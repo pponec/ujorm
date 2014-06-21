@@ -41,21 +41,21 @@ import org.ujorm.extensions.StringWrapper;
  */
 public class UjoCoder {
 
-    /** Date formater and parser with second precision.
+    /** Date formatter and parser with second precision.
      * @see <a href="http://www.javacodegeeks.com/2010/07/java-best-practices-dateformat-in.html">Performacce tip</a>
      */
     public static final ThreadLocal<SimpleDateFormat> FORMAT_DATE = new ThreadLocal<SimpleDateFormat>() {
        @Override protected SimpleDateFormat initialValue() { return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH); }
     };
 
-    /** Date formater and parser with daily accuracy.
+    /** Date formatter and parser with daily accuracy.
      * @see <a href="http://www.javacodegeeks.com/2010/07/java-best-practices-dateformat-in.html">Performacce tip</a>
      */
     public static final ThreadLocal<SimpleDateFormat> FORMAT_DAY = new ThreadLocal<SimpleDateFormat>() {
        @Override protected SimpleDateFormat initialValue() { return new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH); }
     };
 
-    /** Typ konstruktoru */
+    /** Constructor type */
     public static final Class[] CONSTRUCTOR_TYPE = new Class[]{String.class};
 
     // === CONVERTING VALUES ===
@@ -163,7 +163,7 @@ public class UjoCoder {
      * <br>If value can't be decoded, an IllegalArgumentException is throwed.
      */
     @SuppressWarnings("unchecked")
-    public Object decodeValue(final Key key, final String aValue, final Class type) throws IllegalArgumentException {
+    public <T> T decodeValue(final Key<?,T> key, final String aValue, final Class type) throws IllegalArgumentException {
         if (key instanceof ListKey) {
             if (aValue==null || aValue.length()==0) { return null; }
             List result = new ArrayList();
@@ -175,10 +175,10 @@ public class UjoCoder {
                 final Object val  = decodeValue(propertyList.getItemType(), text);
                 result.add(val);
             }
-            return result;
+            return (T) result;
         } else {
             final Object result = decodeValue(type!=null ? type : key.getType(), aValue);
-            return result;
+            return (T) result;
         }
     }
 
@@ -330,7 +330,7 @@ public class UjoCoder {
      * Decode HexaString into byte array.
      * @param hexString NULL value is not supported.
      * @return Byte array
-     * @see javax.xml.bind.DatatypeConverter#parseHexBinary(java.lang.String) 
+     * @see javax.xml.bind.DatatypeConverter#parseHexBinary(java.lang.String)
      */
     protected byte[] decodeBytes(String hexString) {
         byte[] bytes = new byte[hexString.length() >> 1];
