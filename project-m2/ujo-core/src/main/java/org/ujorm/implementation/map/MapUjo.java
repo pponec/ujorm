@@ -28,7 +28,7 @@ import org.ujorm.extensions.SuperAbstractUjo;
  * This is a simple abstract implementation of <code>Ujo</code>.<br>
  * Child implementation can use "public static final Key" constants for its KeyProperties.
  * The code syntax is Java 1.5 complied.<br>
- * <br>Features: very simple implementaton and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
+ * <br>Features: very simple implementation and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
  * <h3>Sample of usage</h3>
  * <pre class="pre">
  * <span class="java-keywords">import</span> org.ujorm.implementation.map.*;

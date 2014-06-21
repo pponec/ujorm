@@ -80,12 +80,12 @@ public interface Ujo {
 
     /** Returns all direct keys.
      * There is recommended to be a "name" of each key is unique (but it is NOT a necessary condition).
-     * Two attributes with the same "name" must be demarked by a different annotation {@link XmlElementBody} for a XML export.
+     * Two attributes with the same "name" must be distinguished by a different annotation {@link XmlElementBody} for a XML export.
      *
      * <br>An index key in the array UJO must be unique a continuous, an order of key array depends on an implementation of UJO object.
      * @see Key#isDirect()
      */
-    public <T extends Ujo> KeyList<T> readKeys();
+    public <U extends Ujo> KeyList<U> readKeys();
 
     /**
      * Get an authorization of the key for different actions.

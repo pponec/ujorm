@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
+ */
 
 package org.ujorm.swing;
 
@@ -26,21 +26,21 @@ import org.ujorm.UjoAction;
 
 /**
  * An implementation of TableModel for a Single Ujo object.
- * 
+ *
  * @author Pavel Ponec
  */
 public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements Iterable<UjoPropertyRow> {
-    
+
     /** Property row */
     public static final UjoPropertyRow ROWS = null;
-    
+
     /**
      * Creates a new instance of SingleUjoTabModel
      */
     public SingleUjoTabModel(Ujo content) {
         this(content, UjoManager.getInstance().readKeys(UjoPropertyRow.class).toArray() );
     }
-    
+
     /**
      * Creates a new instance of SingleUjoTabModel
      */
@@ -48,17 +48,17 @@ public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements 
         super(columns);
         rows = UjoManager.getInstance().createPropertyList(content, new UjoActionImpl(UjoAction.ACTION_TABLE_SHOW, this));
     }
-    
+
     /** Only Value is editable. */
     @Override
     public boolean isCellEditable(int rowIndex, Key column) {
-        final boolean result 
+        final boolean result
         =  column==UjoPropertyRow.P_VALUE
         || column==UjoPropertyRow.P_TEXT
         ;
         return result;
     }
-    
+
     /** Set a value to a cell of table model. */
     @Override
     @SuppressWarnings("static-access")
@@ -73,12 +73,12 @@ public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements 
             super.setValueAt(value, rowIndex, column);
         }
     }
-    
+
     /** Get Value in a String format. */
     @Override
     @SuppressWarnings("static-access")
     public Object getValueAt(int rowIndex, Key column) {
-        final Object result 
+        final Object result
         = (column==ROWS.P_VALUE)
         ?  getRow(rowIndex).readValueString(column, new UjoActionImpl(this))
         : (column==ROWS.P_DEFAULT)
@@ -87,15 +87,15 @@ public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements 
         ;
         return result;
     }
-    
+
     /** Returns an UjoCoder */
     protected UjoCoder getCoder() {
         return UjoManager.getInstance().getCoder();
     }
 
-    /** Returns an interator */
+    /** Returns an iterator */
     public Iterator<UjoPropertyRow> iterator() {
         return rows.iterator();
     }
-    
+
 }

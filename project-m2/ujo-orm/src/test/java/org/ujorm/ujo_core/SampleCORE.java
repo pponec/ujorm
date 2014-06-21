@@ -165,7 +165,7 @@ public class SampleCORE {
         Employee source = service.getEmployee();
         Employee target = source.getClass().newInstance();
 
-        for (Key<Ujo,?> key : source.readKeys()) {
+        for (Key<Employee,?> key : source.readKeys()) {
             key.copy(source, target);
         }
 

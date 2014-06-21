@@ -18,6 +18,7 @@ package org.ujorm.implementation.mapImpl;
 import java.io.Serializable;
 import java.util.HashMap;
 import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.Property;
@@ -98,7 +99,15 @@ abstract public class MapImplUjoMiddle<UJO extends MapImplUjoMiddle>
         readUjoManager().setText(this, key, value, null, null);
     }
 
-
-
+    /** Returns all direct keys.
+     * <br>Note 1: An order of keys is sorted by a value of the index attribute.
+     * <br>Note 2: The implementation returns the original key array so it is possible to change some original key in the array from an extefnal code.
+     *            Overwrite the method to return a copy array in case you need an assurance of immutable!
+     * @see Key#isDirect()
+     */
+    @Override
+    public KeyList<UJO> readKeys() {
+        return super.readKeys();
+    }
 
 }

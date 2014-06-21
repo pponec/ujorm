@@ -18,6 +18,7 @@ package org.ujorm.extensions;
 
 import java.util.List;
 import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
@@ -96,6 +97,11 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
 
         final Key<UJO, VALUE> path = PathProperty.of(property1, property2, property3);
         set((Key)path, value);
+    }
+
+    @Override
+    public KeyList<UJO> readKeys() {
+        return super.readKeys();
     }
 
     // ------ LIST ----------

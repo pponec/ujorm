@@ -26,14 +26,14 @@ import org.ujorm.core.*;
  * This is a simple abstract implementation of Ujo. <br>
  * For implementation define only a "public static final Key" constants in a child class.
  * The code syntax is Java 1.5 complied.<br>
- * <br>Features: very simple implementaton and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
+ * <br>Features: very simple implementation and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
 
  * @author Pavel Ponec
  */
 public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable {
 
     /**
-     * Initializa all keys. If the keys are unlocked than recalculate index
+     * Initialize all keys. If the keys are unlocked than recalculate index
      * and set an undefined key name by its static field.
      * @param ujoClass Ujo class
      */
@@ -44,7 +44,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
 
 
     /**
-     * Initializa all keys. If the keys are unlocked than recalculate index
+     * Initialize all keys. If the keys are unlocked than recalculate index
      * and set an undefined key name by its static field.
      * @param ujoClass Ujo class
      * @param checkUniqueProperties Check unique keys
@@ -70,6 +70,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * @see Key#isDirect()
      */
     @SuppressWarnings("unchecked")
+    @Override
     public <T extends Ujo> KeyList<T> readKeys() {
         return (KeyList<T>) readUjoManager().readKeys(getClass());
     }
@@ -86,6 +87,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * @return Returns TRUE, if key is authorized.
      * @see UjoAction Action Constants
      */
+    @Override
     public boolean readAuthorization(final UjoAction action, final Key key, final Object value) {
         return true;
     }
@@ -126,6 +128,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * <br>Sample: value "0" returns the same object, value "1" returns the same attribute values, etc.
      * @return A clone of current class
      */
+    @Override
     public Object clone(final int depth, final Object context) {
         return readUjoManager().clone(this, depth, context);
     }
@@ -142,6 +145,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * @return If key type is "container" then result is null.
      */
     @SuppressWarnings("unchecked")
+    @Override
     public String readValueString(final Key key, final UjoAction action) {
         final Object value  = key.of(this);
         final String result = readUjoManager().encodeValue(value, false);
@@ -157,9 +161,9 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * @param action A context of the action.
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
      */
+    @Override
     public void writeValueString(final Key key, final String value, final Class type, final UjoAction action) {
         final Object valueObj = readUjoManager().decodeValue(key, value, type);
         writeValue(key, valueObj);
     }
-
 }
