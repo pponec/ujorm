@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.Key;
+import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
@@ -56,9 +57,13 @@ implements ParamService {
         //
         final Criterion<ParamValue> crnA, crnB, crnC, crnD;
         crnA = crn1.and(crn2);
-
-        return null;
+        crnB = crnA.and(crn3).and(crn4);
+        crnC = crnA.and(crn5).and(crn6);
+        crnD = crnB.or(crnC);
+        //
+        final ParamValue param = getSession().createQuery(crnD).orderBy(ParamValue.CUSTOMER).uniqueResult();
+        return param != null
+                ? UjoManager.getInstance().decodeValue(key,  param.getTextValue())
+                : key.getDefault();
     }
-
-
 }
