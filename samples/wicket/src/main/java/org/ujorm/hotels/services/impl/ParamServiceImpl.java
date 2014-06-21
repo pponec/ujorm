@@ -47,21 +47,21 @@ implements ParamService {
 
     /** Get a value of the key */
     public <U extends ParamService, T> T getValue(Key<? super U, T> key, Module module) {
-        final Criterion<ParamValue> crn1, crn2, crn3, crn4, crn5, crn6, crn7;
+        final Criterion<ParamValue> crn1, crn2, crn3, crn4, crn5;
         crn1 = ParamValue.KEY_NAME$.whereEq(key.getName());
         crn2 = ParamValue.KEY_MODULE$.whereEq(module);
-        crn3 = ParamValue.KEY_SYSTEM$.whereEq(true);
-        crn4 = ParamValue.CUSTOMER.whereNull();
-        crn5 = ParamValue.KEY_SYSTEM$.whereEq(false);
-        crn6 = ParamValue.CUSTOMER.whereEq(authService.getLoggedCustomer());
+        crn3 = ParamValue.CUSTOMER.whereNull();
+        crn4 = ParamValue.CUSTOMER.whereEq(authService.getLoggedCustomer());
+        crn5 = crn1.and(crn2).and(crn3.or(crn4));
         //
-        final Criterion<ParamValue> crnA, crnB, crnC, crnD;
-        crnA = crn1.and(crn2);
-        crnB = crnA.and(crn3).and(crn4);
-        crnC = crnA.and(crn5).and(crn6);
-        crnD = crnB.or(crnC);
-        //
-        final ParamValue param = getSession().createQuery(crnD).orderBy(ParamValue.CUSTOMER).uniqueResult();
+        ParamValue param = null;
+        for (ParamValue paramValue : getSession().createQuery(crn5).orderBy(ParamValue.CUSTOMER)) {
+            param = paramValue;
+            if (paramValue.readFK(ParamValue.CUSTOMER) != null) {
+                break;
+            }
+        }
+
         return param != null
                 ? UjoManager.getInstance().decodeValue(key,  param.getTextValue())
                 : key.getDefault();
