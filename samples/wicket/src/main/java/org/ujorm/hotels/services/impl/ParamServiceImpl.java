@@ -15,12 +15,12 @@
  */
 package org.ujorm.hotels.services.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,9 +117,12 @@ implements ParamService {
 
     /** Returns a ParamKeySet for required module */
     private Map<String, ParamKey> getParamKeyMap(ModuleParams<?> params) {
-        final List<String> keyNames = new ArrayList<>(params.readKeys().size());
+        final Set<String> keyNames = new HashSet<>(params.readKeys().size());
         for (Key key : params.readKeys()) {
-            keyNames.add(key.getName());
+            boolean unique = keyNames.add(key.getName());
+            if (!unique) {
+                throw new IllegalStateException("The parameter is not unique: " + key.toStringFull());
+            }
         }
         final Criterion<ParamKey> crn1, crn2, crn3;
         crn1 = ParamKey.NAME.whereIn(keyNames);
