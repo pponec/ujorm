@@ -48,7 +48,18 @@ implements ParamService {
 
     /** Get a value of the key */
     @Override
-    public <U extends ParamService, T> T getValue(Key<? super U, T> key, Module module) {
+    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key) {
+        try {
+            final U instance = (U) key.getDomainType().newInstance();
+            return getValue(key, instance.getModule());
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("Can' get value for the key: " + key.toStringFull(), e);
+        }
+    }
+
+    /** Get a value of the key */
+    @Override
+    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module) {
         final Criterion<ParamValue> crn1, crn2, crn3, crn4, crn5;
         crn1 = ParamValue.KEY_NAME$.whereEq(key.getName());
         crn2 = ParamValue.KEY_MODULE$.whereEq(module);
