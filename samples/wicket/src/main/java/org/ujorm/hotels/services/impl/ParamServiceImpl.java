@@ -53,7 +53,7 @@ implements ParamService {
             final U instance = (U) key.getDomainType().newInstance();
             return getValue(key, instance.getModule());
         } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException("Can' get value for the key: " + key.toStringFull(), e);
+            throw new IllegalStateException("Can't get a value for the key: " + key.toStringFull(), e);
         }
     }
 
