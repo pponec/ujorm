@@ -88,7 +88,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
         }
         changeDefault(this, NAME, tableKey.getName());
 
-        assert !getKey().isComposite() : String.format("The key %s must be direct.", getKey().toStringFull());
+        assert !getKey().isComposite() : String.format("The key %s must be direct.", getKey().getFullName());
     }
 
     /** It is a DB column (either a value of a foreign key),
@@ -150,7 +150,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     /** Key name */
     @Override
     public String toString() {
-        return TABLE_KEY.of(this).toStringFull();
+        return TABLE_KEY.of(this).getFullName();
     }
 
     /** Two models are the same if its key names are the same for the same domain type. */

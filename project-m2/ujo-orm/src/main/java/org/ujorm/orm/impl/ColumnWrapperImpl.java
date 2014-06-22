@@ -97,7 +97,7 @@ public class ColumnWrapperImpl implements ColumnWrapper {
     /** Returns the Key */
     @Override
     public String toString() {
-        return key.toStringFull();
+        return key.getFullName();
     }
 
 }

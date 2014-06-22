@@ -503,7 +503,7 @@ public class SampleORM {
 
         assert customer != null : "The result have got the one customers";
         assert Customer.PARENT instanceof CompositeKey : "The key is type of CompositeKey" + Customer.PARENT.getClass();
-        assert parentName.toStringFull().equals("Customer.parent[customerAlias].surename") : "The wong implementation CompositeKey.toString()";
+        assert parentName.getFullName().equals("Customer.parent[customerAlias].surename") : "The wong implementation CompositeKey.toString()";
     }
 
     /** DB query with relations to yourself as a value of Criterion */

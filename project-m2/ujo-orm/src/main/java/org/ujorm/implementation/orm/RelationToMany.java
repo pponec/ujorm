@@ -94,7 +94,7 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
                         }
                     case ALLOWED_ANYWHERE_WITH_WARNING:
                         if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                            LOGGER.log(UjoLogger.WARN, "The lazy loading on closed session on the key " + toStringFull(), e);
+                            LOGGER.log(UjoLogger.WARN, "The lazy loading on closed session on the key " + getFullName(), e);
                         }
                     case ALLOWED_ANYWHERE:
                         // open temporary session if it's closed ;) - because of lazy-loading of detached objects (caches, etc.)

@@ -42,7 +42,7 @@ public final class MessageService {
         for (int j = 0; j < max; j++) {
             final int i = j << 1;
             final Object value = args[i + 1];
-            result.put(args[i].toString(), value instanceof Key ? ((Key) value).toStringFull() : value);
+            result.put(args[i].toString(), value instanceof Key ? ((Key) value).getFullName() : value);
         }
         return result;
     }

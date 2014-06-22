@@ -53,7 +53,7 @@ abstract public class AbstractMetaModel extends AbstractUjo implements UjoLockab
         if (enabledKey.of(handler.getParameters())) {
             readOnly = false;
         } else {
-            throw new UnsupportedOperationException("The method must be enabled by parameter: " + enabledKey.toStringFull());
+            throw new UnsupportedOperationException("The method must be enabled by parameter: " + enabledKey.getFullName());
         }
     }
 

@@ -190,6 +190,14 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         return name;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String getFullName() {
+        return getDomainType() != null
+                ? getDomainType().getSimpleName() + '.' +  getName(true)
+                : getName(true);
+    }
+
     /** Full key name with alias names, if any.
      * @param alias A request to display an alias by the template: {@code PARENT[aliasName] }
      * @return alias name
@@ -245,7 +253,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
                         value = (Ujo) keys[i].getType().newInstance();
                         result.writeValue(keys[i], value);
                     } catch (Throwable e) {
-                        throw new IllegalStateException("Can't create new instance for the key: " + keys[i].toStringFull(), e);
+                        throw new IllegalStateException("Can't create new instance for the key: " + keys[i].getFullName(), e);
                     }
                 } else {
                     return value;
@@ -381,22 +389,23 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         return getName(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toStringFull() {
-        return getDomainType().getSimpleName() + '.' +  getName(true);
+        return getFullName();
     }
 
     /**
      * Returns the full name of the Key including all atributes.
      * <br />Example: Person.id {index=0, ascending=false, ...}
-     * @param extended argumenta false calls the method {@link #toStringFull()} only.
+     * @param extended argumenta false calls the method {@link #getFullName()} only.
      * @return the full name of the Key including all atributes.
      */
     @Override
     public String toStringFull(boolean extended) {
         return  extended
-                ? toStringFull() + Property.printAttributes(this)
-                : toStringFull() ;
+                ? getFullName() + Property.printAttributes(this)
+                : getFullName() ;
     }
 
     /** Length of the Name */
