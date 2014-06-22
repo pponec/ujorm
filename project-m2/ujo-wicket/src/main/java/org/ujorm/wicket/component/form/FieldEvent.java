@@ -78,7 +78,7 @@ public class FieldEvent {
     public String toString() {
         return "UjoEvent"
                 + "{ action=" + action
-                + ", sourceKey=" + sourceKey.getFirstKey().toStringFull()
+                + ", sourceKey=" + sourceKey.getFirstKey().getFullName()
                 + '}';
     }
 

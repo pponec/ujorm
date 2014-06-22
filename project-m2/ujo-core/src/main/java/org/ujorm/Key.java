@@ -42,6 +42,10 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     /** Returns a name of the Key. */
     public String getName();
 
+    /** Returns a name of the Key including  a simple class name (without package)
+     * separated by the dot (.) character. */
+    public String getFullName();
+
     /** Returns a class of the current key. */
     public Class<VALUE> getType();
 
@@ -247,7 +251,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     /**
      * Returns the full name of the Key including all attributes.
      * <br />Example: Person.id {index=0, ascending=false, ...}
-     * @param extended arguments false calls the method {@link #toStringFull()} only.
+     * @param extended arguments false calls the method {@link #getFullName()} only.
      * @return the full name of the Key including all attributes.
      */
     public String toStringFull(boolean extended);

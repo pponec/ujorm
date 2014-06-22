@@ -231,7 +231,7 @@ public class Field<T> extends GenericPanel<T> {
 
     /** Resource Label Key */
     protected String getResourceLabelKey(final Key<?,?> key) {
-        return PROPERTY_PREFIX + key.toStringFull();
+        return PROPERTY_PREFIX + key.getFullName();
     }
 
     /** Is the field required ? */

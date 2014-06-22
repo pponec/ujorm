@@ -406,7 +406,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         clearDecoder();
         final MetaColumn mc = getHandler().findColumnModel(getLastProperty(column));
         if (mc==null) {
-            throw new IllegalArgumentException("Column " + column.toStringFull() + " was not foud in the meta-model");
+            throw new IllegalArgumentException("Column " + column.getFullName() + " was not foud in the meta-model");
         }
         final ColumnWrapper wColumn = column.isComposite()
                 ? new ColumnWrapperImpl(mc, column)

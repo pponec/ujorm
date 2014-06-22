@@ -60,8 +60,8 @@ public class SmartUjoBaseTest extends MyTestCase {
     public void testPropertyName() throws Throwable {
         System.out.println("testPropertyName");
 
-        assertEquals(SmartUjoImpl.class.getSimpleName() +'.' + SmartUjoImpl.PRO_P0.getName(), SmartUjoImpl.PRO_P0.toStringFull());
-        assertEquals(SmartUjoImpl.class.getSimpleName() +'.' + SmartUjoImpl.PRO_P1.getName(), SmartUjoImpl.PRO_P1.toStringFull());
+        assertEquals(SmartUjoImpl.class.getSimpleName() +'.' + SmartUjoImpl.PRO_P0.getName(), SmartUjoImpl.PRO_P0.getFullName());
+        assertEquals(SmartUjoImpl.class.getSimpleName() +'.' + SmartUjoImpl.PRO_P1.getName(), SmartUjoImpl.PRO_P1.getFullName());
     }
 
     /**

@@ -118,7 +118,7 @@ final public class AliasKey {
     @Override
     public String toString() {
         final String result = String.format("%s (%s, %s)"
-                , key.toStringFull()
+                , key.getFullName()
                 , aliasFrom
                 , aliasTo);
         return result;

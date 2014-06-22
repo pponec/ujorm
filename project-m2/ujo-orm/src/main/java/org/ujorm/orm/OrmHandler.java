@@ -373,7 +373,7 @@ public class OrmHandler implements OrmHandlerProvider {
         }
         final MetaRelation2Many result = propertyMap.get(pathProperty);
         if (throwException && result == null) {
-            String propertyName = pathProperty != null ? pathProperty.toStringFull() : String.valueOf(pathProperty);
+            String propertyName = pathProperty != null ? pathProperty.getFullName() : String.valueOf(pathProperty);
             throw new IllegalArgumentException("The key " + propertyName + " have got no meta-model.");
         }
         return (T) result;

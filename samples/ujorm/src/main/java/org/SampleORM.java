@@ -510,7 +510,7 @@ public class SampleORM {
 
         assert customer != null : "The result have got the one customers";
         assert Customer.PARENT instanceof CompositeKey : "The key is type of CompositeKey" + Customer.PARENT.getClass();
-        assert parentName.toStringFull().equals("Customer.parent[customerAlias].surename") : "The wong implementation CompositeKey.toString()";
+        assert parentName.getFullName().equals("Customer.parent[customerAlias].surename") : "The wong implementation CompositeKey.toString()";
     }
 
     /** Create a SELECT for the one column only

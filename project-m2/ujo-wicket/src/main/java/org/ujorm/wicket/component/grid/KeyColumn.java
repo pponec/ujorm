@@ -82,7 +82,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
      */
     public KeyColumn(final KeyRing<UJO> key, final KeyRing<UJO> sortKey) {
         this(new ResourceModel(PROPERTY_PREFIX
-                + key.getFirstKey().toStringFull()
+                + key.getFirstKey().getFullName()
                 , key.getFirstKey().toString())
                 , key, sortKey);
     }
@@ -164,7 +164,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     /** Domain class + key */
     @Override
     public String toString() {
-        return keySerializable.getFirstKey().toStringFull();
+        return keySerializable.getFirstKey().getFullName();
     }
 
     // =============== STATIC METHODS ===============

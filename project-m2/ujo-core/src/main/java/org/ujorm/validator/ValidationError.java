@@ -80,7 +80,7 @@ public class ValidationError implements Serializable {
         this.localizationKey = localizationKey;
         this.arguments = arguments;
         // Additional message arguments:
-        arguments.put(KEY.toString(), key!=null ? key.toStringFull() : "''");
+        arguments.put(KEY.toString(), key!=null ? key.getFullName() : "''");
         arguments.put(INPUT.toString(), value);
         arguments.put(MARK.toString(), MessageService.PARAM_BEG);
     }

@@ -214,6 +214,14 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         return name;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    final public String getFullName() {
+        return domainType != null
+             ? domainType.getSimpleName() + '.' + name
+             : name ;
+    }
+
     /** Type of Property */
     @Override
     final public Class<VALUE> getType() {
@@ -481,25 +489,26 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
     /** Returns the full name of the Key including a simple domain class.
-     * <br />Example: Person.id */
+     * <br />Example: Person.id
+     * @deprecated Use the method {@link #getFullName()} rather.
+     */
+    @Deprecated
     @Override
     public final String toStringFull() {
-        return domainType!=null
-             ? domainType.getSimpleName() + '.' + name
-             : name ;
+        return getFullName();
     }
 
     /**
-     * Returns the full name of the Key including all atributes.
+     * Returns the full name of the Key including all attributes.
      * <br />Example: Person.id {index=0, ascending=false, ...}
-     * @param extended argumenta false calls the method {@link #toStringFull()} only.
-     * @return the full name of the Key including all atributes.
+     * @param extended arguments false calls the method {@link #getFullName()} only.
+     * @return the full name of the Key including all attributes.
      */
     @Override
     public String toStringFull(boolean extended) {
         return  extended
-                ? toStringFull() + Property.printAttributes(this)
-                : toStringFull() ;
+                ? getFullName() + Property.printAttributes(this)
+                : getFullName() ;
     }
 
     /** Print  */
