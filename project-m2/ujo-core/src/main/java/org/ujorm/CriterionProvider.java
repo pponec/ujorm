@@ -60,14 +60,14 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * <li>List&lt;TYPE&gt; - list of values</li>
      * <li>Key - reference to a related entity</li>
      * </ul>
-     * @return A the new immutable Criterion
+     * @return The new immutable Criterion
      */
     public Criterion<U> whereEq(VALUE value);
 
     /**
      * Create a new Criterion where this key value equals the parameter value.
      * @param key Key can be type a direct of indirect (for a relation) key
-     * @return A the new immutable Criterion
+     * @return The new immutable Criterion
      */
     public Criterion<U> whereEq(Key<U,VALUE> key);
 
@@ -75,7 +75,7 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * Create new Criterion where this key value is in the one of parameter values.
      * @param key A direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
-     * @return A the new immutable Criterion.
+     * @return The new immutable Criterion.
      */
     public Criterion<U> whereIn
         ( Collection<VALUE> list
@@ -85,7 +85,7 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * Create new Criterion where this key value is not in any of parameter values.
      * @param key A direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
-     * @return A the new immutable Criterion.
+     * @return The new immutable Criterion.
      */
     public Criterion<U> whereNotIn
         ( Collection<VALUE> list
@@ -95,7 +95,7 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * Create new Criterion where this key value is in the one of parameter values.
      * @param key A reference to a related entity
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
-     * @return A the new immutable Criterion
+     * @return The new immutable Criterion
      */
     public Criterion<U> whereIn
         ( VALUE... list
@@ -105,7 +105,7 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * Create new Criterion where this key value is not in any of parameter values.
      * @param key A key direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
-     * @return A the new immutable Criterion.
+     * @return The new immutable Criterion.
      */
     public Criterion<U> whereNotIn
         ( VALUE... list

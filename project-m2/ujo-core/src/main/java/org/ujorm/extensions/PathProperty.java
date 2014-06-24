@@ -396,10 +396,10 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     }
 
     /**
-     * Returns the full name of the Key including all atributes.
+     * Returns the full name of the Key including all attributes.
      * <br />Example: Person.id {index=0, ascending=false, ...}
-     * @param extended argumenta false calls the method {@link #getFullName()} only.
-     * @return the full name of the Key including all atributes.
+     * @param extended argument false calls the method {@link #getFullName()} only.
+     * @return the full name of the Key including all attributes.
      */
     @Override
     public String toStringFull(boolean extended) {
