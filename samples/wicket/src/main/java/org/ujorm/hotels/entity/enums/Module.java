@@ -20,12 +20,12 @@ package org.ujorm.hotels.entity.enums;
 import org.ujorm.extensions.StringWrapper;
 
 /**
- * Param module
+ * Parameter module
  * @author Pavel Ponec
  */
 public enum Module implements StringWrapper {
 
-    /** The base applicatin */
+    /** The base application */
     HOTELS("ht");
 
     /** Short identifier */
