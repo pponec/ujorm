@@ -99,15 +99,4 @@ abstract public class MapImplUjoMiddle<UJO extends MapImplUjoMiddle>
         readUjoManager().setText(this, key, value, null, null);
     }
 
-    /** Returns all direct keys.
-     * <br>Note 1: An order of keys is sorted by a value of the index attribute.
-     * <br>Note 2: The implementation returns the original key array so it is possible to change some original key in the array from an extefnal code.
-     *            Overwrite the method to return a copy array in case you need an assurance of immutable!
-     * @see Key#isDirect()
-     */
-    @Override
-    public KeyList<UJO> readKeys() {
-        return super.readKeys();
-    }
-
 }

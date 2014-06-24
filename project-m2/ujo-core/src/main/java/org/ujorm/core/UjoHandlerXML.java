@@ -31,7 +31,7 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
 /** Use an subclass on your own risk.
- * <br>Use an API of UjoManagerXML insted of. */
+ * <br>Use an API of UjoManagerXML instead of. */
 final class UjoHandlerXML extends DefaultHandler {
 
     /** An Object hierarchy (Ujo or Element) */

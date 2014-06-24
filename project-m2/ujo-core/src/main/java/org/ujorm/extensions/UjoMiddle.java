@@ -74,8 +74,6 @@ public interface UjoMiddle<UJO extends UjoMiddle> extends Ujo {
      */
     public String getText(final Key key);
 
-
-
     /**
      * Set value from a String format by a NULL context. Property can't be an "container" type (Ujo, List, Object[]).
      * <br>The method can be an alias for a method writeValueString(...)
@@ -84,12 +82,8 @@ public interface UjoMiddle<UJO extends UjoMiddle> extends Ujo {
      */
     public void setText(final Key key, final String Key);
 
-    /** Returns all direct keys.
-     * <br>Note 1: An order of keys is sorted by a value of the index attribute.
-     * <br>Note 2: The implementation returns the original key array so it is possible to change some original key in the array from an extefnal code.
-     *            Overwrite the method to return a copy array in case you need an assurance of immutable!
-     * @see Key#isDirect()
+    /** The same method as the {@link #readKeys()} with a different generic type.
+     * @see #readKeys()
      */
-    @Override
-    public KeyList<UJO> readKeys();
+    public KeyList<UJO> readKeyList();
 }

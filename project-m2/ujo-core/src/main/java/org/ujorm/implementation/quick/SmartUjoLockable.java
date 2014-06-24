@@ -17,12 +17,8 @@ package org.ujorm.implementation.quick;
 
 import java.util.Collections;
 import java.util.List;
-import org.ujorm.CompositeKey;
 import org.ujorm.Key;
-import org.ujorm.ListKey;
-import org.ujorm.Ujo;
 import org.ujorm.extensions.UjoLockable;
-import org.ujorm.extensions.UjoMiddle;
 
 /**
  * The smart Ujo implementation with a Lock support.
@@ -43,9 +39,9 @@ abstract public class SmartUjoLockable<U extends SmartUjoLockable>
             readOnly = true;
 
             // Make a immutable lists:
-            for (final Key<U, ?> p : readKeys()) {
+            for (final Key<U, ?> p : readKeyList()) {
                 if (p.isTypeOf(List.class)) {
-                    final List list = ((Key<SmartUjoLockable,List>) p).of(this);
+                    final List list = (List) p.of((U)this);
                     // Skip validators:
                     writeValue(p, (list == null || list.isEmpty())
                     ? Collections.EMPTY_LIST

@@ -84,4 +84,4 @@ public class RegistrarUjoExt<UJO extends RegistrarUjoExt> extends MapUjoExt<UJO>
         , UjoPropertyChangeListener listener) {
         return eventRegistrar.removePropertyChangeListener(key, before, listener);
     }
-}
+ }

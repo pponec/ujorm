@@ -40,7 +40,8 @@ abstract public class AbstractyUjoBase implements Ujo {
 
     /** Return all direct Keys (an implementation from hhe Ujo API) */
     @Override
-    public KeyList readKeys() {
+    @SuppressWarnings("unchecked")
+    public <U extends Ujo> KeyList<U> readKeys() {
         return keys;
     }
 

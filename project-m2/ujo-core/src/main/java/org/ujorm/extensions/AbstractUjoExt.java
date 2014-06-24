@@ -100,7 +100,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
     }
 
     @Override
-    public KeyList<UJO> readKeys() {
+    public KeyList<UJO> readKeyList() {
         return super.readKeys();
     }
 

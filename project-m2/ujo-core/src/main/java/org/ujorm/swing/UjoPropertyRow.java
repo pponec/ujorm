@@ -12,11 +12,12 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
+ */
 
 package org.ujorm.swing;
 
 import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.UjoActionImpl;
@@ -27,12 +28,12 @@ import org.ujorm.implementation.quick.SmartUjo;
 /**
  * An implementation of TableModel for List of Ujo objects.
  * <br>An typical usage is an preview of Key list of the one Ujo object including its values.
- * 
+ *
  * @author Pavel Ponec
  */
 @SuppressWarnings("unchecked")
 public class UjoPropertyRow extends SmartUjo<UjoPropertyRow> {
-    
+
     /** Index of key */
     public static final Key<UjoPropertyRow,Integer> P_INDEX   = newKey("Index");
     /** Name of key */
@@ -55,15 +56,15 @@ public class UjoPropertyRow extends SmartUjo<UjoPropertyRow> {
     static {
        init(UjoPropertyRow.class);
     }
-    
+
     final protected Ujo content;
     final protected Key key;
-    
+
     public UjoPropertyRow(Ujo content, Key key) {
         this.content = content;
         this.key = key;
     }
-    
+
     /** Write value */
     @Override
     public void writeValue(Key aProperty, Object value) {
@@ -75,7 +76,7 @@ public class UjoPropertyRow extends SmartUjo<UjoPropertyRow> {
             throw new UnsupportedOperationException("Can't write key " + key);
         }
     }
-    
+
     /** Write a text value. */
     @Override
     public void writeValueString(Key aProperty, String value, Class subtype, UjoAction action) {
@@ -90,7 +91,7 @@ public class UjoPropertyRow extends SmartUjo<UjoPropertyRow> {
             throw new UnsupportedOperationException("Can't write key " + key);
         }
     }
-    
+
     /** Read Value */
     @Override
     public Object readValue(final Key aProperty) {
@@ -107,12 +108,12 @@ public class UjoPropertyRow extends SmartUjo<UjoPropertyRow> {
         }
         throw new UnsupportedOperationException("Can't read key " + key);
     }
-    
+
     /** Returns an assigned key (a parameter e.g.) */
     public final Key getProperty() {
         return key;
     }
-    
+
     /** Property name + value */
     @Override
     public String toString() {

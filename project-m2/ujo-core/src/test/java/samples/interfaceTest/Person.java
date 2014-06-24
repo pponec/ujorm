@@ -21,18 +21,22 @@ public class Person implements Ujo {
     // --- The start of the Ujo implementation ---
     private Object[] data = new Object[f.lockAndSize()];
 
+    @Override
     public Object readValue(Key key) {
         return data[key.getIndex()];
     }
 
+    @Override
     public void writeValue(Key key, Object value) {
         data[key.getIndex()] = value;
     }
 
+    @Override
     public KeyList readKeys() {
         return f.getKeys();
     }
 
+    @Override
     public boolean readAuthorization(UjoAction action, Key key, Object value) {
         return true;
     } // --- The end of the Ujo implementation ---
