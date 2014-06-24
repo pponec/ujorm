@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.ujorm.KeyList;
 import org.ujorm.hotels.services.ModuleParams;
 import org.ujorm.hotels.services.ParamService;
 import org.ujorm.implementation.quick.SmartUjo;
@@ -27,10 +28,9 @@ import org.ujorm.implementation.quick.SmartUjo;
  * @author ponec
  */
 @Transactional
-public abstract class ModuleParamsImpl<U extends ModuleParamsImpl>
+public abstract class AbstractModuleParamsImpl<U extends AbstractModuleParamsImpl>
 extends SmartUjo<U>
-implements ModuleParams<U>
-{
+implements ModuleParams<U> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParamServiceImpl.class);
 
     @Autowired
@@ -39,6 +39,12 @@ implements ModuleParams<U>
     /** Load default values into database */
     public void init() {
         paramService.init((ModuleParams)this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final  KeyList<U> readKeys() {
+        return super.readKeys();
     }
 
 }
