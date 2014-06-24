@@ -232,7 +232,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * <li>List&lt;TYPE&gt; - list of values</li>
      * <li>Key - reference to a related entity</li>
      * </ul>
-     * @return A the new immutable Criterion
+     * @return The new immutable Criterion
      */
     public static <U extends Ujo, TYPE> Criterion<U> where
         ( Key<U,TYPE> key
@@ -245,7 +245,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * Create new Criterion for operator IN to compare value to a list of constants.
      * @param key A direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
-     * @return A the new immutable Criterion.
+     * @return The new immutable Criterion.
      */
     public static <U extends Ujo, TYPE> Criterion<U> whereIn
         ( Key<U,TYPE> key
@@ -262,7 +262,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * Create new Criterion for operator IN to compare value to a list of constants.
      * @param key A direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
-     * @return A the new immutable Criterion.
+     * @return The new immutable Criterion.
      */
     public static <U extends Ujo, TYPE> Criterion<U> whereNotIn
         ( Key<U,TYPE> key
@@ -278,7 +278,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * Create new Criterion for operator IN to compare value to a list of constants
      * @param key A reference to a related entity
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
-     * @return A the new immutable Criterion
+     * @return The new immutable Criterion
      */
     public static <U extends Ujo, TYPE> Criterion<U> whereIn
         ( Key<U,TYPE> key
@@ -293,7 +293,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * Create new Criterion for operator IN to compare value to a list of constants.
      * @param key A key direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
-     * @return A the new immutable Criterion.
+     * @return The new immutable Criterion.
      */
     public static <U extends Ujo, TYPE> Criterion<U> whereNotIn
         ( Key<U,TYPE> key
@@ -310,7 +310,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param key A direct or indirect Ujo key
      * @param list A collection of the U values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @param relatedKey The one key related to the one attribute of TYPE object.
-     * @return A the new immutable Criterion.
+     * @return The new immutable Criterion.
      */
     public static <U extends Ujo, ITEM extends Ujo, TYPE> Criterion<U> whereIn
         ( Key<U,TYPE> key
@@ -326,7 +326,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param key A direct or indirect Ujo key
      * @param list A collection of the U values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @param relatedKey The one key related to the one attribute of TYPE object.
-     * @return A the new immutable Criterion.
+     * @return The new immutable Criterion.
      */
     public static <U extends Ujo, ITEM extends Ujo, TYPE> Criterion<U> whereNotIn
         ( Key<U,TYPE> key
@@ -343,7 +343,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param list A collection of the U values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @param relatedKey The one key related to the one attribute of TYPE object.
      * @param positive The false value uses the NOT_IN operator.
-     * @return A the new immutable Criterion.
+     * @return The new immutable Criterion.
      */
     private static <U extends Ujo, ITEM extends Ujo, TYPE> Criterion<U> whereIn
         ( boolean positive
@@ -372,7 +372,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * New equals instance
      * @param key Key
      * @param value Value or Key can be type a direct of indirect (for a relation) key
-     * @return A the new immutable Criterion
+     * @return The new immutable Criterion
      */
     public static <U extends Ujo, TYPE> Criterion<U> where
         ( Key<U,TYPE> key
@@ -562,7 +562,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * <li>List&lt;TYPE&gt; - list of values</li>
      * <li>Key - reference to a related entity</li>
      * </ul>
-     * @return A the new immutable Criterion
+     * @return The new immutable Criterion
      * @deprecated See the {@link Criterion#where(org.ujorm.Key, org.ujorm.criterion.Operator, java.lang.Object) where(...) } method.
      */
     @Deprecated
@@ -577,7 +577,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * New equals instance
      * @param key Key
      * @param value Value or Key can be type a direct of indirect (for a relation) key
-     * @return A the new immutable Criterion
+     * @return The new immutable Criterion
      * @deprecated See the {@link Criterion#where(org.ujorm.Key, org.ujorm.criterion.Operator, java.lang.Object) where(...) } method.
      */
     @Deprecated
