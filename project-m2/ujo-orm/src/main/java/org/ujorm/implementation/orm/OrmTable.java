@@ -120,13 +120,6 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
         return result;
     }
 
-    /** {@inheritDoc}
-     * @see Key#isDirect() */
-    @Override
-    public KeyList<U> readKeys() {
-        return super.readKeys();
-    }
-
     /** Getter based on Key implemeted by a pattern UjoExt */
     @SuppressWarnings("unchecked")
     public final <UJO extends U, VALUE> VALUE get(final Key<UJO, VALUE> key) {

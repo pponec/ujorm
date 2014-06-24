@@ -481,7 +481,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     /** Returns all direct properties form a domain class
-     * @param domainClass Mandatory doomain class
+     * @param domainClass Mandatory domain class
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass) {

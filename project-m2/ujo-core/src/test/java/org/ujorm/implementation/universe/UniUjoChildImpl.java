@@ -16,21 +16,25 @@ import org.ujorm.*;
  * @author Pavel Ponec
  */
 public class UniUjoChildImpl implements UniUjoInterfaceChild {
-    
+
     private Object[] data = new Object[KEY_SIZE];
 
+    @Override
     public Object readValue(Key key) {
         return data[key.getIndex()];
     }
 
+    @Override
     public void writeValue(Key key, Object value) {
         data[key.getIndex()] = value;
     }
 
+    @Override
     public KeyList readKeys() {
         return $factory2.getKeys();
     }
 
+    @Override
     public boolean readAuthorization(UjoAction action, Key key, Object value) {
         return true;
     }

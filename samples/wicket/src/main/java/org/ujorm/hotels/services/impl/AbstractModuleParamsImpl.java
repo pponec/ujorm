@@ -41,10 +41,4 @@ implements ModuleParams<U> {
         paramService.init((ModuleParams)this);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public final  KeyList<U> readKeys() {
-        return super.readKeys();
-    }
-
 }

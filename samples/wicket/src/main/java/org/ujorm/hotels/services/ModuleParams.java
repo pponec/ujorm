@@ -28,8 +28,4 @@ public interface ModuleParams<U extends ModuleParams> extends UjoMiddle<U>  {
     /** Returns a module */
     public Module getModule();
 
-    /** {@inheritDoc } */
-    @Override
-    public KeyList<U> readKeys();
-
 }

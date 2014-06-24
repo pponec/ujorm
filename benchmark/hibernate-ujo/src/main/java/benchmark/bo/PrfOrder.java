@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.quick.QuickUjo;
 
@@ -47,9 +48,9 @@ public class PrfOrder extends QuickUjo {
     // Optional code for better performance when creating instance:
     static { f.lock(); }
 
-    @Override
-    public KeyList<PrfOrder> readKeys() { return f.getKeys(); }
-
+    @Override public KeyList<PrfOrder> readKeys() {
+        return f.getKeys();
+    }
 
     // Setters and Getters:
 
