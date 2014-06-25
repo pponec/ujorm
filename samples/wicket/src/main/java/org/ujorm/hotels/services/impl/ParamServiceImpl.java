@@ -25,8 +25,10 @@ import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.Key;
+import org.ujorm.core.UjoCoder;
 import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.ParamKey;
@@ -37,6 +39,7 @@ import org.ujorm.hotels.services.*;
  * Common database service implementations
  * @author ponec
  */
+@Service
 @Transactional
 public class ParamServiceImpl<U extends KeyValue>
 extends AbstractServiceImpl
@@ -87,6 +90,7 @@ implements ParamService {
 
         // --- KEYS ----
 
+        final UjoCoder converter = UjoManager.getInstance().getCoder();
         final Date now = new Date();
         for (Key key : params.readKeys()) {
             ParamKey paramKey = paramKeyMap.get(key.getName());
@@ -95,6 +99,7 @@ implements ParamService {
                 paramKeyMap.put(key.getName(), paramKey);
             }
             paramKey.setParamClass(key.getType());
+            paramKey.setTextDefaultValue(converter.encodeValue(key.getDefault(), false));
             paramKey.setLastUpdate(now);
             paramKey.setSystemParam(true); // TODO
             paramKey.setNote("-"); // TODO
@@ -115,7 +120,7 @@ implements ParamService {
         }
     }
 
-    /** Returns a ParamKeySet for required module */
+    /** Returns a saved ParamKeySet for required module */
     private Map<String, ParamKey> getParamKeyMap(ModuleParams<?> params) {
         final Set<String> keyNames = new HashSet<>(params.readKeys().size());
         for (Key key : params.readKeys()) {

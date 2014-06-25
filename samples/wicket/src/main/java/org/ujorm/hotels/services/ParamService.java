@@ -17,7 +17,6 @@ package org.ujorm.hotels.services;
 
 import org.ujorm.Key;
 import org.ujorm.hotels.entity.enums.Module;
-import org.ujorm.hotels.services.*;
 
 /**
  * Service to manage parameters
