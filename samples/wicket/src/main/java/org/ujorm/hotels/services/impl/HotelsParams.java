@@ -17,22 +17,27 @@ package org.ujorm.hotels.services.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.hotels.services.annot.PersonalParam;
+import org.ujorm.orm.annot.Comment;
 /**
  * Common database service implementations
- * @author ponec
+ * @author Ponec
  */
 @Transactional
+@Service
 public class HotelsParams<U extends HotelsParams> extends AbstractModuleParamsImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(HotelsParams.class);
 
     /** Factory */
     private static final KeyFactory<HotelsParams> f = newFactory(HotelsParams.class);
 
+    @Comment("Count of rows per a page in the table")
+    public static final Key<HotelsParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
     public static final Key<HotelsParams, String> TEST1 = f.newKey("Test1", "A");
     public static final Key<HotelsParams, String> TEST2 = f.newKey("Test2", "B");
     @PersonalParam
@@ -40,11 +45,15 @@ public class HotelsParams<U extends HotelsParams> extends AbstractModuleParamsIm
 
     static { f.lock(); }
 
-
     @Override
     public Module getModule() {
         return Module.HOTELS;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="Generated getters">
+    public Integer getRowsPerPage() {
+        return ROWS_PER_PAGE.of(this);
+    }
+    //</editor-fold>
 
 }

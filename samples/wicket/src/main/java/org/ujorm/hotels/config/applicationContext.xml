@@ -11,9 +11,9 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <!-- Annotation-based configuration-->
-    <context:component-scan base-package="org.ujorm.hotels.services.impl;org.ujorm.hotels.gui" />
+    <!-- Annotation-based configuration -->
     <context:annotation-config />
+    <context:component-scan base-package="org.ujorm.hotels.services.impl, org.ujorm.hotels.gui" />
     <tx:annotation-driven transaction-manager="ujormTransactionManager" />
 
     <!-- ORM Ujorm config -->
@@ -24,8 +24,12 @@
         <property name="ormHandlerProvider" ref="ormConfigProvider"/>
     </bean>
 
-    <!-- Database services -->
+    <bean id="HotelsParams" class="org.ujorm.hotels.services.impl.HotelsParams" />
+    <!--
     <bean id="authService" class="org.ujorm.hotels.services.impl.AuthServiceImpl" />
+    -->
+
+    <!-- Database services -->
     <bean id="dbService" class="org.ujorm.hotels.services.impl.DbServiceImpl">
         <property name="readOnly" value="false"/>
         <property name="measuringCode" value="false"/>

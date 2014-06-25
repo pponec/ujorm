@@ -47,7 +47,7 @@ public final class ParamValue extends OrmTable<ParamValue> {
      * @see ParamKey#SYSTEM_PARAM */
     @Comment("Related customer or a system customer for a system parameter value")
     @Column(uniqueIndex=UNIQUE_PARAM_VALUE)
-    public static final Key<ParamValue, Customer> CUSTOMER = f.newKey(mandatory(Customer.class));
+    public static final Key<ParamValue, Customer> CUSTOMER = f.newKey();
     /** Parameter value in a text format */
     @Comment("Parameter value in a text format")
     @Column(type = DbType.CLOB)

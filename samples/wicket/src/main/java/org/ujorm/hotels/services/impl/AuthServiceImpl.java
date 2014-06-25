@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.ujorm.core.UjoService;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.services.*;
@@ -28,6 +29,7 @@ import org.ujorm.hotels.services.*;
  * Common database service implementations
  * @author Pavel Ponec
  */
+@Service
 public class AuthServiceImpl extends AbstractServiceImpl implements AuthService {
     /** Session attribute name */
     private static final String CUSTOMER_ATTR = "CUSTOMER_ATTR";
