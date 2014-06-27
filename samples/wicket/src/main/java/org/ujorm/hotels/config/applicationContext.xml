@@ -24,11 +24,6 @@
         <property name="ormHandlerProvider" ref="ormConfigProvider"/>
     </bean>
 
-    <bean id="HotelsParams" class="org.ujorm.hotels.services.impl.HotelsParams" />
-    <!--
-    <bean id="authService" class="org.ujorm.hotels.services.impl.AuthServiceImpl" />
-    -->
-
     <!-- Database services -->
     <bean id="dbService" class="org.ujorm.hotels.services.impl.DbServiceImpl">
         <property name="readOnly" value="false"/>
