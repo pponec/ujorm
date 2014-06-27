@@ -18,7 +18,6 @@ package org.ujorm.hotels.services.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.hotels.entity.enums.Module;
@@ -28,8 +27,7 @@ import org.ujorm.orm.annot.Comment;
  * Common database service implementations
  * @author Ponec
  */
-@Transactional
-@Service
+@Service("hotelsParams")
 public class HotelsParams<U extends HotelsParams> extends AbstractModuleParamsImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(HotelsParams.class);
 

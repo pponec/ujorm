@@ -37,7 +37,7 @@ import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.hotels.services.*;
 /**
  * Common database service implementations
- * @author ponec
+ * @author Pavel Ponec
  */
 @Service
 @Transactional

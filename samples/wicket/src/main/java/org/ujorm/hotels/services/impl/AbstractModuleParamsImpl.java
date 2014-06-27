@@ -19,7 +19,6 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.Key;
 import org.ujorm.hotels.services.ModuleParams;
 import org.ujorm.hotels.services.ParamService;
@@ -29,7 +28,6 @@ import org.ujorm.implementation.quick.SmartUjo;
  * Common database service implementations
  * @author ponec
  */
-@Transactional
 public abstract class AbstractModuleParamsImpl<U extends AbstractModuleParamsImpl>
         extends SmartUjo<U>
         implements ModuleParams<U> {
@@ -48,6 +46,7 @@ public abstract class AbstractModuleParamsImpl<U extends AbstractModuleParamsImp
     @PostConstruct
     public void init() {
         paramService.init((ModuleParams)this);
+        LOGGER.info("The parameter module '{}' is initialized", getClass().getName());
     }
 
 }
