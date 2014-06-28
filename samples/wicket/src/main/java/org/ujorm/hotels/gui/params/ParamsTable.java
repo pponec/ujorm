@@ -24,7 +24,6 @@ import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
-import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
 
 /**
@@ -50,6 +49,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         columns.add(ParamValue.PARAM_KEY.add(ParamKey.LAST_UPDATE));
         //columns.add(newActionColumn(ParamValue.ID));
         add(columns.createDataTable(20));
+        columns.setFetchDatabaseColumns(false);
 
         // Dialogs:
         add((editDialog = ParamsEditor.create("editDialog", 700, 390)).getModalWindow());
@@ -65,7 +65,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
                    ? DbService.SYSTEM_ACCOUNT
                    : authService.getLoggedCustomer()).cast();
         } else {
-            result = ParamValue.ID.forNone().cast();
+            result = ParamValue.ID.forAll().cast();
         }
         return Model.of(result);
     }
