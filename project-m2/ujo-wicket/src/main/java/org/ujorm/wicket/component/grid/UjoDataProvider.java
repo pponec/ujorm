@@ -168,23 +168,17 @@ public class UjoDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
         }
 
         final OrmHandler handler = query.getSession().getHandler();
-        final List<Key> keys = new ArrayList(query.getColumns().size() + 3);
-
-        for (ColumnWrapper c : query.getColumns()) {
-            keys.add(c.getKey());
-        }
-
+        
         for (IColumn<U, ?> iColumn : getColumns()) {
             if (iColumn instanceof KeyColumn) {
                 Key<U,?> key = ((KeyColumn) iColumn).getKey();
                 if (key.isComposite()
                 && ((CompositeKey)key).getCompositeCount() > 1
                 && handler.findColumnModel(key) != null) {
-                    keys.add(key);
+                    query.addColumn(key);
                 }
             }
         }
-        query.setColumns(true, keys.toArray(new Key[keys.size()]));
     }
 
     /** Add sorting to a database Query,

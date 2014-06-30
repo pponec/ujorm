@@ -49,7 +49,6 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         columns.add(ParamValue.PARAM_KEY.add(ParamKey.LAST_UPDATE));
         //columns.add(newActionColumn(ParamValue.ID));
         add(columns.createDataTable(20));
-        columns.setFetchDatabaseColumns(false);
 
         // Dialogs:
         add((editDialog = ParamsEditor.create("editDialog", 700, 390)).getModalWindow());
