@@ -440,6 +440,20 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     public final Query<UJO> setColumns(boolean addPrimaryKey, Key... columns)  throws IllegalArgumentException {
         return setColumns(addPrimaryKey, true, columns);
     }
+    
+  /** Set an list of required columns to reading from database table.
+    * Other columns (out of the list) will return a default value, no exception will be throwed.
+    * <br/>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
+    * <br/>WARNING 2: assigning an column from a view is forbidden.
+    * @param columns A Key list including a compositer one to database select. The method does not check collumn duplicities.
+    * @see #setColumn(org.ujorm.Key) setColumn(Property)
+    * @see #addColumn(org.ujorm.Key) addColumn(Property)
+    */
+    public final Query<UJO> setColumns(Collection<ColumnWrapper> columns) throws IllegalArgumentException {
+        clearDecoder();
+        this.columns = new ArrayList<ColumnWrapper>(columns);
+        return this;
+    }     
 
    /** Set an list of required columns to reading from database table.
     * Other columns (out of the list) will return a default value, no exception will be throwed.
