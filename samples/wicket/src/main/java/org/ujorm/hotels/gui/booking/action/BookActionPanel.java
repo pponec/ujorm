@@ -27,16 +27,16 @@ import static org.ujorm.wicket.CommonActions.*;
  * The common action panel
  * @author Pavel Ponec
  */
-public class BookActionPanel<T extends Booking> extends GenericPanel<T> {
+public class BookActionPanel<U extends Booking> extends GenericPanel<U> {
 
         /** Default value is the same like the field */
     public static final String BOOKING = "BOOKING";
 
     /** Current row */
-    private T row;
+    private U row;
 
 
-    public BookActionPanel(String id, final T row) {
+    public BookActionPanel(String id, final U row) {
         super(id);
         this.row = row;
         add(createLink(DELETE, true));

@@ -15,12 +15,10 @@
  */
 package org.ujorm.hotels.gui.params;
 
-import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.services.AuthService;

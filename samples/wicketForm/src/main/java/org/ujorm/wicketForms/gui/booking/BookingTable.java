@@ -16,20 +16,14 @@
 package org.ujorm.wicketForms.gui.booking;
 
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
-import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import org.ujorm.wicketForms.entity.Booking;
-import org.ujorm.wicketForms.gui.booking.action.BookActionPanel;
 import org.ujorm.wicketForms.services.DbService;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
@@ -89,18 +83,6 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
                 }
             }
         }
-    }
-
-    /** Offer action: */
-    private AbstractColumn<Booking, KeyRing<Booking>> newActionColumn() {
-        return new KeyColumn<Booking, Integer>(KeyRing.of(Booking.ID), null) {
-            @Override
-            public void populateItem(Item item, String componentId, IModel model) {
-                final Booking hotel = (Booking) model.getObject();
-                final BookActionPanel panel = new BookActionPanel(componentId, hotel);
-                item.add(panel);
-            }
-        };
     }
 
     /** Reload the data table */

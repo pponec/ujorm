@@ -16,13 +16,9 @@
 package org.ujorm.hotels.gui.booking;
 
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.City;
@@ -32,7 +28,6 @@ import org.ujorm.hotels.gui.booking.action.BookActionPanel;
 import org.ujorm.hotels.services.DbService;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
-import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
@@ -60,7 +55,7 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
         columns.add(Booking.PRICE);
         columns.add(Booking.CURRENCY);
         columns.add(Booking.CREATION_DATE);
-        columns.add(newActionColumn());
+        columns.add(Booking.ID, BookActionPanel.class);
         columns.setSort(Booking.DATE_FROM);
         add(columns.createDataTable(10));
 
@@ -93,18 +88,6 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
                 }
             }
         }
-    }
-
-    /** Offer action: */
-    private AbstractColumn<Booking, KeyRing<Booking>> newActionColumn() {
-        return new KeyColumn<Booking, Integer>(KeyRing.of(Booking.ID), null) {
-            @Override
-            public void populateItem(Item item, String componentId, IModel model) {
-                final Booking hotel = (Booking) model.getObject();
-                final BookActionPanel panel = new BookActionPanel(componentId, hotel);
-                item.add(panel);
-            }
-        };
     }
 
     /** Reload the data table */
