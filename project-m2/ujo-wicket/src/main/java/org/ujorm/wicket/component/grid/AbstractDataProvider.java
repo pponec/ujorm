@@ -225,10 +225,10 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
                     item.add(constr.newInstance(componentId, model.getObject()));
                 } catch (ReflectiveOperationException e) {
                     final String msg = String.format
-                            ("The %s must have got two constructor arguments type of %s and %s."
+                            ("The %s must have got two constructor arguments type of '%s' and '%s'."
                             , panelClass
                             , String.class.getName()
-                            , Panel.class.getName());
+                            , column.getDomainType().getName());
                     throw new IllegalArgumentException(msg, e);
                 }
             }
