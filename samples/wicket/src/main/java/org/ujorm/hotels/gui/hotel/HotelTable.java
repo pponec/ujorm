@@ -17,15 +17,11 @@ package org.ujorm.hotels.gui.hotel;
 
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.ujorm.core.KeyRing;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
@@ -73,7 +69,7 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
         columns.add(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
         columns.add(Hotel.STARS);
         columns.add(Hotel.PHONE);
-        columns.add(newActionColumn());
+        columns.add(Hotel.ID, ActionPanel.class);
         columns.setSort(Hotel.NAME);
         add(columns.createDataTable(DEFAULT_DATATABLE_ID, hotelsParams.get(HotelsParams.ROWS_PER_PAGE)));
 
@@ -134,18 +130,6 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
                 reloadTable(event);
             }
         }
-    }
-
-    /** Action offer: */
-    private AbstractColumn<Hotel, KeyRing<Hotel>> newActionColumn() {
-        return new KeyColumn<Hotel, Integer>(KeyRing.of(Hotel.ID), null) {
-            @Override
-            public void populateItem(Item item, String componentId, IModel model) {
-                final Hotel hotel = (Hotel) model.getObject();
-                final ActionPanel panel = new ActionPanel(componentId, hotel);
-                item.add(panel);
-            }
-        };
     }
 
     /** Reload the data table */

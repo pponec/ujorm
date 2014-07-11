@@ -17,24 +17,19 @@ package org.ujorm.wicketForms.gui.customer;
 
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.form.FieldProvider;
-import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import org.ujorm.wicketForms.entity.Customer;
-import org.ujorm.wicketForms.gui.customer.action.CustActionPanel;
 import org.ujorm.wicketForms.gui.hotel.action.Toolbar;
 import org.ujorm.wicketForms.services.AuthService;
 import org.ujorm.wicketForms.services.DbService;
@@ -124,18 +119,6 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
                 argEvent.stop();
             }
         }
-    }
-
-    /** Create action column */
-    private AbstractColumn<U, KeyRing<U>> createActionColumn() {
-        return new KeyColumn(KeyRing.of(Customer.ID), null) {
-            @Override
-            public void populateItem(Item item, String componentId, IModel model) {
-                final Customer customer = (Customer) model.getObject();
-                final CustActionPanel panel = new CustActionPanel(componentId, customer);
-                item.add(panel);
-            }
-        };
     }
 
     /** Reload the data table */

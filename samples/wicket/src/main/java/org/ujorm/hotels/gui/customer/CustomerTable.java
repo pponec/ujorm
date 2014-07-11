@@ -17,13 +17,10 @@ package org.ujorm.hotels.gui.customer;
 
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.customer.action.CustActionPanel;
@@ -33,7 +30,6 @@ import org.ujorm.hotels.services.DbService;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
-import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
@@ -63,7 +59,7 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
         columns.add(Customer.EMAIL);
         columns.add(Customer.ADMIN);
         columns.add(Customer.ACTIVE);
-        columns.add(createActionColumn());
+        columns.add(Customer.ID, CustActionPanel.class);
         columns.setSort(Customer.LOGIN);
         add(columns.createDataTable(10, true));
 
@@ -124,18 +120,6 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
                 argEvent.stop();
             }
         }
-    }
-
-    /** Create action column */
-    private AbstractColumn<Customer, KeyRing<Customer>> createActionColumn() {
-        return new KeyColumn<Customer, Integer>(KeyRing.of(Customer.ID), null) {
-            @Override
-            public void populateItem(Item item, String componentId, IModel model) {
-                final Customer customer = (Customer) model.getObject();
-                final CustActionPanel panel = new CustActionPanel(componentId, customer);
-                item.add(panel);
-            }
-        };
     }
 
     /** Reload the data table */

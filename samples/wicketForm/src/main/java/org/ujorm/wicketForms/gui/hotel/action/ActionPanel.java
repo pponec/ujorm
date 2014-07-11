@@ -31,7 +31,7 @@ import static org.ujorm.wicket.CommonActions.*;
  * The common action panel
  * @author Pavel Ponec
  */
-public class ActionPanel<T extends Hotel> extends GenericPanel<T> {
+public class ActionPanel<U extends Hotel> extends GenericPanel<U> {
 
         /** Default value is the same like the field */
     public static final String BOOKING = "BOOKING";
@@ -40,10 +40,10 @@ public class ActionPanel<T extends Hotel> extends GenericPanel<T> {
     private AuthService authService;
 
     /** Current row */
-    private T row;
+    private U row;
 
 
-    public ActionPanel(String id, final T row) {
+    public ActionPanel(String id, final U row) {
         super(id);
         this.row = row;
 
