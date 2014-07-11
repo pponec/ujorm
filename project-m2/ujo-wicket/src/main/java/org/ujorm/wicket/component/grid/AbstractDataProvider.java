@@ -16,12 +16,14 @@
 package org.ujorm.wicket.component.grid;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxNavigationToolbar;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
@@ -29,6 +31,8 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NoRecordsToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
@@ -200,6 +204,35 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
         else {
             return add(KeyColumn.of(column, isSortingEnabled((Key)column), null));
         }
+    }
+
+    /** Create new instance of a Panel from the argument {@code panelClass}
+     * and add the result to the grid as new column.
+     * @param <V> Value type
+     * @param column Key for the column, where the Key can't get data.
+     * @param panelClass A panel with two constructor arguments:
+     * <ul>
+     *    <li>String - component identifier</li>
+     *    <li>U - a row object type of {@link Key#getDomainType()}</li>
+     * </ul>
+     */
+    public <V> void add(final Key<? super U,V> column, final Class<? extends WebMarkupContainer> panelClass) {
+        add(new KeyColumn<U, Object>(KeyRing.of(column), null) {
+            @Override
+            public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
+                try {
+                    final Constructor<? extends WebMarkupContainer> constr = panelClass.getConstructor(String.class, column.getDomainType());
+                    item.add(constr.newInstance(componentId, model.getObject()));
+                } catch (ReflectiveOperationException e) {
+                    final String msg = String.format
+                            ("The %s must have got two constructor arguments type of %s and %s."
+                            , panelClass
+                            , String.class.getName()
+                            , Panel.class.getName());
+                    throw new IllegalArgumentException(msg, e);
+                }
+            }
+        });
     }
 
     /** Returns a CSS style for SELECTED row.
