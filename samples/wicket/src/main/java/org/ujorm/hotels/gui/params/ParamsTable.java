@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.gui.params;
 
+import java.util.List;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -24,7 +25,8 @@ import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
-import org.ujorm.wicket.component.grid.UjoDataProvider;
+import org.ujorm.hotels.services.ParamService;
+import org.ujorm.wicket.component.grid.ListDataProvider;
 
 /**
  * ParamValue Panel
@@ -34,13 +36,14 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
 
     @SpringBean private DbService dbService;
     @SpringBean private AuthService authService;
+    @SpringBean private ParamService paramService;
 
     private ParamsEditor editDialog;
 
     public ParamsTable(String id) {
         super(id);
 
-        UjoDataProvider<U> columns = UjoDataProvider.of(getCriterion());
+        ListDataProvider<U> columns = ListDataProvider.of(getCriterion());
         columns.add(ParamValue.KEY_MODULE$);
         columns.add(ParamValue.KEY_NAME$);
         columns.add(ParamValue.KEY_SYSTEM$);
@@ -49,24 +52,19 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         columns.add(ParamValue.PARAM_KEY.add(ParamKey.LAST_UPDATE));
         //columns.add(newActionColumn(ParamValue.ID));
         add(columns.createDataTable(20));
+        columns.setRows(paramService.getValues(authService.getLoggedCustomer()));
 
         // Dialogs:
         add((editDialog = ParamsEditor.create("editDialog", 700, 390)).getModalWindow());
     }
 
-
     /** Create a criterion for the table */
     @SuppressWarnings("unchecked")
     private IModel<Criterion<U>> getCriterion() {
-        final Criterion<U> result;
-        if (authService.isLogged()) {
-            result = ParamValue.CUSTOMER.whereEq(authService.isAdmin()
-                   ? DbService.SYSTEM_ACCOUNT
-                   : authService.getLoggedCustomer()).cast();
-        } else {
-            result = ParamValue.ID.forAll().cast();
-        }
-        return Model.of(result);
+        final Criterion<ParamValue> result = authService.isLogged()
+            ? ParamValue.ID.forAll()
+            : ParamValue.ID.forAll();
+        return new Model(result);
     }
 
 }

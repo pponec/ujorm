@@ -15,7 +15,11 @@
  */
 package org.ujorm.hotels.services;
 
+import java.util.List;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
+import org.ujorm.hotels.entity.Customer;
+import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
 
 /**
@@ -29,6 +33,9 @@ public interface ParamService {
 
     /** Get a value of the key where the momdule have got special parameter for getter performance */
     public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module);
+
+    /** Get all parameters for a required Customer */
+    public List<? super ParamValue> getValues(@Nullable Customer customer);
 
     /** Save all parameters into database */
     public void init(ModuleParams<?> params);
