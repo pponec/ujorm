@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.services.impl;
 
+import org.ujorm.hotels.services.impl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,31 +28,42 @@ import org.ujorm.orm.annot.Comment;
  * Common database service implementations
  * @author Ponec
  */
-@Service("hotelsParams")
-public class HotelsParams<U extends HotelsParams> extends AbstractModuleParamsImpl {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HotelsParams.class);
+@Service("testParams")
+public class TestParams<U extends TestParams> extends AbstractModuleParams {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestParams.class);
 
     /** Factory */
-    private static final KeyFactory<HotelsParams> f = newFactory(HotelsParams.class);
+    private static final KeyFactory<TestParams> f = newFactory(TestParams.class);
 
     @Comment("Count of rows per a page in the table")
-    public static final Key<HotelsParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
-    public static final Key<HotelsParams, String> TEST1 = f.newKey("Test1", "A");
-    public static final Key<HotelsParams, String> TEST2 = f.newKey("Test2", "B");
+    public static final Key<TestParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
+    public static final Key<TestParams, String> TEST1 = f.newKey("Test1", "A");
+    public static final Key<TestParams, String> TEST2 = f.newKey("Test2", "B");
     @PersonalParam
-    public static final Key<HotelsParams, String> TEST3 = f.newKey("Test3", "C");
+    public static final Key<TestParams, String> TEST3 = f.newKey("Test3", "C");
 
     static { f.lock(); }
 
     @Override
     public Module getModule() {
-        return Module.HOTELS;
+        return Module.TEST;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Generated getters">
+    //<editor-fold defaultstate="collapsed" desc="Generated Getters">
     public Integer getRowsPerPage() {
         return ROWS_PER_PAGE.of(this);
     }
-    //</editor-fold>
 
+    public String getTest1() {
+        return TEST1.of(this);
+    }
+
+    public String getTest2() {
+        return TEST2.of(this);
+    }
+
+    public String getTest3() {
+        return TEST3.of(this);
+    }
+    //</editor-fold>
 }

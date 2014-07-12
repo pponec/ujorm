@@ -31,7 +31,7 @@ public interface ParamService {
     /** Get a value of the key the */
     public <U extends ModuleParams, T> T getValue(Key<? super U, T> key);
 
-    /** Get a value of the key where the momdule have got special parameter for getter performance */
+    /** Get a value of the key where the module have got special parameter for getter performance */
     public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module);
 
     /** Get all parameters for a required Customer */
