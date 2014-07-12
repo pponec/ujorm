@@ -23,17 +23,17 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
-import org.ujorm.hotels.gui.customer.action.CustActionPanel;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
+import org.ujorm.wicket.component.grid.CommonAction;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
-import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 
 /**
  * Customer Panel
@@ -59,7 +59,7 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
         columns.add(Customer.EMAIL);
         columns.add(Customer.ADMIN);
         columns.add(Customer.ACTIVE);
-        columns.add(Customer.ID, CustActionPanel.class);
+        columns.add(Customer.ID, createActions());
         columns.setSort(Customer.LOGIN);
         add(columns.createDataTable(10, true));
 
@@ -67,6 +67,35 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
         add((editDialog = CustomerEditor.create("editDialog", 700, 390)).getModalWindow());
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
         add((loginDialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
+    }
+
+    /** Create actions */
+    private CommonAction[] createActions() {
+        final CommonAction[] result =
+        { getActionDelete(DELETE)
+        , getActionsUpdate(UPDATE)
+        , getActionsUpdate(LOGIN)
+        };
+        return result;
+    }
+
+    /** Action DELETE */
+    private CommonAction getActionDelete(String action) {
+        return new CommonAction<U>(action) {
+            @Override public boolean isVisible(U row) {
+                return !authService.isLogged(row) && authService.isAdmin();
+            }
+        };
+    }
+
+    /** Action DELETE */
+    private CommonAction getActionsUpdate(final String action) {
+        return new CommonAction<U>(action) {
+            @Override public boolean isVisible(U row) {
+                boolean updatable = authService.isAdmin() || authService.isLogged(row);
+                return UPDATE.equals(action) == updatable;
+            }
+        };
     }
 
     /** Create a criterion for the table */

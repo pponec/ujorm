@@ -11,6 +11,10 @@ tr.selected {
     background-color: #e7cfcf;
 }
 
+td.actionColumn a {
+    margin-right: 5px;
+}
+
 table td, table th {
     padding: 1px 4px;
 }
