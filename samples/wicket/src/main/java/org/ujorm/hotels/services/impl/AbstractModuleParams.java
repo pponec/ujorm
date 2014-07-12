@@ -28,11 +28,11 @@ import org.ujorm.implementation.quick.SmartUjo;
  * Common database service implementations
  * @author ponec
  */
-public abstract class AbstractModuleParamsImpl<U extends AbstractModuleParamsImpl>
+public abstract class AbstractModuleParams<U extends AbstractModuleParams>
         extends SmartUjo<U>
         implements ModuleParams<U> {
     /** Logger */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModuleParamsImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModuleParams.class);
 
     @Autowired
     private ParamService paramService;

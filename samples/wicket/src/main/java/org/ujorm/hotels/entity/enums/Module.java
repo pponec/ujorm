@@ -26,7 +26,9 @@ import org.ujorm.extensions.StringWrapper;
 public enum Module implements StringWrapper {
 
     /** The base application */
-    HOTELS("ht");
+    HOTELS("ht"),
+    /** Test module */
+    TEST("tt");
 
     /** Short identifier */
     private final String id;

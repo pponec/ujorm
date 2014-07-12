@@ -52,10 +52,10 @@ public class DataLoaderTest {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(DataLoaderTest.class);
 
-    /** Distance of locations from city ceter [km] */
+    /** Distance of locations from city center [km] */
     protected static final Integer DISTANCE_FROM_CENTER = 10;
 
-    /** Test method to dowload data from source: http://api.hotelsbase.org/ */
+    /** Test method to download data from source: http://api.hotelsbase.org/ */
     //@Test
     public void testDownloadData() throws Exception {
         System.out.println("testDownloadData");
@@ -152,7 +152,6 @@ public class DataLoaderTest {
     /** Test of run method, of class DataLoader. */
     @Test
     public void testDummy() {
-
     }
 
 }
