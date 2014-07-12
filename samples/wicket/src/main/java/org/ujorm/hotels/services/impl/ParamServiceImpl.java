@@ -15,12 +15,15 @@
  */
 package org.ujorm.hotels.services.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,7 @@ import org.ujorm.Key;
 import org.ujorm.core.UjoCoder;
 import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
@@ -71,16 +75,36 @@ implements ParamService {
         crn5 = crn1.and(crn2).and(crn3.or(crn4));
         //
         ParamValue param = null;
-        for (ParamValue paramValue : getSession().createQuery(crn5).orderBy(ParamValue.CUSTOMER)) {
+        for (ParamValue paramValue : getSession().createQuery(crn5).orderBy
+                ( ParamValue.KEY_NAME$
+                , ParamValue.KEY_SYSTEM$.descending())) {
             param = paramValue;
-            if (paramValue.readFK(ParamValue.CUSTOMER) != null) {
-                break;
-            }
         }
 
         return param != null
-                ? UjoManager.getInstance().decodeValue(key,  param.getTextValue())
-                : key.getDefault();
+             ? UjoManager.getInstance().decodeValue(key,  param.getTextValue())
+             : key.getDefault();
+    }
+
+    /** Get all parameters for a required Customer
+     * @todo add next argument removeObsolete type of Boolean to exclude obsolete parameter keys
+     */
+    public List<ParamValue> getValues(@Nullable Customer customer) {
+        final Criterion<ParamValue> crn1,crn2,crn3;
+        crn1 = ParamValue.CUSTOMER.whereNull();
+        crn2 = ParamValue.CUSTOMER.whereEq(customer);
+        crn3 = crn1.or(crn2);
+
+        final Key<ParamValue,Integer> KEY_ID = ParamValue.KEY_ID$;
+        final Map<String,ParamValue> values = createQuery(crn3)
+                .orderBy(KEY_ID, ParamValue.KEY_SYSTEM$.descending())
+                .addColumn(KEY_ID)
+                .map(KEY_ID, new HashMap(128));
+        final Map<Integer,ParamKey> keys = createQuery(ParamKey.ID.forAll()).map();
+        for (ParamValue value : values.values()) {
+            value.setParamKey(keys.get(KEY_ID.of(value)));
+        }
+        return new ArrayList(values.values());
     }
 
     /** Save all parameters into database */

@@ -62,6 +62,8 @@ public final class ParamValue extends OrmTable<ParamValue> {
 
     // --- Composite keys ---
 
+    /** Composite Key ID */
+    public static final Key<ParamValue, Integer> KEY_ID$ = PARAM_KEY.add(ParamKey.ID);
     /** Composite KeyName */
     public static final Key<ParamValue, String> KEY_NAME$ = PARAM_KEY.add(ParamKey.NAME);
     /** Composite KeyModule */
