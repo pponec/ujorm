@@ -32,7 +32,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.NoRecordsToo
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
@@ -84,6 +83,9 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     public static final String DEFAULT_DATATABLE_ID = "datatable";
     /** Default CSS style for a SELECTED row */
     protected static final String DEFAULT_CSS_SELECTED = "selected";
+    /** Default CSS style for an ACTION COLUMN */
+    protected static final String DEFAULT_CSS_ACTION = "actionColumn";
+
     /** Data size */
     protected Long size;
     /** Data criterion model for filtering the data resource */
@@ -233,6 +235,21 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
                 }
             }
         });
+    }
+
+    /** Create new instance of an Action Panel using actions from the argument list.
+     * @param <V> Value type
+     * @param column Key for the column, where the Key can't get data.
+     * @param actions Action array
+     */
+    public <V> void add(final Key<? super U,V> column, final CommonAction ... actions) {
+        final KeyColumn<U, Object> col = new KeyColumn<U, Object>(KeyRing.of(column), null) {
+            @Override public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
+                item.add(new CommonActionPanel(componentId, model.getObject(), actions));
+            }
+        };
+        col.setCssClass(DEFAULT_CSS_ACTION);
+        add(col);
     }
 
     /** Returns a CSS style for SELECTED row.
