@@ -21,14 +21,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.extensions.PathProperty;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
@@ -286,6 +287,28 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return iterator().toList();
     }
 
+    /** Returns an instance of the Map where the key is DB table primary key and a value is the row.
+     * The method calls internally the next statement:
+     * <pre>iterator()</pre>
+     * @see #iterator()
+     */
+    public <T> Map<T,UJO> map() {
+        return map(table.getFirstPK().getKey(), new HashMap<T,UJO>(128));
+    }
+
+    /** Returns an instance of the Map where the key is DB table primary key and a value is the row.
+     * The method calls internally the next statement:
+     * <pre>iterator()</pre>
+     * @param mapKey Ujo Key for the mapKey
+     * @see #iterator()
+     */
+    public <T> Map<T,UJO> map(Key<UJO,T> mapKey, Map<T,UJO> result) {
+        for (UJO ujo : iterator()) {
+            result.put(mapKey.of(ujo), ujo);
+        }
+        return result;
+    }
+
     /** Create list and Load all lazy values for the current parameter
      * recursively until optional depth.
      *
@@ -440,7 +463,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     public final Query<UJO> setColumns(boolean addPrimaryKey, Key... columns)  throws IllegalArgumentException {
         return setColumns(addPrimaryKey, true, columns);
     }
-    
+
   /** Set an list of required columns to reading from database table.
     * Other columns (out of the list) will return a default value, no exception will be throwed.
     * <br/>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
@@ -453,7 +476,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         clearDecoder();
         this.columns = new ArrayList<ColumnWrapper>(columns);
         return this;
-    }     
+    }
 
    /** Set an list of required columns to reading from database table.
     * Other columns (out of the list) will return a default value, no exception will be throwed.
