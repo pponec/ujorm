@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -28,6 +29,8 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.validation.IValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -58,6 +61,7 @@ import org.ujorm.wicket.component.form.fields.TextField;
  * @author Pavel Ponec
  */
 public class FieldProvider<U extends Ujo> implements Serializable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FieldProvider.class);
 
     /** Password key name to create a component PasswordField */
     public static final String PASSWORD_KEY_NAME = "PASSWORD";
@@ -65,6 +69,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     private RepeatingView repeatingView;
     private Map<String, Field> fields;
     private U domain;
+    /** Enable method {@link #requestFocus(AjaxRequestTarget)}. The default value is {@code true} */
+    private boolean focusRequestEnabled = false;
     private transient OrmHandler ormHandler;
 
     /** Default constructor */
@@ -392,5 +398,30 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         if (field != null) {
             field.add(new CssAppender(cssStyle));
         }
+    }
+    /** Set a focus to the first component by default */
+    public void requestFocus(@Nonnull final AjaxRequestTarget target) {
+        if (focusRequestEnabled) {
+            final Field field = findFirstField();
+            if (field != null) {
+                try {
+                    field.requestFocus(target);
+                } catch (Throwable e) {
+                    LOGGER.warn("Focus", e);
+                }
+            }
+        }
+    }
+
+    /** Find first field or return {@code null}.*/
+    @Nonnull
+    protected Field<?> findFirstField() {
+        for (int i = 0, max = repeatingView.size(); i < max; i++) {
+            Component result = repeatingView.get(i);
+            if (result instanceof Field) {
+                return (Field<?>) result;
+            }
+        }
+        return null;
     }
 }
