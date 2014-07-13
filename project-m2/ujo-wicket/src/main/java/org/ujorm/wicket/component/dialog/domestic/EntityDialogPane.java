@@ -31,6 +31,7 @@ public class EntityDialogPane<U extends Ujo> extends AbstractDialogPane<U> {
 
     /** Input fields provider */
     protected final FieldProvider<U> fields;
+    /** Feedback Field */
     private FeedbackField feedbackField;
 
     public EntityDialogPane(ModalWindow modalWindow, IModel<? super U> model) {
@@ -58,6 +59,7 @@ public class EntityDialogPane<U extends Ujo> extends AbstractDialogPane<U> {
     @Override
     public void show(AjaxRequestTarget target, IModel<String> title, IModel<U> body, String actionButtonProperty) {
         fields.setDomain(body.getObject());
+        fields.requestFocus(target);
         super.show(target, title, body, actionButtonProperty);
     }
 

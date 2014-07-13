@@ -112,6 +112,7 @@ public class Field<T> extends GenericPanel<T> {
         add(input = createInput("input", (IModel) getDefaultModel()));
         add(createLabel(input));
         add(feedback = new FeedbackLabel("message", input, (IModel)null));
+        // input.setOutputMarkupId(true); // TODO
     }
 
     /** On configure */
@@ -295,5 +296,10 @@ public class Field<T> extends GenericPanel<T> {
         return new AjaxFormComponentUpdatingBehavior("onblur") {
             @Override protected void onUpdate(AjaxRequestTarget t) {}
         };
+    }
+
+    /** Set a focus to the component */
+    public void requestFocus(@Nonnull final AjaxRequestTarget target) {
+       target.focusComponent(getInput());
     }
 }
