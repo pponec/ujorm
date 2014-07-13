@@ -219,18 +219,19 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * </ul>
      */
     public <V> void add(final Key<? super U,V> column, final Class<? extends WebMarkupContainer> panelClass) {
+        final Class<? super U> domainType = column.getDomainType();
         add(new KeyColumn<U, Object>(KeyRing.of(column), null) {
             @Override
             public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
                 try {
-                    final Constructor<? extends WebMarkupContainer> constr = panelClass.getConstructor(String.class, column.getDomainType());
+                    final Constructor<? extends WebMarkupContainer> constr = panelClass.getConstructor(String.class, domainType);
                     item.add(constr.newInstance(componentId, model.getObject()));
                 } catch (ReflectiveOperationException e) {
                     final String msg = String.format
                             ("The %s must have got two constructor arguments type of '%s' and '%s'."
                             , panelClass
                             , String.class.getName()
-                            , column.getDomainType().getName());
+                            , domainType.getName());
                     throw new IllegalArgumentException(msg, e);
                 }
             }
