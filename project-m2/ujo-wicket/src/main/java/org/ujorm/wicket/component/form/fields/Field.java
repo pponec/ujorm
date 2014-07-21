@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -112,7 +113,6 @@ public class Field<T> extends GenericPanel<T> {
         add(input = createInput("input", (IModel) getDefaultModel()));
         add(createLabel(input));
         add(feedback = new FeedbackLabel("message", input, (IModel)null));
-        // input.setOutputMarkupId(true); // TODO
     }
 
     /** On configure */
@@ -243,8 +243,9 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Returns assigned key */
+    @Nullable
     public Key<?,?> getKey() {
-        return key.getFirstKey();
+        return key != null ? key.getFirstKey() : null;
     }
 
     /** Assign a feedback message */
@@ -302,4 +303,15 @@ public class Field<T> extends GenericPanel<T> {
     public void requestFocus(@Nonnull final AjaxRequestTarget target) {
        target.focusComponent(getInput());
     }
+
+    /** A debug information */
+    @Override
+    public String toString() {
+        if (getKey() != null) {
+            return this.getKey().getFullName() + " for the input: " + getInput();
+        } else {
+            return String.valueOf(getInput());
+        }
+    }
+
 }

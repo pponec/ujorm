@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -70,7 +71,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     private Map<String, Field> fields;
     private U domain;
     /** Enable method {@link #requestFocus(AjaxRequestTarget)}. The default value is {@code true} */
-    private boolean focusRequestEnabled = false;
+    private boolean focusRequestEnabled = true;
     private transient OrmHandler ormHandler;
 
     /** Default constructor */
@@ -413,13 +414,18 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         }
     }
 
-    /** Find first field or return {@code null}.*/
-    @Nonnull
+    /** Find first enabled field with a non-null Key or return the {@code null}.*/
+    @Nullable
     protected Field<?> findFirstField() {
         for (int i = 0, max = repeatingView.size(); i < max; i++) {
-            Component result = repeatingView.get(i);
-            if (result instanceof Field) {
-                return (Field<?>) result;
+            final Component component = repeatingView.get(i);
+            if (component instanceof Field ) {
+                final Field<?> result = (Field<?>) component;
+                if (result.isVisibilityAllowed()
+                &&  result.getInput().isEnabled()
+                &&  result.getKey() != null) {
+                    return result;
+                }
             }
         }
         return null;
