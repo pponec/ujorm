@@ -22,11 +22,11 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackHeadersToolbar;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxNavigationToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NoRecordsToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
@@ -46,8 +46,9 @@ import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.toolbar.InsertToolbar;
 
 /**
- * <p>This class called <strong>UjoDataProvider</strong> is an database
- * Wicket DataProvider. For a customization you can use a your own {@link IColumn} implementations
+ * <p>This class called <strong>UjoDataProvider</strong> is an common
+ * Wicket DataProvider to create an AJAX DataTable component.
+ * For a column customizations you can use your own {@link IColumn} implementations.
  * or you can owerwrite selected methods of this provider.
  * </p><p>
  * The implementation generates two database requests per a one rendering,
@@ -288,7 +289,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @return Create AJAX-based DataTable
      */
     public <S> DataTable<U,S> createDataTable(final String id, final int rowsPerPage, boolean insertToolbar) {
-        final DataTable<U,S> result = new DataTable<U,S>(id, (List)columns, this, rowsPerPage) {
+        final DataTable<U,S> result = new DataTable<U,S>(id, this.<S>getColumns(), this, rowsPerPage) {
             @Override protected Item<U> newRowItem
                     ( final String id
                     , final int index
@@ -306,10 +307,11 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
             }
         };
 
-        result.addTopToolbar(new AjaxNavigationToolbar(result));
-        result.addTopToolbar(new HeadersToolbar(result, this));
-        result.addBottomToolbar(new NoRecordsToolbar(result));
         result.setOutputMarkupId(true);
+        result.setVersioned(false);
+        result.addTopToolbar(new AjaxNavigationToolbar(result));
+        result.addTopToolbar(new AjaxFallbackHeadersToolbar(result, this));
+        result.addBottomToolbar(new NoRecordsToolbar(result));
 
         if (insertToolbar) {
             result.addBottomToolbar(new InsertToolbar(result, getDomainClass()));
@@ -338,9 +340,9 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
         this.defaultColumnSorting = defaultColumnSorting;
     }
 
-    /** Transient tableOf columns */
-    public List<IColumn<U, ?>> getColumns() {
-        return columns;
+    /** Column table list */
+    public <T> List<IColumn<U, T>> getColumns() {
+        return (List) columns;
     }
 
     /** Assign a CSS class to a KeyColumn, if exists */

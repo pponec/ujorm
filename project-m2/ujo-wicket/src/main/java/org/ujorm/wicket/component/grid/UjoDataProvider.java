@@ -168,7 +168,7 @@ public class UjoDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
         }
 
         final OrmHandler handler = query.getSession().getHandler();
-        
+
         for (IColumn<U, ?> iColumn : getColumns()) {
             if (iColumn instanceof KeyColumn) {
                 Key<U,?> key = ((KeyColumn) iColumn).getKey();
