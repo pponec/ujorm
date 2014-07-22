@@ -111,7 +111,7 @@ hr {
 
 div.footer {
     color: gray;
-    border-top: thick solid buttonface;
+    border-top: thick solid #eeeeee;
     margin-top: 100px;
     padding: 10px 20px 15px;
     font-size: 11px;
