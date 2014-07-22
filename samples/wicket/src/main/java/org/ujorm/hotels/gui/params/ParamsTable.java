@@ -15,18 +15,22 @@
  */
 package org.ujorm.hotels.gui.params;
 
-import java.util.List;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
+import org.ujorm.hotels.gui.params.action.ParamFinder;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
 import org.ujorm.hotels.services.ParamService;
+import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.grid.ListDataProvider;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
+
 
 /**
  * ParamValue Panel
@@ -38,6 +42,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
     @SpringBean private AuthService authService;
     @SpringBean private ParamService paramService;
 
+    private ParamFinder<U> toolbar = new ParamFinder("paramFinder");
     private ParamsEditor editDialog;
 
     public ParamsTable(String id) {
@@ -56,15 +61,31 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
 
         // Dialogs:
         add((editDialog = ParamsEditor.create("editDialog", 700, 390)).getModalWindow());
+        add(toolbar);
     }
 
     /** Create a criterion for the table */
     @SuppressWarnings("unchecked")
     private IModel<Criterion<U>> getCriterion() {
-        final Criterion<ParamValue> result = authService.isLogged()
-            ? ParamValue.ID.forAll()
-            : ParamValue.ID.forAll();
-        return new Model(result);
+        return authService.isLogged()
+            ? toolbar.getCriterion()
+            : toolbar.getCriterion();
+    }
+
+    /** Manage events */
+    @Override
+    public void onEvent(IEvent<?> argEvent) {
+        final UjoEvent<Hotel> event = UjoEvent.get(argEvent);
+        if (event != null) {
+            if (event.isAction(ParamFinder.FILTER_ACTION)) {
+                reloadTable(event);
+            }
+        }
+    }
+
+    /** Reload the data table */
+    private void reloadTable(UjoEvent event) {
+        event.addTarget(get(DEFAULT_DATATABLE_ID));
     }
 
 }
