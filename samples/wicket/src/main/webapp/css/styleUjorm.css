@@ -4,7 +4,7 @@ body {
 
 /** Table */
 tr.odd {
-    background-color: buttonface;
+    background-color: #eeeeee;
 }
 
 tr.selected {
@@ -29,13 +29,13 @@ th.sorted {
 }
 
 table.border {
-    border: 1px none buttonface;
+    border: 1px none #eeeeee;
 }
 
 table.border th,
 table.border td {
-    border-bottom: 1px solid buttonface;
-    border-right : 1px solid buttonface;
+    border-bottom: 1px solid #eeeeee;
+    border-right : 1px solid #eeeeee;
 }
 
 table.datatable {
@@ -64,7 +64,7 @@ form div.buttons {
 
 /* Wicket TABS */
 div.tabpanel div.tab-row {
-    background-color: buttonface;
+    background-color: #eeeeee;
     margin-top: 20px;
 }
 
@@ -81,7 +81,7 @@ div.tabpanel div.tab-row li {
 }
 
 div.tabpanel div.tab-row li.selected {
-    background-color: buttonface;
+    background-color: #eeeeee;
 }
 
 div.tabpanel div.tab-panel {
@@ -170,7 +170,7 @@ div.wicket-modal div.w_caption {
     background-color: #d0dae1;
 }
 div.wicket-modal div.w_content_3 {
-    border: 1px buttonface solid;
+    border: 1px #eeeeee solid;
 }
 
 .alert-text {
