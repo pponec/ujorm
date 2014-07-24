@@ -58,19 +58,24 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
     public AbstractDialogPane(ModalWindow modalWindow, IModel<? super T> model) {
         super(modalWindow.getContentId(), (IModel) model);
         this.modalWindow = modalWindow;
+        this.modalWindow.setContent(this);
         this.setOutputMarkupPlaceholderTag(true);
 
-        // Form:
+        // Form Dialog:
         this.add(form = new Form("dialogForm"));
+        // Content Dialog:
+        form.add(repeater = new RepeatingView(REPEATER_ID));
+    }
+
+    /** Initialization */
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        // Form:
         form.setOutputMarkupId(true);
         form.add(createActionButton(ACTION_BUTTON_ID, "save"));
         form.add(createCancelButton(CANCEL_BUTTON_ID, "cancel"));
-
-        // Dialog content:
-        form.add(repeater = new RepeatingView(REPEATER_ID));
-
-        // Set content to a Modal window:
-        modalWindow.setContent(this);
     }
 
     /** Action code */
@@ -89,7 +94,7 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
     }
 
     /** Vytvoří textfield pro aktuání model */
-    private AjaxButton createActionButton(String id, String propertyName) {
+    protected AjaxButton createActionButton(String id, String propertyName) {
         final AjaxButton result = new AjaxButton
                 ( id
                 , getButtonModel(propertyName)
@@ -97,11 +102,12 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 try {
+                    //modalWindow.close(target); // call the close() method before send(..)
                     target.add(form);
                     send(getPage()
-                            , Broadcast.BREADTH
-                            , new UjoEvent<T>(getAction(), false, getBaseModelObject(), target));
-                    modalWindow.close(target);
+                        , Broadcast.BREADTH
+                        , new UjoEvent<T>(getAction(), false, getBaseModelObject(), target));
+                    modalWindow.close(target); // call the close() method before send(..)
                 } catch (Throwable e) {
                     setFeedback(e);
                     target.add(form);
@@ -119,7 +125,7 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
     }
 
     /** Vytvoří textfield pro aktuání model */
-    private AjaxButton createCancelButton(String id, String propertyName) {
+    protected AjaxButton createCancelButton(String id, String propertyName) {
         final AjaxButton result = new AjaxButton
                 ( id
                 , getButtonModel(propertyName)
