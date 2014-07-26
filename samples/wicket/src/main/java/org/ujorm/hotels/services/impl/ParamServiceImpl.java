@@ -146,7 +146,7 @@ implements ParamService {
 
     /** Returns a saved ParamKeySet for required module */
     private Map<String, ParamKey> getParamKeyMap(ModuleParams<?> params) {
-        final Set<String> keyNames = new HashSet<>(params.readKeys().size());
+        final Set<String> keyNames = new HashSet<String>(params.readKeys().size());
         for (Key key : params.readKeys()) {
             boolean unique = keyNames.add(key.getName());
             if (!unique) {
@@ -158,7 +158,7 @@ implements ParamService {
         crn2 = ParamKey.MODULE.whereIn(params.getModule());
         crn3 = crn1.and(crn2);
 
-        final Map<String, ParamKey> result = new HashMap<>(keyNames.size());
+        final Map<String, ParamKey> result = new HashMap<String, ParamKey>(keyNames.size());
         for (ParamKey paramKey : getSession().createQuery(crn3)) {
             result.put(paramKey.getName(), paramKey);
         }
@@ -167,7 +167,7 @@ implements ParamService {
 
     /** Returns a ParamValueSet for required module */
     private Map<String, ParamValue> getParamValueMap(Collection<ParamKey> keys) {
-        final Map<String, ParamValue> result = new HashMap<>(keys.size());
+        final Map<String, ParamValue> result = new HashMap<String, ParamValue>(keys.size());
         final Criterion<ParamValue> crn = ParamValue.PARAM_KEY.whereIn(keys);
         for (ParamValue value : getSession().createQuery(crn).addColumn(ParamValue.KEY_NAME$)) {
             result.put(ParamValue.KEY_NAME$.of(value), value);
