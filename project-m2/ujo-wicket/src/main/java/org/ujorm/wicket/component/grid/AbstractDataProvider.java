@@ -227,7 +227,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
                 try {
                     final Constructor<? extends WebMarkupContainer> constr = panelClass.getConstructor(String.class, domainType);
                     item.add(constr.newInstance(componentId, model.getObject()));
-                } catch (ReflectiveOperationException e) {
+                } catch (/*ReflectiveOperationException*/ Exception e) {
                     final String msg = String.format
                             ("The %s must have got two constructor arguments type of '%s' and '%s'."
                             , panelClass
