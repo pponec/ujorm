@@ -54,7 +54,7 @@ public class HotelEditor<U extends Hotel> extends EntityDialogPane<U> {
         final ModalWindow modalWindow = new ModalWindow(componentId, model);
         modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
 
-        final HotelEditor<Hotel> result = new HotelEditor<>(modalWindow, model);
+        final HotelEditor<Hotel> result = new HotelEditor<Hotel>(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         modalWindow.setTitle(new LocalizedModel("dialog.edit.title"));

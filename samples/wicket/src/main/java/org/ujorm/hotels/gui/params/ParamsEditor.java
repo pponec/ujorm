@@ -59,7 +59,7 @@ public class ParamsEditor<U extends ParamValue> extends EntityDialogPane<U> {
         final ModalWindow modalWindow = new ModalWindow(componentId, model);
         modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
 
-        final ParamsEditor<ParamValue> result = new ParamsEditor<>(modalWindow, model);
+        final ParamsEditor<ParamValue> result = new ParamsEditor<ParamValue>(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         modalWindow.setTitle(new LocalizedModel("dialog.edit.title"));

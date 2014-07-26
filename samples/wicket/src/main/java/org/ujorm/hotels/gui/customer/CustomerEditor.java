@@ -68,7 +68,7 @@ public class CustomerEditor<U extends Customer> extends EntityDialogPane<U> {
         final ModalWindow modalWindow = new ModalWindow(componentId, model);
         modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
 
-        final CustomerEditor<Customer> result = new CustomerEditor<>(modalWindow, model);
+        final CustomerEditor<Customer> result = new CustomerEditor<Customer>(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         modalWindow.setTitle(new LocalizedModel("dialog.edit.title"));
