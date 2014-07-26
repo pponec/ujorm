@@ -962,12 +962,12 @@ public class UjoManager implements Comparator<Key> {
             return Modifier.isAbstract(type.getModifiers())
                  ? null
                  : type.newInstance();
-        } catch (ReflectiveOperationException e) {
+        } catch (/*ReflectiveOperationException*/ Exception e) {
             throw new IllegalStateException("New instance failed for the : " + type, e);
         }
     }
 
-    /** Regurns information about current library. */
+    /** Returns information about current library. */
     public static String projectInfo() {
         final String URL = "http://ujorm.org/";
         final Package p  = Ujo.class.getPackage();
