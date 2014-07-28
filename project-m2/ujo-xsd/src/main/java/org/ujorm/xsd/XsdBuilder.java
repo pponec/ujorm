@@ -184,8 +184,8 @@ public class XsdBuilder {
     private Ujo createUjo(Class<?> ujoClass) {
         try {
             return (Ujo) ujoClass.newInstance();
-        } catch (ReflectiveOperationException ex) {
-            throw new IllegalStateException("Can't create instance for " + ujoClass, ex);
+        } catch (/*ReflectiveOperationException*/ Exception e) {
+            throw new IllegalStateException("Can't create instance for " + ujoClass, e);
         }
     }
 }
