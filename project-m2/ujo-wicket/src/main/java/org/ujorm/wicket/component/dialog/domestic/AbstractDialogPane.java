@@ -54,11 +54,14 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
     protected final RepeatingView repeater;
     /** Action code */
     private String action = "";
+    /** Dialog autoclose request */
+    protected final boolean autoClose;
 
-    public AbstractDialogPane(ModalWindow modalWindow, IModel<? super T> model) {
+    public AbstractDialogPane(ModalWindow modalWindow, IModel<? super T> model, boolean autoClose) {
         super(modalWindow.getContentId(), (IModel) model);
         this.modalWindow = modalWindow;
         this.modalWindow.setContent(this);
+        this.autoClose = autoClose;
         this.setOutputMarkupPlaceholderTag(true);
 
         // Form Dialog:
@@ -102,15 +105,15 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 try {
-                    //modalWindow.close(target); // call the close() method before send(..)
                     target.add(form);
                     send(getPage()
                         , Broadcast.BREADTH
                         , new UjoEvent<T>(getAction(), false, getBaseModelObject(), target));
-                    modalWindow.close(target); // call the close() method before send(..)
+                    if (autoClose) {
+                       modalWindow.close(target); // the dialog is closed on the success
+                    }
                 } catch (Throwable e) {
                     setFeedback(e);
-                    target.add(form);
                 }
             }
 
