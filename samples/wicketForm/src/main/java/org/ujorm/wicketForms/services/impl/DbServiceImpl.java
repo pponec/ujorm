@@ -191,7 +191,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
                 hotel.setCity(cityMap.get(cityId));
             }
         }
-        return new ArrayList<>(hotels);
+        return new ArrayList<Hotel>(hotels);
     }
 
 }
