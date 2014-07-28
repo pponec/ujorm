@@ -59,7 +59,7 @@ import org.ujorm.wicket.KeyModel;
  * @author Pavel Ponec
  * @param <UJO extends Ujo> The Model object type
  */
-public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<UJO>> {
+public class KeyColumn<U extends Ujo, T> extends AbstractColumn<U, KeyRing<U>> {
     private static final long serialVersionUID = 1L;
 
     /** Enable a grid column sorting */
@@ -70,7 +70,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     public static final String PROPERTY_PREFIX = "column.";
 
     /** Data key */
-    protected final KeyRing<UJO> keySerializable;
+    protected final KeyRing<U> keySerializable;
     /** The CSS class of the column */
     protected String cssClass;
 
@@ -80,7 +80,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
      * @param sortKey Optional persistent ujorm key to sorting
      * @param cssClass optional argument for a CSS class
      */
-    public KeyColumn(final KeyRing<UJO> key, final KeyRing<UJO> sortKey) {
+    public KeyColumn(final KeyRing<U> key, final KeyRing<U> sortKey) {
         this(new ResourceModel(PROPERTY_PREFIX
                 + key.getFirstKey().getFullName()
                 , key.getFirstKey().toString())
@@ -96,8 +96,8 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
      */
     public KeyColumn
             ( final IModel<String> label
-            , final KeyRing<UJO> key
-            , final KeyRing<UJO> sortKey) {
+            , final KeyRing<U> key
+            , final KeyRing<U> sortKey) {
         super(label, sortKey);
         this.keySerializable = key;
     }
@@ -109,8 +109,8 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
      * @see ICellPopulator#populateItem(Item, String, IModel)
      */
     @Override
-    public void populateItem(final Item<ICellPopulator<UJO>> item, final String componentId, final IModel<UJO> rowModel) {
-        final UJO ujo = rowModel.getObject();
+    public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> rowModel) {
+        final U ujo = rowModel.getObject();
         final IModel<?> valueModel = createValueModel(ujo);
         final Component value = createValueCoponent(componentId, valueModel, ujo);
         appendCssClass(value, ujo);
@@ -129,7 +129,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     }
 
     /** Create the Label for a Value component */
-    protected Component createValueCoponent(final String componentId, final IModel<?> valueModel, final UJO ujo) {
+    protected Component createValueCoponent(final String componentId, final IModel<?> valueModel, final U ujo) {
         return new Label(componentId, valueModel);
     }
 
@@ -140,7 +140,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
      * @param rowModel
      * @return model
      */
-    protected IModel<?> createValueModel(final UJO ujo) {
+    protected IModel<?> createValueModel(final U ujo) {
         final IModel<?> result = KeyModel.of(ujo, keySerializable.getFirstKey());
         return result;
     }
@@ -153,12 +153,12 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     }
 
     /** Get the Key */
-    public Key<UJO,T> getKey() {
-        return (Key<UJO,T>) keySerializable.getFirstKey();
+    public Key<U,T> getKey() {
+        return (Key<U,T>) keySerializable.getFirstKey();
     }
 
     /** Append a CSS class - to overwriting only */
-    protected void appendCssClass(final Component value, final UJO ujo) {
+    protected void appendCssClass(final Component value, final U ujo) {
     }
 
     /** Domain class + key */
