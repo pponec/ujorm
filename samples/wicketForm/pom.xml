@@ -7,7 +7,7 @@
     <groupId>org.ujorm.wicket.sample</groupId>
     <artifactId>wicket-forms</artifactId>
     <name>wicket-forms</name>
-    <version>1.48-SNAPSHOT</version>
+    <version>1.49-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <organization>
@@ -23,7 +23,7 @@
     </licenses>
 
     <properties>
-        <ujorm.version>1.48-SNAPSHOT</ujorm.version>
+        <ujorm.version>1.49-SNAPSHOT</ujorm.version>
         <wicket.version>6.15.0</wicket.version>
         <jetty.version>6.1.26</jetty.version>
         <spring.version>4.0.3.RELEASE</spring.version>
@@ -310,8 +310,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                     <debug>true</debug>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
