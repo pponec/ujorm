@@ -221,7 +221,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      */
     public <V> void add(final Key<? super U,V> column, final Class<? extends WebMarkupContainer> panelClass) {
         final Class<? super U> domainType = column.getDomainType();
-        add(new KeyColumn<U, Object>(KeyRing.of(column), null) {
+        add(new KeyColumn<U, Object>(KeyRing.<U>of(column), null) {
             @Override
             public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
                 try {
@@ -245,7 +245,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @param actions Action array
      */
     public <V> void add(final Key<? super U,V> column, final CommonAction ... actions) {
-        final KeyColumn<U, Object> col = new KeyColumn<U, Object>(KeyRing.of(column), null) {
+        final KeyColumn<U, Object> col = new KeyColumn<U, Object>(KeyRing.<U>of(column), null) {
             @Override public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
                 item.add(new CommonActionPanel(componentId, model.getObject(), actions));
             }

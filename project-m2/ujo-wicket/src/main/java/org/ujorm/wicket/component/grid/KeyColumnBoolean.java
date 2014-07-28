@@ -29,7 +29,7 @@ import org.ujorm.wicket.CssAppender;
  * @param <UJO extends Ujo>
  *            The Model object type
  */
-public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
+public class KeyColumnBoolean<U extends Ujo> extends KeyColumn<U, Boolean> {
 
     private static final long serialVersionUID = 1L;
 
@@ -41,11 +41,11 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
     /** Class for OK value */
     protected final String cssOkClass;
 
-    public KeyColumnBoolean(Key<UJO,?> key, Key<UJO,?> keySortable, String cssClass) {
-        this(KeyRing.of(key), KeyRing.of(keySortable), cssClass, DEFAULT_CSS_OK_CLASS);
+    public KeyColumnBoolean(Key<U,?> key, Key<U,?> keySortable, String cssClass) {
+        this(KeyRing.<U>of(key), KeyRing.<U>of(keySortable), cssClass, DEFAULT_CSS_OK_CLASS);
     }
 
-    public KeyColumnBoolean(KeyRing<UJO> key, KeyRing<UJO> keySortable, String cssClass, String cssOkClass) {
+    public KeyColumnBoolean(KeyRing<U> key, KeyRing<U> keySortable, String cssClass, String cssOkClass) {
         super(key, keySortable);
         setCssClass(cssClass);
         this.cssOkClass = cssOkClass;
@@ -53,7 +53,7 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
 
     /** Create a Value component */
     @Override
-    protected IModel<?> createValueModel(final UJO ujo) {
+    protected IModel<?> createValueModel(final U ujo) {
         final Object value = keySerializable.getFirstValue(ujo);
         String result = value == null
                 ? ""
@@ -65,7 +65,7 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
 
     /** Append css class */
     @Override
-    protected void appendCssClass(Component value, UJO ujo) {
+    protected void appendCssClass(Component value, U ujo) {
         super.appendCssClass(value, ujo);
 
         if (cssOkClass != null
