@@ -1,6 +1,19 @@
 The Ujorm release notes
 *******************************
 
+release 1.48 (2014-07-28)
++ WICKET: The autoclose attribute is supported in dialogs
++ WICKET: The generated HTML code from the component DataTable have got removed some excess HTML tags
++ WICKET: The component AbstractDataProvider is fixed for some AJAX requests
++ WICKET: The default Focus management in the GUI is implemented
++ WICKET: Common Actions are supported in the DataTable component
++ WICKET: Better support for a user column implementations
++ CORE: Java Runtime 6.0 is supported still (bug fixed)
++ CORE: Generic types are cleaned
++ CORE: A new interface 'UjoLockable' is released for a read-only state with two default implementations
++ SAMPLES: The application Demo-hotels is upgraded and extended
+
+
 release 1.47 (2014-06-16)
 + CORE: the Criterion class have got a new method cast() for the case where a Key domain is parent of the Criterion generic domain
 + CORE: the Logging is API have got a better support for the one argument
