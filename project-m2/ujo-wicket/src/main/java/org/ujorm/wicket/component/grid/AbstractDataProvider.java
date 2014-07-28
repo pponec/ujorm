@@ -289,7 +289,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @return Create AJAX-based DataTable
      */
     public <S> DataTable<U,S> createDataTable(final String id, final int rowsPerPage, boolean insertToolbar) {
-        final DataTable<U,S> result = new DataTable<U,S>(id, this.<S>getColumns(), this, rowsPerPage) {
+        final DataTable<U,S> result = new UjoDataTable<U,S>(id, this.<S>getColumns(), this, rowsPerPage) {
             @Override protected Item<U> newRowItem
                     ( final String id
                     , final int index
