@@ -34,7 +34,7 @@ public class DataLoader {
     /** Get hotels from CSV file as a Map */
     public Map<Integer,City> getCityMap() {
         final List<City> cities = getCities();
-        final Map<Integer,City> result = new HashMap<>(cities.size());
+        final Map<Integer,City> result = new HashMap<Integer,City>(cities.size());
         for (City city : cities) {
             result.put(city.getId(), city);
         }
