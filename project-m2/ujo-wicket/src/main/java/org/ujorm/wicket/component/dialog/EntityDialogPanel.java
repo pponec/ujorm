@@ -34,8 +34,8 @@ public class EntityDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
     protected final FieldProvider<T> fields;
     private FeedbackField feedbackField;
 
-    public EntityDialogPanel(ModalWindow modalWindow, IModel<T> model) {
-        super(modalWindow, model);
+    public EntityDialogPanel(ModalWindow modalWindow, IModel<T> model, boolean autoClose) {
+        super(modalWindow, model, autoClose);
         // Create a feedback:
         repeater.add(feedbackField = new FeedbackField(repeater.newChildId()));
         // Create a field factory:

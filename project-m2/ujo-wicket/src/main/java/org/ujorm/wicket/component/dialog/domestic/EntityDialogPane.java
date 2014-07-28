@@ -34,8 +34,14 @@ public class EntityDialogPane<U extends Ujo> extends AbstractDialogPane<U> {
     /** Feedback Field */
     private FeedbackField feedbackField;
 
+    /** Constructor with an enabled autoClosing */
     public EntityDialogPane(ModalWindow modalWindow, IModel<? super U> model) {
-        super(modalWindow, model);
+        this(modalWindow, model, true);
+    }
+
+    /** Common constructor */
+    public EntityDialogPane(ModalWindow modalWindow, IModel<? super U> model, boolean autoClose) {
+        super(modalWindow, model, autoClose);
         // Create a feedback:
         repeater.add(feedbackField = new FeedbackField(repeater.newChildId()));
         // Create a field factory:

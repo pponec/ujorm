@@ -54,13 +54,14 @@ public abstract class AbstractDialogPanel<T> extends GenericPanel<T> {
     protected final RepeatingView repeater;
     /** Action code */
     private String action = "";
-    /** Dialog autoclose request */
-    private boolean autoclose = true;
+    /** The dialog autoclose request */
+    protected final boolean autoclose;
 
-    public AbstractDialogPanel(ModalWindow modalWindow, IModel<? super T> model) {
+    public AbstractDialogPanel(ModalWindow modalWindow, IModel<? super T> model, boolean autoclose) {
         super(modalWindow.getContentId(), (IModel) model);
         this.modalWindow = modalWindow;
         this.modalWindow.setContent(this);
+        this.autoclose = autoclose;
         this.setOutputMarkupPlaceholderTag(true);
 
         // Form Dialog:
@@ -93,11 +94,6 @@ public abstract class AbstractDialogPanel<T> extends GenericPanel<T> {
     /** Dialog autoclose request */
     public boolean isAutoclose() {
         return autoclose;
-    }
-
-    /** Dialog autoclose request */
-    public void setAutoclose(boolean autoclose) {
-        this.autoclose = autoclose;
     }
 
     /** Returns a base model object / entity */

@@ -37,8 +37,8 @@ public class MessageDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
     /** Error message */
     private boolean feedback;
 
-    public MessageDialogPane(ModalWindow modalWindow, IModel<String> model) {
-        super(modalWindow, new Model());
+    public MessageDialogPane(ModalWindow modalWindow, IModel<String> model, boolean autoClose) {
+        super(modalWindow, new Model(), autoClose);
         repeater.add(new MultiLineLabel(repeater.newChildId(), model) {
             @Override
             protected void onComponentTag(ComponentTag tag) {
@@ -72,7 +72,7 @@ public class MessageDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
         final ModalWindow modalWindow = new ModalWindow(componentId, model);
         modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
 
-        final MessageDialogPane result = new MessageDialogPane(modalWindow, model);
+        final MessageDialogPane result = new MessageDialogPane(modalWindow, model, true);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         //modalWindow.setCookieName(componentId + "-modalDialog");
