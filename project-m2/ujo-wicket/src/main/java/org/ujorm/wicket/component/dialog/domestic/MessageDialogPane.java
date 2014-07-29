@@ -66,13 +66,18 @@ public class MessageDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
         }
     }
 
-    /** Create the default message dialog */
+    /** Create the default message dialog with an autoclose feature. */
     public static MessageDialogPane create(String componentId, int width, int height) {
-        IModel<String> model = Model.of("");
+        return create(componentId, width, height, true);
+    }
+
+    /** Create the default message dialog */
+    public static MessageDialogPane create(String componentId, int width, int height, boolean autoClose) {
+        final IModel<String> model = Model.of("");
         final ModalWindow modalWindow = new ModalWindow(componentId, model);
         modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
 
-        final MessageDialogPane result = new MessageDialogPane(modalWindow, model, true);
+        final MessageDialogPane result = new MessageDialogPane(modalWindow, model, autoClose);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         //modalWindow.setCookieName(componentId + "-modalDialog");
