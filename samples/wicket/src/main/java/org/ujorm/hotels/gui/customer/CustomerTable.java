@@ -30,7 +30,7 @@ import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.CommonAction;
-import org.ujorm.wicket.component.grid.UjoDataProvider;
+import org.ujorm.wicket.component.grid.OrmDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
@@ -51,7 +51,7 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
     public CustomerTable(String id) {
         super(id);
 
-        UjoDataProvider<U> columns = UjoDataProvider.of(getCriterion());
+        OrmDataProvider<U> columns = OrmDataProvider.of(getCriterion());
         columns.add(Customer.LOGIN);
         columns.add(Customer.TITLE);
         columns.add(Customer.FIRSTNAME);

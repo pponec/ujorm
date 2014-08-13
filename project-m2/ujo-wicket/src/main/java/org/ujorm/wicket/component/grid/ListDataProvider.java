@@ -30,12 +30,12 @@ import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.Criterion;
 
 /**
- * <p>This class called <strong>ListDataProvider</strong> is an database
- * Wicket DataProvider. For a customization you can use a your own {@link IColumn} implementations
- * or you can owerwrite selected methods of this provider.
+ * <p>This class called <strong>ListDataProvider</strong> is a {@link List} based DataProvider.
+ * For a customization you can use a your own {@link IColumn} implementations
+ * or you can overwrite selected methods of this provider.
  * </p><p>
  * The implementation generates two database requests per a one rendering,
- * the first one get size and the second one get paged data. You can owerwrite the two data methods:
+ * the first one get size and the second one get paged data. You can overwrite the two data methods:
  * {@link #iterator(long, long) iterator()} and the {@link #size() size()}
  * for more optimization.
  * </p><p>

@@ -35,7 +35,7 @@ import org.ujorm.hotels.services.impl.HotelParams;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.KeyColumn;
-import org.ujorm.wicket.component.grid.UjoDataProvider;
+import org.ujorm.wicket.component.grid.OrmDataProvider;
 import org.ujorm.wicket.component.toolbar.InsertToolbar;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
@@ -61,7 +61,7 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
     public HotelTable(String id) {
         super(id);
 
-        UjoDataProvider<U> columns = UjoDataProvider.of(toolbar.getCriterion());
+        OrmDataProvider<U> columns = OrmDataProvider.of(toolbar.getCriterion());
         columns.add(Hotel.NAME);
         columns.add(Hotel.CITY.add(City.NAME)); // An example of relations
         columns.add(Hotel.STREET);

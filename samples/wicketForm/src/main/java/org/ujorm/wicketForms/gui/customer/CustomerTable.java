@@ -34,7 +34,7 @@ import org.ujorm.wicketForms.gui.hotel.action.Toolbar;
 import org.ujorm.wicketForms.services.AuthService;
 import org.ujorm.wicketForms.services.DbService;
 import static org.ujorm.wicket.CommonActions.*;
-import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
+import static org.ujorm.wicket.component.grid.OrmDataProvider.*;
 
 /**
  * Customer Panel

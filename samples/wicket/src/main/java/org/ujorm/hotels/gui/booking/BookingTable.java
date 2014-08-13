@@ -28,10 +28,10 @@ import org.ujorm.hotels.gui.booking.action.BookActionPanel;
 import org.ujorm.hotels.services.DbService;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
-import org.ujorm.wicket.component.grid.UjoDataProvider;
+import org.ujorm.wicket.component.grid.OrmDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
-import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
+import static org.ujorm.wicket.component.grid.OrmDataProvider.*;
 
 /**
  * BookingTable
@@ -45,7 +45,7 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
     public BookingTable(String id) {
         super(id);
 
-        UjoDataProvider<U> columns = UjoDataProvider.of(getCriterionModel());
+        OrmDataProvider<U> columns = OrmDataProvider.of(getCriterionModel());
         columns.add(Booking.DATE_FROM);
         columns.add(Booking.CUSTOMER.add(Customer.LOGIN));
         columns.add(Booking.HOTEL.add(Hotel.NAME));
