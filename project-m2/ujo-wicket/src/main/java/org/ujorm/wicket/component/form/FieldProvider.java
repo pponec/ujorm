@@ -107,15 +107,20 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         field.setOutputMarkupPlaceholderTag(true);
     }
 
+    /** Generates a child component id */
+    protected String newChildId() {
+        return repeatingView.newChildId();
+    }
+
     /** Add new field to a repeating view*/
     public <T extends Object> void add(Key<? super U,T> key) {
         final Field field;
 
         if (key.isTypeOf(Boolean.class)) {
-            field = new BooleanField(key);
+            field = new BooleanField(newChildId(), key, null);
         } else if (key.isTypeOf(String.class)) {
             if (isPasswordKey(key)) {
-                field = new PasswordField(key);
+                field = new PasswordField(newChildId(), key, null);
             } else {
                 final int length = ValidatorUtils.getMaxLength(key.getValidator());
                 field = length >= getTextAreaLimit()
@@ -123,17 +128,17 @@ public class FieldProvider<U extends Ujo> implements Serializable {
                         : new TextField(key);
             }
         } else if (key.isTypeOf(Enum.class)) {
-            field = new EnumField(key, "combo");
+            field = new EnumField(newChildId(), key, "combo");
         } else if (key.isTypeOf(Enum.class)) {
-            field = new EnumField(key, "combo");
+            field = new EnumField(newChildId(), key, "combo");
         } else if (key.isTypeOf(java.sql.Date.class)) {
-            field = new DateField(key);
+            field = new DateField(newChildId(), key, null);
         } else if (key.isTypeOf(java.util.Date.class)) {
-            field = new DateField(key); // TODO DateTime field
+            field = new DateField(newChildId(), key, null); // TODO DateTime field
         } else if (key instanceof ListKey && Ujo.class.isAssignableFrom( ((ListKey)key).getItemType())) {
-            field = new GridField(key);
+            field = new GridField(newChildId(), key, null);
         } else {
-            field = new Field(key); // The common field
+            field = new Field(newChildId(), key, null); // The common field
         }
         add(field);
     }
