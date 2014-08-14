@@ -43,7 +43,11 @@ public class EnumField<T extends Enum<T>> extends Field<T> {
     }
 
     public <U extends Ujo> EnumField(Key<U, T> key, String cssClass) {
-        super(key.getName(), key, null);
+        this(key.getName(), key, cssClass);
+    }
+
+    public <U extends Ujo> EnumField(String componentId, Key<U, T> key, String cssClass) {
+        super(componentId, key, null);
         this.items = Arrays.asList(key.getType().getEnumConstants());
         if (NULL_SUPPORT && !isRequired()) {
             ArrayList list = new ArrayList(items.size() + 1);
