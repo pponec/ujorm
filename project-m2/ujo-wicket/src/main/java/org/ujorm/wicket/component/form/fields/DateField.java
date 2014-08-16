@@ -36,7 +36,7 @@ public class DateField<T> extends Field<T> {
     /** Default 'date' format by the 'ISO 8601' */
     public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
     /** Default 'datetime' format by the 'ISO 8601' */
-    public static final String DEFAULT_DATETIME_PATTERN = DEFAULT_DATE_PATTERN + " HH:mm:ss";
+    public static final String DEFAULT_DATETIME_PATTERN = DEFAULT_DATE_PATTERN + " HH:mm";
 
     public <U extends Ujo> DateField(Key<U,T> key) {
         super(key.getName(), key, null);
