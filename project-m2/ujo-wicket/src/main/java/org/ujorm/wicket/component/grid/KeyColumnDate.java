@@ -49,7 +49,7 @@ public class KeyColumnDate<U extends Ujo> extends KeyColumn<U, java.sql.Date> {
         result.setDefaultModel(new Model() {
             @Override public Serializable getObject() {
                 SimpleDateFormat form = new SimpleDateFormat(getDatePattern(result));
-                return form.format((java.sql.Date) valueModel.getObject());
+                return form.format((java.util.Date) valueModel.getObject());
             }
         });
         return result;
