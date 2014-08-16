@@ -33,6 +33,10 @@ public class DateField<T> extends Field<T> {
     private static final long serialVersionUID = 20130621L;
     /** Default CSS class have got value {@code datepicker} */
     public static final String CSS_DATEPICKER = "datePickerComponent";
+    /** Default 'date' format by the 'ISO 8601' */
+    public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
+    /** Default 'datetime' format by the 'ISO 8601' */
+    public static final String DEFAULT_DATETIME_PATTERN = DEFAULT_DATE_PATTERN + " HH:mm:ss";
 
     public <U extends Ujo> DateField(Key<U,T> key) {
         super(key.getName(), key, null);
@@ -57,7 +61,7 @@ public class DateField<T> extends Field<T> {
 
     /** Returns localizadDate pattern */
     protected String getDatePattern() {
-        return getString("locale.date.pattern", null, "yyyy-MM-dd"); // ISO 8601
+        return getString("locale.date.pattern", null, DateField.DEFAULT_DATE_PATTERN);
     }
 
     /** Returns an {@code input} value from model */
