@@ -204,9 +204,15 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
         if (column.isTypeOf(Number.class)) {
             return add(KeyColumn.of(column, isSortingEnabled((Key)column), "number"));
         }
-        else {
-            return add(KeyColumn.of(column, isSortingEnabled((Key)column), null));
+        if (column.isTypeOf(java.sql.Date.class)) {
+            return add(KeyColumnDate.of(column, isSortingEnabled((Key)column), "date"));
         }
+        if (column.isTypeOf(java.util.Date.class)) {
+            return add(KeyColumnDateTime.of(column, isSortingEnabled((Key)column), "datetime"));
+        }
+
+        // Default:
+        return add(KeyColumn.of(column, isSortingEnabled((Key)column), null));
     }
 
     /** Create new instance of a Panel from the argument {@code panelClass}
