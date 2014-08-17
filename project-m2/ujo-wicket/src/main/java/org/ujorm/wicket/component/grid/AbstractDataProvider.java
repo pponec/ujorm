@@ -206,7 +206,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
             return add(KeyColumn.of(column, isSortingEnabled((Key)column), "number"));
         }
         if (column.isTypeOf(java.sql.Date.class)) {
-            return add(KeyColumnDate.of(column, isSortingEnabled((Key)column), "date"));
+            return add(KeyColumnDate.of(column, isSortingEnabled((Key)column), KeyColumnDate.DEFAULT_CSS_CLASS));
         }
         if (column.isTypeOf(java.util.Date.class)) {
             return add(KeyColumnDate.of(column, isSortingEnabled((Key)column), "datetime", DateTimes.LOCALE_DATETIME_FORMAT_KEY));
