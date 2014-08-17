@@ -19,7 +19,6 @@ package org.ujorm.implementation.orm;
 import java.util.HashSet;
 import java.util.Set;
 import org.ujorm.Key;
-import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
