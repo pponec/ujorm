@@ -7,7 +7,7 @@
 package org.ujorm.hotels.entity;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
@@ -37,7 +37,7 @@ public class Booking extends OrmTable<Booking> {
     public static final Key<Booking, Customer> CUSTOMER = f.newKey(notNull(Customer.class));
     /** Date from */
     @Comment("Date from")
-    public static final Key<Booking, Date> DATE_FROM = f.newKey(mandatory(Date.class));
+    public static final Key<Booking, java.sql.Date> DATE_FROM = f.newKey(mandatory(java.sql.Date.class));
     /** Number of nights */
     @Comment("Number of nights")
     public static final Key<Booking, Short> NIGHTS = f.newKeyDefault((short)1, range((short)1, (short)365));
@@ -50,8 +50,8 @@ public class Booking extends OrmTable<Booking> {
     /** Currency of the price */
     @Comment("Currency of the total price")
     public static final Key<Booking, String> CURRENCY = f.newKeyDefault("USD", length(MANDATORY, 3, 3));
-    /** Creation date of booking. */
-    @Comment("Creation date of booking.")
+    /** Creation datetime of booking. */
+    @Comment("Creation datetime of booking.")
     public static final Key<Booking, Date> CREATION_DATE = f.newKey(mandatory(Date.class));
 
     static {
@@ -98,7 +98,7 @@ public class Booking extends OrmTable<Booking> {
     }
 
     /** Date from */
-    public void setDateFrom(Date dateFrom) {
+    public void setDateFrom(java.sql.Date dateFrom) {
         Booking.DATE_FROM.setValue(this, dateFrom);
     }
 

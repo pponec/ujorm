@@ -17,6 +17,7 @@ package org.ujorm.hotels.services.impl;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
@@ -197,7 +198,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         // TODO: validations ...
 
         booking.setPrice(totalPrice(booking));
-        booking.setReservationDate(new java.sql.Date(System.currentTimeMillis()));
+        booking.setReservationDate(new Date());
         getSession().save(booking);
     }
 
