@@ -24,6 +24,7 @@ import org.apache.wicket.model.Model;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.wicket.CssAppender;
+import org.ujorm.wicket.component.tools.DateTimes;
 
 /**
  * CheckBox field with a Label including a feedback message.
@@ -33,10 +34,6 @@ public class DateField<T> extends Field<T> {
     private static final long serialVersionUID = 20130621L;
     /** Default CSS class have got value {@code datepicker} */
     public static final String CSS_DATEPICKER = "datePickerComponent";
-    /** Default 'date' format by the 'ISO 8601' */
-    public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
-    /** Default 'datetime' format by the 'ISO 8601' */
-    public static final String DEFAULT_DATETIME_PATTERN = DEFAULT_DATE_PATTERN + " HH:mm";
 
     public <U extends Ujo> DateField(Key<U,T> key) {
         super(key.getName(), key, null);
@@ -61,7 +58,8 @@ public class DateField<T> extends Field<T> {
 
     /** Returns localizadDate pattern */
     protected String getDatePattern() {
-        return getString("locale.date.pattern", null, DateField.DEFAULT_DATE_PATTERN);
+        final String key = DateTimes.LOCALE_DATE_FORMAT_KEY;
+        return getLocalizer().getString(key, null, DateTimes.getDefaultPattern(key));
     }
 
     /** Returns an {@code input} value from model */

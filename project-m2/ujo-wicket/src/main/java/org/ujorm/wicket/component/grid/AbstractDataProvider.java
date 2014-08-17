@@ -44,6 +44,7 @@ import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.toolbar.InsertToolbar;
+import org.ujorm.wicket.component.tools.DateTimes;
 
 /**
  * <p>This class called <strong>UjoDataProvider</strong> is an common
@@ -208,7 +209,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
             return add(KeyColumnDate.of(column, isSortingEnabled((Key)column), "date"));
         }
         if (column.isTypeOf(java.util.Date.class)) {
-            return add(KeyColumnDateTime.of(column, isSortingEnabled((Key)column), "datetime"));
+            return add(KeyColumnDate.of(column, isSortingEnabled((Key)column), "datetime", DateTimes.LOCALE_DATETIME_FORMAT_KEY));
         }
 
         // Default:
