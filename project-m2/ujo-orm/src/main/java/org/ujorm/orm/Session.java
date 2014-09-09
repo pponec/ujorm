@@ -599,8 +599,6 @@ public class Session implements Closeable {
     }
 
     /** Delete an optional object from the parameters.
-     * <br />Warning: method does not remove deleted object from internal cache,
-     *       however you can call method clearCache() to release all objects from the cache.
      * @param bo Business object to delete, or the {@code null} argument as a result of some nullable relation.
      * @return Returns a number of the removing items or the zero if the argumetn is {@code null}.
      */
@@ -630,11 +628,9 @@ public class Session implements Closeable {
         return result;
     }
 
-    /** Delete an optional object from the parameters.
-     * <br />Warning: method does not remove deleted object from internal cache,
-     *       however you can call method clearCache() to release all objects from the cache.
-     * @param bos Business objects to delete, the the {@code null} argument is not allowed.
-     * No item can be {@code null}.
+    /** Delete all objects of the <strong>same type</strong> from database.
+     * @param bos Business objects to delete, the the {@code null} argument is not allowed
+     * and the {@code null} items are not allowed too.
      * @return Returns a number of the removing items or the zero if the argumetn is {@code empty}.
      */
     public <T extends OrmUjo> int delete(final List<T> bos) {
