@@ -66,6 +66,8 @@ public class Session implements Closeable {
     private static final String SQL_VALUES = "-- SQL VALUES: ";
     /** Exception SQL message prefix */
     public static final String SQL_ILLEGAL = "ILLEGAL SQL: ";
+    /** Clear the internal cache on the DELETE action */
+    private static final boolean REMOVE_CACHE_ON_DELETE = true;
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(Session.class);
     /** Handler. */
@@ -600,32 +602,72 @@ public class Session implements Closeable {
      * <br />Warning: method does not remove deleted object from internal cache,
      *       however you can call method clearCache() to release all objects from the cache.
      * @param bo Business object to delete, or the {@code null} argument as a result of some nullable relation.
-     * @return Returns a number of the removing is OK or the zero if the argumetn is {@code null}.
+     * @return Returns a number of the removing items or the zero if the argumetn is {@code null}.
      */
     public int delete(final OrmUjo bo) {
         if (bo == null) {
-            LOGGER.log(UjoLogger.DEBUG, "A null object isn't deleted");
+            LOGGER.log(UjoLogger.DEBUG, "The null object isn't deleted");
             return 0;
         }
-        MetaTable table = handler.findTableModel(bo.getClass());
+        final MetaTable table = handler.findTableModel(bo.getClass());
         table.assertChangeAllowed();
-        MetaColumn PK = table.getFirstPK();
-        Criterion crn = Criterion.where(PK.getKey(), PK.getValue(bo));
-        int result = delete(table, crn);
+        final MetaColumn PK = table.getFirstPK();
+        final Criterion crn = Criterion.where(PK.getKey(), PK.getValue(bo));
+        final int result = delete(table, crn);
 
-        if (true) {
-            // Remove the bo from an internal cache:
+        if (REMOVE_CACHE_ON_DELETE) {
             removeCache(bo, MetaTable.PK.of(table));
         }
 
         // Delete parent
         if (MetaParams.INHERITANCE_MODE.of(params)) {
-            OrmUjo parent = table.getParent(bo);
+            final OrmUjo parent = table.getParent(bo);
             if (parent != null) {
                 delete(parent);
             }
         }
 
+        return result;
+    }
+
+    /** Delete an optional object from the parameters.
+     * <br />Warning: method does not remove deleted object from internal cache,
+     *       however you can call method clearCache() to release all objects from the cache.
+     * @param bos Business objects to delete, the the {@code null} argument is not allowed.
+     * No item can be {@code null}.
+     * @return Returns a number of the removing items or the zero if the argumetn is {@code empty}.
+     */
+    public <T extends OrmUjo> int delete(final List<T> bos) {
+        if (bos.isEmpty()) {
+            return 0;
+        }
+
+        final T firstBo = bos.get(0);
+        final MetaTable table = handler.findTableModel(firstBo.getClass());
+        table.assertChangeAllowed();
+        final MetaColumn PK = table.getFirstPK();
+        final List<Object> pKeys = new ArrayList<Object>(bos.size());
+        for (T bo : bos) {
+            pKeys.add(PK.getValue(bo));
+            if (REMOVE_CACHE_ON_DELETE) {
+                removeCache(bo, MetaTable.PK.of(table));
+            }
+        }
+
+        final Criterion crn = Criterion.whereIn(PK.getKey(), pKeys);
+        final int result = delete(table, crn);
+
+        // Delete all parents:
+        if (MetaParams.INHERITANCE_MODE.of(params)) {
+            final List<OrmUjo> parents = new ArrayList<OrmUjo>(bos.size());
+            for (T bo : bos) {
+                final OrmUjo parent = table.getParent(bo);
+                if (parent != null) {
+                    parents.add(parent);
+                }
+            }
+            delete(parents);
+        }
         return result;
     }
 
