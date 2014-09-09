@@ -24,6 +24,7 @@
     </licenses>
 
     <properties>
+        <project.war.name>demo-hotels</project.war.name>
         <ujorm.version>1.49-SNAPSHOT</ujorm.version>
         <wicket.version>6.10.0</wicket.version>
         <jetty.version>6.1.26</jetty.version>
@@ -273,6 +274,8 @@
     </dependencies>
 
     <build>
+        <finalName>${project.war.name}</finalName>
+
         <resources>
             <resource>
                 <filtering>false</filtering>
