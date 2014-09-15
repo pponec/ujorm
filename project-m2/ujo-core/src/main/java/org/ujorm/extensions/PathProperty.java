@@ -337,6 +337,13 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         return getLastKey().isTypeOf(type);
     }
 
+    /** Returns true if the key type is a type or subtype of the parameter class. */
+    @SuppressWarnings("unchecked")
+    @Override
+    final public boolean isDomainOf(final Class type) {
+        return getFirstKey().isDomainOf(type);
+    }
+
     /**
      * Returns true, if the key value equals to a parameter value. The key value can be null.
      *
@@ -379,9 +386,13 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
             ;
     }
 
+    /** HashCode from the {@code name} and {@code domainType} attributes */
     @Override
     public int hashCode() {
-        return this.getName().hashCode();
+        int hash = 5;
+        hash = 67 * hash + this.getName().hashCode();
+        hash = 67 * hash + this.getDomainType().hashCode();
+        return hash;
     }
 
     @Override
@@ -759,7 +770,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     /** Quick instance for the direct key.
      * @hidden
      */
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> of(final Key<? super UJO, VALUE> key) {
+    public static <UJO extends Ujo, VALUE> CompositeKey<UJO, VALUE> of(final Key<? super UJO, VALUE> key) {
         return key.isComposite()
             ? new PathProperty<UJO, VALUE>(key.isAscending(), CompositeKey.DEFAULT_ALIAS, key)
             : new PathProperty<UJO, VALUE>(new Key[]{key}, NO_ALIAS, key.isAscending())
@@ -769,7 +780,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     /** Quick instance for the direct keys
      * @hidden
      */
-    public static <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> of
+    public static <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> CompositeKey<UJO1, VALUE> of
         ( final Key<? super UJO1, UJO2> key1
         , final Key<UJO2, VALUE> key2
         ) {
@@ -782,7 +793,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     /** Create new instance
      * @hidden
      */
-    public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> of
+    public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> CompositeKey<UJO1, VALUE> of
         ( final Key<? super UJO1, UJO2> key1
         , final Key<UJO2, UJO3> key2
         , final Key<UJO3, VALUE> key3
@@ -793,7 +804,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     /** Create new instance
      * @hidden
      */
-    public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> of
+    public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> CompositeKey<UJO1, VALUE> of
         ( final Key<? super UJO1, UJO2> key1
         , final Key<UJO2, UJO3> key2
         , final Key<UJO3, UJO4> key3
@@ -806,7 +817,15 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create
+    public static <U extends Ujo, VALUE> CompositeKey<U, VALUE> create(final List keys) {
+        return new PathProperty(DEFAULT_ALIAS, (Key[]) keys.toArray(new Key[keys.size()]));
+    }
+
+    /** Create new instance
+     * @hidden
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends Ujo, VALUE> CompositeKey<UJO, VALUE> create
             ( Key<UJO, ? extends Object>... keys) {
         return new PathProperty(DEFAULT_ALIAS, keys);
     }

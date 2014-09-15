@@ -170,6 +170,9 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     /** Returns true if the key type is a type or subtype of the parameter class. */
     public boolean isTypeOf(Class type);
 
+    /** Returns true if the domain type is a type or subtype of the parameter class. */
+    public boolean isDomainOf(Class type);
+
     /** A flag for an ascending direction of sorting. It is recommended that the default result was true.
      * @since 0.85
      * @see org.ujorm.core.UjoComparator

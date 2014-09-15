@@ -426,6 +426,13 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         return type.isAssignableFrom(this.type);
     }
 
+    /** Returns true if the domain type is a type or subtype of the parameter class. */
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean isDomainOf(final Class type) {
+        return type.isAssignableFrom(this.domainType);
+    }
+
     /**
      * Returns true, if the key value equals to a parameter value. The key value can be null.
      *
