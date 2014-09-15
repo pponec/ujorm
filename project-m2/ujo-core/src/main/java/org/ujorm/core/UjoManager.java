@@ -108,7 +108,7 @@ public class UjoManager implements Comparator<Key> {
 
     /** Read an KeyList instance. The first result is cached. */
     @SuppressWarnings("unchecked")
-    public <T extends Ujo> KeyList<T> readKeys(Class type) {
+    public <T extends Ujo> KeyList<T> readKeys(Class<T> type) {
         KeyList<T> result = propertiesCache.get(type);
         if (result==null) {
             final Key[] ps = readPropertiesNocache(type, true);

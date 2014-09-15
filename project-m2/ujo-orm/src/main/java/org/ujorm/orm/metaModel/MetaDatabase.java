@@ -41,6 +41,7 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.BytesWrapper;
+import org.ujorm.orm.ColumnSet;
 import org.ujorm.orm.DbProcedure;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.JdbcStatement;
@@ -175,7 +176,10 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         changeDefault(this, ORM2DLL_POLICY, MetaParams.ORM2DLL_POLICY.getDefault());
 
         for (Key tableProperty : database.readKeys()) {
-
+            if (tableProperty.isTypeOf(ColumnSet.class)) {
+                // TODO: include a set of tables ?
+                continue;
+            }
             if (tableProperty instanceof RelationToMany) {
                 RelationToMany tProperty = (RelationToMany) tableProperty;
                 MetaTable par   = param!=null ? param.findTable(tProperty.getName()) : null;

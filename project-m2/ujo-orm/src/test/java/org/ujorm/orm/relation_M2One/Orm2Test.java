@@ -93,7 +93,7 @@ public class Orm2Test extends TestCase {
     // ------- CHAPTERS: -------
 
     /** The handler contains the one or more database meta-models,
-     * the one applicatin can have more OrmHandler instances. */
+     * the one application can have more OrmHandler instances. */
     private OrmHandler handler;
 
     /** The session contains a cache and database connections. */

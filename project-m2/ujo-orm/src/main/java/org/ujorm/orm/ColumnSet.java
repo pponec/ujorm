@@ -24,7 +24,6 @@ package org.ujorm.orm;
  * Inner relations to an another implementation of the interface {@link ColumnSet}
  * are allowed.
  *
- *
  * @author Pavel Ponec
  * @deprecated The interface implementations are not finished yet.
  */

@@ -186,7 +186,7 @@ public class OrmHandler implements OrmHandlerProvider {
         return !resultFalse;
     }
 
-    /** LoadInternal a database model from paramater */
+    /** LoadInternal a database model from parameter */
     private <UJO extends OrmUjo> MetaDatabase loadDatabaseInternal(Class<UJO> databaseModel) {
 
         // Load a configuration parameters:
@@ -348,32 +348,32 @@ public class OrmHandler implements OrmHandlerProvider {
         return null;
     }
 
-    /** Find a Relation/Column model of the paramemeter key.
+    /** Find a Relation/Column model of the parameter key.
      * The column result is type of {@link MetaColumn}.
-     * @param pathProperty Parameter can be type of Key of CompositeKey (direct or indirect);
+     * @param compositeKey Parameter can be type of Key of CompositeKey (direct or indirect);
      * @return Returns an object type of {@link MetaColumn} for database column
      * or a related model type of {@link MetaRelation2Many}
      * or the NULL if no model was found.
      */
-    final public <T extends MetaRelation2Many> T findColumnModel(Key pathProperty) {
-        return findColumnModel(pathProperty, false);
+    final public <T extends MetaRelation2Many> T findColumnModel(Key compositeKey) {
+        return findColumnModel(compositeKey, false);
     }
 
-    /** Find a Relation/Column model of the paramemeter key.
+    /** Find a Relation/Column model of the parameter key.
      * The column result is type of {@link MetaColumn}.
-     * @param pathProperty Parameter can be type of Property of CompositeKey (direct or indirect);
+     * @param compositeKey Parameter can be type of CompositeKey (direct or indirect);
      * @param throwException Throw the IllegalArgument exception of no Model was not found
      * @return Returns an object type of {@link MetaColumn} for database column
      * or a related model type of {@link MetaRelation2Many}
      * or the NULL if no model was found.
      */
-    public <T extends MetaRelation2Many> T findColumnModel(Key pathProperty, boolean throwException) throws IllegalArgumentException {
-        if (pathProperty!=null && pathProperty.isComposite()) {
-            pathProperty = ((CompositeKey)pathProperty).getLastKey();
-        }
-        final MetaRelation2Many result = propertyMap.get(pathProperty);
+    public <T extends MetaRelation2Many> T findColumnModel(Key compositeKey, boolean throwException) throws IllegalArgumentException {
+        if (compositeKey!=null && compositeKey.isComposite()) {
+            compositeKey = ((CompositeKey)compositeKey).getLastKey();
+                    }
+        final MetaRelation2Many result = propertyMap.get(compositeKey);
         if (throwException && result == null) {
-            String propertyName = pathProperty != null ? pathProperty.getFullName() : String.valueOf(pathProperty);
+            String propertyName = compositeKey != null ? compositeKey.getFullName() : String.valueOf(compositeKey);
             throw new IllegalArgumentException("The key " + propertyName + " have got no meta-model.");
         }
         return (T) result;

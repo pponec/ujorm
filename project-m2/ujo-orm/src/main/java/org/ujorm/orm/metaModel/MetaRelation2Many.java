@@ -103,6 +103,11 @@ public class MetaRelation2Many extends AbstractMetaModel {
         return false;
     }
 
+    /** Returns the ID of the column  */
+    public final String getId() {
+        return ID.of(this);
+    }
+
     /** Returns a column direct key  */
     public final Key getKey() {
         return TABLE_KEY.of(this);
