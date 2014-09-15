@@ -240,7 +240,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         List<MetaColumn> result;
 
         MetaTable table;
-        if (TABLE_KEY.of(this) instanceof RelationToOne) {
+        if (getKey() instanceof RelationToOne) {
             RelationToOne rto = (RelationToOne) TABLE_KEY.of(this);
             MetaColumn mc = (MetaColumn) getHandler().findColumnModel(rto.getRelatedKey(), true);
             result = new ArrayList<MetaColumn>(1);
@@ -442,7 +442,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         return CONSTRAINT_NAME.of(this);
     }
 
-    /** Returna not null converter */
+    /** Returns not {@code null} converter */
     public ITypeService getConverter() {
         return converter;
     }

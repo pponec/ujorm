@@ -240,7 +240,7 @@ public class CriterionDecoder {
             //
             tables.add(tab1.addAlias(key.getAliasFrom()));
             tables.add(tab2.addAlias(key.getAliasTo()));
-            
+
             {// TODO: for all foreign columns:
                 if (andOperator) {
                     sql.append(" AND ");
@@ -266,7 +266,7 @@ public class CriterionDecoder {
     protected Collection<AliasKey> getPropertyRelations() {
         final Set<AliasKey> result = new HashSet<AliasKey>();
         final ArrayList<ValueCriterion> allValues = new ArrayList<ValueCriterion>
-                ( values.size() 
+                ( values.size()
                 + nullValues.size());
         allValues.addAll(values);
         allValues.addAll(nullValues);

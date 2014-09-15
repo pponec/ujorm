@@ -42,7 +42,7 @@ public class Order extends OrmTable<Order> {
             return name().substring(0, 1);
         }
     }
-    
+
     /** The Unique Key */
     @Column(pk = true)
     public static final Key<Order, Long> id = newKey();

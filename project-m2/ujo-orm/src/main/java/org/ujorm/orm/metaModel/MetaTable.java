@@ -202,18 +202,19 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         OrmHandler dbHandler = database.getOrmHandler();
         UjoManager ujoManager = UjoManager.getInstance();
         UjoManager.newInstance(dbProperty.getItemType()); // Initialize static Keys
-        for (Key key : ujoManager.readKeys(dbProperty.getItemType())) {
+        for (Key key : getColumns(dbProperty.getItemType())) {
 
             if (!ujoManager.isTransient(key)) {
+                final String keyName = key.getName();
 
                 if (key instanceof RelationToMany) {
-                    MetaRelation2Many param = parTable!=null ? parTable.findRelation(key.getName()) : null;
+                    MetaRelation2Many param = parTable!=null ? parTable.findRelation(keyName) : null;
                     MetaRelation2Many column = new MetaRelation2Many(this, key, param);
                     RELATIONS.addItem(this, column);
                     dbHandler.addColumnModel(column);
 
                 } else {
-                    MetaColumn param  = parTable!=null ? parTable.findColumn(key.getName()) : null;
+                    MetaColumn param  = parTable!=null ? parTable.findColumn(keyName) : null;
                     MetaColumn column = new MetaColumn(this, key, param);
                     COLUMNS.addItem(this, column);
                     dbHandler.addColumnModel(column);
@@ -224,6 +225,12 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
                 }
             }
         }
+    }
+
+    /** Returns all columns from the class  */
+    @SuppressWarnings("unchecked")
+    private Iterable<Key<Ujo,Object>> getColumns(Class ujoClass) {
+        return UjoManager.getInstance().readKeys(ujoClass);
     }
 
     /** Assign a PK from framework */

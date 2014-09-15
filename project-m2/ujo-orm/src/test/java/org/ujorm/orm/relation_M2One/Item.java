@@ -16,9 +16,9 @@
 package org.ujorm.orm.relation_M2One;
 
 import org.ujorm.Key;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToOne;
+import org.ujorm.orm.annot.Column;
 
 /**
  * The column mapping to DB table ITEM (a sample of usage).

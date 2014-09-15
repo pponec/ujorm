@@ -187,7 +187,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             Object value = key.of(ujo);
 
             if (value!=null
-            && !Ujo.class.isAssignableFrom(key.getType())
+            && !key.isTypeOf(Ujo.class)
             &&  getUjoManager().isXmlAttribute(key)
             &&  ujo.readAuthorization(actionExport, key, value)
             && !getUjoManager().isTransient(key)

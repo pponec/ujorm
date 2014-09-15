@@ -72,7 +72,7 @@ final public class UjoStatement extends UnsupportedOperationException implements
     }
 
     /** Returns a <b>any value</b> in a JDBC friendly type.
-     * The real result type depends in an implementatin a ITypeService.
+     * The real result type depends in an implementation a ITypeService.
      * For example a Java Enumerator default value can return either the Integer or String type too.
      * @see ITypeService
      */

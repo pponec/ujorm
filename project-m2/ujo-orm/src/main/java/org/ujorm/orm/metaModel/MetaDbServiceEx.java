@@ -277,7 +277,8 @@ public class MetaDbServiceEx extends MetaDbService {
             }
 
             int mappedMaxCharLength = mappedColumn.getMaxLength();
-            if (mappedMaxCharLength != -1 && (CharSequence.class.isAssignableFrom(mappedColumn.getType()))) {
+            if (mappedMaxCharLength != -1
+            && mappedColumn.getKey().isTypeOf(CharSequence.class)) {
                 LOGGER.log(INFO, "    Checking column char max length...");
                 Object dbMaxCharLength = dbColumn.get(COLUMN_DEF_CHAR_LENGTH);
                 // pokud je maximalni delka v DB omezena a je ruzna od mapovane... (nektere typy neni mozne omezit na urovni DB, napr. decimal v MSSQL, proto musi vyhovet i omezeni=0)

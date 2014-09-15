@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Ujorm configuration file release UNDEFINED was created 2014-09-13 23:24 -->
+<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.43.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <database id="Database">
+        <schema>db_m</schema>
+        <readOnly>false</readOnly>
+        <dialect>org.ujorm.orm.dialect.H2Dialect</dialect>
+        <jdbcUrl>jdbc:h2:mem:db_m</jdbcUrl>
+        <jdbcDriver>org.h2.Driver</jdbcDriver>
+        <user>sa</user>
+        <sequencer>org.ujorm.orm.UjoSequencer</sequencer>
+        <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+        <table id="ORDERS">
+            <name>ord_order</name>
+            <alias>ord_order_alias</alias>
+            <schema>db_m</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="sid">
+                <name>sid</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>10</maxLength>
+                <uniqueIndex>sid_index</uniqueIndex>
+            </column>
+            <column id="state">
+                <name>state</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>1</maxLength>
+            </column>
+            <column id="created">
+                <name>created</name>
+                <dbType>TIMESTAMP</dbType>
+            </column>
+            <column id="modified">
+                <name>modified</name>
+                <dbType>TIMESTAMP</dbType>
+            </column>
+            <column id="userId">
+                <name>userId</name>
+                <dbType>INT</dbType>
+            </column>
+            <column id="note">
+                <name>NOTE</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>128</maxLength>
+            </column>
+            <relation2m id="items">
+                <name>items</name>
+            </relation2m>
+        </table>
+        <table id="ORDER_ITEMS">
+            <name>ord_item</name>
+            <alias>ord_item_alias</alias>
+            <schema>db_m</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="userId">
+                <name>userId</name>
+                <dbType>INT</dbType>
+            </column>
+            <column id="note">
+                <name>note</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>128</maxLength>
+            </column>
+            <column id="order">
+                <name>fk_order</name>
+                <dbType>VARCHAR</dbType>
+            </column>
+        </table>
+        <table id="db_m">
+            <name>db_m</name>
+            <alias>db_m_alias</alias>
+            <schema>db_m</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <relation2m id="ORDERS">
+                <name>ORDERS</name>
+            </relation2m>
+            <relation2m id="ORDER_ITEMS">
+                <name>ORDER_ITEMS</name>
+            </relation2m>
+        </table>
+    </database>
+    <parameters>
+        <tableAliasSuffix>_alias</tableAliasSuffix>
+        <sequenceCache>1</sequenceCache>
+        <moreParams></moreParams>
+    </parameters>
+</body>

@@ -18,6 +18,7 @@ package org.ujorm.orm.metaModel;
 import java.lang.reflect.Field;
 import org.ujorm.ListKey;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
@@ -126,7 +127,8 @@ final public class MetaProcedure extends AbstractMetaModel {
         UjoManager ujoManager = UjoManager.getInstance();
         MetaTable table = new MetaTable(database, r2m, null);
 
-        for (Key p : ujoManager.readKeys(dbProperty.getType())) {
+        final Class<Ujo> ujoType = dbProperty.getType();
+        for (Key p : ujoManager.readKeys(ujoType)) {
 
             MetaColumn c = new MetaColumn(table, p, null);
             PARAMETERS.addItem(this, c);
