@@ -131,7 +131,7 @@ final public class AliasKey {
      * @param out Result
      */
     public static void addRelations(final Key<?,?> key, final Collection<AliasKey> out) {
-        if (key.isComposite()) {
+        if (key.isComposite() && !key.isTypeOf(ColumnSet.class)) { // TODO: Review ??
             final CompositeKey<?,?> cKey = (CompositeKey<?,?>) key;
             addConditions(cKey, 0, cKey.getCompositeCount() - 1, out);
         }
@@ -158,7 +158,17 @@ final public class AliasKey {
         if (key.isComposite()) {
             final CompositeKey<?,?> cKey = (CompositeKey<?,?>) key;
             final int count = cKey.getCompositeCount();
-            addConditions(cKey, count - 1, count, out);
+
+            // A case of the ColumnSet class
+            int beg =  count - 1;
+            for (; beg >= 0; beg--) {
+                final Key k = cKey.getDirectKey(beg);
+                if (!k.isDomainOf(ColumnSet.class)) {
+                    break;
+                }
+            }
+
+            addConditions(cKey, beg, count, out);
         } else {
             out.add(new AliasKey(key));
 
@@ -188,7 +198,10 @@ final public class AliasKey {
                 : CompositeKey.DEFAULT_ALIAS;
         for (int i = beg; i < end; i++) {
             final String aliasTo = cKey.getAlias(i);
-            final Key<?, ?> directKey = cKey.getDirectKey(i);
+            Key directKey = cKey.getDirectKey(i);
+            while (directKey.isTypeOf(ColumnSet.class)) {
+                directKey = directKey.add(cKey.getDirectKey(++i));
+            }
             out.add(new AliasKey(directKey, aliasFrom, aliasTo));
             aliasFrom = aliasTo;
         }

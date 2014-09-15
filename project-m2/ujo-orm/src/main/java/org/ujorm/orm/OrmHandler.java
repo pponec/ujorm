@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import org.ujorm.CompositeKey;
@@ -32,6 +33,7 @@ import org.ujorm.Key;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.core.annot.Immutable;
+import org.ujorm.extensions.PathProperty;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -64,6 +66,8 @@ public class OrmHandler implements OrmHandlerProvider {
 
     /** Map a <strong>key</strong> to a database <strong>column model</strong> */
     private final HashMap<Key,MetaRelation2Many> propertyMap = new HashMap<Key,MetaRelation2Many> ();
+    /** Map a <strong>composite key</strong> to a database <strong>column model</strong> */
+    private final HashMap<Key,MetaRelation2Many> copositeKeyMap = new HashMap<Key,MetaRelation2Many>();
     /** Map a Java class to a database table model */
     private final HashMap<Class,MetaTable> entityMap = new HashMap<Class,MetaTable> ();
     /** Map a Java class to a procedure model */
@@ -310,6 +314,15 @@ public class OrmHandler implements OrmHandlerProvider {
     @SuppressWarnings("unchecked")
     public void addColumnModel(MetaRelation2Many column) {
         Key key = column.getKey();
+
+        // Assigtn ColumnSet:
+        if (column.isCompositeKey()
+        && column.getLastKey().isDomainOf(ColumnSet.class)) {
+            // The key if Map is the full composite Key:
+            copositeKeyMap.put(key, column);
+            return;
+        }
+
         MetaRelation2Many oldColumn = findColumnModel(key);
 
         if (oldColumn == null) {
@@ -348,15 +361,15 @@ public class OrmHandler implements OrmHandlerProvider {
         return null;
     }
 
-    /** Find a Relation/Column model of the parameter key.
+    /** Find a Relation/Column model of the paramemeter key.
      * The column result is type of {@link MetaColumn}.
-     * @param compositeKey Parameter can be type of Key of CompositeKey (direct or indirect);
+     * @param pathProperty Parameter can be type of Key of CompositeKey (direct or indirect);
      * @return Returns an object type of {@link MetaColumn} for database column
      * or a related model type of {@link MetaRelation2Many}
      * or the NULL if no model was found.
      */
-    final public <T extends MetaRelation2Many> T findColumnModel(Key compositeKey) {
-        return findColumnModel(compositeKey, false);
+    final public <T extends MetaRelation2Many> T findColumnModel(Key pathProperty) {
+        return findColumnModel(pathProperty, false);
     }
 
     /** Find a Relation/Column model of the parameter key.
@@ -368,12 +381,30 @@ public class OrmHandler implements OrmHandlerProvider {
      * or the NULL if no model was found.
      */
     public <T extends MetaRelation2Many> T findColumnModel(Key compositeKey, boolean throwException) throws IllegalArgumentException {
-        if (compositeKey!=null && compositeKey.isComposite()) {
-            compositeKey = ((CompositeKey)compositeKey).getLastKey();
+        final Key lastKey = compositeKey!=null && compositeKey.isComposite()
+                ? ((CompositeKey)compositeKey).getLastKey()
+                : compositeKey;
+        MetaRelation2Many result = propertyMap.get(lastKey);
+        if (result == null) {
+            // A case of the ColumnSet class:
+            if (lastKey.isDomainOf(ColumnSet.class)) {
+                final CompositeKey ck = (CompositeKey) compositeKey;
+                final LinkedList list = new LinkedList();
+                int i = ck.getCompositeCount() - 1;
+                for (; i >= 0; --i) {
+                    list.addFirst(ck.getDirectKey(i));
+                    if (! ck.getDirectKey(i).isDomainOf(ColumnSet.class)) {
+                        break;
                     }
-        final MetaRelation2Many result = propertyMap.get(compositeKey);
-        if (throwException && result == null) {
-            String propertyName = compositeKey != null ? compositeKey.getFullName() : String.valueOf(compositeKey);
+                }
+                if (i >= 0) {
+                    final Key key = PathProperty.create(list);
+                    result = copositeKeyMap.get(key);
+                }
+            }
+        }
+        if (result == null && throwException) {
+            String propertyName = lastKey != null ? lastKey.getFullName() : String.valueOf(lastKey);
             throw new IllegalArgumentException("The key " + propertyName + " have got no meta-model.");
         }
         return (T) result;
