@@ -28,6 +28,7 @@ import org.ujorm.criterion.BinaryCriterion;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
+import org.ujorm.extensions.PathProperty;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
@@ -272,12 +273,13 @@ public class CriterionDecoder {
         allValues.addAll(nullValues);
 
         for (ValueCriterion value : allValues) {
-            Key p1 = value.getLeftNode();
+            Key p1 = normalizeNestedColumns(value.getLeftNode());
             if (p1 != null) {
                 AliasKey.addRelations(p1, result);
-                final Object p2 = value.getRightNode();
+                Object p2 = value.getRightNode();
                 if (p2 instanceof CompositeKey) {
-                    AliasKey.addRelations((CompositeKey)p2, result);
+                    final CompositeKey p3 = normalizeNestedColumns((CompositeKey)p2);
+                    AliasKey.addRelations(p3, result);
                 }
             }
         }
@@ -285,11 +287,44 @@ public class CriterionDecoder {
         // Get relations from the 'order by':
         if (orderBy != null) {
             for (Key p1 : orderBy) {
+                p1 = normalizeNestedColumns(p1);
                 AliasKey.addRelations((CompositeKey) p1, result);
             }
         }
 
         return result;
+    }
+
+    /** Normalize nested columns */
+    private <T extends Key> T normalizeNestedColumns(T key) {
+        if (key != null && key.isComposite()) {
+            boolean nested = false;
+            final CompositeKey cKey = (CompositeKey) key;
+            for (int i = 0, max = cKey.getCompositeCount() - 1; i < max; --i) {
+                if (cKey.getDirectKey(i).isTypeOf(ColumnSet.class)) {
+                    nested = true;
+                    break;
+                }
+            }
+            if (nested) {
+                Key lastKey = null;
+                ArrayList<Key> keyList = new ArrayList<Key>();
+                for (int i = 0, max = cKey.getCompositeCount() - 1; i < max; --i) {
+                    if (lastKey != null) {
+                        lastKey = lastKey.add(cKey.getDirectKey(i));
+                    }
+                    if (!cKey.getDirectKey(i).isTypeOf(ColumnSet.class)) {
+                        keyList.add(lastKey);
+                    }
+                }
+                if (lastKey != null) {
+                    keyList.add(lastKey);
+                }
+                return (T) PathProperty.createUnchecked(keyList);
+            }
+        }
+
+        return key;
     }
 
     /** Get Base Table */

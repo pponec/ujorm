@@ -131,7 +131,7 @@ final public class AliasKey {
      * @param out Result
      */
     public static void addRelations(final Key<?,?> key, final Collection<AliasKey> out) {
-        if (key.isComposite() && !key.isTypeOf(ColumnSet.class)) { // TODO: Review ??
+        if (key.isComposite() && ((CompositeKey)key).getCompositeCount() > 1) {
             final CompositeKey<?,?> cKey = (CompositeKey<?,?>) key;
             addConditions(cKey, 0, cKey.getCompositeCount() - 1, out);
         }
