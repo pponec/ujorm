@@ -28,7 +28,6 @@ import org.ujorm.criterion.BinaryCriterion;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
-import org.ujorm.extensions.PathProperty;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
@@ -215,7 +214,8 @@ public class CriterionDecoder {
                 break;
             }
         }
-        while(result instanceof CompositeKey) {
+        while(result instanceof CompositeKey
+           && !(result instanceof CompositeColumn)) {
             result = ((CompositeKey)result).getFirstKey();
         }
         return result;
@@ -277,7 +277,7 @@ public class CriterionDecoder {
             if (p1 != null) {
                 AliasKey.addRelations(p1, result);
                 Object p2 = value.getRightNode();
-                if (p2 instanceof CompositeKey) {
+                if (p2 instanceof CompositeKey && !(p2 instanceof CompositeColumn)) {
                     final CompositeKey p3 = normalizeNestedColumns((CompositeKey)p2);
                     AliasKey.addRelations(p3, result);
                 }
@@ -296,6 +296,7 @@ public class CriterionDecoder {
     }
 
     /** Normalize nested columns */
+    @SuppressWarnings("unchecked")
     private <T extends Key> T normalizeNestedColumns(T key) {
         if (key != null && key.isComposite()) {
             boolean nested = false;
@@ -309,18 +310,19 @@ public class CriterionDecoder {
             if (nested) {
                 Key lastKey = null;
                 ArrayList<Key> keyList = new ArrayList<Key>();
-                for (int i = 0, max = cKey.getCompositeCount() - 1; i < max; --i) {
-                    if (lastKey != null) {
-                        lastKey = lastKey.add(cKey.getDirectKey(i));
-                    }
+                for (int i = 0, max = cKey.getCompositeCount(); i < max; ++i) {
+                     lastKey = lastKey != null
+                             ? lastKey.add(cKey.getDirectKey(i))
+                             : cKey.getDirectKey(i);
                     if (!cKey.getDirectKey(i).isTypeOf(ColumnSet.class)) {
                         keyList.add(lastKey);
+                        lastKey = null;
                     }
                 }
                 if (lastKey != null) {
                     keyList.add(lastKey);
                 }
-                return (T) PathProperty.createUnchecked(keyList);
+                return (T) new CompositeColumn(keyList);
             }
         }
 
