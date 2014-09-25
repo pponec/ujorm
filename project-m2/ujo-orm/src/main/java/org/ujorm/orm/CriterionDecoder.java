@@ -301,7 +301,7 @@ public class CriterionDecoder {
         if (key != null && key.isComposite()) {
             boolean nested = false;
             final CompositeKey cKey = (CompositeKey) key;
-            for (int i = 0, max = cKey.getCompositeCount() - 1; i < max; --i) {
+            for (int i = 0, max = cKey.getCompositeCount() - 1; i < max; ++i) {
                 if (cKey.getDirectKey(i).isTypeOf(ColumnSet.class)) {
                     nested = true;
                     break;
