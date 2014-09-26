@@ -31,6 +31,8 @@ public class PropertiesChooser extends javax.swing.JPanel {
     private static boolean paramSetters = true;
     /** Static parameter */
     private static boolean paramJavaDoc = true;
+    /** Static parameter */
+    private static boolean paramDomainClass = false;
 
     /**
      * Creates new form PropertiesChooser
@@ -47,6 +49,7 @@ public class PropertiesChooser extends javax.swing.JPanel {
         cbGetters.getModel().setSelected(paramGetters);
         cbSetters.getModel().setSelected(paramSetters);
         cbJavaDoc.getModel().setSelected(paramJavaDoc);
+        cbDomainClass.getModel().setSelected(paramDomainClass);
     }
 
     /** Select all items */
@@ -83,6 +86,13 @@ public class PropertiesChooser extends javax.swing.JPanel {
         return result;
     }
 
+    /** Are the Setters required ? */
+    public boolean isDomainClassRequired() {
+        final boolean result = cbDomainClass.getModel().isSelected();
+        paramDomainClass = result;
+        return result;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -98,6 +108,7 @@ public class PropertiesChooser extends javax.swing.JPanel {
         cbGetters = new javax.swing.JCheckBox();
         cbSetters = new javax.swing.JCheckBox();
         cbJavaDoc = new javax.swing.JCheckBox();
+        cbDomainClass = new javax.swing.JCheckBox();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -149,8 +160,22 @@ public class PropertiesChooser extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 22, 0, 10);
         add(cbJavaDoc, gridBagConstraints);
+
+        cbDomainClass.setMnemonic('D');
+        cbDomainClass.setText("Generate a Domain class before Keys"); // NOI18N
+        cbDomainClass.setToolTipText(""); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
+        gridBagConstraints.ipadx = 60;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 22, 0, 10);
+        add(cbDomainClass, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbDomainClass;
     private javax.swing.JCheckBox cbGetters;
     private javax.swing.JCheckBox cbJavaDoc;
     private javax.swing.JCheckBox cbSetters;

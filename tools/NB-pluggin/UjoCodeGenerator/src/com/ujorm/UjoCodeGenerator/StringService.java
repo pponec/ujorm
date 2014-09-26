@@ -100,7 +100,7 @@ final public class StringService {
     }
 
     /**
-     * Returns prexixed variable name in camel case format.
+     * Returns prefixed variable name in camel case format.
      *
      * @param prefix
      * @param variable
@@ -151,7 +151,7 @@ final public class StringService {
         try {
             List<Comment> comments = workingCopy.getTreeUtilities().getComments(variable, true);
             if (comments!=null && comments.size()>0) {
-                workingCopy.getTreeMaker().addComment(newMethod, comments.get(0), true);
+                workingCopy.getTreeMaker().addComment(newMethod, comments.get(comments.size() - 1), true);
             }
         } catch (Throwable e) {
             LOGGER.log(Level.WARNING, "Can't copy JavaDoc to the method: " + newMethod.getName(), e);
@@ -166,8 +166,9 @@ final public class StringService {
         try {
             final List<Comment> comments = workingCopy.getTreeUtilities().getComments(field, true);
             if (comments != null && !comments.isEmpty()) {
-                result = comments.get(0).getText().trim();
-                if (comments.get(0).isDocComment()) {
+                final Comment lastComment= comments.get(comments.size() - 1);
+                result = lastComment.getText().trim();
+                if (lastComment.isDocComment()) {
                     result = result.substring(3, result.length()-2).trim();
                 }
                 result = result.replace('\n', ' ');

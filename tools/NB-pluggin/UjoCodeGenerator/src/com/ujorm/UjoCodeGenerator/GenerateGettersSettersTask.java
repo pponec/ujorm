@@ -56,6 +56,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
     private WorkingCopy workingCopy;
     private TreeMaker treeMaker;
     private ClassTree clazz = null;
+    private boolean domainClassRequest = false;
     PropertiesChooser propertiesChooser = null;
 
     /**
@@ -112,8 +113,9 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      *
      * @param variables
      */
-    private void generateCode(KeyItem[] items, boolean getters, boolean setters, boolean javaDoc) {
+    private void generateCode(KeyItem[] items, boolean getters, boolean setters, boolean javaDoc, boolean domainClass) {
         assert items != null : "Variables cannot be null";
+        this.domainClassRequest = domainClass;
 
         ClassTree modifiedClass = clazz;
 
@@ -192,9 +194,9 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 Collections.<TypeParameterTree>emptyList(),
                 Collections.<VariableTree>emptyList(),
                 Collections.<ExpressionTree>emptyList(),
-                "{\nreturn " 
-                + clazz.getSimpleName().toString()
-                + "."+ variable.getName() + ".of(this);}\n",
+                "{\nreturn "
+                + getDomainClass()
+                + variable.getName() + ".of(this);}\n",
                 null);
         if (javaDoc) {
             stringService.copyJavaDoc(variable, newMethod, workingCopy);
@@ -219,6 +221,10 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         String methodName = stringService.getSetterName(variable);
         String paramName = stringService.getParameterName(variable);
 
+        if (!this.domainClassRequest && variable.getName().toString().equals(paramName)) {
+            paramName = paramName + "Param"; // Add an argument suffix
+        }
+
         ModifiersTree methodModifiers =
                 treeMaker.Modifiers(Collections.<Modifier>singleton(Modifier.PUBLIC),
                 Collections.<AnnotationTree>emptyList());
@@ -237,8 +243,8 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 Collections.<TypeParameterTree>emptyList(),
                 Collections.singletonList(parameter),
                 Collections.<ExpressionTree>emptyList(),
-                "{\n" + clazz.getSimpleName().toString()
-                + "."
+                "{\n"
+                + getDomainClass()
                 + variable.getName() + ".setValue(this, " + paramName + ");}\n",
                 null);
         if (javaDoc) {
@@ -379,11 +385,21 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                         , propertiesChooser.isGettersRequired()
                         , propertiesChooser.isSettersRequired()
                         , propertiesChooser.isJavaDocRequired()
+                        , propertiesChooser.isDomainClassRequired()
                         );
                 }
             }
         });
         DialogDisplayer.getDefault().notify(dialogDescriptor);
+    }
+
+    /** Returns a domain class with a separator */
+    private String getDomainClass() {
+        if (this.domainClassRequest) {
+            return clazz.getSimpleName().toString() + ".";
+        } else {
+            return "";
+        }
     }
 
 }

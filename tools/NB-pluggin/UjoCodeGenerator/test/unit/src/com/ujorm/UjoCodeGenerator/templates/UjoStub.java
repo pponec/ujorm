@@ -7,8 +7,8 @@ package com.ujorm.UjoCodeGenerator.templates;
 import java.util.Date;
 
 /**
- *
- * @author ponec
+ * Stub of the UJO object for tests.
+ * @author Pavel Ponec
  */
 public class UjoStub {
 
@@ -18,8 +18,15 @@ public class UjoStub {
     public static final Key<UjoStub, String> NAME = newKey();
     /** Birthday
      * of the STUB
+     * where the <strong>key name</strong> have got a camelCase
      */
     public static final Key<UjoStub, Date> BIRTH_DAY = newKey();
+
+    // ---------- COMPOSITE KEYS -----
+
+    /** Name of the UjoStub instance
+     * where the <strong>key name</strong> have got a camelCase */
+    public static final Key<UjoStub, String> compositeKey = newKey();
 
     protected static <UJO,VALUE> Key<UJO, VALUE> newKey() {
         return new Key<UJO,VALUE>();
@@ -27,6 +34,6 @@ public class UjoStub {
 
     // ---------- GENERATED METHODS ------------------
 
-
+    
 
 }
