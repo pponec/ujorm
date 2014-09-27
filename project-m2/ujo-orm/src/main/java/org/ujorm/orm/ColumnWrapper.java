@@ -44,7 +44,4 @@ public interface ColumnWrapper {
     @Override
     public boolean equals(Object column);
 
-    /** Composite Column */
-    public boolean isCompositeColumn();
-
 }

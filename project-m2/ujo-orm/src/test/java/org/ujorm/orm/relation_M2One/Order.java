@@ -51,8 +51,8 @@ public class Order extends OrmTable<Order> {
     public static final Key<Order,String> sid = newKeyDefault("");
     /** Order state, default is ACTIVE */
     public static final Key<Order, State> state = newKey(State.ACTIVE);
-   /** Include modifier  columns  */
-    public static final Key<Order, ModifiedSet> modifierColumns = newKey();
+    /** Date of creation */
+    public static final Key<Order, Date> created = newKey();
     /** User key */
     public static final Key<Order, Integer> userId = newKey();
     /** Description of the Order */
@@ -60,11 +60,6 @@ public class Order extends OrmTable<Order> {
     public static final Key<Order, String> note = newKey();
     /** Reference to Items */
     public static final RelationToMany<Order, Item> items = newRelation();
-
-    /** Date of creation */
-    public static final Key<Order, Date> created = modifierColumns.add(ModifiedSet.created);
-   /** Date of creation */
-    public static final Key<Order, Date> modified = modifierColumns.add(ModifiedSet.modified);
 
     // -----------------------------------------------------------------------
 

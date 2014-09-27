@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
-import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
@@ -30,7 +29,6 @@ import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.implementation.orm.RelationToOne;
-import org.ujorm.orm.ColumnSet;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.ForeignKey;
@@ -175,14 +173,6 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     @Override
     public boolean isColumn() {
         return true;
-    }
-
-    @Override
-    public boolean isCompositeColumn() {
-        final Key key = TABLE_KEY.of(this); ((CompositeKey)key).getFirstKey().getType();
-        final boolean result = key.isComposite()
-                && ((CompositeKey)key).getFirstKey().isTypeOf(ColumnSet.class);
-        return result;
     }
 
     /** Is it a Foreign Key ? */

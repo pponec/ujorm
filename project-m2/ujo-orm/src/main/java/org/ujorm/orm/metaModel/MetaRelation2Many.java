@@ -17,7 +17,6 @@
 package org.ujorm.orm.metaModel;
 
 import java.lang.reflect.Field;
-import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
@@ -26,7 +25,6 @@ import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.orm.AbstractMetaModel;
-import org.ujorm.orm.ColumnSet;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
@@ -73,12 +71,11 @@ public class MetaRelation2Many extends AbstractMetaModel {
      * @param param XML content
      */    public MetaRelation2Many(MetaTable table, Key tableKey, MetaRelation2Many param) {
         this.tableAlias = table.getAlias();
-        final Key tableLastKey = tableKey.isComposite() ? ((CompositeKey)tableKey).getLastKey() : tableKey;
-        Field field = UjoManager.getInstance().getPropertyField(tableLastKey.getDomainType(), tableLastKey, false);
+        Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableKey, false);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
 
         if (true) {
-            ID.setValue(this, tableLastKey.getName());
+            ID.setValue(this, tableKey.getName());
             TABLE.setValue(this, table);
             TABLE_KEY.setValue(this, tableKey);
         }
@@ -89,11 +86,9 @@ public class MetaRelation2Many extends AbstractMetaModel {
         if (param!=null) {
             changeDefault(this, NAME, NAME.of(param));
         }
-        changeDefault(this, NAME, tableLastKey.getName());
+        changeDefault(this, NAME, tableKey.getName());
 
-        assert getKey().isComposite()
-                ? ((CompositeKey) getKey()).getFirstKey().isTypeOf(ColumnSet.class) : true
-                : String.format("The key %s must be direct.", getKey().getFullName());
+        assert !getKey().isComposite() : String.format("The key %s must be direct.", getKey().getFullName());
     }
 
     /** It is a DB column (either a value of a foreign key),
@@ -118,17 +113,9 @@ public class MetaRelation2Many extends AbstractMetaModel {
         return TABLE_KEY.of(this);
     }
 
-    /** Returns a column direct key  */
-    public final Key getLastKey() {
-        final Key key = getKey();
-        return key.isComposite()
-                ? ((CompositeKey)key).getLastKey()
-                : key;
-    }
-
-    /** Returns a composite Key for the case of the {@link ColumnSet} object  */
+    /** Is it newer the composite Key */
     public final boolean isCompositeKey() {
-        return getKey().isComposite();
+        return false;
     }
 
     /** Returns true if the key type is a type or subtype of the parameter class. */

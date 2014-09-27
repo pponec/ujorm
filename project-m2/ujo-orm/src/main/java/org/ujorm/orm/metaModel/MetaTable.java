@@ -15,14 +15,12 @@
  */
 package org.ujorm.orm.metaModel;
 
-import java.lang.Object;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
@@ -33,7 +31,6 @@ import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.AbstractMetaModel;
-import org.ujorm.orm.ColumnSet;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
@@ -205,12 +202,10 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         OrmHandler dbHandler = database.getOrmHandler();
         UjoManager ujoManager = UjoManager.getInstance();
         UjoManager.newInstance(dbProperty.getItemType()); // Initialize static Keys
-
         for (Key key : getColumns(dbProperty.getItemType())) {
+
             if (!ujoManager.isTransient(key)) {
-                final String keyName = key.isComposite()
-                        ? ((CompositeKey)key).getLastKey().getName()
-                        : key.getName();
+                final String keyName = key.getName();
 
                 if (key instanceof RelationToMany) {
                     MetaRelation2Many param = parTable!=null ? parTable.findRelation(keyName) : null;
@@ -232,34 +227,10 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         }
     }
 
-    /** */
+    /** Returns all columns from the class  */
     @SuppressWarnings("unchecked")
     private Iterable<Key<Ujo,Object>> getColumns(Class ujoClass) {
-        Iterable<Key<Ujo,Object>> keyList = UjoManager.getInstance().readKeys(ujoClass);
-        boolean colSet = false;
-        for (Key key : keyList) {
-            if (key.isTypeOf(ColumnSet.class)) {
-                colSet = true;
-                break;
-            }
-        }
-
-        if (!colSet) {
-            return keyList;
-        }
-
-        final List<Key<Ujo,Object>> result = new ArrayList<Key<Ujo,Object>>(64);
-        for (Key key : keyList) {
-            if (key.isTypeOf(ColumnSet.class)) {
-                for (Key key2 : getColumns(key.getType())) {
-                   result.add(key.add(key2));
-                }
-            } else {
-                result.add(key);
-            }
-        }
-
-        return result;
+        return UjoManager.getInstance().readKeys(ujoClass);
     }
 
     /** Assign a PK from framework */

@@ -16,9 +16,7 @@
 
 package org.ujorm.orm.impl;
 
-import org.ujorm.CompositeKey;
 import org.ujorm.Key;
-import org.ujorm.orm.ColumnSet;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.metaModel.MetaColumn;
 
@@ -82,13 +80,6 @@ public class ColumnWrapperImpl implements ColumnWrapper {
     public boolean isCompositeKey() {
         return key.isComposite();
     }
-
-    /** Is it a composite Key? */
-    @Override
-    public boolean isCompositeColumn() {
-        return column.isCompositeColumn();
-    }
-
 
     /** Two models are the same if its key names are the same for the same domain type. */
     @Override
