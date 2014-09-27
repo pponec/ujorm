@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
-import org.ujorm.extensions.PathProperty;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
@@ -47,7 +46,7 @@ public class UjoOrderItem extends OrmTable<UjoOrderItem> {
     public static final Key<UjoOrderItem,UjoOrderItem> PARENT = f.newKey("parent_id");
 
     /** Indirect key: ORDER.DELETED */
-    public static final PathProperty<UjoOrderItem,Boolean> _ORDER_DELETED = PathProperty.of(UjoOrderItem.ORDER, UjoOrder.DELETED);
+    public static final Key<UjoOrderItem,Boolean> _ORDER_DELETED = ORDER.add(UjoOrder.DELETED);
 
     static { f.lock(); }
 
