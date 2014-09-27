@@ -120,7 +120,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
                 final int iCol = view ? rs.findColumn(MetaColumn.NAME.of(column)) : (i+1);
                 final Object value = column.getConverter().getValue(column, rs, iCol);
 
-                if (colWrap.isCompositeKey() && !colWrap.isCompositeColumn()) {
+                if (colWrap.isCompositeKey()) {
                     final Ujo semiRow = ((CompositeKey)colWrap.getKey()).getSemiValue(row, true);
                     column.setValue(semiRow, value);
                     // A session of the related object will be assigned using the OrmProperty later.

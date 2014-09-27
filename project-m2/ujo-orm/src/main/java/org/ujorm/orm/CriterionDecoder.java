@@ -214,8 +214,7 @@ public class CriterionDecoder {
                 break;
             }
         }
-        while(result instanceof CompositeKey
-           && !(result instanceof CompositeColumn)) {
+        while(result instanceof CompositeKey) {
             result = ((CompositeKey)result).getFirstKey();
         }
         return result;
@@ -273,13 +272,12 @@ public class CriterionDecoder {
         allValues.addAll(nullValues);
 
         for (ValueCriterion value : allValues) {
-            Key p1 = normalizeNestedColumns(value.getLeftNode());
+            Key p1 = value.getLeftNode();
             if (p1 != null) {
                 AliasKey.addRelations(p1, result);
-                Object p2 = value.getRightNode();
-                if (p2 instanceof CompositeKey && !(p2 instanceof CompositeColumn)) {
-                    final CompositeKey p3 = normalizeNestedColumns((CompositeKey)p2);
-                    AliasKey.addRelations(p3, result);
+                final Object p2 = value.getRightNode();
+                if (p2 instanceof CompositeKey) {
+                    AliasKey.addRelations((CompositeKey)p2, result);
                 }
             }
         }
@@ -287,46 +285,11 @@ public class CriterionDecoder {
         // Get relations from the 'order by':
         if (orderBy != null) {
             for (Key p1 : orderBy) {
-                p1 = normalizeNestedColumns(p1);
                 AliasKey.addRelations((CompositeKey) p1, result);
             }
         }
 
         return result;
-    }
-
-    /** Normalize nested columns */
-    @SuppressWarnings("unchecked")
-    private <T extends Key> T normalizeNestedColumns(T key) {
-        if (key != null && key.isComposite()) {
-            boolean nested = false;
-            final CompositeKey cKey = (CompositeKey) key;
-            for (int i = 0, max = cKey.getCompositeCount() - 1; i < max; ++i) {
-                if (cKey.getDirectKey(i).isTypeOf(ColumnSet.class)) {
-                    nested = true;
-                    break;
-                }
-            }
-            if (nested) {
-                Key lastKey = null;
-                ArrayList<Key> keyList = new ArrayList<Key>();
-                for (int i = 0, max = cKey.getCompositeCount(); i < max; ++i) {
-                     lastKey = lastKey != null
-                             ? lastKey.add(cKey.getDirectKey(i))
-                             : cKey.getDirectKey(i);
-                    if (!cKey.getDirectKey(i).isTypeOf(ColumnSet.class)) {
-                        keyList.add(lastKey);
-                        lastKey = null;
-                    }
-                }
-                if (lastKey != null) {
-                    keyList.add(lastKey);
-                }
-                return (T) new CompositeColumn(keyList);
-            }
-        }
-
-        return key;
     }
 
     /** Get Base Table */
