@@ -66,7 +66,7 @@ public class KeyColumnDate<U extends Ujo> extends KeyColumn<U, java.util.Date> {
 
     /** Returns localizadDate pattern */
     protected String getDatePattern(final Component component) {
-        return component.getLocalizer().getString(localeDateFormatKey, null, DateTimes.getDefaultPattern(localeDateFormatKey));
+        return component.getLocalizer().getString(localeDateFormatKey, component, DateTimes.getDefaultPattern(localeDateFormatKey));
     }
 
     // =============== STATIC FACTORY METHODS ===============
