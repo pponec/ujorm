@@ -41,7 +41,7 @@ public class HotelsApplication extends WebApplication implements OrmHandlerProvi
         super.init();
         // getMarkupSettings().setStripWicketTags(true); // jQuery UI recommendation
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));
-        mountPage("/page", HomePage.class);
+        mountPage("/home", HomePage.class);
     }
 
     /** {@inheritDoc { */
