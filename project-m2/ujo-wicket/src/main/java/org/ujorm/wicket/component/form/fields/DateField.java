@@ -59,7 +59,7 @@ public class DateField<T> extends Field<T> {
     /** Returns localizadDate pattern */
     protected String getDatePattern() {
         final String key = DateTimes.LOCALE_DATE_FORMAT_KEY;
-        return getLocalizer().getString(key, null, DateTimes.getDefaultPattern(key));
+        return getLocalizer().getString(key, this, DateTimes.getDefaultPattern(key));
     }
 
     /** Returns an {@code input} value from model */

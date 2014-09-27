@@ -30,7 +30,7 @@ public abstract class DateTimes {
     /** Default 'datetime' format by the 'ISO 8601' */
     public static final String DEFAULT_DATETIME_PATTERN = DEFAULT_DATE_PATTERN + " HH:mm";
 
-    /** Get a date parrern by the localizationKey. */
+    /** Get a date pattern by the localizationKey. */
     public static String getDefaultPattern(final String localizationKey) {
         return LOCALE_DATE_FORMAT_KEY.equals(localizationKey)
              ? DEFAULT_DATE_PATTERN
