@@ -102,7 +102,7 @@ public class MySqlDialect extends SqlDialect {
                 throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
             }
             out.append(i==0 ? "" :  ", ");
-            printQuotedName(ormColumn.getName(), out);
+            out.append(ormColumn.getColumnAlias());
             out.append("=?");
         }
         return printWhere(decoder, tables, out);
