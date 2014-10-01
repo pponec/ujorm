@@ -43,9 +43,9 @@ public class Person extends SmartUjo<Person> {
     /** Father's name ; */
     public static final CompositeKey<Person,String> FATHERS_NAME = FATHER.add(NAME);
     /** Grandmothers name of the mother  */
-    public static final CompositeKey<Person,String> GRANDMOTHERS_NAME = MOTHER.add(NAME);
+    public static final CompositeKey<Person,String> GRANDMOTHERS_NAME = MOTHER.add(MOTHER).add(NAME);
     /** Grandfather's name of father */
-    public static final CompositeKey<Person,String> GRANDFATHERS_NAME = FATHER.add(NAME);
+    public static final CompositeKey<Person,String> GRANDFATHERS_NAME = FATHER.add(FATHER).add(NAME);
 
 
     /** Equals */

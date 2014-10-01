@@ -20,6 +20,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
@@ -183,6 +184,31 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
             ? ((CompositeKey)result).getFirstKey()
             : result
             ;
+    }
+
+    /** Method implements iterator */
+    @Override
+    public Iterator<Key<?, ?>> iterator() {
+        return new Iterator<Key<?, ?>>() {
+            private final int max = getCompositeCount();
+            private int i = 0;
+
+            @Override
+            public boolean hasNext() {
+                return i < max;
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public Key<Ujo, Object> next() {
+                return (Key<Ujo, Object>) getDirectKey(i++);
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     /** Full key names with no alias */

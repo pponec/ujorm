@@ -12,7 +12,6 @@ import java.util.List;
 import junit.framework.*;
 import org.ujorm.CompositeKey;
 import org.ujorm.MyTestCase;
-import org.ujorm.Ujo;
 import org.ujorm.extensions.PathProperty;
 import static org.ujorm.criterion.Person.*;
 
