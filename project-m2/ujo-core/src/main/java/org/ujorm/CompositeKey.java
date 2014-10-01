@@ -23,7 +23,7 @@ import org.ujorm.validator.ValidationException;
  * A <strong>CompositeKey</strong> interface is a composite of more Key objects.
  * The CompositeKey class can be used wherever is used Key - with a one important <strong>exception</strong>:
  * do not send the CompositeKey object to methods Ujo.readValue(...) and Ujo.writeValue(...) directly!!!
- * <p/>There is prefered two methods UjoManager.setValue(...) / UjoManager.getValue(...)
+ * <p/>There is preferred two methods UjoManager.setValue(...) / UjoManager.getValue(...)
  * to write and read a value instead of this - or use some type safe solution by UjoExt or a method of Key.
  * <p/>Note that method isDirect() returns a false in this class. For this reason, the key is not included
  * in the list returned by Ujo.readProperties().
@@ -32,7 +32,7 @@ import org.ujorm.validator.ValidationException;
  * @since 0.81
  */
 @SuppressWarnings("deprecation")
-public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE> {
+public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, Iterable<Key<?,?>> {
     /** Default name space have got the {@code null} value */
     public static final String DEFAULT_ALIAS = null;
 
