@@ -484,7 +484,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
 
     /** @{@inheritDoc} */
     @Override
-    public final boolean isComposite() {
+    public boolean isComposite() {
         return true;
     }
 
