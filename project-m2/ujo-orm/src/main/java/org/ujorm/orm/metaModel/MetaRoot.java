@@ -47,7 +47,7 @@ final public class MetaRoot extends AbstractMetaModel {
     private static final Class<MetaRoot> CLASS = MetaRoot.class;
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaRoot.class);
     /** XSD source */
-    private static final String XSD_SOURCE = "http://ujorm.org/ujorm-1.43.xsd";
+    private static final String XSD_SOURCE = "http://ujorm.org/ujorm-1.50.xsd";
 
     /** Property Factory */
     private static final KeyFactory<MetaRoot> fa = KeyFactory.CamelBuilder.get(CLASS);
