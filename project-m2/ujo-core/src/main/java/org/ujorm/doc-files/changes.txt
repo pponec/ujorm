@@ -1,5 +1,15 @@
 The Ujorm release notes
 *******************************
+release 1.50 (2014-10-01)
++ CORE:  The composite Key implements the interface Iterable<Key>
++ ORM: The new API for a multi DELETE
++ ORM: MySql dialect is fixed for an UPDATE with more database tables
++ WICKET: The class OrmDataProvider supports a hidden columns for a database column fetching
++ WICKET: The class AbstractDataProvider have got an extended API for a toolbar management.
++ WICKET: DateTime format fixing
++ WICKET: The class UjoTableProvider is renamed to the OrmTableProvider.
++ WICKET: The MessageDialogPanel have a new factory method with an autoclose argument.
++ SAMPLES: The application Demo-Hotels is upgraded and extended
 
 release 1.48 (2014-07-28)
 + WICKET: The autoclose attribute is supported in dialogs
