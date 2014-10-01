@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.ujorm.hotels.gui.HomePage;
-import org.ujorm.hotels.gui.HotelsApplication;
+import org.ujorm.hotels.gui.MainApplication;
 
 /**
  * Simple test using the WicketTester
@@ -20,7 +20,7 @@ public class HomePageTest extends TestCase {
 
     @Override
     public void setUp() {
-        tester = new WicketTester(new HotelsApplication());
+        tester = new WicketTester(new MainApplication());
     }
 
     /** Empty test */

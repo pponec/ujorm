@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
     <head>
         <meta charset="utf-8" />
-        <title>Demo Hotels</title>
+        <title wicket:id="applicationTitle">Application Name</title>
 
         <link rel="shortcut icon" type="image/png" href="images/favicon.png"/>
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
@@ -16,7 +16,7 @@
         <div id="hd">
             <div id="logo">
                 <div wicket:id="login" class="login">Login</div>
-                <h1>Demo Hotels
+                <h1><wicket:container wicket:id="applicationName">Application Name</wicket:container>
                     <img src="images/hotel.png" alt="Guiicons.com, Free for non-commercial use." title="hotel icon"
                          style="margin-left: 15px; width: 64px; height: 64px; margin-left: 30px;" />
                 </h1>

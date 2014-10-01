@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -68,6 +69,8 @@ public class HomePage extends WebPage {
             }
         });
         add(new MeasuringCode("measuringCode"));
+        add(new  Label("applicationTitle", MainApplication.APPLICATION_NAME));
+        add(new  Label("applicationName", MainApplication.APPLICATION_NAME));
     }
 
     /** Manage events */

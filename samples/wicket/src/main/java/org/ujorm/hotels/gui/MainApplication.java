@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, Pavel Ponec
+ * Copyright 2013-2014, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,10 @@ import org.ujorm.orm.OrmHandlerProvider;
  * @see com.mycompany.Start#main(String[])
  */
 @Component("wicketApplicationSpringBean")
-public class HotelsApplication extends WebApplication implements OrmHandlerProvider {
+public class MainApplication extends WebApplication implements OrmHandlerProvider {
+
+    /** The application name */
+    public static final String APPLICATION_NAME = "Demo Hotels";
 
     /** OrmHandler Provider */
     @Autowired
