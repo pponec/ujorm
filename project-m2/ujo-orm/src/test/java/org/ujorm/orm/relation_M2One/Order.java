@@ -19,10 +19,11 @@ import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.extensions.StringWrapper;
-import org.ujorm.orm.DbType;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.DbType;
+import org.ujorm.orm.OrmKeyFactory;
+import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Table;
 
 /**
@@ -43,23 +44,29 @@ public class Order extends OrmTable<Order> {
         }
     }
 
+    /** The Key Factory */
+    private static final OrmKeyFactory<Order> f = newFactory(Order.class);
+
     /** The Unique Key */
     @Column(pk = true)
-    public static final Key<Order, Long> id = newKey();
+    public static final Key<Order, Long> id = f.newKey();
     /** Alternative Unique Key */
     @Column(length=10, uniqueIndex="sid_index")
-    public static final Key<Order,String> sid = newKeyDefault("");
+    public static final Key<Order,String> sid = f.newKeyDefault("");
     /** Order state, default is ACTIVE */
-    public static final Key<Order, State> state = newKey(State.ACTIVE);
+    public static final Key<Order, State> state = f.newKeyDefault(State.ACTIVE);
     /** Date of creation */
-    public static final Key<Order, Date> created = newKey();
+    public static final Key<Order, Date> created = f.newKey();
     /** User key */
-    public static final Key<Order, Integer> userId = newKey();
+    public static final Key<Order, Integer> userId = f.newKey();
     /** Description of the Order */
     @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
-    public static final Key<Order, String> note = newKey();
+    public static final Key<Order, String> note = f.newKey();
     /** Reference to Items */
-    public static final RelationToMany<Order, Item> items = newRelation();
+    public static final RelationToMany<Order, Item> items = f.newRelation();
+
+    // Lock the factory:
+   static {  f.lock(); }
 
     // -----------------------------------------------------------------------
 
