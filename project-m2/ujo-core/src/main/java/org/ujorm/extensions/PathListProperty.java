@@ -24,7 +24,7 @@ import org.ujorm.Ujo;
 import org.ujorm.core.annot.Immutable;
 
 /**
- * A <strong>PathListProperty</strong> class is an composite ending wtih a ListKey objects.
+ * A <strong>PathListProperty</strong> class is an composite ending with a ListKey objects.
  * The PathListProperty class can be used wherever is used ListKey - with a one important <strong>exception</strong>:
  * do not send the PathListProperty object to methods Ujo.readValue(...) and Ujo.writeValue(...) !!!
  * <p/>Note that method isDirect() returns a false in this class. For this reason, the Key is not included
@@ -60,44 +60,53 @@ final public class PathListProperty<UJO extends Ujo, VALUE>
     }
 
     /** Item type */
+    @Override
     public Class<VALUE> getItemType() {
         return getLastPartialProperty().getItemType();
     }
 
+    @Override
     public boolean isItemTypeOf(Class type) {
         return getLastPartialProperty().isItemTypeOf(type);
     }
 
+    @Override
     final public VALUE getItem(UJO ujo, int index) {
         return of(ujo, index);
     }
 
+    @Override
     public VALUE of(UJO ujo, int index) {
         final Ujo u = getSemiValue(ujo, false);
         return  u != null ? getLastPartialProperty().getItem(u, index) : null;
     }
 
+    @Override
     public int getItemCount(UJO ujo) {
         final Ujo u = getSemiValue(ujo, false);
         return u != null ? getLastPartialProperty().getItemCount(u) : 0 ;
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public List<VALUE> getList(UJO ujo) {
         final Ujo u = getSemiValue(ujo, false);
         return u != null ? getLastPartialProperty().getList(u) : null;
     }
 
+    @Override
     public VALUE setItem(UJO ujo, int index, VALUE value) {
         final Ujo u = getSemiValue(ujo, false);
         return u != null ? getLastPartialProperty().setItem(u, index, value) : null;
     }
 
+    @Override
     public boolean addItem(UJO ujo, VALUE value) {
         final Ujo u = getSemiValue(ujo, false);
         return u != null ? getLastPartialProperty().addItem(u, value) : null;
     }
 
+    @Override
     public boolean removeItem(UJO ujo, VALUE value) {
         final Ujo u = getSemiValue(ujo, false);
         return u != null ? getLastPartialProperty().removeItem(u, value) : false;
