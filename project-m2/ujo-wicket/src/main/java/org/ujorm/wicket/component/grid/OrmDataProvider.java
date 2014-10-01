@@ -97,7 +97,7 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
         if (hiddenColumns == null) {
              hiddenColumns = new ArrayList<KeyRing<U>>();
         }
-        hiddenColumns.add(KeyRing.of(column));
+        hiddenColumns.add(KeyRing.<U>of(column));
     }
 
     /** Build a JDBC ResultSet always.
