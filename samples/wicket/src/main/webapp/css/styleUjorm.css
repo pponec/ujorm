@@ -38,6 +38,10 @@ table.border td {
     border-right : 1px solid #eeeeee;
 }
 
+div.w_content table.border {
+    width: 99%;
+}
+
 table.datatable {
     width: 100%;
 }
