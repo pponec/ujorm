@@ -290,7 +290,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         int result = 1;
         for (Field field : getFields()) {
             final Key key = field.getKey();
-            if (key instanceof CompositeKey) {
+            if (key instanceof CompositeKey) { // Test for the Instance
                 result = Math.max(result, ((CompositeKey) key).getCompositeCount());
             }
         }

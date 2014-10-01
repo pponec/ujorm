@@ -81,7 +81,7 @@ import org.ujorm.wicket.component.tools.DateTimes;
  */
 public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataProvider<U, Object> {
     private static final long serialVersionUID = 1L;
-    /** Default Datatable ID have got value {@code "datatable"}. */
+    /** Default DataTable ID have got value {@code "datatable"}. */
     public static final String DEFAULT_DATATABLE_ID = "datatable";
     /** Default CSS style for a SELECTED row */
     protected static final String DEFAULT_CSS_SELECTED = "selected";
@@ -138,7 +138,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
                 : SortOrder.DESCENDING);
     }
 
-    /** Vrací klíč pro řazení */
+    /** Returns a sorting Key */
     public Key<U,?> getSortKey() {
         final SortParam<Object> sort = getSort();
         if (sort != null) {
@@ -151,13 +151,13 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
         }
     }
 
-    /** Build a JDBC ResultSet allways.
+    /** Build a JDBC ResultSet always.
      * Overwrite the method for an optimization.<br>
      */
 
     public abstract Iterator<U> iterator(long first, long count);
 
-    /** Method calculate the size using special SQL requst.
+    /** Method calculate the size using special SQL request.
      * Overwrite the method for an optimization.<br>
      * Original documentation: {@inheritDoc}
      */
@@ -167,7 +167,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     @Override
     public abstract void detach();
 
-    /** Get a domann class */
+    /** Get a domain class */
     public Class<U> getDomainClass() {
         return (Class<U>) filter.getObject().getDomain();
     }
@@ -316,15 +316,27 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
 
         result.setOutputMarkupId(true);
         result.setVersioned(false);
-        result.addTopToolbar(new AjaxNavigationToolbar(result));
-        result.addTopToolbar(new AjaxFallbackHeadersToolbar(result, this));
-        result.addBottomToolbar(new NoRecordsToolbar(result));
+
+        createTopToolbars(result);
+        createBottomToolbars(result);
 
         if (insertToolbar) {
             result.addBottomToolbar(new InsertToolbar(result, getDomainClass()));
         }
 
         return result;
+    }
+
+    /** Create default top table toolbars: AjaxNavigationToolbar and  AjaxFallbackHeadersToolbar */
+    @SuppressWarnings("unchecked")
+    protected <S> void createTopToolbars(final DataTable<U, S> result) {
+        result.addTopToolbar(new AjaxNavigationToolbar(result));
+        result.addTopToolbar(new AjaxFallbackHeadersToolbar(result, this));
+    }
+
+    /** Create default bottom table toolbars: NoRecordsToolbar */
+    protected <S> void createBottomToolbars(final DataTable<U, S> result) {
+        result.addBottomToolbar(new NoRecordsToolbar(result));
     }
 
     // ============= SETERS / GETTERS =============
@@ -413,6 +425,6 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      */
     public long updateRow(Criterion<? super U> updateCondition, U updatedRow) {
         throw new UnsupportedOperationException();
- }
+    }
 
 }
