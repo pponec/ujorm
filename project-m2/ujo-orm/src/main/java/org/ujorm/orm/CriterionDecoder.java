@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
+import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.BinaryCriterion;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
@@ -214,7 +215,7 @@ public class CriterionDecoder {
                 break;
             }
         }
-        while(result instanceof CompositeKey) {
+        while(UjoManager.isCompositeKey(result)) {
             result = ((CompositeKey)result).getFirstKey();
         }
         return result;

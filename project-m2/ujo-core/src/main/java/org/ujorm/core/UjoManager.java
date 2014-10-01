@@ -956,6 +956,24 @@ public class UjoManager implements Comparator<Key> {
          getInstance().checkUniqueProperties(type, true);
     }
 
+    /** Is the argument an Composite Key ?
+     * @param key any <strong>nullable</strong> object
+     * @return Returns true, if the argument is type of {@link CompositeKey}
+     * and its method {@link CompositeKey#isComposite()}.
+     */
+    public static boolean isCompositeKey(Object key) {
+        return key instanceof CompositeKey && ((CompositeKey) key).isComposite();
+    }
+
+    /** Is the argument an Composite Key ?
+     * @param key any <strong>nullable</strong> object
+     * @return Returns true, if the argument is type of {@link CompositeKey}
+     * and its method {@link CompositeKey#isComposite()}.
+     */
+    public static boolean isCompositeKey(Key key) {
+        return key != null && key.isComposite();
+    }
+
     /** Create a new instance of the Ujo and initialize all static fields */
     public static <T> T newInstance(Class<T> type) throws IllegalStateException {
         try {
@@ -985,14 +1003,14 @@ public class UjoManager implements Comparator<Key> {
         return result;
     }
 
-    /** Regurns information about current library. */
+    /** Returns information about current library. */
     public static String version() {
         final Package packge = Ujo.class.getPackage();
         final String result = packge!=null ? packge.getSpecificationVersion() : null;
         return result!=null ? result : "UNDEFINED" ;
     }
 
-    /** Regurns information about current library.
+    /** Returns information about current library.
      * @deprecated Use the method {@link #version()} rather.
      */
     public static String projectVersion() {
