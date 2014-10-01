@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- The Ujorm configuration file release UNDEFINED was created 2014-09-13 23:24 -->
-<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.43.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.50.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <database id="Database">
         <schema>db_m</schema>
         <readOnly>false</readOnly>
