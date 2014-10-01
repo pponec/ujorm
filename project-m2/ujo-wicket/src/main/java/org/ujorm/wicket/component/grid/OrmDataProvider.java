@@ -15,13 +15,16 @@
  */
 package org.ujorm.wicket.component.grid;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
+import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
@@ -63,6 +66,9 @@ import org.ujorm.wicket.OrmSessionProvider;
  */
 public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
     private static final long serialVersionUID = 1L;
+
+    /** Hidden table columns for DB fetching */
+    List<KeyRing<U>> hiddenColumns = null;
     /** OrmSession */
     private OrmSessionProvider ormSession;
     /** Fetch database columns for better SQL performance
@@ -86,7 +92,15 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
         this.ormSession = new OrmSessionProvider();
     }
 
-    /** Build a JDBC ResultSet allways.
+    /** Add the hidden column for a fetch loading from database */
+    public void addHidden(Key<? super U, ?> column) {
+        if (hiddenColumns == null) {
+             hiddenColumns = new ArrayList<KeyRing<U>>();
+        }
+        hiddenColumns.add(KeyRing.of(column));
+    }
+
+    /** Build a JDBC ResultSet always.
      * Overwrite the method for an optimization.<br>
      */
     @Override
@@ -116,7 +130,7 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
        return size;
     }
 
-    /** Returns orm Session */
+    /** Returns ORM Session */
     protected Session getOrmSession() {
         return ormSession.getSession();
     }
@@ -154,14 +168,19 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
      * @see #isFetchDatabaseColumns()
      */
     protected void fetchDatabaseColumns(Query<U> query) {
-        if (!fetchDatabaseColumns) {
-            return; // Fetching is disabled
-        }
         if (getColumns().isEmpty()) {
             return; // Keep the default state
         }
         if (query.getTableModel().isView()) {
             return; // View is not supported for fetching
+        }
+        if (hiddenColumns != null) {
+            for (KeyRing<U> hiddenKey : hiddenColumns) {
+                query.addColumn(hiddenKey.getFirstKey());
+            }
+        }
+        if (!fetchDatabaseColumns) {
+            return; // Auto fetching is disabled
         }
 
         final OrmHandler handler = query.getSession().getHandler();
@@ -176,6 +195,11 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
                 }
             }
         }
+    }
+
+    /** Hidden column table list */
+    public List<KeyRing<U>> getHiddenColumns() {
+        return hiddenColumns;
     }
 
     /** Add sorting to a database Query,
