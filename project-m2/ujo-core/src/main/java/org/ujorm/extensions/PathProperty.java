@@ -26,6 +26,7 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
+import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
@@ -131,9 +132,11 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
 
     /** Create a key array from the argument */
     private static Key[] createKeyArray(final Key keys) {
-        if (keys instanceof PathProperty) {
-            return ((PathProperty)keys).keys;
-        } else if (keys instanceof CompositeKey) {
+        if (UjoManager.isCompositeKey(keys)) {
+            if (keys instanceof PathProperty ) {
+               return ((PathProperty)keys).keys;
+            }
+
             final CompositeKey cKey = (CompositeKey) keys;
             final Key[] result = new Key[cKey.getCompositeCount()];
             for (int i = cKey.length() - 1; i >= 0 ; i--) {
