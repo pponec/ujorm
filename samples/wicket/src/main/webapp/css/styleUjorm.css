@@ -141,7 +141,7 @@ td.logical {
     text-align: center;
 }
 
-td.logical .ok {
+td.logical.ok {
     color: rgba(0, 0, 0, 0);
     background-image: url("../images/icons/tick.png");
     background-repeat: no-repeat;
