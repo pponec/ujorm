@@ -33,6 +33,7 @@ public class FeedbackField<T> extends Field<T> {
 
     private static final long serialVersionUID = 20130621L;
 
+    @SuppressWarnings("unchecked")
     public FeedbackField(String id) {
         super(id, null, null);
         setDefaultModel(new Model(""));

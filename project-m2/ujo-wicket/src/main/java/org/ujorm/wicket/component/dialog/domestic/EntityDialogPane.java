@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, Pavel Ponec
+ * Copyright 2013-2014, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.ujorm.Ujo;
 import org.ujorm.wicket.component.form.FieldProvider;
+import org.ujorm.wicket.component.form.FieldProviderFactory;
 import org.ujorm.wicket.component.form.fields.FeedbackField;
 
 /**
@@ -41,11 +42,18 @@ public class EntityDialogPane<U extends Ujo> extends AbstractDialogPane<U> {
 
     /** Common constructor */
     public EntityDialogPane(ModalWindow modalWindow, IModel<? super U> model, boolean autoClose) {
+        this(modalWindow, model, new FieldProviderFactory<U>(), autoClose);
+    }
+
+    /** Common constructor */
+    public EntityDialogPane(ModalWindow modalWindow, IModel<? super U> model, FieldProviderFactory<U> fieldProviderFactory, boolean autoClose) {
         super(modalWindow, model, autoClose);
         // Create a feedback:
-        repeater.add(feedbackField = new FeedbackField(repeater.newChildId()));
+        feedbackField = fieldProviderFactory.createDefaultFeedbackField(repeater);
+        repeater.add(feedbackField);
         // Create a field factory:
-        form.add((fields = new FieldProvider(repeater)).getRepeatingView());
+        this.fields = fieldProviderFactory.createDefaultFieldProvider(repeater);
+        form.add(fields.getRepeatingView());
     }
 
     /** Input fields provider
