@@ -50,10 +50,10 @@ import org.ujorm.wicket.component.tools.DateTimes;
  * <p>This class called <strong>UjoDataProvider</strong> is an common
  * Wicket DataProvider to create an AJAX DataTable component.
  * For a column customizations you can use your own {@link IColumn} implementations.
- * or you can owerwrite selected methods of this provider.
+ * or you can overwrite selected methods of this provider.
  * </p><p>
  * The implementation generates two database requests per a one rendering,
- * the first one get size and the second one get paged data. You can owerwrite the two data methods:
+ * the first one get size and the second one get paged data. You can overwrite the two data methods:
  * {@link #iterator(long, long) iterator()} and the {@link #size() size()}
  * for more optimization.
  * </p><p>
@@ -92,8 +92,8 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     protected Long size;
     /** Data criterion model for filtering the data resource */
     protected IModel<Criterion<U>> filter;
-    /** Data criterion model for select data rows */
-    protected IModel<Criterion<U>> selected;
+    /** Data criterion model for highlighting data rows */
+    protected IModel<Criterion<U>> highlighting;
     /** Visible table columns */
     private List<IColumn<U, ?>> columns = new ArrayList<IColumn<U, ?>>();
     /** Default column sorting for the method {@link #addColumn(org.ujorm.Key) }
@@ -303,9 +303,9 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
                     , final IModel<U> model) {
                 final Item<U> result = new OddEvenItem<U>(id, index, model);
 
-                // Mark a selected rows:
-                if (selected != null) {
-                    final Criterion<U> crn = selected.getObject();
+                // Mark a highlighting rows:
+                if (highlighting != null) {
+                    final Criterion<U> crn = highlighting.getObject();
                     if (crn!=null && crn.evaluate(model.getObject())) {
                        result.add(new CssAppender(getCssSelected()));
                     }
@@ -377,27 +377,47 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
 
     /**
      * Data criterion model for select data rows
-     * @return the selected
+     * @return the highlighting
      */
     @Nullable
-    public IModel<Criterion<U>> getSelected() {
-        return selected;
+    public IModel<Criterion<U>> getHighlighting() {
+        return highlighting;
+    }
+
+    /**
+     * Data criterion model for highlighting data rows
+     * @param criterionModel The highlighting criterion model to set
+     */
+    public void setHighlighting(@Nullable IModel<Criterion<U>> criterionModel) {
+        this.highlighting = criterionModel;
     }
 
     /**
      * Data criterion model for select data rows
-     * @param selected the selected to set
+     * @param criterion The highlighting criterion to set
      */
-    public void setSelected(@Nullable IModel<Criterion<U>> selected) {
-        this.selected = selected;
+    public void setHighlighting(@Nonnull Criterion<U> criterion) {
+        setHighlighting(new Model(criterion));
     }
 
     /**
      * Data criterion model for select data rows
-     * @param selected the selected to set
+     * @param criterionModel The highlighting criterion model to set
+     * @depreated Use the method {@link #setHighlighting(org.apache.wicket.model.IModel)}
      */
-    public void setSelected(@Nonnull Criterion<U> selected) {
-        setSelected(new Model(selected));
+    @Deprecated
+    public final void setSelected(@Nullable IModel<Criterion<U>> criterionModel) {
+        setHighlighting(criterionModel);
+    }
+
+    /**
+     * Data criterion model for highlighting data rows
+     * @param criterion The highlighting criterion to set
+     * @depreated Use the method {@link #setHighlighting(org.ujorm.criterion.Criterion) }
+     */
+    @Deprecated
+    public final void setSelected(@Nonnull Criterion<U> criterion) {
+        setHighlighting(criterion);
     }
 
     // --------- CRUD support ---------
