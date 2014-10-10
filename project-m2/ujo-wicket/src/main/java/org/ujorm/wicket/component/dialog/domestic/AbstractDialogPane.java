@@ -237,6 +237,16 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
         return modalWindow;
     }
 
+    /** Close the modal window */
+    public void close (AjaxRequestTarget target) {
+        modalWindow.close(target);
+    }
+
+    /** Close the modal window */
+    public final void close (UjoEvent target) {
+        close(target.getTarget());
+    }
+
     /** Get Save button key key */
     protected IModel<String> getButtonModel(String propertyName) {
         return new ResourceModel(BUTTON_PREFIX + propertyName, propertyName);
