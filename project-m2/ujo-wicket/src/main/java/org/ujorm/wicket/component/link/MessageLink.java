@@ -51,7 +51,7 @@ public class MessageLink extends Panel {
 
     }
 
-    /** Owerwrite the method  */
+    /** overwrite the method  */
     public void onClick(AjaxRequestTarget target) {
     }
 

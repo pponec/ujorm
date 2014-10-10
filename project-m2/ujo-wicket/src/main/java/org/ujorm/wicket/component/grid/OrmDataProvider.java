@@ -35,7 +35,7 @@ import org.ujorm.wicket.OrmSessionProvider;
 /**
  * <p>This class called <strong>OrmDataProvider</strong> is an ORM based
  * Wicket DataProvider. For a customization you can use a your own {@link IColumn} implementations
- * or you can overwrite selected methods of this provider.
+ * or you can overwrite highlighting methods of this provider.
  * </p><p>
  * The implementation generates two database requests per a one rendering,
  * the first one get size and the second one get paged data. You can overwrite the two data methods:
