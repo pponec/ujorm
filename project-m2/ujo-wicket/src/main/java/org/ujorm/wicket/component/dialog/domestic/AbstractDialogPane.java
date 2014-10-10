@@ -96,7 +96,7 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
         return (T) getDefaultModelObject();
     }
 
-    /** Vytvoří textfield pro aktuání model */
+    /** Creates the default Confirmation button */
     protected AjaxButton createActionButton(String id, String propertyName) {
         final AjaxButton result = new AjaxButton
                 ( id
@@ -127,7 +127,7 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
         return result;
     }
 
-    /** Vytvoří textfield pro aktuání model */
+    /** Creates the default Cancel button */
     protected AjaxButton createCancelButton(String id, String propertyName) {
         final AjaxButton result = new AjaxButton
                 ( id
