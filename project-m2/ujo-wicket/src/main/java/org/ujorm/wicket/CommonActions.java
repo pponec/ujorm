@@ -42,6 +42,8 @@ public interface CommonActions {
     /** Default value is the same like the field */
     public static final String LOGIN_CHANGED = "LOGIN_CHANGED";
     /** Default value is the same like the field */
+    public static final String SELECT = "SELECT";
+    /** Default value is the same like the field */
     public static final String UNDEFINED = "";
 
 }

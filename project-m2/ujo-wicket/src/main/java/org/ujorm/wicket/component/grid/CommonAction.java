@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.ujorm.Ujo;
+import org.ujorm.wicket.CommonActions;
 
 /**
  * The common action panel
@@ -35,15 +36,19 @@ public class CommonAction<U extends Ujo> implements Serializable {
     /** Label of the action */
     private final IModel<String> label;
 
-    /** Create Resource model label using {@code actionId} with a prefix {@code "label.action."} */
+    /** Create Resource model label using {@code actionId} with a prefix {@code "label.action."}
+     * @param actionId Action identifier, see common constants from the class {@link CommonActions}.
+     * @see CommonActions
+     */
     public CommonAction(String actionId) {
         this(actionId, null);
     }
 
     /** Constructor with full arguments
-     * @param actionId Action identifier
+     * @param actionId Action identifier, see common constants from the class {@link CommonActions}.
      * @param label Optional Label, the {@code null} value is replaced by the key: {@code "label.action." + actionId}.
      * @param visibleModel Visible model is optional
+     * @see CommonActions
      */
     public CommonAction(@Nonnull String actionId, @Nullable IModel<String> label) {
         this.actionId = actionId;
@@ -61,14 +66,18 @@ public class CommonAction<U extends Ujo> implements Serializable {
         return label;
     }
 
-    /** Is the action visibled? The method is ready to to owerriding. */
+    /** Is the action visible? The method is ready to to overriding. */
     public boolean isVisible(U row) {
         return true;
     }
 
     // ------- STATIC METHODS -------
 
-    /** A common action factory */
+    /** A common action factory
+     * @param actions An array of the action names
+     * @see CommonActions class
+     * @return CommonActions
+     */
     public static CommonAction[] of(String ... actions) {
         final CommonAction[] result = new CommonAction[actions.length];
         for (int i = result.length - 1; i >= 0; i--) {
@@ -76,5 +85,4 @@ public class CommonAction<U extends Ujo> implements Serializable {
         }
         return result;
     }
-
 }
