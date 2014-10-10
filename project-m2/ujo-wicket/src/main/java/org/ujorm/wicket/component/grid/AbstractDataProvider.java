@@ -420,6 +420,16 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
         setHighlighting(criterion);
     }
 
+    /** A common tool returns the first row of the selected dataTable or the {@code null} value if no row was found */
+    @SuppressWarnings("unchecked")
+    protected U getFirstTableRow(@Nonnull DataTable dataTable) {
+        final Long firstRowIndex = dataTable.getCurrentPage() * dataTable.getItemsPerPage();
+        final Iterator<U> iterator = dataTable.getDataProvider().iterator(firstRowIndex, 1);
+        return iterator.hasNext()
+               ? iterator.next()
+               : null ;
+    }
+
     // --------- CRUD support ---------
 
     /** Insert row to the data source.
