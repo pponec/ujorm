@@ -59,6 +59,10 @@ div.wicket-modal div.w_content {
     padding-top: 4px;
 }
 
+.w_content textarea {
+    /* width: 95%; */
+}
+
 form span.help-inline, form div.help-inline {
     color: #DD5600;
 }
