@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 Pavel Ponec
+ *  Copyright 2013-2014 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ public class KeyColumn<U extends Ujo, T> extends AbstractColumn<U, KeyRing<U>> {
         final U ujo = rowModel.getObject();
         final IModel<?> valueModel = createValueModel(ujo);
         final Component value = createValueCoponent(componentId, valueModel, ujo);
-        appendCssClass(value, ujo);
+        appendCssClass(item, ujo);
         item.add(value);
     }
 
@@ -128,7 +128,9 @@ public class KeyColumn<U extends Ujo, T> extends AbstractColumn<U, KeyRing<U>> {
         this.cssClass = cssClass;
     }
 
-    /** Create the Label for a Value component */
+    /** Create the Label for a Value component, but no CSS class.
+     * @see #appendCssClass(org.apache.wicket.Component, org.ujorm.Ujo)
+     */
     protected Component createValueCoponent(final String componentId, final IModel<?> valueModel, final U ujo) {
         return new Label(componentId, valueModel);
     }

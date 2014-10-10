@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 Pavel Ponec
+ *  Copyright 2013-2014 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,20 +35,20 @@ public class KeyColumnBoolean<U extends Ujo> extends KeyColumn<U, Boolean> {
 
     /** Default CSS class for an OK value */
     protected static String DEFAULT_LOGICAL_CLASS = "logical";
-    /** Default CSS class for an OK value */
-    protected static String DEFAULT_CSS_OK_CLASS = "ok";
+    /** Default CSS class for an {@code true} value */
+    protected static String DEFAULT_CSS_AFFIRMATIVE_CLASS = "ok";
 
-    /** Class for OK value */
-    protected final String cssOkClass;
+    /** Class for the TRUE value */
+    protected final String cssAffirmativeClass;
 
     public KeyColumnBoolean(Key<U,?> key, Key<U,?> keySortable, String cssClass) {
-        this(KeyRing.<U>of(key), KeyRing.<U>of(keySortable), cssClass, DEFAULT_CSS_OK_CLASS);
+        this(KeyRing.<U>of(key), KeyRing.<U>of(keySortable), cssClass, DEFAULT_CSS_AFFIRMATIVE_CLASS);
     }
 
-    public KeyColumnBoolean(KeyRing<U> key, KeyRing<U> keySortable, String cssClass, String cssOkClass) {
+    public KeyColumnBoolean(KeyRing<U> key, KeyRing<U> keySortable, String cssClass, String cssAffirmativeClass) {
         super(key, keySortable);
         setCssClass(cssClass);
-        this.cssOkClass = cssOkClass;
+        this.cssAffirmativeClass = cssAffirmativeClass;
     }
 
     /** Create a Value component */
@@ -63,63 +63,63 @@ public class KeyColumnBoolean<U extends Ujo> extends KeyColumn<U, Boolean> {
         return Model.of(result);
     }
 
-    /** Append css class */
+    /** Append the CSS class */
     @Override
     protected void appendCssClass(Component value, U ujo) {
         super.appendCssClass(value, ujo);
 
-        if (cssOkClass != null
+        if (cssAffirmativeClass != null
         &&  Boolean.TRUE.equals(keySerializable.getFirstValue(ujo))) {
-            value.add(new CssAppender(cssOkClass));
+            value.add(new CssAppender(cssAffirmativeClass));
         }
     }
 
     /** Returns a CSS class of the {@code true} value */
-    public String getCssOkClass() {
-        return cssOkClass;
+    public String getCssAffirmativeClass() {
+        return cssAffirmativeClass;
     }
 
     // =============== STATIC FACTORY METHODS ===============
 
     /**
-     * A factory method where a default key {@link #getCssOkClass()} have got value {@link #DEFAULT_CSS_OK_CLASS}
+     * A factory method where a default key {@link #getCssAffirmativeClass()} have got value {@link #DEFAULT_CSS_AFFIRMATIVE_CLASS}
      * @param key Domain Key
      * @param sorted A sorting request
      * @return New instance of the KeyColumn class
      */
     public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, boolean sorted) {
-        return of(key, sorted, DEFAULT_CSS_OK_CLASS);
+        return of(key, sorted, DEFAULT_CSS_AFFIRMATIVE_CLASS);
     }
 
     /**
      * A factory method
      * @param key Domain Key
      * @param sorted Sorted column
-     * @param cssOkClass Class for a value {@code Boolean.TRUE} where a default value is {@link #DEFAULT_CSS_OK_CLASS}.
+     * @param cssAffirmativeClass Class for a value {@code Boolean.{@code true}} where a default value is {@link #DEFAULT_CSS_AFFIRMATIVE_CLASS}.
      * @return New instance of the KeyColumn class
      */
-    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, boolean sorted, String cssOkClass) {
+    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, boolean sorted, String cssTrueClass) {
         final KeyRing serializableKey = KeyRing.of(key);
         return new KeyColumnBoolean
                 ( serializableKey
                 , sorted ? serializableKey : null
                 , DEFAULT_LOGICAL_CLASS
-                , cssOkClass);
+                , cssTrueClass);
     }
 
     /**
      * A factory method
      * @param key Domain Key
      * @param sort Key of sorting
-     * @param cssOkClass Class for a value {@code Boolean.TRUE} where a default value is {@link #DEFAULT_CSS_OK_CLASS}.
+     * @param cssAffirmativeClass Class for a value {@code Boolean.TRUE} where a default value is {@link #DEFAULT_CSS_AFFIRMATIVE_CLASS}.
      * @return
      */
-    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, Key<U,T> sort, String cssOkClass) {
+    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, Key<U,T> sort, String cssTrueClass) {
         return new KeyColumnBoolean
                 ( KeyRing.of(key)
                 , KeyRing.of(sort)
                 , DEFAULT_LOGICAL_CLASS
-                , cssOkClass);
+                , cssTrueClass);
     }
 
 
