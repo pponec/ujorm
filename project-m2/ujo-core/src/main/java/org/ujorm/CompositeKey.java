@@ -104,4 +104,15 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
     /** Returns the {@code true} if the composite key contains any alias name */
     public boolean hasAlias();
 
+    /**
+     * Returns the {@code true}, if the values
+     * {@link CompositeKey#getName() } and
+     * {@link CompositeKey#getDomainType()}
+     * of an another {@link CompositeKey} implementation are equals to the current object.
+     * Note: Any Alias names are ignored, there is necessary to use another comparator for it.
+     * @param key A checked {@link CompositeKey} implementation
+     */
+    @Override
+    public boolean equals(final Object key);
+
 }

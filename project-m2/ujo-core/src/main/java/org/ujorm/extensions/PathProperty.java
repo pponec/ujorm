@@ -402,17 +402,22 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     }
 
     /**
-     * Returns true, if the key value equals to a parameter value. The key value can be null.
-     *
-     * @param key A basic CujoProperty.
-     * @param value Null value is supported.
+     * Returns the {@code true}, if the values
+     * {@link CompositeKey#getName() } and
+     * {@link CompositeKey#getDomainType()}
+     * of an another {@link CompositeKey} implementation are equals to the current object.
+     * Note: Any Alias names are ignored, there is necessary to use another comparator for it.
+     * @param key A checked {@link CompositeKey} implementation
      */
     @Override
     public boolean equals(final Object key) {
-        return key instanceof Key
-            && key.toString().equals(toString())
-            && getType().equals(((Key)key).getType())
-            ;
+        if (key instanceof CompositeKey) {
+            final CompositeKey argument = (CompositeKey) (key);
+            return this.getName().equals(argument.getName())
+                && this.getDomainType().equals(argument.getDomainType());
+        } else {
+            return false;
+        }
     }
 
     /** HashCode from the {@code name} and {@code domainType} attributes */
@@ -585,6 +590,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     }
 
     /** Returns the {@code true} if the composite key contains any name space */
+    @Override
     public boolean hasAlias() {
         return this.aliases != NO_ALIAS;
     }
@@ -593,6 +599,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     /** Compare to another Key object by the index and name of the key.
      * @since 1.20
      */
+    @Override
     public int compareTo(final Key p) {
         return getIndex()<p.getIndex() ? -1
              : getIndex()>p.getIndex() ?  1
@@ -608,6 +615,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     }
 
     /** Returns a count of inner key items of this composite key */
+    @Override
     public int getCompositeCount() {
         return this.keys.length;
     }
@@ -746,7 +754,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
      * A substring {@code {0}} will be replaced for the current column name;
-     * @param value a codition value
+     * @param value a condition value
      * A substring {@code {1}} will be replaced for the current column name;
      * @see Operator#XSQL
      */
