@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
@@ -226,7 +227,7 @@ public class SampleCORE {
      * however the setter with the CompositeKey <create>creates</create> missing domain relations automatically.
      */
     public void compositeKey() {
-        Key<Employee, String> companyNameKey = COMPANY.add(Company.NAME);
+        CompositeKey<Employee, String> companyNameKey = COMPANY.add(Company.NAME);
 
         Employee employee = new Employee();
         String companyName = employee.get(companyNameKey); //!
