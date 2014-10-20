@@ -18,6 +18,7 @@ package org.ujorm.hotels.gui.params;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Hotel;
@@ -27,7 +28,9 @@ import org.ujorm.hotels.gui.params.action.ParamFinder;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
 import org.ujorm.hotels.services.ParamService;
+import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.UjoEvent;
+import org.ujorm.wicket.component.grid.CommonAction;
 import org.ujorm.wicket.component.grid.ListDataProvider;
 import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 
@@ -55,7 +58,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         columns.add(ParamValue.PARAM_KEY.add(ParamKey.CLASS_NAME));
         columns.add(ParamValue.TEXT_VALUE);
         columns.add(ParamValue.PARAM_KEY.add(ParamKey.LAST_UPDATE));
-        //columns.add(newActionColumn(ParamValue.ID));
+        columns.add(ParamValue.ID, CommonAction.of(CommonActions.UPDATE));
         add(columns.createDataTable(20));
         columns.setRows(paramService.getValues(authService.getLoggedCustomer()));
 
@@ -78,6 +81,14 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         final UjoEvent<Hotel> event = UjoEvent.get(argEvent);
         if (event != null) {
             if (event.isAction(ParamFinder.FILTER_ACTION)) {
+                reloadTable(event);
+            }
+            if (event.isAction(CommonActions.UPDATE)) {
+                if (event.showDialog()){
+                   editDialog.show(event, Model.of("Edit param parameter"));
+                } else {
+                  // TODO update
+                }
                 reloadTable(event);
             }
         }
