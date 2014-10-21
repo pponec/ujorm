@@ -55,7 +55,7 @@ public class ParamsEditor<U extends ParamValue> extends EntityDialogPane<U> {
         }
         fields.setEnabled(ParamValue.TEXT_VALUE, true);
         fields.addValidator(ParamValue.TEXT_VALUE, new IValidator<String>(){
-            /** Validate */
+            /** The validator implementation: */
             @Override public void validate(IValidatable<String> validatable) {
                 final Class paramClass = getModelObject().getParamKey().getParamClass();
                 try {
@@ -63,6 +63,9 @@ public class ParamsEditor<U extends ParamValue> extends EntityDialogPane<U> {
                 } catch (Exception e) {
                     org.apache.wicket.validation.ValidationError wicketErr = new org.apache.wicket.validation.ValidationError();
                     wicketErr.setMessage("The value is not type of the " + paramClass.getSimpleName());
+                    wicketErr.addKey("validator.type.message");
+                    wicketErr.getVariables().put("typeSimple", paramClass.getSimpleName());
+                    wicketErr.getVariables().put("typeName", paramClass.getName());
                     validatable.error(wicketErr);
                 }
             }
