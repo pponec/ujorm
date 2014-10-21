@@ -40,4 +40,7 @@ public interface ParamService {
     /** Save all parameters into database */
     public void init(ModuleParams<?> params);
 
+    /** Update the new text value of the parameter */
+    public void updateValue(ParamValue param);
+
 }
