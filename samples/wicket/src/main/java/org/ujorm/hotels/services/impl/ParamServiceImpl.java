@@ -39,6 +39,7 @@ import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.hotels.services.*;
+import org.ujorm.orm.Session;
 /**
  * Common database service implementations
  * @author Pavel Ponec
@@ -89,6 +90,7 @@ implements ParamService {
     /** Get all parameters for a required Customer
      * @todo add next argument removeObsolete type of Boolean to exclude obsolete parameter keys
      */
+    @Override
     public List<ParamValue> getValues(@Nullable Customer customer) {
         final Criterion<ParamValue> crn1,crn2,crn3;
         crn1 = ParamValue.CUSTOMER.whereNull();
@@ -173,6 +175,17 @@ implements ParamService {
             result.put(ParamValue.KEY_NAME$.of(value), value);
         }
         return result;
+    }
+
+    /** Update the new text value of the parameter */
+    @Override
+    public void updateValue(ParamValue param) {
+        final Session session = getSession();
+        final ParamValue dbParam = new ParamValue();
+        dbParam.setId(param.getId());
+        dbParam.writeSession(session);
+        dbParam.setTextValue(param.getTextValue());
+        session.update(param);
     }
 
 }
