@@ -19,6 +19,9 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidator;
+import org.ujorm.core.UjoManager;
 import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.services.AuthService;
@@ -51,6 +54,19 @@ public class ParamsEditor<U extends ParamValue> extends EntityDialogPane<U> {
             field.setEnabled(false);
         }
         fields.setEnabled(ParamValue.TEXT_VALUE, true);
+        fields.addValidator(ParamValue.TEXT_VALUE, new IValidator<String>(){
+            /** Validate */
+            @Override public void validate(IValidatable<String> validatable) {
+                final Class paramClass = getModelObject().getParamKey().getParamClass();
+                try {
+                    UjoManager.getInstance().decodeValue(paramClass, validatable.getValue());
+                } catch (Exception e) {
+                    org.apache.wicket.validation.ValidationError wicketErr = new org.apache.wicket.validation.ValidationError();
+                    wicketErr.setMessage("The value is not type of the " + paramClass.getSimpleName());
+                    validatable.error(wicketErr);
+                }
+            }
+        });
     }
 
     /** Create the editor dialog */
