@@ -289,7 +289,8 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
         return createDataTable(DEFAULT_DATATABLE_ID, rowsPerPage, insertToolbar);
     }
 
-    /** Create AJAX-based DataTable
+    /** Create AJAX-based DataTable.
+     * The attribute {@link DataTable#getOutputMarkupId() } is set to the {@code true} value.
      * @param id Component ID
      * @param rowsPerPage Row count per the one page
      * @param insertToolbar Append a generic toolbar for an insert action.

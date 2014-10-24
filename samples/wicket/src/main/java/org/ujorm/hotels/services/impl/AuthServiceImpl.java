@@ -18,19 +18,26 @@ package org.ujorm.hotels.services.impl;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.ujorm.core.UjoService;
 import org.ujorm.hotels.entity.Customer;
+import org.ujorm.hotels.gui.MainApplication;
 import org.ujorm.hotels.services.*;
+import org.ujorm.logger.UjoLoggerFactory;
 /**
  * Common database service implementations
  * @author Pavel Ponec
  */
 @Service
 public class AuthServiceImpl extends AbstractServiceImpl implements AuthService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
+
     /** Session attribute name */
     private static final String CUSTOMER_ATTR = "CUSTOMER_ATTR";
 
@@ -124,5 +131,10 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
     private Session getThreadSession() {
         return ThreadContext.getSession();
     }
-
+    
+    /** Log environment information */
+    @PostConstruct
+    protected void init() {
+        LOGGER.info(UjoLoggerFactory.getRuntimeInfo(MainApplication.APPLICATION_NAME));
+    }
 }

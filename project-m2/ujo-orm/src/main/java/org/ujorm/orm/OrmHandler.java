@@ -330,22 +330,12 @@ public class OrmHandler implements OrmHandlerProvider {
      * @param key The key must be a <strong>public static final</strong> field of the related Ujo class.
      * @param annotation Annotation type
      * @return  An annotation instance or the {@code null} value
+     * @deprecated Uset the {@link UjoManager#findAnnotation(org.ujorm.Key, java.lang.Class)} rather
+     * 
      */
+    @Deprecated
     public <T extends Annotation> T findAnnotation(Key<?,?> key, Class<T> annotation) {
-        if (key.isComposite()) {
-            key = ((CompositeKey) key).getFirstKey();
-        }
-        try {
-            for (Field field : findColumnModel(key, true).getTableClass().getFields()) {
-                if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
-                &&  field.get(null) == key) {
-                    return (T) field.getAnnotation(annotation);
-                }
-            }
-        } catch (Throwable e) {
-            throw new IllegalStateException("Illegal state for: " + key, e);
-        }
-        return null;
+        return UjoManager.findAnnotation(key, annotation);
     }
 
     /** Find a Relation/Column model of the parameter key.

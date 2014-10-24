@@ -44,9 +44,15 @@ public abstract class AbstractModuleParams<U extends AbstractModuleParams>
 
     /** Load default values into database */
     @PostConstruct
-    public void init() {
-        paramService.init((ModuleParams)this);
-        LOGGER.info("The parameter module '{}' is initialized", getClass().getName());
+    public void init() throws IllegalStateException {
+        try {
+            paramService.init((ModuleParams) this);
+            LOGGER.info("The parameter module '{}' is initialized", getClass().getName());
+        } catch (Exception e) {
+            final String msg = String.format("The parameter module '%s' loading failed", getClass().getName());
+            LOGGER.info(msg, e);
+            throw new IllegalStateException(msg, e);
+        }
     }
 
 }
