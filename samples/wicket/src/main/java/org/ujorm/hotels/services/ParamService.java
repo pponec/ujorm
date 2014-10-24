@@ -45,4 +45,7 @@ public interface ParamService {
     /** Save a modified text value of the parameter to database */
     public void updateValue(ParamValue param);
 
+    /** Clean some cache, if any */
+    public void clearCache();
+
 }

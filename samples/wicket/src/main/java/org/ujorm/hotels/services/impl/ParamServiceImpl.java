@@ -202,4 +202,9 @@ implements ParamService {
         session.update(param);
     }
 
+    /** The method makes nothing */
+    @Override
+    public void clearCache() {
+    }
+
 }
