@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
-import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +45,9 @@ import org.ujorm.orm.annot.Comment;
  * Common database service implementations
  * @author Pavel Ponec
  */
-@Service
 @Transactional
-public class ParamServiceImpl<U extends KeyValue>
+@Service(ParamService.NATURAL)
+public class ParamServiceImpl
 extends AbstractServiceImpl
 implements ParamService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParamServiceImpl.class);
@@ -60,6 +59,7 @@ implements ParamService {
     @Override
     public <U extends ModuleParams, T> T getValue(Key<? super U, T> key) {
         try {
+            @SuppressWarnings("unchecked")
             final U instance = (U) key.getDomainType().newInstance();
             return getValue(key, instance.getModule());
         } catch (/*ReflectiveOperationException*/ Exception e) {
@@ -100,15 +100,15 @@ implements ParamService {
         crn3 = crn1.or(crn2);
 
         final Key<ParamValue,Integer> KEY_ID = ParamValue.KEY_ID$;
-        final Map<String,ParamValue> values = createQuery(crn3)
+        final Map<Integer,ParamValue> values = createQuery(crn3)
                 .orderBy(KEY_ID, ParamValue.KEY_SYSTEM$.descending())
                 .addColumn(KEY_ID)
-                .map(KEY_ID, new HashMap(128));
+                .map(KEY_ID, new HashMap<Integer,ParamValue>(128));
         final Map<Integer,ParamKey> keys = createQuery(ParamKey.ID.forAll()).map();
         for (ParamValue value : values.values()) {
             value.setParamKey(keys.get(KEY_ID.of(value)));
         }
-        return new ArrayList(values.values());
+        return new ArrayList<ParamValue>(values.values());
     }
 
     /** Save all parameters into database */
@@ -191,7 +191,7 @@ implements ParamService {
         return result;
     }
 
-    /** Update the new text value of the parameter */
+    /** Save a modified text value of the parameter to database */
     @Override
     public void updateValue(ParamValue param) {
         final Session session = getSession();

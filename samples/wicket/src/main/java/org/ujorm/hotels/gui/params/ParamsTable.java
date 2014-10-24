@@ -43,7 +43,8 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
 
     @SpringBean private DbService dbService;
     @SpringBean private AuthService authService;
-    @SpringBean private ParamService paramService;
+    @SpringBean(name=ParamService.CACHED)
+    private ParamService paramService;
 
     private ListDataProvider<U> columns;
     private ParamFinder<U> toolbar = new ParamFinder("paramFinder");
