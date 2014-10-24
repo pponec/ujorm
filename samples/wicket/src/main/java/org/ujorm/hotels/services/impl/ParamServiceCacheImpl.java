@@ -35,4 +35,10 @@ public class ParamServiceCacheImpl extends ParamServiceImpl {
         return super.getValue(key, module);
     }
 
+    /** The method clear cache */
+    @Override
+    public void clearCache() {
+        // TODO ...
+    }
+
 }
