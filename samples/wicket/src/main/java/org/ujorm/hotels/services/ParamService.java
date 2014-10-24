@@ -27,6 +27,8 @@ import org.ujorm.hotels.entity.enums.Module;
  * @author ponec
  */
 public interface ParamService {
+    public static final String CACHED = "ParamServiceCached";
+    public static final String NATURAL = "ParamServiceNatural";
 
     /** Get a value of the key the */
     public <U extends ModuleParams, T> T getValue(Key<? super U, T> key);
@@ -34,13 +36,13 @@ public interface ParamService {
     /** Get a value of the key where the module have got special parameter for getter performance */
     public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module);
 
-    /** Get all parameters for a required Customer */
+    /** Get all parameters for a required/logged Customer */
     public List<? super ParamValue> getValues(@Nullable Customer customer);
 
-    /** Save all parameters into database */
+    /** Save all parameters to database */
     public void init(ModuleParams<?> params);
 
-    /** Update the new text value of the parameter */
+    /** Save a modified text value of the parameter to database */
     public void updateValue(ParamValue param);
 
 }

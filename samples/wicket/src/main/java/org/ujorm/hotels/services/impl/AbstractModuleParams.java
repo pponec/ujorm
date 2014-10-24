@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.ujorm.Key;
 import org.ujorm.hotels.services.ModuleParams;
 import org.ujorm.hotels.services.ParamService;
@@ -35,6 +36,7 @@ public abstract class AbstractModuleParams<U extends AbstractModuleParams>
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModuleParams.class);
 
     @Autowired
+    @Qualifier(ParamService.CACHED)
     private ParamService paramService;
 
     @Override
