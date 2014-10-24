@@ -35,6 +35,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.Checks.*;
+import org.ujorm.core.UjoManager;
 import static org.ujorm.criterion.Operator.*;
 
 /**
@@ -835,8 +836,8 @@ public class SampleORM {
             ;
         logInfo(msg);
 
-        // See, how to get an annotation of a persistent Key in run-time:
-        Comment annotation = handler.findAnnotation(Order.ID, Comment.class);
+        // See, how to get an annotation of an Key in run-time:
+        Comment annotation = UjoManager.findAnnotation(Order.ID, Comment.class);
         logInfo(annotation.value());
     }
 

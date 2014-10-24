@@ -39,7 +39,9 @@ import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.hotels.services.*;
+import org.ujorm.hotels.services.annot.PersonalParam;
 import org.ujorm.orm.Session;
+import org.ujorm.orm.annot.Comment;
 /**
  * Common database service implementations
  * @author Pavel Ponec
@@ -127,8 +129,8 @@ implements ParamService {
             paramKey.setParamClass(key.getType());
             paramKey.setTextDefaultValue(converter.encodeValue(key.getDefault(), false));
             paramKey.setLastUpdate(now);
-            paramKey.setSystemParam(true); // TODO
-            paramKey.setNote("-"); // TODO
+            paramKey.setSystemParam(isSystemParam(key));
+            paramKey.setNote(getComment(key));
             getSession().saveOrUpdate(paramKey);
         }
 
@@ -144,6 +146,18 @@ implements ParamService {
                 getSession().save(paramValue);
             }
         }
+    }
+
+    /** Get a comment of the parameter Key */
+    private String getComment(Key key) {
+        final Comment comment = UjoManager.findAnnotation(key, Comment.class);
+        return comment != null ? comment.value() : "";
+    }
+
+    /** Is the key a system parameter */
+    private boolean isSystemParam(Key key) {
+        final PersonalParam user = UjoManager.findAnnotation(key, PersonalParam.class);
+        return user == null;
     }
 
     /** Returns a saved ParamKeySet for required module */

@@ -36,7 +36,10 @@ public class HotelParams<U extends HotelParams> extends AbstractModuleParams {
 
     @Comment("Count of rows per a page in the table")
     public static final Key<HotelParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
+    @Comment("Parameter test 1")
     public static final Key<HotelParams, String> TEST1 = f.newKey("Test1", "A");
+    @Comment("Parameter test 2")
+    @PersonalParam
     public static final Key<HotelParams, String> TEST2 = f.newKey("Test2", "B");
     @PersonalParam
     public static final Key<HotelParams, String> TEST3 = f.newKey("Test3", "C");

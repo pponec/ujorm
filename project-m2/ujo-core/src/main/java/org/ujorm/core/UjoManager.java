@@ -16,6 +16,7 @@
 
 package org.ujorm.core;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -445,6 +446,29 @@ public class UjoManager implements Comparator<Key> {
     @SuppressWarnings("unchecked")
     public Key findIndirectProperty(Class ujoType, String names, boolean throwException) {
         return readKeys(ujoType).find(names, throwException);
+    }
+    
+    /**
+     * Find a key annotation by the required type.
+     * @param key The key must be a <strong>public static final</strong> field of the related Ujo class.
+     * @param annotation Annotation type
+     * @return  An annotation instance or the {@code null} value
+     */
+    public static <T extends Annotation> T findAnnotation(Key<?,?> key, Class<T> annotation) {
+        if (key instanceof CompositeKey) {
+            key = ((CompositeKey) key).getFirstKey();
+        }
+        try { 
+            for (Field field : key.getDomainType().getFields()) {
+                if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
+                &&  field.get(null) == key) {
+                    return (T) field.getAnnotation(annotation);
+                }
+            }
+        } catch (Throwable e) {
+            throw new IllegalStateException("Illegal state for: " + key, e);
+        }
+        return null;
     }
 
     /** Print a String representation */
