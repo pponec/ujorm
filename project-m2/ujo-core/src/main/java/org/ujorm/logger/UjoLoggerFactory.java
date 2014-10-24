@@ -15,6 +15,7 @@
  */
 package org.ujorm.logger;
 
+import java.text.MessageFormat;
 import java.util.logging.*;
 
 /**
@@ -65,7 +66,7 @@ final public class UjoLoggerFactory implements UjoLogger {
     public void log(final Level level, final String message, final Object... parameters) {
         logger.log(level, message, parameters);
     }
-
+    
     // ---------- FACTORY -----------------
 
     public static UjoLogger getLogger(Class<?> name) {
@@ -91,4 +92,31 @@ final public class UjoLoggerFactory implements UjoLogger {
         return result;
     }
 
+    // ---------- LOG MESSAGES -----------------
+    
+    /** Get a runtime information */
+    public static String getRuntimeInfo(String applicationName) {
+        final String result = MessageFormat.format
+                ( "The application ''{0}'' is running with the properties"
+                + ": java.version={1}"
+                + ", java.vendor={2}"
+                + ", java.home={3}"
+                + ", os.name={4}"
+                + ", os.arch={5}"
+                + ", user.name={6}"
+                + ", user.home={7}"
+                + ", user.dir={8}"
+                , applicationName
+                , System.getProperty("java.version", "?")
+                , System.getProperty("java.vendor", "?")
+                , System.getProperty("java.home", "?")
+                , System.getProperty("os.name", "?")
+                , System.getProperty("os.arch", "?")
+                , System.getProperty("user.name", "?")
+                , System.getProperty("user.home", "?")
+                , System.getProperty("user.dir", "?")
+                );
+        return result;        
+    }
+    
 }
