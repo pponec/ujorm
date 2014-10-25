@@ -34,6 +34,7 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.UjoTools;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.BinaryCriterion;
 import org.ujorm.criterion.Criterion;
@@ -409,7 +410,7 @@ public class Session implements Closeable {
 
         // ---------------- VALIDATIONS -----------------------------------
 
-        if (bos==null || bos.isEmpty()) {
+        if (! UjoTools.isFilled(bos)) {
             LOGGER.log(UjoLogger.DEBUG, "The multi insert list is empty");
             return;
         }

@@ -292,6 +292,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * <pre>iterator()</pre>
      * @see #iterator()
      */
+    @SuppressWarnings("unchecked")
     public <T> Map<T,UJO> map() {
         return map(table.getFirstPK().getKey(), new HashMap<T,UJO>(128));
     }

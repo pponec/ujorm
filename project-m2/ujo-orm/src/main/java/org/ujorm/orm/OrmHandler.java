@@ -31,6 +31,7 @@ import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
+import org.ujorm.core.UjoTools;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -290,7 +291,7 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Do the handler have a read-only state? */
     public boolean isReadOnly() {
         final List<MetaDatabase> dbs = getDatabases();
-        final boolean result = dbs==null || dbs.isEmpty() ? false : dbs.get(0).readOnly();
+        final boolean result = UjoTools.isFilled(dbs) ? dbs.get(0).readOnly() : false;
         return result;
     }
 
@@ -331,7 +332,7 @@ public class OrmHandler implements OrmHandlerProvider {
      * @param annotation Annotation type
      * @return  An annotation instance or the {@code null} value
      * @deprecated Uset the {@link UjoManager#findAnnotation(org.ujorm.Key, java.lang.Class)} rather
-     * 
+     *
      */
     @Deprecated
     public <T extends Annotation> T findAnnotation(Key<?,?> key, Class<T> annotation) {

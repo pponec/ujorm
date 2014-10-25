@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.ujorm.Key;
+import org.ujorm.core.UjoTools;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.DbType;
@@ -58,16 +59,16 @@ public class MSSqlDialect extends SqlDialect {
     public String getJdbcDriver() {
         return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     }
-    
-    
-    /** Does the database support a catalog? 
-     * The feature supports: MySqlDialect and MSSqlDialect. 
+
+
+    /** Does the database support a catalog?
+     * The feature supports: MySqlDialect and MSSqlDialect.
      * @return The value is  {@code true}.
      */
     @Override
     public boolean isCatalog() {
         return true;
-    }    
+    }
 
     /** Print an SQL UPDATE statement.  */
     @Override
@@ -318,7 +319,7 @@ public class MSSqlDialect extends SqlDialect {
         }
 
         // order by part
-        if (query.getOrderBy() != null && !query.getOrderBy().isEmpty()) {
+        if (UjoTools.isFilled(query.getOrderBy())) {
             printSelectOrder(query, out, true);
         }
     }
@@ -330,7 +331,7 @@ public class MSSqlDialect extends SqlDialect {
             out = super.printSelectTable(query, count, out);
         } else {
             // we have to order over some column...
-            if (query.getOrderBy() == null || query.getOrderBy().isEmpty()) {
+            if (!UjoTools.isFilled(query.getOrderBy())) {
                 query.orderBy(query.getColumnArray()[0].getKey());
             }
             StringBuilder innerPart = new StringBuilder(256);
@@ -527,7 +528,7 @@ public class MSSqlDialect extends SqlDialect {
         }
         return out;
     }
-    
+
     /** Print a SQL phrase for the DEFAULT VALUE, for example: DEFAULT 777 */
     @Override
     public Appendable printDefaultValue(final MetaColumn column, final Appendable out) throws IOException {
@@ -631,5 +632,5 @@ public class MSSqlDialect extends SqlDialect {
         Map<String, MetaTable> tables = new LinkedHashMap<String, MetaTable>();
         getTablesFromCriterion(decoder, tables);
         printTablesWithAlias(tables.values(), out);
-    }    
+    }
 }
