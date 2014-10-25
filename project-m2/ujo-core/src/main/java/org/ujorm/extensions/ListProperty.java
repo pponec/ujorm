@@ -22,6 +22,7 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoComparator;
+import org.ujorm.core.UjoTools;
 import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
@@ -139,8 +140,8 @@ public class ListProperty<UJO extends Ujo, ITEM>
     /** Indicates whether a list of items is null or empty. */
     @Override
     public boolean isDefault(UJO ujo) {
-        List<ITEM> list = of(ujo);
-        return list==null || list.isEmpty();
+        final List<ITEM> list = of(ujo);
+        return !UjoTools.isFilled(list);
     }
 
     // --------- STATIC METHODS -------------------
@@ -159,7 +160,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
         final ListProperty<UJO,ITEM> result = new ListProperty<UJO,ITEM>(itemType);
         result.init(NAME, name);
         result.init(INDEX, index);
-        result.init(LOCK, lock);        
+        result.init(LOCK, lock);
         return result;
     }
 
@@ -186,5 +187,5 @@ public class ListProperty<UJO extends Ujo, ITEM>
     ) {
         return newListProperty(name, itemType, UNDEFINED_INDEX);
     }
-    
+
 }

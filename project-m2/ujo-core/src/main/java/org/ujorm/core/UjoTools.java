@@ -243,9 +243,14 @@ public abstract class UjoTools implements Comparator<Key> {
         return null;
     }
 
-    /** Returns true, if text is not null and is not empty. */
+    /** Returns true, if the text is not null and is not empty. */
     public static boolean isFilled(final CharSequence text) {
         return text!=null && text.length()>0;
+    }
+
+    /** Returns true, if the list is not null and is not empty. */
+    public static boolean isFilled(final Collection<?> list) {
+        return list!=null && !list.isEmpty();
     }
 
     /** Validate the argument using all keys from the object. */

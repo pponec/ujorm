@@ -502,8 +502,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Collection<Key<? super UJO, ?>> keys) {
-        if (keys == null
-        ||  keys.isEmpty()) {
+        if (!UjoTools.isFilled(keys)) {
             return null;
         }
         final Key[] ps = new Key[keys.size()];
