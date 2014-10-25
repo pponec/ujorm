@@ -38,7 +38,7 @@ import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.core.annot.XmlElementBody;
 import org.ujorm.extensions.*;
-import org.ujorm.swing.UjoPropertyRow;
+import org.ujorm.swing.UjoKeyRow;
 import org.ujorm.validator.ValidationError;
 import org.ujorm.validator.ValidatorUtils;
 import static org.ujorm.UjoAction.*;
@@ -48,7 +48,7 @@ import static org.ujorm.UjoAction.*;
  * @author Pavel Ponec
  * @composed 1 - 1 UjoCoder
  */
-public class UjoManager implements Comparator<Key> {
+public class UjoManager extends UjoTools implements Comparator<Key> {
 
     /** Requested modifier of key definitions. */
     public static final int PROPERTY_MODIFIER = KeyFactory.PROPERTY_MODIFIER;
@@ -82,15 +82,6 @@ public class UjoManager implements Comparator<Key> {
     /** Get a default initialization */
     public static UjoManager getInstance() {
         return instance;
-    }
-
-    /** Returns a reversed order of objects. */
-    public void revertArray(Object[] array) {
-        for (int left=0, right=array.length-1; left<right; left++, right--) {
-            Object temp  = array[left];
-            array[left]  = array[right];
-            array[right] = temp;
-        }
     }
 
     /** Are keys reversed by default? */
@@ -255,103 +246,6 @@ public class UjoManager implements Comparator<Key> {
         }
     }
 
-    /** Calculate a Hash Code. */
-    public int getHash(Ujo ujo) {
-        return getHash(ujo, ujo.readKeys());
-    }
-
-    /** Calculate a Hash Code. */
-    @SuppressWarnings("unchecked")
-    public int getHash(Ujo ujo, KeyList<?> keys) {
-        int result = 0;
-        if (ujo!=null) for (Key prop : keys) {
-            Object obj = prop.of(ujo);
-            if (obj!=null) {
-                result = (result>>>3) + obj.hashCode();
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Test if Object o1 equalsUjo o2.
-     *
-     * @param o1 First parameter
-     * @param o2 Second parameter
-     * @return Returns true, if objects are the same.
-     */
-    public boolean equals(Object o1, Object o2)  {
-        if (o1==o2) { return true; }
-        if (o1==null || o2==null) { return false; }
-        if (o1.getClass().isArray()) {
-            return equalsArray(o1, o2);
-        }
-        return o1.equals(o2);
-    }
-
-    /**
-     * Test if obj1 equalsUjo obj2. If obj1 object is Array, method call an equalsArray() method, else use en method equalsUjo().
-     *
-     * @param u1 First parameter
-     * @param u2 Optional parameter
-     * @return Returns true, if objects are the same.
-     */
-    public boolean equalsUjo(final Ujo u1, final Ujo u2)  {
-        return equalsUjo(u1, u2, u1!=null ? u1.readKeys() : null);
-    }
-
-    /**
-     * Test if obj1 equalsUjo obj2. If obj1 object is Array, method call an equalsArray() method, else use en method equalsUjo().
-     *
-     * @param u1 First parameter
-     * @param u2 Optional parameter
-     * @return Returns true, if objects are the same.
-     */
-    @SuppressWarnings("unchecked")
-    public boolean equalsUjo(final Ujo u1, final Ujo u2, KeyList keys)  {
-        if (u1==u2) {
-            return true;
-        }
-        if (u1==null || u2==null) {
-            return false;
-        }
-        if (u1.getClass().equals(u2.getClass())) {
-            for (int i=keys.size()-1; i>=0; i--) {
-                Key key = keys.get(i);
-                final Object o1 = key.of(u1);
-                final Object o2 = key.of(u2);
-                if (! equals(o1, o2)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Test if array1 equalsUjo to array2. There are supported types:
-     * <ul>
-     *    <li>byte[]</li>
-     *    <li>char[]</li>
-     * </ul>
-     *
-     * @param array1 Mandatory parameter
-     * @param array2 Optional parameter
-     * @return Returns true, if two objects are the same.
-     */
-    public boolean equalsArray(Object array1, Object array2)  {
-        if (array1==null) {
-            return array2==null;
-        }
-        if (Byte.TYPE==array1.getClass().getComponentType()) {
-            return Arrays.equals( (byte[])array1, (byte[])array2 );
-        }
-        if (Character.TYPE==array1.getClass().getComponentType()) {
-            return Arrays.equals( (char[])array1, (char[])array2 );
-        }
-        return array1.equals(array2);
-    }
 
     /**
      * Clone the UjoCloneable object. The Object and its items must have got a constructor with no parameters.
@@ -447,7 +341,7 @@ public class UjoManager implements Comparator<Key> {
     public Key findIndirectProperty(Class ujoType, String names, boolean throwException) {
         return readKeys(ujoType).find(names, throwException);
     }
-    
+
     /**
      * Find a key annotation by the required type.
      * @param key The key must be a <strong>public static final</strong> field of the related Ujo class.
@@ -458,7 +352,7 @@ public class UjoManager implements Comparator<Key> {
         if (key instanceof CompositeKey) {
             key = ((CompositeKey) key).getFirstKey();
         }
-        try { 
+        try {
             for (Field field : key.getDomainType().getFields()) {
                 if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
                 &&  field.get(null) == key) {
@@ -839,16 +733,22 @@ public class UjoManager implements Comparator<Key> {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Deprecated
+    public final List<UjoKeyRow> createPropertyListKeyRowList(Ujo content, UjoAction action) {
+        return createKeyRowList(content, action);
+    }
+
     /** Create a list of KeyList */
     @SuppressWarnings("unchecked")
-    public List<UjoPropertyRow> createPropertyList(Ujo content, UjoAction action) {
+    public List<UjoKeyRow> createKeyRowList(Ujo content, UjoAction action) {
         KeyList<?> props = content.readKeys();
-        ArrayList<UjoPropertyRow> result = new ArrayList<UjoPropertyRow>(props.size());
+        ArrayList<UjoKeyRow> result = new ArrayList<UjoKeyRow>(props.size());
         for (Key prop : props) {
             final Object  value   = prop.of(content);
             final boolean enabled = content.readAuthorization(action, prop, value);
             if (enabled) {
-                final UjoPropertyRow ujoContentRow = new UjoPropertyRow(content, prop);
+                final UjoKeyRow ujoContentRow = new UjoKeyRow(content, prop);
                 result.add(ujoContentRow);
             }
         }
@@ -895,62 +795,6 @@ public class UjoManager implements Comparator<Key> {
         copy(source, target, (Key[]) null);
     }
 
-    /**
-     * Get a Key field.
-     * @param ujo Type of the Ujo object (Nonnull)
-     * @param key Required key (Nullable)
-     * @return Returns null in case that result was not found
-     * @throws IllegalAccessException Can't get fields.
-     */
-    public Field getPropertyField(Ujo ujo, Key key) throws IllegalStateException {
-        return getPropertyField(ujo.getClass(), key, false);
-    }
-
-    /**
-     * Get a Key field.
-     * @param type Type of the Ujo object (Nonnull)
-     * @param key Required key (Nullable)
-     * @return Returns null in case that result was not found
-     * @throws IllegalAccessException Can't get fields.
-     * @throws IllegalArgumentException The 'key' is not found in the class 'type'.
-     */
-    public Field getPropertyField(Class<?> type, Key key) throws IllegalStateException {
-        return getPropertyField(type, key, false);
-    }
-
-    /**
-     * Get a Key field.
-     * @param type Type of the Ujo object (Nonnull)
-     * @param key Required key (Nullable)
-     * @param throwException in case the result is {@code null} than throw the exception {@link IllegalArgumentException}.
-     * @return Nonnull value always.
-     * @throws IllegalAccessException Can't get fields.
-     * @throws IllegalArgumentException The key 'key' is not found in the class 'type'.
-     */
-    public Field getPropertyField(Class<?> type, Key key, boolean throwException) throws IllegalStateException, IllegalArgumentException {
-        for (Field result : type.getFields()) {
-            if (result.getModifiers() == UjoManager.PROPERTY_MODIFIER
-            && Key.class.isAssignableFrom(result.getType())) {
-                try {
-                    final Object p = result.get(null);
-                    if (p == key) {
-                        return result;
-                    }
-                } catch (Exception e) {
-                    throw new IllegalStateException(String.valueOf(result), e);
-                }
-            }
-        }
-        if (throwException) {
-            final String msg = String.format
-                    ( "The key '%s' was not found in the class '%s'."
-                    , String.valueOf(key)
-                    , type.getName());
-            throw new IllegalArgumentException(msg);
-        }
-        return null;
-    }
-
     /** Check ujo keys to a unique name.
      * There is recommended to calll the method from static block after Key initialization.
      * The beneficial side effect is loading a key cache.
@@ -978,24 +822,6 @@ public class UjoManager implements Comparator<Key> {
      */
     public void checkUniqueProperties(final Class<? extends Ujo> type) throws IllegalStateException {
          getInstance().checkUniqueProperties(type, true);
-    }
-
-    /** Is the argument an Composite Key ?
-     * @param key any <strong>nullable</strong> object
-     * @return Returns true, if the argument is type of {@link CompositeKey}
-     * and its method {@link CompositeKey#isComposite()}.
-     */
-    public static boolean isCompositeKey(Object key) {
-        return key instanceof CompositeKey && ((CompositeKey) key).isComposite();
-    }
-
-    /** Is the argument an Composite Key ?
-     * @param key any <strong>nullable</strong> object
-     * @return Returns true, if the argument is type of {@link CompositeKey}
-     * and its method {@link CompositeKey#isComposite()}.
-     */
-    public static boolean isCompositeKey(Key key) {
-        return key != null && key.isComposite();
     }
 
     /** Create a new instance of the Ujo and initialize all static fields */
