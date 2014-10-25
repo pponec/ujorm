@@ -24,7 +24,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.UjoActionImpl;
 import org.ujorm.core.UjoManager;
-import org.ujorm.swing.UjoPropertyRow;
+import org.ujorm.swing.UjoKeyRow;
 
 /**
  * This is a simple abstract implementation of Ujo. <br>
@@ -254,8 +254,8 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
     }
 
     /** Create a list of Key. */
-    public List<UjoPropertyRow> createPropertyList() {
-        return UjoManager.getInstance().createPropertyList(this, new UjoActionImpl(this));
+    public List<UjoKeyRow> createPropertyList() {
+        return UjoManager.getInstance().createKeyRowList(this, new UjoActionImpl(this));
     }
 
     /**

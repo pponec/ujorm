@@ -29,16 +29,16 @@ import org.ujorm.UjoAction;
  *
  * @author Pavel Ponec
  */
-public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements Iterable<UjoPropertyRow> {
+public class SingleUjoTabModel extends UjoTableModel<UjoKeyRow> implements Iterable<UjoKeyRow> {
 
     /** Property row */
-    public static final UjoPropertyRow ROWS = null;
+    public static final UjoKeyRow ROWS = null;
 
     /**
      * Creates a new instance of SingleUjoTabModel
      */
     public SingleUjoTabModel(Ujo content) {
-        this(content, UjoManager.getInstance().readKeys(UjoPropertyRow.class).toArray() );
+        this(content, UjoManager.getInstance().readKeys(UjoKeyRow.class).toArray() );
     }
 
     /**
@@ -46,15 +46,15 @@ public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements 
      */
     public SingleUjoTabModel(Ujo content, Key ... columns) {
         super(columns);
-        rows = UjoManager.getInstance().createPropertyList(content, new UjoActionImpl(UjoAction.ACTION_TABLE_SHOW, this));
+        rows = UjoManager.getInstance().createKeyRowList(content, new UjoActionImpl(UjoAction.ACTION_TABLE_SHOW, this));
     }
 
     /** Only Value is editable. */
     @Override
     public boolean isCellEditable(int rowIndex, Key column) {
         final boolean result
-        =  column==UjoPropertyRow.P_VALUE
-        || column==UjoPropertyRow.P_TEXT
+        =  column==UjoKeyRow.P_VALUE
+        || column==UjoKeyRow.P_TEXT
         ;
         return result;
     }
@@ -67,7 +67,7 @@ public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements 
         && !column.getType().equals(String.class)
         &&  value instanceof String
         ){
-            UjoPropertyRow row = getRow(rowIndex);
+            UjoKeyRow row = getRow(rowIndex);
             row.writeValueString(column, (String) value, null, new UjoActionImpl(this));
         } else {
             super.setValueAt(value, rowIndex, column);
@@ -94,7 +94,7 @@ public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements 
     }
 
     /** Returns an iterator */
-    public Iterator<UjoPropertyRow> iterator() {
+    public Iterator<UjoKeyRow> iterator() {
         return rows.iterator();
     }
 
