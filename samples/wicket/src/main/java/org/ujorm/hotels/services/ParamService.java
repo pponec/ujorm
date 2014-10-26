@@ -36,16 +36,27 @@ public interface ParamService {
     /** Get a value of the key where the module have got special parameter for getter performance */
     public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module);
 
-    /** Get all parameters for a required/logged Customer */
+    /** Get all parameters for a required */
     public List<? super ParamValue> getValues(@Nullable Customer customer);
 
-    /** Save all parameters to database */
-    public void init(ModuleParams<?> params);
+    /** Get all parameters for a logged Customer */
+    public List<? super ParamValue> getValues();
 
-    /** Save a modified text value of the parameter to database */
+    /** Save a modified text value of the parameter to database
+     * @param param An persistent format of the parameter.
+     * @param Logged user in case of the {@link @PersonalParam}
+     */
+    public void updateValue(ParamValue param, Customer user);
+
+    /** Save a modified parameter text value of a logged user
+     * @param param Undefined customer save an default parameters
+     */
     public void updateValue(ParamValue param);
 
     /** Clean some cache, if any */
     public void clearCache();
+
+    /** Save all parameters to database */
+    public void init(ModuleParams<?> params);
 
 }

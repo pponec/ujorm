@@ -41,7 +41,6 @@ import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATAT
  */
 public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
 
-    @SpringBean private DbService dbService;
     @SpringBean private AuthService authService;
     @SpringBean(name=ParamService.CACHED)
     private ParamService paramService;
@@ -99,7 +98,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
 
     /** Get database rows */
     private List<? super U> getDbRows() {
-        return paramService.getValues(authService.getLoggedCustomer());
+        return paramService.getValues();
     }
 
     /** Reload the data table */
