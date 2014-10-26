@@ -26,7 +26,6 @@ import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.gui.params.action.ParamFinder;
 import org.ujorm.hotels.services.AuthService;
-import org.ujorm.hotels.services.DbService;
 import org.ujorm.hotels.services.ParamService;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.UjoEvent;
@@ -59,7 +58,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         columns.add(ParamValue.PARAM_KEY.add(ParamKey.CLASS_NAME));
         columns.add(ParamValue.TEXT_VALUE);
         columns.add(ParamValue.PARAM_KEY.add(ParamKey.LAST_UPDATE));
-        columns.add(ParamValue.ID, CommonAction.of(CommonActions.UPDATE));
+        columns.add(ParamValue.ID, getActionUpdate(CommonActions.UPDATE));
         add(columns.createDataTable(20));
         columns.setRows(getDbRows());
 
@@ -82,15 +81,17 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         final UjoEvent<U> event = UjoEvent.get(argEvent);
         if (event != null) {
             if (event.isAction(ParamFinder.FILTER_ACTION)) {
-                reloadTable(event);
+                reloadTable(event, false);
             }
-            if (event.isAction(CommonActions.UPDATE)) {
+            else if (event.isAction(CommonActions.LOGIN_CHANGED)) {
+                reloadTable(event, true);
+            }
+            else if (event.isAction(CommonActions.UPDATE)) {
                 if (event.showDialog()) {
                     editDialog.show(event, Model.of("Edit param parameter"));
                 } else {
                     paramService.updateValue(event.getDomain());
-                    columns.setRows(getDbRows());
-                    reloadTable(event);
+                    reloadTable(event, true);
                 }
             }
         }
@@ -102,8 +103,21 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
     }
 
     /** Reload the data table */
-    private void reloadTable(UjoEvent event) {
+    private void reloadTable(UjoEvent event, boolean dbRequest) {
+        if (dbRequest) {
+            columns.setRows(getDbRows());
+        }
         event.addTarget(get(DEFAULT_DATATABLE_ID));
     }
 
+    /** Action UPDATE */
+    private CommonAction getActionUpdate(String action) {
+        return new CommonAction<U>(action) {
+            @Override public boolean isVisible(U row) {
+                return row.isPersonalParam()
+                     ? authService.isLogged()
+                     : authService.isAdmin();
+            }
+        };
+    }
 }

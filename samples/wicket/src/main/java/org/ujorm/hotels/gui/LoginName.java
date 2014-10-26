@@ -38,7 +38,7 @@ public class LoginName extends MessageLink {
     @SpringBean
     private AuthService authService;
     /** Login dialog */
-    private LoginDialog dialog;
+    private final LoginDialog dialog;
 
     public LoginName(String id) {
         super(id, null);
@@ -53,7 +53,7 @@ public class LoginName extends MessageLink {
         if (authService.isLogged()) {
             authService.logout();
             target.add(this);
-            send(getWebPage(), Broadcast.EXACT, new UjoEvent(LOGIN_CHANGED, null, target));
+            send(getWebPage(), Broadcast.BREADTH, new UjoEvent(LOGIN_CHANGED, null, target));
         } else {
             dialog.show(new UjoEvent(LOGIN_CHANGED, new Customer(), target), new LocalizedModel("dialog.login.title"));
         }
