@@ -82,7 +82,8 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
         return lc != null ? lc.getLogin() : null;
     }
 
-    /** Get current customer from session  */
+    /** Get a current customer from session or the {@code null} value */
+    @Nullable
     @Override
     public Customer getLoggedCustomer() {
         final Session session = getThreadSession();
@@ -131,7 +132,7 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
     private Session getThreadSession() {
         return ThreadContext.getSession();
     }
-    
+
     /** Log environment information */
     @PostConstruct
     protected void init() {

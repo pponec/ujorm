@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.hotels.services.*;
 import org.ujorm.hotels.services.annot.PersonalParam;
+import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Comment;
 /**
@@ -67,7 +69,7 @@ implements ParamService {
         }
     }
 
-    /** Get a value of the key */
+    /** Get a value of the key for the logged user */
     @Override
     public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module) {
         final Criterion<ParamValue> crn1, crn2, crn3, crn4, crn5;
@@ -87,6 +89,14 @@ implements ParamService {
         return param != null
              ? UjoManager.getInstance().decodeValue(key,  param.getTextValue())
              : key.getDefault();
+    }
+
+    /** Get all parameters for a logged Customer
+     * @todo add next argument removeObsolete type of Boolean to exclude obsolete parameter keys
+     */
+    @Override
+    public List<ParamValue> getValues() {
+        return getValues(authService.getLoggedCustomer());
     }
 
     /** Get all parameters for a required Customer
@@ -109,6 +119,54 @@ implements ParamService {
             value.setParamKey(keys.get(KEY_ID.of(value)));
         }
         return new ArrayList<ParamValue>(values.values());
+    }
+
+    /** Save a modified parameter text value of a logged user
+     * @param param Undefined customer save an default parameters
+     */
+    @Override
+    public final void updateValue(ParamValue param) {
+        final ForeignKey cutomerFK = param.readFK(ParamValue.CUSTOMER);
+        if (cutomerFK!=null && param.isPersonalParam()) {
+            Args.isTrue(((Integer)cutomerFK.getValue()).intValue() == authService.getLoggedCustomer().getId()
+            , "User " + authService.getLoggedCustomer().getId() + " is modyfing foreign parameters " + param);
+        }
+        updateValue(param, this.authService.getLoggedCustomer());
+    }
+
+    /** Save a modified text value of the parameter to database */
+    /**
+     *
+     * @param param
+     * @param user
+     */
+    @Override
+    public void updateValue(ParamValue param, Customer user) {
+        final Session session = getSession();
+        final ParamValue dbParam;
+
+        if (param.getCustomer()==null && param.isPersonalParam()) {
+            // Make INSERT:
+            dbParam = param;
+            dbParam.writeSession(null);
+            dbParam.setId(null);
+            dbParam.setCustomer(user);
+        }
+        else {
+            // Make UPDATE:
+            dbParam = new ParamValue();
+            dbParam.setId(param.getId());
+            dbParam.writeSession(session);
+        }
+
+        dbParam.setTextValue(param.getTextValue());
+        dbParam.setLastUpdate(new Date());
+        session.saveOrUpdate(dbParam);
+    }
+
+    /** The method makes nothing */
+    @Override
+    public void clearCache() {
     }
 
     /** Save all parameters into database */
@@ -189,22 +247,6 @@ implements ParamService {
             result.put(ParamValue.KEY_NAME$.of(value), value);
         }
         return result;
-    }
-
-    /** Save a modified text value of the parameter to database */
-    @Override
-    public void updateValue(ParamValue param) {
-        final Session session = getSession();
-        final ParamValue dbParam = new ParamValue();
-        dbParam.setId(param.getId());
-        dbParam.writeSession(session);
-        dbParam.setTextValue(param.getTextValue());
-        session.update(param);
-    }
-
-    /** The method makes nothing */
-    @Override
-    public void clearCache() {
     }
 
 }

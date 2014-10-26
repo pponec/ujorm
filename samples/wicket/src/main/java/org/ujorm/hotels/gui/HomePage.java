@@ -54,8 +54,8 @@ public class HomePage extends WebPage {
         List<ITab> tabs = new ArrayList<ITab>();
         tabs.add(new UjoTab("Hotels", "hotel", HotelTable.class));
         tabs.add(new UjoTab("Booking", "booking", BookingTable.class));
-        tabs.add(new UjoTab("Customer", "customer", CustomerTable.class));
         tabs.add(new UjoTab("Parameters", "params", ParamsTable.class));
+        tabs.add(new UjoTab("Customer", "customer", CustomerTable.class));
         tabs.add(new UjoTab("About", "about", AboutPanel.class));
         add(new UjoTabbedPanel("tabs", tabs));
 

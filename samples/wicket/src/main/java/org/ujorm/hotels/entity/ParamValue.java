@@ -84,6 +84,11 @@ public final class ParamValue extends OrmTable<ParamValue> {
         setTextValue(paramKey.getTextDefaultValue());
     }
 
+    /** Is the parametry a Personal type of */
+    public boolean isPersonalParam() {
+        return !KEY_SYSTEM$.of(this);
+    }
+
     // --- Getters / Setters ---
 
     /** The primary identifier */
