@@ -52,7 +52,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
     public ParamsTable(String id) {
         super(id);
 
-        columns = ListDataProvider.of(getCriterion());
+        columns = ListDataProvider.of(getCriterion(), ParamValue.KEY_MODULE$);
         columns.add(ParamValue.KEY_MODULE$);
         columns.add(ParamValue.KEY_NAME$);
         columns.add(ParamValue.KEY_SYSTEM$);
