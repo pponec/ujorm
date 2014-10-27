@@ -173,16 +173,18 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
 //                  : new ForeignKey(key.of((Ujo)value));
 //      }
 // Effectiva: toto se volá cyklicky a navíc se předává špatná key (z původního objektu místo z cizího), pak se vrací nesmysly
-//        if (value instanceof ExtendedOrmUjo) {
-//            return ((ExtendedOrmUjo) value).readFK(key);
-//        }
+//      if (value instanceof ExtendedOrmUjo) {
+//          return ((ExtendedOrmUjo) value).readFK(key);
+//      }
         if (session!=null) {
             final OrmUjo ujo = value instanceof OrmUjo
                     ? (OrmUjo) value
                     : this ;
             return session.readFK(ujo, key);
         }
-        throw new NullPointerException("Can't get FK form the key '"+key+"' due the missing Session");
+        throw new NullPointerException("Can't get FK by the key '"
+                + key.getFullName()
+                + "' due a missing Session");
     }
 
     // ===== STATIC METHODS: Key Facotory =====
