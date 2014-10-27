@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
@@ -40,7 +41,6 @@ import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.hotels.services.*;
 import org.ujorm.hotels.services.annot.PersonalParam;
-import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Comment;
 /**
@@ -95,7 +95,7 @@ implements ParamService {
      * @todo add next argument removeObsolete type of Boolean to exclude obsolete parameter keys
      */
     @Override
-    public List<ParamValue> getValues() {
+    public final List<ParamValue> getValues() {
         return getValues(authService.getLoggedCustomer());
     }
 
@@ -104,10 +104,29 @@ implements ParamService {
      */
     @Override
     public List<ParamValue> getValues(@Nullable Customer customer) {
+        final Criterion<ParamValue> criterion
+                = authService.isAdmin()
+                ? ParamValue.ID.forAll()
+                : ParamValue.KEY_SYSTEM$.whereEq(false);
+        return getValues(customer, criterion);
+    }
+
+    /** Get all parameters for a logged Customer */
+    @Override
+    public List<ParamValue> getValues(@Nonnull Criterion<ParamValue> criterion) {
+        return getValues(authService.getLoggedCustomer(), criterion);
+    }
+
+    /** Get all parameters for a required Customer
+     * @todo add next argument removeObsolete type of Boolean to exclude obsolete parameter keys
+     */
+    @Override
+    public List<ParamValue> getValues(@Nullable Customer customer, @Nonnull Criterion<ParamValue> criterion) {
+        Args.notNull(criterion, "criterion");
         final Criterion<ParamValue> crn1,crn2,crn3;
         crn1 = ParamValue.CUSTOMER.whereNull();
         crn2 = ParamValue.CUSTOMER.whereEq(customer);
-        crn3 = crn1.or(crn2);
+        crn3 = criterion.and(crn1.or(crn2));
 
         final Key<ParamValue,Integer> KEY_ID = ParamValue.KEY_ID$;
         final Map<Integer,ParamValue> values = createQuery(crn3)
@@ -126,9 +145,9 @@ implements ParamService {
      */
     @Override
     public final void updateValue(ParamValue param) {
-        final ForeignKey cutomerFK = param.readFK(ParamValue.CUSTOMER);
-        if (cutomerFK!=null && param.isPersonalParam()) {
-            Args.isTrue(((Integer)cutomerFK.getValue()).intValue() == authService.getLoggedCustomer().getId()
+        param.writeSession(getSession());
+        if (param.getCustomer()!=null && param.isPersonalParam()) {
+            Args.isTrue(param.getCustomer().getId().equals(authService.getLoggedCustomer().getId())
             , "User " + authService.getLoggedCustomer().getId() + " is modyfing foreign parameters " + param);
         }
         updateValue(param, this.authService.getLoggedCustomer());

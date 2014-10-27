@@ -97,9 +97,9 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         }
     }
 
-    /** Get database rows */
+    /** Get user parameters include system params */
     private List<? super U> getDbRows() {
-        return paramService.getValues();
+        return paramService.getValues(ParamValue.ID.forAll());
     }
 
     /** Reload the data table */

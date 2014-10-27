@@ -16,8 +16,10 @@
 package org.ujorm.hotels.services;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
+import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
@@ -36,7 +38,13 @@ public interface ParamService {
     /** Get a value of the key where the module have got special parameter for getter performance */
     public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module);
 
-    /** Get all parameters for a required */
+    /** Get all parameters for a required Customer and an additional Customer */
+    public List<? super ParamValue> getValues(@Nullable Customer customer, Criterion<ParamValue> criterion);
+
+    /** Get all parameters for a logged Customer using an extended criterion */
+    public List<? super ParamValue> getValues(@Nonnull Criterion<ParamValue> criterion);
+
+    /** Get all parameters for a required Customer */
     public List<? super ParamValue> getValues(@Nullable Customer customer);
 
     /** Get all parameters for a logged Customer */
