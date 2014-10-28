@@ -15,30 +15,126 @@
  */
 package org.ujorm.hotels.services.impl;
 
+import java.io.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.Cache;
+import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.stereotype.Service;
 import org.ujorm.Key;
+import org.ujorm.hotels.entity.Customer;
+import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.hotels.services.*;
 /**
- * Common database service implementations
+ * Common Parameter service service provider including a cache
  * @author Pavel Ponec
  */
 @Service(ParamService.CACHED)
 public class ParamServiceCacheImpl extends ParamServiceImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParamServiceCacheImpl.class);
 
-    /** TODO: cache the value */
+    /** See the configuration file {@code ehcache.xml} */
+    private static final String CACHE_IDENTIFIER = "parameterObjectCache";
+
+    @Autowired
+    @Qualifier("cacheManager")
+    private CacheManager cacheManager;
+
+    /** Get an instance of the Cache */
+    private Cache getObjectCache() {
+        return cacheManager.getCache(CACHE_IDENTIFIER);
+    }
+
+    /** Cache the value */
     @Override
-    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module) {
-        return super.getValue(key, module);
+    public <U extends ModuleParams, T> T getValue(final Key<? super U, T> key, final Module module, final Customer customer) {
+        final T result;
+        final Cache cache = getObjectCache();
+        final CacheKey cacheKey = new CacheKey(key.getName(), module, customer);
+        final ValueWrapper wrapper = cache.get(cacheKey);
+
+        if (wrapper != null) {
+            result = (T) wrapper.get();
+        } else {
+            LOGGER.info("No cached value for the parameter: " + key.getFullName());
+            result = super.getValue(key, module, customer);
+            cache.put(cacheKey, result);
+        }
+
+        return result;
+    }
+
+    /** Update the parametr value and evict the parameter value from the current cache */
+    @Override
+    public void updateValue(final ParamValue param, final Customer user) {
+        super.updateValue(param, user);
+        evictParam(param, user);
+    }
+
+    /** Evict a parameter value from the current cache */
+    protected void evictParam(final ParamValue param, final Customer customer) {
+        final CacheKey ck = new CacheKey
+        ( param.getParamKey().getName()
+        , param.getParamKey().getModule()
+        , customer);
+        getObjectCache().evict(ck);
     }
 
     /** The method clear cache */
     @Override
     public void clearCache() {
-        // TODO ...
+        getObjectCache().clear();
+    }
+
+    /** Cache key object */
+    static class CacheKey implements Serializable {
+        private final int customerId;
+        private final String keyName;
+        private final Module module;
+        private int hash;
+
+        public CacheKey(final String keyName, final Module module, final Customer customer) {
+            Integer custId = customer != null ? customer.getId() : null;
+            this.customerId = custId != null ? custId : Integer.MIN_VALUE;
+            this.keyName = keyName;
+            this.module = module;
+        }
+
+        @Override
+        public int hashCode() {
+            if (hash == 0) {
+                hash = 7;
+                hash = 53 * hash + this.customerId;
+                hash = 53 * hash + this.keyName.hashCode();
+                hash = 53 * hash + this.module.hashCode();
+            }
+            return hash;
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final CacheKey other = (CacheKey) obj;
+            if (this.customerId != other.customerId) {
+                return false;
+            }
+            if (!this.keyName.equals(other.keyName)) {
+                return false;
+            }
+            if (this.module != other.module) {
+                return false;
+            }
+            return true;
+        }
     }
 
 }

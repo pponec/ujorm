@@ -38,6 +38,9 @@ public interface ParamService {
     /** Get a value of the key where the module have got special parameter for getter performance */
     public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module);
 
+    /** Get a value of the key where the module have got special parameter for getter performance */
+    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module, Customer customer);
+
     /** Get all parameters for a required Customer and an additional Customer */
     public List<? super ParamValue> getValues(@Nullable Customer customer, Criterion<ParamValue> criterion);
 
@@ -61,7 +64,7 @@ public interface ParamService {
      */
     public void updateValue(ParamValue param);
 
-    /** Clean some cache, if any */
+    /** Clear all the cached parameters */
     public void clearCache();
 
     /** Save all parameters to database */
