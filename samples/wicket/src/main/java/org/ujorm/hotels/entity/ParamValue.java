@@ -26,7 +26,7 @@ import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import static org.ujorm.Validator.Build.*;
 
-/** City with Country */
+/** Parameter value mapping to database */
 public final class ParamValue extends OrmTable<ParamValue> {
 
     /** Unique index name */
