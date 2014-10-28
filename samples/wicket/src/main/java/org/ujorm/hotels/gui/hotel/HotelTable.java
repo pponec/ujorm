@@ -30,8 +30,7 @@ import org.ujorm.hotels.gui.hotel.action.ActionPanel;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
-import org.ujorm.hotels.services.ModuleParams;
-import org.ujorm.hotels.services.impl.HotelParams;
+import org.ujorm.hotels.services.impl.ApplicationParams;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.KeyColumn;
@@ -50,8 +49,8 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
 
     @SpringBean DbService dbService;
     @SpringBean AuthService authService;
-    @Qualifier("hotelsParams")
-    @SpringBean ModuleParams<HotelParams> hotelsParams;
+    @Qualifier("applParams")
+    @SpringBean ApplicationParams<ApplicationParams> applParams;
 
     private Toolbar<U> toolbar = new Toolbar("toolbar");
     private HotelEditor editDialog;
@@ -71,7 +70,7 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
         columns.add(Hotel.PHONE);
         columns.add(Hotel.ID, ActionPanel.class);
         columns.setSort(Hotel.NAME);
-        add(columns.createDataTable(DEFAULT_DATATABLE_ID, hotelsParams.get(HotelParams.ROWS_PER_PAGE)));
+        add(columns.createDataTable(DEFAULT_DATATABLE_ID, applParams.getRowsPerPage()));
 
         add(toolbar);
         add((editDialog = HotelEditor.create("editDialog", 700, 410)).getModalWindow());

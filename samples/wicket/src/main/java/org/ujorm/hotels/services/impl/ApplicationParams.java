@@ -27,22 +27,26 @@ import org.ujorm.orm.annot.Comment;
  * Common database service implementations
  * @author Ponec
  */
-@Service("hotelParams")
-public class HotelParams<U extends HotelParams> extends AbstractModuleParams {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HotelParams.class);
+@Service("applParams")
+public class ApplicationParams<U extends ApplicationParams> extends AbstractModuleParams {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationParams.class);
 
     /** Factory */
-    private static final KeyFactory<HotelParams> f = newFactory(HotelParams.class);
+    private static final KeyFactory<ApplicationParams> f = newFactory(ApplicationParams.class);
 
-    @Comment("Count of rows per a page in the table")
-    public static final Key<HotelParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
-    @Comment("Parameter test 1")
-    public static final Key<HotelParams, String> TEST1 = f.newKey("Test1", "A");
-    @Comment("Parameter test 2")
+    @Comment("Count of rows per a page in the table is a personal parameter")
     @PersonalParam
-    public static final Key<HotelParams, String> TEST2 = f.newKey("Test2", "B");
+    public static final Key<ApplicationParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
+    @Comment("Parameter test 1 for the system")
+    public static final Key<ApplicationParams, String> TEST1 = f.newKey("Test1", "A");
+    @Comment("Parameter test 2 for the system")
+    public static final Key<ApplicationParams, String> TEST2 = f.newKey("Test2", "B");
     @PersonalParam
-    public static final Key<HotelParams, String> TEST3 = f.newKey("Test3", "C");
+    @Comment("Parameter test 3 for the user")
+    public static final Key<ApplicationParams, String> TEST3 = f.newKey("Test3", "C");
+    @PersonalParam
+    @Comment("Parameter test 3 for the user")
+    public static final Key<ApplicationParams, String> TEST4 = f.newKey("Test4", "D");
 
     static { f.lock(); }
 

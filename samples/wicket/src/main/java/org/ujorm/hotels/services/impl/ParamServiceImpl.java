@@ -123,6 +123,7 @@ implements ParamService {
     @Override
     public List<ParamValue> getValues(@Nullable Customer customer, @Nonnull Criterion<ParamValue> criterion) {
         Args.notNull(criterion, "criterion");
+
         final Criterion<ParamValue> crn1,crn2,crn3;
         crn1 = ParamValue.CUSTOMER.whereNull();
         crn2 = ParamValue.CUSTOMER.whereEq(customer);
@@ -130,7 +131,7 @@ implements ParamService {
 
         final Key<ParamValue,Integer> KEY_ID = ParamValue.KEY_ID$;
         final Map<Integer,ParamValue> values = createQuery(crn3)
-                .orderBy(KEY_ID, ParamValue.KEY_SYSTEM$.descending())
+                .orderBy(KEY_ID, ParamValue.KEY_SYSTEM$.descending()) // System is the first!
                 .addColumn(KEY_ID)
                 .map(KEY_ID, new HashMap<Integer,ParamValue>(128));
         final Map<Integer,ParamKey> keys = createQuery(ParamKey.ID.forAll()).map();

@@ -17,7 +17,13 @@
 package org.ujorm.hotels.services.annot;
 import java.lang.annotation.*;
 
-/** The Annotation for a PersonalParam parameter key (not a system key) */
+/** The Annotation is intended for personal key parameter.
+ * The keys without the annotation are system parameters by default.
+ * The System parameter can be changed to the Personal parameter by assigning
+ * the annotation only without database modifications unlike private parameters
+ * where database modifications are necessary.
+ * @see org.ujorm.hotels.services.ModuleParams
+ */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 public @interface PersonalParam {
