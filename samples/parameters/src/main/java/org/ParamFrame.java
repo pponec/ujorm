@@ -5,8 +5,8 @@ import java.io.File;
 import javax.swing.*;
 import org.ujorm.core.UjoManagerRBundle;
 import org.ujorm.swing.SingleUjoTabModel;
-import org.ujorm.swing.UjoPropertyRow;
-import static org.ujorm.swing.UjoPropertyRow.*;
+import org.ujorm.swing.UjoKeyRow;
+import static org.ujorm.swing.UjoKeyRow.*;
 
 
 /** Parameter manager. */
@@ -61,8 +61,8 @@ public class ParamFrame extends JFrame implements ActionListener, Runnable {
     int index = table.getSelectedRow();
 
     if ("Default".equals(label) && index>=0) {
-        UjoPropertyRow row = model.getRow(index);
-        model.setValueAt(row.getProperty().getDefault(), index, UjoPropertyRow.P_VALUE);
+        UjoKeyRow row = model.getRow(index);
+        model.setValueAt(row.getProperty().getDefault(), index, UjoKeyRow.P_VALUE);
     }
   }
 
