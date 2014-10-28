@@ -59,7 +59,7 @@ implements ParamService {
 
     /** Get a value of the key */
     @Override
-    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key) {
+    public final <U extends ModuleParams, T> T getValue(Key<? super U, T> key) {
         try {
             @SuppressWarnings("unchecked")
             final U instance = (U) key.getDomainType().newInstance();
@@ -71,12 +71,18 @@ implements ParamService {
 
     /** Get a value of the key for the logged user */
     @Override
-    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module) {
+    public final <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module) {
+        return getValue(key, module, authService.getLoggedCustomer());
+    }
+
+    /** Get a value of the key for the logged user */
+    @Override
+    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module, Customer customer) {
         final Criterion<ParamValue> crn1, crn2, crn3, crn4, crn5;
         crn1 = ParamValue.KEY_NAME$.whereEq(key.getName());
         crn2 = ParamValue.KEY_MODULE$.whereEq(module);
         crn3 = ParamValue.CUSTOMER.whereNull();
-        crn4 = ParamValue.CUSTOMER.whereEq(authService.getLoggedCustomer());
+        crn4 = ParamValue.CUSTOMER.whereEq(customer);
         crn5 = crn1.and(crn2).and(crn3.or(crn4));
         //
         ParamValue param = null;
