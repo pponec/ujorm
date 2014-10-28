@@ -41,11 +41,11 @@ import org.ujorm.Ujo;
  * @author Pavel Ponec
  * @since UJO release 0.85
  */
-public interface UjoMiddle<UJO extends UjoMiddle> extends Ujo {
+public interface UjoMiddle<U extends UjoMiddle> extends Ujo {
 
     /** Getter based on one Key */
     public <VALUE> VALUE get
-        ( Key<? super UJO, VALUE> key);
+        ( Key<? super U, VALUE> key);
 
     /** The setter  based on a composite Key.
      * If the {@code Key} argument is type of {@link CompositeKey} the method creates all missing relations.
@@ -58,11 +58,11 @@ public interface UjoMiddle<UJO extends UjoMiddle> extends Ujo {
      * @see CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean)
      */
     public <VALUE> Ujo set
-        ( Key<? super UJO, VALUE> key
+        ( Key<? super U, VALUE> key
         , VALUE value);
 
     /** Get a <strong>not null</strong> list result */
-    public <VALUE> List<VALUE> getList(final ListKey<? super UJO, VALUE> key);
+    public <VALUE> List<VALUE> getList(final ListKey<? super U, VALUE> key);
 
     /**
      * Returns a String value by a NULL context.
@@ -85,5 +85,5 @@ public interface UjoMiddle<UJO extends UjoMiddle> extends Ujo {
     /** The same method as the {@link #readKeys()} with a different generic type.
      * @see #readKeys()
      */
-    public KeyList<UJO> readKeyList();
+    public KeyList<U> readKeyList();
 }

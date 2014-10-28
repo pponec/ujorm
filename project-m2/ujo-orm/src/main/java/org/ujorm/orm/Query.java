@@ -300,6 +300,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Returns an instance of the Map where the key is DB table primary key and a value is the row.
      * The method calls internally the next statement:
      * <pre>iterator()</pre>
+     * <br/>Note, the last row of the the same ID wins the instance in the map.
      * @param mapKey Ujo Key for the mapKey
      * @see #iterator()
      */
