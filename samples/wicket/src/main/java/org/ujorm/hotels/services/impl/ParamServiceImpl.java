@@ -43,6 +43,8 @@ import org.ujorm.hotels.services.*;
 import org.ujorm.hotels.services.annot.PersonalParam;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Comment;
+import static org.ujorm.hotels.entity.ParamValue.*;
+
 /**
  * Common database service implementations
  * @author Pavel Ponec
@@ -194,9 +196,9 @@ implements ParamService {
             ( "User '%s' [%s] changed the %s parameter '%s.%s' to a new value: '%s'."
             , user.getLogin()
             , user.getId()
-            , dbParam.getParamKey().getSystemParam() ? "system" : "private"
-            , dbParam.getParamKey().getModule().name()
-            , dbParam.getParamKey().getName()
+            , dbParam.get(KEY_SYSTEM$) ? "system" : "private"
+            , dbParam.get(KEY_MODULE$).name()
+            , dbParam.get(KEY_NAME$)
             , dbParam.getTextValue());
         LOGGER.info(msg);
     }
