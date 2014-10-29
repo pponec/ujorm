@@ -188,6 +188,17 @@ implements ParamService {
         dbParam.setTextValue(param.getTextValue());
         dbParam.setLastUpdate(new Date());
         session.saveOrUpdate(dbParam);
+
+        // Log the value change:
+        final String msg = String.format
+            ( "User '%s' [%s] changed the %s parameter '%s.%s' to a new value: '%s'."
+            , user.getLogin()
+            , user.getId()
+            , dbParam.getParamKey().getSystemParam() ? "system" : "private"
+            , dbParam.getParamKey().getModule().name()
+            , dbParam.getParamKey().getName()
+            , dbParam.getTextValue());
+        LOGGER.info(msg);
     }
 
     /** The method makes nothing */
