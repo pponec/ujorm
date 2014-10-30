@@ -27,33 +27,48 @@ import org.ujorm.orm.annot.Comment;
  * Common database service implementations
  * @author Ponec
  */
-@Service("applParams")
-public class ApplicationParams<U extends ApplicationParams> extends AbstractModuleParams {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationParams.class);
+@Service("applRole")
+public class ApplicationRoles<U extends ApplicationRoles> extends AbstractModuleParams {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationRoles.class);
 
     /** Factory */
-    private static final KeyFactory<ApplicationParams> f = newFactory(ApplicationParams.class);
+    private static final KeyFactory<ApplicationRoles> f = newFactory(ApplicationRoles.class);
 
-    @Comment("Count of rows per a page in the table for a user")
+    @Comment("The Manager role of a user")
     @PersonalParam
-    public static final Key<ApplicationParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
-    @Comment("Parameter Test1 for the system")
-    public static final Key<ApplicationParams, String> TEST1 = f.newKey("Test1", "A");
-    @Comment("Parameter Test2 for the user")
+    public static final Key<ApplicationRoles, Boolean> MANAGER = f.newKey("Manager", false);
+    @Comment("The Tester role of a user")
     @PersonalParam
-    public static final Key<ApplicationParams, String> TEST2 = f.newKey("Test2", "B");
+    public static final Key<ApplicationRoles, Boolean> TESTER = f.newKey("Tester", false);
+    @Comment("The Service role of a user")
+    @PersonalParam
+    public static final Key<ApplicationRoles, Boolean> SERVICE = f.newKey("Service", false);
 
     static { f.lock(); }
 
     @Override
     public Module getModule() {
-        return Module.HOTEL;
+        return Module.ROLE;
     }
 
     //<editor-fold defaultstate="collapsed" desc="Generated getters">
-    public Integer getRowsPerPage() {
-        return ROWS_PER_PAGE.of(this);
+
+    /** The Manager role of a user */
+    public Boolean getManager() {
+        return MANAGER.of(this);
     }
+
+    /** The Tester role of a user */
+    public Boolean getTester() {
+        return TESTER.of(this);
+    }
+
+    /** The Service role of a user */
+    public Boolean getService() {
+        return SERVICE.of(this);
+    }
+
     //</editor-fold>
+
 
 }
