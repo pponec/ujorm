@@ -25,8 +25,10 @@ import org.ujorm.extensions.StringWrapper;
  */
 public enum Module implements StringWrapper {
 
-    /** The base application */
-    HOTELS("ht"),
+    /** The base application parameters */
+    HOTEL("hl"),
+    /** The roles of the user */
+    ROLE("re"),
     /** Test module */
     TEST("tt");
 
