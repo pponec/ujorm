@@ -196,10 +196,10 @@ implements ParamService {
             ( "User '%s' [%s] changed the %s parameter '%s.%s' to a new value: '%s'."
             , user.getLogin()
             , user.getId()
-            , dbParam.get(KEY_SYSTEM$) ? "system" : "private"
-            , dbParam.get(KEY_MODULE$).name()
-            , dbParam.get(KEY_NAME$)
-            , dbParam.getTextValue());
+            , param.get(KEY_SYSTEM$) ? "system" : "private"
+            , param.get(KEY_MODULE$).name()
+            , param.get(KEY_NAME$)
+            , param.getTextValue());
         LOGGER.info(msg);
     }
 
