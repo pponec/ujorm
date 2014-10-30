@@ -107,10 +107,11 @@ public class ParamServiceCacheImpl extends ParamServiceImpl {
         @Override
         public int hashCode() {
             if (hash == 0) {
-                hash = 7;
-                hash = 53 * hash + this.customerId;
-                hash = 53 * hash + this.keyName.hashCode();
-                hash = 53 * hash + this.module.hashCode();
+                int result = 7;
+                result = 53 * result + this.customerId;
+                result = 53 * result + this.keyName.hashCode();
+                result = 53 * result + this.module.hashCode();
+                hash = result;
             }
             return hash;
         }
