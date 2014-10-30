@@ -15,10 +15,14 @@
  */
 package org.ujorm.hotels.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.ujorm.hotels.config.demoData.DataLoader;
+import org.ujorm.hotels.gui.MainApplication;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.ao.CheckReport;
@@ -27,6 +31,8 @@ import org.ujorm.orm.metaModel.MetaParams;
 /** Build and configure database meta-model */
 @Service
 public final class DatabaseConfig implements OrmHandlerProvider {
+    /** Logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseConfig.class);
 
     /** Database meta-model */
     final OrmHandler handler = new OrmHandler();
@@ -36,6 +42,9 @@ public final class DatabaseConfig implements OrmHandlerProvider {
 
     /** Initializa handler */
     public void init() {
+        // Log the current environment:
+        LOGGER.info(UjoLoggerFactory.getRuntimeInfo(MainApplication.APPLICATION_NAME));
+
         // There are prefered default properties for a production environment:
         final boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
