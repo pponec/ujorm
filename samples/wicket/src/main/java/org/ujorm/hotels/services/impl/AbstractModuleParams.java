@@ -23,14 +23,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.ujorm.Key;
 import org.ujorm.hotels.services.ModuleParams;
 import org.ujorm.hotels.services.ParamService;
-import org.ujorm.implementation.quick.SmartUjo;
+import org.ujorm.implementation.quick.SmartUjoLockable;
 
 /**
- * Common database service implementations
+ * Common database service implementations.
+ * If the object is not a Spring managed bean,
+ * then it is possibile to use it like any other regular UJO object.
  * @author ponec
  */
 public abstract class AbstractModuleParams<U extends AbstractModuleParams>
-        extends SmartUjo<U>
+        extends SmartUjoLockable<U>
         implements ModuleParams<U> {
     /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModuleParams.class);
@@ -39,16 +41,21 @@ public abstract class AbstractModuleParams<U extends AbstractModuleParams>
     @Qualifier(ParamService.CACHED)
     private ParamService paramService;
 
+    /** If the instance is not a Spring managed bean,
+     * then the object is a regular UJO object (independent on a Spring services) */
     @Override
     public Object readValue(final Key<?,?> key) {
-        return paramService.getValue((Key)key, getModule());
+        return paramService != null
+             ? paramService.getValue((Key)key, getModule())
+             : super.readValue(key);
     }
 
     /** Load default values into database */
     @PostConstruct
     public void init() throws IllegalStateException {
-        try {
+        if (paramService != null) try {
             paramService.init((ModuleParams) this);
+            lock();
             LOGGER.info("The parameter module '{}' is initialized", getClass().getName());
         } catch (Exception e) {
             final String msg = String.format("The parameter module '%s' loading failed", getClass().getName());
