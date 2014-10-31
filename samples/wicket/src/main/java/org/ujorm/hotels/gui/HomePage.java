@@ -34,7 +34,9 @@ import org.ujorm.hotels.gui.customer.CustomerTable;
 import org.ujorm.hotels.gui.hotel.HotelTable;
 import org.ujorm.hotels.gui.params.ParamsTable;
 import org.ujorm.hotels.services.AuthService;
+import org.ujorm.hotels.services.impl.ApplicationParams;
 import org.ujorm.validator.ValidationException;
+import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.tabs.UjoTab;
 import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
@@ -46,6 +48,8 @@ public class HomePage extends WebPage {
     public static final String LOGOUT_ID = "logout";
     @SpringBean
     private AuthService authService;
+    @SpringBean
+    private ApplicationParams applParams;
 
     public HomePage(PageParameters parameters) {
         super(parameters);
@@ -68,9 +72,13 @@ public class HomePage extends WebPage {
                 ((UjoTabbedPanel)HomePage.this.get("tabs")).selectedTab(AboutPanel.class, target);
             }
         });
+        Label label;
         add(new MeasuringCode("measuringCode"));
-        add(new  Label("applicationTitle", MainApplication.APPLICATION_NAME));
-        add(new  Label("applicationName", MainApplication.APPLICATION_NAME));
+        add(new Label("applicationTitle", MainApplication.APPLICATION_NAME));
+        add(label = new Label("applicationHeader", MainApplication.APPLICATION_NAME));
+        if (applParams.isDemo()) {
+            label.add(new CssAppender("test"));            
+        }
     }
 
     /** Manage events */

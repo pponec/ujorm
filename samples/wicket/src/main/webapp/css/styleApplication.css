@@ -75,6 +75,19 @@ h1 {
     margin-left: 30px;
 }
 
+h1.applicationHeader { 
+    background-image: url("../images/hotel.png");
+    background-position: right;
+    background-repeat: no-repeat;
+    padding-right: 120px;
+    line-height: 64px;
+    display: inline-block;
+}
+
+h1.applicationHeader.test {
+    color: #db4646;
+}
+
 /* About Panel*/
 div.about h1,
 div.about h2,
