@@ -37,8 +37,8 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     @Comment("Count of rows per a page in the table for a user")
     @PersonalParam
     public static final Key<ApplicationParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
-    @Comment("Demo application for tests")
-    public static final Key<ApplicationParams, Boolean> DEMO = f.newKey("Demo", false);
+    @Comment("The production application is running")
+    public static final Key<ApplicationParams, Boolean> PRODUCTION = f.newKey("Production", true);
     @Comment("Parameter Test1 for the system")
     public static final Key<ApplicationParams, String> TEST1 = f.newKey("Test1", "A");
     @Comment("Parameter Test2 for the user")
@@ -57,8 +57,8 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
         return ROWS_PER_PAGE.of(this);
     }
 
-    public boolean isDemo() {
-        return DEMO.of(this);
+    public boolean isProduction() {
+        return PRODUCTION.of(this);
     }
     //</editor-fold>
 

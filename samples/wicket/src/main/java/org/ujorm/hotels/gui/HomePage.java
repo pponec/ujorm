@@ -76,7 +76,7 @@ public class HomePage extends WebPage {
         add(new MeasuringCode("measuringCode"));
         add(new Label("applicationTitle", MainApplication.APPLICATION_NAME));
         add(label = new Label("applicationHeader", MainApplication.APPLICATION_NAME));
-        if (applParams.isDemo()) {
+        if (!applParams.isProduction()) {
             label.add(new CssAppender("test"));            
         }
     }
