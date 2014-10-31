@@ -37,6 +37,8 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     @Comment("Count of rows per a page in the table for a user")
     @PersonalParam
     public static final Key<ApplicationParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
+    @Comment("Demo application for tests")
+    public static final Key<ApplicationParams, Boolean> DEMO = f.newKey("Demo", false);
     @Comment("Parameter Test1 for the system")
     public static final Key<ApplicationParams, String> TEST1 = f.newKey("Test1", "A");
     @Comment("Parameter Test2 for the user")
@@ -53,6 +55,10 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     //<editor-fold defaultstate="collapsed" desc="Generated getters">
     public Integer getRowsPerPage() {
         return ROWS_PER_PAGE.of(this);
+    }
+
+    public boolean isDemo() {
+        return DEMO.of(this);
     }
     //</editor-fold>
 
