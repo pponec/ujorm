@@ -26,6 +26,7 @@ import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.stereotype.Service;
 import org.ujorm.Key;
 import org.ujorm.hotels.entity.Customer;
+import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.hotels.services.*;
@@ -72,15 +73,15 @@ public class ParamServiceCacheImpl extends ParamServiceImpl {
     @Override
     public void updateValue(final ParamValue param, final Customer user) {
         super.updateValue(param, user);
-        evictParam(param, user);
+        evictParam(param.getParamKey(), user);
     }
 
     /** Evict a parameter value from the current cache */
-    protected void evictParam(final ParamValue param, final Customer customer) {
+    protected void evictParam(final ParamKey param, final Customer customer) {
         final CacheKey ck = new CacheKey
-        ( param.getParamKey().getName()
-        , param.getParamKey().getModule()
-        , customer);
+        ( param.getName()
+        , param.getModule()
+        , param.getSystemParam() ? null : customer);
         getObjectCache().evict(ck);
     }
 
@@ -135,6 +136,14 @@ public class ParamServiceCacheImpl extends ParamServiceImpl {
                 return false;
             }
             return true;
+        }
+
+        @Override
+        public String toString() {
+            return "CacheKey"
+                    + "{ customerId=" + customerId 
+                    + ", keyName=" + keyName 
+                    + ", module=" + module + '}';
         }
     }
 
