@@ -89,7 +89,7 @@ implements ParamService {
         //
         ParamValue param = null;
         for (ParamValue paramValue : getSession().createQuery(crn5).orderBy
-                ( ParamValue.KEY_NAME$
+                ( ParamValue.ID
                 , ParamValue.KEY_SYSTEM$.descending())) {
             param = paramValue;
         }
@@ -125,9 +125,9 @@ implements ParamService {
         return getValues(authService.getLoggedCustomer(), criterion);
     }
 
-   /** Get all parameters for a required Customer.
+    /** Get all parameters for a required Customer.
      * NOTE: The SQL standard's core functionality does not explicitly define a default sort order for Nulls
-     * so the ordering by the {@code KEY_ID.descending()} is necessary in this implementation.
+     * so the ordering by the {@code ParamValue.ID} is necessary in this implementation
      * @todo add next argument removeObsolete type of Boolean to exclude obsolete parameter keys
      */
     @Override
@@ -141,7 +141,7 @@ implements ParamService {
 
         final Key<ParamValue,Integer> KEY_ID = ParamValue.KEY_ID$;
         final Map<Integer,ParamValue> values = createQuery(crn3)
-                .orderBy(KEY_ID.descending(), ParamValue.KEY_SYSTEM$.descending()) // System is the first!
+                .orderBy(ParamValue.ID, ParamValue.KEY_SYSTEM$.descending()) // System is the first!
                 .addColumn(KEY_ID)
                 .map(KEY_ID, new HashMap<Integer,ParamValue>(128));
         final Map<Integer,ParamKey> keys = createQuery(ParamKey.ID.forAll()).map();
