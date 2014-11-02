@@ -21,13 +21,14 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
 import org.ujorm.spring.UjormTransactionManager;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
 /**
  * Abstract service with basic database tools
  * @author ponec
  */
 abstract public class AbstractDbService {
-
+    
     /** Orm Configuration */
     // @Autowired // TODO
     private UjormTransactionManager manager;
