@@ -88,9 +88,7 @@ implements ParamService {
         crn5 = crn1.and(crn2).and(crn3.or(crn4));
         //
         ParamValue param = null;
-        for (ParamValue paramValue : getSession().createQuery(crn5).orderBy
-                ( ParamValue.ID
-                , ParamValue.KEY_SYSTEM$.descending())) {
+        for (ParamValue paramValue : getSession().createQuery(crn5).orderBy(ParamValue.ID)) {
             param = paramValue;
         }
 
@@ -141,7 +139,7 @@ implements ParamService {
 
         final Key<ParamValue,Integer> KEY_ID = ParamValue.KEY_ID$;
         final Map<Integer,ParamValue> values = createQuery(crn3)
-                .orderBy(ParamValue.ID, ParamValue.KEY_SYSTEM$.descending()) // System is the first!
+                .orderBy(ParamValue.ID) // Default is the first!
                 .addColumn(KEY_ID)
                 .map(KEY_ID, new HashMap<Integer,ParamValue>(128));
         final Map<Integer,ParamKey> keys = createQuery(ParamKey.ID.forAll()).map();

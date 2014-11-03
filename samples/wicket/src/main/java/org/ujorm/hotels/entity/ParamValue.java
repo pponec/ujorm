@@ -35,8 +35,8 @@ public final class ParamValue extends OrmTable<ParamValue> {
     /** Factory */
     private static final KeyFactory<ParamValue> f = newFactory(ParamValue.class);
 
-    /** The primary identifier */
-    @Comment("The primary identifier")
+    /** The identifier must have an ascending sort for personal rows. */
+    @Comment("The identifier must have an ascending sort for defautl personal rows")
     @Column(pk = true)
     public static final Key<ParamValue, Integer> ID = f.newKey();
     /** Parameter Key where the NULL value means a 'system parameter' */
