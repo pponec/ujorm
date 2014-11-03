@@ -88,7 +88,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
             }
             else if (event.isAction(CommonActions.UPDATE)) {
                 if (event.showDialog()) {
-                    editDialog.show(event, Model.of("Edit param parameter"));
+                    editDialog.show(event, Model.of("Edit parameter"));
                 } else {
                     paramService.updateValue(event.getDomain());
                     reloadTable(event, true);
