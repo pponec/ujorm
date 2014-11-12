@@ -18,6 +18,7 @@ package com.ujorm.UjoCodeGenerator;
 import com.ujorm.UjoCodeGenerator.bo.KeyItem;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
 
 /**
  *
@@ -27,6 +28,8 @@ public class PropertiesChooser extends javax.swing.JPanel {
 
     /** Static parameter */
     private static boolean paramGetters = true;
+    /** Static parameter */
+    private static boolean paramBoolean = true;
     /** Static parameter */
     private static boolean paramSetters = true;
     /** Static parameter */
@@ -47,6 +50,7 @@ public class PropertiesChooser extends javax.swing.JPanel {
         initComponents();
         properties.setModel(defaultListModel);
         cbGetters.getModel().setSelected(paramGetters);
+        cbBoolean.getModel().setSelected(paramBoolean);
         cbSetters.getModel().setSelected(paramSetters);
         cbJavaDoc.getModel().setSelected(paramJavaDoc);
         cbDomainClass.getModel().setSelected(paramDomainClass);
@@ -69,6 +73,13 @@ public class PropertiesChooser extends javax.swing.JPanel {
     public boolean isGettersRequired() {
         final boolean result = cbGetters.getModel().isSelected();
         paramGetters = result;
+        return result;
+    }
+
+    /** Are the Getters required ? */
+    public boolean isGettersOfBoolean() {
+        final boolean result = cbBoolean.getModel().isSelected();
+        paramBoolean = result;
         return result;
     }
 
@@ -107,6 +118,7 @@ public class PropertiesChooser extends javax.swing.JPanel {
         properties = new javax.swing.JList();
         cbGetters = new javax.swing.JCheckBox();
         cbSetters = new javax.swing.JCheckBox();
+        cbBoolean = new javax.swing.JCheckBox();
         cbJavaDoc = new javax.swing.JCheckBox();
         cbDomainClass = new javax.swing.JCheckBox();
 
@@ -116,7 +128,7 @@ public class PropertiesChooser extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 350;
@@ -130,6 +142,11 @@ public class PropertiesChooser extends javax.swing.JPanel {
         cbGetters.setMnemonic('G');
         cbGetters.setText("Getters"); // NOI18N
         cbGetters.setToolTipText("Generate Setters according to Ujo Keys"); // NOI18N
+        cbGetters.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbGettersActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -149,12 +166,28 @@ public class PropertiesChooser extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 22, 0, 0);
         add(cbSetters, gridBagConstraints);
 
+        cbBoolean.setMnemonic('S');
+        cbBoolean.setText("IsBoolean"); // NOI18N
+        cbBoolean.setToolTipText("Generate Setters according to Ujo Keys"); // NOI18N
+        cbBoolean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbBooleanActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 22, 0, 0);
+        add(cbBoolean, gridBagConstraints);
+
         cbJavaDoc.setMnemonic('C');
         cbJavaDoc.setText("Copy JavaDoc form Keys to new methods"); // NOI18N
         cbJavaDoc.setToolTipText(""); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
         gridBagConstraints.ipadx = 60;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
@@ -166,7 +199,7 @@ public class PropertiesChooser extends javax.swing.JPanel {
         cbDomainClass.setToolTipText(""); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
         gridBagConstraints.ipadx = 60;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
@@ -174,7 +207,22 @@ public class PropertiesChooser extends javax.swing.JPanel {
         add(cbDomainClass, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cbGettersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbGettersActionPerformed
+        JCheckBox getters = (JCheckBox) evt.getSource();
+        if (!getters.isSelected()) {
+            this.cbBoolean.setSelected(false);
+        }
+    }//GEN-LAST:event_cbGettersActionPerformed
+
+    private void cbBooleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbBooleanActionPerformed
+        JCheckBox isBoolean = (JCheckBox) evt.getSource();
+        if (isBoolean.isSelected()) {
+            this.cbGetters.setSelected(true);
+        }
+    }//GEN-LAST:event_cbBooleanActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbBoolean;
     private javax.swing.JCheckBox cbDomainClass;
     private javax.swing.JCheckBox cbGetters;
     private javax.swing.JCheckBox cbJavaDoc;

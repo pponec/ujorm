@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.WorkingCopy;
+import static com.ujorm.UjoCodeGenerator.ItemPrefix.*;
 
 /**
  * String service
@@ -39,9 +40,9 @@ final public class StringService {
      * @param variable
      * @return
      */
-    public String getGetterName(VariableTree variable) {
+    public String getGetterName(ItemPrefix prefix, VariableTree variable) {
         assert variable != null : "Variable cannot be null";
-        return getGetterName(variable.getName().toString());
+        return getGetterName(prefix, variable.getName().toString());
     }
 
     /**
@@ -50,9 +51,9 @@ final public class StringService {
      * @param variable
      * @return
      */
-    protected String getGetterName(String variable) {
+    protected String getGetterName(ItemPrefix prefix, String variable) {
         assert variable != null : "Variable cannot be null";
-        return getVariableName("get", variable);
+        return getVariableName(prefix, variable);
     }
 
     /**
@@ -74,7 +75,7 @@ final public class StringService {
      */
     protected String getSetterName(String variable) {
         assert variable != null : "Variable cannot be null";
-        return getVariableName("set", variable);
+        return getVariableName(SET, variable);
     }
 
     /**
@@ -96,7 +97,7 @@ final public class StringService {
      */
     protected String getParameterName(String variable) {
         assert variable != null : "Variable cannot be null";
-        return getVariableName("", variable);
+        return getVariableName(EMPTY, variable);
     }
 
     /**
@@ -106,7 +107,7 @@ final public class StringService {
      * @param variable
      * @return
      */
-    protected String getVariableName(String prefix, String variable) {
+    protected String getVariableName(ItemPrefix prefix, String variable) {
         assert prefix != null : "Prefix cannot be null";
         assert variable != null : "Variable cannot be null";
 
