@@ -127,11 +127,11 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
             if (getters) {
                 modifiedClass = generateGetter(GET, variable, modifiedClass, javaDoc);
             }
-            if (isGetters) {
-                modifiedClass = generateGetter(IS, variable, modifiedClass, javaDoc);
-            }
             if (setters) {
                 modifiedClass = generateSetter(variable, modifiedClass, javaDoc);
+            }
+            if (isGetters) {
+                modifiedClass = generateGetter(IS, variable, modifiedClass, javaDoc);
             }
         }
 
@@ -241,7 +241,9 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
 
     /** Tree is type of boolean */
     private boolean isBooleanType(Tree tree) {
-        return tree.toString().endsWith(Boolean.class.getSimpleName());
+        final String type = tree.toString();
+        return Boolean.class.getSimpleName().equals(type)
+               || Boolean.class.getName().equals(type);
     }
 
     /**
