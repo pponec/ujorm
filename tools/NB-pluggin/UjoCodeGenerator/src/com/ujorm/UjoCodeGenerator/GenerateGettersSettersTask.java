@@ -26,6 +26,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.ujorm.UjoCodeGenerator.bo.KeyItem;
+import com.ujorm.UjoCodeGenerator.bo.PrefixEnum;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -41,7 +42,7 @@ import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
-import static com.ujorm.UjoCodeGenerator.ItemPrefix.*;
+import static com.ujorm.UjoCodeGenerator.bo.PrefixEnum.*;
 
 /**
  *
@@ -134,7 +135,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
             }
         }
 
-        workingCopy.rewrite(clazz, modifiedClass);            
+        workingCopy.rewrite(clazz, modifiedClass);
     }
 
     /**
@@ -162,7 +163,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @param modifiedClass
      * @return
      */
-    protected ClassTree generateGetter(ItemPrefix prefix, VariableTree variable, ClassTree modifiedClass, boolean javaDoc) {
+    protected ClassTree generateGetter(PrefixEnum prefix, VariableTree variable, ClassTree modifiedClass, boolean javaDoc) {
         assert prefix != null : "Prefix cannot be null";
         assert variable != null : "Variable cannot be null";
         assert modifiedClass != null : "Modified class cannot be null";
@@ -173,7 +174,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
 
         return modifiedClass;
     }
-    
+
     /**
      * Creates new getter method for given UJO member.
      *
@@ -181,7 +182,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @param variable
      * @return
      */
-    private ClassTree createGetter(ItemPrefix prefix, ClassTree clazz, VariableTree variable, boolean javaDoc) {
+    private ClassTree createGetter(PrefixEnum prefix, ClassTree clazz, VariableTree variable, boolean javaDoc) {
         assert clazz != null : "Clazz cannot be null";
         assert variable != null : "Variable cannot be null";
 
@@ -197,7 +198,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 }
             default:
                 // to be continue ...
-        }        
+        }
         String getterName = stringService.getGetterName(prefix, variable);
         ModifiersTree methodModifiers =
                 treeMaker.Modifiers(Collections.<Modifier>singleton(Modifier.PUBLIC),
@@ -218,9 +219,9 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
 
         return treeMaker.addClassMember(clazz, newMethod);
     }
-    
+
     /** Build a getter body */
-    private String buildGetterBody(ItemPrefix prefix, VariableTree variable, Tree returnType) {
+    private String buildGetterBody(PrefixEnum prefix, VariableTree variable, Tree returnType) {
         String result;
         switch (prefix) {
             case GET:
@@ -237,7 +238,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         }
         return result;
     }
-    
+
     /** Tree is type of boolean */
     private boolean isBooleanType(Tree tree) {
         return tree.toString().endsWith(Boolean.class.getSimpleName());
@@ -361,7 +362,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @param variable
      * @return
      */
-    protected boolean getterExistsForVariable(ItemPrefix prefix, VariableTree variable) {
+    protected boolean getterExistsForVariable(PrefixEnum prefix, VariableTree variable) {
         assert variable != null : "Variable cannot be null";
         String getterName = stringService.getGetterName(prefix, variable);
         return methodExists(getterName);
