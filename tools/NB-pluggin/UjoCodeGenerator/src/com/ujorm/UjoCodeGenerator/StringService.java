@@ -151,26 +151,34 @@ final public class StringService {
     /** Copy JavaDoc */
     public void copyJavaDoc(VariableTree variable, MethodTree newMethod, WorkingCopy workingCopy) {
         try {
-            List<Comment> comments = workingCopy.getTreeUtilities().getComments(variable, true);
-            if (comments!=null && comments.size()>0) {
-                workingCopy.getTreeMaker().addComment(newMethod, comments.get(comments.size() - 1), true);
+            Comment comment = getComment(workingCopy, variable);
+            if (comment != null) {
+                workingCopy.getTreeMaker().addComment(newMethod, comment, true);
             }
         } catch (Throwable e) {
             LOGGER.log(Level.WARNING, "Can't copy JavaDoc to the method: " + newMethod.getName(), e);
         }
     }
 
+    /** Create comment */
+    private Comment getComment(WorkingCopy workingCopy, VariableTree field) {
+        final List<Comment> comments = workingCopy.getTreeUtilities().getComments(field, true);
+        final Comment comment = (comments!=null && !comments.isEmpty())
+                ? comments.get(comments.size() - 1)
+                : null;
+        return comment;
+    }
+
     /**
      * Get JavaDoc
      */
-    public String getInLineJavaDoc(Tree field, WorkingCopy workingCopy) throws IllegalStateException {
+    public String getInLineJavaDoc(VariableTree field, WorkingCopy workingCopy) throws IllegalStateException {
         String result = "";
         try {
-            final List<Comment> comments = workingCopy.getTreeUtilities().getComments(field, true);
-            if (comments != null && !comments.isEmpty()) {
-                final Comment lastComment= comments.get(comments.size() - 1);
-                result = lastComment.getText().trim();
-                if (lastComment.isDocComment()) {
+            final Comment comment = getComment(workingCopy, field);
+            if (comment != null) {
+                result = comment.getText().trim();
+                if (comment.isDocComment()) {
                     result = result.substring(3, result.length()-2).trim();
                 }
                 result = result.replace('\n', ' ');
