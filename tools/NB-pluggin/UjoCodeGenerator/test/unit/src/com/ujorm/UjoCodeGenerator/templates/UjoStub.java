@@ -21,6 +21,8 @@ public class UjoStub {
      * where the <strong>key name</strong> have got a camelCase
      */
     public static final Key<UjoStub, Date> BIRTH_DAY = newKey();
+    /** The role of the logged  user */
+    public static final Key<UjoStub, Boolean> ADMIN = newKey();
 
     // ---------- COMPOSITE KEYS -----
 
@@ -34,6 +36,6 @@ public class UjoStub {
 
     // ---------- GENERATED METHODS ------------------
 
-    
+
 
 }

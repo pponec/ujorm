@@ -49,35 +49,36 @@ public class StringServiceTest {
     public void testGetGetterName() {
         System.out.println("getGetterName");
         final StringService instance = new StringService();
+        final ItemPrefix prefix = ItemPrefix.GET;
         
         String variable = "ID";
         String expResult = "getId";
-        String result = instance.getGetterName(variable);        
+        String result = instance.getGetterName(prefix, variable);        
         assertEquals(expResult, result);
         //
         variable = "id";
         expResult = "getId";
-        result = instance.getGetterName(variable);        
+        result = instance.getGetterName(prefix, variable);        
         assertEquals(expResult, result);
         //
         variable = "MY_NAME";
         expResult = "getMyName";
-        result = instance.getGetterName(variable);        
+        result = instance.getGetterName(prefix, variable);        
         assertEquals(expResult, result);
         //
         variable = "myName";
         expResult = "getMyName";
-        result = instance.getGetterName(variable);        
+        result = instance.getGetterName(prefix, variable);        
         assertEquals(expResult, result);
         //
         variable = "VERY_LONG_NAME";
         expResult = "getVeryLongName";
-        result = instance.getGetterName(variable);        
+        result = instance.getGetterName(prefix, variable);        
         assertEquals(expResult, result);
         //
         variable = "veryLongName";
         expResult = "getVeryLongName";
-        result = instance.getGetterName(variable);        
+        result = instance.getGetterName(prefix, variable);        
         assertEquals(expResult, result);
     }
 

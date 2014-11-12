@@ -41,6 +41,7 @@ import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import static com.ujorm.UjoCodeGenerator.ItemPrefix.*;
 
 /**
  *
@@ -102,7 +103,8 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
     protected void addVariableToGenerate(VariableTree member) {
         assert member != null : "Member must not be null";
 
-        if (!getterExistsForVariable(member)
+        if (!getterExistsForVariable(GET, member)
+        ||  !getterExistsForVariable(IS, member)
         ||  !setterExistsForVariable(member)) {
             ujoMembers.add(member);
         }
@@ -113,7 +115,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      *
      * @param variables
      */
-    private void generateCode(KeyItem[] items, boolean getters, boolean setters, boolean javaDoc, boolean domainClass) {
+    private void generateCode(KeyItem[] items, boolean getters, boolean isGetters, boolean setters, boolean javaDoc, boolean domainClass) {
         assert items != null : "Variables cannot be null";
         this.domainClassRequest = domainClass;
 
@@ -122,14 +124,17 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         for (KeyItem item : items) {
             VariableTree variable = item.getVariableTree();
             if (getters) {
-                modifiedClass = generateGetter(variable, modifiedClass, javaDoc);
+                modifiedClass = generateGetter(GET, variable, modifiedClass, javaDoc);
+            }
+            if (isGetters) {
+                modifiedClass = generateGetter(IS, variable, modifiedClass, javaDoc);
             }
             if (setters) {
                 modifiedClass = generateSetter(variable, modifiedClass, javaDoc);
             }
         }
 
-        workingCopy.rewrite(clazz, modifiedClass);
+        workingCopy.rewrite(clazz, modifiedClass);            
     }
 
     /**
@@ -157,17 +162,18 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @param modifiedClass
      * @return
      */
-    protected ClassTree generateGetter(VariableTree variable, ClassTree modifiedClass, boolean javaDoc) {
+    protected ClassTree generateGetter(ItemPrefix prefix, VariableTree variable, ClassTree modifiedClass, boolean javaDoc) {
+        assert prefix != null : "Prefix cannot be null";
         assert variable != null : "Variable cannot be null";
         assert modifiedClass != null : "Modified class cannot be null";
 
-        if (!getterExistsForVariable(variable)) {
-            modifiedClass = createGetter(modifiedClass, variable, javaDoc);
+        if (!getterExistsForVariable(prefix, variable)) {
+            modifiedClass = createGetter(prefix, modifiedClass, variable, javaDoc);
         }
 
         return modifiedClass;
     }
-
+    
     /**
      * Creates new getter method for given UJO member.
      *
@@ -175,14 +181,24 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @param variable
      * @return
      */
-    private ClassTree createGetter(ClassTree clazz, VariableTree variable, boolean javaDoc) {
+    private ClassTree createGetter(ItemPrefix prefix, ClassTree clazz, VariableTree variable, boolean javaDoc) {
         assert clazz != null : "Clazz cannot be null";
         assert variable != null : "Variable cannot be null";
 
         ParameterizedTypeTree type = (ParameterizedTypeTree) variable.getType();
-        List<? extends Tree> typeArguments = type.getTypeArguments();
-        String getterName = stringService.getGetterName(variable);
-
+        Tree returnType = type.getTypeArguments().get(1);
+        Tree returnTypeOfMethod = returnType;
+        switch(prefix) {
+            case IS:
+                if(isBooleanType(returnType)) {
+                    returnTypeOfMethod = treeMaker.PrimitiveType(TypeKind.BOOLEAN);
+                } else {
+                    return clazz;
+                }
+            default:
+                // to be continue ...
+        }        
+        String getterName = stringService.getGetterName(prefix, variable);
         ModifiersTree methodModifiers =
                 treeMaker.Modifiers(Collections.<Modifier>singleton(Modifier.PUBLIC),
                 Collections.<AnnotationTree>emptyList());
@@ -190,19 +206,41 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         MethodTree newMethod =
                 treeMaker.Method(methodModifiers,
                 getterName,
-                typeArguments.get(1),
+                returnTypeOfMethod,
                 Collections.<TypeParameterTree>emptyList(),
                 Collections.<VariableTree>emptyList(),
                 Collections.<ExpressionTree>emptyList(),
-                "{\nreturn "
-                + getDomainClass()
-                + variable.getName() + ".of(this);}\n",
+                "{\n" + buildGetterBody(prefix, variable, returnType) + ";\n}\n",
                 null);
         if (javaDoc) {
             stringService.copyJavaDoc(variable, newMethod, workingCopy);
         }
 
         return treeMaker.addClassMember(clazz, newMethod);
+    }
+    
+    /** Build a getter body */
+    private String buildGetterBody(ItemPrefix prefix, VariableTree variable, Tree returnType) {
+        String result;
+        switch (prefix) {
+            case GET:
+                result = "return " + getDomainClass() + variable.getName() + ".of(this)";
+                break;
+            case IS:
+                String getterName = stringService.getGetterName(GET, variable);
+                result = "final " + returnType + " result = " + getterName + "();\n";
+                result += "return result != null && result" ;
+                break;
+            default:
+                result = "throw new " + UnsupportedOperationException.class.getName() + " ()";
+                break;
+        }
+        return result;
+    }
+    
+    /** Tree is type of boolean */
+    private boolean isBooleanType(Tree tree) {
+        return tree.toString().endsWith(Boolean.class.getSimpleName());
     }
 
     /**
@@ -323,10 +361,9 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @param variable
      * @return
      */
-    protected boolean getterExistsForVariable(VariableTree variable) {
+    protected boolean getterExistsForVariable(ItemPrefix prefix, VariableTree variable) {
         assert variable != null : "Variable cannot be null";
-
-        String getterName = stringService.getGetterName(variable);
+        String getterName = stringService.getGetterName(prefix, variable);
         return methodExists(getterName);
     }
 
@@ -383,6 +420,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                     generateCode
                         ( propertiesChooser.getSeletedProperties()
                         , propertiesChooser.isGettersRequired()
+                        , propertiesChooser.isGettersOfBoolean()
                         , propertiesChooser.isSettersRequired()
                         , propertiesChooser.isJavaDocRequired()
                         , propertiesChooser.isDomainClassRequired()
