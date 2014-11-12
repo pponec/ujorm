@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 Pavel Ponec
+ *  Copyright 2012-2014 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package com.ujorm.UjoCodeGenerator;
 
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.ujorm.UjoCodeGenerator.bo.PrefixEnum;
 import java.util.List;
@@ -34,6 +34,12 @@ final public class StringService {
 
     /** Common Logger */
     private static final Logger LOGGER = Logger.getLogger(StringService.class.getName());
+
+    /** Comment class */
+    private static final  String COMMENT_SIMPLE = "Comment";
+    /** Comment Package */
+    private static final  String  COMMENT_PACKAGE = "org.ujorm.orm.annot.";
+
 
     /**
      * Returns variable getter name.
@@ -166,7 +172,39 @@ final public class StringService {
         final Comment comment = (comments!=null && !comments.isEmpty())
                 ? comments.get(comments.size() - 1)
                 : null;
-        return comment;
+
+        if (comment != null) {
+            return comment;
+        }
+
+        // Get the JavaDoc from @Comment annotation:
+        for (AnnotationTree annotation : field.getModifiers().getAnnotations()) {
+            if (isCommentType(annotation)) {
+                final String msg = annotation.getArguments().get(0).toString();
+                final char quotation = '"';
+                final int beg = 1 + msg.indexOf(quotation);
+                final int end = msg.lastIndexOf(quotation);
+
+                if (beg < end) {
+                    final String doc = "/** " + msg.substring(beg, end) + " */";
+                    return Comment.create(Comment.Style.JAVADOC, doc);
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /** Check a comment annotation. */
+    private boolean isCommentType(AnnotationTree anot) {
+        if (anot.getArguments().size()!=1) {
+            return false;
+        }
+        final String annotationType = anot.getAnnotationType().toString();
+        return annotationType.equals(COMMENT_SIMPLE)
+                || annotationType.equals(COMMENT_PACKAGE + COMMENT_SIMPLE);
     }
 
     /**
