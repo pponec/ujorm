@@ -18,12 +18,13 @@ package com.ujorm.UjoCodeGenerator;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.ujorm.UjoCodeGenerator.bo.PrefixEnum;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.WorkingCopy;
-import static com.ujorm.UjoCodeGenerator.ItemPrefix.*;
+import static com.ujorm.UjoCodeGenerator.bo.PrefixEnum.*;
 
 /**
  * String service
@@ -40,7 +41,7 @@ final public class StringService {
      * @param variable
      * @return
      */
-    public String getGetterName(ItemPrefix prefix, VariableTree variable) {
+    public String getGetterName(PrefixEnum prefix, VariableTree variable) {
         assert variable != null : "Variable cannot be null";
         return getGetterName(prefix, variable.getName().toString());
     }
@@ -51,7 +52,7 @@ final public class StringService {
      * @param variable
      * @return
      */
-    protected String getGetterName(ItemPrefix prefix, String variable) {
+    protected String getGetterName(PrefixEnum prefix, String variable) {
         assert variable != null : "Variable cannot be null";
         return getVariableName(prefix, variable);
     }
@@ -107,7 +108,7 @@ final public class StringService {
      * @param variable
      * @return
      */
-    protected String getVariableName(ItemPrefix prefix, String variable) {
+    protected String getVariableName(PrefixEnum prefix, String variable) {
         assert prefix != null : "Prefix cannot be null";
         assert variable != null : "Variable cannot be null";
 
