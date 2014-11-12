@@ -166,7 +166,7 @@ public class PropertiesChooser extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 22, 0, 0);
         add(cbSetters, gridBagConstraints);
 
-        cbBoolean.setMnemonic('S');
+        cbBoolean.setMnemonic('B');
         cbBoolean.setText("IsBoolean"); // NOI18N
         cbBoolean.setToolTipText("Generate Setters according to Ujo Keys"); // NOI18N
         cbBoolean.addActionListener(new java.awt.event.ActionListener() {
