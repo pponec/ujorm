@@ -34,7 +34,7 @@ import org.ujorm.hotels.gui.customer.CustomerTable;
 import org.ujorm.hotels.gui.hotel.HotelTable;
 import org.ujorm.hotels.gui.params.ParamsTable;
 import org.ujorm.hotels.services.AuthService;
-import org.ujorm.hotels.services.impl.ApplicationParams;
+import org.ujorm.hotels.services.params.ApplicationParams;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.UjoEvent;

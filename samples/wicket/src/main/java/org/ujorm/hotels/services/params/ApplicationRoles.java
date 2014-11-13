@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services.impl;
+package org.ujorm.hotels.services.params;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,8 @@ import org.springframework.stereotype.Service;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.hotels.entity.enums.Module;
-import org.ujorm.hotels.services.annot.PersonalParam;
+import org.ujorm.hotels.services.impl.AbstractModuleParams;
+import org.ujorm.hotels.services.params.annot.PersonalParam;
 import org.ujorm.orm.annot.Comment;
 /**
  * Common database service implementations
@@ -58,9 +59,21 @@ public class ApplicationRoles<U extends ApplicationRoles> extends AbstractModule
         return MANAGER.of(this);
     }
 
+    /** The Manager role of a user */
+    public boolean isManager() {
+        final Boolean result = getManager();
+        return result != null && result;
+    }
+
     /** The Tester role of a user */
     public Boolean getTester() {
         return TESTER.of(this);
+    }
+
+    /** The Tester role of a user */
+    public boolean isTester() {
+        final Boolean result = getTester();
+        return result != null && result;
     }
 
     /** The Service role of a user */
@@ -68,7 +81,12 @@ public class ApplicationRoles<U extends ApplicationRoles> extends AbstractModule
         return SERVICE.of(this);
     }
 
-    //</editor-fold>
+    /** The Service role of a user */
+    public boolean isService() {
+        final Boolean result = getService();
+        return result != null && result;
+    }
 
+    //</editor-fold>
 
 }

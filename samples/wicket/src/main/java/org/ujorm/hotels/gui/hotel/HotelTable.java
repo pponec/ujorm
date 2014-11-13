@@ -30,7 +30,7 @@ import org.ujorm.hotels.gui.hotel.action.ActionPanel;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
-import org.ujorm.hotels.services.impl.ApplicationParams;
+import org.ujorm.hotels.services.params.ApplicationParams;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.KeyColumn;

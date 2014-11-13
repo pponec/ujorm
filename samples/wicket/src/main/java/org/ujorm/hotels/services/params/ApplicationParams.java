@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services.impl;
+package org.ujorm.hotels.services.params;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,8 @@ import org.springframework.stereotype.Service;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.hotels.entity.enums.Module;
-import org.ujorm.hotels.services.annot.PersonalParam;
+import org.ujorm.hotels.services.impl.AbstractModuleParams;
+import org.ujorm.hotels.services.params.annot.PersonalParam;
 import org.ujorm.orm.annot.Comment;
 /**
  * Common database service implementations
@@ -53,13 +54,32 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     }
 
     //<editor-fold defaultstate="collapsed" desc="Generated getters">
+
+    /** Count of rows per a page in the table for a user */
     public Integer getRowsPerPage() {
         return ROWS_PER_PAGE.of(this);
     }
 
-    public boolean isProduction() {
+    /** The production application is running */
+    public Boolean getProduction() {
         return PRODUCTION.of(this);
     }
-    //</editor-fold>
 
+    /** The production application is running */
+    public boolean isProduction() {
+        final Boolean result = getProduction();
+        return result != null && result;
+    }
+
+    /** Parameter Test1 for the system */
+    public String getTest1() {
+        return TEST1.of(this);
+    }
+
+    /** Parameter Test2 for the user */
+    public String getTest2() {
+        return TEST2.of(this);
+    }
+
+    //</editor-fold>
 }
