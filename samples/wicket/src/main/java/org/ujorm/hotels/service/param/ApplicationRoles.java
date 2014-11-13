@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services.params;
+package org.ujorm.hotels.service.param;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.hotels.entity.enums.Module;
-import org.ujorm.hotels.services.impl.AbstractModuleParams;
-import org.ujorm.hotels.services.params.annot.PersonalParam;
+import org.ujorm.hotels.service.impl.AbstractModuleParams;
+import org.ujorm.hotels.service.param.annot.PersonalParam;
 import org.ujorm.orm.annot.Comment;
 /**
  * Common database service implementations

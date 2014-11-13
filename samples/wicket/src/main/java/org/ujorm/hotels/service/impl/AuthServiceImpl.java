@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services.impl;
+package org.ujorm.hotels.service.impl;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -28,7 +28,8 @@ import org.springframework.stereotype.Service;
 import org.ujorm.core.UjoService;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.MainApplication;
-import org.ujorm.hotels.services.*;
+import org.ujorm.hotels.service.AuthService;
+import org.ujorm.hotels.service.DbService;
 import org.ujorm.logger.UjoLoggerFactory;
 /**
  * Common database service implementations

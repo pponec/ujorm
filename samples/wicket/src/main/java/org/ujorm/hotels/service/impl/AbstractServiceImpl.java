@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services.impl;
+package org.ujorm.hotels.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ujorm.criterion.Criterion;

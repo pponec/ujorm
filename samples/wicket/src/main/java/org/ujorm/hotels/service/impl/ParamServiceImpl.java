@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services.impl;
+package org.ujorm.hotels.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,8 +39,10 @@ import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
-import org.ujorm.hotels.services.*;
-import org.ujorm.hotels.services.params.annot.PersonalParam;
+import org.ujorm.hotels.service.AuthService;
+import org.ujorm.hotels.service.ModuleParams;
+import org.ujorm.hotels.service.ParamService;
+import org.ujorm.hotels.service.param.annot.PersonalParam;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Comment;
 import static org.ujorm.hotels.entity.ParamValue.*;

@@ -18,7 +18,7 @@
 
     <!-- Annotation-based configuration -->
     <context:annotation-config />
-    <context:component-scan base-package="org.ujorm.hotels.services, org.ujorm.hotels.gui" />
+    <context:component-scan base-package="org.ujorm.hotels.service, org.ujorm.hotels.gui" />
     <tx:annotation-driven transaction-manager="ujormTransactionManager" />
     <cache:annotation-driven />
 
@@ -37,7 +37,7 @@
     </bean>
 
     <!-- Database services -->
-    <bean id="dbService" class="org.ujorm.hotels.services.impl.DbServiceImpl">
+    <bean id="dbService" class="org.ujorm.hotels.service.impl.DbServiceImpl">
         <property name="readOnly" value="false"/>
         <property name="measuringCode" value="false"/>
     </bean>

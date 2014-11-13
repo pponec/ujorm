@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services.impl;
+package org.ujorm.hotels.service.impl;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -29,10 +29,12 @@ import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.hotels.services.*;
+import org.ujorm.hotels.service.AuthService;
+import org.ujorm.hotels.service.DbService;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.core.UjoManager.*;
+import static org.ujorm.hotels.service.DbService.DAY_AS_MILISEC;
 /**
  * Common database service implementations
  * @author ponec

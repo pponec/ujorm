@@ -24,7 +24,7 @@ import org.apache.wicket.validation.IValidator;
 import org.ujorm.core.UjoManager;
 import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
-import org.ujorm.hotels.services.AuthService;
+import org.ujorm.hotels.service.AuthService;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
 import org.ujorm.wicket.component.form.fields.Field;
 import org.ujorm.wicket.component.tools.LocalizedModel;

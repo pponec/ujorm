@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services;
+package org.ujorm.hotels.service;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.hotels.services.impl.AbstractServiceImpl;
+import org.ujorm.hotels.service.impl.AbstractServiceImpl;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.template.AliasTable;

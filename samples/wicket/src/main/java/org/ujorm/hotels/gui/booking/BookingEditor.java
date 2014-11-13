@@ -25,7 +25,7 @@ import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.hotels.services.AuthService;
+import org.ujorm.hotels.service.AuthService;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
 import org.ujorm.wicket.component.form.FieldEvent;
 import org.ujorm.wicket.component.tools.LocalizedModel;

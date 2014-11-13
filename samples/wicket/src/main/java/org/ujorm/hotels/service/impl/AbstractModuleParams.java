@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services.impl;
+package org.ujorm.hotels.service.impl;
 
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.ujorm.Key;
-import org.ujorm.hotels.services.ModuleParams;
-import org.ujorm.hotels.services.ParamService;
+import org.ujorm.hotels.service.ModuleParams;
+import org.ujorm.hotels.service.ParamService;
 import org.ujorm.implementation.quick.SmartUjoLockable;
 
 /**
