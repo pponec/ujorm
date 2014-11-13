@@ -17,7 +17,7 @@ package org.ujorm.hotels.gui.about;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.ujorm.hotels.services.DbService;
+import org.ujorm.hotels.service.DbService;
 
 /**
  * MeasuringCode

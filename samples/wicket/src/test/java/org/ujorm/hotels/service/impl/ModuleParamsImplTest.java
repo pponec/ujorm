@@ -13,9 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujorm.hotels.services.impl;
+package org.ujorm.hotels.service.impl;
 
-import org.ujorm.hotels.services.params.TestParams;
+import org.ujorm.hotels.service.param.TestParams;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,8 +27,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.ujorm.hotels.entity.Customer;
-import org.ujorm.hotels.services.AuthService;
-import org.ujorm.hotels.services.ParamService;
+import org.ujorm.hotels.service.AuthService;
+import org.ujorm.hotels.service.ParamService;
 import static org.junit.Assert.*;
 
 /**

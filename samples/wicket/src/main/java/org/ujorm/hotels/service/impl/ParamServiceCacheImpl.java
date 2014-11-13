@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services.impl;
+package org.ujorm.hotels.service.impl;
 
 import java.io.Serializable;
 import org.slf4j.Logger;
@@ -29,7 +29,8 @@ import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
-import org.ujorm.hotels.services.*;
+import org.ujorm.hotels.service.ModuleParams;
+import org.ujorm.hotels.service.ParamService;
 /**
  * Common Parameter service service provider including a cache
  * @author Pavel Ponec
@@ -141,8 +142,8 @@ public class ParamServiceCacheImpl extends ParamServiceImpl {
         @Override
         public String toString() {
             return "CacheKey"
-                    + "{ customerId=" + customerId 
-                    + ", keyName=" + keyName 
+                    + "{ customerId=" + customerId
+                    + ", keyName=" + keyName
                     + ", module=" + module + '}';
         }
     }

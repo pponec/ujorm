@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services.impl;
+package org.ujorm.hotels.service.impl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.ujorm.hotels.services.AuthService;
+import org.ujorm.hotels.service.AuthService;
 import static org.junit.Assert.*;
 
 /**

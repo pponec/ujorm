@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services;
+package org.ujorm.hotels.service;
 
 import java.util.List;
 import javax.annotation.Nonnull;
