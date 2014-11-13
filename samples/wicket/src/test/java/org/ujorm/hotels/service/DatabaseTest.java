@@ -19,8 +19,10 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,7 @@ import static org.ujorm.orm.template.AliasTable.Build.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:org/ujorm/hotels/config/applicationContext.xml"})
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DatabaseTest extends AbstractServiceImpl {
     /** The one day in MILIS */
     private static final int ONE_DAY = 24 * 60 * 60 * 1000;
