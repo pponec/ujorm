@@ -22,9 +22,9 @@ public enum PrefixEnum {
         return code;
     }
 
-    /** Length of code */
-    public int length() {
-        return code.length();
+    /** Empty length of the code */
+    public boolean isEmpty() {
+        return code.isEmpty();
     }
 
 }

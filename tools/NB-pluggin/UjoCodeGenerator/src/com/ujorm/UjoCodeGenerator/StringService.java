@@ -122,7 +122,7 @@ final public class StringService {
         result.append(prefix);
 
         if (isUpperCase(variable)) {
-            boolean lower = prefix.length()==0;
+            boolean lower = prefix.isEmpty();
             for (int i = 0, max = variable.length(); i < max; i++) {
                 final char c = variable.charAt(i);
                 if (c == '_') {
@@ -133,7 +133,7 @@ final public class StringService {
                 }
             }
         } else {
-            if (prefix.length()==0) {
+            if (prefix.isEmpty()) {
                 result.append(variable);
             } else {
                 result.append(Character.toUpperCase(variable.charAt(0)));
