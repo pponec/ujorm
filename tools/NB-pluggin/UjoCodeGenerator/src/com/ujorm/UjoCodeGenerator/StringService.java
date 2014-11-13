@@ -173,11 +173,13 @@ final public class StringService {
                 ? comments.get(comments.size() - 1)
                 : null;
 
-        if (comment != null) {
-            return comment;
-        }
+        return comment != null
+                ? comment
+                : getCommentMessage(field);
+    }
 
-        // Get the JavaDoc from @Comment annotation:
+    /** Get a message of the @Comment annotation in the JavaDoc format */
+    private Comment getCommentMessage(final VariableTree field) {
         for (AnnotationTree annotation : field.getModifiers().getAnnotations()) {
             if (isCommentType(annotation)) {
                 final String msg = annotation.getArguments().get(0).toString();
@@ -207,9 +209,7 @@ final public class StringService {
                 || annotationType.equals(COMMENT_PACKAGE + COMMENT_SIMPLE);
     }
 
-    /**
-     * Get JavaDoc
-     */
+    /** Get the JavaDoc */
     public String getInLineJavaDoc(VariableTree field, WorkingCopy workingCopy) throws IllegalStateException {
         String result = "";
         try {
@@ -229,6 +229,5 @@ final public class StringService {
         }
         return result;
     }
-
 
 }
