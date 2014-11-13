@@ -40,7 +40,7 @@ import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.hotels.services.*;
-import org.ujorm.hotels.services.annot.PersonalParam;
+import org.ujorm.hotels.services.params.annot.PersonalParam;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Comment;
 import static org.ujorm.hotels.entity.ParamValue.*;

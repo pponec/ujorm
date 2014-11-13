@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.services.impl;
 
+import org.ujorm.hotels.services.params.TestParams;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
