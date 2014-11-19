@@ -116,12 +116,13 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.0.13</version>
+            <version>1.1.2</version>
         </dependency>
-       <dependency>
+        <!-- The Bridge for the Spring Framework -->
+        <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.5</version>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.7.7</version>
         </dependency>
 
         <!-- SPRING: see http://blog.springsource.com/2009/12/02/obtaining-spring-3-artifacts-with-maven/ -->
@@ -134,6 +135,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--
