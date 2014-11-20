@@ -2,10 +2,10 @@
 <configuration>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${user.home}/logs/hotel/demo-hotels.log</file>
+        <file>${user.home}/logs/hotels/main.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <FileNamePattern>${user.home}/logs/hotel/demo-hotels_%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+            <FileNamePattern>${user.home}/logs/hotels/main_%d{yyyy-MM-dd}.log.gz</FileNamePattern>
             <!-- keep 7 days' worth of history -->
             <maxHistory>7</maxHistory>
         </rollingPolicy>
