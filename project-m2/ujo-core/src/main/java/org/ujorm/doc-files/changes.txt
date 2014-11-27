@@ -1,5 +1,14 @@
 The Ujorm release notes
 *******************************
+release 1.51 (2014-11-27)
++ ORM: An exception message is fixed in the lazy-loading
++ WICKET: The CSS styling for the KeyColumnBoolean is fixed
++ WICKET: A method for a highlighting table rows is renamed + JavaDoc is fixed
++ WICKET: The AbstractDialogPanel class have got a new close method for a modal dialog.
++ SAMPLES: The Demo-hotels have got implemented management of the system and user parameters
++ UjoCodeGenerator: the plugin generates the method with name type 'isBooleanValue()' to return the primitive boolean type of 'boolean' for selected attributes/keys type of Boolean (optional feature)
++ UjoCodeGenerator: missing javadoc on the Key is replaced by the argument of the annotation @Comment("My description") for generated getters/setters
+
 release 1.50 (2014-10-01)
 + CORE:  The composite Key implements the interface Iterable<Key>
 + ORM: The new API for a multi DELETE
