@@ -16,6 +16,8 @@
 package org.ujorm.orm.inheritance.sample;
 
 import java.util.logging.*;
+import junit.framework.TestCase;
+import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.criterion.*;
 import org.ujorm.logger.UjoLogger;
@@ -30,7 +32,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
  *
  * Copyright 2010, Pavel Ponec
  */
-public class SampleOfInheritance {
+public class SampleOfInheritance extends TestCase {
 
     private OrmHandler handler = new OrmHandler();
 
@@ -97,6 +99,31 @@ public class SampleOfInheritance {
         System.out.println("Count: " + count);
     }
 
+    /** Now, how to select Customers? */
+    public void getPrimaryKey() {
+
+        Criterion<Customer> cn1, cn2, crit;
+
+        cn1 = Criterion.where(Customer.user.add(User.login), "ponec");
+        cn2 = Criterion.where(Customer.company, "ABC");
+        crit = cn1.and(cn2);
+
+        Session session = handler.getDefaultSession();
+        Query<Customer> customers = session.createQuery(crit);
+
+        final Key<Customer,User> USER = Customer.user;
+        for (Customer customer : customers) {
+            User origUser = customer.get(USER);
+            assertNotNull(origUser);
+            customer.readSession().clearCache();
+            customer.writeValue(USER, new ForeignKey(origUser.getId()));
+            Object primaryKey = customer.readValue(USER);
+            assertTrue(primaryKey instanceof ForeignKey);
+            User lazyUser = customer.get(USER);
+            assertNotNull(lazyUser);
+        }
+    }
+
     /** Print some meta-data of the key Order.note. */
     public void printMetadata() {
         MetaColumn col = handler.findColumnModel(Customer.discount);
@@ -129,6 +156,7 @@ public class SampleOfInheritance {
             sample.useInsert();
             sample.useSelect();
             sample.useSelectCountDistinct();
+            sample.getPrimaryKey();
             sample.printMetadata();
 
         } finally {

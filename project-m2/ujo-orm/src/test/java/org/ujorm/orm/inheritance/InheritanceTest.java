@@ -32,23 +32,20 @@ public class InheritanceTest extends TestCase {
         return InheritanceTest.class;
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     // ---------- TESTS -----------------------
 
     @SuppressWarnings("deprecation")
     public void testInheritance() {
-        SampleOfInheritance.main(new String[]{});
-    }
+        final SampleOfInheritance sample = new SampleOfInheritance();
 
+        sample.loadMetaModel();
+        sample.useInsert();
+        sample.useSelect();
+        sample.useSelectCountDistinct();
+        sample.getPrimaryKey();
+        sample.printMetadata();
+
+    }
 
     // -----------------------------------------------------
 

@@ -208,14 +208,16 @@ public class JdbcStatement {
                     }
                     assignValue(rColumn, rValues, null);
 
-                } else {
-                    OrmUjo bo = (OrmUjo) value;
+                } else if (value instanceof OrmUjo) {
+                    final OrmUjo bo = (OrmUjo) value;
                     for (MetaColumn rColumn : fc) {
                         Object rValue = rColumn.getValue(bo);
                         assignValue(rColumn, rValue, bo);
                     }
+                } else {
+                    assert column.getKey().getType().isInstance(value);
+                    assignValue(column, value, null);
                 }
-
             } else {
                 assignValue(column, value, null);
             }
