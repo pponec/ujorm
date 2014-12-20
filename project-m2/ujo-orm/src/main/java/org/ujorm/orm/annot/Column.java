@@ -20,8 +20,7 @@ import java.lang.annotation.*;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.ITypeService;
 
-
-/** 
+/**
  * Use the annotation to mark a Key static field like XML Attribute.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
@@ -29,7 +28,7 @@ import org.ujorm.orm.ITypeService;
 public @interface Column {
 
     /** A named parameter for the database column name.
-     * If an appropriate Key is a relation to another ORM object with more primary keys, 
+     * If an appropriate Key is a relation to another ORM object with more primary keys,
      * then the several names can be separated by a space or comma character.
      */
     String name() default Table.NULL;
@@ -43,7 +42,7 @@ public @interface Column {
     DbType type() default DbType.Automatic;
     /** Database column maximal length */
     int length() default -1;
-    /** Database column presision */
+    /** Database column precision */
     int precision() default -1;
     /** Not null value */
     boolean mandatory() default false;
@@ -56,10 +55,10 @@ public @interface Column {
     /** A name of the constraint for the case a foreign key */
     String constraintName() default Table.NULL;
     /** Convert, save and read an application data to/from the ResultSet.
-     * If the key have got a default value, so the instance for the real converter will be defined 
+     * If the key have got a default value, so the instance for the real converter will be defined
      * along the parameter {@link org.ujorm.orm.metaModel.MetaParams.MetaParams#TYPE_SERVICE}.
      * @see ITypeService
      */
     Class<? extends ITypeService> converter() default ITypeService.class;
-    
+
 }

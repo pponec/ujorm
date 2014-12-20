@@ -24,7 +24,7 @@ import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
 
 /**
- * The class for building any SQL statement using Ujorm Keys.
+ * The experimental class for building any SQL statement using Ujorm Keys.
  * <br>Example:
  * <pre class="pre">{@code
  * import static org.ujorm.orm.template.AliasTable.Build.*;
@@ -74,7 +74,7 @@ public class AliasTable<UJO extends OrmUjo> {
         return table;
     }
 
-    /** Returns Table witn Alias */
+    /** Returns Table with Alias */
     public String table() throws IllegalStateException {
         try {
             StringBuilder result = new StringBuilder(32);
@@ -85,7 +85,12 @@ public class AliasTable<UJO extends OrmUjo> {
         }
     }
 
-    /** Print one column including alias */
+    /** Print one columnAs including alias */
+    public <T> String columnAs(String expression, Key<UJO, T> key) throws IllegalStateException {
+        return expression + " AS " + key.getName();
+    }
+
+    /** Print one columnAs including alias */
     public <T> String column(Key<UJO, T> key) throws IllegalStateException {
         return printColumn
                 ( findColumnModel(key)
@@ -96,7 +101,7 @@ public class AliasTable<UJO extends OrmUjo> {
 
     /** Returns one column including an <strong>default</strong> special alias name after the 'AS' phrase.  */
     public <T> String columnAs(Key<UJO, T> key) throws IllegalStateException {
-        return columnAs(key, null);
+        return columnAs(key, (CharSequence) null);
     }
 
     /** Returns one column including the <strong>required</strong> alias name after the 'AS' phrase.
@@ -180,6 +185,9 @@ public class AliasTable<UJO extends OrmUjo> {
     /** Static building methods. */
     public static final class Build {
 
+        /** SQL Parameter */
+        public static final String PARAM = "?";
+
         /** No text separator */
         private static final String NO_SEPARATOR = null;
 
@@ -193,15 +201,31 @@ public class AliasTable<UJO extends OrmUjo> {
             return " FROM " + toText(", ", params);
         }
 
-        /** Build SQL FROM phrase */
+        /** Build SQL by the INNER JOIN phrase */
         public static String INNER_JOIN(Object table, Object... conditions) {
             return " INNER JOIN " + table
+                 + " ON " + toText(" ", conditions) + " ";
+        }
+
+        /** Build SQL OUTER JOIN phrase */
+        public static String OUTER_JOIN(Object table, Object... conditions) {
+            return " OUTER JOIN " + table
                  + " ON " + toText(" ", conditions) + " ";
         }
 
         /** Build SQL WHERE phrase */
         public static String WHERE(Object... params) {
             return " WHERE " + toText(NO_SEPARATOR, params);
+        }
+
+        /** Build GROUP BY statement */
+        public static String GROUP_BY(Object... params) {
+            return " GROUP BY " + toText(", ", params);
+        }
+
+        /** Build ORDER BY statement */
+        public static String ORDER_BY(Object... params) {
+            return " ORDER BY " + toText(", ", params);
         }
 
         /** Build any text with the required separator */
