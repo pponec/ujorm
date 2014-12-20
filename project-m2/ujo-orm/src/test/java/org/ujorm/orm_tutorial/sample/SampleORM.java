@@ -36,7 +36,9 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.Checks.*;
 import org.ujorm.core.UjoManager;
+import org.ujorm.orm.template.AliasTable;
 import static org.ujorm.criterion.Operator.*;
+import static org.ujorm.orm.template.AliasTable.Build.*;
 
 /**
  * The tutorial in the class for the Ujorm <br/>
@@ -72,6 +74,7 @@ public class SampleORM {
             sample.useSortOrderItems();
             sample.useSelectViewOrders();
             sample.useSelectWithNativeSQL();
+            sample.useSelectWithAliasTable();
             sample.useSelectItems_1();
             sample.useSelectItems_2();
             sample.useSelectItems_3();
@@ -110,7 +113,7 @@ public class SampleORM {
     // ------- CHAPTERS: -------
 
     /** The handler contains the one or more database meta-models,
-     * the one applicatin can have more OrmHandler instances. */
+     * the one application can have more OrmHandler instances. */
     private OrmHandler handler;
     /** The session contains a cache and database connections. */
     private Session session;
@@ -349,7 +352,7 @@ public class SampleORM {
         SqlParameters sql = new SqlParameters().setSqlStatement
                 ( "SELECT * FROM ("
                 + "SELECT ord_order_alias.id"
-                + ", 1000 + count(*) AS item_count"
+                + ", count(*) AS item_count"
                 + " FROM ${SCHEMA}.ord_order ord_order_alias"
                 + " LEFT JOIN ${SCHEMA}.ord_item ord_item_alias"
                 + " ON ord_order_alias.id = ord_item_alias.fk_order"
@@ -361,8 +364,8 @@ public class SampleORM {
         Criterion<ViewOrder> crit = ViewOrder.ITEM_COUNT.whereLe(100);
         long orderCount = session.createQuery(crit)
                 .setSqlParameters(sql)
-                .getCount()
-                ;
+                .getCount();
+
         logInfo("Order Count: %s", orderCount);
 
         Query<ViewOrder> orders = session.createQuery(crit)
@@ -372,6 +375,41 @@ public class SampleORM {
                 ;
         for (ViewOrder order : orders) {
             logInfo("Order row: %s", order);
+        }
+    }
+
+    /** Use a 'native query' build by the AliasTable object */
+    @SuppressWarnings("unchecked")
+    public void useSelectWithAliasTable() {
+        final Long excludedId = -7L;
+        final AliasTable order = this.handler.tableOf(Order.class);
+        final AliasTable item = this.handler.tableOf(Item.class);
+
+        String innerSql = SELECT(order.column(Order.ID)
+                , item.columnAs("count(*)", ViewOrder.ITEM_COUNT))
+                + FROM (order)
+                + INNER_JOIN(item, item.column(Item.ORDER), "=", order.column(Order.ID))
+                + WHERE(order.column(Order.ID), "!=", PARAM)
+                + GROUP_BY(order.column(Order.ID))
+                + ORDER_BY(order.column(Order.ID));
+
+        String sql = SELECT("*") + FROM("(" + innerSql + ")") + "  testView " + WHERE("true");
+
+        SqlParameters sqlParam = new SqlParameters().setSqlStatement(sql).setParameters(excludedId);
+        Criterion<ViewOrder> crit = ViewOrder.ITEM_COUNT.whereLe(100);
+        long orderCount = session.createQuery(crit)
+                .setSqlParameters(sqlParam)
+                .getCount()
+                ;
+        logInfo("Order Count: %s", orderCount);
+
+        Query<ViewOrder> orders = session.createQuery(crit)
+                .setLimit(5)
+                .orderBy(ViewOrder.ID)
+                .setSqlParameters(sqlParam)
+                ;
+        for (ViewOrder viewOrder : orders) {
+            logInfo("Order row: %s", viewOrder);
         }
     }
 
@@ -753,7 +791,7 @@ public class SampleORM {
     }
 
     /** The batch UPDATE of selected columns for required database rows. <br />
-     * The exsample updates one database column (CREATED) to the current date for all Orders where ID>=1 .
+     * The example updates one database column (CREATED) to the current date for all Orders where ID>=1 .
      */
     public void useBatchUpdate() {
         Order order = new Order();
