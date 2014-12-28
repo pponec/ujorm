@@ -69,7 +69,7 @@ public class HomePage extends WebPage {
         // Footer:
         add(new AjaxLink("aboutLink") {
             @Override public void onClick(AjaxRequestTarget target) {
-                ((UjoTabbedPanel)HomePage.this.get("tabs")).selectedTab(AboutPanel.class, target);
+                ((UjoTabbedPanel)HomePage.this.get("tabs")).selectTab(AboutPanel.class, target);
             }
         });
         Label label;
@@ -77,7 +77,7 @@ public class HomePage extends WebPage {
         add(new Label("applicationTitle", MainApplication.APPLICATION_NAME));
         add(label = new Label("applicationHeader", MainApplication.APPLICATION_NAME));
         if (!applParams.isProduction()) {
-            label.add(new CssAppender("test"));            
+            label.add(new CssAppender("test"));
         }
     }
 
