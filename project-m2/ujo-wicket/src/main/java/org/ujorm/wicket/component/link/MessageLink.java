@@ -17,6 +17,7 @@ package org.ujorm.wicket.component.link;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -27,6 +28,9 @@ import org.apache.wicket.model.IModel;
  * @author Pavel Ponec
  */
 public class MessageLink extends Panel {
+
+    /** The original link */
+    private AjaxLink link;
 
     /**
      * Constructor
@@ -41,18 +45,24 @@ public class MessageLink extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        final AjaxLink link = new AjaxLink("link") {
+        link = new AjaxLink("link") {
             @Override public void onClick(AjaxRequestTarget target) {
                 MessageLink.this.onClick(target);
             }
         };
         add(link);
         link.add(new Label("message", getDefaultModel()));
-
     }
 
-    /** overwrite the method  */
-    public void onClick(AjaxRequestTarget target) {
+    /** Overwrite the method
+     * @param target The Ajax Request Target */
+    protected void onClick(AjaxRequestTarget target) {
+    }
+
+    /** Add behaviours to the link Label
+     * @param behaviors Add the label behaviors */
+    public void addBehaior(final Behavior... behaviors) {
+        link.add(behaviors);
     }
 
 }
