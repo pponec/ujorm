@@ -19,6 +19,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.hotels.entity.Customer;
@@ -33,23 +34,29 @@ import static org.ujorm.wicket.CommonActions.*;
  * Login component
  * @author Pavel Ponec
  */
-public class LoginName extends MessageLink {
+public class LoginName extends Panel {
 
     @SpringBean
     private AuthService authService;
+    /** Login link */
+    private final MessageLink link;
     /** Login dialog */
     private final LoginDialog dialog;
 
     public LoginName(String id) {
-        super(id, null);
-        setDefaultModel(new LoginModel());
+        super(id);
         setOutputMarkupPlaceholderTag(true);
-        add(new AttributeModifier("title", "Change login"));
+        add(link = new MessageLink("link", new LoginModel()) {
+            @Override protected void onClick(AjaxRequestTarget target) {
+                LoginName.this.onClick(target);
+            }
+        });
+        link.addBehaior(new AttributeModifier("title", "Change login"));
         add((dialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
     }
 
-    @Override
-    public void onClick(AjaxRequestTarget target) {
+    /** On click event */
+    private void onClick(AjaxRequestTarget target) {
         if (authService.isLogged()) {
             authService.logout();
             target.add(this);
@@ -73,14 +80,8 @@ public class LoginName extends MessageLink {
     /** Login model */
     private class LoginModel extends Model<String> {
         @Override public String getObject() {
-            final Customer cust = getCurrentCustomer();
+            final Customer cust = authService.getLoggedCustomer();
             return cust != null ? cust.getFullName() : "Login";
         }
     }
-
-    /** Returns logged user */
-    private Customer getCurrentCustomer() {
-        return authService.getLoggedCustomer();
-    }
-
 }
