@@ -43,9 +43,9 @@ public final class ParamValue extends OrmTable<ParamValue> {
     @Comment("Parameter Key where the NULL value means a 'system parameter'")
     @Column(uniqueIndex=UNIQUE_PARAM_VALUE)
     public static final Key<ParamValue, ParamKey> PARAM_KEY = f.newKey();
-    /** Related customer or a system customer for a system parameters
+    /** Related customer or the null value for the system parameter
      * @see ParamKey#SYSTEM_PARAM */
-    @Comment("Related customer or a system customer for a system parameter value")
+    @Comment("Related customer or the null value for the system parameter")
     @Column(uniqueIndex=UNIQUE_PARAM_VALUE)
     public static final Key<ParamValue, Customer> CUSTOMER = f.newKey();
     /** Parameter value in a text format */
