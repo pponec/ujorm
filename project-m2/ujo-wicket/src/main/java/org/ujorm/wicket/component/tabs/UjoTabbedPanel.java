@@ -65,8 +65,16 @@ public class UjoTabbedPanel<T extends UjoTab>
         setDefaultSelectedTab(getSelectedTab());
     }
 
-    /** Select new tab. */
+    /** Select new tab.
+     * @deprecated Use the {@link #selectTab(java.lang.Class, org.apache.wicket.ajax.AjaxRequestTarget) } rather.
+     */
+    @Deprecated
     public final void selectedTab(final Class<? extends UjoTab> tab, AjaxRequestTarget target) {
+        selectTab(tab, target);
+    }
+
+    /** Select a tab. */
+    public final void selectTab(final Class<? extends UjoTab> tab, AjaxRequestTarget target) {
         final List<T> tabs = getTabs();
         for (int i=0, max=tabs.size(); i<max; ++i) {
             if (tab.isAssignableFrom(tabs.get(i).getPanelClass())) {
@@ -74,6 +82,20 @@ public class UjoTabbedPanel<T extends UjoTab>
                 break;
             }
         }
+        target.add(this);
+    }
+
+    /** Select the next tab */
+    public void selectTab(final boolean next, final AjaxRequestTarget target) {
+        final List<T> tabs = getTabs();
+        int i = getSelectedTab() + (next ? 1 : -1);
+        if (i >= tabs.size()) {
+            i = tabs.size() - 1;
+        }
+        if (i < 0) {
+            i = 0;
+        }
+        setSelectedTab(i);
         target.add(this);
     }
 
