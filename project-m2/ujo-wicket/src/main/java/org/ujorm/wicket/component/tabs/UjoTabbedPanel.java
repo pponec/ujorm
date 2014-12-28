@@ -16,11 +16,14 @@
 package org.ujorm.wicket.component.tabs;
 
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.ujorm.wicket.CssAppender;
 
 /**
@@ -86,17 +89,36 @@ public class UjoTabbedPanel<T extends UjoTab>
     }
 
     /** Select the next tab */
-    public void selectTab(final boolean next, final AjaxRequestTarget target) {
-        final List<T> tabs = getTabs();
+    public void selectNextTab(final boolean next, final AjaxRequestTarget target) {
         int i = getSelectedTab() + (next ? 1 : -1);
-        if (i >= tabs.size()) {
-            i = tabs.size() - 1;
+        if (i >= getTabSize()) {
+            i = getTabSize() - 1;
         }
         if (i < 0) {
             i = 0;
         }
         setSelectedTab(i);
         target.add(this);
+    }
+
+    /** Get a title of the required tab or returns the {@code null} */
+    @Nonnull
+    public IModel<String> getNextTitleModel(final boolean next) {
+        int i = getSelectedTab() + (next ? 1 : -1);
+        return (i >= 0 && i < getTabSize())
+            ? getTabs().get(i).getTitle()
+            : new Model<String>(null) ;
+    }
+
+    /** Get a title of the required tab or returns the {@code null} */
+    @Nullable
+    public final String getNextTitle(final boolean next) {
+        return getNextTitleModel(next).getObject();
+    }
+
+    /** Return the tab size */
+    public final int getTabSize() {
+        return getTabs().size();
     }
 
     /** Assign a selected tab and add a user CSS class.
