@@ -75,7 +75,7 @@ h1 {
     margin-left: 30px;
 }
 
-h1.applicationHeader { 
+h1.applicationHeader {
     background-image: url("../images/hotel.png");
     background-position: right;
     background-repeat: no-repeat;
@@ -144,7 +144,7 @@ div.login {
     margin-top: 10px;
 }
 
-div.login span {
+.login .loginLink a {
     background-image: url("../images/icons/door_out.png");
     background-position: right;
     background-repeat: no-repeat;
