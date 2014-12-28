@@ -30,7 +30,7 @@ import org.apache.wicket.model.IModel;
 public class MessageLink extends Panel {
 
     /** The original link */
-    private AjaxLink link;
+    private final AjaxLink link;
 
     /**
      * Constructor
@@ -39,11 +39,6 @@ public class MessageLink extends Panel {
      */
     public MessageLink(String id, IModel<String> message) {
         super(id, message);
-    }
-
-    @Override
-    protected void onInitialize() {
-        super.onInitialize();
 
         link = new AjaxLink("link") {
             @Override public void onClick(AjaxRequestTarget target) {
