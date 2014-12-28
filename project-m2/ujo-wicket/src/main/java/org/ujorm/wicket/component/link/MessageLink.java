@@ -21,6 +21,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 
 /**
@@ -31,6 +32,14 @@ public class MessageLink extends Panel {
 
     /** The original link */
     private final AjaxLink link;
+
+    /**
+     * Constructor with an undefined model value
+     * @param id Component id
+     */
+    public MessageLink(String id) {
+        this(id, new Model<String>());
+    }
 
     /**
      * Constructor
