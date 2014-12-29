@@ -121,6 +121,12 @@ public class UjoTabbedPanel<T extends UjoTab>
         return getTabs().size();
     }
 
+    /** Check the last/first selected tab
+     * @param last Parameter switches the check on the first or last tab  */
+    public final boolean isLastSelectedTab(boolean last) {
+        return getSelectedTab() == (last ? getTabSize() - 1 : 0);
+    }
+
     /** Assign a selected tab and add a user CSS class.
      * <br/>{@inheritDoc}
      */
