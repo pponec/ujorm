@@ -19,6 +19,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
@@ -43,13 +44,20 @@ public class UjoWizard<T extends UjoTab> extends UjoTabbedPanel<T>  {
     /** Constructor */
     public UjoWizard(String id, List<T> tabs, IModel<Integer> model) {
         super(id, tabs, model);
-        final Component component = get(TABS_CONTAINER_ID);
+
+        // Disable the Tab Container
+        final Component component = getTabContainer();
         if (component != null) {
             component.setVisibilityAllowed(false);
         } else {
             final String msg = String.format("Component with the id '%s' is not found", TABS_CONTAINER_ID);
             LOGGER.warn(msg, new IllegalStateException(msg));
         }
+    }
+
+    /** Returns a tab container */
+    protected WebMarkupContainer getTabContainer() {
+        return (WebMarkupContainer) get(TABS_CONTAINER_ID);
     }
 
     /** Get a title of the required tab or returns the {@code null} */
