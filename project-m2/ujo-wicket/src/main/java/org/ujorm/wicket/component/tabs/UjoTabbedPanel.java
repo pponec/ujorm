@@ -73,6 +73,12 @@ public class UjoTabbedPanel<T extends UjoTab>
         selectTab(tab, target);
     }
 
+    /** Select a tab by the order id. */
+    public final void selectTab(final int tab, AjaxRequestTarget target) {
+        setSelectedTab(tab);
+        target.add(this);
+    }
+
     /** Select a tab. */
     public final void selectTab(final Class<? extends UjoTab> tab, AjaxRequestTarget target) {
         final List<T> tabs = getTabs();
