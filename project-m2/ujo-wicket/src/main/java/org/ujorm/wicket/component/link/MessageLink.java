@@ -55,7 +55,7 @@ public class MessageLink extends Panel {
             }
         };
         add(link);
-        link.add(new Label("message", getDefaultModel()));
+        link.add(new Label("title", getDefaultModel()));
     }
 
     /** Overwrite the method
