@@ -30,6 +30,11 @@ import org.apache.wicket.model.Model;
  */
 public class MessageLink extends Panel {
 
+    /** Link ID */
+    protected static final String LINK_ID = "link";
+    /** Title ID */
+    protected static final String TITLE_ID = "title";
+
     /** The original link */
     private final AjaxLink link;
 
@@ -49,13 +54,13 @@ public class MessageLink extends Panel {
     public MessageLink(String id, IModel<String> message) {
         super(id, message);
 
-        link = new AjaxLink("link") {
+        link = new AjaxLink(LINK_ID) {
             @Override public void onClick(AjaxRequestTarget target) {
                 MessageLink.this.onClick(target);
             }
         };
         add(link);
-        link.add(new Label("title", getDefaultModel()));
+        link.add(new Label(TITLE_ID, getDefaultModel()));
     }
 
     /** Overwrite the method
@@ -69,4 +74,8 @@ public class MessageLink extends Panel {
         link.add(behaviors);
     }
 
+    /** Returns title of the link */
+    protected Label getTitle() {
+        return (Label) link.get(TITLE_ID);
+    }
 }
