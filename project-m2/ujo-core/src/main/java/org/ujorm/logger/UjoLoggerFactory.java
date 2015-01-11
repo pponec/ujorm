@@ -96,7 +96,7 @@ final public class UjoLoggerFactory implements UjoLogger {
 
     /** Get a runtime information */
     public static String getRuntimeInfo(String applicationName) {
-        final StringBuilder result = new StringBuilder(128);
+        final StringBuilder result = new StringBuilder(256);
         result.append(MessageFormat.format("The application ''{0}'' is starting with the properties"
                 , applicationName));
         final String[] properties =
