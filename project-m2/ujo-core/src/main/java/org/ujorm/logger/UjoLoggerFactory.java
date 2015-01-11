@@ -114,7 +114,7 @@ final public class UjoLoggerFactory implements UjoLogger {
             result.append(i==0 ? ": " : ", ");
             result.append(property);
             result.append('=');
-            result.append(System.getProperty("java.version", "?"));
+            result.append(System.getProperty(property, "?"));
         }
         return result.toString();
     }
