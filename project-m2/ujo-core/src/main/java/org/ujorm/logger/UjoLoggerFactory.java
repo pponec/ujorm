@@ -96,27 +96,27 @@ final public class UjoLoggerFactory implements UjoLogger {
 
     /** Get a runtime information */
     public static String getRuntimeInfo(String applicationName) {
-        final String result = MessageFormat.format
-                ( "The application ''{0}'' is starting with the properties"
-                + ": java.version={1}"
-                + ", java.vendor={2}"
-                + ", java.home={3}"
-                + ", os.name={4}"
-                + ", os.arch={5}"
-                + ", user.name={6}"
-                + ", user.home={7}"
-                + ", user.dir={8}"
-                , applicationName
-                , System.getProperty("java.version", "?")
-                , System.getProperty("java.vendor", "?")
-                , System.getProperty("java.home", "?")
-                , System.getProperty("os.name", "?")
-                , System.getProperty("os.arch", "?")
-                , System.getProperty("user.name", "?")
-                , System.getProperty("user.home", "?")
-                , System.getProperty("user.dir", "?")
-                );
-        return result;
+        final StringBuilder result = new StringBuilder(128);
+        result.append(MessageFormat.format("The application ''{0}'' is starting with the properties"
+                , applicationName));
+        final String[] properties =
+        {  "java.version"
+        ,  "java.vendor"
+        ,  "java.home"
+        ,  "os.name"
+        ,  "os.arch"
+        ,  "user.name"
+        ,  "user.home"
+        ,  "user.dir"
+        };
+        for (int i = 0; i < properties.length; i++) {
+            final String property = properties[i];
+            result.append(i==0 ? ": " : ", ");
+            result.append(property);
+            result.append('=');
+            result.append(System.getProperty("java.version", "?"));
+        }
+        return result.toString();
     }
 
 }
