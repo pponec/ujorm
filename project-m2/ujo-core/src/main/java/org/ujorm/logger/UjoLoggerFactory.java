@@ -66,7 +66,7 @@ final public class UjoLoggerFactory implements UjoLogger {
     public void log(final Level level, final String message, final Object... parameters) {
         logger.log(level, message, parameters);
     }
-    
+
     // ---------- FACTORY -----------------
 
     public static UjoLogger getLogger(Class<?> name) {
@@ -93,11 +93,11 @@ final public class UjoLoggerFactory implements UjoLogger {
     }
 
     // ---------- LOG MESSAGES -----------------
-    
+
     /** Get a runtime information */
     public static String getRuntimeInfo(String applicationName) {
         final String result = MessageFormat.format
-                ( "The application ''{0}'' is running with the properties"
+                ( "The application ''{0}'' is starting with the properties"
                 + ": java.version={1}"
                 + ", java.vendor={2}"
                 + ", java.home={3}"
@@ -116,7 +116,7 @@ final public class UjoLoggerFactory implements UjoLogger {
                 , System.getProperty("user.home", "?")
                 , System.getProperty("user.dir", "?")
                 );
-        return result;        
+        return result;
     }
-    
+
 }
