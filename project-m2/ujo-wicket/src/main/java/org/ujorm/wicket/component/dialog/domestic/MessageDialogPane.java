@@ -25,7 +25,9 @@ import org.ujorm.Ujo;
 import static org.ujorm.wicket.CssAppender.*;
 
 /**
- * Common Message Dialog
+ * Common Message Dialog.
+ * <h4>Usage</h4>
+ * <pre>{@code add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow()); }</pre>
  * @author Pavel Ponec
  */
 public class MessageDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
