@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, Pavel Ponec (http://ujorm.org/)
+ * Copyright 2013-2015, Pavel Ponec (http://ujorm.org/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,7 +137,8 @@ public class UjoTabbedPanel<T extends UjoTab>
         getSession().setAttribute(indexKey, index);
     }
 
-    /** @{@inheritDoc } */
+    /** {@inheritDoc}
+     * @return A new link to the tab */
     @Override
     protected WebMarkupContainer newLink(String linkId, final int index) {
         final WebMarkupContainer result = super.newLink(linkId, index);
