@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Pavel Ponec
+ * Copyright 2013-2015 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,6 +86,12 @@ public class UjoTab extends AbstractTab {
     /** Model for constructor of the Tab components */
     public void setTabModel(IModel<?> tabModel) {
         this.tabModel = tabModel;
+    }
+
+    /** Model for constructor of the Tab components */
+    public UjoTab setModel(IModel<?> tabModel) {
+        setTabModel(tabModel);
+        return this;
     }
 
     /** Get CSS class name */
