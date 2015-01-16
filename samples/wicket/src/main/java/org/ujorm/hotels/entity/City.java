@@ -16,8 +16,8 @@
 package org.ujorm.hotels.entity;
 
 import org.ujorm.Key;
-import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import static org.ujorm.Validator.Build.*;
@@ -29,7 +29,7 @@ public class City extends OrmTable<City> {
     private static final String UNIQUE_CITY = "idx_unique_city";
 
     /** Factory */
-    private static final KeyFactory<City> f = newFactory(City.class);
+    private static final OrmKeyFactory<City> f = newFactory(City.class);
 
     /** The Primary Key */
     @Comment("The Primary Key")
