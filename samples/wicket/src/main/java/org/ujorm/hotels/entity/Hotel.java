@@ -1,9 +1,6 @@
-/*
- * It can be a generated class in a future.
- * License the Apache License, Version 2.0,
+/* License the Apache License, Version 2.0,
  * Author: Pavel Ponec
  */
-
 package org.ujorm.hotels.entity;
 
 import java.math.BigDecimal;
@@ -16,7 +13,7 @@ import static org.ujorm.Validator.Build.*;
 
 /** Hotel */
 public class Hotel extends OrmTable<Hotel> {
-
+    /** Index name */
     private static final String INDEX_HOTEL_NAME="idx_hotel_name";
 
     /** Factory */
@@ -63,9 +60,7 @@ public class Hotel extends OrmTable<Hotel> {
         f.lock();
     }
 
-    // --- Getters / Setters ---
-
-    //<editor-fold defaultstate="collapsed" desc="Setters and Getters generated from NetBeans">
+    // --- Generated Getters / Setters ---
 
     /** The Primary Key */
     public Long getId() {
@@ -74,7 +69,7 @@ public class Hotel extends OrmTable<Hotel> {
 
     /** The Primary Key */
     public void setId(Long id) {
-        Hotel.ID.setValue(this, id);
+        ID.setValue(this, id);
     }
 
     /** Description of the Company */
@@ -84,7 +79,7 @@ public class Hotel extends OrmTable<Hotel> {
 
     /** Description of the Company */
     public void setName(String name) {
-        Hotel.NAME.setValue(this, name);
+        NAME.setValue(this, name);
     }
 
     /** Description of the hotel */
@@ -94,7 +89,7 @@ public class Hotel extends OrmTable<Hotel> {
 
     /** Description of the hotel */
     public void setNote(String note) {
-        Hotel.NOTE.setValue(this, note);
+        NOTE.setValue(this, note);
     }
 
     /** Relation to the City */
@@ -104,7 +99,7 @@ public class Hotel extends OrmTable<Hotel> {
 
     /** Relation to the City */
     public void setCity(City city) {
-        Hotel.CITY.setValue(this, city);
+        CITY.setValue(this, city);
     }
 
     /** Street of address */
@@ -114,7 +109,7 @@ public class Hotel extends OrmTable<Hotel> {
 
     /** Street of address */
     public void setStreet(String street) {
-        Hotel.STREET.setValue(this, street);
+        STREET.setValue(this, street);
     }
 
     /** Description of the Company */
@@ -124,7 +119,7 @@ public class Hotel extends OrmTable<Hotel> {
 
     /** Description of the Company */
     public void setPhone(String phone) {
-        Hotel.PHONE.setValue(this, phone);
+        PHONE.setValue(this, phone);
     }
 
     /** Stars */
@@ -134,7 +129,7 @@ public class Hotel extends OrmTable<Hotel> {
 
     /** Stars */
     public void setStars(Float stars) {
-        Hotel.STARS.setValue(this, stars);
+        STARS.setValue(this, stars);
     }
 
     /** URL to the HomePage */
@@ -144,7 +139,7 @@ public class Hotel extends OrmTable<Hotel> {
 
     /** URL to the HomePage */
     public void setHomePage(String homePage) {
-        Hotel.HOME_PAGE.setValue(this, homePage);
+        HOME_PAGE.setValue(this, homePage);
     }
 
     /** Price per night in USD */
@@ -154,7 +149,7 @@ public class Hotel extends OrmTable<Hotel> {
 
     /** Price per night in USD */
     public void setPrice(BigDecimal price) {
-        Hotel.PRICE.setValue(this, price);
+        PRICE.setValue(this, price);
     }
 
     /** Currency of the price */
@@ -164,7 +159,7 @@ public class Hotel extends OrmTable<Hotel> {
 
     /** Currency of the price */
     public void setCurrency(String currency) {
-        Hotel.CURRENCY.setValue(this, currency);
+        CURRENCY.setValue(this, currency);
     }
 
     /** Hotel state, default is ACTIVE (the true or null is required) */
@@ -174,9 +169,7 @@ public class Hotel extends OrmTable<Hotel> {
 
     /** Hotel state, default is ACTIVE (the true or null is required) */
     public void setActive(Boolean active) {
-        Hotel.ACTIVE.setValue(this, active);
+        ACTIVE.setValue(this, active);
     }
-
-    //</editor-fold>
 
 }

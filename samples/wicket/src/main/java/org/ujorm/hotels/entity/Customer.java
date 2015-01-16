@@ -1,6 +1,4 @@
-/*
- * It can be a generated class in a future.
- * License the Apache License, Version 2.0,
+/* License the Apache License, Version 2.0,
  * Author: Pavel Ponec
  */
 package org.ujorm.hotels.entity;
@@ -18,7 +16,7 @@ import static org.ujorm.Validator.Build.*;
 /** Common User */
 public class Customer extends OrmTableLockable<Customer> {
 
-    /** Index name */
+    /** Unique index name */
     private static final String UNIQUE_LOGIN = "idx_unique_login";
 
     /** Factory */
@@ -62,8 +60,6 @@ public class Customer extends OrmTableLockable<Customer> {
         f.lock();
     }
 
-    // --- Getters / Setters ---
-
     /** Returns a full name of the Customer */
     public String getFullName() {
         final StringBuilder result = new StringBuilder(32);
@@ -73,7 +69,7 @@ public class Customer extends OrmTableLockable<Customer> {
         return result.toString();
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Setters and Getters generated from NetBeans">
+    // --- Generated Getters / Setters ---
 
     /** The Primary Key */
     public Integer getId() {
@@ -82,7 +78,7 @@ public class Customer extends OrmTableLockable<Customer> {
 
     /** The Primary Key */
     public void setId(Integer id) {
-        Customer.ID.setValue(this, id);
+        ID.setValue(this, id);
     }
 
     /** Unique login */
@@ -92,7 +88,7 @@ public class Customer extends OrmTableLockable<Customer> {
 
     /** Unique login */
     public void setLogin(String login) {
-        Customer.LOGIN.setValue(this, login);
+        LOGIN.setValue(this, login);
     }
 
     /** A form field only where the {@code null} value means: no password chage */
@@ -102,7 +98,7 @@ public class Customer extends OrmTableLockable<Customer> {
 
     /** A form field only where the {@code null} value means: no password chage */
     public void setPassword(String password) {
-        Customer.PASSWORD.setValue(this, password);
+        PASSWORD.setValue(this, password);
     }
 
     /** Password hash */
@@ -112,7 +108,7 @@ public class Customer extends OrmTableLockable<Customer> {
 
     /** Password hash */
     public void setPasswordHash(Long passwordHash) {
-        Customer.PASSWORD_HASH.setValue(this, passwordHash);
+        PASSWORD_HASH.setValue(this, passwordHash);
     }
 
     /** Title */
@@ -122,7 +118,7 @@ public class Customer extends OrmTableLockable<Customer> {
 
     /** Title */
     public void setTitle(TitleEnum title) {
-        Customer.TITLE.setValue(this, title);
+        TITLE.setValue(this, title);
     }
 
     /** First name */
@@ -132,7 +128,7 @@ public class Customer extends OrmTableLockable<Customer> {
 
     /** First name */
     public void setFirstname(String firstname) {
-        Customer.FIRSTNAME.setValue(this, firstname);
+        FIRSTNAME.setValue(this, firstname);
     }
 
     /** Surname */
@@ -142,7 +138,7 @@ public class Customer extends OrmTableLockable<Customer> {
 
     /** Surname */
     public void setSurname(String surname) {
-        Customer.SURNAME.setValue(this, surname);
+        SURNAME.setValue(this, surname);
     }
 
     /** Email */
@@ -152,7 +148,7 @@ public class Customer extends OrmTableLockable<Customer> {
 
     /** Email */
     public void setEmail(String email) {
-        Customer.EMAIL.setValue(this, email);
+        EMAIL.setValue(this, email);
     }
 
     /** Administrator role sign */
@@ -162,7 +158,7 @@ public class Customer extends OrmTableLockable<Customer> {
 
     /** Administrator role sign */
     public void setAdmin(Boolean admin) {
-        Customer.ADMIN.setValue(this, admin);
+        ADMIN.setValue(this, admin);
     }
 
     /** Customer state (the true or null values are required) */
@@ -172,9 +168,7 @@ public class Customer extends OrmTableLockable<Customer> {
 
     /** Customer state (the true or null values are required) */
     public void setActive(Boolean active) {
-        Customer.ACTIVE.setValue(this, active);
+        ACTIVE.setValue(this, active);
     }
-
-    //</editor-fold>
 
 }

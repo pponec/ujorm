@@ -1,17 +1,5 @@
-/*
- *  Copyright 2009-2014 Pavel Ponec
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+/* License the Apache License, Version 2.0,
+ * Author: Pavel Ponec
  */
 package org.ujorm.hotels.entity;
 
@@ -56,9 +44,7 @@ public class City extends OrmTable<City> {
         f.lock();
     }
 
-    // --- Getters / Setters ---
-
-    //<editor-fold defaultstate="collapsed" desc="Setters and Getters generated from NetBeans">
+    // --- Generated Getters / Setters ---
 
     /** The Primary Key */
     public Integer getId() {
@@ -67,7 +53,7 @@ public class City extends OrmTable<City> {
 
     /** The Primary Key */
     public void setId(Integer id) {
-        City.ID.setValue(this, id);
+        ID.setValue(this, id);
     }
 
     /** City name */
@@ -77,7 +63,7 @@ public class City extends OrmTable<City> {
 
     /** City name */
     public void setName(String name) {
-        City.NAME.setValue(this, name);
+        NAME.setValue(this, name);
     }
 
     /** Two characters country code along the ISO 3166 */
@@ -87,7 +73,7 @@ public class City extends OrmTable<City> {
 
     /** Two characters country code along the ISO 3166 */
     public void setCountry(String country) {
-        City.COUNTRY.setValue(this, country);
+        COUNTRY.setValue(this, country);
     }
 
     /** Country name will be located in the another entity in a real application */
@@ -97,7 +83,7 @@ public class City extends OrmTable<City> {
 
     /** Country name will be located in the another entity in a real application */
     public void setCountryName(String countryName) {
-        City.COUNTRY_NAME.setValue(this, countryName);
+        COUNTRY_NAME.setValue(this, countryName);
     }
 
     /** A geographic coordinate for east-west position on the Earth */
@@ -107,7 +93,7 @@ public class City extends OrmTable<City> {
 
     /** A geographic coordinate for east-west position on the Earth */
     public void setLatitude(Float latitude) {
-        City.LATITUDE.setValue(this, latitude);
+        LATITUDE.setValue(this, latitude);
     }
 
     /** A geographic coordinate for north-south position on the Earth */
@@ -117,9 +103,7 @@ public class City extends OrmTable<City> {
 
     /** A geographic coordinate for north-south position on the Earth */
     public void setLongitude(Float longitude) {
-        City.LONGITUDE.setValue(this, longitude);
+        LONGITUDE.setValue(this, longitude);
     }
-
-    //</editor-fold>
 
 }
