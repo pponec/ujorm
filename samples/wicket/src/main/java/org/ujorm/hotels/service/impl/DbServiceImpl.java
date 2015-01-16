@@ -200,7 +200,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         // TODO: validations ...
 
         booking.setPrice(totalPrice(booking));
-        booking.setReservationDate(new Date());
+        booking.setCreationDate(new Date());
         getSession().save(booking);
     }
 

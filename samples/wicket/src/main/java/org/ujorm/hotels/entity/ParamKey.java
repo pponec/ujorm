@@ -81,8 +81,6 @@ final public class ParamKey extends OrmTable<ParamKey> {
         setModule(module);
     }
 
-    // --- Getters / Setters ---
-
     /** Save a class of parameter value */
     public void setParamClass(Class<?> type) {
         CLASS_NAME.setValue(this, type.getSimpleName());
@@ -108,7 +106,7 @@ final public class ParamKey extends OrmTable<ParamKey> {
 
     /** The primary identifier */
     public void setId(Integer id) {
-        ParamKey.ID.setValue(this, id);
+        ID.setValue(this, id);
     }
 
     /** Parameter key name*/
@@ -118,7 +116,7 @@ final public class ParamKey extends OrmTable<ParamKey> {
 
     /** Parameter key name*/
     public void setName(String name) {
-        ParamKey.NAME.setValue(this, name);
+        NAME.setValue(this, name);
     }
 
     /** Parameter module */
@@ -128,7 +126,7 @@ final public class ParamKey extends OrmTable<ParamKey> {
 
     /** Parameter module */
     public void setModule(Module module) {
-        ParamKey.MODULE.setValue(this, module);
+        MODULE.setValue(this, module);
     }
 
     /** The System parameter has a the TRUE value and the User parameter has the FALSE value */
@@ -138,7 +136,7 @@ final public class ParamKey extends OrmTable<ParamKey> {
 
     /** The System parameter has a the TRUE value and the User parameter has the FALSE value */
     public void setSystemParam(Boolean systemParam) {
-        ParamKey.SYSTEM_PARAM.setValue(this, systemParam);
+        SYSTEM_PARAM.setValue(this, systemParam);
     }
 
     /** Description of the argument */
@@ -148,7 +146,7 @@ final public class ParamKey extends OrmTable<ParamKey> {
 
     /** Description of the argument */
     public void setNote(String note) {
-        ParamKey.NOTE.setValue(this, note);
+        NOTE.setValue(this, note);
     }
 
     /** Java class name of the argument with no package */
@@ -158,7 +156,7 @@ final public class ParamKey extends OrmTable<ParamKey> {
 
     /** Java class name of the argument with no package */
     public void setClassName(String className) {
-        ParamKey.CLASS_NAME.setValue(this, className);
+        CLASS_NAME.setValue(this, className);
     }
 
     /** Java class package of the argument */
@@ -168,7 +166,7 @@ final public class ParamKey extends OrmTable<ParamKey> {
 
     /** Java class package of the argument */
     public void setClassPackage(String classPackage) {
-        ParamKey.CLASS_PACKAGE.setValue(this, classPackage);
+        CLASS_PACKAGE.setValue(this, classPackage);
     }
 
     /** Parameter default value in a text format */
@@ -178,7 +176,7 @@ final public class ParamKey extends OrmTable<ParamKey> {
 
     /** Parameter default value in a text format */
     public void setTextDefaultValue(String textDefaultValue) {
-        ParamKey.TEXT_DEFAULT_VALUE.setValue(this, textDefaultValue);
+        TEXT_DEFAULT_VALUE.setValue(this, textDefaultValue);
     }
 
     /** Date of the parameter modification */
@@ -188,6 +186,6 @@ final public class ParamKey extends OrmTable<ParamKey> {
 
     /** Date of the parameter modification */
     public void setLastUpdate(Date lastUpdate) {
-        ParamKey.LAST_UPDATE.setValue(this, lastUpdate);
+        LAST_UPDATE.setValue(this, lastUpdate);
     }
 }

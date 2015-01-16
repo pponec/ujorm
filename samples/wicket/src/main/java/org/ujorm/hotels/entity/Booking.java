@@ -1,9 +1,6 @@
-/*
- * It can be a generated class in a future.
- * License the Apache License, Version 2.0,
+/* License the Apache License, Version 2.0,
  * Author: Pavel Ponec
  */
-
 package org.ujorm.hotels.entity;
 
 import java.math.BigDecimal;
@@ -17,7 +14,7 @@ import static org.ujorm.Validator.Build.*;
 
 /** Reservation */
 public class Booking extends OrmTable<Booking> {
-
+    /** Index name */
     private static final String INDEX_NAME="idx_booking";
 
     /** Factory */
@@ -58,9 +55,7 @@ public class Booking extends OrmTable<Booking> {
         f.lock();
     }
 
-    // --- Getters / Setters ---
-
-    //<editor-fold defaultstate="collapsed" desc="Setters and Getters generated from NetBeans">
+    // --- Generated Getters / Setters ---
 
     /** The Primary Key */
     public Long getId() {
@@ -69,7 +64,7 @@ public class Booking extends OrmTable<Booking> {
 
     /** The Primary Key */
     public void setId(Long id) {
-        Booking.ID.setValue(this, id);
+        ID.setValue(this, id);
     }
 
     /** Relation to hotel */
@@ -79,7 +74,7 @@ public class Booking extends OrmTable<Booking> {
 
     /** Relation to hotel */
     public void setHotel(Hotel hotel) {
-        Booking.HOTEL.setValue(this, hotel);
+        HOTEL.setValue(this, hotel);
     }
 
     /** Relation to customer */
@@ -89,17 +84,17 @@ public class Booking extends OrmTable<Booking> {
 
     /** Relation to customer */
     public void setCustomer(Customer customer) {
-        Booking.CUSTOMER.setValue(this, customer);
+        CUSTOMER.setValue(this, customer);
     }
 
     /** Date from */
-    public Date getDateFrom() {
+    public java.sql.Date getDateFrom() {
         return DATE_FROM.of(this);
     }
 
     /** Date from */
     public void setDateFrom(java.sql.Date dateFrom) {
-        Booking.DATE_FROM.setValue(this, dateFrom);
+        DATE_FROM.setValue(this, dateFrom);
     }
 
     /** Number of nights */
@@ -109,7 +104,7 @@ public class Booking extends OrmTable<Booking> {
 
     /** Number of nights */
     public void setNights(Short nights) {
-        Booking.NIGHTS.setValue(this, nights);
+        NIGHTS.setValue(this, nights);
     }
 
     /** Number of persons (limit from 1 to 20) */
@@ -119,7 +114,7 @@ public class Booking extends OrmTable<Booking> {
 
     /** Number of persons (limit from 1 to 20) */
     public void setPersons(Short persons) {
-        Booking.PERSONS.setValue(this, persons);
+        PERSONS.setValue(this, persons);
     }
 
     /** Total price */
@@ -129,7 +124,7 @@ public class Booking extends OrmTable<Booking> {
 
     /** Total price */
     public void setPrice(BigDecimal price) {
-        Booking.PRICE.setValue(this, price);
+        PRICE.setValue(this, price);
     }
 
     /** Currency of the price */
@@ -139,19 +134,17 @@ public class Booking extends OrmTable<Booking> {
 
     /** Currency of the price */
     public void setCurrency(String currency) {
-        Booking.CURRENCY.setValue(this, currency);
+        CURRENCY.setValue(this, currency);
     }
 
-    /** Reservation date */
-    public Date getReservationDate() {
+    /** Creation datetime of booking. */
+    public Date getCreationDate() {
         return CREATION_DATE.of(this);
     }
 
-    /** Reservation date */
-    public void setReservationDate(Date reservationDate) {
-        Booking.CREATION_DATE.setValue(this, reservationDate);
+    /** Creation datetime of booking. */
+    public void setCreationDate(Date creationDate) {
+        CREATION_DATE.setValue(this, creationDate);
     }
-
-    //</editor-fold>
 
 }

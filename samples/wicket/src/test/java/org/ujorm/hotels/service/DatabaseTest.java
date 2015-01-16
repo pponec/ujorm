@@ -1,5 +1,5 @@
 /*
- ** Copyright 2013-2014, Pavel Ponec
+ * Copyright 2013-2014, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class DatabaseTest extends AbstractServiceImpl {
             booking.setHotel(hotel);
             booking.setDateFrom(new Date(System.currentTimeMillis() + ONE_DAY));
             booking.setPrice(hotel.getPrice());
-            booking.setReservationDate(now());
+            booking.setCreationDate(now());
 
             getSession().save(booking);
         }

@@ -71,7 +71,6 @@ public final class ParamValue extends OrmTable<ParamValue> {
     /** System parameter */
     public static final Key<ParamValue, Boolean> KEY_SYSTEM$ = PARAM_KEY.add(ParamKey.SYSTEM_PARAM);
 
-
     // --- Constructors ---
 
     /** Default constructor */
@@ -89,16 +88,16 @@ public final class ParamValue extends OrmTable<ParamValue> {
         return !KEY_SYSTEM$.of(this);
     }
 
-    // --- Getters / Setters ---
+    // --- Generated Getters / Setters ---
 
-    /** The primary identifier */
+    /** The identifier must have an ascending sort for personal rows. */
     public Integer getId() {
         return ID.of(this);
     }
 
-    /** The primary identifier */
+    /** The identifier must have an ascending sort for personal rows. */
     public void setId(Integer id) {
-        ParamValue.ID.setValue(this, id);
+        ID.setValue(this, id);
     }
 
     /** Parameter Key where the NULL value means a 'system parameter' */
@@ -108,19 +107,19 @@ public final class ParamValue extends OrmTable<ParamValue> {
 
     /** Parameter Key where the NULL value means a 'system parameter' */
     public void setParamKey(ParamKey paramKey) {
-        ParamValue.PARAM_KEY.setValue(this, paramKey);
+        PARAM_KEY.setValue(this, paramKey);
     }
 
-    /** Related customer or a system customer for a system parameters
+    /** Related customer or the null value for the system parameter
      * @see ParamKey#SYSTEM_PARAM */
     public Customer getCustomer() {
         return CUSTOMER.of(this);
     }
 
-    /** Related customer or a system customer for a system parameters
+    /** Related customer or the null value for the system parameter
      * @see ParamKey#SYSTEM_PARAM */
     public void setCustomer(Customer customer) {
-        ParamValue.CUSTOMER.setValue(this, customer);
+        CUSTOMER.setValue(this, customer);
     }
 
     /** Parameter value in a text format */
@@ -130,7 +129,7 @@ public final class ParamValue extends OrmTable<ParamValue> {
 
     /** Parameter value in a text format */
     public void setTextValue(String textValue) {
-        ParamValue.TEXT_VALUE.setValue(this, textValue);
+        TEXT_VALUE.setValue(this, textValue);
     }
 
     /** Date of the parameter modification */
@@ -140,7 +139,7 @@ public final class ParamValue extends OrmTable<ParamValue> {
 
     /** Date of the parameter modification */
     public void setLastUpdate(Date lastUpdate) {
-        ParamValue.LAST_UPDATE.setValue(this, lastUpdate);
+        LAST_UPDATE.setValue(this, lastUpdate);
     }
 
 }
