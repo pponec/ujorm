@@ -8,8 +8,8 @@ package org.ujorm.hotels.entity;
 
 import java.math.BigDecimal;
 import org.ujorm.Key;
-import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import static org.ujorm.Validator.Build.*;
@@ -20,7 +20,7 @@ public class Hotel extends OrmTable<Hotel> {
     private static final String INDEX_HOTEL_NAME="idx_hotel_name";
 
     /** Factory */
-    private static final KeyFactory<Hotel> f = newFactory(Hotel.class);
+    private static final OrmKeyFactory<Hotel> f = newFactory(Hotel.class);
 
     /** The Primary Key */
     @Comment("The Primary Key")

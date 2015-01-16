@@ -6,10 +6,10 @@
 package org.ujorm.hotels.entity;
 
 import org.ujorm.Key;
-import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.hotels.entity.enums.TitleEnum;
 import org.ujorm.implementation.orm.OrmTableLockable;
+import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.wicket.component.form.FieldProvider;
@@ -22,7 +22,7 @@ public class Customer extends OrmTableLockable<Customer> {
     private static final String UNIQUE_LOGIN = "idx_unique_login";
 
     /** Factory */
-    private static final KeyFactory<Customer> f = newFactory(Customer.class);
+    private static final OrmKeyFactory<Customer> f = newFactory(Customer.class);
 
     /** The Primary Key */
     @Comment("The Primary Key")
