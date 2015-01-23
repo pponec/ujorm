@@ -26,7 +26,7 @@ import org.ujorm.core.annot.PackagePrivate;
  * Message Service
  * @author Pavel Ponec
  */
-public final class MessageService {
+public class MessageService {
 
     /** Two-character mark ("${") to introducing a template argument. */
     @PackagePrivate static final String PARAM_BEG = "${";
