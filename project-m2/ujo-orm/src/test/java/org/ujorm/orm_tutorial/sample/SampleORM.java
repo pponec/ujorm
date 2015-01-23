@@ -382,11 +382,11 @@ public class SampleORM {
     @SuppressWarnings("unchecked")
     public void useSelectWithAliasTable() {
         final Long excludedId = -7L;
-        final AliasTable order = this.handler.tableOf(Order.class);
-        final AliasTable item = this.handler.tableOf(Item.class);
+        final AliasTable order = handler.tableOf(ViewOrder.class);
+        final AliasTable item = handler.tableOf(Item.class);
 
         String innerSql = SELECT(order.column(Order.ID)
-                , item.columnAs("count(*)", ViewOrder.ITEM_COUNT))
+                , order.columnAs("count(*)", ViewOrder.ITEM_COUNT))
                 + FROM (order)
                 + INNER_JOIN(item, item.column(Item.ORDER), "=", order.column(Order.ID))
                 + WHERE(order.column(Order.ID), "!=", PARAM)
