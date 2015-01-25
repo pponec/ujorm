@@ -57,10 +57,17 @@ public class EnumField<T extends Enum<T>> extends Field<T> {
         }
     }
 
-    /** Create Form inputComponent */
+    /** Create a new form input Component where the default key have got value
+     * from the key:  {@code "value." + EnumField.super.getKey().getFullName() + ".null"} . */
     @Override
     protected FormComponent createInput(String componentId, IModel<T> model) {
-        DropDownChoice<T> result = new DropDownChoice<T>(componentId, new Model(), getItems());
+        DropDownChoice<T> result = new DropDownChoice<T>(componentId, new Model(), getItems()) {
+            /** Return the localization key for nullValid value
+             * @return {@code "value." + EnumField.super.getKey().getFullName() + ".null"} */
+            @Override protected String getNullKey() {
+                return "value." + EnumField.super.getKey().getFullName() + ".null";
+            }
+        };
         result.setChoiceRenderer(new ChoiceRendererNullable<T>(this));
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
