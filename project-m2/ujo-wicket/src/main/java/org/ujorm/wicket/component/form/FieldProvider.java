@@ -307,8 +307,14 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         return domain;
     }
 
-    /** Copy new value to the result and return the result */
+    /** Copy component values to the domain result and return the result */
     public U getDomain() {
+        copyToDomain(domain);
+        return domain;
+    }
+
+    /** Copy component values to the domain */
+    public void copyToDomain(final U domain) {
         for (Field field : fields.values()) {
             final Key k = field.getKey();
             final Object newValue = getValue(k);
@@ -319,7 +325,19 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             //  k.getValidator().checkValue(newValue, k, domain);
             }
         }
-        return domain;
+    }
+
+
+    /** Copy values according to argument from or to the domain.
+     * @param domain Domain object
+     * @param toFields The TRUE value means 'copy to fields' and FALSE means 'copy to domain'.
+     */
+    public void copyValues(final U domain, final boolean toFields) {
+        if (toFields) {
+            copyToFields(domain);
+        } else {
+            copyToDomain(domain);
+        }
     }
 
     /** Get original domain */
