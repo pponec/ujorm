@@ -40,8 +40,8 @@ public class PasswordField <T> extends Field<T> {
     /** Create Form inputComponent */
     @Override
     @SuppressWarnings("unchecked")
-    protected FormComponent createInput(String componentId, IModel model) {
-        final FormComponent result = new PasswordTextField(componentId, model);
+    protected FormComponent createInput(String componentId, IModel<T> model) {
+        final FormComponent result = new PasswordTextField(componentId, (IModel) model);
 
         result.setRequired(false);
         result.setEnabled(isEnabled());

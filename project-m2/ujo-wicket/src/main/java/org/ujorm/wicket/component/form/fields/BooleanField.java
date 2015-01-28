@@ -44,7 +44,7 @@ public class BooleanField<T extends Boolean> extends Field<T> {
 
     /** Create Form inputComponent */
     @Override
-    protected FormComponent createInput(String componentId, IModel<T> model) {
+    protected FormComponent createInput(final String componentId, final IModel<T> model) {
         final CheckBox result = new CheckBox(componentId, (IModel) model);
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());

@@ -58,7 +58,7 @@ public class GridField<T> extends Field<T> {
     /** Create Form inputComponent */
     @Override
     protected FormComponent createInput(String componentId, IModel<T> model) {
-        final TextField<String> result = new TextField<String>(componentId, new Model(""));
+        final TextField<String> result = new TextField<String>(componentId, (IModel) model);
         result.setEnabled(false);
         return result;
     }
