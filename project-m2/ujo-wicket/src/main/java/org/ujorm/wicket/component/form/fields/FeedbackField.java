@@ -62,8 +62,8 @@ public class FeedbackField<T> extends Field<T> {
 
     /** Create Form inputComponent */
     @Override
-    protected FormComponent createInput(String componentId, IModel model) {
-        final HiddenField<String> result = new HiddenField<String>(componentId, model, String.class);
+    protected FormComponent createInput(String componentId, IModel<T> model) {
+        final HiddenField<String> result = new HiddenField<String>(componentId, (IModel) model, String.class);
         result.setLabel(new Model(""));
         return result;
     }

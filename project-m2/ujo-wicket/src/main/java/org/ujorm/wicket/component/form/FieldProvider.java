@@ -327,7 +327,6 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         }
     }
 
-
     /** Copy values according to argument from or to the domain.
      * @param domain Domain object
      * @param toFields The TRUE value means 'copy to fields' and FALSE means 'copy to domain'.

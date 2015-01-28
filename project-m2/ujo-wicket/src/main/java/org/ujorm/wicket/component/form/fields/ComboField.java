@@ -58,8 +58,8 @@ public class ComboField<T extends Ujo> extends Field<T> {
 
     /** Create Form inputComponent */
     @Override
-    protected FormComponent createInput(String componentId, IModel<T> model) {
-        DropDownChoice<T> result = new DropDownChoice<T>(componentId, new Model(), getItems(), new IChoiceRenderer<T>() {
+    protected FormComponent createInput(final String componentId, final IModel<T> model) {
+        DropDownChoice<T> result = new DropDownChoice<T>(componentId, model, getItems(), new IChoiceRenderer<T>() {
             @Override
             public Object getDisplayValue(T object) {
                 return getComboDisplayValue(object);

@@ -46,9 +46,9 @@ public class DateField<T> extends Field<T> {
     /** Create Form inputComponent */
     @Override
     @SuppressWarnings("unchecked")
-    protected FormComponent createInput(String componentId, IModel<T> model) {
+    protected FormComponent createInput(final String componentId, final IModel<T> model) {
         final DateTextField result = new com.googlecode.wicket.jquery.ui.form.datepicker.DatePicker
-                (componentId, new Model<Date>(), getDatePattern(), createJQueryOptions());
+                (componentId, (IModel) model, getDatePattern(), createJQueryOptions());
         result.add(new CssAppender(getInputCssClass()));
 
         result.setEnabled(isEnabled());
