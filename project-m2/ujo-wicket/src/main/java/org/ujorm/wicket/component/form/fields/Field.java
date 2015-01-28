@@ -141,7 +141,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Create Form inputComponent */
-    protected FormComponent createInput(String componentId, IModel<T> model) {
+    protected FormComponent createInput(final String componentId, final IModel<T> model) {
         @SuppressWarnings("unchecked")
         final FormComponent result = new TextField(componentId, model, key.getFirstKey().getType());
 
@@ -182,9 +182,11 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Set new value for the {@code input} and reset feedback messages */
-    public void setModelValue(T value) {
-        input.getFeedbackMessages().clear();
-        input.setDefaultModelObject(value);
+    public void setModelValue(final T value) {
+        setDefaultModelObject(value);
+        if (input != null) {
+            input.getFeedbackMessages().clear();
+        }
     }
 
     /** add Behaviour */
