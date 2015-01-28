@@ -84,7 +84,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
             hotel.setActive(false);
             getSession().update(hotel);
         } else {
-           getSession().update(hotel);
+           getSession().delete(hotel);
         }
     }
 
@@ -106,7 +106,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
             customer.setActive(false);
             getSession().update(customer);
         } else {
-           getSession().update(customer);
+           getSession().delete(customer);
         }
     }
 
