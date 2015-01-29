@@ -20,9 +20,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.wicket.component.tools.ChoiceRendererNullable;
@@ -32,11 +33,13 @@ import org.ujorm.wicket.component.tools.ChoiceRendererNullable;
  * @author Pavel Ponec
  */
 public class EnumField<T extends Enum<T>> extends Field<T> {
-    private static final long serialVersionUID = 20130621L;
+    private static final long serialVersionUID = 20150121L;
     /** This component does not support the {@code null} item now. */
     private static final boolean NULL_SUPPORT = false;
     /** Available items */
     private List<T> items;
+    /** Choice Renderer */
+    private IChoiceRenderer<T> renderer;
 
     public <U extends Ujo> EnumField(Key<U, T> key) {
         this(key, null);
@@ -57,11 +60,24 @@ public class EnumField<T extends Enum<T>> extends Field<T> {
         }
     }
 
+    /** Choice Renderer */
+    public IChoiceRenderer<T> getRenderer() {
+        return renderer;
+    }
+
+    /** Choice Renderer */
+    public void setRenderer(IChoiceRenderer<T> renderer) {
+        this.renderer = renderer;
+    }
+
     /** Create a new form input Component where the default key have got value
      * from the key:  {@code "value." + EnumField.super.getKey().getFullName() + ".null"} . */
     @Override
     protected FormComponent createInput(final String componentId, final IModel<T> model) {
-        DropDownChoice<T> result = new DropDownChoice<T>(componentId, model, getItems()) {
+        final IChoiceRenderer<T> aRenderer = renderer != null
+            ? renderer
+            : new EnumChoiceRenderer<T>(this);
+        DropDownChoice<T> result = new DropDownChoice<T>(componentId, model, getItems(), aRenderer) {
             /** Return the localization key for nullValid value
              * @return {@code "value." + EnumField.super.getKey().getFullName() + ".null"} */
             @Override protected String getNullKey() {
