@@ -58,6 +58,11 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
             getThreadSession().setAttribute(CUSTOMER_ATTR, result);
             return true;
         } else {
+            try {
+                Thread.sleep(1500L);
+            } catch (InterruptedException e) {
+                LOGGER.warn("Interrupted", e);
+            }
             return false;
         }
     }
