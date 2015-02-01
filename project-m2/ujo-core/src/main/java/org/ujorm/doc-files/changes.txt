@@ -1,5 +1,13 @@
 The Ujorm release notes
 *******************************
+
+release 1.52 (2015-02-02)
++ ORM: lazy loading is fixed for some cases
++ WICKET: There is extended support for localization Enum types
++ WICKET: Field model object is fixed for some cases of early data initialization
++ WICKET: New component for a Wizard is introduced
++ DEMO-HOTELS: Deleting entities is repaired
+
 release 1.51 (2014-11-27)
 + ORM: An exception message is fixed in the lazy-loading
 + WICKET: The CSS styling for the KeyColumnBoolean is fixed
