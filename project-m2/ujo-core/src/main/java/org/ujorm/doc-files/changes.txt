@@ -1,5 +1,9 @@
 The Ujorm release notes
+(Maven groupId: org.ujorm)
 *******************************
+
+release 1.53 (2015-*)
++ todo
 
 release 1.52 (2015-02-02)
 + ORM: lazy loading is fixed for some cases
