@@ -61,6 +61,9 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     private boolean printHeader = true;
     /** Skip empty lines on reading, the default value is {@code true}. */
     private boolean skipEmptyLines = true;
+    /** Skip the last CSV column values.
+     * A default value of this attribute is {@code false}. */
+    private boolean skipLastColumns = false;
     /** Print or validate the CSV Header content */
     private CharSequence[] headerContent = new CharSequence[0];
 
@@ -232,7 +235,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
 
                 if (readHeader) {
                     if (isHeaderFilled()
-                            && !line.startsWith(getHeaderContent())) {
+                    && !line.startsWith(getHeaderContent())) {
                         throw new IllegalStateException("The import header must start with the: " + headerContent);
                     }
                     readHeader = false;
@@ -260,6 +263,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
                     } else { // Outside a quotation
                         if (c == separator) {
                             writeValue(ujo, value, keyPointer++, lineCounter, action);
+                            value.setLength(0);
                         } else if (c == quotation) {
                             inside = true;
                         } else {
@@ -268,6 +272,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
                     }
                 }
                 writeValue(ujo, value, keyPointer++, lineCounter, action);
+                value.setLength(0);
             }
         } catch (Exception e) {
             throwsCsvFailed(e, context);
@@ -275,7 +280,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
         return result;
     }
 
-    /** Write value to UJO */
+    /** Write value to UJO. */
     protected void writeValue
     ( final UJO ujo
     , final StringBuilder value
@@ -283,17 +288,19 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     , final int lineCounter
     , final UjoAction action
     ) throws IllegalArgumentException {
-        if (keyPointer >= getKeys().size()) {
-            if (value.length() == 0) {
+        final KeyList<UJO> keys = getKeys();
+        if (keyPointer >= keys.size()) {
+            if (skipLastColumns || value.length() == 0) {
                 return;
             }
-            throw new IllegalArgumentException("Too many columns on the row: "
-                    + lineCounter
-                    + " value: "
-                    + value.toString());
+            String msg = String.format("Too many columns on the row %s with value '%s'."
+                    + " Try to modify the attribute: %s."
+                    , lineCounter
+                    , value
+                    , "skipLastColumns");
+            throw new IllegalArgumentException(msg);
         }
-        setText(ujo, getKeys().get(keyPointer), null, value.toString(), action);
-        value.setLength(0);
+        setText(ujo, keys.get(keyPointer), null, value.toString(), action);
     }
 
     /** Print Text */
@@ -365,6 +372,18 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
      */
     public void setSkipEmptyLines(boolean skip) {
         this.skipEmptyLines = skip;
+    }
+
+    /** Skip the last CSV column values.
+     * A default value of this attribute is {@code false}. */
+    public boolean isSkipLastColumns() {
+        return skipLastColumns;
+    }
+
+    /** Skip the last CSV column values.
+     * A default value of this attribute is {@code false}. */
+    public void setSkipLastColumns(boolean skipLastColumns) {
+        this.skipLastColumns = skipLastColumns;
     }
 
     /** PrintHeaders text with separators */
