@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 - 2014 Pavel Ponec
+ *  Copyright 2013 - 2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -253,6 +253,13 @@ public class Field<T> extends GenericPanel<T> {
     /** Assign a feedback message */
     public void setFeedbackMessage(IModel<String> message) {
         feedback.setFeedbackMessage(message);
+    }
+
+    /** Clear feedback messages */
+    public void clearFeedbackMessages() {
+        if (input != null) {
+            input.getFeedbackMessages().clear();
+        }
     }
 
     /** Returns a main CSS class */
