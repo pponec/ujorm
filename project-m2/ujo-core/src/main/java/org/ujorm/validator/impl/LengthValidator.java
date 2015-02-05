@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012-2014 Pavel Ponec
+ *  Copyright 2012-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class LengthValidator<VALUE extends String> extends AbstractValidator<VAL
     public static final MessageArg<Integer> MIN = new MessageArg<Integer>("MIN");
     /** String maximal length (inclusive) */
     public static final MessageArg<Integer> MAX = new MessageArg<Integer>("MAX");
-    /** String maximal length (inclusive) */
+    /** Current length of the text value */
     public static final MessageArg<Integer> LENGTH = new MessageArg<Integer>("LENGTH");
 
     /** String minimal length (inclusive) */

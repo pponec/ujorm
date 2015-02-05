@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012-2014 Pavel Ponec
+ *  Copyright 2012-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -222,6 +222,22 @@ public abstract class ValidatorFactory {
      */
     public static Validator<String> email(CheckType type) {
         return regexp(type, PatternValidator.EMAIL);
+    }
+
+    /** Match the input value to the simple email pattern.
+     * For a better regular expression see the <a href="http://ex-parrot.com/~pdw/Mail-RFC822-Address.html">next link</a>.
+     * @see PatternValidator
+     */
+    public static Validator<String> email(int max) {
+        return regexp(PatternValidator.EMAIL).and(length(max));
+    }
+
+    /** Match the input value to the simple email pattern.
+     * For a better regular expression see the <a href="http://ex-parrot.com/~pdw/Mail-RFC822-Address.html">next link</a>.
+     * @see PatternValidator
+     */
+    public static Validator<String> email(CheckType type, int max) {
+        return regexp(type, PatternValidator.EMAIL).and(length(max));
     }
 
     /** Match the input value to pattern
