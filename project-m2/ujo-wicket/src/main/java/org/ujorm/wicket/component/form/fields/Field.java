@@ -204,10 +204,15 @@ public class Field<T> extends GenericPanel<T> {
 
     /** Add a {@code maxlength} of a text-field for String attributes */
     protected void addMaxLength(final FormComponent result) {
-        if (validators instanceof UiValidator
-        && key.getFirstKey().isTypeOf(String.class)) {
-            int length = ValidatorUtils.getMaxLength(((UiValidator)validators).getValidator());
-            if (length >= 0) {
+        if (key.getFirstKey().isTypeOf(String.class)) {
+            int length = Integer.MAX_VALUE;
+            for (IValidator<? super T> item : validators) {
+                if (item instanceof UiValidator) {
+                   int lh = ValidatorUtils.getMaxLength(((UiValidator)item).getValidator());
+                   length = Math.min(lh, length);
+                }
+            }
+            if (length < Integer.MAX_VALUE) {
                result.add(new AttributeModifier("maxlength", Model.of(length)));
             }
         }
