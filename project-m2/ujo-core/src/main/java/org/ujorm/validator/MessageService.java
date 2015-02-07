@@ -74,7 +74,7 @@ public class MessageService {
      * @return Target result
      * @see Formatter
      */
-    protected final String format(String msg, Map<String, Object> args, Locale locale) {
+    protected final String format(final String msg, final Map<String, Object> args, Locale locale) {
         if (msg == null || args == null) {
             return String.valueOf(msg);
         }
@@ -91,9 +91,10 @@ public class MessageService {
             final Object paramValue = args.get(key);
             if (paramValue != null) {
                 result.append(msg.substring(last, i));
-                result.append(formatIndex > 0
-                        ? new Formatter(locale).format(expr.substring(1 + formatIndex), paramValue)
-                        : paramValue.toString());
+                final Object value = formatIndex > 0
+                    ? new Formatter(locale).format(expr.substring(1 + formatIndex), paramValue)
+                    : paramValue;
+                appendValue(value.toString(), result);
             } else {
                 result.append(msg.substring(last, end + 1));
             }
@@ -101,5 +102,12 @@ public class MessageService {
         }
         result.append(msg.substring(last));
         return result.toString();
+    }
+
+    /** Append a value to the output buffer.
+     * The method can be overwrited to escaping values.
+     */
+    protected void appendValue(final String value, final StringBuffer result) {
+        result.append(value);
     }
 }
