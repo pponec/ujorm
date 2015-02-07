@@ -56,6 +56,7 @@ import org.ujorm.wicket.component.form.fields.GridField;
 import org.ujorm.wicket.component.form.fields.PasswordField;
 import org.ujorm.wicket.component.form.fields.TextAreaField;
 import org.ujorm.wicket.component.form.fields.TextField;
+import org.ujorm.wicket.component.form.fields.UjoField;
 
 /**
  * Field Factory
@@ -135,6 +136,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             field = new DateField(newChildId(), key, null);
         } else if (key.isTypeOf(java.util.Date.class)) {
             field = new DateField(newChildId(), key, null); // TODO DateTime field
+        } else if (key.isTypeOf(Ujo.class)) {
+            field = new UjoField(newChildId(), key, null);
         } else if (key instanceof ListKey && Ujo.class.isAssignableFrom( ((ListKey)key).getItemType())) {
             field = new GridField(newChildId(), key, null);
         } else {
