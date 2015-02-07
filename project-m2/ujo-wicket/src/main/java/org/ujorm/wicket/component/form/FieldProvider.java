@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 - 2014 Pavel Ponec
+ *  Copyright 2013 - 2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -125,11 +125,9 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             } else {
                 final int length = ValidatorUtils.getMaxLength(key.getValidator());
                 field = length >= getTextAreaLimit()
-                        ? new TextAreaField(key)
-                        : new TextField(key);
+                        ? new TextAreaField(newChildId(), key, null)
+                        : new TextField(newChildId(), key, null);
             }
-        } else if (key.isTypeOf(Enum.class)) {
-            field = new EnumField(newChildId(), key, "combo");
         } else if (key.isTypeOf(Enum.class)) {
             field = new EnumField(newChildId(), key, "combo");
         } else if (key.isTypeOf(java.sql.Date.class)) {
