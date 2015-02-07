@@ -95,7 +95,7 @@ public class UjoField<T extends Ujo & Serializable> extends Field<T> {
         };
 
         @SuppressWarnings("unchecked")
-        final FormComponent result = new org.apache.wicket.markup.html.form.TextField(componentId, displayModel, key.getFirstKey().getType());
+        final FormComponent result = new org.apache.wicket.markup.html.form.TextField(componentId, displayModel, String.class);
 
         result.add(new AttributeModifier("readonly", "readonly"));
         result.setEnabled(isEnabled());
@@ -103,6 +103,18 @@ public class UjoField<T extends Ujo & Serializable> extends Field<T> {
         result.setRequired(isRequired());
 
         return result;
+    }
+
+    /** Returns an {@code input} value from model */
+    @Override
+    public T getModelValue() {
+        return super.getModel().getObject();
+    }
+
+     /** Set new value for the {@code input} and reset feedback messages */
+    @Override
+    public void setModelValue(final T value) {
+        super.getModel().setObject(value);
     }
 
     // ----------- FACTORIES -------------
