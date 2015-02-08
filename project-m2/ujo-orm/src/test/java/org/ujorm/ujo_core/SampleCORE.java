@@ -199,7 +199,7 @@ public class SampleCORE {
         } catch (ValidationException e) {
             String expected
                     = "Text length for Employee.name must be between 0 and 7, "
-                    + "but the input length is: 8";
+                    + "but the input length is 8 characters";
             assert e.getMessage().equals(expected);
         }
         assert employee.getName() == correctName;
