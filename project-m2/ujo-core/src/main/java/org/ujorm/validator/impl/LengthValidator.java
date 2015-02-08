@@ -74,12 +74,12 @@ public class LengthValidator<VALUE extends String> extends AbstractValidator<VAL
     }
 
     /** Default Message by template:
-     * <br>Text length for KEY must be between MIN, and MAX, but the input length is: LENGTH
+     * <br>Text length for KEY must be between MIN, and MAX, but the input length is LENGTH characters
      */
     @Override
     protected String getDefaultTemplate() {
         return service.template("Text length for ", KEY, " must be between "
-                , MIN, " and ", MAX, ", but the input length is: ", LENGTH);
+                , MIN, " and ", MAX, ", but the input length is ", LENGTH, " characters");
     }
 
     /**
