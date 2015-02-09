@@ -165,6 +165,14 @@ form {
     margin: 0;
 }
 
+div .inputOffer input {
+    width: 185px;
+    background: url(../images/icons/application_form_magnify.png) no-repeat scroll 97% center;
+    padding-right: 27px;
+    cursor: pointer;
+    background-color: white;
+}
+
 .form-horizontal .control-group {
     margin-bottom: 3px;
 }
