@@ -27,7 +27,7 @@ import org.ujorm.wicket.CommonActions;
  * The common action panel
  * @author Pavel Ponec
  */
-public class CommonAction<U extends Ujo> implements Serializable {
+public class CommonAction<U extends Ujo> implements Serializable, CommonActions {
     /** Default Action label prefix is {@code "action.label."} */
     public static final String DEFAULT_PREFIX = "action.label.";
 
