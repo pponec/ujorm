@@ -172,3 +172,13 @@ td.actions .insertHotel {
 td.insertHotel img.world-icon {
     margin-right: 9px;
 }
+
+div .loginField input {
+    padding-right: 27px;
+    background: url(../images/icons/user.png) no-repeat scroll 97% center;
+}
+
+div .passwordField input {
+    padding-right: 27px;
+    background: url(../images/icons/key.png) no-repeat scroll 97% center;
+}

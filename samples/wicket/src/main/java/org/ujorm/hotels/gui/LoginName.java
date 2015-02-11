@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, Pavel Ponec
+ * Copyright 2013-2015, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,8 +80,8 @@ public class LoginName extends Panel {
     /** Login model */
     private class LoginModel extends Model<String> {
         @Override public String getObject() {
-            final Customer cust = authService.getLoggedCustomer();
-            return cust != null ? cust.getFullName() : "Login";
+            final Customer result = authService.getLoggedCustomer();
+            return result != null ? result.getFullName() : "Login";
         }
     }
 }
