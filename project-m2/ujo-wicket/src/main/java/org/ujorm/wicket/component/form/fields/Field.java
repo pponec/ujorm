@@ -163,7 +163,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Validator setter */
-    public Field addValidator(IValidator<T> validator) {
+    public Field<T> addValidator(IValidator<T> validator) {
         if (validators == null) {
             validators = new ArrayList<IValidator<? super T>>();
         }
@@ -172,7 +172,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** The Validator setter */
-    public Field addValidator(Validator<T> validator) {
+    public Field<T> addValidator(Validator<T> validator) {
         return addValidator(new UiValidator(validator, key));
     }
 
@@ -190,11 +190,18 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** add Behaviour */
-    public void addBehaviour(AjaxEventBehavior behavior) {
+    public Field<T> addBehaviour(AjaxEventBehavior behavior) {
         if (behaviors==null) {
             behaviors = new ArrayList<Behavior>();
         }
         behaviors.add(behavior);
+        return this;
+    }
+
+    /** Add a CSS style to the current field */
+    public Field<T> addCssStyle(@Nonnull final String cssStyle) {
+        add(new CssAppender(cssStyle));
+        return this;
     }
 
     /** Return an Input component */

@@ -97,7 +97,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Add any field to a repeating view
      * and set the OutputMarkupPlaceholderTag to value {@code true}. */
-    public void add(final Field field) {
+    public <T extends Object> Field<T> add(final Field<T> field) {
         final Key key = field.getKey();
         Field oldField = fields.put(key.getName(), field);
         if (oldField != null) {
@@ -106,6 +106,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         repeatingView.add(field);
         addValidator(key, field);
         field.setOutputMarkupPlaceholderTag(true);
+        return field;
     }
 
     /** Generates a child component id */
@@ -114,7 +115,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Add new field to a repeating view*/
-    public <T extends Object> void add(Key<? super U,T> key) {
+    public <T extends Object> Field<T> add(Key<? super U,T> key) {
         final Field field;
 
         if (key.isTypeOf(Boolean.class)) {
@@ -142,6 +143,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             field = new Field(newChildId(), key, null); // The common field
         }
         add(field);
+        return field;
     }
 
     /** Add all fields of  a domain class to the form */
@@ -165,17 +167,19 @@ public class FieldProvider<U extends Ujo> implements Serializable {
      * @param key Related Key
      * @param fieldClass Class must have got a one argument constructor type of {@link Key}.
      */
-    public <T extends Ujo> void add(Key<? super U, T> key, Class<? extends Field> fieldClass) {
+    public <T extends Ujo> Field<T> add(Key<? super U, T> key, Class<? extends Field> fieldClass) {
         try {
-            add(fieldClass.getConstructor(Key.class).newInstance(key));
-        } catch (Exception ex) {
-            throw new IllegalStateException("Can't create instance of the " + fieldClass, ex);
+            return add(fieldClass.getConstructor(Key.class).newInstance(key));
+        } catch (Exception e) {
+            throw new IllegalStateException("Can't create instance of the " + fieldClass, e);
         }
     }
 
     /** Add a Combo-box for a <string>persistent</strong> entity */
-    public <T extends OrmUjo> void add(Key<? super U,T> key, Key<T,?> display, Criterion<T> crn) {
-        add(ComboField.of(key, crn, display));
+    public <T extends OrmUjo> Field<T> add(Key<? super U,T> key, Key<T,?> display, Criterion<T> crn) {
+        final Field<T> result = ComboField.of(key, crn, display);
+        add(result);
+        return result;
     }
 
     /** Get Value, or returns a default value */
@@ -420,7 +424,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     public <T> void addCssStyle(final Key<? super U, T> key, String cssStyle) {
         final Field field = getField(key);
         if (field != null) {
-            field.add(new CssAppender(cssStyle));
+            field.addCssStyle(cssStyle);
         }
     }
     /** Set a focus to the first component by default */
