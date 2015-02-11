@@ -78,8 +78,8 @@ public class LengthValidator<VALUE extends String> extends AbstractValidator<VAL
      */
     @Override
     protected String getDefaultTemplate() {
-        return service.template("Text length for ", KEY, " must be between "
-                , MIN, " and ", MAX, ", but the input length is ", LENGTH, " characters");
+        return service.template("Length of ", KEY, " must be between "
+                , MIN, " and ", MAX, ", but the input has ", LENGTH, " characters");
     }
 
     /**
