@@ -15,6 +15,8 @@
  */
 package org.ujorm.wicket.component.dialog;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -227,7 +229,11 @@ public abstract class AbstractDialogPanel<T> extends GenericPanel<T> {
      * @param actionButtonProperty Action button key
      * @param target Target
      */
-    public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> body, String actionButtonProperty) {
+    public void show
+            ( @Nonnull AjaxRequestTarget target
+            , @Nullable IModel<String> title
+            , @Nullable IModel<T> body
+            , @Nullable String actionButtonProperty) {
         setDefaultModel(body);
         setFeedback((IModel)null);
         if (title != null) {

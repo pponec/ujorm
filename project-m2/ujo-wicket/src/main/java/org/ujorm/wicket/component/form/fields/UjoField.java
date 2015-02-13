@@ -57,9 +57,14 @@ public class UjoField<T extends Ujo & Serializable> extends Field<T> {
 
         addBehaviour(new AjaxEventBehavior("onclick") {
              protected void onEvent(AjaxRequestTarget target) {
-                 offerDialog.show(target, new Model(""));
+                 showOfferDialog(target);
              }
          });
+    }
+
+    /** Show offer dialog */
+    protected void showOfferDialog(AjaxRequestTarget target) {
+        offerDialog.show(target, getInput().getLabel(), new Model(""), null);
     }
 
     /** Get Default Criterion */
