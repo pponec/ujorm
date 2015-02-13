@@ -15,7 +15,6 @@
  */
 package org.ujorm.wicket.component.dialog;
 
-import org.ujorm.wicket.component.dialog.domestic.*;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;

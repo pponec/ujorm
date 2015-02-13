@@ -18,6 +18,8 @@ package org.ujorm.wicket.component.form.fields;
 import java.io.Serializable;
 import javax.annotation.Nullable;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -26,25 +28,43 @@ import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.core.UjoManager;
+import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
+import org.ujorm.wicket.component.dialog.OfferDialogPanel;
 
 /**
  * UjoField field with a Label including a feedback message.
  * @author Pavel Ponec
+ * @param <T> Ujo type
  */
 public class UjoField<T extends Ujo & Serializable> extends Field<T> {
     private static final long serialVersionUID = 20150206L;
 
     private KeyRing<T> displayKey;
+    private OfferDialogPanel<T> offerDialog;
 
+    /** Constructor */
     public <U extends Ujo> UjoField(Key<U,T> key, @Nullable Key<T,?> display) {
         this(key.getName(), key, null);
     }
 
+    /** Constructor */
     public <U extends Ujo> UjoField(String id, Key<U,T> key, @Nullable Key<T,?> display) {
         super(id, key, null);
         this.displayKey = KeyRing.of(display);
+        add((offerDialog = OfferDialogPanel.create("offerDialog", 700, 390, getDefaultCriterion(key))).getModalWindow());
+
+        addBehaviour(new AjaxEventBehavior("onclick") {
+             protected void onEvent(AjaxRequestTarget target) {
+                 offerDialog.show(target, new Model(""));
+             }
+         });
+    }
+
+    /** Get Default Criterion */
+    private <U extends Ujo> Criterion getDefaultCriterion(Key<U, T> key) {
+        return UjoManager.getInstance().readKeys(key.getType()).getFirstKey().forAll();
     }
 
     /** Find a default name key */
