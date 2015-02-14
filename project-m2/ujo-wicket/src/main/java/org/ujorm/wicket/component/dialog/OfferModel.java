@@ -190,11 +190,9 @@ public class OfferModel<U extends Ujo> implements Serializable {
         this.display = display != null ? KeyRing.of(display) : null;
     }
 
-    /** Display column of the UjoField
-     * TODO: Extend the searching for ORM
-     */
+    /** Display column of the UjoField */
     @Nonnull
-    public <D extends Ujo> Key<D,U> getId() {
+    public <V> Key<U,V> getId() {
         if (id == null) {
             final KeyList<U> fullKeys = UjoManager.getInstance().readKeys(getType());
             id = findKeyByName("ID", fullKeys);
@@ -202,14 +200,8 @@ public class OfferModel<U extends Ujo> implements Serializable {
                 id = KeyRing.of(fullKeys.getFirstKey());
             }
         }
-        return (Key<D, U>) id.getFirstKey();
+        return (Key<U, V>) id.getFirstKey();
     }
-
-    /** Check the ORM type of domain object */
-    protected boolean isOrm() {
-        return OrmUjo.class.isAssignableFrom(getType());
-    }
-
     /** FindKey by name with ignore case */
     protected KeyList<?> findKeyByName(final String keyName, final KeyList<U> fullKeys) {
         for (Key<U, ?> key : fullKeys) {
