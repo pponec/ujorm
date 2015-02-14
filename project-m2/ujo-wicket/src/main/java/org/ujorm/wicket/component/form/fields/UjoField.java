@@ -84,20 +84,10 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> {
 
     /** Create new Highliting Criterion */
     protected <V> Criterion<U> createHighlitingCriterion() {
-        final Key<U,V> idKey = getDomainId();
+        final Key<U,V> idKey = model.getId();
         final V idValue = idKey.of(getModelValue());
         final Criterion<U> result = idKey.whereEq(idValue);
         return result;
-    }
-
-    /** Returns domain identifier */
-    protected <V> Key<U, V> getDomainId() {
-        if (isOrm()) {
-            // TODO: get OrmModel ....
-            return model.getId();
-        } else {
-            return model.getId();
-        }
     }
 
     /** Check the ORM type of the main domain object */

@@ -32,7 +32,10 @@ import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
+import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.grid.AbstractDataProvider;
 import org.ujorm.wicket.component.grid.ListDataProvider;
 import org.ujorm.wicket.component.grid.OrmDataProvider;
@@ -61,6 +64,8 @@ public class OfferModel<U extends Ujo> implements Serializable {
     private AbstractDataProvider provider;
     /** Row count */
     private int rowCount = 25;
+    /** Orm Handler */
+    private OrmHandler ormHandler;
 
 
     /** All item */
@@ -158,7 +163,7 @@ public class OfferModel<U extends Ujo> implements Serializable {
     public AbstractDataProvider getProvider() {
         if (provider == null) {
             final Key<U,?> sortKey = getColumns().getFirstKey();
-            if (OrmUjo.class.isAssignableFrom(getType())) {
+            if (isOrm()) {
                 provider = new OrmDataProvider(getFilter(), sortKey);
             } else {
                 provider = new ListDataProvider(getFilter(), sortKey);
@@ -167,6 +172,11 @@ public class OfferModel<U extends Ujo> implements Serializable {
             provider.setHighlighting(highliting);
         }
         return provider;
+    }
+
+    /** Is the Domain type an ORM class ? */
+    protected boolean isOrm() {
+        return OrmUjo.class.isAssignableFrom(getType());
     }
 
     /** Create Date Table */
@@ -194,10 +204,16 @@ public class OfferModel<U extends Ujo> implements Serializable {
     @Nonnull
     public <V> Key<U,V> getId() {
         if (id == null) {
-            final KeyList<U> fullKeys = UjoManager.getInstance().readKeys(getType());
-            id = findKeyByName("ID", fullKeys);
-            if (id == null) {
-                id = KeyRing.of(fullKeys.getFirstKey());
+            if (isOrm()) {
+                final Class<OrmUjo> ormType = (Class<OrmUjo>) getType();
+                final MetaTable table = getOrmHandler().findTableModel(ormType);
+                id = KeyRing.of(table.getFirstPK().getKey());
+            } else {
+                final KeyList<U> fullKeys = UjoManager.getInstance().readKeys(getType());
+                id = findKeyByName("ID", fullKeys);
+                if (id == null) {
+                    id = KeyRing.of(fullKeys.getFirstKey());
+                }
             }
         }
         return (Key<U, V>) id.getFirstKey();
@@ -215,5 +231,13 @@ public class OfferModel<U extends Ujo> implements Serializable {
     /** Display column of the UjoField */
     public <D extends Ujo> void setId(@Nullable Key<? super D,U> id) {
         this.id = id != null ? KeyRing.of(id) : null;
+    }
+
+    /** Returns ORM handelr */
+    protected OrmHandler getOrmHandler() {
+        if (ormHandler == null) {
+            ormHandler = OrmSessionProvider.getOrmHandler();
+        }
+        return ormHandler;
     }
 }
