@@ -137,7 +137,7 @@ public abstract class AbstractDialogPanel<T> extends GenericPanel<T> {
         return result;
     }
 
-    /** Vytvoří textfield pro aktuání model */
+    /** Creates the default Cancel button */
     protected AjaxButton createCancelButton(String id, String propertyName) {
         final AjaxButton result = new AjaxButton
                 ( id
@@ -197,7 +197,7 @@ public abstract class AbstractDialogPanel<T> extends GenericPanel<T> {
      * @param domain Domain object
      * @param target target
      */
-    public void show(UjoEvent event, IModel<String> title) {
+    public void show(UjoEvent<T> event, IModel<String> title) {
         setAction(event.getAction());
         show(event.getTarget(), title, event.getUjoModel());
     }
@@ -207,7 +207,7 @@ public abstract class AbstractDialogPanel<T> extends GenericPanel<T> {
      * @param domain Domain object
      * @param target target
      */
-    public void show(UjoEvent event, IModel<String> title, String actionButtonProperty) {
+    public void show(UjoEvent<T> event, IModel<String> title, String actionButtonProperty) {
         setAction(event.getAction());
         show(event.getTarget(), title, event.getUjoModel(), actionButtonProperty);
     }
@@ -249,6 +249,16 @@ public abstract class AbstractDialogPanel<T> extends GenericPanel<T> {
     /** Returns modal WIndow */
     public ModalWindow getModalWindow() {
         return modalWindow;
+    }
+
+    /** Close the modal window */
+    public void close (AjaxRequestTarget target) {
+        modalWindow.close(target);
+    }
+
+    /** Close the modal window */
+    public final void close (UjoEvent target) {
+        close(target.getTarget());
     }
 
     /** Get Save button key key */
