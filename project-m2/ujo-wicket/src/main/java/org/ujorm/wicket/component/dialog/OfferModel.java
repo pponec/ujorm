@@ -176,7 +176,15 @@ public class OfferModel<U extends Ujo> implements Serializable {
 
     /** Add table columns */
     protected void addTableColumns(final AbstractDataProvider provider) {
-        provider.add(getColumns());
+        final KeyList<U> columns = getColumns();
+        for (int i = 0, max = columns.size(); i < max; i++) {
+            final Key key = columns.get(i);
+            if (i == 0) {
+                provider.add(columns);
+            } else {
+                provider.add(columns);
+            }
+        }
     }
 
     /** Is the Domain type an ORM class ? */
