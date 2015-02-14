@@ -45,8 +45,8 @@ import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.validator.ValidatorUtils;
-import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.OrmSessionProvider;
+import org.ujorm.wicket.component.dialog.OfferModel;
 import org.ujorm.wicket.component.form.fields.BooleanField;
 import org.ujorm.wicket.component.form.fields.ComboField;
 import org.ujorm.wicket.component.form.fields.DateField;
@@ -136,15 +136,25 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         } else if (key.isTypeOf(java.util.Date.class)) {
             field = new DateField(newChildId(), key, null); // TODO DateTime field
         } else if (key.isTypeOf(Ujo.class)) {
-            field = new UjoField(newChildId(), key, null);
+            field = new UjoField(newChildId(), key);
         } else if (key instanceof ListKey && Ujo.class.isAssignableFrom( ((ListKey)key).getItemType())) {
             field = new GridField(newChildId(), key, null);
         } else {
             field = new Field(newChildId(), key, null); // The common field
         }
-        add(field);
-        return field;
+        return add(field);
     }
+
+    /** Add new field to a repeating view*/
+    public <T extends Ujo & Serializable> Field<T> add(Key<? super U,T> key, Criterion<T> filter) {
+        return add(key, new OfferModel<T>(filter));
+    }
+
+    /** Add new field to a repeating view*/
+    public <T extends Ujo & Serializable> Field<T> add(Key<? super U,T> key, OfferModel<T> model) {
+        return add(new UjoField<T>(newChildId(), key, model));
+    }
+
 
     /** Add all fields of  a domain class to the form */
     public void add(Class<? super U> domainClass) {
@@ -178,8 +188,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     /** Add a Combo-box for a <string>persistent</strong> entity */
     public <T extends OrmUjo> Field<T> add(Key<? super U,T> key, Key<T,?> display, Criterion<T> crn) {
         final Field<T> result = ComboField.of(key, crn, display);
-        add(result);
-        return result;
+        return add(result);
     }
 
     /** Get Value, or returns a default value */
