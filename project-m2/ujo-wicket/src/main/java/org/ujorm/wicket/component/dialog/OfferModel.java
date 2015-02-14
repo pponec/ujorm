@@ -65,7 +65,7 @@ public class OfferModel<U extends Ujo> implements Serializable {
     /** Row count */
     private int rowCount = 25;
     /** Orm Handler */
-    private OrmHandler ormHandler;
+    transient private OrmHandler ormHandler;
 
 
     /** All item */

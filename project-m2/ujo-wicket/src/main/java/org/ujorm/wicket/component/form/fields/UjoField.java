@@ -79,6 +79,7 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> {
     /** Show offer dialog */
     protected void showOfferDialog(AjaxRequestTarget target) {
         model.setHighliting(createHighlitingCriterion());
+        offerDialog.reloadTable(target);
         offerDialog.show(target, getInput().getLabel(), new Model(""));
     }
 
