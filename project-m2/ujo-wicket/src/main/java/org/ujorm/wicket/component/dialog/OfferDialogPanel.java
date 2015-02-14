@@ -63,18 +63,4 @@ public class OfferDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
         }
     }
 
-    /** Create the editor dialog */
-    public static OfferDialogPanel create(String componentId, OfferModel model) {
-        final ModalWindow modalWindow = new ModalWindow(componentId, Model.of(""));
-        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
-
-        final OfferDialogPanel result = new OfferDialogPanel(modalWindow, model);
-        modalWindow.setInitialWidth(model.getDimension().width);
-        modalWindow.setInitialHeight(model.getDimension().height);
-        modalWindow.setTitle(model.getTitle());
-        // modalWindow.setCookieName(modalWindow.getPath() + "-modalDialog");
-
-        return result;
-    }
-
 }

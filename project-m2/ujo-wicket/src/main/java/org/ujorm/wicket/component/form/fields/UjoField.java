@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -67,7 +68,7 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> {
         super(id, key, null);
         this.model = model != null ? model : new OfferModel(key.getType());
 
-        add((offerDialog = OfferDialogPanel.create("offerDialog", this.model)).getModalWindow());
+        add((offerDialog = createDialog("offerDialog", this.model)).getModalWindow());
         addBehaviour(new AjaxEventBehavior("onclick") {
              protected void onEvent(AjaxRequestTarget target) {
                  showOfferDialog(target);
@@ -175,6 +176,20 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> {
     @Override
     public void setModelValue(final U value) {
         super.getModel().setObject(value);
+    }
+
+    /** Create the editor dialog */
+    public OfferDialogPanel createDialog(final String componentId, final OfferModel model) {
+        final ModalWindow modalWindow = new ModalWindow(componentId, Model.of(""));
+        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
+
+        final OfferDialogPanel result = new OfferDialogPanel(modalWindow, model);
+        modalWindow.setInitialWidth(model.getDimension().width);
+        modalWindow.setInitialHeight(model.getDimension().height);
+        modalWindow.setTitle(model.getTitle());
+        // modalWindow.setCookieName(modalWindow.getPath() + "-modalDialog");
+
+        return result;
     }
 
     // ----------- FACTORIES -------------
