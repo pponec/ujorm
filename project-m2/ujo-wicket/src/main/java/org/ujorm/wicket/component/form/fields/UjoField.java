@@ -39,31 +39,31 @@ import org.ujorm.wicket.component.dialog.OfferModel;
 /**
  * UjoField field with a Label including a feedback message.
  * @author Pavel Ponec
- * @param <T> Ujo type
+ * @param <U> The Ujo type
  */
-public class UjoField<T extends Ujo & Serializable> extends Field<T> {
+public class UjoField<U extends Ujo & Serializable> extends Field<U> {
     private static final long serialVersionUID = 20150206L;
 
     /** Attribute to display in the input field */
-    private KeyRing<T> displayKey;
+    private KeyRing<U> displayKey;
     /** Offer dialog */
-    private OfferDialogPanel<T> offerDialog;
+    private OfferDialogPanel<U> offerDialog;
     /** Offer data model */
-    private OfferModel<T> model;
+    private OfferModel<U> model;
 
     /** Constructor */
-    public <U extends Ujo> UjoField(String id, Key<U,T> key) {
-        this(id, key, (OfferModel<T>) null);
+    public <W extends Ujo> UjoField(String id, Key<W,U> key) {
+        this(id, key, (OfferModel<U>) null);
     }
 
     /** Constructor */
-    public <U extends Ujo> UjoField(@Nonnull String id, @Nonnull Key<U,T> key, @Nullable Key<T,?> display) {
-        this(id, key, (OfferModel<T>) null);
+    public <W extends Ujo> UjoField(@Nonnull String id, @Nonnull Key<W,U> key, @Nullable Key<U,?> display) {
+        this(id, key, (OfferModel<U>) null);
         this.displayKey = display != null ? KeyRing.of(display) : null;
     }
 
     /** Constructor */
-    public <U extends Ujo> UjoField(String id, Key<U,T> key, @Nullable OfferModel<T> model) {
+    public <W extends Ujo> UjoField(String id, Key<W,U> key, @Nullable OfferModel<U> model) {
         super(id, key, null);
         this.model = model != null ? model : new OfferModel(key.getType());
 
@@ -82,20 +82,35 @@ public class UjoField<T extends Ujo & Serializable> extends Field<T> {
     }
 
     /** Create new Highliting Criterion */
-    protected Criterion<T> createHighlitingCriterion() {
-        final Key idKey = model.getId();
-        final Object idValue = idKey.of(getModelValue());
-        final Criterion<T> result = idKey.whereEq(idValue);
+    protected <V> Criterion<U> createHighlitingCriterion() {
+        final Key<U,V> idKey = getDomainId();
+        final V idValue = idKey.of(getModelValue());
+        final Criterion<U> result = idKey.whereEq(idValue);
         return result;
     }
 
+    /** Returns domain identifier */
+    protected <V> Key<U, V> getDomainId() {
+        if (isOrm()) {
+            // TODO: get OrmModel ....
+            return model.getId();
+        } else {
+            return model.getId();
+        }
+    }
+
+    /** Check the ORM type of the main domain object */
+    protected boolean isOrm() {
+        return super.getKey().isTypeOf(OrmUjo.class);
+    }
+
     /** Find a default name key */
-    public Key<T,?> getDisplayKey() {
-        final Key<T,?> result;
+    public Key<U,?> getDisplayKey() {
+        final Key<U,?> result;
         if (displayKey != null) {
             result = displayKey.getFirstKey();
         } else {
-            final Key<T,?> modelKey = model.getDisplay();
+            final Key<U,?> modelKey = model.getDisplay();
             result = modelKey!= null
                     ? modelKey
                     : findDefaultDisplayKey();
@@ -111,9 +126,9 @@ public class UjoField<T extends Ujo & Serializable> extends Field<T> {
      * <li>Find the first key</li>
      * </ul>
      */
-    protected Key<T,?> findDefaultDisplayKey() {
-        final Class<T> type = (Class<T>) getKey().getType();
-        final KeyList<T> keyList = UjoManager.getInstance().readKeys(type);
+    protected Key<U,?> findDefaultDisplayKey() {
+        final Class<U> type = (Class<U>) getKey().getType();
+        final KeyList<U> keyList = UjoManager.getInstance().readKeys(type);
         for (Key k : keyList) {
             if (k.isTypeOf(String.class)
             &&  k.getName().toUpperCase(Locale.ENGLISH).indexOf("NAME") >= 0) {
@@ -130,10 +145,10 @@ public class UjoField<T extends Ujo & Serializable> extends Field<T> {
 
     /** Create Form inputComponent */
     @Override
-    protected FormComponent createInput(final String componentId, final IModel<T> model) {
+    protected FormComponent createInput(final String componentId, final IModel<U> model) {
         final Model<String> displayModel = new Model<String>(){
             @Override public String getObject() {
-                final T ujo = UjoField.this.getModelObject();
+                final U ujo = UjoField.this.getModelObject();
                 final Object result = ujo != null ? getDisplayKey().of(ujo) : null;
                 return result != null ? result.toString() : "";
             }
@@ -152,13 +167,13 @@ public class UjoField<T extends Ujo & Serializable> extends Field<T> {
 
     /** Returns an {@code input} value from model */
     @Override
-    public T getModelValue() {
+    public U getModelValue() {
         return super.getModel().getObject();
     }
 
      /** Set new value for the {@code input} and reset feedback messages */
     @Override
-    public void setModelValue(final T value) {
+    public void setModelValue(final U value) {
         super.getModel().setObject(value);
     }
 
@@ -170,13 +185,13 @@ public class UjoField<T extends Ujo & Serializable> extends Field<T> {
     }
 
     /** Create new ComboField using database request */
-    public static <T extends OrmUjo & Serializable> Field<T> of(Key<?, T> key, @Nullable Key<T, ?> display) {
-        return new UjoField<T>(key.getName(), key, display);
+    public static <U extends OrmUjo & Serializable> Field<U> of(Key<?, U> key, @Nullable Key<U, ?> display) {
+        return new UjoField<U>(key.getName(), key, display);
     }
 
     /** Create new ComboField using database request */
-    public static <T extends OrmUjo & Serializable> Field<T> of(Key<?, T> key) {
-        return new UjoField<T>(key.getName(), key, (OfferModel)null);
+    public static <U extends OrmUjo & Serializable> Field<U> of(Key<?, U> key) {
+        return new UjoField<U>(key.getName(), key, (OfferModel)null);
     }
 
 }
