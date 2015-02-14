@@ -37,6 +37,7 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.grid.AbstractDataProvider;
+import org.ujorm.wicket.component.grid.CommonAction;
 import org.ujorm.wicket.component.grid.ListDataProvider;
 import org.ujorm.wicket.component.grid.OrmDataProvider;
 
@@ -176,15 +177,23 @@ public class OfferModel<U extends Ujo> implements Serializable {
 
     /** Add table columns */
     protected void addTableColumns(final AbstractDataProvider provider) {
+        addSelectColumn(provider, CommonAction.SELECT);
         final KeyList<U> columns = getColumns();
         for (int i = 0, max = columns.size(); i < max; i++) {
             final Key<U,?> key = columns.get(i);
             if (i == 0) {
+                // TODO: the first column must be link to the SELECT action
                 provider.add(key);
             } else {
                 provider.add(key);
             }
         }
+    }
+
+    /** Create new instance of an Action Panel using actions from the argument list. */
+    public void addSelectColumn(final AbstractDataProvider provider, String action) {
+        Key key = SelectUjo.SELECT; // Some hack
+        provider.add(key, new CommonAction(action));
     }
 
     /** Is the Domain type an ORM class ? */
