@@ -105,7 +105,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
     // ----------------- LIST IMPLEMENTATION ------------------------
 
     /** Get key on requered index */
-    public Key get(final int index);
+    public Key<UJO,?> get(final int index);
 
     /** Returns a total count of its keys */
     public int size();

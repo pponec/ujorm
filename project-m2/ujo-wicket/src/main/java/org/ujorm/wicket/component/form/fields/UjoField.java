@@ -60,7 +60,7 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> {
     /** Constructor */
     public <W extends Ujo> UjoField(@Nonnull String id, @Nonnull Key<W,U> key, @Nullable Key<U,?> display) {
         this(id, key, (OfferModel<U>) null);
-        this.displayKey = display != null ? KeyRing.of(display) : null;
+        this.displayKey = display != null ? KeyRing.<U>of(display) : null;
     }
 
     /** Constructor */

@@ -178,11 +178,11 @@ public class OfferModel<U extends Ujo> implements Serializable {
     protected void addTableColumns(final AbstractDataProvider provider) {
         final KeyList<U> columns = getColumns();
         for (int i = 0, max = columns.size(); i < max; i++) {
-            final Key key = columns.get(i);
+            final Key<U,?> key = columns.get(i);
             if (i == 0) {
-                provider.add(columns);
+                provider.add(key);
             } else {
-                provider.add(columns);
+                provider.add(key);
             }
         }
     }
