@@ -34,8 +34,8 @@ import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
-import org.ujorm.wicket.component.dialog.OfferDialogPanel;
-import org.ujorm.wicket.component.dialog.OfferModel;
+import org.ujorm.wicket.component.dialog.domestic.OfferDialogPane;
+import org.ujorm.wicket.component.dialog.domestic.OfferModel;
 
 /**
  * UjoField field with a Label including a feedback message.
@@ -48,7 +48,7 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> {
     /** Attribute to display in the input field */
     private KeyRing<U> displayKey;
     /** Offer dialog */
-    private OfferDialogPanel<U> offerDialog;
+    private OfferDialogPane<U> offerDialog;
     /** Offer data model */
     private OfferModel<U> model;
 
@@ -170,11 +170,11 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> {
     }
 
     /** Create the editor dialog */
-    public OfferDialogPanel createDialog(final String componentId, final OfferModel model) {
+    public OfferDialogPane createDialog(final String componentId, final OfferModel model) {
         final ModalWindow modalWindow = new ModalWindow(componentId, Model.of(""));
         modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
 
-        final OfferDialogPanel result = new OfferDialogPanel(modalWindow, model);
+        final OfferDialogPane result = new OfferDialogPane(modalWindow, model);
         modalWindow.setInitialWidth(model.getDimension().width);
         modalWindow.setInitialHeight(model.getDimension().height);
         modalWindow.setTitle(model.getTitle());

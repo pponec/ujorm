@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.wicket.component.dialog;
+package org.ujorm.wicket.component.dialog.domestic;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -26,13 +26,13 @@ import org.ujorm.wicket.component.grid.AbstractDataProvider;
  * Offer Dialog Model
  * @author Pavel Ponec
  */
-public class OfferDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
+public class OfferDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
     private static final long serialVersionUID = 20150212L;
 
     /** Input fields provider */
     protected final OfferModel<T> model;
 
-    public OfferDialogPanel(ModalWindow modalWindow, OfferModel<T> model) {
+    public OfferDialogPane(ModalWindow modalWindow, OfferModel<T> model) {
         super(modalWindow, new Model(), false);
         this.repeater.setVisibilityAllowed(false);
         this.model = model;

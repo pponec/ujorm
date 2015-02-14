@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.wicket.component.dialog;
+package org.ujorm.wicket.component.dialog.domestic;
 
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
@@ -31,6 +31,5 @@ public class SelectUjo extends SmartUjo<SmartUjo> {
     public static final Key<SelectUjo, String> SELECT = f.newKey("Select");
 
     static { f.lock(); }
-
 
 }

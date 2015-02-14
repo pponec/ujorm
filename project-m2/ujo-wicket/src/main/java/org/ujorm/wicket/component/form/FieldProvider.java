@@ -46,7 +46,7 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.OrmSessionProvider;
-import org.ujorm.wicket.component.dialog.OfferModel;
+import org.ujorm.wicket.component.dialog.domestic.OfferModel;
 import org.ujorm.wicket.component.form.fields.BooleanField;
 import org.ujorm.wicket.component.form.fields.ComboField;
 import org.ujorm.wicket.component.form.fields.DateField;
