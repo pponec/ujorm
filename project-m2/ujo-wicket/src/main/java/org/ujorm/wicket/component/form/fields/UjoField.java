@@ -16,6 +16,8 @@
 package org.ujorm.wicket.component.form.fields;
 
 import java.io.Serializable;
+import java.util.Locale;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -32,6 +34,7 @@ import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.wicket.component.dialog.OfferDialogPanel;
+import org.ujorm.wicket.component.dialog.OfferModel;
 
 /**
  * UjoField field with a Label including a feedback message.
@@ -41,35 +44,49 @@ import org.ujorm.wicket.component.dialog.OfferDialogPanel;
 public class UjoField<T extends Ujo & Serializable> extends Field<T> {
     private static final long serialVersionUID = 20150206L;
 
+    /** Attribute to display in the input field */
     private KeyRing<T> displayKey;
+    /** Offer dialog */
     private OfferDialogPanel<T> offerDialog;
+    /** Offer data model */
+    private OfferModel<T> model;
 
     /** Constructor */
-    public <U extends Ujo> UjoField(Key<U,T> key, @Nullable Key<T,?> display) {
-        this(key.getName(), key, null);
+    public <U extends Ujo> UjoField(String id, Key<U,T> key) {
+        this(id, key, (OfferModel<T>) null);
     }
 
     /** Constructor */
-    public <U extends Ujo> UjoField(String id, Key<U,T> key, @Nullable Key<T,?> display) {
-        super(id, key, null);
-        this.displayKey = KeyRing.of(display);
-        add((offerDialog = OfferDialogPanel.create("offerDialog", 700, 390, getDefaultCriterion(key))).getModalWindow());
+    public <U extends Ujo> UjoField(@Nonnull String id, @Nonnull Key<U,T> key, @Nullable Key<T,?> display) {
+        this(id, key, (OfferModel<T>) null);
+        this.displayKey = display != null ? KeyRing.of(display) : null;
+    }
 
+    /** Constructor */
+    public <U extends Ujo> UjoField(String id, Key<U,T> key, @Nullable OfferModel<T> model) {
+        super(id, key, null);
+        this.model = model != null ? model : new OfferModel(key.getType());
+
+        add((offerDialog = OfferDialogPanel.create("offerDialog", this.model)).getModalWindow());
         addBehaviour(new AjaxEventBehavior("onclick") {
              protected void onEvent(AjaxRequestTarget target) {
                  showOfferDialog(target);
              }
-         });
+        });
     }
 
     /** Show offer dialog */
     protected void showOfferDialog(AjaxRequestTarget target) {
-        offerDialog.show(target, getInput().getLabel(), new Model(""), null);
+        model.setHighliting(createHighlitingCriterion());
+        offerDialog.show(target, getInput().getLabel(), new Model(""));
     }
 
-    /** Get Default Criterion */
-    private <U extends Ujo> Criterion getDefaultCriterion(Key<U, T> key) {
-        return UjoManager.getInstance().readKeys(key.getType()).getFirstKey().forAll();
+    /** Create new Highliting Criterion */
+    protected Criterion<T> createHighlitingCriterion() {
+        final Key idKey = model.getId();
+        final Object idValue = idKey.of(getModelValue());
+        final Criterion<T> result = idKey.whereEq(idValue);
+        return result;
     }
 
     /** Find a default name key */
@@ -78,7 +95,10 @@ public class UjoField<T extends Ujo & Serializable> extends Field<T> {
         if (displayKey != null) {
             result = displayKey.getFirstKey();
         } else {
-            result = findDefaultDisplayKey();
+            final Key<T,?> modelKey = model.getDisplay();
+            result = modelKey!= null
+                    ? modelKey
+                    : findDefaultDisplayKey();
             displayKey = KeyRing.of(result);
         }
         return result;
@@ -96,7 +116,7 @@ public class UjoField<T extends Ujo & Serializable> extends Field<T> {
         final KeyList<T> keyList = UjoManager.getInstance().readKeys(type);
         for (Key k : keyList) {
             if (k.isTypeOf(String.class)
-            &&  k.getName().toUpperCase().indexOf("NAME") >= 0) {
+            &&  k.getName().toUpperCase(Locale.ENGLISH).indexOf("NAME") >= 0) {
                 return k;
             }
         }
@@ -145,18 +165,18 @@ public class UjoField<T extends Ujo & Serializable> extends Field<T> {
     // ----------- FACTORIES -------------
 
     /** Create new ComboField using database request */
-    public static <T extends OrmUjo & Serializable> UjoField<T> of(Key<?, T> key, Query<T> query, @Nullable Key<T, ?> display) {
-        return new UjoField<T>(key, display);
+    public static <T extends OrmUjo & Serializable> Field<T> of(Key<?, T> key, Query<T> query, @Nullable Key<T, ?> display) {
+        return new UjoField<T>(key.getName(), key, display);
     }
 
     /** Create new ComboField using database request */
-    public static <T extends OrmUjo & Serializable> UjoField<T> of(Key<?, T> key, @Nullable Key<T, ?> display) {
-        return new UjoField<T>(key, display);
+    public static <T extends OrmUjo & Serializable> Field<T> of(Key<?, T> key, @Nullable Key<T, ?> display) {
+        return new UjoField<T>(key.getName(), key, display);
     }
 
     /** Create new ComboField using database request */
-    public static <T extends OrmUjo & Serializable> UjoField<T> of(Key<?, T> key) {
-        return new UjoField<T>(key, null);
+    public static <T extends OrmUjo & Serializable> Field<T> of(Key<?, T> key) {
+        return new UjoField<T>(key.getName(), key, (OfferModel)null);
     }
 
 }
