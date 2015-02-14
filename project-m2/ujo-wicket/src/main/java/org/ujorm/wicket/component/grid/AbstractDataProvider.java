@@ -86,7 +86,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     /** Default CSS style for a SELECTED row */
     protected static final String DEFAULT_CSS_SELECTED = "selected";
     /** Default CSS style for an ACTION COLUMN */
-    protected static final String DEFAULT_CSS_ACTION = "actionColumn";
+    public static final String DEFAULT_CSS_ACTION = "actionColumn";
 
     /** Data size */
     protected Long size;

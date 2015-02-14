@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
+import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
@@ -38,6 +40,8 @@ import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.grid.AbstractDataProvider;
 import org.ujorm.wicket.component.grid.CommonAction;
+import org.ujorm.wicket.component.grid.CommonActionPanel;
+import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.ListDataProvider;
 import org.ujorm.wicket.component.grid.OrmDataProvider;
 
@@ -177,7 +181,7 @@ public class OfferModel<U extends Ujo> implements Serializable {
 
     /** Add table columns */
     protected void addTableColumns(final AbstractDataProvider provider) {
-        addSelectColumn(provider, CommonAction.SELECT);
+        provider.add(createSelectColumn(CommonAction.SELECT));
         final KeyList<U> columns = getColumns();
         for (int i = 0, max = columns.size(); i < max; i++) {
             final Key<U,?> key = columns.get(i);
@@ -190,10 +194,16 @@ public class OfferModel<U extends Ujo> implements Serializable {
         }
     }
 
-    /** Create new instance of an Action Panel using actions from the argument list. */
-    public void addSelectColumn(final AbstractDataProvider provider, String action) {
-        Key key = SelectUjo.SELECT; // Some hack
-        provider.add(key, new CommonAction(action));
+    /** Create new instance of an KeyColumn */
+    public KeyColumn<U, Object> createSelectColumn(final String action) {
+        Key column = SelectUjo.SELECT; // Some litle hack
+        final KeyColumn<U, Object> result = new KeyColumn<U, Object>(KeyRing.<U>of(column), null) {
+            @Override public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
+                item.add(new CommonActionPanel(componentId, model.getObject(), CommonAction.of(action)));
+            }
+        };
+        result.setCssClass(AbstractDataProvider.DEFAULT_CSS_ACTION);
+        return result;
     }
 
     /** Is the Domain type an ORM class ? */
