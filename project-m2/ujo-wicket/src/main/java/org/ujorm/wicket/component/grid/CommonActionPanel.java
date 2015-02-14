@@ -47,8 +47,8 @@ public class CommonActionPanel<U extends Ujo> extends GenericPanel<U> {
     /** Create action */
     protected final AjaxLink createLink(String id, final CommonAction<U> action) {
         final AjaxLink result = new AjaxLink(id) {
-            @Override public void onClick(AjaxRequestTarget target) {
-                send(getPage(), Broadcast.BREADTH, new UjoEvent(action.getActionId(), row, target));
+            @Override public void onClick(final AjaxRequestTarget target) {
+                CommonActionPanel.this.onClick(target, action);
             }
             @Override protected void onConfigure() {
                 super.onConfigure();
@@ -59,5 +59,10 @@ public class CommonActionPanel<U extends Ujo> extends GenericPanel<U> {
         result.setOutputMarkupPlaceholderTag(true);
         result.add(new Label("label", action.getLabel()));
         return result;
+    }
+
+    /** On click event */
+    void onClick(final AjaxRequestTarget target, final CommonAction<U> action) {
+        send(getPage(), Broadcast.BREADTH, new UjoEvent(action.getActionId(), row, target));
     }
 }
