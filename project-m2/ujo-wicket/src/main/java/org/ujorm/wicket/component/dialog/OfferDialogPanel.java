@@ -15,6 +15,7 @@
  */
 package org.ujorm.wicket.component.dialog;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -40,8 +41,8 @@ public class OfferDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        // Create a table:
-        super.form.add(model.createDataTable());
+        // Create the data table:
+        form.add(model.createDataTable());
     }
 
     /** Get Table Data Provider
@@ -61,6 +62,11 @@ public class OfferDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
         if (message != null) {
             throw new UnsupportedOperationException("Not supported");
         }
+    }
+
+    /** Refresh DataTable */
+    public void reloadTable(final AjaxRequestTarget target) {
+        target.add(form.get(AbstractDataProvider.DEFAULT_DATATABLE_ID));
     }
 
 }
