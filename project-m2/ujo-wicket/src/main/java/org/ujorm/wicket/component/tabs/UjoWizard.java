@@ -22,8 +22,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.logger.UjoLoggerFactory;
 
 /**
  * The ajax wizard is a child of UjoTabbedPanel class.
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class UjoWizard<T extends UjoTab> extends UjoTabbedPanel<T>  {
     /** Logger */
-    private static final Logger LOGGER = LoggerFactory.getLogger(UjoWizard.class);
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoWizard.class);
     /** ID for the TabsContainer from the parent component */
     private static final String TABS_CONTAINER_ID = "tabs-container";
 
@@ -51,7 +51,7 @@ public class UjoWizard<T extends UjoTab> extends UjoTabbedPanel<T>  {
             component.setVisibilityAllowed(false);
         } else {
             final String msg = String.format("Component with the id '%s' is not found", TABS_CONTAINER_ID);
-            LOGGER.warn(msg, new IllegalStateException(msg));
+            LOGGER.log(UjoLogger.WARN, msg, new IllegalStateException(msg));
         }
     }
 

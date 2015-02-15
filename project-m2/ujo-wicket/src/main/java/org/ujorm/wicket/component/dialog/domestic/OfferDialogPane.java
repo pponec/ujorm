@@ -25,10 +25,10 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ujorm.Ujo;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.grid.AbstractDataProvider;
@@ -40,7 +40,7 @@ import org.ujorm.wicket.component.grid.AbstractDataProvider;
 public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialogPane<T> {
     private static final long serialVersionUID = 20150212L;
     /** Logger */
-    private static final Logger LOGGER = LoggerFactory.getLogger(OfferDialogPane.class);
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(OfferDialogPane.class);
     /** Finder field(s) */
     private OfferToolbar<T> toolbar;
 
@@ -101,7 +101,7 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
                         model.getClosable().closeDialog(target, row);
                     }
                 } catch (Throwable e) {
-                    LOGGER.warn("Wrong selection", e);
+                    LOGGER.log(UjoLogger.WARN, "Wrong selection", e);
                     // setFeedback(e); // TODO (?)
                 }
             }

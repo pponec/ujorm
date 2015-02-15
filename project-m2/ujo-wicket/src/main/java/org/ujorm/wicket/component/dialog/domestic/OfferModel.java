@@ -31,14 +31,14 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaIndex;
@@ -57,7 +57,7 @@ import org.ujorm.wicket.component.grid.OrmDataProvider;
  * @author Pavel Ponec
  */
 public class OfferModel<U extends Ujo & Serializable> implements Serializable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(OfferModel.class);
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(OfferModel.class);
 
     /** Default value to enable toolbar */
     private static final boolean ENABLE_TOOLBAR = true;
@@ -287,7 +287,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
                         if (closable != null) {
                             closable.closeDialog(target, (U) row);
                         } else {
-                            LOGGER.warn("Can't close dialog");
+                            LOGGER.log(UjoLogger.WARN, "Can't close dialog");
                         }
                     }
                 });
