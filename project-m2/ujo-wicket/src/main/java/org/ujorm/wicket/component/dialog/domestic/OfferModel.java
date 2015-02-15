@@ -18,6 +18,8 @@ package org.ujorm.wicket.component.dialog.domestic;
 import java.awt.Dimension;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.Nonnull;
@@ -39,6 +41,7 @@ import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
+import org.ujorm.orm.metaModel.MetaIndex;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.form.Closeable;
@@ -66,6 +69,8 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     private final Dimension dimension = new Dimension(700, 400);
     /** Table columns */
     private KeyList<U> columns;
+    /** Table finders */
+    private KeyList<U> finders;
     /** Unique identifier */
     private KeyList<?> id;
     /** Display column of the UjoField */
@@ -167,8 +172,62 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     }
 
     /** Table columns */
-    public void setColumns(KeyRing<U> columns) {
+    public void setColumns(KeyList<U> columns) {
         this.columns = columns;
+    }
+
+    public void setFinders(KeyList<U> finders) {
+        this.finders = finders;
+    }
+
+    /** Get Finders where {@code String} key type is preferred in auto builder mode */
+    public <V> KeyList<U> getFinders() {
+        if (finders == null) {
+            final List<Key> keys = new ArrayList<Key>(4);
+            if (isOrm()) {
+                getFinders4Orm(keys);
+            }
+            if (keys.isEmpty()) {
+                for (Key<U,?> key : getColumns()) {
+                    if (key.isTypeOf(String.class)) {
+                        keys.add(key);
+                        break;
+                    }
+                }
+            }
+            if (keys.isEmpty()) {
+                for (Key<U,?> key : getColumns()) {
+                    keys.add(key);
+                    break;
+                }
+            }
+            finders = keys.isEmpty() ? columns : KeyRing.of((List)keys);
+        }
+        return finders;
+
+    }
+
+    /** Add finders to the ressult for ORM domain */
+    protected void getFinders4Orm(final List<Key> result) throws IllegalStateException {
+        final MetaTable table = getMetaTable();
+        for (MetaIndex index : getMetaTable().getIndexCollection()) {
+            result.add(index.readKeys().getFirstKey());
+        }
+        if (!result.isEmpty()) {
+            Collections.sort(result, new Comparator<Key>() {
+                @Override public int compare(Key k1, Key k2) {
+                    final Boolean b1 = ! k1.isTypeOf(String.class);
+                    final Boolean b2 = ! k2.isTypeOf(String.class);
+                    return b1.compareTo(b2);
+                }
+            });
+            for (int i = result.size(); i > 0; i--) {
+                final Key key = result.get(i);
+                if (key.isTypeOf(String.class)) {
+                    result.remove(i);
+                }
+            }
+        }
     }
 
     /** Data Provider
@@ -253,8 +312,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     public <V> Key<U,V> getId() {
         if (id == null) {
             if (isOrm()) {
-                final Class<OrmUjo> ormType = (Class<OrmUjo>) (Class) getType();
-                final MetaTable table = getOrmHandler().findTableModel(ormType);
+                final MetaTable table = getMetaTable();
                 id = KeyRing.of(table.getFirstPK().getKey());
             } else {
                 final KeyList<U> fullKeys = UjoManager.getInstance().readKeys(getType());
@@ -266,7 +324,13 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
         }
         return (Key<U, V>) id.getFirstKey();
     }
-    
+
+    /** Find a meta-model for a ORM doman class */
+    protected MetaTable getMetaTable() throws IllegalStateException {
+        final Class<OrmUjo> ormType = (Class<OrmUjo>) (Class) getType();
+        return getOrmHandler().findTableModel(ormType);
+    }
+
     /** FindKey by name with ignore case
      * @param keyName Key name in UPPER CASE
      * @param fullKeys all direct keys
