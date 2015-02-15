@@ -92,10 +92,11 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 try {
-                   // target.add(form);
+                    // target.add(form);
                     final DataTable<T,?> dataTable = getTable();
+                    final long firstRowOnPage = dataTable.getCurrentPage() * dataTable.getItemsPerPage();
                     final T row = dataTable.getItemCount() >= 0
-                            ? dataTable.getDataProvider().iterator(0, 1).next()
+                            ? dataTable.getDataProvider().iterator(firstRowOnPage, 1).next()
                             : null;
                     if (row != null) {
                         model.getClosable().closeDialog(target, row);
