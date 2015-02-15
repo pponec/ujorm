@@ -15,6 +15,7 @@
  */
 package org.ujorm.orm.metaModel;
 
+import java.util.List;
 import org.ujorm.ListKey;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
@@ -42,7 +43,7 @@ final public class MetaIndex extends AbstractMetaModel {
     /** Is the index unique ? */
     @Transient
     public static final Key<MetaIndex,Boolean> UNIQUE = fa.newKey("unique", true);
-    /** Table Columns */
+    /** Index Columns */
     @Transient
     public static final ListKey<MetaIndex,MetaColumn> COLUMNS = fa.newListKey("column");
 
@@ -66,7 +67,9 @@ final public class MetaIndex extends AbstractMetaModel {
         return result;
     }
 
-
-
+    /** Index Columns */
+    public List<MetaColumn> getColumns() {
+        return COLUMNS.getList(this);
+    }
 
 }
