@@ -114,6 +114,10 @@ table.border tr.navigation td {
     border-right: none;
 }
 
+.form-horizontal .controls.toolbar {
+    margin-left: 7px;
+}
+
 /* Table Sorting */
 table th {
     color: #2FA4E7;
