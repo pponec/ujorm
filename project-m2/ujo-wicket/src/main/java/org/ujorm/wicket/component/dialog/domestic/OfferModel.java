@@ -147,12 +147,13 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     }
 
     /** Table columns */
-    public KeyList<U> getColumns() {
+    public <V> KeyList<U> getColumns() {
         if (columns == null) {
             final List<Key> keys = new ArrayList<Key>(32);
             final KeyList<U> fullKeys = UjoManager.getInstance().readKeys(getType());
+            final Key<U, V> id = getId();
             for (Key<U,?> key : fullKeys) {
-                if ("ID".equals(key.getName().toUpperCase(Locale.ENGLISH))) {
+                if (id == key) {
                     continue;
                 }
                 if (key.isTypeOf(Ujo.class)) {
@@ -265,7 +266,12 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
         }
         return (Key<U, V>) id.getFirstKey();
     }
-    /** FindKey by name with ignore case */
+    
+    /** FindKey by name with ignore case
+     * @param keyName Key name in UPPER CASE
+     * @param fullKeys all direct keys
+     * @return Primary Key in a KeyList format
+     */
     protected KeyList<?> findKeyByName(final String keyName, final KeyList<U> fullKeys) {
         for (Key<U, ?> key : fullKeys) {
             if (keyName.equals(key.getName().toUpperCase(Locale.ENGLISH))) {
