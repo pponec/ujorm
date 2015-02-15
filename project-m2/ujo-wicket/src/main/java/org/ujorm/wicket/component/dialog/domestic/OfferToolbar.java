@@ -89,6 +89,7 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
     @Override
     public void requestFocus(@Nonnull final AjaxRequestTarget target) {
         searching.setModelValue(null);
+        getCriterion().setObject(null);
         target.focusComponent(searching);
     }
 }
