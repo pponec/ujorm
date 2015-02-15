@@ -29,6 +29,8 @@ import org.ujorm.wicket.component.grid.AbstractDataProvider;
  */
 public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialogPane<T> {
     private static final long serialVersionUID = 20150212L;
+    /** Finder field(s) */
+    private OfferToolbar<T> toolbar;
 
     /** Input fields provider */
     protected final OfferModel<T> model;
@@ -42,6 +44,9 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        // Finding toolbar:
+        add(toolbar = new OfferToolbar("toolbar", model.getFinders()));
         // Create the data table:
         form.add(model.createDataTable());
     }

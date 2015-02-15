@@ -204,16 +204,14 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
             finders = keys.isEmpty() ? columns : KeyRing.of((List)keys);
         }
         return finders;
-
     }
 
     /** Add finders to the ressult for ORM domain */
     protected void getFinders4Orm(final List<Key> result) throws IllegalStateException {
-        final MetaTable table = getMetaTable();
         for (MetaIndex index : getMetaTable().getIndexCollection()) {
             result.add(index.readKeys().getFirstKey());
         }
-        if (!result.isEmpty()) {
+        if (result.size() > 1) {
             Collections.sort(result, new Comparator<Key>() {
                 @Override public int compare(Key k1, Key k2) {
                     final Boolean b1 = ! k1.isTypeOf(String.class);
@@ -221,7 +219,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
                     return b1.compareTo(b2);
                 }
             });
-            for (int i = result.size(); i > 0; i--) {
+            for (int i = result.size() - 1; i > 0; i--) {
                 final Key key = result.get(i);
                 if (key.isTypeOf(String.class)) {
                     result.remove(i);

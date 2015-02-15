@@ -14,6 +14,7 @@ package org.ujorm.wicket.component.dialog.domestic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import java.io.Serializable;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.ujorm.Key;
@@ -29,18 +30,22 @@ import static org.ujorm.core.UjoManager.*;
  * The common action panel
  * @author Pavel Ponec
  */
-public final class OfferToolbar<U extends Ujo> extends AbstractToolbar<U> {
+public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractToolbar<U> {
+    private static final boolean ENABLED = false;
+
     /** Event action */
     public static final String FILTER_ACTION = CommonActions.FILTER;
 
     /** Finding field */
-    private KeyList<U> fields;
+    private final KeyList<U> fields;
 
     /** Search data */
     private final TextField searching;
 
     public OfferToolbar(String id, KeyList<U> fields) {
         super(id);
+        this.fields = fields;
+        setVisibilityAllowed(ENABLED);
 
         final Form form = new Form("form");
         this.add(form);
