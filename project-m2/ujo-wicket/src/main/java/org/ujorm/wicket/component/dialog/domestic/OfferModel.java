@@ -73,7 +73,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     /** DataProvider */
     private AbstractDataProvider provider;
     /** Row count */
-    private int rowCount = 25;
+    private int rowCount = 10;
     /** Orm Handler */
     transient private OrmHandler ormHandler;
     /** Closable object */
