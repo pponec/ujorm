@@ -36,13 +36,14 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.wicket.component.dialog.domestic.OfferDialogPane;
 import org.ujorm.wicket.component.dialog.domestic.OfferModel;
+import org.ujorm.wicket.component.form.Closeable;
 
 /**
  * UjoField field with a Label including a feedback message.
  * @author Pavel Ponec
  * @param <U> The Ujo type
  */
-public class UjoField<U extends Ujo & Serializable> extends Field<U> {
+public class UjoField<U extends Ujo & Serializable> extends Field<U> implements Closeable<U> {
     private static final long serialVersionUID = 20150206L;
 
     /** Attribute to display in the input field */
@@ -67,6 +68,7 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> {
     public <W extends Ujo> UjoField(String id, Key<W,U> key, @Nullable OfferModel<U> model) {
         super(id, key, null);
         this.model = model != null ? model : new OfferModel(key.getType());
+        this.model.setClosable(this);
 
         add((offerDialog = createDialog("offerDialog", this.model)).getModalWindow());
         addBehaviour(new AjaxEventBehavior("onclick") {
@@ -181,6 +183,15 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> {
         // modalWindow.setCookieName(modalWindow.getPath() + "-modalDialog");
 
         return result;
+    }
+
+    @Override
+    public void closeDialog(AjaxRequestTarget target, U row) {
+        this.offerDialog.close(target);
+        if (row != null) {
+            setModelValue(row);
+            target.add(this);
+        }
     }
 
     // ----------- FACTORIES -------------
