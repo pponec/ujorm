@@ -82,8 +82,6 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> implements 
     protected void showOfferDialog(AjaxRequestTarget target) {
         if (getInput().isEnableAllowed()) {
             model.setHighliting(createHighlitingCriterion());
-            offerDialog.reloadTable(target);
-            offerDialog.requestFocus(target);
             offerDialog.show(target, getInput().getLabel(), new Model(""));
         }
     }

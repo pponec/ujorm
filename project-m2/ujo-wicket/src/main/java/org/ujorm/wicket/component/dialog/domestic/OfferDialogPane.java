@@ -123,19 +123,25 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
         final UjoEvent<T> event = UjoEvent.get(argEvent);
         if (event != null) {
             if (event.isAction(OfferToolbar.FILTER_ACTION)) {
-                final Criterion<T> crn1, crn2, crn3;
-                crn1 = model.getFilter();
-                crn2 = toolbar.getCriterion().getObject();
-                crn3 = crn2 != null ? crn1.and(crn2) : crn1;
-                model.getFilterModel().setObject(crn3);
+                buildCriterion();
                 reloadTable(event.getTarget());
                 argEvent.stop();
             }
         }
     }
 
+    /** Builde new criterion */
+    protected void buildCriterion() {
+        final Criterion<T> crn1, crn2, crn3;
+        crn1 = model.getFilter();
+        crn2 = toolbar.getCriterion().getObject();
+        crn3 = crn2 != null ? crn1.and(crn2) : crn1;
+        model.getFilterModel().setObject(crn3);
+
+    }
+
     /** Refresh DataTable */
-    public void reloadTable(final AjaxRequestTarget target) {
+    public void reloadTable(@Nonnull final AjaxRequestTarget target) {
         target.add(getTable());
     }
 
@@ -144,8 +150,16 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
         return (DataTable<T, S>) form.get(AbstractDataProvider.DEFAULT_DATATABLE_ID);
     }
 
-    /** Set a focus to the first component by default */
-    public void requestFocus(@Nonnull final AjaxRequestTarget target) {
+    /**
+     * Show dialog and assign a data from domain object
+     * @param body Domain object
+     * @param title Window title
+     * @param target target
+     */
+    public void show(@Nonnull AjaxRequestTarget target, IModel<String> title, IModel<T> body) {
         toolbar.requestFocus(target);
+        buildCriterion();
+        reloadTable(target);
+        super.show(target, title, body, null);
     }
 }
