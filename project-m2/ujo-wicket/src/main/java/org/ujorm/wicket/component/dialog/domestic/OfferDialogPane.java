@@ -15,6 +15,7 @@
  */
 package org.ujorm.wicket.component.dialog.domestic;
 
+import java.io.Serializable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
@@ -26,7 +27,7 @@ import org.ujorm.wicket.component.grid.AbstractDataProvider;
  * Offer Dialog Model
  * @author Pavel Ponec
  */
-public class OfferDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
+public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialogPane<T> {
     private static final long serialVersionUID = 20150212L;
 
     /** Input fields provider */

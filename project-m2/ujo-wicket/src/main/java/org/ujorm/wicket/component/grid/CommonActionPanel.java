@@ -31,7 +31,7 @@ import org.ujorm.wicket.UjoEvent;
 public class CommonActionPanel<U extends Ujo> extends GenericPanel<U> {
 
     /** Row of the grid */
-    private final U row;
+    protected final U row;
 
     public CommonActionPanel(String id, final U row, CommonAction ... actions) {
         super(id);
@@ -62,7 +62,7 @@ public class CommonActionPanel<U extends Ujo> extends GenericPanel<U> {
     }
 
     /** On click event */
-    void onClick(final AjaxRequestTarget target, final CommonAction<U> action) {
+    protected void onClick(final AjaxRequestTarget target, final CommonAction<U> action) {
         send(getPage(), Broadcast.BREADTH, new UjoEvent(action.getActionId(), row, target));
     }
 }

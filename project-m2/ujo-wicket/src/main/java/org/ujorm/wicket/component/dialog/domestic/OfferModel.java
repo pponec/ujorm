@@ -22,12 +22,15 @@ import java.util.List;
 import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -38,6 +41,7 @@ import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.wicket.OrmSessionProvider;
+import org.ujorm.wicket.component.form.Closeable;
 import org.ujorm.wicket.component.grid.AbstractDataProvider;
 import org.ujorm.wicket.component.grid.CommonAction;
 import org.ujorm.wicket.component.grid.CommonActionPanel;
@@ -49,7 +53,8 @@ import org.ujorm.wicket.component.grid.OrmDataProvider;
  * UjoFieldModel
  * @author Pavel Ponec
  */
-public class OfferModel<U extends Ujo> implements Serializable {
+public class OfferModel<U extends Ujo & Serializable> implements Serializable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OfferModel.class);
 
     /** Main filter */
     private final IModel<Criterion<U>> filter;
@@ -71,6 +76,8 @@ public class OfferModel<U extends Ujo> implements Serializable {
     private int rowCount = 25;
     /** Orm Handler */
     transient private OrmHandler ormHandler;
+    /** Closable object */
+    private Closeable<U> closable;
 
 
     /** All item */
@@ -199,7 +206,15 @@ public class OfferModel<U extends Ujo> implements Serializable {
         Key column = SelectUjo.SELECT; // Some litle hack
         final KeyColumn<U, Object> result = new KeyColumn<U, Object>(KeyRing.<U>of(column), null) {
             @Override public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
-                item.add(new CommonActionPanel(componentId, model.getObject(), CommonAction.of(action)));
+                item.add(new CommonActionPanel(componentId, model.getObject(), CommonAction.of(action)) {
+                    @Override protected void onClick(AjaxRequestTarget target, CommonAction action) {
+                        if (closable != null) {
+                            closable.closeDialog(target, (U) row);
+                        } else {
+                            LOGGER.warn("Can't close dialog");
+                        }
+                    }
+                });
             }
         };
         result.setCssClass(AbstractDataProvider.DEFAULT_CSS_ACTION);
@@ -237,7 +252,7 @@ public class OfferModel<U extends Ujo> implements Serializable {
     public <V> Key<U,V> getId() {
         if (id == null) {
             if (isOrm()) {
-                final Class<OrmUjo> ormType = (Class<OrmUjo>) getType();
+                final Class<OrmUjo> ormType = (Class<OrmUjo>) (Class) getType();
                 final MetaTable table = getOrmHandler().findTableModel(ormType);
                 id = KeyRing.of(table.getFirstPK().getKey());
             } else {
@@ -272,4 +287,15 @@ public class OfferModel<U extends Ujo> implements Serializable {
         }
         return ormHandler;
     }
+
+    /** Closable object */
+    public Closeable<U> getClosable() {
+        return closable;
+    }
+
+    /** Closable object */
+    public void setClosable(@Nonnull Closeable<U> closable) {
+        this.closable = Args.notNull(closable, "closable");
+    }
+
 }
