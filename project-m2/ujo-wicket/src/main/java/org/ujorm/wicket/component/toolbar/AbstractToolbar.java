@@ -1,6 +1,6 @@
 package org.ujorm.wicket.component.toolbar;
 /*
- * Copyright 2013, Pavel Ponec
+ * Copyright 2013-2015, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,21 +59,31 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
     /**
      * Create TextFiled, add 'placeholder', assign Behaviour and set an OutputMarkupId.
      * @param componentId Component ID
-     * @param placeholderKey Localization key for a Placeholder
      * @return TextField for searching
      */
     protected TextField createSearchFiled(String componentId) {
-        return createSearchFiled(componentId, componentId);
+        return createSearchFiled(componentId, String.class,  componentId);
     }
 
     /**
      * Create TextFiled, add 'placeholder', assign Behaviour and set an OutputMarkupId.
      * @param componentId Component ID
+     * @param type Type of the field
+     * @return TextField for searching
+     */
+    protected TextField createSearchFiled(String componentId, Class<?> type) {
+        return createSearchFiled(componentId, type,  componentId);
+    }
+
+    /**
+     * Create TextFiled, add 'placeholder', assign Behaviour and set an OutputMarkupId.
+     * @param componentId Component ID
+     * @param type Type of the field
      * @param placeholderKey Localization key for a Placeholder
      * @return TextField for searching
      */
-    protected TextField createSearchFiled(String componentId, String placeholderKey) {
-        TextField result = new TextField(componentId, Model.of(""));
+    protected TextField createSearchFiled(String componentId, Class<?> type, String placeholderKey) {
+        final TextField result = new TextField(componentId, new Model(), type);
         result.add(new AttributeModifier("placeholder", new ResourceModel(placeholderKey, placeholderKey)));
         result.setOutputMarkupId(true);
         result.add(createChangeBehavior(result));
