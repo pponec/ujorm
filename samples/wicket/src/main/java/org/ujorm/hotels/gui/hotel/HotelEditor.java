@@ -37,7 +37,7 @@ public class HotelEditor<U extends Hotel> extends EntityDialogPane<U> {
         // Create form fields:
         FieldProvider<U> fields = getFields(); // optional statement
         fields.add(Hotel.NAME);
-        fields.add(Hotel.CITY, City.NAME, City.ID.forAll());
+        fields.add(Hotel.CITY); //fields.add(Hotel.CITY,City.NAME,City.ID.forAll()); //Original solution
         fields.add(Hotel.STREET);
         fields.add(Hotel.PHONE);
         fields.add(Hotel.STARS);
