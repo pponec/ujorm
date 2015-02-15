@@ -30,8 +30,6 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.validation.IValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -40,6 +38,8 @@ import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
@@ -63,7 +63,7 @@ import org.ujorm.wicket.component.form.fields.UjoField;
  * @author Pavel Ponec
  */
 public class FieldProvider<U extends Ujo> implements Serializable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FieldProvider.class);
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(FieldProvider.class);
 
     /** Password key name to create a component PasswordField */
     public static final String PASSWORD_KEY_NAME = "PASSWORD";
@@ -444,7 +444,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
                 try {
                     field.requestFocus(target);
                 } catch (Throwable e) {
-                    LOGGER.warn("Focus", e);
+                    LOGGER.log(UjoLogger.WARN, "Focus", e);
                 }
             }
         }
