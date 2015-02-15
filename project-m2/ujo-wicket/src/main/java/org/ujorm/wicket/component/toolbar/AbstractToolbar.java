@@ -14,6 +14,7 @@ package org.ujorm.wicket.component.toolbar;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import javax.annotation.Nonnull;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -130,5 +131,9 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
     /** Default action name is {@link CommonActions#FILTER} */
     protected String getDefaultActionName() {
         return CommonActions.FILTER;
+    }
+
+    /** Imlements the method to request focus */
+    public void requestFocus(@Nonnull final AjaxRequestTarget target) {
     }
 }

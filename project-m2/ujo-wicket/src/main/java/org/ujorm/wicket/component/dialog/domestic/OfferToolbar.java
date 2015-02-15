@@ -15,7 +15,8 @@ package org.ujorm.wicket.component.dialog.domestic;
  * limitations under the License.
  */
 import java.io.Serializable;
-import org.apache.wicket.markup.html.form.Form;
+import javax.annotation.Nonnull;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.TextField;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -46,9 +47,7 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
         super(id);
         this.fields = fields;
 
-        final Form form = new Form("form");
-        this.add(form);
-        form.add(searching = createSearchFiled("searching", fields.getFirstKey().getType()));
+        add(searching = createSearchFiled("searching", fields.getFirstKey().getType()));
 
         buildCriterion();
     }
@@ -84,5 +83,12 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
     @Override
     public String getDefaultActionName() {
         return FILTER_ACTION;
+    }
+
+    /** Set a focus to the Serarch Toolbar by default */
+    @Override
+    public void requestFocus(@Nonnull final AjaxRequestTarget target) {
+        searching.setModelValue(null);
+        target.focusComponent(searching);
     }
 }
