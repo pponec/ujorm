@@ -20,7 +20,7 @@ import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.quick.SmartUjo;
 
 /**
- * Dummy Ujo object t
+ * Dummy Ujo object
  * @author Pavel Ponec
  */
 public class SelectUjo extends SmartUjo<SmartUjo> {
@@ -28,8 +28,7 @@ public class SelectUjo extends SmartUjo<SmartUjo> {
     /** Factory */
     private static final KeyFactory<SelectUjo> f = newFactory(SelectUjo.class);
     /** SELECT dummy action */
-    public static final Key<SelectUjo, String> SELECT = f.newKey("Select");
+    public static final Key<SelectUjo, Boolean> SELECT = f.newKey("Select");
 
     static { f.lock(); }
-
 }

@@ -22,6 +22,7 @@ import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
+import org.ujorm.orm.OrmUjo;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.component.toolbar.AbstractToolbar;
 import static org.ujorm.core.UjoManager.*;
@@ -31,7 +32,6 @@ import static org.ujorm.core.UjoManager.*;
  * @author Pavel Ponec
  */
 public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractToolbar<U> {
-    private static final boolean ENABLED = false;
 
     /** Event action */
     public static final String FILTER_ACTION = CommonActions.FILTER;
@@ -45,7 +45,6 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
     public OfferToolbar(String id, KeyList<U> fields) {
         super(id);
         this.fields = fields;
-        setVisibilityAllowed(ENABLED);
 
         final Form form = new Form("form");
         this.add(form);
@@ -54,6 +53,7 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
         buildCriterion();
     }
 
+    /** Is the type of value the String class */
     protected boolean isStringType() {
         return fields.getFirstKey().isTypeOf(String.class);
     }
@@ -70,9 +70,10 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
             final Object value = searching.getModelObject();
 
             if (isStringType()) {
-               result = key.where(Operator.STARTS_CASE_INSENSITIVE, value);
+                final boolean orm = OrmUjo.class.isAssignableFrom(key.getType());
+                result = key.where(orm ? Operator.STARTS : Operator.STARTS_CASE_INSENSITIVE, value);
             } else {
-               result = key.where(Operator.EQ, value);
+                result = key.where(Operator.EQ, value);
             }
         }
 
