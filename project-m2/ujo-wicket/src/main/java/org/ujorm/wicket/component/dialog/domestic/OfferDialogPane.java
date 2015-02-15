@@ -17,10 +17,13 @@ package org.ujorm.wicket.component.dialog.domestic;
 
 import java.io.Serializable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.Ujo;
+import org.ujorm.criterion.Criterion;
+import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.grid.AbstractDataProvider;
 
 /**
@@ -47,6 +50,7 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
 
         // Finding toolbar:
         add(toolbar = new OfferToolbar("toolbar", model.getFinders()));
+        toolbar.setVisibilityAllowed(model.isEnableToolbar());
         // Create the data table:
         form.add(model.createDataTable());
     }
@@ -67,6 +71,23 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
     protected void setFeedback(IModel<String> message) {
         if (message != null) {
             throw new UnsupportedOperationException("Not supported");
+        }
+    }
+
+    /** Manage events */
+    @Override
+    public void onEvent(IEvent<?> argEvent) {
+        final UjoEvent<T> event = UjoEvent.get(argEvent);
+        if (event != null) {
+            if (event.isAction(OfferToolbar.FILTER_ACTION)) {
+                final Criterion<T> crn1, crn2, crn3;
+                crn1 = model.getFilter();
+                crn2 = toolbar.getCriterion().getObject();
+                crn3 = crn2 != null ? crn1.and(crn2) : crn1;
+                model.getFilterModel().setObject(crn3);
+                reloadTable(event.getTarget());
+                argEvent.stop();
+            }
         }
     }
 

@@ -110,7 +110,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 buildCriterion();
-                send(getPage(), Broadcast.BREADTH, new UjoEvent(getDefaultActionName(), target));
+                AbstractToolbar.this.onUpdate(target);
             }
 
             @Override
@@ -122,8 +122,13 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
         };
     }
 
+    /** On update event */
+    protected void onUpdate(final AjaxRequestTarget target) {
+        send(getPage(), Broadcast.BREADTH, new UjoEvent(getDefaultActionName(), target));
+    }
+
     /** Default action name is {@link CommonActions#FILTER} */
-    public String getDefaultActionName() {
+    protected String getDefaultActionName() {
         return CommonActions.FILTER;
     }
 }

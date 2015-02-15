@@ -59,8 +59,13 @@ import org.ujorm.wicket.component.grid.OrmDataProvider;
 public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     private static final Logger LOGGER = LoggerFactory.getLogger(OfferModel.class);
 
-    /** Main filter */
-    private final IModel<Criterion<U>> filter;
+    /** Default value to enable toolbar */
+    private static final boolean ENABLE_TOOLBAR = true;
+
+    /** The original main filter */
+    private final Criterion<U> filter;
+    /** Main filter model */
+    private final IModel<Criterion<U>> filterModel;
     /** Main filter */
     private IModel<Criterion<U>> highliting;
     /** Title */
@@ -83,6 +88,8 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     transient private OrmHandler ormHandler;
     /** Closable object */
     private Closeable<U> closable;
+    /** Enable finder */
+    private boolean enableToolbar = ENABLE_TOOLBAR;
 
 
     /** All item */
@@ -91,15 +98,22 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     }
 
     /** Filtering */
-    public OfferModel(Criterion<U> filter) {
-        this.filter = Model.of(Args.notNull(filter, "filter"));
+    public OfferModel(final Criterion<U> filter) {
+        this.filter = Args.notNull(filter, "filter");
+        this.filterModel = Model.of(filter);
         this.highliting = new Model<Criterion<U>>(null);
     }
 
-    /** Returns filter */
+    /** Returns the original filter */
     @Nonnull
-    public IModel<Criterion<U>> getFilter() {
+    public Criterion<U> getFilter() {
         return filter;
+    }
+
+    /** Returns filter model */
+    @Nonnull
+    public IModel<Criterion<U>> getFilterModel() {
+        return filterModel;
     }
 
     /** Returns highliting */
@@ -117,7 +131,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     /** Return a base class */
     @Nonnull
     public Class<U> getType() {
-        return (Class<U>) filter.getObject().getDomain();
+        return (Class<U>) filter.getDomain();
     }
 
     /** Dialog title */
@@ -180,9 +194,13 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
         this.finders = finders;
     }
 
-    /** Get Finders where {@code String} key type is preferred in auto builder mode */
+    /** Get Finders for Toolbar where {@code String} key type is preferred in auto builder mode */
     public <V> KeyList<U> getFinders() {
         if (finders == null) {
+            if (!isEnableToolbar()) {
+                finders = KeyRing.of(getColumns().getFirstKey());
+                return finders;
+            }
             final List<Key> keys = new ArrayList<Key>(4);
             if (isOrm()) {
                 getFinders4Orm(keys);
@@ -209,7 +227,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     /** Add finders to the ressult for ORM domain */
     protected void getFinders4Orm(final List<Key> result) throws IllegalStateException {
         for (MetaIndex index : getMetaTable().getIndexCollection()) {
-            result.add(index.readKeys().getFirstKey());
+            result.add(index.getColumns().get(0).getKey());
         }
         if (result.size() > 1) {
             Collections.sort(result, new Comparator<Key>() {
@@ -234,9 +252,9 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
         if (provider == null) {
             final Key<U,?> sortKey = getColumns().getFirstKey();
             if (isOrm()) {
-                provider = new OrmDataProvider(getFilter(), sortKey);
+                provider = new OrmDataProvider(getFilterModel(), sortKey);
             } else {
-                provider = new ListDataProvider(getFilter(), sortKey);
+                provider = new ListDataProvider(getFilterModel(), sortKey);
             }
             addTableColumns(provider);
             provider.setHighlighting(highliting);
@@ -364,6 +382,16 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     /** Closable object */
     public void setClosable(@Nonnull Closeable<U> closable) {
         this.closable = Args.notNull(closable, "closable");
+    }
+
+    /** Enable finder */
+    public boolean isEnableToolbar() {
+        return enableToolbar;
+    }
+
+    /** Enable finder */
+    public void setEnableToolbar(boolean enableToolbar) {
+        this.enableToolbar = enableToolbar;
     }
 
 }
