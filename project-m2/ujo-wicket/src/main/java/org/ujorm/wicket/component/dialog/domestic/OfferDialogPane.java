@@ -16,13 +16,20 @@
 package org.ujorm.wicket.component.dialog.domestic;
 
 import java.io.Serializable;
+import javax.annotation.Nonnull;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ujorm.Ujo;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.grid.AbstractDataProvider;
 
@@ -32,6 +39,8 @@ import org.ujorm.wicket.component.grid.AbstractDataProvider;
  */
 public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialogPane<T> {
     private static final long serialVersionUID = 20150212L;
+    /** Logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger(OfferDialogPane.class);
     /** Finder field(s) */
     private OfferToolbar<T> toolbar;
 
@@ -49,7 +58,7 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
         super.onInitialize();
 
         // Finding toolbar:
-        add(toolbar = new OfferToolbar("toolbar", model.getFinders()));
+        form.add(toolbar = new OfferToolbar("toolbar", model.getFinders()));
         toolbar.setVisibilityAllowed(model.isEnableToolbar());
         // Create the data table:
         form.add(model.createDataTable());
@@ -74,6 +83,39 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
         }
     }
 
+    /** Creates the default Confirmation button */
+    @Override protected AjaxButton createActionButton(String id, String propertyName) {
+        final AjaxButton result = new AjaxButton
+                ( id
+                , getButtonModel(propertyName)
+                , form) {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                try {
+                   // target.add(form);
+                    final DataTable<T,?> dataTable = getTable();
+                    final T row = dataTable.getItemCount() >= 0
+                            ? dataTable.getDataProvider().iterator(0, 1).next()
+                            : null;
+                    if (row != null) {
+                        model.getClosable().closeDialog(target, row);
+                    }
+                } catch (Throwable e) {
+                    LOGGER.warn("Wrong selection", e);
+                    // setFeedback(e); // TODO (?)
+                }
+            }
+
+            @Override
+            protected void onError(AjaxRequestTarget target, Form<?> form) {
+               target.add(form);
+            }
+        };
+        result.add(new CssAppender("btn btn-primary"));
+        form.setDefaultButton(result);
+        return result;
+    }
+
     /** Manage events */
     @Override
     public void onEvent(IEvent<?> argEvent) {
@@ -93,7 +135,16 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
 
     /** Refresh DataTable */
     public void reloadTable(final AjaxRequestTarget target) {
-        target.add(form.get(AbstractDataProvider.DEFAULT_DATATABLE_ID));
+        target.add(getTable());
     }
 
+    /** Get table component */
+    protected <S> DataTable<T, S> getTable() {
+        return (DataTable<T, S>) form.get(AbstractDataProvider.DEFAULT_DATATABLE_ID);
+    }
+
+    /** Set a focus to the first component by default */
+    public void requestFocus(@Nonnull final AjaxRequestTarget target) {
+        toolbar.requestFocus(target);
+    }
 }
