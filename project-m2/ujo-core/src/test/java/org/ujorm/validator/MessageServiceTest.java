@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ponec.
+ * Copyright 2012-2015 Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.ujorm.validator;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -127,4 +128,35 @@ public class MessageServiceTest extends TestCase {
         String result = service.format(template, args, Locale.ENGLISH);
         assertEquals(expResult, result);
     }
+
+    /** Test of format method, of class MessageService. */
+    public void testFormat_6() {
+        System.out.println("format");
+        String expResult = "Date is: 2015-10-20T01:02:03";
+        String template = "Date is: ${DATE,%tY-%tm-%tdT%tH:%tM:%tS}";
+        Map<String, Object> args = service.map(DATE, getCalendar().getTime());
+        String result = service.format(template, args, Locale.ENGLISH);
+        assertEquals(expResult, result);
+    }
+
+    /** Create a new Calendar for date: 2015-10-20T01:02:03  */
+    private Calendar getCalendar() {
+        return getCalendar(2015, Calendar.OCTOBER, 20, 1, 2, 3);
+    }
+
+
+    /** Create a new Calendar */
+    private Calendar getCalendar(int year, int month, int day, int hour, int minute, int sec) {
+        final Calendar result = Calendar.getInstance(Locale.ENGLISH);
+        result.set(Calendar.YEAR, year);
+        result.set(Calendar.MONTH, month);
+        result.set(Calendar.DAY_OF_MONTH, day);
+        result.set(Calendar.HOUR_OF_DAY, hour);
+        result.set(Calendar.MINUTE, minute);
+        result.set(Calendar.SECOND, sec);
+        result.set(Calendar.MILLISECOND, 0);
+        //
+        return result;
+    }
+
 }
