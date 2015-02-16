@@ -88,13 +88,14 @@ public class MessageService {
             final String expr = msg.substring(i + PARAM_BEG.length(), end);
             final int formatIndex = expr.indexOf(',');
             final String key = expr.substring(0, formatIndex >= 0 ? formatIndex : expr.length());
-            final Object paramValue = args.get(key);
-            if (paramValue != null) {
+            final Object value = args.get(key);
+            if (value != null) {
                 result.append(msg.substring(last, i));
-                final Object value = formatIndex > 0
-                    ? new Formatter(locale).format(expr.substring(1 + formatIndex), paramValue)
-                    : paramValue;
-                appendValue(value.toString(), result);
+                final Object niceValue = formatIndex > 0
+                    ? new Formatter(locale).format(expr.substring(1 + formatIndex)
+                    , value, value, value, value, value, value) // Simplify Date format
+                    : value;
+                appendValue(niceValue.toString(), result);
             } else {
                 result.append(msg.substring(last, end + 1));
             }
