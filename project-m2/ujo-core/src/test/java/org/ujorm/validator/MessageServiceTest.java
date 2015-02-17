@@ -132,18 +132,22 @@ public class MessageServiceTest extends TestCase {
     /** Test of format method, of class MessageService. */
     public void testFormat_6() {
         System.out.println("format");
-        String expResult = "Date is: 2016-05-04T03:02:01";
-        String template = "Date is: ${DATE,%tY-%tm-%tdT%tH:%tM:%tS}";
+        String expResult = "Date is: 2016-05-04 03:02:01";
         Map<String, Object> args = service.map(DATE, getCalendar().getTime());
-        String result = service.format(template, args, Locale.ENGLISH);
-        assertEquals(expResult, result);
+        //
+        String template1 = "Date is: ${DATE,%tY-%tm-%td %tH:%tM:%tS}";
+        String result1 = service.format(template1, args, Locale.ENGLISH);
+        assertEquals(expResult, result1);
+        //
+        String template2 = "Date is: ${DATE,%tF %tT}";
+        String result2 = service.format(template2, args, Locale.ENGLISH);
+        assertEquals(expResult, result2);
     }
 
     /** Create a new Calendar for date: 2016-05-04T03:02:01  */
     private Calendar getCalendar() {
         return getCalendar(2016, Calendar.MAY, 4, 3, 2, 1);
     }
-
 
     /** Create a new Calendar */
     private Calendar getCalendar(int year, int month, int day, int hour, int minute, int sec) {

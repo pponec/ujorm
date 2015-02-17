@@ -67,7 +67,9 @@ public class MessageService {
      * Each variable must be surrounded by two marks "${" and "}".
      * The first mark is forbidden in a common text and can be replaced by the variable #{MARK}.
      * @param msg Template message, see the simple example:
-     * <pre>{@code "The input date ${KEY,%s} must be less than: ${DATE,%F}"}</pre>
+     * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%F}"}</pre>
+     * or
+     * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"}</pre>
      * The format expression is separated by the character (,) a and it is not mandatory.
      * @param args Key-value map arguments
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the ENGLISH.
