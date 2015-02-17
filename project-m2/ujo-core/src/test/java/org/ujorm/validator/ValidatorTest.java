@@ -92,7 +92,7 @@ public class ValidatorTest extends MyTestCase {
 
         // Check the localized message using the template:
         String expectedMessage = "The variable ${LIMIT} = 1971-12-31 22:50:10.";
-        String myTemplate = "The variable ${MARK}LIMIT} = ${LIMIT,%1$tF %1$tT}.";
+        String myTemplate = "The variable ${MARK}LIMIT} = ${LIMIT,%tF %tT}.";
         String message = error.getMessage(myTemplate);
         assertEquals(expectedMessage, message);
     }
@@ -388,8 +388,8 @@ public class ValidatorTest extends MyTestCase {
         //sertAssignLeg(false, ValidMandatory.NUMBER_TYPE_EXPL, (Number)(Object)"wrong");
         //sertAssignLeg(false, ValidMandatory.NUMBER_TYPE_EXPL, (Number)(Object)new Date());
     }
-    
-    
+
+
     /** Test of readValue method, */
     public void testMandatory() {
         assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidBo.NOT_NULL.getValidator()));
@@ -404,7 +404,7 @@ public class ValidatorTest extends MyTestCase {
         assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidMandatory.MAIL.getValidator()));
         assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidMandatory.FORBIDDEN_1_3.getValidator()));
     }
-    
+
     /** Test of readValue method, */
     public void testMaxLength() {
         assertEquals(-1, ValidatorUtils.getMaxLength(ValidBo.NOT_NULL.getValidator()));
@@ -417,13 +417,13 @@ public class ValidatorTest extends MyTestCase {
         //
         assertEquals(-1, ValidatorUtils.getMaxLength(ValidMandatory.BETWEEN_1_10.getValidator()));
         assertEquals(-1, ValidatorUtils.getMaxLength(ValidMandatory.MAIL.getValidator()));
-        assertEquals(-1, ValidatorUtils.getMaxLength(ValidMandatory.FORBIDDEN_1_3.getValidator()));        
+        assertEquals(-1, ValidatorUtils.getMaxLength(ValidMandatory.FORBIDDEN_1_3.getValidator()));
         //
         assertEquals(4, ValidatorUtils.getMaxLength(ValidBo.LENGTH_2_4.getValidator()));
         assertEquals(3, ValidatorUtils.getMaxLength(ValidBo.LENGTH_MAX_3.getValidator()));
         assertEquals(4, ValidatorUtils.getMaxLength(ValidMandatory.LENGTH_2_4.getValidator()));
         assertEquals(3, ValidatorUtils.getMaxLength(ValidMandatory.LENGTH_MAX_3.getValidator()));
-    }    
+    }
 
     /** Method to test Validators */
     private <T> void assertAssign(boolean expected, Key<ValidBo,T> key, T value) {
