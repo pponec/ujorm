@@ -2,8 +2,11 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.53 (2015-*)
-+ todo
+release 1.53 (2015-02-18)
++ CORE: The MessageService class simplify a Date format
++ CORE: The API of the KeyList class is fixed
++ WICKET: The UjoField with an OfferDialogPanel are implemented (beta)
++ WICKET: Component ID for the TextField is fixed.
 
 release 1.52 (2015-02-02)
 + ORM: lazy loading is fixed for some cases
