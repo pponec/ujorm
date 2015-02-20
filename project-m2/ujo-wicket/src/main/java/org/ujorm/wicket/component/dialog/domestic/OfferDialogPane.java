@@ -113,7 +113,7 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
             }
         };
         result.add(new CssAppender("btn btn-primary"));
-        form.setDefaultButton(result);
+     // form.setDefaultButton(result); // TODO.pop
         return result;
     }
 
