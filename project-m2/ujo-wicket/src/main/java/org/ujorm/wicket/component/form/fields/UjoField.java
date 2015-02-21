@@ -186,12 +186,14 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> implements 
         return result;
     }
 
+    /** Close dialog set new model and set a focus to the current input */
     @Override
     public void closeDialog(AjaxRequestTarget target, U row) {
         this.offerDialog.close(target);
         if (row != null) {
             setModelValue(row);
             target.add(this);
+            target.focusComponent(getInput());
         }
     }
 
