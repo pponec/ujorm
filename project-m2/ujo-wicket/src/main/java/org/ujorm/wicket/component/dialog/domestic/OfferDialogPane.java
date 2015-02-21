@@ -16,7 +16,9 @@
 package org.ujorm.wicket.component.dialog.domestic;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.IEvent;
@@ -32,6 +34,7 @@ import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.grid.AbstractDataProvider;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 
 /**
  * Offer Dialog Model
@@ -93,11 +96,7 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 try {
                     // target.add(form);
-                    final DataTable<T,?> dataTable = getTable();
-                    final long firstRowOnPage = dataTable.getCurrentPage() * dataTable.getItemsPerPage();
-                    final T row = dataTable.getItemCount() >= 0
-                            ? dataTable.getDataProvider().iterator(firstRowOnPage, 1).next()
-                            : null;
+                    final T row = getBaseModelObject();
                     if (row != null) {
                         model.getClosable().closeDialog(target, row);
                     }
@@ -112,9 +111,29 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
                target.add(form);
             }
         };
-        result.add(new CssAppender("btn btn-primary"));
+        result.add(new CssAppender("btn btn-primary btn-offer"));
      // form.setDefaultButton(result); // TODO.pop
         return result;
+    }
+
+    /** Try to find the first grid row */
+    @Nullable
+    @Override
+    public T getBaseModelObject() {
+        try {
+            final DataTable dataTable = (DataTable) form.get(DEFAULT_DATATABLE_ID);
+            final long firstRowIndex = dataTable.getCurrentPage() * dataTable.getItemsPerPage();
+            @SuppressWarnings("unchecked")
+            final Iterator<T> iterator = (Iterator<T>) dataTable.getDataProvider().iterator(firstRowIndex, 1);
+            if (iterator.hasNext()) {
+                return iterator.next();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            LOGGER.log(UjoLogger.ERROR, "GetBaseModeObject failed", e);
+            return null;
+        }
     }
 
     /** Manage events */
@@ -130,7 +149,7 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
         }
     }
 
-    /** Builde new criterion */
+    /** Build a new criterion */
     protected void buildCriterion() {
         final Criterion<T> crn1, crn2, crn3;
         crn1 = model.getFilter();

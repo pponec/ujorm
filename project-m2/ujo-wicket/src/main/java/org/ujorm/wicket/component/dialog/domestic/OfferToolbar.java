@@ -48,7 +48,6 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
         this.fields = fields;
 
         add(searching = createSearchFiled("searching", fields.getFirstKey().getType()));
-
         buildCriterion();
     }
 
@@ -57,7 +56,7 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
         return fields.getFirstKey().isTypeOf(String.class);
     }
 
-    /** Build a Criteron for a Ujorm QUERY.
+    /** Build a Criterion for a Ujorm QUERY.
      * @see #getCriterion()
      */
     @Override
@@ -85,7 +84,7 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
         return FILTER_ACTION;
     }
 
-    /** Set a focus to the Serarch Toolbar by default */
+    /** Set a focus to the Search Toolbar by default */
     @Override
     public void requestFocus(@Nonnull final AjaxRequestTarget target) {
         searching.setModelValue(null);
