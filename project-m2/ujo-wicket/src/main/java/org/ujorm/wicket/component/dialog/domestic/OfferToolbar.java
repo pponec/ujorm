@@ -18,6 +18,8 @@ import java.io.Serializable;
 import javax.annotation.Nonnull;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -43,11 +45,14 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
     /** Search data */
     private final TextField searching;
 
+    /** Placeholder key is built by the prefix {@code "label."  + key.fullName} */
     public OfferToolbar(String id, KeyList<U> fields) {
         super(id);
         this.fields = fields;
 
-        add(searching = createSearchFiled("searching", fields.getFirstKey().getType()));
+        final String placeholderKey = "label." + fields.getFirstKey().getFullName();
+        final IModel<String> placeholder = new ResourceModel(placeholderKey, fields.getFirstKey().getName());
+        add(searching = createSearchFiled("searching", fields.getFirstKey().getType(), placeholder));
         buildCriterion();
     }
 

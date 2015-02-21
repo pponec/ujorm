@@ -77,15 +77,26 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
     }
 
     /**
-     * Create TextFiled, add 'placeholder', assign Behaviour and set an OutputMarkupId.
+     * Create TextFiled, add 'placeholder', assign Behavior and set an OutputMarkupId.
      * @param componentId Component ID
      * @param type Type of the field
      * @param placeholderKey Localization key for a Placeholder
      * @return TextField for searching
      */
-    protected TextField createSearchFiled(String componentId, Class<?> type, String placeholderKey) {
+    protected final TextField createSearchFiled(String componentId, Class<?> type, String placeholderKey) {
+        return createSearchFiled(componentId, type, new ResourceModel(placeholderKey, placeholderKey));
+    }
+
+    /**
+     * Create TextFiled, add 'placeholder', assign Behavior and set an OutputMarkupId.
+     * @param componentId Component ID
+     * @param type Type of the field
+     * @param placeholder Localization for a Placeholder
+     * @return TextField for searching
+     */
+    protected TextField createSearchFiled(String componentId, Class<?> type, IModel<String> placeholder) {
         final TextField result = new TextField(componentId, new Model(), type);
-        result.add(new AttributeModifier("placeholder", new ResourceModel(placeholderKey, placeholderKey)));
+        result.add(new AttributeModifier("placeholder", placeholder));
         result.setOutputMarkupId(true);
         result.add(createChangeBehavior(result));
         return result;
@@ -99,7 +110,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
         return criterionModel;
     }
 
-    /** Modify internal Criteiron */
+    /** Modify internal Criterion */
     abstract protected void buildCriterion();
 
     /** Create an Updating Behavior with "keyup" event
@@ -133,7 +144,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
         return CommonActions.FILTER;
     }
 
-    /** Imlements the method to request focus */
+    /** Implements the method to request focus */
     public void requestFocus(@Nonnull final AjaxRequestTarget target) {
     }
 }
