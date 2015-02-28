@@ -87,10 +87,11 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> implements 
     }
 
     /** Create new Highliting Criterion */
+    @Nullable
     protected <V> Criterion<U> createHighlitingCriterion() {
         final Key<U,V> idKey = model.getId();
-        final V idValue = idKey.of(getModelValue());
-        final Criterion<U> result = idKey.whereEq(idValue);
+        final U ujo = getModelValue();
+        final Criterion<U> result = ujo != null ? idKey.whereEq(idKey.of(ujo)) : null;
         return result;
     }
 
