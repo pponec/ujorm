@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, Pavel Ponec
+ * Copyright 2013-2015, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import org.ujorm.logger.UjoLoggerFactory;
  * @author Pavel Ponec
  */
 @Service
-public class AuthServiceImpl extends AbstractServiceImpl implements AuthService {
+public class AuthServiceImpl extends AbstractServiceImpl<Customer> implements AuthService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     /** Session attribute name */

@@ -10,4 +10,7 @@ Without this configuration present, some functionality in the IDE may be limited
         <config-files/>
         <config-file-groups/>
     </spring-data>
+    <properties xmlns="http://www.netbeans.org/ns/maven-properties-data/1">
+        <netbeans.compile.on.save>none</netbeans.compile.on.save>
+    </properties>
 </project-shared-configuration>
