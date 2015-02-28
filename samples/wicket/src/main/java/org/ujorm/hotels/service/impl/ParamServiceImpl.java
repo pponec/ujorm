@@ -1,5 +1,5 @@
 /*
- * Copyright 2014, Pavel Ponec
+ * Copyright 2014-2015, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ import static org.ujorm.hotels.entity.ParamValue.*;
 @Transactional
 @Service(ParamService.NATURAL)
 public class ParamServiceImpl
-extends AbstractServiceImpl
+extends AbstractServiceImpl<ParamValue>
 implements ParamService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParamServiceImpl.class);
 
@@ -144,7 +144,7 @@ implements ParamService {
                 .orderBy(ParamValue.ID) // Default is the first!
                 .addColumn(KEY_ID)
                 .map(KEY_ID, new HashMap<Integer,ParamValue>(128));
-        final Map<Integer,ParamKey> keys = createQuery(ParamKey.ID.forAll()).map();
+        final Map<Integer,ParamKey> keys = getSession().createQuery(ParamKey.ID.forAll()).map();
         for (ParamValue value : values.values()) {
             value.setParamKey(keys.get(KEY_ID.of(value)));
         }

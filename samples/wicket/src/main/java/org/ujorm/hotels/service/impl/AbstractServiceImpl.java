@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, Pavel Ponec
+ * Copyright 2013-2015, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.ujorm.spring.UjormTransactionManager;
  * Abstract service with basic database tools
  * @author ponec
  */
-abstract public class AbstractServiceImpl {
+abstract public class AbstractServiceImpl<T extends OrmUjo> {
 
     /** Orm Configuration */
     @Autowired
@@ -38,7 +38,7 @@ abstract public class AbstractServiceImpl {
     }
 
     /** Create database query with Session */
-    final protected <T extends OrmUjo> Query<T> createQuery(Criterion<T> criterion) {
+    final protected Query<T> createQuery(Criterion<T> criterion) {
         return getSession().createQuery(criterion);
     }
 

@@ -40,7 +40,7 @@ import static org.ujorm.hotels.service.DbService.DAY_AS_MILISEC;
  * @author ponec
  */
 @Transactional
-public class DbServiceImpl extends AbstractServiceImpl implements DbService {
+public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DbServiceImpl.class);
 
     @Autowired

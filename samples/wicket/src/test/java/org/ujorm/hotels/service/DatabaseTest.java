@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014, Pavel Ponec
+ * Copyright 2013-2015, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.service.impl.AbstractServiceImpl;
 import org.ujorm.orm.OrmHandler;
+import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.template.AliasTable;
 import static org.junit.Assert.*;
@@ -46,7 +47,7 @@ import static org.ujorm.orm.template.AliasTable.Build.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:org/ujorm/hotels/config/applicationContext.xml"})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class DatabaseTest extends AbstractServiceImpl {
+public class DatabaseTest extends AbstractServiceImpl<Hotel> {
     /** The one day in MILIS */
     private static final int ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -56,8 +57,8 @@ public class DatabaseTest extends AbstractServiceImpl {
     public void setUp() {
         final String login = "test";
         final String city = "Prague";
-        if (!createQuery(Booking.ID.forAll()).exists()) {
-            Customer customer = createQuery(Customer.LOGIN.whereEq(login)).uniqueResult();
+        if (!query(Booking.ID.forAll()).exists()) {
+            Customer customer = query(Customer.LOGIN.whereEq(login)).uniqueResult();
             Hotel hotel = createQuery(Hotel.CITY.add(City.NAME).whereEq(city)).setLimit(1).uniqueResult();
             //
             Booking booking = new Booking();
@@ -97,7 +98,7 @@ public class DatabaseTest extends AbstractServiceImpl {
         assertEquals(1, crn4.evaluate(getBookings()).size());
 
         // Build query:
-        Query<Booking> bookings = createQuery(crn3);
+        Query<Booking> bookings = query(crn3);
         List<Booking> result = bookings.list();
         assertFalse(result.isEmpty());
 
@@ -168,5 +169,10 @@ public class DatabaseTest extends AbstractServiceImpl {
     /** Returns some next Criterion */
     private Criterion<Booking> anotherCriterion() {
         return Booking.CURRENCY.whereEq("USD");
+    }
+
+    /** Create a database query with Session */
+    final protected <T extends OrmUjo> Query<T> query(Criterion<T> criterion) {
+        return getSession().createQuery(criterion);
     }
 }
