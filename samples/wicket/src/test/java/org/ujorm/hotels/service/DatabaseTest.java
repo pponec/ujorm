@@ -119,7 +119,7 @@ public class DatabaseTest extends AbstractServiceImpl<Hotel> {
         String[] cities  = {"Prague", "Amsterdam"};
         Criterion crn = bookingCityName.forSqlUnchecked("{0} IN ({1})", cities);
 
-        Query<T> bookings = createQuery(crn);
+        Query<T> bookings = getSession().createQuery(crn);
         List<T> result = bookings.list();
         assertFalse(result.isEmpty());
     }
