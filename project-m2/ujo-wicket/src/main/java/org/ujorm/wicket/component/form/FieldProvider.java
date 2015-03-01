@@ -56,7 +56,7 @@ import org.ujorm.wicket.component.form.fields.GridField;
 import org.ujorm.wicket.component.form.fields.PasswordField;
 import org.ujorm.wicket.component.form.fields.TextAreaField;
 import org.ujorm.wicket.component.form.fields.TextField;
-import org.ujorm.wicket.component.form.fields.UjoField;
+import org.ujorm.wicket.component.form.fields.OfferField;
 
 /**
  * Field Factory
@@ -136,7 +136,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         } else if (key.isTypeOf(java.util.Date.class)) {
             field = new DateField(newChildId(), key, null); // TODO DateTime field
         } else if (key.isTypeOf(Ujo.class)) {
-            field = new UjoField(newChildId(), key);
+            field = new OfferField(newChildId(), key);
         } else if (key instanceof ListKey && Ujo.class.isAssignableFrom( ((ListKey)key).getItemType())) {
             field = new GridField(newChildId(), key, null);
         } else {
@@ -152,7 +152,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Add new field to a repeating view*/
     public <T extends Ujo & Serializable> Field<T> add(Key<? super U,T> key, OfferModel<T> model) {
-        return add(new UjoField<T>(newChildId(), key, model));
+        return add(new OfferField<T>(newChildId(), key, model));
     }
 
 

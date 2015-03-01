@@ -43,7 +43,7 @@ import org.ujorm.wicket.component.form.Closeable;
  * @author Pavel Ponec
  * @param <U> The Ujo type
  */
-public class UjoField<U extends Ujo & Serializable> extends Field<U> implements Closeable<U> {
+public class OfferField<U extends Ujo & Serializable> extends Field<U> implements Closeable<U> {
     private static final long serialVersionUID = 20150206L;
 
     /** Attribute to display in the input field */
@@ -54,18 +54,18 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> implements 
     private OfferModel<U> model;
 
     /** Constructor */
-    public <W extends Ujo> UjoField(String id, Key<W,U> key) {
+    public <W extends Ujo> OfferField(String id, Key<W,U> key) {
         this(id, key, (OfferModel<U>) null);
     }
 
     /** Constructor */
-    public <W extends Ujo> UjoField(@Nonnull String id, @Nonnull Key<W,U> key, @Nullable Key<U,?> display) {
+    public <W extends Ujo> OfferField(@Nonnull String id, @Nonnull Key<W,U> key, @Nullable Key<U,?> display) {
         this(id, key, (OfferModel<U>) null);
         this.displayKey = display != null ? KeyRing.<U>of(display) : null;
     }
 
     /** Constructor */
-    public <W extends Ujo> UjoField(String id, Key<W,U> key, @Nullable OfferModel<U> model) {
+    public <W extends Ujo> OfferField(String id, Key<W,U> key, @Nullable OfferModel<U> model) {
         super(id, key, null);
         this.model = model != null ? model : new OfferModel(key.getType());
         this.model.setClosable(this);
@@ -144,7 +144,7 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> implements 
     protected FormComponent createInput(final String componentId, final IModel<U> model) {
         final Model<String> displayModel = new Model<String>(){
             @Override public String getObject() {
-                final U ujo = UjoField.this.getModelObject();
+                final U ujo = OfferField.this.getModelObject();
                 final Object result = ujo != null ? getDisplayKey().of(ujo) : null;
                 return result != null ? result.toString() : "";
             }
@@ -202,17 +202,17 @@ public class UjoField<U extends Ujo & Serializable> extends Field<U> implements 
 
     /** Create new ComboField using database request */
     public static <T extends OrmUjo & Serializable> Field<T> of(Key<?, T> key, Query<T> query, @Nullable Key<T, ?> display) {
-        return new UjoField<T>(key.getName(), key, display);
+        return new OfferField<T>(key.getName(), key, display);
     }
 
     /** Create new ComboField using database request */
     public static <U extends OrmUjo & Serializable> Field<U> of(Key<?, U> key, @Nullable Key<U, ?> display) {
-        return new UjoField<U>(key.getName(), key, display);
+        return new OfferField<U>(key.getName(), key, display);
     }
 
     /** Create new ComboField using database request */
     public static <U extends OrmUjo & Serializable> Field<U> of(Key<?, U> key) {
-        return new UjoField<U>(key.getName(), key, (OfferModel)null);
+        return new OfferField<U>(key.getName(), key, (OfferModel)null);
     }
 
 }
