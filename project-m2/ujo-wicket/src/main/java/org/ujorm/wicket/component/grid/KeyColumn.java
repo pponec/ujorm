@@ -27,6 +27,7 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.wicket.KeyModel;
+import org.ujorm.wicket.component.tools.LocalizedModel;
 
 /**
  * A convenience implementation of column that adds a Ujo Property to the cell whose model is determined by
@@ -82,8 +83,8 @@ public class KeyColumn<U extends Ujo, T> extends AbstractColumn<U, KeyRing<U>> {
      */
     public KeyColumn(final KeyRing<U> key, final KeyRing<U> sortKey) {
         this(new ResourceModel(PROPERTY_PREFIX
-                + key.getFirstKey().getFullName()
-                , key.getFirstKey().toString())
+                + LocalizedModel.getSimpleKeyName(key.getFirstKey())
+                , key.getFirstKey().getName())
                 , key, sortKey);
     }
 

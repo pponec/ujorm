@@ -49,6 +49,7 @@ import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.form.FeedbackLabel;
 import org.ujorm.wicket.component.form.FieldEvent;
 import org.ujorm.wicket.component.form.UiValidator;
+import org.ujorm.wicket.component.tools.LocalizedModel;
 
 /**
  * Common Input field with a Label including a feedback message.
@@ -238,7 +239,7 @@ public class Field<T> extends GenericPanel<T> {
 
     /** Create label model */
     protected IModel createLabelModel() {
-        final Key<?,?> nativeKey = key.getFirstKey();
+        final Key<?,?> nativeKey = getKey();
         final ResourceModel labelModel = new ResourceModel
                 (getResourceLabelKey(nativeKey), nativeKey.getName());
         return labelModel;
@@ -246,7 +247,7 @@ public class Field<T> extends GenericPanel<T> {
 
     /** Resource Label Key */
     protected String getResourceLabelKey(final Key<?,?> key) {
-        return PROPERTY_PREFIX + key.getFullName();
+        return PROPERTY_PREFIX + getKeyName();
     }
 
     /** Is the field required ? */
@@ -258,7 +259,7 @@ public class Field<T> extends GenericPanel<T> {
 
     /** Returns assigned key */
     @Nullable
-    public Key<?,?> getKey() {
+    public final Key<?,?> getKey() {
         return key != null ? key.getFirstKey() : null;
     }
 
@@ -336,11 +337,21 @@ public class Field<T> extends GenericPanel<T> {
        target.focusComponent(getInput());
     }
 
+    /** Get a simple key name for a localization */
+    protected String getKeyName() {
+        return getKeyName(getKey());
+    }
+
+    /** Get a simple key name for a localization */
+    protected String getKeyName(final Key<?,?> key) {
+        return LocalizedModel.getSimpleKeyName(key);
+    }
+
     /** A debug information */
     @Override
     public String toString() {
         if (getKey() != null) {
-            return this.getKey().getFullName() + " for the input: " + getInput();
+            return getKeyName() + " for the input: " + getInput();
         } else {
             return String.valueOf(getInput());
         }
