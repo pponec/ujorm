@@ -39,6 +39,7 @@ import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATAT
 /**
  * Offer Dialog Model
  * @author Pavel Ponec
+ * @param <T> Ujo & Serializable
  */
 public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialogPane<T> {
     private static final long serialVersionUID = 20150212L;
@@ -112,7 +113,7 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
             }
         };
         result.add(new CssAppender("btn btn-primary btn-offer"));
-     // form.setDefaultButton(result); // TODO.pop
+     // form.setDefaultButton(result); // The ENTER action must by solved by a JavaScript
         return result;
     }
 
