@@ -540,6 +540,7 @@ public class SampleORM {
         Key<Customer, String> parentName = Customer.PARENT.add(Customer.SURENAME);
         Customer customer = session.createQuery(parentName.whereEq("Smith"))
                 .addColumn(parentName)
+                .orderBy(parentName)
                 .uniqueResult();
 
         assert customer != null : "The result have got the one customers";

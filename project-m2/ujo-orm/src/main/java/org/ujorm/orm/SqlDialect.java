@@ -909,9 +909,9 @@ abstract public class SqlDialect {
         out.append(" ORDER BY ");
         final List<Key> props = query.getOrderBy();
         for (int i=0; i<props.size(); i++) {
-            MetaColumn column = query.readOrderColumn(i);
-            boolean ascending = props.get(i).isAscending();
-            if (i>0) {
+            final ColumnWrapper column = query.readOrderColumn(i);
+            final boolean ascending = props.get(i).isAscending();
+            if (i > 0) {
                 out.append(", ");
             }
             printColumnAlias(column, out);
