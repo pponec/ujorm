@@ -16,6 +16,7 @@
 package org.ujorm.wicket.component.tools;
 
 import org.apache.wicket.model.ResourceModel;
+import org.ujorm.Key;
 
 /**
  * Extended {@link ResourceModel} where default value is the original key by default.
@@ -30,6 +31,17 @@ public class LocalizedModel extends ResourceModel {
 
     public LocalizedModel(String resourceKey, String defaultValue) {
         super(resourceKey, defaultValue);
+    }
+
+    /** Get a full key name with no alias information by example:  */
+    public static final String getSimpleKeyName(final Key key) {
+        if (key == null) {
+            return "undefined.key";
+        }
+        final Class domainType = key.getDomainType();
+        return domainType != null
+             ? domainType.getSimpleName() + '.' +  key.getName()
+             : key.getName();
     }
 
 }

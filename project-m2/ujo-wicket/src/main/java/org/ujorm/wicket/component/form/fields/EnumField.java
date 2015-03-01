@@ -79,9 +79,9 @@ public class EnumField<T extends Enum<T>> extends Field<T> {
             : new EnumChoiceRenderer<T>(this);
         DropDownChoice<T> result = new DropDownChoice<T>(componentId, model, getItems(), aRenderer) {
             /** Return the localization key for nullValid value
-             * @return {@code "value." + EnumField.super.getKey().getFullName() + ".null"} */
+             * @return {@code "value." + getKeyName() + ".null"} */
             @Override protected String getNullKey() {
-                return "value." + EnumField.super.getKey().getFullName() + ".null";
+                return "value." + getKeyName() + ".null";
             }
         };
         result.setChoiceRenderer(new ChoiceRendererNullable<T>(this));

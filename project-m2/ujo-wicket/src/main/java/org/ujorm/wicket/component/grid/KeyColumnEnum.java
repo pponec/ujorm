@@ -23,11 +23,13 @@ import org.apache.wicket.model.Model;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
+import org.ujorm.wicket.component.tools.LocalizedModel;
 
 /**
  * Key column for a Date data type
  * @author Pavel Ponec
- * @param <UJO extends Ujo> The Model object type
+ * @param <U> Ujo
+ * @param <T> Enum type
  */
 public class KeyColumnEnum<U extends Ujo, T extends Enum<T>> extends KeyColumn<U, T> {
     private static final long serialVersionUID = 1L;
@@ -60,7 +62,7 @@ public class KeyColumnEnum<U extends Ujo, T extends Enum<T>> extends KeyColumn<U
     protected String resourceKey(T value) {
         return value != null
              ? value.getClass().getSimpleName() + '.' + value.name()
-             : ("value." + getKey().getFullName() + ".null");
+             : ("value." + LocalizedModel.getSimpleKeyName(getKey()) + ".null");
     }
 
     // =============== STATIC FACTORY METHODS ===============

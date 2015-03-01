@@ -28,6 +28,7 @@ import org.ujorm.criterion.Operator;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.component.toolbar.AbstractToolbar;
+import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.core.UjoManager.*;
 
 /**
@@ -50,8 +51,9 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
         super(id);
         this.fields = fields;
 
-        final String placeholderKey = "label." + fields.getFirstKey().getFullName();
-        final IModel<String> placeholder = new ResourceModel(placeholderKey, fields.getFirstKey().getName());
+        final String keyName = LocalizedModel.getSimpleKeyName(fields.getFirstKey());
+        final String placeholderKey = "label." + keyName;
+        final IModel<String> placeholder = new ResourceModel(placeholderKey, keyName);
         add(searching = createSearchFiled("searching", fields.getFirstKey().getType(), placeholder));
         buildCriterion();
     }
