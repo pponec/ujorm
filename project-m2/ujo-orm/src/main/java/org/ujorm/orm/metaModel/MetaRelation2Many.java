@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -129,6 +129,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     }
 
     /** Returns an alias of the table model */
+    //@javax.validation.constraints.NotNull
     public final String getTableAlias() {
         return tableAlias;
     }
