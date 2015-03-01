@@ -55,9 +55,10 @@ public class ColumnWrapperImpl implements ColumnWrapper {
         this.key = key != null ? key : column.getKey();
     }
 
-    /** Returns an alias of the key */
+    /** Returns an alias of the key or the {@code nul} value */
     private static String getAlias(final CompositeKey key) {
-        return key.getAlias(key.getCompositeCount() - 2);
+        final int count = key.getCompositeCount();
+        return count > 1 ? key.getAlias(count - 2) : null;
     }
 
     /** Returns an original column model */
