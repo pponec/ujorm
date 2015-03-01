@@ -76,7 +76,7 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
                 final boolean orm = OrmUjo.class.isAssignableFrom(key.getType());
                 result = key.where(orm ? Operator.STARTS : Operator.STARTS_CASE_INSENSITIVE, value);
             } else {
-                result = key.where(Operator.EQ, value);
+                result = key.where(Operator.GE, value);
             }
         }
 
