@@ -327,16 +327,15 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         return domain;
     }
 
-    /** Copy component values to the domain */
+    /** Copy component values of the enabled fields to the domain */
     public void copyToDomain(final U domain) {
         for (Field field : fields.values()) {
-            final Key k = field.getKey();
-            final Object newValue = getValue(k);
-            if (!k.equals(domain, newValue)) {
-                k.setValue(domain, newValue);
-            //  Some fields can be inactive or hidden in the GUI:
-            //  } else if (k.getValidator()!=null) {
-            //  k.getValidator().checkValue(newValue, k, domain);
+            if (field.isEnabled()) {
+                final Key k = field.getKey();
+                final Object newValue = getValue(k);
+                if (!k.equals(domain, newValue)) {
+                    k.setValue(domain, newValue);
+                }
             }
         }
     }

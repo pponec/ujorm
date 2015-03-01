@@ -289,6 +289,17 @@ public class Field<T> extends GenericPanel<T> {
         this.visibleModel = visibleModel;
     }
 
+    /** Component is enabled if its input is enabled too */
+    @Override
+    public boolean isEnabled() {
+        if (super.isEnabled()) {
+            final FormComponent input = getInput();
+            return input == null || input.isEnableAllowed();
+        } else {
+            return false;
+        }
+    }
+
     /** Create an Updating Behavior with "keyup" event
      * @param field Field is not used by default, however it can be a switch for different results for example.
      * @return
