@@ -574,15 +574,22 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-    /** Returns an order column. A method for an internal use only.  */
-    public MetaColumn readOrderColumn(int i) throws IllegalStateException {
+    /** Returns an order column. A method is for an internal use only.
+     * @param i Column index
+     * @return ColumnWrapper */
+    public ColumnWrapper readOrderColumn(int i) throws IllegalStateException {
         final Key key = orderBy.get(i);
         final MetaRelation2Many result = session.getHandler().findColumnModel(key);
 
         if (result instanceof MetaColumn) {
-            return (MetaColumn) result;
+            return key.isComposite()
+                 ? new ColumnWrapperImpl((MetaColumn) result, key)
+                 : (MetaColumn) result;
         } else {
-            String msg = "Property '" + table.getType().getSimpleName() + "." + key + "' is not a persistent table column";
+            final String msg = String.format
+                 ( "The key '%s.%s' is not persistent table column"
+                 , table.getType().getSimpleName()
+                 , key);
             throw new IllegalStateException(msg);
         }
     }

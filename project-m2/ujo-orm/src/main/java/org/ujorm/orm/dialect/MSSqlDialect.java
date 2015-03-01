@@ -120,11 +120,11 @@ public class MSSqlDialect extends SqlDialect {
     }
 
     /** Print a full SQL column alias name by sample: o_<TABLE>_<ALIAS_COLUMN> - used for as order alias */
-    public Appendable printColumnOrderAlias(final MetaColumn column, final Appendable out) throws IOException {
+    public Appendable printColumnOrderAlias(final ColumnWrapper column, final Appendable out) throws IOException {
         out.append("o_");
         out.append(column.getTableAlias());
         out.append('_');
-        out.append(MetaColumn.NAME.of(column));
+        out.append(MetaColumn.NAME.of(column.getModel()));
 
         return out;
     }
@@ -217,7 +217,7 @@ public class MSSqlDialect extends SqlDialect {
     protected void printOrderColumns(Query query, Appendable out, boolean asOrderAlias, boolean addOrderAlias, boolean showDesc) throws IOException {
         final List<Key> props = query.getOrderBy();
         for (int i=0; i<props.size(); i++) {
-            MetaColumn column = query.readOrderColumn(i);
+            ColumnWrapper column = query.readOrderColumn(i);
             boolean ascending = props.get(i).isAscending();
             if (i>0) {
                 out.append(", ");
@@ -248,9 +248,9 @@ public class MSSqlDialect extends SqlDialect {
         Map<String, MetaTable> tables = new LinkedHashMap<String, MetaTable>();
         List<Key> props = query.getOrderBy();
         for (int i = 0; i < props.size(); i++) {
-            MetaColumn column = query.readOrderColumn(i);
+            ColumnWrapper column = query.readOrderColumn(i);
             String alias = column.getTableAlias();
-            tables.put(alias, column.getTable());
+            tables.put(alias, column.getModel().getTable());
         }
         if (query.getCriterion() != null) {
             CriterionDecoder ed = query.getDecoder();
