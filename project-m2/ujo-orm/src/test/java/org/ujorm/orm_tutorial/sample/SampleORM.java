@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -538,11 +538,14 @@ public class SampleORM {
      */
     public void useHierarchicalQuerySimple() {
         Key<Customer, String> parentName = Customer.PARENT.add(Customer.SURENAME);
-        Customer customer = session.createQuery(parentName.whereEq("Smith")).uniqueResult();
+        Customer customer = session.createQuery(parentName.whereEq("Smith"))
+                .addColumn(parentName)
+                .uniqueResult();
 
         assert customer != null : "The result have got the one customers";
         assert Customer.PARENT instanceof CompositeKey : "The key is type of CompositeKey" + Customer.PARENT.getClass();
         assert parentName.getFullName().equals("Customer.parent[customerAlias].surename") : "The wong implementation CompositeKey.toString()";
+        assert "Smith".equals(customer.get(parentName));
     }
 
     /** DB query with relations to yourself as a value of Criterion */

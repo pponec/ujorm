@@ -149,7 +149,7 @@ public class MSSqlDialect extends SqlDialect {
                 }
             } else if (column.isColumn()) {
                 out.append(separator);
-                printColumnAlias(column, out);
+                printColumnAlias(columnWrapper, out);
 
                 out.append(" AS ");
                 printColumnUnderAlias(column, out);
