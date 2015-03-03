@@ -18,6 +18,7 @@ package org.ujorm.wicket.component.dialog.domestic;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -56,6 +57,8 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
     private String action = "";
     /** Dialog autoclose request */
     protected final boolean autoClose;
+    /** Target of the close action */
+    protected IEventSink eventTarget;
 
     public AbstractDialogPane(ModalWindow modalWindow, IModel<? super T> model, boolean autoClose) {
         super(modalWindow.getContentId(), (IModel) model);
@@ -106,9 +109,12 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 try {
                     target.add(form);
-                    send(getPage()
-                        , Broadcast.BREADTH
-                        , new UjoEvent<T>(getAction(), false, getBaseModelObject(), target));
+                    final UjoEvent<T> uEvent = new UjoEvent<T>(getAction(), false, getBaseModelObject(), target);
+                    if (eventTarget != null) {
+                        send(eventTarget, Broadcast.EXACT, uEvent);
+                    } else {
+                        send(getPage(), Broadcast.BREADTH, uEvent);
+                    }
                     if (autoClose) {
                        modalWindow.close(target); // the dialog is closed on the success
                     }
@@ -252,4 +258,13 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
         return new ResourceModel(BUTTON_PREFIX + propertyName, propertyName);
     }
 
+    /** Target of the close action */
+    public IEventSink getTarget() {
+        return eventTarget;
+    }
+
+    /** Target of the close action */
+    public void setTarget(IEventSink target) {
+        this.eventTarget = target;
+    }
 }
