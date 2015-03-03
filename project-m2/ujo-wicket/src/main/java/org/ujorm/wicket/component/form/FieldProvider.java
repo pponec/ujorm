@@ -333,7 +333,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             if (field.isEnabled()) {
                 final Key k = field.getKey();
                 final Object newValue = getValue(k);
-                if (!k.equals(domain, newValue)) {
+                // Note: if the key is Ujo type, then there are an endless loop
+                if (k.isTypeOf(Ujo.class) || !k.equals(domain, newValue)) {
                     k.setValue(domain, newValue);
                 }
             }
