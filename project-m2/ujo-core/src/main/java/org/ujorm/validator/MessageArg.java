@@ -15,13 +15,14 @@
  */
 package org.ujorm.validator;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Validator Argument
  * @author Pavel Ponec
  */
-public final class MessageArg<T> {
+public final class MessageArg<T> implements Serializable {
 
     /** Key name */
     private final String name;
