@@ -18,7 +18,6 @@ package org.ujorm.hotels.gui.hotel;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
 import org.ujorm.wicket.component.form.FieldProvider;
@@ -27,6 +26,7 @@ import org.ujorm.wicket.component.tools.LocalizedModel;
 /**
  * Hotel Editor
  * @author Pavel Ponec
+ * @param <U> Hotel
  */
 public class HotelEditor<U extends Hotel> extends EntityDialogPane<U> {
     private static final long serialVersionUID = 0L;
