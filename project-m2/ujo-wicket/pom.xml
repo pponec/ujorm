@@ -143,7 +143,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.4.0</version>
+            <version>1.6.4</version>
             <scope>provided</scope>
         </dependency>
 
@@ -191,7 +191,7 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>
-        
+
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-spring</artifactId>
