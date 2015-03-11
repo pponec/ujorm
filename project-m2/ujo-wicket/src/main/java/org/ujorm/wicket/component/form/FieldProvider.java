@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 - 2015 Pavel Ponec
+ *  Copyright 2013-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -74,6 +74,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     /** Enable method {@link #requestFocus(AjaxRequestTarget)}. The default value is {@code true} */
     private boolean focusRequestEnabled = true;
     private transient OrmHandler ormHandler;
+    /** Disable new fields if the argument is {@code true} */
+    private boolean disableRequest = false;
 
     /** Default constructor */
     public FieldProvider(String repeatingViewId) {
@@ -106,6 +108,9 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         repeatingView.add(field);
         addValidator(key, field);
         field.setOutputMarkupPlaceholderTag(true);
+        if (disableRequest) {
+            field.setEnabled(false);
+        }
         return field;
     }
 
@@ -400,6 +405,22 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         if (field != null) {
             field.setVisibilityAllowed(visible);
         }
+    }
+
+    /** Disable new fields if the argument is {@code true} */
+    public boolean isDisableRequest() {
+        return disableRequest;
+    }
+
+    /** Disable new fields if the argument is {@code true} */
+    public void setDisablRequest(boolean disableRequest) {
+        this.disableRequest = disableRequest;
+    }
+
+    /** Disable new fields (by default) */
+    public final FieldProvider<U> disableFields() {
+        setDisablRequest(true);
+        return this;
     }
 
     /** Add a validator for a required filed.
