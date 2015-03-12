@@ -75,9 +75,8 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                     switch (mySession.getLazyLoading()) {
                         default:
                             final String msg = String.format
-                                   ( "The lazy loading of the key '%s' is disabled due the closed Session of the: %s"
-                                    , getFullName()
-                                    , ujo);
+                                   ( "The lazy loading of the key '%s' is disabled due the closed Session"
+                                    , getFullName());
                             throw new IllegalStateException(msg);
                         case ALLOWED_ANYWHERE_WITH_STACKTRACE:
                             if (LOGGER.isLoggable(UjoLogger.INFO)) {
