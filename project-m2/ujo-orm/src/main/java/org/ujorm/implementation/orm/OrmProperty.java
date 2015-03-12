@@ -74,6 +74,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                    IllegalStateException e = null;
                     switch (mySession.getLazyLoading()) {
                         default:
+                            // The method "ujo.toString()" calls a never ending loop here!
                             final String msg = String.format
                                    ( "The lazy loading of the key '%s' is disabled due the closed Session"
                                     , getFullName());
