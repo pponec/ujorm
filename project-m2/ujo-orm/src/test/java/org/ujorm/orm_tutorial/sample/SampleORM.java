@@ -382,9 +382,16 @@ public class SampleORM {
     @SuppressWarnings("unchecked")
     public void useSelectWithAliasTable() {
         final Long excludedId = -7L;
-        final AliasTable order = handler.tableOf(ViewOrder.class);
-        final AliasTable item = handler.tableOf(Item.class);
+        final AliasTable order = handler.tableOf(ViewOrder.class, "o");
+        final AliasTable item = handler.tableOf(Item.class, "i");
 
+        String expected = "SELECT o.ID"
+                + ", count(*) AS ITEM_COUNT"
+                + " FROM db1.ord_order o"
+                + " INNER JOIN db1.ord_item i ON i.fk_order = o.ID "
+                + " WHERE o.ID!=?"
+                + " GROUP BY o.ID"
+                + " ORDER BY o.ID";
         String innerSql = SELECT(order.column(Order.ID)
                 , order.columnAs("count(*)", ViewOrder.ITEM_COUNT))
                 + FROM (order)
@@ -393,14 +400,14 @@ public class SampleORM {
                 + GROUP_BY(order.column(Order.ID))
                 + ORDER_BY(order.column(Order.ID));
 
+        assert expected.equals(innerSql);
         String sql = SELECT("*") + FROM("(" + innerSql + ")") + "  testView " + WHERE("true");
 
         SqlParameters sqlParam = new SqlParameters().setSqlStatement(sql).setParameters(excludedId);
         Criterion<ViewOrder> crit = ViewOrder.ITEM_COUNT.whereLe(100);
         long orderCount = session.createQuery(crit)
                 .setSqlParameters(sqlParam)
-                .getCount()
-                ;
+                .getCount();
         logInfo("Order Count: %s", orderCount);
 
         Query<ViewOrder> orders = session.createQuery(crit)
