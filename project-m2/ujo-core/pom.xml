@@ -58,7 +58,7 @@
                     <docfilessubdirs>true</docfilessubdirs>
                     <encoding>UTF-8</encoding>
                     <author>Pavel Ponec</author>
-                    <bottom><![CDATA[Copyright 2013, <a target="_blank" href="http://ujorm.org/">Pavel Ponec<a>]]></bottom>
+                    <bottom><![CDATA[Copyright 2015, <a target="_blank" href="http://ujorm.org/">Pavel Ponec<a>]]></bottom>
                     <doctitle>Ujorm ${project.version} (${project.name})</doctitle>
                     <windowtitle>Ujorm ${project.version} - ${project.name}</windowtitle>
                     <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="http://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
