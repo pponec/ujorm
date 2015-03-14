@@ -386,14 +386,14 @@ public class SampleORM {
         final AliasTable item = handler.tableOf(Item.class, "i");
 
         String expected = "SELECT o.ID"
-                + ", count(*) AS ITEM_COUNT"
+                + ", COUNT(*) AS ITEM_COUNT"
                 + " FROM db1.ord_order o"
                 + " INNER JOIN db1.ord_item i ON i.fk_order = o.ID "
                 + " WHERE o.ID!=?"
                 + " GROUP BY o.ID"
                 + " ORDER BY o.ID";
         String innerSql = SELECT(order.column(Order.ID)
-                , order.columnAs("count(*)", ViewOrder.ITEM_COUNT))
+                , order.columnAs("COUNT(*)", ViewOrder.ITEM_COUNT))
                 + FROM (order)
                 + INNER_JOIN(item, item.column(Item.ORDER), "=", order.column(Order.ID))
                 + WHERE(order.column(Order.ID), "!=", PARAM)
