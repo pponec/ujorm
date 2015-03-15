@@ -290,6 +290,14 @@ public class Field<T> extends GenericPanel<T> {
         this.visibleModel = visibleModel;
     }
 
+    /** Set entabled the input component */
+    public void setEnabledInput(boolean enabled) {
+        super.setEnabled(enabled);
+        if (getInput() != null) {
+            getInput().setEnabled(enabled);
+        }
+    }
+
     /** Component is enabled if its input is enabled too */
     @Override
     public boolean isEnabled() {
