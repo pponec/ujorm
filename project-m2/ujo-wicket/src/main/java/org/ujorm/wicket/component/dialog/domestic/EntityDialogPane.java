@@ -63,19 +63,19 @@ public class EntityDialogPane<U extends Ujo> extends AbstractDialogPane<U> {
         return fields;
     }
 
-    /**
-     * Show dialog and assign a data from domain object
-     * @param title Dialog title
-     * @param body Dialog body
-     * @param actionButtonProperty Action button key
-     * @param target Target
-     */
+    /** An action in show before to assign a data from domain object */
     @Override
-    public void show(AjaxRequestTarget target, IModel<String> title, IModel<U> body, String actionButtonProperty) {
-        fields.setDomain(body.getObject());
+    protected void onShowBefore(AjaxRequestTarget target) {
+        super.onShowBefore(target);
+        fields.setDomain(getModelObject());
         fields.requestFocus(target);
-        super.show(target, title, body, actionButtonProperty);
     }
+
+//  public void show(AjaxRequestTarget target, IModel<String> title, IModel<U> body, String actionButtonProperty) {
+//      fields.setDomain(body.getObject());
+//      fields.requestFocus(target);
+//      super.show(target, title, body, actionButtonProperty);
+//  }
 
     /** Returns a base model object / entity */
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, Pavel Ponec
+ * Copyright 2013-2015, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -210,9 +210,9 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
 
     /**
      * Show dialog and assign a data from domain object
-     * @param domain Domain object
      * @param title Window title
      * @param target target
+     * @param body
      */
     public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> body) {
         show(target, title, body, null);
@@ -224,8 +224,14 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
      * @param body Dialog body as a default mode
      * @param actionButtonProperty Action button key
      * @param target Target
+     * @see #onShowBefore(org.apache.wicket.ajax.AjaxRequestTarget)
+     * @see #onShowAfter(org.apache.wicket.ajax.AjaxRequestTarget)
      */
-    public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> body, String actionButtonProperty) {
+    public final void show
+        ( final AjaxRequestTarget target
+        , final IModel<String> title
+        , final IModel<T> body
+        , final String actionButtonProperty) {
         setDefaultModel(body);
         setFeedback((IModel)null);
         if (title != null) {
@@ -234,8 +240,13 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
         if (actionButtonProperty != null) {
            form.get(ACTION_BUTTON_ID).setDefaultModel(getButtonModel(actionButtonProperty));
         }
+        onShowBefore(target);
         getModalWindow().show(target);
         target.add(form);
+    }
+
+    /** An action in show before */
+    protected void onShowBefore(AjaxRequestTarget target) {
     }
 
     /** Returns modal WIndow */
