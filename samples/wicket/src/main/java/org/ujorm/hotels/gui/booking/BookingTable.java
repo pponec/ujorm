@@ -47,13 +47,13 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
 
         OrmDataProvider<U> columns = OrmDataProvider.of(getCriterionModel());
         columns.add(Booking.DATE_FROM);
-        columns.add(Booking.CUSTOMER.add(Customer.LOGIN));
         columns.add(Booking.HOTEL.add(Hotel.NAME));
         columns.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
         columns.add(Booking.PERSONS);
         columns.add(Booking.NIGHTS);
         columns.add(Booking.PRICE);
         columns.add(Booking.CURRENCY);
+        columns.add(Booking.CUSTOMER.add(Customer.LOGIN));
         columns.add(Booking.CREATION_DATE);
         columns.add(Booking.ID, BookActionPanel.class);
         columns.setSort(Booking.DATE_FROM);
