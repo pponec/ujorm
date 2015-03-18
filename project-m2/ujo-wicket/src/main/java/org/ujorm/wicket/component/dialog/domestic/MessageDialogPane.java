@@ -87,13 +87,23 @@ public class MessageDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
         return result;
     }
 
-    /** Show the dialog with a message */
     @Override
-    @SuppressWarnings("unchecked")
-    public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> message, String actionButtonProperty) {
+    protected void onShowBefore(AjaxRequestTarget target) {
+        super.onShowBefore(target);
+        final IModel<T> message = getModel();
+        super.onShowAfter(target);
         if (message != null && ((Object) message.getObject()) instanceof String) {
             setMessage((IModel) message);
         }
-        super.show(target, title, message, actionButtonProperty);
     }
+
+//    /** Show the dialog with a message */
+//    @Override
+//    @SuppressWarnings("unchecked")
+//    public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> message, String actionButtonProperty) {
+//        if (message != null && ((Object) message.getObject()) instanceof String) {
+//            setMessage((IModel) message);
+//        }
+//        super.show(target, title, message, actionButtonProperty);
+//    }
 }
