@@ -91,7 +91,6 @@ public class MessageDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
     protected void onShowBefore(AjaxRequestTarget target) {
         super.onShowBefore(target);
         final IModel<T> message = getModel();
-        super.onShowAfter(target);
         if (message != null && ((Object) message.getObject()) instanceof String) {
             setMessage((IModel) message);
         }
