@@ -42,7 +42,7 @@ public class UjoDropDown<U extends Ujo> extends DropDownChoice<U> {
      * @param index Required Unique identifier Key
      */
     public UjoDropDown(final String id, final List<? extends U> choices, Key<U, ?> display, Key<U, ?> index) {
-        this(id, choices, KeyRing.of(display, index));
+        this(id, choices, KeyRing.<U>of(display, index));
         Args.notNull(display, "display");
         Args.notNull(index, "index");
     }
