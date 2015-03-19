@@ -500,12 +500,12 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         }
         this.columns = new ArrayList<ColumnWrapper>(columns.length + 3);
         final OrmHandler handler = getHandler();
-        for (Key column : columns) {
-            final MetaColumn mc = (MetaColumn) handler.findColumnModel(getLastProperty(column), true);
-            final ColumnWrapper cw = column.isComposite()
-                    ? new ColumnWrapperImpl(mc, column)
+        for (Key key : columns) {
+            final MetaColumn mc = (MetaColumn) handler.findColumnModel(getLastProperty(key), true);
+            final ColumnWrapper column = key.isComposite()
+                    ? new ColumnWrapperImpl(mc, key)
                     : mc;
-            addMissingColumn(cw, addChilds, false);
+            addMissingColumn(column, addChilds, false);
         }
         if (addPrimaryKey) {
             addMissingColumn(table.getFirstPK(), false, true);
@@ -520,7 +520,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      */
     protected void addMissingColumn(final ColumnWrapper column, final boolean addChilds, final boolean checkDuplicities) {
         final int hashCode = column.hashCode();
-        if (checkDuplicities) {
+        final MetaColumn model = column.getModel();
+
+        if (checkDuplicities && !model.isForeignKey()) {
             for (final ColumnWrapper c : columns) {
                 if (c.hashCode()==hashCode && column.equals(c)) {
                     return; // The same column is assigned
@@ -528,7 +530,6 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             }
         }
         if (addChilds) {
-            final MetaColumn model = column.getModel();
             if (model.isForeignKey()) {
                 for (ColumnWrapper columnWrapper : model.getForeignTable().getColumns()) {
                     final Key myKey = column.getKey().add(columnWrapper.getKey());
