@@ -2,6 +2,12 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 1.55 (2015-03-22)
++ ORM: The fetching or relations is fixed
++ WICKET: UjoDropDown choice component
++ WICKET: The new method AbstractDialogPanel.onShowBefore(...)
++ WICKET: The new method Field.setEnabledInput(...)
+
 release 1.54 (2015-03-14)
 + CORE: Some jUnit tests are extended
 + ORM: Bug fixing for the additional Column alias name in the Query
