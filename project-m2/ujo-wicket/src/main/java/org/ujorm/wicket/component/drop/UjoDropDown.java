@@ -19,7 +19,9 @@ import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
+import org.apache.wicket.model.util.WildcardListModel;
 import org.apache.wicket.util.lang.Args;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
@@ -47,12 +49,21 @@ public class UjoDropDown<U extends Ujo> extends DropDownChoice<U> {
         Args.notNull(index, "index");
     }
 
-    /** Constructor
+        /** Constructor
      * @param id Component identifier
      * @param choices Item list
      * @param display Two keys [display & index]
      */
     public UjoDropDown(final String id, final List<? extends U> choices, final KeyRing<U> display) {
+        this(id, new WildcardListModel<U>(choices), display);
+    }
+
+    /** Constructor
+     * @param id Component identifier
+     * @param choices Item list
+     * @param display Two keys [display & index]
+     */
+    public UjoDropDown(final String id, final IModel<List<? extends U>> choices, final KeyRing<U> display) {
         super(id, choices, new IChoiceRenderer<U>() {
             @Override public Object getDisplayValue(final U bo) {
                 return display.getFirstKey().of(bo);
