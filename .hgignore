@@ -1,5 +1,6 @@
 syntax: glob
 target/
 nbproject/
+tools/NB-pluggin/UjoCodeGenerator/build/
 a.sh
 *~
