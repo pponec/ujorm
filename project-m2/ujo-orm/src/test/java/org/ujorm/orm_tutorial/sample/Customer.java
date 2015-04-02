@@ -38,9 +38,9 @@ public final class Customer extends OrmTable<Customer> {
     /** Firstname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
     public static final Key<Customer, String> FIRSTNAME = f.newKey();
-    /** Surename */
+    /** Surname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final Key<Customer, String> SURENAME = f.newKey();
+    public static final Key<Customer, String> SURNAME = f.newKey();
     /** Date of creation */
     public static final Key<Customer, Date> CREATED = f.newKey();
     /** A parent (father or mother) with an alias called {@code "parent"} */
@@ -58,6 +58,7 @@ public final class Customer extends OrmTable<Customer> {
     }
 
     // --- An optional implementation of commonly used setters and getters ---
+    
     public Long getId() {
         return get(ID);
     }

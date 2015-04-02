@@ -524,16 +524,16 @@ public class SampleORM {
         Criterion<Customer> crn1, crn2, crn3;
         crn1 = Customer.PARENT.alias("parent1")
           .add(Customer.PARENT).alias("parent2")
-          .add(Customer.SURENAME)
+          .add(Customer.SURNAME)
           .whereEq("Smith");
-        crn2 = Customer.SURENAME.whereEq("Brown");
+        crn2 = Customer.SURNAME.whereEq("Brown");
         crn3 = crn1.and(crn2);
 
         createHierarchicalCustomers("Smith", "Brown");
         Customer customer = session.createQuery(crn3).uniqueResult();
 
         assert customer != null : "The result have got the one customers";
-        assert Customer.SURENAME.equals(customer, "Brown") : "Wrong customer";
+        assert Customer.SURNAME.equals(customer, "Brown") : "Wrong customer";
     }
 
     /**
@@ -544,7 +544,7 @@ public class SampleORM {
      * @see org.ujorm.core.KeyFactory#newKeyAlias(java.lang.String)
      */
     public void useHierarchicalQuerySimple() {
-        Key<Customer, String> parentName = Customer.PARENT.add(Customer.SURENAME);
+        Key<Customer, String> parentName = Customer.PARENT.add(Customer.SURNAME);
         Customer customer = session.createQuery(parentName.whereEq("Smith"))
                 .addColumn(parentName)
                 .orderBy(parentName)
@@ -562,7 +562,7 @@ public class SampleORM {
         crn1 = Customer.FIRSTNAME.whereEq(
                Customer.PARENT.alias("parent1")
                .add(Customer.PARENT).alias("parent2")
-               .add(Customer.SURENAME));
+               .add(Customer.SURNAME));
 
         Customer customer = session.createQuery(crn1).uniqueResult();
         assert customer != null : "The result have got the one customers";
@@ -911,19 +911,19 @@ public class SampleORM {
 
     /** Create the hierarchical data */
     private void createHierarchicalCustomers(String superName, String currentName) {
-        if (!session.exists(Customer.SURENAME.whereEq(superName))) {
+        if (!session.exists(Customer.SURNAME.whereEq(superName))) {
             Customer c2 = new Customer();
-            Customer.SURENAME.setValue(c2, superName);
+            Customer.SURNAME.setValue(c2, superName);
             Customer.FIRSTNAME.setValue(c2, "John");
             Customer.PARENT.setValue(c2, null);
             //
             Customer c1 = new Customer();
-            Customer.SURENAME.setValue(c1, superName + "-" + currentName);
+            Customer.SURNAME.setValue(c1, superName + "-" + currentName);
             Customer.FIRSTNAME.setValue(c1, "Jack");
             Customer.PARENT.setValue(c1, c2);
             //
             Customer c0 = new Customer();
-            Customer.SURENAME.setValue(c0, currentName);
+            Customer.SURNAME.setValue(c0, currentName);
             Customer.FIRSTNAME.setValue(c0, superName);
             Customer.PARENT.setValue(c0, c1);
             //
