@@ -162,12 +162,17 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Key<MetaParams,Integer> LOG_VALUE_LENGTH_LIMIT = f.newKey("logValueLengthLimit", 128);
 
-    /** An application context for initializaton of the customer componets of the meta-model. */
+    /** An application context for initialization of the customer components of the meta-model. */
     @Transient
     public static final Key<MetaParams,Object> APPL_CONTEXT = f.newKey("applContext");
 
     /** The key initialization */
     static{f.lock();}
+
+    /** An extended index name strategy
+     * @see MoreParams#EXTENTED_INDEX_NAME_STRATEGY
+     */
+    public static final Key<MetaParams, Boolean> EXTENTED_INDEX_NAME_STRATEGY = MORE_PARAMS.add(MoreParams.EXTENTED_INDEX_NAME_STRATEGY);
 
     /** The type service cache */
     private final Map<Class, ITypeService> typeServices = new HashMap<Class, ITypeService>(2);
@@ -245,7 +250,7 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** Skip the check test and Quote all SQL columns, tables and alias names.
      * <br>NOTE: The change of the parameter value affects the native SQL statements in Ujorm views.
-     * @param quote Parameter {@code true} affects to an escapinng the database names,
+     * @param quote Parameter {@code true} affects to an escaping the database names,
      * else the {@code false} value will affects to checked a database KeyWords in the names.
      * @see #CHECK_KEYWORDS
      * @see CheckReport#SKIP_AND_QUOTE_SQL_NAMES

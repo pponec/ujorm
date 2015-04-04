@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
+import org.ujorm.orm.SqlNameProvider;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.dialect.MSSqlDialect;
@@ -42,7 +43,7 @@ import static org.ujorm.orm.metaModel.MetaDatabase.*;
 
 /**
  * A service method for the MetaDatabase class.
- * The service class can be overriten
+ * The service class can be overwritten
  * @author Effectiva Solutions company
  * @see MetaParams#META_DB_SERVICE
  */
@@ -55,7 +56,7 @@ public class MetaDbServiceEx extends MetaDbService {
      * Specifies if default values in DB are allowed. There are many problems
      * with default value constraints in MSSQL, therefore it's recommended to
      * not use them. Ujorm provides own mechanism to deal with default values
-     * and INSERTs and UPDATEs containt default values explicitly.
+     * and INSERTs and UPDATEs contains default values explicitly.
      */
     public static boolean DEFAULT_VALUES_IN_DB_ALLOWED = false;
     public static final String COLUMN_DEF_DEFAULT_VALUE = "COLUMN_DEF";
@@ -288,16 +289,16 @@ public class MetaDbServiceEx extends MetaDbService {
                     LOGGER.log(WARN, msg);
                     messages.add(msg);
                     if (repairDB) {
-                        boolean uniqueIndexExists = mappedColumn.get(MetaColumn.UNIQUE_INDEX).length() > 0;
+                        boolean uniqueIndexExists = !mappedColumn.get(MetaColumn.UNIQUE_INDEX).isEmpty();
                         if (uniqueIndexExists) {
                             msg = "    It's not possible to repair column length with unique index.";
                             LOGGER.log(WARN, msg);
                         } else {
                             StringBuilder sql;
-                            String indexName = mappedTable.createIndexNameForColumn(mappedColumn, false);
+                            String indexName = createIndexNameForColumn(mappedColumn, false, mappedTable);
                             MetaIndex mappedIndex = null;
                             if (indexName != null) {
-                                mappedIndex = mappedTable.createIndexForColumn(indexName, mappedColumn);
+                                mappedIndex = createIndexForColumn(indexName, mappedColumn, mappedTable);
                                 mappedIndex.writeValue(MetaIndex.COLUMNS, new ArrayList<MetaColumn>(1));
                                 mappedIndex.get(MetaIndex.COLUMNS).add(mappedColumn);
                                 // DROP indexu
@@ -852,5 +853,39 @@ public class MetaDbServiceEx extends MetaDbService {
 
     private boolean isDialectTypeMSSql() {
         return getDialect() instanceof MSSqlDialect;
+    }
+
+    /** Create an Index For the Column. The method is called from the {@link MetaDbServiceEx} class */
+    public MetaIndex createIndexForColumn(String idxName, MetaColumn column, MetaTable metaTable) {
+        MetaIndex mIndex = new MetaIndex(idxName, metaTable);
+        boolean isUniqueIndexExists = MetaColumn.UNIQUE_INDEX.getItemCount(column) > 0;
+        MetaIndex.UNIQUE.setValue(mIndex, isUniqueIndexExists);
+        return mIndex;
+    }
+
+    /** Create an Index For the Column. The method is called from the {@link MetaDbServiceEx} class */
+    public String createIndexNameForColumn(MetaColumn column, boolean uniqueIndex, MetaTable metaTable) {
+        String metaIdxName;
+        if (uniqueIndex) {
+            metaIdxName = MetaColumn.UNIQUE_INDEX.getFirstItem(column);
+        } else {
+            metaIdxName = MetaColumn.INDEX.getFirstItem(column);
+        }
+        if (metaIdxName.length() == 0 && column.isForeignKey()) {
+            metaIdxName = MetaColumn.AUTO_INDEX_NAME;
+        }
+
+        assert metaIdxName.length() > 0;
+
+        // automatic indexes ("AUTO" or foreign keys)
+        if (MetaColumn.AUTO_INDEX_NAME.equalsIgnoreCase(metaIdxName)) {
+            final SqlNameProvider nameProvider = metaTable.getDatabase().getDialect().getNameProvider();
+            if (uniqueIndex) {
+                metaIdxName = nameProvider.getUniqueConstraintName(column);
+            } else {
+                metaIdxName = nameProvider.getIndexName(column);
+            }
+        }
+        return metaIdxName;
     }
 }

@@ -45,7 +45,6 @@ import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.orm.utility.OrmTools;
 
-
 /**
  * DB table or view meta-model.
  * @author Pavel Ponec
@@ -374,112 +373,60 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return sequencer;
     }
 
-    /** Create an Index For the Column */
-    public MetaIndex createIndexForColumn(String idxName, MetaColumn column) {
-        MetaIndex mIndex = new MetaIndex(idxName, this);
-        boolean isUniqueIndexExists = MetaColumn.UNIQUE_INDEX.of(column).length() > 0;
-        MetaIndex.UNIQUE.setValue(mIndex, isUniqueIndexExists);
-        return mIndex;
-    }
-
-    /** Create an Index For the Column */
-    public String createIndexNameForColumn(MetaColumn column, boolean uniqueIndex) {
-        String metaIdxName;
-        if (uniqueIndex) {
-            metaIdxName = MetaColumn.UNIQUE_INDEX.of(column);
-        } else {
-            metaIdxName = MetaColumn.INDEX.of(column);
-        }
-        if (metaIdxName.length() == 0 && column.isForeignKey()) {
-            metaIdxName = "AUTO";
-        }
-
-        assert metaIdxName.length() > 0;
-
-        // automatic indexes ("AUTO" or foreign keys)
-        if (MetaColumn.AUTO_INDEX_NAME.equalsIgnoreCase(metaIdxName)) {
-            final SqlNameProvider nameProvider = getDatabase().getDialect().getNameProvider();
-            if (uniqueIndex) {
-                metaIdxName = nameProvider.getUniqueConstraintName(column);
-            } else {
-                metaIdxName = nameProvider.getIndexName(column);
-            }
-        }
-        return metaIdxName;
-    }
-
-    /** Create a new collection of the table indexes. */
+    /** Create a new collection of the table indexes.
+     * @return Collection of the MetaIndex objects */
     public Collection<MetaIndex> getIndexCollection() {
-        final boolean extendedStrategy = MetaParams.MORE_PARAMS
-        .add(MoreParams.EXTENTED_INDEX_NAME_STRATEGY)
-        .of(DATABASE.of(this).getOrmHandler().getParameters());
-
-        return extendedStrategy
-             ? getIndexCollectionExtended()
-             : getIndexCollectionOriginal() ;
-    }
-
-    /** Create a new collection of the table indexes.<br/>
-     * The extended index name strategy.
-     */
-    private Collection<MetaIndex> getIndexCollectionExtended() {
-        Map<String,MetaIndex> mapIndex = new HashMap<String,MetaIndex>();
-
+        final Map<String,MetaIndex> mapIndex = new HashMap<String,MetaIndex>();
         for (MetaColumn column : COLUMNS.getList(this)) {
-            final String metaUdxName = MetaColumn.UNIQUE_INDEX.of(column);
-            final String metaIdxName = MetaColumn.INDEX.of(column);
-            final boolean indexExists = metaIdxName.length() > 0;
-            final boolean uniqueIndexExists = metaUdxName.length() > 0;
-
-            if (indexExists || column.isForeignKey()) {
-                addIndex(column, mapIndex, false);
+            for (String idx : MetaColumn.UNIQUE_INDEX.of(column)) {
+                addIndex(idx, column, false, mapIndex);
             }
-            if (uniqueIndexExists) {
-                addIndex(column, mapIndex, true);
+            for (String idx : MetaColumn.INDEX.of(column)) {
+                addIndex(idx, column, true, mapIndex);
             }
         }
         return mapIndex.values();
     }
 
-    /** Create a new collection of the table indexes.<br/>
-     * <br>The original Ujorm solution.
+    /** Is an extended index naming strategy
+     * @see MoreParams#EXTENTED_INDEX_NAME_STRATEGY
      */
-    private Collection<MetaIndex> getIndexCollectionOriginal() {
-        Map<String,MetaIndex> mapIndex = new HashMap<String,MetaIndex>();
-
-        for (MetaColumn column : COLUMNS.getList(this)) {
-            String[] idxs = {MetaColumn.INDEX.of(column), MetaColumn.UNIQUE_INDEX.of(column)};
-
-            for (int i=0; i<2; ++i) {
-                if (idxs[i].length()>0) {
-                    String upperIdx = idxs[i].toUpperCase();
-                    MetaIndex mIndex = mapIndex.get(upperIdx);
-                    if (mIndex==null) {
-                        mIndex = new MetaIndex(idxs[i], this);
-                        mapIndex.put(upperIdx, mIndex);
-                    }
-                    if (i==0) {
-                        MetaIndex.UNIQUE.setValue(mIndex, false);
-                    } else if (upperIdx.equalsIgnoreCase(idxs[0])) {
-                        break; // Ignore the same column in the index.
-                    }
-                    MetaIndex.COLUMNS.addItem(mIndex, column);
-                }
-            }
-        }
-        return mapIndex.values();
+    private Boolean isExtendedIndexStrategy() {
+        return MetaParams.EXTENTED_INDEX_NAME_STRATEGY
+              .of(DATABASE.of(this).getOrmHandler().getParameters());
     }
 
-    /** Add new index */
-    private void addIndex(MetaColumn column, Map<String, MetaIndex> mapIndex, boolean uniqueIndex) {
-        String idxName = createIndexNameForColumn(column, uniqueIndex);
-        MetaIndex mIndex = mapIndex.get(idxName);
-        if (mIndex == null) {
-            mIndex = createIndexForColumn(idxName, column);
-            mapIndex.put(idxName, mIndex);
+    /** Add the column model to the index model from the IndexMap according the index name (case insensitive) */
+    private void addIndex
+        ( String indexName
+        , final MetaColumn column
+        , final boolean unique
+        , final Map<String, MetaIndex> mapIndex) {
+        if (isExtendedIndexStrategy()
+        && (MetaColumn.AUTO_INDEX_NAME.equals(indexName) || column.isForeignKey())) {
+            final SqlNameProvider nameProvider = getDatabase().getDialect().getNameProvider();
+            indexName = unique
+                    ? nameProvider.getUniqueConstraintName(column)
+                    : nameProvider.getIndexName(column);
         }
-        MetaIndex.COLUMNS.addItem(mIndex, column);
+        if (indexName == null || indexName.isEmpty()) {
+            return;
+        }
+
+        final String index = indexName.toUpperCase();
+        MetaIndex mi = mapIndex.get(index);
+        if (mi == null) {
+            mi = new MetaIndex(indexName, this);
+            mapIndex.put(index, mi);
+        }
+        if (!unique) {
+            MetaIndex.UNIQUE.setValue(mi, false);
+        }
+        if (column != MetaIndex.COLUMNS.getLastItem(mi)) {
+            MetaIndex.COLUMNS.addItem(mi, column);
+        }
     }
+
 
     /** Returns a parent of the parameter or the null if no parent was not found.<br/>
      * The method provides a parent in case of emulated inheritance.

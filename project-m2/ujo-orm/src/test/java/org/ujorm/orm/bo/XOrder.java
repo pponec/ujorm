@@ -37,6 +37,11 @@ import org.ujorm.orm.utility.OrmTools;
 @Table(name = "ord_order")
 public class XOrder extends OrmTable<XOrder> {
 
+    /** Simple Index */
+    public static final String IDX_NOTE = "idx_note";
+    /** Composite Index */
+    public static final String IDX_STATE_NOTE = "idx_state_note";
+
     public enum State {
         ACTIVE,
         DELETED
@@ -46,12 +51,13 @@ public class XOrder extends OrmTable<XOrder> {
     @Column(pk = true)
     public static final Key<XOrder, Long> ID = newKey();
     /** XOrder state, default is ACTIVE */
-    public static final Key<XOrder, State> STATE = newKey(State.ACTIVE);
+    @Column(index = IDX_STATE_NOTE) //
+    public static final Key<XOrder, State> STATE = newKey("state", State.ACTIVE);
     /** User key */
     public static final Key<XOrder, Integer> USER_ID = newKey();
     /** Description of the Order */
-    @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true, index="idx_description") //
-    public static final Key<XOrder, String> NOTE = newKey();
+    @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true, index = {IDX_NOTE, IDX_STATE_NOTE})
+    public static final Key<XOrder, String> NOTE = newKey("note");
     /** Favorite Color */
     public static final Key<XOrder, Color> COLOR = newKey(Color.WHITE);
     /** Date of creation */
