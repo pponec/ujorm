@@ -75,6 +75,20 @@ final public class PathListProperty<UJO extends Ujo, VALUE>
         return of(ujo, index);
     }
 
+    /** Returns the first item or the {@code null} value */
+    @Override
+    public VALUE getFirstItem(final UJO ujo) {
+        final int i = getItemCount(ujo);
+        return i > 0 ? getItem(ujo, 0) : null;
+    }
+
+    /** Returns the last item or the {@code null} value */
+    @Override
+    public VALUE getLastItem(final UJO ujo) {
+        final int i = getItemCount(ujo);
+        return i > 0 ? getItem(ujo, i - 1) : null;
+    }
+
     @Override
     public VALUE of(UJO ujo, int index) {
         final Ujo u = getSemiValue(ujo, false);

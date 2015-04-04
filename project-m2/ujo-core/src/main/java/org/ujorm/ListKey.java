@@ -41,6 +41,17 @@ public interface ListKey<UJO extends Ujo, ITEM> extends Key<UJO,List<ITEM>> {
     public ITEM getItem(UJO ujo, int index);
 
     /**
+     * Returns the first item value or the null, if no item was found.
+     */
+    public ITEM getFirstItem(UJO ujo);
+
+    /**
+     * Returns the last item value or the null, if no item was found.
+     */
+    public ITEM getLastItem(UJO ujo);
+
+
+    /**
      * An alias for {@link #getItem(org.ujorm.Ujo, int)}.
      * @return Returns a value of key. The result is the same, like Ujo#readValue(ListUjoPropertyCommon).
      */

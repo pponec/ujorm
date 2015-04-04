@@ -50,16 +50,30 @@ public class ListProperty<UJO extends Ujo, ITEM>
     /** Returns a count of Items. If a key value is null, method returns 0. */
     @Override
     public int getItemCount(final UJO ujo) {
-        List<ITEM> list = of(ujo);
+        final List<ITEM> list = of(ujo);
         return list!=null ? list.size() : 0 ;
     }
 
     /**
-     * Returns a value of key. The result is the same, like Ujo#of(UjoPropertyList) .get(index) .
+     * Returns a value of key. The result is the same, like {@link Ujo#of(UjoPropertyList).get(index)} .
      */
     @Override
     public ITEM getItem(final UJO ujo, final int index) {
         return of(ujo).get(index);
+    }
+
+    /** Returns the first item or the {@code null} value */
+    @Override
+    public ITEM getFirstItem(final UJO ujo) {
+        final int i = getItemCount(ujo);
+        return i > 0 ? getItem(ujo, 0) : null;
+    }
+
+    /** Returns the last item or the {@code null} value */
+    @Override
+    public ITEM getLastItem(final UJO ujo) {
+        final int i = getItemCount(ujo);
+        return i > 0 ? getItem(ujo, i - 1) : null;
     }
 
     /**
