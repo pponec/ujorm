@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,10 +19,12 @@ package org.ujorm.orm.metaModel;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.KeyFactory;
@@ -71,11 +73,11 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     /** A name of the non-unique database index for the column, where the same index can contain more columns.
      * If the name is "AUTO" then automatic name based on column setting is generated.
      * If a single column of the index is marked as unique, so the entire index will be unique. */
-    public static final Key<MetaColumn,String> INDEX = fa.newKey("index", "");
+    public static final ListKey<MetaColumn,String> INDEX = fa.newListKey("index");
     /** A name of the unique database index for the column, where the same index can contain more columns.
      * If the name is "AUTO" then automatic name based on column setting is generated.
      * If a single column of the index is marked as unique, so the entire index will be unique. */
-    public static final Key<MetaColumn,String> UNIQUE_INDEX = fa.newKey("uniqueIndex", "");
+    public static final ListKey<MetaColumn,String> UNIQUE_INDEX = fa.newListKey("uniqueIndex");
     /** A name of the constraint for the case a foreign key */
     public static final Key<MetaColumn,String> CONSTRAINT_NAME = fa.newKey("constraintName", "");
     /** Convert, save and read application data from/to the database */
@@ -85,7 +87,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     /** The key initialization */
     static{fa.lock();}
 
-    /** If current column is a foreign key than related model is a related table column (primarky key by default). */
+    /** If current column is a foreign key than related model is a related table column (primary key by default). */
     private List<MetaColumn> relatedModel;
     /** Foreign column names. */
     private String[] foreignNames = null;
@@ -132,8 +134,8 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
             changeDefault(this, MAX_LENGTH , column.length());
             changeDefault(this, PRECISION  , column.precision());
             changeDefault(this, DB_TYPE    , column.type());
-            changeDefault(this, INDEX      , column.index());
-            changeDefault(this, UNIQUE_INDEX,column.uniqueIndex());
+            changeDefault(this, INDEX      , toList(column.index()));
+            changeDefault(this, UNIQUE_INDEX,toList(column.uniqueIndex()));
             changeDefault(this, CONSTRAINT_NAME, column.constraintName());
             changeDefault(this, CONVERTER  , column.converter());
         }
@@ -164,6 +166,15 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         // The MAX_LENGTH must be after the DB_TYPE:
         if (MAX_LENGTH.isDefault(this)) {
             MetaTable.DATABASE.of(table).changeDbLength(this);
+        }
+    }
+
+    /** Create an UnmodifiableList */
+    private static final List<String> toList(String[] items) {
+        if (items == null || items.length == 0) {
+            return Collections.emptyList();
+        } else {
+            return Collections.unmodifiableList(Arrays.asList(items));
         }
     }
 

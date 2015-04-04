@@ -552,7 +552,7 @@ public class SampleORM {
 
         assert customer != null : "The result have got the one customers";
         assert Customer.PARENT instanceof CompositeKey : "The key is type of CompositeKey" + Customer.PARENT.getClass();
-        assert parentName.getFullName().equals("Customer.parent[customerAlias].surename") : "The wong implementation CompositeKey.toString()";
+        assert parentName.getFullName().equals("Customer.parent[customerAlias].surname") : "The wrong implementation CompositeKey.toString()";
         assert "Smith".equals(customer.get(parentName));
     }
 
