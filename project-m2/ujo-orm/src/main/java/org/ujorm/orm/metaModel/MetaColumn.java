@@ -53,7 +53,9 @@ import org.ujorm.validator.ValidatorUtils;
 public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper {
     private static final Class<MetaColumn> CLASS = MetaColumn.class;
 
-    /** A constant for an auto index name */
+    /** A constant for an auto index name from the {@link SqlNameProvider} generator
+     * @see SqlNameProvider
+     */
     public static final String AUTO_INDEX_NAME = "AUTO";
 
     /** Property Factory */

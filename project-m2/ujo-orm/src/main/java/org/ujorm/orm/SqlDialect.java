@@ -59,7 +59,7 @@ abstract public class SqlDialect {
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(SqlDialect.class);
 
-    /** The table model for an internal sequence tabable support */
+    /** The table model for an internal sequence table support */
     final private SeqTableModel pkTableModel = new SeqTableModel();
 
     /** The table key for a common sequence emulator. */
@@ -1244,7 +1244,7 @@ abstract public class SqlDialect {
         return nameProvider;
     }
 
-    /** Get Exted dialect */
+    /** Get an Extended dialect */
     public SqlDialectEx getExtentedDialect() {
         if (extentedDialect == null) {
             extentedDialect = new SqlDialectEx(this);

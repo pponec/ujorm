@@ -377,12 +377,16 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
      * @return Collection of the MetaIndex objects */
     public Collection<MetaIndex> getIndexCollection() {
         final Map<String,MetaIndex> mapIndex = new HashMap<String,MetaIndex>();
+        final boolean extendedStrategy = isExtendedIndexStrategy();
         for (MetaColumn column : COLUMNS.getList(this)) {
             for (String idx : MetaColumn.UNIQUE_INDEX.of(column)) {
-                addIndex(idx, column, false, mapIndex);
+                addIndex(idx, column, true, mapIndex);
             }
             for (String idx : MetaColumn.INDEX.of(column)) {
-                addIndex(idx, column, true, mapIndex);
+                addIndex(idx, column, false, mapIndex);
+            }
+            if (extendedStrategy && column.isForeignKey()) {
+                addIndex(MetaColumn.AUTO_INDEX_NAME, column, false, mapIndex);
             }
         }
         return mapIndex.values();
@@ -402,8 +406,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         , final MetaColumn column
         , final boolean unique
         , final Map<String, MetaIndex> mapIndex) {
-        if (isExtendedIndexStrategy()
-        && (MetaColumn.AUTO_INDEX_NAME.equals(indexName) || column.isForeignKey())) {
+        if (MetaColumn.AUTO_INDEX_NAME.equals(indexName)) {
             final SqlNameProvider nameProvider = getDatabase().getDialect().getNameProvider();
             indexName = unique
                     ? nameProvider.getUniqueConstraintName(column)
