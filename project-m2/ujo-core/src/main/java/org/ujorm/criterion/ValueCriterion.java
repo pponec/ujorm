@@ -364,10 +364,18 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
                    .append(value)
                    .append(quotation)
                    ;
+            } else if (value instanceof Object[]) {
+                boolean first = true;
+                for (Object object : (Object[]) value) {
+                    if (first) {
+                        first = !first;
+                    } else {
+                        out.append(", ");
+                    }
+                    printValue(object, out);
+                }
             } else {
-                out.append(
-                    value instanceof Number ||
-                    value instanceof CharSequence
+                out.append(value instanceof Number
                     ? value.toString()
                     : new UjoCoder().encodeValue(value, false)
                 );
