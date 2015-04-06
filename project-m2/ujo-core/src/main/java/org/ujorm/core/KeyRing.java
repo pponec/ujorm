@@ -153,7 +153,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /**
      * Find <strong>indirect</strong> key by the name. Empty result can trhow NULL value if parameter throwException==false.
-     * @param names Not null key name inclukde composite keys (indirect keys).
+     * @param names Not null key name include composite keys (indirect keys).
      * @param throwException
      * @return new Key
      */
