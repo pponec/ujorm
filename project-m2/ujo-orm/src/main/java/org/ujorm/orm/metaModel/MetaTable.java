@@ -35,12 +35,12 @@ import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
-import org.ujorm.orm.SqlNameProvider;
 import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.annot.View;
+import org.ujorm.orm.ao.IndexCollector;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.orm.utility.OrmTools;
@@ -376,20 +376,20 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Create a new collection of the table indexes.
      * @return Collection of the MetaIndex objects */
     public Collection<MetaIndex> getIndexCollection() {
-        final Map<String,MetaIndex> mapIndex = new HashMap<String,MetaIndex>();
+        final IndexCollector mapIndex = new IndexCollector(this);
         final boolean extendedStrategy = isExtendedIndexStrategy();
         for (MetaColumn column : COLUMNS.getList(this)) {
             for (String idx : MetaColumn.UNIQUE_INDEX.of(column)) {
-                addIndex(idx, column, true, mapIndex);
+                mapIndex.addIndex(idx, column, true);
             }
             for (String idx : MetaColumn.INDEX.of(column)) {
-                addIndex(idx, column, false, mapIndex);
+                mapIndex.addIndex(idx, column, false);
             }
             if (extendedStrategy && column.isForeignKey()) {
-                addIndex(MetaColumn.AUTO_INDEX_NAME, column, false, mapIndex);
+                mapIndex.addIndex(MetaColumn.AUTO_INDEX_NAME, column, false);
             }
         }
-        return mapIndex.values();
+        return mapIndex.getIndexes();
     }
 
     /** Is an extended index naming strategy
@@ -399,37 +399,6 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return MetaParams.EXTENTED_INDEX_NAME_STRATEGY
               .of(DATABASE.of(this).getOrmHandler().getParameters());
     }
-
-    /** Add the column model to the index model from the IndexMap according the index name (case insensitive) */
-    private void addIndex
-        ( String indexName
-        , final MetaColumn column
-        , final boolean unique
-        , final Map<String, MetaIndex> mapIndex) {
-        if (MetaColumn.AUTO_INDEX_NAME.equals(indexName)) {
-            final SqlNameProvider nameProvider = getDatabase().getDialect().getNameProvider();
-            indexName = unique
-                    ? nameProvider.getUniqueConstraintName(column)
-                    : nameProvider.getIndexName(column);
-        }
-        if (indexName == null || indexName.isEmpty()) {
-            return;
-        }
-
-        final String index = indexName.toUpperCase();
-        MetaIndex mi = mapIndex.get(index);
-        if (mi == null) {
-            mi = new MetaIndex(indexName, this);
-            mapIndex.put(index, mi);
-        }
-        if (!unique) {
-            MetaIndex.UNIQUE.setValue(mi, false);
-        }
-        if (column != MetaIndex.COLUMNS.getLastItem(mi)) {
-            MetaIndex.COLUMNS.addItem(mi, column);
-        }
-    }
-
 
     /** Returns a parent of the parameter or the null if no parent was not found.<br/>
      * The method provides a parent in case of emulated inheritance.
@@ -449,7 +418,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return READ_ONLY.of(this);
     }
 
-    /** Asssert that the table may be changed. */
+    /** Assert that the table may be changed. */
     public void assertChangeAllowed() {
         if (isReadOnly()) {
             final String msg = "The table '" + NAME.of(this) + "' have got the READ-ONLY mode. Check the Ujorm meta-model configuration.";
