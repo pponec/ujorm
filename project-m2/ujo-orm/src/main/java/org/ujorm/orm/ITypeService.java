@@ -26,7 +26,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
  * A type service for popular Java types and more.
  * Implementation must have got an no-parameter constructor.
  * @author Pavel Ponec
- * @param <J> Java types iń the business objects
+ * @param <J> Common types of the Java objects
  * @param <D> Converted Java types to a JDBC type ready
  */
 public interface ITypeService<J,D> {
@@ -36,7 +36,7 @@ public interface ITypeService<J,D> {
      * It must be the same implementation as {@link #getValue(org.ujorm.orm.metaModel.MetaColumn, java.sql.CallableStatement, int)}.
      * @param mColumn Meta-model column, where the {@link MetaColumn#getTypeCode() typeCode} must be assigned before.
      * @param rs The ResultSet instance
-     * @param c Catabase column index starting at #1
+     * @param c Database column index starting at #1
      * @return Value form the result set.
      * @throws SQLException
      */

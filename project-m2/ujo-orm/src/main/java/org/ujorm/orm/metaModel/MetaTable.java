@@ -18,9 +18,7 @@ package org.ujorm.orm.metaModel;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
@@ -40,7 +38,7 @@ import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.annot.View;
-import org.ujorm.orm.ao.IndexCollector;
+import org.ujorm.orm.ao.ModelIndexBuilder;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.orm.utility.OrmTools;
@@ -376,20 +374,20 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Create a new collection of the table indexes.
      * @return Collection of the MetaIndex objects */
     public Collection<MetaIndex> getIndexCollection() {
-        final IndexCollector mapIndex = new IndexCollector(this);
+        final ModelIndexBuilder indexBuilder = getDatabase().getParams().getModelIndexBuilder(this);
         final boolean extendedStrategy = isExtendedIndexStrategy();
         for (MetaColumn column : COLUMNS.getList(this)) {
             for (String idx : MetaColumn.UNIQUE_INDEX.of(column)) {
-                mapIndex.addIndex(idx, column, true);
+                indexBuilder.addIndex(idx, column, true);
             }
             for (String idx : MetaColumn.INDEX.of(column)) {
-                mapIndex.addIndex(idx, column, false);
+                indexBuilder.addIndex(idx, column, false);
             }
             if (extendedStrategy && column.isForeignKey()) {
-                mapIndex.addIndex(MetaColumn.AUTO_INDEX_NAME, column, false);
+                indexBuilder.addIndex(MetaColumn.AUTO_INDEX_NAME, column, false);
             }
         }
-        return mapIndex.getIndexes();
+        return indexBuilder.getIndexModels();
     }
 
     /** Is an extended index naming strategy
