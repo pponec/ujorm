@@ -87,6 +87,7 @@
             <xs:element name="saveConfigToFile" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="initializationBatch" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="typeService" type="xs:string" minOccurs="0"></xs:element>
+            <xs:element name="modelIndexBuilder" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="metaDbService" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="sqlNameProvider" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="checkKeywords" type="CheckReport" minOccurs="0"></xs:element>

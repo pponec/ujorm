@@ -25,7 +25,7 @@ import org.ujorm.orm.AbstractMetaModel;
 
 
 /**
- * DB index metamodel.
+ * DB index meta-model.
  * @author Pavel Ponec
  */
 @Immutable

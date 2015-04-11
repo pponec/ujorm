@@ -21,14 +21,21 @@ import java.util.HashMap;
 import java.util.Map;
 import org.ujorm.orm.SqlNameProvider;
 
-/** Database index collector */
-final public class IndexCollector  {
+/** Database meta model index builder with a support of ordered columns */
+public class ModelIndexBuilder  {
 
-    private final MetaTable metaTable;
-    private final SqlNameProvider nameProvider;
-    private final Map<String, MetaIndex> mapIndex;
+    /** MetaTable */
+    protected MetaTable metaTable;
+    /** SQL name provider */
+    protected SqlNameProvider nameProvider;
+    /** Map a MetaIndex for an index name (case insensitive) */
+    protected Map<String, MetaIndex> mapIndex;
 
-    public IndexCollector(MetaTable metaTable) {
+    /** Initialize the object */
+    public void init(MetaTable metaTable) throws IllegalStateException {
+        if (this.metaTable != null) {
+            throw new IllegalStateException("The class is initialized by " + this.metaTable);
+        }
         this.metaTable = metaTable;
         this.nameProvider = metaTable.getDatabase().getDialect().getNameProvider();
         this.mapIndex = new HashMap<String, MetaIndex>();
@@ -67,7 +74,7 @@ final public class IndexCollector  {
 
     /** Returns all indexes of the current table
      * @return Collection of the Index model */
-    public Collection<MetaIndex> getIndexes() {
+    public Collection<MetaIndex> getIndexModels() {
         return mapIndex.values();
     }
 

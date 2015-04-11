@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.ao.CommentPolicy;
 import org.ujorm.orm.ao.LazyLoading;
+import org.ujorm.orm.ao.ModelIndexBuilder;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.utility.OrmTools;
 
@@ -94,6 +95,11 @@ final public class MetaParams extends AbstractMetaModel {
      * @see org.ujorm.orm.annot.Column#converter()
      */
     public static final Key<MetaParams,Class<? extends ITypeService>> TYPE_SERVICE = f.newClassKey("typeService", TypeService.class);
+    /** The class for is used for building a {@link org.ujorm.orm.metaModel.MetaIndex} model.
+     * You can specify a subtype of the class for an index special features.
+     * @see org.ujorm.orm.metaModel.MetaIndex
+     */
+    public static final Key<MetaParams,Class<? extends ModelIndexBuilder>> MODEL_INDEX_BUILDER = f.newClassKey("modelIndexBuilder", ModelIndexBuilder.class);
     /** The instance of the parameter class {@see MetaDbService} is used for creating and validation a database according to the meta-model.
      * You can overwrite some method for your ideas.
      */
@@ -269,13 +275,24 @@ final public class MetaParams extends AbstractMetaModel {
     }
 
     /** Returns an instance of the initialization batch */
-    public InitializationBatch getInitializationBatch() throws IllegalStateException{
+    public InitializationBatch getInitializationBatch() throws IllegalStateException {
         if (INITIALIZATION_BATCH.isDefault(this)) {
             return this.batch;
         } else try {
             return INITIALIZATION_BATCH.of(this).newInstance();
         } catch (Exception e) {
             throw new IllegalStateException("Instance of the class failed: " + INITIALIZATION_BATCH.of(this));
+        }
+    }
+
+    /** Create new instance of the class ModelIndexBuilder and initialize the result by a parameter */
+    public ModelIndexBuilder getModelIndexBuilder(MetaTable metaTable) throws IllegalStateException {
+        try {
+            final ModelIndexBuilder result = MODEL_INDEX_BUILDER.of(this).newInstance();
+            result.init(metaTable);
+            return result;
+        } catch (Exception e) {
+            throw new IllegalStateException("Instance of the class failed: " + MODEL_INDEX_BUILDER.of(this));
         }
     }
 }
