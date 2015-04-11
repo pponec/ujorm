@@ -38,8 +38,8 @@ import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.utility.OrmTools;
 
 /**
- * A logical database description.
- * The class is a root of database configuration.
+ * An ORM configuration parameters is a part of meta-model.
+ * The class is a root of a database configuration.
  * @author Pavel Ponec
  */
 @Immutable
@@ -53,19 +53,19 @@ final public class MetaParams extends AbstractMetaModel {
      * The default value is PROTECTED_CACHE.
      * @see CachePolicy Parameter values */
     public static final Key<MetaParams,CachePolicy> CACHE_POLICY = f.newKey("cachePolicy", CachePolicy.PROTECTED_CACHE);
-    /** Special prameter for an automatically assembled table alias prefix.
+    /** Special parameter for an automatically assembled table alias prefix.
      * The default value is the empty string. */
     public static final Key<MetaParams,String> TABLE_ALIAS_PREFIX = f.newKey("tableAliasPrefix", "");
-    /** Special prameter for an automatically assembled table alias prefix.
+    /** Special parameter for an automatically assembled table alias prefix.
      * The default value is the empty String. */
     public static final Key<MetaParams,String> TABLE_ALIAS_SUFFIX = f.newKey("tableAliasSuffix", "");
     /** Sequential cache parameter saves the number of requests to the following sequence when a insert statement into DB.
-     * The value of the parameter is used only when creating a new DB, indivuální ORM changes for each table
+     * The value of the parameter is used only when creating a new DB, specific ORM changes for each table
      * can be changed any time later in the column 'cache' of table 'ormujo_pk_support' .
      * Default values is 100, the smallest possible value is 1. */
     public static final Key<MetaParams,Integer> SEQUENCE_CACHE = f.newKey("sequenceCache", 100);
     /** The parameter 'lazyLoading' specify a lazy-loading policy in case
-     * that UJO objects have got any sesson. Argument options are described
+     * that UJO objects have got any session. Argument options are described
      * in the enum {@link org.ujorm.orm.ao.LazyLoading}.
      * In case the object have assigned no session, the key returns the {@code null} value
      * as well as common javabeans. A default key value is the
@@ -84,18 +84,18 @@ final public class MetaParams extends AbstractMetaModel {
     public static final Key<MetaParams,CommentPolicy> COMMENT_POLICY = f.newKey("commentPolicy", CommentPolicy.ON_ANY_CHANGE);
     /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
     public static final Key<MetaParams,File> SAVE_CONFIG_TO_FILE = f.newKey("saveConfigToFile");
-    /** An inicializaton batch implementation can be called after building the ORM meta-model.
+    /** An initialization batch implementation can be called after building the ORM meta-model.
      * Default value means: run no batch.
      * @see InitializationBatch
      */
     public static final Key<MetaParams,Class<? extends InitializationBatch>> INITIALIZATION_BATCH = f.newClassKey("initializationBatch", InitializationBatch.class);
-    /** The instance of the parameter class {@see ITypeService} is used for conversion, reading and writting to/from the ResultSet.
-     * You can specify a sybtype of the class for a commiono special fetures.
+    /** The instance of the parameter class {@see ITypeService} is used for conversion, reading and writing to/from the ResultSet.
+     * You can specify a subtype of the class for a column special features.
      * @see org.ujorm.orm.annot.Column#converter()
      */
     public static final Key<MetaParams,Class<? extends ITypeService>> TYPE_SERVICE = f.newClassKey("typeService", TypeService.class);
-    /** The instance of the parameter class {@see MetaDbService} is used for creating and validaton a database according to the meta-model.
-     * You can overwrite some method for youre ieas.
+    /** The instance of the parameter class {@see MetaDbService} is used for creating and validation a database according to the meta-model.
+     * You can overwrite some method for your ideas.
      */
     public static final Key<MetaParams,Class<? extends MetaDbService>> META_DB_SERVICE = f.newClassKey("metaDbService", MetaDbService.class);
     /** Default SQL name provider for special names of database is called: {@link SqlNameProvider} */
@@ -114,7 +114,7 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** The parameter value TRUE affects to a Sequence key name in the internal sequence generator.
      * Value TRUE generate a special character "~" instead of default database schema in the sequence table.
-     * The benefit of the special chatacter can be evaluated in the case of the renaming of the database schema.
+     * The benefit of the special character can be evaluated in the case of the renaming of the database schema.
      * In case of change of the parameter value is necessary to convert values in the database column 'ujorm_pk_support.id' by hand.
      * <br>NOTE: The default value is FALSE for backward compatibility, however for new projects is preferred value TRUE.
      */
@@ -122,15 +122,15 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** Any action type or CREATE, UPDATE, DELETE on inheritance objects calls the same action to its 'parent' object.
      * If the mode is off than you must take care of all its parents in the code handy.
-     * The default falue is TRUE.<br />
-     * Note: the parameter does not affect the opearations
+     * The default failure is TRUE.<br />
+     * Note: the parameter does not affect the operations
      * {@link org.ujorm.orm.Session#update(org.ujorm.orm.OrmUjo, org.ujorm.criterion.Criterion) batch update} or
      * {@link org.ujorm.orm.Session#delete(org.ujorm.criterion.Criterion) batch delete} due direct modification of database.
      * @see MetaTable#getParent(org.ujorm.orm.OrmUjo) MetaTable.getParent(..)
      */
     public static final Key<MetaParams,Boolean> INHERITANCE_MODE = f.newKey("inheritanceMode", true);
 
-    /** The parameter is used to limit of the insert sttatemtn in case the "sql multirow insert".
+    /** The parameter is used to limit of the insert statement in case the "sql multirow insert".
      * The default value is 100.
      * @see org.ujorm.orm.Session#save(java.util.List, int) save(List)
      */
@@ -147,13 +147,13 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Key<MetaParams,Boolean> LOG_METAMODEL_INFO = f.newKey("logMetamodelInfo", true);
 
-    /** Enable the loggin for a multi-value SQL statement INSERT including its values
+    /** Enable the login for a multi-value SQL statement INSERT including its values
      * where the default parameter value is {@code false}.
      * If JDBC driver does not support the multi-value statement, the parameter is ignored.
      */
     public static final Key<MetaParams,Boolean> LOG_SQL_MULTI_INSERT = f.newKey("logSqlMultiInsert", false);
 
-    /** Pamameter tries to install a brighe to the <a href="http://logback.qos.ch/">Logback</a> logging framework
+    /** Parameter tries to install a bridge to the <a href="http://logback.qos.ch/">Logback</a> logging framework
      * using a statement <code>SLF4JBridgeHandler.install()</code>;
      */
     public static final Key<MetaParams,Boolean> LOGBACK_LOGGING_SUPPORT = f.newKey("logbackLoggingSupport", false);
@@ -268,7 +268,7 @@ final public class MetaParams extends AbstractMetaModel {
         this.batch = batch;
     }
 
-    /** Retunrs an instance of the initialization batch */
+    /** Returns an instance of the initialization batch */
     public InitializationBatch getInitializationBatch() throws IllegalStateException{
         if (INITIALIZATION_BATCH.isDefault(this)) {
             return this.batch;
