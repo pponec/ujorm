@@ -17,8 +17,10 @@ package org.ujorm.orm;
 
 import java.util.Collection;
 import junit.framework.TestCase;
+import org.ujorm.orm.ao.IndexModelOrderedBuilder;
 import org.ujorm.orm.bo.*;
 import org.ujorm.orm.metaModel.MetaIndex;
+import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 
 /**
@@ -27,7 +29,8 @@ import org.ujorm.orm.metaModel.MetaTable;
  */
 public class ModelTest extends TestCase {
 
-    static private OrmHandler handler;
+    static private OrmHandler handlerBase;
+    static private OrmHandler handlerExtended;
 
     public ModelTest(String testName) {
         super(testName);
@@ -39,9 +42,36 @@ public class ModelTest extends TestCase {
 
     // ---------- TESTS -----------------------
 
-    public void testMetaIndex() {
-        System.out.print("MetaIndex");
-        MetaTable metaTable = getHandler().findTableModel(XOrder.class);
+    public void testMetaIndexBase() {
+        System.out.print("MetaIndex base");
+        MetaTable metaTable = getHandlerBase().findTableModel(XOrder.class);
+        assertNotNull(metaTable);
+
+        Collection<MetaIndex> indexes = metaTable.getIndexCollection();
+        assertEquals(2, indexes.size());
+        int count = 0;
+
+        for (MetaIndex index : indexes) {
+            if (MetaIndex.NAME.of(index).equals(XOrder.IDX_STATE_NOTE)) {
+                assertEquals(false, MetaIndex.UNIQUE.getValue(index).booleanValue());
+                assertEquals(2, index.getColumns().size());
+                assertSame(XOrder.STATE, index.getColumns().get(0).getKey());
+                assertSame(XOrder.NOTE, index.getColumns().get(1).getKey());
+                ++count;
+            }
+            if (MetaIndex.NAME.of(index).equals(XOrder.IDX_NOTE)) {
+                assertEquals(false, MetaIndex.UNIQUE.getValue(index).booleanValue());
+                assertSame(1, index.getColumns().size());
+                assertSame(XOrder.NOTE, index.getColumns().get(0).getKey());
+                ++count;
+            }
+        }
+        assertEquals(count, indexes.size());
+    }
+
+    public void testMetaIndexExtended() {
+        System.out.print("MetaIndex extended");
+        MetaTable metaTable = getHandlerExtended().findTableModel(XOrder.class);
         assertNotNull(metaTable);
 
         Collection<MetaIndex> indexes = metaTable.getIndexCollection();
@@ -68,12 +98,30 @@ public class ModelTest extends TestCase {
 
     // ---------- TOOLS -----------------------
 
-    static protected OrmHandler getHandler() {
-        if (handler == null) {
-            handler = new OrmHandler();
-            handler.loadDatabase(XDatabase.class);
+    static protected OrmHandler getHandlerBase() {
+        if (handlerBase == null) {
+            handlerBase = new OrmHandler();
+            handlerBase.loadDatabase(XDatabase.class);
         }
-        return handler;
+        return handlerBase;
+    }
+
+    static protected OrmHandler getHandlerExtended() {
+        if (handlerExtended == null) {
+            handlerExtended = new OrmHandler();
+
+            // There are prefered default keys for a production environment:
+            boolean yesIWantToChangeDefaultParameters = true;
+            if (yesIWantToChangeDefaultParameters) {
+                MetaParams params = new MetaParams();
+                params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
+                params.set(MetaParams.INDEX_MODEL_BUILDER, IndexModelOrderedBuilder.class);
+                handlerExtended.config(params);
+            }
+
+            handlerExtended.loadDatabase(XDatabase.class);
+        }
+        return handlerExtended;
     }
 
     public static void main(java.lang.String[] argList) {
