@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.ujorm.core.annot.PackagePrivate;
+import static org.ujorm.orm.metaModel.MetaTable.COLUMNS;
 
 /** Database meta model index builder with a support of ordered columns */
 public class IndexModelOrderedBuilder extends IndexModelBuilder {
@@ -71,6 +72,8 @@ public class IndexModelOrderedBuilder extends IndexModelBuilder {
      * @return Collection of the Index model */
     @Override
     public Collection<MetaIndex> getIndexModels() {
+        super.addColumnsToIndex();
+
         final List<MetaIndex> result = new ArrayList<MetaIndex>();
         for (List<OrderedColumn> columns : indexes.values()) {
             addToResult(columns, false, result);
