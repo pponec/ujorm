@@ -77,6 +77,12 @@ public class IndexModelBuilder  {
     /** Returns all indexes of the current table
      * @return Collection of the Index model */
     public Collection<MetaIndex> getIndexModels() {
+        addColumnsToIndex();
+        return mapIndex.values();
+    }
+
+    /** Add columns to index */
+    protected void addColumnsToIndex() {
         final boolean extendedStrategy = isExtendedIndexStrategy();
         for (MetaColumn column : COLUMNS.getList(metaTable)) {
             for (String idx : MetaColumn.UNIQUE_INDEX.of(column)) {
@@ -89,8 +95,6 @@ public class IndexModelBuilder  {
                 addIndex(MetaColumn.AUTO_INDEX_NAME, column, false);
             }
         }
-
-        return mapIndex.values();
     }
 
     /** Is an extended index naming strategy
