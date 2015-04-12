@@ -24,7 +24,14 @@ import java.util.List;
 import java.util.Map;
 import org.ujorm.core.annot.PackagePrivate;
 
-/** Database meta model index builder with a support of ordered columns */
+/** Database meta model index builder with a support of ordered columns.
+ * The colum order index can be written at the end of column name,
+ * where the number value is separated by the character #, see the example:
+ * <pre class="pre">
+ *   &#64;Column(index = IDX_STATE_NOTE + "#10")
+ *   public static final Key&lt;XOrder, State&gt; STATE = newKey();
+ * </pre>
+ */
 public class IndexModelOrderedBuilder extends IndexModelBuilder {
 
     /** Order separator in the column name */
