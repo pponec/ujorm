@@ -22,7 +22,7 @@ import java.util.Map;
 import org.ujorm.orm.SqlNameProvider;
 
 /** Database meta model index builder with a support of ordered columns */
-public class ModelIndexBuilder  {
+public class IndexModelBuilder  {
 
     /** MetaTable */
     protected MetaTable metaTable;

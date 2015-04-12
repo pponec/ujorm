@@ -38,7 +38,7 @@ import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.annot.View;
-import org.ujorm.orm.ao.ModelIndexBuilder;
+import org.ujorm.orm.ao.IndexModelBuilder;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.orm.utility.OrmTools;
@@ -374,7 +374,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Create a new collection of the table indexes.
      * @return Collection of the MetaIndex objects */
     public Collection<MetaIndex> getIndexCollection() {
-        final ModelIndexBuilder indexBuilder = getDatabase().getParams().getModelIndexBuilder(this);
+        final IndexModelBuilder indexBuilder = getDatabase().getParams().getIndexModelBuilder(this);
         final boolean extendedStrategy = isExtendedIndexStrategy();
         for (MetaColumn column : COLUMNS.getList(this)) {
             for (String idx : MetaColumn.UNIQUE_INDEX.of(column)) {
