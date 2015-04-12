@@ -34,7 +34,7 @@ import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.ao.CommentPolicy;
 import org.ujorm.orm.ao.LazyLoading;
-import org.ujorm.orm.ao.ModelIndexBuilder;
+import org.ujorm.orm.ao.IndexModelBuilder;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.utility.OrmTools;
 
@@ -99,7 +99,7 @@ final public class MetaParams extends AbstractMetaModel {
      * You can specify a subtype of the class for an index special features.
      * @see org.ujorm.orm.metaModel.MetaIndex
      */
-    public static final Key<MetaParams,Class<? extends ModelIndexBuilder>> MODEL_INDEX_BUILDER = f.newClassKey("modelIndexBuilder", ModelIndexBuilder.class);
+    public static final Key<MetaParams,Class<? extends IndexModelBuilder>> INDEX_MODEL_BUILDER = f.newClassKey("modelIndexBuilder", IndexModelBuilder.class);
     /** The instance of the parameter class {@see MetaDbService} is used for creating and validation a database according to the meta-model.
      * You can overwrite some method for your ideas.
      */
@@ -285,14 +285,14 @@ final public class MetaParams extends AbstractMetaModel {
         }
     }
 
-    /** Create new instance of the class ModelIndexBuilder and initialize the result by a parameter */
-    public ModelIndexBuilder getModelIndexBuilder(MetaTable metaTable) throws IllegalStateException {
+    /** Create new instance of the class IndexModelBuilder and initialize the result by a parameter */
+    public IndexModelBuilder getIndexModelBuilder(MetaTable metaTable) throws IllegalStateException {
         try {
-            final ModelIndexBuilder result = MODEL_INDEX_BUILDER.of(this).newInstance();
+            final IndexModelBuilder result = INDEX_MODEL_BUILDER.of(this).newInstance();
             result.init(metaTable);
             return result;
         } catch (Exception e) {
-            throw new IllegalStateException("Instance of the class failed: " + MODEL_INDEX_BUILDER.of(this));
+            throw new IllegalStateException("Instance of the class failed: " + INDEX_MODEL_BUILDER.of(this));
         }
     }
 }

@@ -25,7 +25,7 @@ import java.util.Map;
 import org.ujorm.core.annot.PackagePrivate;
 
 /** Database meta model index builder with a support of ordered columns */
-public class ModelIndexOrderedBuilder extends ModelIndexBuilder {
+public class IndexModelOrderedBuilder extends IndexModelBuilder {
 
     /** Order separator in the column name */
     @PackagePrivate static final char ORDER_SEPARATOR = '#';
