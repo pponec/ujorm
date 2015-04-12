@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.ujorm.core.annot.PackagePrivate;
-import static org.ujorm.orm.metaModel.MetaTable.COLUMNS;
 
 /** Database meta model index builder with a support of ordered columns */
 public class IndexModelOrderedBuilder extends IndexModelBuilder {
@@ -31,17 +30,22 @@ public class IndexModelOrderedBuilder extends IndexModelBuilder {
     /** Order separator in the column name */
     @PackagePrivate static final char ORDER_SEPARATOR = '#';
     /** Order separator in the column name */
-    @PackagePrivate static final Integer DEFAULT_ORDER = 1;
+    protected static final Integer DEFAULT_ORDER = 1;
 
     private final Map<String, List<OrderedColumn>> indexes = new HashMap<String, List<OrderedColumn>>();
     private final Map<String, List<OrderedColumn>> uniqueIndexes = new HashMap<String, List<OrderedColumn>>();
+
+    /** Returns a separator of the column order from an index name */
+    protected char getOrderSerparator() {
+        return ORDER_SEPARATOR;
+    }
 
     /** Add the column model to the column model from the IndexMap according the column name (case insensitive)
      * @param indexName Case sensitive column name
      * @param column Column model
      * @param unique Unique column request */
     @Override
-    public void addIndex
+    protected void addIndex
         ( String indexName
         , final MetaColumn column
         , final boolean unique) {
@@ -54,17 +58,25 @@ public class IndexModelOrderedBuilder extends IndexModelBuilder {
                     ? nameProvider.getUniqueConstraintName(column)
                     : nameProvider.getIndexName(column);
         }
-        final String indexKey = indexName.toUpperCase();
+        final int iSep = indexName.lastIndexOf(getOrderSerparator());
+        final String indexNameShort = iSep > 0 ? indexName.substring(0, iSep) : indexName;
+        final String indexKey = indexNameShort.toUpperCase();
+        final Integer columnOrder = iSep > 0 ? Integer.parseInt(indexName.substring(1 + iSep)) : DEFAULT_ORDER;
         final Map<String, List<OrderedColumn>> idxMap = unique ? uniqueIndexes : indexes;
+        //
         List<OrderedColumn> columns = idxMap.get(indexKey);
         if (columns == null) {
             columns = new ArrayList<OrderedColumn>();
             idxMap.put(indexKey, columns);
         }
-        MetaColumn lastCol = columns.isEmpty() ? null
+        final MetaColumn lastCol = columns.isEmpty()
+                ? null
                 : columns.get(columns.size() - 1).column;
         if (column != lastCol) {
-            columns.add(new OrderedColumn(indexName, column, DEFAULT_ORDER));
+            columns.add(new OrderedColumn
+                 ( indexNameShort
+                 , column
+                 , columnOrder));
         }
     }
 
