@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.ujorm.orm.SqlNameProvider;
+import static org.ujorm.orm.metaModel.MetaTable.COLUMNS;
+import static org.ujorm.orm.metaModel.MetaTable.DATABASE;
 
 /** Database meta model index builder with a support of ordered columns */
 public class IndexModelBuilder  {
@@ -45,7 +47,7 @@ public class IndexModelBuilder  {
      * @param indexName Case sensitive index name
      * @param column Column model
      * @param unique Unique index request */
-    public void addIndex
+    protected void addIndex
         ( String indexName
         , final MetaColumn column
         , final boolean unique) {
@@ -75,7 +77,27 @@ public class IndexModelBuilder  {
     /** Returns all indexes of the current table
      * @return Collection of the Index model */
     public Collection<MetaIndex> getIndexModels() {
+        final boolean extendedStrategy = isExtendedIndexStrategy();
+        for (MetaColumn column : COLUMNS.getList(metaTable)) {
+            for (String idx : MetaColumn.UNIQUE_INDEX.of(column)) {
+                addIndex(idx, column, true);
+            }
+            for (String idx : MetaColumn.INDEX.of(column)) {
+                addIndex(idx, column, false);
+            }
+            if (extendedStrategy && column.isForeignKey()) {
+                addIndex(MetaColumn.AUTO_INDEX_NAME, column, false);
+            }
+        }
+
         return mapIndex.values();
+    }
+
+    /** Is an extended index naming strategy
+     * @see MoreParams#EXTENTED_INDEX_NAME_STRATEGY
+     */
+    protected Boolean isExtendedIndexStrategy() {
+        return MetaParams.EXTENTED_INDEX_NAME_STRATEGY.of(DATABASE.of(metaTable).getOrmHandler().getParameters());
     }
 
 }

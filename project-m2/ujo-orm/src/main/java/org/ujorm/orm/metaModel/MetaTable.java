@@ -374,28 +374,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Create a new collection of the table indexes.
      * @return Collection of the MetaIndex objects */
     public Collection<MetaIndex> getIndexCollection() {
-        final IndexModelBuilder indexBuilder = getDatabase().getParams().getIndexModelBuilder(this);
-        final boolean extendedStrategy = isExtendedIndexStrategy();
-        for (MetaColumn column : COLUMNS.getList(this)) {
-            for (String idx : MetaColumn.UNIQUE_INDEX.of(column)) {
-                indexBuilder.addIndex(idx, column, true);
-            }
-            for (String idx : MetaColumn.INDEX.of(column)) {
-                indexBuilder.addIndex(idx, column, false);
-            }
-            if (extendedStrategy && column.isForeignKey()) {
-                indexBuilder.addIndex(MetaColumn.AUTO_INDEX_NAME, column, false);
-            }
-        }
-        return indexBuilder.getIndexModels();
-    }
-
-    /** Is an extended index naming strategy
-     * @see MoreParams#EXTENTED_INDEX_NAME_STRATEGY
-     */
-    private Boolean isExtendedIndexStrategy() {
-        return MetaParams.EXTENTED_INDEX_NAME_STRATEGY
-              .of(DATABASE.of(this).getOrmHandler().getParameters());
+        return getDatabase().getParams().getIndexModelBuilder(this).getIndexModels();
     }
 
     /** Returns a parent of the parameter or the null if no parent was not found.<br/>
