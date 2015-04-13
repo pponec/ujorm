@@ -46,7 +46,8 @@ import org.ujorm.orm.utility.OrmTools;
 @Immutable
 final public class MetaParams extends AbstractMetaModel {
     private static final Class<MetaParams> CLASS = MetaParams.class;
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaParams.class);
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(CLASS);
+    private static final String INSTANCE_FAILED_MSG = "Instance of the class failed: ";
 
     /** Property Factory */
     private static final KeyFactory<MetaParams> f = KeyFactory.CamelBuilder.get(CLASS);
@@ -96,10 +97,13 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Key<MetaParams,Class<? extends ITypeService>> TYPE_SERVICE = f.newClassKey("typeService", TypeService.class);
     /** The class for is used for building a {@link org.ujorm.orm.metaModel.MetaIndex} model.
-     * You can specify a subtype of the class for an index special features.
+     * You can specify a subtype of the class {@link org.ujorm.orm.ao.IndexModelBuilder}
+     * for an index special features.
+     * @see org.ujorm.orm.ao.IndexModelBuilder
+     * @see org.ujorm.orm.ao.IndexModelOrderedBuilder
      * @see org.ujorm.orm.metaModel.MetaIndex
      */
-    public static final Key<MetaParams,Class<? extends IndexModelBuilder>> INDEX_MODEL_BUILDER = f.newClassKey("modelIndexBuilder", IndexModelBuilder.class);
+    public static final Key<MetaParams,Class<? extends IndexModelBuilder>> INDEX_MODEL_BUILDER = f.newClassKey("indexModelBuilder", IndexModelBuilder.class);
     /** The instance of the parameter class {@see MetaDbService} is used for creating and validation a database according to the meta-model.
      * You can overwrite some method for your ideas.
      */
@@ -221,7 +225,7 @@ final public class MetaParams extends AbstractMetaModel {
                 result = converterClass.newInstance();
                 typeServices.put(converterClass, result);
             } catch (Exception e) {
-                throw new IllegalStateException("Can't create a type service for the " + converterClass, e);
+                return throwInstantiationException(converterClass, e);
             }
         }
         return result;
@@ -281,7 +285,7 @@ final public class MetaParams extends AbstractMetaModel {
         } else try {
             return INITIALIZATION_BATCH.of(this).newInstance();
         } catch (Exception e) {
-            throw new IllegalStateException("Instance of the class failed: " + INITIALIZATION_BATCH.of(this));
+            return throwInstantiationException(INITIALIZATION_BATCH.of(this), e);
         }
     }
 
@@ -292,9 +296,13 @@ final public class MetaParams extends AbstractMetaModel {
             result.init(metaTable);
             return result;
         } catch (Exception e) {
-            final String msg = "Instance of the class failed: " + INDEX_MODEL_BUILDER.of(this);
-            throw new IllegalStateException(msg, e);
+            return throwInstantiationException(INDEX_MODEL_BUILDER.of(this), e);
         }
+    }
+
+    /** Throws an unchecked exception due an InstantiationException */
+    private <T> T throwInstantiationException(final Class<?> type, final Exception e) throws IllegalStateException {
+        throw new IllegalStateException(INSTANCE_FAILED_MSG + type, e);
     }
 }
 
