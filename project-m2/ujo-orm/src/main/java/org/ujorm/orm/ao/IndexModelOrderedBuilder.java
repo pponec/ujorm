@@ -24,30 +24,44 @@ import java.util.List;
 import java.util.Map;
 import org.ujorm.core.annot.PackagePrivate;
 
-/** Database meta model index builder with a support of ordered columns.
- * The colum order index can be written at the end of column name,
- * where the number value is separated by the character #, see the example:
+/** Database meta index model builder with a user ordered columns support.
+ * Two columns of a database composite index can be ordered according a number
+ * at the end of a index name separated by the character {@code '#'}.
+ * Two index columns with the same order value are sorted according
+ * to the natural order of the Keys in the {@link Ujo} class.
+ * The default order value (with no number in the index name) is <strong>10</strong>.
+ * <br/>
+ * See the next example to create a composite index with two columns in a reverted order:
  * <pre class="pre">
- *   &#64;Column(index = IDX_STATE_NOTE + "#10")
+ *   &#64;Column(index = IDX_STATE_NOTE + <strong>"#30"</strong>)
  *   public static final Key&lt;XOrder, State&gt; STATE = newKey();
+ *
+ *   &#64;Column(index = IDX_STATE_NOTE + <strong>"#20"</strong>)
+ *   public static final Key&lt;XOrder, Integer&gt; COUNT = newKey();
  * </pre>
+ * The builder class can be changed by the parameter {@link MetaParams#INDEX_MODEL_BUILDER}.
+ * @see MetaParams#INDEX_MODEL_BUILDER
  */
 public class IndexModelOrderedBuilder extends IndexModelBuilder {
 
     /** Order separator in the column name */
     @PackagePrivate static final char ORDER_SEPARATOR = '#';
-    /** Order separator in the column name */
-    protected static final Integer DEFAULT_ORDER = 1;
+    /** The default index column value is 10 */
+    protected static final Integer DEFAULT_ORDER = 10;
 
     private final Map<String, List<OrderedColumn>> indexes = new HashMap<String, List<OrderedColumn>>();
     private final Map<String, List<OrderedColumn>> uniqueIndexes = new HashMap<String, List<OrderedColumn>>();
 
-    /** Returns a separator of the column order from an index name */
+    /** Returns a separator of the column order from an index name.
+     * @return The default value is {@code '#'}
+     * @see #DEFAULT_ORDER
+     */
     protected char getOrderSerparator() {
         return ORDER_SEPARATOR;
     }
 
-    /** Add the column model to the column model from the IndexMap according the column name (case insensitive)
+    /** Add the column model to the column model from the IndexMap
+     * according the column name (case insensitive)
      * @param indexName Case sensitive column name
      * @param column Column model
      * @param unique Unique column request */
