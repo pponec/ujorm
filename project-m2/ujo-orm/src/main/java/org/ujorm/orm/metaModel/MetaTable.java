@@ -38,10 +38,10 @@ import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.annot.View;
-import org.ujorm.orm.ao.IndexModelBuilder;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.orm.utility.OrmTools;
+import static org.ujorm.orm.metaModel.MetaParams.INDEX_MODEL_BUILDER;
 
 /**
  * DB table or view meta-model.
@@ -374,7 +374,18 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Create a new collection of the table indexes.
      * @return Collection of the MetaIndex objects */
     public Collection<MetaIndex> getIndexCollection() {
-        return getDatabase().getParams().getIndexModelBuilder(this).getIndexModels();
+        final MetaParams params = getDatabase().getParams();
+        try {
+            return params.getIndexModelBuilder(this).getIndexModels();
+        } catch (Exception e) {
+            final String msg = String.format
+                    ( "The %s with an entity %s fails, see the parameter %s"
+                    , params.get(INDEX_MODEL_BUILDER)
+                    , getType().getSimpleName()
+                    , INDEX_MODEL_BUILDER.getFullName()
+            );
+            throw new IllegalStateException(msg, e);
+        }
     }
 
     /** Returns a parent of the parameter or the null if no parent was not found.<br/>

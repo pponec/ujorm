@@ -292,7 +292,8 @@ final public class MetaParams extends AbstractMetaModel {
             result.init(metaTable);
             return result;
         } catch (Exception e) {
-            throw new IllegalStateException("Instance of the class failed: " + INDEX_MODEL_BUILDER.of(this));
+            final String msg = "Instance of the class failed: " + INDEX_MODEL_BUILDER.of(this);
+            throw new IllegalStateException(msg, e);
         }
     }
 }
