@@ -32,11 +32,11 @@ import org.ujorm.orm.AbstractMetaModel;
 final public class MetaSelect extends AbstractMetaModel {
     private static final Class<MetaSelect> CLASS = MetaSelect.class;
 
+    /** Logger */
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(CLASS);
+
     /** Schema variable is replaced for a real schema name. */
     public static final String SCHEMA = "${SCHEMA}";
-
-    /** Logger */
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaSelect.class);
 
     /** Property Factory */
     private static final KeyFactory<MetaSelect> fa = KeyFactory.CamelBuilder.get(CLASS);
