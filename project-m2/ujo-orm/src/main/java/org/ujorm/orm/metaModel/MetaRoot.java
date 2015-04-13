@@ -45,7 +45,7 @@ import org.ujorm.orm.utility.OrmTools;
 @Immutable
 final public class MetaRoot extends AbstractMetaModel {
     private static final Class<MetaRoot> CLASS = MetaRoot.class;
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaRoot.class);
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(CLASS);
     /** XSD source */
     private static final String XSD_SOURCE = "http://ujorm.org/ujorm-1.56.xsd";
 
