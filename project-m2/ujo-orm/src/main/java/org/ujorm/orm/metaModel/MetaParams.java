@@ -101,7 +101,6 @@ final public class MetaParams extends AbstractMetaModel {
      * for an index special features.
      * @see org.ujorm.orm.ao.IndexModelBuilder
      * @see org.ujorm.orm.ao.IndexModelOrderedBuilder
-     * @see org.ujorm.orm.metaModel.MetaIndex
      */
     public static final Key<MetaParams,Class<? extends IndexModelBuilder>> INDEX_MODEL_BUILDER = f.newClassKey("indexModelBuilder", IndexModelBuilder.class);
     /** The instance of the parameter class {@see MetaDbService} is used for creating and validation a database according to the meta-model.

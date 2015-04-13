@@ -23,7 +23,21 @@ import org.ujorm.orm.SqlNameProvider;
 import static org.ujorm.orm.metaModel.MetaTable.COLUMNS;
 import static org.ujorm.orm.metaModel.MetaTable.DATABASE;
 
-/** Database meta model index builder with a support of ordered columns */
+/** The database index model builder. The builder sorts columns of the composite index
+ * according the natural order of Keys in the {@link Ujo} class
+ * <br/>
+ * See the next example to create a composite index with two columns with a natural order:
+ * <pre class="pre">
+ *   &#64;Column(index = IDX_STATE_NOTE)
+ *   public static final Key&lt;XOrder, State&gt; STATE = newKey();
+ *
+ *   &#64;Column(index = IDX_STATE_NOTE)
+ *   public static final Key&lt;XOrder, Integer&gt; COUNT = newKey();
+ * </pre>
+ * The builder class can be changed by the parameter {@link MetaParams#INDEX_MODEL_BUILDER}.
+ * @see IndexModelOrderedBuilder
+ * @see MetaParams#INDEX_MODEL_BUILDER
+ */
 public class IndexModelBuilder  {
 
     /** MetaTable */
