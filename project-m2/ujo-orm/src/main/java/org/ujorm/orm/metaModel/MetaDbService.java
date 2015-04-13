@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
@@ -113,7 +114,9 @@ public class MetaDbService {
             } catch (SQLException ex) {
                 LOGGER.log(WARN, "Can't rollback DB" + db.getId(), ex);
             }
-            throw new IllegalArgumentException(Session.SQL_ILLEGAL + getSql(), e);
+            final String msg = Session.SQL_ILLEGAL + getSql();
+            LOGGER.log(Level.SEVERE, msg, e);
+            throw new IllegalArgumentException(msg, e);
         }
     }
 
