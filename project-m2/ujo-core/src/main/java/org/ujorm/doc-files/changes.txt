@@ -5,6 +5,7 @@ The Ujorm release notes
 release 1.56 (2015-04-??)
 + ORM: database composite indexes are supported for any columns with custom the order
 + ORM: the ORM configuration supports a custom index model building using an IndexModelBuilder sub-class implementation
++ ORM: the UUID type is supported
 
 release 1.55 (2015-03-22)
 + ORM: The fetching or relations is fixed
