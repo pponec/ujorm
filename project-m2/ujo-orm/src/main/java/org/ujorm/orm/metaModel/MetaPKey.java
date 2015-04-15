@@ -74,19 +74,18 @@ final public class MetaPKey extends AbstractMetaModel {
 
             MetaColumn column = COLUMNS.getItem(this, 0);
             Key key = column.getKey();
-            if (key.of(bo)!=null) {
+            if (key.of(bo) != null) {
                 return false;
             }
 
-            final long value = TABLE.of(this).getSequencer().nextValue(session);
-
             switch (column.getTypeCode()) {
-                case TypeService.LONG    : bo.writeValue(key,         value); return true;
-                case TypeService.INT     : bo.writeValue(key, (int  ) value); return true;
-                case TypeService.SHORT   : bo.writeValue(key, (short) value); return true;
-                case TypeService.BYTE    : bo.writeValue(key, (byte ) value); return true;
-                case TypeService.BIG_INTE: bo.writeValue(key, BigInteger.valueOf(value)); return true;
-                case TypeService.STRING  : bo.writeValue(key, String.valueOf(value)); return true;
+                case TypeService.LONG    : bo.writeValue(key, nextValue(session)); return true;
+                case TypeService.INT     : bo.writeValue(key, (int ) nextValue(session)); return true;
+                case TypeService.SHORT   : bo.writeValue(key, (short) nextValue(session)); return true;
+                case TypeService.BYTE    : bo.writeValue(key, (byte) nextValue(session)); return true;
+                case TypeService.BIG_INTE: bo.writeValue(key, BigInteger.valueOf(nextValue(session))); return true;
+                case TypeService.STRING  : bo.writeValue(key, String.valueOf(nextValue(session))); return true;
+                case TypeService.UUID    : bo.writeValue(key, java.util.UUID.randomUUID()); return true;
                 default: return false;
             }
         } else {
@@ -100,6 +99,11 @@ final public class MetaPKey extends AbstractMetaModel {
             }
             return false;
         }
+    }
+
+    /** Generate a next value */
+    protected final long nextValue(final Session session) {
+        return TABLE.of(this).getSequencer().nextValue(session);
     }
 
     /** Returns the first column. */

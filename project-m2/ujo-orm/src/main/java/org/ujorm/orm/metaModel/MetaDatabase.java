@@ -231,7 +231,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         return dialect;
     }
 
-    /** Change DbType by a Java key */
+    /** Change DbType by a Java key
+     * @param column Column model */
     public void changeDbType(MetaColumn column) {
         final Class type = column.getDbTypeClass();
 
@@ -273,6 +274,9 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         }
         else if (Boolean.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.BOOLEAN);
+        }
+        else if (java.util.UUID.class.isAssignableFrom(type)) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.UUID);
         }
         else if (Enum.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.SMALLINT);

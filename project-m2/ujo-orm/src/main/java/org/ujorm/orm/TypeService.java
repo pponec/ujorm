@@ -62,6 +62,7 @@ public class TypeService implements ITypeService<Object,Object> {
     public static final char BYTES_WRAP = 21;
     public static final char ENUM = 22;
     public static final char COLOR = 23;
+    public static final char UUID = 24; // An object type
 
     /** Constructor for the String argument type */
     private static final Class[] STR_ARGS = new Class[] {String.class};
@@ -99,6 +100,7 @@ public class TypeService implements ITypeService<Object,Object> {
         if (type==java.sql.Clob.class) return CLOB;
         if (type.isEnum()) return ENUM;
         if (type==Color.class) return COLOR;
+        if (type==java.util.UUID.class) return UUID;
 
         if (column.isForeignKey()) {
             List<MetaColumn> columns = column.getForeignColumns();
@@ -152,7 +154,8 @@ public class TypeService implements ITypeService<Object,Object> {
             case STRING_WRAP: return createStringWrapper(rs.getString(c), mColumn);
             case BYTES_WRAP : return createBytesWrapper(rs.getBytes(c), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(c), mColumn);
-            default       : return rs.getObject(c);
+            case UUID:
+            default         : return rs.getObject(c);
         }
         return rs.wasNull() ? null : r;
     }
@@ -162,7 +165,7 @@ public class TypeService implements ITypeService<Object,Object> {
      * It must be the same implementation as {@link #of(org.ujorm.orm.metaModel.MetaColumn, java.sql.ResultSet, int)}.
      * @param mColumn Meta-model column, where the {@link MetaColumn#getTypeCode() typeCode} must be assigned before.
      * @param rs The CallableStatement instance
-     * @param c Catabase column index starting at #1
+     * @param c Database column index starting at #1
      * @return Value form the result set.
      * @throws SQLException
      */
@@ -200,7 +203,8 @@ public class TypeService implements ITypeService<Object,Object> {
             case STRING_WRAP: return createStringWrapper(rs.getString(c), mColumn);
             case BYTES_WRAP : return createBytesWrapper(rs.getBytes(c), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(c), mColumn);
-            default       : return rs.getObject(c);
+            case UUID:
+            default         : return rs.getObject(c);
         }
         return rs.wasNull() ? null : r;
     }
@@ -249,7 +253,8 @@ public class TypeService implements ITypeService<Object,Object> {
             case EXPORT_ENUM:
             case STRING_WRAP:rs.setString(c, value!=null ? ((StringWrapper)value).exportToString() : null ); break;
             case BYTES_WRAP :rs.setBytes(c, value!=null ? ((BytesWrapper)value).exportToBytes() : null ); break;
-            default       : rs.setObject(c, value);  break;
+            case UUID:
+            default         : rs.setObject(c, value);  break;
         }
     }
 

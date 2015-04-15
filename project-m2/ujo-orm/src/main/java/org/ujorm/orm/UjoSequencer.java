@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import org.ujorm.orm.metaModel.MetaTable;
 
 /**
  * The default sequence provider.
- * A result value is recieved from a special database table.
+ * A result value is received from a special database table.
  * @author Pavel Ponec
  */
 public class UjoSequencer {
@@ -165,7 +165,7 @@ public class UjoSequencer {
     }
 
     /** Method returns true because the internal table 'ujorm_pk_support' is required to get a next sequence value.
-     * In case you have a different imlementation, there is possible overwrite this method and return an another value. */
+     * In case you have a different implementation, there is possible overwrite this method and return an another value. */
     public boolean isSequenceTableRequired() {
         return true;
     }
