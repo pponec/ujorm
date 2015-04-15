@@ -68,7 +68,7 @@ public interface ITypeService<J,D> {
         ) throws SQLException;
 
 
-    /** Return an converted Java type to use in database <b>DDL statements</b>. */
+    /** Returns converted Java type to use in database <b>DDL statements</b>. */
     public Class<D> getDbTypeClass(final MetaColumn column);
 
 }
