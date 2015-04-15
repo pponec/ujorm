@@ -55,6 +55,7 @@
             <xs:enumeration value="BLOB"></xs:enumeration>
             <xs:enumeration value="CLOB"></xs:enumeration>
             <xs:enumeration value="NULL"></xs:enumeration>
+            <xs:enumeration value="UUID"></xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="Orm2ddlPolicy">
