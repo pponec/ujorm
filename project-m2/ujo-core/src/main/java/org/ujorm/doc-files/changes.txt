@@ -8,7 +8,7 @@ release 1.56 (2015-04-??)
 + ORM: the UUID type is supported
 
 release 1.55 (2015-03-22)
-+ ORM: The fetching or relations is fixed
++ ORM: The fetching of relations is fixed
 + WICKET: UjoDropDown choice component
 + WICKET: The new method AbstractDialogPanel.onShowBefore(...)
 + WICKET: The new method Field.setEnabledInput(...)
