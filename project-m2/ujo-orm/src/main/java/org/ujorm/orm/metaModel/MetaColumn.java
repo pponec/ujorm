@@ -175,9 +175,16 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     private static final List<String> toList(String[] items) {
         if (items == null || items.length == 0) {
             return Collections.emptyList();
+        } else if (items.length == 1 && isEmpty(items[0])) {
+            return Collections.emptyList();
         } else {
             return Collections.unmodifiableList(Arrays.asList(items));
         }
+    }
+
+    /** Check the empty value */
+    private static boolean isEmpty(final String value) {
+        return value == null || value.isEmpty();
     }
 
     /** It is a DB column (either a value of a foreign key),

@@ -65,13 +65,13 @@ public class IndexModelBuilder  {
         ( String indexName
         , final MetaColumn column
         , final boolean unique) {
+        if (indexName == null || indexName.isEmpty()) {
+            return;
+        }
         if (MetaColumn.AUTO_INDEX_NAME.equals(indexName)) {
             indexName = unique
                     ? nameProvider.getUniqueConstraintName(column)
                     : nameProvider.getIndexName(column);
-        }
-        if (indexName == null || indexName.isEmpty()) {
-            return;
         }
 
         final String index = indexName.toUpperCase();
