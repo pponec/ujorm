@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.48-SNAPSHOT was created 2014-06-17 19:42 -->
-<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.43.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!-- The Ujorm configuration file release 1.56-SNAPSHOT was created 2015-04-17 20:23 -->
+<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.56.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <database id="DatabaseMapping">
         <schema>demoHotels</schema>
         <readOnly>false</readOnly>
@@ -104,7 +104,7 @@
                 <name>LOGIN</name>
                 <dbType>VARCHAR</dbType>
                 <mandatory>true</mandatory>
-                <maxLength>6</maxLength>
+                <maxLength>30</maxLength>
                 <uniqueIndex>idx_unique_login</uniqueIndex>
                 <comment>Unique login</comment>
             </column>
@@ -132,7 +132,7 @@
                 <dbType>VARCHAR</dbType>
                 <mandatory>true</mandatory>
                 <maxLength>60</maxLength>
-                <comment>Lastname</comment>
+                <comment>Surname</comment>
             </column>
             <column id="EMAIL">
                 <name>EMAIL</name>
@@ -211,9 +211,9 @@
             </column>
             <column id="CREATION_DATE">
                 <name>CREATION_DATE</name>
-                <dbType>DATE</dbType>
+                <dbType>TIMESTAMP</dbType>
                 <mandatory>true</mandatory>
-                <comment>Creation date of booking.</comment>
+                <comment>Creation datetime of booking.</comment>
             </column>
         </table>
         <table id="CITY">
@@ -306,7 +306,7 @@
                 <dbType>VARCHAR</dbType>
                 <mandatory>true</mandatory>
                 <maxLength>64</maxLength>
-                <comment>Java class name of the argumetn with no package</comment>
+                <comment>Java class name of the argument with no package</comment>
             </column>
             <column id="CLASS_PACKAGE">
                 <name>CLASS_PACKAGE</name>
@@ -315,11 +315,16 @@
                 <maxLength>128</maxLength>
                 <comment>Java class package of the argument</comment>
             </column>
+            <column id="TEXT_DEFAULT_VALUE">
+                <name>TEXT_DEFAULT_VALUE</name>
+                <dbType>CLOB</dbType>
+                <comment>Parameter default value in a text format</comment>
+            </column>
             <column id="LAST_UPDATE">
                 <name>LAST_UPDATE</name>
                 <dbType>TIMESTAMP</dbType>
                 <mandatory>true</mandatory>
-                <comment>Date of the last param modification</comment>
+                <comment>Date of the last parameter modification</comment>
             </column>
         </table>
         <table id="PARAM_VALUE">
@@ -331,21 +336,20 @@
                 <name>ID</name>
                 <primaryKey>true</primaryKey>
                 <dbType>INT</dbType>
-                <comment>The primary identifier</comment>
+                <comment>The identifier must have an ascending sort for defautl personal rows</comment>
             </column>
             <column id="PARAM_KEY">
                 <name>PARAM_KEY</name>
                 <dbType>INT</dbType>
                 <mandatory>true</mandatory>
                 <uniqueIndex>idx_unique_param_value</uniqueIndex>
-                <comment>Parameter Key</comment>
+                <comment>Parameter Key where the NULL value means a &apos;system parameter&apos;</comment>
             </column>
             <column id="CUSTOMER">
                 <name>CUSTOMER</name>
                 <dbType>INT</dbType>
-                <mandatory>true</mandatory>
                 <uniqueIndex>idx_unique_param_value</uniqueIndex>
-                <comment>Related customer or a system customer for a system parameter value</comment>
+                <comment>Related customer or the null value for the system parameter</comment>
             </column>
             <column id="TEXT_VALUE">
                 <name>TEXT_VALUE</name>
