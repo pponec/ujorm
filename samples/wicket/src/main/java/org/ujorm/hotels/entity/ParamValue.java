@@ -41,7 +41,7 @@ public final class ParamValue extends OrmTable<ParamValue> {
     public static final Key<ParamValue, Integer> ID = f.newKey();
     /** Parameter Key where the NULL value means a 'system parameter' */
     @Comment("Parameter Key where the NULL value means a 'system parameter'")
-    @Column(uniqueIndex=UNIQUE_PARAM_VALUE)
+    @Column(uniqueIndex=UNIQUE_PARAM_VALUE, mandatory = true)
     public static final Key<ParamValue, ParamKey> PARAM_KEY = f.newKey();
     /** Related customer or the null value for the system parameter
      * @see ParamKey#SYSTEM_PARAM */
