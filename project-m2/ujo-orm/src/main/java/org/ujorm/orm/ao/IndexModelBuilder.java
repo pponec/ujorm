@@ -28,10 +28,13 @@ import static org.ujorm.orm.metaModel.MetaTable.DATABASE;
  * <br/>
  * See the next example to create a composite index with two columns with a natural order:
  * <pre class="pre">
- *   &#64;Column(index = IDX_STATE_NOTE)
+ *   private static final String IDX_STATE_COUNT = "idx_state_count";
+ *   private static final String IDX_COUNT = "idx_count";
+ *
+ *   &#64;Column(index = IDX_STATE_COUNT)
  *   public static final Key&lt;XOrder, State&gt; STATE = newKey();
  *
- *   &#64;Column(index = IDX_STATE_NOTE)
+ *   &#64;Column(index = {IDX_STATE_COUNT, IDX_COUNT})
  *   public static final Key&lt;XOrder, Integer&gt; COUNT = newKey();
  * </pre>
  * The builder class can be changed by the parameter {@link MetaParams#INDEX_MODEL_BUILDER}.

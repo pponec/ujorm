@@ -33,13 +33,26 @@ import org.ujorm.core.annot.PackagePrivate;
  * <br/>
  * See the next example to create a composite index with two columns in a reverted order:
  * <pre class="pre">
- *   &#64;Column(index = IDX_STATE_NOTE + <strong>"#30"</strong>)
+ *   private static final String IDX_STATE_COUNT = "idx_state_count";
+ *
+ *   &#64;Column(index = IDX_STATE_COUNT + <strong>"#30"</strong>)
  *   public static final Key&lt;XOrder, State&gt; STATE = newKey();
  *
- *   &#64;Column(index = IDX_STATE_NOTE + <strong>"#20"</strong>)
+ *   &#64;Column(index = IDX_STATE_COUNT + <strong>"#20"</strong>)
  *   public static final Key&lt;XOrder, Integer&gt; COUNT = newKey();
  * </pre>
- * The builder class can be changed by the parameter {@link MetaParams#INDEX_MODEL_BUILDER}.
+ *
+ * The builder class can be changed by the parameter {@link MetaParams#INDEX_MODEL_BUILDER}
+ * in time of building a meta-model according the next example:
+ *
+ * <pre class="pre">
+ *   MetaParams params = new MetaParams();
+ *   params.set(MetaParams.INDEX_MODEL_BUILDER, IndexModelOrderedBuilder.class);
+ *   ormHandler.config(params);
+ * </pre>
+ *
+ *
+
  * @see MetaParams#INDEX_MODEL_BUILDER
  */
 public class IndexModelOrderedBuilder extends IndexModelBuilder {
