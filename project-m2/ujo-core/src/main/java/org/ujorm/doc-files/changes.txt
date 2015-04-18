@@ -2,7 +2,7 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.56 (2015-04-??)
+release 1.56 (2015-04-17)
 + ORM: database composite indexes are supported for any columns with custom the order
 + ORM: the ORM configuration supports a custom index model building using an IndexModelBuilder sub-class implementation
 + ORM: the UUID type is supported
