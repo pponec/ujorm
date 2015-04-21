@@ -51,8 +51,6 @@ import org.ujorm.core.annot.PackagePrivate;
  *   ormHandler.config(params);
  * </pre>
  *
- *
-
  * @see MetaParams#INDEX_MODEL_BUILDER
  */
 public class IndexModelOrderedBuilder extends IndexModelBuilder {
@@ -62,8 +60,8 @@ public class IndexModelOrderedBuilder extends IndexModelBuilder {
     /** The default index column value is 10 */
     protected static final Integer DEFAULT_ORDER = 10;
 
-    private final Map<String, List<OrderedColumn>> indexes = new HashMap<String, List<OrderedColumn>>();
-    private final Map<String, List<OrderedColumn>> uniqueIndexes = new HashMap<String, List<OrderedColumn>>();
+    /** Index columns */
+    private final Map<String, List<OrderedColumn>> idxMap = new HashMap<String, List<OrderedColumn>>();
 
     /** Returns a separator of the column order from an index name.
      * @return The default value is {@code '#'}
@@ -96,7 +94,6 @@ public class IndexModelOrderedBuilder extends IndexModelBuilder {
         final String indexNameShort = iSep > 0 ? indexName.substring(0, iSep) : indexName;
         final String indexKey = indexNameShort.toUpperCase();
         final Integer columnOrder = iSep > 0 ? Integer.parseInt(indexName.substring(1 + iSep)) : DEFAULT_ORDER;
-        final Map<String, List<OrderedColumn>> idxMap = unique ? uniqueIndexes : indexes;
         //
         List<OrderedColumn> columns = idxMap.get(indexKey);
         if (columns == null) {
@@ -110,7 +107,8 @@ public class IndexModelOrderedBuilder extends IndexModelBuilder {
             columns.add(new OrderedColumn
                  ( indexNameShort
                  , column
-                 , columnOrder));
+                 , columnOrder
+                 , unique));
         }
     }
 
@@ -121,24 +119,21 @@ public class IndexModelOrderedBuilder extends IndexModelBuilder {
         super.addColumnsToIndex();
 
         final List<MetaIndex> result = new ArrayList<MetaIndex>();
-        for (List<OrderedColumn> columns : indexes.values()) {
-            addToResult(columns, false, result);
-        }
-        for (List<OrderedColumn> columns : uniqueIndexes.values()) {
-            addToResult(columns, true, result);
+        for (List<OrderedColumn> columns : idxMap.values()) {
+            addToResult(columns, result);
         }
         return result;
     }
 
     /** Add the column to the result index list */
-    protected void addToResult(List<OrderedColumn> columns, boolean unique, final List<MetaIndex> result) {
+    protected void addToResult(List<OrderedColumn> columns, final List<MetaIndex> result) {
         Collections.sort(columns);
         MetaIndex mIndex = new MetaIndex(columns.get(0).indexName, metaTable);
         result.add(mIndex);
         for (OrderedColumn column : columns) {
             MetaIndex.COLUMNS.addItem(mIndex, column.column);
-            if (!unique) {
-               MetaIndex.UNIQUE.setValue(mIndex, unique);
+            if (!column.unique) {
+               MetaIndex.UNIQUE.setValue(mIndex, column.unique);
             }
         }
     }
@@ -148,11 +143,13 @@ public class IndexModelOrderedBuilder extends IndexModelBuilder {
         private final String indexName;
         private final MetaColumn column;
         private final Integer order;
+        private final Boolean unique;
 
-        public OrderedColumn(String indexName, MetaColumn column, Integer order) {
+        public OrderedColumn(String indexName, MetaColumn column, Integer order, Boolean unique) {
             this.indexName = indexName;
             this.column = column;
             this.order = order;
+            this.unique = unique;
         }
 
         @Override
