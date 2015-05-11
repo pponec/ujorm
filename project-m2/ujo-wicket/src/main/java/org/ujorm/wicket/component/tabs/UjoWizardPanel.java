@@ -27,22 +27,22 @@ import org.ujorm.logger.UjoLoggerFactory;
 
 /**
  * The ajax wizard is a child of UjoTabbedPanel class.
- *
+ * @see UjoWizardBar
  * @author PavelPonec
  */
-public class UjoWizard<T extends UjoTab> extends UjoTabbedPanel<T>  {
+public class UjoWizardPanel<T extends UjoTab> extends UjoTabbedPanel<T>  {
     /** Logger */
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoWizard.class);
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoWizardPanel.class);
     /** ID for the TabsContainer from the parent component */
     private static final String TABS_CONTAINER_ID = "tabs-container";
 
     /** Constructor */
-    public UjoWizard(String id, List<T> tabs) {
+    public UjoWizardPanel(String id, List<T> tabs) {
         this(id, tabs, null);
     }
 
     /** Constructor */
-    public UjoWizard(String id, List<T> tabs, IModel<Integer> model) {
+    public UjoWizardPanel(String id, List<T> tabs, IModel<Integer> model) {
         super(id, tabs, model);
 
         // Disable the Tab Container
