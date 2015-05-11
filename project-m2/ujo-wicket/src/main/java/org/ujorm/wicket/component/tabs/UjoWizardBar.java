@@ -55,6 +55,7 @@ public class UjoWizardBar extends GenericPanel<Object> {
     public UjoWizardBar(String id, UjoWizardPanel<UjoTab> aWizard) {
         super(id);
         this.wizard = aWizard;
+        setOutputMarkupId(true);
         add(repeater = new RepeatingView("repeaterItem"));
 
         final List<UjoTab> tabs = wizard.getTabs();
