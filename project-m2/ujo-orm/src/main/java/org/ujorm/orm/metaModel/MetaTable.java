@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         DATABASE.setValue(this, database);
         DB_PROPERTY.setValue(this, dbProperty);
 
-        final Field field = UjoManager.getInstance().getPropertyField(MetaDatabase.ROOT.of(database), dbProperty);
+        final Field field = UjoManager.getPropertyField(MetaDatabase.ROOT.of(database), dbProperty);
         View view1 = field!=null ? field.getAnnotation(View.class) : null;
         View view2 = (View) dbProperty.getItemType().getAnnotation(View.class);
         VIEW.setValue(this, view1!=null || view2!=null);

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -390,6 +390,14 @@ public class MetaDbService {
             db.getDialect().printSequenceTable(db, sql);
             final MetaTable table = new MetaTable();
             MetaTable.ORM2DLL_POLICY.setValue(table, MetaParams.ORM2DLL_POLICY.getDefault());
+            executeUpdate(sql, table);
+
+            // Write a table comment:
+            sql.setLength(0);
+            MetaTable.NAME.setValue(table, db.getDialect().getSeqTableModel().getTableName());
+            MetaTable.SCHEMA.setValue(table, MetaDatabase.SCHEMA.of(db));
+            MetaTable.COMMENT.setValue(table, db.getDialect().getSeqTableModel().getTableComment());
+            db.getDialect().printComment(table, sql);
             executeUpdate(sql, table);
         }
     }

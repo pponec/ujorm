@@ -1,5 +1,5 @@
 /*
- *  Copyright 2011-2014 Pavel Ponec
+ *  Copyright 2011-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,10 +26,12 @@ final public class SeqTableModel {
     private final String sequence;
     private final String cache;
     private final String maxValue;
+    private final String comment;
 
     /** Default Constructor */
     public SeqTableModel() {
-        this("ujorm_pk_support", "id", "seq", "cache", "max_value");
+        this( "ujorm_pk_support", "id", "seq", "cache", "max_value"
+            , "Auxiliary table of the Ujorm framework to hold sequence values");
     }
 
     public SeqTableModel
@@ -38,12 +40,14 @@ final public class SeqTableModel {
             , String sequenceColumn
             , String cacheColumn
             , String maxValueColumn
+            , String comment
         ){
         this.tableName = seqTableName;
         this.id = idColumn;
         this.sequence = sequenceColumn;
         this.cache = cacheColumn;
         this.maxValue = maxValueColumn;
+        this.comment = comment;
     }
 
     /** The table key for a common sequence emulator.
@@ -53,6 +57,11 @@ final public class SeqTableModel {
      */
     public String getTableName() {
         return tableName;
+    }
+
+    /** Get comment of the database table */
+    public String getTableComment() {
+        return comment;
     }
 
     /** ID column name, default value is 'id'. */
