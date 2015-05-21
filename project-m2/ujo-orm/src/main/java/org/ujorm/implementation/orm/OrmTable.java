@@ -58,6 +58,7 @@ import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
  *  }</pre>
  *
  * @author Pavel Ponec
+ * @param <U> The current BO type
  * @see org.ujorm.implementation.orm.RelationToMany
  * @see org.ujorm.core.UjoIterator
  */
@@ -119,7 +120,7 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
         return result;
     }
 
-    /** Getter based on Key implemeted by a pattern UjoExt */
+    /** Getter based on Key implemented by a pattern UjoExt */
     @SuppressWarnings("unchecked")
     public final <UJO extends U, VALUE> VALUE get(final Key<UJO, VALUE> key) {
         final VALUE result = key.of((UJO)this);
@@ -189,7 +190,7 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
 
     // ===== STATIC METHODS: Key Facotory =====
 
-    /** Create a factory with a cammel-case Key name generator.
+    /** Create a factory with a camel-case Key name generator.
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
      */
     protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newCamelFactory(Class<? extends UJO> ujoClass) {

@@ -815,7 +815,7 @@ public class SampleORM {
         session.commit();
     }
 
-    /** The batch UPDATE of selected columns for required database rows for an extented condition. <br />
+    /** The batch UPDATE of selected columns for required database rows for an extended condition.<br />
      * See the next example:
      */
     public void useExtendedUpdate() {
@@ -831,7 +831,7 @@ public class SampleORM {
         session.commit();
     }
 
-    /** Using the pesimistic database UPDATE by the method: setLockRequest(). */
+    /** Using the pessimistic database UPDATE by the method: setLockRequest(). */
     public void usePesimisticUpdate() {
         Order order = session.createQuery(Order.ID.whereEq(anyOrderId))
                 .setLockRequest()

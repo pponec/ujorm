@@ -353,7 +353,7 @@ public class Session implements Closeable {
             result.writeSession(this);
             return result;
         } catch (Exception e) {
-            throw new RuntimeException("Can't create database from: " + dbType);
+            throw new RuntimeException("Can't create database from: " + dbType, e);
         }
     }
 
