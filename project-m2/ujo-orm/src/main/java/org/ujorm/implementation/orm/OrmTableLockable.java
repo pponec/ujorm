@@ -42,7 +42,7 @@ implements UjoLockable {
         return readOnly;
     }
 
-    /** A write method checking a lock sigh. */
+    /** A write method checking a lock sign. */
     @Override
     public void writeValue(final Key<?,?> key, final Object value) throws UnsupportedOperationException {
         if (readOnly) {
