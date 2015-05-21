@@ -17,13 +17,12 @@
 package org.ujorm.orm;
 
 import org.ujorm.Key;
-import org.ujorm.Ujo;
 
 /**
  * Extended ORM Ujo. Interface methods are not necessary to run the ORM.
  * @author Ponec
  */
-public interface ExtendedOrmUjo<UJO_IMPL extends Ujo> extends OrmUjo {
+public interface ExtendedOrmUjo<U extends ExtendedOrmUjo> extends OrmUjo {
 
    /** Read the foreign key.
      * This is useful to obtain the foreign key value without (lazy) loading the entire object.
@@ -33,6 +32,6 @@ public interface ExtendedOrmUjo<UJO_IMPL extends Ujo> extends OrmUjo {
      * @throws IllegalStateException Method throws an exception for a wrong key type.
      * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the key.
      */
-    public <UJO extends UJO_IMPL> ForeignKey readFK(Key<UJO, ? extends OrmUjo> key) throws IllegalStateException;
+    public <UJO extends U> ForeignKey readFK(Key<UJO, ? extends OrmUjo> key) throws IllegalStateException;
 
 }

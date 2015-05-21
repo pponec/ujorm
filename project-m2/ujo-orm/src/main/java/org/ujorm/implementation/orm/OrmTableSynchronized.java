@@ -44,15 +44,12 @@ import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
  * @author Pavel Ponec
  * @see OrmTable
  */
-public abstract class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo implements ExtendedOrmUjo<UJO_IMPL> {
+public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> extends QuickUjo implements ExtendedOrmUjo<U> {
 
-    /** Orm session */
+    /** ORM session */
     transient private ThreadLocal<Session> session;
     /** Set of changes */
     transient private Set<Key> changes = null;
-
-    public OrmTableSynchronized() {
-    }
 
     /** Read a session */
     @Override
@@ -111,10 +108,9 @@ public abstract class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUj
         return result;
     }
 
-
-    /** Getter based on Key implemeted by a pattern UjoExt */
+    /** Getter based on Key implemented by a pattern UjoExt */
     @SuppressWarnings("unchecked")
-    public final <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> key) {
+    public final <UJO extends U, VALUE> VALUE get(final Key<UJO, VALUE> key) {
         final VALUE result = key.of((UJO)this);
         return result;
     }
@@ -123,13 +119,13 @@ public abstract class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUj
      * The method was implemented by a pattern UjoExt.
      */
     @SuppressWarnings({"unchecked"})
-    public final <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
+    public final <UJO extends U, VALUE> U set
         ( final Key<UJO, VALUE> key
         , final VALUE value
         ) {
         UjoManager.assertAssign(key, value);
         key.setValue((UJO)this, value);
-        return (UJO_IMPL) this;
+        return (U) this;
     }
 
     /** Test an authorization of the action. */
@@ -153,7 +149,7 @@ public abstract class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUj
      * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the key.
      */
     @Override
-    synchronized public <UJO extends UJO_IMPL> ForeignKey readFK(Key<UJO, ? extends OrmUjo> key) throws IllegalStateException {
+    synchronized public <UJO extends U> ForeignKey readFK(Key<UJO, ? extends OrmUjo> key) throws IllegalStateException {
         final Object value = super.readValue(key);
         if (value==null || value instanceof ForeignKey) {
             return (ForeignKey) value;
@@ -174,7 +170,7 @@ public abstract class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUj
 
     // ===== STATIC METHODS: Key Facotory =====
 
-    /** Create a factory with a cammel-case Key name generator.
+    /** Create a factory with a camel-case Key name generator.
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
      */
     protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newCamelFactory(Class<? extends UJO> ujoClass) {
