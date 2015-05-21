@@ -562,7 +562,7 @@ public class Session implements Closeable {
             MetaDatabase db = MetaTable.DATABASE.of(table);
             List<MetaColumn> changedColumns = getOrmColumns(bo.readChangedProperties(true));
             if (changedColumns.isEmpty()) {
-                LOGGER.log(UjoLogger.DEBUG, "No changed column to update {} ", bo);
+                LOGGER.log(UjoLogger.WARN, "No changed column to update {}", bo);
                 return result;
             }
             final CriterionDecoder decoder = new CriterionDecoder(criterion, table);
