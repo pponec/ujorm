@@ -207,14 +207,15 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Set Value */
     @SuppressWarnings("unchecked")
-    public <T> void setValue(Key<? super U, T> key, T value) {
-        fields.get(key.getName()).setModelValue(value);
+    public <T> void setValue(final Key<? super U, T> key, final T value) {
+        getField(key).setModelValue(value);
     }
 
     /** Set Value and repaint the component */
-    public <T> void setValue(Key<? super U, T> key, T value, AjaxRequestTarget target) {
-        setValue(key, value);
-        target.add(fields.get(key.getName()));
+    public <T> void setValue(final Key<? super U, T> key, final T value, final AjaxRequestTarget target) {
+        final Field field = getField(key);
+        field.setModelValue(value);
+        target.add(field);
     }
 
     /** Return all fields */
@@ -222,8 +223,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         return fields.values();
     }
 
-    /** Returns the related Field */
-    public <F extends Field> F getField(Key<? super U,?> key) {
+    /** Returns the related Field component */
+    public final <F extends Field> F getField(final Key<? super U,?> key) {
         return (F) fields.get(key.getName());
     }
 
