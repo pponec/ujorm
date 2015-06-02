@@ -26,7 +26,7 @@
     <properties>
         <project.war.name>demo-hotels</project.war.name>
         <ujorm.version>1.57-SNAPSHOT</ujorm.version>
-        <wicket.version>6.10.0</wicket.version>
+        <wicket.version>6.15.0</wicket.version>
         <jetty.version>6.1.26</jetty.version>
         <spring.version>3.2.2.RELEASE</spring.version>
         <java.version>1.6</java.version>
@@ -117,6 +117,12 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- The Bridge for the Spring Framework -->
         <dependency>
@@ -227,6 +233,12 @@
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache-core</artifactId>
             <version>2.6.9</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- JTA (Java Transacton API) -->
@@ -285,6 +297,11 @@
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>8.4-701.jdbc3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.7</version>
         </dependency>
     </dependencies>
 
