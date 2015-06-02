@@ -175,10 +175,10 @@ td.insertHotel img.world-icon {
 
 div .loginField input {
     padding-right: 27px;
-    background: url(../images/icons/user.png) no-repeat scroll 97% center white;
+    background: url(../images/icons/user_light.png) no-repeat scroll 97% center white;
 }
 
 div .passwordField input {
     padding-right: 27px;
-    background: url(../images/icons/key.png) no-repeat scroll 97% center white;
+    background: url(../images/icons/key_light.png) no-repeat scroll 97% center white;
 }
