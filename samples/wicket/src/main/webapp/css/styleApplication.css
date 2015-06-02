@@ -182,3 +182,7 @@ div .passwordField input {
     padding-right: 27px;
     background: url(../images/icons/key_light.png) no-repeat scroll 97% center white;
 }
+
+div.date input {
+    background: url(../images/icons/date_light.png) no-repeat scroll 97% center white;
+}

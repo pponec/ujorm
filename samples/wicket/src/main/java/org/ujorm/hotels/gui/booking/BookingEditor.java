@@ -51,7 +51,7 @@ public class BookingEditor<U extends Booking> extends EntityDialogPane<U> {
         fields.add(Booking.HOTEL.add(Hotel.NAME));
         fields.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
         fields.add(Booking.PERSONS);
-        fields.add(Booking.DATE_FROM);
+        fields.add(Booking.DATE_FROM).addCssStyle("date");
         fields.add(Booking.NIGHTS);
         fields.add(Booking.PRICE);
         fields.add(Booking.CURRENCY);
