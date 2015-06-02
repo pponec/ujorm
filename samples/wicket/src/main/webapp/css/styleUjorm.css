@@ -102,6 +102,13 @@ div.tabpanel div.tab-row a {
     white-space: nowrap;
 }
 
+div.tabpanel div.tab-row li.disabled a {
+    color: gray;
+    font-style: italic;
+    cursor: no-drop;
+    outline: 0; /* Removing focus outline */
+}
+
 /* Table Navigator */
 div.navigator {
     text-align: right;

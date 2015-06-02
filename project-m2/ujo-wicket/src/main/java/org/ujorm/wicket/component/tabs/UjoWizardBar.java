@@ -50,28 +50,28 @@ import org.ujorm.wicket.component.link.MessageLink;
 public class UjoWizardBar extends GenericPanel<Object> {
     /** The repeater  */
     private RepeatingView repeater;
-    private UjoWizardPanel<UjoTab> wizard;
+    private UjoWizardPanel<UjoTab> wizardPanel;
 
     public UjoWizardBar(String id, UjoWizardPanel<UjoTab> aWizard) {
         super(id);
-        this.wizard = aWizard;
+        this.wizardPanel = aWizard;
         setOutputMarkupId(true);
         add(repeater = new RepeatingView("repeaterItem"));
 
-        final List<UjoTab> tabs = wizard.getTabs();
+        final List<UjoTab> tabs = wizardPanel.getTabs();
         for (int i = 0; i < tabs.size(); ++i) {
             final UjoTab tab = tabs.get(i);
             final int ii = i;
             final MessageLink link = new MessageLink(repeater.newChildId(), tab.getTitle()) {
                 @Override protected void onClick(AjaxRequestTarget target) {
                     if (isActionAllowed()) {
-                        wizard.selectTab(ii, target);
+                        wizardPanel.selectTab(ii, target);
                         target.add(UjoWizardBar.this);
                         onUpdate(target);
                     }
                 }
                 private boolean isActionAllowed() {
-                    return isEnabled() && ii < wizard.getSelectedTab();
+                    return isEnabled() && ii < wizardPanel.getSelectedTab();
                 }
             };
             link.setOutputMarkupId(true);
@@ -84,10 +84,10 @@ public class UjoWizardBar extends GenericPanel<Object> {
     @Override
     protected void onBeforeRender() {
         super.onBeforeRender();
-        final int selected = wizard.getSelectedTab();
+        final int selected = wizardPanel.getSelectedTab();
         int i = 0;
         for (Component item : repeater) {
-            final String cssClass = wizard.getTabs().get(i).getCssClass();
+            final String cssClass = wizardPanel.getTabs().get(i).getCssClass();
             item.add(new AttributeModifier(CssAppender.CSS_CLASS, cssClass));
 
             if (i == selected) {
@@ -98,6 +98,11 @@ public class UjoWizardBar extends GenericPanel<Object> {
             }
             ++i;
         }
+    }
+
+    /** Get Wizard Panel */
+    public UjoWizardPanel<UjoTab> getWizardPanel() {
+        return wizardPanel;
     }
 
     /** On update event to overriding
