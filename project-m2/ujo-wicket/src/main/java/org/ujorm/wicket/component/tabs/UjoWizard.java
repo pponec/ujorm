@@ -17,6 +17,7 @@ package org.ujorm.wicket.component.tabs;
 
 import java.util.List;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 
 /**
@@ -70,5 +71,10 @@ public class UjoWizard extends GenericPanel<Object> {
     public void selectNextTab(final boolean next, final AjaxRequestTarget target) {
         wizardBar.getWizardPanel().selectNextTab(next, target);
         target.add(wizardBar);
+    }
+
+    /** Get selected tab panel */
+    public WebMarkupContainer getSelectedTabPanel() {
+        return wizardBar.getWizardPanel().getSelectedTabPanel();
     }
 }
