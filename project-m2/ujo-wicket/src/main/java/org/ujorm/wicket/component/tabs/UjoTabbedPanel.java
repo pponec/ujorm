@@ -148,4 +148,9 @@ public class UjoTabbedPanel<T extends UjoTab>
         }
         return result;
     }
+
+    /** Get selected tab panel */
+    public WebMarkupContainer getSelectedTabPanel() {
+        return (WebMarkupContainer) get(TAB_PANEL_ID);
+    }
 }

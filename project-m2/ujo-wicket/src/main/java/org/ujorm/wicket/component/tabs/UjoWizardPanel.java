@@ -34,7 +34,7 @@ public class UjoWizardPanel<T extends UjoTab> extends UjoTabbedPanel<T>  {
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoWizardPanel.class);
     /** ID for the TabsContainer from the parent component */
-    private static final String TABS_CONTAINER_ID = "tabs-container";
+    private static final String TABS_BAR_ID = "tabs-container";
 
     /** Constructor */
     public UjoWizardPanel(String id, List<T> tabs) {
@@ -46,18 +46,18 @@ public class UjoWizardPanel<T extends UjoTab> extends UjoTabbedPanel<T>  {
         super(id, tabs, model);
 
         // Disable the Tab Container
-        final Component component = getTabContainer();
+        final Component component = getTabBar();
         if (component != null) {
             component.setVisibilityAllowed(false);
         } else {
-            final String msg = String.format("Component with the id '%s' is not found", TABS_CONTAINER_ID);
+            final String msg = String.format("Component with the id '%s' is not found", TABS_BAR_ID);
             LOGGER.log(UjoLogger.WARN, msg, new IllegalStateException(msg));
         }
     }
 
     /** Returns a tab container */
-    protected WebMarkupContainer getTabContainer() {
-        return (WebMarkupContainer) get(TABS_CONTAINER_ID);
+    protected WebMarkupContainer getTabBar() {
+        return (WebMarkupContainer) get(TABS_BAR_ID);
     }
 
     /** Get a title of the required tab or returns the {@code null} */
