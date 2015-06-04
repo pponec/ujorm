@@ -107,6 +107,9 @@ div.tabpanel div.tab-row li.disabled a {
     font-style: italic;
     cursor: no-drop;
     outline: 0; /* Removing focus outline */
+    filter: gray;
+    -Xms-filter: grayscale(100%);
+    -webkit-filter: grayscale(1);
 }
 
 /* Table Navigator */
