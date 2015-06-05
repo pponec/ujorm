@@ -8,30 +8,30 @@ div.tab-panel {
     padding: 5px;
 }
 
-div.tabpanel div.tab-row li a {
+div.tabpanel .tab-row li a {
     background-position: 7px 1px;
     background-repeat: no-repeat;
     padding-left: 30px;
     padding-right: 9px;
 }
 
-div.tabpanel div.tab-row li a.hotel {
+div.tabpanel .tab-row li a.hotel {
     background-image: url("../images/icons/house.png");
 }
 
-div.tabpanel div.tab-row li a.booking {
+div.tabpanel .tab-row li a.booking {
     background-image: url("../images/icons/book_open.png");
 }
 
-div.tabpanel div.tab-row li a.customer {
+div.tabpanel .tab-row li a.customer {
     background-image: url("../images/icons/user.png");
 }
 
-div.tabpanel div.tab-row li a.params {
+div.tabpanel .tab-row li a.params {
     background-image: url("../images/icons/wrench.png");
 }
 
-div.tabpanel div.tab-row li a.about {
+div.tabpanel .tab-row li a.about {
     background-image: url("../images/icons/help.png");
 }
 
