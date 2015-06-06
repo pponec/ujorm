@@ -48,6 +48,7 @@ public class UjoWizardPanel<T extends UjoTab> extends UjoTabbedPanel<T>  {
         // Disable the Tab Container
         final Component component = getTabBar();
         if (component != null) {
+            component.setOutputMarkupId(false);
             component.setVisibilityAllowed(false);
         } else {
             final String msg = String.format("Component with the id '%s' is not found", TABS_BAR_ID);
@@ -56,7 +57,7 @@ public class UjoWizardPanel<T extends UjoTab> extends UjoTabbedPanel<T>  {
     }
 
     /** Returns a tab container */
-    protected WebMarkupContainer getTabBar() {
+    protected final WebMarkupContainer getTabBar() {
         return (WebMarkupContainer) get(TABS_BAR_ID);
     }
 

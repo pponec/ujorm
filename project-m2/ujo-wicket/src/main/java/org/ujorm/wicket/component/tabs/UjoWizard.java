@@ -30,7 +30,7 @@ public class UjoWizard extends GenericPanel<Object> {
 
     protected final UjoWizardBar wizardBar;
 
-    public UjoWizard(String id,  List<UjoTab> tabs) {
+    public UjoWizard(String id, List<UjoTab> tabs) {
         super(id);
 
         // Wizard Panel:
