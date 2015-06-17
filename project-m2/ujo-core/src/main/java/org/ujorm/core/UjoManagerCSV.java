@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2014 Pavel Ponec
+ *  Copyright 2007-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.ujorm.UjoAction;
 
 /**
  * A Manager for CSV import / export.
- * If you need take a control of a non UJO Key object serialization then use a UjoTextable object list.
+ * If you need take a control of a non U Key object serialization then use a UjoTextable object list.
  * <h3>Sample of usage</h3>
  * <pre class="pre">
  *  List&lt;Person&gt; people = <span class="java-keywords">new</span> ArrayList&lt;Person&gt;(<span class="java-numeric-literals">0</span>);
@@ -49,10 +49,10 @@ import org.ujorm.UjoAction;
  * @author Pavel Ponec
  * @see org.ujorm.extensions.UjoTextable
  */
-public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
+public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
 
     /** Quotation, the default value is {@code "} */
-    final private char quotation = '"';
+    final protected char QUOTATION = '"';
     /** CSV Separator, the default value is {@code ;} */
     private char separator = ';';
     /** New Line */
@@ -69,10 +69,9 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
 
     /**
      * Creates a new instance of UjoManagerCSV
-     * @param ujoClass Exported Ujo Class
      * @param keys Exported keys of class, if value is null than all keys are used.
      */
-    public UjoManagerCSV(KeyList<UJO> keys) {
+    public UjoManagerCSV(KeyList<U> keys) {
         super(keys.getType(), keys);
     }
     /**
@@ -80,8 +79,16 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
      * @param ujoClass Exported Ujo Class
      * @param keys Exported keys of class, if value is null than all keys are used.
      */
-    public UjoManagerCSV(Class<UJO> ujoClass, KeyList<UJO> keys) {
+    public UjoManagerCSV(Class<U> ujoClass, KeyList<U> keys) {
         super(ujoClass, keys);
+    }
+
+    /**
+     * Creates a new instance of UjoManagerCSV
+     * @param ujoClass Exported Ujo Class
+     */
+    public UjoManagerCSV(Class<U> ujoClass) {
+        super(ujoClass, (KeyList<U>) null);
     }
 
     /**
@@ -89,12 +96,12 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
      * @param ujoClass Exported Ujo Class
      * @param keys Exported keys of class, if value is null than all keys are used.
      */
-    public UjoManagerCSV(Class<UJO> ujoClass, Key... keys) {
+    public UjoManagerCSV(Class<U> ujoClass, Key... keys) {
         super(ujoClass, keys);
     }
 
-    /** Save Ujo into CSV format by codepage UTF-8. */
-    public void saveCSV(File file, List<UJO> ujoList, Object context) throws IllegalStateException {
+    /** Save Ujo into CSV format by code page UTF-8. */
+    public void saveCSV(File file, List<U> ujoList, Object context) throws IllegalStateException {
         OutputStream os = null;
         try {
             os = getOutputStream(file);
@@ -110,10 +117,10 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
      * Save Ujo into CSV format.
      * @param out Output Stream.
      * @param cs Character set
-     * @param ujoList List of UJO objects
+     * @param ujoList List of Ujo objects
      * @param context
      */
-    public void saveCSV(OutputStream out, Charset cs, List<UJO> ujoList, Object context)
+    public void saveCSV(OutputStream out, Charset cs, List<U> ujoList, Object context)
             throws IllegalStateException {
         final Writer writer = new OutputStreamWriter(out, cs != null ? cs : UTF_8);
         try {
@@ -127,14 +134,14 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
 
     /** Save Ujo into CSV format */
     @SuppressWarnings("unchecked")
-    public void saveCSV(Writer out, List<UJO> ujoList, Object context)
+    public void saveCSV(Writer out, List<U> ujoList, Object context)
             throws IllegalStateException {
         try {
             if (printHeader) {
                 if (isHeaderFilled()) {
                     printHeaders(out);
                 } else {
-                    UJO ujo = ujoList.size() > 0
+                    final U ujo = ujoList.size() > 0
                             ? ujoList.get(0)
                             : getUjoClass().newInstance();
                     boolean printSepar = false;
@@ -155,7 +162,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
                 out.write(newLine);
             }
 
-            for (UJO ujo : ujoList) {
+            for (U ujo : ujoList) {
                 boolean printSepar = false;
                 for (Key p : getKeys()) {
                     UjoAction action = new UjoActionImpl(UjoAction.ACTION_CSV_EXPORT, context);
@@ -189,13 +196,13 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
 
     /** Load an Ujo from CSV format by UTF-8 code-page.
      * @param file An input data
-     * @param context Context of loading wil be passed to the method
+     * @param context Context of loading will be passed to the method
      * {@link Ujo#readAuthorization(org.ujorm.UjoAction, org.ujorm.Key, java.lang.Object)}
-     * inside tje UjoAction
-     * @return List of UJO
+     * inside an UjoAction
+     * @return List of Ujo
      * @throws IllegalStateException can be throwed in case the header check failed
      */
-    public List<UJO> loadCSV(File file, Object context) throws IllegalStateException {
+    public List<U> loadCSV(File file, Object context) throws IllegalStateException {
         Reader reader = null;
         try {
             reader = RingBuffer.createReader(file);
@@ -210,14 +217,14 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
 
     /** Load an Ujo from CSV format by UTF-8 code-page.
      * @param file An input data
-     * @param context Context of loading wil be passed to the method
+     * @param context Context of loading will be passed to the method
      * {@link Ujo#readAuthorization(org.ujorm.UjoAction, org.ujorm.Key, java.lang.Object)}
-     * inside tje UjoAction
-     * @return List of UJO
+     * inside an UjoAction
+     * @return List of U
      * @throws IllegalStateException can be throwed in case the header check failed
      */
-    public List<UJO> loadCSV(Scanner inp, Object context) throws IllegalStateException {
-        final List<UJO> result = new ArrayList<UJO>(128);
+    public List<U> loadCSV(Scanner inp, Object context) throws IllegalStateException {
+        final List<U> result = new ArrayList<U>(128);
         final StringBuilder value = new StringBuilder(32);
         boolean readHeader = printHeader;
         boolean inside = false;
@@ -241,7 +248,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
                     readHeader = false;
                     continue;
                 }
-                UJO ujo = (UJO) getUjoClass().newInstance();
+                U ujo = (U) getUjoClass().newInstance();
                 result.add(ujo);
                 int keyPointer = 0;  // Key pointer
 
@@ -249,9 +256,9 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
                     char c = line.charAt(i);
 
                     if (inside) { // Inside a quotation
-                        if (c == quotation) {
+                        if (c == QUOTATION) {
                             int next = i + 1;
-                            if (next < line.length() && line.charAt(next) == '"') {
+                            if (next < line.length() && line.charAt(next) == QUOTATION) {
                                 i++;
                             } else {
                                 inside = false;
@@ -264,7 +271,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
                         if (c == separator) {
                             writeValue(ujo, value, keyPointer++, lineCounter, action);
                             value.setLength(0);
-                        } else if (c == quotation) {
+                        } else if (c == QUOTATION) {
                             inside = true;
                         } else {
                             value.append(c);
@@ -280,15 +287,15 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
         return result;
     }
 
-    /** Write value to UJO. */
+    /** Write value to U. */
     protected void writeValue
-    ( final UJO ujo
+    ( final U ujo
     , final StringBuilder value
     , final int keyPointer
     , final int lineCounter
     , final UjoAction action
     ) throws IllegalArgumentException {
-        final KeyList<UJO> keys = getKeys();
+        final KeyList<U> keys = getKeys();
         if (keyPointer >= keys.size()) {
             if (skipLastColumns || value.length() == 0) {
                 return;
@@ -307,18 +314,18 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     protected void printValue(Writer out, String value) throws IOException {
         if (UjoManager.isFilled(value)
         && (value.indexOf(separator)>=0
-        ||  value.indexOf(quotation)>=0)
+        ||  value.indexOf(QUOTATION)>=0)
         ){
-            out.write(quotation);
+            out.write(QUOTATION);
 
             for (int i = 0; i < value.length(); i++) {
                 char c = value.charAt(i);
-                if (c == quotation) {
-                    out.write(quotation);
+                if (c == QUOTATION) {
+                    out.write(QUOTATION);
                 }
                 out.write(c);
             }
-            out.write(quotation);
+            out.write(QUOTATION);
         } else {
             out.write(value);
         }
@@ -457,38 +464,38 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     // -------------- STATIC ----------------
 
     /** Create new instance */
-    public static <UJO extends Ujo> UjoManagerCSV<UJO> of(Class<UJO> ujoClass) {
-        return new UjoManagerCSV<UJO>(ujoClass, (KeyList<UJO>) null);
+    public static <U extends Ujo> UjoManagerCSV<U> of(Class<U> ujoClass) {
+        return new UjoManagerCSV<U>(ujoClass);
     }
 
     /** Create new instance */
-    public static <UJO extends Ujo> UjoManagerCSV<UJO> of(Class<UJO> ujoClass, Key... keys) {
-        return new UjoManagerCSV<UJO>(ujoClass, keys);
+    public static <U extends Ujo> UjoManagerCSV<U> of(Class<U> ujoClass, Key... keys) {
+        return new UjoManagerCSV<U>(ujoClass, keys);
     }
 
     /** Create new instance where the domain class is get from an array of the keys. */
-    public static <UJO extends Ujo> UjoManagerCSV<UJO> of(Key... keys) {
-        return new UjoManagerCSV<UJO>(KeyRing.getBaseType(keys), keys);
+    public static <U extends Ujo> UjoManagerCSV<U> of(Key... keys) {
+        return new UjoManagerCSV<U>(KeyRing.getBaseType(keys), keys);
     }
 
     /** Create new instance
      * @deprecated Use the method {@code of(...)}
      */
-    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass) {
-        return new UjoManagerCSV<UJO>(ujoClass, (KeyList<UJO>) null);
+    public static <U extends Ujo> UjoManagerCSV<U> getInstance(Class<U> ujoClass) {
+        return new UjoManagerCSV<U>(ujoClass, (KeyList<U>) null);
     }
 
     /** Create new instance
      * @deprecated Use the method {@code of(...)}
      */
-    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass, Key... keys) {
-        return new UjoManagerCSV<UJO>(ujoClass, keys);
+    public static <U extends Ujo> UjoManagerCSV<U> getInstance(Class<U> ujoClass, Key... keys) {
+        return new UjoManagerCSV<U>(ujoClass, keys);
     }
 
     /** Create new instance where the domain class is get from an array of the keys.
      * @deprecated Use the method {@code of(...)}
      */
-    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Key... keys) {
-        return new UjoManagerCSV<UJO>(KeyRing.getBaseType(keys), keys);
+    public static <U extends Ujo> UjoManagerCSV<U> getInstance(Key... keys) {
+        return new UjoManagerCSV<U>(KeyRing.getBaseType(keys), keys);
     }
 }
