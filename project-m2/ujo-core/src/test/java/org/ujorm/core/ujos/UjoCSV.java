@@ -44,6 +44,16 @@ public class UjoCSV extends SmartUjo<UjoCSV> {
 
     //public boolean readAuthorization(ACTION_ZERO_REPLACE, key, result, null) {}
 
+    public String getP1() {
+        return P1.of(this);
+    }
 
+    public String getP2() {
+        return P2.of(this);
+    }
+
+    public String getP3() {
+        return P3.of(this);
+    }
 
 }

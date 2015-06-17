@@ -182,6 +182,31 @@ public class UjoManagerCSVTest extends MyTestCase {
         }
     }
 
+    /** Test of the new Lines inside a cell  */
+    public void testSaveCSV6NewLine() throws Exception {
+        System.out.println("SaveCSV6NewLine-3");
+        //
+        UjoCSV.P1.setValue(ujo, "TE\nST1");
+        UjoCSV.P2.setValue(ujo, "T\nES\nT2");
+        UjoCSV.P3.setValue(ujo, "\nTE\nST3\n");
+        //
+        ByteArrayOutputStream out = createOutputStream();
+        manager.saveCSV(out, null, ujoList, context);
+        out.close();
+
+        ByteArrayInputStream is = createInputStream(out);
+        List<UjoCSV> list2 = manager.loadCSV(new Scanner(is), context);
+
+        assertEquals(ujoList.size(), list2.size());
+
+        UjoCSV u1 = ujoList.get(0);
+        UjoCSV u2 = list2.get(0);
+        assertEquals(u1, u2);
+
+        // PrintIt
+        // System.out.print("-----\n" + out.toString("utf-8") + "\n-----\n");
+    }
+
     // ------------------------------------------------
 
     public ByteArrayOutputStream createOutputStream() {
