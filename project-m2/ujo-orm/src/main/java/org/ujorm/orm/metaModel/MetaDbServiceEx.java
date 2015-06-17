@@ -871,7 +871,7 @@ public class MetaDbServiceEx extends MetaDbService {
         } else {
             metaIdxName = MetaColumn.INDEX.getFirstItem(column);
         }
-        if (metaIdxName.length() == 0 && column.isForeignKey()) {
+        if (metaIdxName.isEmpty() && column.isForeignKey()) {
             metaIdxName = MetaColumn.AUTO_INDEX_NAME;
         }
 

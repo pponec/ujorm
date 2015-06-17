@@ -258,9 +258,9 @@ public class TypeService implements ITypeService<Object,Object> {
         }
     }
 
-    /** Find enum by KEY. */
+    /** Find an enumeration by the Key. */
     private Object findEnum(final String key, final MetaColumn mColumn) throws IllegalArgumentException {
-        if (key==null || key.length()==0) {
+        if (key==null || key.isEmpty()) {
             return null;
         }
         for (Object o : mColumn.getType().getEnumConstants()) {
@@ -278,7 +278,7 @@ public class TypeService implements ITypeService<Object,Object> {
     /** Create the new StringWrapper by the KEY. */
     @SuppressWarnings("unchecked")
     private Object createStringWrapper(final String key, final MetaColumn mColumn) throws IllegalArgumentException {
-        if (key==null || key.length()==0) {
+        if (key==null || key.isEmpty()) {
             return null;
         }
         try {

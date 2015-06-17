@@ -163,7 +163,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
         if (name==null) {
             return;
         }
-        if (name.length()==0) {
+        if (name.isEmpty()) {
             final String msg = String.format("Property name '%s' must not be empty"
                     , name);
             throw new IllegalArgumentException(msg);
