@@ -53,10 +53,12 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
 
     /** Quotation, the default value is {@code "} */
     final protected char QUOTATION = '"';
+    /** New line character */
+    final protected char NEW_LINE_CHAR = '\n';
+    /** New Line String, default value from system property */
+    private String newLine = System.getProperty("line.separator");
     /** CSV Separator, the default value is {@code ;} */
     private char separator = ';';
-    /** New Line */
-    private String newLine = System.getProperty("line.separator");
     /** Enable to print a CSV header, the default value is {@code true} */
     private boolean printHeader = true;
     /** Skip empty lines on reading, the default value is {@code true}. */
@@ -226,17 +228,17 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
     public List<U> loadCSV(Scanner inp, Object context) throws IllegalStateException {
         final List<U> result = new ArrayList<U>(128);
         final StringBuilder value = new StringBuilder(32);
+        final UjoAction action = new UjoActionImpl(context);
         boolean readHeader = printHeader;
         boolean inside = false;
         int lineCounter = 0;
-        UjoAction action = new UjoActionImpl(context);
 
         try {
             while (inp.hasNextLine()) {
                 String line = inp.nextLine();
                 ++lineCounter;
 
-                if (skipEmptyLines && line.length()==0) {
+                if (skipEmptyLines && line.isEmpty()) {
                     continue;
                 }
 
@@ -248,17 +250,17 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
                     readHeader = false;
                     continue;
                 }
-                U ujo = (U) getUjoClass().newInstance();
+                final U ujo = (U) getUjoClass().newInstance();
                 result.add(ujo);
                 int keyPointer = 0;  // Key pointer
 
-                for (int i = 0; i < line.length(); i++) {
-                    char c = line.charAt(i);
+                for (int i = 0, max = line.length(); i < max; i++) {
+                    final char c = line.charAt(i);
+                    final int next = i + 1;
 
-                    if (inside) { // Inside a quotation
+                    if (inside) { // Inside a cell value:
                         if (c == QUOTATION) {
-                            int next = i + 1;
-                            if (next < line.length() && line.charAt(next) == QUOTATION) {
+                            if (next < max && line.charAt(next) == QUOTATION) {
                                 i++;
                             } else {
                                 inside = false;
@@ -276,6 +278,15 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
                         } else {
                             value.append(c);
                         }
+                    }
+
+                    // Check the breaking cell:
+                    if (inside
+                    && next == max
+                    && inp.hasNextLine()) {
+                        line = line + NEW_LINE_CHAR + inp.nextLine();
+                        max = line.length();
+                        ++lineCounter;
                     }
                 }
                 writeValue(ujo, value, keyPointer++, lineCounter, action);
@@ -313,17 +324,18 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
     /** Print Text */
     protected void printValue(Writer out, String value) throws IOException {
         if (UjoManager.isFilled(value)
-        && (value.indexOf(separator)>=0
-        ||  value.indexOf(QUOTATION)>=0)
+        && (value.indexOf(separator) >= 0
+        ||  value.indexOf(QUOTATION) >= 0
+        ||  value.indexOf(NEW_LINE_CHAR) >= 0)
         ){
             out.write(QUOTATION);
 
-            for (int i = 0; i < value.length(); i++) {
-                char c = value.charAt(i);
-                if (c == QUOTATION) {
-                    out.write(QUOTATION);
-                }
+            for (int i = 0, max = value.length(); i < max; i++) {
+                final char c = value.charAt(i);
                 out.write(c);
+                if (c == QUOTATION) {
+                    out.write(c); // Print second quotation
+                }
             }
             out.write(QUOTATION);
         } else {
@@ -359,7 +371,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
         return printHeader;
     }
 
-    /** Print CSV Header, the defalt value is {@code true} */
+    /** Print CSV Header, the default value is {@code true} */
     public UjoManagerCSV setPrintHeader(boolean printHeader) {
         this.printHeader = printHeader;
         return this;
