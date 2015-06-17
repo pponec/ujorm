@@ -248,8 +248,8 @@ final public class RingBuffer implements CharSequence {
      * @throws IOException
      */
     public static String findWordNoTrim(final Reader reader, String beg, String end) throws IOException {
-        boolean begEmpty = beg == null || beg.length()==0;
-        boolean endEmpty = end == null || end.length()==0;
+        boolean begEmpty = beg == null || beg.isEmpty();
+        boolean endEmpty = end == null || end.isEmpty();
 
         if (begEmpty && endEmpty) {
             return "";
@@ -295,7 +295,7 @@ final public class RingBuffer implements CharSequence {
                     return result.toString();
                 } else {
                     tag = tags[++i];
-                    if (tag.length()==0) {
+                    if (tag.isEmpty()) {
                         break;
                     }
                     ring = new RingBuffer(tag.length());

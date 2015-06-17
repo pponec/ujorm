@@ -376,7 +376,7 @@ final class UjoHandlerXML extends DefaultHandler {
         public void saveBody() {
             if (body!=null) {
                 String bodyText = body.toString().trim();
-                if (bodyText.length()==0) { return; }
+                if (bodyText.isEmpty()) { return; }
 
                 if (ujo instanceof UjoTextable) {
                     ((UjoTextable)ujo).writeValueString(bodyProperty, bodyText, null, actionImport);

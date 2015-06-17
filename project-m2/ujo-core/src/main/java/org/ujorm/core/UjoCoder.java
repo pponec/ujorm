@@ -165,7 +165,7 @@ public class UjoCoder {
     @SuppressWarnings("unchecked")
     public <T> T decodeValue(final Key<?,T> key, final String aValue, final Class type) throws IllegalArgumentException {
         if (key instanceof ListKey) {
-            if (aValue==null || aValue.length()==0) { return null; }
+            if (aValue==null || aValue.isEmpty()) { return null; }
             List result = new ArrayList();
             ListKey propertyList = (ListKey) key;
             String separator = String.valueOf(getSeparator());
@@ -194,7 +194,7 @@ public class UjoCoder {
             ||  String.class==type) {
                 return aValue;
             }
-            if (aValue.length() == 0) {
+            if (aValue.isEmpty()) {
                 return null;
             }
             if (Integer.class==type) {
