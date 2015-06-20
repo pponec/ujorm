@@ -40,11 +40,11 @@ public class UjoDropDown<U extends Ujo> extends DropDownChoice<U> {
      * Constructor
      * @param id Component ID
      * @param choices List of items type of Ujo
-     * @param display Required display Key
      * @param index Required Unique identifier Key
+     * @param display Required display Key
      */
-    public UjoDropDown(final String id, final List<? extends U> choices, Key<U, ?> display, Key<U, ?> index) {
-        this(id, choices, KeyRing.<U>of(display, index));
+    public UjoDropDown(final String id, final List<? extends U> choices, Key<U, ?> index, Key<U, ?> display) {
+        this(id, choices, KeyRing.<U>of(index, display));
         Args.notNull(display, "display");
         Args.notNull(index, "index");
     }
@@ -52,7 +52,7 @@ public class UjoDropDown<U extends Ujo> extends DropDownChoice<U> {
         /** Constructor
      * @param id Component identifier
      * @param choices Item list
-     * @param display Two keys [display & index]
+     * @param display Two keys [identifier & display]
      */
     public UjoDropDown(final String id, final List<? extends U> choices, final KeyRing<U> display) {
         this(id, new WildcardListModel<U>(choices), display);
@@ -61,15 +61,15 @@ public class UjoDropDown<U extends Ujo> extends DropDownChoice<U> {
     /** Constructor
      * @param id Component identifier
      * @param choices Item list
-     * @param display Two keys [display & index]
+     * @param display Two keys [identifier & display]
      */
     public UjoDropDown(final String id, final IModel<List<? extends U>> choices, final KeyRing<U> display) {
         super(id, choices, new IChoiceRenderer<U>() {
             @Override public Object getDisplayValue(final U bo) {
-                return display.getFirstKey().of(bo);
+                return display.getLastKey().of(bo);
             }
             @Override public String getIdValue(final U bo, final int index) {
-                return "" + display.getLastKey().of(bo);
+                return String.valueOf(display.getFirstKey().of(bo));
             }
         });
         this.display = display;
@@ -83,7 +83,7 @@ public class UjoDropDown<U extends Ujo> extends DropDownChoice<U> {
             @Override public boolean compare(final Component component, final Object newObject) {
                 if (display.getType().isInstance(newObject)) {
                     final U thisValue = (U) component.getDefaultModelObject();
-                    final Key<U, Object> ID = (Key<U, Object>) display.getLastKey();
+                    final Key<U, Object> ID = (Key<U, Object>) display.getFirstKey();
                     return thisValue != null && ID.equals(thisValue, ID.of((U) newObject));
                 } else {
                     return UjoDropDown.super.getModelComparator().compare(component, newObject);
