@@ -35,10 +35,10 @@ public abstract class AbstractValidator<VALUE> implements Validator<VALUE>, Seri
      * @see MessageService#PARAM_BEG */
     public static final MessageArg<Object> MARK = new MessageArg<Object>("MARK");
 
-    /** Validator serivce */
+    /** Validator service */
     protected static final MessageService service = new MessageService();
 
-    /** Localizatioln Key Prefix */
+    /** Localization Key Prefix */
     public static final String KEY_PREFIX = "validator.";
 
     /** Check the value without context */

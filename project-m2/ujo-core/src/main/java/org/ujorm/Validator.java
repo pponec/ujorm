@@ -21,7 +21,7 @@ import org.ujorm.validator.impl.ValidatorFactory;
 
 /**
  * Input Validator interface where the interface will be an immutable objects always.
- * See how tu use the Validators:
+ * See how to use the Validators:
  * <pre>{@code
  * import org.ujorm.Validator.Build.*;
  *
