@@ -23,7 +23,7 @@ import org.ujorm.validator.ValidationException;
 
 /**
  * This interface is a descriptor of the {@link Ujo} attribute. The Key contains only meta-data
- * and therefore the Propertry implementation never contains business data. 
+ * and therefore the Property implementation never contains business data. 
  * Each instance of the Key must be located in the {@code public static final} field of some Ujo implementation.
  * The Key can't have a serializable feature never, because its instance is the unique for a related java field.
  * An appropriate solution solution for serialization is to use a decorator class KeyRing.
