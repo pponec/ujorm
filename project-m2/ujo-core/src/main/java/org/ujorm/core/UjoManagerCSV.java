@@ -66,7 +66,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
     /** Skip the last CSV column values.
      * A default value of this attribute is {@code false}. */
     private boolean skipLastColumns = false;
-    /** Print or validate the CSV Header content */
+    /** Print or validate the CSV Header content (nonnull value) */
     private CharSequence[] headerContent = new CharSequence[0];
 
     /**
@@ -245,7 +245,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
                 if (readHeader) {
                     if (isHeaderFilled()
                     && !line.startsWith(getHeaderContent())) {
-                        throw new IllegalStateException("The import header must start with the: " + headerContent);
+                        throw new IllegalStateException("The import header must start with the: " + getHeaders());
                     }
                     readHeader = false;
                     continue;
@@ -406,6 +406,17 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
     }
 
     /** PrintHeaders text with separators */
+    protected String getHeaders() {
+        try {
+            final CharArrayWriter result = new CharArrayWriter(256);
+            printHeaders(result);
+            return result.toString();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /** PrintHeaders text with separators */
     protected void printHeaders(Writer out) throws IOException {
         for (int i = 0; i < headerContent.length; i++) {
             if (i > 0) {
@@ -442,10 +453,12 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
      * @param headerContent a String or Key arguments
      */
     public void setHeaderContent(CharSequence... headerContent) {
-        this.headerContent = headerContent;
+        this.headerContent = headerContent != null
+                ? headerContent
+                : new CharSequence[0];
     }
 
-    /** Assign the entire content of the CSV where no characte is escaped.
+    /** Assign the entire content of the CSV where no character is escaped.
      * The empty text or {@code null} value means the undefined header.
      * @param headerContent a String or Key arguments
      */
