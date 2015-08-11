@@ -44,7 +44,7 @@ import java.nio.charset.Charset;
  */
 final public class RingBuffer implements CharSequence {
 
-    /** The UTF-8 Charset */
+    /** The UTF-8 Charset, see {@link java.nio.charset.StandardCharsets#UTF_8} from Java 7 */
     public static final Charset UTF8 = Charset.forName("UTF-8");
     /** The string content (buffer)*/
     private final char[] b;
