@@ -426,7 +426,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Add a validator for a required filed.
      * If the field is not found, the statement is ignored */
-    public <T> void addValidator(final Key<? super U, T> key, Validator<T> validator) {
+    public <T> void addValidator(final Key<? super U, T> key, Validator<? super T> validator) {
         final Field field = getField(key);
         if (field != null) {
             field.addValidator(validator);
@@ -437,13 +437,13 @@ public class FieldProvider<U extends Ujo> implements Serializable {
      * If the field is not found, the statement is ignored
      * @see #setValidator(org.ujorm.Key, org.ujorm.Validator)
      */
-    public <T> void addValidatorUnchecked(final Key<? super U, T> key, Validator validator) {
+    public <T> void addValidatorUnchecked(final Key<? super U, ? super T> key, Validator validator) {
         addValidator(key, validator);
     }
 
     /** Set a visible attribute for a required filed.
      * If the field is not found, the statement is ignored */
-    public <T> void addValidator(final Key<? super U, T> key, IValidator<T> validator) {
+    public <T> void addValidator(final Key<? super U, T> key, IValidator<? super T> validator) {
         final Field field = getField(key);
         if (field != null) {
             field.addValidator(validator);
@@ -452,7 +452,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Add a CSS style to the field of required key.
      * If the field is not found, the statement is ignored */
-    public <T> void addCssStyle(final Key<? super U, T> key, String cssStyle) {
+    public <T> void addCssStyle(final Key<? super U, ? super T> key, String cssStyle) {
         final Field field = getField(key);
         if (field != null) {
             field.addCssStyle(cssStyle);

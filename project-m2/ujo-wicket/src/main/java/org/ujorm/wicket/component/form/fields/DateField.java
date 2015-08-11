@@ -16,11 +16,9 @@
 package org.ujorm.wicket.component.form.fields;
 
 import com.googlecode.wicket.jquery.core.Options;
-import java.util.Date;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.wicket.CssAppender;
@@ -47,7 +45,7 @@ public class DateField<T> extends Field<T> {
     @Override
     @SuppressWarnings("unchecked")
     protected FormComponent createInput(final String componentId, final IModel<T> model) {
-        final DateTextField result = new com.googlecode.wicket.jquery.ui.form.datepicker.DatePicker
+        final DateTextField result = new com.googlecode.wicket.jquery.ui.form.datepicker.AjaxDatePicker
                 (componentId, (IModel) model, getDatePattern(), createJQueryOptions());
         result.add(new CssAppender(getInputCssClass()));
 
