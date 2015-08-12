@@ -388,9 +388,7 @@ public class Session implements Closeable {
     }
 
     /** INSERT object into table using the <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29">Multirow inserts</a>.
-     * @param multiLimit Row limit for the one insert.
-     *        If the value will be out of range <1,bos.size()> than the value will be corrected.
-     *        If the list item count is greather than multi limit so insert will be separated by more multirow inserts.
+     * @param bos Business objects
      * @throws IllegalStateException
      * @see MetaParams#INSERT_MULTIROW_ITEM_LIMIT
      */
@@ -403,7 +401,7 @@ public class Session implements Closeable {
      * @param bos List of the business object of the same class. If the list must not contain object of different types
      * @param multiLimit Row limit for the one insert.
      *        If the value will be out of range <1,bos.size()> than the value will be corrected.
-     *        If the list item count is greather than multi limit so insert will be separated by more multirow inserts.
+     *        If the list item count is greater than multi limit so insert will be separated by more multirow inserts.
      * @throws IllegalStateException
      */
     public void save(final List<? extends OrmUjo> bos, int multiLimit) throws IllegalStateException {
@@ -673,7 +671,7 @@ public class Session implements Closeable {
      *       however you can call method clearCache() to release all objects from the cache.
      * @param tableClass Type of table to delete
      * @param criterion filter for deleting tables.
-     * @return Returns a number of the realy deleted objects.
+     * @return Returns a number of the really deleted objects.
      */
     public <UJO extends OrmUjo> int delete(final Class<UJO> tableClass, final Criterion<UJO> criterion) {
         final MetaTable tableModel = handler.findTableModel(tableClass);
@@ -685,7 +683,7 @@ public class Session implements Closeable {
      *       however you can call method clearCache() to release all objects from the cache.
      * @param tableModel Type of table to delete
      * @param criterion filter for deleting tables.
-     * @return Returns a number of the realy deleted objects.
+     * @return Returns a number of the really deleted objects.
      */
     protected <UJO extends OrmUjo> int delete(final MetaTable tableModel, final Criterion<UJO> criterion) {
         tableModel.assertChangeAllowed();
