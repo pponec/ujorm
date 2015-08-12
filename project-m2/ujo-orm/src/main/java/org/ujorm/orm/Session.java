@@ -398,6 +398,7 @@ public class Session implements Closeable {
     }
 
     /** INSERT object into table using the <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29">Multirow inserts</a>.
+     * The flags of modified attributes are ignored, if any.
      * @param bos List of the business object of the same class. If the list must not contain object of different types
      * @param multiLimit Row limit for the one insert.
      *        If the value will be out of range <1,bos.size()> than the value will be corrected.
@@ -493,7 +494,8 @@ public class Session implements Closeable {
     }
 
 
-    /** INSERT object into table. */
+    /** Save all persistent attributes into DB table by an INSERT SQL statement.
+     * The flags of modified attributes are ignored, if any. */
     public void save(final OrmUjo bo) throws IllegalStateException {
         checkNotNull(bo, "save");
         JdbcStatement statement = null;
