@@ -110,7 +110,7 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
     @Override
     public Key[] readChangedProperties(boolean clear) {
         final Key[] result
-            = changes==null || changes.isEmpty()
+            = (changes==null || changes.isEmpty())
             ? EMPTY
             : changes.toArray(new Key[changes.size()])
             ;
