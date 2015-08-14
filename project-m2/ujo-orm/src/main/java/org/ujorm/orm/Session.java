@@ -360,6 +360,7 @@ public class Session implements Closeable {
     /** Make a statement INSERT or UPDATE into a database table
      * according to attribute {@link Session}. Related objects
      * must be saved using an another call of the method.
+     * The method cleans all flags of modified attributes.
      */
     public void saveOrUpdate(final OrmUjo bo) throws IllegalStateException {
         checkNotNull(bo, "saveOrUpdate");
@@ -398,7 +399,7 @@ public class Session implements Closeable {
     }
 
     /** INSERT object into table using the <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29">Multirow inserts</a>.
-     * The flags of modified attributes are ignored, if any.
+     * The method cleans all flags of modified attributes.
      * @param bos List of the business object of the same class. If the list must not contain object of different types
      * @param multiLimit Row limit for the one insert.
      *        If the value will be out of range <1,bos.size()> than the value will be corrected.
@@ -437,16 +438,17 @@ public class Session implements Closeable {
                     saveOrUpdate(parent);
                 }
             }
-
             // 2. Assign primary key
             table.assignPrimaryKey(bo, this);
             // 3. Session must be assigned after assignPrimaryKey()
-            bo.writeSession(this); //
+            bo.writeSession(this);
+            // 4. Clean all flags of modified attributes
+            bo.readChangedProperties(true);
         }
 
         // --------------- PERFORMANCE -------------------------------------
 
-        multiLimit = between(multiLimit, 1, bosCount); // Multi Limit corrction;
+        multiLimit = between(multiLimit, 1, bosCount); // Multi Limit correction;
         int idxFrom = 0;
         int idxTo = multiLimit;
 
@@ -495,7 +497,7 @@ public class Session implements Closeable {
 
 
     /** Save all persistent attributes into DB table by an INSERT SQL statement.
-     * The flags of modified attributes are ignored, if any. */
+     * The method cleans all flags of modified attributes. */
     public void save(final OrmUjo bo) throws IllegalStateException {
         checkNotNull(bo, "save");
         JdbcStatement statement = null;
@@ -517,6 +519,8 @@ public class Session implements Closeable {
             LOGGER.log(UjoLogger.INFO, SQL_VALUES + statement.getAssignedValues());
             // 4. Execute:
             statement.executeUpdate(); // execute insert statement
+            // 5. Clean all flags of modified attributes
+            bo.readChangedProperties(true);
         } catch (Throwable e) {
             rollbackOnly = true;
             throw new IllegalStateException(SQL_ILLEGAL + sql, e);
@@ -526,6 +530,7 @@ public class Session implements Closeable {
     }
 
     /** Database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
+     * The method cleans all flags of modified attributes.
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
@@ -534,6 +539,7 @@ public class Session implements Closeable {
     }
 
     /** Database Batch UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} along a criterion.
+     * The method cleans all flags of modified attributes.
      * <br />Warning: method does affect to parent objects, see the {@link MetaParams#INHERITANCE_MODE} for more information.
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
@@ -543,6 +549,7 @@ public class Session implements Closeable {
     }
 
     /** Database Batch UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} along a criterion.
+     * The method cleans all flags of modified attributes.
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
@@ -591,7 +598,7 @@ public class Session implements Closeable {
      *       however you can call method clearCache() to release all objects from the cache.
      * <br />Warning 2: method does not delete parent objects, see the {@link MetaParams#INHERITANCE_MODE} for more information.
      * @param criterion filter for deleting tables.
-     * @return Returns a number of the realy deleted objects.
+     * @return Returns a number of the really deleted objects.
      */
     public <UJO extends OrmUjo> int delete(final Criterion<UJO> criterion) {
         final MetaRelation2Many column = getBasicColumn(criterion);

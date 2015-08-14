@@ -20,7 +20,6 @@ import org.ujorm.orm.*;
 import org.ujorm.orm.inheritance.sample.Database;
 import org.ujorm.orm.inheritance.sample.bo.User;
 import org.ujorm.orm.inheritance.sample.bo.Customer;
-import org.ujorm.orm.inheritance.sample.bo.Customer.*;
 
 /**
  * The tests of the SQL LIMIT & OFFSET.

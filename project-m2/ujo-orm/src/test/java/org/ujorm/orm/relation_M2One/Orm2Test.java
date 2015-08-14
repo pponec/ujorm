@@ -154,6 +154,16 @@ public class Orm2Test extends TestCase {
         } else {
            session.rollback();
         }
+
+        // ------- Check the assigned properties -------
+
+        assert order.readSession() != null;
+        assert order.readChangedProperties(false).length == 0;
+        order.setNote("John's order");
+        assert order.readChangedProperties(false).length == 1;
+        session.update(order);
+        assert order.readChangedProperties(false).length == 0;
+
     }
 
     /** Now, how to select Orders from the database by Criterions? */
