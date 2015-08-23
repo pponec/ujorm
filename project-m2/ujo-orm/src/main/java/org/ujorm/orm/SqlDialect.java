@@ -520,7 +520,7 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Create a subquery for the DELETE/UPDATE statement */
+    /** Create a sub-query for the DELETE/UPDATE statement */
     protected Query createSubQuery(CriterionDecoder decoder) {
         final MetaTable baseTable = decoder.getBaseTable();
         final Query result = new Query(baseTable, decoder.getCriterion());
@@ -529,7 +529,7 @@ abstract public class SqlDialect {
         return result;
     }
 
-    /** Returns an SQL criterion template. The result is a tempate by the next sample: "{0}={1}" .
+    /** Returns an SQL criterion template. The result is a template by the next sample: "{0}={1}" .
      * <br>See an example of the implementation:
      * <pre class="pre">
      * switch (crit.getOperator()) {
