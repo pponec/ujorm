@@ -47,7 +47,7 @@ public class CriterionDecoder {
 
     final protected Criterion criterion;
     final protected List<Key> orderBy;
-    final protected StringBuilder sql;
+    final protected String sql;
     final protected List<ValueCriterion> values;
     final protected List<ValueCriterion> nullValues;
     final protected Set<TableWrapper> tables;
@@ -77,27 +77,24 @@ public class CriterionDecoder {
         this.dialect = database.getDialect();
         this.orderBy = orderByItems;
         this.handler = database.getOrmHandler();
-        this.sql = new StringBuilder(64);
         this.values = new ArrayList<ValueCriterion>();
         this.nullValues = new ArrayList<ValueCriterion>();
         this.tables = new HashSet<TableWrapper>();
         this.tables.add(baseTable);
         this.printAllJoinedTables = MetaParams.MORE_PARAMS.add(MoreParams.PRINT_All_JOINED_TABLES).of(handler.getParameters());
 
-        if (this.criterion!=null) {
-            unpack(this.criterion);
-        }
-
+        final StringBuilder sqlBuffer = new StringBuilder(64);
         if (this.criterion!=null
         ||  this.orderBy!=null) {
-            writeRelations();
+            writeRelations(sqlBuffer);
         }
+        this.sql = sqlBuffer.toString();
     }
 
     /** Unpack criterion. */
-    protected void unpack(final Criterion c) {
+    protected void unpack(final Criterion c, final StringBuilder sql) {
         if (c.isBinary()) {
-            unpackBinary((BinaryCriterion)c);
+            unpackBinary((BinaryCriterion)c, sql);
         } else try {
             final ValueCriterion origCriterion = (ValueCriterion) c;
             final ValueCriterion newCriterion = dialect.printCriterion(origCriterion, sql);
@@ -106,14 +103,14 @@ public class CriterionDecoder {
             } else if (origCriterion != null) {
                 nullValues.add(origCriterion);
             }
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
         }
     }
 
     /** Unpack criterion. */
     @SuppressWarnings("fallthrough")
-    private void unpackBinary(final BinaryCriterion eb) {
+    private void unpackBinary(final BinaryCriterion eb, final StringBuilder sql) {
 
         boolean or = false;
         switch (eb.getOperator()) {
@@ -121,18 +118,18 @@ public class CriterionDecoder {
                 or = true;
             case AND:
                 if (or) sql.append(" (");
-                unpack(eb.getLeftNode());
+                unpack(eb.getLeftNode(), sql);
                 sql.append(" ");
                 sql.append(eb.getOperator().name());
                 sql.append(" ");
-                unpack(eb.getRightNode());
+                unpack(eb.getRightNode(), sql);
                 if (or) sql.append(") ");
                 break;
             case NOT:
                 sql.append(" ");
                 sql.append(eb.getOperator().name());
                 sql.append(" (");
-                unpack(eb.getRightNode()); // same criterion in both nodes
+                unpack(eb.getRightNode(), sql); // same criterion in both nodes
                 sql.append(") ");
                 break;
             default:
@@ -240,10 +237,13 @@ public class CriterionDecoder {
 
     /** Writer a relation conditions: */
     @SuppressWarnings("unchecked")
-    protected void writeRelations() {
-        Collection<AliasKey> relations = getPropertyRelations();
+    protected void writeRelations(final StringBuilder sql) {
+        if (criterion != null) {
+            unpack(criterion, sql);
+        }
 
-        boolean parenthesis = sql.length() > 0
+        final Collection<AliasKey> relations = getPropertyRelations();
+        final boolean parenthesis = sql.length() > 0
                 && !relations.isEmpty();
         if (parenthesis) {
             sql.append(" AND (");
