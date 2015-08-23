@@ -196,6 +196,23 @@ public class CriterionDecoder {
         return criterion;
     }
 
+//    /** Returns the relation criterion for the INNER JOIN phase. */
+//    public Criterion getCriterionForRelations() {
+//        if (criterion instanceof BinaryCriterion) {
+//            return ((BinaryCriterion) criterion).getLeftNode();
+//        }
+//        return null;
+//    }
+//
+//    /** Returns the relation criterion for the INNER JOIN phase. */
+//    public Criterion getCriterionForConditions() {
+//        if (criterion instanceof BinaryCriterion) {
+//            return ((BinaryCriterion) criterion).getRightNode();
+//        }
+//        return null;
+//    }
+
+
     /** Returns a SQL WHERE 'expression' of an empty string if no condition is found. */
     public String getWhere() {
         return sql.toString();

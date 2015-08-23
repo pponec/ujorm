@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
@@ -63,6 +65,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** A list of keys to sorting */
     private List<Key<UJO,?>> orderBy;
+    /** A list of keys to sorting */
+    private List<Key<UJO,?>> outerJoins;
     /** Set the first row to retrieve. If not set, rows will be retrieved beginnning from row 0. */
     private long offset = 0;
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation. */
@@ -594,6 +598,22 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             throw new IllegalStateException(msg);
         }
     }
+
+    /** Set the one entity / table to LEFT OUTER JOIN */
+    public boolean addOuterJoin(Key<UJO,? extends OrmTable> entity) throws IllegalArgumentException {
+        if (outerJoins == null) {
+            outerJoins = new ArrayList<Key<UJO,?>>();
+        }
+        return outerJoins.add(entity);
+    }
+
+    /** Return a non-null list of the outer joins */
+    public List<Key<UJO,?>> getOuterJoins()  {
+        return outerJoins != null
+            ? Collections.<Key<UJO,?>>emptyList()
+            : outerJoins;
+    }
+
 
     /** Has this Query an offset? */
     public boolean isOffset() {
