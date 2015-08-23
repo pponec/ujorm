@@ -191,12 +191,12 @@ public class CriterionDecoder {
         }
     }
 
-    /** Returns the criterion from costructor. */
+    /** Returns the criterion from constructor. */
     public Criterion getCriterion() {
         return criterion;
     }
 
-    /** Returns a SQL WHERE 'expression' of an empty string if no conditon is found. */
+    /** Returns a SQL WHERE 'expression' of an empty string if no condition is found. */
     public String getWhere() {
         return sql.toString();
     }

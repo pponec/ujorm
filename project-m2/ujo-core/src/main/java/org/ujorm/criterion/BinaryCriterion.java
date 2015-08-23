@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
-   
+ */
+
 
 package org.ujorm.criterion;
 
@@ -34,7 +34,7 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
     final private BinaryOperator operator;
     /** A domoain class of sub Criterions like a backup */
     private Class<?> domain;
-    
+
     public BinaryCriterion
         ( final Criterion<UJO> criterion1
         , final BinaryOperator operator
@@ -74,7 +74,7 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
             case NOR    : return !(e1 ||  crn2.evaluate(ujo));
             case EQ     : return   e1 ==  crn2.evaluate(ujo) ;
             case NOT    : return  !e1 ;
-            default:  
+            default:
                 throw new IllegalArgumentException("Unsupported operator: " + operator);
         }
     }
@@ -85,16 +85,16 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
         return true;
     }
 
-    /** Print the conditon in a human reading format. */
+    /** Print the condition in a human reading format. */
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
         boolean parentheses = operator!=BinaryOperator.AND;
-        if (parentheses) result.append('(');        
+        if (parentheses) result.append('(');
         result.append(crn1);
         result.append(' ').append(operator.name()).append(' ');
         result.append(crn2);
-        if (parentheses) result.append(')');        
+        if (parentheses) result.append(')');
 
         return  result.toString();
     }
