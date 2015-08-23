@@ -37,6 +37,11 @@ final public class MoreParams extends AbstractMetaModel {
      */
     public static final Key<MoreParams,String> DIALECT_MYSQL_ENGINE_TYPE = f.newKey("DialectMySqlEngineType", "ENGINE = InnoDB");
 
+    /** The value {@code true} builds the SQL statement using SQL phrase: <br/>
+     * LEFT INNER JOIN (or LEFT OUTER JOIN in future).
+     */
+    public static final Key<MoreParams,Boolean> DIALECT_SQL_JOIN = f.newKey("DialectSqlJoin", false);
+
     /** EFFECTIVA REQUEST: to enforce printing all Ujorm joined tables */
     public static final Key<MoreParams,Boolean> PRINT_All_JOINED_TABLES = f.newKey("printAllJoinedTables", false);
 
