@@ -20,7 +20,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -370,14 +369,23 @@ public class OrmHandler implements OrmHandlerProvider {
         return (T) result;
     }
 
-    /** Find a tableOf model by the dbClass.
-     * If the tableOf model is not found then the IllegalStateException is throwed.
+    /** Find a table model by the dbClass.
+     * If the table model is not found then the IllegalStateException is throwed.
      */
-    public MetaTable findTableModel(Class<? extends OrmUjo> dbClass) throws IllegalStateException {
-        MetaTable result = entityMap.get(dbClass);
-        if (result==null) {
-            final String msg = "An entity mapping bug: the " + dbClass + " is not mapped to the Database.";
-            throw new IllegalStateException(msg);
+    public final MetaTable findTableModel(final Class<? extends OrmUjo> dbClass) throws IllegalStateException {
+        return findTableModel(dbClass, true);
+    }
+
+    /**
+     * Find a table model by the dbClass.
+     * @param throwException Throw the IllegalArgument exception of no Model was not found
+     * @return Returns a related model throw the IllegalArgumentException exception.
+     */
+    public MetaTable findTableModel(final Class<? extends OrmUjo> dbClass, final boolean throwException) throws IllegalStateException {
+        final MetaTable result = entityMap.get(dbClass);
+        if (result==null && throwException) {
+             final String msg = "An entity mapping bug: the " + dbClass + " is not mapped to the Database.";
+             throw new IllegalStateException(msg);
         }
         return result;
     }
