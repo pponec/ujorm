@@ -280,9 +280,9 @@ final public class OrmTools {
         }
         for (UJO u : ujos) {
             result.add(u);
-            ForeignKey fk = u.readFK(key);
-            if (fk!=null) {
-                map.put(fk.getValue(), null);
+            final Object fk = u.readValue(key);
+            if (fk instanceof ForeignKey) {
+                map.put(((ForeignKey)fk).getValue(), null);
             }
         }
         if (result.isEmpty()) {
@@ -309,10 +309,10 @@ final public class OrmTools {
             }
         }
         for (UJO u : result) {
-            ForeignKey fk = u.readFK(key);
-            if (fk!=null) {
+            final Object fk = u.readValue(key);
+            if (fk instanceof ForeignKey) {
                 u.writeSession(null); // switch off the change management
-                u.writeValue(key, map.get(fk.getValue()));
+                u.writeValue(key, map.get(((ForeignKey)fk).getValue()));
                 u.writeSession(session);
             }
         }
