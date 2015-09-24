@@ -17,10 +17,10 @@ package org.ujorm.hotels.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.http.WebResponse;
@@ -69,7 +69,7 @@ public class HomePage extends WebPage {
         // Footer:
         add(new AjaxLink("aboutLink") {
             @Override public void onClick(AjaxRequestTarget target) {
-                ((UjoTabbedPanel)HomePage.this.get("tabs")).selectTab(AboutPanel.class, target);
+                showAboutTab(target);
             }
         });
         Label label;
@@ -79,6 +79,15 @@ public class HomePage extends WebPage {
         if (!applParams.isProduction()) {
             label.add(new CssAppender("test"));
         }
+
+        if (parameters.get("tab").toString("").equals("about")) {
+            showAboutTab(null);
+        }
+    }
+
+    /** Show the about tab */
+    private void showAboutTab(@Nonnull AjaxRequestTarget target) {
+        ((UjoTabbedPanel)HomePage.this.get("tabs")).selectTab(AboutPanel.class, target);
     }
 
     /** Manage events */
@@ -101,5 +110,6 @@ public class HomePage extends WebPage {
     protected void setHeaders(WebResponse response) {
         super.setHeaders(response);
         response.setHeader("X-UA-Compatible", "IE=edge");
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     }
 }
