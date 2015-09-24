@@ -16,6 +16,7 @@
 package org.ujorm.wicket.component.tabs;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
@@ -80,7 +81,7 @@ public class UjoTabbedPanel<T extends UjoTab>
     }
 
     /** Select a tab. */
-    public final void selectTab(final Class<? extends UjoTab> tab, AjaxRequestTarget target) {
+    public final void selectTab(final Class<? extends UjoTab> tab, @Nonnull AjaxRequestTarget target) {
         final List<T> tabs = getTabs();
         for (int i=0, max=tabs.size(); i<max; ++i) {
             if (tab.isAssignableFrom(tabs.get(i).getPanelClass())) {
@@ -88,7 +89,9 @@ public class UjoTabbedPanel<T extends UjoTab>
                 break;
             }
         }
-        target.add(this);
+        if (target != null) {
+            target.add(this);
+        }
     }
 
     /** Select the next tab */
