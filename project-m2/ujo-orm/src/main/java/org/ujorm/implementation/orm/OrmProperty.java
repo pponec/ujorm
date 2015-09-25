@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -91,7 +91,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                             // open temporary session if it's closed ;) - because of lazy-loading of detached objects (caches, etc.) */
                             final Session tempSession = mySession.getHandler().createSession();
                             try {
-                                result = tempSession.loadInternal(this, ((ForeignKey) result).getValue(), true);
+                                result = loadOrmUjo(tempSession, (ForeignKey) result);
                                 if (result != null) {
                                     // Assign the same session due original session arguments (lazyLoading e.g.):
                                     ((OrmUjo) result).writeSession(mySession);
@@ -101,7 +101,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                             }
                     }
                 } else {
-                    result = mySession.loadInternal(this, ((ForeignKey) result).getValue(), true);
+                    result = loadOrmUjo(mySession, (ForeignKey) result);
                 }
                 ujo.writeSession(null); // Replacing of the foreign key is not a key change
                 ujo.writeValue(this, result);
@@ -118,5 +118,17 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
         return result != null
                 ? (VALUE) result
                 : getDefault();
+    }
+
+    /**
+     * Load OrmUjo
+     * @param session A required session
+     * @param foreignKey A required foreign key
+     * @return Load UJO by a unique id. If the result is not unique, then an exception is throwed.
+     */
+    protected OrmUjo loadOrmUjo(final Session session, final ForeignKey foreignKey) {
+        assert session != null;
+        assert foreignKey != null;
+        return session.loadInternal(this, foreignKey.getValue(), true);
     }
 }

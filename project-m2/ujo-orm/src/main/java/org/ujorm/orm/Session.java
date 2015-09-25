@@ -1044,7 +1044,6 @@ public class Session implements Closeable {
         return true;
     }
 
-
     /**
      * Load UJO by a unique id. If the result is not unique, then an exception is throwed.
      * @param relatedProperty Related key
