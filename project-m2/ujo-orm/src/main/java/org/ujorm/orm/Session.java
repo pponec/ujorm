@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -119,7 +119,7 @@ public class Session implements Closeable {
     }
 
     /** Returns a handler */
-    final public OrmHandler getHandler() {
+    public final OrmHandler getHandler() {
         return handler;
     }
 
@@ -274,7 +274,7 @@ public class Session implements Closeable {
      * @see #createQuery(org.ujorm.criterion.Criterion)
      */
     @Deprecated
-    final public <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass, Criterion<UJO> criterion) {
+    public final <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass, Criterion<UJO> criterion) {
         return createQuery(criterion, aClass);
     }
 
@@ -283,33 +283,33 @@ public class Session implements Closeable {
      *  without the Class parameter.
      * @see #createQuery(org.ujorm.criterion.Criterion)
      */
-    final public <UJO extends OrmUjo> Query<UJO> createQuery(final Criterion<UJO> criterion, final Class<UJO> aClass) {
+    public final <UJO extends OrmUjo> Query<UJO> createQuery(final Criterion<UJO> criterion, final Class<UJO> aClass) {
         final MetaTable metaTable = handler.findTableModel(aClass);
         return new Query<UJO>(metaTable, criterion, this);
     }
 
     /** The table class is derived from the first criterion column. */
-    final public <UJO extends OrmUjo> Query<UJO> createQuery(final Criterion<UJO> criterion) {
+    public final <UJO extends OrmUjo> Query<UJO> createQuery(final Criterion<UJO> criterion) {
         final MetaRelation2Many column = getBasicColumn(criterion);
         final MetaTable table = MetaRelation2Many.TABLE.of(column);
         return new Query<UJO>(table, criterion, this);
     }
 
     /** Returns {@code true} if exists any database row with the required condition. */
-    final public <UJO extends OrmUjo> boolean exists(final Criterion<UJO> criterion) {
+    public final <UJO extends OrmUjo> boolean exists(final Criterion<UJO> criterion) {
         final MetaTable table = MetaRelation2Many.TABLE.of(getBasicColumn(criterion));
         return exists(table, criterion, table.getFirstPK().getKey());
     }
 
     /** Returns {@code true} if exists any database row for the required entity. */
-    final public <UJO extends OrmUjo> boolean exists(final Class<UJO> entity) {
+    public final <UJO extends OrmUjo> boolean exists(final Class<UJO> entity) {
         final MetaTable table = handler.findTableModel(entity);
         final Key pk = table.getFirstPK().getKey();
         return exists(table, pk.forAll(), pk);
     }
 
     /** Returns {@code true} if exists any database row for the required criterion. */
-    final protected <UJO extends OrmUjo> boolean exists( MetaTable table, Criterion<UJO> criterion, Key pk) {
+    protected final <UJO extends OrmUjo> boolean exists( MetaTable table, Criterion<UJO> criterion, Key pk) {
         final Ujo result = new Query<UJO>(table, criterion, this)
                 .setColumn(pk)
                 .setLimit(1)
@@ -339,7 +339,7 @@ public class Session implements Closeable {
     }
 
     /** Returns the first Database instance. */
-    final public <DB extends OrmUjo> DB getFirstDatabase() {
+    public final <DB extends OrmUjo> DB getFirstDatabase() {
         return (DB) getDatabase(null);
     }
 
@@ -901,7 +901,7 @@ public class Session implements Closeable {
      * Get the first Connection where an autocommit is set to false.
      * @param databaseIndex The first database have got the index value: 0 .
      */
-    final public Connection getFirstConnection() throws IllegalStateException {
+    public final Connection getFirstConnection() throws IllegalStateException {
         return getFirstConnection(true);
     }
 
@@ -910,7 +910,7 @@ public class Session implements Closeable {
      * @param databaseIndex The first database have got the index value: 0 .
      * @param toModify By the value {@code false} is disabled to assign savepoints in an active transaction.
      */
-    final public Connection getFirstConnection(boolean toModify) throws IllegalStateException {
+    public final Connection getFirstConnection(boolean toModify) throws IllegalStateException {
         return getConnection(0, toModify);
     }
 
@@ -920,7 +920,7 @@ public class Session implements Closeable {
      * @param databaseIndex The first database have got the index value: 0 .
      * @param toModify By the value {@code false} is disabled to assign savepoints in an active transaction.
      */
-    final public Connection getConnection(int databaseIndex, final boolean toModify) throws IllegalStateException {
+    public final Connection getConnection(int databaseIndex, final boolean toModify) throws IllegalStateException {
         final MetaDatabase metaDb = handler.getDatabases().get(databaseIndex);
         return getConnection(metaDb, toModify);
     }
@@ -931,7 +931,7 @@ public class Session implements Closeable {
      * @param toModify By the value {@code false} is disabled to assign savepoints in an active transaction.
      * @throws IllegalStateException An envelope for a run-time SQL exception
      */
-    final public Connection getConnection(final MetaDatabase database, final boolean toModify) throws IllegalStateException {
+    public final Connection getConnection(final MetaDatabase database, final boolean toModify) throws IllegalStateException {
         final Connection result = getConnection_(database, 0);
         if (this.transaction!=null && toModify) {
             this.transaction.assignSavepoint(database, result);
@@ -940,7 +940,7 @@ public class Session implements Closeable {
     }
 
     /** Get sequence connection for a required database with an autocommit na false. For internal use only. */
-    final Connection getSeqConnection(final MetaDatabase database) throws IllegalStateException {
+    public final Connection getSeqConnection(final MetaDatabase database) throws IllegalStateException {
         return getConnection_(database, 1);
     }
 
@@ -1193,7 +1193,7 @@ public class Session implements Closeable {
     }
 
     /** Returns parameters */
-    final public MetaParams getParameters() {
+    public final MetaParams getParameters() {
         return params;
     }
 
