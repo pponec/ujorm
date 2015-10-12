@@ -61,6 +61,8 @@ public class AuthServiceImpl extends AbstractServiceImpl<Customer> implements Au
             try {
                 Thread.sleep(1500L);
             } catch (InterruptedException e) {
+                // Restoring the interrupted status:
+                Thread.currentThread().interrupt();
                 LOGGER.warn("Interrupted", e);
             }
             return false;
