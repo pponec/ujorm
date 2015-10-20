@@ -503,6 +503,11 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
         return new UjoManagerCSV<U>(KeyRing.getBaseType(keys), keys);
     }
 
+    /** Create new instance by a KeyRing */
+    public static <U extends Ujo> UjoManagerCSV<U> of(KeyList<U> keys) {
+        return of(keys.toArray());
+    }
+
     /** Create new instance
      * @deprecated Use the method {@code of(...)}
      */
