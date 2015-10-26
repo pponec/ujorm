@@ -321,6 +321,11 @@ public class MSSqlDialect extends SqlDialect {
         // order by part
         if (UjoTools.isFilled(query.getOrderBy())) {
             printSelectOrder(query, out, true);
+            /* When creating the ROW_NUMBER (), he shall transmit the parameter
+             * of the column by which to sort -> RowNum is now sorted itself
+             * (otherwise the paging WHERE RowNum BETWEEN 1 AND 200 didn't make sense)
+             */
+            out.append(" ORDER BY MyInnerTable.RowNum");
         }
     }
 
