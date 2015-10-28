@@ -463,6 +463,14 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     /** Returns all domain keys excluding the argument keys.
+     * @param excludedKeys Array of the <strong>direct</strong> excluded keys.
+     */
+    public static <UJO extends Ujo> KeyRing<UJO> ofExcluding(Key<?, ?>... excludedKeys) {
+        return ofExcluding(getBaseType((Key<UJO, ?>[]) excludedKeys), excludedKeys);
+    }
+
+
+    /** Returns all domain keys excluding the argument keys.
      * @param domainClass The domain class where a not null value is recommended for better performance.
      * @param excludedKeys Array of the <strong>direct</strong> excluded keys.
      */
@@ -545,7 +553,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     /** Throws an {@link IllegalArgumentException} exception with the text:<br/>
-     * "The key '%s' of the class %s was not found"
+     * "The 'keyname' of the class was not found"
      */
     private void throwException(final String keyName, final Class type, Throwable e) throws IllegalArgumentException {
         final String msg = String.format("The key '%s' of the %s was not found", keyName, type);
