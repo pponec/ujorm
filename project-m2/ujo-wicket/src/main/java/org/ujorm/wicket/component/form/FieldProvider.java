@@ -142,7 +142,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             field = new DateField(newChildId(), key, null); // TODO DateTime field
         } else if (key.isTypeOf(Ujo.class)) {
             field = new OfferField(newChildId(), key);
-        } else if (key instanceof ListKey && Ujo.class.isAssignableFrom( ((ListKey)key).getItemType())) {
+        } else if (key instanceof ListKey && ((ListKey)key).isItemTypeOf(Ujo.class)) {
             field = new GridField(newChildId(), key, null);
         } else {
             field = new Field(newChildId(), key, null); // The common field
