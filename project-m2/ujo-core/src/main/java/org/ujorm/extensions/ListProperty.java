@@ -94,7 +94,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     }
 
     /** Add an Item value to a List key. If the list is {@code null}, than the method create a new instance of List (for exact behaviour see an implementation).
-     * The method works like a simolar code:
+     * The method works like a similar code:
      * <pre class="pre">
      * if (ujo.get(VALUE_LIST)==null) {
      *    ujo.set(VALUE_LIST, new ArrayList());
