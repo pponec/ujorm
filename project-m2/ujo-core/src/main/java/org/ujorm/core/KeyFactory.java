@@ -30,6 +30,7 @@ import java.util.Map;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.annot.PackagePrivate;
@@ -419,14 +420,14 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Create new Key */
-    public final <T> ListProperty<UJO, T> newListKey() {
+    public final <T> ListKey<UJO, T> newListKey() {
         return newListKey(null);
     }
 
     /** Create new Key */
-    public <T> ListProperty<UJO, T> newListKey(String name) {
+    public <T> ListKey<UJO, T> newListKey(String name) {
         checkLock();
-        final ListProperty<UJO, T> p = ListProperty.newListProperty(name, null, Property.UNDEFINED_INDEX, false);
+        final ListKey<UJO, T> p = ListProperty.newListProperty(name, null, Property.UNDEFINED_INDEX, false);
         tmpStore.addKey(p);
         return p;
     }

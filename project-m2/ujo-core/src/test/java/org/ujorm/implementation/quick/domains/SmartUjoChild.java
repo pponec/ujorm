@@ -12,8 +12,8 @@ package org.ujorm.implementation.quick.domains;
 import java.awt.Color;
 import java.util.Date;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.extensions.ListProperty;
 
 /**
  * An UnifiedDataObject Implementation
@@ -27,7 +27,7 @@ public class SmartUjoChild<U extends SmartUjoChild> extends SmartUjoImpl<U> {
     public static final Key <SmartUjoChild, String>  PRO_P7 = f.newKey();
     public static final Key <SmartUjoChild, Date>    PRO_P8 = f.newKey();
     public static final Key <SmartUjoChild, Class>   PRO_P9 = f.newKey();
-    public static final ListProperty <SmartUjoChild,Color> PRO_LST2 = f.newListKey();
+    public static final ListKey <SmartUjoChild,Color> PRO_LST2 = f.newListKey();
 
     // --- Mandatory initializaton ---
     static {
