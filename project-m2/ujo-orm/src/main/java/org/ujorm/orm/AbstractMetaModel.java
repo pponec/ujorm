@@ -82,14 +82,14 @@ abstract public class AbstractMetaModel extends AbstractUjo implements UjoLockab
         this.readOnly = true; // <<<<<< LOCK THE OBJECT !!!
 
         if (recurse) {
-            for (Key p : readKeys()) {
+            for (Key key : readKeys()) {
 
-                final Object value = p.of(this);
+                final Object value = key.of(this);
                 if (value instanceof AbstractMetaModel) {
                     ((AbstractMetaModel) value).setReadOnly(recurse);
-                } else if (p instanceof ListKey) {
-                    if (AbstractMetaModel.class.isAssignableFrom(((ListKey) p).getItemType())) {
-                        for (AbstractMetaModel m : ((ListKey<AbstractMetaModel, AbstractMetaModel>) p).getList(this)) {
+                } else if (key instanceof ListKey) {
+                    if (((ListKey)key).isItemTypeOf(AbstractMetaModel.class)) {
+                        for (AbstractMetaModel m : ((ListKey<AbstractMetaModel, AbstractMetaModel>) key).getList(this)) {
                             m.setReadOnly(recurse);
                         }
                     }
