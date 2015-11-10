@@ -25,7 +25,7 @@ import org.ujorm.orm.Session;
 import static org.ujorm.extensions.PropertyModifier.*;
 import static org.ujorm.orm.ao.LazyLoading.*;
 
-/** The special Key pro LazyLoadiing */
+/** The special Key pro a LazyLoading */
 public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
 
     /** Logger */
