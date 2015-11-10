@@ -87,7 +87,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
 
     /**
      * Creates a new instance of UjoManagerCSV
-     * @param ujoClass Exported Ujo Class
+     * @param ujoClass Exported ujoClass Class
      */
     public UjoManagerCSV(Class<U> ujoClass) {
         super(ujoClass, (KeyList<U>) null);
@@ -387,7 +387,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
 
     /**
      * Skip empty lines on reading, the default value is {@code true}.
-     * @param skipEmptyLines the skipEmptyLines to set
+     * @param skip the skipEmptyLines to set
      */
     public void setSkipEmptyLines(boolean skip) {
         this.skipEmptyLines = skip;
