@@ -31,7 +31,7 @@ public class Person extends SmartUjo<Person> {
     private static final KeyFactory<Person> f = newFactory(Person.class);
 
     public static final Key<Person, Integer> ID = f.newKey("id");
-    public static final Key<Person, Date> CREATED = f.newKey("created");
+    public static final Key<Person, Date> CREATED = f.newKey("created", new Date());
     public static final ListKey<Person, Person> PERS = f.newListKey("person");
 
     static {
