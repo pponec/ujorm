@@ -19,17 +19,26 @@ package org.ujorm.extensions;
 
 import org.ujorm.Key;
 import org.ujorm.ListKey;
-import org.ujorm.implementation.quick.QuickUjo;
+import org.ujorm.core.KeyFactory;
+import org.ujorm.implementation.quick.SmartUjo;
+import java.util.Date;
 
 /**
- *
+ * Person BO
  * @author Pavel Ponec
  */
-public class Person extends QuickUjo {
-    
-    public static final Key<Person, Integer> ID = newKey("id");
-    public static final ListKey<Person, Person> PERS = newListKey("person");
+public class Person extends SmartUjo<Person> {
+    private static final KeyFactory<Person> f = newFactory(Person.class);
 
+    public static final Key<Person, Integer> ID = f.newKey("id");
+    public static final Key<Person, Date> CREATED = f.newKey("created");
+    public static final ListKey<Person, Person> PERS = f.newListKey("person");
+
+    static {
+        f.lock();
+    }
+
+    /** Constructor */
     public Person(Integer id) {
         ID.setValue(this, id);
     }
