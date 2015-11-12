@@ -85,13 +85,24 @@ public class PropertyTest extends TestCase {
     }
 
     /**
-     * Test of getValue method, of class Property.
+     * Test of the {@code getValue} method, from a Property class.
      */
     public void testGetValue() {
         System.out.println("getValue");
         Integer expectedResult = 987;
         Person ujo = new Person(expectedResult);
         assertSame(expectedResult, Person.ID.getValue(ujo));
+        assertSame(expectedResult, ujo.get(Person.ID));
+    }
+
+    /**
+     * Test of the {@code of} method, from a Property class.
+     */
+    public void testOf() {
+        System.out.println("of");
+        Integer expectedResult = 980;
+        Person ujo = new Person(expectedResult);
+        assertSame(expectedResult, Person.ID.of(ujo));
         assertSame(expectedResult, ujo.get(Person.ID));
     }
 
