@@ -16,8 +16,6 @@
 package org.ujorm.extensions;
 
 import junit.framework.TestCase;
-import org.ujorm.Key;
-import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import java.util.Date;
 import java.io.Serializable;
@@ -251,373 +249,100 @@ public class PropertyTest extends TestCase {
         assertTrue(Person.ID.equalsName(Person.ID.getName()));
     }
 
-//    /**
-//     * Test of compareTo method, of class Property.
-//     */
-//    public void testCompareTo() {
-//        System.out.println("compareTo");
-//        Key p = null;
-//        Property instance = null;
-//        int expResult = 0;
-//        int result = instance.compareTo(p);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of charAt method, of class Property.
-//     */
-//    public void testCharAt() {
-//        System.out.println("charAt");
-//        int index = 0;
-//        Property instance = null;
-//        char expResult = ' ';
-//        char result = instance.charAt(index);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of length method, of class Property.
-//     */
-//    public void testLength() {
-//        System.out.println("length");
-//        Property instance = null;
-//        int expResult = 0;
-//        int result = instance.length();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of subSequence method, of class Property.
-//     */
-//    public void testSubSequence() {
-//        System.out.println("subSequence");
-//        int start = 0;
-//        int end = 0;
-//        Property instance = null;
-//        CharSequence expResult = null;
-//        CharSequence result = instance.subSequence(start, end);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of toString method, of class Property.
-//     */
-//    public void testToString() {
-//        System.out.println("toString");
-//        Property instance = null;
-//        String expResult = "";
-//        String result = instance.toString();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of toStringFull method, of class Property.
-//     */
-//    public void testToStringFull_0args() {
-//        System.out.println("toStringFull");
-//        Property instance = null;
-//        String expResult = "";
-//        String result = instance.toStringFull();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of toStringFull method, of class Property.
-//     */
-//    public void testToStringFull_boolean() {
-//        System.out.println("toStringFull");
-//        boolean extended = false;
-//        Property instance = null;
-//        String expResult = "";
-//        String result = instance.toStringFull(extended);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of where method, of class Property.
-//     */
-//    public void testWhere_Operator_GenericType() {
-//        System.out.println("where");
-//        Operator operator = null;
-//        Object value = null;
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.where(operator, value);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of where method, of class Property.
-//     */
-//    public void testWhere_Operator_Key() {
-//        System.out.println("where");
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = null; //instance.where(null);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereEq method, of class Property.
-//     */
-//    public void testWhereEq_GenericType() {
-//        System.out.println("whereEq");
-//        Object value = null;
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.whereEq(value);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereIn method, of class Property.
-//     */
-//    public void testWhereIn_Collection() {
-//        System.out.println("whereIn");
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = null; //instance.whereIn(null);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereNotIn method, of class Property.
-//     */
-//    public void testWhereNotIn_Collection() {
-//        System.out.println("whereNotIn");
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = null; //instance.whereNotIn(null);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereNotIn method, of class Property.
-//     */
-//    public void testWhereNotIn_GenericType() {
-//        System.out.println("whereNotIn");
-//        Object[] list = null;
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.whereNotIn(list);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereEq method, of class Property.
-//     */
-//    public void testWhereEq_Key() {
-//        System.out.println("whereEq");
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.whereEq(null);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereNull method, of class Property.
-//     */
-//    public void testWhereNull() {
-//        System.out.println("whereNull");
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.whereNull();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereNotNull method, of class Property.
-//     */
-//    public void testWhereNotNull() {
-//        System.out.println("whereNotNull");
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.whereNotNull();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereFilled method, of class Property.
-//     */
-//    public void testWhereFilled() {
-//        System.out.println("whereFilled");
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.whereFilled();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereNotFilled method, of class Property.
-//     */
-//    public void testWhereNotFilled() {
-//        System.out.println("whereNotFilled");
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.whereNotFilled();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereNeq method, of class Property.
-//     */
-//    public void testWhereNeq() {
-//        System.out.println("whereNeq");
-//        Object value = null;
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.whereNeq(value);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereGt method, of class Property.
-//     */
-//    public void testWhereGt() {
-//        System.out.println("whereGt");
-//        Object value = null;
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.whereGt(value);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereGe method, of class Property.
-//     */
-//    public void testWhereGe() {
-//        System.out.println("whereGe");
-//        Object value = null;
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.whereGe(value);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereLt method, of class Property.
-//     */
-//    public void testWhereLt() {
-//        System.out.println("whereLt");
-//        Object value = null;
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.whereLt(value);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of whereLe method, of class Property.
-//     */
-//    public void testWhereLe() {
-//        System.out.println("whereLe");
-//        Object value = null;
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.whereLe(value);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of forSql method, of class Property.
-//     */
-//    public void testForSql_String() {
-//        System.out.println("forSql");
-//        String sqlCondition = "";
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.forSql(sqlCondition);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//
-//    /**
-//     * Test of forSqlUnchecked method, of class Property.
-//     */
-//    public void testForSqlUnchecked() {
-//        System.out.println("forSqlUnchecked");
-//        String sqlCondition = "";
-//        Object value = null;
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.forSqlUnchecked(sqlCondition, value);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of forAll method, of class Property.
-//     */
-//    public void testForAll() {
-//        System.out.println("forAll");
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.forAll();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of forNone method, of class Property.
-//     */
-//    public void testForNone() {
-//        System.out.println("forNone");
-//        Property instance = null;
-//        Criterion expResult = null;
-//        Criterion result = instance.forNone();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
+    /**
+     * Test of compareTo method, of class Property.
+     */
+    public void testCompareTo() {
+        System.out.println("compareTo");
+        assertEquals(-1, Person.BORN.compareTo(Person.MOTHER));
+        assertEquals( 0, Person.MOTHER.compareTo(Person.MOTHER));
+        assertEquals(+1, Person.CHILDREN.compareTo(Person.MOTHER));
+    }
+
+    /**
+     * Test of charAt method, of class Property.
+     */
+    public void testCharAt() {
+        System.out.println("charAt");
+        assertEquals('b', Person.BORN.charAt(0));
+        assertEquals('o', Person.BORN.charAt(1));
+        assertEquals('r', Person.BORN.charAt(2));
+        assertEquals('n', Person.BORN.charAt(3));
+    }
+
+    /**
+     * Test of length method, of class Property.
+     */
+    public void testLength() {
+        System.out.println("length");
+        assertEquals("born".length(), Person.BORN.length());
+    }
+
+    /**
+     * Test of subSequence method, of class Property.
+     */
+    public void testSubSequence() {
+        System.out.println("subSequence");
+        assertEquals("b", Person.BORN.subSequence(0, 1));
+        assertEquals("o", Person.BORN.subSequence(1, 2));
+        assertEquals("r", Person.BORN.subSequence(2, 3));
+        assertEquals("n", Person.BORN.subSequence(3, 4));
+    }
+
+    /**
+     * Test of toString method, of class Property.
+     */
+    public void testToString() {
+        System.out.println("toString");
+        assertEquals("born"  , Person.BORN.toString());
+        assertEquals("mother", Person.MOTHER.toString());
+        //
+        assertSame(Person.BORN.getName()  , Person.BORN.toString());
+        assertSame(Person.MOTHER.getName(), Person.MOTHER.toString());
+    }
+
+    /**
+     * Test of where method, of class Property.
+     */
+    public void testWhere() {
+        System.out.println("where");
+        assertTrue(Person.ID.whereEq(TWO).evaluate(new Person(TWO)));
+        assertTrue(Person.ID.whereEq(ONE).evaluate(new Person(ONE)));
+        assertTrue(Person.ID.whereEq(NIL).evaluate(new Person(null)));
+        //
+        assertTrue(Person.ID.whereLt(TWO).evaluate(new Person(ONE)));
+        assertTrue(Person.ID.whereLt(ONE).evaluate(new Person(NIL)));
+        assertFalse(Person.ID.whereLt(NIL).evaluate(new Person(NIL)));
+    }
+
+    /**
+     * Test of forSql method, of class Property.
+     */
+    public void testForSql() {
+        System.out.println("forSql");
+        assertSame(Operator.XSQL, Person.ID.forSql("{0}=1").getOperator());
+    }
+
+    /**
+     * Test of forAll method, of class Property.
+     */
+    public void testForAll() {
+        System.out.println("forAll");
+        assertTrue(Person.ID.forAll().evaluate(new Person(null)));
+        assertTrue(Person.ID.forAll().evaluate(new Person(NIL)));
+        assertTrue(Person.ID.forAll().evaluate(new Person(ONE)));
+        assertTrue(Person.ID.forAll().evaluate(new Person(TWO)));
+    }
+
+    /**
+     * Test of forNone method, of class Property.
+     */
+    public void testForNone() {
+        System.out.println("forNone");
+        assertFalse(Person.ID.forNone().evaluate(new Person(null)));
+        assertFalse(Person.ID.forNone().evaluate(new Person(NIL)));
+        assertFalse(Person.ID.forNone().evaluate(new Person(ONE)));
+        assertFalse(Person.ID.forNone().evaluate(new Person(TWO)));
+    }
 
 }
