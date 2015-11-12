@@ -201,7 +201,7 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted.
      * A substring {@code {0}} will be replaced for the current column name
      * and the substring {@code {1}} will be replaced for the required value.
-     * @param value a codition value, array, list or an another key
+     * @param value a condition value, array, list or an another key
      * @see Operator#XSQL
      */
     public Criterion<U> forSql(String sqlTemplate, VALUE value);
@@ -219,7 +219,7 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted.
      * A substring {@code {0}} will be replaced for the current column name
      * and the substring {@code {1}} will be replaced for the required value.
-     * @param value a codition value, array, list or an another key
+     * @param value a condition value, array, list or an another key
      * @see Operator#XSQL
      */
     public Criterion<U> forSqlUnchecked(String sqlTemplate, Object value);

@@ -191,7 +191,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
         return result;
     }
 
-    /** Update all rows with a codition using the row
+    /** Update all rows with a condition using the row
      * @param updateCondition Update condition
      * @param row Updated row
      */

@@ -464,7 +464,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
      * A substring {@code {0}} will be replaced for the current column name;
-     * @param value a codition value
+     * @param value a condition value
      * A substring {@code {1}} will be replaced for the current column name;
      * @see Operator#XSQL
      */
@@ -485,7 +485,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
      * A substring {@code {0}} will be replaced for the current column name;
-     * @param value a codition value, array, list or an another key
+     * @param value a condition value, array, list or an another key
      * A substring {@code {1}} will be replaced for the current column name;
      * @see Operator#XSQL
      */
