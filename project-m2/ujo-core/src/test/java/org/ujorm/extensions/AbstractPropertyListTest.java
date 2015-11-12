@@ -54,50 +54,50 @@ public class AbstractPropertyListTest extends MyTestCase {
         Person p1 = new Person(1);
         Person px = new Person(2);
         Person p  = null;
-        assertEquals(0, Person.PERS.getItemCount(root));
-        Person.PERS.addItem(root, p0);
-        assertEquals(1, Person.PERS.getItemCount(root));
-        Person.PERS.addItem(root, p1);
-        assertEquals(2, Person.PERS.getItemCount(root));
+        assertEquals(0, Person.CHILDREN.getItemCount(root));
+        Person.CHILDREN.addItem(root, p0);
+        assertEquals(1, Person.CHILDREN.getItemCount(root));
+        Person.CHILDREN.addItem(root, p1);
+        assertEquals(2, Person.CHILDREN.getItemCount(root));
         //
         
-        boolean result = Person.PERS.removeItem(root, p0);
+        boolean result = Person.CHILDREN.removeItem(root, p0);
         assertEquals(true, result);
-        assertEquals(1, Person.PERS.getItemCount(root));
-        result = Person.PERS.removeItem(root, p0);
+        assertEquals(1, Person.CHILDREN.getItemCount(root));
+        result = Person.CHILDREN.removeItem(root, p0);
         assertEquals(false, result);
-        assertEquals(1, Person.PERS.getItemCount(root));
-        result = Person.PERS.removeItem(root, p1);
+        assertEquals(1, Person.CHILDREN.getItemCount(root));
+        result = Person.CHILDREN.removeItem(root, p1);
         assertEquals(true, result);
-        assertEquals(0, Person.PERS.getItemCount(root));
-        result = Person.PERS.removeItem(root, p1);
+        assertEquals(0, Person.CHILDREN.getItemCount(root));
+        result = Person.CHILDREN.removeItem(root, p1);
         assertEquals(false, result);
-        assertEquals(0, Person.PERS.getItemCount(root));
+        assertEquals(0, Person.CHILDREN.getItemCount(root));
         //
         
-        assertEquals(0, Person.PERS.getItemCount(root));
-        Person.PERS.addItem(root, p0);
-        assertEquals(1, Person.PERS.getItemCount(root));
-        Person.PERS.addItem(root, p1);
-        assertEquals(2, Person.PERS.getItemCount(root));
+        assertEquals(0, Person.CHILDREN.getItemCount(root));
+        Person.CHILDREN.addItem(root, p0);
+        assertEquals(1, Person.CHILDREN.getItemCount(root));
+        Person.CHILDREN.addItem(root, p1);
+        assertEquals(2, Person.CHILDREN.getItemCount(root));
         //
         
-        assertEquals(p0, Person.PERS.getItem(root, 0));
-        assertEquals(p1, Person.PERS.getItem(root, 1));
+        assertEquals(p0, Person.CHILDREN.getItem(root, 0));
+        assertEquals(p1, Person.CHILDREN.getItem(root, 1));
         //
         int i = 1;
-        p = Person.PERS.setItem(root, i, px);
+        p = Person.CHILDREN.setItem(root, i, px);
         assertEquals(p1, p);
-        assertEquals(px, Person.PERS.getItem(root, i));
+        assertEquals(px, Person.CHILDREN.getItem(root, i));
         //
         i = 0;
-        p = Person.PERS.setItem(root, i, px);
+        p = Person.CHILDREN.setItem(root, i, px);
         assertEquals(p0, p);
-        assertEquals(px, Person.PERS.getItem(root, i));
+        assertEquals(px, Person.CHILDREN.getItem(root, i));
         //
         
         root = new Person(0);
-        result = Person.PERS.removeItem(root, p0);
+        result = Person.CHILDREN.removeItem(root, p0);
         assertEquals(false, false);
     }
 

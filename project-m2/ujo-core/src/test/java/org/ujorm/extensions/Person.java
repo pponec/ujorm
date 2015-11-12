@@ -31,8 +31,9 @@ public class Person extends SmartUjo<Person> {
     private static final KeyFactory<Person> f = newCamelFactory(Person.class);
 
     public static final Key<Person, Integer> ID = f.newKey();
-    public static final Key<Person, Date> CREATED = f.newKeyDefault(new Date());
-    public static final ListKey<Person, Person> PERS = f.newListKey();
+    public static final Key<Person, Date> BORN = f.newKeyDefault(new Date());
+    public static final Key<Person, Person> MOTHER = f.newKey();
+    public static final ListKey<Person, Person> CHILDREN = f.newListKey();
 
     static {
         f.lock();

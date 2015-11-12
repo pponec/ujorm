@@ -40,8 +40,10 @@ public class PropertyTest extends TestCase {
     public void testGetName() {
         System.out.println("getName");
         assertEquals("id", Person.ID.getName());
-        assertEquals("created", Person.CREATED.getName());
-        assertEquals("pers", Person.PERS.getName());
+        assertEquals("born", Person.BORN.getName());
+        assertEquals("mother", Person.MOTHER.getName());
+        assertEquals("children", Person.CHILDREN.getName());
+        assertEquals("mother.born", Person.MOTHER.add(Person.BORN).getName());
     }
 
     /**
@@ -50,8 +52,9 @@ public class PropertyTest extends TestCase {
     public void testGetFullName() {
         System.out.println("getFullName");
         assertEquals("Person.id", Person.ID.getFullName());
-        assertEquals("Person.created", Person.CREATED.getFullName());
-        assertEquals("Person.pers", Person.PERS.getFullName());
+        assertEquals("Person.born", Person.BORN.getFullName());
+        assertEquals("Person.mother", Person.MOTHER.getFullName());
+        assertEquals("Person.children", Person.CHILDREN.getFullName());
     }
 
     /**
@@ -60,8 +63,9 @@ public class PropertyTest extends TestCase {
     public void testGetType() {
         System.out.println("getType");
         assertEquals(Integer.class, Person.ID.getType());
-        assertEquals(Date.class, Person.CREATED.getType());
-        assertEquals(List.class, Person.PERS.getType());
+        assertEquals(Date.class, Person.BORN.getType());
+        assertEquals(Person.class, Person.MOTHER.getType());
+        assertEquals(List.class, Person.CHILDREN.getType());
     }
 
     /**
@@ -70,8 +74,9 @@ public class PropertyTest extends TestCase {
     public void testGetDomainType() {
         System.out.println("getDomainType");
         assertEquals(Person.class, Person.ID.getDomainType());
-        assertEquals(Person.class, Person.CREATED.getDomainType());
-        assertEquals(Person.class, Person.PERS.getDomainType());
+        assertEquals(Person.class, Person.BORN.getDomainType());
+        assertEquals(Person.class, Person.MOTHER.getDomainType());
+        assertEquals(Person.class, Person.CHILDREN.getDomainType());
     }
 
     /**
@@ -80,8 +85,9 @@ public class PropertyTest extends TestCase {
     public void testGetIndex() {
         System.out.println("getIndex");
         assertEquals(0, Person.ID.getIndex());
-        assertEquals(1, Person.CREATED.getIndex());
-        assertEquals(2, Person.PERS.getIndex());
+        assertEquals(1, Person.BORN.getIndex());
+        assertEquals(2, Person.MOTHER.getIndex());
+        assertEquals(3, Person.CHILDREN.getIndex());
     }
 
     /**
@@ -112,8 +118,9 @@ public class PropertyTest extends TestCase {
     public void testGetDefault() {
         System.out.println("getDefault");
         assertNull(Person.ID.getDefault());
-        assertNotNull(Person.CREATED.getDefault());
-        assertNull(Person.PERS.getDefault());
+        assertNotNull(Person.BORN.getDefault());
+        assertNull(Person.MOTHER.getDefault());
+        assertNull(Person.CHILDREN.getDefault());
     }
 
     /**
@@ -125,7 +132,7 @@ public class PropertyTest extends TestCase {
         assertEquals(null, ujo.get(Person.ID));
         assertSame(null, ujo.get(Person.ID));
         assertSame(Person.ID.getDefault(), ujo.get(Person.ID));
-        assertSame(Person.CREATED.getDefault(), ujo.get(Person.CREATED));
+        assertSame(Person.BORN.getDefault(), ujo.get(Person.BORN));
     }
 
     /**
@@ -134,7 +141,9 @@ public class PropertyTest extends TestCase {
     public void testIsComposite() {
         System.out.println("isComposite");
         assertEquals(false, Person.ID.isComposite());
-        assertEquals(false, Person.CREATED.isComposite());
+        assertEquals(false, Person.BORN.isComposite());
+        assertEquals(false, Person.MOTHER.isComposite());
+        assertEquals(true , Person.MOTHER.add(Person.MOTHER).isComposite());
     }
 
     /**
@@ -142,8 +151,8 @@ public class PropertyTest extends TestCase {
      */
     public void testIsAscending() {
         System.out.println("isAscending");
-        assertEquals(true, Person.CREATED.isAscending());
-        assertEquals(false, Person.CREATED.descending().isAscending());
+        assertEquals(true, Person.BORN.isAscending());
+        assertEquals(false, Person.BORN.descending().isAscending());
 
     }
 
@@ -171,18 +180,27 @@ public class PropertyTest extends TestCase {
         assertEquals(false, Person.ID.isTypeOf(String.class));
         assertEquals(false, Person.ID.isTypeOf(Person.class));
         //
-        assertEquals(true , Person.CREATED.isTypeOf(Object.class));
-        assertEquals(true , Person.CREATED.isTypeOf(Serializable.class));
-        assertEquals(true , Person.CREATED.isTypeOf(java.util.Date.class));
-        assertEquals(false, Person.CREATED.isTypeOf(java.sql.Date.class));
-        assertEquals(false, Person.CREATED.isTypeOf(Number.class));
-        assertEquals(false, Person.CREATED.isTypeOf(Integer.class));
-        assertEquals(false, Person.CREATED.isTypeOf(Person.class));
+        assertEquals(true , Person.BORN.isTypeOf(Object.class));
+        assertEquals(true , Person.BORN.isTypeOf(Serializable.class));
+        assertEquals(true , Person.BORN.isTypeOf(java.util.Date.class));
+        assertEquals(false, Person.BORN.isTypeOf(java.sql.Date.class));
+        assertEquals(false, Person.BORN.isTypeOf(Number.class));
+        assertEquals(false, Person.BORN.isTypeOf(Integer.class));
+        assertEquals(false, Person.BORN.isTypeOf(Person.class));
         //
-        assertEquals(true , Person.PERS.isTypeOf(Object.class));
-        assertEquals(true , Person.PERS.isTypeOf(List.class));
-        assertEquals(false, Person.PERS.isTypeOf(Integer.class));
-        assertEquals(false, Person.PERS.isTypeOf(Person.class));
+        assertEquals(true , Person.MOTHER.isTypeOf(Object.class));
+        assertEquals(true , Person.MOTHER.isTypeOf(Serializable.class));
+        assertEquals(true , Person.MOTHER.isTypeOf(Person.class));
+        assertEquals(false, Person.MOTHER.isTypeOf(java.util.Date.class));
+        assertEquals(false, Person.MOTHER.isTypeOf(java.sql.Date.class));
+        assertEquals(false, Person.MOTHER.isTypeOf(Number.class));
+        assertEquals(false, Person.MOTHER.isTypeOf(Integer.class));
+        assertEquals(false, Person.MOTHER.isTypeOf(new Person(1){}.getClass()));
+        //
+        assertEquals(true , Person.CHILDREN.isTypeOf(Object.class));
+        assertEquals(true , Person.CHILDREN.isTypeOf(List.class));
+        assertEquals(false, Person.CHILDREN.isTypeOf(Integer.class));
+        assertEquals(false, Person.CHILDREN.isTypeOf(Person.class));
     }
 
     /**
@@ -190,12 +208,12 @@ public class PropertyTest extends TestCase {
      */
     public void testIsDomainOf() {
         System.out.println("isDomainOf");
-        assertEquals(true, Person.CREATED.isDomainOf(Object.class));
-        assertEquals(true, Person.CREATED.isDomainOf(SmartUjo.class));
-        assertEquals(true, Person.CREATED.isDomainOf(Person.class));
-        assertEquals(false, Person.CREATED.isDomainOf(Date.class));
-        assertEquals(false, Person.CREATED.isDomainOf(Integer.class));
-        assertEquals(false, Person.CREATED.isDomainOf((new Person(1){}).getClass()));
+        assertEquals(true, Person.BORN.isDomainOf(Object.class));
+        assertEquals(true, Person.BORN.isDomainOf(SmartUjo.class));
+        assertEquals(true, Person.BORN.isDomainOf(Person.class));
+        assertEquals(false, Person.BORN.isDomainOf(Date.class));
+        assertEquals(false, Person.BORN.isDomainOf(Integer.class));
+        assertEquals(false, Person.BORN.isDomainOf((new Person(1){}).getClass()));
     }
 
     /**
