@@ -14,7 +14,6 @@
  *  limitations under the License.
  */
 
-
 package org.ujorm.extensions;
 
 import org.ujorm.Key;
@@ -22,6 +21,7 @@ import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.quick.SmartUjo;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Person BO
@@ -30,8 +30,8 @@ import java.util.Date;
 public class Person extends SmartUjo<Person> {
     private static final KeyFactory<Person> f = newCamelFactory(Person.class);
 
-    public static final Key<Person, Integer> ID = f.newKey();
-    public static final Key<Person, Date> BORN = f.newKeyDefault(new Date());
+    public static final Key<Person, Integer> ID = f.newKeyDefault(0);
+    public static final Key<Person, Date> BORN = f.newKey();
     public static final Key<Person, Person> MOTHER = f.newKey();
     public static final ListKey<Person, Person> CHILDREN = f.newListKey();
 
@@ -42,6 +42,22 @@ public class Person extends SmartUjo<Person> {
     /** Constructor */
     public Person(Integer id) {
         ID.setValue(this, id);
+    }
+
+    public Integer getId() {
+        return ID.of(this);
+    }
+
+    public Date getBorn() {
+        return BORN.of(this);
+    }
+
+    public Person getMother() {
+        return MOTHER.of(this);
+    }
+
+    public List<Person> getChildren() {
+        return CHILDREN.of(this);
     }
 
 }
