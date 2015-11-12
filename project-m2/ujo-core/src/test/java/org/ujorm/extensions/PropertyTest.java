@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 pavel.
+ * Copyright 2015 Pavel Ponec.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,9 @@ public class PropertyTest extends TestCase {
      */
     public void testGetName() {
         System.out.println("getName");
+        assertEquals("id", Person.ID.getName());
         assertEquals("created", Person.CREATED.getName());
+        assertEquals("pers", Person.PERS.getName());
     }
 
     /**
@@ -47,7 +49,9 @@ public class PropertyTest extends TestCase {
      */
     public void testGetFullName() {
         System.out.println("getFullName");
+        assertEquals("Person.id", Person.ID.getFullName());
         assertEquals("Person.created", Person.CREATED.getFullName());
+        assertEquals("Person.pers", Person.PERS.getFullName());
     }
 
     /**
@@ -55,7 +59,9 @@ public class PropertyTest extends TestCase {
      */
     public void testGetType() {
         System.out.println("getType");
+        assertEquals(Integer.class, Person.ID.getType());
         assertEquals(Date.class, Person.CREATED.getType());
+        assertEquals(List.class, Person.PERS.getType());
     }
 
     /**
@@ -63,7 +69,9 @@ public class PropertyTest extends TestCase {
      */
     public void testGetDomainType() {
         System.out.println("getDomainType");
+        assertEquals(Person.class, Person.ID.getDomainType());
         assertEquals(Person.class, Person.CREATED.getDomainType());
+        assertEquals(Person.class, Person.PERS.getDomainType());
     }
 
     /**
@@ -71,7 +79,9 @@ public class PropertyTest extends TestCase {
      */
     public void testGetIndex() {
         System.out.println("getIndex");
+        assertEquals(0, Person.ID.getIndex());
         assertEquals(1, Person.CREATED.getIndex());
+        assertEquals(2, Person.PERS.getIndex());
     }
 
     /**
@@ -81,9 +91,7 @@ public class PropertyTest extends TestCase {
         System.out.println("getValue");
         Integer expectedResult = 987;
         Person ujo = new Person(expectedResult);
-        assertEquals(expectedResult, Person.ID.of(ujo));
-        assertEquals(expectedResult, ujo.get(Person.ID));
-        assertSame(expectedResult, Person.ID.of(ujo));
+        assertSame(expectedResult, Person.ID.getValue(ujo));
         assertSame(expectedResult, ujo.get(Person.ID));
     }
 
@@ -94,6 +102,7 @@ public class PropertyTest extends TestCase {
         System.out.println("getDefault");
         assertNull(Person.ID.getDefault());
         assertNotNull(Person.CREATED.getDefault());
+        assertNull(Person.PERS.getDefault());
     }
 
     /**
@@ -144,23 +153,23 @@ public class PropertyTest extends TestCase {
      */
     public void testIsTypeOf() {
         System.out.println("isTypeOf");
-        assertEquals(true, Person.ID.isTypeOf(Object.class));
-        assertEquals(true, Person.ID.isTypeOf(Number.class));
-        assertEquals(true, Person.ID.isTypeOf(Serializable.class));
-        assertEquals(true, Person.ID.isTypeOf(Integer.class));
+        assertEquals(true , Person.ID.isTypeOf(Object.class));
+        assertEquals(true , Person.ID.isTypeOf(Number.class));
+        assertEquals(true , Person.ID.isTypeOf(Serializable.class));
+        assertEquals(true , Person.ID.isTypeOf(Integer.class));
         assertEquals(false, Person.ID.isTypeOf(String.class));
         assertEquals(false, Person.ID.isTypeOf(Person.class));
         //
-        assertEquals(true, Person.CREATED.isTypeOf(Object.class));
-        assertEquals(true, Person.CREATED.isTypeOf(Serializable.class));
-        assertEquals(true, Person.CREATED.isTypeOf(java.util.Date.class));
+        assertEquals(true , Person.CREATED.isTypeOf(Object.class));
+        assertEquals(true , Person.CREATED.isTypeOf(Serializable.class));
+        assertEquals(true , Person.CREATED.isTypeOf(java.util.Date.class));
         assertEquals(false, Person.CREATED.isTypeOf(java.sql.Date.class));
         assertEquals(false, Person.CREATED.isTypeOf(Number.class));
         assertEquals(false, Person.CREATED.isTypeOf(Integer.class));
         assertEquals(false, Person.CREATED.isTypeOf(Person.class));
         //
-        assertEquals(true, Person.PERS.isTypeOf(Object.class));
-        assertEquals(true, Person.PERS.isTypeOf(List.class));
+        assertEquals(true , Person.PERS.isTypeOf(Object.class));
+        assertEquals(true , Person.PERS.isTypeOf(List.class));
         assertEquals(false, Person.PERS.isTypeOf(Integer.class));
         assertEquals(false, Person.PERS.isTypeOf(Person.class));
     }
@@ -183,9 +192,9 @@ public class PropertyTest extends TestCase {
      */
     public void testEquals() {
         System.out.println("equals");
-        Integer expectedResult = 22;
-        Person ujo = new Person(expectedResult);
-        assertTrue(Person.ID.equals(ujo, expectedResult));
+        Integer id = 22;
+        Person ujo = new Person(id);
+        assertTrue(Person.ID.equals(ujo, id));
     }
 
     /**

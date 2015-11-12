@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2014 Pavel Ponec
+ *  Copyright 2007-2015 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,11 +28,11 @@ import java.util.Date;
  * @author Pavel Ponec
  */
 public class Person extends SmartUjo<Person> {
-    private static final KeyFactory<Person> f = newFactory(Person.class);
+    private static final KeyFactory<Person> f = newCamelFactory(Person.class);
 
-    public static final Key<Person, Integer> ID = f.newKey("id");
-    public static final Key<Person, Date> CREATED = f.newKey("created", new Date());
-    public static final ListKey<Person, Person> PERS = f.newListKey("person");
+    public static final Key<Person, Integer> ID = f.newKey();
+    public static final Key<Person, Date> CREATED = f.newKeyDefault(new Date());
+    public static final ListKey<Person, Person> PERS = f.newListKey();
 
     static {
         f.lock();
