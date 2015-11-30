@@ -1,4 +1,0 @@
-LOGIN;PASSWORD;HASH;TITLE;FIRSTNAME;SURNAME;EMAIL;ADMIN;ACTIVE
-admin;test;-3360410906529887736;mr;David;Admin;admin@ujorm.org;true;true
-demo;test;-3360410906529887736;mr;Jan;Demo;demo@ujorm.org;false;true
-test;test;-3360410906529887736;ms;Lucy;Test;lucy@ujorm.org;false;true

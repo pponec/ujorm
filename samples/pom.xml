@@ -45,7 +45,6 @@
         <module>inheritance</module>
         <module>binding</module>
         <module>wicket</module>
-        <module>wicketForm</module>
     </modules>
 
 
