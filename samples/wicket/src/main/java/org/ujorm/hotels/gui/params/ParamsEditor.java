@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, Pavel Ponec
+ * Copyright 2013-2015, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,8 @@ public class ParamsEditor<U extends ParamValue> extends EntityDialogPane<U> {
         fields.setEnabled(ParamValue.TEXT_VALUE, true);
         fields.addValidator(ParamValue.TEXT_VALUE, new IValidator<String>(){
             /** The validator implementation: */
-            @Override public void validate(IValidatable<String> validatable) {
+            @Override @SuppressWarnings("unchecked")
+            public void validate(IValidatable<String> validatable) {
                 final Class paramClass = getModelObject().getParamKey().getParamClass();
                 try {
                     UjoManager.getInstance().decodeValue(paramClass, validatable.getValue());
@@ -64,7 +65,7 @@ public class ParamsEditor<U extends ParamValue> extends EntityDialogPane<U> {
                     org.apache.wicket.validation.ValidationError wicketErr = new org.apache.wicket.validation.ValidationError();
                     wicketErr.setMessage("The value is not type of the " + paramClass.getSimpleName());
                     wicketErr.addKey("validator.type.message");
-                    wicketErr.getVariables().put("typeSimple", paramClass.getSimpleName());
+                    wicketErr.getVariables().put("simpleType", paramClass.getSimpleName());
                     wicketErr.getVariables().put("typeName", paramClass.getName());
                     validatable.error(wicketErr);
                 }
