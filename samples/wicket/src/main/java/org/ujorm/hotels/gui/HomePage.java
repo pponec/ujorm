@@ -80,7 +80,7 @@ public class HomePage extends WebPage {
             label.add(new CssAppender("test"));
         }
 
-        if (parameters.get("tab").toString("").equals("about")) {
+        if (parameters.get("about").toString() != null) {
             showAboutTab(null);
         }
     }
