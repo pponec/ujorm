@@ -161,7 +161,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
         clearBuffer();
     }
 
-    /** Clear a filterd rows and size */
+    /** Clear a filter rows and size */
     protected void clearBuffer() {
         this.filteredRows = null;
         this.size = null;
@@ -198,7 +198,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
 
     /** Update all rows with a condition using the row
      * @param updateCondition Update condition
-     * @param row Updated row
+     * @param updatedRow Updated row
      */
     @Override
     public long updateRow(@Nonnull final Criterion<? super U> updateCondition, @Nonnull final U updatedRow) {
