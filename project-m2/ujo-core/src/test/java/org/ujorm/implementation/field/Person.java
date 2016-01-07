@@ -27,7 +27,7 @@ import org.ujorm.extensions.ValueAgent;
 public class Person extends FieldUjo {
     
     private Long cash;
-    private List<Person> childs;
+    private List<Person> children;
     
     public static FieldProperty<Person,Long> CASH = newKey("CASH"
         , new ValueAgent<Person,Long>() {
@@ -40,14 +40,14 @@ public class Person extends FieldUjo {
         }
     });    
     
-    public static FieldPropertyList<Person,Person> CHILDS 
-        = newListKey("CHILDS"
+    public static FieldPropertyList<Person,Person> CHILDREN 
+        = newListKey("CHILDREN"
         , new ValueAgent<Person,List<Person>>() {
         public void writeValue(Person ujo, List<Person> value) {
-            ujo.childs = value; 
+            ujo.children = value; 
         }
         public List<Person> readValue(Person ujo) {
-            return ujo.childs; 
+            return ujo.children; 
         }
     });
 }

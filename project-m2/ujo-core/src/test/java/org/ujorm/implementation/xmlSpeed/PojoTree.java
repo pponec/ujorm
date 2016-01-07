@@ -27,18 +27,18 @@ public class PojoTree
 {
     
     /** List<PojoTree> */
-    private ArrayList<PojoTree> childs = new ArrayList<PojoTree>();
+    private ArrayList<PojoTree> children = new ArrayList<PojoTree>();
     
     /** Creates a new instance of UnifiedDataObjectImlp */
     public PojoTree() {
     }
 
     public ArrayList<PojoTree> getChilds() {
-        return childs;
+        return children;
     }
 
-    public void setChilds(ArrayList<PojoTree> childs) {
-        this.childs = childs;
+    public void setChilds(ArrayList<PojoTree> children) {
+        this.children = children;
     }
 
     public List<PojoTree> addChild(PojoTree child) {
@@ -48,9 +48,9 @@ public class PojoTree
     
     public int size() {
         int result = 0;
-        ArrayList<PojoTree> childs = getChilds();      
+        ArrayList<PojoTree> children = getChilds();      
         
-        if (childs!=null) for (PojoTree tree : childs) {
+        if (children!=null) for (PojoTree tree : children) {
             result += tree.size() + 1;
         }
         return result;
@@ -105,7 +105,7 @@ public class PojoTree
 //            xml.setAttribute("p7", person.p7);
 //            //xml.setAttribute("p8", person.p8); // Sorry, this I do not know.
 //            xml.setAttribute("p9", person.p9);
-//            xml.add(person.childs, "Person");
+//            xml.add(person.children, "Person");
 //        }
 //
 //        @Override
@@ -122,7 +122,7 @@ public class PojoTree
 //                    //person.p8 = xml.getAttribute("p8", new Date()); // Sorry, this I do not know.
 //                    person.p9 = xml.getAttribute("p9", 0.0f);
 //
-//                    person.childs = xml.get( "Person" );
+//                    person.children = xml.get( "Person" );
 //        }
 //
 //    };

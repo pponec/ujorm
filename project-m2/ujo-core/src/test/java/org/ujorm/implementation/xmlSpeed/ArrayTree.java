@@ -23,7 +23,7 @@ public class ArrayTree extends ArrayUjoImplChild {
     /** Factory */
     private static final KeyFactory<ArrayTree> f = newFactory(ArrayTree.class);
     
-    public static final ListKey<ArrayTree, ArrayTree> PRO_CHILDS = f.newListKey("CHILDS");
+    public static final ListKey<ArrayTree, ArrayTree> PRO_CHILDREN = f.newListKey("CHILDREN");
 
     static {
         f.lock();
@@ -31,7 +31,7 @@ public class ArrayTree extends ArrayUjoImplChild {
     
     public int size() {
         int result = 0;
-        for (ArrayTree tree : PRO_CHILDS.getList(this)) {
+        for (ArrayTree tree : PRO_CHILDREN.getList(this)) {
             result += tree.size() + 1;
         }
         return result;
@@ -64,7 +64,7 @@ public class ArrayTree extends ArrayUjoImplChild {
             }
             ArrayTree item = new ArrayTree();
             item.init(counter, deep-1);
-            PRO_CHILDS.addItem(this, item);
+            PRO_CHILDREN.addItem(this, item);
         }
         
     }

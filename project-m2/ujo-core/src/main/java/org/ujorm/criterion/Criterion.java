@@ -424,7 +424,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
             );
     }
 
-    /** This is a special constant criterion independed on the key or the ujo entity. A result is the same like the parameter constant allways.
+    /** This is a special constant criterion independed on the key or the ujo entity. A result is the same like the parameter constant always.
      * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @see Operator#XFIXED
      */

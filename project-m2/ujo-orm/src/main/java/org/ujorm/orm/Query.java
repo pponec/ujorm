@@ -457,7 +457,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
    /** Set an list of required columns to reading from database table.
     * Other columns (out of the list) will return a default value, no exception will be throwed.
     * @param addPrimaryKey If the column list does not contains a primary key then the one can be included.
-    * @param columns A Key list including a compositer one to database select. The method does not check collumn duplicities.
+    * @param columns A Key list including a compositer one to database select. The method does not check column duplicities.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
@@ -470,7 +470,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * Other columns (out of the list) will return a default value, no exception will be throwed.
     * <br/>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
     * <br/>WARNING 2: assigning an column from a view is forbidden.
-    * @param columns A Key list including a compositer one to database select. The method does not check collumn duplicities.
+    * @param columns A Key list including a compositer one to database select. The method does not check column duplicities.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
@@ -485,8 +485,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * <br/>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
     * <br/>WARNING 2: assigning an column from a view is forbidden.
     * @param addPrimaryKey If the column list doesn't contain a primary key of the base Entity then the one will be included.
-    * @param addChilds Add all childs of the all <strong>foreign keys</strong>.
-    * @param columns A Key list including a compositer one to database select. The method does not check collumn duplicities.
+    * @param addChilds Add all children of the all <strong>foreign keys</strong>.
+    * @param columns A Key list including a compositer one to database select. The method does not check column duplicities.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
@@ -515,7 +515,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** Add a missing column. The method is for an internal use.
      * @param column Add the column for case it is missing in the column list
-     * @param addChilds Add all childs of the <strong>foreign key</strong>.
+     * @param addChilds Add all children of the <strong>foreign key</strong>.
      * @param checkDuplicities Check a duplicity column
      */
     protected void addMissingColumn(final ColumnWrapper column, final boolean addChilds, final boolean checkDuplicities) {

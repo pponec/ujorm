@@ -73,7 +73,7 @@ public class T004b_Test extends MyTestCase {
         AtrPerson.MALE  .setValue(result, false);
         AtrPerson.NAME  .setValue(result, "JIŘINA");
         AtrPerson.BIRTH .setValue(result, cal.getTime());
-        AtrPerson.CHILDS.addItem(result, createPersonOne());
+        AtrPerson.CHILDREN.addItem(result, createPersonOne());
         
         return result;
     }

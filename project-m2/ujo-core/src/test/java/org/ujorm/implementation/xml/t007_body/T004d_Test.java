@@ -66,12 +66,12 @@ public class T004d_Test extends MyTestCase {
     protected AtrPerson createPerson() {
         AtrPerson result = createPersonOne();                      sleep(10);
         AtrPerson child  = null;
-        AtrPerson.CHILDS.addItem(result, child=createPersonOne()); sleep(10);
-        AtrPerson.CHILDS.addItem(result, child=createPersonOne()); sleep(10);
-        AtrPerson.CHILDS.addItem(child , child=createPersonOne()); sleep(10);
-        AtrPerson.CHILDS.addItem(result, child=createPersonOne()); sleep(10);
-        AtrPerson.CHILDS.addItem(child , child=createPersonOne()); sleep(10);
-        AtrPerson.CHILDS.addItem(child , child=createPersonOne()); sleep(10);
+        AtrPerson.CHILDREN.addItem(result, child=createPersonOne()); sleep(10);
+        AtrPerson.CHILDREN.addItem(result, child=createPersonOne()); sleep(10);
+        AtrPerson.CHILDREN.addItem(child , child=createPersonOne()); sleep(10);
+        AtrPerson.CHILDREN.addItem(result, child=createPersonOne()); sleep(10);
+        AtrPerson.CHILDREN.addItem(child , child=createPersonOne()); sleep(10);
+        AtrPerson.CHILDREN.addItem(child , child=createPersonOne()); sleep(10);
         
         return result;
     }
