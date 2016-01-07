@@ -33,7 +33,7 @@ import org.ujorm.extensions.ValueAgent;
  * <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> Person <span class="keyword-directive">extends</span> FieldUjoExt {
  *   
  *   <span class="keyword-directive">private</span> Long cash;
- *   <span class="keyword-directive">private</span> List&lt;Person&gt; childs;
+ *   <span class="keyword-directive">private</span> List&lt;Person&gt; children;
  *   
  *   <span class="keyword-directive">public static</span> Key&lt;Person,Long&gt; CASH
  *     = newProperty(<span class="character">"CASH"</span>, Long.<span class="keyword-directive">class</span>
@@ -47,14 +47,14 @@ import org.ujorm.extensions.ValueAgent;
  *     }
  *   });    
  *   
- *   <span class="keyword-directive">public static</span> UjoPropertyList&lt;Person,Person&gt; CHILDS
- *     = newListProperty(<span class="character">"</span><span class="character">CHILDS</span><span class="character">"</span>, Person.<span class="keyword-directive">class</span>
+ *   <span class="keyword-directive">public static</span> UjoPropertyList&lt;Person,Person&gt; CHILDREN
+ *     = newListProperty(<span class="character">"</span><span class="character">CHILDREN</span><span class="character">"</span>, Person.<span class="keyword-directive">class</span>
  *     , <span class="keyword-directive">new</span> ValueAgent&lt;Person,List&lt;Person&gt;&gt;() {
  *     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Person ujo, List&lt;Person&gt; value) {
- *         ujo.childs = value; 
+ *         ujo.children = value; 
  *     }
  *     <span class="keyword-directive">public</span> List&lt;Person&gt; readValue(Person ujo) {
- *         <span class="keyword-directive">return</span> ujo.childs; 
+ *         <span class="keyword-directive">return</span> ujo.children; 
  *     }
  *   });
  * }</pre>

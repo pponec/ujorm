@@ -19,12 +19,12 @@ import org.ujorm.implementation.map.MapUjoImplChild;
  */
 public class MapTree extends MapUjoImplChild {
     
-    public static final ListKey<MapTree, MapTree> PRO_CHILDS = newListProperty("CHILDS", MapTree.class);
+    public static final ListKey<MapTree, MapTree> PRO_CHILDREN = newListProperty("CHILDREN", MapTree.class);
     
     
     public int size() {
         int result = 0;
-        for (MapTree tree : PRO_CHILDS.getList(this)) {
+        for (MapTree tree : PRO_CHILDREN.getList(this)) {
             result += tree.size() + 1;
         }
         return result;
@@ -58,7 +58,7 @@ public class MapTree extends MapUjoImplChild {
             }
             MapTree item = new MapTree();
             item.init(counter, deep-1);
-            PRO_CHILDS.addItem(this, item);
+            PRO_CHILDREN.addItem(this, item);
         }
         
     }

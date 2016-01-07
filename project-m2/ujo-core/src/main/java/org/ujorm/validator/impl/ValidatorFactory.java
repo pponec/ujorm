@@ -376,7 +376,7 @@ public abstract class ValidatorFactory {
 
     /** Check a content of another related Ujo object using the Criterion.
      * <br>Note 1: this result is not serialiable object, because the Criterion is not serializable
-     * <br>Note 2: a static field type of Key is Serializable allways, including the CriterionValidator inside.
+     * <br>Note 2: a static field type of Key is Serializable always, including the CriterionValidator inside.
      * @see CriterionValidator
      */
     public static <VALUE extends Ujo> Validator<VALUE> relation(Criterion<VALUE> criterion) {
@@ -385,7 +385,7 @@ public abstract class ValidatorFactory {
 
     /** Check a content of another related Ujo object using the Criterion.
      * <br>Note 1: this result is not serialiable object, because the Criterion is not serializable
-     * <br>Note 2: a static field type of Key is Serializable allways, including the CriterionValidator inside.
+     * <br>Note 2: a static field type of Key is Serializable always, including the CriterionValidator inside.
      * @see CriterionValidator
      */
     public static <VALUE extends Ujo> Validator<VALUE> relation(CheckType type, Criterion<VALUE> criterion) {

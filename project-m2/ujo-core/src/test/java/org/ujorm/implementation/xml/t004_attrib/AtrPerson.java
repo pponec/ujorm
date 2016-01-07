@@ -25,6 +25,6 @@ public class AtrPerson extends QuickUjo  {
     @XmlAttribute
     public static final Key<AtrPerson, Boolean> MALE = newKey("Male");
     public static final Key<AtrPerson, Date>   BIRTH = newKey("Birth");
-    public static final ListKey<AtrPerson, AtrPerson> CHILDS = newListKey("Child");
+    public static final ListKey<AtrPerson, AtrPerson> CHILDREN = newListKey("Child");
 
 }

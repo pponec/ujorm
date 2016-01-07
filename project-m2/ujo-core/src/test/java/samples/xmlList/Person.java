@@ -15,5 +15,5 @@ import org.ujorm.implementation.map.*;
 public class Person extends MapUjo {
 
     public static final Key<Person, String> NAME = newKey("Name");
-    public static final ListKey<Person, Person> CHILDS = newListKey("Child");
+    public static final ListKey<Person, Person> CHILDREN = newListKey("Child");
 }

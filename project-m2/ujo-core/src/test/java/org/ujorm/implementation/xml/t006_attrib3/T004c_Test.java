@@ -69,13 +69,13 @@ public class T004c_Test extends MyTestCase {
         AtrPerson.NAME.setValue(result, null);
         
         if (true) {
-            AtrPerson.CHILDS.addItem(result, createPersonOne()); sleep(100);
-            AtrPerson.CHILDS.addItem(result, createPersonOne()); sleep(100);
-            AtrPerson.CHILDS.addItem(result, createPersonOne()); sleep(10);
+            AtrPerson.CHILDREN.addItem(result, createPersonOne()); sleep(100);
+            AtrPerson.CHILDREN.addItem(result, createPersonOne()); sleep(100);
+            AtrPerson.CHILDREN.addItem(result, createPersonOne()); sleep(10);
         } else {
-            AtrPerson.CHILDS.addItem(result, createPersonOne()); sleep(100);
-            //AtrPerson.CHILDS.addItem(result, createPersonOne()); sleep(100);
-            //AtrPerson.CHILDS.addItem(result, createPersonOne()); sleep(10);
+            AtrPerson.CHILDREN.addItem(result, createPersonOne()); sleep(100);
+            //AtrPerson.CHILDREN.addItem(result, createPersonOne()); sleep(100);
+            //AtrPerson.CHILDREN.addItem(result, createPersonOne()); sleep(10);
             
         }
         return result;

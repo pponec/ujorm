@@ -64,12 +64,12 @@ public class T005d_Array_Test extends MyTestCase {
     protected AtrPersonArray createPerson() {
         AtrPersonArray result = createPersonOne();                     
         AtrPersonArray child  = null;
-        AtrPersonArray.CHILDS.addItem(result, child=createPersonOne()); 
-        AtrPersonArray.CHILDS.addItem(result, child=createPersonOne()); 
-        AtrPersonArray.CHILDS.addItem(child , child=createPersonOne()); 
-        AtrPersonArray.CHILDS.addItem(result, child=createPersonOne());
-        AtrPersonArray.CHILDS.addItem(child , child=createPersonOne());
-        AtrPersonArray.CHILDS.addItem(child , child=createPersonOne());
+        AtrPersonArray.CHILDREN.addItem(result, child=createPersonOne()); 
+        AtrPersonArray.CHILDREN.addItem(result, child=createPersonOne()); 
+        AtrPersonArray.CHILDREN.addItem(child , child=createPersonOne()); 
+        AtrPersonArray.CHILDREN.addItem(result, child=createPersonOne());
+        AtrPersonArray.CHILDREN.addItem(child , child=createPersonOne());
+        AtrPersonArray.CHILDREN.addItem(child , child=createPersonOne());
         
         return result;
     }

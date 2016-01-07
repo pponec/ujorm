@@ -259,7 +259,7 @@ Doporučené řešení pro implementaci vazby <strong>1:N</strong> pro objekty P
 <pre class="pre">
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo { 
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty    &lt;Person,String&gt; NAME  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;Name&quot;</span>, String.<span class="java-keywords">class</span>);
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapPropertyList&lt;Person,Child&gt; CHILDS = <span class="java-layer-method">newListProperty</span>(<span class="java-string-literal">&quot;Child&quot;</span>, Child.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapPropertyList&lt;Person,Child&gt; CHILDREN = <span class="java-layer-method">newListProperty</span>(<span class="java-string-literal">&quot;Child&quot;</span>, Child.<span class="java-keywords">class</span>);
 }
 </pre>
 

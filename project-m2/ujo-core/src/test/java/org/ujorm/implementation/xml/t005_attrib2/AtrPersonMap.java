@@ -25,7 +25,7 @@ public class AtrPersonMap extends MapUjo  {
     public static final Key<AtrPersonMap, String> NAME_ELEM = newProperty("name", String.class);
     @XmlAttribute
     public static final Key<AtrPersonMap, String> NAME_ATTR = newProperty("name", String.class);
-    public static final ListKey<AtrPersonMap, AtrPersonMap> CHILDS = newListProperty("child", AtrPersonMap.class);
+    public static final ListKey<AtrPersonMap, AtrPersonMap> CHILDREN = newListProperty("child", AtrPersonMap.class);
     
     
 }

@@ -22,23 +22,23 @@ import org.ujorm.implementation.field.FieldUjoImplChild;
  */
 public class FieldTree extends FieldUjoImplChild {
     
-    private List<FieldTree> childs;
+    private List<FieldTree> children;
     
     /** (List) */
-    public static final FieldPropertyList<FieldTree,FieldTree> PRO_CHILDS = newListKey("CHILDS", new ValueAgent<FieldTree,List<FieldTree>>() {
+    public static final FieldPropertyList<FieldTree,FieldTree> PRO_CHILDREN = newListKey("CHILDREN", new ValueAgent<FieldTree,List<FieldTree>>() {
         public void writeValue(FieldTree ujo, List<FieldTree> value) {
-            ujo.childs = value; 
+            ujo.children = value; 
         }
         public List<FieldTree> readValue(FieldTree ujo) {
-            return ujo.childs; 
+            return ujo.children; 
         }
     });
     
-    public void setChilds(List<FieldTree> childs) {
-        this.childs = childs;
+    public void setChilds(List<FieldTree> children) {
+        this.children = children;
     }
     public List<FieldTree> getChilds() {
-        return childs;
+        return children;
     }
 
     public List<FieldTree> addChild(FieldTree child) {
@@ -49,7 +49,7 @@ public class FieldTree extends FieldUjoImplChild {
     
     public int size() {
         int result = 0;
-        for (FieldTree tree : PRO_CHILDS.getList(this)) {
+        for (FieldTree tree : PRO_CHILDREN.getList(this)) {
             result += tree.size() + 1;
         }
         return result;
@@ -83,7 +83,7 @@ public class FieldTree extends FieldUjoImplChild {
             }
             FieldTree item = new FieldTree();
             item.init(counter, deep-1);
-            PRO_CHILDS.addItem(this, item);
+            PRO_CHILDREN.addItem(this, item);
         }
         
     }

@@ -12,7 +12,7 @@ import org.ujorm.orm.annot.Procedure;
 @Procedure(name = "ujorm_test")
 abstract public class _MyProcedure extends DbProcedure<_MyProcedure> {
 
-    /** The first parameter is the OUTPUT allways. If the stored procedure has no return parameter, use the type: java.lang.Void */
+    /** The first parameter is the OUTPUT always. If the stored procedure has no return parameter, use the type: java.lang.Void */
     public static final Key<_MyProcedure, Integer> result = newProperty(Integer.class);
     /** INPUT parameter */
     @Parameter(input = true)

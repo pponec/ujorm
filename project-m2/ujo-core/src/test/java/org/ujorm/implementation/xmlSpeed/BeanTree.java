@@ -20,18 +20,18 @@ import org.ujorm.implementation.bean.*;
  */
 public class BeanTree extends BeanUjoImplChild {
 
-    public static final BeanPropertyList<BeanTree, BeanTree> PRO_CHILDS = newListKey("Child");
+    public static final BeanPropertyList<BeanTree, BeanTree> PRO_CHILDREN = newListKey("Child");
 
     /** Verify unique constants */
     static{init(BeanTree.class,true);}
     
-    private List<PojoTree> childs;
+    private List<PojoTree> children;
     
-    public void setChilds(List<PojoTree> childs) {
-        this.childs = childs;
+    public void setChilds(List<PojoTree> children) {
+        this.children = children;
     }
     public List<PojoTree> getChilds() {
-        return childs;
+        return children;
     }
 
     public List<PojoTree> addChild(PojoTree child) {
@@ -43,7 +43,7 @@ public class BeanTree extends BeanUjoImplChild {
     
     public int size() {
         int result = 0;
-        for (BeanTree tree : PRO_CHILDS.getList(this)) {
+        for (BeanTree tree : PRO_CHILDREN.getList(this)) {
             result += tree.size() + 1;
         }
         return result;
@@ -77,7 +77,7 @@ public class BeanTree extends BeanUjoImplChild {
             }
             BeanTree item = new BeanTree();
             item.init(counter, deep-1);
-            PRO_CHILDS.addItem(this, item);
+            PRO_CHILDREN.addItem(this, item);
         }
         
     }

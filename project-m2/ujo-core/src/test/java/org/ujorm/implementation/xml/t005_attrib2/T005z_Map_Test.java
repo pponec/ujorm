@@ -64,12 +64,12 @@ public class T005z_Map_Test extends MyTestCase {
     protected AtrPersonMap createPerson() {
         AtrPersonMap result = createPersonOne();
         AtrPersonMap child  = null;
-        AtrPersonMap.CHILDS.addItem(result, child=createPersonOne());
-        AtrPersonMap.CHILDS.addItem(result, child=createPersonOne());
-        AtrPersonMap.CHILDS.addItem(child , child=createPersonOne());
-        AtrPersonMap.CHILDS.addItem(result, child=createPersonOne());
-        AtrPersonMap.CHILDS.addItem(child , child=createPersonOne());
-        AtrPersonMap.CHILDS.addItem(child , child=createPersonOne());
+        AtrPersonMap.CHILDREN.addItem(result, child=createPersonOne());
+        AtrPersonMap.CHILDREN.addItem(result, child=createPersonOne());
+        AtrPersonMap.CHILDREN.addItem(child , child=createPersonOne());
+        AtrPersonMap.CHILDREN.addItem(result, child=createPersonOne());
+        AtrPersonMap.CHILDREN.addItem(child , child=createPersonOne());
+        AtrPersonMap.CHILDREN.addItem(child , child=createPersonOne());
         
         return result;
     }

@@ -28,7 +28,7 @@ public class AtrPersonArray extends QuickUjo  {
     public static final Key<AtrPersonArray, String> NAME_ELEM = f.newKey("name");
     @XmlAttribute
     public static final Key<AtrPersonArray, String> NAME_ATTR = f.newKey("name");
-    public static final ListKey<AtrPersonArray, AtrPersonArray> CHILDS = f.newListKey("child");
+    public static final ListKey<AtrPersonArray, AtrPersonArray> CHILDREN = f.newListKey("child");
 
     static {
         f.lock();

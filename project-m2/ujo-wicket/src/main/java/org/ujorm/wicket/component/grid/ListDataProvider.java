@@ -109,7 +109,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
         return filteredRows;
     }
 
-    /** Build a JDBC ResultSet allways.
+    /** Build a JDBC ResultSet always.
      * Overwrite the method for an optimization.<br>
      */
     @Override
