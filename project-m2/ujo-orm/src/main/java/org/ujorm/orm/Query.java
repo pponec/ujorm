@@ -490,7 +490,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
-    public final Query<UJO> setColumns(boolean addPrimaryKey, boolean addChilds, Key... columns) throws IllegalArgumentException {
+    public final Query<UJO> setColumns(boolean addPrimaryKey, boolean addChilds, Key<UJO,?>... columns) throws IllegalArgumentException {
         clearDecoder();
         if (columns.length > 1) {
             // There is strongly preferred to sort the keys from direct to the relations (along a count of the relations in the key) due
@@ -545,7 +545,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Only direct keys are supported */
-    private Key getLastProperty(Key p) {
+    private Key getLastProperty(Key<UJO,?> p) {
         return p.isComposite()
             ? ((CompositeKey)p).getLastKey()
             : p ;
@@ -557,13 +557,22 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @see #addOrderBy(org.ujorm.Key)
     */
     @SuppressWarnings("unchecked")
-    public Query<UJO> orderBy(Collection<Key> orderItems) {
+    public Query<UJO> orderBy(Collection<Key<UJO,?>> orderItems) {
         clearDecoder();
         if (orderItems==null) {
             return orderByMany(); // empty sorting
         } else {
             this.orderBy.clear();
             this.orderBy.addAll( (Collection)orderItems );
+        }
+        return this;
+    }
+
+    /** Add an item to the end of order list. */
+    public Query<UJO> addOrderBy(final Key<UJO,?> ... keys) {
+        clearDecoder();
+        for (Key<UJO, ?> key : keys) {
+           orderBy.add(key);
         }
         return this;
     }

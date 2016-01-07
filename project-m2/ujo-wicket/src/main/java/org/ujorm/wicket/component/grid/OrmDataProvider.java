@@ -112,13 +112,13 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
                 , count);
         Query<U> query = createQuery(filter.getObject())
                 .setLimit((int) count, first)
-                .addOrderBy(getSortKey());
+                .addOrderBy(getSortKeys());
         fetchDatabaseColumns(query);
         sortDatabaseQuery(query);
         return query.iterator();
     }
 
-    /** Method calculate the size using special SQL requst.
+    /** Method calculate the size using special SQL request.
      * Overwrite the method for an optimization.<br>
      * Original documentation: {@inheritDoc}
      */

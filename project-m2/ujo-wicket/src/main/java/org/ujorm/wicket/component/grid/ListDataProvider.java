@@ -129,13 +129,18 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
 
         // Sort:
         if (sortRequest) {
-            UjoComparator.of(getSortKey()).sort(rows);
+            sortRows(rows);
         }
 
         // The sublist:
         final int last = (int) Math.min(first + count, rows.size());
         final int frst = (int) Math.min(first, last);
         return UjoIterator.of(rows.subList(frst, last));
+    }
+
+    /** Sort the rows */
+    protected void sortRows(final List<U> rows) {
+        UjoComparator.of(getSortKeys()).sort(rows);
     }
 
     /** Method calculate the size of filtered rows */

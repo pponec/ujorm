@@ -151,16 +151,26 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
         }
     }
 
+    /** Returns a sorting Key */
+    @SuppressWarnings({"unchecked"})
+    public Key<U,?>[] getSortKeys() {
+        final Key<U,?> columnKey = getSortKey();
+        return columnKey != null
+                ? new Key[]{columnKey}
+                : new Key[0];
+    }
+
     /** Build a JDBC ResultSet always.
      * Overwrite the method for an optimization.<br>
      */
-
+    @Override
     public abstract Iterator<U> iterator(long first, long count);
 
     /** Method calculate the size using special SQL request.
      * Overwrite the method for an optimization.<br>
      * Original documentation: {@inheritDoc}
      */
+    @Override
     public abstract long size();
 
     /** Commit and close transaction */
