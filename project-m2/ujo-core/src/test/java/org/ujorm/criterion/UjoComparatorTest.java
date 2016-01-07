@@ -9,7 +9,6 @@ package org.ujorm.criterion;
 
 import java.util.ArrayList;
 import java.util.List;
-import junit.framework.*;
 import org.ujorm.Key;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.UjoComparator;
@@ -19,7 +18,7 @@ import static org.ujorm.criterion.Person.*;
  * Criteria test
  * @author Pavel Ponec
  */
-public class ComparatorTest extends MyTestCase {
+public class UjoComparatorTest extends MyTestCase {
 
     Key<Person,Double> MOTHERS_CASH  = MOTHER.add(CASH);
     Key<Person,String> MOTHERS_NAME  = MOTHER.add(NAME);
@@ -27,16 +26,12 @@ public class ComparatorTest extends MyTestCase {
 
     private List<Person> persons;
 
-    public ComparatorTest(String testName) {
+    public UjoComparatorTest(String testName) {
         super(testName);
     }
 
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(ComparatorTest.class);
-        return suite;
-    }
-
-    private Person newPerson(String name, Double cash) {
+    /** Create new Person */
+    private Person createPerson(String name, Double cash) {
         Person result = new Person();
         result.set(NAME, name);
         result.set(CASH, cash);
@@ -49,10 +44,10 @@ public class ComparatorTest extends MyTestCase {
     protected void setUp() throws Exception {
         persons = new ArrayList<Person>();
 
-        Person p = newPerson("John" , 10.0);
-        Person m = newPerson("Marry", 20.0);
-        Person g = newPerson("Julia", 30.0);
-        Person e = newPerson("Eva"  , 40.0);
+        Person p = createPerson("John" , 10.0);
+        Person m = createPerson("Marry", 20.0);
+        Person g = createPerson("Julia", 30.0);
+        Person e = createPerson("Eva"  , 40.0);
 
         p.set(MOTHER, m);
         m.set(MOTHER, g);
@@ -66,24 +61,25 @@ public class ComparatorTest extends MyTestCase {
     }
 
 
+    /** No sort for an empty Comparator */
+    public void testInit_00() {
+        List<Person> result = UjoComparator.<Person>of().sort(persons);
+        assertEquals("John", result.get(0).get(NAME));
+    }
 
+    /** Sort by name */
     public void testInit_01() {
         List<Person> result = UjoComparator.<Person>of(NAME).sort(persons);
         assertEquals("Eva", result.get(0).get(NAME) );
     }
 
+    /** Sort by mother's name */
     public void testInit_02() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         UjoComparator comp = UjoComparator.of(MOTHERS_NAME);
         List<Person> result = uc.select(persons, comp);
 
         assertEquals("Eva", result.get(0).get(MOTHERS_NAME) );
-    }
-
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 
 }
