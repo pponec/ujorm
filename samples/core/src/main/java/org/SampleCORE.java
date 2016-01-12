@@ -36,6 +36,7 @@ import org.ujorm.criterion.*;
 import org.ujorm.validator.ValidationException;
 import static org.Company.CITY;
 import static org.Employee.*;
+import static org.ujorm.core.UjoTools.SPACE;
 
 /**
  * The tutorial in the class for the UJO CORE <br>
@@ -260,7 +261,7 @@ public class SampleCORE {
                 .evaluate(service.getEmployees());
 
         for (Employee employee : employees) {
-            System.out.println(employee.getCompany().getCity() + " " + employee.getName());
+            System.out.println(employee.getCompany().getCity() + SPACE + employee.getName());
         }
         assert employees.size() == 4;
     }
@@ -273,7 +274,7 @@ public class SampleCORE {
                 .evaluate(service.getEmployees());
 
         for (Employee employee : employees) {
-            System.out.println(employee.getCompany().getCity() + " " + employee.getName());
+            System.out.println(employee.getCompany().getCity() + SPACE + employee.getName());
         }
 
         assert employees.size() == 1 : "Check the result count";
@@ -288,13 +289,13 @@ public class SampleCORE {
                 ).sort(service.getEmployees());
 
         for (Employee employee : employees) {
-            System.out.println(employee.getCompany().getCity() + " " + employee.getName());
+            System.out.println(employee.getCompany().getCity() + SPACE + employee.getName());
         }
 
         assert employees.size() == 4 : "Check the result count";
     }
 
-    /** Each direct Key has an unique instance in a classloader,
+    /** Each direct Key has an unique instance in a class-loader,
      * similar like an item of the {@link Enum} type.
      * For the serialization use a {@link KeyRing} envelope.
      */

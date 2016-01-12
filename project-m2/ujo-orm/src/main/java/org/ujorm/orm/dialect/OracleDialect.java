@@ -23,6 +23,7 @@ import org.ujorm.orm.Query;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaIndex;
 import org.ujorm.orm.metaModel.MetaTable;
+import static org.ujorm.core.UjoTools.SPACE;
 
 /** Oracle (www.oracle.com/) release 9.0 */
 public class OracleDialect extends PostgreSqlDialect {
@@ -88,7 +89,7 @@ public class OracleDialect extends PostgreSqlDialect {
         }
     }
 
-    /** Print a SQL sript to add a new column to the table 
+    /** Print a SQL sript to add a new column to the table
      * <br>Sample: ALTER TABLE sa_myphone.ord_order ADD (NEW_COLUMN INT DEFAULT 777 NOT NULL);
      */
     @Override
@@ -117,7 +118,7 @@ public class OracleDialect extends PostgreSqlDialect {
 
         String name = aName!=null ? aName : column.getName();
         printQuotedName(name, out);
-        out.append(' ');
+        out.append(SPACE);
         out.append(getColumnType(column));
 
         if (!MetaColumn.MAX_LENGTH.isDefault(column)) {

@@ -20,7 +20,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -31,7 +30,6 @@ import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.*;
-import org.ujorm.swing.UjoKeyRow;
 import org.ujorm.validator.ValidationError;
 import org.ujorm.validator.ValidatorUtils;
 
@@ -41,6 +39,9 @@ import org.ujorm.validator.ValidatorUtils;
 
  */
 public abstract class UjoTools implements Comparator<Key> {
+
+    /** Simple space */
+    public static final char SPACE = ' ';
 
     /** Requested modifier of key definitions. */
     public static final int PROPERTY_MODIFIER = KeyFactory.PROPERTY_MODIFIER;

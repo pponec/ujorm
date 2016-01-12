@@ -34,6 +34,7 @@ import org.ujorm.core.UjoComparator;
 import org.ujorm.core.UjoManagerCSV;
 import org.ujorm.criterion.*;
 import org.ujorm.validator.ValidationException;
+import static org.ujorm.core.UjoTools.SPACE;
 import static org.ujorm.ujo_core.Company.CITY;
 import static org.ujorm.ujo_core.Employee.*;
 
@@ -260,7 +261,7 @@ public class SampleCORE {
                 .evaluate(service.getEmployees());
 
         for (Employee employee : employees) {
-            System.out.println(employee.getCompany().getCity() + " " + employee.getName());
+            System.out.println(employee.getCompany().getCity() + SPACE + employee.getName());
         }
         assert employees.size() == 4;
     }
@@ -273,7 +274,7 @@ public class SampleCORE {
                 .evaluate(service.getEmployees());
 
         for (Employee employee : employees) {
-            System.out.println(employee.getCompany().getCity() + " " + employee.getName());
+            System.out.println(employee.getCompany().getCity() + SPACE + employee.getName());
         }
 
         assert employees.size() == 1 : "Check the result count";
@@ -288,13 +289,13 @@ public class SampleCORE {
                 ).sort(service.getEmployees());
 
         for (Employee employee : employees) {
-            System.out.println(employee.getCompany().getCity() + " " + employee.getName());
+            System.out.println(employee.getCompany().getCity() + SPACE + employee.getName());
         }
 
         assert employees.size() == 4 : "Check the result count";
     }
 
-    /** Each direct Key has an unique instance in a classloader,
+    /** Each direct Key has an unique instance in a class-loader,
      * similar like an item of the {@link Enum} type.
      * For the serialization use a {@link KeyRing} envelope.
      */

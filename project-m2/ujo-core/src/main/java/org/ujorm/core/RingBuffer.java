@@ -200,8 +200,8 @@ final public class RingBuffer implements CharSequence {
      * @return Return a text before the last tag. The result is newer NULL.
      * @throws IOException
      */
-    public static String findWord(final Reader reader, final String... tag) throws IOException {
-        return findWordNoTrim(reader, tag).trim();
+    public static String findWord(final Reader reader, final String... tags) throws IOException {
+        return findWordNoTrim(reader, tags).trim();
     }
 
     /**

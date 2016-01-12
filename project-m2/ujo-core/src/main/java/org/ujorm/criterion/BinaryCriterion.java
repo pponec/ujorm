@@ -12,12 +12,13 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
-   
+ */
+
 
 package org.ujorm.criterion;
 
 import org.ujorm.Ujo;
+import static org.ujorm.core.UjoTools.SPACE;
 
 /**
  * The BinaryCriterion implementation allows to join two another Criterions into the binary tree.
@@ -34,7 +35,7 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
     final private BinaryOperator operator;
     /** A domoain class of sub Criterions like a backup */
     private Class<?> domain;
-    
+
     public BinaryCriterion
         ( final Criterion<UJO> criterion1
         , final BinaryOperator operator
@@ -74,7 +75,7 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
             case NOR    : return !(e1 ||  crn2.evaluate(ujo));
             case EQ     : return   e1 ==  crn2.evaluate(ujo) ;
             case NOT    : return  !e1 ;
-            default:  
+            default:
                 throw new IllegalArgumentException("Unsupported operator: " + operator);
         }
     }
@@ -90,11 +91,11 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
     public String toString() {
         StringBuilder result = new StringBuilder();
         boolean parentheses = operator!=BinaryOperator.AND;
-        if (parentheses) result.append('(');        
+        if (parentheses) result.append('(');
         result.append(crn1);
-        result.append(' ').append(operator.name()).append(' ');
+        result.append(SPACE).append(operator.name()).append(SPACE);
         result.append(crn2);
-        if (parentheses) result.append(')');        
+        if (parentheses) result.append(')');
 
         return  result.toString();
     }

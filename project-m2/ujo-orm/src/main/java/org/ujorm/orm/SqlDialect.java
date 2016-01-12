@@ -45,6 +45,7 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaSelect;
 import org.ujorm.orm.metaModel.MetaTable;
+import static org.ujorm.core.UjoTools.SPACE;
 
 /**
  * SQL dialect abstract class. Methods of this class print a SQL statement(s) along a metamodel usually.
@@ -154,7 +155,7 @@ abstract public class SqlDialect {
         printFullTableName(table.getModel(), out);
         final String alias = table.getAlias();
         if (isFilled(alias)) {
-            out.append(' ');
+            out.append(SPACE);
             printQuotedName(alias, out);
         }
     }
@@ -336,7 +337,7 @@ abstract public class SqlDialect {
 
         String name = aName!=null ? aName : column.getName();
         printQuotedName(name, out);
-        out.append(' ');
+        out.append(SPACE);
         out.append(getColumnType(column));
 
         if (isColumnLengthAllowed(column)) {
@@ -447,7 +448,7 @@ abstract public class SqlDialect {
             out.append(i==idxFrom ? ")\nSELECT " : " UNION ALL\nSELECT ")
                .append(values);
             if (isFilled(fromPhrase)) {
-                out.append(" ").append(fromPhrase);
+                out.append(SPACE).append(fromPhrase);
             }
         }
         return out;
@@ -747,9 +748,9 @@ abstract public class SqlDialect {
         int size = column.getModel().getForeignColumns().size();
         for (int i=0; i<size; i++) {
             if (i>0) {
-                out.append(' ');
+                out.append(SPACE);
                 out.append(crit.getOperator().name());
-                out.append(' ');
+                out.append(SPACE);
             }
 
             StringBuilder columnName = new StringBuilder(256);
@@ -887,7 +888,7 @@ abstract public class SqlDialect {
                 printOffset(query, out);
             }
             if (query.isLockRequest()) {
-               out.append(' ');
+               out.append(SPACE);
                printLockForSelect(query, out);
             }
         }
@@ -928,7 +929,7 @@ abstract public class SqlDialect {
 
         List<MetaColumn> propList = MetaProcedure.PARAMETERS.of(procedure);
 
-        out.append('{').append(' ');
+        out.append('{').append(SPACE);
         if (!propList.get(0).isVoid()) {
            out.append("? =");
         }
@@ -942,7 +943,7 @@ abstract public class SqlDialect {
             }
             out.append(')');
         }
-        out.append(' ').append('}');
+        out.append(SPACE).append('}');
         return out;
     }
 
@@ -984,9 +985,9 @@ abstract public class SqlDialect {
         printQuotedName(getSeqTableModel().getTableName(), out);
         out.append ( ""
         + "\n\t( " + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
-        + "\n\t, " + getQuotedName(getSeqTableModel().getSequence()) + " " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
+        + "\n\t, " + getQuotedName(getSeqTableModel().getSequence()) + SPACE + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
         + "\n\t, " + getQuotedName(getSeqTableModel().getCache()) + " INT DEFAULT " + cache + " NOT NULL"
-        + "\n\t, " + getQuotedName(getSeqTableModel().getMaxValue()) + " " + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
+        + "\n\t, " + getQuotedName(getSeqTableModel().getMaxValue()) + SPACE + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
         + "\n\t)");
         return out;
     }

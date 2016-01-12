@@ -35,6 +35,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.utility.OrmTools;
+import static org.ujorm.core.UjoTools.SPACE;
 
 /**
  * ORM query.
@@ -738,7 +739,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             result.append(" | ordered by: ");
             for (Key<UJO, ?> ujoProperty : orderBy) {
                 result.append(ujoProperty)
-                      .append(" ")
+                      .append(SPACE)
                       .append(ujoProperty.isAscending() ? "ASC" : "DESC")
                       .append(", ")
                       ;
