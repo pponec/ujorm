@@ -30,6 +30,7 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.core.UjoCoder;
+import static org.ujorm.core.UjoTools.SPACE;
 
 /**
  * The value criterion implementation.
@@ -332,9 +333,9 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
         if (operator!=Operator.XFIXED) {
             out
             .append(key)
-            .append(' ')
+            .append(SPACE)
             .append(operator.name())
-            .append(' ');
+            .append(SPACE);
         }
 
         printValue(value, out);

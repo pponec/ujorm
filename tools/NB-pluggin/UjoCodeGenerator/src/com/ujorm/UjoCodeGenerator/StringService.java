@@ -219,7 +219,7 @@ final public class StringService {
                 if (comment.isDocComment()) {
                     result = result.substring(3, result.length()-2).trim();
                 }
-                result = result.replace('\n', ' ');
+                result = result.replace('\n', SPACE);
                 result = result.replaceAll(" \\* ", " ");
                 result = result.replaceAll("\\s+", " ");
             }

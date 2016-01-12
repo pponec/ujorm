@@ -52,6 +52,7 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
+import static org.ujorm.core.UjoTools.SPACE;
 
 /**
  * The ORM session.
@@ -579,7 +580,7 @@ public class Session implements Closeable {
             statement.assignValues(decoder);
 
             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                LOGGER.log(UjoLogger.INFO, sql + " " + SQL_VALUES + statement.getAssignedValues());
+                LOGGER.log(UjoLogger.INFO, sql + SPACE + SQL_VALUES + statement.getAssignedValues());
             }
             result = statement.executeUpdate(); // execute update statement
             bo.writeSession(this);
@@ -734,7 +735,7 @@ public class Session implements Closeable {
             statement.assignValues(procedure);
 
             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                LOGGER.log(UjoLogger.INFO, sql + " " + SQL_VALUES + statement.getAssignedValues());
+                LOGGER.log(UjoLogger.INFO, sql + SPACE + SQL_VALUES + statement.getAssignedValues());
             }
             statement.execute(); // execute call statement
             statement.loadValues(procedure);
@@ -829,7 +830,7 @@ public class Session implements Closeable {
             result.assignValues(query);
 
             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                LOGGER.log(UjoLogger.INFO, sql + " " + SQL_VALUES + result.getAssignedValues());
+                LOGGER.log(UjoLogger.INFO, sql + SPACE + SQL_VALUES + result.getAssignedValues());
             }
             return result;
 

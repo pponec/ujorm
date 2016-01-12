@@ -32,10 +32,11 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.UjoTextable;
+import static org.ujorm.core.UjoTools.SPACE;
 
 /**
  * Ujo Manager for instances type of UjoTextAccess.
- * <br>Method supports for example persistentions type of XML
+ * <br>Method supports for example persistence type of XML
  * <h3>Sample of usage</h3>
  * <pre class="pre">
  *  Person person = <span class="java-keywords">new</span> <span class="java-layer-method">Person</span>(); <span class="java-block-comment">// Set attributes ...</span>
@@ -193,7 +194,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             && !getUjoManager().isTransient(key)
             ){
                 final String valueStr = ujo.readValueString(key, actionExport);
-                writer.write(' ');
+                writer.write(SPACE);
                 writer.write(key.getName());
                 writer.write("=\"");
                 printText2Xml(writer, valueStr);
@@ -288,7 +289,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         // Print extended attributes:
         if (extendedAttributes != null) {
             for (String keyName : extendedAttributes.keySet()) {
-                writer.write(' ');
+                writer.write(SPACE);
                 writer.write(keyName);
                 writer.write("=\"");
                 printText2Xml(writer, extendedAttributes.get(keyName));
@@ -302,7 +303,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
         // Attributes: Class of a Value
         if (valueType!=null) {
-            writer.write(' ');
+            writer.write(SPACE);
             writer.write(ATTR_CLASS);
             writer.write("=\"");
             writer.write(valueType.getName());
@@ -350,7 +351,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         && (defaultType ==null
         || !defaultType.equals(value.getClass()))
         ){
-            writer.write(' ');
+            writer.write(SPACE);
             writer.write(ATTR_CLASS);
             writer.write("=\"");
             writer.write(value.getClass().getName());

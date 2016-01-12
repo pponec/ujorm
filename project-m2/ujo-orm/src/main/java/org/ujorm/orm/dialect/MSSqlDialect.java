@@ -38,6 +38,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
+import static org.ujorm.core.UjoTools.SPACE;
 
 /** Dialect for the MSSQL tested on SQL Server 2008 R2 with Microsoft SQL Server JDBC Driver 3.0
  *  from <a href="http://msdn.microsoft.com/data/jdbc">http://msdn.microsoft.com/data/jdbc</a>
@@ -474,9 +475,9 @@ public class MSSqlDialect extends SqlDialect {
         printQuotedName(getSeqTableModel().getTableName(), out);
         out.append ( ""
             + "\n\t( " + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
-            + "\n\t, " + getQuotedName(getSeqTableModel().getSequence()) + " " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
+            + "\n\t, " + getQuotedName(getSeqTableModel().getSequence()) + SPACE + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
             + "\n\t, " + getQuotedName(getSeqTableModel().getCache()) + " INT DEFAULT " + cache + " NOT NULL"
-            + "\n\t, " + getQuotedName(getSeqTableModel().getMaxValue()) + " " + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
+            + "\n\t, " + getQuotedName(getSeqTableModel().getMaxValue()) + SPACE + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
             + "\n\t)");
         return out;
     }
@@ -573,7 +574,7 @@ public class MSSqlDialect extends SqlDialect {
 
                 String name = aName != null ? aName : MetaColumn.NAME.of(column);
                 printQuotedName(name, out);
-                out.append(' ');
+                out.append(SPACE);
                 out.append(getColumnType(column));
 
                 out.append("( MAX");
