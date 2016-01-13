@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012-2014 Pavel Ponec
+ *  Copyright 2012-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package org.ujorm.wicket;
 
+import java.io.Serializable;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
@@ -25,10 +27,16 @@ import org.apache.wicket.model.Model;
 final public class CssAppender extends AttributeAppender {
 
     /** CSS class */
-    public static String CSS_CLASS = "class";
+    public static final String CSS_CLASS = "class";
 
-    public CssAppender(final String cssClass) {
-        super(CSS_CLASS, new Model(cssClass), " ");
+    /** The constructor with a String argument */
+    public <V extends CharSequence & Serializable> CssAppender(V value) {
+        this(Model.of(value));
+    }
+
+    /** The constructor with a Model argument */
+    public CssAppender(IModel<?> valueModel) {
+        super(CSS_CLASS, valueModel, " ");
     }
 
     /** Returns a CSS class */
