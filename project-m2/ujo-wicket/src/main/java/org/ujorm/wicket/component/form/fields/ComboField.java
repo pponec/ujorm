@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 Pavel Ponec
+ *  Copyright 2013-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
@@ -58,7 +58,7 @@ public class ComboField<T extends Ujo> extends Field<T> {
     /** Create Form inputComponent */
     @Override
     protected FormComponent createInput(final String componentId, final IModel<T> model) {
-        DropDownChoice<T> result = new DropDownChoice<T>(componentId, model, getItems(), new IChoiceRenderer<T>() {
+        DropDownChoice<T> result = new DropDownChoice<T>(componentId, model, getItems(), new ChoiceRenderer<T>() {
             @Override
             public Object getDisplayValue(T object) {
                 return getComboDisplayValue(object);
@@ -106,7 +106,7 @@ public class ComboField<T extends Ujo> extends Field<T> {
         return items;
     }
 
-    /** Get the indentifier key */
+    /** Get the identifier key */
     final public Key<T, ?> getKeyId() {
         return keys.get(0);
     }
