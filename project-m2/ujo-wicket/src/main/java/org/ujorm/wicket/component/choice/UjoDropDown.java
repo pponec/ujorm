@@ -1,5 +1,5 @@
 /*
- *  Copyright 2015-2015 Pavel Ponec
+ *  Copyright 2015-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -70,6 +70,16 @@ public class UjoDropDown<U extends Ujo> extends DropDownChoice<U> {
             }
             @Override public String getIdValue(final U bo, final int index) {
                 return String.valueOf(display.getFirstKey().of(bo));
+            }
+            @Override public U getObject(String id, IModel<? extends List<? extends U>> choices) {
+                final List<? extends U> choiceList = choices.getObject();
+                for (int i = 0, max = choiceList.size(); i < max; i++) {
+                    final U choice = choiceList.get(i);
+                    if (getIdValue(choice, i).equals(id)) {
+                        return choice;
+                    }
+                }
+                return null;
             }
         });
         this.display = display;

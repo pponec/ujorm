@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 - 2015 Pavel Ponec
+ *  Copyright 2013-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -238,7 +238,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Create label model */
-    protected IModel createLabelModel() {
+    protected IModel<String> createLabelModel() {
         final Key<?,?> nativeKey = getKey();
         final ResourceModel labelModel = new ResourceModel
                 (getResourceLabelKey(nativeKey), nativeKey.getName());

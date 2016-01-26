@@ -1,5 +1,5 @@
 /*
- * Copyright 2014, Pavel Ponec
+ * Copyright 2014-2016, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.googlecode.wicket.jquery.ui.widget.dialog.AbstractDialog;
 import com.googlecode.wicket.jquery.ui.widget.dialog.DialogButton;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -35,7 +35,7 @@ import org.ujorm.wicket.component.tools.LocalizedModel;
 public class MessageDialogPanel<T extends Ujo> extends AbstractDialog {
     private static final long serialVersionUID = 20140401L;
 
-    protected final DialogButton btnSure = new DialogButton(LBL_OK);
+    protected final DialogButton btnSure = new DialogButton("btn", LBL_OK);
 
     /** Message */
     protected static final String MESSAGE = "message";
@@ -43,7 +43,7 @@ public class MessageDialogPanel<T extends Ujo> extends AbstractDialog {
     /** CSS alert */
     private static final String ALERT_CSS = "alert-text";
 
-    public MessageDialogPanel(String id, IModel title) {
+    public MessageDialogPanel(String id, IModel<String> title) {
         super(id, title);
     }
 
@@ -64,8 +64,8 @@ public class MessageDialogPanel<T extends Ujo> extends AbstractDialog {
     }
 
     /** Overwrite it */
-    public void onClose(AjaxRequestTarget target, DialogButton button) {
-
+    @Override
+    public void onClose(IPartialPageRequestHandler requestHandler, DialogButton db) {
     }
 
     /** Set a dialog message */

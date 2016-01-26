@@ -1,5 +1,5 @@
 /*
- *  Copyright 2014-2014 Pavel Ponec
+ *  Copyright 2014-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 package org.ujorm.wicket.component.tools;
 
+import java.util.List;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
 
@@ -43,7 +45,6 @@ public class ChoiceRendererNullable<T extends Enum<T>> implements IChoiceRendere
 
     /** Undefined item Key */
     protected static final String UNDEFINED_ITEM_KEY = "undefinedItem";
-
 
     /**
      * Component used to resolve i18n resources for this renderer.
@@ -72,8 +73,8 @@ public class ChoiceRendererNullable<T extends Enum<T>> implements IChoiceRendere
         final String key = resourceKey(item);
         final String defaultValue = item != null ? item.name() : "-";
         final String value = resourceSource != null
-            ? resourceSource.getString(key, null, defaultValue )
-            : Application.get().getResourceSettings().getLocalizer().getString(key, null, defaultValue);
+                ? resourceSource.getString(key, null, defaultValue)
+                : Application.get().getResourceSettings().getLocalizer().getString(key, null, defaultValue);
         return postprocess(value);
     }
 
@@ -86,16 +87,16 @@ public class ChoiceRendererNullable<T extends Enum<T>> implements IChoiceRendere
      */
     protected String resourceKey(T item) {
         return item != null
-             ? Classes.simpleName(item.getDeclaringClass()) + '.' + item.name()
-             : getUndefinedKey();
+                ? Classes.simpleName(item.getDeclaringClass()) + '.' + item.name()
+                : getUndefinedKey();
     }
 
     /**
-     * Postprocesses the {@code value} after it is retrieved from the localizer. Default
+     * Post-processes the {@code value} after it is retrieved from the localizer. Default
      * implementation escapes any markup found in the {@code value}.
      *
      * @param value
-     * @return postprocessed value
+     * @return post-processed value
      */
     protected CharSequence postprocess(String value) {
         return Strings.escapeMarkup(value);
@@ -104,11 +105,23 @@ public class ChoiceRendererNullable<T extends Enum<T>> implements IChoiceRendere
     /** {@inheritDoc} */
     @Override
     public String getIdValue(T item, int index) {
-        return item!=null ? item.name() : getUndefinedKey();
+        return item != null ? item.name() : getUndefinedKey();
     }
 
     /** Localization key for undefined value */
     protected String getUndefinedKey() {
         return UNDEFINED_ITEM_KEY;
+    }
+
+    @Override
+    public T getObject(String id, IModel<? extends List<? extends T>> choices) {
+        final List<? extends T> choiceList = choices.getObject();
+        for (int i = 0, max = choiceList.size(); i < max; i++) {
+            final T choice = choiceList.get(i);
+            if (getIdValue(choice, i).equals(id)) {
+                return choice;
+            }
+        }
+        return null;
     }
 }
