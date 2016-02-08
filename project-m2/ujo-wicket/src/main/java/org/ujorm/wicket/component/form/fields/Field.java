@@ -184,8 +184,9 @@ public class Field<T> extends GenericPanel<T> {
 
     /** Set new value for the {@code input} and reset feedback messages */
     public void setModelValue(final T value) {
-        setDefaultModelObject(value);
+        getModel().setObject(value);
         if (input != null) {
+            input.modelChanged();
             input.getFeedbackMessages().clear();
         }
     }
