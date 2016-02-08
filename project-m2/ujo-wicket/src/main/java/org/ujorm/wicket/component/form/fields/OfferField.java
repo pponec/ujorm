@@ -1,5 +1,5 @@
 /*
- *  Copyright 2015 Pavel Ponec
+ *  Copyright 2015-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -164,13 +164,7 @@ public class OfferField<U extends Ujo & Serializable> extends Field<U> implement
     /** Returns an {@code input} value from model */
     @Override
     public U getModelValue() {
-        return super.getModel().getObject();
-    }
-
-     /** Set new value for the {@code input} and reset feedback messages */
-    @Override
-    public void setModelValue(final U value) {
-        super.getModel().setObject(value);
+        return getModel().getObject();
     }
 
     /** Create the editor dialog */
