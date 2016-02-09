@@ -1,4 +1,5 @@
 /* Generated objedt, do not modify it */
+
 package org.version2.bo.ujo;
 
 import java.util.Date;
@@ -30,7 +31,11 @@ public class User$ extends User implements UjoMiddle<User$> {
     public static final Key<User$, Date> BIRTHDAY = f.newKey();
     public static final Key<User$, Float> HEIGHT = f.newKey();
     public static final Key<User$, Boolean> MALE = f.newKey();
-    public static final Key<User$, Address> ADDRESS = f.newKey();
+    public static final Key<User$, Address$> ADDRESS = f.newKey();
+
+    static {
+        f.lock(); // Lock the factory
+    }
 
     private final User data;
 
@@ -190,13 +195,22 @@ public class User$ extends User implements UjoMiddle<User$> {
     }
 
     @Override
-    public Address getAddress() {
+    public Address$ getAddress() {
         return ADDRESS.of(this);
     }
 
     @Override
     public void setAddress(Address address) {
+        final Address$ localAddress
+                = address instanceof Address$
+                ? (Address$) address
+                : new Address$(address);
+        setAddress(localAddress);
+    }
+
+    // @Override
+    public void setAddress(Address$ address) {
         ADDRESS.setValue(this, address);
     }
-    
+
 }
