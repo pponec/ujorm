@@ -1,4 +1,5 @@
 /* Generated objedt, do not modify it */
+
 package org.version2.bo.ujo;
 
 import java.util.List;
