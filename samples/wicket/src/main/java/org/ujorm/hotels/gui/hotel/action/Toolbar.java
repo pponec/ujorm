@@ -50,7 +50,7 @@ public final class Toolbar<U extends Hotel> extends AbstractToolbar<U> {
         buildCriterion();
     }
 
-    /** Build a Criteron for a Ujorm QUERY.
+    /** Build a Criterion for a Ujorm QUERY.
      * @see #getCriterion()
      */
     @Override

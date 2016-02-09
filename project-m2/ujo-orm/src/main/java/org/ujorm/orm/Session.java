@@ -280,7 +280,7 @@ public class Session implements Closeable {
     }
 
     /** Create query. This method has a slightly higher performance
-     * than the method {@link #createQuery(org.ujorm.criterion.Criterion) createQuery(Criteron)}
+     * than the method {@link #createQuery(org.ujorm.criterion.Criterion) createQuery(Criterion)}
      *  without the Class parameter.
      * @see #createQuery(org.ujorm.criterion.Criterion)
      */

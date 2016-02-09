@@ -29,11 +29,11 @@ import org.ujorm.Ujo;
  * <ul>
  *    <li>like a generic UJO object validator (2)</li>
  *    <li>to create a query on the UJO list (1)</li>
- *    <li>the class is used to build 'SQL query' in the module </strong>ujo-orm</strong> (sience 0.90)</li>
+ *    <li>the class is used to build 'SQL query' in the module </strong>ujo-orm</strong> (since 0.90)</li>
  * </ul>
  *
  * There is allowed to join two instances (based on the same BO) to a binary tree by a new Criterion.
- * Some common operators (and, or, not) are implemeted into a special join method of the Criteron class.
+ * Some common operators (and, or, not) are implemented into a special join method of the Criterion class.
  *
  * <h3>Example of use</h3>
  * <pre class="pre"><span class="comment">// Make a criterion:</span>
@@ -178,7 +178,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         return (Criterion<T>) this;
     }
 
-    /** Print the Criteron including the main domain name along the example: Order(id EQ 1)  */
+    /** Print the Criterion including the main domain name along the example: Order(id EQ 1)  */
     public String toStringFull() {
         final Class domain = getDomain();
         return domain.getSimpleName() + this;
