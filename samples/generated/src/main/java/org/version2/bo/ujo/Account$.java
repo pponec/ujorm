@@ -1,4 +1,5 @@
 /* Generated objedt, do not modify it */
+
 package org.version2.bo.ujo;
 
 import java.util.List;
@@ -24,6 +25,10 @@ public class Account$ extends Account implements UjoMiddle<Account$> {
     public static final Key<Account$, String> LOGIN = f.newKey();
     public static final Key<Account$, byte[]> PASSWORD = f.newKey();
     public static final Key<Account$, Boolean> ENABLED = f.newKey();
+
+    static {
+        f.lock(); // Lock the factory
+    }
 
     /** Basic data */
     private final Account data;
