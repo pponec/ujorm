@@ -1,7 +1,7 @@
 /** Editing of the class is allowed. */
 
-package org.bo;
-import org.bo.gen._ViewOrder;
+package org.version1.bo;
+import org.version1.bo.gen._ViewOrder;
 import org.ujorm.orm.annot.View;
 
 @View(select = "SELECT ord_order_alias.id, count(*) AS item_count"
