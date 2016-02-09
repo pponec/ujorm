@@ -80,6 +80,7 @@
                 <module>samples/inheritance</module>
                 <module>samples/binding</module>
                 <module>samples/wicket</module>
+                <module>samples/generated</module>
 
                 <module>benchmark/hibernate</module>
                 <module>benchmark/hibernate-ujo</module>
