@@ -13,7 +13,7 @@ public class Account {
     /** Password */
     private byte[] password;
     /** Account is enabled */
-    private boolean enabled;
+    private Boolean enabled;
 
     /**
      * ID
@@ -67,7 +67,7 @@ public class Account {
      * Account is enabled
      * @return the enabled
      */
-    public boolean isEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
@@ -75,7 +75,7 @@ public class Account {
      * Account is enabled
      * @param enabled the enabled to set
      */
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
