@@ -14,9 +14,9 @@
  *  limitations under the License.
  */
 
-package org;
+package org.version1;
 
-import org.bo.gen._Database;
+import org.version1.bo.gen._Database;
 import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.dialect.*;
 

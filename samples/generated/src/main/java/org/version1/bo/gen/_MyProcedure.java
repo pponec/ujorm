@@ -2,7 +2,7 @@
  *  Don't modify the generated class.
  *  License the Apache License, Version 2.0
  */
-package org.bo.gen;
+package org.version1.bo.gen;
 
 import org.ujorm.Key;
 import org.ujorm.orm.DbProcedure;

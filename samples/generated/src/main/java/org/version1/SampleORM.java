@@ -14,15 +14,15 @@
  *  limitations under the License.
  */
 
-package org;
+package org.version1;
 
 import java.util.Date;
 import java.util.List;
 import java.util.logging.*;
-import org.bo.Item;
-import org.bo.MyProcedure;
-import org.bo.Order;
-import org.bo.ViewOrder;
+import org.version1.bo.Item;
+import org.version1.bo.MyProcedure;
+import org.version1.bo.Order;
+import org.version1.bo.ViewOrder;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;

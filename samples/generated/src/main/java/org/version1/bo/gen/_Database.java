@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-package org.bo.gen;
+package org.version1.bo.gen;
 
-import org.Database;
-import org.bo.Item;
-import org.bo.MyProcedure;
-import org.bo.Order;
-import org.bo.ViewOrder;
+import org.version1.Database;
+import org.version1.bo.Item;
+import org.version1.bo.MyProcedure;
+import org.version1.bo.Order;
+import org.version1.bo.ViewOrder;
 import org.ujorm.Key;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
