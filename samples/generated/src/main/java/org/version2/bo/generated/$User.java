@@ -1,6 +1,6 @@
 /* Generated objedt, do not modify it */
 
-package org.version2.bo.ujo;
+package org.version2.bo.generated;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +13,7 @@ import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.UjoMiddle;
 import org.version2.bo.*;
+import org.version2.tools.UnsupportedKey;
 
 /**
  * $User
@@ -121,9 +122,7 @@ public class $User extends User implements UjoMiddle<$User> {
                 case 9: return super.getAddress();
             }
         }
-        throw new IllegalArgumentException(String.format("Unsupported key: %s[%s]"
-                , key.getFullName()
-                , key.getIndex()));
+        throw new UnsupportedKey(key);
     }
 
     @Override
@@ -155,9 +154,7 @@ public class $User extends User implements UjoMiddle<$User> {
                 case 9: super.setAddress((Address) value); return;
             }
         }
-        throw new IllegalArgumentException(String.format("Unsupported key: %s[%s]"
-                , key.getFullName()
-                , key.getIndex()));
+        throw new UnsupportedKey(key);
     }
 
     // ---------- GETTERS AND SETTERS ----------

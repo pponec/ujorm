@@ -1,8 +1,9 @@
 package org.version2;
 
+import org.version2.bo.generated.$User;
+import org.version2.bo.generated.$Address;
 import java.util.Date;
 import org.version2.bo.*;
-import org.version2.bo.ujo.*;
 
 /**
  * DEMO Sample
