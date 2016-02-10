@@ -62,11 +62,11 @@ public class Sample2 {
     /** Convert POJO to UJO by a service */
     public void run_04() {
         User user = new User();
+        $User userUjo = new UjoPojoConverter<$User>().marshal(user);
+
         String surname = "Kovář";
         user.setSurname(surname);
-        $User ujoUser = new UjoPojoConverter<$User>().marshal(user);
-
-        assert ujoUser.getSurname() == surname;
+        assert userUjo.getSurname() == surname;
     }
 
 }
