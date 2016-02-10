@@ -3,6 +3,7 @@ package org.version2;
 import org.version2.bo.generated.$User;
 import org.version2.bo.generated.$Address;
 import java.util.Date;
+import org.ujorm.Key;
 import org.version2.bo.*;
 import org.version2.tools.UjoPojoConverter;
 
@@ -49,15 +50,16 @@ public class Sample2 {
         String city1 = "Kroměříž";
         String city2 = null;
         //
-        user.set($User.ADDRESS.add($Address.CITY), city1);
-        city2 = user.get($User.ADDRESS.add($Address.CITY));
+        Key<$User,String> compisiteKeyCity = $User.ADDRESS.add($Address.CITY);
+        user.set(compisiteKeyCity, city1);
+        city2 = user.get(compisiteKeyCity);
 
         assert city1 == city2;
         assert city1 == user.getAddress().getCity();
         assert city1 == user.original().getAddress().getCity();
     }
 
-    /** Use POJO to UJO converter */
+    /** Convert POJO to UJO by a service */
     public void run_04() {
         User user = new User();
         String surname = "Kovář";
