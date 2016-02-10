@@ -23,7 +23,8 @@ public class Sample2 {
         user.setBirthday(new Date());
         user.setAddress(address);
 
-        System.out.println("User: " + user);
+        assert user.getForename() == "Jan";
+        assert user.getAddress().getCity() == "Brno";
     }
 
     public void run_02() {
@@ -33,7 +34,9 @@ public class Sample2 {
         address.setCountry("Czech Republic");
 
         $Address ujoAddress = new $Address(address);
-        System.out.println("ujoAddress: " + ujoAddress);
+
+        assert ujoAddress.getId().intValue() == 10;
+        assert ujoAddress.getCity() == "Brno";
     }
 
     public void run_03() {
@@ -45,6 +48,8 @@ public class Sample2 {
         city2 = user.get($User.ADDRESS.add($Address.CITY));
 
         assert city1 == city2;
+        assert city1 == user.getAddress().getCity();
+        assert city1 == user.original().getAddress().getCity();
     }
 
 }

@@ -121,39 +121,43 @@ public class $User extends User implements UjoMiddle<$User> {
                 case 9: return super.getAddress();
             }
         }
-        throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
+        throw new IllegalArgumentException(String.format("Unsupported key: %s[%s]"
+                , key.getFullName()
+                , key.getIndex()));
     }
 
     @Override
     public void writeValue(Key<?, ?> key, Object value) {
           if (this.data != null) {
             switch (key.getIndex()) {
-                case 0: data.setId((Integer) value); break;
-                case 1: data.setLogin((String) value); break;
-                case 2: data.setPassword((byte[]) value); break;
-                case 3: data.setEnabled((Boolean) value); break;
-                case 4: data.setForename((String) value); break;
-                case 5: data.setSurname((String) value); break;
-                case 6: data.setBirthday((Date) value); break;
-                case 7: data.setHeight((Float) value); break;
-                case 8: data.setMale((Boolean) value); break;
-                case 9: data.setAddress((Address) value); break;
+                case 0: data.setId((Integer) value); return;
+                case 1: data.setLogin((String) value); return;
+                case 2: data.setPassword((byte[]) value); return;
+                case 3: data.setEnabled((Boolean) value); return;
+                case 4: data.setForename((String) value); return;
+                case 5: data.setSurname((String) value); return;
+                case 6: data.setBirthday((Date) value); return;
+                case 7: data.setHeight((Float) value); return;
+                case 8: data.setMale((Boolean) value); return;
+                case 9: data.setAddress((Address) value); return;
             }
         } else {
             switch (key.getIndex()) {
-                case 0: super.setId((Integer) value); break;
-                case 1: super.setLogin((String) value); break;
-                case 2: super.setPassword((byte[]) value); break;
-                case 3: super.setEnabled((Boolean) value); break;
-                case 4: super.setForename((String) value); break;
-                case 5: super.setSurname((String) value); break;
-                case 6: super.setBirthday((Date) value); break;
-                case 7: super.setHeight((Float) value); break;
-                case 8: super.setMale((Boolean) value); break;
-                case 9: super.setAddress((Address) value); break;
+                case 0: super.setId((Integer) value); return;
+                case 1: super.setLogin((String) value); return;
+                case 2: super.setPassword((byte[]) value); return;
+                case 3: super.setEnabled((Boolean) value); return;
+                case 4: super.setForename((String) value); return;
+                case 5: super.setSurname((String) value); return;
+                case 6: super.setBirthday((Date) value); return;
+                case 7: super.setHeight((Float) value); return;
+                case 8: super.setMale((Boolean) value); return;
+                case 9: super.setAddress((Address) value); return;
             }
         }
-        throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
+        throw new IllegalArgumentException(String.format("Unsupported key: %s[%s]"
+                , key.getFullName()
+                , key.getIndex()));
     }
 
     // ---------- GETTERS AND SETTERS ----------
