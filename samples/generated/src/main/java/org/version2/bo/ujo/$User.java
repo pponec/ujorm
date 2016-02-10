@@ -2,7 +2,6 @@
 
 package org.version2.bo.ujo;
 
-import com.sun.istack.internal.Nullable;
 import java.util.Date;
 import java.util.List;
 import org.ujorm.Key;
@@ -16,23 +15,23 @@ import org.ujorm.extensions.UjoMiddle;
 import org.version2.bo.*;
 
 /**
- * User$
+ * $User
  * @author Pavel Ponec
  */
-public class User$ extends User implements UjoMiddle<User$> {
+public class $User extends User implements UjoMiddle<$User> {
 
-    private static final KeyFactory<User$> f = new KeyFactory<User$>(User$.class, false);
+    private static final KeyFactory<$User> f = new KeyFactory<$User>($User.class, false);
     //
-    public static final Key<User$, Integer> ID = f.newKey();
-    public static final Key<User$, String> LOGIN = f.newKey();
-    public static final Key<User$, byte[]> PASSWORD = f.newKey();
-    public static final Key<User$, Boolean> ENABLED = f.newKey();
-    public static final Key<User$, String> FORENAME = f.newKey();
-    public static final Key<User$, String> SURNAME = f.newKey();
-    public static final Key<User$, Date> BIRTHDAY = f.newKey();
-    public static final Key<User$, Float> HEIGHT = f.newKey();
-    public static final Key<User$, Boolean> MALE = f.newKey();
-    public static final Key<User$, Address$> ADDRESS = f.newKey();
+    public static final Key<$User, Integer> ID = f.newKey();
+    public static final Key<$User, String> LOGIN = f.newKey();
+    public static final Key<$User, byte[]> PASSWORD = f.newKey();
+    public static final Key<$User, Boolean> ENABLED = f.newKey();
+    public static final Key<$User, String> FORENAME = f.newKey();
+    public static final Key<$User, String> SURNAME = f.newKey();
+    public static final Key<$User, Date> BIRTHDAY = f.newKey();
+    public static final Key<$User, Float> HEIGHT = f.newKey();
+    public static final Key<$User, Boolean> MALE = f.newKey();
+    public static final Key<$User, $Address> ADDRESS = f.newKey();
 
     static {
         f.lock(); // Lock the factory
@@ -40,32 +39,31 @@ public class User$ extends User implements UjoMiddle<User$> {
 
     private final User data;
 
-    public User$(User data) {
+    public $User(User data) {
         this.data = data;
     }
 
-    public User$() {
+    public $User() {
         this(null);
     }
 
-    @Nullable
     public User original() {
         return data != null ? data : this;
     }
 
     @Override
-    public <VALUE> VALUE get(Key<? super User$, VALUE> key) {
+    public <VALUE> VALUE get(Key<? super $User, VALUE> key) {
         return key.of(this);
     }
 
     @Override
-    public <VALUE> Ujo set(Key<? super User$, VALUE> key, VALUE value) {
+    public <VALUE> Ujo set(Key<? super $User, VALUE> key, VALUE value) {
         key.setValue(this, value);
         return this;
     }
 
     @Override
-    public <VALUE> List<VALUE> getList(ListKey<? super User$, VALUE> key) {
+    public <VALUE> List<VALUE> getList(ListKey<? super $User, VALUE> key) {
         return key.getList(this);
     }
 
@@ -80,7 +78,7 @@ public class User$ extends User implements UjoMiddle<User$> {
     }
 
     @Override
-    public KeyList<User$> readKeyList() {
+    public KeyList<$User> readKeyList() {
         return f.getKeys();
     }
 
@@ -251,21 +249,21 @@ public class User$ extends User implements UjoMiddle<User$> {
     }
 
     @Override
-    public Address$ getAddress() {
+    public $Address getAddress() {
         return ADDRESS.of(this);
     }
 
     @Override
     public void setAddress(Address address) {
-        final Address$ localAddress
-                = address instanceof Address$
-                ? (Address$) address
-                : new Address$(address);
+        final $Address localAddress
+                = address instanceof $Address
+                ? ($Address) address
+                : new $Address(address);
         setAddress(localAddress);
     }
 
     // @Override
-    public void setAddress(Address$ address) {
+    public void setAddress($Address address) {
         ADDRESS.setValue(this, address);
     }
 
