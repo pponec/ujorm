@@ -27,14 +27,27 @@ import org.ujorm.Ujo;
  */
 public class UjoPojoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
 
+    /** Name of the method for an original object */
+    protected static final String ORIGINAL_METHOD = "original";
+
+    /** Related package name */
     private final String packag;
+    /** A prefix of the Ujo class */
     private final String prefix;
+    /** A suffix of the Ujo class */
     private final String suffix;
 
+    /** Default constructor */
     public UjoPojoConverter() {
         this("generated", "$", "");
     }
 
+    /**
+     * Argument constructor
+     * @param packag Related package name
+     * @param prefix A prefix of the Ujo class
+     * @param suffix A suffix of the Ujo class
+     */
     public UjoPojoConverter(String packag, String prefix, String suffix) {
         this.packag = packag;
         this.prefix = prefix;
@@ -76,7 +89,7 @@ public class UjoPojoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
             return null;
         }
         try {
-            final Method method = v.getClass().getMethod("original");
+            final Method method = v.getClass().getMethod(ORIGINAL_METHOD);
             return method.invoke(v);
         } catch (Throwable e) {
             throw new IllegalStateException(e);
