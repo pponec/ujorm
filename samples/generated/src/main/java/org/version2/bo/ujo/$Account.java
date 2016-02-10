@@ -2,7 +2,6 @@
 
 package org.version2.bo.ujo;
 
-import java.util.Date;
 import java.util.List;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -104,27 +103,31 @@ public class $Account extends Account implements UjoMiddle<$Account> {
                 case 3: return super.getEnabled();
             }
         }
-        throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
+        throw new IllegalArgumentException(String.format("Unsupported key: %s[%s]"
+                , key.getFullName()
+                , key.getIndex()));
     }
 
     @Override
     public void writeValue(Key<?, ?> key, Object value) {
           if (this.data != null) {
             switch (key.getIndex()) {
-                case 0: data.setId((Integer) value); break;
-                case 1: data.setLogin((String) value); break;
-                case 2: data.setPassword((byte[]) value); break;
-                case 3: data.setEnabled((Boolean) value); break;
+                case 0: data.setId((Integer) value); return;
+                case 1: data.setLogin((String) value); return;
+                case 2: data.setPassword((byte[]) value); return;
+                case 3: data.setEnabled((Boolean) value); return;
             }
         } else {
             switch (key.getIndex()) {
-                case 0: super.setId((Integer) value); break;
-                case 1: super.setLogin((String) value); break;
-                case 2: super.setPassword((byte[]) value); break;
-                case 3: super.setEnabled((Boolean) value); break;
+                case 0: super.setId((Integer) value); return;
+                case 1: super.setLogin((String) value); return;
+                case 2: super.setPassword((byte[]) value); return;
+                case 3: super.setEnabled((Boolean) value); return;
             }
         }
-        throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
+        throw new IllegalArgumentException(String.format("Unsupported key: %s[%s]"
+                , key.getFullName()
+                , key.getIndex()));
     }
 
     // ---------- GETTERS AND SETTERS ----------

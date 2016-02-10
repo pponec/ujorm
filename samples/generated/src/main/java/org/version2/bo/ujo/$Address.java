@@ -103,27 +103,31 @@ public class $Address extends Address implements UjoMiddle<$Address> {
                 case 3: return super.getCountry();
             }
         }
-        throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
+        throw new IllegalArgumentException(String.format("Unsupported key: %s[%s]"
+                , key.getFullName()
+                , key.getIndex()));
     }
 
     @Override
     public void writeValue(Key<?, ?> key, Object value) {
           if (this.data != null) {
             switch (key.getIndex()) {
-                case 0: data.setId((Integer) value); break;
-                case 1: data.setStreet((String) value); break;
-                case 2: data.setCity((String) value); break;
-                case 3: data.setCountry((String) value); break;
+                case 0: data.setId((Integer) value); return;
+                case 1: data.setStreet((String) value); return;
+                case 2: data.setCity((String) value); return;
+                case 3: data.setCountry((String) value); return;
             }
         } else {
             switch (key.getIndex()) {
-                case 0: super.setId((Integer) value); break;
-                case 1: super.setStreet((String) value); break;
-                case 2: super.setCity((String) value); break;
-                case 3: super.setCountry((String) value); break;
+                case 0: super.setId((Integer) value); return;
+                case 1: super.setStreet((String) value); return;
+                case 2: super.setCity((String) value); return;
+                case 3: super.setCountry((String) value); return;
             }
         }
-        throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
+        throw new IllegalArgumentException(String.format("Unsupported key: %s[%s]"
+                , key.getFullName()
+                , key.getIndex()));
     }
 
     // ---------- GETTERS AND SETTERS ----------
