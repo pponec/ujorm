@@ -81,7 +81,7 @@ public class Account$ extends Account implements UjoMiddle<Account$> {
     public <U extends Ujo> KeyList<U> readKeys() {
         return (KeyList<U>) readKeyList();
     }
-    
+
     @Override
     public boolean readAuthorization(UjoAction action, Key<?, ?> key, Object value) {
         return true;
@@ -91,17 +91,17 @@ public class Account$ extends Account implements UjoMiddle<Account$> {
     public Object readValue(Key<?, ?> key) {
         if (this.data != null) {
             switch (key.getIndex()) {
-                case 1: return data.getId();
-                case 2: return data.getLogin();
-                case 3: return data.getPassword();
-                case 4: return data.getEnabled();
+                case 0: return data.getId();
+                case 1: return data.getLogin();
+                case 2: return data.getPassword();
+                case 3: return data.getEnabled();
             }
         } else {
             switch (key.getIndex()) {
-                case 1: return super.getId();
-                case 2: return super.getLogin();
-                case 3: return super.getPassword();
-                case 4: return super.getEnabled();
+                case 0: return super.getId();
+                case 1: return super.getLogin();
+                case 2: return super.getPassword();
+                case 3: return super.getEnabled();
             }
         }
         throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
@@ -111,17 +111,17 @@ public class Account$ extends Account implements UjoMiddle<Account$> {
     public void writeValue(Key<?, ?> key, Object value) {
           if (this.data != null) {
             switch (key.getIndex()) {
-                case 1: data.setId((Integer) value); break;
-                case 2: data.setLogin((String) value); break;
-                case 3: data.setPassword((byte[]) value); break;
-                case 4: data.setEnabled((Boolean) value); break;
+                case 0: data.setId((Integer) value); break;
+                case 1: data.setLogin((String) value); break;
+                case 2: data.setPassword((byte[]) value); break;
+                case 3: data.setEnabled((Boolean) value); break;
             }
         } else {
             switch (key.getIndex()) {
-                case 1: super.setId((Integer) value); break;
-                case 2: super.setLogin((String) value); break;
-                case 3: super.setPassword((byte[]) value); break;
-                case 4: super.setEnabled((Boolean) value); break;
+                case 0: super.setId((Integer) value); break;
+                case 1: super.setLogin((String) value); break;
+                case 2: super.setPassword((byte[]) value); break;
+                case 3: super.setEnabled((Boolean) value); break;
             }
         }
         throw new IllegalArgumentException("Unsupported key: " + key.getFullName());

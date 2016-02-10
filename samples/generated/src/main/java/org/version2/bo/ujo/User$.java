@@ -98,29 +98,29 @@ public class User$ extends User implements UjoMiddle<User$> {
     public Object readValue(Key<?, ?> key) {
         if (this.data != null) {
             switch (key.getIndex()) {
-                case 1: return data.getId();
-                case 2: return data.getLogin();
-                case 3: return data.getPassword();
-                case 4: return data.getEnabled();
-                case 5: return data.getForename();
-                case 6: return data.getSurname();
-                case 7: return data.getBirthday();
-                case 8: return data.getHeight();
-                case 9: return data.getMale();
-                case 10: return data.getAddress();
+                case 0: return data.getId();
+                case 1: return data.getLogin();
+                case 2: return data.getPassword();
+                case 3: return data.getEnabled();
+                case 4: return data.getForename();
+                case 5: return data.getSurname();
+                case 6: return data.getBirthday();
+                case 7: return data.getHeight();
+                case 8: return data.getMale();
+                case 9: return data.getAddress();
             }
         } else {
             switch (key.getIndex()) {
-                case 1: return super.getId();
-                case 2: return super.getLogin();
-                case 3: return super.getPassword();
-                case 4: return super.getEnabled();
-                case 5: return super.getForename();
-                case 6: return super.getSurname();
-                case 7: return super.getBirthday();
-                case 8: return super.getHeight();
-                case 9: return super.getMale();
-                case 10: return super.getAddress();
+                case 0: return super.getId();
+                case 1: return super.getLogin();
+                case 2: return super.getPassword();
+                case 3: return super.getEnabled();
+                case 4: return super.getForename();
+                case 5: return super.getSurname();
+                case 6: return super.getBirthday();
+                case 7: return super.getHeight();
+                case 8: return super.getMale();
+                case 9: return super.getAddress();
             }
         }
         throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
@@ -130,29 +130,29 @@ public class User$ extends User implements UjoMiddle<User$> {
     public void writeValue(Key<?, ?> key, Object value) {
           if (this.data != null) {
             switch (key.getIndex()) {
-                case 1: data.setId((Integer) value); break;
-                case 2: data.setLogin((String) value); break;
-                case 3: data.setPassword((byte[]) value); break;
-                case 4: data.setEnabled((Boolean) value); break;
-                case 5: data.setForename((String) value); break;
-                case 6: data.setSurname((String) value); break;
-                case 7: data.setBirthday((Date) value); break;
-                case 8: data.setHeight((Float) value); break;
-                case 9: data.setMale((Boolean) value); break;
-                case 10: data.setAddress((Address) value); break;
+                case 0: data.setId((Integer) value); break;
+                case 1: data.setLogin((String) value); break;
+                case 2: data.setPassword((byte[]) value); break;
+                case 3: data.setEnabled((Boolean) value); break;
+                case 4: data.setForename((String) value); break;
+                case 5: data.setSurname((String) value); break;
+                case 6: data.setBirthday((Date) value); break;
+                case 7: data.setHeight((Float) value); break;
+                case 8: data.setMale((Boolean) value); break;
+                case 9: data.setAddress((Address) value); break;
             }
         } else {
             switch (key.getIndex()) {
-                case 1: super.setId((Integer) value); break;
-                case 2: super.setLogin((String) value); break;
-                case 3: super.setPassword((byte[]) value); break;
-                case 4: super.setEnabled((Boolean) value); break;
-                case 5: super.setForename((String) value); break;
-                case 6: super.setSurname((String) value); break;
-                case 7: super.setBirthday((Date) value); break;
-                case 8: super.setHeight((Float) value); break;
-                case 9: super.setMale((Boolean) value); break;
-                case 10: super.setAddress((Address) value); break;
+                case 0: super.setId((Integer) value); break;
+                case 1: super.setLogin((String) value); break;
+                case 2: super.setPassword((byte[]) value); break;
+                case 3: super.setEnabled((Boolean) value); break;
+                case 4: super.setForename((String) value); break;
+                case 5: super.setSurname((String) value); break;
+                case 6: super.setBirthday((Date) value); break;
+                case 7: super.setHeight((Float) value); break;
+                case 8: super.setMale((Boolean) value); break;
+                case 9: super.setAddress((Address) value); break;
             }
         }
         throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
