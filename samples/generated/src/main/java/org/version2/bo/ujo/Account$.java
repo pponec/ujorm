@@ -2,6 +2,7 @@
 
 package org.version2.bo.ujo;
 
+import java.util.Date;
 import java.util.List;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -38,11 +39,11 @@ public class Account$ extends Account implements UjoMiddle<Account$> {
     }
 
     public Account$() {
-        this(new Account());
+        this(null);
     }
 
     public Account original() {
-        return data;
+        return data != null ? data : this;
     }
 
     @Override
@@ -80,20 +81,50 @@ public class Account$ extends Account implements UjoMiddle<Account$> {
     public <U extends Ujo> KeyList<U> readKeys() {
         return (KeyList<U>) readKeyList();
     }
+    
+    @Override
+    public boolean readAuthorization(UjoAction action, Key<?, ?> key, Object value) {
+        return true;
+    }
 
     @Override
     public Object readValue(Key<?, ?> key) {
-        throw new UnsupportedOperationException("TODO");
+        if (this.data != null) {
+            switch (key.getIndex()) {
+                case 1: return data.getId();
+                case 2: return data.getLogin();
+                case 3: return data.getPassword();
+                case 4: return data.getEnabled();
+            }
+        } else {
+            switch (key.getIndex()) {
+                case 1: return super.getId();
+                case 2: return super.getLogin();
+                case 3: return super.getPassword();
+                case 4: return super.getEnabled();
+            }
+        }
+        throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
     }
 
     @Override
     public void writeValue(Key<?, ?> key, Object value) {
-        throw new UnsupportedOperationException("TODO");
-    }
-
-    @Override
-    public boolean readAuthorization(UjoAction action, Key<?, ?> key, Object value) {
-        return true;
+          if (this.data != null) {
+            switch (key.getIndex()) {
+                case 1: data.setId((Integer) value); break;
+                case 2: data.setLogin((String) value); break;
+                case 3: data.setPassword((byte[]) value); break;
+                case 4: data.setEnabled((Boolean) value); break;
+            }
+        } else {
+            switch (key.getIndex()) {
+                case 1: super.setId((Integer) value); break;
+                case 2: super.setLogin((String) value); break;
+                case 3: super.setPassword((byte[]) value); break;
+                case 4: super.setEnabled((Boolean) value); break;
+            }
+        }
+        throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
     }
 
     // ---------- GETTERS AND SETTERS ----------
