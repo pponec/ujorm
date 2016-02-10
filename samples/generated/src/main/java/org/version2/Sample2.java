@@ -11,12 +11,12 @@ import org.version2.bo.ujo.*;
 public class Sample2 {
 
     public void run_01() {
-        Address address = new Address$();
+        Address address = new $Address();
         address.setId(10);
         address.setCity("Brno");
         address.setCountry("Czech Republic");
 
-        User user = new User$();
+        User user = new $User();
         user.setId(100);
         user.setForename("Jan");
         user.setSurname("Novák");
@@ -32,17 +32,17 @@ public class Sample2 {
         address.setCity("Brno");
         address.setCountry("Czech Republic");
 
-        Address$ ujoAddress = new Address$(address);
+        $Address ujoAddress = new $Address(address);
         System.out.println("ujoAddress: " + ujoAddress);
     }
 
     public void run_03() {
-        User$ user = new User$();
+        $User user = new $User();
         String city1 = "Kroměříž";
         String city2 = null;
         //
-        user.set(User$.ADDRESS.add(Address$.CITY), city1);
-        city2 = user.get(User$.ADDRESS.add(Address$.CITY));
+        user.set($User.ADDRESS.add($Address.CITY), city1);
+        city2 = user.get($User.ADDRESS.add($Address.CITY));
 
         assert city1 == city2;
     }

@@ -15,17 +15,17 @@ import org.ujorm.extensions.UjoMiddle;
 import org.version2.bo.*;
 
 /**
- * Account$
+ * $Account
  * @author Pavel Ponec
  */
-public class Account$ extends Account implements UjoMiddle<Account$> {
+public class $Account extends Account implements UjoMiddle<$Account> {
 
-    private static final KeyFactory<Account$> f = new KeyFactory<Account$>(Account$.class, false);
+    private static final KeyFactory<$Account> f = new KeyFactory<$Account>($Account.class, false);
     //
-    public static final Key<Account$, Integer> ID = f.newKey();
-    public static final Key<Account$, String> LOGIN = f.newKey();
-    public static final Key<Account$, byte[]> PASSWORD = f.newKey();
-    public static final Key<Account$, Boolean> ENABLED = f.newKey();
+    public static final Key<$Account, Integer> ID = f.newKey();
+    public static final Key<$Account, String> LOGIN = f.newKey();
+    public static final Key<$Account, byte[]> PASSWORD = f.newKey();
+    public static final Key<$Account, Boolean> ENABLED = f.newKey();
 
     static {
         f.lock(); // Lock the factory
@@ -34,11 +34,11 @@ public class Account$ extends Account implements UjoMiddle<Account$> {
     /** Basic data */
     private final Account data;
 
-    public Account$(Account data) {
+    public $Account(Account data) {
         this.data = data;
     }
 
-    public Account$() {
+    public $Account() {
         this(null);
     }
 
@@ -47,18 +47,18 @@ public class Account$ extends Account implements UjoMiddle<Account$> {
     }
 
     @Override
-    public <VALUE> VALUE get(Key<? super Account$, VALUE> key) {
+    public <VALUE> VALUE get(Key<? super $Account, VALUE> key) {
         return key.of(this);
     }
 
     @Override
-    public <VALUE> Ujo set(Key<? super Account$, VALUE> key, VALUE value) {
+    public <VALUE> Ujo set(Key<? super $Account, VALUE> key, VALUE value) {
         key.setValue(this, value);
         return this;
     }
 
     @Override
-    public <VALUE> List<VALUE> getList(ListKey<? super Account$, VALUE> key) {
+    public <VALUE> List<VALUE> getList(ListKey<? super $Account, VALUE> key) {
         return key.getList(this);
     }
 
@@ -73,7 +73,7 @@ public class Account$ extends Account implements UjoMiddle<Account$> {
     }
 
     @Override
-    public KeyList<Account$> readKeyList() {
+    public KeyList<$Account> readKeyList() {
         return f.getKeys();
     }
 
