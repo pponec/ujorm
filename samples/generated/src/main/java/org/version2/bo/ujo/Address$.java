@@ -92,17 +92,17 @@ public class Address$ extends Address implements UjoMiddle<Address$> {
     public Object readValue(Key<?, ?> key) {
         if (this.data != null) {
             switch (key.getIndex()) {
-                case 1: return data.getId();
-                case 2: return data.getStreet();
-                case 3: return data.getCity();
-                case 4: return data.getCountry();
+                case 0: return data.getId();
+                case 1: return data.getStreet();
+                case 2: return data.getCity();
+                case 3: return data.getCountry();
             }
         } else {
             switch (key.getIndex()) {
-                case 1: return super.getId();
-                case 2: return super.getStreet();
-                case 3: return super.getCity();
-                case 4: return super.getCountry();
+                case 0: return super.getId();
+                case 1: return super.getStreet();
+                case 2: return super.getCity();
+                case 3: return super.getCountry();
             }
         }
         throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
@@ -112,17 +112,17 @@ public class Address$ extends Address implements UjoMiddle<Address$> {
     public void writeValue(Key<?, ?> key, Object value) {
           if (this.data != null) {
             switch (key.getIndex()) {
-                case 1: data.setId((Integer) value); break;
-                case 2: data.setStreet((String) value); break;
-                case 3: data.setCity((String) value); break;
-                case 4: data.setCountry((String) value); break;
+                case 0: data.setId((Integer) value); break;
+                case 1: data.setStreet((String) value); break;
+                case 2: data.setCity((String) value); break;
+                case 3: data.setCountry((String) value); break;
             }
         } else {
             switch (key.getIndex()) {
-                case 1: super.setId((Integer) value); break;
-                case 2: super.setStreet((String) value); break;
-                case 3: super.setCity((String) value); break;
-                case 4: super.setCountry((String) value); break;
+                case 0: super.setId((Integer) value); break;
+                case 1: super.setStreet((String) value); break;
+                case 2: super.setCity((String) value); break;
+                case 3: super.setCountry((String) value); break;
             }
         }
         throw new IllegalArgumentException("Unsupported key: " + key.getFullName());
