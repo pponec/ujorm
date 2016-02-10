@@ -4,6 +4,7 @@ import org.version2.bo.generated.$User;
 import org.version2.bo.generated.$Address;
 import java.util.Date;
 import org.version2.bo.*;
+import org.version2.tools.UjoPojoConverter;
 
 /**
  * DEMO Sample
@@ -53,4 +54,13 @@ public class Sample2 {
         assert city1 == user.original().getAddress().getCity();
     }
 
+    public void run_04() {
+        User user = new User();
+        String surname = "Kovář";
+        user.setSurname(surname);
+        $User ujoUser = new UjoPojoConverter<$User>().marshal(user);
+
+        assert ujoUser.getSurname() == surname;
+    }
+    
 }

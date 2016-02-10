@@ -49,4 +49,13 @@ public class Sample2Test extends TestCase {
         instance.run_03();
     }
 
+    /**
+     * Test of run_04 method, of class Sample2.
+     */
+    public void testRun_04() {
+        System.out.println("run_04");
+        Sample2 instance = new Sample2();
+        instance.run_04();
+    }
+
 }

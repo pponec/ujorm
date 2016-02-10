@@ -1,10 +1,13 @@
 package org.version2.bo;
 
+import org.version2.tools.MyConverter;
+import org.version2.tools.UjoConverter;
 
 /**
  * Address
  * @author Pavel Ponec
  */
+@UjoConverter(MyConverter.class)
 public class Address extends Account {
 
     /** ID */
@@ -80,6 +83,6 @@ public class Address extends Account {
         this.country = country;
     }
 
-    
+
 
 }
