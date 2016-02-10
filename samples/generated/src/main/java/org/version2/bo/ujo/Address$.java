@@ -2,6 +2,7 @@
 
 package org.version2.bo.ujo;
 
+import com.sun.istack.internal.Nullable;
 import java.util.List;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -41,6 +42,7 @@ public class Address$ extends Address implements UjoMiddle<Address$> {
         this(null);
     }
 
+    @Nullable
     public Address original() {
         return data != null ? data : this;
     }
@@ -86,7 +88,7 @@ public class Address$ extends Address implements UjoMiddle<Address$> {
         return true;
     }
 
-  @Override
+    @Override
     public Object readValue(Key<?, ?> key) {
         if (this.data != null) {
             switch (key.getIndex()) {
