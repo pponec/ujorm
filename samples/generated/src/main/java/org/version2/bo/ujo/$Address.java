@@ -2,7 +2,6 @@
 
 package org.version2.bo.ujo;
 
-import com.sun.istack.internal.Nullable;
 import java.util.List;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -15,18 +14,18 @@ import org.ujorm.extensions.UjoMiddle;
 import org.version2.bo.*;
 
 /**
- * Address$
+ * $Address
  * @author Pavel Ponec
  */
-public class Address$ extends Address implements UjoMiddle<Address$> {
+public class $Address extends Address implements UjoMiddle<$Address> {
 
     /** Key factory */
-    private static final KeyFactory<Address$> f = new KeyFactory<Address$>(Address$.class, false);
+    private static final KeyFactory<$Address> f = new KeyFactory<$Address>($Address.class, false);
     //
-    public static final Key<Address$, Integer> ID = f.newKey();
-    public static final Key<Address$, String> STREET = f.newKey();
-    public static final Key<Address$, String> CITY = f.newKey();
-    public static final Key<Address$, String> COUNTRY = f.newKey();
+    public static final Key<$Address, Integer> ID = f.newKey();
+    public static final Key<$Address, String> STREET = f.newKey();
+    public static final Key<$Address, String> CITY = f.newKey();
+    public static final Key<$Address, String> COUNTRY = f.newKey();
 
     static {
         f.lock();
@@ -34,32 +33,31 @@ public class Address$ extends Address implements UjoMiddle<Address$> {
 
     private final Address data;
 
-    public Address$(Address data) {
+    public $Address(Address data) {
         this.data = data;
     }
 
-    public Address$() {
+    public $Address() {
         this(null);
     }
 
-    @Nullable
     public Address original() {
         return data != null ? data : this;
     }
 
     @Override
-    public <VALUE> VALUE get(Key<? super Address$, VALUE> key) {
+    public <VALUE> VALUE get(Key<? super $Address, VALUE> key) {
         return key.of(this);
     }
 
     @Override
-    public <VALUE> Address$ set(Key<? super Address$, VALUE> key, VALUE value) {
+    public <VALUE> $Address set(Key<? super $Address, VALUE> key, VALUE value) {
         key.setValue(this, value);
         return this;
     }
 
     @Override
-    public <VALUE> List<VALUE> getList(ListKey<? super Address$, VALUE> key) {
+    public <VALUE> List<VALUE> getList(ListKey<? super $Address, VALUE> key) {
         return key.getList(this);
     }
 
@@ -74,7 +72,7 @@ public class Address$ extends Address implements UjoMiddle<Address$> {
     }
 
     @Override
-    public KeyList<Address$> readKeyList() {
+    public KeyList<$Address> readKeyList() {
         return f.getKeys();
     }
 
