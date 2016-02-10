@@ -12,6 +12,7 @@ import org.version2.tools.UjoPojoConverter;
  */
 public class Sample2 {
 
+    /** Ujo is type of POJO */
     public void run_01() {
         Address address = new $Address();
         address.setId(10);
@@ -29,6 +30,7 @@ public class Sample2 {
         assert user.getAddress().getCity() == "Brno";
     }
 
+    /** Create UJO from POJO */
     public void run_02() {
         Address address = new Address();
         address.setId(10);
@@ -41,6 +43,7 @@ public class Sample2 {
         assert ujoAddress.getCity() == "Brno";
     }
 
+    /** Use a composite Key */
     public void run_03() {
         $User user = new $User();
         String city1 = "Kroměříž";
@@ -54,6 +57,7 @@ public class Sample2 {
         assert city1 == user.original().getAddress().getCity();
     }
 
+    /** Use POJO to UJO converter */
     public void run_04() {
         User user = new User();
         String surname = "Kovář";
@@ -62,5 +66,5 @@ public class Sample2 {
 
         assert ujoUser.getSurname() == surname;
     }
-    
+
 }
