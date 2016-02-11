@@ -24,6 +24,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 public @interface UjoConverter {
 
-    Class<? extends UjoPojoConverter> value() default UjoPojoConverter.class;
+    Class<? extends DefaultUjoConverter> value() default DefaultUjoConverter.class;
 
 }
