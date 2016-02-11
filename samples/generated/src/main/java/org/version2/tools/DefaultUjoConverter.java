@@ -22,10 +22,10 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.ujorm.Ujo;
 
 /**
- * Generic POJO to UJO converter
+ * Default generic UJO converter from POJO objects and back
  * @author Pavel Ponec
  */
-public class UjoPojoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
+public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
 
     /** Name of the method for an original object */
     protected static final String ORIGINAL_METHOD = "original";
@@ -38,7 +38,7 @@ public class UjoPojoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
     private final String suffix;
 
     /** Default constructor */
-    public UjoPojoConverter() {
+    public DefaultUjoConverter() {
         this("generated", "$", "");
     }
 
@@ -48,23 +48,29 @@ public class UjoPojoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
      * @param prefix A prefix of the Ujo class
      * @param suffix A suffix of the Ujo class
      */
-    public UjoPojoConverter(String packag, String prefix, String suffix) {
+    public DefaultUjoConverter(String packag, String prefix, String suffix) {
         this.packag = packag;
         this.prefix = prefix;
         this.suffix = suffix;
     }
 
+    /** Convert from POJO to UJO */
     @Override
     public U marshal(final Object v) throws IllegalStateException {
         if (v == null) {
             return null;
+        }
+        if (v instanceof Ujo) {
+            @SuppressWarnings("unchecked")
+            final U result = (U) v;
+            return result;
         }
         try {
             // Required converter from an Annotation:
             final UjoConverter converter = v.getClass().getAnnotation(UjoConverter.class);
             if (converter != null) {
                 @SuppressWarnings("unchecked")
-                final UjoPojoConverter<U> newConverter = (UjoPojoConverter<U>) converter.value().newInstance();
+                final DefaultUjoConverter<U> newConverter = (DefaultUjoConverter<U>) converter.value().newInstance();
                 if (getClass() != newConverter.getClass()) {
                     return newConverter.marshal(v);
                 }
@@ -83,6 +89,7 @@ public class UjoPojoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
         }
     }
 
+    /** Convert from UJO to POJO */
     @Override
     public Object unmarshal(final U v) throws IllegalStateException {
         if (v == null) {
