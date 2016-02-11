@@ -68,9 +68,9 @@ public class Sample2 {
         String city1 = "Kroměříž";
         String city2 = null;
         //
-        Key<$User,String> compisiteKeyCity = $User.ADDRESS.add($Address.CITY);
-        user.set(compisiteKeyCity, city1);
-        city2 = user.get(compisiteKeyCity);
+        Key<$User,String> compositeKeyCity = $User.ADDRESS.add($Address.CITY);
+        user.set(compositeKeyCity, city1);
+        city2 = user.get(compositeKeyCity);
 
         assert city1 == city2;
         assert city1 == user.getAddress().getCity();
