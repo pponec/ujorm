@@ -8,7 +8,7 @@ import org.version2.tools.UjoConverter;
  * @author Pavel Ponec
  */
 @UjoConverter(MyConverter.class)
-public class Address extends Account {
+public class Address {
 
     /** ID */
     private Integer id;
