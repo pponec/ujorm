@@ -4,6 +4,8 @@ package org.version2.bo.generated;
 
 import java.util.Date;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.ListKey;
@@ -38,9 +40,10 @@ public class $User extends User implements UjoMiddle<$User> {
         f.lock(); // Lock the factory
     }
 
+    @Nullable
     private final User data;
 
-    public $User(User data) {
+    public $User(@Nullable User data) {
         this.data = data;
     }
 
@@ -48,6 +51,7 @@ public class $User extends User implements UjoMiddle<$User> {
         this(null);
     }
 
+    @Nonnull
     public User original() {
         return data != null ? data : this;
     }
