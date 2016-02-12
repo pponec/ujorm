@@ -3,6 +3,8 @@
 package org.version2.bo.generated;
 
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.ListKey;
@@ -32,9 +34,10 @@ public class $Account extends Account implements UjoMiddle<$Account> {
     }
 
     /** Basic data */
+    @Nullable
     private final Account data;
 
-    public $Account(Account data) {
+    public $Account(@Nullable Account data) {
         this.data = data;
     }
 
@@ -42,6 +45,7 @@ public class $Account extends Account implements UjoMiddle<$Account> {
         this(null);
     }
 
+    @Nonnull
     public Account original() {
         return data != null ? data : this;
     }

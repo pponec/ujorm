@@ -3,6 +3,8 @@
 package org.version2.bo.generated;
 
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.ListKey;
@@ -32,9 +34,10 @@ public class $Address extends Address implements UjoMiddle<$Address> {
         f.lock();
     }
 
+    @Nullable
     private final Address data;
 
-    public $Address(Address data) {
+    public $Address(@Nullable Address data) {
         this.data = data;
     }
 
@@ -42,6 +45,7 @@ public class $Address extends Address implements UjoMiddle<$Address> {
         this(null);
     }
 
+    @Nonnull
     public Address original() {
         return data != null ? data : this;
     }
