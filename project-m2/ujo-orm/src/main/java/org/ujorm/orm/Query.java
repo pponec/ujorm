@@ -64,7 +64,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** A list of keys to sorting */
     private List<Key<UJO,?>> orderBy;
-    /** Set the first row to retrieve. If not set, rows will be retrieved beginnning from row 0. */
+    /** Set the first row to retrieve. If not set, rows will be retrieved beginning from row 0. */
     private long offset = 0;
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation. */
     private int limit = -1;
