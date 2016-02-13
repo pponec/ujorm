@@ -6,7 +6,7 @@ The Ujorm (original name was UJO Framework) is designed primarily for the rapid 
 *    java compiler can discover a syntax error of Ujorm database query similar like 4GL database languages
 *    easy to configure the ORM model by java source code, optionally by annotations and a XML file
 *    great performance, some types of SELECT query are very fast in comparison to its competitors
-*    lazy loading or the one request data loading of relations are supported optionaly as a fetch strategy
+*    lazy loading or the one request data loading of relations are supported optionally as a fetch strategy
 *    database tables, columns and indexes can be optionally updated according to Java meta-model in the run-time
 *    no confusing proxy or binary modified business objects
 *    very lightweight framework with no library dependencies in the run-time
