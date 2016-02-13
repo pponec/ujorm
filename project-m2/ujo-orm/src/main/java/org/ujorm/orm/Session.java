@@ -980,8 +980,7 @@ public class Session implements Closeable {
     /**
      * Load UJO by a unique id. If primary key is {@code null} or no result is found
      * then the {@code null} value is returned.
-     * @param tableType Type of Ujo
-     * @param id Value ID
+     * @param ujo Ujo
      */
     public <UJO extends OrmUjo> UJO loadBy(UJO ujo) throws NoSuchElementException {
         if (ujo == null) {
