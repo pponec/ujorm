@@ -290,8 +290,7 @@ public abstract class UjoTools implements Comparator<Key> {
     /** An assignable test. */
     public static boolean assertAssign(final Key key, final Object value) throws IllegalArgumentException {
         final boolean result
-            =  value==null
-            || value instanceof NoCheck
+            =  value == null
             || key.getType().isInstance(value)
             ;
         if (!result) {
@@ -301,7 +300,7 @@ public abstract class UjoTools implements Comparator<Key> {
             + "\""
             + (value!=null ? " (" + value.getClass().getName() + ')' : "")
             + " can't be assiged to key \""
-            + key
+            + key.getFullName()
             + "\" type of \""
             + key.getType().getName()
             + "\"."

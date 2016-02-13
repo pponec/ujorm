@@ -116,12 +116,19 @@ public class SampleOfInheritance extends TestCase {
             User origUser = customer.get(USER);
             assertNotNull(origUser);
             customer.readSession().clearCache();
-            customer.writeValue(USER, new ForeignKey(origUser.getId()));
-            Object primaryKey = customer.readValue(USER);
-            assertTrue(primaryKey instanceof ForeignKey);
+            customer.writeValue(USER, createForeignKey(origUser));
+            User primaryKey = (User) customer.readValue(USER);
+            assertNotNull(primaryKey.readInternalFK());
             User lazyUser = customer.get(USER);
             assertNotNull(lazyUser);
         }
+    }
+
+    /** Create foreign Key */
+    private User createForeignKey(User origUser) {
+        final User fk = new User();
+        fk.writeInternalFK(new ForeignKey(origUser.getId()));
+        return fk;
     }
 
     /** Print some meta-data of the key Order.note. */

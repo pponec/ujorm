@@ -280,9 +280,12 @@ final public class OrmTools {
         }
         for (UJO u : ujos) {
             result.add(u);
-            final Object fk = u.readValue(key);
-            if (fk instanceof ForeignKey) {
-                map.put(((ForeignKey)fk).getValue(), null);
+            final Object fkEnvelope = u.readValue(key);
+            final ForeignKey fk = fkEnvelope instanceof OrmUjo
+                ? ((OrmUjo)fkEnvelope).readInternalFK()
+                : null;
+            if (fk != null) {
+                map.put(fk.getValue(), null);
             }
         }
         if (result.isEmpty()) {

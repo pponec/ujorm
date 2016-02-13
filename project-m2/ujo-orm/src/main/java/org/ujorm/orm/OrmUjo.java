@@ -56,5 +56,13 @@ public interface OrmUjo extends Ujo {
      */
     public Key[] readChangedProperties(boolean clear);
 
+    /** Get an original foreign key for an internal use only.
+     * The {@code non null} value means the undefined object properties of the current object.
+     * @return An original foreign key can be {@code nullable} */
+    public ForeignKey readInternalFK();
+
+    /** A method to a foreign key for an internal use only.
+     * @param fk New key to assign can be {@code null} */
+    public void writeInternalFK(ForeignKey fk);
 
 }

@@ -37,6 +37,7 @@ import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.ITypeService;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.SqlDialect;
+import org.ujorm.orm.SqlNameProvider;
 import org.ujorm.orm.TypeService;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
@@ -329,7 +330,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     }
 
     /** Returns a key value from a table
-     * @param ujo Related Ujo object
+     * @param bo Related Ujo object
      * @param value A value to assign.
      */
     @SuppressWarnings("unchecked")
@@ -337,9 +338,16 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         final Key key = super.getKey();
 
         if (isForeignKey()
-        &&   value !=null
+        &&   value != null
         && !(value instanceof OrmUjo)) {
-             value = new ForeignKey(value);
+            try {
+                // Create new foreignKey:
+                final OrmUjo u = (OrmUjo) key.getType().newInstance();
+                u.writeInternalFK(new ForeignKey(value));
+                value = u;
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
         }
 
         key.setValue(bo, value);

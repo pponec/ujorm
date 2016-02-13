@@ -599,7 +599,6 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
     static public boolean assertAssign(final Key key, final Object value) throws IllegalArgumentException {
         final boolean result
             =  value==null
-            || value instanceof NoCheck
             || key.getType().isInstance(value)
             ;
         if (!result) {
@@ -609,7 +608,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
             + "\""
             + (value!=null ? " (" + value.getClass().getName() + ')' : "")
             + " can't be assiged to key \""
-            + key
+            + key.getFullName()
             + "\" type of \""
             + key.getType().getName()
             + "\"."

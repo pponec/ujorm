@@ -67,6 +67,8 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
     /** An empty array of the UJO keys */
     @PackagePrivate
     static final Key[] EMPTY = new Key[0];
+    /** Foreign key where a non null value is request to a lazy loading */
+    private ForeignKey foreignKey;
     /** ORM session */
     transient private Session session;
     /** Set of changes */
@@ -149,6 +151,20 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
             default:
                 return super.readAuthorization(action, key, value);
         }
+    }
+
+    /** Read the original foreign key, if any
+     * @return Return an original key */
+    @Override
+    public ForeignKey readInternalFK() {
+        return foreignKey;
+    }
+
+    /** Write the original foreign key or the {@code null}
+     * @param fk New foreign key to assign */
+    @Override
+    public void writeInternalFK(final ForeignKey fk) {
+        this.foreignKey = fk;
     }
 
     /** Read the foreign key.

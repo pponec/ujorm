@@ -1211,11 +1211,15 @@ public class Session implements Closeable {
         rollbackOnly = true;
     }
 
-    /** Build new Forign key.
-     * @param key The key must be a relalation type of "many to one".
+    /** Build new Foreign key.
+     * @param key The key must be a relation type of "many to one".
      * @throws IllegalStateException If a parameter key is not a foreign key.
      */
     public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> key) throws IllegalStateException {
+        final ForeignKey fk = ujo.readInternalFK();
+        if (fk != null) {
+            return fk;
+        }
         final MetaColumn column = handler.findColumnModel(key);
         if (column!=null && column.isForeignKey()) {
             final Object result = column.getForeignColumns().get(0).getKey().of(ujo);
@@ -1226,15 +1230,15 @@ public class Session implements Closeable {
         }
     }
 
-    /** Check dialecttype */
+    /** Check dialect-type */
     public final SqlDialect getDialect(Class<? extends OrmUjo> ormType) {
         return handler.findTableModel(ormType).getDatabase().getDialect();
     }
 
-    /** Returns true, if Corm type have got any from listed dialects
+    /** Returns true, if ORM type have got any from listed dialects
      * @param ormType Entity type
      * @param dialects Entity dialect type
-     * @return Returns true, if Corm type have got any from listed dialects
+     * @return Returns true, if ORM type have got any from listed dialects
      */
     public boolean hasDialect(Class<? extends OrmUjo> ormType, Class<? extends SqlDialect> ... dialects) {
         final SqlDialect dialect = handler.findTableModel(ormType).getDatabase().getDialect();

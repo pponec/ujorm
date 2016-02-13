@@ -17,13 +17,12 @@
 package org.ujorm.orm;
 
 import java.io.Serializable;
-import org.ujorm.core.NoCheck;
 
 /**
  * A Unique key of the entity OrmUjo
  * @author Pavel Ponec
  */
-public class ForeignKey implements NoCheck, Serializable {
+public class ForeignKey implements Serializable {
 
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
     private static final long serialVersionUID = 464564L;

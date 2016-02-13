@@ -44,11 +44,11 @@ public class InheritanceTest extends TestCase {
         sample.useSelectCountDistinct();
         sample.getPrimaryKey();
         sample.printMetadata();
-
     }
 
     // -----------------------------------------------------
 
+    @SuppressWarnings("unchecked")
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
     }
