@@ -63,7 +63,10 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
         Object result = ujo.readValue(this);
 
         if (isTypeOf(OrmUjo.class)) {
-            if (result instanceof ForeignKey) {
+            final ForeignKey fk = result instanceof OrmUjo
+                ? ((OrmUjo)result).readInternalFK()
+                : null;
+            if (fk != null) {
                 if (mySession == null) {
                     return null;
                 }
@@ -91,7 +94,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                             // open temporary session if it's closed ;) - because of lazy-loading of detached objects (caches, etc.) */
                             final Session tempSession = mySession.getHandler().createSession();
                             try {
-                                result = loadOrmUjo(tempSession, (ForeignKey) result);
+                                result = loadOrmUjo(tempSession, fk);
                                 if (result != null) {
                                     // Assign the same session due original session arguments (lazyLoading e.g.):
                                     ((OrmUjo) result).writeSession(mySession);
@@ -101,7 +104,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                             }
                     }
                 } else {
-                    result = loadOrmUjo(mySession, (ForeignKey) result);
+                    result = loadOrmUjo(mySession, fk);
                 }
                 ujo.writeSession(null); // Replacing of the foreign key is not a key change
                 ujo.writeValue(this, result);

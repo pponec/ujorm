@@ -55,8 +55,8 @@ public class FetchTest extends TestCase {
         Key<XItem, ?> fetchColumn = null;
         int count = 0;
         for (XItem item : query) {
-            Object orderFk = item.readValue(XItem.ORDER);
-            assertTrue("Order must be a foreign key", orderFk instanceof ForeignKey);
+            XOrder orderFk = (XOrder) item.readValue(XItem.ORDER);
+            assertNotNull("Order must be a foreign key", orderFk.readInternalFK());
             assertTrue(item.get(XItem.ORDER) instanceof XOrder);
             assertNotNull(item.get(XItem.ID));
             assertNotNull(item.get(XItem.NOTE));
@@ -142,11 +142,11 @@ public class FetchTest extends TestCase {
         query.list();
         query.getColumns();
         for (XItem item : query) {
-            Object objectFk = item.readValue(XItem.ORDER);
-            assertTrue("Order instance", objectFk instanceof XOrder);
+            XOrder orderFk = (XOrder) item.readValue(XItem.ORDER);
+            assertNull("No FK order instance", orderFk.readInternalFK());
             XOrder order = item.get(XItem.ORDER);
-            objectFk = order.readValue(XOrder.CUSTOMER);
-            assertTrue("Order instance", objectFk instanceof ForeignKey);
+            XCustomer customerFk = (XCustomer) order.readValue(XOrder.CUSTOMER);
+            assertNotNull("Customer FK instance", customerFk.readInternalFK());
             assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNotNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));

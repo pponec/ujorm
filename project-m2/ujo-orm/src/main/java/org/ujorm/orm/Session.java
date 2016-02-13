@@ -1216,6 +1216,10 @@ public class Session implements Closeable {
      * @throws IllegalStateException If a parameter key is not a foreign key.
      */
     public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> key) throws IllegalStateException {
+        final ForeignKey fk = ujo.readInternalFK();
+        if (fk != null) {
+            return fk;
+        }
         final MetaColumn column = handler.findColumnModel(key);
         if (column!=null && column.isForeignKey()) {
             final Object result = column.getForeignColumns().get(0).getKey().of(ujo);
@@ -1226,7 +1230,7 @@ public class Session implements Closeable {
         }
     }
 
-    /** Check dialect type */
+    /** Check dialect-type */
     public final SqlDialect getDialect(Class<? extends OrmUjo> ormType) {
         return handler.findTableModel(ormType).getDatabase().getDialect();
     }
