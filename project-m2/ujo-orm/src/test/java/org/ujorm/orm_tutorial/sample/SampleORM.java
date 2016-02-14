@@ -15,12 +15,7 @@
  */
 package org.ujorm.orm_tutorial.sample;
 
-import org.ujorm.orm_tutorial.sample.entity.ViewOrder;
-import org.ujorm.orm_tutorial.sample.entity.Order;
-import org.ujorm.orm_tutorial.sample.entity.MyProcedure;
-import org.ujorm.orm_tutorial.sample.entity.Database;
-import org.ujorm.orm_tutorial.sample.entity.Item;
-import org.ujorm.orm_tutorial.sample.entity.Customer;
+import org.ujorm.orm_tutorial.sample.entity.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
