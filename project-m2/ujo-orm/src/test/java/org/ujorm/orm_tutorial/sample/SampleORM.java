@@ -15,12 +15,7 @@
  */
 package org.ujorm.orm_tutorial.sample;
 
-import org.ujorm.orm_tutorial.sample.entity.ViewOrder;
-import org.ujorm.orm_tutorial.sample.entity.Order;
-import org.ujorm.orm_tutorial.sample.entity.MyProcedure;
-import org.ujorm.orm_tutorial.sample.entity.Database;
-import org.ujorm.orm_tutorial.sample.entity.Item;
-import org.ujorm.orm_tutorial.sample.entity.Customer;
+import org.ujorm.orm_tutorial.sample.entity.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -619,7 +614,7 @@ public class SampleORM {
         }
     }
 
-    /** Select orderes using a native criterion */
+    /** Select orders using a native criterion */
     public void useNativeCriterion() {
         // The base using: the first arguments is replaced by column, the second is replaced using argument.
         Criterion<Order> crn = Order.ID.forSql("{0} > {1}", 0L)
