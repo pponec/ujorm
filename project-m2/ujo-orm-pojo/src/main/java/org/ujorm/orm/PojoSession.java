@@ -15,22 +15,11 @@
  */
 package org.ujorm.orm;
 
-import org.ujorm.orm.*;
 import java.io.Closeable;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.ujorm.core.DefaultUjoConverter;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.orm.OrmHandler;
-import org.ujorm.orm.OrmHandler;
-import org.ujorm.orm.OrmUjo;
-import org.ujorm.orm.OrmUjo;
-import org.ujorm.orm.Query;
-import org.ujorm.orm.Query;
-import org.ujorm.orm.Session;
-import org.ujorm.orm.Session;
-import org.ujorm.orm.SqlDialect;
-import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.ao.LazyLoading;
 import org.ujorm.orm.metaModel.MetaParams;
@@ -97,23 +86,24 @@ public class PojoSession implements Closeable {
     }
 
     /** Create query for all table rows. */
-    public <T> PojoQuery<T> createQuery(Class<?> aClass) {
-        return new PojoQuery<T>(session.createQuery(converter.marshalType(aClass)));
+    public <UJO extends OrmUjo> PojoQuery<UJO> createQuery(Class<? super UJO> aClass) {
+        final Query<UJO> query = (Query<UJO>) session.createQuery(converter.marshalType(aClass));
+        return new PojoQuery<UJO>(query);
     }
 
     /** The table class is derived from the first criterion column. */
-    public <T> PojoQuery<T> createQuery(final Criterion<?> criterion) {
-        return new PojoQuery<T>(session.createQuery((Criterion)criterion));
+    public <UJO extends OrmUjo> PojoQuery<UJO> createQuery(final Criterion<UJO> criterion) {
+        return new PojoQuery<UJO>(session.createQuery((Criterion)criterion));
     }
 
     /** Returns {@code true} if exists any database row with the required condition. */
-    public final <T extends OrmUjo> boolean exists(final Criterion<T> criterion) {
+    public final <UJO extends OrmUjo> boolean exists(final Criterion<UJO> criterion) {
         return session.exists(criterion);
     }
 
     /** Returns {@code true} if exists any database row for the required entity. */
-    public final <T> boolean exists(final Class<?> entity) {
-        return session.exists( converter.marshalType(entity));
+    public final <UJO extends OrmUjo> boolean exists(final Class<?> entity) {
+        return session.exists(converter.marshalType(entity));
     }
 
     /** Make a statement INSERT or UPDATE into a database table
@@ -178,7 +168,7 @@ public class PojoSession implements Closeable {
      * @param criterion filter for deleting tables.
      * @return Returns a number of the really deleted objects.
      */
-    public <T extends OrmUjo> int delete(final Criterion<T> criterion) {
+    public <UJO extends OrmUjo> int delete(final Criterion<UJO> criterion) {
         return session.delete(criterion);
     }
 
@@ -195,7 +185,7 @@ public class PojoSession implements Closeable {
      * and the {@code null} items are not allowed too.
      * @return Returns a number of the removing items or the zero if the argumetn is {@code empty}.
      */
-    public int delete(final List<?> bos) {
+    public <UJO extends OrmUjo> int delete(final List<UJO> bos) {
         return session.delete(converter.marshalList(bos));
     }
 
@@ -209,11 +199,11 @@ public class PojoSession implements Closeable {
      * @param tableType Type of POJO
      * @param id Value ID
      */
-    public <T extends Object> T load
-        ( final Class<?> tableType
+    public <UJO extends OrmUjo> UJO load
+        ( final Class<UJO> tableType
         , final Object id
         ) throws NoSuchElementException {
-        return (T) session.load(converter.marshalType(tableType), id);
+        return (UJO) session.load(converter.marshalType(tableType), id);
     }
 
     /**
@@ -221,8 +211,8 @@ public class PojoSession implements Closeable {
      * then the {@code null} value is returned.
      * @param tableType POJO
      */
-    public <T extends Object> T loadBy(Object bo) throws NoSuchElementException {
-        return (T) session.loadBy(converter.marshal(bo));
+    public <UJO extends Object> UJO loadBy(UJO bo) throws NoSuchElementException {
+        return (UJO) session.loadBy(converter.marshal(bo));
     }
 
     /** Reload values of the persistent object. <br>
