@@ -24,7 +24,6 @@ import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.annot.Procedure;
 import org.ujorm.orm.annot.View;
 import org.ujorm.orm.dialect.*;
-import org.ujorm.orm_tutorial.sample.ViewOrder;
 
 /**
  * A class mapping to a database (sample of usage)
