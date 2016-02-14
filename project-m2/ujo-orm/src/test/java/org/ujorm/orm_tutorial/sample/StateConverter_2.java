@@ -17,13 +17,14 @@
 
 package org.ujorm.orm_tutorial.sample;
 
+import org.ujorm.orm_tutorial.sample.entity.Order;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.ujorm.orm.ITypeService;
 import org.ujorm.orm.metaModel.MetaColumn;
-import org.ujorm.orm_tutorial.sample.Order.State;
+import org.ujorm.orm_tutorial.sample.entity.Order.State;
 
 /**
  *

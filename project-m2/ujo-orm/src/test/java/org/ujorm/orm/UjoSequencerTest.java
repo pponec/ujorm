@@ -15,6 +15,8 @@
  */
 package org.ujorm.orm;
 
+import org.ujorm.orm_tutorial.sample.entity.Order;
+import org.ujorm.orm_tutorial.sample.entity.Database;
 import java.util.logging.Logger;
 import junit.framework.TestCase;
 import org.ujorm.Ujo;

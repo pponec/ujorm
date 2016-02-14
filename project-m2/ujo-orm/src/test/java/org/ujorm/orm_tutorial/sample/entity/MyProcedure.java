@@ -15,7 +15,7 @@
  *  under the License.
  */
 
-package org.ujorm.orm_tutorial.sample;
+package org.ujorm.orm_tutorial.sample.entity;
 
 import org.ujorm.Key;
 import org.ujorm.orm.DbProcedure;
