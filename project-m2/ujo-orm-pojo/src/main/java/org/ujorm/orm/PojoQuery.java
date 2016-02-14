@@ -16,28 +16,26 @@
 
 package org.ujorm.orm;
 
-import org.ujorm.orm.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import org.ujorm.Key;
-import org.ujorm.Key;
-import org.ujorm.orm.Query;
-import org.ujorm.orm.Query;
+import org.ujorm.core.UjoIterator;
 import org.ujorm.orm.utility.OrmTools;
 
 /**
  * ORM query.
  * @author Pavel Ponec
+ * @param <UJO>
  * @composed 1 - 1 Session
  * @composed 1 - 1 CriterionDecoder
  */
-public class PojoQuery<UJO extends Object> /*implements Iterable<UJO>*/ {
+public class PojoQuery<UJO extends OrmUjo> implements Iterable<UJO> {
 
-    private final Query<?> query;
+    private final Query<UJO> query;
 
-    public PojoQuery(Query query) {
+    public PojoQuery(Query<UJO> query) {
         this.query = query;
     }
 
@@ -45,12 +43,25 @@ public class PojoQuery<UJO extends Object> /*implements Iterable<UJO>*/ {
         return query;
     }
 
+    /** Create a new iterator by the query. The result iterator can be used
+     *  in the Java statement <code>for(...)</code> directly.
+     * <br>NOTE: The items can be iterated inside a database transaction only,
+     * in other case call the next expression:
+     * <pre>iterator().toList()</pre>
+     * @see #uniqueResult()
+     * @see #exists()
+     */
+    @Override
+    public UjoIterator<UJO> iterator() {
+        return query.iterator();
+    }
+
     /** There is recommended to use the method {@link #iterator()} rather.
      * The method calls internally the next statement:
      * <pre>iterator().toList()</pre>
-
+     * @return
      */
-    public List<?> list() {
+    public List<? super UJO> list() {
         return query.list();
     }
 
@@ -60,7 +71,7 @@ public class PojoQuery<UJO extends Object> /*implements Iterable<UJO>*/ {
      * @see #iterator()
      */
     @SuppressWarnings("unchecked")
-    public Map<Object, ?> map() {
+    public <T> Map<T, ? super UJO> map() {
         return query.map();
     }
 
@@ -76,9 +87,8 @@ public class PojoQuery<UJO extends Object> /*implements Iterable<UJO>*/ {
      * @see OrmTools#loadLazyValues(java.lang.Iterable, int)
      * @see OrmTools#loadLazyValuesAsBatch(org.ujorm.orm.Query)
      */
-    public List<UJO> list(int depth) {
-        return (List<UJO>) query.list(depth);
-
+    public List<? super UJO> list(int depth) {
+        return query.list(depth);
     }
 
     /** Returns a unique result or null if no result item (database row) was found.
@@ -87,7 +97,7 @@ public class PojoQuery<UJO extends Object> /*implements Iterable<UJO>*/ {
      * @see #exists()
      */
     public UJO uniqueResult() throws NoSuchElementException {
-        return (UJO) query.uniqueResult();
+        return query.uniqueResult();
     }
 
     /** The method performs a new database request and returns result of the function <code>UjoIterator.hasNext()</code>.
@@ -101,15 +111,15 @@ public class PojoQuery<UJO extends Object> /*implements Iterable<UJO>*/ {
 
 
    /** Set an order of the rows by a SQL ORDER BY phrase. */
-    public PojoQuery<UJO> orderBy(Key<?,?> orderItem) {
+    public PojoQuery<UJO> orderBy(Key<UJO,?> orderItem) {
         query.orderBy((Key)orderItem);
         return this;
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase. */
     public PojoQuery<UJO> orderBy
-        ( Key<?,?> orderItem1
-        , Key<?,?> orderItem2
+        ( Key<UJO,?> orderItem1
+        , Key<UJO,?> orderItem2
         ) {
         query.orderByMany(new Key[]{orderItem1, orderItem2});
         return this;
@@ -117,9 +127,9 @@ public class PojoQuery<UJO extends Object> /*implements Iterable<UJO>*/ {
 
    /** Set an order of the rows by a SQL ORDER BY phrase. */
     public PojoQuery<UJO> orderBy
-        ( Key<?,?> orderItem1
-        , Key<?,?> orderItem2
-        , Key<?,?> orderItem3
+        ( Key<UJO,?> orderItem1
+        , Key<UJO,?> orderItem2
+        , Key<UJO,?> orderItem3
         ) {
         query.orderByMany(new Key[]{orderItem1, orderItem2, orderItem3});
         return this;
@@ -142,7 +152,7 @@ public class PojoQuery<UJO extends Object> /*implements Iterable<UJO>*/ {
     * @param column A Property to select. A composite Property is allowed however only the first item will be used.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     */
-    public PojoQuery<UJO> addColumn(Key<?,?> column) throws IllegalArgumentException {
+    public PojoQuery<UJO> addColumn(Key<UJO,?> column) throws IllegalArgumentException {
         query.addColumn((Key)column);
         return this;
     }
@@ -154,7 +164,7 @@ public class PojoQuery<UJO extends Object> /*implements Iterable<UJO>*/ {
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
     @SuppressWarnings("unchecked")
-    public PojoQuery<UJO> setColumn(Key<?, ?> column) throws IllegalArgumentException {
+    public PojoQuery<UJO> setColumn(Key<UJO, ?> column) throws IllegalArgumentException {
         query.setColumns(false, column);
         return this;
     }
@@ -175,7 +185,7 @@ public class PojoQuery<UJO extends Object> /*implements Iterable<UJO>*/ {
    /** Set an list of required columns to reading from database table.
     * Other columns (out of the list) will return a default value, no exception will be throwed.
     * <br/>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
-v    * <br/>WARNING 2: assigning an column from a view is forbidden.
+    * <br/>WARNING 2: assigning an column from a view is forbidden.
     * @param addPrimaryKey If the column list doesn't contain a primary key of the base Entity then the one will be included.
     * @param addChilds Add all children of the all <strong>foreign keys</strong>.
     * @param columns A Key list including a compositer one to database select. The method does not check column duplicities.
@@ -199,13 +209,13 @@ v    * <br/>WARNING 2: assigning an column from a view is forbidden.
     }
 
     /** Add an item to the end of order list. */
-    public PojoQuery<UJO> addOrderBy(final Key<?,?> ... keys) {
+    public PojoQuery<UJO> addOrderBy(final Key<UJO,?> ... keys) {
         query.addOrderBy((Key[])keys);
         return this;
     }
 
     /** Add an item to the end of order list. */
-    public PojoQuery<UJO> addOrderBy(Key<?,?> key) {
+    public PojoQuery<UJO> addOrderBy(Key<UJO,?> key) {
         query.addOrderBy((Key)key);
         return this;
     }
