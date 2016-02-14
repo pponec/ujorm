@@ -32,7 +32,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.orm_tutorial.sample.entity.MyProcedure;
-import org.ujorm.orm_tutorial.sample.ViewOrder;
+import org.ujorm.orm_tutorial.sample.entity.ViewOrder;
 
 /**
  * The tutorial in the class for the Ujorm <br>
