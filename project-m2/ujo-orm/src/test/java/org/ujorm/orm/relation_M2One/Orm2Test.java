@@ -31,7 +31,7 @@ import org.ujorm.orm.dialect.FirebirdDialect;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
-import org.ujorm.orm_tutorial.sample.MyProcedure;
+import org.ujorm.orm_tutorial.sample.entity.MyProcedure;
 import org.ujorm.orm_tutorial.sample.ViewOrder;
 
 /**
