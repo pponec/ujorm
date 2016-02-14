@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujorm.orm.pojo;
+package org.ujorm.orm;
 
 import org.ujorm.orm.*;
 import java.util.Collection;
@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import org.ujorm.Key;
+import org.ujorm.Key;
+import org.ujorm.orm.Query;
+import org.ujorm.orm.Query;
 import org.ujorm.orm.utility.OrmTools;
 
 /**
