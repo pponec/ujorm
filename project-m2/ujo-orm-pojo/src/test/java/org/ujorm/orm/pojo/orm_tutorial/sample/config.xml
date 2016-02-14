@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Ujorm configuration file release 1.43-SNAPSHOT was created 2014-02-24 17:54 -->
+<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.50.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <database id="Database">
+        <schema>db1</schema>
+        <readOnly>false</readOnly>
+        <dialect>org.ujorm.orm.dialect.H2Dialect</dialect>
+        <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
+        <jdbcDriver>org.h2.Driver</jdbcDriver>
+        <user>sa</user>
+        <sequencer>org.ujorm.orm.UjoSequencer</sequencer>
+        <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+        <table id="ORDERS">
+            <name>ord_order</name>
+            <alias>ord_order_alias</alias>
+            <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <comment>Order table for registering the &apos;order items&apos;</comment>
+            <column id="ID">
+                <name>ID</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+                <comment>The Primary Key</comment>
+            </column>
+            <column id="STATE">
+                <name>STATE</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>1</maxLength>
+                <comment>Order state, default value is ACTIVE</comment>
+            </column>
+            <column id="USER_ID">
+                <name>USER_ID</name>
+                <dbType>INT</dbType>
+            </column>
+            <column id="NOTE">
+                <name>NOTE</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>128</maxLength>
+                <comment>Description of the Order</comment>
+            </column>
+            <column id="CREATED">
+                <name>CREATED</name>
+                <dbType>TIMESTAMP</dbType>
+            </column>
+            <column id="CUSTOMER">
+                <name>fk_customer</name>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="NEW_COLUMN">
+                <name>NEW_COLUMN</name>
+                <dbType>INT</dbType>
+                <mandatory>true</mandatory>
+            </column>
+            <relation2m id="ITEMS">
+                <name>ITEMS</name>
+            </relation2m>
+        </table>
+        <table id="ORDER_ITEMS">
+            <name>ord_item</name>
+            <alias>ord_item_alias</alias>
+            <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <comment>Order item</comment>
+            <column id="ID">
+                <name>ID</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="USER_ID">
+                <name>USER_ID</name>
+                <dbType>INT</dbType>
+            </column>
+            <column id="NOTE">
+                <name>NOTE</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>128</maxLength>
+            </column>
+            <column id="PRICE">
+                <name>PRICE</name>
+                <dbType>DECIMAL</dbType>
+                <maxLength>8</maxLength>
+                <precision>2</precision>
+                <comment>Price of the item</comment>
+            </column>
+            <column id="ORDER">
+                <name>fk_order</name>
+                <dbType>BIGINT</dbType>
+                <comment>A reference to the Order</comment>
+            </column>
+        </table>
+        <table id="VIEW_ORDERS" view="true">
+            <name>ord_order</name>
+            <alias>testView</alias>
+            <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <select>SELECT * FROM ( SELECT ord_order_alias.id, count(*) AS item_count FROM ${SCHEMA}.ord_order ord_order_alias LEFT JOIN ${SCHEMA}.ord_item ord_item_alias ON ord_order_alias.id = ord_item_alias.fk_order WHERE ord_item_alias.id&gt;=?  GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id) testView WHERE true</select>
+            <column id="ID">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="ITEM_COUNT">
+                <name>item_count</name>
+                <dbType>INT</dbType>
+            </column>
+        </table>
+        <table id="CUSTOMER">
+            <name>ord_customer</name>
+            <alias>ord_customer_alias</alias>
+            <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="pin">
+                <name>pin</name>
+                <dbType>INT</dbType>
+            </column>
+            <column id="firstname">
+                <name>firstname</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>50</maxLength>
+                <uniqueIndex>idx_customer_full_name</uniqueIndex>
+            </column>
+            <column id="surename">
+                <name>surename</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>50</maxLength>
+                <uniqueIndex>idx_customer_full_name</uniqueIndex>
+            </column>
+            <column id="created">
+                <name>created</name>
+                <dbType>TIMESTAMP</dbType>
+            </column>
+            <column id="parent">
+                <name>parent</name>
+                <dbType>BIGINT</dbType>
+            </column>
+        </table>
+        <table id="db1">
+            <name>db1</name>
+            <alias>db1_alias</alias>
+            <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <column id="myProcedure">
+                <name>myProcedure</name>
+            </column>
+            <relation2m id="ORDERS">
+                <name>ORDERS</name>
+            </relation2m>
+            <relation2m id="ORDER_ITEMS">
+                <name>ORDER_ITEMS</name>
+            </relation2m>
+            <relation2m id="VIEW_ORDERS">
+                <name>VIEW_ORDERS</name>
+            </relation2m>
+            <relation2m id="CUSTOMER">
+                <name>CUSTOMER</name>
+            </relation2m>
+        </table>
+        <procedure id="myProcedure">
+            <name>ujorm_test</name>
+            <schema>db1</schema>
+            <parameter id="RESULT">
+                <name>RESULT</name>
+                <dbType>INT</dbType>
+            </parameter>
+            <parameter id="PARAM_CODE">
+                <name>PARAM_CODE</name>
+                <dbType>INT</dbType>
+            </parameter>
+            <parameter id="PARAM_ENABLED">
+                <name>PARAM_ENABLED</name>
+                <dbType>BOOLEAN</dbType>
+            </parameter>
+        </procedure>
+    </database>
+    <parameters>
+        <tableAliasSuffix>_alias</tableAliasSuffix>
+        <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
+        <moreParams></moreParams>
+    </parameters>
+</body>
