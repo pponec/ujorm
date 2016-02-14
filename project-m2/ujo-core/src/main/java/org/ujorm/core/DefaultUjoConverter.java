@@ -17,6 +17,9 @@ package org.ujorm.core;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.ujorm.Ujo;
 import org.ujorm.core.annot.UjoConverter;
@@ -81,7 +84,7 @@ public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
             }
 
             if (targetType == null) {
-                targetType = createTargetType(v);
+                targetType = createTargetType(v.getClass());
             }
             @SuppressWarnings("unchecked")
             final Constructor<U> constructor = targetType.getConstructor(v.getClass());
@@ -93,10 +96,33 @@ public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
     }
 
     /** Generic converter of the target class */
-    protected Class<?> createTargetType(final Object v) throws ClassNotFoundException {
-        final String path = v.getClass().getPackage().getName();
-        final String name = v.getClass().getSimpleName();
-        return Class.forName(path + '.' + packag + '.' + prefix + name + suffix);
+    public <T extends U> Class<T> marshalType(final Class<?> pojoClass) {
+        try {
+            final UjoConverter aConverter = pojoClass.getAnnotation(UjoConverter.class);
+            final Class<?> result = aConverter != null
+                    ? aConverter.target()
+                    : createTargetType(pojoClass);
+            return (Class<T>) result;
+        } catch (Throwable e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /** Generic converter of the target class */
+    @SuppressWarnings("unchecked")
+    protected Class<U> createTargetType(final Class<?> pojoClass) throws ClassNotFoundException {
+        final String path = pojoClass.getPackage().getName();
+        final String name = pojoClass.getSimpleName();
+        return (Class<U>) Class.forName(path + '.' + packag + '.' + prefix + name + suffix);
+    }
+
+    /** Convert from POJO list to UJO list */
+    public List<U> marshalList(final Collection<?> list) throws IllegalStateException {
+        final List<U> result = new ArrayList<U>(list.size());
+        for (Object pojo : list) {
+            result.add(marshal(pojo));
+        }
+        return result;
     }
 
     /** Convert from UJO to POJO */
@@ -112,5 +138,4 @@ public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
             throw new IllegalStateException(e);
         }
     }
-
 }
