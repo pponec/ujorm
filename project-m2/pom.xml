@@ -19,7 +19,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo</artifactId>
     <version>1.61-SNAPSHOT</version>
-    <name>Module UJO</name>
+    <name>Modules UJO</name>
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
 
@@ -40,11 +40,11 @@
     <modules>
         <module>ujo-core</module>
         <module>ujo-orm</module>
+        <module>ujo-orm-pojo</module>
         <module>ujo-spring</module>
         <module>ujo-wicket</module>
         <module>ujo-xsd</module>
     </modules>
-
 
     <!-- DEPENDENCES -->
     <dependencies>

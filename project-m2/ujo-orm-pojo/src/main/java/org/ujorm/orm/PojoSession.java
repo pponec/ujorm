@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujorm.orm.pojo;
+package org.ujorm.orm;
 
 import org.ujorm.orm.*;
 import java.io.Closeable;
@@ -21,6 +21,16 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.ujorm.core.DefaultUjoConverter;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.orm.OrmHandler;
+import org.ujorm.orm.OrmHandler;
+import org.ujorm.orm.OrmUjo;
+import org.ujorm.orm.OrmUjo;
+import org.ujorm.orm.Query;
+import org.ujorm.orm.Query;
+import org.ujorm.orm.Session;
+import org.ujorm.orm.Session;
+import org.ujorm.orm.SqlDialect;
+import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.ao.LazyLoading;
 import org.ujorm.orm.metaModel.MetaParams;
