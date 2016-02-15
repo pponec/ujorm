@@ -1,12 +1,12 @@
 /*
  *  Copyright 2010 Ponec.
- *
+ * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *
+ * 
  *       http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,7 +15,7 @@
  *  under the License.
  */
 
-package org.ujorm.orm.pojo.orm_tutorial.sample.entity;
+package org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated;
 
 import org.ujorm.Key;
 import org.ujorm.orm.DbProcedure;
@@ -33,41 +33,16 @@ import org.ujorm.orm.annot.Procedure;
  * @author Pavel Ponec
  */
 @Procedure(name="ujorm_test")
-public final class MyProcedure extends DbProcedure<MyProcedure> {
+public final class $MyProcedure extends DbProcedure<$MyProcedure> {
 
     /** The first parameter is the OUTPUT always. <br/>
      * If the stored procedure has no return parameter, set the first key type to: java.lang.Void */
-    private Integer result;
+    public static final Key<$MyProcedure,Integer> RESULT = newKey();
     /** INPUT parameter */
     @Parameter(input=true)
-    private Integer paramCode = 0;
+    public static final Key<$MyProcedure,Integer> PARAM_CODE = newKey(0);
     /** INPUT parameter */
-    private Boolean paramEnabled = false;
+    public static final Key<$MyProcedure,Boolean> PARAM_ENABLED = newKey(false);
 
-    // --- Generated setters and getters ---
-
-    public Integer getResult() {
-        return result;
-    }
-
-    public void setResult(Integer result) {
-        this.result = result;
-    }
-
-    public Integer getParamCode() {
-        return paramCode;
-    }
-
-    public void setParamCode(Integer paramCode) {
-        this.paramCode = paramCode;
-    }
-
-    public Boolean getParamEnabled() {
-        return paramEnabled;
-    }
-
-    public void setParamEnabled(Boolean paramEnabled) {
-        this.paramEnabled = paramEnabled;
-    }
 
 }

@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujorm.orm.pojo.orm_tutorial.sample.entity;
+package org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated;
 
 import org.ujorm.Key;
 import org.ujorm.implementation.orm.OrmTable;
@@ -37,7 +37,7 @@ import org.ujorm.orm.annot.View;
     + ") testView WHERE true"
     , alias="testView"
     )
-
+  
 //  /* MSSQL query */
 //  @View(SELECT * FROM ( "
 //  + " SELECT ord_order_alias.id, count(*) AS item_count"
@@ -51,13 +51,13 @@ import org.ujorm.orm.annot.View;
 //  , alias="testView"
 //  )
 
- public class ViewOrder extends OrmTable<ViewOrder> {
+ public class $ViewOrder extends OrmTable<$ViewOrder> {
 
     /** Unique key */
     @Column(pk=true, name="id")
-    private Long id;
+    public static final Key<$ViewOrder,Long> ID = newKey();
     /** ItemCount */
     @Column(name="item_count")
-    private Integer itemCount = 0;
+    public static final Key<$ViewOrder,Integer> ITEM_COUNT = newKey(0);
 
 }
