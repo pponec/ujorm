@@ -1,4 +1,4 @@
-/* Generated objedt, do not modify it */
+/* Generated object, don't modify it */
 
 package org.version2.bo.generated;
 

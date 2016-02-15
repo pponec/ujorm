@@ -59,7 +59,7 @@ public class Sample2 {
         assert ujo != pojo;
         assert ujo.getId() == 10;
         assert ujo.getCity() == "Brno";
-        assert ujo.getCity() == ujo.getCity();
+        assert ujo.getCity() == pojo.getCity();
     }
 
     /** Use a composite Key */
