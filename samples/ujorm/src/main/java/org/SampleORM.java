@@ -558,7 +558,7 @@ public class SampleORM {
         }
     }
 
-    /** Select orderes using a native criterion */
+    /** Select orders using a native criterion */
     public void useNativeCriterion() {
         // The base using: the first arguments is replaced by column, the second is replaced using argument.
         Criterion<Order> crn = Order.ID.forSql("{0} > {1}", 0L)
