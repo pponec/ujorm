@@ -16,8 +16,6 @@
 
 package org.ujorm.orm.pojo.orm_tutorial.sample.entity;
 
-import org.ujorm.Key;
-import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.View;
 
@@ -51,7 +49,7 @@ import org.ujorm.orm.annot.View;
 //  , alias="testView"
 //  )
 
- public class ViewOrder extends OrmTable<ViewOrder> {
+ public class ViewOrder {
 
     /** Unique key */
     @Column(pk=true, name="id")

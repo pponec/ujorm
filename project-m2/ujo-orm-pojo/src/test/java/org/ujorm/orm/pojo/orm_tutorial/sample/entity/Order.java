@@ -19,18 +19,12 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.util.Date;
 import java.util.List;
-import org.ujorm.Key;
-import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.extensions.StringWrapper;
-import org.ujorm.implementation.orm.OrmTable;
-import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.DbType;
-import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
-import org.ujorm.orm.utility.OrmTools;
 
 /**
  * The column mapping to DB table ORDER (a sample of usage).
@@ -39,7 +33,7 @@ import org.ujorm.orm.utility.OrmTools;
  */
 @Comment("Order table for registering the 'order items'")
 @Table(name = "ord_order")
-public final class Order extends OrmTable<Order> {
+public class Order {
 
     /** Store the value like VARCHAR. */
     public enum State implements StringWrapper {

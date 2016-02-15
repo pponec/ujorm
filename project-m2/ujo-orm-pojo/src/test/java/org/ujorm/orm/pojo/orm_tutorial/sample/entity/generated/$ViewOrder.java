@@ -20,6 +20,8 @@ import org.ujorm.Key;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.View;
+import org.ujorm.extensions.UjoMiddle;
+import org.ujorm.orm.pojo.orm_tutorial.sample.entity.*;
 
 /**
  * The column mapping to FROM view.
@@ -37,7 +39,7 @@ import org.ujorm.orm.annot.View;
     + ") testView WHERE true"
     , alias="testView"
     )
-  
+
 //  /* MSSQL query */
 //  @View(SELECT * FROM ( "
 //  + " SELECT ord_order_alias.id, count(*) AS item_count"
