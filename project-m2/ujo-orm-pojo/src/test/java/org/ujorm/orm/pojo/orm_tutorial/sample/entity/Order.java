@@ -18,6 +18,7 @@ package org.ujorm.orm.pojo.orm_tutorial.sample.entity;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.util.Date;
+import java.util.List;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.Transient;
@@ -50,38 +51,32 @@ public final class Order extends OrmTable<Order> {
         }
     }
 
-    /** The Key Factory */
-    private static final OrmKeyFactory<Order> f = newFactory(Order.class);
-
     /** The Primary Key */
     @Comment("The Primary Key")
     @Column(pk = true)
-    public static final Key<Order, Long> ID = f.newKey();
+    private Long id;
     /** Order STATE, default is ACTIVE */
     @Comment("Order state, default value is ACTIVE")
-    public static final Key<Order, State> STATE = f.newKeyDefault(State.ACTIVE);
+    private State state = State.ACTIVE;
     /** User key */
-    public static final Key<Order, Integer> USER_ID = f.newKey();
+    private Integer user_id ;
     /** Description of the Order */
     @Comment("Description of the Order")
     @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
-    public static final Key<Order, String> NOTE = f.newKey();
+    private String note;
     /** Date of creation */
-    public static final Key<Order, Date> CREATED = f.newKey();
+    private Date created;
     /** Text file */
     @Transient
-    public static final Key<Order, Clob> TEXT_FILE = f.newKey();
+    private Clob text_file;
     /** Binary file */
     @Transient
-    public static final Key<Order, Blob> BINARY_FILE = f.newKey();
+    private Blob binary_file;
     /** Reference to Items */
-    public static final RelationToMany<Order, Item> ITEMS = f.newRelation();
+    private List<Item> items;
     /** Customer */
-    @Column(name="fk_customer") public static final Key<Order, Customer> CUSTOMER = f.newKey();
-    @Column(mandatory=true) public static final Key<Order, Integer> NEW_COLUMN = f.newKeyDefault(777);
-
-    // Lock the factory:
-    static {  f.lock(); }
+    @Column(name="fk_customer") private Customer customer;
+    @Column(mandatory=true) private Integer new_column = 777;
 
     // --- Constructors ---
 
@@ -92,65 +87,86 @@ public final class Order extends OrmTable<Order> {
         setId(id);
     }
 
-    // --- An optional implementation of commonly used setters and getters ---
+    // --- Generated Getters and setters ---
 
     public Long getId() {
-        return get(ID);
+        return id;
     }
 
-    public void setId(Long _id) {
-        set(ID, _id);
-    }
-
-    public Integer getUsrId() {
-        return get(USER_ID);
-    }
-
-    public void setUsrId(Integer _usrId) {
-        set(USER_ID, _usrId);
-    }
-
-    public String getNote() {
-        return get(NOTE);
-    }
-
-    public void setNote(String _note) {
-        set(NOTE, _note);
-    }
-
-    public Date getCreated() {
-        return get(CREATED);
-    }
-
-    public void setCreated(Date _created) {
-        set(CREATED, _created);
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public State getState() {
-        return get(STATE);
+        return state;
     }
 
-    public void setState(State _state) {
-        set(STATE, _state);
+    public void setState(State state) {
+        this.state = state;
     }
 
-    public String getTextFile() {
-        return OrmTools.getClobString(get(TEXT_FILE));
+    public Integer getUser_id() {
+        return user_id;
     }
 
-    public void setTextFile(String _largeFile) {
-        set(TEXT_FILE, OrmTools.createClob(_largeFile));
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
     }
 
-    public byte[] getBinaryFile() {
-        return OrmTools.getBlobBytes(get(BINARY_FILE));
+    public String getNote() {
+        return note;
     }
 
-    public void setBinaryFile(byte[] _binaryFile) {
-        set(BINARY_FILE, OrmTools.createBlob(_binaryFile));
+    public void setNote(String note) {
+        this.note = note;
     }
 
-    public UjoIterator<Item> getItems() {
-        return get(ITEMS);
+    public Date getCreated() {
+        return created;
     }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Clob getText_file() {
+        return text_file;
+    }
+
+    public void setText_file(Clob text_file) {
+        this.text_file = text_file;
+    }
+
+    public Blob getBinary_file() {
+        return binary_file;
+    }
+
+    public void setBinary_file(Blob binary_file) {
+        this.binary_file = binary_file;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Integer getNew_column() {
+        return new_column;
+    }
+
+    public void setNew_column(Integer new_column) {
+        this.new_column = new_column;
+    }
+
 }

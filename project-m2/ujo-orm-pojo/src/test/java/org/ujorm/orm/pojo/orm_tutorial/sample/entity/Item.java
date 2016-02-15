@@ -22,6 +22,7 @@ import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated.*;
 
 /**
  * The column mapping to DB table ITEM (a sample of usage).
@@ -35,56 +36,64 @@ public final class Item extends OrmTable<Item> {
 
     /** Unique key */
     @Column(pk = true)
-    public static final Key<Item,Long> ID = f.newKey();
+    private Long id;
     /** User key */
-    public static final Key<Item,Integer> USER_ID = f.newKey();
+    private Integer userId;
     /** Description of the Item */
-    public static final Key<Item,String> NOTE = f.newKey();
+    private String note;
     /** Price of the item */
     @Comment("Price of the item")
     @Column(length=8, precision=2)
-    public static final Key<Item,BigDecimal> PRICE = f.newKeyDefault(BigDecimal.ZERO);
+    private BigDecimal price = BigDecimal.ZERO;
     /** A reference to common Order */
     @Comment("A reference to the Order")
     @Column(name="fk_order")
-    public static final Key<Item,Order> ORDER = f.newKey();
+    private Order order;
+
     /** A composed (or indirect) key provides a 'CREATED' attribute of the Order */
-    public static final Key<Item,Date> $ORDER_CREATED = Item.ORDER.add(Order.CREATED);
+    public static final Key<$Item, Date> $ORDER_CREATED = $Item.ORDER.add($Order.CREATED);
 
 
-
-    // --- An optional implementation of commonly used setters and getters ---
+    // --- Generated setters and getters ---
 
     public Long getId() {
-        return get(ID);
+        return id;
     }
-    public void setId(Long _id) {
-        set(ID, _id);
+
+    public void setId(Long id) {
+        this.id = id;
     }
-    public Integer getUsrId() {
-        return get(USER_ID);
+
+    public Integer getUser_id() {
+        return userId;
     }
-    public void setUsrId(Integer _id) {
-        set(USER_ID, _id);
+
+    public void setUser_id(Integer userId) {
+        this.userId = userId;
     }
+
     public String getNote() {
-        return get(NOTE);
+        return note;
     }
-    public void setNote(String _descr) {
-        set(NOTE, _descr);
+
+    public void setNote(String note) {
+        this.note = note;
     }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
     public Order getOrder() {
-        return get(ORDER);
-    }
-    public void setOrder(Order _descr) {
-        set(ORDER, _descr);
+        return order;
     }
 
-    /** Example of the composed key */
-    public Date getOrderCreated() {
-        // An alternative solution for: getOrder().getCreated();
-        return get($ORDER_CREATED);
+    public void setOrder(Order order) {
+        this.order = order;
     }
-
 
 }

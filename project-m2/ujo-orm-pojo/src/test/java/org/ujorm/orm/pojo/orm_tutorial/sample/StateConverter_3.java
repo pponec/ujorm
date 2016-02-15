@@ -17,20 +17,20 @@
 
 package org.ujorm.orm.pojo.orm_tutorial.sample;
 
-import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Order;
+import org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated.$Order;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.ujorm.orm.ITypeService;
 import org.ujorm.orm.metaModel.MetaColumn;
-import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Order.State;
+import org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated.$Order.State;
 
 /**
  *
  * @author pavel
  */
-public class StateConverter_3 implements ITypeService<Order.State, String> {
+public class StateConverter_3 implements ITypeService<$Order.State, String> {
 
     public State getValue(MetaColumn mColumn, ResultSet rs, int c) throws SQLException {
         String str = rs.getString(c);

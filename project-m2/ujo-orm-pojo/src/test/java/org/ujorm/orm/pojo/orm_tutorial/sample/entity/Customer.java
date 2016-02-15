@@ -16,8 +16,6 @@
 package org.ujorm.orm.pojo.orm_tutorial.sample.entity;
 
 import java.util.Date;
-import org.ujorm.Key;
-import org.ujorm.KeyList;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
@@ -32,47 +30,68 @@ public final class Customer extends OrmTable<Customer> {
 
     /** Unique key */
     @Column(pk = true)
-    public static final Key<Customer, Long> ID = f.newKey();
+    private Long id;
     /** Personal Number */
-    public static final Key<Customer, Integer> PIN = f.newKey();
+    private Integer pin;
     /** Firstname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final Key<Customer, String> FIRSTNAME = f.newKey();
+    private String firstname;
     /** Surname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final Key<Customer, String> SURNAME = f.newKey();
+    private String surname;
     /** Date of creation */
-    public static final Key<Customer, Date> CREATED = f.newKey();
+    private Date created;
     /** A parent (father or mother) with an alias called {@code "parent"} */
-    public static final Key<Customer, Customer> PARENT = f.newKeyAlias("customerAlias");
+    private Customer parent ; // f.newKeyAlias("customerAlias");
 
-    // Lock the Key factory
-    static { f.lock(); }
+    // --- Generated setters and getters ---
 
-    /** An optional method for a better performance.
-     * @return Return all direct Keys (An implementation from the Ujo API)
-     */
-    @Override
-    public KeyList<Customer> readKeys() {
-        return f.getKeys();
-    }
-
-    // --- An optional implementation of commonly used setters and getters ---
-    
     public Long getId() {
-        return get(ID);
+        return id;
     }
 
-    public void setId(Long _id) {
-        set(ID, _id);
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getPin() {
-        return get(PIN);
+        return pin;
     }
 
-    public void setPin(Integer _pin) {
-        set(PIN, _pin);
+    public void setPin(Integer pin) {
+        this.pin = pin;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Customer getParent() {
+        return parent;
+    }
+
+    public void setParent(Customer parent) {
+        this.parent = parent;
     }
 
 }
