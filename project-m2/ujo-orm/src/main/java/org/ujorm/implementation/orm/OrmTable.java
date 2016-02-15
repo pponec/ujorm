@@ -179,9 +179,16 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
     @Override
     public <UJO extends U> ForeignKey readFK(Key<UJO, ? extends OrmUjo> key) throws IllegalStateException {
         final Object value = super.readValue(key);
-        if (value==null || value instanceof ForeignKey) {
-            return (ForeignKey) value;
+        if (value == null) {
+            return null;
         }
+        final ForeignKey fk = value instanceof OrmUjo
+                ? ((OrmUjo)value).readInternalFK()
+                : null;
+        if (fk != null) {
+            return fk;
+        }
+
 //      if (key instanceof RelationToOne) {
 //          // TODO: fix the case the key is a relation:
 //          final Key key = ((RelationToOne)key).getRelatedKey();
