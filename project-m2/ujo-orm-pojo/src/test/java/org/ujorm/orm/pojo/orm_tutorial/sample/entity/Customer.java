@@ -16,8 +16,6 @@
 package org.ujorm.orm.pojo.orm_tutorial.sample.entity;
 
 import java.util.Date;
-import org.ujorm.core.KeyFactory;
-import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 
 /**
@@ -25,8 +23,7 @@ import org.ujorm.orm.annot.Column;
  * Note, how the Keys are created by the KeyFactory.
  * @hidden
  */
-public final class Customer extends OrmTable<Customer> {
-    private static final KeyFactory<Customer> f = newCamelFactory(Customer.class);
+public class Customer {
 
     /** Unique key */
     @Column(pk = true)

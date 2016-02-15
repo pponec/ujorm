@@ -22,6 +22,8 @@ import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.extensions.UjoMiddle;
+import org.ujorm.orm.pojo.orm_tutorial.sample.entity.*;
 
 /**
  * The column mapping to DB table ITEM (a sample of usage).

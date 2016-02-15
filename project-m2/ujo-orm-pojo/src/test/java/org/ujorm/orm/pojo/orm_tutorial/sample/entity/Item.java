@@ -18,8 +18,6 @@ package org.ujorm.orm.pojo.orm_tutorial.sample.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 import org.ujorm.Key;
-import org.ujorm.core.KeyFactory;
-import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated.*;
@@ -31,8 +29,7 @@ import org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated.*;
  * @Table=bo_item
  */
 @Comment("Order item")
-public final class Item extends OrmTable<Item> {
-    private static final KeyFactory<Item> f = newCamelFactory(Item.class);
+public class Item {
 
     /** Unique key */
     @Column(pk = true)

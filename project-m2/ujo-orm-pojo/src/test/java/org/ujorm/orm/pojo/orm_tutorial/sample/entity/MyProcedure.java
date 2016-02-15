@@ -17,8 +17,6 @@
 
 package org.ujorm.orm.pojo.orm_tutorial.sample.entity;
 
-import org.ujorm.Key;
-import org.ujorm.orm.DbProcedure;
 import org.ujorm.orm.annot.Parameter;
 import org.ujorm.orm.annot.Procedure;
 
@@ -33,7 +31,7 @@ import org.ujorm.orm.annot.Procedure;
  * @author Pavel Ponec
  */
 @Procedure(name="ujorm_test")
-public final class MyProcedure extends DbProcedure<MyProcedure> {
+public class MyProcedure {
 
     /** The first parameter is the OUTPUT always. <br/>
      * If the stored procedure has no return parameter, set the first key type to: java.lang.Void */
