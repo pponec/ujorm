@@ -53,7 +53,7 @@ public class Order {
     @Comment("Order state, default value is ACTIVE")
     private State state = State.ACTIVE;
     /** User key */
-    private Integer user_id ;
+    private Integer userId ;
     /** Description of the Order */
     @Comment("Description of the Order")
     @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
@@ -71,6 +71,15 @@ public class Order {
     /** Customer */
     @Column(name="fk_customer") private Customer customer;
     @Column(mandatory=true) private Integer newColumn = 777;
+
+    // --- Constructor ---
+
+    public Order() {
+    }
+
+    public Order(Long id) {
+        setId(id);
+    }
 
     // --- Getters and Setters ---
 
@@ -90,12 +99,12 @@ public class Order {
         this.state = state;
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getNote() {

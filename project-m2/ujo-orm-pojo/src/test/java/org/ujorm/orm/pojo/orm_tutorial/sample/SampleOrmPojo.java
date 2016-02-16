@@ -37,9 +37,13 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.core.UjoManager;
+import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Customer;
+import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Item;
+import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Order;
 import org.ujorm.orm.template.AliasTable;
 import static org.ujorm.criterion.Operator.*;
 import static org.ujorm.orm.template.AliasTable.Build.*;
+import static org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated.$UjoConverter.*;
 
 /**
  * The tutorial in the class for the Ujorm <br/>
@@ -117,7 +121,7 @@ public class SampleOrmPojo {
      * the one application can have more OrmHandler instances. */
     private OrmHandler handler;
     /** The session contains a cache and database connections. */
-    private Session session;
+    private PojoSession session;
     /** Temporary field */
     private Long anyOrderId;
 
@@ -160,22 +164,22 @@ public class SampleOrmPojo {
         handler.loadDatabase($Database.class);
 
         // Open an ORM session (which is no thread safe):
-        session = handler.createSession();
+        session = new PojoSession(handler.createSession());
     }
 
     /** Insert one $Order and two Items into database. */
     public void useInsert() {
 
-        $Order order = new $Order();
+        Order order = new Order();
         order.setCreated(new Date());
         order.setNote("My order");
         //ORDER.setBinaryFile("binary".getBytes());
 
-        $Item item1 = new $Item();
+        Item item1 = new Item();
         item1.setOrder(order);
         item1.setNote("Yellow table");
 
-        $Item item2 = new $Item();
+        Item item2 = new Item();
         item2.setOrder(order);
         item2.setNote("Green window");
 
@@ -189,7 +193,7 @@ public class SampleOrmPojo {
         session.save(item2);
 
         for (int i = 0; i < 10; i++) {
-            $Item item3 = new $Item();
+            Item item3 = new Item();
             item3.setOrder(order);
             item3.setNote("Green window " + i);
             session.save(item3);
@@ -207,11 +211,11 @@ public class SampleOrmPojo {
     /** Batch insert by a multi row insert statement. */
     public void useBatchInsert() {
 
-        $Order order = session.createQuery($Order.class).orderBy($Order.ID.descending()).setLimit(1).uniqueResult();
-        List<$Item> itemList = new ArrayList<$Item>();
+        Order order = session.createQuery($Order.class).orderBy($Order.ID.descending()).setLimit(1).uniqueResult();
+        List<Item> itemList = new ArrayList<Item>();
 
         for (int i = 0; i < 3; i++) {
-            $Item item = new $Item();
+            Item item = new Item();
             item.setOrder(order);
             item.setNote("Item number #i");
             itemList.add(item);
@@ -247,7 +251,7 @@ public class SampleOrmPojo {
     /** Lern how to use the Criterion as an simple object validator only. */
     public void useCriterions() {
 
-        final $Order order = new $Order();
+        final Order order = new Order();
         order.setId(100L);
         order.setNote("my order");
         order.setCreated(new Date());
@@ -259,55 +263,56 @@ public class SampleOrmPojo {
         crn = null;
 
         // Simple condition: $Order.ID>99
-        assert crnId.evaluate(order);
+        assert crnId.evaluate(ujo(order));
 
         // Compound condition: $Order.ID>99 or $Order.NOTE='another'
         crn = crnId.or(crnNote);
-        assert crn.evaluate(order);
+        assert crn.evaluate(ujo(order));
 
         // Compound condition with parentheses: $Order.CREATED<=now() and ($Order.NOTE='another' or $Order.ID>99)
         crn = crnCreated.and(crnNote.or(crnId));
-        assert crn.evaluate(order);
+        assert crn.evaluate(ujo(order));
 
         // Another condition: ($Order.CREATED<=now() or $Order.NOTE='another') and $Order.ID>99
         crn = (crnCreated.or(crnNote)).and(crnId);
         // ... or simple by a native priority:
         crn = crnCreated.or(crnNote).and(crnId);
-        assert crn.evaluate(order);
+        assert crn.evaluate(ujo(order));
     }
 
     /** Sort orders by two keys: NOTE and CREATED descending. */
     public void useSortOrders() {
 
-        Query<$Order> orders = session.createQuery($Order.class);
-        orders.orderBy($Order.NOTE
+        PojoQuery<$Order> orders = session.createQuery(Order.class);
+        orders.orderBy( $Order.NOTE
                       , $Order.CREATED.descending() );
 
         logInfo("View-order count: %s", orders.getCount());
     }
 
-    /** *  Sort items by a <strong>composite</strong> propertry. <br>
+    /** *  Sort items by a <strong>composite</strong> property. <br>
      * Note 1: see how a composite key can be used for reading values too. <br>
  Note 2: the method loadLazyValues(..) is able to load all lazy keys for the $Item and its related $Order<br>
      */
     public void useSortOrderItems() {
 
-        Query<$Item> items = session.createQuery($Item.class);
+        PojoQuery<$Item> items = session.createQuery(Item.class);
         items.orderBy($Item.ORDER.add($Order.CREATED));
 
-        for ($Item item : items) {
-            OrmTools.loadLazyValues(item, 2);
-            logInfo("Created: %s of %s", item.get($Item.ORDER.add($Order.CREATED)), item);
+        for (Item item : items) {
+            OrmTools.loadLazyValues(($Item)item, 2);
+            logInfo("Created: %s of %s", (($Item)item).get($Item.ORDER.add($Order.CREATED)), item);
         }
         // Another way to avoid the lazy loading by a bulk key loading:
-        List<$Item> itemList = OrmTools.loadLazyValuesAsBatch(items);
+        List<$Item> itemList = OrmTools.loadLazyValuesAsBatch(items.getQuery());
         logInfo("ItemList: %s", itemList);
     }
 
     /** *  Use a 'native query' where the query is CREATED
      * by a special entity signed by the @View annotation. <br/>
-     * Note the special <strong>inner parameter</strong> in the SQL statement on the Annotation of the class $ViewOrder,
- where value for this (optional) parameter is set by the method Query.setSqlParameters();
+     * Note the special <strong>inner parameter</strong> in the SQL statement
+     * on the Annotation of the class $ViewOrder,
+     * where value for this (optional) parameter is set by the method Query.setSqlParameters();
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectViewOrders() {
@@ -326,7 +331,7 @@ public class SampleOrmPojo {
                 ;
         logInfo("Order count: %s", orderCount);
 
-        Query<$ViewOrder> orders = session.createQuery(crit)
+        PojoQuery<$ViewOrder> orders = session.createQuery(crit)
                 .setLimit(5)
                 .orderBy($ViewOrder.ID)
                 .setSqlParameters(0)
@@ -369,7 +374,7 @@ public class SampleOrmPojo {
 
         logInfo("Order Count: %s", orderCount);
 
-        Query<$ViewOrder> orders = session.createQuery(crit)
+        PojoQuery<$ViewOrder> orders = session.createQuery(crit)
                 .setLimit(5)
                 .orderBy($ViewOrder.ID)
                 .setSqlParameters(sql)
@@ -411,7 +416,7 @@ public class SampleOrmPojo {
                 .getCount();
         logInfo("Order Count: %s", orderCount);
 
-        Query<$ViewOrder> orders = session.createQuery(crit)
+        PojoQuery<$ViewOrder> orders = session.createQuery(crit)
                 .setLimit(5)
                 .orderBy($ViewOrder.ID)
                 .setSqlParameters(sqlParam)
@@ -425,10 +430,10 @@ public class SampleOrmPojo {
     public void useSelectItems_1() {
 
         Criterion<$Item> crit = $Item.NOTE.where(CONTAINS_CASE_INSENSITIVE, "table");
-        Query<$Item> items = session.createQuery(crit).orderBy($Item.ID.descending());
+        PojoQuery<$Item> items = session.createQuery(crit).orderBy($Item.ID.descending());
 
-        for ($Item item : items) {
-            $Order order = item.getOrder();
+        for (Item item : items) {
+            Order order = item.getOrder();
             logInfo("Item row: %s of the Order: %s", item, order);
         }
     }
@@ -437,22 +442,22 @@ public class SampleOrmPojo {
     public void useSelectItems_2() {
 
         $Order orderValue = session.load($Order.class, anyOrderId);
-        Query<$Item> items = session.createQuery($Item.ORDER.whereEq(orderValue));
+        PojoQuery<$Item> items = session.createQuery($Item.ORDER.whereEq(orderValue));
 
-        for ($Item item : items) {
-            $Order order2 = item.getOrder();
+        for (Item item : items) {
+            Order order2 = item.getOrder();
             logInfo("item row: %s of the Order: %s", item, order2);
         }
     }
 
     /** Select an $Order by ID and print its Items
- by a 'one to many' relation key
+     * by a 'one to many' relation key
      */
     public void useSelectItems_3() {
-        $Order order = session.load($Order.class, anyOrderId);
+        Order order = session.load($Order.class, anyOrderId);
 
-        for ($Item item : order.getItems()) {
-            $Order order2 = item.getOrder();
+        for (Item item : order.getItems()) {
+            Order order2 = item.getOrder();
             logInfo("Item row: %s of the Order: %s", item, order2);
         }
     }
@@ -463,9 +468,9 @@ public class SampleOrmPojo {
      */
     public void useSelectItems_4() {
         Key<$Item, Date> ORDER_DATE = $Item.ORDER.add($Order.CREATED); // or use: $Item.$ORDER_CREATED
-        Query<$Item> items = session.createQuery(ORDER_DATE.whereLe(new Date()));
+        PojoQuery<$Item> items = session.createQuery(ORDER_DATE.whereLe(new Date()));
 
-        for ($Item item : items) {
+        for (Item item : items) {
             logInfo("Item: %s", item);
         }
     }
@@ -476,19 +481,19 @@ public class SampleOrmPojo {
      * @see $Item#$ORDER_CREATED
      */
     public void useSelectItems_5() {
-        Query<$Item> items = session.createQuery($Item.ID.whereIn(1L, 2L, 3L, 4L, 5L));
+        PojoQuery<$Item> items = session.createQuery($Item.ID.whereIn(1L, 2L, 3L, 4L, 5L));
 
-        for ($Item item : items) {
+        for (Item item : items) {
             logInfo("Item: %s", item);
         }
     }
 
     /** Select using the IN operator with persistent objects. */
     public void useSelectItems_5b() {
-        $Order orderA = new $Order(1L);
-        $Order orderB = new $Order(2L);
+        $Order orderA = ujo(new Order(1L));
+        $Order orderB = ujo(new Order(2L));
 
-        for ($Item item : session.createQuery($Item.ORDER.whereIn(orderA, orderB))) {
+        for (Item item : session.createQuery($Item.ORDER.whereIn(orderA, orderB))) {
             logInfo("Item: %s", item);
         }
 
@@ -496,25 +501,25 @@ public class SampleOrmPojo {
 
         Collection ids = Arrays.asList(1L, 2L);
         Criterion<$Item> crn = $Item.ORDER.whereIn(ids);
-        for ($Item item : session.createQuery(crn)) {
+        for (Item item : session.createQuery(crn)) {
             logInfo("Item: %s", item);
         }
-
     }
 
     /** Select one items without $Order */
     public void useSelectItems_6() {
-        Query<$Item> items = session.createQuery($Item.ORDER.add($Order.CUSTOMER).whereNull());
-        for ($Item item : items) {
+        PojoQuery<$Item> items = session.createQuery($Item.ORDER.add($Order.CUSTOMER).whereNull());
+        for (Item item : items) {
             logInfo("Item without order: %s", item);
         }
     }
 
     /** Using IN phrase for a list of Ujo objects. */
     public void useSelectItems_7() {
-        List<$Order> orders = session.createQuery($Order.ID.forAll()).setLimit(1).list();
-        List<$Item> items = session.createQuery($Item.ORDER.whereIn(orders)).list();
-        assert items.size() > 0 : "The result have got two Items";
+// POJO:TODO
+//        List<$Order> orders = session.createQuery($Order.ID.forAll()).setLimit(1).list();
+//        List<$Item> items = session.createQuery($Item.ORDER.whereIn(orders)).list();
+//        assert items.size() > 0 : "The result have got two Items";
     }
 
     /** Sample for a DB query with relations to yourself.<br>
@@ -531,10 +536,10 @@ public class SampleOrmPojo {
         crn3 = crn1.and(crn2);
 
         createHierarchicalCustomers("Smith", "Brown");
-        $Customer customer = session.createQuery(crn3).uniqueResult();
+        Customer customer = session.createQuery(crn3).uniqueResult();
 
         assert customer != null : "The result have got the one customers";
-        assert $Customer.SURNAME.equals(customer, "Brown") : "Wrong customer";
+        assert $Customer.SURNAME.equals(ujo(customer), "Brown") : "Wrong customer";
     }
 
     /**
@@ -546,7 +551,7 @@ public class SampleOrmPojo {
      */
     public void useHierarchicalQuerySimple() {
         Key<$Customer, String> parentName = $Customer.PARENT.add($Customer.SURNAME);
-        $Customer customer = session.createQuery(parentName.whereEq("Smith"))
+        Customer customer = session.createQuery(parentName.whereEq("Smith"))
                 .addColumn(parentName)
                 .orderBy(parentName)
                 .uniqueResult();
@@ -554,7 +559,7 @@ public class SampleOrmPojo {
         assert customer != null : "The result have got the one customers";
         assert $Customer.PARENT instanceof CompositeKey : "The key is type of CompositeKey" + $Customer.PARENT.getClass();
         assert parentName.getFullName().equals("$Customer.parent[customerAlias].surname") : "The wrong implementation CompositeKey.toString()";
-        assert "Smith".equals(customer.get(parentName));
+        assert "Smith".equals(customer.getParent().getSurname());
     }
 
     /** DB query with relations to yourself as a value of Criterion */
@@ -564,7 +569,7 @@ public class SampleOrmPojo {
                .add($Customer.PARENT).alias("parent2")
                .add($Customer.SURNAME));
 
-        $Customer customer = session.createQuery(crn1).uniqueResult();
+        Customer customer = session.createQuery(crn1).uniqueResult();
         assert customer != null : "The result have got the one customers";
     }
 
@@ -572,11 +577,11 @@ public class SampleOrmPojo {
      * with no duplicate rows for a better performance.
      */
     public void useOptimizedSelect() {
-        Query<$Item> items = session.createQuery($Item.ID.whereNeq(0L))
+        PojoQuery<$Item> items = session.createQuery($Item.ID.whereNeq(0L))
                 .setColumn($Item.NOTE) // Select the one column
                 .setDistinct()        // Remove duplicate rows
                 ;
-        for ($Item item : items) {
+        for (Item item : items) {
             logInfo("Note: %s", item.getNote());
 
             // Other columns have got the default value always:
@@ -587,30 +592,30 @@ public class SampleOrmPojo {
 
     /** Fetch column from related tables */
     public void useOneRequestLoading() {
-        Query<$Item> items = session.createQuery($Item.ID.whereNeq(0L));
+        PojoQuery<$Item> items = session.createQuery($Item.ID.whereNeq(0L));
         Key<$Item, Date> orderCreated = $Item.ORDER.add($Order.CREATED);
 
         // Fetch the $Order's CREATED column (and the primary key):
         items.setColumns(true, orderCreated);
-        for ($Item item : items.list()) {
+//        for (Item item : items.list()) {
 //            expectNull(false, item.getId()); // due the request: addPrimaryKey
 //            expectNull(false, item.get(orderCreated));
 //            expectNull(false, item.get($Item.ORDER));
 //            // checkNull(false , item.get($Item.ORDER.add($Order.ID))); // TODO FixIT (?)
 //            expectNull(true , item.get($Item.NOTE));
 //            expectNull(true , item.get($Item.ORDER.add($Order.NOTE))); // Eeach lazy $Order has a not-null NOTE!
-        }
+//        }
 
         // Fetch all the $Order columns:
         items.setColumns(true, $Item.ORDER);
-        for ($Item item : items.list()) {
+//        for $Item item : items.list()) {
 //            expectNull(false, item.getId()); // due the request: addPrimaryKey
 //            expectNull(true , item.get($Item.NOTE));
 //            expectNull(false, item.get($Item.ORDER));
 //            expectNull(false, item.get(orderCreated));
 //            expectNull(false, item.get($Item.ORDER.add($Order.ID)));
 //            expectNull(false, item.get($Item.ORDER.add($Order.NOTE)));
-        }
+//        }
     }
 
     /** Select orders using a native criterion */
@@ -619,9 +624,9 @@ public class SampleOrmPojo {
         Criterion<$Order> crn = $Order.ID.forSql("{0} > {1}", 0L)
                 .and($Order.CREATED.where(LE, new Date()));
         $Order.ID.forSql("{0} > {1}", 1L).getRightNode();
-        Query<$Order> orders = session.createQuery(crn);
+        PojoQuery<$Order> orders = session.createQuery(crn);
 
-        for ($Order order : orders) {
+        for (Order order : orders) {
             logInfo("Order: %s", order);
         }
 
@@ -634,14 +639,14 @@ public class SampleOrmPojo {
              .and($Order.CREATED.where(LE, new Date()));
         orders = session.createQuery(crn);
 
-        for ($Order order : orders) {
+        for (Order order : orders) {
             logInfo("Order: %s", order);
         }
     }
 
     /** How to reload the object key values from the database ? */
     public void useReloading() {
-        $Order order = new $Order(anyOrderId);
+        $Order order = ujo(new Order(anyOrderId));
         boolean result = session.reload(order);
         logInfo("Reloading result: %s for Order: %s", result, order);
     }
@@ -655,15 +660,15 @@ public class SampleOrmPojo {
         item.readSession().close();
 
         try {
-            $Order order2 = item.getOrder();
+            Order order2 = item.getOrder();
             assert false : "Lazy-loading for a closed session is disabled by default, the Item is: " + order2.getId();
         } catch (IllegalStateException e) {
             logInfo("OK: %s", e.getClass().getSimpleName());
         }
 
         item.readSession().setLazyLoading(LazyLoading.ALLOWED_ANYWHERE_WITH_WARNING); // Enable lazy-loading
-        $Order order3 = item.getOrder();
-        $Item item4 = order3.getItems().next(); // Lazy loading type of one to many
+        Order order3 = item.getOrder();
+        Item item4 = order3.getItems().get(0); // POJO:TODO: Lazy loading type of one to many
         logInfo("Lazy Order: %s and Item: %s", order3, item4);
     }
 
@@ -680,14 +685,14 @@ public class SampleOrmPojo {
 
     /** How to count items ? */
     public void useSelectCount() {
-        Query<$Item> query = session.createQuery($Item.NOTE.where(CONTAINS_CASE_INSENSITIVE, "table"));
+        PojoQuery<$Item> query = session.createQuery($Item.NOTE.where(CONTAINS_CASE_INSENSITIVE, "table"));
         long count = query.getCount();
         logInfo("Count of the order items: %s", count);
     }
 
     /** How to get a Foreign Key without lazy loading */
     public void useForeignKey() {
-        $Database db = session.getFirstDatabase();
+        $Database db = session.original().getFirstDatabase();
         for ($Item item : db.get($Database.ORDER_ITEMS)) {
             ForeignKey fk1 = item.readFK($Item.ORDER);   // before lazy loading
             item.get($Item.ORDER);                       // the lazy loading
@@ -715,14 +720,14 @@ public class SampleOrmPojo {
      * Note that it is possible to use a $Database configuration object too.
      */
     public void useRelation() {
-        $Database db = session.getDatabase($Database.class);
+        $Database db = session.original().getDatabase($Database.class);
 
         UjoIterator<$Order> orders = db.get($Database.ORDERS);
-        for ($Order order : orders) {
+        for (Order order : orders) {
             String note = order.getNote();
             logInfo("Order: %s with Note: %s", order, note);
 
-            for ($Item item : order.getItems()) {
+            for (Item item : order.getItems()) {
                 Long itemId = item.getId();
                 String itemDescr = item.getNote();
                 logInfo(" Item id: %s with Note: %s", itemId, itemDescr);
@@ -738,7 +743,7 @@ public class SampleOrmPojo {
      *    IMMUTABLE
      *    RETURNS NULL ON NULL INPUT;
      * </code>
-     * Note: the source code is an aarly implementation prototype.<br>
+     * Note: the source code is an early implementation prototype.<br>
      * Note: test was running on the PostgreSQL release 8.4
      */
     public void useStoredProcedure() {
@@ -750,13 +755,13 @@ public class SampleOrmPojo {
         // Assign input parameters:
         procedure.set($MyProcedure.PARAM_CODE, 5);
         procedure.set($MyProcedure.PARAM_ENABLED, true);
-        Integer result = procedure.call(session); // Take the RESULT from the first parameter
+        Integer result = procedure.call(session.original()); // Take the RESULT from the first parameter
         logInfo("The stored procedure result #1: %s", result);
 
         // Another way how to get the output parameter:
         procedure.set($MyProcedure.PARAM_CODE, 24);
         procedure.set($MyProcedure.RESULT, null); // The output parameter(s) can't be initialized.
-        procedure.call(session);
+        procedure.call(session.original());
         result = procedure.get($MyProcedure.RESULT); // Take the RESULT from any output parameter
         logInfo("The stored procedure result #2: %s", result);
     }
@@ -783,12 +788,12 @@ public class SampleOrmPojo {
         procedure.set($MyProcedure.PARAM_CODE, 5);
         procedure.set($MyProcedure.PARAM_ENABLED, true);
 
-        Integer result = procedure.call(session);
+        Integer result = procedure.call(session.original());
         logInfo("The stored procedure result #1: %s", result);
 
         // See how to reuse input parameters of the object 'procedure':
         procedure.set($MyProcedure.PARAM_CODE, 24);
-        result = procedure.call(session, $MyProcedure.RESULT); // Take the RESULT of any (output) parameter
+        result = procedure.call(session.original(), $MyProcedure.RESULT); // Take the RESULT of any (output) parameter
         logInfo("The stored procedure result #2: %s", result);
     }
 
@@ -807,7 +812,7 @@ public class SampleOrmPojo {
     public void useBatchUpdate() {
         $Order order = new $Order();
         // Activate the Change column management:
-        order.writeSession(session);
+        order.writeSession(session.original());
         // Set a value(s) to the change:
         order.setCreated(new Date());
 
@@ -821,7 +826,7 @@ public class SampleOrmPojo {
     public void useExtendedUpdate() {
         $Order order = new $Order();
         // Activate the Change column management:
-        order.writeSession(session);
+        order.writeSession(session.original());
         // Set a value(s) to the change:
         order.setCreated(new Date());
 

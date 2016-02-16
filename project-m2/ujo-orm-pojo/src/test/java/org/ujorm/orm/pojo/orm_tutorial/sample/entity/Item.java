@@ -16,6 +16,8 @@
 package org.ujorm.orm.pojo.orm_tutorial.sample.entity;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import org.ujorm.Key;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated.*;
@@ -28,6 +30,9 @@ import org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated.*;
  */
 @Comment("Order item")
 public class Item {
+
+    /** A composed (or indirect) key provides a 'CREATED' attribute of the $Order */
+    public static final Key<$Item,Date> $ORDER_CREATED = $Item.ORDER.add($Order.CREATED);
 
     /** Unique key */
     @Column(pk = true)
@@ -43,7 +48,7 @@ public class Item {
     /** A reference to common $Order */
     @Comment("A reference to the Order")
     @Column(name="fk_order")
-    private $Order order;
+    private Order order;
 
     // --- Getters and Setters ---
 
@@ -79,11 +84,11 @@ public class Item {
         this.price = price;
     }
 
-    public $Order getOrder() {
+    public Order getOrder() {
         return order;
     }
 
-    public void setOrder($Order order) {
+    public void setOrder(Order order) {
         this.order = order;
     }
 

@@ -21,8 +21,6 @@ import org.ujorm.Key;
 import org.ujorm.orm.DbProcedure;
 import org.ujorm.orm.annot.Parameter;
 import org.ujorm.orm.annot.Procedure;
-import org.ujorm.extensions.UjoMiddle;
-import org.ujorm.orm.pojo.orm_tutorial.sample.entity.*;
 
 /**
  * The API for a database stored procedure:

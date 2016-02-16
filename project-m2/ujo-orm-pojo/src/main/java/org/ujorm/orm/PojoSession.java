@@ -53,6 +53,27 @@ public class PojoSession implements Closeable {
                 : new DefaultUjoConverter<OrmUjo>();
     }
 
+    /** Returns an original session */
+    public Session original() {
+        return session;
+    }
+
+    /**
+     * Create a new transaction or a sub-transaction.
+     * @return Create new (sub) transaction
+     * @throws IllegalStateException Throw the Exception if a Transaction is running
+     */
+    public Transaction beginTransaction() throws IllegalStateException {
+        return session.beginTransaction();
+    }
+
+    /** Returns the current transaction
+      * @return Return {@code null} if no transaction is running.
+      */
+    public Transaction getTransaction() {
+        return session.getTransaction();
+    }
+
     /** Returns a handler */
     public final OrmHandler getHandler() {
         return session.getHandler();

@@ -39,8 +39,23 @@ public class PojoQuery<UJO extends OrmUjo> implements Iterable<UJO> {
         this.query = query;
     }
 
-    public Query<?> getQuery() {
+    public Query<UJO> getQuery() {
         return query;
+    }
+
+
+    /** Returns a database row count along a current limit and offset attribues.
+     * @see #getCount()
+     */
+    public long getLimitedCount() {
+        return query.getLimitedCount();
+    }
+
+    /** Returns a count of the items
+     * @see #getLimitedCount()
+     */
+    public long getCount() {
+        return query.getCount();
     }
 
     /** Create a new iterator by the query. The result iterator can be used
@@ -329,6 +344,29 @@ public class PojoQuery<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Select DISTINCT for a unique row result */
     public PojoQuery<UJO> setDistinct() {
         query.setDistinct();
+        return this;
+    }
+
+    /** Get a SQL parameters of the Native view */
+    public SqlParameters getSqlParameters() {
+        return query.getSqlParameters();
+    }
+
+    /** Set a SQL parameters of the <strong>Native View</strong>
+     * @see org.ujorm.orm.annot.View
+     * @throws IllegalArgumentException The SQL parameters can be used for the VIEW only
+     */
+    public PojoQuery<UJO> setSqlParameters(SqlParameters sqlParameters) throws IllegalArgumentException {
+        query.setSqlParameters(sqlParameters);
+        return this;
+    }
+
+    /** Set a SQL parameters of the Native View
+     * @see org.ujorm.orm.annot.View
+     * @throws IllegalArgumentException The SQL parameters can be used for the VIEW only
+     */
+    public PojoQuery<UJO> setSqlParameters(Object ... parameters) throws IllegalArgumentException {
+        query.setSqlParameters(parameters);
         return this;
     }
 
