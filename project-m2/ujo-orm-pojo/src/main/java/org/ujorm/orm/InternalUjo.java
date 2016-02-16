@@ -19,6 +19,7 @@ package org.ujorm.orm;
 import java.io.Serializable;
 import java.util.Set;
 import org.ujorm.Key;
+import org.ujorm.core.DefaultUjoConverter;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.implementation.orm.RelationToMany;
 
@@ -41,13 +42,17 @@ import org.ujorm.implementation.orm.RelationToMany;
  * @see RelationToMany
  */
 public class InternalUjo implements Serializable {
+    /** Default UJORM converter */
+    public static final DefaultUjoConverter<OrmUjo> CONVERTER = new DefaultUjoConverter<OrmUjo>();
 
     /** An empty array of the UJO keys */
     @PackagePrivate
     static final Key[] EMPTY = new Key[0];
 
+    /** ORM session  */
     private Session session;
 
+    /** Foreign key for an internal use */
     private ForeignKey internalFK;
 
     /** Set of changes */
@@ -115,17 +120,6 @@ public class InternalUjo implements Serializable {
             return fk;
         }
 
-//      if (key instanceof RelationToOne) {
-//          // TODO: fix the case the key is a relation:
-//          final Key key = ((RelationToOne)key).getRelatedKey();
-//          return value instanceof ExtendedOrmUjo
-//                  ? ((ExtendedOrmUjo)value).readFK(key)
-//                  : new ForeignKey(key.of((Ujo)value));
-//      }
-// Effectiva: toto se volá cyklicky a navíc se předává špatná key (z původního objektu místo z cizího), pak se vrací nesmysly
-//      if (value instanceof ExtendedOrmUjo) {
-//          return ((ExtendedOrmUjo) value).readFK(key);
-//      }
         if (session!=null) {
             final OrmUjo ujo = value instanceof OrmUjo
                     ? (OrmUjo) value

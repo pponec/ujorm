@@ -32,9 +32,9 @@ import org.ujorm.orm.ExtendedOrmUjo;
 import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.InternalUjo;
 import org.ujorm.orm.OrmKeyFactory;
-import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.pojo.orm_tutorial.sample.entity.*;
+import static org.ujorm.orm.InternalUjo.CONVERTER;
 
 /**
  * The column mapping to DB table ORDER (a sample of usage).
@@ -63,7 +63,7 @@ public final class $Customer extends Customer implements UjoMiddle<$Customer>, E
     // Lock the Key factory
     static { f.lock(); }
 
-    private InternalUjo internalUjo = new InternalUjo();
+    private final InternalUjo internal = new InternalUjo();
 
     /** Basic data */
     private final Customer data;
@@ -96,12 +96,12 @@ public final class $Customer extends Customer implements UjoMiddle<$Customer>, E
 
     /** Read an ORM session where the session is an transient key. */
     public Session readSession() {
-        return internalUjo.readSession();
+        return internal.readSession();
     }
 
     /** Write an ORM session. */
     public void writeSession(Session session) {
-        internalUjo.writeSession(session);
+        internal.writeSession(session);
     }
 
     /**
@@ -113,25 +113,25 @@ public final class $Customer extends Customer implements UjoMiddle<$Customer>, E
      * @return Key array of the modified values.
      */
     public Key[] readChangedProperties(boolean clear) {
-         return internalUjo.readChangedProperties(clear);
+         return internal.readChangedProperties(clear);
     }
 
     /** Get an original foreign key for an internal use only.
      * The {@code non null} value means the undefined object properties of the current object.
      * @return An original foreign key can be {@code nullable} */
     public ForeignKey readInternalFK() {
-        return internalUjo.readInternalFK();
+        return internal.readInternalFK();
     }
 
     /** A method to a foreign key for an internal use only.
      * @param fk New key to assign can be {@code null} */
     public void writeInternalFK(ForeignKey fk) {
-        internalUjo.writeInternalFK(fk);
+        internal.writeInternalFK(fk);
     }
 
     @Override
     public ForeignKey readFK(Key key) throws IllegalStateException {
-        return internalUjo.readFK(this, readValue(key), key);
+        return internal.readFK(this, readValue(key), key);
     }
 
     @Override
@@ -162,7 +162,7 @@ public final class $Customer extends Customer implements UjoMiddle<$Customer>, E
 
     @Override
     public Object readValue(Key<?, ?> key) {
-         if (this.data != null) {
+        if (this.data != null) {
             switch (key.getIndex()) {
                 case 0: return data.getId();
                 case 1: return data.getPin();
@@ -188,21 +188,21 @@ public final class $Customer extends Customer implements UjoMiddle<$Customer>, E
     public void writeValue(Key<?, ?> key, Object value) {
        if (this.data != null) {
             switch (key.getIndex()) {
-                case 0: data.getId();
-                case 1: data.getPin();
-                case 2: data.getFirstname();
-                case 3: data.getSurname();
-                case 4: data.getCreated();
-                case 5: data.getParent();
+                case 0: data.setId((Long) value); return;
+                case 1: data.setPin((Integer) value); return;
+                case 2: data.setFirstname((String) value); return;
+                case 3: data.setSurname((String) value); return;
+                case 4: data.setCreated((Date) value); return;
+                case 5: data.setParent((Customer) value); return;
             }
         } else {
             switch (key.getIndex()) {
-                case 0: super.getId(); return;
-                case 1: super.getPin(); return;
-                case 2: super.getFirstname(); return;
-                case 3: super.getSurname(); return;
-                case 4: super.getCreated(); return;
-                case 5: super.getParent(); return;
+                case 0: super.setId((Long) value); return;
+                case 1: super.setPin((Integer) value); return;
+                case 2: super.setFirstname((String) value); return;
+                case 3: super.setSurname((String) value); return;
+                case 4: super.setCreated((Date) value); return;
+                case 5: super.setParent((Customer) value); return;
             }
         }
         throw new UnsupportedKey(key);
@@ -212,63 +212,75 @@ public final class $Customer extends Customer implements UjoMiddle<$Customer>, E
     // --- Getters and Setters ---
 
     /** Unique key */
+    @Override
     public Long getId() {
         return ID.of(this);
     }
 
     /** Unique key */
+    @Override
     public void setId(Long id) {
         ID.setValue(this, id);
     }
 
     /** Personal Number */
+    @Override
     public Integer getPin() {
         return PIN.of(this);
     }
 
     /** Personal Number */
+    @Override
     public void setPin(Integer pin) {
         PIN.setValue(this, pin);
     }
 
     /** Firstname */
+    @Override
     public String getFirstname() {
         return FIRSTNAME.of(this);
     }
 
     /** Firstname */
+    @Override
     public void setFirstname(String firstname) {
         FIRSTNAME.setValue(this, firstname);
     }
 
     /** Surname */
+    @Override
     public String getSurname() {
         return SURNAME.of(this);
     }
 
     /** Surname */
+    @Override
     public void setSurname(String surname) {
         SURNAME.setValue(this, surname);
     }
 
     /** Date of creation */
+    @Override
     public Date getCreated() {
         return CREATED.of(this);
     }
 
     /** Date of creation */
+    @Override
     public void setCreated(Date created) {
         CREATED.setValue(this, created);
     }
 
     /** A parent (father or mother) with an alias called {@code "parent"} */
+    @Override
     public $Customer getParent() {
         return PARENT.of(this);
     }
 
     /** A parent (father or mother) with an alias called {@code "parent"} */
-    public void setParent($Customer parent) {
-        PARENT.setValue(this, parent);
+    @Override
+    public void setParent(Customer parent) {
+        PARENT.setValue(this, ($Customer) CONVERTER.marshal(parent));
     }
 
 }
