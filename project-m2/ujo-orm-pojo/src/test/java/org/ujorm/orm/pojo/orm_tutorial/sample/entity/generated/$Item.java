@@ -23,6 +23,7 @@ import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.extensions.UjoMiddle;
+import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.pojo.orm_tutorial.sample.entity.*;
 
 /**
@@ -33,7 +34,7 @@ import org.ujorm.orm.pojo.orm_tutorial.sample.entity.*;
  */
 @Comment("Order item")
 public final class $Item extends OrmTable<$Item> {
-    private static final KeyFactory<$Item> f = newCamelFactory($Item.class);
+    private static final KeyFactory<$Item> f = new OrmKeyFactory($Item.class, true);
 
     /** Unique key */
     @Column(pk = true)
@@ -53,40 +54,69 @@ public final class $Item extends OrmTable<$Item> {
     /** A composed (or indirect) key provides a 'CREATED' attribute of the $Order */
     public static final Key<$Item,Date> $ORDER_CREATED = $Item.ORDER.add($Order.CREATED);
 
+    // Lock the Key factory
+    static { f.lock(); }
 
+    // --- Getters and Setters ---
 
-    // --- An optional implementation of commonly used setters and getters ---
-
+    /** Unique key */
     public Long getId() {
-        return get(ID);
+        return ID.of(this);
     }
-    public void setId(Long _id) {
-        set(ID, _id);
+
+    /** Unique key */
+    public void setId(Long id) {
+        ID.setValue(this, id);
     }
-    public Integer getUsrId() {
-        return get(USER_ID);
+
+    /** User key */
+    public Integer getUserId() {
+        return USER_ID.of(this);
     }
-    public void setUsrId(Integer _id) {
-        set(USER_ID, _id);
+
+    /** User key */
+    public void setUserId(Integer userId) {
+        USER_ID.setValue(this, userId);
     }
+
+    /** Description of the $Item */
     public String getNote() {
-        return get(NOTE);
+        return NOTE.of(this);
     }
-    public void setNote(String _descr) {
-        set(NOTE, _descr);
+
+    /** Description of the $Item */
+    public void setNote(String note) {
+        NOTE.setValue(this, note);
     }
+
+    /** Price of the item */
+    public BigDecimal getPrice() {
+        return PRICE.of(this);
+    }
+
+    /** Price of the item */
+    public void setPrice(BigDecimal price) {
+        PRICE.setValue(this, price);
+    }
+
+    /** A reference to common $Order */
     public $Order getOrder() {
-        return get(ORDER);
-    }
-    public void setOrder($Order _descr) {
-        set(ORDER, _descr);
+        return ORDER.of(this);
     }
 
-    /** Example of the composed key */
-    public Date getOrderCreated() {
-        // An alternative solution for: getOrder().getCreated();
-        return get($ORDER_CREATED);
+    /** A reference to common $Order */
+    public void setOrder($Order order) {
+        ORDER.setValue(this, order);
     }
 
+    /** A composed (or indirect) key provides a 'CREATED' attribute of the $Order */
+    public Date get$orderCreated() {
+        return $ORDER_CREATED.of(this);
+    }
+
+    /** A composed (or indirect) key provides a 'CREATED' attribute of the $Order */
+    public void set$orderCreated(Date $orderCreated) {
+        $ORDER_CREATED.setValue(this, $orderCreated);
+    }
 
 }

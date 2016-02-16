@@ -42,7 +42,7 @@ public class MyProcedure {
     /** INPUT parameter */
     private Boolean paramEnabled = false;
 
-    // --- Generated setters and getters ---
+    // --- Getters and Setters ---
 
     public Integer getResult() {
         return result;

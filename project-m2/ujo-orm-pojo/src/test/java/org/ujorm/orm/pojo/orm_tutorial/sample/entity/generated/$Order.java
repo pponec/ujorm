@@ -92,7 +92,7 @@ public final class $Order extends OrmTable<$Order> {
         setId(id);
     }
 
-    // --- An optional implementation of commonly used setters and getters ---
+    // --- Getters and Setters ---
 
     public Long getId() {
         return get(ID);
