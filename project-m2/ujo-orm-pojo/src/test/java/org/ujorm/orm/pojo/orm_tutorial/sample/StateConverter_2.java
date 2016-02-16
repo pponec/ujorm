@@ -24,7 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.ujorm.orm.ITypeService;
 import org.ujorm.orm.metaModel.MetaColumn;
-import org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated.$Order.State;
+import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Order.State;
 
 /**
  *
