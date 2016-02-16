@@ -58,4 +58,22 @@ import org.ujorm.orm.annot.View;
     @Column(name="item_count")
     private Integer itemCount = 0;
 
+    // --- Getters and Setters ---
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getItemCount() {
+        return itemCount;
+    }
+
+    public void setItemCount(Integer itemCount) {
+        this.itemCount = itemCount;
+    }
+    
 }

@@ -41,7 +41,7 @@ public class Customer {
     /** A parent (father or mother) with an alias called {@code "parent"} */
     private Customer parent ; // f.newKeyAlias("customerAlias");
 
-    // --- Generated setters and getters ---
+    // --- Getters and Setters ---
 
     public Long getId() {
         return id;

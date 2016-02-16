@@ -16,8 +16,6 @@
 package org.ujorm.orm.pojo.orm_tutorial.sample.entity;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import org.ujorm.Key;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated.*;
@@ -36,22 +34,18 @@ public class Item {
     private Long id;
     /** User key */
     private Integer userId;
-    /** Description of the Item */
+    /** Description of the $Item */
     private String note;
     /** Price of the item */
     @Comment("Price of the item")
     @Column(length=8, precision=2)
     private BigDecimal price = BigDecimal.ZERO;
-    /** A reference to common Order */
+    /** A reference to common $Order */
     @Comment("A reference to the Order")
     @Column(name="fk_order")
-    private Order order;
+    private $Order order;
 
-    /** A composed (or indirect) key provides a 'CREATED' attribute of the Order */
-    public static final Key<$Item, Date> $ORDER_CREATED = $Item.ORDER.add($Order.CREATED);
-
-
-    // --- Generated setters and getters ---
+    // --- Getters and Setters ---
 
     public Long getId() {
         return id;
@@ -61,11 +55,11 @@ public class Item {
         this.id = id;
     }
 
-    public Integer getUser_id() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUser_id(Integer userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -85,11 +79,11 @@ public class Item {
         this.price = price;
     }
 
-    public Order getOrder() {
+    public $Order getOrder() {
         return order;
     }
 
-    public void setOrder(Order order) {
+    public void setOrder($Order order) {
         this.order = order;
     }
 

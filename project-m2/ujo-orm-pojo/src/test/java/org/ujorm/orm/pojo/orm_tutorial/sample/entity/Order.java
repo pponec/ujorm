@@ -62,26 +62,17 @@ public class Order {
     private Date created;
     /** Text file */
     @Transient
-    private Clob text_file;
+    private Clob textFile;
     /** Binary file */
     @Transient
-    private Blob binary_file;
+    private Blob binaryFile;
     /** Reference to Items */
     private List<Item> items;
     /** Customer */
     @Column(name="fk_customer") private Customer customer;
-    @Column(mandatory=true) private Integer new_column = 777;
+    @Column(mandatory=true) private Integer newColumn = 777;
 
-    // --- Constructors ---
-
-    public Order() {
-    }
-
-    public Order(Long id) {
-        setId(id);
-    }
-
-    // --- Generated Getters and setters ---
+    // --- Getters and Setters ---
 
     public Long getId() {
         return id;
@@ -123,20 +114,20 @@ public class Order {
         this.created = created;
     }
 
-    public Clob getText_file() {
-        return text_file;
+    public Clob getTextFile() {
+        return textFile;
     }
 
-    public void setText_file(Clob text_file) {
-        this.text_file = text_file;
+    public void setTextFile(Clob textFile) {
+        this.textFile = textFile;
     }
 
-    public Blob getBinary_file() {
-        return binary_file;
+    public Blob getBinaryFile() {
+        return binaryFile;
     }
 
-    public void setBinary_file(Blob binary_file) {
-        this.binary_file = binary_file;
+    public void setBinaryFile(Blob binaryFile) {
+        this.binaryFile = binaryFile;
     }
 
     public List<Item> getItems() {
@@ -155,12 +146,12 @@ public class Order {
         this.customer = customer;
     }
 
-    public Integer getNew_column() {
-        return new_column;
+    public Integer getNewColumn() {
+        return newColumn;
     }
 
-    public void setNew_column(Integer new_column) {
-        this.new_column = new_column;
+    public void setNewColumn(Integer newColumn) {
+        this.newColumn = newColumn;
     }
 
 }
