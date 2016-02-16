@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.annot.UjoConverter;
 
@@ -60,10 +61,7 @@ public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
     /** Convert from POJO to UJO */
     @Override
     public U marshal(final Object v) throws IllegalStateException {
-        if (v == null) {
-            return null;
-        }
-        if (v instanceof Ujo) {
+        if (v == null || v instanceof Ujo) {
             @SuppressWarnings("unchecked")
             final U result = (U) v;
             return result;
@@ -138,4 +136,18 @@ public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
             throw new IllegalStateException(e);
         }
     }
+
+    // ------ TOOLS --------
+
+
+    /** Get value */
+    public <U extends Ujo, V> V getValue(final Key<U,V> key, final Object domain) {
+        return key.of((U) marshal(domain));
+    }
+
+    /** Get value */
+    public <U extends Ujo, V> void setValue(final Key<U,V> key, final Object domain, final V value) {
+        key.setValue((U) marshal(domain), value);
+    }
+
 }
