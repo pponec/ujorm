@@ -40,6 +40,7 @@ import org.ujorm.core.UjoManager;
 import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Customer;
 import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Item;
 import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Order;
+import org.ujorm.orm.pojo.orm_tutorial.sample.entity.ViewOrder;
 import org.ujorm.orm.template.AliasTable;
 import static org.ujorm.criterion.Operator.*;
 import static org.ujorm.orm.template.AliasTable.Build.*;
@@ -242,13 +243,13 @@ public class SampleOrmPojo {
             .and($Item.NOTE.where(CONTAINS, "table" ) )
             .and($Item.ORDER.add($Order.NOTE).whereEq( "My order" ));
 
-        for ($Item item : session.createQuery(crn)) {
+        for (Item item : session.createQuery(crn)) {
             Date created = item.getOrder().getCreated(); // Lazy loading
             System.out.println("Item: " + item + " // created: " + created);
         }
     }
 
-    /** Lern how to use the Criterion as an simple object validator only. */
+    /** Learn how to use the Criterion as an simple object validator only. */
     public void useCriterions() {
 
         final Order order = new Order();
@@ -275,6 +276,8 @@ public class SampleOrmPojo {
 
         // Another condition: ($Order.CREATED<=now() or $Order.NOTE='another') and $Order.ID>99
         crn = (crnCreated.or(crnNote)).and(crnId);
+        assert crn.evaluate(ujo(order));
+
         // ... or simple by a native priority:
         crn = crnCreated.or(crnNote).and(crnId);
         assert crn.evaluate(ujo(order));
@@ -292,7 +295,7 @@ public class SampleOrmPojo {
 
     /** *  Sort items by a <strong>composite</strong> property. <br>
      * Note 1: see how a composite key can be used for reading values too. <br>
- Note 2: the method loadLazyValues(..) is able to load all lazy keys for the $Item and its related $Order<br>
+     * Note 2: the method loadLazyValues(..) is able to load all lazy keys for the $Item and its related $Order<br>
      */
     public void useSortOrderItems() {
 
@@ -336,7 +339,7 @@ public class SampleOrmPojo {
                 .orderBy($ViewOrder.ID)
                 .setSqlParameters(0)
                 ;
-        for ($ViewOrder order : orders) {
+        for (ViewOrder order : orders) {
             logInfo("Order row: %s", order);
         }
     }
@@ -379,7 +382,7 @@ public class SampleOrmPojo {
                 .orderBy($ViewOrder.ID)
                 .setSqlParameters(sql)
                 ;
-        for ($ViewOrder order : orders) {
+        for (ViewOrder order : orders) {
             logInfo("Order row: %s", order);
         }
     }
@@ -421,7 +424,7 @@ public class SampleOrmPojo {
                 .orderBy($ViewOrder.ID)
                 .setSqlParameters(sqlParam)
                 ;
-        for ($ViewOrder viewOrder : orders) {
+        for (ViewOrder viewOrder : orders) {
             logInfo("Order row: %s", viewOrder);
         }
     }
@@ -674,7 +677,7 @@ public class SampleOrmPojo {
 
     /** How to get the latest order by the LIMIT attribute? */
     public void useLimitAndOffset() {
-        $Order order = session.createQuery($Order.class)
+        Order order = session.createQuery($Order.class)
                 .setLimit(1)
                 .setOffset(0) // The default value can't be specified
                 .orderBy($Order.CREATED.descending())
@@ -838,7 +841,7 @@ public class SampleOrmPojo {
 
     /** Using the pessimistic database UPDATE by the method: setLockRequest(). */
     public void usePesimisticUpdate() {
-        $Order order = session.createQuery($Order.ID.whereEq(anyOrderId))
+        Order order = session.createQuery($Order.ID.whereEq(anyOrderId))
                 .setLockRequest()
             .uniqueResult()
             ;
@@ -849,7 +852,7 @@ public class SampleOrmPojo {
 
     /** How to DELETE the one loaded object? */
     public void useDelete() {
-        $Item item = session.createQuery($Item.class).setLimit(1).uniqueResult();
+        Item item = session.createQuery($Item.class).setLimit(1).uniqueResult();
 
         session.delete(item);
         session.commit();
@@ -865,7 +868,7 @@ public class SampleOrmPojo {
         logInfo("There are DELETED rows:  %s", count);
     }
 
-    /** How to use a batch DELETE for an extended conditon? <br/>
+    /** How to use a batch DELETE for an extended condition? <br/>
      * See the next example:
      */
     public void useExtendedDelete() {
