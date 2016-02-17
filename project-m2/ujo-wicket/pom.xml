@@ -5,7 +5,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-wicket</artifactId>
     <packaging>jar</packaging>
-    <version>1.62-SNAPSHOT</version>
+    <version>1.61.BETA1-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-wicket</name>
     <description>The Ujo-Wicket is designed for supprot a Wicket framework applications.</description>
@@ -108,7 +108,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>1.62-SNAPSHOT</version>
+            <version>1.61.BETA1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -196,7 +196,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-spring</artifactId>
-            <version>1.62-SNAPSHOT</version>
+            <version>1.61.BETA1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

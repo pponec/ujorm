@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-xsd</artifactId>
     <packaging>jar</packaging>
-    <version>1.62-SNAPSHOT</version>
+    <version>1.61.BETA1-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-xsd</name>
     <description>XSD generator according the Ujo
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>1.62-SNAPSHOT</version>
+            <version>1.61.BETA1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>1.62-SNAPSHOT</version>
+            <version>1.61.BETA1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 
