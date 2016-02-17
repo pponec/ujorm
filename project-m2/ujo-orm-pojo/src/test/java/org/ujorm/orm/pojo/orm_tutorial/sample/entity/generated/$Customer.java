@@ -146,8 +146,21 @@ public final class $Customer extends Customer implements UjoMiddle<$Customer>, E
         UjoManager.getInstance().setText(this, key, value, null, null);
     }
 
+    /** POJO:TODO: move the implementation to Key implementation (?) */
     @Override
     public Object readValue(Key<?, ?> key) {
+        final Object result = _readValue(key);
+        if (result == null) {
+            return result;
+        }
+        if (key.isTypeOf(Ujo.class) && !(result instanceof Ujo)) {
+            return CONVERTER.marshal(result);
+        } else {
+            return result;
+        }
+    }
+
+    protected Object _readValue(Key<?, ?> key) {
         if (this.data != null) {
             switch (key.getIndex()) {
                 case 0: return data.getId();

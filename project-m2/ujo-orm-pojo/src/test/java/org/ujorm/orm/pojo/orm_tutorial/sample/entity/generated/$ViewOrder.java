@@ -19,6 +19,7 @@ import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.View;
 import org.ujorm.orm.pojo.orm_tutorial.sample.entity.ViewOrder;
+import static org.ujorm.orm.InternalUjo.CONVERTER;
 
 /**
  * The column mapping to FROM view.
@@ -162,6 +163,18 @@ import org.ujorm.orm.pojo.orm_tutorial.sample.entity.ViewOrder;
 
     @Override
     public Object readValue(Key<?, ?> key) {
+        final Object result = _readValue(key);
+        if (result == null) {
+            return result;
+        }
+        if (key.isTypeOf(Ujo.class) && !(result instanceof Ujo)) {
+            return CONVERTER.marshal(result);
+        } else {
+            return result;
+        }
+    }
+
+    protected Object _readValue(Key<?, ?> key) {
         if (this.data != null) {
             switch (key.getIndex()) {
                 case 0: return data.getId();

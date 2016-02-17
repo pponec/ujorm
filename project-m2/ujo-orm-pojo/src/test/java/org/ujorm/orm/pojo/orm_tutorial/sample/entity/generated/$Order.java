@@ -30,6 +30,7 @@ import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Customer;
 import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Item;
 import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Order;
 import org.ujorm.orm.pojo.orm_tutorial.sample.entity.Order.State;
+import static org.ujorm.orm.InternalUjo.CONVERTER;
 
 /**
  * The column mapping to DB table ORDER (a sample of usage).
@@ -170,6 +171,18 @@ public final class $Order extends Order implements UjoMiddle<$Order>, ExtendedOr
 
     @Override
     public Object readValue(Key<?, ?> key) {
+        final Object result = _readValue(key);
+        if (result == null) {
+            return result;
+        }
+        if (key.isTypeOf(Ujo.class) && !(result instanceof Ujo)) {
+            return CONVERTER.marshal(result);
+        } else {
+            return result;
+        }
+    }
+
+    protected Object _readValue(Key<?, ?> key) {
         if (this.data != null) {
             switch (key.getIndex()) {
                 case 0: return data.getId();

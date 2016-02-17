@@ -31,9 +31,6 @@ import org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated.*;
 @Comment("Order item")
 public class Item {
 
-    /** A composed (or indirect) key provides a 'CREATED' attribute of the $Order */
-    public static final Key<$Item,Date> $ORDER_CREATED = $Item.ORDER.add($Order.CREATED);
-
     /** Unique key */
     @Column(pk = true)
     private Long id;
