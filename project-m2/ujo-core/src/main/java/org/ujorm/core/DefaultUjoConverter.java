@@ -95,6 +95,9 @@ public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
 
     /** Generic converter of the target class */
     public <T extends U> Class<T> marshalType(final Class<?> pojoClass) {
+        if (Ujo.class.isAssignableFrom(pojoClass)) {
+            return (Class<T>) pojoClass;
+        }
         try {
             final UjoConverter aConverter = pojoClass.getAnnotation(UjoConverter.class);
             final Class<?> result = aConverter != null
