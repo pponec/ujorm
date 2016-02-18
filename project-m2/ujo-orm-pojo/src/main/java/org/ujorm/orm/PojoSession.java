@@ -107,14 +107,13 @@ public class PojoSession implements Closeable {
     }
 
     /** Create query for all table rows. */
-    public <UJO extends OrmUjo> PojoQuery<UJO> createQuery(Class<? super UJO> aClass) {
-        final Query<UJO> query = (Query<UJO>) session.createQuery(converter.marshalType(aClass));
-        return new PojoQuery<UJO>(query);
+    public <UJO extends OrmUjo> Query<UJO> createQuery(Class<? super UJO> aClass) {
+        return (Query<UJO>) session.createQuery(converter.marshalType(aClass));
     }
 
     /** The table class is derived from the first criterion column. */
-    public <UJO extends OrmUjo> PojoQuery<UJO> createQuery(final Criterion<UJO> criterion) {
-        return new PojoQuery<UJO>(session.createQuery((Criterion)criterion));
+    public <UJO extends OrmUjo> Query<UJO> createQuery(final Criterion<UJO> criterion) {
+        return session.createQuery((Criterion)criterion);
     }
 
     /** Returns {@code true} if exists any database row with the required condition. */

@@ -286,7 +286,7 @@ public class SampleOrmPojo {
     /** Sort orders by two keys: NOTE and CREATED descending. */
     public void useSortOrders() {
 
-        PojoQuery<$Order> orders = session.createQuery(Order.class);
+        Query<$Order> orders = session.createQuery(Order.class);
         orders.orderBy( $Order.NOTE
                       , $Order.CREATED.descending() );
 
@@ -299,7 +299,7 @@ public class SampleOrmPojo {
      */
     public void useSortOrderItems() {
 
-        PojoQuery<$Item> items = session.createQuery(Item.class);
+        Query<$Item> items = session.createQuery(Item.class);
         items.orderBy($Item.ORDER.add($Order.CREATED));
 
         for (Item item : items) {
@@ -307,7 +307,7 @@ public class SampleOrmPojo {
             logInfo("Created: %s of %s", (($Item)item).get($Item.ORDER.add($Order.CREATED)), item);
         }
         // Another way to avoid the lazy loading by a bulk key loading:
-        List<$Item> itemList = OrmTools.loadLazyValuesAsBatch(items.getQuery());
+        List<$Item> itemList = OrmTools.loadLazyValuesAsBatch(items);
         logInfo("ItemList: %s", itemList);
     }
 
@@ -334,7 +334,7 @@ public class SampleOrmPojo {
                 ;
         logInfo("Order count: %s", orderCount);
 
-        PojoQuery<$ViewOrder> orders = session.createQuery(crit)
+        Query<$ViewOrder> orders = session.createQuery(crit)
                 .setLimit(5)
                 .orderBy($ViewOrder.ID)
                 .setSqlParameters(0)
@@ -377,7 +377,7 @@ public class SampleOrmPojo {
 
         logInfo("Order Count: %s", orderCount);
 
-        PojoQuery<$ViewOrder> orders = session.createQuery(crit)
+        Query<$ViewOrder> orders = session.createQuery(crit)
                 .setLimit(5)
                 .orderBy($ViewOrder.ID)
                 .setSqlParameters(sql)
@@ -419,7 +419,7 @@ public class SampleOrmPojo {
                 .getCount();
         logInfo("Order Count: %s", orderCount);
 
-        PojoQuery<$ViewOrder> orders = session.createQuery(crit)
+        Query<$ViewOrder> orders = session.createQuery(crit)
                 .setLimit(5)
                 .orderBy($ViewOrder.ID)
                 .setSqlParameters(sqlParam)
@@ -433,7 +433,7 @@ public class SampleOrmPojo {
     public void useSelectItems_1() {
 
         Criterion<$Item> crit = $Item.NOTE.where(CONTAINS_CASE_INSENSITIVE, "table");
-        PojoQuery<$Item> items = session.createQuery(crit).orderBy($Item.ID.descending());
+        Query<$Item> items = session.createQuery(crit).orderBy($Item.ID.descending());
 
         for (Item item : items) {
             Order order = item.getOrder();
@@ -445,7 +445,7 @@ public class SampleOrmPojo {
     public void useSelectItems_2() {
 
         $Order orderValue = session.load($Order.class, anyOrderId);
-        PojoQuery<$Item> items = session.createQuery($Item.ORDER.whereEq(orderValue));
+        Query<$Item> items = session.createQuery($Item.ORDER.whereEq(orderValue));
 
         for (Item item : items) {
             Order order2 = item.getOrder();
@@ -471,7 +471,7 @@ public class SampleOrmPojo {
      */
     public void useSelectItems_4() {
         Key<$Item, Date> ORDER_DATE = $Item.ORDER.add($Order.CREATED); // or use: $Item.$ORDER_CREATED
-        PojoQuery<$Item> items = session.createQuery(ORDER_DATE.whereLe(new Date()));
+        Query<$Item> items = session.createQuery(ORDER_DATE.whereLe(new Date()));
 
         for (Item item : items) {
             logInfo("Item: %s", item);
@@ -484,7 +484,7 @@ public class SampleOrmPojo {
      * @see $Item#$ORDER_CREATED
      */
     public void useSelectItems_5() {
-        PojoQuery<$Item> items = session.createQuery($Item.ID.whereIn(1L, 2L, 3L, 4L, 5L));
+        Query<$Item> items = session.createQuery($Item.ID.whereIn(1L, 2L, 3L, 4L, 5L));
 
         for (Item item : items) {
             logInfo("Item: %s", item);
@@ -511,7 +511,7 @@ public class SampleOrmPojo {
 
     /** Select one items without $Order */
     public void useSelectItems_6() {
-        PojoQuery<$Item> items = session.createQuery($Item.ORDER.add($Order.CUSTOMER).whereNull());
+        Query<$Item> items = session.createQuery($Item.ORDER.add($Order.CUSTOMER).whereNull());
         for (Item item : items) {
             logInfo("Item without order: %s", item);
         }
@@ -580,7 +580,7 @@ public class SampleOrmPojo {
      * with no duplicate rows for a better performance.
      */
     public void useOptimizedSelect() {
-        PojoQuery<$Item> items = session.createQuery($Item.ID.whereNeq(0L))
+        Query<$Item> items = session.createQuery($Item.ID.whereNeq(0L))
                 .setColumn($Item.NOTE) // Select the one column
                 .setDistinct()        // Remove duplicate rows
                 ;
@@ -595,7 +595,7 @@ public class SampleOrmPojo {
 
     /** Fetch column from related tables */
     public void useOneRequestLoading() {
-        PojoQuery<$Item> items = session.createQuery($Item.ID.whereNeq(0L));
+        Query<$Item> items = session.createQuery($Item.ID.whereNeq(0L));
         Key<$Item, Date> orderCreated = $Item.ORDER.add($Order.CREATED);
 
         // Fetch the $Order's CREATED column (and the primary key):
@@ -627,7 +627,7 @@ public class SampleOrmPojo {
         Criterion<$Order> crn = $Order.ID.forSql("{0} > {1}", 0L)
                 .and($Order.CREATED.where(LE, new Date()));
         $Order.ID.forSql("{0} > {1}", 1L).getRightNode();
-        PojoQuery<$Order> orders = session.createQuery(crn);
+        Query<$Order> orders = session.createQuery(crn);
 
         for (Order order : orders) {
             logInfo("Order: %s", order);
@@ -688,7 +688,7 @@ public class SampleOrmPojo {
 
     /** How to count items ? */
     public void useSelectCount() {
-        PojoQuery<$Item> query = session.createQuery($Item.NOTE.where(CONTAINS_CASE_INSENSITIVE, "table"));
+        Query<$Item> query = session.createQuery($Item.NOTE.where(CONTAINS_CASE_INSENSITIVE, "table"));
         long count = query.getCount();
         logInfo("Count of the order items: %s", count);
     }
