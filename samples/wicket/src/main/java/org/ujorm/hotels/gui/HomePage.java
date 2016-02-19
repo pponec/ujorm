@@ -28,6 +28,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.about.AboutPanel;
+import org.ujorm.hotels.gui.about.BuildInfo;
 import org.ujorm.hotels.gui.about.MeasuringCode;
 import org.ujorm.hotels.gui.booking.BookingTable;
 import org.ujorm.hotels.gui.customer.CustomerTable;
@@ -74,6 +75,7 @@ public class HomePage extends WebPage {
         });
         Label label;
         add(new MeasuringCode("measuringCode"));
+        add(new BuildInfo("buildInfo"));
         add(new Label("applicationTitle", MainApplication.APPLICATION_NAME));
         add(label = new Label("applicationHeader", MainApplication.APPLICATION_NAME));
         if (!applParams.isProduction()) {
