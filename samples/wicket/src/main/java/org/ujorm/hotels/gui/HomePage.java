@@ -18,9 +18,12 @@ package org.ujorm.hotels.gui;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.http.WebResponse;
@@ -43,7 +46,7 @@ import org.ujorm.wicket.component.tabs.UjoTab;
 import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
 import static org.ujorm.wicket.CommonActions.*;
 
-public class HomePage extends WebPage {
+public class HomePage extends WebPage implements IAjaxIndicatorAware {
     private static final long serialVersionUID = 1L;
     /** Logout */
     public static final String LOGOUT_ID = "logout";
@@ -51,6 +54,8 @@ public class HomePage extends WebPage {
     private AuthService authService;
     @SpringBean
     private ApplicationParams applParams;
+    /** Waiting animated icon */
+    private final Component waitingIcon;
 
     public HomePage(PageParameters parameters) {
         super(parameters);
@@ -74,6 +79,7 @@ public class HomePage extends WebPage {
             }
         });
         Label label;
+        add(waitingIcon = new WebMarkupContainer("waitingIcon").setOutputMarkupId(true));
         add(new MeasuringCode("measuringCode"));
         add(new BuildInfo("buildInfo"));
         add(new Label("applicationTitle", MainApplication.APPLICATION_NAME));
@@ -113,5 +119,11 @@ public class HomePage extends WebPage {
         super.setHeaders(response);
         response.setHeader("X-UA-Compatible", "IE=edge");
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getAjaxIndicatorMarkupId() {
+        return waitingIcon.getMarkupId();
     }
 }
