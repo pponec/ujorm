@@ -30,6 +30,7 @@
         <jetty.version>6.1.26</jetty.version>
         <spring.version>3.2.2.RELEASE</spring.version>
         <java.version>1.6</java.version>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.deploy.server>Tomcat60</netbeans.hint.deploy.server>
     </properties>
@@ -339,6 +340,17 @@
         </testResources>
 
         <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId> <!-- or maven-jar-plugin -->
+                <version>2.2</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Build-Time>${maven.build.timestamp}</Build-Time>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
             <plugin>
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
