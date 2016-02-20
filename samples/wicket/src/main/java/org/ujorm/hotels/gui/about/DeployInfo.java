@@ -21,16 +21,16 @@ import org.slf4j.LoggerFactory;
  * MeasuringCode
  * @author Pavel Ponec
  */
-public class BuildInfo extends Label {
+public class DeployInfo extends Label {
     /** Logger */
-    private static final Logger LOGGER = LoggerFactory.getLogger(BuildInfo.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeployInfo.class);
 
     /** New line */
     private static final char NEW_LINE = '\n';
     private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final Date STARTUP = new Date();
 
-    public BuildInfo(String id) {
+    public DeployInfo(String id) {
         super(id);
         setRenderBodyOnly(true);
         setEscapeModelStrings(false);
@@ -47,7 +47,7 @@ public class BuildInfo extends Label {
         final SimpleDateFormat format = new SimpleDateFormat(FORMAT);
         final StringBuilder result = new StringBuilder();
 
-        result.append(NEW_LINE).append("<!-- Build:");
+        result.append(NEW_LINE).append("<!-- Deploy info:");
         result.append(NEW_LINE).append("Startup Date: ").append(format.format(STARTUP));
         result.append(NEW_LINE).append("Build Time..: ").append(getBuildDate());
         result.append(NEW_LINE).append("-->");
