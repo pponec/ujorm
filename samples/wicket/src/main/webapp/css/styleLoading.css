@@ -2,23 +2,23 @@ div.waitingIcon {
     padding-top: 250px;
 }
 
-#floatingBarsG {
+#floatingBarsG{
     position:relative;
-    width:60px;
-    height:75px;
+    width:109px;
+    height:135px;
     margin:auto;
 }
 
-.blockG {
+.blockG{
     position:absolute;
     background-color:rgb(255,255,255);
-    width:10px;
-    height:23px;
-    border-radius:8px 8px 0 0;
-    -o-border-radius:8px 8px 0 0;
-    -ms-border-radius:8px 8px 0 0;
-    -webkit-border-radius:8px 8px 0 0;
-    -moz-border-radius:8px 8px 0 0;
+    width:18px;
+    height:42px;
+    border-radius:14px 14px 0 0;
+    -o-border-radius:14px 14px 0 0;
+    -ms-border-radius:14px 14px 0 0;
+    -webkit-border-radius:14px 14px 0 0;
+    -moz-border-radius:14px 14px 0 0;
     transform:scale(0.4);
     -o-transform:scale(0.4);
     -ms-transform:scale(0.4);
@@ -48,7 +48,7 @@ div.waitingIcon {
 
 #rotateG_01{
     left:0;
-    top:27px;
+    top:49px;
     animation-delay:0.45s;
     -o-animation-delay:0.45s;
     -ms-animation-delay:0.45s;
@@ -62,8 +62,8 @@ div.waitingIcon {
 }
 
 #rotateG_02{
-    left:8px;
-    top:10px;
+    left:14px;
+    top:18px;
     animation-delay:0.6s;
     -o-animation-delay:0.6s;
     -ms-animation-delay:0.6s;
@@ -77,8 +77,8 @@ div.waitingIcon {
 }
 
 #rotateG_03{
-    left:25px;
-    top:3px;
+    left:46px;
+    top:5px;
     animation-delay:0.75s;
     -o-animation-delay:0.75s;
     -ms-animation-delay:0.75s;
@@ -92,8 +92,8 @@ div.waitingIcon {
 }
 
 #rotateG_04{
-    right:8px;
-    top:10px;
+    right:14px;
+    top:18px;
     animation-delay:0.9s;
     -o-animation-delay:0.9s;
     -ms-animation-delay:0.9s;
@@ -108,7 +108,7 @@ div.waitingIcon {
 
 #rotateG_05{
     right:0;
-    top:27px;
+    top:49px;
     animation-delay:1.05s;
     -o-animation-delay:1.05s;
     -ms-animation-delay:1.05s;
@@ -122,8 +122,8 @@ div.waitingIcon {
 }
 
 #rotateG_06{
-    right:8px;
-    bottom:7px;
+    right:14px;
+    bottom:12px;
     animation-delay:1.2s;
     -o-animation-delay:1.2s;
     -ms-animation-delay:1.2s;
@@ -138,7 +138,7 @@ div.waitingIcon {
 
 #rotateG_07{
     bottom:0;
-    left:25px;
+    left:46px;
     animation-delay:1.35s;
     -o-animation-delay:1.35s;
     -ms-animation-delay:1.35s;
@@ -152,8 +152,8 @@ div.waitingIcon {
 }
 
 #rotateG_08{
-    left:8px;
-    bottom:7px;
+    left:14px;
+    bottom:12px;
     animation-delay:1.5s;
     -o-animation-delay:1.5s;
     -ms-animation-delay:1.5s;
@@ -165,8 +165,6 @@ div.waitingIcon {
     -webkit-transform:rotate(-135deg);
     -moz-transform:rotate(-135deg);
 }
-
-
 
 @keyframes fadeG{
     0%{
@@ -212,3 +210,4 @@ div.waitingIcon {
         background-color:rgb(255,255,255);
     }
 }
+/* Source: http://cssload.net/en/spinners */
