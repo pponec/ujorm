@@ -80,7 +80,7 @@ public class SampleOrmPojo {
             sample.useSortOrderItems();
             sample.useSelectViewOrders();
             sample.useSelectWithNativeSQL();
-          //sample.useSelectWithAliasTable(); // POJO:todo
+            sample.useSelectWithAliasTable();
             sample.useSelectItems_1();
             sample.useSelectItems_2();
             sample.useSelectItems_3();
@@ -395,7 +395,7 @@ public class SampleOrmPojo {
         final AliasTable item = handler.tableOf($Item.class, "i");
 
         String expected = "SELECT o.id"
-                + ", COUNT(*) AS itemCount"
+                + ", COUNT(*) AS item_count"
                 + " FROM db1.ord_order o"
                 + " INNER JOIN db1.ord_item i ON i.fk_order = o.id "
                 + " WHERE o.id!=?"
