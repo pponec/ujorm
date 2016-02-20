@@ -96,7 +96,7 @@ public class SampleOrmPojo {
             sample.useOneRequestLoading();
             sample.useNativeCriterion();
             sample.useReloading();
-          //sample.useLazyLoadingOnClosedSession(); // POJO:todo
+            sample.useLazyLoadingOnClosedSession();
             sample.useLimitAndOffset();
             sample.useSelectCount();
             sample.useForeignKey();
