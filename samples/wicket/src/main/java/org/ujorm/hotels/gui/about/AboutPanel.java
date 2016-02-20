@@ -15,13 +15,15 @@
  */
 package org.ujorm.hotels.gui.about;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.springframework.core.SpringVersion;
 import org.ujorm.core.UjoManager;
 
 /**
- *
+ * AboutPanel
  * @author Pavel Ponec
  */
 public class AboutPanel extends Panel {
@@ -33,9 +35,15 @@ public class AboutPanel extends Panel {
        add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
        add(new Label("ujormVersion", UjoManager.version()));
        add(new Label("springVersion", SpringVersion.getVersion()));
-
-
-
+       add(new AjaxLink("waiting") {
+           @Override
+           public void onClick(AjaxRequestTarget target) {
+               try {
+                   Thread.sleep(4000);
+               } catch (InterruptedException e) {
+                   Thread.currentThread().interrupt();
+               }
+           }
+       });
     }
-
 }

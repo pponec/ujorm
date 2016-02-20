@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="css/styleBootstrap.css" type="text/css" media="screen" title="Stylesheet" />
         <link rel="stylesheet" href="css/styleUjorm.css" type="text/css" media="screen" title="Stylesheet" />
         <link rel="stylesheet" href="css/styleApplication.css" type="text/css" media="screen" title="Stylesheet" />
+        <link rel="stylesheet" href="css/styleLoading.css" type="text/css" media="screen" title="Stylesheet" />
     </head>
     <body>
         <div id="hd">
@@ -29,7 +30,18 @@
             hotel data are from <a href="http://hotelsbase.org">hotelsbase.org</a>,
             see the <a href="#" wicket:id="aboutLink">full license</a>.
         </div>
-        <div wicket:id="waitingIcon" class="waitingIcon" />
+        <div wicket:id="waitingIcon" class="waitingIcon">
+            <div id="floatingBarsG">
+                <div class="blockG" id="rotateG_01"></div>
+                <div class="blockG" id="rotateG_02"></div>
+                <div class="blockG" id="rotateG_03"></div>
+                <div class="blockG" id="rotateG_04"></div>
+                <div class="blockG" id="rotateG_05"></div>
+                <div class="blockG" id="rotateG_06"></div>
+                <div class="blockG" id="rotateG_07"></div>
+                <div class="blockG" id="rotateG_08"></div>
+            </div>
+        </div>
         <div wicket:id="measuringCode" />
         <div wicket:id="buildInfo" />
     </body>
