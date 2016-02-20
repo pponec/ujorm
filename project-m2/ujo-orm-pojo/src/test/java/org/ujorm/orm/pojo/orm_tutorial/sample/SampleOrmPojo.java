@@ -83,7 +83,7 @@ public class SampleOrmPojo {
           //sample.useSelectWithAliasTable(); // POJO:todo
             sample.useSelectItems_1();
             sample.useSelectItems_2();
-          //sample.useSelectItems_3(); // POJO:todo
+            sample.useSelectItems_3();
             sample.useSelectItems_4();
             sample.useSelectItems_5();
             sample.useSelectItems_5b();
