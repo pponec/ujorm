@@ -322,7 +322,11 @@ public final class $Order extends Order implements UjoMiddle<$Order>, ExtendedOr
     }
 
     public List<Item> getItems() {
-        return new ArrayList<Item>((Collection<? extends Item>) ITEMS.getValue(this));
+        final ArrayList<Item> result = new ArrayList<Item>();
+        for ($Item item : ITEMS.getValue(this)) {
+            result.add(item);
+        }
+        return result;
     }
 
     /** Binary file */

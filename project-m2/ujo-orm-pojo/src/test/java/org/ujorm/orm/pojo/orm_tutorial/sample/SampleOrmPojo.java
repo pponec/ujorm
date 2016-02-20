@@ -101,7 +101,7 @@ public class SampleOrmPojo {
             sample.useSelectCount();
             sample.useForeignKey();
             sample.useIteratorSkip();
-          //sample.useRelation();  // POJO:todo
+            sample.useRelation();
             sample.useStoredProcedure();
             sample.useUpdate();
             sample.useBatchUpdate();
