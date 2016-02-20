@@ -293,7 +293,7 @@ public class SampleOrmPojo {
         logInfo("View-order count: %s", orders.getCount());
     }
 
-    /** *  Sort items by a <strong>composite</strong> property. <br>
+    /** Sort items by a <strong>composite</strong> property. <br>
      * Note 1: see how a composite key can be used for reading values too. <br>
      * Note 2: the method loadLazyValues(..) is able to load all lazy keys for the $Item and its related $Order<br>
      */
@@ -311,7 +311,7 @@ public class SampleOrmPojo {
         logInfo("ItemList: %s", itemList);
     }
 
-    /** *  Use a 'native query' where the query is CREATED
+    /** Use a 'native query' where the query is CREATED
      * by a special entity signed by the @View annotation. <br/>
      * Note the special <strong>inner parameter</strong> in the SQL statement
      * on the Annotation of the class $ViewOrder,
@@ -344,10 +344,10 @@ public class SampleOrmPojo {
         }
     }
 
-    /** *  Use a 'native query' where the query is CREATED
+    /** Use a 'native query' where the query is CREATED
      * by a special entity signed by the @View annotation. <br/>
      * Note the special <strong>inner parameter</strong> in the SQL statement on the Annotation of the class $ViewOrder,
- where value for this (optional) parameter is set by the method Query.setSqlParameters();
+     * where value for this (optional) parameter is set by the method Query.setSqlParameters();
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectWithNativeSQL() {
@@ -859,9 +859,8 @@ public class SampleOrmPojo {
         logInfo("There is DELETED object:  %s", item);
     }
 
-    /** *  How to use a batch DELETE? <br/>
- The next example deletes all Items where $Item.ID = 1
-     */
+    /** How to use a batch DELETE? <br/>
+     * The next example deletes all Items where $Item.ID = 1 */
     public void useBatchDelete() {
         int count = session.delete($Item.ID.whereEq(anyOrderId));
         session.commit();
