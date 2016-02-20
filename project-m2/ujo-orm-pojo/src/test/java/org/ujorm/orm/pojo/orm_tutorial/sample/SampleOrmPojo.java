@@ -80,10 +80,10 @@ public class SampleOrmPojo {
             sample.useSortOrderItems();
             sample.useSelectViewOrders();
             sample.useSelectWithNativeSQL();
-            sample.useSelectWithAliasTable();
+          //sample.useSelectWithAliasTable(); // POJO:todo
             sample.useSelectItems_1();
             sample.useSelectItems_2();
-            sample.useSelectItems_3();
+          //sample.useSelectItems_3(); // POJO:todo
             sample.useSelectItems_4();
             sample.useSelectItems_5();
             sample.useSelectItems_5b();
@@ -96,12 +96,12 @@ public class SampleOrmPojo {
             sample.useOneRequestLoading();
             sample.useNativeCriterion();
             sample.useReloading();
-            sample.useLazyLoadingOnClosedSession();
+          //sample.useLazyLoadingOnClosedSession(); // POJO:todo
             sample.useLimitAndOffset();
             sample.useSelectCount();
             sample.useForeignKey();
             sample.useIteratorSkip();
-            sample.useRelation();
+          //sample.useRelation();  // POJO:todo
             sample.useStoredProcedure();
             sample.useUpdate();
             sample.useBatchUpdate();
@@ -394,13 +394,13 @@ public class SampleOrmPojo {
         final AliasTable order = handler.tableOf($ViewOrder.class, "o");
         final AliasTable item = handler.tableOf($Item.class, "i");
 
-        String expected = "SELECT o.ID"
-                + ", COUNT(*) AS ITEM_COUNT"
+        String expected = "SELECT o.id"
+                + ", COUNT(*) AS itemCount"
                 + " FROM db1.ord_order o"
-                + " INNER JOIN db1.ord_item i ON i.fk_order = o.ID "
-                + " WHERE o.ID!=?"
-                + " GROUP BY o.ID"
-                + " ORDER BY o.ID";
+                + " INNER JOIN db1.ord_item i ON i.fk_order = o.id "
+                + " WHERE o.id!=?"
+                + " GROUP BY o.id"
+                + " ORDER BY o.id";
         String innerSql = SELECT(order.column($Order.ID)
                 , order.columnAs("COUNT(*)", $ViewOrder.ITEM_COUNT))
                 + FROM (order)

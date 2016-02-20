@@ -4,6 +4,8 @@ package org.ujorm.orm.pojo.orm_tutorial.sample.entity.generated;
 
 import java.sql.Blob;
 import java.sql.Clob;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +14,7 @@ import org.ujorm.KeyList;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
+import org.ujorm.core.UjoIterator;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UnsupportedKey;
 import org.ujorm.core.annot.Transient;
@@ -316,6 +319,19 @@ public final class $Order extends Order implements UjoMiddle<$Order>, ExtendedOr
     /** Binary file */
     public void setBinaryFile(Blob binaryFile) {
         BINARY_FILE.setValue(this, binaryFile);
+    }
+
+    public List<Item> getItems() {
+        return new ArrayList<Item>((Collection<? extends Item>) ITEMS.getValue(this));
+    }
+
+    /** Binary file */
+    public void setItems(List<Item> items) {
+        final List<$Item> uItems = new ArrayList<$Item>(items.size());
+        for (Item item : items) {
+            uItems.add(($Item) CONVERTER.marshal(item));
+        }
+        ITEMS.setValue(this, UjoIterator.of(uItems));
     }
 
     /** $Customer */
