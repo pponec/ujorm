@@ -176,27 +176,27 @@ div.waitingIcon {
 }
 
 @keyframes fadeG{
-    0%{background-color:white;}
-    100%{background-color:black;}
+    0%{background-color:rgb(0,0,0);}
+    100%{background-color:rgb(255,255,255);}
 }
 
 @-o-keyframes fadeG{
-    0%{background-color:white;}
-    100%{background-color:black;}
+    0%{background-color:rgb(0,0,0);}
+    100%{background-color:rgb(255,255,255);}
 }
 
 @-ms-keyframes fadeG{
-    0%{background-color:white;}
-    100%{background-color:black;}
+    0%{background-color:rgb(0,0,0);}
+    100%{background-color:rgb(255,255,255);}
 }
 
 @-webkit-keyframes fadeG{
-    0%{background-color:white;}
-    100%{background-color:black;}
+    0%{background-color:rgb(0,0,0);}
+    100%{background-color:rgb(255,255,255);}
 }
 
 @-moz-keyframes fadeG{
-    0%{background-color:white;}
-    100%{background-color:black;}
+    0%{background-color:rgb(0,0,0);}
+    100%{background-color:rgb(255,255,255);}
 }
 /* Source: http://cssload.net/en/spinners */
