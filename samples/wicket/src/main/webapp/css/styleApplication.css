@@ -187,22 +187,4 @@ div.date input {
     background: url(../images/icons/date_light.png) no-repeat scroll 97% center white;
 }
 
-.waitingIcon {
-    display: none;
-    background-color: transparent;
-    opacity: 0.4;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 99999;
-    width: 100%;
-    height: 100%;
-    /*background: url(../images/spin.svg) no-repeat scroll center transparent;*/
-}
-
-.X-waitingIcon[showIncrementallyCount="1"] {
-    animation-delay: 1s;
-    color: red;
-    transition: showincrementallycount 1s;
-}
 
