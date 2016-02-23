@@ -23,7 +23,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.http.WebResponse;
@@ -44,6 +43,7 @@ import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.tabs.UjoTab;
 import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
+import org.ujorm.wicket.component.waiting.WaitingIcon;
 import static org.ujorm.wicket.CommonActions.*;
 
 public class HomePage extends WebPage implements IAjaxIndicatorAware {
@@ -79,7 +79,7 @@ public class HomePage extends WebPage implements IAjaxIndicatorAware {
             }
         });
         Label label;
-        add(waitingIcon = new WebMarkupContainer("waitingIcon").setOutputMarkupId(true));
+        add(waitingIcon = new WaitingIcon("waitingIcon"));
         add(new MeasuringCode("measuringCode"));
         add(new DeployInfo("deployInfo"));
         add(new Label("applicationTitle", MainApplication.APPLICATION_NAME));
