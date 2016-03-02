@@ -173,8 +173,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** Set a new Criterion. There is recommended
      * @param criterion The value NULL is allowed because the value is replaced internally to expression <code>Criterion.where(true)</code>.
-     *                  A MetaTable parameter must be specified in the constuctor for this case.
-     * @see Session#createQuery(org.ujorm.criterion.Criterion) createQuery(Criteron)
+     *                  A MetaTable parameter must be specified in the constructor for this case.
+     * @see Session#createQuery(org.ujorm.criterion.Criterion) createQuery(Criterion)
      * @see #addCriterion(org.ujorm.criterion.Criterion) addCriterion(..)
      **/
     public Query<UJO> setCriterion(Criterion<UJO> criterion) {
@@ -191,7 +191,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return criterion;
     }
 
-    /** Method builds and retuns a criterion decoder.
+    /** Method builds and returns a criterion decoder.
      * The new decoder is cached to a next order by change.
      */
     @SuppressWarnings("unchecked")
@@ -316,7 +316,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * recursively until optional depth.
      *
      * <br>Performance note: all lazy values are loaded using the one more SQL statement per one relation Key.
-     * The method can consume a lot of memory in dependence on the database row count and content of the Criteron.
+     * The method can consume a lot of memory in dependence on the database row count and content of the Criterion.
      *
      * @param depth The object resursion depth where value 0 means: do not any lazy loading.
      * level. The current release supports only values: 0 and 1.

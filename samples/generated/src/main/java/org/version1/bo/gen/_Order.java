@@ -2,11 +2,11 @@
  *  Don't modify the generated class.
  *  License the Apache License, Version 2.0
  */
-package org.bo.gen;
+package org.version1.bo.gen;
 
 import java.util.Date;
-import org.bo.Item;
-import org.bo.Order;
+import org.version1.bo.Item;
+import org.version1.bo.Order;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.extensions.ValueExportable;

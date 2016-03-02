@@ -56,7 +56,7 @@ public class OrmHandler implements OrmHandlerProvider {
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(OrmHandler.class);
 
     /** List of databases */
-    private MetaRoot databases = new MetaRoot();
+    private final MetaRoot databases = new MetaRoot();
     /** Temporary configuration */
     private MetaRoot configuration;
     /** The default ORM session */
@@ -292,6 +292,11 @@ public class OrmHandler implements OrmHandlerProvider {
         final List<MetaDatabase> dbs = getDatabases();
         final boolean result = UjoTools.isFilled(dbs) ? dbs.get(0).readOnly() : false;
         return result;
+    }
+
+    /** Returns database model */
+    public MetaRoot getDatabaseModel() {
+        return databases;
     }
 
     /** Map a key to the table */

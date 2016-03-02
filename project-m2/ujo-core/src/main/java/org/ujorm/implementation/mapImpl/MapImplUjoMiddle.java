@@ -60,7 +60,7 @@ abstract public class MapImplUjoMiddle<UJO extends MapImplUjoMiddle>
         super(aData);
     }
 
-    /** No parameters constuctor */
+    /** No parameters constructor */
     public MapImplUjoMiddle() {
     }
 
