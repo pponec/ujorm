@@ -94,7 +94,16 @@ public class UjoSequencer {
                 seqLimit = seqMap[SEQ_LIMIT];
                 int step = (int) seqMap[SEQ_STEP];
                 maxValue = seqMap[SEQ_MAX_VALUE];
-                sequence = (seqLimit - step) + 1; // Get the last assigned number + 1;
+                sequence = seqLimit - step + 1; // Get the last assigned number + 1;
+
+                if (LOGGER.isLoggable(UjoLogger.INFO)) {
+                    final String msg = getClass().getSimpleName()
+                            + ": seqLimit=" + seqLimit
+                            + ", step=" + step
+                            + ", maxValue=" + maxValue
+                            + ", sequence=" + sequence;
+                    LOGGER.log(UjoLogger.INFO, msg);
+                }
 
                 if (maxValue!=0L) {
                     if (seqLimit>maxValue) {
