@@ -20,7 +20,6 @@
     <context:annotation-config />
     <context:component-scan base-package="org.ujorm.hotels.service, org.ujorm.hotels.gui" />
     <tx:annotation-driven transaction-manager="ujormTransactionManager" />
-    <cache:annotation-driven />
 
     <!-- Cache configuration -->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
