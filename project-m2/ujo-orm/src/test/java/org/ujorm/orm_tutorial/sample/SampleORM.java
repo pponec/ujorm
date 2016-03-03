@@ -15,7 +15,6 @@
  */
 package org.ujorm.orm_tutorial.sample;
 
-import org.ujorm.orm_tutorial.sample.entity.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
