@@ -16,6 +16,7 @@
 
 package org.ujorm.orm;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -174,6 +175,16 @@ public class UjoSequencer {
         return table;
     }
 
+    /** Returns table name */
+    protected String getTableName() {
+        try {
+            final MetaDatabase db = MetaTable.DATABASE.of(table);
+            return db.getDialect().printFullTableName(getTable(), true, new StringBuilder()).toString();
+        } catch (IOException e) {
+            throw new IllegalStateException("TableName failed", e);
+        }
+    }
+
     /** Method returns true because the internal table 'ujorm_pk_support' is required to get a next sequence value.
      * In case you have a different implementation, there is possible overwrite this method and return an another value. */
     public boolean isSequenceTableRequired() {
@@ -187,7 +198,7 @@ public class UjoSequencer {
         maxValue = 0;
 
         LOGGER.log(UjoLogger.INFO
-              , getClass().getSimpleName() + ": reset the sequencer");
+              , getClass().getSimpleName() + ": reset the sequencer for the table " + getTableName());
     }
 
     /** Returns current db sequence for an actual table with a performance optimizations.

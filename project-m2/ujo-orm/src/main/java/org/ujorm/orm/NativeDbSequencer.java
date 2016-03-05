@@ -71,6 +71,6 @@ public class NativeDbSequencer extends UjoSequencer {
     /** Reset is unsupported */
     @Override
     public synchronized void reset() {
-        throw new UnsupportedOperationException("Reset is unsupported");
+        throw new UnsupportedOperationException("Reset is unsupported for the table " + getTableName());
     }
 }
