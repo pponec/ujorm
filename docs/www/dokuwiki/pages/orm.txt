@@ -1,0 +1,40 @@
+=== ORM module ===
+
+This is a very early version of the documentation.
+
+On these pages you will find documentation for ORM-UJO.
+At present, the basic use of the ORM is described by the [[ http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/SampleORM.java?view=markup | sample code]] only.
+There is possible to download all sample poject in the Maven format from the [[ http://downloads.sourceforge.net/project/ujoframework/ujoframework/0.89.B3/sample_0.89.B3.zip | SourceForge]].
+
+
+
+== How to use INSERT ? ==
+See how to create database and to how to INSERT an order with two items into database: 
+
+<code java>
+OrmHandler.getInstance().loadDatabase(Database.class);  
+  
+Order order = new Order();  
+order.setDate(new Date());  
+order.setDescr("John's order");  
+  
+Item item1 = new Item();  
+item1.setOrder(order);  
+item1.setDescr("Yellow table");  
+  
+Item item2 = new Item();  
+item2.setOrder(order);  
+item2.setDescr("Green window");  
+  
+Session session = OrmHandler.getInstance().getSession();  
+session.save(order);  
+session.save(item1);  
+session.save(item2);  
+  
+session.commit();  
+</code>
+
+TODO ...
+
+See a [[orm_faq | FAQ ]] page to some more information.
+

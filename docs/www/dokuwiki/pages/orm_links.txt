@@ -1,0 +1,13 @@
+=== Ujorm links ===
+
+  * [[ http://ujoframework.org/orm/ | Home page ]]
+  * [[ http://ujoframework.org/presentation/#orm | ORM presentation ]] slide show ([[ http://ujoframework.org/prezentace/#orm | Czech language ]])
+  * [[ http://ujoframework.org/presentation/#core | UJO quick start]] slide show ([[ http://ujoframework.org/prezentace/#core | Czech language ]])
+  * [[ http://ujoframework.org/javadoc/ | JavaDoc]] stable version
+  * [[ http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/bo/Order.java?view=markup | Order ]] - Java source of the Order business object
+  * [[ http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/bo/Item.java?&amp;view=markup | Item]] - Java source of the Item business object
+  * [[ http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/bo/ViewOrder.java?view=markup | View]] - Use of a native SQL query
+  * [[ http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/Database.java?view=markup | Database]] - Java source of a database description of a metamodel
+  * [[ http://ujoframework.org/orm/config.html | XML configuration file]] - sample
+  * [[ http://sourceforge.net/scm/?type=svn&amp;group_id=207681 | ORM]] project sources (SVN)
+  * [[ http://sourceforge.net/projects/ujoframework/files/ | Project]] files and the ORM benchmark test (comparison with Hibernate) on the SourceForge

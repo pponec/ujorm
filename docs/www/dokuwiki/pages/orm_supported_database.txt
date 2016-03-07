@@ -1,0 +1,12 @@
+===== Supported databases =====
+
+    * PostgreSql (8.3)
+    * MySql (5.0)
+    * Derby (10.5)
+    * Oracle (8.0)
+    * H2 (1.2.x)
+    * HSQLDB (1.8.x)
+    * Firebird (jaybird 2.1.6)
+
+Note:
+support for another database can be realized by the overwriting of appropriate methods of the class [[http://ujoframework.org/javadoc/org/ujoframework/orm/SqlDialect.html | SqlDialect]]

@@ -1,0 +1,74 @@
+==== The Frequently Asked Questions ====
+
+Q: How to create a support for a new database?\\
+A: Create a child of the SqlDialect class and refer it by annotation in you configuration database class. The new class can have overwrited some methods for buidling sql statements. See the [[ ORM Supported database | supported databases ]] too.
+
+Q: How to specify a database connection?\\
+A: There are three ways how to manage the database connection:
+  * use connection parameters directly by the annotation 'Db':<code java>@Db(user="sa", password="xxx", jdbcUrl="jdbc:h2:mem:db1" ...)
+public class Database ...</code>
+  * or use the JNDI by the sample:<code java>@Db(jndi="jdbc/MyDatabase", ...)
+public class Database ...</code>Note: annotation attributes can be overwrited by a XML config file
+  * you can to create special database connections (using dynamical parameters e.g.) in your method [[http://ujoframework.org/javadoc/index.html?org/ujoframework/orm/package-summary.html | createConnection(…)]] in a child class of the SqlDialect. The implementation of this method has a higher priority, such as annotations.
+
+Q: How works a sequence for a table primary key?\\
+A: Ujorm uses its own table to store the current sequence value for each table - by default.
+
+Q: I would like to write myself primary key instead of a sequence generator. How do I do?\\
+A: Simply assign your own value into primary key. If the value of the PK is not NULL, the framework does not call the sequence generator.
+
+Q: Are there supported a native database sequence?\\
+A: No by default. However you can create a subclass of UjoSequencer with a support of a native database sequence as you like. 
+This solution can use an annotation '''@sequence''' that was created for this purpose.
+
+Q: Is supported an object cache?\\
+A: Yes, however the cache is supported only for objects related via foreign key.
+
+Q: Does '''repeated database select''' return the same object instances ?\\
+A: No. A relation '''many to one''' can return the same object from a cache, however this behavior is not guaranteed.
+
+Q: May a result of database query be a List object?\\
+A: The request result is always instance of a '''UjoIterator''' so you can use '''toList()''' method to providing the List type.
+
+Q: Do persistent object have some states?\\
+A: The object has no states, only a session. The assigned session is necessary for  loading a lazy relation and for accounting of modified properties. 
+
+Q: How to build a multi-table query ?\\
+A: Use a  [[ http://ujoframework.org/javadoc/org/ujoframework/extensions/PathProperty.html | composed]] property
+to create the query. The new instance can be created dynamically or can be referenced like a static field of the basic entity - it is your option. \\
+See the next example for a composed relation: '''item.order.created''' :
+<code java>
+ UjoProperty<Item,Date> ORDER_CREATED = Item.ORDER.add(Order.CREATED);
+ Criterion<Item> cn = Criterion.newInstance(ORDER_CREATED, new Date());
+</code>
+
+Q: Can I read or write a value by the [[ http://ujoframework.org/javadoc/org/ujoframework/extensions/PathProperty.html | composed]] property ?\\
+A: Yes, of course, see the next example:
+<code java>
+ UjoProperty<Item,Date> ORDER_CREATED = Item.ORDER.add(Order.CREATED);
+ Date date = item.get(ORDER_CREATED);
+</code>
+
+Q: How to join a table to itself ?\\
+A: Map the '''entity''' to a native SQL query by a @View annotation. I'll try to develop some alternative way in a future release. 
+
+Q: How works transaction?\\
+A: All database DML statements can be seen as temporary until they are committed. Ujorm supports commitment with the Ujorm Session.commit(). \\
+Method Session.rollback() is used to remove operations performed since the previous commit or rollback. Use this method when an exception occurs or when the program detects some error condition or error in the data. For a concurrency transaction use a next session.\\
+See a JDBC 2.0 documentation for more information. 
+
+Q: Is allowed to override a part of ORM code mapping by a XML file?\\
+A: Yes, the code and XML configuration approaches can be combined together, however the XML configuraton will have a higher weight.
+
+Q: How to configure the Ujorm?\\
+A: Behavior frameworu can affect the parameters to be used before loading the meta-model. See the [[http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html | full list of parameters]] or see the next sample of use:
+<code java>
+ MetaParams params = new MetaParams();
+ MetaParams.CHECK_KEYWORDS.setValue(params, CheckReport.EXCEPTION);
+ OrmHandler handler = new OrmHandler();
+ handler.config(params);
+</code>
+
+Q: How to map a special user object to a database column? \\
+A: Create a child class of the TypeSevice with your mapping and assign the class by the parameter [[http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html#TYPE_SERVICE | TYPE_SERVICE]]. \\
+If you prefer mapping the user object (include Enum) to VARCHAR type, so it is sufficient to implement the interface ValueExportable (since version 0.94).

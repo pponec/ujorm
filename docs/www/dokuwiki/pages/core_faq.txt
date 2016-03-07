@@ -1,0 +1,96 @@
+==== The Frequently Asked Questions ====
+
+Q: The UJO Framework offers several [[http://ujoframework.org/javadoc/org/ujoframework/Ujo.html | Ujo]] implementations. 	
+What is the best implementation? \\
+A: I think that implementation [[http://ujoframework.org/javadoc/org/ujoframework/implementation/quick/QuickUjo.html | QuickUjo]] satisfies both requirements for good performance and user friendliness.
+
+Q: How to use the [[http://ujoframework.org/javadoc/org/ujoframework/implementation/quick/QuickUjo.html | QuickUjo]] for my business object ? \\
+A: Follow the next code. The static block with init(..) method assigns correct indexes and names into Property objects.
+<code java>
+public class Person extends QuickUjo {
+  public static final Property<Person,String > NAME = newProperty(String.class);
+  public static final Property<Person,Boolean> MALE = newProperty(Boolean.class);
+  public static final Property<Person,Double > CASH = newProperty(0);
+  static { init(Person.class); }
+}
+</code>
+
+Q: Is the static block calling the QuickUjo.init(..) method necessary? \\
+A: The static block with init(..) method assigns correct indexes and names into Property objects. 
+Alternatively you can call the method Ujo.readProperties() before the first using of the object instead of.
+
+Q: Why a subclass [[http://ujoframework.org/javadoc/org/ujoframework/implementation/orm/OrmTable.html | OrmTable]] implementations don't use the static block init(..)? \\
+A: The [[http://ujoframework.org/orm/ | Ujorm]] initializes all properties automatically in the ORM meta-model building time.
+
+Q: May the UjoProperty contain a reference to a [[http://java.sun.com/j2se/1.5.0/docs/api/java/util/List.html | List]]? \\
+A: Yes, of course, however a better solution is to use a special subtype [[http://ujoframework.org/javadoc/org/ujoframework/extensions/ListProperty.html | ListProperty]].
+<code java>
+public class Person extends QuickUjo {
+  public static final ListProperty<Person,String > EMAILS = newListProperty("email", String.class);
+  static { init(Person.class); }
+}
+</code>
+
+Q: How do I quickly copy all the attributes of an UJO object to another instance? \\
+A: Use the next code:
+<code jave>
+Person from = getPerson();
+Person to = new Person ();
+for (UjoProperty p : newUser.readProperties()) {
+    p.copy(from, to);
+}
+</code>
+
+Q: How do I copy all the attributes of an UJO object to another instance excluding a property? \\
+A: See the next code for excluding a CASH property for example. Note that each property have got a unique instance of the object so it is allowed to use the == operator to a quick comparison: 
+<code jave>
+for (UjoProperty p : oldUser.readProperties()) {
+    if (Person.CASH != p) {
+        newUser.writeValue(p, oldUser.readValue(p));
+    }
+}
+</code>
+
+Q: How to test that a type of property is the Date for example? \\
+A: Use a property method [[ http://ujoframework.org/javadoc/org/ujoframework/UjoProperty.html#isTypeOf%28java.lang.Class%29 | isTypeOf(Class)]]
+<code jave>
+if (property.isTypeOf(Date.class)) {
+    // your code ...
+}
+</code>
+
+Q: How to save the UJO from to a XML file? \\
+A: Use the next code: 
+<code jave>
+String defaultXmlHeader = null;
+UjoManagerXML.getInstance().saveXML(dataFile, person, defaultXmlHeader, "Save");
+</code>
+
+Q: How to restore the UJO from a XML file? \\
+A: Use the next code: 
+<code jave>
+Person user = UjoManagerXML.getInstance().parseXML(dataFile, Person.class, "Restore");
+</code>
+
+Q: How works the [[http://ujoframework.org/javadoc/org/ujoframework/implementation/quick/QuickUjo.html | QuickUjo]] implementation? \\
+A: The one QuickUjo instance have got the exactly one field: private array of objects. Because each instance of UjoProperty has an index to the one cell of the array, so it is easy to read or write values.
+
+Q: How to use parentheses on composed Criterions? \\
+A: A Criterion instance composed from aother criterions works as an expression separated by parentheses. See the next example:
+<code jave>
+// Consider instances:
+ Criterion<Person> a, b, c, result;
+ a = Criterion.where(CASH, Operator.GT, 10.0);
+ b = Criterion.where(CASH, Operator.LE, 20.0);
+ c = Criterion.where(NAME, Operator.STARTS, "P");
+
+ // Expression 1: (a OR b) AND c :
+ result = (a.or(b)).and(c); // or simply:
+ result = a.or(b).and(c); 
+
+ // Expression 2: a AND (b OR c) :
+ result = a.and(b.or(c));
+</code>
+
+
+

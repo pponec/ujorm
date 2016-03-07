@@ -1,0 +1,17 @@
+=== UJO Framework on Wiki ===
+
+  * [[ http://ujoframework.org/javadoc/org/ujoframework/package-summary.html#UJO | Core]]
+    * [[ http://ujoframework.org/presentation/#core | Quick start (a slide show) ]]
+    * [[ http://ujoframework.org/javadoc/org/ujoframework/package-summary.html#UJO | Tutorial ]]
+    * [[ http://ujoframework.org/sample/index.htm | Sample 1: persistent table ]]
+    * [[ http://ujoframework.org/sample/parameters.htm | Sample 2: application parameters ]]
+    * [[ http://ujoframework.org/sample/read-only.htm | Sample 3: read-only Ujo ]]
+    * [[ CORE FAQ | Core FAQ ]]
+  * [[ORM | Ujorm - the ORM module for UJO objects]]
+    * [[ http://ujoframework.org/orm/tutorial/ | Ujorm User Guide]]
+    * [[ http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup | Live code samples]] - learn the basic skills in 15 minutes by a live Java code
+    * [[ ORM Supported database | Supported databases ]]
+    * [[ ORM FAQ | Ujorm FAQ ]]
+    * [[ ORM links | More links ]]
+
+~~DISCUSSION:off~~
