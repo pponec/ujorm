@@ -78,6 +78,9 @@ abstract public class SqlDialect {
     /** Prints quoted name (identifier) to SQL */
     private Boolean quoteRequest;
 
+    /** An INNER JOIN syntax request */
+    private final boolean innerJoin = true;
+
     /** Set the OrmHandler - the method is for internal call only. */
     public void setHandler(OrmHandler ormHandler) {
         if (this.ormHandler!=null) {
@@ -464,7 +467,7 @@ abstract public class SqlDialect {
         return true;
     }
 
-    /** Print an SQL UPDATE statement.  */
+    /** Print an SQL UPDATE statement. */
     public Appendable printUpdate
         ( List<MetaColumn> changedColumns
         , CriterionDecoder decoder
@@ -866,9 +869,12 @@ abstract public class SqlDialect {
 
             for (int i=0; i<tables.length; ++i) {
                 if (i>0) {
-                    out.append(", ");
+                    out.append(innerJoin ? "\nINNER JOIN " : ", ");
                 }
                 printTableAliasDefinition(tables[i], out);
+                if (innerJoin && i > 0) {
+                    printInnerJoinCondition(tables[i], query, out);
+                }
             }
 
             final String where = ed.getWhere();
@@ -894,7 +900,13 @@ abstract public class SqlDialect {
         }
     }
 
-    /** Print a 'lock clausule' to the end of SQL SELECT statement to use a pessimistic lock.
+    /** Print inner join condition */
+    protected Appendable printInnerJoinCondition(final TableWrapper table, final Query query, final Appendable out) throws IOException {
+        out.append(" ON 1=1 ");
+        return out;
+    }
+
+    /** Print a 'lock phrase' to the end of SQL SELECT statement to use a pessimistic lock.
      * The current database does not support the feature, throw an exception UnsupportedOperationException.
      * <br>The method prints a text "FOR UPDATE".
      * @param query The UJO query
@@ -957,7 +969,7 @@ abstract public class SqlDialect {
         out.append(" OFFSET " + query.getOffset());
     }
 
-    /** Prinnt the full sequence table */
+    /** Print the full sequence table */
     protected Appendable printSequenceTableName(final UjoSequencer sequence, final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
         if (isFilled(schema)) {
