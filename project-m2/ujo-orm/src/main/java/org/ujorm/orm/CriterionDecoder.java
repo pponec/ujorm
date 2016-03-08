@@ -119,11 +119,11 @@ public class CriterionDecoder {
                 or = true;
             case AND:
                 if (or) sql.append(" (");
-                unpack(eb.getLeftNode());
+                unpack(eb.getLeftNode(), sql);
                 sql.append(SPACE);
                 sql.append(eb.getOperator().name());
                 sql.append(SPACE);
-                unpack(eb.getRightNode());
+                unpack(eb.getRightNode(), sql);
                 if (or) sql.append(") ");
                 break;
             case NOT:
