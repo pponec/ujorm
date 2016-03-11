@@ -48,7 +48,6 @@ public class CriterionDecoder {
 
     final protected Criterion criterion;
     final protected List<Key> orderBy;
-    final protected String sql;
     /** List of the non-null criterion values */
     final protected List<ValueCriterion> values;
     /** List of the nullable criterion values */
@@ -58,6 +57,8 @@ public class CriterionDecoder {
     final protected MetaTable baseTable;
     /** EFFECTIVA REQUEST: to enforce printing all Ujorm joined tables */
     final protected boolean printAllJoinedTables;
+    /** The WHERE condition in SQL format */
+    protected final String where;
 
     /**
      * Constructor
@@ -86,11 +87,7 @@ public class CriterionDecoder {
         this.tables = new HashSet<TableWrapper>();
         this.tables.add(baseTable);
         this.printAllJoinedTables = MetaParams.MORE_PARAMS.add(MoreParams.PRINT_All_JOINED_TABLES).of(handler.getParameters());
-
-        final StringBuilder sqlBuffer = new StringBuilder(64);
-        writeRelations(sqlBuffer);
-        writeConditions(sqlBuffer);
-        this.sql = sqlBuffer.toString();
+        this.where = getWhere();
     }
 
     /**
@@ -218,13 +215,20 @@ public class CriterionDecoder {
 
 
     /** Returns a SQL WHERE 'expression' of an empty string if no condition is found. */
-    public String getWhere() {
-        return sql.toString();
+    public final String getWhere() {
+        if (where != null) {
+            return where;
+        } else {
+            final StringBuilder sqlBuffer = new StringBuilder(64);
+            writeRelations(sqlBuffer);
+            writeConditions(sqlBuffer);
+            return sqlBuffer.toString();
+        }
     }
 
     /** Is the SQL statement empty?  */
     public boolean isEmpty() {
-        return sql.length()==0;
+        return getWhere().isEmpty();
     }
 
     /** Returns the first direct key. */
