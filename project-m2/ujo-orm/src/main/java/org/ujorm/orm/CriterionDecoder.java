@@ -88,10 +88,8 @@ public class CriterionDecoder {
         this.printAllJoinedTables = MetaParams.MORE_PARAMS.add(MoreParams.PRINT_All_JOINED_TABLES).of(handler.getParameters());
 
         final StringBuilder sqlBuffer = new StringBuilder(64);
-        if (this.criterion!=null
-        ||  this.orderBy!=null) {
-            writeRelations(sqlBuffer);
-        }
+        writeRelations(sqlBuffer);
+        writeConditions(sqlBuffer);
         this.sql = sqlBuffer.toString();
     }
 
@@ -244,11 +242,19 @@ public class CriterionDecoder {
         return result;
     }
 
-    /** Write the relation conditions */
+   /** Write the relation conditions */
     @SuppressWarnings("unchecked")
     protected void writeRelations(final StringBuilder sql) {
         if (criterion != null) {
             unpack(criterion, sql);
+        }
+    }
+
+    /** Write the value conditions */
+    @SuppressWarnings("unchecked")
+    protected void writeConditions(final StringBuilder sql) {
+        if (criterion==null && orderBy==null) {
+            return;
         }
 
         final Collection<AliasKey> relations = getPropertyRelations();
