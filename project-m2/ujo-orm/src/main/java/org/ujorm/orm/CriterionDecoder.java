@@ -237,7 +237,7 @@ public class CriterionDecoder {
         return result;
     }
 
-    /** Writer a relation conditions: */
+    /** Write the relation conditions */
     @SuppressWarnings("unchecked")
     protected void writeRelations(final StringBuilder sql) {
         if (criterion != null) {
@@ -245,8 +245,7 @@ public class CriterionDecoder {
         }
 
         final Collection<AliasKey> relations = getPropertyRelations();
-        final boolean parenthesis = sql.length() > 0
-                && !relations.isEmpty();
+        final boolean parenthesis = sql.length() > 0 && !relations.isEmpty();
         if (parenthesis) {
             sql.append(" AND (");
         }
@@ -282,17 +281,15 @@ public class CriterionDecoder {
     }
 
     /** Returns the unique direct key relations. */
-    @SuppressWarnings("unchecked")
     protected Collection<AliasKey> getPropertyRelations() {
         final Set<AliasKey> result = new HashSet<AliasKey>();
         final ArrayList<ValueCriterion> allValues = new ArrayList<ValueCriterion>
-                ( values.size()
-                + nullValues.size());
+                (values.size() + nullValues.size());
         allValues.addAll(values);
         allValues.addAll(nullValues);
 
-        for (ValueCriterion value : allValues) {
-            Key p1 = value.getLeftNode();
+        for (ValueCriterion<?> value : allValues) {
+            final Key<?,?> p1 = value.getLeftNode();
             if (p1 != null) {
                 AliasKey.addRelations(p1, result);
                 final Object p2 = value.getRightNode();

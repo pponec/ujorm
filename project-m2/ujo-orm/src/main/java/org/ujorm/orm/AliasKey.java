@@ -1,5 +1,5 @@
 /*
- *  Copyright 2014-2014 Pavel Ponec
+ *  Copyright 2014-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,11 +33,11 @@ final public class AliasKey {
     @PackagePrivate static final String DEFAULT_RELATION_ALIAS = new String("[RELATION ALIAS]");
 
     /** The Key is not null always */
-    @PackagePrivate Key<?,?> key;
+    @PackagePrivate final Key<?,?> key;
     /** Nullable alias for the previous table */
-    @PackagePrivate String aliasFrom;
+    @PackagePrivate final String aliasFrom;
     /** Nullable alias for the next table */
-    @PackagePrivate String aliasTo;
+    @PackagePrivate final String aliasTo;
     /** Hash */
     @PackagePrivate int hashCode;
 
@@ -88,7 +88,7 @@ final public class AliasKey {
     public int hashCode() {
         if (hashCode == 0) {
             int hash = 5;
-            hash = 79 * hash + this.key.hashCode();
+            hash = 79 * hash +  this.key.hashCode();
             hash = 79 * hash + (this.aliasFrom != null ? this.aliasFrom.hashCode() : 0);
             hash = 79 * hash + (this.aliasTo != null ? this.aliasTo.hashCode() : 0);
             hashCode = hash;

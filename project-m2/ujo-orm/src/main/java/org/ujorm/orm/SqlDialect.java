@@ -639,14 +639,15 @@ abstract public class SqlDialect {
     /** Print a <strong>condition phrase</strong> from the criterion.
      * @return A value criterion to assign into the SQL query.
      */
-    public ValueCriterion printCriterion(ValueCriterion crit, Appendable out) throws IOException {
-        final Operator operator = crit.getOperator();
-        final Key key = crit.getLeftNode();
+    public ValueCriterion printCriterion(ValueCriterion crn, Appendable out) throws IOException {
+        final Operator operator = crn.getOperator();
+        final Key key = crn.getLeftNode();
         final ColumnWrapper column = key != null
-                ? AliasKey.getLastKey(key).getColumn(ormHandler) : null;
-        Object right = crit.getRightNode();
+                ? AliasKey.getLastKey(key).getColumn(ormHandler)
+                : null;
 
-        if (right==null ) {
+        Object right = crn.getRightNode();
+        if (right == null ) {
             switch (operator) {
                 case EQ:
                 case EQUALS_CASE_INSENSITIVE:
@@ -658,16 +659,16 @@ abstract public class SqlDialect {
                     out.append(" IS NOT NULL");
                     return null;
                 default:
-                    throw new UnsupportedOperationException("Comparation the NULL value is forbiden by a operator: " + operator);
+                    throw new UnsupportedOperationException("Comparation the NULL value is forbiden by the operator: " + operator);
             }
         }
 
-        String template = getCriterionTemplate(crit);
+        final String template = getCriterionTemplate(crn);
         if (template == null) {
             throw new UnsupportedOperationException("Unsupported SQL operator: " + operator);
         }
 
-        switch (crit.getOperator()) {
+        switch (crn.getOperator()) {
             case XFIXED:
                 out.append( template );
                 break;
@@ -675,7 +676,7 @@ abstract public class SqlDialect {
                 if (right instanceof TemplateValue) {
                     right = ((TemplateValue) right).getRightVale();
                     ValueCriterion crit2 = (ValueCriterion) Criterion.where
-                            ( crit.getLeftNode()
+                            ( crn.getLeftNode()
                             , Operator.EQ // The hack
                             , right);
                     return printCriterionValue(template, column, crit2, out);
@@ -687,7 +688,7 @@ abstract public class SqlDialect {
                 }
                 break;
             default:
-                return printCriterionValue(template, column, crit, out);
+                return printCriterionValue(template, column, crn, out);
         }
         return null;
     }
@@ -713,9 +714,9 @@ abstract public class SqlDialect {
             }
         } else if (right instanceof Object[]) {
             final Object[] os = (Object[]) right;
-            final StringBuilder sb = new StringBuilder(2*os.length);
-            for (Object o : os) {
-                sb.append(sb.length()>0 ? ",?" : "?");
+            final StringBuilder sb = new StringBuilder(2 * os.length);
+            for (int i = 0; i < os.length; i++) {
+                sb.append(i > 0 ? ",?" : "?");
             }
             String f = MessageFormat.format(template, getAliasColumnName(column), sb.toString());
             out.append(f);
