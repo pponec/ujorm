@@ -637,7 +637,7 @@ abstract public class SqlDialect {
 
 
     /** Print a <strong>condition phrase</strong> from the criterion.
-     * @return A value criterion to assign into the SQL query.
+     * @return A nullable value criterion to assign into the SQL query.
      */
     public ValueCriterion printCriterion(ValueCriterion crn, Appendable out) throws IOException {
         final Operator operator = crn.getOperator();

@@ -92,16 +92,20 @@ public class CriterionDecoder {
         this.sql = sqlBuffer.toString();
     }
 
-    /** Unpack criterion. */
+    /**
+     * Unpack criterion
+     * @param c The non-null criterion
+     * @param sql SQL output buffer;
+     */
     protected void unpack(final Criterion c, final StringBuilder sql) {
         if (c.isBinary()) {
             unpackBinary((BinaryCriterion)c, sql);
         } else try {
             final ValueCriterion origCriterion = (ValueCriterion) c;
-            final ValueCriterion newCriterion = dialect.printCriterion(origCriterion, sql);
-            if (newCriterion!=null) {
-                values.add(newCriterion);
-            } else if (origCriterion != null) {
+            final ValueCriterion valueCriterion = dialect.printCriterion(origCriterion, sql);
+            if (valueCriterion != null) {
+                values.add(valueCriterion);
+            } else {
                 nullValues.add(origCriterion);
             }
         } catch (Exception e) {
