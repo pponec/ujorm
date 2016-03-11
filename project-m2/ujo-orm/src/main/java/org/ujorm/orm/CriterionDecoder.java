@@ -49,8 +49,11 @@ public class CriterionDecoder {
     final protected Criterion criterion;
     final protected List<Key> orderBy;
     final protected String sql;
+    /** List of the non-null criterion values */
     final protected List<ValueCriterion> values;
+    /** List of the nullable criterion values */
     final protected List<ValueCriterion> nullValues;
+    /** All table set */
     final protected Set<TableWrapper> tables;
     final protected MetaTable baseTable;
     /** EFFECTIVA REQUEST: to enforce printing all Ujorm joined tables */
