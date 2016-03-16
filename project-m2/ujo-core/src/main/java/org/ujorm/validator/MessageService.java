@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import org.ujorm.Key;
-import org.ujorm.core.annot.PackagePrivate;
 
 /**
  * Message Service
@@ -29,7 +28,7 @@ import org.ujorm.core.annot.PackagePrivate;
 public class MessageService {
 
     /** Two-character mark ("${") to introducing a template argument. */
-    @PackagePrivate static final String PARAM_BEG = "${";
+    protected static final String PARAM_BEG = "${";
     /** The mark ("}") to finishing a template argument. */
     private static final char PARAM_END = '}';
 
