@@ -636,7 +636,7 @@ abstract public class SqlDialect {
     }
 
 
-    /** Print a <strong>condition phrase</strong> from the criterion.
+    /** Print a <strong>value condition phrase</strong> from the criterion.
      * @return A nullable value criterion to assign into the SQL query.
      */
     public ValueCriterion printCriterion(ValueCriterion crn, Appendable out) throws IOException {
