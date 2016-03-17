@@ -91,7 +91,7 @@ public class CriterionDecoder {
     }
 
     /**
-     * Unpack criterion
+     * Unpack criterion and write value conditions to SQL buffer
      * @param c The non-null criterion
      * @param sql SQL output buffer;
      */
@@ -216,8 +216,8 @@ public class CriterionDecoder {
     /** Returns a SQL WHERE 'expression' of an empty string if no condition is found. */
     protected final String initWhere() {
         final StringBuilder result = new StringBuilder(64);
-        writeRelations(result);
         writeConditions(result);
+        writeRelations(result);
         return result.toString();
     }
 
@@ -246,17 +246,17 @@ public class CriterionDecoder {
         return result;
     }
 
-   /** Write the relation conditions */
+   /** Unpack binary criterions and write all value conditions */
     @SuppressWarnings("unchecked")
-    protected void writeRelations(final StringBuilder sql) {
+    protected void writeConditions(final StringBuilder sql) {
         if (criterion != null) {
             unpack(criterion, sql);
         }
     }
 
-    /** Write the value conditions */
+    /** Write the relation conditions */
     @SuppressWarnings("unchecked")
-    protected void writeConditions(final StringBuilder sql) {
+    protected void writeRelations(final StringBuilder sql) {
         if (criterion==null && orderBy==null) {
             return;
         }
