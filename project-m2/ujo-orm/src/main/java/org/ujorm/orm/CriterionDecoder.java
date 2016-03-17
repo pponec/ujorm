@@ -87,7 +87,7 @@ public class CriterionDecoder {
         this.tables = new HashSet<TableWrapper>();
         this.tables.add(baseTable);
         this.printAllJoinedTables = MetaParams.MORE_PARAMS.add(MoreParams.PRINT_All_JOINED_TABLES).of(handler.getParameters());
-        this.where = getWhere();
+        this.where = initWhere();
     }
 
     /**
@@ -213,17 +213,17 @@ public class CriterionDecoder {
 //        return null;
 //    }
 
+    /** Returns a SQL WHERE 'expression' of an empty string if no condition is found. */
+    protected final String initWhere() {
+        final StringBuilder result = new StringBuilder(64);
+        writeRelations(result);
+        writeConditions(result);
+        return result.toString();
+    }
 
     /** Returns a SQL WHERE 'expression' of an empty string if no condition is found. */
-    public final String getWhere() {
-        if (where != null) {
-            return where;
-        } else {
-            final StringBuilder sqlBuffer = new StringBuilder(64);
-            writeRelations(sqlBuffer);
-            writeConditions(sqlBuffer);
-            return sqlBuffer.toString();
-        }
+    public String getWhere() {
+        return where;
     }
 
     /** Is the SQL statement empty?  */
