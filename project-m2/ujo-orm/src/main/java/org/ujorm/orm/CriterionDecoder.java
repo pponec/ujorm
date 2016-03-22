@@ -57,6 +57,8 @@ public class CriterionDecoder {
     final protected MetaTable baseTable;
     /** EFFECTIVA REQUEST: to enforce printing all Ujorm joined tables */
     final protected boolean printAllJoinedTables;
+    /** Relations */
+    final List<Relation> relations = new ArrayList<Relation>();
     /** The WHERE condition in SQL format */
     protected final String where;
 
@@ -277,7 +279,10 @@ public class CriterionDecoder {
             tables.add(tab1.addAlias(key.getAliasFrom()));
             tables.add(tab2.addAlias(key.getAliasTo()));
 
-            {// TODO: for all foreign columns:
+            if (dialect.isInnerJoin()) {
+                this.relations.add(new Relation(fk1, pk2));
+            } else {
+                // TODO: for all foreign columns:
                 if (andOperator) {
                     sql.append(" AND ");
                 } else {
@@ -391,5 +396,24 @@ public class CriterionDecoder {
     @Override
     public String toString() {
         return criterion!=null ? criterion.toString() : null ;
+    }
+
+    /** Relation definition */
+    public static final class Relation {
+        private final ColumnWrapper left;
+        private final ColumnWrapper right;
+
+        public Relation(final ColumnWrapper left, final ColumnWrapper right) {
+            this.left = left;
+            this.right = right;
+        }
+
+        public ColumnWrapper getLeft() {
+            return left;
+        }
+
+        public ColumnWrapper getRight() {
+            return right;
+        }
     }
 }

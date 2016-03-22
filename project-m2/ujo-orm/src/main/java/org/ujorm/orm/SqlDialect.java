@@ -79,7 +79,15 @@ abstract public class SqlDialect {
     private Boolean quoteRequest;
 
     /** An INNER JOIN syntax request */
-    private final boolean innerJoin = true;
+    private Boolean _innerJoin;
+
+    /** Inner join */
+    public boolean isInnerJoin() {
+        if (_innerJoin == null) {
+            _innerJoin = MetaParams.JOIN_PHRASE.of(ormHandler.getParameters());
+        }
+        return _innerJoin;
+    }
 
     /** Set the OrmHandler - the method is for internal call only. */
     public void setHandler(OrmHandler ormHandler) {
@@ -870,10 +878,10 @@ abstract public class SqlDialect {
 
             for (int i=0; i<tables.length; ++i) {
                 if (i>0) {
-                    out.append(innerJoin ? "\nINNER JOIN " : ", ");
+                    out.append(isInnerJoin() ? "\nINNER JOIN " : ", ");
                 }
                 printTableAliasDefinition(tables[i], out);
-                if (innerJoin && i > 0) {
+                if (isInnerJoin() && i > 0) {
                     printInnerJoinCondition(tables[i], query, out);
                 }
             }
