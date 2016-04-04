@@ -884,12 +884,11 @@ abstract public class SqlDialect {
                 printTableAliasDefinition(tables[0], out);
                 for (CriterionDecoder.Relation relation : ed.getRelations()) {
                     out.append(NEW_LINE_SEPARATOR).append("INNER JOIN ");
-                    printTableAliasDefinition(relation.getLeft().buildTableWrapper(), out);
+                    printTableAliasDefinition(relation.getRight().buildTableWrapper(), out);
                     out.append(" ON ");
-                    //
-                    printColumnAlias(relation.getLeft(), out);
-                    out.append('=');
                     printColumnAlias(relation.getRight(), out);
+                    out.append('=');
+                    printColumnAlias(relation.getLeft(), out);
                 }
             } else {
                 for (int i=0; i<tables.length; ++i) {
