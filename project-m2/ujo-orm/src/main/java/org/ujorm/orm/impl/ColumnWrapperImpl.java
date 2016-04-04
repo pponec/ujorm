@@ -19,6 +19,7 @@ package org.ujorm.orm.impl;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.orm.ColumnWrapper;
+import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.metaModel.MetaColumn;
 
 /**
@@ -78,6 +79,12 @@ public class ColumnWrapperImpl implements ColumnWrapper {
     //@javax.annotation.Nonnull
     public String getTableAlias() {
         return tableAlias;
+    }
+
+    /** Build new table wrapper */
+    @Override
+    public TableWrapper buildTableWrapper() {
+        return column.getTable().addAlias(tableAlias);
     }
 
     /** Returns an original Key */

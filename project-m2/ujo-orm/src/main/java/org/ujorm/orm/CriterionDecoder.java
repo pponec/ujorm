@@ -264,12 +264,12 @@ public class CriterionDecoder {
         }
 
         final Collection<AliasKey> relations = getPropertyRelations();
-        final boolean parenthesis = sql.length() > 0 && !relations.isEmpty();
-        if (parenthesis) {
-            sql.append(" AND (");
-        }
+//        final boolean parenthesis = sql.length() > 0 && !relations.isEmpty();
+//        if (parenthesis) {
+//            sql.append(" AND (");
+//        }
 
-        boolean andOperator = false;
+        boolean andOperator = true;
         for (AliasKey key : relations) try {
             final ColumnWrapper fk1 = key.getColumn(handler);
             final MetaTable tab1 = fk1.getModel().getTable();
@@ -297,9 +297,9 @@ public class CriterionDecoder {
             throw new IllegalStateException(e);
         }
 
-        if (parenthesis) {
-            sql.append(")");
-        }
+//        if (parenthesis) {
+//            sql.append(")");
+//        }
     }
 
     /** Returns the unique direct key relations. */
@@ -392,6 +392,11 @@ public class CriterionDecoder {
         return handler;
     }
 
+    /** Return relations */
+    public List<Relation> getRelations() {
+        return relations;
+    }
+
     /** Returns the criterion */
     @Override
     public String toString() {
@@ -408,10 +413,12 @@ public class CriterionDecoder {
             this.right = right;
         }
 
+        /** Get left column */
         public ColumnWrapper getLeft() {
             return left;
         }
 
+        /** Get right column */
         public ColumnWrapper getRight() {
             return right;
         }

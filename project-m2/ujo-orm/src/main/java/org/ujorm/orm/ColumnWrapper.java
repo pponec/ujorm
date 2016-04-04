@@ -34,6 +34,9 @@ public interface ColumnWrapper {
     /** Returns always the NonNull alias of the related database table */
     public String getTableAlias();
 
+    /** Build new table wrapper including an table alias */
+    public TableWrapper buildTableWrapper();
+
     /** Returns an original key */
     public Key getKey();
 

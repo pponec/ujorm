@@ -37,6 +37,7 @@ import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.ITypeService;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.SqlDialect;
+import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.TypeService;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
@@ -415,7 +416,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     }
 
     /** Returns a default value in a JDBC friendly type.
-     * The real result type depends in an implementatin of the ITypeService.
+     * The real result type depends in an implementation of the ITypeService.
      * For example a Java Enumerator default value can return either the Integer or String type too.
      * @see ITypeService
      */
@@ -457,7 +458,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         return isTypeOf(Void.class);
     }
 
-    /** Returns a constraint name for case a foreigh key */
+    /** Returns a constraint name for case a foreign key */
     public String getConstraintName() {
         return CONSTRAINT_NAME.of(this);
     }
@@ -483,6 +484,12 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     @Override
     public MetaColumn getModel() {
         return this;
+    }
+
+    /** Build new table wrapper */
+    @Override
+    public TableWrapper buildTableWrapper() {
+        return getTable().addAlias(getTableAlias());
     }
 
     /** Create new object column for the new alias
