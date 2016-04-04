@@ -30,7 +30,7 @@ public class MessageService {
     /** Two-character mark ("${") to introducing a template argument. */
     protected static final String PARAM_BEG = "${";
     /** The mark ("}") to finishing a template argument. */
-    private static final char PARAM_END = '}';
+    protected static final char PARAM_END = '}';
 
     /** Create a map from man pairs key-value
      * @param args Key-value pairs
