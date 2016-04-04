@@ -20,7 +20,7 @@ import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Table;
 
-/** Customer */
+/** Customer extends User */
 @Table(name="usr_customer")
 public class Customer extends OrmTable<Customer> implements ICustomer {
 
@@ -31,7 +31,7 @@ public class Customer extends OrmTable<Customer> implements ICustomer {
     public static final Key<Customer, String> company = newKey();
     /** Discount [%] */
     public static final Key<Customer, Integer> discount = newKeyDefault(0);
-    
+
 
     // -------- Setters and getters ---------
 
