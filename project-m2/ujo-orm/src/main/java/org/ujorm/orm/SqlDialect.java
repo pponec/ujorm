@@ -878,10 +878,9 @@ abstract public class SqlDialect {
 
         if (query.getCriterion() != null) {
             final CriterionDecoder ed = query.getDecoder();
-            final TableWrapper[] tables = ed.getTables();
 
             if (isInnerJoin()) {
-                printTableAliasDefinition(tables[0], out);
+                printTableAliasDefinition(ed.getBaseTable(), out);
                 for (CriterionDecoder.Relation relation : ed.getRelations()) {
                     out.append(NEW_LINE_SEPARATOR).append("INNER JOIN ");
                     printTableAliasDefinition(relation.getRight().buildTableWrapper(), out);
@@ -891,6 +890,7 @@ abstract public class SqlDialect {
                     printColumnAlias(relation.getLeft(), out);
                 }
             } else {
+                final TableWrapper[] tables = ed.getTables();
                 for (int i=0; i<tables.length; ++i) {
                     if (i>0) {
                         out.append(", ");
