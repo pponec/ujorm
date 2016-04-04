@@ -67,6 +67,8 @@ abstract public class SqlDialect {
     public static final String COMMON_SEQ_TABLE_KEY = "<ALL>";
     /** The default schema symbol */
     public static final String DEFAULT_SCHEMA_SYMBOL = "~";
+    /** The new line separator for SQL statements */
+    public static final String NEW_LINE_SEPARATOR = "\n\t";
 
     /** The ORM handler */
     protected OrmHandler ormHandler;
@@ -183,10 +185,10 @@ abstract public class SqlDialect {
     public Appendable printTable(MetaTable table, Appendable out) throws IOException {
         out.append("CREATE TABLE ");
         printFullTableName(table, out);
-        String separator = "\n\t( ";
+        String separator = NEW_LINE_SEPARATOR + "( ";
         for (MetaColumn column : MetaTable.COLUMNS.getList(table)) {
             out.append(separator);
-            separator = "\n\t, ";
+            separator = NEW_LINE_SEPARATOR + ", ";
 
             if (column.isForeignKey()) {
                 printFKColumnsDeclaration(column, out);
@@ -194,7 +196,7 @@ abstract public class SqlDialect {
                 printColumnDeclaration(column, null, out);
             }
         }
-        out.append("\n\t)");
+        out.append(NEW_LINE_SEPARATOR).append(')');
         return out;
     }
 
@@ -269,7 +271,7 @@ abstract public class SqlDialect {
 
         out.append("ALTER TABLE ");
         printFullTableName(table, out);
-        out.append("\n\tADD CONSTRAINT ");
+        out.append(NEW_LINE_SEPARATOR).append("ADD CONSTRAINT ");
         getNameProvider().printConstraintName(table, column, out);
         out.append(" FOREIGN KEY ");
 
@@ -279,7 +281,7 @@ abstract public class SqlDialect {
             printQuotedName(name, out);
         }
 
-        out.append(")\n\tREFERENCES ");
+        out.append(')').append(NEW_LINE_SEPARATOR).append("REFERENCES ");
         printFullTableName(foreignTable, out);
         String separator = "(";
 
@@ -378,9 +380,11 @@ abstract public class SqlDialect {
         final List<MetaColumn> columns = column.getForeignColumns();
 
         for (int i=0; i<columns.size(); ++i) {
-            MetaColumn col = columns.get(i);
-            out.append(i==0 ? "" : "\n\t, ");
-            String name = column.getForeignColumnName(i);
+            final MetaColumn col = columns.get(i);
+            final String name = column.getForeignColumnName(i);
+            if (i > 0) {
+                out.append(COMMON_SEQ_TABLE_KEY).append(", ");
+            }
             printColumnDeclaration(col, name, out);
             if (MetaColumn.MANDATORY.of(column)) {
                 out.append(" NOT NULL");
@@ -485,7 +489,7 @@ abstract public class SqlDialect {
         final MetaTable table = decoder.getBaseTable();
         out.append("UPDATE ");
         printTableAliasDefinition(table, out);
-        out.append("\n\tSET ");
+        out.append(NEW_LINE_SEPARATOR).append("SET ");
 
         for (int i=0; i<changedColumns.size(); i++) {
             MetaColumn ormColumn = changedColumns.get(i);
@@ -496,7 +500,7 @@ abstract public class SqlDialect {
             printQuotedName(ormColumn.getName(), out);
             out.append("=?");
         }
-        out.append("\n\tWHERE ");
+        out.append(NEW_LINE_SEPARATOR).append("WHERE ");
 
         if (decoder.getTableCount() > 1) {
             printQuotedName(table.getFirstPK().getName(), out);
@@ -845,7 +849,7 @@ abstract public class SqlDialect {
         if (count && query.isDistinct()) {
             out.append("SELECT COUNT(*) FROM (");
             printSelectTableBase(query, count, out);
-            out.append("\n\tGROUP BY ");
+            out.append(NEW_LINE_SEPARATOR).append("GROUP BY ");
             printTableColumns(query.getColumns(), null, out);
             out.append(") ujorm_count_");
         } else {
@@ -870,25 +874,35 @@ abstract public class SqlDialect {
         if (!count || query.isDistinct()) {
             printTableColumns(query.getColumns(), null, out);
         }
-        out.append("\n\tFROM ");
+        out.append(NEW_LINE_SEPARATOR).append("FROM ");
 
         if (query.getCriterion() != null) {
             final CriterionDecoder ed = query.getDecoder();
             final TableWrapper[] tables = ed.getTables();
 
-            for (int i=0; i<tables.length; ++i) {
-                if (i>0) {
-                    out.append(isInnerJoin() ? "\nINNER JOIN " : ", ");
+            if (isInnerJoin()) {
+                printTableAliasDefinition(tables[0], out);
+                for (CriterionDecoder.Relation relation : ed.getRelations()) {
+                    out.append(NEW_LINE_SEPARATOR).append("INNER JOIN ");
+                    printTableAliasDefinition(relation.getLeft().buildTableWrapper(), out);
+                    out.append(" ON ");
+                    //
+                    printColumnAlias(relation.getLeft(), out);
+                    out.append('=');
+                    printColumnAlias(relation.getRight(), out);
                 }
-                printTableAliasDefinition(tables[i], out);
-                if (isInnerJoin() && i > 0) {
-                    printInnerJoinCondition(tables[i], query, out);
+            } else {
+                for (int i=0; i<tables.length; ++i) {
+                    if (i>0) {
+                        out.append(", ");
+                    }
+                    printTableAliasDefinition(tables[i], out);
                 }
             }
 
             final String where = ed.getWhere();
-            if (where.length()>0) {
-                out.append(" WHERE ");
+            if (!where.isEmpty()) {
+                out.append(NEW_LINE_SEPARATOR).append("WHERE ");
                 out.append(where);
             }
         } else {
@@ -907,12 +921,6 @@ abstract public class SqlDialect {
                printLockForSelect(query, out);
             }
         }
-    }
-
-    /** Print inner join condition */
-    protected Appendable printInnerJoinCondition(final TableWrapper table, final Query query, final Appendable out) throws IOException {
-        out.append(" ON 1=1 ");
-        return out;
     }
 
     /** Print a 'lock phrase' to the end of SQL SELECT statement to use a pessimistic lock.
@@ -1005,11 +1013,11 @@ abstract public class SqlDialect {
 
         printQuotedName(getSeqTableModel().getTableName(), out);
         out.append ( ""
-        + "\n\t( " + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
-        + "\n\t, " + getQuotedName(getSeqTableModel().getSequence()) + SPACE + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
-        + "\n\t, " + getQuotedName(getSeqTableModel().getCache()) + " INT DEFAULT " + cache + " NOT NULL"
-        + "\n\t, " + getQuotedName(getSeqTableModel().getMaxValue()) + SPACE + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
-        + "\n\t)");
+        + NEW_LINE_SEPARATOR + "( " + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
+        + NEW_LINE_SEPARATOR + ", " + getQuotedName(getSeqTableModel().getSequence()) + SPACE + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
+        + NEW_LINE_SEPARATOR + ", " + getQuotedName(getSeqTableModel().getCache()) + " INT DEFAULT " + cache + " NOT NULL"
+        + NEW_LINE_SEPARATOR + ", " + getQuotedName(getSeqTableModel().getMaxValue()) + SPACE + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
+        + NEW_LINE_SEPARATOR + ")");
         return out;
     }
 
