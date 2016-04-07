@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import org.ujorm.CompositeKey;
@@ -52,7 +53,7 @@ public class CriterionDecoder {
     final protected List<ValueCriterion> values;
     /** List of the nullable criterion values */
     final protected List<ValueCriterion> nullValues;
-    /** All table set */
+    /** All table set where a predicable order is required (by inserts) */
     final protected Set<TableWrapper> tables;
     final protected MetaTable baseTable;
     /** EFFECTIVA REQUEST: to enforce printing all Ujorm joined tables */
@@ -86,7 +87,7 @@ public class CriterionDecoder {
         this.handler = database.getOrmHandler();
         this.values = new ArrayList<ValueCriterion>();
         this.nullValues = new ArrayList<ValueCriterion>();
-        this.tables = new HashSet<TableWrapper>();
+        this.tables = new LinkedHashSet<TableWrapper>(); // Predicable order is required
         this.tables.add(baseTable);
         this.printAllJoinedTables = MetaParams.MORE_PARAMS.add(MoreParams.PRINT_All_JOINED_TABLES).of(handler.getParameters());
         this.where = initWhere();
@@ -302,9 +303,9 @@ public class CriterionDecoder {
 //        }
     }
 
-    /** Returns the unique direct key relations. */
+    /** Returns the unique direct key relation set with the predicable order (by inserts). */
     protected Collection<AliasKey> getPropertyRelations() {
-        final Set<AliasKey> result = new HashSet<AliasKey>();
+        final Set<AliasKey> result = new LinkedHashSet<AliasKey>(); // the predicable order is required (by inserts)
         final ArrayList<ValueCriterion> allValues = new ArrayList<ValueCriterion>
                 (values.size() + nullValues.size());
         allValues.addAll(values);

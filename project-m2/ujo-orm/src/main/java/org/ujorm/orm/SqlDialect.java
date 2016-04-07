@@ -882,7 +882,11 @@ abstract public class SqlDialect {
             if (isInnerJoin()) {
                 printTableAliasDefinition(ed.getBaseTable(), out);
                 for (CriterionDecoder.Relation relation : ed.getRelations()) {
-                    out.append(NEW_LINE_SEPARATOR).append("INNER JOIN ");
+                    out.append(NEW_LINE_SEPARATOR);
+                    out.append(query.getOuterJoins().contains(relation.getLeft()) // TODO.pop ?
+                            ? "LEFT OUTER"
+                            : "INNER");
+                    out.append(" JOIN ");
                     printTableAliasDefinition(relation.getRight().buildTableWrapper(), out);
                     out.append(" ON ");
                     printColumnAlias(relation.getRight(), out);

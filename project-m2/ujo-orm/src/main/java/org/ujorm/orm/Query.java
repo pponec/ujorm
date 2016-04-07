@@ -23,21 +23,26 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.core.UjoTools.SPACE;
+import static org.ujorm.logger.UjoLogger.WARN;
 
 /**
  * ORM query.
@@ -46,6 +51,8 @@ import static org.ujorm.core.UjoTools.SPACE;
  * @composed 1 - 1 CriterionDecoder
  */
 public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
+    /** Logger */
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(Query.class);
 
     /** The base table */
     final private MetaTable table;
@@ -66,9 +73,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** A list of keys to sorting */
     private List<Key<UJO,?>> orderBy;
-    /** A list of keys to sorting */
-    private List<Key<UJO,?>> outerJoins;
-    /** Set the first row to retrieve. If not set, rows will be retrieved beginnning from row 0. */
+    /** A list of columns for the LEFT OUTER JOIN */
+    private Set<ColumnWrapper> outerJoins;
+    /** Set the first row to retrieve. If not set, rows will be retrieved beginning from row 0. */
     private long offset = 0;
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation. */
     private int limit = -1;
@@ -610,20 +617,26 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Set the one entity / table to LEFT OUTER JOIN */
-    public boolean addOuterJoin(Key<UJO,? extends OrmTable> entity) throws IllegalArgumentException {
+    public boolean addOuterJoin(Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
         if (outerJoins == null) {
-            outerJoins = new ArrayList<Key<UJO,?>>();
+            outerJoins = new HashSet<ColumnWrapper>();
         }
-        return outerJoins.add(entity);
+        final MetaColumn column = getHandler().findColumnModel(relation, true);
+        final ColumnWrapper wColumn = relation.isComposite()
+                ? new ColumnWrapperImpl(column, relation)
+                : column;
+        if (column.isMandatory()) {
+            LOGGER.log(WARN, "The relation is required: " + relation);
+        }
+        return outerJoins.add(wColumn);
     }
 
     /** Return a non-null list of the outer joins */
-    public List<Key<UJO,?>> getOuterJoins()  {
+    public Set<ColumnWrapper> getOuterJoins()  {
         return outerJoins != null
-            ? Collections.<Key<UJO,?>>emptyList()
-            : outerJoins;
+            ? outerJoins
+            : Collections.<ColumnWrapper>emptySet();
     }
-
 
     /** Has this Query an offset? */
     public boolean isOffset() {
