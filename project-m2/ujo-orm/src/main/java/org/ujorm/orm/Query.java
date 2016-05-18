@@ -502,7 +502,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         this.columns = new ArrayList<ColumnWrapper>(columns.length + 3);
         final OrmHandler handler = getHandler();
         for (Key key : columns) {
-            final MetaColumn mc = (MetaColumn) handler.findColumnModel(getLastProperty(key), true);
+            final MetaColumn mc = handler.findColumnModel(getLastProperty(key), true);
             final ColumnWrapper column = key.isComposite()
                     ? new ColumnWrapperImpl(mc, key)
                     : mc;

@@ -318,11 +318,13 @@ public class CriterionDecoder {
                 Object o1 = value.getLeftNode();
                 Object o2 = value.getRightNode();
                 if (o1 instanceof Key) {
-                    final MetaTable table = handler.findColumnModel((Key) o1).getTable();
+                  //final TableWrapper table = handler.findColumnModel((Key) o1).getTable();
+                    final TableWrapper table = handler.findTableWrapper((Key) o1);
                     result.add(table);
                 }
                 if (o2 instanceof Key) {
-                    final MetaTable table = handler.findColumnModel((Key) o2).getTable();
+                  //final TableWrapper table = handler.findColumnModel((Key) o2).getTable();
+                    final TableWrapper table = handler.findTableWrapper((Key) o2);
                     result.add(table);
                 }
             }
