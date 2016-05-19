@@ -374,19 +374,15 @@ public class OrmHandler implements OrmHandlerProvider {
         return (T) result;
     }
 
-    /** Find a base table with alias by the last direct key. */
+    /** Find a base table model with alias by the last direct key. */
     public final TableWrapper findTableModel(final Key key) throws IllegalStateException {
-        final Key<OrmUjo,?> lastKey;
-        final String alias;
         if (key instanceof CompositeKey) {
             final CompositeKey compositeKey = (CompositeKey) key;
-            lastKey = compositeKey.getLastKey();
-            alias = compositeKey.getAlias(compositeKey.getCompositeCount() - 1);
-        } else {
-            lastKey = key;
-            alias = null;
+            final Key<OrmUjo,?> lastKey = compositeKey.getLastKey();
+            final String alias = compositeKey.getAlias(compositeKey.getCompositeCount() - 1);
+            return findTableModel(lastKey.getDomainType()).addAlias(alias);
         }
-        return findTableModel(lastKey.getDomainType(), true).addAlias(alias);
+        return findTableModel(key.getDomainType());
     }
 
     /** Find a table model by the dbCl111ass.
