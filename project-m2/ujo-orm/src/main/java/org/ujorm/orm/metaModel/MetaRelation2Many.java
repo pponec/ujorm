@@ -32,6 +32,9 @@ import org.ujorm.orm.annot.Column;
 
 /**
  * The database/object relation to many.
+ * The model describes a relation to another database table (to another UJO object),
+ * so the database column properties are defined by the related column.
+ * @see MetaColumn
  * @author Pavel Ponec
  */
 @Immutable
