@@ -374,7 +374,7 @@ public class OrmHandler implements OrmHandlerProvider {
         return (T) result;
     }
 
-    /** Find a base table model with alias by the last direct key. */
+    /** Find a base table model with a correct alias by the last direct key. */
     public final TableWrapper findTableModel(final Key key) throws IllegalStateException {
         if (key instanceof CompositeKey) {
             final CompositeKey compositeKey = (CompositeKey) key;
