@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2014 Pavel Ponec
+ *  Copyright 2007-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -105,6 +105,15 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
     @SuppressWarnings("unchecked")
     protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newCamelFactory(Class<? extends UJO> ujoClass) {
         return (FACTORY) KeyFactory.CamelBuilder.get(ujoClass);
+    }
+    
+    /** Create a factory with a camel-case Key name generator.
+     * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
+     * <br>In case of OrmUjo the method is called by a Ujorm framework
+     */
+    @SuppressWarnings("unchecked")
+    protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newSnakeCaseFactory(Class<? extends UJO> ujoClass) {
+        return (FACTORY) KeyFactory.SnakeCaseBuilder.get(ujoClass);
     }
 
     /** Create a base factory Key name generator where key name is the same as its field name.
