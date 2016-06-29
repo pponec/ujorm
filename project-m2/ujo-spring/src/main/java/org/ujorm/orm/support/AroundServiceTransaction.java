@@ -25,6 +25,7 @@ import org.ujorm.orm.Session;
  * ServiceTransaction
  * @author Hampl
  */
+@Deprecated
 public class AroundServiceTransaction {
 
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(AroundServiceTransaction.class);
