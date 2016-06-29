@@ -32,6 +32,10 @@ import org.ujorm.orm.annot.Column;
 
 /**
  * The database/object relation to many.
+ * It is no model of persistent column (nor foreign key).
+ * @see #isColumn()
+ * @see #isForeignKey()
+ * @see MetaColumn
  * @author Pavel Ponec
  */
 @Immutable

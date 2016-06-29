@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ponec.
+ * Copyright 2016 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.ujorm.implementation.orm.RelationToMany;
 
 /**
  * OrmFactory
- * @author ponec
+ * @author Pavel Ponec
  */
 public class OrmKeyFactory<UJO extends OrmUjo> extends KeyFactory<UJO> {
 

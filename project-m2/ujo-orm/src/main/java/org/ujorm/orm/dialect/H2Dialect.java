@@ -21,7 +21,10 @@ import org.ujorm.orm.SqlDialect;
 @SuppressWarnings("unchecked")
 public class H2Dialect extends SqlDialect {
 
-    /** Returns a default JDBC URL */
+    /** Returns a default JDBC URL.
+     * <br>For a PostgreSQL simulation use: 
+     * {@code jdbc:h2:mem:db1;MODE=PostgreSQL}
+     */    
     public String getJdbcUrl() {
         return "jdbc:h2:mem:db1";
     }

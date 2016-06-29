@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2015 Pavel Ponec
+ *  Copyright 2009-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.ujorm.orm;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -75,16 +76,16 @@ public class UjoSequencer {
                 out.setLength(0);
                 sql = db.getDialect().printSequenceNextValue(this, out).toString();
 
-                if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                    LOGGER.log(UjoLogger.INFO, sql + "; [" + tableName + ']');
+                if (LOGGER.isLoggable(UjoLogger.TRACE)) {
+                    LOGGER.log(UjoLogger.TRACE, sql + "; [" + tableName + ']');
                 }
                 final int i = executeSql(connection, sql, tableName);
                 if (i==0) {
                     // INSERT the new sequence:
                     out.setLength(0);
                     sql = db.getDialect().printSequenceInit(this, out).toString();
-                    if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                        LOGGER.log(UjoLogger.INFO, sql + "; ["+tableName+']');
+                    if (LOGGER.isLoggable(UjoLogger.TRACE)) {
+                        LOGGER.log(UjoLogger.TRACE, sql + "; ["+tableName+']');
                     }
                     executeSql(connection, sql, tableName);
                 }
@@ -98,7 +99,8 @@ public class UjoSequencer {
 
                 if (LOGGER.isLoggable(UjoLogger.INFO)) {
                     final String msg = getClass().getSimpleName()
-                            + ": seqLimit=" + seqLimit
+                            + ": tableName=" + tableName
+                            + ", seqLimit=" + seqLimit
                             + ", step=" + step
                             + ", maxValue=" + maxValue
                             + ", sequence=" + sequence;
@@ -173,6 +175,16 @@ public class UjoSequencer {
         return table;
     }
 
+    /** Returns table name */
+    protected String getTableName() {
+        try {
+            final MetaDatabase db = MetaTable.DATABASE.of(table);
+            return db.getDialect().printFullTableName(getTable(), true, new StringBuilder()).toString();
+        } catch (IOException e) {
+            throw new IllegalStateException("TableName failed", e);
+        }
+    }
+
     /** Method returns true because the internal table 'ujorm_pk_support' is required to get a next sequence value.
      * In case you have a different implementation, there is possible overwrite this method and return an another value. */
     public boolean isSequenceTableRequired() {
@@ -184,11 +196,14 @@ public class UjoSequencer {
         sequence = 0;
         seqLimit = 0;
         maxValue = 0;
+
+        LOGGER.log(UjoLogger.INFO
+              , getClass().getSimpleName() + ": reset the sequencer for the table " + getTableName());
     }
 
     /** Returns current db sequence for an actual table with a performance optimizations.
      * @param connection Connection
-     * @param sql Temporarry buffer for a better performance. The value can be {@code null} a not null will be cleaned always.
+     * @param sql Temporary buffer for a better performance. The value can be {@code null} a not null will be cleaned always.
      * @return Returns current db sequence for an actual table with a value order:
      * <br/>[SEQ_LIMIT, SEQ_STEP, SEQ_MAX_VALUE].
      * <br/>If no sequence is found then the method returns the value {@code null}.

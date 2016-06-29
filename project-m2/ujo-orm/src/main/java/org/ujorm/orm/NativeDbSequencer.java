@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013-2014 Pavel Ponec
+ *  Copyright 2013-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -66,5 +66,11 @@ public class NativeDbSequencer extends UjoSequencer {
               .getDialect()
               .printNextSequence(sequenceName, table, new StringBuilder(128))
               .toString();
+    }
+
+    /** Reset is unsupported */
+    @Override
+    public synchronized void reset() {
+        throw new UnsupportedOperationException("Reset is unsupported for the table " + getTableName());
     }
 }
