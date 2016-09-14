@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2014 Pavel Ponec
+ *  Copyright 2007-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package org.ujorm.criterion;
 
 /**
- * The value criterion operator enum.
+ * The value criterion operator enumerations.
  * @since 0.90
  * @author Pavel Ponec
  */
@@ -56,31 +56,31 @@ public enum Operator implements AbstractOperator {
     /** Only for a CharSequence subtypes (including String) */
     CONTAINS_CASE_INSENSITIVE,
     /** This operator can have their own SQL condition by a SqlDialect solution.
-     * <br>If you need to use more operators, I recommend to implement your own class 
-     * by the iterface AbstractOperator and adjust the appropriate SqlDialect.
+     * <br>If you need to use more operators, I recommend to implement your own class
+     * by the interface AbstractOperator and adjust the appropriate SqlDialect.
      * @see org.ujorm.orm.SqlDialect#getCriterionTemplate(org.ujorm.criterion.ValueCriterion)
      */
     USER,
     /** The operator for an internal use only where a result is
      * <strong>not dependent</strong> on the value.
-     * @see Criterion#constant(org.ujorm.Key, boolean) 
+     * The result of the {@link Criterion#getRightNode()} method is the {@Link Boolean} type always.
+     * @see Criterion#constant(org.ujorm.Key, boolean)
      */
     XFIXED,
     /** The operator for an indication of the SQL condition in a text format
      * Parameters of the SQL condition are not supported by the Ujorm.
-     * @see Criterion#forSql(org.ujorm.Key, java.lang.String) 
+     * @see Criterion#forSql(org.ujorm.Key, java.lang.String)
      */
     XSQL,
     ;
 
-
-    /** The implementace is a VALUE type (not a binary one) */
+    /** The implementation is a VALUE type (not a binary one) */
     @Override
     public final boolean isBinary() {
         return false;
     }
 
-    /** Returns Enum */
+    /** Returns an Enumeration */
     @Override
     public final Enum getEnum() {
         return this;
