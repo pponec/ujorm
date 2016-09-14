@@ -96,8 +96,14 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public static final Key<MetaDatabase,String> USER = fa.newKey("user", "");
     /** DB password of the user */
     public static final Key<MetaDatabase,String> PASSWORD = fa.newKey("password", "");
-    /** <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
-     * (java naming and directory interface) connection string
+    /** The <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
+     * (java naming and directory interface) connection string.
+     * <br>A typical use on the Tomcat can be:<br> jndi = {"java:comp/env/jdbc/TestDB"}
+     * <br>See the 
+     * <a href="http://www.mkyong.com/tomcat/how-to-configure-mysql-datasource-in-tomcat-6/" target="_blank">link</a> or
+     * <a href="http://tomcat.apache.org/tomcat-6.0-doc/jndi-datasource-examples-howto.html" target="_blank">link</a>
+     * for more information about JNDI on the Tomcat.
+     * @see org.ujorm.orm.annot.Db#jndi() 
      */
     public static final ListKey<MetaDatabase,String> JNDI = fa.newListKey("jndi");
     /** The sequencer class for tables of the current database.

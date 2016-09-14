@@ -40,6 +40,7 @@ public @interface Db {
      * <a href="http://www.mkyong.com/tomcat/how-to-configure-mysql-datasource-in-tomcat-6/" target="_blank">link</a> or
      * <a href="http://tomcat.apache.org/tomcat-6.0-doc/jndi-datasource-examples-howto.html" target="_blank">link</a>
      * for more information about JNDI on the Tomcat.
+     * @see org.ujorm.orm.metaModel.MetaDatabase#JNDI
      */
     String[] jndi() default {};
     /** JDBC Url */

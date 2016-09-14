@@ -25,6 +25,7 @@ import org.ujorm.orm.Session;
  * ServiceTransaction
  * @author Hampl
  */
+@Deprecated
 public class AroundServiceTransaction {
 
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(AroundServiceTransaction.class);
@@ -40,38 +41,39 @@ public class AroundServiceTransaction {
     }
 
     public Object aroundFilter(ProceedingJoinPoint call) throws Throwable {
-        Throwable ex = null;
-        Object result = null;
-
         try {
-            if (incCalling()) {
-                LOGGER.log(UjoLogger.TRACE, "Auto transaction registred/started");
-                ujoSessionFactory.setAutoTransaction(true);
+            if (incCalling()) { // the first aroundFilter call
+                beginTransaction();
             }
-            try {
-                result = doCall(call);
-            } catch (Throwable e) {
-                ex = e;
-                getSession().markForRolback();
-            }
+            return doCall(call);
+        } catch (Throwable e) {
+            markForRollback();
+            throw e;
         } finally {
-            if (decCalling()) {
-                LOGGER.log(UjoLogger.TRACE, "Auto transaction ending (commit/rollback)");
-                Session session = getSession();
-                //rollback if there was error
-                if (session.isRollbackOnly()) {
-                    LOGGER.log(UjoLogger.DEBUG, "Transaction rolling back because it has been marked as rollback-only");
-                    session.rollback();
-                    // if exception is not caught send it
-                    return doReturn(ex, result);
-                } else {
-                    //there was no error
-                    session.commit();
-                    return doReturn(ex, result);
-                }
-            } else {//this is not las aop call
-                return doReturn(ex, result);
+            if (decCalling()) { // the last aroundFilter call
+                finishTransaction();
             }
+        }
+    }
+
+    protected void beginTransaction() {
+        LOGGER.log(UjoLogger.TRACE, "Auto transaction registred/started");
+        ujoSessionFactory.setAutoTransaction(true);
+    }
+
+    protected void markForRollback() {
+        getSession().markForRolback();
+    }
+
+    protected void finishTransaction() {
+        LOGGER.log(UjoLogger.TRACE, "Auto transaction ending (commit/rollback)");
+        final Session session = getSession();
+        // rollback if there was error
+        if (session.isRollbackOnly()) {
+            LOGGER.log(UjoLogger.DEBUG, "Transaction rolling back because it has been marked as rollback-only");
+            session.rollback();
+        } else {
+            session.commit();
         }
     }
 
@@ -108,7 +110,7 @@ public class AroundServiceTransaction {
      */
     @SuppressWarnings("unchecked")
     private boolean decCalling() {
-        AtomicInteger deep = deepHolder.get();
+        final AtomicInteger deep = deepHolder.get();
 
         if (deep.decrementAndGet() == 0) {
             deepHolder.set(null);
@@ -118,11 +120,4 @@ public class AroundServiceTransaction {
         }
     }
 
-    private Object doReturn(Throwable ex, Object result) throws Throwable {
-        if (ex != null) {
-            throw ex;
-        } else {
-            return result;
-        }
-    }
 }

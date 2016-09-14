@@ -207,7 +207,7 @@ public class SampleORM {
         System.out.println("VIEW-ORDER COUNT: " + orders.getCount());
     }
 
-    /** Sort items by a <strong>composite</strong> propertry. <br>
+    /** Sort items by a <strong>composite</strong> property. <br>
      * Note 1: see how a composite key can be used for reading values too. <br>
      * Note 2: the method loadLazyValues(..) is able to load all lazy keys for the Item and its related Order<br>
      */

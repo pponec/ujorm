@@ -62,7 +62,7 @@ public class OrmHandler implements OrmHandlerProvider {
     /** The default ORM session */
     private Session defaultSession;
 
-    /** Map a <strong>key</strong> to a database <strong>column model</strong> */
+    /** Map a <strong>key</strong> to a database <strong>column</strong> model */
     private final HashMap<Key,MetaRelation2Many> propertyMap = new HashMap<Key,MetaRelation2Many> ();
     /** Map a Java class to a database table model */
     private final HashMap<Class,MetaTable> entityMap = new HashMap<Class,MetaTable> ();
@@ -365,7 +365,7 @@ public class OrmHandler implements OrmHandlerProvider {
     public <T extends MetaRelation2Many> T findColumnModel(Key compositeKey, boolean throwException) throws IllegalArgumentException {
         if (compositeKey!=null && compositeKey.isComposite()) {
             compositeKey = ((CompositeKey)compositeKey).getLastKey();
-                    }
+        }
         final MetaRelation2Many result = propertyMap.get(compositeKey);
         if (throwException && result == null) {
             String propertyName = compositeKey != null ? compositeKey.getFullName() : String.valueOf(compositeKey);
@@ -374,7 +374,18 @@ public class OrmHandler implements OrmHandlerProvider {
         return (T) result;
     }
 
-    /** Find a table model by the dbClass.
+    /** Find a base table model with a correct alias by the last direct key. */
+    public final TableWrapper findTableModel(final Key key) throws IllegalStateException {
+        if (key instanceof CompositeKey) {
+            final CompositeKey compositeKey = (CompositeKey) key;
+            final Key<OrmUjo,?> lastKey = compositeKey.getLastKey();
+            final String alias = compositeKey.getAlias(compositeKey.getCompositeCount() - 1);
+            return findTableModel(lastKey.getDomainType()).addAlias(alias);
+        }
+        return findTableModel(key.getDomainType());
+    }
+
+    /** Find a table model by the dbCl111ass.
      * If the table model is not found then the IllegalStateException is throwed.
      */
     public final MetaTable findTableModel(final Class<? extends OrmUjo> dbClass) throws IllegalStateException {

@@ -49,8 +49,8 @@ import static org.ujorm.orm.template.AliasTable.Build.*;
  * and show how to use a meta-model.
  *
  * Entities: <pre>
- *  - Order [ID, NOTE, CREATED, ...]
- *  - Item [ID, ORDER, NOTE, ...]
+ * - Order [ID, NOTE, CREATED, ...]
+ * - Item [ID, ORDER, NOTE, ...]
  * </pre>
 
  * Copyright 2011, Pavel Ponec
@@ -243,7 +243,7 @@ public class SampleORM {
         }
     }
 
-    /** Lern how to use the Criterion as an simple object validator only. */
+    /** Learn how to use the Criterion as an simple object validator only. */
     public void useCriterions() {
 
         final Order order = new Order();
@@ -270,6 +270,8 @@ public class SampleORM {
 
         // Another condition: (Order.CREATED<=now() or Order.NOTE='another') and Order.ID>99
         crn = (crnCreated.or(crnNote)).and(crnId);
+        assert crn.evaluate(order);
+
         // ... or simple by a native priority:
         crn = crnCreated.or(crnNote).and(crnId);
         assert crn.evaluate(order);
@@ -285,7 +287,7 @@ public class SampleORM {
         logInfo("View-order count: %s", orders.getCount());
     }
 
-    /** Sort items by a <strong>composite</strong> propertry. <br>
+    /** Sort items by a <strong>composite</strong> property. <br>
      * Note 1: see how a composite key can be used for reading values too. <br>
      * Note 2: the method loadLazyValues(..) is able to load all lazy keys for the Item and its related Order<br>
      */
@@ -386,7 +388,7 @@ public class SampleORM {
         final AliasTable item = handler.tableOf(Item.class, "i");
 
         String expected = "SELECT o.ID"
-                + ", COUNT(*) AS ITEM_COUNT"
+                + ", COUNT(*) AS item_count"
                 + " FROM db1.ord_order o"
                 + " INNER JOIN db1.ord_item i ON i.fk_order = o.ID "
                 + " WHERE o.ID!=?"
@@ -498,7 +500,6 @@ public class SampleORM {
         for (Item item : session.createQuery(crn)) {
             logInfo("Item: %s", item);
         }
-
     }
 
     /** Select one items without Order */
@@ -613,7 +614,7 @@ public class SampleORM {
         }
     }
 
-    /** Select orderes using a native criterion */
+    /** Select orders using a native criterion */
     public void useNativeCriterion() {
         // The base using: the first arguments is replaced by column, the second is replaced using argument.
         Criterion<Order> crn = Order.ID.forSql("{0} > {1}", 0L)

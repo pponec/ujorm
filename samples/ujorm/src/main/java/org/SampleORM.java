@@ -288,7 +288,7 @@ public class SampleORM {
         logInfo("View-order count: %s", orders.getCount());
     }
 
-    /** Sort items by a <strong>composite</strong> propertry. <br>
+    /** Sort items by a <strong>composite</strong> property. <br>
      * Note 1: see how a composite key can be used for reading values too. <br>
      * Note 2: the method loadLazyValues(..) is able to load all lazy keys for the Item and its related Order<br>
      */
@@ -558,7 +558,7 @@ public class SampleORM {
         }
     }
 
-    /** Select orderes using a native criterion */
+    /** Select orders using a native criterion */
     public void useNativeCriterion() {
         // The base using: the first arguments is replaced by column, the second is replaced using argument.
         Criterion<Order> crn = Order.ID.forSql("{0} > {1}", 0L)

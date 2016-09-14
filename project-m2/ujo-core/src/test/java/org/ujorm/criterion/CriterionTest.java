@@ -1,10 +1,3 @@
-/*
- * HUnifiedDataObjectTest.java
- * JUnit based test
- *
- * Created on 3. June 2007, 23:00
- */
-
 package org.ujorm.criterion;
 
 import java.io.ByteArrayInputStream;
@@ -86,8 +79,8 @@ public class CriterionTest extends MyTestCase {
         assertEquals(expected, noFilled);
     }
 
-    /** Filled */
-    public void testJoin() {
+    /** Test Value fix Join */
+    public void testValueFixJoin() {
         final Criterion<Person> crnTrue, crnFalse, crnOther;
         Person person = new Person();
         Criterion<Person> result;
@@ -109,6 +102,61 @@ public class CriterionTest extends MyTestCase {
         assertEquals(false, result.evaluate(person));
         //
         result = crnFalse.and(crnOther);
+        assertSame(crnFalse, result);
+        assertEquals(false, result.evaluate(person));
+    }
+
+
+    /** Test Value Other Join */
+    public void testValueOtherJoin() {
+        final Criterion<Person> crnTrue, crnFalse, crnOther;
+        Person person = new Person();
+        Criterion<Person> result;
+
+        crnTrue = Person.NAME.forAll();
+        crnFalse = Person.NAME.forNone();
+        crnOther = Person.CASH.whereGt(10.00);
+        //
+        result = crnOther.or(crnTrue);
+        assertSame(crnTrue, result);
+        assertEquals(true, result.evaluate(person));
+        //
+        result = crnOther.or(crnFalse);
+        assertSame(crnOther, result);
+        assertEquals(false, result.evaluate(person));
+        //
+        result = crnOther.and(crnTrue);
+        assertSame(crnOther, result);
+        assertEquals(false, result.evaluate(person));
+        //
+        result = crnOther.and(crnFalse);
+        assertSame(crnFalse, result);
+        assertEquals(false, result.evaluate(person));
+    }
+
+    /** Test Binary Join */
+    public void testBinaryJoin() {
+        final Criterion<Person> crnTrue, crnFalse, crnOther;
+        Person person = new Person();
+        Criterion<Person> result;
+
+        crnTrue = Person.NAME.forAll();
+        crnFalse = Person.NAME.forNone();
+        crnOther = Person.CASH.whereGt(10.00).and(Person.CASH.whereLe(100.00));
+        //
+        result = crnOther.or(crnTrue);
+        assertSame(crnTrue, result);
+        assertEquals(true, result.evaluate(person));
+        //
+        result = crnOther.or(crnFalse);
+        assertSame(crnOther, result);
+        assertEquals(false, result.evaluate(person));
+        //
+        result = crnOther.and(crnTrue);
+        assertSame(crnOther, result);
+        assertEquals(false, result.evaluate(person));
+        //
+        result = crnOther.and(crnFalse);
         assertSame(crnFalse, result);
         assertEquals(false, result.evaluate(person));
     }

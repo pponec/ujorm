@@ -2,6 +2,15 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 1.61 (2016-03-02)
++ The Ujorm project is moved to the GitHub
++ CORE: JavaDoc is fixed
++ ORM: The AliasTable class is fixed
++ ORM: The UjoSequencer class have got an advanced logging
++ ORM: The OrmHandler provides a database model by API
++ WICKET: A new component for the waiting icon is part of the Ujorm now
++ HOTELS: Validation message of the ParamsEditor is changed
+
 release 1.60 (2015-10-28)
 + CORE: a new factory method of the KeyRing
 + CORE: Building a new instance of the UjoManagerCSV class by a KeyRing argument

@@ -86,8 +86,14 @@ public class AliasTable<UJO extends OrmUjo> {
     }
 
     /** Print one columnAs including alias */
-    public <T> String columnAs(String expression, Key<UJO, T> key) throws IllegalStateException {
-        return expression + " AS " + key.getName();
+    public <T> String columnAs(final String expression, final Key<UJO, T> key) throws IllegalStateException {
+        final MetaColumn model = findColumnModel(key);
+        return columnAs(expression, model != null ? model.getName() : key.getName());
+    }
+
+    /** Print one columnAs including alias */
+    public <T> String columnAs(final String expression, final String alias) throws IllegalStateException {
+        return expression + " AS " + alias;
     }
 
     /** Print one columnAs including alias */
