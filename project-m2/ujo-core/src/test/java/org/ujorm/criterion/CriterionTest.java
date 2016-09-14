@@ -80,7 +80,7 @@ public class CriterionTest extends MyTestCase {
     }
 
     /** Test Value Join */
-    public void testValieJoin() {
+    public void testValueJoin() {
         final Criterion<Person> crnTrue, crnFalse, crnOther;
         Person person = new Person();
         Criterion<Person> result;
