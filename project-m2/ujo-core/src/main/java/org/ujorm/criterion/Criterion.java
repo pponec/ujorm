@@ -138,7 +138,15 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         validate(ujo, "Invalid condition (" + toString() + ") for the " + ujo.toString());
     }
 
-    public Criterion<U> join(BinaryOperator operator, Criterion<U> criterion) {
+    /** Join the instance with a second criterion using an operator. */
+    public Criterion<U> join(final BinaryOperator operator, final Criterion<U> criterion) {
+        if (criterion.getOperator() == Operator.XFIXED) {
+            final boolean value = (Boolean) criterion.getRightNode();
+            switch (operator) {
+                case OR : return value ? criterion : this;
+                case AND: return value ? this : criterion;
+            }
+        }
         return new BinaryCriterion<U>(this, operator, criterion);
     }
 

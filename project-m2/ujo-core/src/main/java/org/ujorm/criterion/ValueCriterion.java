@@ -123,7 +123,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
     public Criterion<UJO> and(Criterion<UJO> criterion) {
         return operator != Operator.XFIXED
              ? super.and(criterion)
-             : Boolean.TRUE.equals(value)
+             : (Boolean) value
              ? criterion
              : this ;
     }
@@ -133,7 +133,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
     public Criterion<UJO> or(Criterion<UJO> criterion) {
         return operator != Operator.XFIXED
              ? super.or(criterion)
-             : Boolean.TRUE.equals(value)
+             : (Boolean) value
              ? this
              : criterion ;
     }
