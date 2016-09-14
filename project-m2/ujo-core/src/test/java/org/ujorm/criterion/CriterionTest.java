@@ -79,8 +79,8 @@ public class CriterionTest extends MyTestCase {
         assertEquals(expected, noFilled);
     }
 
-    /** Test Value Join */
-    public void testValueJoin() {
+    /** Test Value fix Join */
+    public void testValueFixJoin() {
         final Criterion<Person> crnTrue, crnFalse, crnOther;
         Person person = new Person();
         Criterion<Person> result;
@@ -106,6 +106,34 @@ public class CriterionTest extends MyTestCase {
         assertEquals(false, result.evaluate(person));
     }
 
+
+    /** Test Value Other Join */
+    public void testValueOtherJoin() {
+        final Criterion<Person> crnTrue, crnFalse, crnOther;
+        Person person = new Person();
+        Criterion<Person> result;
+
+        crnTrue = Person.NAME.forAll();
+        crnFalse = Person.NAME.forNone();
+        crnOther = Person.CASH.whereGt(10.00);
+        //
+        result = crnOther.or(crnTrue);
+        assertSame(crnTrue, result);
+        assertEquals(true, result.evaluate(person));
+        //
+        result = crnOther.or(crnFalse);
+        assertSame(crnOther, result);
+        assertEquals(false, result.evaluate(person));
+        //
+        result = crnOther.and(crnTrue);
+        assertSame(crnOther, result);
+        assertEquals(false, result.evaluate(person));
+        //
+        result = crnOther.and(crnFalse);
+        assertSame(crnFalse, result);
+        assertEquals(false, result.evaluate(person));
+    }
+
     /** Test Binary Join */
     public void testBinaryJoin() {
         final Criterion<Person> crnTrue, crnFalse, crnOther;
@@ -114,7 +142,7 @@ public class CriterionTest extends MyTestCase {
 
         crnTrue = Person.NAME.forAll();
         crnFalse = Person.NAME.forNone();
-        crnOther = Person.CASH.whereGt(10.00);
+        crnOther = Person.CASH.whereGt(10.00).and(Person.CASH.whereLe(100.00));
         //
         result = crnOther.or(crnTrue);
         assertSame(crnTrue, result);
