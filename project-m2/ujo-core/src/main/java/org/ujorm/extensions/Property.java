@@ -679,8 +679,20 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
     /** {@inheritDoc} */
     @Override
+    public final Criterion<U> whereAll() {
+        return forAll();
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Criterion<U> forNone() {
         return Criterion.forNone(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final Criterion<U> whereNone() {
+        return forNone();
     }
 
     // --------- STATIC METHODS -------------------

@@ -35,9 +35,9 @@ import org.ujorm.core.annot.Immutable;
  */
 @Immutable
 @SuppressWarnings("deprecation")
-final public class PathListProperty<UJO extends Ujo, VALUE>
-      extends PathProperty<UJO, List<VALUE>>
-      implements ListKey<UJO, VALUE> {
+final public class PathListProperty<U extends Ujo, VALUE>
+      extends PathProperty<U, List<VALUE>>
+      implements ListKey<U, VALUE> {
 
     public PathListProperty(String lastSpaceName, List<Key> keys) {
         super(lastSpaceName, keys);
@@ -71,57 +71,57 @@ final public class PathListProperty<UJO extends Ujo, VALUE>
     }
 
     @Override
-    final public VALUE getItem(UJO ujo, int index) {
+    final public VALUE getItem(U ujo, int index) {
         return of(ujo, index);
     }
 
     /** Returns the first item or the {@code null} value */
     @Override
-    public VALUE getFirstItem(final UJO ujo) {
+    public VALUE getFirstItem(final U ujo) {
         final int i = getItemCount(ujo);
         return i > 0 ? getItem(ujo, 0) : null;
     }
 
     /** Returns the last item or the {@code null} value */
     @Override
-    public VALUE getLastItem(final UJO ujo) {
+    public VALUE getLastItem(final U ujo) {
         final int i = getItemCount(ujo);
         return i > 0 ? getItem(ujo, i - 1) : null;
     }
 
     @Override
-    public VALUE of(UJO ujo, int index) {
+    public VALUE of(U ujo, int index) {
         final Ujo u = getSemiValue(ujo, false);
         return  u != null ? getLastPartialProperty().getItem(u, index) : null;
     }
 
     @Override
-    public int getItemCount(UJO ujo) {
+    public int getItemCount(U ujo) {
         final Ujo u = getSemiValue(ujo, false);
         return u != null ? getLastPartialProperty().getItemCount(u) : 0 ;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<VALUE> getList(UJO ujo) {
+    public List<VALUE> getList(U ujo) {
         final Ujo u = getSemiValue(ujo, false);
         return u != null ? getLastPartialProperty().getList(u) : null;
     }
 
     @Override
-    public VALUE setItem(UJO ujo, int index, VALUE value) {
+    public VALUE setItem(U ujo, int index, VALUE value) {
         final Ujo u = getSemiValue(ujo, false);
         return u != null ? getLastPartialProperty().setItem(u, index, value) : null;
     }
 
     @Override
-    public boolean addItem(UJO ujo, VALUE value) {
+    public boolean addItem(U ujo, VALUE value) {
         final Ujo u = getSemiValue(ujo, false);
         return u != null ? getLastPartialProperty().addItem(u, value) : null;
     }
 
     @Override
-    public boolean removeItem(UJO ujo, VALUE value) {
+    public boolean removeItem(U ujo, VALUE value) {
         final Ujo u = getSemiValue(ujo, false);
         return u != null ? getLastPartialProperty().removeItem(u, value) : false;
     }

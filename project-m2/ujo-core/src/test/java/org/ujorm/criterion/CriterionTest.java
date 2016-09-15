@@ -81,27 +81,27 @@ public class CriterionTest extends MyTestCase {
 
     /** Test Value fix Join */
     public void testValueFixJoin() {
-        final Criterion<Person> crnTrue, crnFalse, crnOther;
-        Person person = new Person();
+        final Criterion<Person> crnTrue, crnFalse, crnAny;
+        final Person person = new Person();
         Criterion<Person> result;
 
         crnTrue = Person.NAME.forAll();
         crnFalse = Person.NAME.forNone();
-        crnOther = Person.CASH.whereGt(10.00);
+        crnAny = Person.CASH.whereGt(10.00);
         //
-        result = crnTrue.or(crnOther);
+        result = crnTrue.or(crnAny);
         assertSame(crnTrue, result);
         assertEquals(true, result.evaluate(person));
         //
-        result = crnFalse.or(crnOther);
-        assertSame(crnOther, result);
+        result = crnFalse.or(crnAny);
+        assertSame(crnAny, result);
         assertEquals(false, result.evaluate(person));
         //
-        result = crnTrue.and(crnOther);
-        assertSame(crnOther, result);
+        result = crnTrue.and(crnAny);
+        assertSame(crnAny, result);
         assertEquals(false, result.evaluate(person));
         //
-        result = crnFalse.and(crnOther);
+        result = crnFalse.and(crnAny);
         assertSame(crnFalse, result);
         assertEquals(false, result.evaluate(person));
     }
@@ -109,54 +109,54 @@ public class CriterionTest extends MyTestCase {
 
     /** Test Value Other Join */
     public void testValueOtherJoin() {
-        final Criterion<Person> crnTrue, crnFalse, crnOther;
-        Person person = new Person();
+        final Criterion<Person> crnTrue, crnFalse, crnAny;
+        final Person person = new Person();
         Criterion<Person> result;
 
         crnTrue = Person.NAME.forAll();
         crnFalse = Person.NAME.forNone();
-        crnOther = Person.CASH.whereGt(10.00);
+        crnAny = Person.CASH.whereGt(10.00);
         //
-        result = crnOther.or(crnTrue);
+        result = crnAny.or(crnTrue);
         assertSame(crnTrue, result);
         assertEquals(true, result.evaluate(person));
         //
-        result = crnOther.or(crnFalse);
-        assertSame(crnOther, result);
+        result = crnAny.or(crnFalse);
+        assertSame(crnAny, result);
         assertEquals(false, result.evaluate(person));
         //
-        result = crnOther.and(crnTrue);
-        assertSame(crnOther, result);
+        result = crnAny.and(crnTrue);
+        assertSame(crnAny, result);
         assertEquals(false, result.evaluate(person));
         //
-        result = crnOther.and(crnFalse);
+        result = crnAny.and(crnFalse);
         assertSame(crnFalse, result);
         assertEquals(false, result.evaluate(person));
     }
 
     /** Test Binary Join */
     public void testBinaryJoin() {
-        final Criterion<Person> crnTrue, crnFalse, crnOther;
-        Person person = new Person();
+        final Criterion<Person> crnTrue, crnFalse, crnAny;
+        final Person person = new Person();
         Criterion<Person> result;
 
         crnTrue = Person.NAME.forAll();
         crnFalse = Person.NAME.forNone();
-        crnOther = Person.CASH.whereGt(10.00).and(Person.CASH.whereLe(100.00));
+        crnAny = Person.CASH.whereGt(10.00).and(Person.CASH.whereLe(100.00));
         //
-        result = crnOther.or(crnTrue);
+        result = crnAny.or(crnTrue);
         assertSame(crnTrue, result);
         assertEquals(true, result.evaluate(person));
         //
-        result = crnOther.or(crnFalse);
-        assertSame(crnOther, result);
+        result = crnAny.or(crnFalse);
+        assertSame(crnAny, result);
         assertEquals(false, result.evaluate(person));
         //
-        result = crnOther.and(crnTrue);
-        assertSame(crnOther, result);
+        result = crnAny.and(crnTrue);
+        assertSame(crnAny, result);
         assertEquals(false, result.evaluate(person));
         //
-        result = crnOther.and(crnFalse);
+        result = crnAny.and(crnFalse);
         assertSame(crnFalse, result);
         assertEquals(false, result.evaluate(person));
     }

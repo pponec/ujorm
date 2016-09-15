@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2015 Pavel Ponec
+ *  Copyright 2009-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -560,11 +560,11 @@ abstract public class SqlDialect {
             case LE:
                 return "{0}<={1}";
             case EQUALS_CASE_INSENSITIVE:
-                return "UPPER({0})={1}";
+                return "LOWER({0})={1}";
             case STARTS_CASE_INSENSITIVE:
             case ENDS_CASE_INSENSITIVE:
             case CONTAINS_CASE_INSENSITIVE:
-                return "UPPER({0}) LIKE {1}";
+                return "LOWER({0}) LIKE {1}";
             case STARTS:
             case ENDS:
             case CONTAINS:
@@ -592,7 +592,7 @@ abstract public class SqlDialect {
 
     /**
      * Print table columns
-     * @param columns List of tablel columns
+     * @param columns List of table columns
      * @param values Print columns including its aliases.
      * @param out Table columns output.
      * @throws java.io.IOException
