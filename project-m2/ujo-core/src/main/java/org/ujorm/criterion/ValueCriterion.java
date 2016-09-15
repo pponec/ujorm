@@ -117,7 +117,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
         return operator;
     }
 
-    /** Join this instance with a second criterion by an operator with a simple optimization. */
+    /** Join this instance with a second criterion by an operator with a simple logical optimization. */
     @Override
     public Criterion<U> join(final BinaryOperator operator, final Criterion<U> criterion) {
         if (this.operator == Operator.XFIXED) {
