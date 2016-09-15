@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -175,7 +175,8 @@ public class CriterionDecoder {
             return value;
         }
         if (crit.isInsensitive()) {
-            value = value.toString().toUpperCase();
+            // Note: ! "Geß".toUpperCase().equals("GES")
+            value = value.toString().toLowerCase();
         }
         switch (crit.getOperator()) {
             case CONTAINS:
