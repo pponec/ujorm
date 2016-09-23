@@ -207,26 +207,31 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
         return result;
     }
 
-    /** Add table column according to column type */
+    /** Add a table column according to column type */
     public <V> boolean add(Key<? super U,V> column) {
+        return add(createKeyColumn(column));
+    }
+
+    /** Create new object type of {@link KeyColumn} */
+    public <V> KeyColumn<? super U, V> createKeyColumn(Key<? super U, V> column) {
         if (column.isTypeOf(Boolean.class)) {
-            return add(KeyColumnBoolean.of(column, isSortingEnabled((Key) column)));
+            return KeyColumnBoolean.of(column, isSortingEnabled((Key) column));
         }
         if (column.isTypeOf(Number.class)) {
-            return add(KeyColumn.of(column, isSortingEnabled((Key)column), "number"));
+            return KeyColumn.of(column, isSortingEnabled((Key)column), "number");
         }
         if (column.isTypeOf(java.sql.Date.class)) {
-            return add(KeyColumnDate.of(column, isSortingEnabled((Key)column), KeyColumnDate.DEFAULT_CSS_CLASS));
+            return KeyColumnDate.of(column, isSortingEnabled((Key)column), KeyColumnDate.DEFAULT_CSS_CLASS);
         }
         if (column.isTypeOf(java.util.Date.class)) {
-            return add(KeyColumnDate.of(column, isSortingEnabled((Key)column), "datetime", DateTimes.LOCALE_DATETIME_FORMAT_KEY));
+            return KeyColumnDate.of(column, isSortingEnabled((Key)column), "datetime", DateTimes.LOCALE_DATETIME_FORMAT_KEY);
         }
         if (column.isTypeOf(Enum.class)) {
-            return add(KeyColumnEnum.of(column, isSortingEnabled((Key)column), "enum"));
+            return KeyColumnEnum.of(column, isSortingEnabled((Key)column), "enum");
         }
 
         // Default:
-        return add(KeyColumn.of(column, isSortingEnabled((Key)column), null));
+        return KeyColumn.of(column, isSortingEnabled((Key)column), null);
     }
 
     /** Create new instance of a Panel from the argument {@code panelClass}
