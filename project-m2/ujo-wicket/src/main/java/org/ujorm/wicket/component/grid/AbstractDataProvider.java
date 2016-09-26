@@ -383,6 +383,17 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
         return (List) columns;
     }
 
+    /** Returns columns type of {@link IExportableColumn} for a {@code true} argument. */
+    protected <S> List<KeyColumnExportable<U, S>> getExportableColumns(boolean exportable) {
+        final List<KeyColumnExportable<U, S>> result = new ArrayList<KeyColumnExportable<U, S>>(getColumns().size());
+        for (IColumn<U, Object> column : getColumns()) {
+            if (column instanceof KeyColumn) {
+               result.add(new KeyColumnExportable<U, S>((KeyColumn)column));
+            }
+        }
+        return result;
+    }
+
     /** Assign a CSS class to a KeyColumn, if exists */
     public void setCssClass(final Key<? super U, ?> key, final String cssClass) {
         for (IColumn<U, ?> iColumn : columns) {

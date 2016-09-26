@@ -58,7 +58,7 @@ import org.ujorm.wicket.component.tools.LocalizedModel;
  *
  * @see KeyModel
  * @author Pavel Ponec
- * @param <UJO extends Ujo> The Model object type
+ * @param <U extends Ujo> The Model object type
  */
 public class KeyColumn<U extends Ujo, T> extends AbstractColumn<U, KeyRing<U>> {
     private static final long serialVersionUID = 1L;
