@@ -75,9 +75,7 @@ final public class Transaction implements javax.transaction.Transaction{
         }
     }
 
-    /** Commit the current level of the beginTransaction.
-     * @return Return a parent Transaction or the value [@code null} for the root transaction.
-     */
+    /** Commit the current level of the beginTransaction. */
     @Override
     public void commit() throws IllegalStateException {
         if (status==Status.STATUS_ACTIVE && !rollbackOnly) {
@@ -90,9 +88,7 @@ final public class Transaction implements javax.transaction.Transaction{
         }
     }
 
-    /** Rollback the current level of the beginTransaction.
-     * @return Return a parent Transaction or the value [@code null} for the root transaction.
-     */
+    /** Rollback the current level of the beginTransaction. */
     @Override
     public void rollback() throws IllegalStateException {
         if (status==Status.STATUS_ACTIVE) {
