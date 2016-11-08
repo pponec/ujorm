@@ -32,7 +32,7 @@ import org.ujorm.wicket.KeyModel;
  * @author Pavel Ponec
  * @param <U extends Ujo> The Model object type
  */
-public class KeyColumnExportable<U extends Ujo, T> implements IExportableColumn<U, KeyRing<U>, T> {
+public class KeyColumnExportable<U extends Ujo, T> implements IExportableColumn<U, KeyRing<U>> {
     private static final long serialVersionUID = 1L;
 
     /** Original column */
