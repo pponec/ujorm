@@ -30,7 +30,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 /**
  * Sample of inheritance for the persistent objects.
  *
- * Copyright 2010, Pavel Ponec
+ * Copyright 2010-2016, Pavel Ponec
  */
 public class SampleOfInheritance extends TestCase {
 
@@ -68,10 +68,9 @@ public class SampleOfInheritance extends TestCase {
     /** Now, how to select Customers? */
     public void useSelect() {
 
-        Criterion<Customer> cn1, cn2, crit;
-
-        cn1 = Criterion.where(Customer.user.add(User.login), "ponec");
-        cn2 = Criterion.where(Customer.company, "ABC");
+        final Criterion<Customer> cn1, cn2, crit;
+        cn1 = Customer.user.add(User.login).whereEq("ponec");
+        cn2 = Customer.company.whereEq("ABC");
         crit = cn1.and(cn2);
 
         Session session = handler.getDefaultSession();

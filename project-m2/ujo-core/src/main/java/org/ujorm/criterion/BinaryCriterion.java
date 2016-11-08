@@ -86,7 +86,7 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
         return true;
     }
 
-    /** Print the conditon in a human reading format. */
+    /** Print the condition in a human reading format. */
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
