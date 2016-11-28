@@ -26,7 +26,7 @@
     <properties>
         <project.war.name>demo-hotels</project.war.name>
         <ujorm.version>1.62-SNAPSHOT</ujorm.version>
-        <wicket.version>7.1.0</wicket.version>
+        <wicket.version>7.5.0</wicket.version>
         <jetty.version>9.2.14.v20151106</jetty.version>
         <spring.version>4.2.4.RELEASE</spring.version>
         <java.version>1.7</java.version>
