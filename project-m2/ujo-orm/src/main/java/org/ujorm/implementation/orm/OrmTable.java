@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
+import org.ujorm.orm.SnakeCaseFactory;
 
 /**
  * This abstract implementation of the OrmUjo interface is situable
@@ -192,9 +193,18 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
 
     /** Create a factory with a camel-case Key name generator.
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
+     * @see OrmKeyFactory
      */
     protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newCamelFactory(Class<? extends UJO> ujoClass) {
         return (FACTORY) new OrmKeyFactory(ujoClass, true);
+    }
+
+    /** Create a factory with a snake_case Key name generator.
+     * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
+     * @see SnakeCaseFactory
+     */
+    protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newSnakeCaseFactory(Class<? extends UJO> ujoClass) {
+        return (FACTORY) new SnakeCaseFactory(ujoClass);
     }
 
     /** Create a base factory Key name generator where key name is the same as its field name.

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2014 Pavel Ponec
+ *  Copyright 2007-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 
 package org.ujorm.criterion;
 
@@ -37,7 +36,7 @@ import static org.ujorm.core.UjoTools.SPACE;
  * @since 0.90
  * @author Pavel Ponec
  */
-public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements Serializable {
+public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Serializable {
     static final long serialVersionUID = 20140128L;
 
     /** True constant criterion */
@@ -45,7 +44,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
     /** False constant criterion */
     public static final Criterion<Ujo> FALSE = new ValueCriterion<Ujo>(false);
 
-    private Key<UJO, Object> key;
+    private Key<U, Object> key;
     private Operator operator;
     protected Object value;
 
@@ -55,12 +54,12 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
     }
 
     /** An undefined operator (null) is replaced by EQ. */
-    public ValueCriterion(Key<UJO,? extends Object> key, Operator operator, Key<UJO,Object> value) {
+    public ValueCriterion(Key<U,? extends Object> key, Operator operator, Key<U,Object> value) {
         this(key, operator, (Object) value);
     }
 
     /** An undefined operator (null) is replaced by EQ. */
-    public ValueCriterion(Key<UJO,? extends Object> key, Operator operator, Object value) {
+    public ValueCriterion(Key<U,? extends Object> key, Operator operator, Object value) {
 
         if (key==null) {
             value = (Boolean) value; // Type test for the CriterionConstant.
@@ -95,7 +94,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
                  break;
         }
 
-        this.key = (Key<UJO, Object>) key;
+        this.key = (Key<U, Object>) key;
         this.value = value;
         this.operator = operator;
     }
@@ -118,29 +117,21 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
         return operator;
     }
 
-    /** The implementation with an optimization */
+    /** Join this instance with a second criterion by an operator with a simple logical optimization. */
     @Override
-    public Criterion<UJO> and(Criterion<UJO> criterion) {
-        return operator != Operator.XFIXED
-             ? super.and(criterion)
-             : Boolean.TRUE.equals(value)
-             ? criterion
-             : this ;
-    }
-
-    /** The implementation with an optimization */
-    @Override
-    public Criterion<UJO> or(Criterion<UJO> criterion) {
-        return operator != Operator.XFIXED
-             ? super.or(criterion)
-             : Boolean.TRUE.equals(value)
-             ? this
-             : criterion ;
+    public Criterion<U> join(final BinaryOperator operator, final Criterion<U> criterion) {
+        if (this.operator == Operator.XFIXED) {
+            switch (operator) {
+                case OR : return (Boolean) value ? this : criterion;
+                case AND: return (Boolean) value ? criterion : this;
+            }
+        }
+        return super.join(operator, criterion);
     }
 
     @SuppressWarnings({"unchecked", "fallthrough"})
     @Override
-    public boolean evaluate(UJO ujo) {
+    public boolean evaluate(final U ujo) {
         if (operator==Operator.XSQL) {
             throw new UnsupportedOperationException("The operator " + operator + " can't be evaluated (" + value + ")");
         }
@@ -235,15 +226,15 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
     @Override
-    final public List<UJO> evaluate(final Iterable<UJO> ujoList) {
+    final public List<U> evaluate(final Iterable<U> ujoList) {
         switch (operator) {
             case XFIXED:
                 return Boolean.FALSE.equals(value)
-                     ? Collections.<UJO>emptyList()
+                     ? Collections.<U>emptyList()
                      : ujoList instanceof List
                      ? (List) ujoList
                      : ujoList instanceof Collection
-                     ? new ArrayList<UJO>((Collection) ujoList)
+                     ? new ArrayList<U>((Collection) ujoList)
                      : super.evaluate(ujoList);
             default:
                 return super.evaluate(ujoList);
@@ -254,11 +245,11 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
     @Override
-    final public List<UJO> evaluate(final UJO ... ujoList) {
+    final public List<U> evaluate(final U ... ujoList) {
         switch (operator) {
             case XFIXED:
                 return Boolean.FALSE.equals(value)
-                     ? Collections.<UJO>emptyList()
+                     ? Collections.<U>emptyList()
                      : Arrays.asList(ujoList);
             default:
                 return super.evaluate(ujoList);

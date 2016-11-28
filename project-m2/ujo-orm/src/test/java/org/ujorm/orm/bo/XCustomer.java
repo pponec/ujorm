@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import org.ujorm.orm.annot.Column;
  * @hidden
  */
 public class XCustomer extends OrmTable<XCustomer> {
-    private static KeyFactory<XCustomer> f = newFactory(XCustomer.class);
+    private static KeyFactory<XCustomer> f = newSnakeCaseFactory(XCustomer.class);
 
     /** Unique key */
     @Column(pk = true, converter=TypeService.class)

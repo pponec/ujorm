@@ -45,7 +45,7 @@ import org.ujorm.validator.ValidationException;
  */
 @Immutable
 @SuppressWarnings("deprecation")
-public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, VALUE> {
+public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE> {
     /** No alias is used */
     protected static final String[] NO_ALIAS = null;
 
@@ -260,7 +260,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     /** Property domain type */
     @Override
     @SuppressWarnings("unchecked")
-    public Class<UJO> getDomainType() {
+    public Class<U> getDomainType() {
         return keys[0].getDomainType();
     }
 
@@ -269,7 +269,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Ujo getSemiValue(final UJO ujo, final boolean create) {
+    public Ujo getSemiValue(final U ujo, final boolean create) {
         if (ujo == null) {
             return ujo;
         }
@@ -299,7 +299,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      */
     @SuppressWarnings("unchecked")
     @Override
-    final public VALUE getValue(final UJO ujo) throws ValidationException {
+    final public VALUE getValue(final U ujo) throws ValidationException {
         return of(ujo);
     }
 
@@ -309,12 +309,12 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @since 1.45
      */
     @Override
-    final public void setValue(final UJO ujo, final VALUE value) throws ValidationException {
+    final public void setValue(final U ujo, final VALUE value) throws ValidationException {
         setValue(ujo, value, true);
     }
 
     @Override
-    final public void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException {
+    final public void setValue(final U ujo, final VALUE value, boolean createRelations) throws ValidationException {
         final Ujo u = getSemiValue(ujo, createRelations);
         getLastPartialProperty().setValue(u, value);
     }
@@ -323,7 +323,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * If a value  (not getLastPartialProperty) is null, then the result is null.
      */
     @Override
-    final public VALUE of(final UJO ujo) {
+    final public VALUE of(final U ujo) {
         final Ujo u = getSemiValue(ujo, false);
         return  u!=null ? getLastPartialProperty().of(u) : null ;
     }
@@ -341,7 +341,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
 
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
     @Override
-    public boolean isDefault(UJO ujo) {
+    public boolean isDefault(U ujo) {
         VALUE value = of(ujo);
         VALUE defaultValue = getDefault();
         final boolean result
@@ -353,7 +353,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     @Override
-    public void copy(final UJO from, final UJO to) {
+    public void copy(final U from, final U to) {
         final Ujo from2 = getSemiValue(from, false);
         final Ujo to2 = getSemiValue(to, false);
         getLastPartialProperty().copy(from2, to2);
@@ -381,7 +381,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @return Accordance
      */
     @Override
-    public boolean equals(final UJO ujo, final VALUE value) {
+    public boolean equals(final U ujo, final VALUE value) {
         Object myValue = of(ujo);
         if (myValue==value) { return true; }
 
@@ -506,7 +506,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      */
     @Override
     @SuppressWarnings({"unchecked","deprecation"})
-    public Key<UJO,VALUE> descending() {
+    public Key<U,VALUE> descending() {
         return descending(true);
     }
 
@@ -515,7 +515,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      */
     @Override
     @SuppressWarnings({"unchecked","deprecation"})
-    public Key<UJO,VALUE> descending(boolean descending) {
+    public Key<U,VALUE> descending(boolean descending) {
         return isAscending()==descending
                 ? new PathProperty(this, aliases, !descending)
                 : this
@@ -549,7 +549,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> key) {
+    public <T> CompositeKey<U, T> add(final Key<? super VALUE, T> key) {
         return new PathProperty(DEFAULT_ALIAS, this, key);
     }
 
@@ -558,13 +558,13 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> key, String alias) {
+    public <T> CompositeKey<U, T> add(final Key<? super VALUE, T> key, String alias) {
         return new PathProperty(alias, this, key);
     }
 
     /** ListKey, method does not support the name spaces */
     @SuppressWarnings("unchecked")
-    public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> key) {
+    public <T> ListKey<U, T> add(ListKey<? super VALUE, T> key) {
         Key[] props = new Key[keys.length+1];
         System.arraycopy(keys, 0, props, 0, keys.length);
         props[keys.length] = key;
@@ -576,8 +576,8 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @since 1.43
      */
     @Override
-    public CompositeKey<UJO, VALUE> alias(String alias) {
-        return new PathProperty<UJO, VALUE>(alias, this);
+    public CompositeKey<U, VALUE> alias(String alias) {
+        return new PathProperty<U, VALUE>(alias, this);
     }
 
     /** Returns a {@code spaceName} for the required level.
@@ -622,71 +622,71 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> where(Operator operator, VALUE value) {
+    public Criterion<U> where(Operator operator, VALUE value) {
         return Criterion.where(this, operator, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> where(Operator operator, Key<?, VALUE> value) {
+    public Criterion<U> where(Operator operator, Key<?, VALUE> value) {
         return Criterion.where(this, operator, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereEq(VALUE value) {
+    public Criterion<U> whereEq(VALUE value) {
         return Criterion.where(this, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereEq(Key<UJO, VALUE> value) {
+    public Criterion<U> whereEq(Key<U, VALUE> value) {
         return Criterion.where(this, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereIn(Collection<VALUE> list) {
+    public Criterion<U> whereIn(Collection<VALUE> list) {
         return Criterion.whereIn(this, list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereNotIn(Collection<VALUE> list) {
+    public Criterion<U> whereNotIn(Collection<VALUE> list) {
         return Criterion.whereNotIn(this, list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereIn(VALUE... list) {
+    public Criterion<U> whereIn(VALUE... list) {
         return Criterion.whereIn(this, list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereNotIn(VALUE... list) {
+    public Criterion<U> whereNotIn(VALUE... list) {
         return Criterion.whereNotIn(this, list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereNull() {
+    public Criterion<U> whereNull() {
         return Criterion.whereNull(this);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereNotNull() {
+    public Criterion<U> whereNotNull() {
         return Criterion.whereNotNull(this);
     }
 
     /** {@inheritDoc} */
-    public Criterion<UJO> whereFilled() {
+    public Criterion<U> whereFilled() {
         return Criterion.whereNotNull(this).and(Criterion.where(this, Operator.NOT_EQ, getEmptyValue()));
     }
 
     /** {@inheritDoc} */
-    public Criterion<UJO> whereNotFilled(){
+    public Criterion<U> whereNotFilled(){
         return Criterion.whereNull(this).or(Criterion.where(this, getEmptyValue()));
     }
 
@@ -707,37 +707,37 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereNeq(VALUE value) {
+    public Criterion<U> whereNeq(VALUE value) {
         return Criterion.where(this, Operator.NOT_EQ, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereGt(VALUE value) {
+    public Criterion<U> whereGt(VALUE value) {
         return Criterion.where(this, Operator.GT, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereGe(VALUE value) {
+    public Criterion<U> whereGe(VALUE value) {
         return Criterion.where(this, Operator.GE, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereLt(VALUE value) {
+    public Criterion<U> whereLt(VALUE value) {
         return Criterion.where(this, Operator.LT, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereLe(VALUE value) {
+    public Criterion<U> whereLe(VALUE value) {
         return Criterion.where(this, Operator.LE, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> forSql(String sqlCondition) {
+    public Criterion<U> forSql(String sqlCondition) {
         return Criterion.forSql(this, sqlCondition);
     }
 
@@ -759,24 +759,36 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @see Operator#XSQL
      */
 
-    public Criterion<UJO> forSql(String sqlTemplate, VALUE value) {
+    public Criterion<U> forSql(String sqlTemplate, VALUE value) {
         return Criterion.forSql(this, sqlTemplate, value);
     }
 
-    public Criterion<UJO> forSqlUnchecked(String sqlTemplate, Object value) {
+    public Criterion<U> forSqlUnchecked(String sqlTemplate, Object value) {
         return Criterion.forSqlUnchecked(this, sqlTemplate, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> forAll() {
+    public Criterion<U> forAll() {
         return Criterion.forAll(this);
+    }
+
+   /** {@inheritDoc} */
+    @Override
+    public final Criterion<U> whereAll() {
+        return forAll();
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> forNone() {
+    public Criterion<U> forNone() {
         return Criterion.forNone(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final Criterion<U> whereNone() {
+        return forNone();
     }
 
     // ============= STATIC METHODS =============

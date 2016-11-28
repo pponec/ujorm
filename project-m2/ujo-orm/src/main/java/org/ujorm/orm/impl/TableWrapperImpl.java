@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 Pavel Ponec
+ *  Copyright 2012-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.ujorm.orm.metaModel.MetaTable;
  * @author Pavel Ponec
  */
 public class TableWrapperImpl implements TableWrapper {
-    
+
     private final MetaTable table;
     private final String alias;
     private final List<ColumnWrapper> columns;
@@ -38,22 +38,26 @@ public class TableWrapperImpl implements TableWrapper {
         this.columns = new ArrayList<ColumnWrapper>(16);
     }
 
+    @Override
     public MetaTable getModel() {
         return table;
     }
 
+    @Override
     public String getAlias() {
         return alias;
     }
 
+    @Override
     public boolean isView() {
         return false;
     }
 
+    @Override
     public List<? extends ColumnWrapper> getColumns() {
         return columns;
     }
-    
+
     /** Table model and alias must be the same */
     @Override
     public int hashCode() {
@@ -79,6 +83,6 @@ public class TableWrapperImpl implements TableWrapper {
             return false;
         }
         return true;
-    }  
-    
+    }
+
 }

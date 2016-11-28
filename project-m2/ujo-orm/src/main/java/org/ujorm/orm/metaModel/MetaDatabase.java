@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -99,11 +99,11 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** The <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
      * (java naming and directory interface) connection string.
      * <br>A typical use on the Tomcat can be:<br> jndi = {"java:comp/env/jdbc/TestDB"}
-     * <br>See the 
+     * <br>See the
      * <a href="http://www.mkyong.com/tomcat/how-to-configure-mysql-datasource-in-tomcat-6/" target="_blank">link</a> or
      * <a href="http://tomcat.apache.org/tomcat-6.0-doc/jndi-datasource-examples-howto.html" target="_blank">link</a>
      * for more information about JNDI on the Tomcat.
-     * @see org.ujorm.orm.annot.Db#jndi() 
+     * @see org.ujorm.orm.annot.Db#jndi()
      */
     public static final ListKey<MetaDatabase,String> JNDI = fa.newListKey("jndi");
     /** The sequencer class for tables of the current database.
@@ -141,6 +141,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      * @param ormHandler ORM handler
      * @param database Database instance
      * @param param Configuration data from a XML file
+     * @param order Database order
      */
     @SuppressWarnings("LeakingThisInConstructor")
     public MetaDatabase(OrmHandler ormHandler, OrmUjo database, MetaDatabase param, Integer order) {
@@ -477,10 +478,12 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         if (obj instanceof MetaDatabase) {
             MetaDatabase db = (MetaDatabase) obj;
 
-            final Integer i1 = MetaDatabase.ORDER.of(this);
-            final Integer i2 = MetaDatabase.ORDER.of(db);
+            final int i1 = MetaDatabase.ORDER.of(this);
+            final int i2 = MetaDatabase.ORDER.of(db);
+            final String url1 = MetaDatabase.JDBC_URL.of(this);
+            final String url2 = MetaDatabase.JDBC_URL.of(db);
 
-            return i1.equals(i2);
+            return i1 == i2 && url1.equals(url2);
         } else {
             return false;
         }
@@ -489,8 +492,10 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** Hash code */
     @Override
     public int hashCode() {
-        final Integer ir = MetaDatabase.ORDER.of(this);
-        return ir.hashCode();
+        int result = 7;
+        result = 59 * result + MetaDatabase.ORDER.of(this);
+        result = 59 * result + MetaDatabase.JDBC_URL.of(this).hashCode();
+        return result;
     }
 
 

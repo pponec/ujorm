@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2014 Pavel Ponec
+ *  Copyright 2007-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -138,20 +138,42 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         validate(ujo, "Invalid condition (" + toString() + ") for the " + ujo.toString());
     }
 
-    public Criterion<U> join(BinaryOperator operator, Criterion<U> criterion) {
+    /** Join this instance with a second criterion by an operator with a simple logical optimization. */
+    public Criterion<U> join(final BinaryOperator operator, final Criterion<U> criterion) {
+        if (criterion.getOperator() == Operator.XFIXED) {
+            final boolean rightValue = (Boolean) criterion.getRightNode();
+            switch (operator) {
+                case OR : return rightValue ? criterion : this;
+                case AND: return rightValue ? this : criterion;
+            }
+        }
         return new BinaryCriterion<U>(this, operator, criterion);
     }
 
-    public Criterion<U> and(Criterion<U> criterion) {
+    /**
+     * Join a criterion by the {@link BinaryOperator.AND} operator.
+     * @param criterion Criterion to join
+     * @return Result
+     */
+    public final Criterion<U> and(Criterion<U> criterion) {
         return join(BinaryOperator.AND, criterion);
     }
 
-    public Criterion<U> or(Criterion<U> criterion) {
+    /**
+     * Join a criterion by the {@link BinaryOperator.OR} operator.
+     * @param criterion Criterion to join
+     * @return Result
+     */
+    public final Criterion<U> or(Criterion<U> criterion) {
         return join(BinaryOperator.OR, criterion);
     }
 
-    public Criterion<U> not() {
-        return new BinaryCriterion<U>(this, BinaryOperator.NOT, this);
+    /**
+     * Join this criterion by the {@link BinaryOperator.NOT} operator.
+     * @return Result
+     */
+    public final Criterion<U> not() {
+        return join(BinaryOperator.NOT, this);
     }
 
     /** Returns the left node of the parent. */
@@ -171,7 +193,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         return false;
     }
 
-    /** Cast the current criterion to an extented generic domain for the case
+    /** Cast the current criterion to an extended generic domain for the case
      * where the current Key domain is from a parent class.
      */
     public final <T extends U> Criterion<T> cast() {

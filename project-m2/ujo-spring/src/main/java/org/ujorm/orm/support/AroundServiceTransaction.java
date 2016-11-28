@@ -25,6 +25,7 @@ import org.ujorm.orm.Session;
  * ServiceTransaction
  * @author Hampl
  */
+@Deprecated
 public class AroundServiceTransaction {
 
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(AroundServiceTransaction.class);
@@ -64,15 +65,21 @@ public class AroundServiceTransaction {
         getSession().markForRolback();
     }
 
-    protected void finishTransaction() {
-        LOGGER.log(UjoLogger.TRACE, "Auto transaction ending (commit/rollback)");
-        final Session session = getSession();
-        // rollback if there was error
-        if (session.isRollbackOnly()) {
-            LOGGER.log(UjoLogger.DEBUG, "Transaction rolling back because it has been marked as rollback-only");
-            session.rollback();
-        } else {
-            session.commit();
+    /** Don't throw exception - method is called from finally block, so origin exception would be lost */
+    protected void finishTransaction (){
+        try {
+            LOGGER.log(UjoLogger.TRACE, "Auto transaction ending (commit/rollback)");
+            final Session session = getSession();
+            // rollback if there was error
+            if (session.isRollbackOnly()) {
+                LOGGER.log(UjoLogger.DEBUG, "Transaction rolling back because it has been marked as rollback-only");
+                session.rollback();
+            } else {
+                session.commit();
+            }
+        } catch (Throwable e) {
+            // don't throw exception - method is called from finally block, so origin exception would be lost
+            LOGGER.log(UjoLogger.ERROR, "Transaction close error", e);
         }
     }
 

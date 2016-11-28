@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012-2012 Pavel Ponec
+ *  Copyright 2012-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.ujorm.UjoAction;
  */
 abstract public class AbstractAplicationContextAdapter implements Ujo, ApplicationContextAware {
 
-    /** Spring application Conext */
+    /** Spring application Context */
     private ApplicationContext context;
 
     /** Default adapter. */
@@ -41,7 +41,7 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
         setApplicationContext(context);
     }
 
-    /** A delegat for the method {@link #getBean(org.ujorm.Key). */
+    /** A delegate for the method {@link #getBean(org.ujorm.Key). */
     @Override
     @SuppressWarnings("unchecked")
     final public Object readValue(Key key) {
@@ -55,7 +55,7 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
         throw new UnsupportedOperationException("Method is not supported");
     }
 
-    /** An delegat for the method {@link ApplicationContext#getBean(java.lang.String, java.lang.Class)} */
+    /** A delegate for the method {@link ApplicationContext#getBean(java.lang.String, java.lang.Class)} */
     @SuppressWarnings("unchecked")
     public <T> T getBean(Key<? extends Ujo, T> key) throws BeansException {
         return (T) context.getBean(key.getName(), key.getType());

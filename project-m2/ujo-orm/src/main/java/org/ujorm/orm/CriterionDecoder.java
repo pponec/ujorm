@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import org.ujorm.CompositeKey;
@@ -49,8 +50,11 @@ public class CriterionDecoder {
     final protected Criterion criterion;
     final protected List<Key> orderBy;
     final protected StringBuilder sql;
+    /** List of the non-null criterion values */
     final protected List<ValueCriterion> values;
+    /** List of the nullable criterion values */
     final protected List<ValueCriterion> nullValues;
+    /** All table set where a predicable order is required (by inserts) */
     final protected Set<TableWrapper> tables;
     final protected MetaTable baseTable;
     /** EFFECTIVA REQUEST: to enforce printing all Ujorm joined tables */
@@ -81,7 +85,7 @@ public class CriterionDecoder {
         this.sql = new StringBuilder(64);
         this.values = new ArrayList<ValueCriterion>();
         this.nullValues = new ArrayList<ValueCriterion>();
-        this.tables = new HashSet<TableWrapper>();
+        this.tables = new LinkedHashSet<TableWrapper>(); // Predicable order is required
         this.tables.add(baseTable);
         this.printAllJoinedTables = MetaParams.MORE_PARAMS.add(MoreParams.PRINT_All_JOINED_TABLES).of(handler.getParameters());
 
@@ -101,14 +105,14 @@ public class CriterionDecoder {
             unpackBinary((BinaryCriterion)c);
         } else try {
             final ValueCriterion origCriterion = (ValueCriterion) c;
-            final ValueCriterion newCriterion = dialect.printCriterion(origCriterion, sql);
-            if (newCriterion!=null) {
-                values.add(newCriterion);
-            } else if (origCriterion != null) {
+            final ValueCriterion valueCriterion = dialect.printCriterion(origCriterion, sql);
+            if (valueCriterion != null) {
+                values.add(valueCriterion);
+            } else {
                 nullValues.add(origCriterion);
             }
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
         }
     }
 
@@ -175,7 +179,8 @@ public class CriterionDecoder {
             return value;
         }
         if (crit.isInsensitive()) {
-            value = value.toString().toUpperCase();
+            // Note: ! "Geß".toUpperCase().equals("GES")
+            value = value.toString().toLowerCase();
         }
         switch (crit.getOperator()) {
             case CONTAINS:
@@ -192,7 +197,7 @@ public class CriterionDecoder {
         }
     }
 
-    /** Returns the criterion from costructor. */
+    /** Returns the criterion from constructor. */
     public Criterion getCriterion() {
         return criterion;
     }
@@ -260,21 +265,19 @@ public class CriterionDecoder {
 
         if (parenthesis) {
             sql.append(")");
-        }
+    }
     }
 
-    /** Returns the unique direct key relations. */
-    @SuppressWarnings("unchecked")
+    /** Returns the unique direct key relation set with the predicable order (by inserts). */
     protected Collection<AliasKey> getPropertyRelations() {
-        final Set<AliasKey> result = new HashSet<AliasKey>();
+        final Set<AliasKey> result = new LinkedHashSet<AliasKey>(); // the predicable order is required (by inserts)
         final ArrayList<ValueCriterion> allValues = new ArrayList<ValueCriterion>
-                ( values.size()
-                + nullValues.size());
+                (values.size() + nullValues.size());
         allValues.addAll(values);
         allValues.addAll(nullValues);
 
-        for (ValueCriterion value : allValues) {
-            Key p1 = value.getLeftNode();
+        for (ValueCriterion<?> value : allValues) {
+            final Key<?,?> p1 = value.getLeftNode();
             if (p1 != null) {
                 AliasKey.addRelations(p1, result);
                 final Object p2 = value.getRightNode();

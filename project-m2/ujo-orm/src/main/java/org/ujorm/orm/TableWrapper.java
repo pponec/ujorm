@@ -25,7 +25,7 @@ import org.ujorm.orm.metaModel.MetaTable;
  */
 public interface TableWrapper {
 
-    /** Returns a meta-tablemodel */
+    /** Returns a meta-table model */
     public MetaTable getModel();
 
     /** Returns a unique table name in the one SQL statement. */

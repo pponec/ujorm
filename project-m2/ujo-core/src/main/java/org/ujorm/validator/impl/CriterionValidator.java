@@ -52,11 +52,11 @@ public class CriterionValidator<VALUE extends Ujo> extends AbstractValidator<VAL
     }
 
     /** Default Message by template:
-     * <br>Value for KEY is not valid for the conditon: CRN,.The input object is: INPUT
+     * <br>Value for KEY is not valid for the condition: CRN,.The input object is: INPUT
      */
     @Override
     protected String getDefaultTemplate() {
-        return service.template("An attribute ", KEY, " is not valid for the conditon: "
+        return service.template("An attribute ", KEY, " is not valid for the condition: "
                 , CRN,". The input object is: ", INPUT);
     }
 

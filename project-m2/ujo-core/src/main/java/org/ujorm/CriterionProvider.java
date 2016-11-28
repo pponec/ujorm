@@ -215,7 +215,6 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
      *       of target application to ensure database compatibility</li>
      * </ul>
-     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted.
      * A substring {@code {0}} will be replaced for the current column name
      * and the substring {@code {1}} will be replaced for the required value.
@@ -226,14 +225,19 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
 
     /** Create a new Criterion for this key where all results will be true (the result is independed on the value).
      *  The method evaluate(ujo) returns TRUE always.
-     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      */
     public Criterion<U> forAll();
 
     /** Create a new Criterion for this key where all results will be false (the result is independed on the value).
      *  The  method evaluate(method) returns FALSE always.
-     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      */
     public Criterion<U> forNone();
+
+    /** An alias for the method: {@link #forAll() } */
+    public Criterion<U> whereAll();
+
+    /** An alias for the method: {@link #forNone() } */
+    public Criterion<U> whereNone();
+
 
 }

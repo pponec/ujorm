@@ -106,7 +106,7 @@ public class CriterionDialectTest extends TestCase {
     /** Returns SQL Statement */
     private String getWhere(Query<XOrder> query) throws IOException {
         final String result = getStatement(query);
-        int i = 1 + result.lastIndexOf(" WHERE ");
+        int i = 1 + result.lastIndexOf("\tWHERE ");
         return result.substring(i).trim();
     }
 

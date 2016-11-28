@@ -805,7 +805,7 @@ public class SampleORM {
         logInfo("There are DELETED rows:  %s", count);
     }
 
-    /** How to use a batch DELETE for an extended conditon? <br/>
+    /** How to use a batch DELETE for an extended condition? <br/>
      * See the next example:
      */
     public void useExtendedDelete() {

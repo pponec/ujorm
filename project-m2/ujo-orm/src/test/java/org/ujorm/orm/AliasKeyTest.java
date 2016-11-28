@@ -1,5 +1,5 @@
 /*
- *  Copyright 2014-2014 Pavel Ponec
+ *  Copyright 2014-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,6 +33,15 @@ public class AliasKeyTest extends TestCase {
         super(testName);
     }
 
+    /**
+     * Test of getKey method, of class Relation.
+     */
+    public void testKeyName() {
+        assertEquals("id", XCustomer.ID.getName());
+        assertEquals("firstname", XCustomer.FIRSTNAME.getName());
+        assertEquals("lastname", XCustomer.LASTNAME.getName());
+    }
+    
     /**
      * Test of getKey method, of class Relation.
      */

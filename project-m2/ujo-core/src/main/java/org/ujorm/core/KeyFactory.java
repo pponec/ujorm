@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 Pavel Ponec
+ * Copyright 2012-2016 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
@@ -413,7 +414,12 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Common protected factory method */
-    protected <T> Key<UJO, T> createKey(String name, T defaultValue, Validator<T> validator) {
+    protected <T> Key<UJO, T> createKey(final String name, final T defaultValue, final Validator<T> validator) {
+        return createPlainKey(name, defaultValue, validator);
+    }
+    
+    /** Original protected factory method to create a plain key */
+    protected final <T> Key<UJO, T> createPlainKey(final String name, final T defaultValue, final Validator<T> validator) {
         final Property<UJO, T> p = Property.of(name, null, defaultValue, Property.UNDEFINED_INDEX, validator, false);
         addKey(p);
         return p;
@@ -644,6 +650,36 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         @SuppressWarnings("unchecked")
         public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass, KeyList<?> superKeys) {
             return new KeyFactory(baseClass, CAMEL_CASE, superKeys);
+        }
+    }
+    
+    /** The base factory */
+    public static final class SnakeCaseBuilder {
+
+        /** Private constructor */
+        private SnakeCaseBuilder() {
+        }
+
+        /** Return an instance of the {@link KeyFactory} class
+         * @param baseClass Base class
+         * @return Return an instance of the {@link KeyFactory} class
+         */
+        @SuppressWarnings("unchecked")
+        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass) {
+            return get(baseClass, null);
+        }
+
+        /** Return an instance of the {@link KeyFactory} class.
+         * @param baseClass The domain class
+         * @param superKeys Keys form an abstract super class
+         */
+        @SuppressWarnings("unchecked")
+        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass, KeyList<?> superKeys) {
+            return new KeyFactory(baseClass, CAMEL_CASE, superKeys) {
+                @Override protected String createKeyName(final Field field, final boolean camelCase) {
+                    return field.getName().toLowerCase(Locale.ROOT);
+                }  
+            };
         }
     }
 

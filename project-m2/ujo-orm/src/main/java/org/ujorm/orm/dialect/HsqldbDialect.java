@@ -26,6 +26,14 @@ import org.ujorm.orm.metaModel.MetaTable;
  * @author Pavel Ponec
  */
 public class HsqldbDialect extends H2Dialect {
+    
+    /** Returns a default JDBC URL.
+     * <br>For a PostgreSQL simulation use: 
+     * {@code jdbc:hsqldb:mem:db1;sql.syntax_pgs=true}
+     */    
+    public String getJdbcUrl() {
+        return "jdbc:hsqldb:mem:db1";
+    }
 
     @Override
     public String getJdbcDriver() {

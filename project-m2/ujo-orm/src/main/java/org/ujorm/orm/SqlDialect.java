@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2015 Pavel Ponec
+ *  Copyright 2009-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -67,6 +67,8 @@ abstract public class SqlDialect {
     public static final String COMMON_SEQ_TABLE_KEY = "<ALL>";
     /** The default schema symbol */
     public static final String DEFAULT_SCHEMA_SYMBOL = "~";
+    /** The new line separator for SQL statements */
+    public static final String NEW_LINE_SEPARATOR = "\n\t";
 
     /** The ORM handler */
     protected OrmHandler ormHandler;
@@ -172,10 +174,10 @@ abstract public class SqlDialect {
     public Appendable printTable(MetaTable table, Appendable out) throws IOException {
         out.append("CREATE TABLE ");
         printFullTableName(table, out);
-        String separator = "\n\t( ";
+        String separator = NEW_LINE_SEPARATOR.concat("( ");
         for (MetaColumn column : MetaTable.COLUMNS.getList(table)) {
             out.append(separator);
-            separator = "\n\t, ";
+            separator = NEW_LINE_SEPARATOR + ", ";
 
             if (column.isForeignKey()) {
                 printFKColumnsDeclaration(column, out);
@@ -183,7 +185,7 @@ abstract public class SqlDialect {
                 printColumnDeclaration(column, null, out);
             }
         }
-        out.append("\n\t)");
+        out.append(NEW_LINE_SEPARATOR).append(')');
         return out;
     }
 
@@ -258,7 +260,7 @@ abstract public class SqlDialect {
 
         out.append("ALTER TABLE ");
         printFullTableName(table, out);
-        out.append("\n\tADD CONSTRAINT ");
+        out.append(NEW_LINE_SEPARATOR).append("ADD CONSTRAINT ");
         getNameProvider().printConstraintName(table, column, out);
         out.append(" FOREIGN KEY ");
 
@@ -268,7 +270,7 @@ abstract public class SqlDialect {
             printQuotedName(name, out);
         }
 
-        out.append(")\n\tREFERENCES ");
+        out.append(')').append(NEW_LINE_SEPARATOR).append("REFERENCES ");
         printFullTableName(foreignTable, out);
         String separator = "(";
 
@@ -367,9 +369,11 @@ abstract public class SqlDialect {
         final List<MetaColumn> columns = column.getForeignColumns();
 
         for (int i=0; i<columns.size(); ++i) {
-            MetaColumn col = columns.get(i);
-            out.append(i==0 ? "" : "\n\t, ");
-            String name = column.getForeignColumnName(i);
+            final MetaColumn col = columns.get(i);
+            final String name = column.getForeignColumnName(i);
+            if (i > 0) {
+                out.append(COMMON_SEQ_TABLE_KEY).append(", ");
+            }
             printColumnDeclaration(col, name, out);
             if (MetaColumn.MANDATORY.of(column)) {
                 out.append(" NOT NULL");
@@ -464,7 +468,7 @@ abstract public class SqlDialect {
         return true;
     }
 
-    /** Print an SQL UPDATE statement.  */
+    /** Print an SQL UPDATE statement. */
     public Appendable printUpdate
         ( List<MetaColumn> changedColumns
         , CriterionDecoder decoder
@@ -474,7 +478,7 @@ abstract public class SqlDialect {
         final MetaTable table = decoder.getBaseTable();
         out.append("UPDATE ");
         printTableAliasDefinition(table, out);
-        out.append("\n\tSET ");
+        out.append(NEW_LINE_SEPARATOR).append("SET ");
 
         for (int i=0; i<changedColumns.size(); i++) {
             MetaColumn ormColumn = changedColumns.get(i);
@@ -485,7 +489,7 @@ abstract public class SqlDialect {
             printQuotedName(ormColumn.getName(), out);
             out.append("=?");
         }
-        out.append("\n\tWHERE ");
+        out.append(NEW_LINE_SEPARATOR).append("WHERE ");
 
         if (decoder.getTableCount() > 1) {
             printQuotedName(table.getFirstPK().getName(), out);
@@ -521,7 +525,7 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Create a subquery for the DELETE/UPDATE statement */
+    /** Create a sub-query for the DELETE/UPDATE statement */
     protected Query createSubQuery(CriterionDecoder decoder) {
         final MetaTable baseTable = decoder.getBaseTable();
         final Query result = new Query(baseTable, decoder.getCriterion());
@@ -530,7 +534,7 @@ abstract public class SqlDialect {
         return result;
     }
 
-    /** Returns an SQL criterion template. The result is a tempate by the next sample: "{0}={1}" .
+    /** Returns an SQL criterion template. The result is a template by the next sample: "{0}={1}" .
      * <br>See an example of the implementation:
      * <pre class="pre">
      * switch (crit.getOperator()) {
@@ -560,11 +564,11 @@ abstract public class SqlDialect {
             case LE:
                 return "{0}<={1}";
             case EQUALS_CASE_INSENSITIVE:
-                return "UPPER({0})={1}";
+                return "LOWER({0})={1}";
             case STARTS_CASE_INSENSITIVE:
             case ENDS_CASE_INSENSITIVE:
             case CONTAINS_CASE_INSENSITIVE:
-                return "UPPER({0}) LIKE {1}";
+                return "LOWER({0}) LIKE {1}";
             case STARTS:
             case ENDS:
             case CONTAINS:
@@ -592,7 +596,7 @@ abstract public class SqlDialect {
 
     /**
      * Print table columns
-     * @param columns List of tablel columns
+     * @param columns List of table columns
      * @param values Print columns including its aliases.
      * @param out Table columns output.
      * @throws java.io.IOException
@@ -633,17 +637,18 @@ abstract public class SqlDialect {
     }
 
 
-    /** Print a <strong>condition phrase</strong> from the criterion.
-     * @return A value criterion to assign into the SQL query.
+    /** Print a <strong>value condition phrase</strong> from the criterion.
+     * @return A nullable value criterion to assign into the SQL query.
      */
-    public ValueCriterion printCriterion(ValueCriterion crit, Appendable out) throws IOException {
-        final Operator operator = crit.getOperator();
-        final Key key = crit.getLeftNode();
+    public ValueCriterion printCriterion(ValueCriterion crn, Appendable out) throws IOException {
+        final Operator operator = crn.getOperator();
+        final Key key = crn.getLeftNode();
         final ColumnWrapper column = key != null
-                ? AliasKey.getLastKey(key).getColumn(ormHandler) : null;
-        Object right = crit.getRightNode();
+                ? AliasKey.getLastKey(key).getColumn(ormHandler)
+                : null;
 
-        if (right==null ) {
+        Object right = crn.getRightNode();
+        if (right == null ) {
             switch (operator) {
                 case EQ:
                 case EQUALS_CASE_INSENSITIVE:
@@ -655,16 +660,16 @@ abstract public class SqlDialect {
                     out.append(" IS NOT NULL");
                     return null;
                 default:
-                    throw new UnsupportedOperationException("Comparation the NULL value is forbiden by a operator: " + operator);
+                    throw new UnsupportedOperationException("Comparation the NULL value is forbiden by the operator: " + operator);
             }
         }
 
-        String template = getCriterionTemplate(crit);
+        final String template = getCriterionTemplate(crn);
         if (template == null) {
             throw new UnsupportedOperationException("Unsupported SQL operator: " + operator);
         }
 
-        switch (crit.getOperator()) {
+        switch (crn.getOperator()) {
             case XFIXED:
                 out.append( template );
                 break;
@@ -672,7 +677,7 @@ abstract public class SqlDialect {
                 if (right instanceof TemplateValue) {
                     right = ((TemplateValue) right).getRightVale();
                     ValueCriterion crit2 = (ValueCriterion) Criterion.where
-                            ( crit.getLeftNode()
+                            ( crn.getLeftNode()
                             , Operator.EQ // The hack
                             , right);
                     return printCriterionValue(template, column, crit2, out);
@@ -684,7 +689,7 @@ abstract public class SqlDialect {
                 }
                 break;
             default:
-                return printCriterionValue(template, column, crit, out);
+                return printCriterionValue(template, column, crn, out);
         }
         return null;
     }
@@ -710,9 +715,9 @@ abstract public class SqlDialect {
             }
         } else if (right instanceof Object[]) {
             final Object[] os = (Object[]) right;
-            final StringBuilder sb = new StringBuilder(2*os.length);
-            for (Object o : os) {
-                sb.append(sb.length()>0 ? ",?" : "?");
+            final StringBuilder sb = new StringBuilder(2 * os.length);
+            for (int i = 0; i < os.length; i++) {
+                sb.append(i > 0 ? ",?" : "?");
             }
             String f = MessageFormat.format(template, getAliasColumnName(column), sb.toString());
             out.append(f);
@@ -833,7 +838,7 @@ abstract public class SqlDialect {
         if (count && query.isDistinct()) {
             out.append("SELECT COUNT(*) FROM (");
             printSelectTableBase(query, count, out);
-            out.append("\n\tGROUP BY ");
+            out.append(NEW_LINE_SEPARATOR).append("GROUP BY ");
             printTableColumns(query.getColumns(), null, out);
             out.append(") ujorm_count_");
         } else {
@@ -858,12 +863,12 @@ abstract public class SqlDialect {
         if (!count || query.isDistinct()) {
             printTableColumns(query.getColumns(), null, out);
         }
-        out.append("\n\tFROM ");
+        out.append(NEW_LINE_SEPARATOR).append("FROM ");
 
         if (query.getCriterion() != null) {
             final CriterionDecoder ed = query.getDecoder();
             final TableWrapper[] tables = ed.getTables();
-
+            
             for (int i=0; i<tables.length; ++i) {
                 if (i>0) {
                     out.append(", ");
@@ -872,8 +877,8 @@ abstract public class SqlDialect {
             }
 
             final String where = ed.getWhere();
-            if (where.length()>0) {
-                out.append(" WHERE ");
+            if (!where.isEmpty()) {
+                out.append(NEW_LINE_SEPARATOR).append("WHERE ");
                 out.append(where);
             }
         } else {
@@ -894,7 +899,7 @@ abstract public class SqlDialect {
         }
     }
 
-    /** Print a 'lock clausule' to the end of SQL SELECT statement to use a pessimistic lock.
+    /** Print a 'lock phrase' to the end of SQL SELECT statement to use a pessimistic lock.
      * The current database does not support the feature, throw an exception UnsupportedOperationException.
      * <br>The method prints a text "FOR UPDATE".
      * @param query The UJO query
@@ -957,7 +962,7 @@ abstract public class SqlDialect {
         out.append(" OFFSET " + query.getOffset());
     }
 
-    /** Prinnt the full sequence table */
+    /** Print the full sequence table */
     protected Appendable printSequenceTableName(final UjoSequencer sequence, final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
         if (isFilled(schema)) {
@@ -984,11 +989,11 @@ abstract public class SqlDialect {
 
         printQuotedName(getSeqTableModel().getTableName(), out);
         out.append ( ""
-        + "\n\t( " + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
-        + "\n\t, " + getQuotedName(getSeqTableModel().getSequence()) + SPACE + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
-        + "\n\t, " + getQuotedName(getSeqTableModel().getCache()) + " INT DEFAULT " + cache + " NOT NULL"
-        + "\n\t, " + getQuotedName(getSeqTableModel().getMaxValue()) + SPACE + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
-        + "\n\t)");
+        + NEW_LINE_SEPARATOR.concat("( ") + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
+        + NEW_LINE_SEPARATOR.concat(", ") + getQuotedName(getSeqTableModel().getSequence()) + SPACE + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
+        + NEW_LINE_SEPARATOR.concat(", ") + getQuotedName(getSeqTableModel().getCache()) + " INT DEFAULT " + cache + " NOT NULL"
+        + NEW_LINE_SEPARATOR.concat(", ") + getQuotedName(getSeqTableModel().getMaxValue()) + SPACE + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
+        + NEW_LINE_SEPARATOR.concat(")"));
         return out;
     }
 
