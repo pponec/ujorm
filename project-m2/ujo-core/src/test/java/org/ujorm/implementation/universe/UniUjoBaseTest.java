@@ -129,7 +129,7 @@ public class UniUjoBaseTest extends MyTestCase {
         assertEquals(UniUjoBase.PRO_P4, props.get(4));
     }
 
-    /** Test of keys (temporarry removed). The test logs an error to the standard stream. */
+    /** Test of keys (temporary removed). The test logs an error to the standard stream. */
     // @ExpectedException(class=IllegalStateException.class, message="Exception Message", causeException)
     public void temporarryRemoved_testMismuch() throws Throwable {
         try {
