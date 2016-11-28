@@ -49,7 +49,7 @@ final class UjoHandlerXML extends DefaultHandler {
     /** Ignore missing key related to an ELEMENT or ATTRIBUTE during XML import. */
     private boolean ignoreMissingProp = false;
 
-    // -- Temporarry fields --
+    // -- Temporary fields --
     protected String  $elementName  = null;
     protected Class   $elementType  = null;
     protected Key     $key     = null;

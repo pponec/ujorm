@@ -483,7 +483,8 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     // ================== INNER CLASS ==================
-    /** A temporarry data store. */
+    
+    /** A temporary data store. */
     protected static final class InnerDataStore<UJO extends Ujo> {
 
         /** Empty Key List */
