@@ -61,7 +61,7 @@ public class OrmTutorialTest extends TestCase {
         if (noRunned) {
             noRunned = true;
             SampleORM.main(new String[]{});
-            //SampleCORE.main(new String[]{});
+          //SampleCORE.main(new String[]{});
         }
     }
 

@@ -18,6 +18,7 @@ package org.ujorm.core;
 import java.io.CharArrayWriter;
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -108,7 +109,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
         try {
             os = getOutputStream(file);
             saveCSV(os, UTF_8, ujoList, context);
-        } catch (Exception e) {
+        } catch (RuntimeException | FileNotFoundException e) {
             throwsCsvFailed(e, context);
         } finally {
             close(os, context);
@@ -182,7 +183,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
                 }
                 out.write(newLine);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException | ReflectiveOperationException | IOException e) {
             throwsCsvFailed(e, context);
         }
     }
@@ -209,7 +210,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
         try {
             reader = RingBuffer.createReader(file);
             return loadCSV(new Scanner(reader), context);
-        } catch (Exception e) {
+        } catch (RuntimeException | FileNotFoundException e) {
             throwsCsvFailed(e, context);
         } finally {
             close(reader, context);
@@ -245,7 +246,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
                 if (readHeader) {
                     if (isHeaderFilled()
                     && !line.startsWith(getHeaderContent())) {
-                        throw new IllegalStateException("The import header must start with the: " + getHeaders());
+                        throw new IllegalUjormException("The import header must start with the: " + getHeaders());
                     }
                     readHeader = false;
                     continue;
@@ -292,7 +293,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
                 writeValue(ujo, value, keyPointer++, lineCounter, action);
                 value.setLength(0);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException | ReflectiveOperationException e) {
             throwsCsvFailed(e, context);
         }
         return result;
@@ -316,7 +317,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
                     , lineCounter
                     , value
                     , "skipLastColumns");
-            throw new IllegalArgumentException(msg);
+            throw new IllegalStateException(msg);
         }
         setText(ujo, keys.get(keyPointer), null, value.toString(), action);
     }
@@ -412,7 +413,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
             printHeaders(result);
             return result.toString();
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalUjormException(e.getMessage(), e);
         }
     }
 
@@ -443,7 +444,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
             printHeaders(out);
             return out.toString();
         } catch (IOException e) {
-            throw new IllegalStateException("getHeaderContent failed", e);
+            throw new IllegalUjormException("getHeaderContent failed", e);
         }
     }
 
@@ -483,7 +484,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
 
     /** Throws an CSV exception. */
     private void throwsCsvFailed(Throwable e, Object context) throws IllegalStateException {
-        throw new IllegalStateException("CSV failed for a context: " + context, e);
+        throw new IllegalUjormException("CSV failed for a context: " + context, e);
     }
 
     // -------------- STATIC ----------------

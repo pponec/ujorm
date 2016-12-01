@@ -106,7 +106,6 @@ public class KeyTest extends MyTestCase {
         descending = true;
         id = id.descending(descending);
         assertEquals(descending, !id.isAscending());
-
     }
 
     /**

@@ -118,7 +118,7 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
                     if (autoClose) {
                        modalWindow.close(target); // the dialog is closed on the success
                     }
-                } catch (Throwable e) {
+                } catch (RuntimeException | OutOfMemoryError e) {
                     setFeedback(e);
                 }
             }

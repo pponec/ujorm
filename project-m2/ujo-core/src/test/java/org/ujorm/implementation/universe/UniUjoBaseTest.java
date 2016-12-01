@@ -136,7 +136,7 @@ public class UniUjoBaseTest extends MyTestCase {
             new MismuchUjoBase().readKeys();
         } catch (ExceptionInInitializerError e) {
             return;
-        } catch (Throwable e) {
+        } catch (RuntimeException | OutOfMemoryError e) {
             return;
         }
         assertEquals("The exception " + IllegalArgumentException.class.getSimpleName() + " is expected.", null);

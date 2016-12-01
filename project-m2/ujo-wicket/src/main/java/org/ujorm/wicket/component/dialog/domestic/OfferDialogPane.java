@@ -101,7 +101,7 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
                     if (row != null) {
                         model.getClosable().closeDialog(target, row);
                     }
-                } catch (Throwable e) {
+                } catch (RuntimeException | OutOfMemoryError e) {
                     LOGGER.log(UjoLogger.WARN, "Wrong selection", e);
                     // setFeedback(e); // TODO (?)
                 }

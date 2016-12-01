@@ -18,6 +18,7 @@ package org.ujorm.orm.template;
 import java.io.IOException;
 import org.ujorm.Key;
 import org.ujorm.core.annot.Immutable;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.*;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.orm.impl.TableWrapperImpl;
@@ -75,13 +76,13 @@ public class AliasTable<UJO extends OrmUjo> {
     }
 
     /** Returns Table with Alias */
-    public String table() throws IllegalStateException {
+    public String table() throws IllegalUjormException {
         try {
             StringBuilder result = new StringBuilder(32);
             getDialect().printTableAliasDefinition(table, result);
             return result.toString();
         } catch (IOException e) {
-            throw new IllegalStateException(e.getClass().getSimpleName(), e);
+            throw new IllegalUjormException(e.getClass().getSimpleName(), e);
         }
     }
 
@@ -157,7 +158,7 @@ public class AliasTable<UJO extends OrmUjo> {
      * @return Returns one column including an default special alias.
      * @throws IllegalStateException
      */
-    protected StringBuilder printColumn(MetaColumn column, final CharSequence columnAlias, StringBuilder out) throws IllegalStateException {
+    protected StringBuilder printColumn(MetaColumn column, final CharSequence columnAlias, StringBuilder out) throws IllegalUjormException {
         try {
             getDialect().printColumnAlias(new ColumnWrapperImpl(column, table.getAlias()), out);
             if (columnAlias != null) {
@@ -165,7 +166,7 @@ public class AliasTable<UJO extends OrmUjo> {
             }
             return out;
         } catch (IOException e) {
-            throw new IllegalStateException(e.getClass().getSimpleName(), e);
+            throw new IllegalUjormException(e.getClass().getSimpleName(), e);
         }
     }
 

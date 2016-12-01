@@ -16,6 +16,7 @@
 package org.ujorm.implementation.orm;
 
 import org.ujorm.Validator;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.Property;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -68,7 +69,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                     return null;
                 }
                 if (DISABLED.equalsTo(mySession.getLazyLoading())) {
-                    throw new IllegalStateException("The lazy loading is disabled in the current Session.");
+                    throw new IllegalUjormException("The lazy loading is disabled in the current Session.");
                 }
                 if (mySession.isClosed()) {
                    IllegalStateException e = null;
@@ -78,10 +79,10 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                             final String msg = String.format
                                    ( "The lazy loading of the key '%s' is disabled due the closed Session"
                                     , getFullName());
-                            throw new IllegalStateException(msg);
+                            throw new IllegalUjormException(msg);
                         case ALLOWED_ANYWHERE_WITH_STACKTRACE:
                             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                                e = new IllegalStateException(mySession.getLazyLoading().name());
+                                e = new IllegalUjormException(mySession.getLazyLoading().name());
                             }
                         case ALLOWED_ANYWHERE_WITH_WARNING:
                             if (LOGGER.isLoggable(UjoLogger.INFO)) {

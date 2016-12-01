@@ -15,6 +15,7 @@
  */
 package org.ujorm.extensions;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.ujorm.Ujo;
 import org.ujorm.WeakKey;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.WeakKeyFactory;
+import org.ujorm.core.IllegalUjormException;
 import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
@@ -138,8 +140,8 @@ public class WeakKeyImpl<VALUE>
             return result!=null
                    ? (VALUE) UjoManager.getInstance().decodeValue(getType(), result.toString())
                    : getDefault() ;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Can't get parameter " + getName() + " from the servletRequest: " + servletReqest, e);
+        } catch (RuntimeException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalUjormException("Can't get parameter " + getName() + " from the servletRequest: " + servletReqest, e);
         }
     }    
 

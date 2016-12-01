@@ -291,7 +291,7 @@ public class BenchmarkHnP {
             sample.useDelete();
             sample.useClose();
 
-        } catch (Throwable e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
         }
     }
@@ -310,7 +310,7 @@ public class BenchmarkHnP {
             BenchmarkHnP result = new BenchmarkHnP(countOfOrder, countOfItem, commitFlushMode);
             printInputParameters(result, args);
             return result;
-        } catch (Throwable e) {
+        } catch (RuntimeException e) {
             throw new RuntimeException("Usage: java -jar benchmark.jar [countOfOrder:int] [commitFlushMode:boolean]", e);
         }
     }

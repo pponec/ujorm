@@ -658,7 +658,7 @@ public class SampleORM {
         try {
             Order order2 = item.getOrder();
             assert false : "Lazy-loading for a closed session is disabled by default, the Item is: " + order2.getId();
-        } catch (IllegalStateException e) {
+        } catch (RuntimeException e) {
             logInfo("OK: %s", e.getClass().getSimpleName());
         }
 

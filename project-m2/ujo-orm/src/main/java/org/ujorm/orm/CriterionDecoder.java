@@ -36,6 +36,7 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.metaModel.MoreParams;
 import static org.ujorm.core.UjoTools.SPACE;
+import org.ujorm.core.IllegalUjormException;
 
 /**
  * SQL Criterion Decoder.
@@ -111,8 +112,8 @@ public class CriterionDecoder {
             } else {
                 nullValues.add(origCriterion);
             }
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+        } catch (RuntimeException | IOException e) {
+            throw new IllegalUjormException("Unpack failed for criterion: " + c, e);
         }
     }
 
@@ -260,7 +261,7 @@ public class CriterionDecoder {
                 dialect.printColumnAlias(pk2, sql);
             }
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalUjormException(e.getMessage(), e);
         }
 
         if (parenthesis) {

@@ -23,6 +23,7 @@ import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.core.UjoTools;
+import org.ujorm.core.IllegalUjormException;
 import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
@@ -135,8 +136,8 @@ public class ListProperty<UJO extends Ujo, ITEM>
                     : getType().newInstance()
                     ;
                 setValue(ujo, result);
-            } catch (InstantiationException ex) { throw new IllegalStateException("Can't create an empty list: " + getType(), ex);
-            } catch (IllegalAccessException ex) { throw new IllegalStateException("Can't create an empty list: " + getType(), ex);
+            } catch (RuntimeException | ReflectiveOperationException e) { 
+                throw new IllegalUjormException("Can't create an empty list: " + getType(), e);
             }
         }
         return result;

@@ -30,6 +30,7 @@ import org.ujorm.Validator;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.implementation.orm.RelationToOne;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.DbType;
@@ -37,6 +38,7 @@ import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.ITypeService;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.SqlDialect;
+import org.ujorm.orm.SqlNameProvider;
 import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.TypeService;
 import org.ujorm.orm.annot.Column;
@@ -257,7 +259,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
      * @return Returns an original foreign columns in case a foreign column.
      * @throws IllegalStateException The relation column have no foreign keys! */
     @SuppressWarnings("unchecked")
-    private List<MetaColumn> createForeignColumns() throws IllegalStateException {
+    private List<MetaColumn> createForeignColumns() throws IllegalUjormException {
         List<MetaColumn> result;
 
         MetaTable table;
@@ -276,7 +278,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
             }
         }
         if (result.isEmpty()) {
-            throw new IllegalStateException("The relation column " + this + " have no foreign keys!");
+            throw new IllegalUjormException("The relation column " + this + " have no foreign keys!");
         }
         return result;
     }
@@ -368,7 +370,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
             out.append(getName());
             return out.toString();
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalUjormException(e.getMessage(), e);
         }
     }
 
@@ -382,7 +384,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
                 .toString();
             return result;
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalUjormException(e.getMessage(), e);
         }
     }
 

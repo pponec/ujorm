@@ -17,7 +17,9 @@ package org.ujorm.orm;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.implementation.orm.OrmProperty;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -49,12 +51,12 @@ public class NativeDbSequencer extends UjoSequencer {
                 if (rs.next()) {
                     return rs.getLong(1);
                 } else {
-                    throw new IllegalStateException("No value for sequence: " + sequenceName);
+                    throw new IllegalUjormException("No value for sequence: " + sequenceName);
                 }
-            } catch (Exception e) {
+            } catch (RuntimeException | SQLException | IOException e) {
                 final String msg = "Sequence error for name: " + sequenceName;
                 LOGGER.log(UjoLogger.ERROR, msg, e);
-                throw new IllegalStateException(msg, e);
+                throw new IllegalUjormException(msg, e);
             }
         }
         return super.nextValue(session);

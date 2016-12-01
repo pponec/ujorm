@@ -117,7 +117,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
         try {
             inp = getInputStream(inputFile);
             return loadResourceBundle(inp, validate, context);
-        } catch (Exception e) {
+        } catch (RuntimeException | FileNotFoundException e) {
             throwsPropFailed(e, context);
         } finally {
             close(inp, context);
@@ -145,10 +145,10 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
                 if (prop!=null) {
                     setText(ujo, prop, null, value, action);
                 } else if (validate) {
-                    throw new IllegalArgumentException("An attribute \""+key+"\" was not found in " + ujo.getClass());
+                    throw new IllegalStateException("An attribute \""+key+"\" was not found in " + ujo.getClass());
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException | ReflectiveOperationException | IOException e) {
             throwsPropFailed(e, context);
         }
         return ujo;
@@ -167,7 +167,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
 
     /** Throws an CSV exception. */
     private void throwsPropFailed(Throwable e, Object context) throws IllegalStateException {
-        throw new IllegalStateException("PROPERTIES failed for a context: " + context, e);
+        throw new IllegalUjormException("PROPERTIES failed for a context: " + context, e);
     }
 
     // -------------- STATIC METHODS --------------

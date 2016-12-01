@@ -17,6 +17,7 @@ package org.ujorm.wicket;
 
 import java.io.Serializable;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.Session;
@@ -41,7 +42,7 @@ public class OrmSessionProvider implements Serializable {
                     ( "The class %s must to implement: %s"
                     , WebApplication.class.getSimpleName()
                     , OrmHandlerProvider.class.getName());
-            throw new IllegalStateException(msg);
+            throw new IllegalUjormException(msg);
         }
     }
 

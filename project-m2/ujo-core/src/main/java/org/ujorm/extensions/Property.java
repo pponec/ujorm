@@ -27,6 +27,7 @@ import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.PackagePrivate;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
@@ -154,7 +155,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     /** Check an internal log and throw an {@code IllegalStateException} if the object is locked. */
     protected final void checkLock() throws IllegalStateException {
         if (this.lock) {
-            throw new IllegalArgumentException("The key is already initialized: " + this);
+            throw new IllegalStateException("The key is already initialized: " + this);
         }
     }
 
@@ -164,13 +165,13 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
             return;
         }
         if (name.isEmpty()) {
-            final String msg = String.format("Property name '%s' must not be empty"
+            final String msg = String.format("Key name '%s' must not be empty"
                     , name);
             throw new IllegalArgumentException(msg);
         }
         if (isPropertySeparatorDisabled()
         && name.indexOf(PROPERTY_SEPARATOR)>0) {
-            final String msg = String.format("Property name '%s' must not contain a dot character '%c'."
+            final String msg = String.format("Key name '%s' must not contain a dot character '%c'."
                     , name
                     , PROPERTY_SEPARATOR);
             throw new IllegalArgumentException(msg);
@@ -195,16 +196,16 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     /** Check validity of keys */
     protected void checkValidity() throws IllegalArgumentException {
         if (name == null) {
-            throw new IllegalArgumentException("Name must not be null for key index: #" + index);
+            throw new IllegalUjormException("Name must not be null for key index: #" + index);
         }
         if (type == null) {
-            throw new IllegalArgumentException("Type must not be null in the " + this);
+            throw new IllegalUjormException("Type must not be null in the " + this);
         }
         if (defaultValue != null && !type.isInstance(defaultValue)) {
-            throw new IllegalArgumentException("Default value have not properly type in the " + this);
+            throw new IllegalUjormException("Default value have not properly type in the " + this);
         }
         if (this.domainType==null) {
-            throw new IllegalArgumentException("Domain type is missing for the key: " + name);
+            throw new IllegalUjormException("Domain type is missing for the key: " + name);
         }
     }
 

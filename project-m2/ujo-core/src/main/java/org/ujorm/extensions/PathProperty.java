@@ -29,6 +29,7 @@ import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.validator.ValidationException;
@@ -152,7 +153,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     /** Check arguments */
     private void checkAttributes() throws IllegalStateException {
         if (aliases != null && aliases.length != keys.length) {
-            throw new IllegalStateException
+            throw new IllegalUjormException
                     ( "The spaces have hot a bad count: "
                     + (aliases != null ? aliases.length : -1));
         }
@@ -281,8 +282,8 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
                     try {
                         value = (Ujo) keys[i].getType().newInstance();
                         result.writeValue(keys[i], value);
-                    } catch (Throwable e) {
-                        throw new IllegalStateException("Can't create new instance for the key: " + keys[i].getFullName(), e);
+                    } catch (RuntimeException | ReflectiveOperationException | OutOfMemoryError e) {
+                        throw new IllegalUjormException("Can't create new instance for the key: " + keys[i].getFullName(), e);
                     }
                 } else {
                     return value;

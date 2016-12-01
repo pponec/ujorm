@@ -30,6 +30,7 @@ import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.core.UjoCoder;
 import static org.ujorm.core.UjoTools.SPACE;
+import org.ujorm.core.IllegalUjormException;
 
 /**
  * The value criterion implementation.
@@ -192,7 +193,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
                     case CONTAINS_CASE_INSENSITIVE:
                          return t1.contains(t2);
                     default:
-                         throw new IllegalStateException("State:" + operator);
+                         throw new IllegalUjormException("State:" + operator);
                 }
             }
             case NOT_IN:

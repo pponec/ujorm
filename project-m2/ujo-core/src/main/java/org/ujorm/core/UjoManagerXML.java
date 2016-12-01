@@ -18,6 +18,7 @@ package org.ujorm.core;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -91,7 +92,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         try {
             bis = getInputStream(inputFile);
             return parseXML(bis, classType, validating, context);
-        } catch (Exception e) {
+        } catch (RuntimeException | FileNotFoundException e) {
             throwsXmlFailed(e, context);
         } finally {
             close(bis, context);
@@ -173,7 +174,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
     /** Throws an CSV exception. */
     private void throwsXmlFailed(Throwable e, Object context) throws IllegalStateException {
-        throw new IllegalStateException("XML failed for a context: " + context, e);
+        throw new IllegalUjormException("XML failed for a context: " + context, e);
     }
 
     /** Print attributes of the tag */

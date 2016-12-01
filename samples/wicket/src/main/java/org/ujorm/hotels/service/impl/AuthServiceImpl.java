@@ -17,6 +17,7 @@ package org.ujorm.hotels.service.impl;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import org.apache.wicket.Session;
@@ -131,7 +132,7 @@ public class AuthServiceImpl extends AbstractServiceImpl<Customer> implements Au
             final MessageDigest md = MessageDigest.getInstance("SHA-256");
             final byte[] digest = md.digest(text.getBytes(UjoService.UTF_8));
             return new BigInteger(digest).longValue();
-        } catch (Throwable e) {
+        } catch (NoSuchAlgorithmException | RuntimeException | OutOfMemoryError e) {
             throw new IllegalStateException("Method getHash() failed. ", e);
         }
     }

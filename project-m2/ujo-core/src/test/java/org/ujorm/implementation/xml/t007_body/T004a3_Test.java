@@ -41,7 +41,7 @@ public class T004a3_Test extends MyTestCase {
             UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
             
             System.out.println("XML==PERSON:\n" + writer.toString());
-        } catch (Throwable ex) {
+        } catch (RuntimeException | OutOfMemoryError ex) {
             ex.printStackTrace();
         }
     }

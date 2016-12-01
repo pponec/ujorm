@@ -35,6 +35,7 @@ import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.logger.UjoLogger;
@@ -219,11 +220,11 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Create a service method */
-    public MetaDbService createService() throws IllegalStateException {
+    public MetaDbService createService() throws IllegalUjormException {
         try {
             return getParams().get(MetaParams.META_DB_SERVICE).newInstance();
-        } catch (Throwable e) {
-            throw new IllegalStateException("Can't create an instance of: " + MetaDbService.class, e);
+        } catch (RuntimeException | ReflectiveOperationException | OutOfMemoryError e) {
+            throw new IllegalUjormException("Can't create an instance of: " + MetaDbService.class, e);
         }
     }
 
@@ -232,8 +233,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         if (dialect==null) try {
             dialect = (SqlDialect) DIALECT.of(this).newInstance();
             dialect.setHandler(ormHandler);
-        } catch (Exception e) {
-            throw new IllegalStateException("Can't create an instance of " + dialect, e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("Can't create an instance of " + dialect, e);
         }
         return dialect;
     }
@@ -320,7 +321,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Calculate database VARCHAR lenght for required column. Minimal lenght is 1 character */
-    private int maxEnumLenght4Db(final MetaColumn column) throws IllegalArgumentException {
+    private int maxEnumLenght4Db(final MetaColumn column) throws IllegalUjormException {
         try {
             int maxLenght = 1;
             final UjoStatement statement = new UjoStatement();
@@ -333,7 +334,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             }
             return maxLenght;
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalUjormException(e.getMessage(), e);
         }
     }
 
@@ -358,7 +359,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             ( final Connection connection
             , final JdbcStatement statement
             , final ResultSet rs
-            , final boolean throwExcepton) throws IllegalStateException {
+            , final boolean throwExcepton) throws IllegalUjormException {
 
         try {
             try {
@@ -376,10 +377,10 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                     }
                 }
             }
-        } catch (Throwable e) {
+        } catch (RuntimeException | SQLException | OutOfMemoryError e) {
             String msg = "Can't close a SQL object";
             if (throwExcepton) {
-                throw new IllegalStateException(msg, e);
+                throw new IllegalUjormException(msg, e);
             } else {
                 LOGGER.log(UjoLogger.ERROR, msg, e);
             }
@@ -391,7 +392,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             ( final Connection connection
             , final Statement statement
             , final ResultSet rs
-            , final boolean throwExcepton) throws IllegalStateException {
+            , final boolean throwExcepton) throws IllegalUjormException {
         try {
             try {
                 if (rs != null) {
@@ -408,10 +409,10 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                     }
                 }
             }
-        } catch (Throwable e) {
+        } catch (RuntimeException | SQLException | OutOfMemoryError e) {
             String msg = "Can't close a SQL object";
             if (throwExcepton) {
-                throw new IllegalStateException(msg, e);
+                throw new IllegalUjormException(msg, e);
             } else {
                 LOGGER.log(UjoLogger.ERROR, msg, e);
             }
@@ -434,7 +435,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Create connection with auto-commit false. */
-    public Connection createConnection() throws Exception {
+    public Connection createConnection() throws Exception  {
         final Connection result = dialect.createConnection(this);
         if (result.getAutoCommit()) {
             result.setAutoCommit(false);
@@ -456,12 +457,12 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             for (int i=0; i<lastItem; i++) {
                 initContext = (InitialContext) initContext.lookup(jndi.get(i));
                 if (initContext==null) {
-                    throw new IllegalStateException("JNDI problem: InitialContext was not found for the: " + jndi.get(i));
+                    throw new IllegalUjormException("JNDI problem: InitialContext was not found for the: " + jndi.get(i));
                 }
             }
             DataSource dataSource = (DataSource) initContext.lookup(jndi.get(lastItem));
             if (dataSource==null) {
-                throw new IllegalStateException("JNDI problem: database connection was not found for the: " + jndi);
+                throw new IllegalUjormException("JNDI problem: database connection was not found for the: " + jndi);
             }
             result = dataSource.getConnection();
         } else {
@@ -558,7 +559,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Create a new sequencer for selected table */
     @SuppressWarnings("unchecked")
-    protected UjoSequencer createSequencer(MetaTable table) {
+    protected UjoSequencer createSequencer(MetaTable table) throws IllegalUjormException {
         UjoSequencer result;
         Class seqClass = SEQUENCER.of(this);
         if (seqClass==UjoSequencer.class) {
@@ -566,8 +567,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         } else try {
             Constructor<UjoSequencer> constr = seqClass.getConstructor(MetaTable.class);
             result = constr.newInstance(table);
-        } catch (Exception e) {
-            throw new IllegalStateException("Can't create sequencer for " + seqClass, e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("Can't create sequencer for " + seqClass, e);
         }
 
         return result;

@@ -17,9 +17,11 @@
 package org.version2.tools;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.ujorm.Ujo;
+import org.ujorm.core.IllegalUjormException;
 
 /**
  * Default generic UJO converter from POJO objects and back
@@ -84,8 +86,14 @@ public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
             final Constructor<U> constructor = clazz.getConstructor(v.getClass());
 
             return constructor.newInstance(v);
-        } catch (Throwable e) {
-            throw new IllegalStateException(e);
+        } catch ( ClassNotFoundException 
+                | InstantiationException 
+                | InvocationTargetException 
+                | IllegalAccessException 
+                | NoSuchMethodException 
+                | RuntimeException 
+                | OutOfMemoryError e) {
+            throw new IllegalUjormException(e.getMessage(), e);
         }
     }
 
@@ -98,8 +106,12 @@ public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
         try {
             final Method method = v.getClass().getMethod(ORIGINAL_METHOD);
             return method.invoke(v);
-        } catch (Throwable e) {
-            throw new IllegalStateException(e);
+        } catch ( IllegalAccessException 
+                | InvocationTargetException 
+                | NoSuchMethodException 
+                | RuntimeException 
+                | OutOfMemoryError e) {
+            throw new IllegalUjormException(e.getMessage(), e);
         }
     }
 

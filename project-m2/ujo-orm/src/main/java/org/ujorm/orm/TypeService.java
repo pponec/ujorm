@@ -26,6 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -259,7 +260,7 @@ public class TypeService implements ITypeService<Object,Object> {
     }
 
     /** Find an enumeration by the Key. */
-    private Object findEnum(final String key, final MetaColumn mColumn) throws IllegalArgumentException {
+    private Object findEnum(final String key, final MetaColumn mColumn) throws IllegalUjormException {
         if (key==null || key.isEmpty()) {
             return null;
         }
@@ -272,34 +273,34 @@ public class TypeService implements ITypeService<Object,Object> {
                 , mColumn
                 , mColumn.getType().getSimpleName()
                 , key );
-        throw new IllegalArgumentException(msg);
+        throw new IllegalUjormException(msg);
     }
 
     /** Create the new StringWrapper by the KEY. */
     @SuppressWarnings("unchecked")
-    private Object createStringWrapper(final String key, final MetaColumn mColumn) throws IllegalArgumentException {
+    private Object createStringWrapper(final String key, final MetaColumn mColumn) throws IllegalUjormException {
         if (key==null || key.isEmpty()) {
             return null;
         }
         try {
             final Object result = mColumn.getType().getConstructor(STR_ARGS).newInstance(key);
             return result;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Bad value export " + mColumn.getType() + "." + key, e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("Bad value export " + mColumn.getType() + "." + key, e);
         }
     }
 
     /** Create the new BytesWrapper by the KEY. */
     @SuppressWarnings("unchecked")
-    private Object createBytesWrapper(final byte[] key, final MetaColumn mColumn) throws IllegalArgumentException {
+    private Object createBytesWrapper(final byte[] key, final MetaColumn mColumn) throws IllegalUjormException {
         if (key==null || key.length==0) {
             return null;
         }
         try {
             final Object result = mColumn.getType().getConstructor(BYTES_ARGS).newInstance(key);
             return result;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Bad value export " + mColumn.getType() + "." + key, e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("Bad value export " + mColumn.getType() + "." + key, e);
         }
     }
 

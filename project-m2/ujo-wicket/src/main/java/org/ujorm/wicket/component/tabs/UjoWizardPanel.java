@@ -22,6 +22,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 
@@ -52,7 +53,7 @@ public class UjoWizardPanel<T extends UjoTab> extends UjoTabbedPanel<T>  {
             component.setVisibilityAllowed(false);
         } else {
             final String msg = String.format("Component with the id '%s' is not found", TABS_BAR_ID);
-            LOGGER.log(UjoLogger.WARN, msg, new IllegalStateException(msg));
+            LOGGER.log(UjoLogger.WARN, msg, new IllegalUjormException(msg));
         }
     }
 

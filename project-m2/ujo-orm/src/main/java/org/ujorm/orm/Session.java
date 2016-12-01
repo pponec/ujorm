@@ -16,6 +16,7 @@
 package org.ujorm.orm;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,6 +54,7 @@ import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
 import static org.ujorm.core.UjoTools.SPACE;
+import org.ujorm.core.IllegalUjormException;
 
 /**
  * The ORM session.
@@ -165,10 +167,10 @@ public class Session implements Closeable {
      * @param commit if parameters is false than make a rollback.
      * @param savepoint Nullable array of Savepoints to commit / release
      */
-    @PackagePrivate void commit(final boolean commit, final Transaction transaction) throws IllegalStateException {
+    @PackagePrivate void commit(final boolean commit, final Transaction transaction) throws IllegalUjormException {
         if (commit && rollbackOnly) {
             commit(false);
-            throw new IllegalStateException("The Ujorm session has got the 'rollbackOnly' state.");
+            throw new IllegalUjormException("The Ujorm session has got the 'rollbackOnly' state.");
         }
 
         final String errMessage = "Can't make commit of DB ";
@@ -226,9 +228,9 @@ public class Session implements Closeable {
                     ? transaction.getParent()
                     : null;
 
-        } catch (Throwable e) {
+        } catch (RuntimeException | SQLException | OutOfMemoryError e) {
             LOGGER.log(UjoLogger.ERROR, errMessage + database, e);
-            throw new IllegalStateException(errMessage + database, e);
+            throw new IllegalUjormException(errMessage + database, e);
         }
         rollbackOnly = false;
     }
@@ -236,7 +238,7 @@ public class Session implements Closeable {
     /** Create a savepoint to all available databases */
     @PackagePrivate Savepoint[] setSavepoint() {
         if (rollbackOnly) {
-            throw new IllegalStateException("The Ujorm session has got the 'rollbackOnly' state.");
+            throw new IllegalUjormException("The Ujorm session has got the 'rollbackOnly' state.");
         }
 
         final Savepoint[] result;
@@ -255,9 +257,9 @@ public class Session implements Closeable {
                 final Connection conn = connections[0].get(database);
                 result[i] = conn.setSavepoint();
             }
-        } catch (Throwable e) {
+        } catch (RuntimeException | SQLException |OutOfMemoryError e) {
             LOGGER.log(UjoLogger.ERROR, errMessage + database, e);
-            throw new IllegalStateException(errMessage + database, e);
+            throw new IllegalUjormException(errMessage + database, e);
         }
         rollbackOnly = false;
         return result;
@@ -353,7 +355,7 @@ public class Session implements Closeable {
                     ;
             result.writeSession(this);
             return result;
-        } catch (Exception e) {
+        } catch (RuntimeException | ReflectiveOperationException e) {
             throw new RuntimeException("Can't create database from: " + dbType, e);
         }
     }
@@ -407,7 +409,7 @@ public class Session implements Closeable {
      *        If the list item count is greater than multi limit so insert will be separated by more multirow inserts.
      * @throws IllegalStateException
      */
-    public void save(final List<? extends OrmUjo> bos, int multiLimit) throws IllegalStateException {
+    public void save(final List<? extends OrmUjo> bos, int multiLimit) throws IllegalUjormException {
 
         // ---------------- VALIDATIONS -----------------------------------
 
@@ -478,9 +480,9 @@ public class Session implements Closeable {
                 idxTo = between(idxFrom + multiLimit, idxFrom, bosCount);
             }
 
-        } catch (Throwable e) {
+        } catch (RuntimeException | SQLException | IOException | OutOfMemoryError e) {
             rollbackOnly = true;
-            throw new IllegalStateException(SQL_ILLEGAL + sql, e);
+            throw new IllegalUjormException(SQL_ILLEGAL + sql, e);
         } finally {
             MetaDatabase.close(null, statement, null, true);
         }
@@ -522,9 +524,9 @@ public class Session implements Closeable {
             statement.executeUpdate(); // execute insert statement
             // 5. Clean all flags of modified attributes
             bo.readChangedProperties(true);
-        } catch (Throwable e) {
+        } catch (RuntimeException | SQLException | IOException | OutOfMemoryError e) {
             rollbackOnly = true;
-            throw new IllegalStateException(SQL_ILLEGAL + sql, e);
+            throw new IllegalUjormException(SQL_ILLEGAL + sql, e);
         } finally {
             MetaDatabase.close(null, statement, null, true);
         }
@@ -584,10 +586,10 @@ public class Session implements Closeable {
             }
             result = statement.executeUpdate(); // execute update statement
             bo.writeSession(this);
-        } catch (Throwable e) {
+        } catch (RuntimeException | SQLException | IOException | OutOfMemoryError e) {
             rollbackOnly = true;
             MetaDatabase.close(null, statement, null, false);
-            throw new IllegalStateException(SQL_ILLEGAL + sql, e);
+            throw new IllegalUjormException(SQL_ILLEGAL + sql, e);
         } finally {
             MetaDatabase.close(null, statement, null, true);
         }
@@ -712,10 +714,10 @@ public class Session implements Closeable {
                 LOGGER.log(UjoLogger.INFO, sql + SQL_VALUES + statement.getAssignedValues());
             }
             result = statement.executeUpdate(); // execute delete statement
-        } catch (Throwable e) {
+        } catch (RuntimeException | SQLException | IOException | OutOfMemoryError e) {
             rollbackOnly = true;
             MetaDatabase.close(null, statement, null, false);
-            throw new IllegalStateException(SQL_ILLEGAL + sql, e);
+            throw new IllegalUjormException(SQL_ILLEGAL + sql, e);
         } finally {
             MetaDatabase.close(null, statement, null, true);
         }
@@ -739,10 +741,10 @@ public class Session implements Closeable {
             }
             statement.execute(); // execute call statement
             statement.loadValues(procedure);
-        } catch (Throwable e) {
+        } catch (RuntimeException | SQLException | IOException | OutOfMemoryError e) {
             rollbackOnly = true;
             MetaDatabase.close(null, statement, null, false);
-            throw new IllegalStateException(SQL_ILLEGAL + sql, e);
+            throw new IllegalUjormException(SQL_ILLEGAL + sql, e);
         } finally {
             MetaDatabase.close(null, statement, null, true);
         }
@@ -799,7 +801,7 @@ public class Session implements Closeable {
 
             rs = statement.executeQuery(); // execute a select statement
             result = rs.next() ? rs.getLong(1) : 0;
-        } catch (Exception e) {
+        } catch (RuntimeException | IOException | SQLException e) {
             rollbackOnly = true;
             throw new RuntimeException(SQL_ILLEGAL + sql, e);
         } finally {
@@ -834,9 +836,9 @@ public class Session implements Closeable {
             }
             return result;
 
-        } catch (Throwable e) {
+        } catch (RuntimeException | SQLException | IOException | OutOfMemoryError e) {
             rollbackOnly = true;
-            throw new IllegalStateException(SQL_ILLEGAL + sql, e);
+            throw new IllegalUjormException(SQL_ILLEGAL + sql, e);
         }
     }
 
@@ -866,7 +868,7 @@ public class Session implements Closeable {
             MetaTable origTable = handler.findTableModel(value.getClass());
             if (origTable.isPersistent()) { // Is it not a DATABASE ?
                 String msg = "Can't find a foreign key of " + table + " to a " + value.getClass().getSimpleName();
-                throw new IllegalStateException(msg);
+                throw new IllegalUjormException(msg);
             }
         }
 
@@ -884,14 +886,14 @@ public class Session implements Closeable {
      * @param index Value {@code 0} means the BASE connection, value {@code 1} means the SEQUENCE connection.
      * @throws IllegalStateException
      */
-    private Connection getConnection_(final MetaDatabase database, final int index) throws IllegalStateException {
+    private Connection getConnection_(final MetaDatabase database, final int index) throws IllegalUjormException {
         Connection result = connections[index].get(database);
         if (result == null) {
             assertOpenSession();
             try {
                 result = database.createConnection();
             } catch (Exception e) {
-                throw new IllegalStateException("Can't create an connection for " + database, e);
+                throw new IllegalUjormException("Can't create an connection for " + database, e);
             }
             connections[index].put(database, result);
         }
@@ -1108,7 +1110,7 @@ public class Session implements Closeable {
                         conn.rollback(); // TODO
                         conn.close();
                     }
-                } catch (Throwable e) {
+                } catch (RuntimeException | SQLException | OutOfMemoryError e) {
                     LOGGER.log(UjoLogger.ERROR, errMessage + db, e);
                     if (exception == null) {
                         exception = e;
@@ -1119,7 +1121,7 @@ public class Session implements Closeable {
             cons.clear();
         }
         if (exception != null) {
-            throw new IllegalStateException(errMessage + database, exception);
+            throw new IllegalUjormException(errMessage + database, exception);
         }
     }
 
@@ -1129,9 +1131,9 @@ public class Session implements Closeable {
     }
 
     /** Assert the current session os open. */
-    private void assertOpenSession() throws IllegalStateException {
+    private void assertOpenSession() throws IllegalUjormException {
         if (closed) {
-            throw new IllegalStateException("The session is closed ("+hashCode()+")");
+            throw new IllegalUjormException("The session is closed ("+hashCode()+")");
         }
     }
 
@@ -1215,14 +1217,14 @@ public class Session implements Closeable {
      * @param key The key must be a relation type of "many to one".
      * @throws IllegalStateException If a parameter key is not a foreign key.
      */
-    public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> key) throws IllegalStateException {
+    public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> key) throws IllegalUjormException {
         final MetaColumn column = handler.findColumnModel(key);
         if (column!=null && column.isForeignKey()) {
             final Object result = column.getForeignColumns().get(0).getKey().of(ujo);
             return new ForeignKey(result);
         } else {
             final String propertyName = ujo.getClass().getSimpleName() + "." + key;
-            throw new IllegalStateException("The key '" + propertyName + "' is not a foreign key");
+            throw new IllegalUjormException("The key '" + propertyName + "' is not a foreign key");
         }
     }
 

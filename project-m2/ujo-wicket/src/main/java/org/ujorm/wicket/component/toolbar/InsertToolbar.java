@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.ResourceModel;
 import org.ujorm.Ujo;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.wicket.CommonActions.*;
 
@@ -92,8 +93,8 @@ public class InsertToolbar<U extends Ujo> extends AbstractToolbar {
     protected U newTypeInstance() throws IllegalStateException {
         try {
             return getDomainType().newInstance();
-        } catch (Exception e) {
-            throw new IllegalStateException("Can't create instance of the " + getDomainType(), e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("Can't create instance of the " + getDomainType(), e);
         }
     }
 

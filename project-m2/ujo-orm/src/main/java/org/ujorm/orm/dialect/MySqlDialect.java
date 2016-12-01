@@ -28,6 +28,7 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.metaModel.MoreParams;
 import static org.ujorm.core.UjoTools.SPACE;
+import org.ujorm.core.IllegalUjormException;
 
 /** Dialect for the MySQL since release 5.0 for the InnoDB engine.
  * <br><a href="http://dev.mysql.com/">http://dev.mysql.com/</a>
@@ -100,7 +101,7 @@ public class MySqlDialect extends SqlDialect {
         for (int i=0; i<changedColumns.size(); i++) {
             MetaColumn ormColumn = changedColumns.get(i);
             if (ormColumn.isPrimaryKey()) {
-                throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
+                throw new IllegalUjormException("Primary key can not be changed: " + ormColumn);
             }
             out.append(i==0 ? "" :  ", ");
             out.append(ormColumn.getColumnAlias());

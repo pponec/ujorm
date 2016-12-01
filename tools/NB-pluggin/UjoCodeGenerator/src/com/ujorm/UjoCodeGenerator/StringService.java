@@ -161,7 +161,7 @@ final public class StringService {
             if (comment != null) {
                 workingCopy.getTreeMaker().addComment(newMethod, comment, true);
             }
-        } catch (Throwable e) {
+        } catch (RuntimeException | OutOfMemoryError e) {
             LOGGER.log(Level.WARNING, "Can't copy JavaDoc to the method: " + newMethod.getName(), e);
         }
     }
@@ -223,7 +223,7 @@ final public class StringService {
                 result = result.replaceAll(" \\* ", " ");
                 result = result.replaceAll("\\s+", " ");
             }
-        } catch (Throwable e) {
+        } catch (RuntimeException | OutOfMemoryError e) {
             LOGGER.log(Level.SEVERE, "getInLineJavaDoc method error", e);
             result = "";
         }

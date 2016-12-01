@@ -39,6 +39,7 @@ import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import static org.ujorm.core.UjoTools.SPACE;
+import org.ujorm.core.IllegalUjormException;
 
 /** Dialect for the MSSQL tested on SQL Server 2008 R2 with Microsoft SQL Server JDBC Driver 3.0
  *  from <a href="http://msdn.microsoft.com/data/jdbc">http://msdn.microsoft.com/data/jdbc</a>
@@ -82,7 +83,7 @@ public class MSSqlDialect extends SqlDialect {
         for (int i = 0; i < changedColumns.size(); i++) {
             MetaColumn ormColumn = changedColumns.get(i);
             if (ormColumn.isPrimaryKey()) {
-                throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
+                throw new IllegalUjormException("Primary key can not be changed: " + ormColumn);
             }
             out.append(i == 0 ? "" : ", ");
             printQuotedName(ormColumn.getName(), out);

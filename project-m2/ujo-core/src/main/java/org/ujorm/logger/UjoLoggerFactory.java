@@ -84,7 +84,7 @@ final public class UjoLoggerFactory implements UjoLogger {
                 showLog = false;
                 result.log(Level.FINEST, "Ujorm logging is switched to the SLF4J.");
             }
-        } catch (Throwable e) {
+        } catch (RuntimeException | NoClassDefFoundError | OutOfMemoryError e) {
             slf4jSupport = false;
             result = new UjoLoggerFactory(name);
             result.log(Level.INFO, "Ujorm logging is switched to the JUL.");

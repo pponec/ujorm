@@ -120,7 +120,7 @@ public abstract class AbstractDialogPanel<T> extends GenericPanel<T> {
                     if (autoclose) {
                         modalWindow.close(target);
                     }
-                } catch (Throwable e) {
+                } catch (RuntimeException | OutOfMemoryError e) {
                     //modalWindow.show(target);
                     setFeedback(e);
                     target.add(form);

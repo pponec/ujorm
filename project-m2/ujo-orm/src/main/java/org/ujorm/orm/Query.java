@@ -36,6 +36,7 @@ import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.core.UjoTools.SPACE;
+import org.ujorm.core.IllegalUjormException;
 
 /**
  * ORM query.
@@ -110,7 +111,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             handler = session.getHandler();
         }
         if (handler == null) {
-            throw new IllegalStateException("The base class must be assigned first!");
+            throw new IllegalUjormException("The base class must be assigned first!");
         }
         return handler;
     }
@@ -588,7 +589,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Returns an order column. A method is for an internal use only.
      * @param i Column index
      * @return ColumnWrapper */
-    public ColumnWrapper readOrderColumn(int i) throws IllegalStateException {
+    public ColumnWrapper readOrderColumn(int i) throws IllegalUjormException {
         final Key key = orderBy.get(i);
         final MetaRelation2Many result = session.getHandler().findColumnModel(key);
 
@@ -601,7 +602,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
                  ( "The key '%s.%s' is not persistent table column"
                  , table.getType().getSimpleName()
                  , key);
-            throw new IllegalStateException(msg);
+            throw new IllegalUjormException(msg);
         }
     }
 

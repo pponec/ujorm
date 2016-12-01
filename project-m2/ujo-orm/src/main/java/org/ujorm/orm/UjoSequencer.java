@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaDatabase;
@@ -112,7 +113,7 @@ public class UjoSequencer {
                         seqLimit=maxValue;
                         if (sequence>maxValue) {
                             String msg = "The sequence '" + tableName + "' needs to raise the maximum value: " + maxValue;
-                            throw new IllegalStateException(msg);
+                            throw new IllegalUjormException(msg);
                         }
                         out.setLength(0);
                         sql = db.getDialect().printSequenceNextValue(this, out).toString();
@@ -134,7 +135,7 @@ public class UjoSequencer {
                 }
                 connection.commit();
 
-            } catch (Throwable e) {
+            } catch (IOException | SQLException | RuntimeException | OutOfMemoryError e) {
                 if (connection!=null) try {
                     connection.rollback();
                 } catch (SQLException ex) {
@@ -142,7 +143,7 @@ public class UjoSequencer {
                 }
                 IllegalStateException exception = e instanceof IllegalStateException
                     ? (IllegalStateException) e
-                    : new IllegalStateException("ILLEGAL SQL: " + sql, e);
+                    : new IllegalUjormException("ILLEGAL SQL: " + sql, e);
                 throw exception;
             }
             return sequence;
@@ -181,7 +182,7 @@ public class UjoSequencer {
             final MetaDatabase db = MetaTable.DATABASE.of(table);
             return db.getDialect().printFullTableName(getTable(), true, new StringBuilder()).toString();
         } catch (IOException e) {
-            throw new IllegalStateException("TableName failed", e);
+            throw new IllegalUjormException("TableName failed", e);
         }
     }
 
@@ -207,9 +208,9 @@ public class UjoSequencer {
      * @return Returns current db sequence for an actual table with a value order:
      * <br/>[SEQ_LIMIT, SEQ_STEP, SEQ_MAX_VALUE].
      * <br/>If no sequence is found then the method returns the value {@code null}.
-     * @throws Exception
+     * @throws java.io.IOException
      */
-    public long[] getCurrentDBSequence(final Connection connection, StringBuilder sql) throws Exception {
+    public long[] getCurrentDBSequence(final Connection connection, StringBuilder sql) throws SQLException, IOException  {
         if (sql != null) {
             sql.setLength(0);
         } else {

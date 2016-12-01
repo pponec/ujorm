@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
@@ -32,6 +33,7 @@ import org.ujorm.orm.SqlDialectEx;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.logger.UjoLogger.*;
+import org.ujorm.orm.ao.CommentPolicy;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
 
 /**
@@ -108,7 +110,7 @@ public class MetaDbService {
             // 9. Commit:
             conn.commit();
 
-        } catch (Throwable e) {
+        } catch (SQLException | IOException | RuntimeException | OutOfMemoryError e) {
             try {
                 conn.rollback();
             } catch (SQLException ex) {
@@ -116,7 +118,7 @@ public class MetaDbService {
             }
             final String msg = Session.SQL_ILLEGAL + getSql();
             LOGGER.log(Level.SEVERE, msg, e);
-            throw new IllegalArgumentException(msg, e);
+            throw new IllegalUjormException(msg, e);
         }
     }
 
@@ -237,8 +239,12 @@ public class MetaDbService {
 
     // =================================================
 
-    /** 0. Initialization */
-    protected boolean initialize(Connection conn) throws Exception {
+    /** 0. Initialization
+     * @param conn
+     * @return A createSequenceTable request
+     * @throws java.sql.SQLException
+     * @throws java.io.IOException */
+    protected boolean initialize(Connection conn) throws SQLException, IOException, IllegalUjormException {
         this.stat = conn.createStatement();
         boolean createSequenceTable = false;
         if (db.isSequenceTableRequired()) {
@@ -252,7 +258,7 @@ public class MetaDbService {
                 ps = conn.prepareStatement(sql.toString());
                 ps.setString(1, "-");
                 rs = ps.executeQuery();
-            } catch (Throwable e) {
+            } catch (SQLException e) {
                 exception = e;
             }
 
@@ -260,7 +266,7 @@ public class MetaDbService {
                 switch (ORM2DLL_POLICY.of(db)) {
                     case VALIDATE:
                     case WARNING:
-                        throw new IllegalStateException(logMsg, exception);
+                        throw new IllegalUjormException(logMsg, exception);
                     case CREATE_DDL:
                     case CREATE_OR_UPDATE_DDL:
                     case INHERITED:
@@ -290,7 +296,7 @@ public class MetaDbService {
     }
 
     /** 1. CheckReport keywords: */
-    protected void checkReportKeywords(Connection conn, List<MetaTable> tables, List<MetaColumn> newColumns, List<MetaIndex> indexes) throws Exception {
+    protected void checkReportKeywords(Connection conn, List<MetaTable> tables, List<MetaColumn> newColumns, List<MetaIndex> indexes) throws SQLException {
         switch (MetaParams.CHECK_KEYWORDS.of(db.getParams())) {
             case WARNING:
             case EXCEPTION:
@@ -334,7 +340,7 @@ public class MetaDbService {
     }
 
     /** 3. Create tables: */
-    protected void createTable(List<MetaTable> tables, List<MetaColumn> foreignColumns) throws Exception {
+    protected void createTable(List<MetaTable> tables, List<MetaColumn> foreignColumns) throws IOException, SQLException {
         for (MetaTable table : tables) {
             if (table.isTable()) {
                 sql.setLength(0);
@@ -347,7 +353,7 @@ public class MetaDbService {
     }
 
     /** 4. Create new columns: */
-    protected void createNewColumn(List<MetaColumn> newColumns, List<MetaColumn> foreignColumns) throws Exception {
+    protected void createNewColumn(List<MetaColumn> newColumns, List<MetaColumn> foreignColumns) throws IOException, SQLException {
         for (MetaColumn column : newColumns) {
             sql.setLength(0);
             db.getDialect().printAlterTableAddColumn(column, sql);
@@ -362,7 +368,7 @@ public class MetaDbService {
     }
 
     /** 5. Create Indexes: */
-    protected void changeIndex(List<MetaIndex> indexes) throws Exception {
+    protected void changeIndex(List<MetaIndex> indexes) throws SQLException, IOException {
         for (MetaIndex index : indexes) {
             sql.setLength(0);
             db.getDialect().printIndex(index, sql);
@@ -372,7 +378,7 @@ public class MetaDbService {
     }
 
     /** 6. Create Foreign Keys: */
-    protected void createForeignKey(List<MetaColumn> foreignColumns) throws Exception {
+    protected void createForeignKey(List<MetaColumn> foreignColumns) throws IOException, SQLException {
         for (MetaColumn column : foreignColumns) {
             if (column.isForeignKey()) {
                 sql.setLength(0);
@@ -384,7 +390,7 @@ public class MetaDbService {
     }
 
     /** 7. Create SEQUENCE table: */
-    protected void createSequenceTable(boolean createSequenceTable) throws Exception {
+    protected void createSequenceTable(boolean createSequenceTable) throws SQLException, IOException {
         if (createSequenceTable) {
             sql.setLength(0);
             db.getDialect().printSequenceTable(db, sql);
@@ -403,10 +409,11 @@ public class MetaDbService {
     }
 
     /** 8. Create table comment for the all tables: */
-    protected void createTableComments(List<MetaTable> tables) throws Exception {
+    protected void createTableComments(List<MetaTable> tables) throws IllegalUjormException {
         @SuppressWarnings("unchecked")
         final List<MetaTable> cTables;
-        switch (MetaParams.COMMENT_POLICY.of(db.getParams())) {
+        final CommentPolicy policy = MetaParams.COMMENT_POLICY.of(db.getParams());
+        switch (policy) {
             case FOR_NEW_OBJECT:
                 cTables = tables;
                 break;
@@ -420,7 +427,7 @@ public class MetaDbService {
                 cTables = Collections.emptyList();
                 break;
             default:
-                throw new IllegalStateException("Unsupported parameter");
+                throw new IllegalUjormException("Unsupported parameter: " + policy);
         }
         if (!cTables.isEmpty()) {
             createTableComments(cTables, sql);
@@ -455,13 +462,13 @@ public class MetaDbService {
                     default:
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException | IOException | SQLException e) {
             LOGGER.log(ERROR, "Error on table comment: {}", out);
         }
     }
 
     /** Check the keyword */
-    protected void checkKeyWord(String word, MetaTable table, Set<String> keywords) throws Exception {
+    protected void checkKeyWord(String word, MetaTable table, Set<String> keywords) throws IllegalUjormException {
         if (keywords.contains(word.toUpperCase())) {
             String msg = "The database table or column called '" + word
                 + "' is a SQL keyword. See the class: "
@@ -470,7 +477,7 @@ public class MetaDbService {
                 ;
             switch (MetaParams.CHECK_KEYWORDS.of(db.getParams())) {
                 case EXCEPTION:
-                    throw new IllegalArgumentException(msg);
+                    throw new IllegalUjormException(msg);
                 case WARNING:
                     LOGGER.log(WARN, msg);
             }
@@ -478,12 +485,12 @@ public class MetaDbService {
     }
 
     /** Check missing database table, index, or column */
-    protected void executeUpdate(final Appendable sql, final MetaTable table) throws IllegalStateException, SQLException {
+    protected void executeUpdate(final Appendable sql, final MetaTable table) throws IllegalUjormException, SQLException {
 
        boolean validateCase = false;
        switch (table.getOrm2ddlPolicy()) {
            case INHERITED:
-               throw new IllegalStateException("An internal error due the DDL policy: " + table.getOrm2ddlPolicy());
+               throw new IllegalUjormException("An internal error due the DDL policy: " + table.getOrm2ddlPolicy());
            case DO_NOTHING:
                return;
            case VALIDATE:
@@ -496,7 +503,7 @@ public class MetaDbService {
                           + sql
                           ;
                if (validateCase) {
-                   throw new IllegalStateException(msg);
+                   throw new IllegalUjormException(msg);
                } else {
                    LOGGER.log(WARN, msg);
                }

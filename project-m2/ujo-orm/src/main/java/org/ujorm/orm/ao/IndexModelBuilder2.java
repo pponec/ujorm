@@ -19,7 +19,6 @@ import org.ujorm.orm.metaModel.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.SqlNameProvider;
 import static org.ujorm.orm.metaModel.MetaTable.COLUMNS;
@@ -43,7 +42,7 @@ import static org.ujorm.orm.metaModel.MetaTable.DATABASE;
  * @see IndexModelOrderedBuilder
  * @see MetaParams#INDEX_MODEL_BUILDER
  */
-public class IndexModelBuilder  {
+public class IndexModelBuilder2  {
 
     /** MetaTable */
     protected MetaTable metaTable;
@@ -55,7 +54,7 @@ public class IndexModelBuilder  {
     /** Initialize the object */
     public void init(MetaTable metaTable) throws IllegalUjormException {
         if (this.metaTable != null) {
-            throw new IllegalUjormException("The class is initialized by " + metaTable);
+            throw new IllegalUjormException("The class is initialized by " + this.metaTable);
         }
         this.metaTable = metaTable;
         this.nameProvider = metaTable.getDatabase().getDialect().getNameProvider();

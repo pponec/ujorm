@@ -1,6 +1,7 @@
 package org;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
 import org.ujorm.core.UjoManagerXML;
@@ -44,7 +45,7 @@ public class TableFrame extends JFrame implements ActionListener, Runnable  {
   private Company loadCompany() {
     if (dataFile.isFile()) try {
       return UjoManagerXML.getInstance().parseXML(dataFile, Company.class, "Load company");
-    } catch (Throwable e) {
+    } catch (RuntimeException | OutOfMemoryError e) {
       e.printStackTrace();
     }
     return new Company();
@@ -55,7 +56,7 @@ public class TableFrame extends JFrame implements ActionListener, Runnable  {
     try {
       XmlHeader defaultXmlHeader = null;
       UjoManagerXML.getInstance().saveXML(dataFile, company, defaultXmlHeader, "Save company");
-    } catch (Throwable e) {
+    } catch (IOException | RuntimeException | OutOfMemoryError e) {
       e.printStackTrace();
     }
   }

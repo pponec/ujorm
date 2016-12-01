@@ -45,7 +45,7 @@ public class XmlTest_2 extends TestCase {
             UjoManagerXML.getInstance().saveXML(writer, ujo, null, "TEST");
             
             System.err.println("XML Root:\n" + writer.toString());
-        } catch (Throwable ex) {
+        } catch (RuntimeException ex) {
             ex.printStackTrace();
             
             if (writer!=null) {
