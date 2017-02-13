@@ -2,7 +2,10 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.62 (2016-11-??)
+release 1.62 (2017-02-??)
++ CORE: Minimal Java 1.7 is required
++ CORE: Ujorm throws an UjormStateException and try-catch cleaning is done
++ CORE: Criterion join optimization is done for the next cases: CriterionProvider.forAll(), CriterionProvider.forNone()
 + ORM: The error is fixed for the case If two database model ORDER attributes have got a default value, then the the different databases are considered as the same.
 + ORM: An implementation is fixed for the method: HsqldbDialect.getJdbcUrl()
 + ORM: The table alias solution is improved 
@@ -13,10 +16,10 @@ release 1.62 (2016-11-??)
 + ORM: large code cleaning and correcting typing errors.
 + ORM: SnakeCaseFactory implementation class
 + ORM: Log the UjoSequence events are logged
-+ CORE: Criterion join optimization is done for the next cases: CriterionProvider.forAll(), CriterionProvider.forNone()
 + SPRING: Don't throw exception in the method AroundServiceTransaction.finishTransaction(). The method is called from finally block, so origin exception would be lost
 + SPRING: The AroundServiceTransaction class is simplified in the TransactionManager (by the Effectiva Solutions company)
 + WICKET: new class KeyColumnExportable for a CSV support from a DataProvider
++ WICKET: KeyColumnDate is fixed
 + WICKET: refactoring to create a new method: AbstractDataProvider.createKeyColumn()
 + ALL: jUnit tests are extended
 
