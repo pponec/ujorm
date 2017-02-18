@@ -2,7 +2,7 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.62 (2017-02-??)
+release 1.62 (2017-02-18)
 + CORE: Minimal Java 1.7 is required
 + CORE: Ujorm throws an UjormStateException and try-catch cleaning is done
 + CORE: Criterion join optimization is done for the next cases: CriterionProvider.forAll(), CriterionProvider.forNone()
