@@ -96,8 +96,8 @@ abstract public class UjoService<UJO extends Ujo> {
         if (keys == null) {
             try {
                 keys = (KeyList<UJO>) getUjoClass().newInstance().readKeys();
-            } catch (Exception e) {
-                throw new IllegalStateException("New instance failed for the " + getUjoClass(), e);
+            } catch (RuntimeException | ReflectiveOperationException e) {
+                throw new IllegalUjormException("New instance failed for the " + getUjoClass(), e);
             }
         }
         return keys;

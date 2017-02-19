@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 - 2015 Pavel Ponec
+ *  Copyright 2013-2016 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -184,8 +184,9 @@ public class Field<T> extends GenericPanel<T> {
 
     /** Set new value for the {@code input} and reset feedback messages */
     public void setModelValue(final T value) {
-        setDefaultModelObject(value);
+        getModel().setObject(value);
         if (input != null) {
+            input.modelChanged();
             input.getFeedbackMessages().clear();
         }
     }
@@ -238,7 +239,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Create label model */
-    protected IModel createLabelModel() {
+    protected IModel<String> createLabelModel() {
         final Key<?,?> nativeKey = getKey();
         final ResourceModel labelModel = new ResourceModel
                 (getResourceLabelKey(nativeKey), nativeKey.getName());
@@ -290,7 +291,7 @@ public class Field<T> extends GenericPanel<T> {
         this.visibleModel = visibleModel;
     }
 
-    /** Set entabled the input component */
+    /** Set enabled the input component */
     public void setEnabledInput(boolean enabled) {
         super.setEnabled(enabled);
         if (getInput() != null) {

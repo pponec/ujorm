@@ -26,6 +26,7 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.Property;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -142,7 +143,9 @@ public class JdbcStatement {
         assignValues(query.getDecoder());
     }
 
-    /** Assign extended values into the prepared statement */
+    /** Assign extended values into the prepared statement
+     * @param query
+     * @throws java.sql.SQLException */
     public void assignExtendedValues(Query query) throws SQLException {
         SqlParameters params = query.getSqlParameters();
         if (params==null) {
@@ -169,10 +172,10 @@ public class JdbcStatement {
             try {
                 ++parameterPointer;
                 column.getConverter().setValue(column, ps, value, parameterPointer);
-            } catch (Throwable e) {
+            } catch (RuntimeException | OutOfMemoryError e) {
                 String textValue = UjoManager.getInstance().encodeValue(value, false);
                 String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s", key.getType().getSimpleName(), column, parameterPointer, textValue);
-                throw new IllegalStateException(msg, e);
+                throw new IllegalUjormException(msg, e);
             }
         }
     }
@@ -265,7 +268,7 @@ public class JdbcStatement {
                 ++parameterPointer;
                 column.getConverter().setValue(column, ps, value, parameterPointer);
             }
-        } catch (Throwable e) {
+        } catch (RuntimeException | OutOfMemoryError e) {
             String textValue = bo!=null
                 ? UjoManager.getInstance().getText(bo, key, UjoAction.DUMMY)
                 : UjoManager.getInstance().encodeValue(value, false)
@@ -277,7 +280,7 @@ public class JdbcStatement {
                 , parameterPointer
                 , textValue
                 );
-            throw new IllegalStateException(msg, e);
+            throw new IllegalUjormException(msg, e);
         }
     }
 
@@ -311,12 +314,16 @@ public class JdbcStatement {
                     ps.registerOutParameter(parameterPointer, sqlType);
                 }
 
-            } catch (Throwable e) {
+            } catch (RuntimeException | SQLException | OutOfMemoryError e) {
                 String textValue = bo != null
                     ? UjoManager.getInstance().getText(bo, key, UjoAction.DUMMY)
                     : UjoManager.getInstance().encodeValue(value, false);
-                String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s", bo != null ? bo.getClass().getSimpleName() : "null", key, parameterPointer, textValue);
-                throw new IllegalStateException(msg, e);
+                String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s"
+                        , bo != null ? bo.getClass().getSimpleName() : "null"
+                        , key
+                        , parameterPointer
+                        , textValue);
+                throw new IllegalUjormException(msg, e);
             }
         }
     }
@@ -341,7 +348,7 @@ public class JdbcStatement {
                 }
             }
         } catch (Exception e) {
-            throw new IllegalStateException("Procedure: " + bo, e);
+            throw new IllegalUjormException("Procedure: " + bo, e);
         }
     }
 

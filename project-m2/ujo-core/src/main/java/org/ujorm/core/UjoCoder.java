@@ -21,6 +21,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.ParseException;
@@ -150,8 +151,8 @@ public class UjoCoder {
             if (regenerationTest) {
                 try { // Testing of a regeneration:
                     Constructor c = value.getClass().getConstructor(CONSTRUCTOR_TYPE);
-                } catch (Throwable e) {
-                    throw new IllegalArgumentException("Unsupported type: " + value.getClass().getName(), e);
+                } catch (RuntimeException | ReflectiveOperationException | OutOfMemoryError e) {
+                    throw new IllegalUjormException("Unsupported type: " + value.getClass().getName(), e);
                 }
             }
             result = String.valueOf(value);
@@ -271,7 +272,7 @@ public class UjoCoder {
                     final String msg = String.format
                             ( "I have found no item for value '%s' in the %s"
                             , aValue, type);
-                    throw new IllegalArgumentException(msg);
+                    throw new IllegalUjormException(msg);
                 } else {
                     return Enum.valueOf(type, aValue);
                 }
@@ -300,7 +301,7 @@ public class UjoCoder {
                             ;
                     return result;
                 } catch (ParseException ex) {
-                    throw new IllegalArgumentException("\"" + aValue + "\" " + type, ex);
+                    throw new IllegalUjormException("\"" + aValue + "\" " + type, ex);
                 }
             }
             if (Color.class.isAssignableFrom(type)) {
@@ -320,8 +321,8 @@ public class UjoCoder {
                     final Object result = constructor.newInstance(new Object[]{aValue});
                     return result;
             }
-        } catch (Throwable e) {
-            throw new IllegalArgumentException("Can't decode \"" + aValue + "\" to " + type, e);
+        } catch ( RuntimeException | ReflectiveOperationException | OutOfMemoryError e) {
+            throw new IllegalUjormException("Can't decode \"" + aValue + "\" to " + type, e);
         }
         return null;
     }

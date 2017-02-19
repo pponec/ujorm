@@ -18,6 +18,7 @@ package org.ujorm.implementation.orm;
 import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.AbstractCollectionProperty;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -80,17 +81,17 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
         &&  mySession.getHandler().isPersistent(this)) {
 
             if (DISABLED.equalsTo(mySession.getLazyLoading())) {
-                throw new IllegalStateException("The lazy loading is disabled in the current Session.");
+                throw new IllegalUjormException("The lazy loading is disabled in the current Session.");
             }
 
             if (mySession.isClosed()) {
                 IllegalStateException e = null;
                 switch (mySession.getLazyLoading()) {
                     default:
-                        throw new IllegalStateException("The lazy loading is disabled in the closed Session.");
+                        throw new IllegalUjormException("The lazy loading is disabled in the closed Session.");
                     case ALLOWED_ANYWHERE_WITH_STACKTRACE:
                         if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                            e = new IllegalStateException(mySession.getLazyLoading().name());
+                            e = new IllegalUjormException(mySession.getLazyLoading().name());
                         }
                     case ALLOWED_ANYWHERE_WITH_WARNING:
                         if (LOGGER.isLoggable(UjoLogger.INFO)) {

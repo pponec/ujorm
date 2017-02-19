@@ -1,5 +1,5 @@
 /*
- *  Copyright 2014 Pavel Ponec
+ *  Copyright 2014-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.ujorm.wicket.component.grid;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -29,7 +30,7 @@ import org.ujorm.wicket.component.tools.DateTimes;
 /**
  * Key column for a Date data type
  * @author Pavel Ponec
- * @param <UJO extends Ujo> The Model object type
+ * @param <U extends Ujo> The Model object type
  */
 public class KeyColumnDate<U extends Ujo> extends KeyColumn<U, java.util.Date> {
     private static final long serialVersionUID = 1L;
@@ -57,8 +58,13 @@ public class KeyColumnDate<U extends Ujo> extends KeyColumn<U, java.util.Date> {
         final Label result = new Label(componentId);
         result.setDefaultModel(new Model() {
             @Override public Serializable getObject() {
-                SimpleDateFormat form = new SimpleDateFormat(getDatePattern(result));
-                return form.format((java.util.Date) valueModel.getObject());
+                final Date modelObject = (Date) valueModel.getObject();
+                if (modelObject != null) {
+                    final SimpleDateFormat form = new SimpleDateFormat(getDatePattern(result));
+                    return form.format(modelObject);
+                } else {
+                    return null;
+                }
             }
         });
         return result;
@@ -75,7 +81,7 @@ public class KeyColumnDate<U extends Ujo> extends KeyColumn<U, java.util.Date> {
      * A factory method
      * @param key Domain Key
      * @param sorted Sorted column
-     * @param cssOkClass Class for a value {@code Boolean.TRUE} where a default value is {@link #DEFAULT_CSS_OK_CLASS}.
+     * @param cssClass Class for a value {@code Boolean.TRUE} where a default value is {@link #DEFAULT_CSS_OK_CLASS}.
      * @return New instance of the KeyColumn class
      */
     public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, boolean sorted, String cssClass) {
@@ -86,7 +92,7 @@ public class KeyColumnDate<U extends Ujo> extends KeyColumn<U, java.util.Date> {
      * A factory method
      * @param key Domain Key
      * @param sorted Sorted column
-     * @param cssOkClass Class for a value {@code Boolean.TRUE} where a default value is {@link #DEFAULT_CSS_OK_CLASS}.
+     * @param cssClass Class for a value {@code Boolean.TRUE} where a default value is {@link #DEFAULT_CSS_OK_CLASS}.
      * @return New instance of the KeyColumn class
      */
     public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, boolean sorted, String cssClass, String localeDateFormatKey) {

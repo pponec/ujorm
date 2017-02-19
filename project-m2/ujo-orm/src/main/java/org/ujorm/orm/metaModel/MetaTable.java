@@ -27,6 +27,7 @@ import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.ColumnWrapper;
@@ -237,8 +238,8 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
             try {
                final MetaPKey pk = PK.of(this);
                pk.assignPrimaryKey(bo, session);
-            } catch (Throwable e) {
-               throw new IllegalArgumentException("DB SEQUENCE is not supported for " + type, e);
+            } catch (RuntimeException | OutOfMemoryError e) {
+               throw new IllegalUjormException("DB SEQUENCE is not supported for " + type, e);
             }
         } else {
             throw new IllegalArgumentException("Argument is not type of " + type);
@@ -246,7 +247,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     }
 
     /** Returns a new instance or the BO. */
-    public OrmUjo createBO() throws InstantiationException, IllegalAccessException {
+    public OrmUjo createBO() throws ReflectiveOperationException {
         final OrmUjo result = getType().newInstance();
         return result;
     }
@@ -384,7 +385,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
                     , getType().getSimpleName()
                     , INDEX_MODEL_BUILDER.getFullName()
             );
-            throw new IllegalStateException(msg, e);
+            throw new IllegalUjormException(msg, e);
         }
     }
 
@@ -410,7 +411,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     public void assertChangeAllowed() {
         if (isReadOnly()) {
             final String msg = "The table '" + NAME.of(this) + "' have got the READ-ONLY mode. Check the Ujorm meta-model configuration.";
-            throw new IllegalStateException(msg);
+            throw new IllegalUjormException(msg);
         }
     }
 

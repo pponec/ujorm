@@ -83,7 +83,7 @@ public class WeakKeyFactory extends KeyFactory<Ujo> {
         for (Key<Ujo,?>  key : list) {
             boolean unique = set.add(key.getName());
             if (!unique) {
-                throw new IllegalStateException("The key name is not unique: " + key);
+                throw new IllegalUjormException("The key name is not unique: " + key);
             }
         }
     }    

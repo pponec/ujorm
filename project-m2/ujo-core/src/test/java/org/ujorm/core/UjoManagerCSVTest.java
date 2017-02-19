@@ -38,11 +38,12 @@ public class UjoManagerCSVTest extends MyTestCase {
         return UjoManagerCSVTest.class;
     }
 
+    @Override
     protected void setUp() throws Exception {
         manager = UjoManagerCSV.of(UjoCSV.class);
         context = "CSV-Context";
         ujo = new UjoCSV();
-        ujoList = new ArrayList<UjoCSV>();
+        ujoList = new ArrayList<>();
         ujoList.add(ujo);
     }
 

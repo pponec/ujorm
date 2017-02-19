@@ -23,6 +23,7 @@ import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
@@ -226,7 +227,7 @@ final public class MetaParams extends AbstractMetaModel {
             try {
                 result = converterClass.newInstance();
                 typeServices.put(converterClass, result);
-            } catch (Exception e) {
+            } catch (RuntimeException | ReflectiveOperationException e) {
                 return throwInstantiationException(converterClass, e);
             }
         }
@@ -286,7 +287,7 @@ final public class MetaParams extends AbstractMetaModel {
             return this.batch;
         } else try {
             return INITIALIZATION_BATCH.of(this).newInstance();
-        } catch (Exception e) {
+        } catch (RuntimeException | ReflectiveOperationException e) {
             return throwInstantiationException(INITIALIZATION_BATCH.of(this), e);
         }
     }
@@ -297,14 +298,14 @@ final public class MetaParams extends AbstractMetaModel {
             final IndexModelBuilder result = INDEX_MODEL_BUILDER.of(this).newInstance();
             result.init(metaTable);
             return result;
-        } catch (Exception e) {
+        } catch (RuntimeException | ReflectiveOperationException e) {
             return throwInstantiationException(INDEX_MODEL_BUILDER.of(this), e);
         }
     }
 
     /** Throws an unchecked exception due an InstantiationException */
-    private <T> T throwInstantiationException(final Class<?> type, final Exception e) throws IllegalStateException {
-        throw new IllegalStateException(INSTANCE_FAILED_MSG + type, e);
+    private <T> T throwInstantiationException(final Class<?> type, final Exception e) throws IllegalUjormException {
+        throw new IllegalUjormException(INSTANCE_FAILED_MSG + type, e);
     }
 }
 

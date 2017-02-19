@@ -17,6 +17,7 @@
 package org.ujorm.core;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
@@ -43,8 +44,8 @@ public class BeanManager<UJO,VALUE> {
     public void writeValue(final UJO bean, final VALUE value) throws IllegalArgumentException {
         try {
             getMethod(bean, true).invoke(bean, value);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("BeanProperty:"+key.getName()+"="+value, e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("BeanProperty:"+key.getName()+"="+value, e);
         }
     }
     
@@ -54,8 +55,8 @@ public class BeanManager<UJO,VALUE> {
     public Object readValue(final UJO bean) throws IllegalArgumentException {
         try {
             return getMethod(bean, false).invoke(bean);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("BeanProperty:"+key.getName(), e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("BeanProperty:"+key.getName(), e);
         }
     }
     
@@ -94,7 +95,7 @@ public class BeanManager<UJO,VALUE> {
                 ex = e;
             }
             if (result==null) {
-                throw new IllegalArgumentException("Can't find method: " + methodName+'('+key.getType().getName()+')', ex);
+                throw new IllegalUjormException("Can't find method: " + methodName+'('+key.getType().getName()+')', ex);
             }
         }
         return result;
@@ -109,7 +110,7 @@ public class BeanManager<UJO,VALUE> {
                 final Object result = field.get(null);
                 return (Class) result;
             }
-        } catch (Exception e) {
+        } catch (RuntimeException | ReflectiveOperationException e) {
             return null;
         }
         return null;

@@ -77,7 +77,7 @@ public class DbParamModel <V extends OrmUjo, K extends OrmUjo, C extends OrmUjo>
     public V createValueInstance() {
         try {
             return getTypeValue().newInstance();
-        } catch (Exception e) {
+        } catch (RuntimeException | ReflectiveOperationException e) {
             throw new IllegalStateException("Instance failed for: " + getTypeValue(), e);
         }
     }
@@ -88,7 +88,7 @@ public class DbParamModel <V extends OrmUjo, K extends OrmUjo, C extends OrmUjo>
             ParamKey_NAME.setValue(result, paramName);
             ParamKey_MODULE.setValue(result, module);
             return result;
-        } catch (Exception e) {
+        } catch (RuntimeException | ReflectiveOperationException e) {
             throw new IllegalStateException("Instance failed for: " + getTypeKey(), e);
         }
     }

@@ -23,6 +23,7 @@ import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.xa.XAResource;
 import org.ujorm.core.annot.PackagePrivate;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.metaModel.MetaDatabase;
 
 /**
@@ -60,7 +61,7 @@ final public class Transaction implements javax.transaction.Transaction{
      * @param conn Database connection
      * @throws IllegalStateException An envelope for a run-time SQL exception
      */
-    @PackagePrivate void assignSavepoint(MetaDatabase db, Connection conn) throws IllegalStateException {
+    @PackagePrivate void assignSavepoint(MetaDatabase db, Connection conn) throws IllegalUjormException {
         final int pointer = MetaDatabase.ORDER.of(db);
         if (savepoints[pointer] == null) {
             if (parent!=null) {
@@ -70,32 +71,32 @@ final public class Transaction implements javax.transaction.Transaction{
                 savepoints[pointer] = conn.setSavepoint();
                 status = Status.STATUS_ACTIVE;
             } catch (SQLException e) {
-                throw new IllegalStateException("Cant save Savepoint", e);
+                throw new IllegalUjormException("Cant save Savepoint", e);
             }
         }
     }
 
     /** Commit the current level of the beginTransaction. */
     @Override
-    public void commit() throws IllegalStateException {
+    public void commit() throws IllegalUjormException {
         if (status==Status.STATUS_ACTIVE && !rollbackOnly) {
             status = Status.STATUS_COMMITTED;
             session.commit(true, this);
         } else if (this.rollbackOnly) {
             throw new SecurityException("Transaction have got status ROLLBACK_ONLY");
         } else {
-            throw new IllegalStateException("Transactíon state isn't STATUS_ACTIVE, but " + status);
+            throw new IllegalUjormException("Transactíon state isn't STATUS_ACTIVE, but " + status);
         }
     }
 
     /** Rollback the current level of the beginTransaction. */
     @Override
-    public void rollback() throws IllegalStateException {
+    public void rollback() throws IllegalUjormException {
         if (status==Status.STATUS_ACTIVE) {
             status = Status.STATUS_ROLLEDBACK;
             session.commit(false, this);
         } else {
-            throw new IllegalStateException("Transactíon state isn't STATUS_ACTIVE, but " + status);
+            throw new IllegalUjormException("Transactíon state isn't STATUS_ACTIVE, but " + status);
         }
     }
 

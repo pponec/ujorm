@@ -46,6 +46,7 @@ import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaSelect;
 import org.ujorm.orm.metaModel.MetaTable;
 import static org.ujorm.core.UjoTools.SPACE;
+import org.ujorm.core.IllegalUjormException;
 
 /**
  * SQL dialect abstract class. Methods of this class print a SQL statement(s) along a metamodel usually.
@@ -94,7 +95,7 @@ abstract public class SqlDialect {
     /** Set the OrmHandler - the method is for internal call only. */
     public void setHandler(OrmHandler ormHandler) {
         if (this.ormHandler!=null) {
-            throw new IllegalStateException("The OrmHandler is assigned yet.");
+            throw new IllegalUjormException("The OrmHandler is assigned yet.");
         }
         this.ormHandler = ormHandler;
     }
@@ -185,7 +186,7 @@ abstract public class SqlDialect {
     public Appendable printTable(MetaTable table, Appendable out) throws IOException {
         out.append("CREATE TABLE ");
         printFullTableName(table, out);
-        String separator = NEW_LINE_SEPARATOR + "( ";
+        String separator = NEW_LINE_SEPARATOR.concat("( ");
         for (MetaColumn column : MetaTable.COLUMNS.getList(table)) {
             out.append(separator);
             separator = NEW_LINE_SEPARATOR + ", ";
@@ -494,7 +495,7 @@ abstract public class SqlDialect {
         for (int i=0; i<changedColumns.size(); i++) {
             MetaColumn ormColumn = changedColumns.get(i);
             if (ormColumn.isPrimaryKey()) {
-                throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
+                throw new IllegalUjormException("Primary key can not be changed: " + ormColumn);
             }
             out.append(i==0 ? "" :  ", ");
             printQuotedName(ormColumn.getName(), out);
@@ -1016,11 +1017,11 @@ abstract public class SqlDialect {
 
         printQuotedName(getSeqTableModel().getTableName(), out);
         out.append ( ""
-        + NEW_LINE_SEPARATOR + "( " + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
-        + NEW_LINE_SEPARATOR + ", " + getQuotedName(getSeqTableModel().getSequence()) + SPACE + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
-        + NEW_LINE_SEPARATOR + ", " + getQuotedName(getSeqTableModel().getCache()) + " INT DEFAULT " + cache + " NOT NULL"
-        + NEW_LINE_SEPARATOR + ", " + getQuotedName(getSeqTableModel().getMaxValue()) + SPACE + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
-        + NEW_LINE_SEPARATOR + ")");
+        + NEW_LINE_SEPARATOR.concat("( ") + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
+        + NEW_LINE_SEPARATOR.concat(", ") + getQuotedName(getSeqTableModel().getSequence()) + SPACE + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
+        + NEW_LINE_SEPARATOR.concat(", ") + getQuotedName(getSeqTableModel().getCache()) + " INT DEFAULT " + cache + " NOT NULL"
+        + NEW_LINE_SEPARATOR.concat(", ") + getQuotedName(getSeqTableModel().getMaxValue()) + SPACE + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
+        + NEW_LINE_SEPARATOR.concat(")"));
         return out;
     }
 
@@ -1168,7 +1169,7 @@ abstract public class SqlDialect {
             reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/org/ujorm/orm/sql-keywords.txt"), "UTF8"));
             assignKeywords(result, reader);
 
-        } catch (Throwable e) {
+        } catch (RuntimeException | SQLException | IOException | OutOfMemoryError e) {
             LOGGER.log(UjoLogger.WARN, "Can't read SQL keywords", e);
         } finally {
             if (reader!=null) try {
@@ -1266,12 +1267,12 @@ abstract public class SqlDialect {
      * @return Current SQL name provider
      * @throws IllegalStateException A problem during creating an instance.
      */
-    public SqlNameProvider getNameProvider() throws IllegalStateException {
+    public SqlNameProvider getNameProvider() throws IllegalUjormException {
         if (nameProvider==null) {
             try {
                 nameProvider = MetaParams.SQL_NAME_PROVIDER.of(ormHandler.getParameters()).newInstance();
-            } catch (Exception e) {
-                throw new IllegalStateException("Can't create an instance of the " + ormHandler.getParameters(), e);
+            } catch (RuntimeException | ReflectiveOperationException e) {
+                throw new IllegalUjormException("Can't create an instance of the " + ormHandler.getParameters(), e);
             }
         }
         return nameProvider;

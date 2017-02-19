@@ -177,9 +177,9 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                         if (r2 == null) {
                             r2 = getFieldValue(KeyFactory.class, field);
                         }
-                    } catch (Exception e) {
+                    } catch (RuntimeException | ReflectiveOperationException e) {
                         final String msg = String.format("Pass the %s attribute of the superlass %s to the constructor of the class %s, please", KeyList.class.getSimpleName(), superClass, getClass().getSimpleName());
-                        throw new IllegalArgumentException(msg, e);
+                        throw new IllegalUjormException(msg, e);
                     }
                 }
             }
@@ -189,14 +189,14 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         } else {
             try {
                 return ((Ujo) superClass.newInstance()).readKeys();
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Can't create instance of " + superClass, e);
+            } catch (RuntimeException | ReflectiveOperationException e) {
+                throw new IllegalUjormException("Can't create instance of " + superClass, e);
             }
         }
     }
 
     /** Returns a field value */
-    private <T> T getFieldValue(Class<T> type, Field field) throws Exception {
+    private <T> T getFieldValue(Class<T> type, Field field) throws IllegalAccessException {
         if (type.isAssignableFrom(field.getType())) {
             if (!field.isAccessible()) {
                 field.setAccessible(true);
@@ -233,10 +233,10 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                     try {
                         propertyStore = createKeyList();
                         onCreate(propertyStore, tmpStore);
-                    } catch (Throwable e) {
+                    } catch (RuntimeException | OutOfMemoryError e) {
                         final String msg = "Can't create the KeyFactory for the " + tmpStore.holder;
                         LOGGER.log(UjoLogger.ERROR, msg, e);
-                        throw new IllegalStateException(msg, e);
+                        throw new IllegalUjormException(msg, e);
                     }
                     tmpStore = (InnerDataStore<UJO>) (Object) InnerDataStore.EMPTY;
                 }
@@ -284,7 +284,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                 }
             }
         } catch (Exception e) {
-            throw new IllegalStateException("Can't initialize a key of the " + tmpStore.holder, e);
+            throw new IllegalUjormException("Can't initialize a key of the " + tmpStore.holder, e);
         }
         return tmpStore.createKeyList(result);
     }
@@ -332,7 +332,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                 , p.getIndex()
                 , tmpStore.holder.getSimpleName()
                 , p.getName());
-        throw new IllegalStateException(msg);
+        throw new IllegalUjormException(msg);
     }
 
     /** Create new Key */
@@ -441,7 +441,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     /** Check if the class is locked */
     protected void checkLock() throws IllegalStateException {
         if (propertyStore != null) {
-            throw new IllegalStateException(getClass().getSimpleName() + " is locked");
+            throw new IllegalUjormException(getClass().getSimpleName() + " is locked");
         }
     }
 
@@ -483,7 +483,8 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     // ================== INNER CLASS ==================
-    /** A temporarry data store. */
+    
+    /** A temporary data store. */
     protected static final class InnerDataStore<UJO extends Ujo> {
 
         /** Empty Key List */

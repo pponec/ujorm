@@ -19,6 +19,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import org.springframework.transaction.support.DefaultTransactionStatus;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.OrmHandler;
@@ -115,7 +116,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     public Session getLocalSession() throws IllegalStateException {
         final Session result = session.get();
         if (result == null) {
-            throw new IllegalStateException("ORM session does not exists, check pointcut mapping");
+            throw new IllegalUjormException("ORM session does not exists, check pointcut mapping");
         }
         return result;
     }

@@ -43,7 +43,7 @@ public class T004b_Test extends MyTestCase {
             UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST Context");
             
             System.out.println("XML==PERSON:\n" + writer.toString());
-        } catch (Throwable ex) {
+        } catch (RuntimeException ex) {
             ex.printStackTrace();
         }
     }

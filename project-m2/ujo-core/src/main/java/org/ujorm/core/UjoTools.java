@@ -216,8 +216,8 @@ public abstract class UjoTools implements Comparator<Key> {
             }
             return result;
 
-        } catch (InstantiationException ex) { throw new IllegalStateException(ex);
-        } catch (IllegalAccessException ex) { throw new IllegalStateException(ex);
+        } catch (RuntimeException | ReflectiveOperationException e) { 
+            throw new IllegalUjormException(e.getMessage(), e);
         }
     }
 
@@ -238,8 +238,8 @@ public abstract class UjoTools implements Comparator<Key> {
                     return (T) field.getAnnotation(annotation);
                 }
             }
-        } catch (Throwable e) {
-            throw new IllegalStateException("Illegal state for: " + key, e);
+        } catch (RuntimeException | ReflectiveOperationException | OutOfMemoryError e) {
+            throw new IllegalUjormException("Illegal state for: " + key, e);
         }
         return null;
     }
@@ -371,8 +371,8 @@ public abstract class UjoTools implements Comparator<Key> {
                     if (p == key) {
                         return result;
                     }
-                } catch (Exception e) {
-                    throw new IllegalStateException(String.valueOf(result), e);
+                } catch (RuntimeException | ReflectiveOperationException e) {
+                    throw new IllegalUjormException(String.valueOf(result), e);
                 }
             }
         }
@@ -412,8 +412,8 @@ public abstract class UjoTools implements Comparator<Key> {
             return Modifier.isAbstract(type.getModifiers())
                  ? null
                  : type.newInstance();
-        } catch (/*ReflectiveOperationException*/ Exception e) {
-            throw new IllegalStateException("New instance failed for the : " + type, e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("New instance failed for the : " + type, e);
         }
     }
 

@@ -39,7 +39,7 @@ public class ParamFrame extends JFrame implements ActionListener, Runnable {
   private Parameters loadParameters() {
     if (dataFile.isFile()) try {
       return UjoManagerRBundle.of(Parameters.class).loadResourceBundle(dataFile, false, this);
-    } catch (Throwable e) {
+    } catch (RuntimeException | OutOfMemoryError e) {
       e.printStackTrace();
     }
     return new Parameters();
@@ -50,7 +50,7 @@ public class ParamFrame extends JFrame implements ActionListener, Runnable {
     try {
       final String msg = "Configuration file:" ;
       UjoManagerRBundle.of(Parameters.class).saveResourceBundle(dataFile, parameters, msg, this);
-    } catch (Throwable e) {
+    } catch (RuntimeException | OutOfMemoryError e) {
       e.printStackTrace();
     }
   }

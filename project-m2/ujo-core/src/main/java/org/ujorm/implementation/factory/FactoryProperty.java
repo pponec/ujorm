@@ -17,8 +17,10 @@
 package org.ujorm.implementation.factory;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.ValueAgent;
 import static org.ujorm.extensions.PropertyModifier.*;
@@ -58,7 +60,7 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
         Constructor<VALUE> c = null;
         try {
             c = type.getConstructor(Ujo.class, Key.class);
-        } catch (Throwable e) {
+        } catch (RuntimeException | OutOfMemoryError | ReflectiveOperationException e) {
             c = null;
         }
         constructor = c;
@@ -75,7 +77,7 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
                 : getType().newInstance()
                 ;
             return result;
-        } catch (Throwable e) {
+        } catch (RuntimeException | ReflectiveOperationException | OutOfMemoryError e) {
             throwException(e);
             return null;
         }
@@ -89,10 +91,9 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
         throw new UnsupportedOperationException();
     }
 
-
     /** Throw an RuntimeException */
-    protected void throwException(Throwable e) throws RuntimeException {
-       throw new IllegalArgumentException("The class " + getType().getName()
+    protected void throwException(Throwable e) throws IllegalUjormException {
+       throw new IllegalUjormException("The class " + getType().getName()
           + " must have got two parameters constructor type of Ujo and Key", e);
     }
 

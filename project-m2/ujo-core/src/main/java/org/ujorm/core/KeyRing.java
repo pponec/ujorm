@@ -287,8 +287,8 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
             UJO result = (UJO) type.newInstance();
             return result;
 
-        } catch (Exception e) {
-            throw new IllegalStateException("Can't create instance for " + type, e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("Can't create instance for " + type, e);
         }
     }
 
@@ -498,8 +498,8 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
             return result instanceof KeyRing
             ? (KeyRing) result
             : of(domainClass, (Collection) result);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException(e.getMessage(), e);
         }
     }
 
@@ -555,9 +555,9 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     /** Throws an {@link IllegalArgumentException} exception with the text:<br/>
      * "The 'keyname' of the class was not found"
      */
-    private void throwException(final String keyName, final Class type, Throwable e) throws IllegalArgumentException {
+    private void throwException(final String keyName, final Class type, Throwable e) throws IllegalUjormException {
         final String msg = String.format("The key '%s' of the %s was not found", keyName, type);
-        throw new IllegalArgumentException(msg, e);
+        throw new IllegalUjormException(msg, e);
     }
 
 }

@@ -50,6 +50,7 @@ final class UjoLoggerBridge2Slf4j implements UjoLogger {
         logger = LoggerFactory.getLogger(name);
     }
 
+    @Override
     public boolean isLoggable(final Level level) {
         final int levelId = level.intValue();
         if (levelId >= ERROR_LEVEL) {
@@ -70,11 +71,13 @@ final class UjoLoggerBridge2Slf4j implements UjoLogger {
     }
 
     /** Log Message */
+    @Override
     public void log(final Level level, final String message) {
         log(level, message, (Throwable) null);
     }
 
     /** Log Message */
+    @Override
     public void log(final Level level, final String message, final Throwable e) {
         final int levelId = level.intValue();
 
@@ -96,6 +99,7 @@ final class UjoLoggerBridge2Slf4j implements UjoLogger {
     }
 
     /** Log Message */
+    @Override
     public void log(final Level level, final String message, final Object param) {
         final int levelId = level.intValue();
 
@@ -117,6 +121,7 @@ final class UjoLoggerBridge2Slf4j implements UjoLogger {
     }
 
     /** Log Message */
+    @Override
     public void log(final Level level, final String message, final Object... params) {
         final int levelId = level.intValue();
 

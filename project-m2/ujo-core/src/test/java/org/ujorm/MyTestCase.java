@@ -124,7 +124,8 @@ abstract public class MyTestCase extends TestCase {
     protected void sleep(int millis) {
         try {
             Thread.sleep(millis);
-        } catch (Throwable e) {
+        } catch (InterruptedException e) {
+            Thread.interrupted();
         }
     }
 }

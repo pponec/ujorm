@@ -142,7 +142,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
                                 + type
                                 + "' is not initialized properly yet. Try to call the current method later."
                                 ;
-                            throw new IllegalStateException(msg);
+                            throw new IllegalUjormException(msg);
                         }
                         if (!ujoProp.isComposite()) {
                            keyList.add(ujoProp);
@@ -179,8 +179,8 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
 
                     }
                 }
-            } catch (Exception e) {
-                throw new IllegalStateException(String.valueOf(field), e);
+            } catch (RuntimeException | ReflectiveOperationException e) {
+                throw new IllegalUjormException(String.valueOf(field), e);
             }
 
             result = keyList.toArray( new Key[keyList.size()] );
@@ -304,8 +304,8 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
             }
             return result;
 
-        } catch (InstantiationException ex) { throw new IllegalStateException(ex);
-        } catch (IllegalAccessException ex) { throw new IllegalStateException(ex);
+        } catch (RuntimeException | ReflectiveOperationException e) { 
+            throw new IllegalUjormException(e.getMessage(), e);
         }
     }
 
@@ -359,8 +359,8 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
                     return (T) field.getAnnotation(annotation);
                 }
             }
-        } catch (Throwable e) {
-            throw new IllegalStateException("Illegal state for: " + key, e);
+        } catch (RuntimeException | ReflectiveOperationException | OutOfMemoryError e) {
+            throw new IllegalUjormException("Illegal state for: " + key, e);
         }
         return null;
     }
@@ -401,7 +401,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
                 } else {
                     value = coder.encodeValue(objVal, false);
                 }
-            } catch (Throwable e) {
+            } catch (RuntimeException | OutOfMemoryError e) {
                 value = e.getClass().getSimpleName();
             }
 
@@ -805,7 +805,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
         if (enabled) for (Key key : readKeys(type)) {
             //final UjoProperty key = (UjoProperty) _property;
             if (!names.add(key.getName())) {
-                throw new IllegalStateException
+                throw new IllegalUjormException
                     ( "Key '"
                     + key
                     + "' is duplicate in the "
@@ -830,8 +830,8 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
             return Modifier.isAbstract(type.getModifiers())
                  ? null
                  : type.newInstance();
-        } catch (/*ReflectiveOperationException*/ Exception e) {
-            throw new IllegalStateException("New instance failed for the : " + type, e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("New instance failed for the : " + type, e);
         }
     }
 

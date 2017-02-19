@@ -32,6 +32,7 @@ import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.core.UjoTools;
 import org.ujorm.core.annot.Immutable;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -120,7 +121,7 @@ public class OrmHandler implements OrmHandlerProvider {
      *    <li>~/app/dbconfig.xml</li>
      * </ul>
      */
-    public boolean config(String url) throws IllegalArgumentException {
+    public boolean config(String url) throws IllegalUjormException {
         try {
             if (url.startsWith("~")) {
                 final String file = System.getProperty("user.home") + url.substring(1);
@@ -129,7 +130,7 @@ public class OrmHandler implements OrmHandlerProvider {
                 return config(new URL(url), true);
             }
         } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Configuration file is not valid " + url , e);
+            throw new IllegalUjormException("Configuration file is not valid " + url , e);
         }
     }
 
@@ -156,7 +157,7 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Load parameters from an external XML file.
      * The initialization must be finished before an ORM definition loading.
      */
-    public boolean config(URL url, boolean throwsException) throws IllegalArgumentException {
+    public boolean config(URL url, boolean throwsException) throws IllegalUjormException {
         try {
             final MetaRoot conf = UjoManagerXML.getInstance().parseXML
             ( new BufferedInputStream(url.openStream())
@@ -167,9 +168,9 @@ public class OrmHandler implements OrmHandlerProvider {
             config(conf);
             return true;
 
-        } catch (Exception e) {
+        } catch (RuntimeException | IOException e) {
             if (throwsException) {
-               throw new IllegalArgumentException("Configuration file is not valid ", e);
+               throw new IllegalUjormException("Configuration file is not valid ", e);
             } else {
                return false;
             }
@@ -215,7 +216,7 @@ public class OrmHandler implements OrmHandlerProvider {
     public final synchronized <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModel) {
 
         if (isReadOnly()) {
-            throw new IllegalArgumentException("The meta-model is locked and can´t be changed.");
+            throw new IllegalUjormException("The meta-model is locked and can´t be changed.");
         }
 
         // Load meta-model:
@@ -248,7 +249,7 @@ public class OrmHandler implements OrmHandlerProvider {
         if (outConfigFile!=null) try {
             databases.print(outConfigFile);
         } catch (IOException e) {
-            throw new IllegalStateException("Can't create configuration " + outConfigFile, e);
+            throw new IllegalUjormException("Can't create configuration " + outConfigFile, e);
         }
 
         for (MetaDatabase dbModel : getDatabases()) {
@@ -268,7 +269,7 @@ public class OrmHandler implements OrmHandlerProvider {
             } catch (Exception e) {
                 final String msg = "The batch failed: " + batch.getClass().getName();
                 LOGGER.log(UjoLogger.ERROR, msg, e);
-                throw new IllegalStateException(msg, e);
+                throw new IllegalUjormException(msg, e);
             } finally {
                 if (session != null) {
                     session.rollback();
@@ -282,8 +283,8 @@ public class OrmHandler implements OrmHandlerProvider {
     private <UJO extends OrmUjo> UJO getInstance(Class<UJO> databaseModel) {
         try {
             return databaseModel.newInstance();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Can't create instance of " + databaseModel, e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("Can't create instance of " + databaseModel, e);
         }
     }
 
@@ -362,14 +363,14 @@ public class OrmHandler implements OrmHandlerProvider {
      * or a related model type of {@link MetaRelation2Many}
      * or the NULL if no model was found.
      */
-    public <T extends MetaRelation2Many> T findColumnModel(Key compositeKey, boolean throwException) throws IllegalArgumentException {
+    public <T extends MetaRelation2Many> T findColumnModel(Key compositeKey, boolean throwException) throws IllegalUjormException {
         if (compositeKey!=null && compositeKey.isComposite()) {
             compositeKey = ((CompositeKey)compositeKey).getLastKey();
         }
         final MetaRelation2Many result = propertyMap.get(compositeKey);
         if (throwException && result == null) {
             String propertyName = compositeKey != null ? compositeKey.getFullName() : String.valueOf(compositeKey);
-            throw new IllegalArgumentException("The key " + propertyName + " have got no meta-model.");
+            throw new IllegalUjormException("The key " + propertyName + " have got no meta-model.");
         }
         return (T) result;
     }
@@ -397,11 +398,11 @@ public class OrmHandler implements OrmHandlerProvider {
      * @param throwException Throw the IllegalArgument exception of no Model was not found
      * @return Returns a related model throw the IllegalArgumentException exception.
      */
-    public MetaTable findTableModel(final Class<? extends OrmUjo> dbClass, final boolean throwException) throws IllegalStateException {
+    public MetaTable findTableModel(final Class<? extends OrmUjo> dbClass, final boolean throwException) throws IllegalUjormException {
         final MetaTable result = entityMap.get(dbClass);
         if (result==null && throwException) {
              final String msg = "An entity mapping bug: the " + dbClass + " is not mapped to the Database.";
-             throw new IllegalStateException(msg);
+             throw new IllegalUjormException(msg);
         }
         return result;
     }
@@ -409,11 +410,11 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Find a procedure model by the procedureClass.
      * If the procedure model is not found then the IllegalStateException is throwed.
      */
-    public MetaProcedure findProcedureModel(Class<? extends DbProcedure> procedureClass) throws IllegalStateException {
+    public MetaProcedure findProcedureModel(Class<? extends DbProcedure> procedureClass) throws IllegalUjormException {
         MetaProcedure result = procedureMap.get(procedureClass);
         if (result==null) {
             final String msg = "An procedure mapping bug: the " + procedureClass + " is not mapped to the Database.";
-            throw new IllegalStateException(msg);
+            throw new IllegalUjormException(msg);
         }
         return result;
     }

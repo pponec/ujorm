@@ -5,7 +5,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-orm</artifactId>
     <packaging>jar</packaging>
-    <version>1.62-SNAPSHOT</version>
+    <version>1.70-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-orm</name>
     <description>The Ujorm is designed for rapid Java development with great performance
@@ -98,8 +98,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <encoding>UTF-8</encoding>
                     <debug>true</debug>
                 </configuration>
@@ -141,7 +141,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>1.62-SNAPSHOT</version>
+            <version>1.70-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 

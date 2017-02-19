@@ -17,6 +17,7 @@ package org.ujorm.wicket.component.grid;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +42,7 @@ import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.toolbar.InsertToolbar;
@@ -252,13 +254,13 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
                 try {
                     final Constructor<? extends WebMarkupContainer> constr = panelClass.getConstructor(String.class, domainType);
                     item.add(constr.newInstance(componentId, model.getObject()));
-                } catch (/*ReflectiveOperationException*/ Exception e) {
+                } catch (RuntimeException | ReflectiveOperationException | OutOfMemoryError e) {
                     final String msg = String.format
                             ("The %s must have got two constructor arguments type of '%s' and '%s'."
                             , panelClass
                             , String.class.getName()
                             , domainType.getName());
-                    throw new IllegalArgumentException(msg, e);
+                    throw new IllegalUjormException(msg, e);
                 }
             }
         });

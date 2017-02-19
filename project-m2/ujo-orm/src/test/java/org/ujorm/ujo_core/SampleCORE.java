@@ -18,6 +18,7 @@ package org.ujorm.ujo_core;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -35,6 +36,7 @@ import org.ujorm.core.UjoManagerCSV;
 import org.ujorm.criterion.*;
 import org.ujorm.validator.ValidationException;
 import static org.ujorm.core.UjoTools.SPACE;
+import org.ujorm.core.IllegalUjormException;
 import static org.ujorm.ujo_core.Company.CITY;
 import static org.ujorm.ujo_core.Employee.*;
 
@@ -397,7 +399,7 @@ public class SampleCORE {
                 decoder.close();
 
                 return (T) result;
-            } catch (Exception e) {
+            } catch (IOException | ClassNotFoundException e) {
                 throw new IllegalStateException("Serializaton error", e);
             }
         }

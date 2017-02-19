@@ -49,7 +49,7 @@ final class UjoHandlerXML extends DefaultHandler {
     /** Ignore missing key related to an ELEMENT or ATTRIBUTE during XML import. */
     private boolean ignoreMissingProp = false;
 
-    // -- Temporarry fields --
+    // -- Temporary fields --
     protected String  $elementName  = null;
     protected Class   $elementType  = null;
     protected Key     $key     = null;
@@ -131,13 +131,13 @@ final class UjoHandlerXML extends DefaultHandler {
                 $attributes.add(new String[]{attribName, attribs.getValue(i)});
             }
         } catch (ClassNotFoundException ex) {
-            throw new IllegalArgumentException(ex);
+            throw new IllegalUjormException(ex.getMessage(), ex);
         }
 
         // Find an ELEMENT class:
         if ($elementType==null) {
             if ($parentObj.isRoot()) {
-                throw new IllegalStateException("Tag <" + $elementName  + "> is missing attribute '" + UjoManagerXML.ATTR_CLASS + "'");
+                throw new IllegalUjormException("Tag <" + $elementName  + "> is missing attribute '" + UjoManagerXML.ATTR_CLASS + "'");
             }
             $elementType = $parentObj.isUjo()
             ? ($propertyList != null ? $propertyList.getItemType() : $key.getType())
@@ -146,7 +146,7 @@ final class UjoHandlerXML extends DefaultHandler {
         }
 
         if ($elementType==null) {
-            throw new IllegalStateException("Tag <" + $elementName + "> can't find class.");
+            throw new IllegalUjormException("Tag <" + $elementName + "> can't find class.");
         } else try {
             boolean isUJO = UjoTextable.class.isAssignableFrom($elementType);
             boolean isList = List.class.isAssignableFrom($elementType);
@@ -186,8 +186,8 @@ final class UjoHandlerXML extends DefaultHandler {
                 }
             }
 
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Can't create instance of " + $elementType, e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("Can't create instance of " + $elementType, e);
         }
     }
 
@@ -262,8 +262,8 @@ final class UjoHandlerXML extends DefaultHandler {
         try {
             SAXParser saxParser = factory.newSAXParser();
             saxParser.parse(inputStream, handler);
-        } catch (Exception e) {
-            throw new IllegalStateException("Parser exception with context: " + context, e);
+        } catch (RuntimeException | ParserConfigurationException | SAXException | IOException e) {
+            throw new IllegalUjormException("Parser exception with context: " + context, e);
         }
 
         return (T) handler.getRoot();

@@ -56,7 +56,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
     /** Has a resultset a next row? */
     private boolean hasNext = true;
 
-    public ResultSetIterator(Query query) throws IllegalStateException {
+    public ResultSetIterator(Query query) throws IllegalUjormException {
         try {
             this.query = query;
             this.queryColumns = query.getColumnArray();
@@ -65,7 +65,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
             this.view = query.getTableModel().isSelectModel();
         } catch (SQLException e) {
             close();
-            throw new IllegalStateException(Session.SQL_ILLEGAL + query, e);
+            throw new IllegalUjormException(Session.SQL_ILLEGAL + query, e);
         }
     }
 
@@ -74,7 +74,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
      * @throws java.lang.IllegalStateException
      */
     @Override
-    public boolean hasNext() throws IllegalStateException {
+    public boolean hasNext() throws IllegalUjormException {
 
         if (!cursorReady) try {
             cursorReady = true;
@@ -83,7 +83,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
                 close();
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("A hasNext() reading exception", e);
+            throw new IllegalUjormException("A hasNext() reading exception", e);
         }
         return hasNext;
     }
@@ -92,19 +92,19 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
      * If the current iterator moves after the last entry then this method is called automatically.
      */
     @Override
-    public void close() {
+    public void close() throws IllegalUjormException {
         if (statement!=null) try {
             statement.close();
             statement = null;
         } catch (SQLException e) {
-            throw new IllegalStateException("Can't close statement: " + statement, e);
+            throw new IllegalUjormException("Can't close statement: " + statement, e);
         }
     }
 
     /** Returns a next table row. */
     @Override
     @SuppressWarnings("fallthrough")
-    public T next() throws NoSuchElementException {
+    public T next() throws NoSuchElementException, IllegalUjormException {
 
         if (!hasNext()) {
             throw new NoSuchElementException("Query: " + query.toString());
@@ -133,8 +133,8 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
                 initState = false;
             }
             return row;
-        } catch (Throwable e) {
-            throw new UnsupportedOperationException("Query: " + query, e);
+        } catch (RuntimeException | SQLException | ReflectiveOperationException | OutOfMemoryError e) {
+            throw new IllegalUjormException("Query: " + query, e);
         }
     }
 
@@ -180,7 +180,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
 //            hasNext = rs.relative(--count);
 //            return hasNext;
 //
-//        } catch (Throwable e) {
+//        } catch (RuntimeException | OutOfMemoryError e) {
 //            throw new UnsupportedOperationException("Skip Query: " + query, e);
 //        }
 //    }

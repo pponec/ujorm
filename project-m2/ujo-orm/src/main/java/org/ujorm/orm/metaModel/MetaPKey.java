@@ -22,6 +22,7 @@ import org.ujorm.ListKey;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Immutable;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
@@ -68,7 +69,7 @@ final public class MetaPKey extends AbstractMetaModel {
      * @throws java.lang.IllegalArgumentException The PK can't be assigned.
      */
     @SuppressWarnings("unchecked")
-    public boolean assignPrimaryKey(final OrmUjo bo, final Session session) throws IllegalArgumentException {
+    public boolean assignPrimaryKey(final OrmUjo bo, final Session session) throws IllegalUjormException {
         int count = COLUMNS.getItemCount(this);
         if (count==1) {
 
@@ -94,7 +95,7 @@ final public class MetaPKey extends AbstractMetaModel {
                 final Key key = column.getKey();
                 if (key.of(bo) == null) {
                     String msg = "Table " + bo + " must have defined only one primary key type of Long, Integer, Short, Byte, BigInteger or String for an auto-increment support";
-                    throw new IllegalArgumentException(msg);
+                    throw new IllegalUjormException(msg);
                 }
             }
             return false;

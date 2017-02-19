@@ -16,6 +16,7 @@
 package org.ujorm.wicket.component.form;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -36,6 +37,7 @@ import org.ujorm.KeyList;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.logger.UjoLogger;
@@ -103,7 +105,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         final Key key = field.getKey();
         Field oldField = fields.put(key.getName(), field);
         if (oldField != null) {
-            throw new IllegalStateException("Field is assigned for the key: " + field);
+            throw new IllegalUjormException("Field is assigned for the key: " + field);
         }
         repeatingView.add(field);
         addValidator(key, field);
@@ -165,8 +167,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     public void add(Class<? super U> domainClass) {
         try {
             add(((U)domainClass.newInstance()).readKeys());
-        } catch (Exception e) {
-            throw new IllegalStateException("Can't get keys of the domain " + domainClass, e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("Can't get keys of the domain " + domainClass, e);
         }
     }
 
@@ -185,8 +187,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     public <T extends Ujo> Field<T> add(Key<? super U, T> key, Class<? extends Field> fieldClass) {
         try {
             return add(fieldClass.getConstructor(Key.class).newInstance(key));
-        } catch (Exception e) {
-            throw new IllegalStateException("Can't create instance of the " + fieldClass, e);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            throw new IllegalUjormException("Can't create instance of the " + fieldClass, e);
         }
     }
 
@@ -465,7 +467,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             if (field != null) {
                 try {
                     field.requestFocus(target);
-                } catch (Throwable e) {
+                } catch (RuntimeException | OutOfMemoryError e) {
                     LOGGER.log(UjoLogger.WARN, "Focus", e);
                 }
             }

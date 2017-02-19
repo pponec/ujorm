@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.Session;
@@ -73,7 +74,7 @@ public class BenchmarkUjo {
         session = handler.createSession();
         if (this.COMMIT_FLUSH_MODE) {
             // Note: the default mode of the Ujorm is "AUTO" due to reduced risks
-            throw new IllegalArgumentException("session.setCommitFlushMode(true) is not supported.");
+            throw new IllegalUjormException("session.setCommitFlushMode(true) is not supported.");
             //session.setCommitFlushMode(true);
         }
 
@@ -277,7 +278,7 @@ public class BenchmarkUjo {
             sample.useDelete();
             sample.useClose();
 
-        } catch (Throwable e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
         } finally {
             sample.closeSession();
@@ -295,7 +296,7 @@ public class BenchmarkUjo {
             BenchmarkUjo result = new BenchmarkUjo(countOfOrder, countOfItem, commitFlushMode);
             printInputParameters(result, args);
             return result;
-        } catch (Throwable e) {
+        } catch (RuntimeException e) {
             throw new RuntimeException("Usage: java -jar benchmark.jar [countOfOrder:int] [commitFlushMode:boolean]", e);
         }
     }

@@ -34,8 +34,9 @@ public class Person<U extends Person> extends SmartUjo<U> {
     public static final Key<Person, Person> MOTHER = f.newKey("mother");
     public static final Key<Person, String> ADDRESS = f.newKey("address");
 
-    static { f.lock(); }
-
+    static {
+        f.lock();
+    }
 
     public void init() {
         set(NAME, "Jack");

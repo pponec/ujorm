@@ -46,7 +46,7 @@ public class AroundServiceTransaction {
                 beginTransaction();
             }
             return doCall(call);
-        } catch (Throwable e) {
+        } catch (RuntimeException | OutOfMemoryError e) {
             markForRollback();
             throw e;
         } finally {
@@ -77,7 +77,7 @@ public class AroundServiceTransaction {
             } else {
                 session.commit();
             }
-        } catch (Throwable e) {
+        } catch (RuntimeException | OutOfMemoryError e) {
             // don't throw exception - method is called from finally block, so origin exception would be lost
             LOGGER.log(UjoLogger.ERROR, "Transaction close error", e);
         }

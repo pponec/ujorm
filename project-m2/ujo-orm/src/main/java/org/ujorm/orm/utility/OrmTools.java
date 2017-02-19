@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.sql.Blob;
 import java.sql.Clob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.ExtendedOrmUjo;
 import org.ujorm.orm.ForeignKey;
@@ -64,7 +66,7 @@ final public class OrmTools {
         try {
             return bytes!=null ? new SerialBlob(bytes) : null;
         } catch (Exception e) {
-            throw new IllegalStateException(e);
+            throw new IllegalUjormException(e.getMessage(), e);
         }
     }
 
@@ -82,13 +84,13 @@ final public class OrmTools {
                 baos.write(buffer, 0, len);
             }
             return new SerialBlob(baos.toByteArray());
-        } catch (Exception e) {
-            throw new IllegalStateException("Reding error", e);
+        } catch (RuntimeException | IOException | SQLException e) {
+            throw new IllegalUjormException("Reding error", e);
         } finally {
             try {
                 inputStream.close();
             } catch (IOException e) {
-                throw new IllegalStateException("Reding error", e);
+                throw new IllegalUjormException("Reding error", e);
             }
         }
     }
@@ -99,7 +101,7 @@ final public class OrmTools {
      * @throws IllegalStateException A container for the SQLExeption
      * @throws IndexOutOfBoundsException Length of the bytes is great than Integer.MAX_VALUE
      */
-    public static byte[] getBlobBytes(Blob blob) throws IllegalStateException, IndexOutOfBoundsException {
+    public static byte[] getBlobBytes(Blob blob) throws IllegalUjormException, IndexOutOfBoundsException {
         try {
             if (blob==null) {
                 return null;
@@ -108,7 +110,7 @@ final public class OrmTools {
                 return blob.getBytes(1, (int) blob.length());
             }
         } catch (Exception e) {
-            throw new IllegalStateException("Reding error", e);
+            throw new IllegalUjormException("Reding error", e);
         }
         throw new IndexOutOfBoundsException("Length of the result is great than Integer.MAX_VALUE");
     }
@@ -117,11 +119,11 @@ final public class OrmTools {
      * Returns a Blob byte array to the maximal length Integer.MAX_VALUE.
      * @throws IllegalStateException A container for the SQLExeption
      */
-    public static InputStream getBlobStream(Blob blob) throws IllegalStateException {
+    public static InputStream getBlobStream(Blob blob) throws IllegalUjormException {
         try {
             return blob.getBinaryStream();
         } catch (Exception e) {
-            throw new IllegalStateException("Reding error", e);
+            throw new IllegalUjormException("Reding error", e);
         }
     }
 
@@ -134,7 +136,7 @@ final public class OrmTools {
         try {
             return text!=null ? new SerialClob(text) : null;
         } catch (Exception e) {
-            throw new IllegalStateException(e);
+            throw new IllegalUjormException(e.getMessage(), e);
         }
     }
 
@@ -159,13 +161,13 @@ final public class OrmTools {
                 baos.write(buffer, 0, len);
             }
             return new SerialClob(baos.toCharArray());
-        } catch (Exception e) {
-            throw new IllegalStateException("Reader error", e);
+        } catch (RuntimeException | IOException | SQLException e) {
+            throw new IllegalUjormException("Reader error", e);
         } finally {
             try {
                 reader.close();
             } catch (IOException e) {
-                throw new IllegalStateException("Reader error", e);
+                throw new IllegalUjormException("Reader error", e);
             }
         }
     }
@@ -176,7 +178,7 @@ final public class OrmTools {
      * @throws IllegalStateException A container for the SQLExeption
      * @throws IndexOutOfBoundsException Length of the bytes is great than Integer.MAX_VALUE
      */
-    public static String getClobString(Clob clob) throws IllegalStateException, IndexOutOfBoundsException {
+    public static String getClobString(Clob clob) throws IllegalUjormException, IndexOutOfBoundsException {
         try {
             if (clob==null) {
                 return null;
@@ -185,7 +187,7 @@ final public class OrmTools {
                 return clob.getSubString(1, (int) clob.length());
             }
         } catch (Exception e) {
-            throw new IllegalStateException("Reding error", e);
+            throw new IllegalUjormException("Reding error", e);
         }
         throw new IndexOutOfBoundsException("Length of the result is great than Integer.MAX_VALUE");
     }
@@ -352,7 +354,7 @@ final public class OrmTools {
         if (isFilled(primaryKeys)) {
             final MetaPKey pKey = MetaTable.PK.of(table);
             if (pKey.getCount()!=1) {
-                throw new IllegalStateException("There supported only objects with a one primary keys");
+                throw new IllegalUjormException("There supported only objects with a one primary keys");
             }
             final Criterion c = pKey.getFirstColumn().getKey().whereIn(primaryKeys);
             result = result!=null ? result.or(c) : c;
