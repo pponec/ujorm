@@ -821,16 +821,18 @@ public class SampleORM {
      * See the next example:
      */
     public void useExtendedUpdate() {
-        Order order = new Order();
-        // Activate the Change column management:
-        order.writeSession(session);
-        // Set a value(s) to the change:
-        order.setCreated(new Date());
-
-        Criterion<Item> crn = Item.ID.whereGt(0L)
-                .and(Item.ORDER.add(Order.NOTE).whereNull());
-        session.update(order, crn);
+        final Item item = new Item();
+        item.writeSession(session); // Activate a change management:
+        item.setNote("test");
+        
+        final Criterion<Item> crn1, crn2, crn3;
+        crn1 = Item.ID.whereGt(0L);
+        crn2 = Item.ORDER.add(Order.NOTE).whereNull();
+        crn3 = crn1.and(crn2);
+        
+        int count = session.update(item, crn3);
         session.commit();
+        assert count == 0;
     }
 
     /** Using the pessimistic database UPDATE by the method: setLockRequest(). */
