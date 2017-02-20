@@ -68,6 +68,7 @@ public class SampleORM {
             sample.createMetaModel();
             sample.useInsert();
             sample.useSelect();
+            sample.useSelectOuterJoin();
             sample.useBatchInsert();
             sample.useCriterions();
             sample.useSortOrders();
@@ -239,6 +240,33 @@ public class SampleORM {
             .and( Item.ORDER.add(Order.NOTE).whereEq( "My order" ));
 
         for (Item item : session.createQuery(crn)) {
+            Date created = item.getOrder().getCreated(); // Lazy loading
+            System.out.println("Item: " + item + " // created: " + created);
+        }
+    }
+
+    /** Another SELECT with LEFT-OUTER-JOIN.
+     * The generated SQL code from this example
+     * will be similar like the next statement:
+     * <pre>
+     * SELECT * FROM item
+     * LEFT OUTER JOIN order ON order.id = item.id_order
+     * WHERE item.id >= 1
+     *   AND item.note LIKE '%table%'
+     *   AND order.note = 'My order';
+     * </pre>
+     * where both parameters are passed by a 'question mark' notation
+     * for a better security.
+     */
+    public void useSelectOuterJoin() {
+        Criterion<Item> crn = Item.ID.where(GE, 1L )
+            .and( Item.NOTE.where(CONTAINS, "table" ) )
+            .and( Item.ORDER.add(Order.NOTE).whereEq( "My order" ));
+        
+        Query<Item> query = session.createQuery(crn);
+        query.addOuterJoin(Item.ORDER);
+        
+        for (Item item : query) {
             Date created = item.getOrder().getCreated(); // Lazy loading
             System.out.println("Item: " + item + " // created: " + created);
         }
