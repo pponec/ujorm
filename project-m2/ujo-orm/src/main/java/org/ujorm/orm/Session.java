@@ -547,7 +547,7 @@ public class Session implements Closeable {
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
-    public int update(OrmUjo bo, Criterion criterion) {
+    public <U extends OrmUjo> int update(U bo, Criterion<U> criterion) {
         return update(bo, criterion, false);
     }
 
@@ -556,7 +556,7 @@ public class Session implements Closeable {
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
-    private int update(OrmUjo bo, Criterion criterion, boolean singleObject) {
+    private <U extends OrmUjo> int update(U bo, Criterion<U> criterion, boolean singleObject) {
         checkNotNull(bo, "update");
 
         int result = 0;
