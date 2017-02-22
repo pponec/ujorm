@@ -764,16 +764,20 @@ public class SampleORM {
      * See the next example:
      */
     public void useExtendedUpdate() {
-        Order order = new Order();
+        Item order = new Item();
         // Activate the Change column management:
         order.writeSession(session);
         // Set a value(s) to the change:
-        order.setCreated(new Date());
+        order.setNote("TEST");
 
-        Criterion<Item> crn = Item.ID.whereGt(0L)
-                .and(Item.ORDER.add(Order.NOTE).whereNull());
-        session.update(order, crn);
+        final Criterion<Item> crn1, crn2, crn3;
+        crn1 = Item.ID.whereGt(0L);
+        crn2 = Item.ORDER.add(Order.NOTE).whereNull();
+        crn3 = crn1.and(crn2);
+        
+        int count = session.update(order, crn3);
         session.commit();
+        assert count == 0;
     }
 
     /** Using the pesimistic database UPDATE by the method: setLockRequest(). */
