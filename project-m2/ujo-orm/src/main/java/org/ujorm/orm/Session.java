@@ -266,8 +266,8 @@ public class Session implements Closeable {
     }
 
     /** Create query for all table rows. */
-    public <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass) {
-        final Criterion<UJO> criterion = Criterion.where(true);
+    public <U extends OrmUjo> Query<U> createQuery(Class<U> aClass) {
+        final Criterion<U> criterion = Criterion.where(true);
         return createQuery(criterion, aClass);
     }
 
@@ -277,7 +277,7 @@ public class Session implements Closeable {
      * @see #createQuery(org.ujorm.criterion.Criterion)
      */
     @Deprecated
-    public final <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass, Criterion<UJO> criterion) {
+    public final <U extends OrmUjo> Query<U> createQuery(Class<U> aClass, Criterion<U> criterion) {
         return createQuery(criterion, aClass);
     }
 
@@ -286,34 +286,34 @@ public class Session implements Closeable {
      *  without the Class parameter.
      * @see #createQuery(org.ujorm.criterion.Criterion)
      */
-    public final <UJO extends OrmUjo> Query<UJO> createQuery(final Criterion<UJO> criterion, final Class<UJO> aClass) {
+    public final <U extends OrmUjo> Query<U> createQuery(final Criterion<U> criterion, final Class<U> aClass) {
         final MetaTable metaTable = handler.findTableModel(aClass);
-        return new Query<UJO>(metaTable, criterion, this);
+        return new Query<U>(metaTable, criterion, this);
     }
 
     /** The table class is derived from the first criterion column. */
-    public final <UJO extends OrmUjo> Query<UJO> createQuery(final Criterion<UJO> criterion) {
+    public final <U extends OrmUjo> Query<U> createQuery(final Criterion<U> criterion) {
         final MetaRelation2Many column = getBasicColumn(criterion);
         final MetaTable table = MetaRelation2Many.TABLE.of(column);
-        return new Query<UJO>(table, criterion, this);
+        return new Query<U>(table, criterion, this);
     }
 
     /** Returns {@code true} if exists any database row with the required condition. */
-    public final <UJO extends OrmUjo> boolean exists(final Criterion<UJO> criterion) {
+    public final <U extends OrmUjo> boolean exists(final Criterion<U> criterion) {
         final MetaTable table = MetaRelation2Many.TABLE.of(getBasicColumn(criterion));
         return exists(table, criterion, table.getFirstPK().getKey());
     }
 
     /** Returns {@code true} if exists any database row for the required entity. */
-    public final <UJO extends OrmUjo> boolean exists(final Class<UJO> entity) {
+    public final <U extends OrmUjo> boolean exists(final Class<U> entity) {
         final MetaTable table = handler.findTableModel(entity);
         final Key pk = table.getFirstPK().getKey();
         return exists(table, pk.forAll(), pk);
     }
 
     /** Returns {@code true} if exists any database row for the required criterion. */
-    protected final <UJO extends OrmUjo> boolean exists( MetaTable table, Criterion<UJO> criterion, Key pk) {
-        final Ujo result = new Query<UJO>(table, criterion, this)
+    protected final <U extends OrmUjo> boolean exists( MetaTable table, Criterion<U> criterion, Key pk) {
+        final Ujo result = new Query<U>(table, criterion, this)
                 .setColumn(pk)
                 .setLimit(1)
                 .uniqueResult();
@@ -603,7 +603,7 @@ public class Session implements Closeable {
      * @param criterion filter for deleting tables.
      * @return Returns a number of the really deleted objects.
      */
-    public <UJO extends OrmUjo> int delete(final Criterion<UJO> criterion) {
+    public <U extends OrmUjo> int delete(final Criterion<U> criterion) {
         final MetaRelation2Many column = getBasicColumn(criterion);
         final MetaTable table = MetaRelation2Many.TABLE.of(column);
         return delete(table, criterion);
@@ -685,7 +685,7 @@ public class Session implements Closeable {
      * @param criterion filter for deleting tables.
      * @return Returns a number of the really deleted objects.
      */
-    public <UJO extends OrmUjo> int delete(final Class<UJO> tableClass, final Criterion<UJO> criterion) {
+    public <U extends OrmUjo> int delete(final Class<U> tableClass, final Criterion<U> criterion) {
         final MetaTable tableModel = handler.findTableModel(tableClass);
         return delete(tableModel, criterion);
     }
@@ -697,7 +697,7 @@ public class Session implements Closeable {
      * @param criterion filter for deleting tables.
      * @return Returns a number of the really deleted objects.
      */
-    protected <UJO extends OrmUjo> int delete(final MetaTable tableModel, final Criterion<UJO> criterion) {
+    protected <U extends OrmUjo> int delete(final MetaTable tableModel, final Criterion<U> criterion) {
         tableModel.assertChangeAllowed();
         int result = 0;
         JdbcStatement statement = null;
@@ -782,7 +782,7 @@ public class Session implements Closeable {
     }
 
     /** Returns a count of rows */
-    public <UJO extends OrmUjo> long getRowCount(Query<UJO> query) {
+    public <U extends OrmUjo> long getRowCount(Query<U> query) {
         long result = -1;
         JdbcStatement statement = null;
         ResultSet rs = null;
@@ -858,7 +858,7 @@ public class Session implements Closeable {
      * @param key Table key type of the RelationToMany.
      * @param value A value type of OrmUjo
      */
-    public <UJO extends OrmUjo> UjoIterator<UJO> iterateInternal(RelationToMany key, OrmUjo value) {
+    public <U extends OrmUjo> UjoIterator<U> iterateInternal(RelationToMany key, OrmUjo value) {
 
         final Class tableClass = key.getItemType();
         final MetaTable table = handler.findTableModel(tableClass);
@@ -902,7 +902,6 @@ public class Session implements Closeable {
 
     /**
      * Get the first Connection where an autocommit is set to false.
-     * @param databaseIndex The first database have got the index value: 0 .
      */
     public final Connection getFirstConnection() throws IllegalStateException {
         return getFirstConnection(true);
@@ -910,7 +909,6 @@ public class Session implements Closeable {
 
     /**
      * Get the first Connection where an autocommit is set to false.
-     * @param databaseIndex The first database have got the index value: 0 .
      * @param toModify By the value {@code false} is disabled to assign savepoints in an active transaction.
      */
     public final Connection getFirstConnection(boolean toModify) throws IllegalStateException {
@@ -964,8 +962,8 @@ public class Session implements Closeable {
      * @param tableType Type of Ujo
      * @param id Value ID
      */
-    public <UJO extends OrmUjo> UJO load
-        ( final Class<UJO> tableType
+    public <U extends OrmUjo> U load
+        ( final Class<U> tableType
         , final Object id
         ) throws NoSuchElementException {
         final MetaTable table = handler.findTableModel(tableType);
@@ -976,16 +974,15 @@ public class Session implements Closeable {
         Query query = createQuery(crn);
 
         final OrmUjo result = query.uniqueResult();
-        return (UJO) result;
+        return (U) result;
     }
 
     /**
      * Load UJO by a unique id. If primary key is {@code null} or no result is found
      * then the {@code null} value is returned.
-     * @param tableType Type of Ujo
-     * @param id Value ID
+     * @param ujo Ujo object
      */
-    public <UJO extends OrmUjo> UJO loadBy(UJO ujo) throws NoSuchElementException {
+    public <U extends OrmUjo> U loadBy(U ujo) throws NoSuchElementException {
         if (ujo == null) {
             return ujo;
         }
@@ -993,19 +990,19 @@ public class Session implements Closeable {
         final MetaPKey pkeys = MetaTable.PK.of(metaTable);
         final boolean fk = ujo instanceof ExtendedOrmUjo;
 
-        Criterion<UJO> criterion = null;
+        Criterion<U> criterion = null;
         for (MetaColumn c : MetaPKey.COLUMNS.of(pkeys)) {
             final Object pk = c.getValue(ujo);
             if (pk == null) {
                 return null;
             }
-            final Criterion<UJO> crn = Criterion.where(c.getKey(), pk);
+            final Criterion<U> crn = Criterion.where(c.getKey(), pk);
             criterion = criterion != null
                 ? criterion.and(crn)
                 : crn ;
         }
 
-        final UJO result = createQuery(criterion).uniqueResult();
+        final U result = createQuery(criterion).uniqueResult();
         return result;
     }
 
@@ -1054,7 +1051,7 @@ public class Session implements Closeable {
      * @param mandatory If result is mandatory then the method throws an exception if no object was found else returns null;
      */
     @SuppressWarnings("unchecked")
-    public <UJO extends OrmUjo> UJO loadInternal
+    public <U extends OrmUjo> U loadInternal
         ( final Key relatedProperty
         , final Object id
         , final boolean mandatory
@@ -1072,13 +1069,13 @@ public class Session implements Closeable {
             tableModel = MetaColumn.TABLE.of(columns.get(0));
             OrmUjo r = findCache(tableModel.getType(), id);
             if (r != null) {
-                return (UJO) r;
+                return (U) r;
             }
         }
 
         // SELECT DB row:
-        Criterion<UJO> crn = Criterion.where(columns.get(0).getKey(), id);
-        UJO result = createQuery(crn).uniqueResult();
+        final Criterion<U> crn = Criterion.where(columns.get(0).getKey(), id);
+        final U result = createQuery(crn).uniqueResult();
         if (mandatory && result==null) {
             throw new RuntimeException("Deleted object for key " + id);
         }
