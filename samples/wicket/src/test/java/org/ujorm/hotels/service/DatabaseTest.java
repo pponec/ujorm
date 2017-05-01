@@ -15,7 +15,9 @@
  */
 package org.ujorm.hotels.service;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
@@ -49,7 +51,7 @@ import static org.ujorm.orm.template.AliasTable.Build.*;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DatabaseTest extends AbstractServiceImpl<Hotel> {
     /** The one day in MILIS */
-    private static final int ONE_DAY = 24 * 60 * 60 * 1000;
+    private static final Period ONE_DAY = Period.ofDays(1);
 
     /** Create a one reservation in the Prague */
     @Before
@@ -64,9 +66,9 @@ public class DatabaseTest extends AbstractServiceImpl<Hotel> {
             Booking booking = new Booking();
             booking.setCustomer(customer);
             booking.setHotel(hotel);
-            booking.setDateFrom(new Date(System.currentTimeMillis() + ONE_DAY));
+            booking.setDateFrom(LocalDate.now().plus(ONE_DAY));
             booking.setPrice(hotel.getPrice());
-            booking.setCreationDate(now());
+            booking.setCreationDate(LocalDateTime.now());
 
             getSession().save(booking);
         }
@@ -78,7 +80,7 @@ public class DatabaseTest extends AbstractServiceImpl<Hotel> {
     public void testDbQueries() {
 
         // Simple criterion:
-        Key<Booking, Date> dateFrom = Booking.DATE_FROM;
+        Key<Booking, LocalDate> dateFrom = Booking.DATE_FROM;
         Criterion<Booking> crn1 = dateFrom.whereGt(now());
         List<Booking> futureAccommodations = crn1.evaluate(getBookings());
         assertEquals(1, futureAccommodations.size());
@@ -147,8 +149,8 @@ public class DatabaseTest extends AbstractServiceImpl<Hotel> {
     // ---------- HELPFUL METHODS ----------
 
     /** Returns the current day */
-    private Date now() {
-        return new Date(System.currentTimeMillis());
+    private LocalDate now() {
+        return LocalDate.now();
     }
 
     /** Returns two Booking objects with different DateFrom attribute value */
@@ -157,11 +159,11 @@ public class DatabaseTest extends AbstractServiceImpl<Hotel> {
 
         Booking item1 = new Booking();
         result.add(item1);
-        item1.setDateFrom(new Date(System.currentTimeMillis() - ONE_DAY));
+        item1.setDateFrom(LocalDate.now().plus(ONE_DAY.negated()));
 
         Booking item2 = new Booking();
         result.add(item2);
-        item2.setDateFrom(new Date(System.currentTimeMillis() + ONE_DAY));
+        item2.setDateFrom(LocalDate.now().plus(ONE_DAY));
 
         return result;
     }

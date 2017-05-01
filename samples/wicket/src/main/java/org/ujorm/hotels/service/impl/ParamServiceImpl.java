@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -190,7 +191,7 @@ implements ParamService {
         }
 
         dbParam.setTextValue(param.getTextValue());
-        dbParam.setLastUpdate(new Date());
+        dbParam.setLastUpdate(LocalDateTime.now());
         session.saveOrUpdate(dbParam);
 
         // Log the value change:
@@ -218,7 +219,7 @@ implements ParamService {
         // --- KEYS ----
 
         final UjoCoder converter = UjoManager.getInstance().getCoder();
-        final Date now = new Date();
+        final LocalDateTime now = LocalDateTime.now();
         for (Key key : params.readKeys()) {
             ParamKey paramKey = paramKeyMap.get(key.getName());
             if (paramKey == null) {

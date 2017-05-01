@@ -4,7 +4,8 @@
 package org.ujorm.hotels.entity;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.ujorm.Key;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.OrmKeyFactory;
@@ -34,7 +35,7 @@ public class Booking extends OrmTable<Booking> {
     public static final Key<Booking, Customer> CUSTOMER = f.newKey(notNull(Customer.class));
     /** Date from */
     @Comment("Date from")
-    public static final Key<Booking, java.sql.Date> DATE_FROM = f.newKey(mandatory(java.sql.Date.class));
+    public static final Key<Booking, LocalDate> DATE_FROM = f.newKey(mandatory(LocalDate.class));
     /** Number of nights */
     @Comment("Number of nights")
     public static final Key<Booking, Short> NIGHTS = f.newKeyDefault((short)1, range((short)1, (short)365));
@@ -49,7 +50,7 @@ public class Booking extends OrmTable<Booking> {
     public static final Key<Booking, String> CURRENCY = f.newKeyDefault("USD", length(MANDATORY, 3, 3));
     /** Creation datetime of booking. */
     @Comment("Creation datetime of booking.")
-    public static final Key<Booking, Date> CREATION_DATE = f.newKey(mandatory(Date.class));
+    public static final Key<Booking, LocalDateTime> CREATION_DATE = f.newKey(mandatory(LocalDateTime.class));
 
     static {
         f.lock();
@@ -88,12 +89,12 @@ public class Booking extends OrmTable<Booking> {
     }
 
     /** Date from */
-    public java.sql.Date getDateFrom() {
+    public java.time.LocalDate getDateFrom() {
         return DATE_FROM.of(this);
     }
 
     /** Date from */
-    public void setDateFrom(java.sql.Date dateFrom) {
+    public void setDateFrom(java.time.LocalDate dateFrom) {
         DATE_FROM.setValue(this, dateFrom);
     }
 
@@ -138,12 +139,12 @@ public class Booking extends OrmTable<Booking> {
     }
 
     /** Creation datetime of booking. */
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return CREATION_DATE.of(this);
     }
 
     /** Creation datetime of booking. */
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         CREATION_DATE.setValue(this, creationDate);
     }
 

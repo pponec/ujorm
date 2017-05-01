@@ -16,6 +16,7 @@
 package org.ujorm.orm_tutorial.sample;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
@@ -49,7 +50,7 @@ public final class Item extends OrmTable<Item> {
     @Column(name="fk_order")
     public static final Key<Item,Order> ORDER = f.newKey();
     /** A composed (or indirect) key provides a 'CREATED' attribute of the Order */
-    public static final Key<Item,Date> $ORDER_CREATED = Item.ORDER.add(Order.CREATED);
+    public static final Key<Item,LocalDateTime> $ORDER_CREATED = Item.ORDER.add(Order.CREATED);
 
 
 
@@ -81,7 +82,7 @@ public final class Item extends OrmTable<Item> {
     }
 
     /** Example of the composed key */
-    public Date getOrderCreated() {
+    public LocalDateTime getOrderCreated() {
         // An alternative solution for: getOrder().getCreated();
         return get($ORDER_CREATED);
     }

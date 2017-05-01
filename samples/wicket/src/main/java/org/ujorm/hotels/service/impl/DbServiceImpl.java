@@ -16,8 +16,9 @@
 package org.ujorm.hotels.service.impl;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.Arrays;
-import java.util.Date;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
@@ -34,7 +35,7 @@ import org.ujorm.hotels.service.DbService;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.core.UjoManager.*;
-import static org.ujorm.hotels.service.DbService.DAY_AS_MILISEC;
+import static org.ujorm.hotels.service.DbService.ONE_DAY;
 /**
  * Common database service implementations
  * @author ponec
@@ -180,7 +181,7 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
         result.setHotel(getSession().loadBy(event.getDomain()));
         result.setPrice(result.getHotel().getPrice());
         result.setCurrency(result.getHotel().getCurrency());
-        result.setDateFrom(new java.sql.Date(System.currentTimeMillis() + DAY_AS_MILISEC));
+        result.setDateFrom(java.time.LocalDate.now().plus(ONE_DAY));
         result.setCustomer(authService.getLoggedCustomer(new Customer()));
         result.getHotel().getCity(); // Fetching City
 
@@ -200,7 +201,7 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
         // TODO: validations ...
 
         booking.setPrice(totalPrice(booking));
-        booking.setCreationDate(new Date());
+        booking.setCreationDate(LocalDateTime.now());
         getSession().save(booking);
     }
 
@@ -219,7 +220,7 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
         if (cust == null) {
             return Booking.ID.forNone();
         }
-        Criterion<Booking> result = Booking.DATE_FROM.whereGe(now(-DAY_AS_MILISEC));
+        Criterion<Booking> result = Booking.DATE_FROM.whereGe(now(ONE_DAY.negated()));
         if (!cust.getAdmin()) {
             result = result.and(Booking.CUSTOMER.whereEq(cust));
         }
@@ -227,8 +228,8 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
     }
 
     /** Get Current SQL time */
-    private java.sql.Date now(long shift) {
-        return new java.sql.Date(System.currentTimeMillis() + shift);
+    private java.time.LocalDate now(Period shift) {
+        return java.time.LocalDate.now().plus(shift);
     }
 
     /** Calculate total price */

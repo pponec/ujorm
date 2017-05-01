@@ -14,6 +14,7 @@ package org.ujorm.hotels.gui.booking.action;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import java.time.LocalDate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -54,7 +55,7 @@ public class BookActionPanel<U extends Booking> extends GenericPanel<U> {
             /** Removing is allowed in the future more than three days. */
             @Override
             public boolean isEnabled() {
-                return row.getDateFrom().getTime() > System.currentTimeMillis();
+                return row.getDateFrom().isAfter(LocalDate.now());
             }
         };
 
