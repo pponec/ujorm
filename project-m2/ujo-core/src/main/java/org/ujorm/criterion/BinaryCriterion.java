@@ -89,16 +89,17 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
     /** Print the condition in a human reading format. */
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        boolean parentheses = operator!=BinaryOperator.AND;
-        if (parentheses) result.append('(');
-        result.append(crn1);
-        result.append(SPACE).append(operator.name()).append(SPACE);
+        final StringBuilder result = new StringBuilder();
+        final boolean parentheses = operator != BinaryOperator.AND;
+        final boolean notOperator = operator == BinaryOperator.NOT;
+        if ( parentheses) result.append('(');
+        if (!notOperator) result.append(crn1).append(SPACE);
+        result.append(operator.name()).append(SPACE);
         result.append(crn2);
         if (parentheses) result.append(')');
 
         return  result.toString();
-    }
+    }    
 
     /** Find a domain class type of {@code Class<UJO>} from its keys.
      * @return returns Method returns the {@code Ujo.class} instance if no domain was found.

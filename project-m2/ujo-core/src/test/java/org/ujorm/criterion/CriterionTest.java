@@ -237,6 +237,9 @@ public class CriterionTest extends MyTestCase {
         //
         expected = "User(name EQ \"Pavel\") AND (login EQ \"myLogin\")";
         assertEquals(expected, crn3.toStringFull());
+        //
+        expected = "User(NOT (login EQ \"myLogin\"))";
+        assertEquals(expected, crn1.not().toStringFull());
     }
 
     /** Object serialization */
