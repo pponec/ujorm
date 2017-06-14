@@ -259,9 +259,9 @@ public class TypeService implements ITypeService<Object,Object> {
             case DATE_SQL : rs.setDate(c, (java.sql.Date) value); break;
             case TIME_SQL : rs.setTime(c, (java.sql.Time)value); break;
             case TIMESTAMP: rs.setTimestamp(c, (java.sql.Timestamp)value); break;
-            case LOCAL_DATE: rs.setObject(c, value);
-            case LOCAL_TIME: rs.setObject(c, value);
-            case LOCAL_DATE_TIME: rs.setObject(c, value);
+            case LOCAL_DATE: rs.setObject(c, value); break;
+            case LOCAL_TIME: rs.setObject(c, value); break;
+            case LOCAL_DATE_TIME: rs.setObject(c, value); break;
             case BLOB     : rs.setBlob(c, (Blob)value); break;
             case CLOB     : rs.setClob(c, (Clob)value); break;
             case ENUM     : rs.setInt(c, ((Enum)value).ordinal()); break;
