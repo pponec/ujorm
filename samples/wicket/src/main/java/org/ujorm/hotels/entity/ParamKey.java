@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.annotation.Nonnull;
 import org.ujorm.Key;
@@ -65,7 +66,7 @@ final public class ParamKey extends OrmTable<ParamKey> {
     public static final Key<ParamKey, String> TEXT_DEFAULT_VALUE = f.newKey();
     /** Date of the parameter modification */
     @Comment("Date of the last parameter modification")
-    public static final Key<ParamKey, Date> LAST_UPDATE = f.newKey(mandatory(Date.class));
+    public static final Key<ParamKey, LocalDateTime> LAST_UPDATE = f.newKey(mandatory(LocalDateTime.class));
 
     static {
         f.lock();
@@ -180,12 +181,12 @@ final public class ParamKey extends OrmTable<ParamKey> {
     }
 
     /** Date of the parameter modification */
-    public Date getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return LAST_UPDATE.of(this);
     }
 
     /** Date of the parameter modification */
-    public void setLastUpdate(Date lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         LAST_UPDATE.setValue(this, lastUpdate);
     }
 }

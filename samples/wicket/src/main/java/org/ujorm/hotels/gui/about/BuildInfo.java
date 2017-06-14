@@ -6,7 +6,7 @@ package org.ujorm.hotels.gui.about;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import org.apache.wicket.markup.html.basic.Label;
@@ -28,7 +28,7 @@ public class BuildInfo extends Label {
     /** New line */
     private static final char NEW_LINE = '\n';
     private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
-    private static final Date STARTUP = new Date();
+    private static final LocalDateTime STARTUP = LocalDateTime.now();
 
     public BuildInfo(String id) {
         super(id);

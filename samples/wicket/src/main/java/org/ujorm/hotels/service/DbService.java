@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.service;
 
+import java.time.Period;
 import org.apache.wicket.model.IModel;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Booking;
@@ -30,8 +31,8 @@ public interface DbService {
     /** System account is {@code null} always */
     public static final Customer SYSTEM_ACCOUNT = null;
 
-    /** The one day in milisecond */
-    public static final int DAY_AS_MILISEC = 1000 * 60 * 60 * 24;
+    /** The one day */
+    public static final Period ONE_DAY = Period.ofDays(1);
 
     /** Find a customer */
     public Customer getCustomer(String login);

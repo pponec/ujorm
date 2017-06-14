@@ -15,6 +15,7 @@
  */
 package org.ujorm.orm_tutorial.sample;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,6 +36,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.Checks.*;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.orm.template.AliasTable;
 import static org.ujorm.criterion.Operator.*;
@@ -168,7 +170,7 @@ public class SampleORM {
     public void useInsert() {
 
         Order order = new Order();
-        order.setCreated(new Date());
+        order.setCreated(LocalDateTime.now());
         order.setNote("My order");
         //ORDER.setBinaryFile("binary".getBytes());
 
@@ -240,7 +242,7 @@ public class SampleORM {
             .and( Item.ORDER.add(Order.NOTE).whereEq( "My order" ));
 
         for (Item item : session.createQuery(crn)) {
-            Date created = item.getOrder().getCreated(); // Lazy loading
+            LocalDateTime created = item.getOrder().getCreated(); // Lazy loading
             System.out.println("Item: " + item + " // created: " + created);
         }
     }
@@ -267,7 +269,7 @@ public class SampleORM {
         query.addOuterJoin(Item.ORDER);
         
         for (Item item : query) {
-            Date created = item.getOrder().getCreated(); // Lazy loading
+            LocalDateTime created = item.getOrder().getCreated(); // Lazy loading
             System.out.println("Item: " + item + " // created: " + created);
         }
     }
@@ -278,12 +280,12 @@ public class SampleORM {
         final Order order = new Order();
         order.setId(100L);
         order.setNote("my order");
-        order.setCreated(new Date());
+        order.setCreated(LocalDateTime.now());
 
         Criterion<Order> crnId, crnNote, crnCreated, crn;
         crnId = Order.ID.where(GT, 99L);
         crnNote = Order.NOTE.whereEq("another");
-        crnCreated = Order.CREATED.where(LE, new Date());
+        crnCreated = Order.CREATED.where(LE, LocalDateTime.now());
         crn = null;
 
         // Simple condition: Order.ID>99
@@ -492,8 +494,8 @@ public class SampleORM {
      * @see Item#$ORDER_CREATED
      */
     public void useSelectItems_4() {
-        Key<Item, Date> ORDER_DATE = Item.ORDER.add(Order.CREATED); // or use: Item.$ORDER_CREATED
-        Query<Item> items = session.createQuery(ORDER_DATE.whereLe(new Date()));
+        Key<Item, LocalDateTime> ORDER_DATE = Item.ORDER.add(Order.CREATED); // or use: Item.$ORDER_CREATED
+        Query<Item> items = session.createQuery(ORDER_DATE.whereLe(LocalDateTime.now()));
 
         for (Item item : items) {
             logInfo("Item: %s", item);
@@ -618,7 +620,7 @@ public class SampleORM {
     /** Fetch column from related tables */
     public void useOneRequestLoading() {
         Query<Item> items = session.createQuery(Item.ID.whereNeq(0L));
-        Key<Item, Date> orderCreated = Item.ORDER.add(Order.CREATED);
+        Key<Item, LocalDateTime> orderCreated = Item.ORDER.add(Order.CREATED);
 
         // Fetch the Order's CREATED column (and the primary key):
         items.setColumns(true, orderCreated);
@@ -647,7 +649,7 @@ public class SampleORM {
     public void useNativeCriterion() {
         // The base using: the first arguments is replaced by column, the second is replaced using argument.
         Criterion<Order> crn = Order.ID.forSql("{0} > {1}", 0L)
-                .and(Order.CREATED.where(LE, new Date()));
+                .and(Order.CREATED.where(LE, LocalDateTime.now()));
         Order.ID.forSql("{0} > {1}", 1L).getRightNode();
         Query<Order> orders = session.createQuery(crn);
 
@@ -661,7 +663,7 @@ public class SampleORM {
         }
 
         crn = Order.STATE.forSql("ord_order_alias.id > 0")
-             .and(Order.CREATED.where(LE, new Date()));
+             .and(Order.CREATED.where(LE, LocalDateTime.now()));
         orders = session.createQuery(crn);
 
         for (Order order : orders) {
@@ -825,7 +827,7 @@ public class SampleORM {
     /** Using the database UPDATE */
     public void useUpdate() {
         Order order = session.load(Order.class, anyOrderId);
-        order.setCreated(new Date());
+        order.setCreated(LocalDateTime.now());
 
         session.update(order);
         session.commit();
@@ -839,7 +841,7 @@ public class SampleORM {
         // Activate the Change column management:
         order.writeSession(session);
         // Set a value(s) to the change:
-        order.setCreated(new Date());
+        order.setCreated(LocalDateTime.now());
 
         session.update(order, Order.ID.whereGe(anyOrderId));
         session.commit();
@@ -849,13 +851,13 @@ public class SampleORM {
      * See the next example:
      */
     public void useExtendedUpdate() {
-        final Item item = new Item();
+        final Order item = new Order();
         item.writeSession(session); // Activate a change management:
-        item.setNote("test");
+        item.setCreated(LocalDateTime.now()); // Set a value(s) to the change:
         
-        final Criterion<Item> crn1, crn2, crn3;
-        crn1 = Item.ID.whereGt(0L);
-        crn2 = Item.ORDER.add(Order.NOTE).whereNull();
+        final Criterion<Order> crn1, crn2, crn3;
+        crn1 = Order.ID.whereGt(0L);
+        crn2 = Order.CREATED.whereNull();
         crn3 = crn1.and(crn2);
         
         int count = session.update(item, crn3);
@@ -869,7 +871,7 @@ public class SampleORM {
                 .setLockRequest()
             .uniqueResult()
             ;
-        order.setCreated(new Date());
+        order.setCreated(LocalDateTime.now());
         session.update(order);
         session.commit();
     }

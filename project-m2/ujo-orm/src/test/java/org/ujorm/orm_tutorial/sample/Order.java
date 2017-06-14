@@ -17,6 +17,7 @@ package org.ujorm.orm_tutorial.sample;
 
 import java.sql.Blob;
 import java.sql.Clob;
+import java.time.LocalDateTime;
 import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
@@ -67,7 +68,7 @@ public final class Order extends OrmTable<Order> {
     @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
     public static final Key<Order, String> NOTE = f.newKey();
     /** Date of creation */
-    public static final Key<Order, Date> CREATED = f.newKey();
+    public static final Key<Order, LocalDateTime> CREATED = f.newKey();
     /** Text file */
     @Transient
     public static final Key<Order, Clob> TEXT_FILE = f.newKey();
@@ -118,11 +119,11 @@ public final class Order extends OrmTable<Order> {
         set(NOTE, _note);
     }
 
-    public Date getCreated() {
+    public LocalDateTime getCreated() {
         return get(CREATED);
     }
 
-    public void setCreated(Date _created) {
+    public void setCreated(LocalDateTime _created) {
         set(CREATED, _created);
     }
 
