@@ -71,7 +71,7 @@ public class OfferField<U extends Ujo & Serializable> extends Field<U> implement
         this.model.setClosable(this);
 
         add((offerDialog = createDialog("offerDialog", this.model)).getModalWindow());
-        addBehaviour(new AjaxEventBehavior("onclick") {
+        addBehaviour(new AjaxEventBehavior("click") {
              protected void onEvent(AjaxRequestTarget target) {
                  showOfferDialog(target);
              }

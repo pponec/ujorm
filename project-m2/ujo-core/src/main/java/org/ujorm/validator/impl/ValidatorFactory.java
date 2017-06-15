@@ -15,6 +15,8 @@
  */
 package org.ujorm.validator.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.regex.Pattern;
@@ -267,6 +269,20 @@ public abstract class ValidatorFactory {
      */
     public static <VALUE extends Date> Validator<VALUE> future() {
         return new DateValidator<VALUE>(false);
+    }
+
+   /** Check the date is in the future in compare to a local time
+     * @see DateValidator
+     */
+    public static <VALUE extends LocalDate> Validator<VALUE> futureLocalDate() {
+        return new LocalDateValidator<VALUE>(false);
+    }
+
+   /** Check the date is in the future in compare to a local time
+     * @see DateValidator
+     */
+    public static <VALUE extends LocalDateTime> Validator<VALUE> futureLocalDateTime() {
+        return new LocalDateTimeValidator<VALUE>(false);
     }
 
     /** Check the date is in the future in compare to a local time

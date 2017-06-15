@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import org.apache.wicket.markup.html.basic.Label;
@@ -44,7 +45,7 @@ public class BuildInfo extends Label {
 
     /** Get text */
     protected String getInfo() {
-        final SimpleDateFormat format = new SimpleDateFormat(FORMAT);
+        final DateTimeFormatter format = DateTimeFormatter.ofPattern(FORMAT);
         final StringBuilder result = new StringBuilder();
 
         result.append(NEW_LINE).append("<!-- Build:");

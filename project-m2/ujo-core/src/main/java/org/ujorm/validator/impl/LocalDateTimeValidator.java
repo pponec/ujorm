@@ -15,7 +15,8 @@
  */
 package org.ujorm.validator.impl;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.validator.AbstractValidator;
@@ -26,12 +27,12 @@ import org.ujorm.validator.ValidationError;
  * Data validator compare the input date to the <strong>current local</strong> date-time.
  * @author Pavel Ponec
  */
-public class DateValidator<VALUE extends Date> extends AbstractValidator<VALUE> {
+public class LocalDateTimeValidator<VALUE extends LocalDateTime> extends AbstractValidator<VALUE> {
 
     /** TODAY date*/
-    public static final MessageArg<Date> NOW = new MessageArg<Date>("NOW");
+    public static final MessageArg<LocalDate> NOW = new MessageArg<>("NOW");
     /** A sing for Past {@code true} / Future {@code false} */
-    public static final MessageArg<Boolean> PAST = new MessageArg<Boolean>("PAST");
+    public static final MessageArg<Boolean> PAST = new MessageArg<>("PAST");
 
     /** A sing for Past {@code true} / Future {@code false} */
     private final boolean past;
@@ -39,9 +40,9 @@ public class DateValidator<VALUE extends Date> extends AbstractValidator<VALUE> 
 
     /**
      * Between validator
-     * @param past Past
+     * @param past Serializable maximum valuem (inclusive)
      */
-    public DateValidator(boolean past) {
+    public LocalDateTimeValidator(boolean past) {
         this.past = past;
         this.pastWord = past ? "past" : "future";
     }
@@ -49,9 +50,9 @@ public class DateValidator<VALUE extends Date> extends AbstractValidator<VALUE> 
     /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
 
-            final Long now = System.currentTimeMillis();
+            final LocalDateTime now = LocalDateTime.now();
             final boolean ok = input==null
-                    || (input.getTime() <= now == past)
+                    || ((input.compareTo(now) <= 0) == past)
                     ;
             return !ok ? createError
                     ( input

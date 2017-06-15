@@ -16,7 +16,6 @@
 package org.ujorm.wicket.component.form;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -55,6 +54,8 @@ import org.ujorm.wicket.component.form.fields.DateField;
 import org.ujorm.wicket.component.form.fields.EnumField;
 import org.ujorm.wicket.component.form.fields.Field;
 import org.ujorm.wicket.component.form.fields.GridField;
+import org.ujorm.wicket.component.form.fields.LocalDateField;
+import org.ujorm.wicket.component.form.fields.LocalDateTimeField;
 import org.ujorm.wicket.component.form.fields.PasswordField;
 import org.ujorm.wicket.component.form.fields.TextAreaField;
 import org.ujorm.wicket.component.form.fields.TextField;
@@ -138,6 +139,10 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             }
         } else if (key.isTypeOf(Enum.class)) {
             field = new EnumField(newChildId(), key, "combo");
+        } else if (key.isTypeOf(java.time.LocalDate.class)) {
+            field = new LocalDateField(newChildId(), key, null);
+        } else if (key.isTypeOf(java.time.LocalDateTime.class)) {
+            field = new LocalDateTimeField(newChildId(), key, null); // TODO DateTime field
         } else if (key.isTypeOf(java.sql.Date.class)) {
             field = new DateField(newChildId(), key, null);
         } else if (key.isTypeOf(java.util.Date.class)) {

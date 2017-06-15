@@ -54,7 +54,7 @@ public class BooleanField<T extends Boolean> extends Field<T> {
     /** Create an "onchange" event */
     @Override
     public void onChange(final String action) {
-        addBehaviour(createChangeBehaviour(action, "onchange"));
+        addBehaviour(createChangeBehaviour(action, "change"));
     }
 
     /** Create an AjaxFormComponentUpdatingBehavior with no delay. */

@@ -116,13 +116,10 @@ public class ComboField<T extends Ujo> extends Field<T> {
         return keys.get(1);
     }
 
-    /** Create an Updating Behavior with "keyup" event
-     * @param field Field is not used by default, however it can be a switch for different results for example.
-     * @return
-     */
+    /** Create an Updating Behavior with "keyup" event */
     @Override
     public void onChange(final String action) {
-        addBehaviour(createChangeBehaviour(action, "onchange"));
+        addBehaviour(createChangeBehaviour(action, "change"));
     }
 
     /** Create new AjaxFormComponentUpdatingBehavior with delay 300 ms. */

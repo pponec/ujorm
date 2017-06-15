@@ -316,7 +316,7 @@ public class Field<T> extends GenericPanel<T> {
      */
     public void onChange(final String action) {
         addBehaviour(createChangeBehaviour(action, "keyup"));
-        addBehaviour(createChangeBehaviour(action, "onchange"));
+        addBehaviour(createChangeBehaviour(action, "change"));
     }
 
     /** Create new AjaxFormComponentUpdatingBehavior with delay 300 ms. */
@@ -336,7 +336,7 @@ public class Field<T> extends GenericPanel<T> {
     /** Add a new {@link AjaxFormComponentUpdatingBehavior|Behavior}
      * to updating a component model on blur events. */
     public AjaxEventBehavior addBehaviourOnBlur() {
-        return new AjaxFormComponentUpdatingBehavior("onblur") {
+        return new AjaxFormComponentUpdatingBehavior("blur") {
             @Override protected void onUpdate(AjaxRequestTarget t) {}
         };
     }

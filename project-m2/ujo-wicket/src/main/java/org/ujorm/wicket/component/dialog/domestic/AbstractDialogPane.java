@@ -181,7 +181,6 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
 
     /**
      * Show dialog and assign a data from domain object
-     * @param domain Domain object
      * @param target target
      */
     public void show(AjaxRequestTarget target, IModel<T> body) {
@@ -190,8 +189,6 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
 
     /**
      * Show dialog and assign a data from domain object
-     * @param domain Domain object
-     * @param target target
      */
     public void show(UjoEvent<T> event, IModel<String> title) {
         setAction(event.getAction());
@@ -200,8 +197,6 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
 
     /**
      * Show dialog and assign a data from domain object
-     * @param domain Domain object
-     * @param target target
      */
     public void show(UjoEvent<T> event, IModel<String> title, String actionButtonProperty) {
         setAction(event.getAction());
@@ -212,7 +207,7 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
      * Show dialog and assign a data from domain object
      * @param title Window title
      * @param target target
-     * @param body
+     * @param body Body model
      */
     public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> body) {
         show(target, title, body, null);
