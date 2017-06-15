@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>sample-inheritance</artifactId>
     <packaging>jar</packaging>
-    <version>1.70-SNAPSHOT</version>
+    <version>1.70</version>
     <url>http://ujorm.org</url>
     <build>
         <plugins>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>1.70-SNAPSHOT</version>
+            <version>1.70</version>
         </dependency>
 
         <dependency>

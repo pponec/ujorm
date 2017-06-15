@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <properties>
-        <ujo.version>1.70-SNAPSHOT</ujo.version>
+        <ujo.version>1.70</ujo.version>
         <java.version>1.7</java.version>
         <maven.compiler.target>1.7</maven.compiler.target>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ujorm</groupId>
     <artifactId>ujo</artifactId>
-    <version>1.70-SNAPSHOT</version>
+    <version>1.70</version>
     <name>Module UJO</name>
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
