@@ -228,6 +228,12 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
         if (column.isTypeOf(java.util.Date.class)) {
             return KeyColumnDate.of(column, isSortingEnabled((Key)column), "datetime", DateTimes.LOCALE_DATETIME_FORMAT_KEY);
         }
+        if (column.isTypeOf(java.time.LocalDateTime.class)) {
+            return KeyColumnLocalDateTime.of(column, isSortingEnabled((Key)column), "datetime", DateTimes.LOCALE_DATETIME_FORMAT_KEY);
+        }
+        if (column.isTypeOf(java.time.LocalDate.class)) {
+            return KeyColumnLocalDate.of(column, isSortingEnabled((Key)column), "datetime", DateTimes.LOCALE_DATETIME_FORMAT_KEY);
+        }
         if (column.isTypeOf(Enum.class)) {
             return KeyColumnEnum.of(column, isSortingEnabled((Key)column), "enum");
         }
