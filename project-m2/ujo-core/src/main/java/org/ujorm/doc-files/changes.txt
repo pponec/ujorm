@@ -2,6 +2,15 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 1.70 (2017-06-15)
++ CORE: Minimal Java 1.8 is required
++ ORM: Left-outer-join is implemented by the API
++ ORM: Java types LocalDate and LocalDateTime from package java.time date are supported by JDBC 4.2+
++ WICKET: Java types LocalDate and LocalDateTime from package java.time date are supported in Wicket 7.7.0
++ CORE: The method UjoComparator.compare() accepts NULL arguments
++ CORE: The rendering of the method is fixed: Criterion.not().toString()
++ CORE: some generic API is extended or fixed
+
 release 1.62 (2017-02-18)
 + CORE: Minimal Java 1.7 is required
 + CORE: Ujorm throws an UjormStateException and try-catch cleaning is done
