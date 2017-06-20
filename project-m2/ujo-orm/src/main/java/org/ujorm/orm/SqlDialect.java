@@ -47,6 +47,7 @@ import org.ujorm.orm.metaModel.MetaSelect;
 import org.ujorm.orm.metaModel.MetaTable;
 import static org.ujorm.core.UjoTools.SPACE;
 import org.ujorm.core.IllegalUjormException;
+import org.ujorm.orm.metaModel.MoreParams;
 
 /**
  * SQL dialect abstract class. Methods of this class print a SQL statement(s) along a metamodel usually.
@@ -87,7 +88,7 @@ abstract public class SqlDialect {
     /** Inner join */
     public boolean isInnerJoin() {
         if (_innerJoin == null) {
-            _innerJoin = MetaParams.JOIN_PHRASE.of(ormHandler.getParameters());
+            _innerJoin = MetaParams.MORE_PARAMS.add(MoreParams.JOIN_PHRASE).of(ormHandler.getParameters());
         }
         return _innerJoin;
     }

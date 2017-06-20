@@ -146,9 +146,6 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Key<MetaParams,Integer> INSERT_MULTIROW_ITEM_LIMIT = f.newKey("insertMultirowItemLimit", 100);
 
-    /** Render the SQL with JOIN phrase */
-    @Deprecated
-    public static final Key<MetaParams,Boolean> JOIN_PHRASE = f.newKey("joinPhrase", true);
     /** The parameter contains the special parameters with for different use.
      * @see MoreParams
      */

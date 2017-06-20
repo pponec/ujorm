@@ -40,6 +40,7 @@ import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.orm.template.AliasTable;
 import static org.ujorm.criterion.Operator.*;
+import org.ujorm.orm.metaModel.MoreParams;
 import static org.ujorm.orm.template.AliasTable.Build.*;
 
 /**
@@ -140,7 +141,7 @@ public class SampleORM {
             MetaParams params = new MetaParams();
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
-            params.set(MetaParams.JOIN_PHRASE, true);
+            params.set(MetaParams.MORE_PARAMS.add(MoreParams.JOIN_PHRASE), true);
             params.setQuotedSqlNames(false);
             params.set(MetaParams.INITIALIZATION_BATCH, new InitializationBatch() {
                 @Override public void run(Session session) throws Exception {
