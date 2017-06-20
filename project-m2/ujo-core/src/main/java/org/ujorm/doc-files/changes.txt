@@ -2,7 +2,7 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.70 (2017-06-15)
+release 1.70 (2017-06-20)
 + CORE: Minimal Java 1.8 is required
 + ORM: Left-outer-join is implemented by the API
 + ORM: Java types LocalDate and LocalDateTime from package java.time date are supported by JDBC 4.2+
