@@ -17,7 +17,6 @@ package org.ujorm.orm_tutorial.sample;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;

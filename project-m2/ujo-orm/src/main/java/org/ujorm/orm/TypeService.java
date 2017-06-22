@@ -25,6 +25,7 @@ import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.*;
 import java.util.List;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.StringWrapper;
@@ -67,6 +68,7 @@ public class TypeService implements ITypeService<Object,Object> {
     public static final char LOCAL_DATE = 25; 
     public static final char LOCAL_TIME = 26;
     public static final char LOCAL_DATE_TIME = 27;
+    public static final char OFFSET_DATE_TIME = 28;
     
     /** Constructor for the String argument type */
     private static final Class[] STR_ARGS = new Class[] {String.class};
@@ -103,6 +105,7 @@ public class TypeService implements ITypeService<Object,Object> {
         if (type==java.time.LocalDate.class) return LOCAL_DATE;
         if (type==java.time.LocalTime.class) return LOCAL_TIME;
         if (type==java.time.LocalDateTime.class) return LOCAL_DATE_TIME;
+        if (type==java.time.OffsetDateTime.class) return OFFSET_DATE_TIME;
         if (type==java.sql.Blob.class) return BLOB;
         if (type==java.sql.Clob.class) return CLOB;
         if (type.isEnum()) return ENUM;
@@ -148,15 +151,16 @@ public class TypeService implements ITypeService<Object,Object> {
             case DATE_SQL : return rs.getDate(c);
             case TIME_SQL : return rs.getTime(c);
             case TIMESTAMP: return rs.getTimestamp(c);
-            case LOCAL_DATE: return rs.getObject(c, java.time.LocalDate.class);
-            case LOCAL_TIME: return rs.getObject(c, java.time.LocalTime.class);
-            case LOCAL_DATE_TIME: return rs.getObject(c, java.time.LocalDateTime.class);       
+            case LOCAL_DATE:
+            case LOCAL_TIME:
+            case LOCAL_DATE_TIME:
+            case OFFSET_DATE_TIME: return rs.getObject(c, mColumn.getType());
             case BLOB     : return rs.getBlob(c);
             case CLOB     : return rs.getClob(c);
             case ENUM     : int i = rs.getInt(c);
                             return i==0 && rs.wasNull()
                             ? null
-                            : mColumn.getType().getEnumConstants()[i] ;
+                            : mColumn.getType().getEnumConstants()[i];
             case COLOR    : i = rs.getInt(c);
                             return i==0 && rs.wasNull()
                             ? null
@@ -200,15 +204,16 @@ public class TypeService implements ITypeService<Object,Object> {
             case DATE_SQL : return rs.getDate(c);
             case TIME_SQL : return rs.getTime(c);
             case TIMESTAMP: return rs.getTimestamp(c);
-            case LOCAL_DATE: return rs.getObject(c, java.time.LocalDate.class);
-            case LOCAL_TIME: return rs.getObject(c, java.time.LocalTime.class);
-            case LOCAL_DATE_TIME: return rs.getObject(c, java.time.LocalDateTime.class);
+            case LOCAL_DATE:
+            case LOCAL_TIME:
+            case LOCAL_DATE_TIME:
+            case OFFSET_DATE_TIME: return rs.getObject(c, mColumn.getType());
             case BLOB     : return rs.getBlob(c);
             case CLOB     : return rs.getClob(c);
             case ENUM     : int i = rs.getInt(c);
                             return i==0 && rs.wasNull()
                             ? null
-                            : mColumn.getType().getEnumConstants()[i] ;
+                            : mColumn.getType().getEnumConstants()[i];
             case COLOR    : i = rs.getInt(c);
                             return i==0 && rs.wasNull()
                             ? null
@@ -259,9 +264,6 @@ public class TypeService implements ITypeService<Object,Object> {
             case DATE_SQL : rs.setDate(c, (java.sql.Date) value); break;
             case TIME_SQL : rs.setTime(c, (java.sql.Time)value); break;
             case TIMESTAMP: rs.setTimestamp(c, (java.sql.Timestamp)value); break;
-            case LOCAL_DATE: rs.setObject(c, value); break;
-            case LOCAL_TIME: rs.setObject(c, value); break;
-            case LOCAL_DATE_TIME: rs.setObject(c, value); break;
             case BLOB     : rs.setBlob(c, (Blob)value); break;
             case CLOB     : rs.setClob(c, (Clob)value); break;
             case ENUM     : rs.setInt(c, ((Enum)value).ordinal()); break;
@@ -269,8 +271,12 @@ public class TypeService implements ITypeService<Object,Object> {
             case EXPORT_ENUM:
             case STRING_WRAP:rs.setString(c, value!=null ? ((StringWrapper)value).exportToString() : null ); break;
             case BYTES_WRAP :rs.setBytes(c, value!=null ? ((BytesWrapper)value).exportToBytes() : null ); break;
+            case LOCAL_DATE:
+            case LOCAL_TIME:
+            case LOCAL_DATE_TIME:
+            case OFFSET_DATE_TIME:
             case UUID:
-            default         : rs.setObject(c, value);  break;
+            default: rs.setObject(c, value);
         }
     }
 

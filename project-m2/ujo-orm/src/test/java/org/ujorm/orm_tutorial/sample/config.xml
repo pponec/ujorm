@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.43-SNAPSHOT was created 2014-02-24 17:54 -->
-<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.50.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!-- The Ujorm configuration file release 1.71 was created 2017-06-24 09:27 -->
+<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.70.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <database id="Database">
         <schema>db1</schema>
         <readOnly>false</readOnly>
@@ -125,8 +125,8 @@
                 <maxLength>50</maxLength>
                 <uniqueIndex>idx_customer_full_name</uniqueIndex>
             </column>
-            <column id="surename">
-                <name>surename</name>
+            <column id="surname">
+                <name>surname</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>50</maxLength>
                 <uniqueIndex>idx_customer_full_name</uniqueIndex>

@@ -270,13 +270,13 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         }
         else if (java.sql.Date.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.DATE);
-        }
-        else if (java.util.Date.class.isAssignableFrom(type)) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
-        }        
+        }  
         else if (java.util.Date.class.isAssignableFrom(type) 
              ||  java.time.LocalDateTime.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
+        }
+        else if (java.time.OffsetDateTime.class.isAssignableFrom(type)) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP_WITH_TIME_ZONE);
         }
         else if (java.time.LocalDate.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.DATE);

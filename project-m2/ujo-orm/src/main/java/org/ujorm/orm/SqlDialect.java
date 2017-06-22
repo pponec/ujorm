@@ -332,6 +332,7 @@ abstract public class SqlDialect {
             case DATE:
             case TIME:
             case TIMESTAMP:
+            case TIMESTAMP_WITH_TIME_ZONE:
                  return false;
             case CHAR:
             case VARCHAR:
@@ -373,7 +374,13 @@ abstract public class SqlDialect {
 
     /** Returns a database column type */
     protected String getColumnType(final MetaColumn column) {
-        return MetaColumn.DB_TYPE.of(column).name();
+        final String sqlType = MetaColumn.DB_TYPE.of(column).name();
+        switch (MetaColumn.DB_TYPE.of(column)) {
+            case TIMESTAMP_WITH_TIME_ZONE:
+                return sqlType.replace('_', ' ');
+            default:
+                return sqlType;
+        }
     }
 
     /** Print a SQL to create foreign keys. */

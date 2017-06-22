@@ -40,6 +40,7 @@ public enum DbType {
     TIME(Types.TIME),
     DATE(Types.DATE),
     TIMESTAMP(Types.TIMESTAMP),
+    TIMESTAMP_WITH_TIME_ZONE(Types.TIMESTAMP_WITH_TIMEZONE),
     //IDENTITY(Types.IDENTITY),
     BINARY(Types.BINARY),
     //OTHER(Types.OTHER),
