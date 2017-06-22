@@ -11,6 +11,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Locale;
 import org.ujorm.MyTestCase;
@@ -96,67 +100,118 @@ public class UjoManagerTest extends MyTestCase {
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */
     public void testEncodeColor() {
-        Class type = Color.class;
+        Class<Color> type = Color.class;
         UjoManager manager = UjoManager.getInstance();
         Color expected;
         Color result  ;
 
         //
         expected = new Color(0x000001);
-        result   = (Color) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("1", expected, result);
         //
         expected = new Color(0x100001);
-        result   = (Color) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
         //
         expected = new Color(0x100000);
-        result   = (Color) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("3", expected, result);
         //
         expected = new Color(0xaabbcc);
-        result   = (Color) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("4", expected, result);
         //
         expected = new Color(0xAABBCC);
-        result   = (Color) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("5", expected, result);
         //
     }
 
+    /**
+     * Test classess of  java.time
+     */
+    public void testLocalDate() {
+        Class<LocalDate> type = LocalDate.class;
+        UjoManager manager = UjoManager.getInstance();
+        LocalDate expected, result;
+        //
+        expected = LocalDate.now();
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
+        assertEquals("1", expected, result);
+    }
+
+    /**
+     * Test classess of  java.time
+     */
+    public void testLocalTime() {
+        Class<LocalTime> type = LocalTime.class;
+        UjoManager manager = UjoManager.getInstance();
+        LocalTime expected, result;
+        //
+        expected = LocalTime.now();
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
+        assertEquals("1", expected, result);
+    }
+
+    /**
+     * Test classess of  java.time
+     */
+    public void testLocalDateTime() {
+        Class<LocalDateTime> type = LocalDateTime.class;
+        UjoManager manager = UjoManager.getInstance();
+        LocalDateTime expected, result;
+        //
+        expected = LocalDateTime.now();
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
+        assertEquals("1", expected, result);
+    }
+
+    /**
+     * Test classess of  java.time
+     */
+    public void testZonedDateTime() {
+        Class<ZonedDateTime> type = ZonedDateTime.class;
+        UjoManager manager = UjoManager.getInstance();
+        ZonedDateTime expected, result;
+        //
+        expected = ZonedDateTime.now();
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
+        assertEquals("1", expected, result);
+    }
 
     /**
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */
     public void testEncodeCharset() {
-        Class charset = Charset.class;
+        Class<Charset> charset = Charset.class;
         UjoManager manager = UjoManager.getInstance();
         Charset expected;
         Charset result  ;
 
         //
         expected = Charset.forName("windows-1250");
-        result   = (Charset) manager.decodeValue(charset, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(charset, manager.encodeValue(expected, false));
         assertEquals("1", expected, result);
         //
         expected = Charset.forName("utf8");
-        result   = (Charset) manager.decodeValue(charset, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(charset, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
         //
         expected = Charset.forName("UTF-8");
-        result   = (Charset) manager.decodeValue(charset, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(charset, manager.encodeValue(expected, false));
         assertEquals("3", expected, result);
         //
         expected = Charset.forName("ascii");
-        result   = (Charset) manager.decodeValue(charset, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(charset, manager.encodeValue(expected, false));
         assertEquals("4", expected, result);
         //
         expected = Charset.forName("cp1250");
-        result   = (Charset) manager.decodeValue(charset, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(charset, manager.encodeValue(expected, false));
         assertEquals("5", expected, result);
         //
         expected = null;
-        result   = (Charset) manager.decodeValue(charset, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(charset, manager.encodeValue(expected, false));
         assertEquals("6", expected, result);
     }
 
@@ -165,39 +220,39 @@ public class UjoManagerTest extends MyTestCase {
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */
     public void testEncodeLocale() {
-        Class type = Locale.class;
+        Class<Locale> type = Locale.class;
         UjoManager manager = UjoManager.getInstance();
         Locale expected;
         Locale result  ;
 
         //
         expected = Locale.getDefault();
-        result   = (Locale) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("1", expected, result);
         //
         expected = new Locale("cs", "CZ");
-        result   = (Locale) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
         //
         expected = new Locale("en", "GB");
-        result   = (Locale) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
         //
         //
         expected = new Locale("cs");
-        result   = (Locale) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
         //
         expected = new Locale("en");
-        result   = (Locale) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
         //
         expected = new Locale("cs", "CZ", "XX");
-        result   = (Locale) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
         //
         expected = new Locale("en", "GB", "XX");
-        result   = (Locale) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
     }
 
@@ -205,30 +260,30 @@ public class UjoManagerTest extends MyTestCase {
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */
     public void testEncodeDim() {
-        Class type = Dimension.class;
+        Class<Dimension> type = Dimension.class;
         UjoManager manager = UjoManager.getInstance();
         Dimension expected;
         Dimension result  ;
 
         //
         expected = new Dimension(0,0);
-        result   = (Dimension) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("1", expected, result);
         //
         expected = new Dimension(-1,1);
-        result   = (Dimension) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
         //
         expected = new Dimension(Integer.MIN_VALUE,Integer.MAX_VALUE);
-        result   = (Dimension) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("3", expected, result);
         //
         expected = new Dimension(-500,-600);
-        result   = (Dimension) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("4", expected, result);
         //
         expected = new Dimension(800,660);
-        result   = (Dimension) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("5", expected, result);
         //
     }
@@ -237,30 +292,30 @@ public class UjoManagerTest extends MyTestCase {
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */
     public void testEncodeRectangle2() {
-        Class type = Rectangle.class;
+        Class<Rectangle> type = Rectangle.class;
         UjoManager manager = UjoManager.getInstance();
         Rectangle expected;
         Rectangle result  ;
 
         //
         expected = new Rectangle(0,0);
-        result   = (Rectangle) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("1", expected, result);
         //
         expected = new Rectangle(-1,1);
-        result   = (Rectangle) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
         //
         expected = new Rectangle(Integer.MIN_VALUE,Integer.MAX_VALUE);
-        result   = (Rectangle) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("3", expected, result);
         //
         expected = new Rectangle(-500,-600);
-        result   = (Rectangle) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("4", expected, result);
         //
         expected = new Rectangle(800,660);
-        result   = (Rectangle) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("5", expected, result);
         //
     }
@@ -269,30 +324,30 @@ public class UjoManagerTest extends MyTestCase {
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */
     public void testEncodeRectangle4() {
-        Class type = Rectangle.class;
+        Class<Rectangle> type = Rectangle.class;
         UjoManager manager = UjoManager.getInstance();
         Rectangle expected;
         Rectangle result  ;
 
         //
         expected = new Rectangle(0,0,0,0);
-        result   = (Rectangle) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("1", expected, result);
         //
         expected = new Rectangle(-1,1,-2,2);
-        result   = (Rectangle) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
         //
         expected = new Rectangle(Integer.MIN_VALUE,Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MAX_VALUE);
-        result   = (Rectangle) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("3", expected, result);
         //
         expected = new Rectangle(-500,-600,-500,-600);
-        result   = (Rectangle) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("4", expected, result);
         //
         expected = new Rectangle(800,660,10,20);
-        result   = (Rectangle) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("5", expected, result);
         //
     }
@@ -301,21 +356,21 @@ public class UjoManagerTest extends MyTestCase {
      * ENUM test
      */
     public void testEnum() {
-        Class type = SampleEnum.class;
+        Class<SampleEnum> type = SampleEnum.class;
         UjoManager manager = UjoManager.getInstance();
         Enum expected;
         Enum result  ;
 
         expected = SampleEnum.ONE;
-        result   = (Enum) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("1", expected, result);
 
         expected = SampleEnum.TWO;
-        result   = (Enum) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
 
         expected = null;
-        result   = (Enum) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("3", expected, result);
     }
 
@@ -323,21 +378,21 @@ public class UjoManagerTest extends MyTestCase {
      * Sample EnumWrapper test
      */
     public void testEnumWrapper() {
-        Class type = SampleEnumWrapper.class;
+        Class<SampleEnumWrapper> type = SampleEnumWrapper.class;
         UjoManager manager = UjoManager.getInstance();
         SampleEnumWrapper expected;
         SampleEnumWrapper result  ;
 
         expected = SampleEnumWrapper.ONE;
-        result   = (SampleEnumWrapper) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("1", expected, result);
 
         expected = SampleEnumWrapper.TWO;
-        result   = (SampleEnumWrapper) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
 
         expected = null;
-        result   = (SampleEnumWrapper) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("3", expected, result);
     }
 
@@ -345,21 +400,21 @@ public class UjoManagerTest extends MyTestCase {
      * Sample NumberWrapper test
      */
     public void testNumberWrapper() {
-        Class type = SampleNumberWrapper.class;
+        Class<SampleNumberWrapper> type = SampleNumberWrapper.class;
         UjoManager manager = UjoManager.getInstance();
         SampleNumberWrapper expected;
         SampleNumberWrapper result  ;
 
         expected = new SampleNumberWrapper("1.01");
-        result   = (SampleNumberWrapper) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("1", expected.getNumber(), result.getNumber());
 
         expected = new SampleNumberWrapper("2.23");
-        result   = (SampleNumberWrapper) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected.getNumber(), result.getNumber());
 
         expected = null;
-        result   = (SampleNumberWrapper) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("3", expected, result);
     }
 
@@ -367,21 +422,21 @@ public class UjoManagerTest extends MyTestCase {
      * CLAS test
      */
     public void testClass() {
-        Class type = Class.class;
+        Class<Class> type = Class.class;
         UjoManager manager = UjoManager.getInstance();
         Class expected;
         Class result  ;
 
         expected = String.class;
-        result   = (Class) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("1", expected, result);
 
         expected = Color.class;
-        result   = (Class) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
 
         expected = null;
-        result   = (Class) manager.decodeValue(type, manager.encodeValue(expected, false));
+        result   = manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("3", expected, result);
     }
 

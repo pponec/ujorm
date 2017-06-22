@@ -21,11 +21,15 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.File;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -103,6 +107,8 @@ public class UjoCoder {
                     ? FORMAT_DAY.get().format((java.sql.Date) value)
                     : FORMAT_DATE.get().format((Date) value)
                     ;
+        } else if (value instanceof Temporal) {
+            result = value.toString();
         } else if (value instanceof Color) {
             result = Integer.toHexString(((Color) value).getRGB() & 0xffffff | 0x1000000).substring(1).toUpperCase();
         } else if (value instanceof File) {
@@ -248,7 +254,7 @@ public class UjoCoder {
                 return result;
             }
             if (Locale.class==type) {
-                StringTokenizer sTok = new StringTokenizer(aValue, "-");
+                final StringTokenizer sTok = new StringTokenizer(aValue, "-");
                 final String p1 = sTok.hasMoreTokens() ? sTok.nextToken() : "";
                 final String p2 = sTok.hasMoreTokens() ? sTok.nextToken() : "";
                 final String p3 = sTok.hasMoreTokens() ? sTok.nextToken() : "";
@@ -278,14 +284,14 @@ public class UjoCoder {
                 }
             }
             if (Dimension.class.isAssignableFrom(type)) {
-                StringTokenizer st = new StringTokenizer(aValue, ",");
+                final StringTokenizer st = new StringTokenizer(aValue, ",");
                 final int w = Integer.parseInt(st.nextToken());
                 final int h = Integer.parseInt(st.nextToken());
                 final Dimension result = new Dimension(w, h);
                 return result;
             }
             if (Rectangle.class.isAssignableFrom(type)) {
-                StringTokenizer st = new StringTokenizer(aValue, ",");
+                final StringTokenizer st = new StringTokenizer(aValue, ",");
                 final int x = Integer.parseInt(st.nextToken());
                 final int y = Integer.parseInt(st.nextToken());
                 final int w = Integer.parseInt(st.nextToken());
@@ -295,7 +301,7 @@ public class UjoCoder {
             }
             if (Date.class.isAssignableFrom(type)) {
                 try {
-                    Date result = java.sql.Date.class.isAssignableFrom(type)
+                    final Date result = java.sql.Date.class.isAssignableFrom(type)
                             ?  new java.sql.Date(FORMAT_DAY.get().parse(aValue).getTime())
                             :  FORMAT_DATE.get().parse(aValue)
                             ;
@@ -303,6 +309,22 @@ public class UjoCoder {
                 } catch (ParseException ex) {
                     throw new IllegalUjormException("\"" + aValue + "\" " + type, ex);
                 }
+            }
+            if (LocalDateTime.class.isAssignableFrom(type)) {
+                final LocalDateTime result = LocalDateTime.parse(aValue);
+                return result;
+            }
+            if (LocalDate.class.isAssignableFrom(type)) {
+                final LocalDate result = LocalDate.parse(aValue);
+                return result;
+            }
+            if (LocalTime.class.isAssignableFrom(type)) {
+                final LocalTime result = LocalTime.parse(aValue);
+                return result;
+            }
+            if (ZonedDateTime.class.isAssignableFrom(type)) {
+                final ZonedDateTime result = ZonedDateTime.parse(aValue);
+                return result;
             }
             if (Color.class.isAssignableFrom(type)) {
                 final Color result = new java.awt.Color(Integer.parseInt(aValue, 16));

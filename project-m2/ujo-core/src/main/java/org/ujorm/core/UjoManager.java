@@ -503,7 +503,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
      * @param type Optional subtype class of the key type.
      * @return Instance of new result.
      */
-    public final <T> T  decodeValue(final Key<?,T> key, final String aValue, Class type) {
+    public final <T> T decodeValue(final Key<?,T> key, final String aValue, Class type) {
         return coder.decodeValue(key, aValue, type);
     }
 
