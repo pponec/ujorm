@@ -29,7 +29,7 @@ import org.ujorm.validator.ValidationError;
 public class ReadOnlyValidator<VALUE> extends AbstractValidator<VALUE> {
 
     /** Sign to read only / all enabled */
-    public static final MessageArg<Boolean> READ_ONLY = new MessageArg<Boolean>("READ_ONLY");
+    public static final MessageArg<Boolean> READ_ONLY = new MessageArg<>("READ_ONLY");
 
     /** Sign to a state read-only / all enabled */
     private final boolean readOnly;
@@ -42,6 +42,7 @@ public class ReadOnlyValidator<VALUE> extends AbstractValidator<VALUE> {
     }
 
     /** {@inheritDoc} */
+    @Override
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
         final boolean failed = readOnly;
         return failed ? createError
@@ -67,6 +68,7 @@ public class ReadOnlyValidator<VALUE> extends AbstractValidator<VALUE> {
      *   <li>org.ujorm..allEnabledt</li>
      * </ul>
      */
+    @Override
     public String getLocalizationKey() {
         return KEY_PREFIX + (readOnly ? "readOnly" : "allEnabledt");
     }

@@ -41,9 +41,9 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
     static final long serialVersionUID = 20140128L;
 
     /** True constant criterion */
-    public static final Criterion<Ujo> TRUE  = new ValueCriterion<Ujo>(true);
+    public static final Criterion<Ujo> TRUE  = new ValueCriterion<>(true);
     /** False constant criterion */
-    public static final Criterion<Ujo> FALSE = new ValueCriterion<Ujo>(false);
+    public static final Criterion<Ujo> FALSE = new ValueCriterion<>(false);
 
     private Key<U, Object> key;
     private Operator operator;
@@ -235,7 +235,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
                      : ujoList instanceof List
                      ? (List) ujoList
                      : ujoList instanceof Collection
-                     ? new ArrayList<U>((Collection) ujoList)
+                     ? new ArrayList<>((Collection) ujoList)
                      : super.evaluate(ujoList);
             default:
                 return super.evaluate(ujoList);

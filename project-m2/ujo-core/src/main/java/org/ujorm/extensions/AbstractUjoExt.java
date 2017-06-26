@@ -37,6 +37,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
 
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
+    @Override
     public <VALUE> VALUE get
         ( final Key<? super UJO, VALUE> key
         ) {
@@ -45,6 +46,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
 
     /** Getter based on two keys */
     @SuppressWarnings("unchecked")
+    @Override
     public <UJO2 extends Ujo, VALUE> VALUE get
         ( final Key<? super UJO, UJO2 > property1
         , final Key<UJO2, VALUE> property2) {
@@ -55,6 +57,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
 
     /** Getter based on three keys */
     @SuppressWarnings("unchecked")
+    @Override
     public <UJO2 extends Ujo, UJO3 extends Ujo, VALUE> VALUE get
         ( final Key<? super UJO, UJO2 > property1
         , final Key<UJO2, UJO3 > property2
@@ -67,6 +70,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
 
     /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings({"unchecked"})
+    @Override
     public <VALUE> UJO set
         ( final Key<? super UJO, VALUE> key
         , final VALUE value
@@ -77,6 +81,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
     }
 
     /** Setter  based on two keys. Type of value is checked in the runtime. */
+    @Override
     public <UJO2 extends Ujo, VALUE> void set
         ( final Key<? super UJO, UJO2> property1
         , final Key<UJO2, VALUE> property2
@@ -88,6 +93,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
     }
 
     /** Setter  based on three keys. Type of value is checked in the runtime. */
+    @Override
     public <UJO2 extends Ujo, UJO3 extends Ujo, VALUE> void set
         ( final Key<? super UJO, UJO2 > property1
         , final Key<UJO2, UJO3 > property2
@@ -110,6 +116,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
      * <br>Inside is called a method ListUjoPropertyCommon.getItemCount() internally.
      */
     @SuppressWarnings("unchecked")
+    @Override
     public <ITEM> int getItemCount
         ( final ListKey<? super UJO,ITEM> key
         ) {
@@ -120,6 +127,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
      * <br>Inside is called a method ListUjoPropertyCommon.addItem(...) internally.
      */
     @SuppressWarnings("unchecked")
+    @Override
     public <ITEM> UJO add
         ( final ListKey<? super UJO,ITEM> key
         , final ITEM value
@@ -132,6 +140,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
      * <br>Inside is called a method ListUjoPropertyCommon.setItem(...) internally.
      */
     @SuppressWarnings("unchecked")
+    @Override
     public <ITEM> UJO set
         ( final ListKey<? super UJO,ITEM> key
         , final int index
@@ -145,6 +154,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
      * <br>Inside is called a method ListUjoPropertyCommon.getItem(...) internally.
      */
     @SuppressWarnings("unchecked")
+    @Override
     public <ITEM> ITEM get
         ( final ListKey<? super UJO,ITEM> key
         , final int index
@@ -160,6 +170,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
      * @return removed item
      */
     @SuppressWarnings("unchecked")
+    @Override
     public <ITEM> ITEM remove
         ( final ListKey<? super UJO,ITEM> key
         , final int index
@@ -185,6 +196,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
      * <br>Inside is called a method ListUjoPropertyCommon.getList() internally.
      */
     @SuppressWarnings("unchecked")
+    @Override
     public <LIST extends List<ITEM>,ITEM> LIST list
         ( final ListKey<? super UJO,ITEM> key
         ) {
@@ -219,6 +231,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
      * @param key A Property
      * @return If key type is "container" then result is null.
      */
+    @Override
     public String getText(final Key key) {
         return readUjoManager().getText(this, key, null);
     }
@@ -229,6 +242,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
      * @param key Property
      * @param value String value
      */
+    @Override
     public void setText(final Key key, final String value) {
         readUjoManager().setText(this, key, value, null, null);
     }
@@ -267,7 +281,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
      * <li>UjoCloneable</li>
      * <li>List</li>
      * <li>array of privitive values</li>
-     * <ul>
+     * </ul>
      */
     @Override
     @SuppressWarnings("unchecked")

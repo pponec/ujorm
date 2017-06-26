@@ -61,6 +61,7 @@ final public class CompositeValidator<VALUE> extends AbstractValidator<VALUE> {
 
     /** {
      * @Inherited} */
+    @Override
     public <UJO extends Ujo> ValidationError validate(final VALUE input, final Key<UJO, VALUE> key, final UJO bo) {
         final ValidationError leftErr = leftValidator.validate(input, key, bo);
         if (operator == BinaryOperator.AND) {
@@ -81,6 +82,7 @@ final public class CompositeValidator<VALUE> extends AbstractValidator<VALUE> {
     }
 
     /** @return Returns localizaton key of the leftValidator: */
+    @Override
     public String getLocalizationKey() {
         return leftValidator.getLocalizationKey();
     }

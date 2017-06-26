@@ -67,7 +67,7 @@ public class WeakKeyFactory extends KeyFactory<Ujo> {
     /** For internal use only: Create a new Key */
     @Override
     protected <T> WeakKey<T> createKey(String name, T defaultValue, Validator<T> validator) {
-        final WeakKeyImpl<T> p = new WeakKeyImpl<T>(name, defaultValue, getTmpStore().size());
+        final WeakKeyImpl<T> p = new WeakKeyImpl<>(name, defaultValue, getTmpStore().size());
         addKey(p);
         return p;
     }
@@ -79,7 +79,7 @@ public class WeakKeyFactory extends KeyFactory<Ujo> {
      */
     @Override
     protected void onCreate(KeyList<Ujo> list, InnerDataStore<Ujo> innerData) throws IllegalStateException {
-        final Set<String> set = new HashSet<String>(list.size());        
+        final Set<String> set = new HashSet<>(list.size());        
         for (Key<Ujo,?>  key : list) {
             boolean unique = set.add(key.getName());
             if (!unique) {

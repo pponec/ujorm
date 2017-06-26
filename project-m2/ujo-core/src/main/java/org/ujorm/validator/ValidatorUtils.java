@@ -38,7 +38,7 @@ public final class ValidatorUtils {
      * @return Returns the true value if the validator contains a not-null validator.
      */
     public static boolean isMandatoryValidator(Validator validator) {
-        List<LengthValidator> vals = new ArrayList<LengthValidator>();
+        List<LengthValidator> vals = new ArrayList<>();
         boolean ok = findValidators(validator, NotNullValidator.class, vals);
         return ok && !vals.isEmpty();
     }
@@ -49,7 +49,7 @@ public final class ValidatorUtils {
      */
     public static int getMaxLength(Validator validator) {
         int result = -1;
-        List<LengthValidator> vals = new ArrayList<LengthValidator>();
+        List<LengthValidator> vals = new ArrayList<>();
         findValidators(validator, LengthValidator.class, vals);
 
         for (LengthValidator v : vals) {
@@ -83,7 +83,7 @@ public final class ValidatorUtils {
      * ujos Collection of the beans
      */
     public static List<ValidationError> validate(final Ujo ujo) {
-        final ArrayList<ValidationError> result = new ArrayList<ValidationError>();
+        final ArrayList<ValidationError> result = new ArrayList<>();
         for (Key<Ujo,Object> key : ujo.readKeys()) {
             final Validator<Object> validator = key.getValidator();
             if (validator == null
@@ -103,7 +103,7 @@ public final class ValidatorUtils {
      * ujos Collection of the beans
      */
     public static List<ValidationError> validate(final Collection<Ujo> ujos) {
-        final ArrayList<ValidationError> result = new ArrayList<ValidationError>();
+        final ArrayList<ValidationError> result = new ArrayList<>();
         for (Ujo ujo : ujos) {
             for (Key<Ujo,Object> key : ujo.readKeys()) {
                 final Validator<Object> validator = key.getValidator();

@@ -28,12 +28,12 @@ import org.ujorm.validator.impl.CompositeValidator;
 public abstract class AbstractValidator<VALUE> implements Validator<VALUE>, Serializable {
 
     /** Ujo-key */
-    public static final MessageArg<String> KEY = new MessageArg<String>("KEY");
+    public static final MessageArg<String> KEY = new MessageArg<>("KEY");
     /** Input value */
-    public static final MessageArg<Object> INPUT = new MessageArg<Object>("INPUT");
+    public static final MessageArg<Object> INPUT = new MessageArg<>("INPUT");
     /** Two-character mark ("${") to introducing a template argument.
      * @see MessageService#PARAM_BEG */
-    public static final MessageArg<Object> MARK = new MessageArg<Object>("MARK");
+    public static final MessageArg<Object> MARK = new MessageArg<>("MARK");
 
     /** Validator service */
     protected static final MessageService service = new MessageService();
@@ -47,6 +47,7 @@ public abstract class AbstractValidator<VALUE> implements Validator<VALUE>, Seri
     }
 
     /** Check the value with a context */
+    @Override
     public <UJO extends Ujo> void checkValue(VALUE input, Key<UJO, VALUE> key, UJO bo) throws ValidationException {
         final ValidationError result = validate(input, key, bo);
         if (result!=null) {
@@ -84,13 +85,15 @@ public abstract class AbstractValidator<VALUE> implements Validator<VALUE>, Seri
     protected abstract String getDefaultTemplate();
 
     /** @{@inheritDoc} */
+    @Override
     public final Validator<VALUE> and(Validator<VALUE> validator) {
-        return new CompositeValidator<VALUE>(this, BinaryOperator.AND, validator);
+        return new CompositeValidator<>(this, BinaryOperator.AND, validator);
     }
 
     /** @{@inheritDoc} */
+    @Override
     public final Validator<VALUE> or(Validator<VALUE> validator) {
-        return new CompositeValidator<VALUE>(this, BinaryOperator.OR, validator);
+        return new CompositeValidator<>(this, BinaryOperator.OR, validator);
     }
 
     /** Returns a localization key. */

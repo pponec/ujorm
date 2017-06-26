@@ -42,6 +42,7 @@ public class ZCounter {
         return count<=0;
     }
 
+    @Override
     public String toString() {
         String retValue = String.valueOf(count);
         return retValue;

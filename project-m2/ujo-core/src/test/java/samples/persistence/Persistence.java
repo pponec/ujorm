@@ -42,7 +42,7 @@ public class Persistence {
     
     void showCSV() throws Exception {
         
-        List<Person> people = new ArrayList<Person>(0);
+        List<Person> people = new ArrayList<>(0);
         UjoManagerCSV<Person> manager = UjoManagerCSV.of(Person.class);
         
         // Save CSV:

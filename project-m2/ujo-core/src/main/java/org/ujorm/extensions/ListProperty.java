@@ -101,7 +101,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
      *    ujo.set(VALUE_LIST, new ArrayList());
      * }
      * ujo.get(VALUE_LIST).add(itemValue);
-     * <pre class="pre">
+     * </pre>
      * @return Value {@code true} as per the general contract of Collection.add.
      */
     @Override
@@ -172,7 +172,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     , final int index
     , final boolean lock
     ) {
-        final ListProperty<UJO,ITEM> result = new ListProperty<UJO,ITEM>(itemType);
+        final ListProperty<UJO,ITEM> result = new ListProperty<>(itemType);
         result.init(NAME, name);
         result.init(INDEX, index);
         result.init(LOCK, lock);

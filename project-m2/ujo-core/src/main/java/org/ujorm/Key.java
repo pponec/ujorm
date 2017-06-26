@@ -145,7 +145,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     /**
      * If the key is the direct key of the related UJO class then method returns the TRUE value.
      * The return value false means, that key is type of {@link CompositeKey}.
-     * <br />
+     * <br>
      * Note: The composite keys are excluded from from function Ujo.readProperties() by default
      * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
      * @see CompositeKey
@@ -159,7 +159,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * The composite key is an instance of CompositeKey.
      * It this key is the a direct key of a related UJO class then this method returns the TRUE value.
      * All composite keys are excluded from from list {@link Ujo#readKeys()} by default
-     * <br />
+     * <br>
      * Note:
      * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
      * @see CompositeKey
@@ -207,7 +207,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @param key The relation key
      * @param alias This attribute is used to distinguish the same entities
      * in different spaces. Examples of use are different alias for a table in SQL queries.
-     * <br/>The attribute is not serializable in the current release.
+     * <br>The attribute is not serializable in the current release.
      *
      * @return
      * @since 1.43
@@ -223,7 +223,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     /** Create new composite (indirect) instance with a required alias name
      * @param alias This attribute is used to distinguish the same entities
      * in different spaces. Examples of use are different alias for a table in SQL queries.
-     * <br/>The attribute is not serializable in the current release.
+     * <br>The attribute is not serializable in the current release.
      *
      * @return An instance of the CompositeKey interface
      * @since 1.43
@@ -248,12 +248,12 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     public String toString();
 
     /** Returns the full name of the Key including a simple domain class and aliases.
-     * <br />Example: Person.ID */
+     * <br>Example: Person.ID */
     public String toStringFull();
 
     /**
      * Returns the full name of the Key including all attributes.
-     * <br />Example: Person.id {index=0, ascending=false, ...}
+     * <br>Example: Person.id {index=0, ascending=false, ...}
      * @param extended arguments false calls the method {@link #getFullName()} only.
      * @return the full name of the Key including all attributes.
      */

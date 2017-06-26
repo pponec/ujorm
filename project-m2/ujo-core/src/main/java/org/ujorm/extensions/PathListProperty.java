@@ -27,7 +27,7 @@ import org.ujorm.core.annot.Immutable;
  * A <strong>PathListProperty</strong> class is an composite ending with a ListKey objects.
  * The PathListProperty class can be used wherever is used ListKey - with a one important <strong>exception</strong>:
  * do not send the PathListProperty object to methods Ujo.readValue(...) and Ujo.writeValue(...) !!!
- * <p/>Note that method isDirect() returns a false in this class. For this reason, the Key is not included
+ * <p>Note that method isDirect() returns a false in this class. For this reason, the Key is not included
  * in the list returned by Ujo.readProperties().
  *
  * @author Pavel Ponec

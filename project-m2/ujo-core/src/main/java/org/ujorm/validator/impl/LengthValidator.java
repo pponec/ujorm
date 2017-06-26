@@ -28,11 +28,11 @@ import org.ujorm.validator.ValidationError;
 public class LengthValidator<VALUE extends String> extends AbstractValidator<VALUE> {
 
     /** String minimal length (inclusive) */
-    public static final MessageArg<Integer> MIN = new MessageArg<Integer>("MIN");
+    public static final MessageArg<Integer> MIN = new MessageArg<>("MIN");
     /** String maximal length (inclusive) */
-    public static final MessageArg<Integer> MAX = new MessageArg<Integer>("MAX");
+    public static final MessageArg<Integer> MAX = new MessageArg<>("MAX");
     /** Current length of the text value */
-    public static final MessageArg<Integer> LENGTH = new MessageArg<Integer>("LENGTH");
+    public static final MessageArg<Integer> LENGTH = new MessageArg<>("LENGTH");
 
     /** String minimal length (inclusive) */
     private final int min;
@@ -58,6 +58,7 @@ public class LengthValidator<VALUE extends String> extends AbstractValidator<VAL
     }
 
     /** {@inheritDoc} */
+    @Override
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
         final int length = input != null ? input.length() : min;
         final boolean failed = length < min || length > max;
@@ -89,6 +90,7 @@ public class LengthValidator<VALUE extends String> extends AbstractValidator<VAL
      *   <li>org.ujorm..minLimit</li>
      * </ul>
      */
+    @Override
     public String getLocalizationKey() {
         return KEY_PREFIX + (min==max
                 ? "exactStringLength"

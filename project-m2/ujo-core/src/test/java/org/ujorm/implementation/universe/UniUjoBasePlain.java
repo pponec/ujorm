@@ -45,10 +45,12 @@ public class UniUjoBasePlain implements Ujo {
         return pf.getKeys();
     }
 
+    @Override
     public Object readValue(Key key) {
         return data==null ? data : data[key.getIndex()];
     }
 
+    @Override
     public void writeValue(Key key, Object value) {
         if (data==null) {
             data = new Object[readKeys().size()];
@@ -56,6 +58,7 @@ public class UniUjoBasePlain implements Ujo {
         data[key.getIndex()] = value;
     }
 
+    @Override
     public boolean readAuthorization(UjoAction action, Key key, Object value) {
         return true;
     }

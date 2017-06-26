@@ -268,15 +268,13 @@ public class KeyRingTest extends TestCase {
     @SuppressWarnings("unchecked")
     private <T extends Serializable> T serialize(T object) throws Exception {
         ByteArrayOutputStream os = new ByteArrayOutputStream(8000);
-        ObjectOutputStream encoder = new ObjectOutputStream(os);
-        encoder.writeObject(object);
-        encoder.close();
+        try (ObjectOutputStream encoder = new ObjectOutputStream(os)) {
+            encoder.writeObject(object);
+        }
         //
         InputStream is = new ByteArrayInputStream(os.toByteArray());
-        ObjectInputStream decoder = new ObjectInputStream(is);
-        Object result = (Serializable) decoder.readObject();
-        decoder.close();
-
-        return (T) result;
+        try (ObjectInputStream decoder = new ObjectInputStream(is)) {
+            return (T) decoder.readObject();
+        }
     }
 }

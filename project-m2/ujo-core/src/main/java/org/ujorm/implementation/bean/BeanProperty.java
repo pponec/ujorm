@@ -83,14 +83,14 @@ public class BeanProperty<UJO extends Ujo,VALUE>
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> BeanProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
-        return new BeanProperty<UJO,VALUE> (name, type, index);
+        return new BeanProperty<> (name, type, index);
     }
 
     /** A Property Factory creates new key and assigns a next key index.
      * @hidden
      */
     public static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newInstance(String name, VALUE value, int index) {
-        return new BeanProperty<UJO, VALUE>(name, value, index);
+        return new BeanProperty<>(name, value, index);
     }
 
 

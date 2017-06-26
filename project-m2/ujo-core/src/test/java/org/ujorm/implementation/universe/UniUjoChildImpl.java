@@ -17,7 +17,7 @@ import org.ujorm.*;
  */
 public class UniUjoChildImpl implements UniUjoInterfaceChild {
 
-    private Object[] data = new Object[KEY_SIZE];
+    private final Object[] data = new Object[KEY_SIZE];
 
     @Override
     public Object readValue(Key key) {

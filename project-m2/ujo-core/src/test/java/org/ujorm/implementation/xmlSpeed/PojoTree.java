@@ -27,7 +27,7 @@ public class PojoTree
 {
     
     /** List<PojoTree> */
-    private ArrayList<PojoTree> children = new ArrayList<PojoTree>();
+    private ArrayList<PojoTree> children = new ArrayList<>();
     
     /** Creates a new instance of UnifiedDataObjectImlp */
     public PojoTree() {

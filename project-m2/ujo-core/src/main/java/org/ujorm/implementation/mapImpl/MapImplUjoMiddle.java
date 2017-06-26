@@ -18,7 +18,6 @@ package org.ujorm.implementation.mapImpl;
 import java.io.Serializable;
 import java.util.HashMap;
 import org.ujorm.Key;
-import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.Property;
@@ -26,7 +25,7 @@ import org.ujorm.extensions.UjoMiddle;
 
 /**
  * This is an middle extended implementation of a setter and getter methods for an easier access for developpers.
- * <br />Notes:
+ * <br>Notes:
  * <ul>
  *   <li>the NULL key is not supported in this implementation</li>
  *   <li>the map implementation is a proxy to an internal Map&lt;String,Object&gt; object</li>
@@ -66,12 +65,14 @@ abstract public class MapImplUjoMiddle<UJO extends MapImplUjoMiddle>
 
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
+    @Override
     public <VALUE> VALUE get(final Key<? super UJO, VALUE> key) {
         return key.of((UJO)this);
     }
 
     /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings("unchecked")
+    @Override
     public <VALUE> Ujo set(final Key<? super UJO, VALUE> key, final VALUE value) {
         assert UjoManager.assertDirectAssign(key, value, this);
         key.setValue((UJO)this, value);
@@ -85,6 +86,7 @@ abstract public class MapImplUjoMiddle<UJO extends MapImplUjoMiddle>
      * @param key A Property
      * @return If key type is "container" then result is null.
      */
+    @Override
     public String getText(final Key key) {
         return readUjoManager().getText(this, key, null);
     }
@@ -95,6 +97,7 @@ abstract public class MapImplUjoMiddle<UJO extends MapImplUjoMiddle>
      * @param key Property
      * @param value String value
      */
+    @Override
     public void setText(final Key key, final String value) {
         readUjoManager().setText(this, key, value, null, null);
     }

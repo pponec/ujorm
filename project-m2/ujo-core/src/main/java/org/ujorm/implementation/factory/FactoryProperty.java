@@ -70,6 +70,7 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
      * <br>WARNING: There is recommended to call the method from the method <code>Ujo.readProperty(...)</code> only.
      * <br>A direct call can bypass a important actions implemented in the <code>readProperty(method)</code>.
      */
+    @Override
     public VALUE readValue(final UJO ujo) throws IllegalArgumentException {
         try {
             final VALUE result = constructor!=null
@@ -87,6 +88,7 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
      * <br>WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.
      * <br>A direct call can bypass a important actions implemented in the writeProperty(method).
      */
+    @Override
     public void writeValue(final UJO ujo, final VALUE value) throws IllegalArgumentException {
         throw new UnsupportedOperationException();
     }
@@ -103,7 +105,7 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> FactoryProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
-        return new FactoryProperty<UJO,VALUE>(name, type, index);
+        return new FactoryProperty<>(name, type, index);
     }
 
     /** Returns a new instance of the Key where the default value is null.

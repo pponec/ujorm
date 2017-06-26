@@ -168,7 +168,7 @@ public abstract class UjoTools implements Comparator<Key> {
      * <li>UjoCloneable</li>
      * <li>List</li>
      * <li>array of privitive values</li>
-     * <ul>
+     * </ul>
      *
      * In other cases the same instance is used. The feature can be useful for a Final object like a String, Integer etc.
      *
@@ -335,7 +335,7 @@ public abstract class UjoTools implements Comparator<Key> {
      * @param ujo Type of the Ujo object (Nonnull)
      * @param key Required key (Nullable)
      * @return Returns null in case that result was not found
-     * @throws IllegalAccessException Can't get fields.
+     * @throws IllegalStateException Can't get fields.
      */
     public static Field getPropertyField(Ujo ujo, Key key) throws IllegalStateException {
         return getPropertyField(ujo.getClass(), key, false);
@@ -346,8 +346,7 @@ public abstract class UjoTools implements Comparator<Key> {
      * @param type Type of the Ujo object (Nonnull)
      * @param key Required key (Nullable)
      * @return Returns null in case that result was not found
-     * @throws IllegalAccessException Can't get fields.
-     * @throws IllegalArgumentException The 'key' is not found in the class 'type'.
+     * @throws IllegalStateException The 'key' is not found in the class 'type'.
      */
     public static Field getPropertyField(Class<?> type, Key key) throws IllegalStateException {
         return getPropertyField(type, key, false);
@@ -359,7 +358,7 @@ public abstract class UjoTools implements Comparator<Key> {
      * @param key Required key (Nullable)
      * @param throwException in case the result is {@code null} than throw the exception {@link IllegalArgumentException}.
      * @return Nonnull value always.
-     * @throws IllegalAccessException Can't get fields.
+     * @throws IllegalStateException Can't get fields.
      * @throws IllegalArgumentException The key 'key' is not found in the class 'type'.
      */
     public static Field getPropertyField(Class<?> type, Key key, boolean throwException) throws IllegalStateException, IllegalArgumentException {

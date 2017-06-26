@@ -29,7 +29,7 @@ import org.ujorm.Ujo;
  * <ul>
  *    <li>like a generic UJO object validator (2)</li>
  *    <li>to create a query on the UJO list (1)</li>
- *    <li>the class is used to build 'SQL query' in the module </strong>ujo-orm</strong> (since 0.90)</li>
+ *    <li>the class is used to build 'SQL query' in the module <strong>ujo-orm</strong> (since 0.90)</li>
  * </ul>
  *
  * There is allowed to join two instances (based on the same BO) to a binary tree by a new Criterion.
@@ -86,7 +86,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
     public List<U> evaluate(final Iterable<U> ujoList) {
-        final List<U> result = new ArrayList<U>();
+        final List<U> result = new ArrayList<>();
         for (final U ujo : ujoList) {
             if (evaluate(ujo)) {
                 result.add(ujo);
@@ -99,7 +99,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
     public List<U> evaluate(final U ... ujoList) {
-        final List<U> result = new ArrayList<U>();
+        final List<U> result = new ArrayList<>();
         for (final U ujo : ujoList) {
             if (evaluate(ujo)) {
                 result.add(ujo);
@@ -147,7 +147,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
                 case AND: return rightValue ? this : criterion;
             }
         }
-        return new BinaryCriterion<U>(this, operator, criterion);
+        return new BinaryCriterion<>(this, operator, criterion);
     }
 
     /**
@@ -224,7 +224,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         , Operator operator
         , TYPE value
         ) {
-        return new ValueCriterion<U>(key, operator, value);
+        return new ValueCriterion<>(key, operator, value);
     }
 
     /**
@@ -243,7 +243,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         , Operator operator
         , Key<?,TYPE> value
         ) {
-        return new ValueCriterion<U>(key, operator, value);
+        return new ValueCriterion<>(key, operator, value);
     }
 
     /**
@@ -260,7 +260,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         ( Key<U,TYPE> key
         , TYPE value
         ) {
-        return new ValueCriterion<U>(key, null, value);
+        return new ValueCriterion<>(key, null, value);
     }
 
     /**
@@ -276,7 +276,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
 
         return list.isEmpty()
                 ? Criterion.constant(key, false)
-                : new ValueCriterion<U>(key, Operator.IN, list.toArray())
+                : new ValueCriterion<>(key, Operator.IN, list.toArray())
                 ;
     }
 
@@ -292,7 +292,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         ) {
         return list.isEmpty()
                 ? Criterion.constant(key, true)
-                : new ValueCriterion<U>(key, Operator.NOT_IN, list.toArray())
+                : new ValueCriterion<>(key, Operator.NOT_IN, list.toArray())
                 ;
     }
 
@@ -308,7 +308,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         ) {
         return list.length==0
                 ? Criterion.constant(key, false)
-                : new ValueCriterion<U>(key, Operator.IN, list);
+                : new ValueCriterion<>(key, Operator.IN, list);
     }
 
     /**
@@ -323,7 +323,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         ) {
         return list.length==0
                 ? Criterion.constant(key, true)
-                : new ValueCriterion<U>(key, Operator.NOT_IN, list)
+                : new ValueCriterion<>(key, Operator.NOT_IN, list)
                 ;
     }
 
@@ -382,7 +382,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
             for (int i = 0, max = values.length; i < max; i++) {
                 values[i] = relatedKey.of(it.next());
             }
-            return new ValueCriterion<U>(key
+            return new ValueCriterion<>(key
                     , positive ? Operator.IN : Operator.NOT_IN
                     , values
                     );
@@ -400,7 +400,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         ( Key<U,TYPE> key
         , Key<U,TYPE> value
         ) {
-        return new ValueCriterion<U>(key, null, value);
+        return new ValueCriterion<>(key, null, value);
     }
 
     /**
@@ -414,7 +414,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @see Operator#EQ
      */
     public static <U extends Ujo, TYPE> Criterion<U> whereNull(Key<U,TYPE> key) {
-        return new ValueCriterion<U>(key, Operator.EQ, (TYPE)null);
+        return new ValueCriterion<>(key, Operator.EQ, (TYPE)null);
     }
 
     /**
@@ -428,7 +428,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @see Operator#NOT_EQ
      */
     public static <U extends Ujo, TYPE> Criterion<U> whereNotNull(Key<U,TYPE> key) {
-        return new ValueCriterion<U>(key, Operator.NOT_EQ, (TYPE)null);
+        return new ValueCriterion<>(key, Operator.NOT_EQ, (TYPE)null);
     }
 
     /** This is an constane criterion independed on an entity.
@@ -451,7 +451,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @see Operator#XFIXED
      */
     public static <U extends Ujo> Criterion<U> constant(Key<U,?> key, boolean constant) {
-        return new ValueCriterion<U>(key, Operator.XFIXED, constant);
+        return new ValueCriterion<>(key, Operator.XFIXED, constant);
     }
 
     /** The method creates a new Criterion for a native condition (called Native Criterion) in SQL statejemt format.
@@ -470,7 +470,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @see Operator#XSQL
      */
     public static <U extends Ujo> Criterion<U> forSql(Key<U,?> key, String sqlCondition) {
-        return new ValueCriterion<U>(key, Operator.XSQL, sqlCondition);
+        return new ValueCriterion<>(key, Operator.XSQL, sqlCondition);
     }
 
     /** The method creates a new Criterion for a native condition (called Native Criterion) in SQL statejemt format.
@@ -491,7 +491,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @see Operator#XSQL
      */
     public static <U extends Ujo, VALUE> Criterion<U> forSql(Key<U,VALUE> key, String sqlTemplate, VALUE value) {
-        return new ValueCriterion<U>(key, Operator.XSQL, new TemplateValue(sqlTemplate, value));
+        return new ValueCriterion<>(key, Operator.XSQL, new TemplateValue(sqlTemplate, value));
     }
 
     /** The method creates a new Criterion for a native condition (called Native Criterion) in SQL statejemt format.
@@ -512,7 +512,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @see Operator#XSQL
      */
     public static <U extends Ujo, VALUE> Criterion<U> forSqlUnchecked(Key<U,VALUE> key, String sqlTemplate, Object value) {
-        return new ValueCriterion<U>(key, Operator.XSQL, new TemplateValue(sqlTemplate, value));
+        return new ValueCriterion<>(key, Operator.XSQL, new TemplateValue(sqlTemplate, value));
     }
 
     /** This is a constant criterion independed on the key value or the ujo entity.

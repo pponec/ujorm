@@ -179,7 +179,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
 
     /** Create new instance */
     public static <UJO extends Ujo> UjoManagerRBundle<UJO> of(Class<UJO> ujoClass, Key ... keys) {
-        return new UjoManagerRBundle<UJO>(ujoClass, keys);
+        return new UjoManagerRBundle<>(ujoClass, keys);
     }
 
     /** Create new instance
@@ -193,7 +193,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
      * @deprecated Use the method {@code of(...)}
      */
     public static <UJO extends Ujo> UjoManagerRBundle<UJO> getInstance(Class<UJO> ujoClass, Key ... keys) {
-        return new UjoManagerRBundle<UJO>(ujoClass, keys);
+        return new UjoManagerRBundle<>(ujoClass, keys);
     }
 
 }

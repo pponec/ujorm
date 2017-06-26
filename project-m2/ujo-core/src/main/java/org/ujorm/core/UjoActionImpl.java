@@ -48,11 +48,13 @@ public class UjoActionImpl implements UjoAction {
      * </ul>
      * <br>The number can be useful for a resolution of an action for a different purpose (e.g. export to 2 different XML files).
      */
+    @Override
     public final int getType() {
         return type;
     }
 
     /** Returns a conetxt of the action. The value is dedicated to a user usage and the value can be null. */
+    @Override
     public final Object getContext() {
         return context;
     }

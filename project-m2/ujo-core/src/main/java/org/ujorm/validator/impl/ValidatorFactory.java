@@ -297,7 +297,7 @@ public abstract class ValidatorFactory {
      * @see NotNullValidator
      */
     public static <VALUE extends Date> Validator<VALUE> past() {
-        return new DateValidator<VALUE>(true);
+        return new DateValidator<>(true);
     }
 
     /** Check the date is in the past or equals to now in compare to the local time
@@ -314,7 +314,7 @@ public abstract class ValidatorFactory {
      * @see StringLengthValidator
      */
     public static Validator<String> length(int max) {
-        return new LengthValidator<String>(max);
+        return new LengthValidator<>(max);
     }
 
     /** Check the maximal length of the String.
@@ -334,7 +334,7 @@ public abstract class ValidatorFactory {
      * @see StringLengthValidator
      */
     public static Validator<String> length(int min, int max) {
-        return new LengthValidator<String>(min, max);
+        return new LengthValidator<>(min, max);
     }
 
     /** Check the minimal and maximal length of the String.
@@ -358,7 +358,7 @@ public abstract class ValidatorFactory {
      */
     @Deprecated
     public static Validator<String> size(int min, int max) {
-        return new LengthValidator<String>(min, max);
+        return new LengthValidator<>(min, max);
     }
 
     /** The validator allows to read only default values. No value is allowed including the {@code null} value. */
@@ -370,14 +370,14 @@ public abstract class ValidatorFactory {
      * @param valueType Argument to clean a type checking only
      */
     public static <T> Validator<T> readOnly(Class<T> valueType) {
-        return new ReadOnlyValidator<T>(true);
+        return new ReadOnlyValidator<>(true);
     }
 
     /** It is a logical empty validator. Each value is allowed.
      * @deprecated Use the {@link #everything()} method rather */
     @Deprecated
     public static Validator allAllowed() {
-        return new ReadOnlyValidator<String>(false);
+        return new ReadOnlyValidator<>(false);
     }
 
     /** It is a logical empty validator. Each value is allowed. */
@@ -396,7 +396,7 @@ public abstract class ValidatorFactory {
      * @see CriterionValidator
      */
     public static <VALUE extends Ujo> Validator<VALUE> relation(Criterion<VALUE> criterion) {
-        return new CriterionValidator<VALUE>(criterion);
+        return new CriterionValidator<>(criterion);
     }
 
     /** Check a content of another related Ujo object using the Criterion.
@@ -422,7 +422,7 @@ public abstract class ValidatorFactory {
 
     /** Check the type of value along a Key, where the Key argument in the test time is mandatory. */
     public static <VALUE extends Object> Validator<VALUE> type(Class<VALUE> type) {
-        return new TypeValidator<VALUE>(type);
+        return new TypeValidator<>(type);
     }
 
     /** Check the type of value along a Key, where the Key argument in the test time is mandatory. */

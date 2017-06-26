@@ -43,26 +43,31 @@ final public class UjoLoggerFactory implements UjoLogger {
     }
 
     /** {@inheritdoc} */
+    @Override
     public boolean isLoggable(final Level level) {
         return logger.isLoggable(level);
     }
 
     /** {@inheritdoc} */
+    @Override
     public void log(final Level level, final String message) {
         logger.log(level, message);
     }
 
     /** {@inheritdoc} */
+    @Override
     public void log(final Level level, final String message, final Throwable e) {
         logger.log(level, message, e);
     }
 
     /** {@inheritdoc} */
+    @Override
     public void log(final Level level, final String message, final Object parameter) {
         logger.log(level, message, parameter);
     }
 
     /** {@inheritdoc} */
+    @Override
     public void log(final Level level, final String message, final Object... parameters) {
         logger.log(level, message, parameters);
     }

@@ -56,6 +56,7 @@ public class ConstantsValidator<VALUE> extends AbstractValidator<VALUE> {
     }
 
     /** {@inheritDoc} */
+    @Override
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean ok = input==null
                     || ( forbidden
@@ -97,6 +98,7 @@ public class ConstantsValidator<VALUE> extends AbstractValidator<VALUE> {
      *   <li>org.ujorm.values.required</li>
      * </ul>
      */
+    @Override
     public String getLocalizationKey() {
         return KEY_PREFIX + "constants." + (forbidden ? "forbidden" : "required");
     }

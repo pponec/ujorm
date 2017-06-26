@@ -41,6 +41,7 @@ final public class UjoPropertySetter implements Setter {
     /**
      * @param target Value must by type of Ujo
      */
+    @Override
     public final void set(final Object target, final Object value, final SessionFactoryImplementor factory) throws HibernateException {
         if (ujoProperty == null) {
             ujoProperty = ((Ujo)target).readKeys().findDirectKey(propertyName, true);
@@ -51,6 +52,7 @@ final public class UjoPropertySetter implements Setter {
     /**
      * inspired from BackrefPropertyAccessor
      **/
+    @Override
     public String getMethodName() {
         return propertyName;
     }
@@ -58,6 +60,7 @@ final public class UjoPropertySetter implements Setter {
     /**
      * inspired from BackrefPropertyAccessor
      **/
+    @Override
     public Method getMethod() {
         return null;
     }

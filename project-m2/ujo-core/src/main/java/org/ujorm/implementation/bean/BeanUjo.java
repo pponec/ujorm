@@ -114,7 +114,7 @@ public abstract class BeanUjo extends SuperAbstractUjo {
      * @hidden
      */
     protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newKey(String name, VALUE value) {
-        return new BeanProperty<UJO, VALUE>(name, value, Property.UNDEFINED_INDEX);
+        return new BeanProperty<>(name, value, Property.UNDEFINED_INDEX);
     }
 
     /** A ListProperty Factory for a <strong>BeanUjo</strong> object.
@@ -122,7 +122,7 @@ public abstract class BeanUjo extends SuperAbstractUjo {
      * @hidden
      */
     protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newListKey(String name) {
-        return new BeanPropertyList<UJO,ITEM> (name, null, Property.UNDEFINED_INDEX);
+        return new BeanPropertyList<> (name, null, Property.UNDEFINED_INDEX);
     }
 
 }

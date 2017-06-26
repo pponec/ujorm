@@ -32,6 +32,7 @@ public class UjoManagerRBundleTest extends MyTestCase {
         return UjoManagerCSVTest.class;
     }
 
+    @Override
     protected void setUp() throws Exception {
         manager = UjoManagerRBundle.of(UjoCSV.class);
         context = "Bundle-Context";

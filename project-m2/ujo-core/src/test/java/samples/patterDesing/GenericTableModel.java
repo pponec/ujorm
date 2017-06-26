@@ -1,6 +1,5 @@
 package samples.patterDesing;
 
-import java.util.List;
 import javax.swing.table.TableModel;
 
 /**

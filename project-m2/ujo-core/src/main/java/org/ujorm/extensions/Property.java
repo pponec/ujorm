@@ -110,7 +110,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
                 }
                 break;
             case INDEX:
-                final int idxParam = ((Integer)value).intValue();
+                final int idxParam = (Integer)value;
                 if (this.index < 0 && idxParam >= 0) {
                     this.index = idxParam;
                 }
@@ -282,8 +282,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     /**
      * It is a basic method for getting an appropriate type safe value from an Ujo object.
      * <br>For the getting value is used internally a method
-     *     {@link AbstractUjo#readValue(org.ujorm.Key)}
-     * </a>.
+     *     {@link AbstractUjo#readValue(org.ujorm.Key)} .
      * <br>Note: this method replaces the value of <strong>null</strong> for default
      * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the ujo object.
@@ -296,8 +295,8 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
         return result!= null ? (VALUE) result : defaultValue;
     }
 
-    /** Returns a Default key value. The value replace the <code>null<code> value in the method Ujo.readValue(...).
-     * If the default value is not modified, returns the <code>null<code>.
+    /** Returns a Default key value. The value replace the {@code null} value in the method Ujo.readValue(...).
+     * If the default value is not modified, returns the {@code null}.
      */
     @Override
     public VALUE getDefault() {
@@ -305,7 +304,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     }
 
     /** Assign a Default value. The default value may be modified after locking - at your own risk.
-     * <br />WARNING: the change of the default value modifies all values in all instances with the null value of the current key!
+     * <br>WARNING: the change of the default value modifies all values in all instances with the null value of the current key!
      */
     @SuppressWarnings("unchecked")
     public <PROPERTY extends Property> PROPERTY writeDefault(VALUE value) {
@@ -333,7 +332,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     /**
      * If the key is the direct key of the related UJO class then method returns the TRUE value.
      * The return value false means, that key is type of {@link CompositeKey}.
-     * <br />
+     * <br>
      * Note: The composite keys are excluded from from function Ujo.readProperties() by default
      * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
      * @see CompositeKey
@@ -341,6 +340,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
      * @deprecated use rather a negation of the method {@link #isComposite() }
      */
     @Deprecated
+    @Override
     public final boolean isDirect() {
         return ! isComposite();
     }
@@ -381,6 +381,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     }
 
     /** Get the ujorm key validator or return the {@code null} value if no validator was assigned */
+    @Override
     public Validator<VALUE> getValidator() {
         return validator;
     }
@@ -397,11 +398,13 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     /** Create new composite (indirect) instance for an object type of ListKey.
      * @since 0.92
      */
+    @Override
     public <T> ListKey<U, T> add(ListKey<? super VALUE, T> key) {
         return new PathListProperty<U, T>(PathProperty.DEFAULT_ALIAS, (Key)this, key);
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public <T> CompositeKey<U, T> add(Key<? super VALUE, T> key, String alias) {
         return new PathProperty(alias, (Key)this, key);
     }
@@ -411,7 +414,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
      */
     @Override
     public CompositeKey<U, VALUE> alias(String alias) {
-        return new PathProperty<U, VALUE>(alias, this);
+        return new PathProperty<>(alias, this);
     }
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
@@ -465,6 +468,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     /** Compare to another Key object by the index and name of the key.
      * @since 1.20
      */
+    @Override
     public int compareTo(final Key p) {
         return index<p.getIndex() ? -1
              : index>p.getIndex() ?  1
@@ -497,7 +501,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     }
 
     /** Returns the full name of the Key including a simple domain class.
-     * <br />Example: Person.id
+     * <br>Example: Person.id
      * @deprecated Use the method {@link #getFullName()} rather.
      */
     @Deprecated
@@ -508,7 +512,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
     /**
      * Returns the full name of the Key including all attributes.
-     * <br />Example: Person.id {index=0, ascending=false, ...}
+     * <br>Example: Person.id {index=0, ascending=false, ...}
      * @param extended arguments false calls the method {@link #getFullName()} only.
      * @return the full name of the Key including all attributes.
      */
@@ -594,6 +598,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
+    @Override
     public Criterion<U> whereFilled() {
         final Criterion<U> result = whereNotNull()
             .and(Criterion.where(this, Operator.NOT_EQ, (VALUE) getEmptyValue()))
@@ -603,6 +608,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
+    @Override
     public Criterion<U> whereNotFilled(){
         final Criterion<U> result = whereNull()
             .or(new ValueCriterion(this, Operator.EQ, getEmptyValue()))
@@ -784,7 +790,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
 
     /** A Property Factory where a key type is related from from default value.
-     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
+     * <br>Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     @SuppressWarnings("unchecked")
@@ -888,7 +894,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
 
     /** A Property Factory where a key type is related from from default value.
-     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
+     * <br>Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use the of(...) operator
      * @hidden
      */

@@ -23,9 +23,9 @@ import org.ujorm.validator.ValidationException;
  * A <strong>CompositeKey</strong> interface is a composite of more Key objects.
  * The CompositeKey class can be used wherever is used Key - with a one important <strong>exception</strong>:
  * do not send the CompositeKey object to methods Ujo.readValue(...) and Ujo.writeValue(...) directly!!!
- * <p/>There is preferred two methods UjoManager.setValue(...) / UjoManager.getValue(...)
+ * <p>There is preferred two methods UjoManager.setValue(...) / UjoManager.getValue(...)
  * to write and read a value instead of this - or use some type safe solution by UjoExt or a method of Key.
- * <p/>Note that method isDirect() returns a false in this class. For this reason, the key is not included
+ * <p>Note that method isDirect() returns a false in this class. For this reason, the key is not included
  * in the list returned by Ujo.readProperties().
  *
  * @author Pavel Ponec
@@ -42,7 +42,7 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
     /** Get the first key of the current object. The result is direct key always. */
     public <U extends Ujo> Key<U, VALUE> getFirstKey();
 
-    /** Export all <string>direct</strong> keys to the list from parameter. */
+    /** Export all <strong>direct</strong> keys to the list from parameter. */
     public void exportKeys(Collection<Key<?,?>> result);
 
     /** Returns a {@code directKey} for the required level.
@@ -53,7 +53,7 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
 
     /** The method writes a {@code value} to the domain object
      * and creates all missing relations.
-     * <br/>The method calls a method
+     * <br>The method calls a method
      * {@link Ujo#writeValue(org.ujorm.Key, java.lang.Object)}
      * always.
      * @param ujo Related Ujo object
@@ -96,7 +96,7 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
      * @param level Level no. 0 returns the {@link null} value always.
      * @return The value is used to distinguish the same entities
      * in different spaces. Examples of use are different alias for a table in SQL queries.
-     * <br/>The attribute is not serializable in the current Ujorm release.
+     * <br>The attribute is not serializable in the current Ujorm release.
      * @see #getCompositeCount()
      */
     public String getAlias(int level);

@@ -25,12 +25,7 @@ public class MapUjoTest extends MyTestCase {
         TestSuite suite = new TestSuite(MapUjoTest.class);
         return suite;
     }
-    
-    protected void setUp() throws Exception {
-    }
-    
-    protected void tearDown() throws Exception {
-    }
+   
     
     public void testSpeedTime() throws Throwable {
         System.out.println("M1:testTime: " + suite().toString());

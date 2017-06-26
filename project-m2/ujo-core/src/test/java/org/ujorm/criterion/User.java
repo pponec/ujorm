@@ -34,6 +34,7 @@ public class User<U extends User> extends Person<U> {
     static { f2.lock(); }
 
 
+    @Override
     public void init() {
         super.init();
 

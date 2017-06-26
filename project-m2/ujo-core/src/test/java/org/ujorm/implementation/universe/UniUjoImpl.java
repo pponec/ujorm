@@ -16,7 +16,7 @@ import org.ujorm.*;
  * @author Pavel Ponec
  */
 public class UniUjoImpl implements UniUjoInterface {    
-    private Object[] data = new Object[KEY_SIZE];
+    private final Object[] data = new Object[KEY_SIZE];
 
     @Override
     public KeyList readKeys() {

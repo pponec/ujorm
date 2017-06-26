@@ -60,6 +60,7 @@ abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends AbstractUjoExt<
      * @see BeanProperty#setValue(Ujo,Object) BeanProperty.setValue(Ujo,Object)
      */
     @SuppressWarnings("unchecked")
+    @Override
     public void writeValue(final Key key, final Object value) {
         assert UjoManager.assertDirectAssign(key, value, this);
         ((ValueAgent) key).writeValue(this, value);
@@ -86,14 +87,14 @@ abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends AbstractUjoExt<
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newKey(String name, Class<VALUE> type) {
-        return new BeanProperty<UJO,VALUE> (name, type, Property.UNDEFINED_INDEX);
+        return new BeanProperty<> (name, type, Property.UNDEFINED_INDEX);
     }
 
     /** A Property Factory, a key type is related from the default value.
      * @hidden
      */
     protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newKey(String name, VALUE value) {
-        return new BeanProperty<UJO, VALUE>(name, value, Property.UNDEFINED_INDEX);
+        return new BeanProperty<>(name, value, Property.UNDEFINED_INDEX);
     }
 
     /** A ListProperty Factory for a <strong>BeanUjo</strong> object

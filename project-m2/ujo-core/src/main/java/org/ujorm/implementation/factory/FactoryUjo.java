@@ -57,7 +57,7 @@ public abstract class FactoryUjo extends SuperAbstractUjo {
     @SuppressWarnings("unchecked")
     protected static <UJO extends Ujo,VALUE> FactoryProperty<UJO, VALUE> newKey
         ( String name) {
-        return new FactoryProperty<UJO,VALUE> (name, (Class) null, Property.UNDEFINED_INDEX);
+        return new FactoryProperty<>(name, (Class) null, Property.UNDEFINED_INDEX);
     }
     
 }

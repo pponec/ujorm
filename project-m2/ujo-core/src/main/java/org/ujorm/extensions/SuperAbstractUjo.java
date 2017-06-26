@@ -130,7 +130,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      */
     @Override
     public Object clone(final int depth, final Object context) {
-        return readUjoManager().clone(this, depth, context);
+        return UjoManager.clone(this, depth, context);
     }
 
     // ---- An UjoTextable implementation -----

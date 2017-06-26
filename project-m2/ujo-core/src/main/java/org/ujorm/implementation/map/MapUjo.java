@@ -72,6 +72,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
      *
      * @see Key#setValue(Ujo,Object)
      */
+    @Override
     public void writeValue(final Key key, final Object value) {
         assert UjoManager.assertDirectAssign(key, value, this);
         data.put(key, value);
@@ -86,6 +87,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
      *
      * @see Key#of(Ujo)
      */
+    @Override
     public Object readValue(final Key key) {
         assert !key.isComposite() : "Property must be direct only.";
         return data.get(key);

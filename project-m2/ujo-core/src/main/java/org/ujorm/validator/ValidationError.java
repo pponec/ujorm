@@ -16,7 +16,6 @@
 package org.ujorm.validator;
 
 import java.io.Serializable;
-import java.util.Formatter;
 import java.util.Locale;
 import java.util.Map;
 import org.ujorm.Key;

@@ -29,7 +29,7 @@ import org.ujorm.validator.ValidationError;
  */
 public class CriterionValidator<VALUE extends Ujo> extends AbstractValidator<VALUE> {
 
-    public static final MessageArg<String> CRN = new MessageArg<String>("CRN");
+    public static final MessageArg<String> CRN = new MessageArg<>("CRN");
 
     /** Criterion to validation */
     private final Criterion<VALUE> crn;
@@ -38,6 +38,7 @@ public class CriterionValidator<VALUE extends Ujo> extends AbstractValidator<VAL
         this.crn = crn;
     }
     /** {@inheritDoc} */
+    @Override
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean ok = input==null
                     || crn.evaluate(input);
@@ -61,6 +62,7 @@ public class CriterionValidator<VALUE extends Ujo> extends AbstractValidator<VAL
     }
 
     /** @return Retunrs: "org.ujorm.criterion" */
+    @Override
     public String getLocalizationKey() {
         return KEY_PREFIX + "criterion";
     }

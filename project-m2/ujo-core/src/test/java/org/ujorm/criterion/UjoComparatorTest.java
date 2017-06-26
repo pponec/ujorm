@@ -32,7 +32,7 @@ public class UjoComparatorTest extends MyTestCase {
 
     /** Create new Person */
     private Person<Person> createPerson(String name, Double cash) {
-        final Person<Person> result = new Person<Person>();
+        final Person<Person> result = new Person<>();
         result.set(NAME, name);
         result.set(CASH, cash);
         return result;
@@ -40,7 +40,7 @@ public class UjoComparatorTest extends MyTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        persons = new ArrayList<Person>();
+        persons = new ArrayList<>();
         final Person<Person> p,m,g,e;
 
         persons.add(p = createPerson("John" , 10.0));

@@ -17,8 +17,6 @@
 package org.ujorm.listener;
 
 import java.util.ArrayList;
-import org.ujorm.listener.UjoPropertyChangeEvent;
-import org.ujorm.listener.UjoPropertyChangeListener;
 
 /**
  * Listener
@@ -26,8 +24,9 @@ import org.ujorm.listener.UjoPropertyChangeListener;
  */
 public class Listener implements UjoPropertyChangeListener {
     
-    private ArrayList<UjoPropertyChangeEvent> list = new ArrayList<UjoPropertyChangeEvent>();
+    private final ArrayList<UjoPropertyChangeEvent> list = new ArrayList<>();
 
+    @Override
     public void propertyChange(UjoPropertyChangeEvent evt) {
         list.add(evt);
     }

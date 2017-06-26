@@ -52,11 +52,13 @@ public enum BinaryOperator implements AbstractOperator {
     }
 
     /** The operator is the BINARY type (not a value one) */
+    @Override
     public final boolean isBinary() {
         return false;
     }
 
     /** Returns Enum */
+    @Override
     public final Enum getEnum() {
         return this;
     }

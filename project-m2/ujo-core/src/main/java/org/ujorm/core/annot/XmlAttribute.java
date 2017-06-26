@@ -19,7 +19,7 @@ import java.lang.annotation.*;
 
 /**
  * Use the annotation to mark a Key static field like a XML <strong>Attribute</strong>.
- * <br />All other keys are exported like a XML elements by default.
+ * <br>All other keys are exported like a XML elements by default.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.FIELD)

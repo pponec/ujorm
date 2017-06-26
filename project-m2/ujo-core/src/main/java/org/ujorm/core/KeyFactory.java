@@ -120,7 +120,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public KeyFactory(Class<?> holder, boolean propertyCamelCase, Iterable<? extends Key<?,?>> abstractSuperKeys) {
-        this.tmpStore = new InnerDataStore<UJO>(holder, propertyCamelCase, abstractSuperKeys);
+        this.tmpStore = new InnerDataStore<>(holder, propertyCamelCase, abstractSuperKeys);
     }
 
     /** Get a KeyList from a super class or interfaces  */
@@ -145,7 +145,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
      */
     protected final Iterable<? extends Key<?,?>> getSuperKeys(Class<?> holder) {
         if (holder.isInterface()) {
-            final List<Key<?,?>> keyList = new ArrayList<Key<?,?>>();
+            final List<Key<?,?>> keyList = new ArrayList<>();
             for (Class<?> types : holder.getInterfaces()) {
                 for (Key<?, ?> key : readKeys(types)) {
                    keyList.add(key);
@@ -247,7 +247,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Create a key List */
     protected KeyList<UJO> createKeyList() throws IllegalStateException {
-        final List<Key<UJO,?>> result = new ArrayList<Key<UJO,?>>(tmpStore.propertyList.size() + 8);
+        final List<Key<UJO,?>> result = new ArrayList<>(tmpStore.propertyList.size() + 8);
         try {
             for (Key key : createSuperKeys()) {
                 result.add(key);
@@ -490,7 +490,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         /** Empty Key List */
         private static final Iterable<? extends Key<?,?>> EMPYT_KEYS = Collections.emptyList();
         /** Empty constant */
-        private static final InnerDataStore<Ujo> EMPTY = new InnerDataStore<Ujo>(Ujo.class, false, null);
+        private static final InnerDataStore<Ujo> EMPTY = new InnerDataStore<>(Ujo.class, false, null);
         /** External keys */
         private final Iterable<? extends Key<?,?>> superKeys;
         /** The Ujo type is serialized holder of the Fields*/
@@ -567,7 +567,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         /** Get all UjoPorperty fields */
         public List<Field> getFields() {
             final Field[] fields = holder.getFields();
-            final List<Field> result = new LinkedList<Field>();
+            final List<Field> result = new LinkedList<>();
             for (int j = 0; j < fields.length; j++) {
                 final Field field = fields[j];
                 if (field.getModifiers() == UjoManager.PROPERTY_MODIFIER
@@ -634,7 +634,6 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
         /** Return an instance of the {@link KeyFactory} class
          * @param baseClass Base class
-         * @param propertyCamelCase {@link #CAMEL_CASE}
          * @return Return an instance of the {@link KeyFactory} class
          */
         @SuppressWarnings("unchecked")
@@ -644,7 +643,6 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
         /** Return an instance of the {@link KeyFactory} class.
          * @param baseClass The domain class
-         * @param propertyCamelCase {@link #CAMEL_CASE}
          * @param superKeys Keys form an abstract super class
          */
         @SuppressWarnings("unchecked")
@@ -692,7 +690,6 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
         /** Return an instance of the {@link KeyFactory} class
          * @param baseClass Base class
-         * @param propertyCamelCase {@link #CAMEL_CASE}
          * @return Return an instance of the {@link KeyFactory} class
          */
         @SuppressWarnings("unchecked")
@@ -702,7 +699,6 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
         /** Return an instance of the {@link KeyFactory} class.
          * @param baseClass The domain class
-         * @param propertyCamelCase {@link #CAMEL_CASE}
          * @param superKeys Keys form an abstract super class
          */
         @SuppressWarnings("unchecked")

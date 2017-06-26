@@ -27,12 +27,6 @@ public class BeanUjoTest extends MyTestCase {
         return suite;
     }
     
-    protected void setUp() throws Exception {
-    }
-    
-    protected void tearDown() throws Exception {
-    }
-    
     /**
      * Test of readValue method, of class org.ujorm.hmapImlp.AUnifiedDataObject.
      */

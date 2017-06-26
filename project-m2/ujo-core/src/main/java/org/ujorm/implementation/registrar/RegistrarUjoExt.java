@@ -69,6 +69,7 @@ public class RegistrarUjoExt<UJO extends RegistrarUjoExt> extends MapUjoExt<UJO>
     }
 
     /** Add key Listener */
+    @Override
     public boolean addPropertyChangeListener
         ( Key<? super UJO,?> key
         , Boolean before
@@ -78,6 +79,7 @@ public class RegistrarUjoExt<UJO extends RegistrarUjoExt> extends MapUjoExt<UJO>
     }
 
     /** Remove key Listener */
+    @Override
     public boolean removePropertyChangeListener
         ( Key<? super UJO,?> key
         , Boolean before

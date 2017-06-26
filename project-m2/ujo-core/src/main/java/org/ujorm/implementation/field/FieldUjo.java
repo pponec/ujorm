@@ -101,7 +101,7 @@ public abstract class FieldUjo extends SuperAbstractUjo {
     protected static <UJO extends Ujo,VALUE> FieldProperty<UJO, VALUE> newKey
         ( String name, ValueAgent<UJO, VALUE> agent
         ) {
-        return new FieldProperty<UJO,VALUE> (name, (Class) null, -1, agent);
+        return new FieldProperty<> (name, (Class) null, -1, agent);
     }
 
     /** A Property Factory creates a new key and assigns a next key index.
@@ -112,7 +112,7 @@ public abstract class FieldUjo extends SuperAbstractUjo {
         , VALUE value
         , ValueAgent<UJO, VALUE> agent
         ) {
-        return new FieldProperty<UJO, VALUE>(name, value, -1, agent);
+        return new FieldProperty<>(name, value, -1, agent);
     }
 
     /** A ListProperty Factory for a <strong>FieldUjo</strong> object

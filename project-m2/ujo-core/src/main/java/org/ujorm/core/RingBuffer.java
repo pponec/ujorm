@@ -148,7 +148,7 @@ final public class RingBuffer implements CharSequence {
     /**
      * Find a word betveen beg and end text from current cursor and TRIM the result.
      * The method is designed for a very large data source (a character stream).
-     * <br/>
+     * <br>
      * Sample:
      * <pre>
      *    String text = "xxx ${abc} def";
@@ -168,7 +168,7 @@ final public class RingBuffer implements CharSequence {
     /**
      * Find a word betveen beg and end text from current cursor and TRIM the result.
      * The method is designed for a very large data source (a character stream).
-     * <br/>
+     * <br>
      * Sample:
      * <pre>
      *    String text = "xxx ${abc} def";
@@ -188,7 +188,7 @@ final public class RingBuffer implements CharSequence {
     /**
      * Find a word from current cursor betveen a penultimate and the last tag.
      * The method is designed for a very large data source (a character stream).
-     * <br/>
+     * <br>
      * Sample:
      * <pre>
      *    String text = "xxx ${abc} def";
@@ -207,7 +207,7 @@ final public class RingBuffer implements CharSequence {
     /**
      * Find a word betveen beg and end text from the source start and trim the result.
      * The method is designed for a very large data source (a character stream).
-     * <br/>
+     * <br>
      * @param source a Data source
      * @param beg Start tag (text) where the empty value means find end from the current cursor.
      * @param end End tag (text) must not be empty.
@@ -221,7 +221,7 @@ final public class RingBuffer implements CharSequence {
     /**
      * Find a word betveen beg and end text from the source start.
      * The method is designed for a very large data source (a character stream).
-     * <br/>
+     * <br>
      * Sample:
      * <pre>
      *    String text = "xxx ${abc} def";

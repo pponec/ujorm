@@ -59,7 +59,7 @@ public class CriteriaTool<UJO extends Ujo> {
 
     /** Create a copy of the list and sort it. */
     public List<UJO> select(List<UJO> list, UjoComparator<UJO> comparator) {
-        return comparator.sort(new ArrayList<UJO>(list));
+        return comparator.sort(new ArrayList<>(list));
     }
 
     /** Filter the list from parameter by a Criterion.
@@ -84,7 +84,7 @@ public class CriteriaTool<UJO extends Ujo> {
 
     /** Create a new instance */
     public static <UJO extends Ujo> CriteriaTool<UJO> newInstance() {
-        return new CriteriaTool<UJO>();
+        return new CriteriaTool<>();
     }
 
 }

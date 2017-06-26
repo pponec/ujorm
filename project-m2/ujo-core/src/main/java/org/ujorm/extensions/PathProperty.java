@@ -38,7 +38,7 @@ import org.ujorm.validator.ValidationException;
  * A <strong>PathProperty</strong> class is an composite of a Key objects.
  * The PathProperty class can be used wherever is used Key - with a one important <strong>exception</strong>:
  * do not send the PathProperty object to methods Ujo.readValue(...) and Ujo.writeValue(...) !!!
- * <p/>Note that method isDirect() returns a false in this class. For this reason, the Key is not included
+ * <p>Note that method isDirect() returns a false in this class. For this reason, the Key is not included
  * in the list returned by Ujo.readProperties().
  *
  * @author Pavel Ponec
@@ -213,6 +213,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     }
 
     /** Full key names with no alias */
+    @Override
     final public String getName() {
         if (name == null) {
             name = getName(false);
@@ -443,7 +444,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
 
     /**
      * Returns the full name of the Key including all attributes.
-     * <br />Example: Person.id {index=0, ascending=false, ...}
+     * <br>Example: Person.id {index=0, ascending=false, ...}
      * @param extended argument false calls the method {@link #getFullName()} only.
      * @return the full name of the Key including all attributes.
      */
@@ -475,7 +476,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     /**
      * If the key is the direct key of the related UJO class then method returns the TRUE value.
      * The return value false means, that key is type of {@link CompositeKey}.
-     * <br />
+     * <br>
      * Note: The composite keys are excluded from from function Ujo.readProperties() by default
      * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
      * @see CompositeKey
@@ -523,7 +524,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
                 ;
     }
 
-    /** Export all <string>direct</strong> keys to the list from parameter. */
+    /** Export all <strong>direct</strong> keys to the list from parameter. */
     @SuppressWarnings("unchecked")
     @Override
     public void exportKeys(final Collection<Key<?,?>> result) {
@@ -536,11 +537,13 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @param level Level of the composite key.
      * @see #getCompositeCount()
      */
+    @Override
     public Key<?,?> getDirectKey(int level) {
         return keys[level];
     }
 
     /** Get the last key validator or return the {@code null} value if no validator was assigned */
+    @Override
     public Validator<VALUE> getValidator() {
         return getLastKey().getValidator();
     }
@@ -565,6 +568,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
 
     /** ListKey, method does not support the name spaces */
     @SuppressWarnings("unchecked")
+    @Override
     public <T> ListKey<U, T> add(ListKey<? super VALUE, T> key) {
         Key[] props = new Key[keys.length+1];
         System.arraycopy(keys, 0, props, 0, keys.length);
@@ -578,12 +582,13 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      */
     @Override
     public CompositeKey<U, VALUE> alias(String alias) {
-        return new PathProperty<U, VALUE>(alias, this);
+        return new PathProperty<>(alias, this);
     }
 
     /** Returns a {@code spaceName} for the required level.
      * Level no. 0 returns the {@link null} value always.
      */
+    @Override
     public final String getAlias(int level) {
         return this.aliases == NO_ALIAS
             ? DEFAULT_ALIAS
@@ -682,11 +687,13 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     }
 
     /** {@inheritDoc} */
+    @Override
     public Criterion<U> whereFilled() {
         return Criterion.whereNotNull(this).and(Criterion.where(this, Operator.NOT_EQ, getEmptyValue()));
     }
 
     /** {@inheritDoc} */
+    @Override
     public Criterion<U> whereNotFilled(){
         return Criterion.whereNull(this).or(Criterion.where(this, getEmptyValue()));
     }
@@ -760,10 +767,12 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @see Operator#XSQL
      */
 
+    @Override
     public Criterion<U> forSql(String sqlTemplate, VALUE value) {
         return Criterion.forSql(this, sqlTemplate, value);
     }
 
+    @Override
     public Criterion<U> forSqlUnchecked(String sqlTemplate, Object value) {
         return Criterion.forSqlUnchecked(this, sqlTemplate, value);
     }
@@ -803,8 +812,8 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
             return (Key<UJO, VALUE>) key;
         }
         return key.isComposite()
-            ? new PathProperty<UJO, VALUE>(ascending, DEFAULT_ALIAS, key)
-            : new PathProperty<UJO, VALUE>(new Key[]{key}, NO_ALIAS, ascending)
+            ? new PathProperty<>(ascending, DEFAULT_ALIAS, key)
+            : new PathProperty<>(new Key[]{key}, NO_ALIAS, ascending)
             ;
     }
 
@@ -822,8 +831,8 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      */
     public static <UJO extends Ujo, VALUE> CompositeKey<UJO, VALUE> of(final Key<? super UJO, VALUE> key) {
         return key.isComposite()
-            ? new PathProperty<UJO, VALUE>(key.isAscending(), CompositeKey.DEFAULT_ALIAS, key)
-            : new PathProperty<UJO, VALUE>(new Key[]{key}, NO_ALIAS, key.isAscending())
+            ? new PathProperty<>(key.isAscending(), CompositeKey.DEFAULT_ALIAS, key)
+            : new PathProperty<>(new Key[]{key}, NO_ALIAS, key.isAscending())
             ;
     }
 
@@ -835,8 +844,8 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         , final Key<UJO2, VALUE> key2
         ) {
         return key1.isComposite() || key2.isComposite()
-            ? new PathProperty<UJO1, VALUE>(key2.isAscending(), DEFAULT_ALIAS, key1, key2)
-            : new PathProperty<UJO1, VALUE>(new Key[]{key1,key2}, NO_ALIAS, key2.isAscending())
+            ? new PathProperty<>(key2.isAscending(), DEFAULT_ALIAS, key1, key2)
+            : new PathProperty<>(new Key[]{key1,key2}, NO_ALIAS, key2.isAscending())
             ;
     }
 
@@ -848,7 +857,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         , final Key<UJO2, UJO3> key2
         , final Key<UJO3, VALUE> key3
         ) {
-        return new PathProperty<UJO1, VALUE>(DEFAULT_ALIAS, key1, key2, key3);
+        return new PathProperty<>(DEFAULT_ALIAS, key1, key2, key3);
     }
 
     /** Create new instance
@@ -860,7 +869,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         , final Key<UJO3, UJO4> key3
         , final Key<UJO4, VALUE> key4
         ) {
-        return new PathProperty<UJO1, VALUE>(DEFAULT_ALIAS, key1, key2, key3, key4);
+        return new PathProperty<>(DEFAULT_ALIAS, key1, key2, key3, key4);
     }
 
     /** Create new instance
@@ -896,8 +905,8 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      */
     public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final Key<UJO, VALUE> key) {
         return key.isComposite()
-            ? new PathProperty<UJO, VALUE>(key.isAscending(), CompositeKey.DEFAULT_ALIAS, key)
-            : new PathProperty<UJO, VALUE>(new Key[]{key}, NO_ALIAS, key.isAscending())
+            ? new PathProperty<>(key.isAscending(), CompositeKey.DEFAULT_ALIAS, key)
+            : new PathProperty<>(new Key[]{key}, NO_ALIAS, key.isAscending())
             ;
     }
 
@@ -910,8 +919,8 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         , final Key<UJO2, VALUE> key2
         ) {
         return key1.isComposite() || key2.isComposite()
-            ? new PathProperty<UJO1, VALUE>(key2.isAscending(), DEFAULT_ALIAS, key1, key2)
-            : new PathProperty<UJO1, VALUE>(new Key[]{key1,key2}, NO_ALIAS, key2.isAscending())
+            ? new PathProperty<>(key2.isAscending(), DEFAULT_ALIAS, key1, key2)
+            : new PathProperty<>(new Key[]{key1,key2}, NO_ALIAS, key2.isAscending())
             ;
     }
 
@@ -924,7 +933,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         , final Key<UJO2, UJO3> key2
         , final Key<UJO3, VALUE> key3
         ) {
-        return new PathProperty<UJO1, VALUE>(DEFAULT_ALIAS, key1, key2, key3);
+        return new PathProperty<>(DEFAULT_ALIAS, key1, key2, key3);
     }
 
     /** Create new instance
@@ -937,7 +946,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         , final Key<UJO3, UJO4> key3
         , final Key<UJO4, VALUE> key4
         ) {
-        return new PathProperty<UJO1, VALUE>(DEFAULT_ALIAS, key1, key2, key3, key4);
+        return new PathProperty<>(DEFAULT_ALIAS, key1, key2, key3, key4);
     }
 
 }

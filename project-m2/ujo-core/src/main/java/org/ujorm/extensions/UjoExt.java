@@ -18,7 +18,6 @@ package org.ujorm.extensions;
 
 import java.util.List;
 import org.ujorm.Key;
-import org.ujorm.KeyList;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 

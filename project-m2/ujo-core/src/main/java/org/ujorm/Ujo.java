@@ -56,7 +56,7 @@ public interface Ujo {
      * {@link Key#getValue(org.ujorm.Ujo)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
-     * <br />NOTE: A reaction on an incorrect key depends on the implementation.
+     * <br>NOTE: A reaction on an incorrect key depends on the implementation.
      *
      * @param key The Key must be a direct type only!
      * @return Property value
@@ -73,6 +73,7 @@ public interface Ujo {
      * <br>NOTE: A reaction on an incorrect key depends on the implementation.
      *
      * @param key Property must be a direct type only!
+     * @param value Value
      * @see Key#setValue(Ujo,Object)
      * @see Key#isDirect()
      */

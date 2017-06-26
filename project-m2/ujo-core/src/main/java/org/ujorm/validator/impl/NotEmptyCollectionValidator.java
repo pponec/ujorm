@@ -49,6 +49,7 @@ public class NotEmptyCollectionValidator<VALUE extends Collection> extends Abstr
     }
 
     /** @return Return: "org.ujorm.notEmptyCollection" */
+    @Override
     public String getLocalizationKey() {
         return KEY_PREFIX + "notEmptyCollection";
     }

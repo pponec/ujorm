@@ -47,6 +47,7 @@ public class LocalDateValidator<VALUE extends LocalDate> extends AbstractValidat
     }
 
     /** {@inheritDoc} */
+    @Override
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
 
             final LocalDate now = LocalDate.now();
@@ -81,6 +82,7 @@ public class LocalDateValidator<VALUE extends LocalDate> extends AbstractValidat
      *   <li>org.ujorm..dateLimit.future</li>
      * </ul>
      */
+    @Override
     public String getLocalizationKey() {
         return KEY_PREFIX + "dateLimit." + pastWord;
     }

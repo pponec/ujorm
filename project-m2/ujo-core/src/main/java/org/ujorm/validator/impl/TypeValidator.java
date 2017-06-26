@@ -28,7 +28,7 @@ import org.ujorm.validator.ValidationError;
 public class TypeValidator<VALUE extends Object> extends AbstractValidator<VALUE> {
 
     /** Class value */
-    public static final MessageArg<Object> TYPE = new MessageArg<Object>("TYPE");
+    public static final MessageArg<Object> TYPE = new MessageArg<>("TYPE");
 
     /** Class value */
     private final Class<VALUE> type;
@@ -49,6 +49,7 @@ public class TypeValidator<VALUE extends Object> extends AbstractValidator<VALUE
      * @return
      * @throws NullPointerException
      */
+    @Override
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) throws NullPointerException {
             final boolean ok = input==null
                   || (type != null ? type : key.getType()).isInstance(input);
@@ -70,6 +71,7 @@ public class TypeValidator<VALUE extends Object> extends AbstractValidator<VALUE
     }
 
     /** @return Returns: "ujorm.org.type" */
+    @Override
     public String getLocalizationKey() {
         return KEY_PREFIX + "type";
     }

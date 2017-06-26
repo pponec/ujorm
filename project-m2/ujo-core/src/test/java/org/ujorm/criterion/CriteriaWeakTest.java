@@ -44,6 +44,7 @@ public class CriteriaWeakTest extends MyTestCase {
         return result;
     }
 
+    @Override
     protected void setUp() throws Exception {
         persons = new ArrayList<Person>();
 

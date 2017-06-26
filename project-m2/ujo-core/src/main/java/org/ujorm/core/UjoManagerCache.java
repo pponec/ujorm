@@ -43,7 +43,7 @@ public class UjoManagerCache {
     
     /** Constructor. */
     public UjoManagerCache(boolean recursion, Ujo ... ujos) {
-        this.propertiesCache = new HashMap<Class, KeyList>();
+        this.propertiesCache = new HashMap<>();
     }
     
     /** Returns true, if the class is abstract. */

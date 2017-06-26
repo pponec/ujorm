@@ -10,7 +10,6 @@
 package org.ujorm.implementation.xml.test2;
 
 import org.ujorm.ListKey;
-import org.ujorm.implementation.map.MapUjo;
 import org.ujorm.implementation.quick.QuickUjo;
 
 

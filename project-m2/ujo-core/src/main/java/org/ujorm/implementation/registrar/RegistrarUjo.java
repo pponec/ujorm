@@ -71,6 +71,7 @@ public class RegistrarUjo<UJO extends Ujo> extends MapUjo implements EventRegist
     }
 
     /** Add key Listener */
+    @Override
     public boolean addPropertyChangeListener
         ( Key<? super UJO,?> key
         , Boolean before
@@ -80,6 +81,7 @@ public class RegistrarUjo<UJO extends Ujo> extends MapUjo implements EventRegist
     }
 
     /** Remove key Listener */
+    @Override
     public boolean removePropertyChangeListener
         ( Key<? super UJO,?> key
         , Boolean before

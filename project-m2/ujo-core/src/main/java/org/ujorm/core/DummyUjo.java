@@ -51,13 +51,14 @@ final class DummyUjo implements Ujo {
     /** Is an order of keys reversed? */
     public Boolean isPropertiesReversed() {
         final KeyList props = readKeys();
-        final Boolean result = Boolean.valueOf(props.get(0)==P1);
+        final Boolean result = props.get(0)==P1;
         return result;
     }
 
     /**
      * Get a visibility of the key for different actions.
      */
+    @Override
     public boolean readAuthorization(UjoAction action, Key key, Object value) {
         return true;
     }

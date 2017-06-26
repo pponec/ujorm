@@ -27,9 +27,9 @@ import org.ujorm.validator.ValidationError;
  */
 public class ComparableValidator<VALUE extends Comparable> extends AbstractValidator<VALUE> {
 
-    public static final MessageArg<Comparable> LIMIT = new MessageArg<Comparable>("LIMIT");
+    public static final MessageArg<Comparable> LIMIT = new MessageArg<>("LIMIT");
     /** Sing for MAX/MIN */
-    public static final MessageArg<Boolean> MAX = new MessageArg<Boolean>("MAX");
+    public static final MessageArg<Boolean> MAX = new MessageArg<>("MAX");
 
     /** Serializable minimum (inclusive) */
     private final Comparable limit;
@@ -48,6 +48,7 @@ public class ComparableValidator<VALUE extends Comparable> extends AbstractValid
     }
 
     /** {@inheritDoc} */
+    @Override
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean ok = input==null
                     || ( max
@@ -83,6 +84,7 @@ public class ComparableValidator<VALUE extends Comparable> extends AbstractValid
      *   <li>org.ujorm..minLimit</li>
      * </ul>
      */
+    @Override
     public String getLocalizationKey() {
         return KEY_PREFIX + (max ? "maxLimit" : "minLimit");
     }

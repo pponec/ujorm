@@ -62,7 +62,6 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /**
      * Constructor
-     * @param baseClass Not null base class for all keys
      * @param keys Property array
      * @see #of(java.lang.Class, org.ujorm.Key<T,?>[])
      */
@@ -84,6 +83,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** The the domain class of related Keys.
      * The value can be {@code null} if the Key array is empty. */
+    @Override
     public Class<UJO> getType() {
         if (type==null) {
             type = getBaseType(keys);
@@ -166,7 +166,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
         Class ujoType = getType();
         int j, i = 0;
-        List<Key> props = new ArrayList<Key>(8);
+        List<Key> props = new ArrayList<>(8);
         names += ".";
         try {
             while ((j = names.indexOf('.', i + 1)) >= 0) {
@@ -436,14 +436,13 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     // -------------- STATIC METHOD(S) --------------
 
     /** Create a new instance, the parameters is cloned.
-     * @param domainClass The domain class where the not null value is recommended for better performance.
-     * @param keys Nullable value
+     * @param key Nullable value
      * @return If the keys are {@code null}, than the result is the {@code null} too.
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> KeyRing<UJO> of(Key<? super UJO, ?> key) {
         return key != null
-             ? new KeyRing<UJO>((Class<UJO>) key.getDomainType(), new Key[] {key})
+             ? new KeyRing<>((Class<UJO>) key.getDomainType(), new Key[] {key})
              : null;
     }
 
@@ -459,7 +458,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         }
         final Key[] ps = new Key[keys.length];
         System.arraycopy(keys, 0, ps, 0, ps.length);
-        return new KeyRing<UJO>(domainClass, ps);
+        return new KeyRing<>(domainClass, ps);
     }
 
     /** Returns all domain keys excluding the argument keys.
@@ -475,7 +474,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @param excludedKeys Array of the <strong>direct</strong> excluded keys.
      */
     public static <UJO extends Ujo> KeyRing<UJO> ofExcluding(Class<UJO> domainClass, Key<?, ?>... excludedKeys) {
-        final List<Key<? super UJO, ?>> keys = new ArrayList<Key<? super UJO, ?>>();
+        final List<Key<? super UJO, ?>> keys = new ArrayList<>();
         main:
         for (Key<UJO,?> key : of(domainClass)) {
             for (Key<?, ?> ex : excludedKeys) {
@@ -518,7 +517,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         for (Key<? super UJO, ?> p : keys) {
             ps[i++] = (Key<UJO, ?>) p;
         }
-        return new KeyRing<UJO>(domainClass, ps);
+        return new KeyRing<>(domainClass, ps);
     }
 
     /** Create a new instance, the parameters is cloned. */
@@ -552,7 +551,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return result!=null ? result : Ujo.class;
     }
 
-    /** Throws an {@link IllegalArgumentException} exception with the text:<br/>
+    /** Throws an {@link IllegalArgumentException} exception with the text:<br>
      * "The 'keyname' of the class was not found"
      */
     private void throwException(final String keyName, final Class type, Throwable e) throws IllegalUjormException {

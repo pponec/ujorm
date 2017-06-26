@@ -94,6 +94,7 @@ public class SingleUjoTabModel extends UjoTableModel<UjoKeyRow> implements Itera
     }
 
     /** Returns an iterator */
+    @Override
     public Iterator<UjoKeyRow> iterator() {
         return rows.iterator();
     }

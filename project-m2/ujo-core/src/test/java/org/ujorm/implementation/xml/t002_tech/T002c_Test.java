@@ -13,7 +13,6 @@ import junit.framework.*;
 import org.ujorm.MyTestCase;
 import org.ujorm.Key;
 import org.ujorm.core.UjoManagerXML;
-import org.ujorm.KeyList;
 
 /**
  *
@@ -28,13 +27,6 @@ public class T002c_Test extends MyTestCase {
     public static TestSuite suite() {
         TestSuite suite = new TestSuite(T002c_Test.class);
         return suite;
-    }
-    
-    protected void setUp() throws Exception {
-        //UjoManager.getInstance().setZeroProviderEnabled(true);
-    }
-    
-    protected void tearDown() throws Exception {
     }
     
     /**

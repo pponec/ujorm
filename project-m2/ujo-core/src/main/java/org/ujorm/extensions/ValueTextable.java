@@ -51,7 +51,7 @@ package org.ujorm.extensions;
  *   <li>Enum</li>
  *   <li>Class</li>
  *   <li>Charset</li>
- *   <li>List&lt;some-type-above&gt; with some restrictions for <strong>deserialization</strong>:<br />
+ *   <li>List&lt;some-type-above&gt; with some restrictions for <strong>deserialization</strong>:<br>
  *       value key must be type of UjoPropertyList and
  *       the serialized text must not contain a separator character comma ','
  *   </li>

@@ -75,7 +75,7 @@ public interface ListKey<UJO extends Ujo, ITEM> extends Key<UJO,List<ITEM>> {
      *    ujo.set(VALUE_LIST, new ArrayList());
      * }
      * ujo.get(VALUE_LIST).add(itemValue);
-     * <pre class="pre">
+     * </pre>
      * @return Value {@code true} as per the general contract of Collection.add.
      */
     public boolean addItem(UJO ujo, ITEM value);
@@ -87,6 +87,7 @@ public interface ListKey<UJO extends Ujo, ITEM> extends Key<UJO,List<ITEM>> {
     public boolean removeItem(UJO ujo, ITEM value);
 
     /** Indicates whether a list of items is null or empty. */
+    @Override
     public boolean isDefault(UJO ujo);
 
 }

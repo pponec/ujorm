@@ -9,7 +9,6 @@
 
 package org.ujorm.implementation.xmlSpeed;
 
-import java.util.List;
 import java.util.Date;
 import java.util.List;
 import org.ujorm.extensions.ValueAgent;

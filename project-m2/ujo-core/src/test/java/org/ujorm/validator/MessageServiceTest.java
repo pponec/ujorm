@@ -31,10 +31,10 @@ public class MessageServiceTest extends TestCase {
     /** Message Service */
     private static final MessageService service = new MessageService();
     /** Message Arguments */
-    private static MessageArg<Integer> ID = new MessageArg<Integer>("ID");
-    private static MessageArg<Date> DATE = new MessageArg<Date>("DATE");
-    private static MessageArg<String> TEXT = new MessageArg<String>("TEXT");
-    private static MessageArg<BigDecimal> NUMBER = new MessageArg<BigDecimal>("NUMBER");
+    private static MessageArg<Integer> ID = new MessageArg<>("ID");
+    private static MessageArg<Date> DATE = new MessageArg<>("DATE");
+    private static MessageArg<String> TEXT = new MessageArg<>("TEXT");
+    private static MessageArg<BigDecimal> NUMBER = new MessageArg<>("NUMBER");
 
     public MessageServiceTest() {
     }

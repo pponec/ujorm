@@ -117,21 +117,15 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
     /** Write keys to XML including a XML header. A root tag is "body" by default. */
     public void saveXML(File xmlFile, UjoTextable ujo, XmlHeader xmlHeader, Object context) throws IOException {
-        final OutputStream os = getOutputStream(xmlFile);
-        try {
+        try (OutputStream os = getOutputStream(xmlFile)) {
             saveXML(os, ujo, xmlHeader, context);
-        } finally {
-            os.close();
         }
     }
 
     /** Write keys to XML including a XML header. A root tag is "body" by default. */
     public void saveXML(OutputStream outStream, UjoTextable ujo, XmlHeader xmlHeader, Object context) throws IOException {
-        final Writer writer = new OutputStreamWriter(outStream, UTF_8);
-        try {
+        try (Writer writer = new OutputStreamWriter(outStream, UTF_8)) {
             saveXML(writer, ujo, xmlHeader, context);
-        } finally {
-            writer.close();
         }
     }
 

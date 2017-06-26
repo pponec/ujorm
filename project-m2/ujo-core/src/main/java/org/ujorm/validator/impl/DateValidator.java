@@ -29,9 +29,9 @@ import org.ujorm.validator.ValidationError;
 public class DateValidator<VALUE extends Date> extends AbstractValidator<VALUE> {
 
     /** TODAY date*/
-    public static final MessageArg<Date> NOW = new MessageArg<Date>("NOW");
+    public static final MessageArg<Date> NOW = new MessageArg<>("NOW");
     /** A sing for Past {@code true} / Future {@code false} */
-    public static final MessageArg<Boolean> PAST = new MessageArg<Boolean>("PAST");
+    public static final MessageArg<Boolean> PAST = new MessageArg<>("PAST");
 
     /** A sing for Past {@code true} / Future {@code false} */
     private final boolean past;
@@ -47,6 +47,7 @@ public class DateValidator<VALUE extends Date> extends AbstractValidator<VALUE> 
     }
 
     /** {@inheritDoc} */
+    @Override
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
 
             final Long now = System.currentTimeMillis();
@@ -81,6 +82,7 @@ public class DateValidator<VALUE extends Date> extends AbstractValidator<VALUE> 
      *   <li>org.ujorm..dateLimit.future</li>
      * </ul>
      */
+    @Override
     public String getLocalizationKey() {
         return KEY_PREFIX + "dateLimit." + pastWord;
     }

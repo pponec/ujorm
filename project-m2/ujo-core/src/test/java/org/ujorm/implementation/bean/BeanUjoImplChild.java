@@ -9,9 +9,6 @@
 
 package org.ujorm.implementation.bean;
 import java.util.Date;
-import org.ujorm.core.KeyFactory;
-import org.ujorm.core.UjoManager;
-import org.ujorm.implementation.xmlSpeed.BeanTree;
 
 /**
  * A BEAN Object

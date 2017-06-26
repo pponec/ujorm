@@ -49,6 +49,7 @@ public class BetweenValidator<VALUE extends Comparable> extends AbstractValidato
     }
 
     /** {@inheritDoc} */
+    @Override
     public <UJO extends Ujo> ValidationError validate(VALUE input
             , Key<UJO, VALUE> key
             , UJO bo
@@ -76,6 +77,7 @@ public class BetweenValidator<VALUE extends Comparable> extends AbstractValidato
     }
 
     /** Default value is: "org.ujorm.between" */
+    @Override
     public String getLocalizationKey() {
         return KEY_PREFIX + "between";
     }

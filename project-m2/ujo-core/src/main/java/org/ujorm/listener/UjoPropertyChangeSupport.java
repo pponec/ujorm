@@ -64,7 +64,7 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
     /** Get a not null listener list for the required key. 
      * <br>The method creates an empty list if the one was not found.
      */
-    private final List<UjoPropertyChangeListener> getListeners
+    private List<UjoPropertyChangeListener> getListeners
         ( final Key key
         , final boolean before
         ){

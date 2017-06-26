@@ -48,12 +48,7 @@ public class XmlSpeedTest extends MyTestCase {
         return new TestSuite(XmlSpeedTest.class);
     }
     
-    protected void setUp() throws Exception {
-    }
-    
-    protected void tearDown() throws Exception {
-    }
-    
+   
     protected int getCount() {
         return 10;
         //return 1;

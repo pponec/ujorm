@@ -61,7 +61,7 @@ final class UjoHandlerXML extends DefaultHandler {
     protected StringBuilder $value  = new StringBuilder(64);
 
     /** A list of XML attributes, one item is always a pair: attribute - value */
-    protected ArrayList<String[]> $attributes = new ArrayList<String[]>();
+    protected ArrayList<String[]> $attributes = new ArrayList<>();
 
     /** Constructor. */
     @SuppressWarnings("deprecation")
@@ -121,14 +121,18 @@ final class UjoHandlerXML extends DefaultHandler {
             if (isEmpty(attribName)) {
                 attribName = attribs.getQName(i);
             }
-            if (UjoManagerXML.ATTR_CLASS.equals(attribName)) {
-                $elementType = Class.forName(attribs.getValue(i));
-            } else if (UjoManagerXML.ATTR_LIST.equals(attribName)) {
-                $listType = Class.forName(attribs.getValue(i));
-            } else if (UjoManagerXML.ATTR_ITEM.equals(attribName)) {
-                $itemType = Class.forName(attribs.getValue(i));
-            } else {
-                $attributes.add(new String[]{attribName, attribs.getValue(i)});
+            if (null != attribName) switch (attribName) {
+                case UjoManagerXML.ATTR_CLASS:
+                    $elementType = Class.forName(attribs.getValue(i));
+                    break;
+                case UjoManagerXML.ATTR_LIST:
+                    $listType = Class.forName(attribs.getValue(i));
+                    break;
+                case UjoManagerXML.ATTR_ITEM:
+                    $itemType = Class.forName(attribs.getValue(i));
+                    break;
+                default:
+                    $attributes.add(new String[]{attribName, attribs.getValue(i)});
             }
         } catch (ClassNotFoundException ex) {
             throw new IllegalUjormException(ex.getMessage(), ex);

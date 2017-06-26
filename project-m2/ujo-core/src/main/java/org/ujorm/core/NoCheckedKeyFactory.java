@@ -42,7 +42,7 @@ public class NoCheckedKeyFactory<UJO extends Ujo> extends KeyFactory<UJO> {
     /** Create a special Key without a Validator checking */
     @Override
     protected <T> Key<UJO,T> createKey(String name, T defaultValue, Validator<T> validator) {
-        final NoCheckedProperty<UJO,T> p = new NoCheckedProperty<UJO,T>(name, defaultValue, validator);
+        final NoCheckedProperty<UJO,T> p = new NoCheckedProperty<>(name, defaultValue, validator);
         addKey(p);
         return p;
     }

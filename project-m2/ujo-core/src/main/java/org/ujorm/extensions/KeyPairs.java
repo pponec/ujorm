@@ -26,7 +26,7 @@ import org.ujorm.Ujo;
  */
 public class KeyPairs<SRC extends Ujo, TRG extends Ujo> {
 
-    private List<PairItem> pairs = new ArrayList<PairItem>();
+    private final List<PairItem> pairs = new ArrayList<>();
     /** Locked sign */
     private boolean locked;
 
@@ -92,7 +92,7 @@ public class KeyPairs<SRC extends Ujo, TRG extends Ujo> {
     // ----------- FACTORY -----------
 
     public static <SRC extends Ujo, TRG extends Ujo, V> KeyPairs<SRC,TRG> get() {
-        return new KeyPairs<SRC, TRG>();
+        return new KeyPairs<>();
     }
 
 

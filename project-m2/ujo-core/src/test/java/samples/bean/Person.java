@@ -57,13 +57,13 @@ public class Person extends MapUjo {
     /** Equals */
     @Override
     public boolean equals(Object obj) {
-        return UjoManager.getInstance().equalsUjo(this, (Ujo)obj );
+        return UjoManager.equalsUjo(this, (Ujo)obj );
     }
     
     /** Equals */
     @Override
     public Object clone(int depth, Object context) {
-        return UjoManager.getInstance().clone(this, depth, context);
+        return UjoManager.clone(this, depth, context);
     }
     
     /**

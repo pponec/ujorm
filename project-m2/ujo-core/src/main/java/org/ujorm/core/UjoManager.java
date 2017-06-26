@@ -75,7 +75,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
 
     /** Constructor. */
     public UjoManager() {
-        this.propertiesCache = new HashMap<Class, KeyList>();
+        this.propertiesCache = new HashMap<>();
         this.coder = new UjoCoder();
     }
 
@@ -87,12 +87,13 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
     /** Are keys reversed by default? */
     public boolean isPropertiesReversed() {
         if (arePropertiesReversed==null) {
-            arePropertiesReversed = new DummyUjo().isPropertiesReversed().booleanValue();
+            arePropertiesReversed = new DummyUjo().isPropertiesReversed();
         }
         return arePropertiesReversed;
     }
 
-    /** Returns true, if the class is abstract. */
+    /** Returns true, if the class is abstract.
+     * @param type */
     protected boolean isAbstract(Class type) {
         final boolean result = Modifier.isAbstract(type.getModifiers() );
         return result;
@@ -123,7 +124,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
     @SuppressWarnings("unchecked")
     public Key[] readPropertiesNocache(Class type, boolean sorted) throws IllegalStateException {
         Key[] result;
-        ArrayList<Key> keyList = new ArrayList<Key>(32);
+        ArrayList<Key> keyList = new ArrayList<>(32);
         Field field = null;
 
         synchronized(type) {
@@ -225,6 +226,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
     }
 
     /** Compare Ujo keys by index. An undefined key indexes (-1 are sorted to the end. */
+    @Override
     public int compare(final Key p1, final Key p2) {
         final int i1 = p1.getIndex()>=0 ? p1.getIndex() : Integer.MAX_VALUE;
         final int i2 = p2.getIndex()>=0 ? p2.getIndex() : Integer.MAX_VALUE;
@@ -251,12 +253,12 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
      * Clone the UjoCloneable object. The Object and its items must have got a constructor with no parameters.
      * <br>Note: There are supported attributes
      * <ul>
-     * <li>null value </li>
+     * <li>null value</li>
      * <li>Ujo</li>
      * <li>UjoCloneable</li>
      * <li>List</li>
      * <li>array of privitive values</li>
-     * <ul>
+     * </ul>
      *
      * In other cases the same instance is used. The feature can be useful for a Final object like a String, Integer etc.
      *
@@ -541,7 +543,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
             return;
         }
         if (attributesCache==null) {
-            attributesCache = new HashSet<Key>();
+            attributesCache = new HashSet<>();
         }
         attributesCache.add(attribute);
     }
@@ -556,7 +558,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
             return;
         }
         if (xmlBodyCache==null) {
-            xmlBodyCache = new HashMap<Class, Key>(4);
+            xmlBodyCache = new HashMap<>(4);
         }
         Key old = xmlBodyCache.get(type);
         if (old==null || old.getIndex()<key.getIndex()) {
@@ -567,7 +569,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
     /** Mark a key to transient attribute in a cache. */
     private void cacheTransientAttribute(final Key attribute) {
         if (transientCache==null) {
-            transientCache = new HashSet<Key>();
+            transientCache = new HashSet<>();
         }
         transientCache.add(attribute);
     }
@@ -743,7 +745,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
     @SuppressWarnings("unchecked")
     public List<UjoKeyRow> createKeyRowList(Ujo content, UjoAction action) {
         KeyList<?> props = content.readKeys();
-        ArrayList<UjoKeyRow> result = new ArrayList<UjoKeyRow>(props.size());
+        ArrayList<UjoKeyRow> result = new ArrayList<>(props.size());
         for (Key prop : props) {
             final Object  value   = prop.of(content);
             final boolean enabled = content.readAuthorization(action, prop, value);
@@ -801,7 +803,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
      * @throws java.lang.IllegalStateException If an duplicity is found than an exception is throwed.
      */
     protected void checkUniqueProperties(final Class<? extends Ujo> type, final boolean enabled) throws IllegalStateException {
-        final HashSet<String> names = new HashSet<String>(16);
+        final HashSet<String> names = new HashSet<>(16);
         if (enabled) for (Key key : readKeys(type)) {
             //final UjoProperty key = (UjoProperty) _property;
             if (!names.add(key.getName())) {
