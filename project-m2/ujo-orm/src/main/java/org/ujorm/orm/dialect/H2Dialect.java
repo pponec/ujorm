@@ -25,11 +25,13 @@ public class H2Dialect extends SqlDialect {
      * <br>For a PostgreSQL simulation use: 
      * {@code jdbc:h2:mem:db1;MODE=PostgreSQL}
      */    
+    @Override
     public String getJdbcUrl() {
         return "jdbc:h2:mem:db1";
     }
 
     /** Returns a JDBC Driver */
+    @Override
     public String getJdbcDriver() {
         return "org.h2.Driver";
     }

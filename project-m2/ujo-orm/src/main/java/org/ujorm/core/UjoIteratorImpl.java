@@ -44,6 +44,7 @@ class UjoIteratorImpl<T> extends UjoIterator<T> {
     }
 
     /** Tests if this enumeration contains more elements. */
+    @Override
     public boolean hasNext() {
         return e.hasNext();
     }
@@ -53,6 +54,7 @@ class UjoIteratorImpl<T> extends UjoIterator<T> {
      * @return     the next element
      * @exception  NoSuchElementException no more elements exist.
      */
+    @Override
     public T next() throws NoSuchElementException {
         return e.next();
     }

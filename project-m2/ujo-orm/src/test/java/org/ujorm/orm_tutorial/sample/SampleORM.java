@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.*;
 import org.ujorm.CompositeKey;
@@ -44,8 +43,8 @@ import org.ujorm.orm.metaModel.MoreParams;
 import static org.ujorm.orm.template.AliasTable.Build.*;
 
 /**
- * The tutorial in the class for the Ujorm <br/>
- * --------------------------------------- <br/>
+ * The tutorial in the class for the Ujorm <br>
+ * --------------------------------------- <br>
  * Learn the basic skills in 15 minutes by a live Java code.
  * The next several methods demonstrate the use of statements:
  *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE
@@ -224,7 +223,7 @@ public class SampleORM {
         session.commit();
     }
 
-    /** Now, how to select Orders from a database by Criterions? <br/>
+    /** Now, how to select Orders from a database by Criterions? <br>
      * The generated SQL code from this example
      * will be similar like the next statement:
      * <pre>
@@ -338,7 +337,7 @@ public class SampleORM {
     }
 
     /** Use a 'native query' where the query is CREATED
-     * by a special entity signed by the @View annotation. <br/>
+     * by a special entity signed by the @View annotation. <br>
      * Note the special <strong>inner parameter</strong> in the SQL statement on the Annotation of the class ViewOrder,
      * where value for this (optional) parameter is set by the method Query.setSqlParameters();
      * @see Query#setSqlParameters(java.lang.Object[])
@@ -370,7 +369,7 @@ public class SampleORM {
     }
 
     /** Use a 'native query' where the query is CREATED
-     * by a special entity signed by the @View annotation. <br/>
+     * by a special entity signed by the @View annotation. <br>
      * Note the special <strong>inner parameter</strong> in the SQL statement on the Annotation of the class ViewOrder,
      * where value for this (optional) parameter is set by the method Query.setSqlParameters();
      * @see Query#setSqlParameters(java.lang.Object[])
@@ -570,7 +569,7 @@ public class SampleORM {
     }
 
     /**
-     * TODO: fix it<br/>
+     * TODO: fix it<br>
      * Simple hierarchical Query (to yourself) for the special case<br>
      * where the relation {@link Customer#PARENT PARENT} is created by method {@link KeyFactory#newKeyAlias(java.lang.String)}
      * and the request have got the <strong>first level</strong> of hierarchical relations only.
@@ -834,7 +833,7 @@ public class SampleORM {
         session.commit();
     }
 
-    /** The batch UPDATE of selected columns for required database rows. <br />
+    /** The batch UPDATE of selected columns for required database rows. <br>
      * The example updates one database column (CREATED) to the current date for all Orders where ID>=1 .
      */
     public void useBatchUpdate() {
@@ -848,7 +847,7 @@ public class SampleORM {
         session.commit();
     }
 
-    /** The batch UPDATE of selected columns for required database rows for an extended condition.<br />
+    /** The batch UPDATE of selected columns for required database rows for an extended condition.<br>
      * See the next example:
      */
     public void useExtendedUpdate() {
@@ -886,7 +885,7 @@ public class SampleORM {
         logInfo("There is DELETED object:  %s", item);
     }
 
-    /** How to use a batch DELETE? <br/>
+    /** How to use a batch DELETE? <br>
      * The next example deletes all Items where Item.ID = 1
      */
     public void useBatchDelete() {
@@ -895,7 +894,7 @@ public class SampleORM {
         logInfo("There are DELETED rows:  %s", count);
     }
 
-    /** How to use a batch DELETE for an extended condition? <br/>
+    /** How to use a batch DELETE for an extended condition? <br>
      * See the next example:
      */
     public void useExtendedDelete() {

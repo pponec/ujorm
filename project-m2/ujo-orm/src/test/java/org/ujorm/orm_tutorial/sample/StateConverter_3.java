@@ -31,6 +31,7 @@ import org.ujorm.orm_tutorial.sample.Order.State;
  */
 public class StateConverter_3 implements ITypeService<Order.State, String> {
 
+    @Override
     public State getValue(MetaColumn mColumn, ResultSet rs, int c) throws SQLException {
         String str = rs.getString(c);
 
@@ -41,6 +42,7 @@ public class StateConverter_3 implements ITypeService<Order.State, String> {
         }
     }
 
+    @Override
     public State getValue(MetaColumn mColumn, CallableStatement rs, int c) throws SQLException {
         String str = rs.getString(c);
 
@@ -51,10 +53,12 @@ public class StateConverter_3 implements ITypeService<Order.State, String> {
         }
     }
 
+    @Override
     public void setValue(MetaColumn mColumn, PreparedStatement rs, State value, int c) throws SQLException {
         rs.setString(c, value.name().substring(0, 4));
     }
 
+    @Override
     public Class<String> getDbTypeClass(MetaColumn column) {
         return String.class;
     }

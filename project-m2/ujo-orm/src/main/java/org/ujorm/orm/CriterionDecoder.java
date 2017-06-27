@@ -306,8 +306,8 @@ public class CriterionDecoder {
 
     /** Returns the unique direct key relation set with the predicable order (by inserts). */
     protected Collection<AliasKey> getPropertyRelations() {
-        final Set<AliasKey> result = new LinkedHashSet<AliasKey>(); // the predicable order is required (by inserts)
-        final ArrayList<ValueCriterion> allValues = new ArrayList<ValueCriterion>
+        final Set<AliasKey> result = new LinkedHashSet<>(); // the predicable order is required (by inserts)
+        final ArrayList<ValueCriterion> allValues = new ArrayList<>
                 (values.size() + nullValues.size());
         allValues.addAll(values);
         allValues.addAll(nullValues);
@@ -346,11 +346,11 @@ public class CriterionDecoder {
     /** Returns all participated tables include the parameter table. */
     public TableWrapper[] getTables() {
         if (printAllJoinedTables) {
-            final Set<TableWrapper> result = new HashSet<TableWrapper>();
+            final Set<TableWrapper> result = new HashSet<>();
             result.addAll(tables);
 
             //EFFECTIVA REQUEST: TR-1771: to enforce printing Ujorm joined tables
-            ArrayList<ValueCriterion> allValues = new ArrayList<ValueCriterion>(values.size() + nullValues.size());
+            ArrayList<ValueCriterion> allValues = new ArrayList<>(values.size() + nullValues.size());
             allValues.addAll(values);
             allValues.addAll(nullValues);
             for (ValueCriterion value : allValues) {

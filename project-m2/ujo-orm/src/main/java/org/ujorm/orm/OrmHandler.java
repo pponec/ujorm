@@ -64,11 +64,11 @@ public class OrmHandler implements OrmHandlerProvider {
     private Session defaultSession;
 
     /** Map a <strong>key</strong> to a database <strong>column</strong> model */
-    private final HashMap<Key,MetaRelation2Many> propertyMap = new HashMap<Key,MetaRelation2Many> ();
+    private final HashMap<Key,MetaRelation2Many> propertyMap = new HashMap<>();
     /** Map a Java class to a database table model */
-    private final HashMap<Class,MetaTable> entityMap = new HashMap<Class,MetaTable> ();
+    private final HashMap<Class,MetaTable> entityMap = new HashMap<>();
     /** Map a Java class to a procedure model */
-    private final HashMap<Class,MetaProcedure> procedureMap = new HashMap<Class,MetaProcedure> ();
+    private final HashMap<Class,MetaProcedure> procedureMap = new HashMap<>();
 
     /** The constructor */
     public OrmHandler() {
@@ -113,7 +113,7 @@ public class OrmHandler implements OrmHandlerProvider {
 
     /** Load parameters from an external XML file.
      * The initialization must be finished before an ORM definition loading.
-     * <br/>Note: in case the parameter starts by the character tilde '~' than the symbol is replaced by a local home directory.
+     * <br>Note: in case the parameter starts by the character tilde '~' than the symbol is replaced by a local home directory.
      * See some valid parameter examples:
      * <ul>
      *    <li>http://myproject.org/dbconfig.xml</li>
@@ -435,11 +435,11 @@ public class OrmHandler implements OrmHandlerProvider {
         return MetaRoot.DATABASES.of(databases);
     }
 
-    /** Find all <strong>persistent<strong> keys with the required type or subtype.
+    /** Find all <strong>persistent</strong> keys with the required type or subtype.
      * @param type The parameter value Object.clas returns all persistent keys.
      */
     public List<Key> findPropertiesByType(Class type) {
-        List<Key> result = new ArrayList<Key>();
+        List<Key> result = new ArrayList<>();
         for (Key p : propertyMap.keySet()) {
             if (p.isTypeOf(type)) {
                 result.add(p);

@@ -209,7 +209,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     @SuppressWarnings("unchecked")
     final public CriterionDecoder getDecoder() {
         if (decoder==null) {
-            final List<Key> relations = new ArrayList<Key>(16);
+            final List<Key> relations = new ArrayList<>(16);
             for (Key key : orderBy) {
                 if (key.isComposite()) {
                     relations.add(key);
@@ -313,7 +313,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Returns an instance of the Map where the key is DB table primary key and a value is the row.
      * The method calls internally the next statement:
      * <pre>iterator()</pre>
-     * <br/>Note, the last row of the the same ID wins the instance in the map.
+     * <br>Note, the last row of the the same ID wins the instance in the map.
      * @param mapKey Ujo Key for the mapKey
      * @see #iterator()
      */
@@ -420,7 +420,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase.
-    * <br/>WARNING: the parameters are not type checked.
+    * <br>WARNING: the parameters are not type checked.
     */
     @SuppressWarnings("unchecked")
     public final Query<UJO> orderByMany(Key... orderItems) {
@@ -434,9 +434,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
    /** Set the one column to reading from database table.
     * Other columns will return a default value, no exception will be throwed.
-    * <br/>WARNING 1: assigning an column from a view is forbidden.
-    * <br/>WARNING 2: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
-    * <br/>WARNING 3: assigning an column from a view is forbidden.
+    * <br>WARNING 1: assigning an column from a view is forbidden.
+    * <br>WARNING 2: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
+    * <br>WARNING 3: assigning an column from a view is forbidden.
     * @param column A Property to select. A composite Property is allowed however only the first item will be used.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     */
@@ -450,7 +450,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
                 ? new ColumnWrapperImpl(mc, column)
                 : mc;
         if (columns==null) {
-            columns = new ArrayList<ColumnWrapper>(getDefaultColumns());
+            columns = new ArrayList<>(getDefaultColumns());
         }
         addMissingColumn(wColumn, true, true);
         return this;
@@ -458,7 +458,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
    /** Set the one column to reading from database table.
     * Other columns will return a default value, no exception will be throwed.
-    * <br/>WARNING: assigning an column from a view is forbidden.
+    * <br>WARNING: assigning an column from a view is forbidden.
     * @param column A Property to select. A composite Property is allowed however only the first item will be used.
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
@@ -481,8 +481,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
   /** Set an list of required columns to reading from database table.
     * Other columns (out of the list) will return a default value, no exception will be throwed.
-    * <br/>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
-    * <br/>WARNING 2: assigning an column from a view is forbidden.
+    * <br>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
+    * <br>WARNING 2: assigning an column from a view is forbidden.
     * @param columns A Key list including a compositer one to database select. The method does not check column duplicities.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
@@ -495,8 +495,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
    /** Set an list of required columns to reading from database table.
     * Other columns (out of the list) will return a default value, no exception will be throwed.
-    * <br/>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
-    * <br/>WARNING 2: assigning an column from a view is forbidden.
+    * <br>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
+    * <br>WARNING 2: assigning an column from a view is forbidden.
     * @param addPrimaryKey If the column list doesn't contain a primary key of the base Entity then the one will be included.
     * @param addChilds Add all children of the all <strong>foreign keys</strong>.
     * @param columns A Key list including a compositer one to database select. The method does not check column duplicities.
@@ -620,7 +620,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Set the one entity / table to LEFT OUTER JOIN */
     public boolean addOuterJoin(Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
         if (outerJoins == null) {
-            outerJoins = new HashSet<ColumnWrapper>();
+            outerJoins = new HashSet<>();
         }
         final MetaColumn column = getHandler().findColumnModel(relation, true);
         final ColumnWrapper wColumn = relation.isComposite()
@@ -828,6 +828,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** Compare two keys according to count of the KeyCount on sequence */
     @PackagePrivate static final Comparator<Key> INNER_KEY_COMPARATOR = new Comparator<Key>() {
+            @Override
             public int compare(final Key k1, final Key k2) {
                 if (!k1.isComposite()) {
                     return k2.isComposite() ? -1 : 0;

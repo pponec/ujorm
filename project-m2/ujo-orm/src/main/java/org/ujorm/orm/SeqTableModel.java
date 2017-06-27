@@ -51,7 +51,7 @@ final public class SeqTableModel {
     }
 
     /** The table key for a common sequence emulator.
-     * <br/>The SQL script for migration to the Ujorm 0.93:
+     * <br>The SQL script for migration to the Ujorm 0.93:
      * <pre>ALTER TABLE ormujo_pk_support RENAME TO ujorm_pk_support;</pre>.
      * Default value is 'ujorm_pk_support';
      */

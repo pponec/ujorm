@@ -90,7 +90,7 @@ public class FirebirdDialect extends org.ujorm.orm.SqlDialect {
         return out;
     }
 
-    /** Multi row INSERT is not implemented in this dialect yet due:<br/>
+    /** Multi row INSERT is not implemented in this dialect yet due:<br>
      * Caused by: org.firebirdsql.jdbc.FBSQLException: GDS Exception. 335544436. SQL error code = -804
      */
     @Override
@@ -107,7 +107,7 @@ public class FirebirdDialect extends org.ujorm.orm.SqlDialect {
         return printInsertBySelect(bo, idxFrom, idxTo, "FROM RDB$DATABASE", out);
     }
 
-     /** This method does not quote due some errors. <br/>
+     /** This method does not quote due some errors. <br>
      * @param name Name (identifier) for quoting
      * @param sql Target SQL for printing new quoted name
      * @return SQL with printed quoted name

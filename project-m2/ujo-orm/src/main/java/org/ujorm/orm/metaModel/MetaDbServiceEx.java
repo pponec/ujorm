@@ -75,8 +75,8 @@ public class MetaDbServiceEx extends MetaDbService {
         LOGGER.log(INFO, "UJORM checking db structure...");
         Connection conn = session.getConnection(db, repairDB);
         try {
-            List<String> messages = new ArrayList<String>();
-            List<MetaTable> mappedTables = new ArrayList<MetaTable>(db.get(TABLES));
+            List<String> messages = new ArrayList<>();
+            List<MetaTable> mappedTables = new ArrayList<>(db.get(TABLES));
             // filter only persistent tables
             for (Iterator<MetaTable> it = mappedTables.iterator(); it.hasNext();) {
                 MetaTable metaTable = it.next();
@@ -299,7 +299,7 @@ public class MetaDbServiceEx extends MetaDbService {
                             MetaIndex mappedIndex = null;
                             if (indexName != null) {
                                 mappedIndex = createIndexForColumn(indexName, mappedColumn, mappedTable);
-                                mappedIndex.writeValue(MetaIndex.COLUMNS, new ArrayList<MetaColumn>(1));
+                                mappedIndex.writeValue(MetaIndex.COLUMNS, new ArrayList<>(1));
                                 mappedIndex.get(MetaIndex.COLUMNS).add(mappedColumn);
                                 // DROP indexu
                                 sql = new StringBuilder();
@@ -612,8 +612,8 @@ public class MetaDbServiceEx extends MetaDbService {
     }
 
     private List<? extends String> checkUjormPKSupport(Connection conn, List<MetaTable> mappedTables, boolean repairDB) throws Exception {
-        List<String> messages = new ArrayList<String>();
-        Set<String> tableSequenceIds = new HashSet<String>();
+        List<String> messages = new ArrayList<>();
+        Set<String> tableSequenceIds = new HashSet<>();
 
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.getSequencer().isSequenceTableRequired()) {
@@ -739,7 +739,7 @@ public class MetaDbServiceEx extends MetaDbService {
     }
 
     public Map<String, Map<String, Object>> listDBTableColumns(MetaTable table, final DatabaseMetaData dmd) throws SQLException {
-        Map<String, Map<String, Object>> result = new LinkedHashMap<String, Map<String, Object>>();
+        Map<String, Map<String, Object>> result = new LinkedHashMap<>();
         String schemaDBName = dbIdentifier(MetaTable.SCHEMA.of(table), dmd);
         String tableDBName = dbIdentifier(MetaTable.NAME.of(table), dmd);
 
@@ -751,10 +751,10 @@ public class MetaDbServiceEx extends MetaDbService {
             try {
                 statement.setString(1, tableDBName);
                 rs = statement.executeQuery();
-                defaultValueConstraints = new HashMap<String, HashMap<String, String>>();
+                defaultValueConstraints = new HashMap<>();
                 while (rs.next()) {
                     String columnName = rs.getString("column");
-                    HashMap<String, String> constraintInfo = new HashMap<String, String>();
+                    HashMap<String, String> constraintInfo = new HashMap<>();
                     defaultValueConstraints.put(columnName, constraintInfo);
                     constraintInfo.put("constraint", rs.getString("constraint"));
                     constraintInfo.put("default_value", rs.getString("default_value"));
@@ -765,58 +765,58 @@ public class MetaDbServiceEx extends MetaDbService {
         }
 
         boolean catalog = isCatalog();
-        ResultSet rs = dmd.getColumns(catalog ? schemaDBName : null, catalog ? null : schemaDBName, tableDBName, null);
-        while (rs.next()) {
-            String columnName = rs.getString(COLUMN_DEF_NAME);
-            HashMap<String, Object> columnInfo = new HashMap<String, Object>();
-            result.put(columnName.toUpperCase(), columnInfo);
-            columnInfo.put(COLUMN_DEF_NAME, columnName);
-            columnInfo.put(COLUMN_DEF_DEFAULT_VALUE, rs.getString(COLUMN_DEF_DEFAULT_VALUE));
-            columnInfo.put(COLUMN_DEF_NULLABLE, rs.getInt(COLUMN_DEF_NULLABLE));
-            columnInfo.put(COLUMN_DEF_CHAR_LENGTH, rs.getInt(COLUMN_DEF_CHAR_LENGTH));
-            columnInfo.put(COLUMN_DEF_VALUE_CONSTRAINTS, defaultValueConstraints != null ? defaultValueConstraints.get(columnName) : null);
+        try (ResultSet rs = dmd.getColumns(catalog ? schemaDBName : null, catalog ? null : schemaDBName, tableDBName, null)) {
+            while (rs.next()) {
+                String columnName = rs.getString(COLUMN_DEF_NAME);
+                HashMap<String, Object> columnInfo = new HashMap<>();
+                result.put(columnName.toUpperCase(), columnInfo);
+                columnInfo.put(COLUMN_DEF_NAME, columnName);
+                columnInfo.put(COLUMN_DEF_DEFAULT_VALUE, rs.getString(COLUMN_DEF_DEFAULT_VALUE));
+                columnInfo.put(COLUMN_DEF_NULLABLE, rs.getInt(COLUMN_DEF_NULLABLE));
+                columnInfo.put(COLUMN_DEF_CHAR_LENGTH, rs.getInt(COLUMN_DEF_CHAR_LENGTH));
+                columnInfo.put(COLUMN_DEF_VALUE_CONSTRAINTS, defaultValueConstraints != null ? defaultValueConstraints.get(columnName) : null);
+            }
         }
-        rs.close();
         return result;
     }
 
     public Map<String, Map<String, Object>> listDBTablePKey(MetaTable table, final DatabaseMetaData dmd) throws SQLException {
-        Map<String, Map<String, Object>> result = new LinkedHashMap<String, Map<String, Object>>();
+        Map<String, Map<String, Object>> result = new LinkedHashMap<>();
         String schemaDBName = dbIdentifier(MetaTable.SCHEMA.of(table), dmd);
         String tableDBName = dbIdentifier(MetaTable.NAME.of(table), dmd);
         boolean catalog = isCatalog();
-        ResultSet rs = dmd.getPrimaryKeys(catalog ? schemaDBName : null, catalog ? null : schemaDBName, tableDBName);
-        while (rs.next()) {
-            String keyName = rs.getString(PKEY_DEF_NAME);
-            String columnName = rs.getString(PKEY_DEF_COLUMN_NAME);
-            HashMap<String, Object> info = new HashMap<String, Object>();
-            result.put(keyName.toUpperCase(), info);
-            info.put(PKEY_DEF_NAME, keyName);
-            info.put(PKEY_DEF_COLUMN_NAME, columnName);
+        try (ResultSet rs = dmd.getPrimaryKeys(catalog ? schemaDBName : null, catalog ? null : schemaDBName, tableDBName)) {
+            while (rs.next()) {
+                String keyName = rs.getString(PKEY_DEF_NAME);
+                String columnName = rs.getString(PKEY_DEF_COLUMN_NAME);
+                HashMap<String, Object> info = new HashMap<>();
+                result.put(keyName.toUpperCase(), info);
+                info.put(PKEY_DEF_NAME, keyName);
+                info.put(PKEY_DEF_COLUMN_NAME, columnName);
+            }
         }
-        rs.close();
         return result;
     }
 
     public Map<String, Map<String, Object>> listDBTableFKey(MetaTable table, final DatabaseMetaData dmd) throws SQLException {
-        Map<String, Map<String, Object>> result = new LinkedHashMap<String, Map<String, Object>>();
+        Map<String, Map<String, Object>> result = new LinkedHashMap<>();
         String schemaDBName = dbIdentifier(MetaTable.SCHEMA.of(table), dmd);
         String tableDBName = dbIdentifier(MetaTable.NAME.of(table), dmd);
         boolean catalog = isCatalog();
-        ResultSet rs = dmd.getImportedKeys(catalog ? schemaDBName : null, catalog ? null : schemaDBName, tableDBName);
-        while (rs.next()) {
-            String keyName = rs.getString(FKEY_DEF_NAME);
-            HashMap<String, Object> info = new HashMap<String, Object>();
-            result.put(keyName.toUpperCase(), info);
-            info.put(FKEY_DEF_NAME, keyName);
+        try (ResultSet rs = dmd.getImportedKeys(catalog ? schemaDBName : null, catalog ? null : schemaDBName, tableDBName)) {
+            while (rs.next()) {
+                String keyName = rs.getString(FKEY_DEF_NAME);
+                HashMap<String, Object> info = new HashMap<>();
+                result.put(keyName.toUpperCase(), info);
+                info.put(FKEY_DEF_NAME, keyName);
+            }
         }
-        rs.close();
         return result;
     }
 
     public Set<String> listDBTableIndexes(MetaTable table, final DatabaseMetaData dmd, List<MetaColumn> skippedPrimaryKeyColumns) throws SQLException {
         ResultSet rs;
-        Set<String> dbTableIndexes = new HashSet<String>();
+        Set<String> dbTableIndexes = new HashSet<>();
         String schemaDBName = dbIdentifier(MetaTable.SCHEMA.of(table), dmd);
         String tableDBName = dbIdentifier(MetaTable.NAME.of(table), dmd);
         boolean catalog = isCatalog();

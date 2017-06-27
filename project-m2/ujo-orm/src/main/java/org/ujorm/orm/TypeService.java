@@ -130,6 +130,7 @@ public class TypeService implements ITypeService<Object,Object> {
      * @return Value form the result set.
      * @throws SQLException
      */
+    @Override
     public Object getValue(final MetaColumn mColumn, final ResultSet rs, final int c) throws SQLException {
         final Object r;
         switch (mColumn.getTypeCode()) {
@@ -183,6 +184,7 @@ public class TypeService implements ITypeService<Object,Object> {
      * @return Value form the result set.
      * @throws SQLException
      */
+    @Override
     public Object getValue(final MetaColumn mColumn, final CallableStatement rs, final int c) throws SQLException {
         final Object r;
         switch (mColumn.getTypeCode()) {
@@ -234,6 +236,7 @@ public class TypeService implements ITypeService<Object,Object> {
      * @param c The database column index starts at #1
      * @throws SQLException
      */
+    @Override
     public void setValue
         ( final MetaColumn mColumn
         , final PreparedStatement rs
@@ -326,6 +329,7 @@ public class TypeService implements ITypeService<Object,Object> {
     }
 
     /** Return an converted Java type to database <b>DDL statements</b> by a generic test. */
+    @Override
     public Class getDbTypeClass(final MetaColumn column) {
         assert column.getConverter()==this : "Invalid column for this service: " + column;
 

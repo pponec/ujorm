@@ -51,14 +51,14 @@ public class RelationToOne<UJO extends ExtendedOrmUjo, VALUE> extends OrmPropert
 
     /** A Property Factory */
     public static <UJO extends ExtendedOrmUjo, VALUE extends ExtendedOrmUjo> RelationToOne<UJO, VALUE> of(Class<VALUE> type, Key<VALUE,?> relatedKey) {
-        return new RelationToOne<UJO, VALUE>(null, type, relatedKey);
+        return new RelationToOne<>(null, type, relatedKey);
     }
 
     /** A Property Factory
      * @deprecated Use the method {@link #of(java.lang.Class, org.ujorm.Key) }
      */
     public static <UJO extends ExtendedOrmUjo, VALUE extends ExtendedOrmUjo> RelationToOne<UJO, VALUE> newInstance(Class<VALUE> type, Key<VALUE,?> relatedKey) {
-        return new RelationToOne<UJO, VALUE>(null, type, relatedKey);
+        return new RelationToOne<>(null, type, relatedKey);
     }
 
 }

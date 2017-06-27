@@ -266,7 +266,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         if (getKey() instanceof RelationToOne) {
             RelationToOne rto = (RelationToOne) TABLE_KEY.of(this);
             MetaColumn mc = (MetaColumn) getHandler().findColumnModel(rto.getRelatedKey(), true);
-            result = new ArrayList<MetaColumn>(1);
+            result = new ArrayList<>(1);
             result.add(mc);
         } else {
             table = getHandler().findTableModel(getType());
@@ -294,7 +294,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
                 final StringTokenizer tokenizer = new StringTokenizer(dbColumns.size()==1
                         ? getName() : "", ", ");
 
-                ArrayList<String> fNames = new ArrayList<String>(dbColumns.size());
+                ArrayList<String> fNames = new ArrayList<>(dbColumns.size());
                 for (MetaColumn dbColumn : dbColumns) {
                     String name;
                     if (tokenizer.hasMoreTokens()) {
@@ -354,6 +354,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     }
 
     /** Returns a column name */
+    @Override
     public final String getName() {
         return NAME.of(this);
     }

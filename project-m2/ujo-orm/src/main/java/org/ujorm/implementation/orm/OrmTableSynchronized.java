@@ -39,7 +39,6 @@ import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
  *   <li>some critical method are synchronized</li>
  *   <li>Session is saved to the ThreadLocal instance so object in different thread must assign a new Session</li>
  * </ul>
- * <ul>
  * See the {@link OrmTable} javadoc for basic information.
  * @author Pavel Ponec
  * @see OrmTable
@@ -64,7 +63,7 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
             if (session==null) {
                 return;
             }
-            this.session = new ThreadLocal<Session>();
+            this.session = new ThreadLocal<>();
         }
         this.session.set(session);
     }
@@ -74,7 +73,7 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     synchronized public void writeValue(Key key, Object value) {
         if (readSession()!=null) {
             if (changes==null) {
-                changes = new HashSet<Key>(8);
+                changes = new HashSet<>(8);
             }
             changes.add(key);
         }
@@ -191,14 +190,14 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
      */
     @Deprecated
     protected static <UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo> RelationToMany<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
-        return new RelationToMany<UJO,ITEM> (name, type, UNDEFINED_INDEX, false);
+        return new RelationToMany<> (name, type, UNDEFINED_INDEX, false);
     }
 
     /** A PropertyIterator Factory creates an new key and assign a next index.
      * @hidden
      */
     protected static <UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo> RelationToMany<UJO,ITEM> newRelation(String name) {
-        return new RelationToMany<UJO,ITEM> (name, null, UNDEFINED_INDEX, false);
+        return new RelationToMany<> (name, null, UNDEFINED_INDEX, false);
     }
 
     /** A PropertyIterator Factory creates an new key and assign a next index.
@@ -262,7 +261,7 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     }
 
     /** A Property Factory creates new key and assigns a next key index.
-     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
+     * <br>Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newKey
@@ -272,7 +271,7 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     }
 
     /** Returns a new instance of key where the default value is null.
-     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
+     * <br>Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     @SuppressWarnings("unchecked")
@@ -283,7 +282,7 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     // ------------- DEPRECATED METHODS ---------------------
 
     /** A Property Factory creates new key and assigns a next key index.
-     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
+     * <br>Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use rather a method {@link QuickUjo#newProperty(java.lang.String)} instead of this.
      * @hidden
      */
@@ -296,7 +295,7 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     }
 
     /** A Property Factory creates new key and assigns a next key index.
-     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
+     * <br>Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use the method newKey(...)
      * @hidden
      */
@@ -306,7 +305,7 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     }
 
     /** A Property Factory creates new key and assigns a next key index.
-     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
+     * <br>Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use the method newKey(...)
      * @hidden
      */
@@ -319,7 +318,7 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     }
 
     /** A Property Factory creates new key and assigns a next key index.
-     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
+     * <br>Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use rather a method {@link QuickUjo#newProperty()} instead of this,
      * @hidden
      */
@@ -342,7 +341,7 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     }
 
     /** A Property Factory creates new key and assigns a next key index.
-     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
+     * <br>Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      * @deprecated Use the method newKey(...)
      */
@@ -354,7 +353,7 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     }
 
     /** A Property Factory creates new key and assigns a next key index.
-     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
+     * <br>Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      * @deprecated Use the method newKey(...)
      */

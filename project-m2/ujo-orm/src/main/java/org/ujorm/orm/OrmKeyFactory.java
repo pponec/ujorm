@@ -53,7 +53,7 @@ public class OrmKeyFactory<UJO extends OrmUjo> extends KeyFactory<UJO> {
      * @hidden
      */
     public <UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo> RelationToMany<UJO,ITEM> newRelation() {
-        final RelationToMany<UJO,ITEM> p = new RelationToMany<UJO,ITEM>(null);
+        final RelationToMany<UJO,ITEM> p = new RelationToMany<>(null);
         addKey(p);
         return p;
     }

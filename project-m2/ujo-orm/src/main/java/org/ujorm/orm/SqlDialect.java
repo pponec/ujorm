@@ -146,7 +146,7 @@ abstract public class SqlDialect {
     }
 
     /** Print a extended SQL table name by sample: SCHEMA.TABLE
-     * @param printSymbolSchema True parameter replaces a <string>default schema</string> name for the symbol "~" by the example: ~.TABLE
+     * @param printSymbolSchema True parameter replaces a <strong>default schema</strong> name for the symbol "~" by the example: ~.TABLE
      * @throws IOException
      */
     public Appendable printFullTableName(final MetaTable table, final boolean printSymbolSchema, final Appendable out) throws IOException {

@@ -27,7 +27,7 @@ import static org.ujorm.orm.metaModel.MetaTable.DATABASE;
 
 /** The database index model builder. The builder sorts columns of the composite index
  * according the natural order of Keys in the {@link Ujo} class
- * <br/>
+ * <br>
  * See the next example to create a composite index with two columns with a natural order:
  * <pre class="pre">
  *   private static final String IDX_STATE_COUNT = "idx_state_count";
@@ -59,7 +59,7 @@ public class IndexModelBuilder  {
         }
         this.metaTable = metaTable;
         this.nameProvider = metaTable.getDatabase().getDialect().getNameProvider();
-        this.mapIndex = new HashMap<String, MetaIndex>();
+        this.mapIndex = new HashMap<>();
     }
 
     /** Add the column model to the index model from the IndexMap according the index name (case insensitive)

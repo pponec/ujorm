@@ -57,7 +57,7 @@ public @interface Db {
     Class<? extends UjoSequencer> sequencer() default org.ujorm.orm.UjoSequencer.class;
     /** Default read-only state for all database tables.
      * The parameter value is evaluated in the execution SQL commands type of INSERT, UPDATE, and DELETE.
-     * <br/>Note, that only the default value FALSE can be overwritten by a table annotation or by a XML config. 
+     * <br>Note, that only the default value FALSE can be overwritten by a table annotation or by a XML config. 
      * @see Table#readOnly()
      */
     boolean readOnly() default false;

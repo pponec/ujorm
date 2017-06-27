@@ -39,7 +39,6 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
 
     /** Constructor
      * @param name optional
-     * @param itemType optional
      */
     public RelationToMany(String name) {
         this(name, null, UNDEFINED_INDEX, false);

@@ -132,7 +132,7 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** Any action type or CREATE, UPDATE, DELETE on inheritance objects calls the same action to its 'parent' object.
      * If the mode is off than you must take care of all its parents in the code handy.
-     * The default failure is TRUE.<br />
+     * The default failure is TRUE.<br>
      * Note: the parameter does not affect the operations
      * {@link org.ujorm.orm.Session#update(org.ujorm.orm.OrmUjo, org.ujorm.criterion.Criterion) batch update} or
      * {@link org.ujorm.orm.Session#delete(org.ujorm.criterion.Criterion) batch delete} due direct modification of database.

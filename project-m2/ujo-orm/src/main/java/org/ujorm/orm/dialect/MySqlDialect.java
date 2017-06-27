@@ -220,7 +220,7 @@ public class MySqlDialect extends SqlDialect {
     }
 
     /** Create a SQL script for the NEXT SEQUENCE from a native database sequencer
-     * <br/>TIP: SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = $dbName AND TABLE_NAME = $tblName.
+     * <br>TIP: SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = $dbName AND TABLE_NAME = $tblName.
      */
     @Override
     public Appendable printNextSequence(String sequenceName, MetaTable table, Appendable out) throws IOException {

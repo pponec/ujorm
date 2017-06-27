@@ -69,9 +69,9 @@ public class SerializatonTest extends TestCase {
     @SuppressWarnings("unchecked")
     private <T> T serialize(Serializable object) throws Exception {
         ByteArrayOutputStream os = new ByteArrayOutputStream(8000);
-        ObjectOutputStream encoder = new ObjectOutputStream(os);
-        encoder.writeObject(object);
-        encoder.close();
+        try (ObjectOutputStream encoder = new ObjectOutputStream(os)) {
+            encoder.writeObject(object);
+        }
         //
         InputStream is = new ByteArrayInputStream(os.toByteArray());
         ObjectInputStream decoder = new ObjectInputStream(is);

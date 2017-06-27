@@ -31,20 +31,24 @@ import org.ujorm.orm_tutorial.sample.Order.State;
  */
 public class StateConverter_2 implements ITypeService<Order.State, Short> {
 
+    @Override
     public State getValue(MetaColumn mColumn, ResultSet rs, int c) throws SQLException {
         int i = rs.getInt(c);
         return State.values()[i];
     }
 
+    @Override
     public State getValue(MetaColumn mColumn, CallableStatement rs, int c) throws SQLException {
         int i = rs.getInt(c);
         return State.values()[i];
     }
 
+    @Override
     public void setValue(MetaColumn mColumn, PreparedStatement rs, State value, int c) throws SQLException {
         rs.setInt(c, value.ordinal());
     }
 
+    @Override
     public Class<Short> getDbTypeClass(MetaColumn column) {
         return Short.class;
     }

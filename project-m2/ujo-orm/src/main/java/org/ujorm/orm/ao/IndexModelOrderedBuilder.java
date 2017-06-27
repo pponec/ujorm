@@ -30,7 +30,7 @@ import org.ujorm.core.annot.PackagePrivate;
  * Two index columns with the same order value are sorted according
  * to the natural order of the Keys in the {@link Ujo} class.
  * The default order value (with no number in the index name) is <strong>10</strong>.
- * <br/>
+ * <br>
  * See the next example to create a composite index with two columns in a reverted order:
  * <pre class="pre">
  *   private static final String IDX_STATE_COUNT = "idx_state_count";
@@ -61,7 +61,7 @@ public class IndexModelOrderedBuilder extends IndexModelBuilder {
     protected static final Integer DEFAULT_ORDER = 10;
 
     /** Index columns */
-    private final Map<String, List<OrderedColumn>> idxMap = new HashMap<String, List<OrderedColumn>>();
+    private final Map<String, List<OrderedColumn>> idxMap = new HashMap<>();
 
     /** Returns a separator of the column order from an index name.
      * @return The default value is {@code '#'}
@@ -97,7 +97,7 @@ public class IndexModelOrderedBuilder extends IndexModelBuilder {
         //
         List<OrderedColumn> columns = idxMap.get(indexKey);
         if (columns == null) {
-            columns = new ArrayList<OrderedColumn>();
+            columns = new ArrayList<>();
             idxMap.put(indexKey, columns);
         }
         final MetaColumn lastCol = columns.isEmpty()

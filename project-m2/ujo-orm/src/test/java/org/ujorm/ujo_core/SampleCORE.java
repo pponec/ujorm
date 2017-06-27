@@ -187,7 +187,7 @@ public class SampleCORE {
      *    <li>the Validator can be assigned to the {@link Key} to check all input data in the <strong>writing time</strong> always</li>
      * </ul>
      * The {@link Employee#NAME} has got allowed max 7 characters length.
-     * <br/>The key definition in the {@link Employee} class is:
+     * <br>The key definition in the {@link Employee} class is:
      * <pre>{@code public static final Key<Employee, String> NAME = factory.newKey(length(7));
      *  }</pre>
      */

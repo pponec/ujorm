@@ -55,7 +55,7 @@ final public class MetaSelect extends AbstractMetaModel {
 
     /**
      * Constructor.
-     * @param select SQL SELECT, the sample of the parameter<br />
+     * @param select SQL SELECT, the sample of the parameter<br>
      *  SELECT DISTINCT size(*) as itemCount, ord.id as id FROM order ord, item itm
      *  WHERE ord.id=itm.orderId
      *  GROUP BY ord.id ;

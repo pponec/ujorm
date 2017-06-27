@@ -169,7 +169,7 @@ final public class AliasKey {
      * @param compositeKey The Ujorm composite Key
      */
     public static AliasKey getLastKey(final Key<?,?> compositeKey) {
-        final ArrayList<AliasKey> result = new ArrayList<AliasKey>(1);
+        final ArrayList<AliasKey> result = new ArrayList<>(1);
         addLastKey(compositeKey, result);
         return result.isEmpty() ? null : result.get(0);
     }

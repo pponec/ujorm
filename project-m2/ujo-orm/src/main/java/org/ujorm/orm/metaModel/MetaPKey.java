@@ -49,7 +49,7 @@ final public class MetaPKey extends AbstractMetaModel {
 
     public MetaPKey(MetaTable table) {
         TABLE.setValue(this, table);
-        COLUMNS.setValue(this, new ArrayList<MetaColumn>(0));
+        COLUMNS.setValue(this, new ArrayList<>(0));
     }
 
     @Override

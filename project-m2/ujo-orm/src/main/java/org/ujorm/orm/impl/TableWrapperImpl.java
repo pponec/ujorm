@@ -35,7 +35,7 @@ public class TableWrapperImpl implements TableWrapper {
     public TableWrapperImpl(MetaTable table, String alias) {
         this.table = table;
         this.alias = alias;
-        this.columns = new ArrayList<ColumnWrapper>(16);
+        this.columns = new ArrayList<>(16);
     }
 
     @Override

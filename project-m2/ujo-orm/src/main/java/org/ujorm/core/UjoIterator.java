@@ -82,7 +82,7 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T>, Closea
 
     /** Copy items to a new List */
     public List<T> toList() throws IllegalStateException {
-        final List<T> result = new ArrayList<T>(32);
+        final List<T> result = new ArrayList<>(32);
         for (T item : this) {
             result.add(item);
         }

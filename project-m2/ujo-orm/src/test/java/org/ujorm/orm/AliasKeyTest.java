@@ -46,8 +46,8 @@ public class AliasKeyTest extends TestCase {
      * Test of getKey method, of class Relation.
      */
     public void testConditions() {
-        Set<AliasKey> outSet = new HashSet<AliasKey>();
-        LinkedList<AliasKey> outList = new LinkedList<AliasKey>();
+        Set<AliasKey> outSet = new HashSet<>();
+        LinkedList<AliasKey> outList = new LinkedList<>();
         //-
         Key key0 = XCustomer.SUPERIOR;
         AliasKey.addKeys(key0, outList);
@@ -86,8 +86,8 @@ public class AliasKeyTest extends TestCase {
      * Test of getKey method, of class Relation.
      */
     public void testRelations() {
-        Set<AliasKey> outSet = new HashSet<AliasKey>();
-        LinkedList<AliasKey> outList = new LinkedList<AliasKey>();
+        Set<AliasKey> outSet = new HashSet<>();
+        LinkedList<AliasKey> outList = new LinkedList<>();
         //-
         Key key0 = XCustomer.SUPERIOR;
         AliasKey.addKeys(key0, outList);
@@ -126,8 +126,8 @@ public class AliasKeyTest extends TestCase {
      * Test of getKey method, of class Relation.
      */
     public void testLastCondition() {
-        Set<AliasKey> outSet = new HashSet<AliasKey>();
-        LinkedList<AliasKey> outList = new LinkedList<AliasKey>();
+        Set<AliasKey> outSet = new HashSet<>();
+        LinkedList<AliasKey> outList = new LinkedList<>();
         //-
         Key key0 = XCustomer.SUPERIOR;
         AliasKey.addLastKey(key0, outList);

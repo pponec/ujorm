@@ -18,7 +18,6 @@ package org.ujorm.orm_tutorial.sample;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.time.LocalDateTime;
-import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.Transient;

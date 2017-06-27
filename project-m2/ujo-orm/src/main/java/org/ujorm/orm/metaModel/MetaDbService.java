@@ -59,10 +59,10 @@ public class MetaDbService {
     public void create(MetaDatabase metaDatabase, Session session) {
         this.db = metaDatabase;
         Connection conn = session.getConnection(db, true);
-        List<MetaTable> tables = new ArrayList<MetaTable>();
-        List<MetaColumn> newColumns = new ArrayList<MetaColumn>();
-        List<MetaColumn> foreignColumns = new ArrayList<MetaColumn>();
-        List<MetaIndex> indexes = new ArrayList<MetaIndex>();
+        List<MetaTable> tables = new ArrayList<>();
+        List<MetaColumn> newColumns = new ArrayList<>();
+        List<MetaColumn> foreignColumns = new ArrayList<>();
+        List<MetaIndex> indexes = new ArrayList<>();
         int tableTotalCount = db.getTableTotalCount();
 
         try {
@@ -151,7 +151,7 @@ public class MetaDbService {
 
                 // ---------- CHECK TABLE COLUMNS ----------
 
-                final Set<String> items = new HashSet<String>(32);
+                final Set<String> items = new HashSet<>(32);
                 final String schema = dbIdentifier(MetaTable.SCHEMA.of(table),dmd);
                 ResultSet rs = dmd.getColumns
                     ( catalog ? schema : null

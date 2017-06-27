@@ -517,7 +517,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Get all table schemas */
     public Set<String> getSchemas(List<MetaTable> tables) {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         for (MetaTable table : tables) {
             if (table.isTable()) {
                 String schema = MetaTable.SCHEMA.of(table);
@@ -586,7 +586,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Returns all database indexes */
     public List<MetaIndex> getIndexList() {
-        final List<MetaIndex> result = new ArrayList<MetaIndex>(32);
+        final List<MetaIndex> result = new ArrayList<>(32);
 
         for (MetaTable table : TABLES.of(this)) {
             result.addAll(table.getIndexCollection());
@@ -605,6 +605,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Compare the object by ORDER. */
+    @Override
     public int compareTo(MetaDatabase o) {
         final Integer i1 = ORDER.of(this);
         final Integer i2 = ORDER.of(o);

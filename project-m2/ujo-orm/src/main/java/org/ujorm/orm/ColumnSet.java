@@ -20,7 +20,7 @@ package org.ujorm.orm;
  * This Interface can be used as a sign for an external column set to be included
  * to a basic database table, so the  {@link ColumnSet} object does not create
  * separated database table.
- * <br/>
+ * <br>
  * Inner relations to an another implementation of the interface {@link ColumnSet}
  * are allowed.
  *

@@ -69,7 +69,7 @@ abstract public class DbProcedure<UJO extends DbProcedure> extends SmartUjo<UJO>
      * @hidden
      */
     protected static <UJO extends OrmTable, ITEM extends OrmTable> RelationToMany<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
-        return new RelationToMany<UJO,ITEM> (name, type, -1, false);
+        return new RelationToMany<> (name, type, -1, false);
     }
 
     /** A PropertyIterator Factory creates an new key and assign a next index.

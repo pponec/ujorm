@@ -58,7 +58,7 @@ import org.ujorm.core.IllegalUjormException;
 
 /**
  * The ORM session.
- * <br />Methods of the session are not thread safe.
+ * <br>Methods of the session are not thread safe.
  * @author Pavel Ponec
  * @composed * - 1 OrmHandler
  * @assoc - - - JdbcStatement
@@ -80,8 +80,8 @@ public class Session implements Closeable {
     final private MetaParams params;
     /** Two database connections set (common and sequence)  */
     final private HashMap<MetaDatabase, Connection>[] connections = new HashMap[]
-        { new HashMap<MetaDatabase, Connection>(2) // common connections
-        , new HashMap<MetaDatabase, Connection>(2) // sequence connections
+        { new HashMap<>(2) // common connections
+        , new HashMap<>(2) // sequence connections
     };
     /** A session cache */
     private Map<CacheKey, OrmUjo> cache;
@@ -288,14 +288,14 @@ public class Session implements Closeable {
      */
     public final <U extends OrmUjo> Query<U> createQuery(final Criterion<U> criterion, final Class<U> aClass) {
         final MetaTable metaTable = handler.findTableModel(aClass);
-        return new Query<U>(metaTable, criterion, this);
+        return new Query<>(metaTable, criterion, this);
     }
 
     /** The table class is derived from the first criterion column. */
     public final <U extends OrmUjo> Query<U> createQuery(final Criterion<U> criterion) {
         final MetaRelation2Many column = getBasicColumn(criterion);
         final MetaTable table = MetaRelation2Many.TABLE.of(column);
-        return new Query<U>(table, criterion, this);
+        return new Query<>(table, criterion, this);
     }
 
     /** Returns {@code true} if exists any database row with the required condition. */
@@ -313,7 +313,7 @@ public class Session implements Closeable {
 
     /** Returns {@code true} if exists any database row for the required criterion. */
     protected final <U extends OrmUjo> boolean exists( MetaTable table, Criterion<U> criterion, Key pk) {
-        final Ujo result = new Query<U>(table, criterion, this)
+        final Ujo result = new Query<>(table, criterion, this)
                 .setColumn(pk)
                 .setLimit(1)
                 .uniqueResult();
@@ -543,7 +543,7 @@ public class Session implements Closeable {
 
     /** Database Batch UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} along a criterion.
      * The method cleans all flags of modified attributes.
-     * <br />Warning: method does affect to parent objects, see the {@link MetaParams#INHERITANCE_MODE} for more information.
+     * <br>Warning: method does affect to parent objects, see the {@link MetaParams#INHERITANCE_MODE} for more information.
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
@@ -597,9 +597,9 @@ public class Session implements Closeable {
     }
 
     /** Delete all object object by the criterion from parameter.
-     * <br />Warning 1: method does not remove deleted object from internal cache,
+     * <br>Warning 1: method does not remove deleted object from internal cache,
      *       however you can call method clearCache() to release all objects from the cache.
-     * <br />Warning 2: method does not delete parent objects, see the {@link MetaParams#INHERITANCE_MODE} for more information.
+     * <br>Warning 2: method does not delete parent objects, see the {@link MetaParams#INHERITANCE_MODE} for more information.
      * @param criterion filter for deleting tables.
      * @return Returns a number of the really deleted objects.
      */
@@ -653,7 +653,7 @@ public class Session implements Closeable {
         final MetaTable table = handler.findTableModel(firstBo.getClass());
         table.assertChangeAllowed();
         final MetaColumn PK = table.getFirstPK();
-        final List<Object> pKeys = new ArrayList<Object>(bos.size());
+        final List<Object> pKeys = new ArrayList<>(bos.size());
         for (T bo : bos) {
             pKeys.add(PK.getValue(bo));
             if (REMOVE_CACHE_ON_DELETE) {
@@ -666,7 +666,7 @@ public class Session implements Closeable {
 
         // Delete all parents:
         if (MetaParams.INHERITANCE_MODE.of(params)) {
-            final List<OrmUjo> parents = new ArrayList<OrmUjo>(bos.size());
+            final List<OrmUjo> parents = new ArrayList<>(bos.size());
             for (T bo : bos) {
                 final OrmUjo parent = table.getParent(bo);
                 if (parent != null) {
@@ -679,7 +679,7 @@ public class Session implements Closeable {
     }
 
     /** Delete all object object by the criterion from parameter.
-     * <br />Warning: method does not remove deleted object from internal cache,
+     * <br>Warning: method does not remove deleted object from internal cache,
      *       however you can call method clearCache() to release all objects from the cache.
      * @param tableClass Type of table to delete
      * @param criterion filter for deleting tables.
@@ -691,7 +691,7 @@ public class Session implements Closeable {
     }
 
     /** Delete all objects object form parameter
-     * <br />Warning: method does not remove deleted object from internal cache,
+     * <br>Warning: method does not remove deleted object from internal cache,
      *       however you can call method clearCache() to release all objects from the cache.
      * @param tableModel Type of table to delete
      * @param criterion filter for deleting tables.
@@ -752,7 +752,7 @@ public class Session implements Closeable {
 
     /** Convert a key array to a column list. */
     protected List<MetaColumn> getOrmColumns(final Key... keys) {
-        final List<MetaColumn> result = new ArrayList<MetaColumn>(keys.length);
+        final List<MetaColumn> result = new ArrayList<>(keys.length);
 
         for (Key key : keys) {
             MetaRelation2Many column = handler.findColumnModel(key);
@@ -1178,10 +1178,10 @@ public class Session implements Closeable {
         assertOpenSession();
         switch (policy) {
             case PROTECTED_CACHE:
-                cache = new WeakHashMap<CacheKey, OrmUjo>();
+                cache = new WeakHashMap<>();
                 break;
             case SOLID_CACHE:
-                cache = new HashMap<CacheKey, OrmUjo>();
+                cache = new HashMap<>();
                 break;
             case NO_CACHE:
                 cache = null;

@@ -44,7 +44,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
  *             + "WHERE order.ID = item.fk_order";
  *
  *     assertEquals(sqlExpected, sql);
- * }}<pre>
+ * }}</pre>
  *
  * @author Pavel Ponec
  */
@@ -153,7 +153,7 @@ public class AliasTable<UJO extends OrmUjo> {
     // ------------ HELPER METHODS ------------
 
     /** Returns one column including an default special alias after the 'AS' phrase.
-     * @param key Related key
+     * @param column Related key
      * @param columnAlias an alias name or a Key instance, the {@code null} value use an Key name.
      * @return Returns one column including an default special alias.
      * @throws IllegalStateException
@@ -179,12 +179,12 @@ public class AliasTable<UJO extends OrmUjo> {
 
     /** Create new Alias with required name */
     public static <UJO extends OrmUjo> AliasTable<UJO> of(Class<UJO> table, String alias, OrmHandler handler) {
-        return new AliasTable<UJO>(table, alias, handler);
+        return new AliasTable<>(table, alias, handler);
     }
 
     /** Create new Alias with default name */
     public static <UJO extends OrmUjo> AliasTable<UJO> of(Class<UJO> table, OrmHandler handler) {
-        return new AliasTable<UJO>(handler.findTableModel(table), handler);
+        return new AliasTable<>(handler.findTableModel(table), handler);
     }
 
     // ------------ STATIC TOOLS ------------

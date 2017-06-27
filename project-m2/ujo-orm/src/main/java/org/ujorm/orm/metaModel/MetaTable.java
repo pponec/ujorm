@@ -389,7 +389,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         }
     }
 
-    /** Returns a parent of the parameter or the null if no parent was not found.<br/>
+    /** Returns a parent of the parameter or the null if no parent was not found.<br>
      * The method provides a parent in case of emulated inheritance.
      */
     public OrmUjo getParent(final OrmUjo bo) {

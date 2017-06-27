@@ -31,6 +31,7 @@ public class HsqldbDialect extends H2Dialect {
      * <br>For a PostgreSQL simulation use: 
      * {@code jdbc:hsqldb:mem:db1;sql.syntax_pgs=true}
      */    
+    @Override
     public String getJdbcUrl() {
         return "jdbc:hsqldb:mem:db1";
     }

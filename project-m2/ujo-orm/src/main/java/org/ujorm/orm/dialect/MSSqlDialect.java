@@ -110,7 +110,7 @@ public class MSSqlDialect extends SqlDialect {
         return out;
     }
 
-    /** Print a full SQL column alias name by sample: <TABLE>_<ALIAS_COLUMN> */
+    /** Print a full SQL column alias name by sample: [TABLE]_[ALIAS_COLUMN] */
     public Appendable printColumnUnderAlias(final MetaColumn column, final Appendable out) throws IOException {
         final MetaTable table = MetaColumn.TABLE.of(column);
 
@@ -121,7 +121,7 @@ public class MSSqlDialect extends SqlDialect {
         return out;
     }
 
-    /** Print a full SQL column alias name by sample: o_<TABLE>_<ALIAS_COLUMN> - used for as order alias */
+    /** Print a full SQL column alias name by sample: o_[TABLE]_[ALIAS_COLUMN] - used for as order alias */
     public Appendable printColumnOrderAlias(final ColumnWrapper column, final Appendable out) throws IOException {
         out.append("o_");
         out.append(column.getTableAlias());
@@ -131,7 +131,7 @@ public class MSSqlDialect extends SqlDialect {
         return out;
     }
 
-    /**  prints columns in "<TABLE>.<COLUMN_NAME> AS <TABLE>_<COLUMN_NAME>" format separated by comma */
+    /**  prints columns in "[TABLE].[COLUMN_NAME] AS [TABLE]_[COLUMN_NAME]" format separated by comma */
     protected void printTableColumnsWithUnderAliases(Collection<ColumnWrapper> columnWrappers, Appendable out) throws IOException {
         String separator = "";
         for (ColumnWrapper columnWrapper : columnWrappers) {
@@ -161,7 +161,7 @@ public class MSSqlDialect extends SqlDialect {
         }
     }
 
-    /** prints columns in <TABLE>_<COLUMN_NAME> separated by comma */
+    /** prints columns in [TABLE]_[COLUMN_NAME] separated by comma */
     protected void printTableColumnsUnderAliases(Collection<ColumnWrapper> columnWrappers, Appendable out) throws IOException {
         String separator = "";
         for (ColumnWrapper columnWrapper : columnWrappers) {
@@ -247,7 +247,7 @@ public class MSSqlDialect extends SqlDialect {
 
     /** Where clause for inner select */
     protected void createWherePart(Query query, Appendable out) throws IOException {
-        Map<String, MetaTable> tables = new LinkedHashMap<String, MetaTable>();
+        Map<String, MetaTable> tables = new LinkedHashMap<>();
         List<Key> props = query.getOrderBy();
         for (int i = 0; i < props.size(); i++) {
             ColumnWrapper column = query.readOrderColumn(i);
@@ -435,7 +435,7 @@ public class MSSqlDialect extends SqlDialect {
     }
 
     /** Print a extended SQL table name by sample: SCHEMA.TABLE
-     * @param printSymbolSchema True parameter replaces a <string>default schema</string> name for the symbol "~" by the example: ~.TABLE
+     * @param printSymbolSchema True parameter replaces a <strong>default schema</strong> name for the symbol "~" by the example: ~.TABLE
      * @throws IOException
      */
     @Override
@@ -636,7 +636,7 @@ public class MSSqlDialect extends SqlDialect {
 
     /** Print table alias definition */
     protected void printTableAliasDefinition(CriterionDecoder decoder, Appendable out) throws IOException {
-        Map<String, MetaTable> tables = new LinkedHashMap<String, MetaTable>();
+        Map<String, MetaTable> tables = new LinkedHashMap<>();
         getTablesFromCriterion(decoder, tables);
         printTablesWithAlias(tables.values(), out);
     }
