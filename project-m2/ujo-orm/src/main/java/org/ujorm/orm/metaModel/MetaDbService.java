@@ -484,34 +484,41 @@ public class MetaDbService {
         }
     }
 
-    /** Check missing database table, index, or column */
-    protected void executeUpdate(final Appendable sql, final MetaTable table) throws IllegalUjormException, SQLException {
+    /**
+     * Check missing database table, index, or column
+     * @param sqlAppendable Single SQL statement
+     * @param table Model of database table
+     */
+    protected void executeUpdate(final Appendable sqlAppendable, final MetaTable table) throws IllegalUjormException, SQLException {
+        final String sql = sqlAppendable.toString();
+        if (sql.isEmpty()) {
+            return;
+        }
 
-       boolean validateCase = false;
-       switch (table.getOrm2ddlPolicy()) {
-           case INHERITED:
-               throw new IllegalUjormException("An internal error due the DDL policy: " + table.getOrm2ddlPolicy());
-           case DO_NOTHING:
-               return;
-           case VALIDATE:
-               validateCase = true;
-           case WARNING:
-               String msg = "A database validation (caused by the parameter "
-                          + MetaTable.ORM2DLL_POLICY
-                          + ") have found an inconsistency. "
-                          + "There is required a database change: "
-                          + sql
-                          ;
-               if (validateCase) {
-                   throw new IllegalUjormException(msg);
-               } else {
-                   LOGGER.log(WARN, msg);
-               }
+        boolean validateCase = false;
+        switch (table.getOrm2ddlPolicy()) {
+            case INHERITED:
+                throw new IllegalUjormException("An internal error due the DDL policy: " + table.getOrm2ddlPolicy());
+            case DO_NOTHING:
+                return;
+            case VALIDATE:
+                validateCase = true;
+            case WARNING:
+                String msg = "A database validation (caused by the parameter "
+                        + MetaTable.ORM2DLL_POLICY
+                        + ") have found an inconsistency. "
+                        + "There is required a database change: "
+                        + sql;
+                if (validateCase) {
+                    throw new IllegalUjormException(msg);
+                } else {
+                    LOGGER.log(WARN, msg);
+                }
 
-           default:
-               stat.executeUpdate(sql.toString());
-               LOGGER.log(INFO, sql.toString());
-       }
+            default:
+                stat.executeUpdate(sql);
+                LOGGER.log(INFO, sql);
+        }
     }
 
     /** Find the first sequence of the database or returns null if no sequence was not found. */
