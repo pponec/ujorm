@@ -2,6 +2,11 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 1.71 (2017-07-09)
++ ORM: Support for ZonedDateTime is finished
++ ORM: A bug of ujorm is fixed for HSQLDB dialect
++ ORM: file ujorm-1.71.xsd is upgraded
+
 release 1.70 (2017-06-20)
 + CORE: Minimal Java 1.8 is required
 + ORM: Left-outer-join is implemented by the API
