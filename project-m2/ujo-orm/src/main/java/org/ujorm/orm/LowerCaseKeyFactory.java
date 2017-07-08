@@ -17,21 +17,21 @@ import java.lang.reflect.Field;
 import java.util.Locale;
 
 /**
- * The SnakeCase Factory for an ORM.
+ * The lower_case Factory for an ORM.
  * @author František Mejta
  */
-public class SnakeCaseFactory<UJO extends OrmUjo> extends OrmKeyFactory<UJO> {
+public class LowerCaseKeyFactory<UJO extends OrmUjo> extends OrmKeyFactory<UJO> {
 
     /** Constructor for the ORM support */
-    public SnakeCaseFactory(Class<? extends UJO> type) {
+    public LowerCaseKeyFactory(Class<? extends UJO> type) {
         super(type);
     }
 
-    /** Returns a <a href="https://en.wikipedia.org/wiki/Snake_case">snake_case</a> name.
+    /** Returns a <strong>lower_case</strong> name.
      * The method expects a filed name by a java convention.
      */
     @Override
-    protected String createKeyName(final Field field, final boolean camelCase) {
+    protected String createKeyName(final Field field, final boolean lowerCase) {
         return field.getName().toLowerCase(Locale.ROOT);
     }
 

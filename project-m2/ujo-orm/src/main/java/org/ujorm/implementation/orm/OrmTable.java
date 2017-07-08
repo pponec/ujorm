@@ -32,7 +32,7 @@ import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
-import org.ujorm.orm.SnakeCaseFactory;
+import org.ujorm.orm.LowerCaseKeyFactory;
 
 /**
  * This abstract implementation of the OrmUjo interface is situable
@@ -199,12 +199,22 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
         return (FACTORY) new OrmKeyFactory(ujoClass, true);
     }
 
-    /** Create a factory with a snake_case Key name generator.
+    /** Create a factory with a lower_case Key name generator.
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
-     * @see SnakeCaseFactory
+     * @see LowerCaseKeyFactory
+     * @deprecated Use the {@link #newLowerCaseFactory(java.lang.Class) } rather
      */
+    @Deprecated
     protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newSnakeCaseFactory(Class<? extends UJO> ujoClass) {
-        return (FACTORY) new SnakeCaseFactory(ujoClass);
+        return newLowerCaseFactory(ujoClass);
+    }
+
+    /** Create a factory with a lower_case Key name generator.
+     * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
+     * @see LowerCaseKeyFactory
+     */
+    protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newLowerCaseFactory(Class<? extends UJO> ujoClass) {
+        return (FACTORY) new LowerCaseKeyFactory(ujoClass);
     }
 
     /** Create a base factory Key name generator where key name is the same as its field name.
