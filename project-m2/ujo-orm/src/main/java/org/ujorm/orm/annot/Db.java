@@ -74,7 +74,7 @@ public @interface Db {
      * will be used.
      * @see Orm2ddlPolicy#CREATE_OR_UPDATE_DDL
      */
-    Orm2ddlPolicy Orm2ddlPolicy() default Orm2ddlPolicy.INHERITED;
+    Orm2ddlPolicy orm2ddlPolicy() default Orm2ddlPolicy.INHERITED;
 
 
 }

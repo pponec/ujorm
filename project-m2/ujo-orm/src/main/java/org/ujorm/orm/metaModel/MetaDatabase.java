@@ -167,7 +167,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         if (annotDB!=null) {
             changeDefault(this, SCHEMA  , annotDB.schema());
             changeDefault(this, READ_ONLY, annotDB.readOnly());
-            changeDefault(this, ORM2DLL_POLICY, annotDB.Orm2ddlPolicy());
+            changeDefault(this, ORM2DLL_POLICY, annotDB.orm2ddlPolicy());
             changeDefault(this, DIALECT , annotDB.dialect());
             changeDefault(this, JDBC_URL, annotDB.jdbcUrl());
             changeDefault(this, JDBC_DRIVER, annotDB.jdbcDriver());
