@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+import javax.annotation.Nonnull;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -444,18 +445,14 @@ public class MetaDbService {
                         if (table.isTable()) {
                             if (table.isCommented()) {
                                 out.setLength(0);
-                                Appendable sql = db.getDialect().printComment(table, out);
-                                if (sql.toString().length() > 0) {
-                                    executeUpdate(sql, table);
-                                }
+                                final Appendable sql = db.getDialect().printComment(table, out);
+                                executeUpdate(sql, table);
                             }
                             for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
                                 if (column.isCommented()) {
                                     out.setLength(0);
-                                    Appendable sql = db.getDialect().printComment(column, out);
-                                    if (sql.toString().length() > 0) {
-                                        executeUpdate(sql, table);
-                                    }
+                                    final Appendable sql = db.getDialect().printComment(column, out);
+                                    executeUpdate(sql, table);
                                 }
                             }
                         }
@@ -486,12 +483,15 @@ public class MetaDbService {
 
     /**
      * Check missing database table, index, or column
-     * @param sqlAppendable Single SQL statement
+     * @param sqlAppendable Single SQL statement where the empty value is ignored
      * @param table Model of database table
+     * @throws IllegalUjormException An runtime exception
+     * @throws SQLException SQL exception
      */
-    protected void executeUpdate(final Appendable sqlAppendable, final MetaTable table) throws IllegalUjormException, SQLException {
+    protected void executeUpdate(@Nonnull final Appendable sqlAppendable, @Nonnull final MetaTable table) throws IllegalUjormException, SQLException {
         final String sql = sqlAppendable.toString();
         if (sql.isEmpty()) {
+            LOGGER.log(Level.FINEST, "Empty SQL statement");
             return;
         }
 
@@ -514,7 +514,6 @@ public class MetaDbService {
                 } else {
                     LOGGER.log(WARN, msg);
                 }
-
             default:
                 stat.executeUpdate(sql);
                 LOGGER.log(INFO, sql);
