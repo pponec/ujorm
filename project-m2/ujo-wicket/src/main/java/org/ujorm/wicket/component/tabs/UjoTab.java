@@ -103,7 +103,7 @@ public class UjoTab extends AbstractTab {
 
     /** Create new instance of the {@code panel} class.
      * You can overwrite the method for a special requirements.
-     * <br/>Original documentation: @{inheritDoc}
+     * <br>Original documentation: @{inheritDoc}
      */
     @Override
     public WebMarkupContainer getPanel(String panelId) throws IllegalStateException {

@@ -39,8 +39,8 @@ import org.ujorm.xsd.domains.RootSchema;
 import org.ujorm.xsd.domains.SimpleType;
 
 /**
- * The class build XSD file according to Ujo object.<br/>
- * Example of the use<br/>
+ * The class build XSD file according to Ujo object.<br>
+ * Example of the use<br>
  * <pre class=pre>[@code
  *    String xsd = new XsdBuilder(Company.class).print();
  * }</pre>

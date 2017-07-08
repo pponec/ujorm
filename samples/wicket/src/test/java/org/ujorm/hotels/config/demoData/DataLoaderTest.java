@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.ujorm.hotels.entity.City;
 
 /**
- * Class to load hotes.<br/>
+ * Class to load hotes.<br>
  * Join all CSV files using a linux statement:
  * <pre class=pre>
  * {@code head -q -n 20 *.csv}
@@ -82,7 +82,7 @@ public class DataLoaderTest {
         makeXslTransformation(source, xsl, cityArg, cityArg);
     }
 
-    /** Load data from URL by an example: <br/>
+    /** Load data from URL by an example: <br>
      * http://api.hotelsbase.org/search.php?longitude=14.421138&latitude=50.087533
      */
     public URL createDataUrl(City city) throws MalformedURLException {

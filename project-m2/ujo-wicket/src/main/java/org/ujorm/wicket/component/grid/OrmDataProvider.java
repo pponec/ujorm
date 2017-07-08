@@ -162,8 +162,8 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
      * The current implementation assigns all direct keys/columns from domain entity and
      * all required keys/columns from the IColumn object.
      *
-     * <br/>Note: You can overwrite the method for a different behaviour.
-     * <br/>Note: If the implementation will be empty, so all related attributes will be lazy loaded,
+     * <br>Note: You can overwrite the method for a different behaviour.
+     * <br>Note: If the implementation will be empty, so all related attributes will be lazy loaded,
      * so it can be a performance problem in some cases.
      * @see #isFetchDatabaseColumns()
      */

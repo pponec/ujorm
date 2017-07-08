@@ -275,7 +275,7 @@ public class BenchmarkHnP {
     }
 
     /** Test
-     * <br/>Example:
+     * <br>Example:
      * {@codemain(new String[]{"2000"}) }
      */
     public static void main(String[] args) {
@@ -297,7 +297,7 @@ public class BenchmarkHnP {
     }
 
     /**  Create new instance
-     * <br/>Example:
+     * <br>Example:
      * {@code new Instance("2000". "yes") }
      */
     public static BenchmarkHnP newInstance(String... args) {

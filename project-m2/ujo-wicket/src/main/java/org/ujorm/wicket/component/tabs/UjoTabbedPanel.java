@@ -119,7 +119,7 @@ public class UjoTabbedPanel<T extends UjoTab>
     }
 
     /** Assign a selected tab and add a user CSS class.
-     * <br/>{@inheritDoc}
+     * <br>{@inheritDoc}
      */
     @Override
     public final TabbedPanel<T> setSelectedTab(final int index) {

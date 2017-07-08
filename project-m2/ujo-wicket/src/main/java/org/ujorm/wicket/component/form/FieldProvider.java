@@ -291,7 +291,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Copy domain attributes to fields and clone the arguments to internal parameters.
-     * <br/>Persistent object will be reloaded from database.
+     * <br>Persistent object will be reloaded from database.
      */
     public void setDomain(U domain) {
         OrmSessionProvider session = new OrmSessionProvider();
