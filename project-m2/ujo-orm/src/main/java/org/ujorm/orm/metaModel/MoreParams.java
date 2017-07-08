@@ -35,7 +35,7 @@ final public class MoreParams extends AbstractMetaModel {
     /** A default engine for the MySQL dialect. The default value of this parameter is: "ENGINE = InnoDB".
      * @see org.ujorm.orm.dialect.MySqlDialect#getEngine()
      */
-    public static final Key<MoreParams,String> DIALECT_MYSQL_ENGINE_TYPE = f.newKey("DialectMySqlEngineType", "ENGINE = InnoDB");
+    public static final Key<MoreParams,String> DIALECT_MYSQL_ENGINE_TYPE = f.newKey("dialectMySqlEngineType", "ENGINE = InnoDB");
 
     /** Render the SQL with JOIN phrase */
     @Deprecated
