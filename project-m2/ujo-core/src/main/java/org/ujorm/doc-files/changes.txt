@@ -2,6 +2,11 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 1.72 (2017)
++ ORM: Support for ZonedDateTime is finished
++ ORM: A bug of ujorm is fixed for HSQLDB dialect
++ ORM: file ujorm-1.71.xsd is upgraded
+
 release 1.71 (2017-07-09)
 + ORM: Support for ZonedDateTime is finished
 + ORM: A bug of ujorm is fixed for HSQLDB dialect
