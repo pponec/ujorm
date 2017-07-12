@@ -61,13 +61,13 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      */
     private int index;
     /** Property type (class) */
-    private Class<VALUE> type;
+    private Class<V> type;
     /** Domain type type (class) */
     private Class<U> domainType;
     /** Property default value */
-    private VALUE defaultValue;
+    private V defaultValue;
     /** Input Validator */
-    private Validator<VALUE> validator;
+    private Validator<V> validator;
     /** Lock all properties after initialization */
     private boolean lock;
 
@@ -101,7 +101,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      * @param lock Lock the key.
      */
     @SuppressWarnings("unchecked")
-    protected final Property<U,VALUE> init(final int field, final Object value) {
+    protected final Property<U,V> init(final int field, final Object value) {
         checkLock();
         switch (field) {
             case NAME:
@@ -117,7 +117,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
                 break;
             case TYPE:
                 if (this.type == null) {
-                    this.type = (Class<VALUE>) value;
+                    this.type = (Class<V>) value;
                 }
                 break;
             case DOMAIN_TYPE:
@@ -127,12 +127,12 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
                 break;
             case DEFAULT_VALUE:
                 if (this.defaultValue == null) {
-                    this.defaultValue = (VALUE) value;
+                    this.defaultValue = (V) value;
                 }
                 break;
             case VALIDATOR:
                 if (this.validator == null) {
-                    this.validator = (Validator<VALUE>) value;
+                    this.validator = (Validator<V>) value;
                 }
                 break;
             case LOCK:
@@ -225,7 +225,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
 
     /** Type of Property */
     @Override
-    final public Class<VALUE> getType() {
+    final public Class<V> getType() {
         return type;
     }
 
@@ -248,7 +248,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
-    public void setValue(final U ujo, final VALUE value) throws ValidationException{
+    public void setValue(final U ujo, final V value) throws ValidationException{
         if (validator != null) {
             validator.checkValue(value, this, ujo);
         }
@@ -265,7 +265,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
-    public final void setValue(final U ujo, final VALUE value, boolean createRelations) throws ValidationException{
+    public final void setValue(final U ujo, final V value, boolean createRelations) throws ValidationException{
         setValue(ujo, value);
     }
 
@@ -275,7 +275,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public final VALUE getValue(final U ujo) {
+    public final V getValue(final U ujo) {
         return of(ujo);
     }
 
@@ -290,16 +290,16 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public VALUE of(final U ujo) {
+    public V of(final U ujo) {
         final Object result = ujo.readValue(this);
-        return result!= null ? (VALUE) result : defaultValue;
+        return result!= null ? (V) result : defaultValue;
     }
 
     /** Returns a Default key value. The value replace the {@code null} value in the method Ujo.readValue(...).
      * If the default value is not modified, returns the {@code null}.
      */
     @Override
-    public VALUE getDefault() {
+    public V getDefault() {
         return defaultValue;
     }
 
@@ -307,7 +307,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      * <br>WARNING: the change of the default value modifies all values in all instances with the null value of the current key!
      */
     @SuppressWarnings("unchecked")
-    public <PROPERTY extends Property> PROPERTY writeDefault(VALUE value) {
+    public <PROPERTY extends Property> PROPERTY writeDefault(V value) {
         defaultValue = value;
         if (lock) checkValidity();
         return (PROPERTY) this;
@@ -321,7 +321,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
     @Override
     public boolean isDefault(U ujo) {
-        VALUE value = of(ujo);
+        V value = of(ujo);
         final boolean result
         =  value==defaultValue
         || (defaultValue!=null && defaultValue.equals(value))
@@ -366,7 +366,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      * @see org.ujorm.core.UjoComparator
      */
     @Override
-    public Key<U, VALUE> descending() {
+    public Key<U, V> descending() {
         return descending(true);
     }
 
@@ -376,13 +376,13 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      * @see org.ujorm.core.UjoComparator
      */
     @Override
-    public Key<U, VALUE> descending(boolean descending) {
+    public Key<U, V> descending(boolean descending) {
         return PathProperty.sort(this, !descending);
     }
 
     /** Get the ujorm key validator or return the {@code null} value if no validator was assigned */
     @Override
-    public Validator<VALUE> getValidator() {
+    public Validator<V> getValidator() {
         return validator;
     }
 
@@ -391,7 +391,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<U, T> add(final Key<? super VALUE, T> key) {
+    public <T> CompositeKey<U, T> add(final Key<? super V, T> key) {
         return PathProperty.of((Key) this, key);
     }
 
@@ -399,13 +399,13 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      * @since 0.92
      */
     @Override
-    public <T> ListKey<U, T> add(ListKey<? super VALUE, T> key) {
+    public <T> ListKey<U, T> add(ListKey<? super V, T> key) {
         return new PathListProperty<U, T>(PathProperty.DEFAULT_ALIAS, (Key)this, key);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<U, T> add(Key<? super VALUE, T> key, String alias) {
+    public <T> CompositeKey<U, T> add(Key<? super V, T> key, String alias) {
         return new PathProperty(alias, (Key)this, key);
     }
 
@@ -413,7 +413,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      * @since 1.43
      */
     @Override
-    public CompositeKey<U, VALUE> alias(String alias) {
+    public CompositeKey<U, V> alias(String alias) {
         return new PathProperty<>(alias, this);
     }
 
@@ -452,7 +452,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
      * @return Accordance
      */
     @Override
-    public boolean equals(final U ujo, final VALUE value) {
+    public boolean equals(final U ujo, final V value) {
         final Object myValue = of(ujo);
         if (myValue==value) { return true; }
 
@@ -545,49 +545,49 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> where(Operator operator, VALUE value) {
+    public Criterion<U> where(Operator operator, V value) {
         return Criterion.where(this, operator, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> where(Operator operator, Key<?, VALUE> value) {
+    public Criterion<U> where(Operator operator, Key<?, V> value) {
         return Criterion.where(this, operator, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereEq(VALUE value) {
+    public Criterion<U> whereEq(V value) {
         return Criterion.where(this, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereIn(Collection<VALUE> list) {
+    public Criterion<U> whereIn(Collection<V> list) {
         return Criterion.whereIn(this, list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereNotIn(Collection<VALUE> list) {
+    public Criterion<U> whereNotIn(Collection<V> list) {
         return Criterion.whereNotIn(this, list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereIn(VALUE... list) {
+    public Criterion<U> whereIn(V... list) {
         return Criterion.whereIn(this, list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereNotIn(VALUE... list) {
+    public Criterion<U> whereNotIn(V... list) {
         return Criterion.whereNotIn(this, list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereEq(Key<U, VALUE> value) {
+    public Criterion<U> whereEq(Key<U, V> value) {
         return Criterion.where(this, value);
     }
 
@@ -608,7 +608,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
     @Override
     public Criterion<U> whereFilled() {
         final Criterion<U> result = whereNotNull()
-            .and(Criterion.where(this, Operator.NOT_EQ, (VALUE) getEmptyValue()))
+            .and(Criterion.where(this, Operator.NOT_EQ, (V) getEmptyValue()))
                 ;
         return result;
     }
@@ -639,31 +639,31 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereNeq(VALUE value) {
+    public Criterion<U> whereNeq(V value) {
         return Criterion.where(this, Operator.NOT_EQ, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereGt(VALUE value) {
+    public Criterion<U> whereGt(V value) {
         return Criterion.where(this, Operator.GT, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereGe(VALUE value) {
+    public Criterion<U> whereGe(V value) {
         return Criterion.where(this, Operator.GE, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereLt(VALUE value) {
+    public Criterion<U> whereLt(V value) {
         return Criterion.where(this, Operator.LT, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereLe(VALUE value) {
+    public Criterion<U> whereLe(V value) {
         return Criterion.where(this, Operator.LE, value);
     }
 
@@ -675,7 +675,7 @@ public class Property<U extends Ujo,V> implements Key<U,V> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forSql(String sqlCondition, VALUE value) {
+    public Criterion<U> forSql(String sqlCondition, V value) {
         return Criterion.forSql(this, sqlCondition, value);
     }
 

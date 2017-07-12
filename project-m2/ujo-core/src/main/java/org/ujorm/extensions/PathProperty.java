@@ -949,4 +949,9 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         return new PathProperty<>(DEFAULT_ALIAS, key1, key2, key3, key4);
     }
 
+    @Override
+    public <Y extends U> Key<U, VALUE> clone(Key<Y, VALUE> parentKey) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

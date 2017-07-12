@@ -140,4 +140,9 @@ final public class PathListProperty<U extends Ujo, VALUE>
         throw new UnsupportedOperationException("Concatenation of the ListKey is not supported");
     }
 
+    @Override
+    public <Y extends U> Key<U, List<VALUE>> clone(Key<Y, List<VALUE>> parentKey) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
