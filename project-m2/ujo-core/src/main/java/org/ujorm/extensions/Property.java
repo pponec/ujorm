@@ -40,7 +40,7 @@ import static org.ujorm.extensions.PropertyModifier.*;
  * @author Pavel Ponec
  */
 @Immutable
-public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
+public class Property<U extends Ujo,V> implements Key<U,V> {
 
     /** Property Separator character */
     public static final char PROPERTY_SEPARATOR = '.';
@@ -421,6 +421,13 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     @Override
     public void copy(final U from, final U to) {
         to.writeValue(this, from.readValue(this));
+    }
+
+        /** Clone the key from the parent */
+    public <Y extends U> Key<U,V> clone(Key<Y,V> parentKey) {
+        return new ProxyKey(this) {
+
+        };
     }
 
     /** Returns true if the key type is a type or subtype of the parameter class. */

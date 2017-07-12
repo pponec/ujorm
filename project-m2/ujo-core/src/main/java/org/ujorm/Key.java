@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2014 Pavel Ponec
+ *  Copyright 2007-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,10 +34,12 @@ import org.ujorm.validator.ValidationException;
  * @opt attributes
  * @opt operations
  * @see KeyRing
+ * @param <U> Ujo object
+ * @param <V> Value object
  */
 @Immutable
 @SuppressWarnings("deprecation")
-public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Key>, CriterionProvider<UJO,VALUE> {
+public interface Key <U extends Ujo,V> extends CharSequence, Comparable<Key>, CriterionProvider<U,V> {
 
     /** Returns a name of the Key. */
     public String getName();
@@ -47,10 +49,10 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     public String getFullName();
 
     /** Returns a class of the current key. */
-    public Class<VALUE> getType();
+    public Class<V> getType();
 
     /** Returns a class of the domain Ujo object. */
-    public Class<UJO> getDomainType();
+    public Class<U> getDomainType();
 
     /** Returns a container of the Key field. */
     // public Class<?> getContainerType(); // TODO (?)
@@ -58,14 +60,14 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     /**
      * It is a basic method for setting an appropriate type safe value to an Ujo object.
      * <br>The method calls a method
-     * {@link Ujo#writeValue(org.ujorm.Key, java.lang.Object)}
+     * {@link U#writeValue(org.ujorm.Key, java.lang.Object)}
      * always.
      * @param ujo Related Ujo object
      * @param value A value to assign.
      * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
-     * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
+     * @see U#writeValue(org.ujorm.Key, java.lang.Object)
      */
-    public void setValue(UJO ujo, VALUE value) throws ValidationException;
+    public void setValue(U ujo, V value) throws ValidationException;
 
     /**
      * TODO: Is it really the good idea to extend the interface with this method ?
@@ -85,7 +87,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * A shortcut for the method {@link #of(org.ujorm.Ujo)}.
      * @see #of(Ujo)
      */
-    public VALUE getValue(UJO ujo);
+    public V getValue(U ujo);
 
     /**
      * It is a basic method for getting an appropriate type safe value from an Ujo object.
@@ -98,7 +100,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see Ujo#readValue(Key)
      * @see #getValue(org.ujorm.Ujo)
      */
-    public VALUE of(UJO ujo);
+    public V of(U ujo);
 
 
 //    /**
@@ -119,13 +121,13 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
 
     /** Method returns a default value for substitution of the <code>null</code> value for the current key.
      * The feature is purposeful only if the default value is not <code>null</code> and a propert value is <code>null</code> .
-     * @see Ujo#readValue(Key)
+     * @see U#readValue(Key)
      */
-    public VALUE getDefault();
+    public V getDefault();
 
 
     /** Indicates whether a parameter value of the ujo "equal to" this key default value. */
-    public boolean isDefault(UJO ujo);
+    public boolean isDefault(U ujo);
 
     /**
      * Returns true, if the key value equals to a parameter value. The key value can be null.
@@ -134,7 +136,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @param value Null value is supported.
      * @return Accordance
      */
-    public boolean equals(UJO ujo, VALUE value);
+    public boolean equals(U ujo, V value);
 
     /**
      * Returns true, if the key name equals to the parameter value.
@@ -185,7 +187,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see #isAscending()
      * @see org.ujorm.core.UjoComparator
      */
-    public Key<UJO,VALUE> descending();
+    public Key<U,V> descending();
 
     /** Create new instance of an <strong>indirect</strong> Key with the descending direction of sorting.
      * @return returns a new instance of the indirect Key
@@ -193,15 +195,15 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see #isAscending()
      * @see org.ujorm.core.UjoComparator
      */
-    public Key<UJO,VALUE> descending(boolean descending);
+    public Key<U,V> descending(boolean descending);
 
     /** Get the ujorm key validator or return the {@code null} value if no validator was assigned */
-    public Validator<VALUE> getValidator();
+    public Validator<V> getValidator();
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 0.92
      */
-    public <T> CompositeKey<UJO, T> add(Key<? super VALUE, T> key);
+    public <T> CompositeKey<U, T> add(Key<? super V, T> key);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @param key The relation key
@@ -213,12 +215,12 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @since 1.43
      * @see CompositeKey#getSpaceName(int)
      */
-    public <T> CompositeKey<UJO, T> add(Key<? super VALUE, T> key, String alias);
+    public <T> CompositeKey<U, T> add(Key<? super V, T> key, String alias);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 1.36
      */
-    public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> key);
+    public <T> ListKey<U, T> add(ListKey<? super V, T> key);
 
     /** Create new composite (indirect) instance with a required alias name
      * @param alias This attribute is used to distinguish the same entities
@@ -230,10 +232,13 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see CompositeKey#getSpaceName(int)
      * @see KeyFactory#newKeyAlias(java.lang.String)
      */
-    public CompositeKey<UJO, VALUE> alias(String alias);
+    public CompositeKey<U, V> alias(String alias);
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
-    public void copy(UJO from, UJO to);
+    public void copy(U from, U to);
+
+    /** Clone the key from the parent */
+    public <Y extends U> Key<U,V> clone(Key<Y,V> parentKey);
 
     /** Compare to another Key object by the index and name of the Key.
      * @since 1.20
