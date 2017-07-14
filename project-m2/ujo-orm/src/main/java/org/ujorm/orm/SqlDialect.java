@@ -333,6 +333,8 @@ abstract public class SqlDialect {
             case TIME:
             case TIMESTAMP:
             case TIMESTAMP_WITH_TIME_ZONE:
+            case CLOB:
+            case BLOB:
                  return false;
             case CHAR:
             case VARCHAR:
