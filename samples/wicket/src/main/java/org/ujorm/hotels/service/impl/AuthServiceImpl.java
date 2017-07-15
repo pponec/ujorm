@@ -16,6 +16,7 @@
 package org.ujorm.hotels.service.impl;
 
 import java.math.BigInteger;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.annotation.Nullable;
@@ -26,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.ujorm.core.UjoService;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.MainApplication;
 import org.ujorm.hotels.service.AuthService;
@@ -130,7 +130,7 @@ public class AuthServiceImpl extends AbstractServiceImpl<Customer> implements Au
         }
         try {
             final MessageDigest md = MessageDigest.getInstance("SHA-256");
-            final byte[] digest = md.digest(text.getBytes(UjoService.UTF_8));
+            final byte[] digest = md.digest(text.getBytes(UTF_8));
             return new BigInteger(digest).longValue();
         } catch (NoSuchAlgorithmException | RuntimeException | OutOfMemoryError e) {
             throw new IllegalStateException("Method getHash() failed. ", e);

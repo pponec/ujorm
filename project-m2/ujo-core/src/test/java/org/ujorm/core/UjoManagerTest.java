@@ -194,7 +194,7 @@ public class UjoManagerTest extends MyTestCase {
         result   = manager.decodeValue(charset, manager.encodeValue(expected, false));
         assertEquals("1", expected, result);
         //
-        expected = Charset.forName("utf8");
+        expected = Charset.forName("UTF-8");
         result   = manager.decodeValue(charset, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
         //

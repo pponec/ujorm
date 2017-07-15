@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * A 'ring buffer' implementation whith a required length of the buffer.
@@ -44,8 +45,6 @@ import java.nio.charset.Charset;
  */
 final public class RingBuffer implements CharSequence {
 
-    /** The UTF-8 Charset, see {@link java.nio.charset.StandardCharsets#UTF_8} from Java 7 */
-    public static final Charset UTF8 = Charset.forName("UTF-8");
     /** The string content (buffer)*/
     private final char[] b;
     /** Length */
@@ -162,7 +161,7 @@ final public class RingBuffer implements CharSequence {
      * @throws IOException
      */
     public static String findWord(final InputStream inputUtf8, final String beg, final String end) throws IOException {
-        return findWord(createReader(inputUtf8, UTF8), beg, end);
+        return findWord(createReader(inputUtf8, UTF_8), beg, end);
     }
 
     /**
@@ -309,7 +308,7 @@ final public class RingBuffer implements CharSequence {
 
     /** Create Reader from the UTF-8 encode source */
     public static Reader createReader(File file) throws FileNotFoundException {
-        return createReader(file, UTF8);
+        return createReader(file, UTF_8);
     }
 
     /** Create Reader */
@@ -324,7 +323,7 @@ final public class RingBuffer implements CharSequence {
 
     /** Create Reader from the UTF-8 encode source */
     public static Reader createReader(URL url) throws IOException {
-        return createReader(url, UTF8);
+        return createReader(url, UTF_8);
     }
 
     /** Create Reader */

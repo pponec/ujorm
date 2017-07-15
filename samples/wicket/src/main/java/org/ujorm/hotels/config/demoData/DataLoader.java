@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.config.demoData;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.List;
 import java.util.Scanner;
 import org.ujorm.core.UjoManagerCSV;
@@ -23,7 +24,6 @@ import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.orm.InitializationBatch;
 import org.ujorm.orm.Session;
-import static org.ujorm.core.UjoService.*;
 
 /**
  * Data loader from CSV resources

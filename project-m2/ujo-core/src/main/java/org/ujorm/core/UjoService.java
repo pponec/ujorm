@@ -39,8 +39,6 @@ abstract public class UjoService<UJO extends Ujo> {
 
     /** Undefined text VALUE have got a <strong>unique instance</strong>. */
     public static final String UNDEFINED = new String("U");
-    /** Charset UTF-8, see {@link java.nio.charset.StandardCharsets#UTF_8} from Java 7 */
-    public static final Charset UTF_8 = Charset.forName("UTF-8");
     /** Basic UJO Class */
     final private Class<UJO> ujoClass;
     /** Keys */

@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.List;
 import java.util.Map;
 import org.ujorm.Key;
