@@ -38,6 +38,9 @@ public class BinaryWrapperTest {
         BinaryWrapper instance = BinaryWrapper.of(code);
         String result = instance.toString();
         assertEquals(expResult, result);
+        //
+        instance.internalClean();
+        assertEquals("null", instance.toString());
     }
 
     /** Test of getBase64 method, of class BinaryWrapper. */

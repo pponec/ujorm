@@ -44,10 +44,10 @@ public class PasswordWrapper extends BinaryWrapper {
         super(DEFAULT_PASSWORD.toCharArray());
     }
 
-    /** Returns an asterisk character allways. */
+    /** Returns an asterisk character or {@code "null"} for invalidated object. */
     @Override
     public String toString() {
-        return "*";
+        return binary != null ? "*" : String.valueOf((Object) null);
     }
 
     /** Get an original password as String

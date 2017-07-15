@@ -80,13 +80,13 @@ public class BinaryWrapper implements StringWrapper {
         return result;
     }
 
-    /** Returns a base64 format */
+    /** Returns a data encoded by BASE64 or {@code "null"} for invalidated object. */
     @Nonnull
     @Override
     public String toString() {
         return binary != null
                 ? getBase64()
-                : String.valueOf(null);
+                : String.valueOf((Object) null);
     }
 
     /** Clean binary data */

@@ -51,6 +51,9 @@ public class PasswordWrapperTest {
         String expResult = "*";
         String result = instance.toString();
         assertEquals(expResult, result);
+        //
+        instance.internalClean();
+        assertEquals("null", instance.toString());
     }
 
     /** Test of getPassword method, of class PasswordWrapper. */
