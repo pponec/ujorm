@@ -73,6 +73,17 @@ public class PasswordWrapperTest {
         assertArrayEquals(expResult, result);
     }
 
+    /** Test of exportToString method, of class PasswordWrapper. */
+    @Test
+    public void testExportToString() {
+        System.out.println("exportToString");
+        BinaryWrapper instance = BinaryWrapper.of("ABC");
+        String expResult = "QUJD";
+        String result = instance.exportToString();
+        assertEquals(expResult, result);
+        assertEquals(instance.getBase64(), result);
+    }
+
     /** Test of of method, of class PasswordWrapper. */
     @Test
     public void testOf() {

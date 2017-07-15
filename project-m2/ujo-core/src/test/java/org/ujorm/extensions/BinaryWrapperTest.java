@@ -58,6 +58,7 @@ public class BinaryWrapperTest {
         String expResult = "QUJD";
         String result = instance.exportToString();
         assertEquals(expResult, result);
+        assertEquals(instance.getBase64(), result);
     }
 
     /** Test of getBinary method, of class BinaryWrapper. */
