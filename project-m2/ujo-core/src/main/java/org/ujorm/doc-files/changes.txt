@@ -2,12 +2,11 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.72 (2017)
-+ ORM: Support for ZonedDateTime is finished
-+ ORM: A bug of ujorm is fixed for HSQLDB dialect
-+ ORM: file ujorm-1.71.xsd is upgraded
+release 1.72-SNAPSHOT (2017-??+)
++ CORE: Support to store a binary code as BASE64 string
++ ORM: The bug is fixed: database types BLOB and CLOB does not support the length
 
-release 1.71 (2017-07-09)
+release 1.71 (2017-07-08)
 + ORM: Support for ZonedDateTime is finished
 + ORM: A bug of ujorm is fixed for HSQLDB dialect
 + ORM: file ujorm-1.71.xsd is upgraded
