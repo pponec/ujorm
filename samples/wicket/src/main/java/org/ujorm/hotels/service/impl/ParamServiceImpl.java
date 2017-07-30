@@ -47,7 +47,7 @@ import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Comment;
 import static org.ujorm.hotels.entity.ParamValue.*;
 import org.ujorm.orm.OrmUjo;
-import org.ujorm.spring.AbstractDao;
+import org.ujorm.spring.SimpleDao;
 
 /**
  * Common database service implementations
@@ -56,12 +56,14 @@ import org.ujorm.spring.AbstractDao;
 @Transactional
 @Service(ParamService.NATURAL)
 public class ParamServiceImpl
-extends AbstractDao<OrmUjo>
 implements ParamService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParamServiceImpl.class);
 
     @Autowired
     private AuthService authService;
+
+    /** DAO layer */
+    @Autowired private SimpleDao<OrmUjo> dao;
 
     /** Get a value of the key */
     @Override
@@ -92,7 +94,7 @@ implements ParamService {
         crn5 = crn1.and(crn2).and(crn3.or(crn4));
         //
         ParamValue param = null;
-        for (ParamValue paramValue : createQuery(crn5).orderBy(ParamValue.ID)) {
+        for (ParamValue paramValue : dao.createQuery(crn5).orderBy(ParamValue.ID)) {
             param = paramValue;
         }
 
@@ -142,11 +144,11 @@ implements ParamService {
         crn3 = criterion.and(crn1.or(crn2));
 
         final Key<ParamValue,Integer> KEY_ID = ParamValue.KEY_ID$;
-        final Map<Integer,ParamValue> values = createQuery(crn3)
+        final Map<Integer,ParamValue> values = dao.createQuery(crn3)
                 .orderBy(ParamValue.ID) // Default is the first!
                 .addColumn(KEY_ID)
                 .map(KEY_ID, new HashMap<Integer,ParamValue>(128));
-        final Map<Integer,ParamKey> keys = createQuery(ParamKey.ID.forAll()).map();
+        final Map<Integer,ParamKey> keys = dao.createQuery(ParamKey.ID.forAll()).map();
         for (ParamValue value : values.values()) {
             value.setParamKey(keys.get(KEY_ID.of(value)));
         }
@@ -158,7 +160,7 @@ implements ParamService {
      */
     @Override
     public final void updateValue(ParamValue param) {
-        param.writeSession(getSession());
+        param.writeSession(dao.getSession());
         if (param.getCustomer()!=null && param.isPersonalParam()) {
             Args.isTrue(param.getCustomer().getId().equals(authService.getLoggedCustomer().getId())
             , "User " + authService.getLoggedCustomer().getId() + " is modyfing foreign parameters " + param);
@@ -174,7 +176,7 @@ implements ParamService {
      */
     @Override
     public void updateValue(ParamValue param, Customer user) {
-        final Session session = getSession();
+        final Session session = dao.getSession();
         final ParamValue dbParam;
 
         if (param.getCustomer()==null && param.isPersonalParam()) {
@@ -232,7 +234,7 @@ implements ParamService {
             paramKey.setLastUpdate(now);
             paramKey.setSystemParam(isSystemParam(key));
             paramKey.setNote(getComment(key));
-            doSaveOrUpdate(paramKey);
+            dao.saveOrUpdate(paramKey);
         }
 
         // --- VALUES ----
@@ -244,7 +246,7 @@ implements ParamService {
                 paramValue = new ParamValue(paramKeyMap.get(key.getName()));
                 paramValue.setCustomer(null);
                 paramValue.setLastUpdate(now);
-                doSave(paramValue);
+                dao.save(paramValue);
             }
         }
     }
@@ -276,7 +278,7 @@ implements ParamService {
         crn3 = crn1.and(crn2);
 
         final Map<String, ParamKey> result = new HashMap<String, ParamKey>(keyNames.size());
-        for (ParamKey paramKey : createQuery(crn3)) {
+        for (ParamKey paramKey : dao.createQuery(crn3)) {
             result.put(paramKey.getName(), paramKey);
         }
         return result;
@@ -286,7 +288,7 @@ implements ParamService {
     private Map<String, ParamValue> getParamValueMap(Collection<ParamKey> keys) {
         final Map<String, ParamValue> result = new HashMap<String, ParamValue>(keys.size());
         final Criterion<ParamValue> crn = ParamValue.PARAM_KEY.whereIn(keys);
-        for (ParamValue value : createQuery(crn).addColumn(ParamValue.KEY_NAME$)) {
+        for (ParamValue value : dao.createQuery(crn).addColumn(ParamValue.KEY_NAME$)) {
             result.put(ParamValue.KEY_NAME$.of(value), value);
         }
         return result;

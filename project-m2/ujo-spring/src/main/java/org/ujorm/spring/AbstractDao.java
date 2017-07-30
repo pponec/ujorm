@@ -10,7 +10,7 @@ import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
 
 /**
- * Abstract DAO for quick implementations.
+ * Abstract DAO for quick implementation.
  * The class is a single thread ready only.
  * @author Pavel Ponec
  */
@@ -45,7 +45,7 @@ public abstract class AbstractDao<T extends OrmUjo> {
     }
 
     /** Create a new query */
-    final protected <U extends T> Query<U> createQuery(Criterion<U> criteron) {
+    final protected <U extends T> Query<U> doQuery(Criterion<U> criteron) {
         return getSession().createQuery(criteron);
     }
 
@@ -88,6 +88,5 @@ public abstract class AbstractDao<T extends OrmUjo> {
     final protected <U extends T> boolean doExists(Criterion<U> criteron) {
         return getSession().exists(criteron);
     }
-
 
 }

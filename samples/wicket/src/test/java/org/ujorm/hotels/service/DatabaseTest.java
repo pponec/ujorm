@@ -61,7 +61,7 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
         final String city = "Prague";
         if (!query(Booking.ID.forAll()).exists()) {
             Customer customer = query(Customer.LOGIN.whereEq(login)).uniqueResult();
-            Hotel hotel = createQuery(Hotel.CITY.add(City.NAME).whereEq(city)).setLimit(1).uniqueResult();
+            Hotel hotel = doQuery(Hotel.CITY.add(City.NAME).whereEq(city)).setLimit(1).uniqueResult();
             //
             Booking booking = new Booking();
             booking.setCustomer(customer);
@@ -121,7 +121,7 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
         String[] cities  = {"Prague", "Amsterdam"};
         Criterion crn = bookingCityName.forSqlUnchecked("{0} IN ({1})", cities);
 
-        Query<T> bookings = createQuery(crn);
+        Query<T> bookings = doQuery(crn);
         List<T> result = bookings.list();
         assertFalse(result.isEmpty());
     }
@@ -175,6 +175,6 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
 
     /** Create a database query with Session */
     final protected <T extends OrmUjo> Query<T> query(Criterion<T> criterion) {
-        return createQuery(criterion);
+        return doQuery(criterion);
     }
 }

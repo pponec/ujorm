@@ -38,17 +38,20 @@ import static org.ujorm.core.UjoManager.*;
 import static org.ujorm.hotels.service.DbService.ONE_DAY;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
-import org.ujorm.spring.AbstractDao;
+import org.ujorm.spring.SimpleDao;
 /**
  * Common database service implementations
  * @author ponec
  */
 @Transactional
-public class DbServiceImpl extends AbstractDao<OrmUjo> implements DbService {
+public class DbServiceImpl implements DbService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DbServiceImpl.class);
 
     @Autowired
     private AuthService authService;
+
+    /** DAO layer */
+    @Autowired private SimpleDao<OrmUjo> dao;
 
     /** Read only sign */
     private boolean readOnly;
@@ -74,7 +77,7 @@ public class DbServiceImpl extends AbstractDao<OrmUjo> implements DbService {
     /** Load Customer by login using a transaction. */
     @Override
     public Customer getCustomer(String login) {
-        final Query<Customer> query = createQuery(Customer.LOGIN.whereEq(login));
+        final Query<Customer> query = dao.createQuery(Customer.LOGIN.whereEq(login));
         return query.uniqueResult();
     }
 
@@ -84,12 +87,12 @@ public class DbServiceImpl extends AbstractDao<OrmUjo> implements DbService {
         LOGGER.info("Delete hotel {}", hotel);
         checkReadOnly(hotel);
 
-        boolean booking = doExists(Booking.HOTEL.whereEq(hotel));
+        boolean booking = dao.exists(Booking.HOTEL.whereEq(hotel));
         if (booking) {
             hotel.setActive(false);
-            doUpdate(hotel);
+            dao.update(hotel);
         } else {
-            doDelete(hotel);
+            dao.delete(hotel);
         }
     }
 
@@ -98,7 +101,7 @@ public class DbServiceImpl extends AbstractDao<OrmUjo> implements DbService {
     public void saveOrUpdateHotel(Hotel hotel) {
         LOGGER.info("Save or update hotel {}", hotel);
         checkReadOnly(hotel);
-        doSaveOrUpdate(hotel);
+        dao.saveOrUpdate(hotel);
     }
 
     @Override
@@ -106,12 +109,12 @@ public class DbServiceImpl extends AbstractDao<OrmUjo> implements DbService {
         LOGGER.info("Delete customer {}", customer);
         checkReadOnly(customer);
 
-        boolean booking = doExists(Booking.CUSTOMER.whereEq(customer));
+        boolean booking = dao.exists(Booking.CUSTOMER.whereEq(customer));
         if (booking) {
             customer.setActive(false);
-            doUpdate(customer);
+            dao.update(customer);
         } else {
-           doDelete(customer);
+            dao.delete(customer);
         }
     }
 
@@ -123,7 +126,7 @@ public class DbServiceImpl extends AbstractDao<OrmUjo> implements DbService {
         checkReadOnly(customer);
 
         // Check a unique login:
-        if (newMode && doExists(Customer.LOGIN.whereEq(customer.getLogin()))) {
+        if (newMode && dao.exists(Customer.LOGIN.whereEq(customer.getLogin()))) {
             throw new ValidationException("login.occupied", "Login is occupied");
         }
 
@@ -134,10 +137,10 @@ public class DbServiceImpl extends AbstractDao<OrmUjo> implements DbService {
 
         final String password = customer.getPassword();
         if (isFilled(password)) {
-            customer.writeSession(newMode ? null : getSession() ); // Activate modifications for EditMode
+            customer.writeSession(newMode ? null : dao.getSession() ); // Activate modifications for EditMode
             customer.setPasswordHash(authService.getHash(password));
         }
-        doSaveOrUpdate(customer);
+        dao.saveOrUpdate(customer);
     }
 
     /** Authenticate the user */
@@ -149,7 +152,7 @@ public class DbServiceImpl extends AbstractDao<OrmUjo> implements DbService {
         crn3 = Customer.ACTIVE.whereEq(true);
         crn4 = crn1.and(crn2).and(crn3);
 
-        return createQuery(crn4).uniqueResult();
+        return dao.createQuery(crn4).uniqueResult();
     }
 
     /** Check a read-only state */
@@ -182,7 +185,7 @@ public class DbServiceImpl extends AbstractDao<OrmUjo> implements DbService {
     @Override
     public IModel<Booking> prepareBooking(final UjoEvent<Hotel> event) {
         Booking result = new Booking();
-        result.setHotel(getSession().loadBy(event.getDomain()));
+        result.setHotel(dao.getSession().loadBy(event.getDomain()));
         result.setPrice(result.getHotel().getPrice());
         result.setCurrency(result.getHotel().getCurrency());
         result.setDateFrom(java.time.LocalDate.now().plus(ONE_DAY));
@@ -206,7 +209,7 @@ public class DbServiceImpl extends AbstractDao<OrmUjo> implements DbService {
 
         booking.setPrice(totalPrice(booking));
         booking.setCreationDate(LocalDateTime.now());
-        doSave(booking);
+        dao.save(booking);
     }
 
     /** Booking in the feature can be removed by its customer, or an administrator */
@@ -214,7 +217,7 @@ public class DbServiceImpl extends AbstractDao<OrmUjo> implements DbService {
     public void deleteBooking(Booking booking) {
         // TODO: check permissions, ...
         LOGGER.info("Delete Booking {}", booking);
-        doDelete(booking);
+        dao.delete(booking);
     }
 
     /** Returns a booking criterion */
