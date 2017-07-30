@@ -18,7 +18,6 @@ package org.ujorm.hotels.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +46,8 @@ import org.ujorm.hotels.service.param.annot.PersonalParam;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Comment;
 import static org.ujorm.hotels.entity.ParamValue.*;
+import org.ujorm.orm.OrmUjo;
+import org.ujorm.spring.AbstractDao;
 
 /**
  * Common database service implementations
@@ -55,7 +56,7 @@ import static org.ujorm.hotels.entity.ParamValue.*;
 @Transactional
 @Service(ParamService.NATURAL)
 public class ParamServiceImpl
-extends AbstractServiceImpl<ParamValue>
+extends AbstractDao<OrmUjo>
 implements ParamService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParamServiceImpl.class);
 
@@ -91,7 +92,7 @@ implements ParamService {
         crn5 = crn1.and(crn2).and(crn3.or(crn4));
         //
         ParamValue param = null;
-        for (ParamValue paramValue : getSession().createQuery(crn5).orderBy(ParamValue.ID)) {
+        for (ParamValue paramValue : createQuery(crn5).orderBy(ParamValue.ID)) {
             param = paramValue;
         }
 
@@ -145,7 +146,7 @@ implements ParamService {
                 .orderBy(ParamValue.ID) // Default is the first!
                 .addColumn(KEY_ID)
                 .map(KEY_ID, new HashMap<Integer,ParamValue>(128));
-        final Map<Integer,ParamKey> keys = getSession().createQuery(ParamKey.ID.forAll()).map();
+        final Map<Integer,ParamKey> keys = createQuery(ParamKey.ID.forAll()).map();
         for (ParamValue value : values.values()) {
             value.setParamKey(keys.get(KEY_ID.of(value)));
         }
@@ -231,7 +232,7 @@ implements ParamService {
             paramKey.setLastUpdate(now);
             paramKey.setSystemParam(isSystemParam(key));
             paramKey.setNote(getComment(key));
-            getSession().saveOrUpdate(paramKey);
+            doSaveOrUpdate(paramKey);
         }
 
         // --- VALUES ----
@@ -243,7 +244,7 @@ implements ParamService {
                 paramValue = new ParamValue(paramKeyMap.get(key.getName()));
                 paramValue.setCustomer(null);
                 paramValue.setLastUpdate(now);
-                getSession().save(paramValue);
+                doSave(paramValue);
             }
         }
     }
@@ -275,7 +276,7 @@ implements ParamService {
         crn3 = crn1.and(crn2);
 
         final Map<String, ParamKey> result = new HashMap<String, ParamKey>(keyNames.size());
-        for (ParamKey paramKey : getSession().createQuery(crn3)) {
+        for (ParamKey paramKey : createQuery(crn3)) {
             result.put(paramKey.getName(), paramKey);
         }
         return result;
@@ -285,7 +286,7 @@ implements ParamService {
     private Map<String, ParamValue> getParamValueMap(Collection<ParamKey> keys) {
         final Map<String, ParamValue> result = new HashMap<String, ParamValue>(keys.size());
         final Criterion<ParamValue> crn = ParamValue.PARAM_KEY.whereIn(keys);
-        for (ParamValue value : getSession().createQuery(crn).addColumn(ParamValue.KEY_NAME$)) {
+        for (ParamValue value : createQuery(crn).addColumn(ParamValue.KEY_NAME$)) {
             result.put(ParamValue.KEY_NAME$.of(value), value);
         }
         return result;

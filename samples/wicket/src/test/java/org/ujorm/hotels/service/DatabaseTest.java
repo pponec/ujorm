@@ -34,13 +34,13 @@ import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.hotels.service.impl.AbstractServiceImpl;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.template.AliasTable;
 import static org.junit.Assert.*;
 import static org.ujorm.orm.template.AliasTable.Build.*;
+import org.ujorm.spring.AbstractDao;
 
 /**
  * Sample code for new article
@@ -49,7 +49,7 @@ import static org.ujorm.orm.template.AliasTable.Build.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:org/ujorm/hotels/config/applicationContext.xml"})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class DatabaseTest extends AbstractServiceImpl<Hotel> {
+public class DatabaseTest extends AbstractDao<OrmUjo> {
     /** The one day in MILIS */
     private static final Period ONE_DAY = Period.ofDays(1);
 
@@ -121,7 +121,7 @@ public class DatabaseTest extends AbstractServiceImpl<Hotel> {
         String[] cities  = {"Prague", "Amsterdam"};
         Criterion crn = bookingCityName.forSqlUnchecked("{0} IN ({1})", cities);
 
-        Query<T> bookings = getSession().createQuery(crn);
+        Query<T> bookings = createQuery(crn);
         List<T> result = bookings.list();
         assertFalse(result.isEmpty());
     }
@@ -175,6 +175,6 @@ public class DatabaseTest extends AbstractServiceImpl<Hotel> {
 
     /** Create a database query with Session */
     final protected <T extends OrmUjo> Query<T> query(Criterion<T> criterion) {
-        return getSession().createQuery(criterion);
+        return createQuery(criterion);
     }
 }

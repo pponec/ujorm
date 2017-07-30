@@ -32,12 +32,13 @@ import org.ujorm.hotels.gui.MainApplication;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.DbService;
 import org.ujorm.logger.UjoLoggerFactory;
+import org.ujorm.spring.AbstractDao;
 /**
  * Common database service implementations
  * @author Pavel Ponec
  */
 @Service
-public class AuthServiceImpl extends AbstractServiceImpl<Customer> implements AuthService {
+public class AuthServiceImpl extends AbstractDao<Customer> implements AuthService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     /** Session attribute name */

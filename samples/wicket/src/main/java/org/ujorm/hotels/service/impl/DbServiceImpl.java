@@ -36,12 +36,15 @@ import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.core.UjoManager.*;
 import static org.ujorm.hotels.service.DbService.ONE_DAY;
+import org.ujorm.orm.OrmUjo;
+import org.ujorm.orm.Query;
+import org.ujorm.spring.AbstractDao;
 /**
  * Common database service implementations
  * @author ponec
  */
 @Transactional
-public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbService {
+public class DbServiceImpl extends AbstractDao<OrmUjo> implements DbService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DbServiceImpl.class);
 
     @Autowired
@@ -71,7 +74,8 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
     /** Load Customer by login using a transaction. */
     @Override
     public Customer getCustomer(String login) {
-        return super.createQuery(Customer.LOGIN.whereEq(login)).uniqueResult();
+        final Query<Customer> query = createQuery(Customer.LOGIN.whereEq(login));
+        return query.uniqueResult();
     }
 
     /** {@inheritDoc } */
@@ -80,12 +84,12 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
         LOGGER.info("Delete hotel {}", hotel);
         checkReadOnly(hotel);
 
-        boolean booking = getSession().exists(Booking.HOTEL.whereEq(hotel));
+        boolean booking = doExists(Booking.HOTEL.whereEq(hotel));
         if (booking) {
             hotel.setActive(false);
-            getSession().update(hotel);
+            doUpdate(hotel);
         } else {
-           getSession().delete(hotel);
+            doDelete(hotel);
         }
     }
 
@@ -94,7 +98,7 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
     public void saveOrUpdateHotel(Hotel hotel) {
         LOGGER.info("Save or update hotel {}", hotel);
         checkReadOnly(hotel);
-        getSession().saveOrUpdate(hotel);
+        doSaveOrUpdate(hotel);
     }
 
     @Override
@@ -102,12 +106,12 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
         LOGGER.info("Delete customer {}", customer);
         checkReadOnly(customer);
 
-        boolean booking = getSession().exists(Booking.CUSTOMER.whereEq(customer));
+        boolean booking = doExists(Booking.CUSTOMER.whereEq(customer));
         if (booking) {
             customer.setActive(false);
-            getSession().update(customer);
+            doUpdate(customer);
         } else {
-           getSession().delete(customer);
+           doDelete(customer);
         }
     }
 
@@ -119,7 +123,7 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
         checkReadOnly(customer);
 
         // Check a unique login:
-        if (newMode && getSession().exists(Customer.LOGIN.whereEq(customer.getLogin()))) {
+        if (newMode && doExists(Customer.LOGIN.whereEq(customer.getLogin()))) {
             throw new ValidationException("login.occupied", "Login is occupied");
         }
 
@@ -133,7 +137,7 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
             customer.writeSession(newMode ? null : getSession() ); // Activate modifications for EditMode
             customer.setPasswordHash(authService.getHash(password));
         }
-        getSession().saveOrUpdate(customer);
+        doSaveOrUpdate(customer);
     }
 
     /** Authenticate the user */
@@ -145,7 +149,7 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
         crn3 = Customer.ACTIVE.whereEq(true);
         crn4 = crn1.and(crn2).and(crn3);
 
-        return getSession().createQuery(crn4).uniqueResult();
+        return createQuery(crn4).uniqueResult();
     }
 
     /** Check a read-only state */
@@ -202,7 +206,7 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
 
         booking.setPrice(totalPrice(booking));
         booking.setCreationDate(LocalDateTime.now());
-        getSession().save(booking);
+        doSave(booking);
     }
 
     /** Booking in the feature can be removed by its customer, or an administrator */
@@ -210,7 +214,7 @@ public class DbServiceImpl extends AbstractServiceImpl<Customer> implements DbSe
     public void deleteBooking(Booking booking) {
         // TODO: check permissions, ...
         LOGGER.info("Delete Booking {}", booking);
-        getSession().delete(booking);
+        doDelete(booking);
     }
 
     /** Returns a booking criterion */
