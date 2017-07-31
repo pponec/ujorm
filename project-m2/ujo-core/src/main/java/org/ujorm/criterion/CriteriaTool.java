@@ -14,12 +14,12 @@
  *  limitations under the License.
  */
 
-
 package org.ujorm.criterion;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoComparator;
 
@@ -48,6 +48,7 @@ import org.ujorm.core.UjoComparator;
 public class CriteriaTool<UJO extends Ujo> {
 
     /** Find the first UJO by an criterion or return NULL if any object was not found. */
+    @Nullable
     public UJO findFirst(List<UJO> list, Criterion<UJO> criterion) {
         for (UJO ujo : list) {
             if (criterion.evaluate(ujo)) {

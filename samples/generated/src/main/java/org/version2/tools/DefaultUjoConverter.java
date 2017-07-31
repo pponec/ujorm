@@ -19,6 +19,7 @@ package org.version2.tools;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import javax.annotation.Nullable;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
@@ -58,7 +59,7 @@ public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
 
     /** Convert from POJO to UJO */
     @Override
-    public U marshal(final Object v) throws IllegalStateException {
+    public U marshal(@Nullable final Object v) throws IllegalStateException {
         if (v == null) {
             return null;
         }
@@ -99,7 +100,7 @@ public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
 
     /** Convert from UJO to POJO */
     @Override
-    public Object unmarshal(final U v) throws IllegalStateException {
+    public Object unmarshal(@Nullable final U v) throws IllegalStateException {
         if (v == null) {
             return null;
         }

@@ -15,6 +15,8 @@
  */
 package org.ujorm.wicket.component.form.fields;
 
+import javax.annotation.Nullable;
+
 /**
  * interpretation of the "quick and dirty" Java converter found in the comments
  * of that link...
@@ -24,7 +26,7 @@ package org.ujorm.wicket.component.form.fields;
  */
 public class DateConverter {
 
-    public String toJQueryUIDateFormat(String dateFormat) {
+    public String toJQueryUIDateFormat(@Nullable String dateFormat) {
 
         if (dateFormat == null) {
             return null;

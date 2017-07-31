@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
@@ -194,6 +195,7 @@ public class UjoCoder {
      * <br>If value can't be decoded, an IllegalArgumentException is throwed.
      */
     @SuppressWarnings("unchecked")
+    @Nullable
     public Object decodeValue(final Class type, final String aValue) throws IllegalArgumentException {
 
         try {

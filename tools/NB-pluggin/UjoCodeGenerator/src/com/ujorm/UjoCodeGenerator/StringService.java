@@ -15,6 +15,7 @@
  */
 package com.ujorm.UjoCodeGenerator;
 
+import com.sun.istack.internal.Nullable;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
@@ -179,6 +180,7 @@ final public class StringService {
     }
 
     /** Get a message of the @Comment annotation in the JavaDoc format */
+    @Nullable
     private Comment getCommentMessage(final VariableTree field) {
         for (AnnotationTree annotation : field.getModifiers().getAnnotations()) {
             if (isCommentType(annotation)) {
@@ -195,7 +197,6 @@ final public class StringService {
                 }
             }
         }
-
         return null;
     }
 

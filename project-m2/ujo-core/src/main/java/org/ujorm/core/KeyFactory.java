@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -143,6 +144,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
      * @param holder The current holder of the key fields
      * @return Keys from the holder super class
      */
+    @Nullable
     protected final Iterable<? extends Key<?,?>> getSuperKeys(Class<?> holder) {
         if (holder.isInterface()) {
             final List<Key<?,?>> keyList = new ArrayList<>();
@@ -196,6 +198,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Returns a field value */
+    @Nullable
     private <T> T getFieldValue(Class<T> type, Field field) throws IllegalAccessException {
         if (type.isAssignableFrom(field.getType())) {
             if (!field.isAccessible()) {

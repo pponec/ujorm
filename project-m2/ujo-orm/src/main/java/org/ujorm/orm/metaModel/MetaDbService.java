@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -521,6 +522,7 @@ public class MetaDbService {
     }
 
     /** Find the first sequence of the database or returns null if no sequence was not found. */
+    @Nullable
     protected UjoSequencer findFirstSequencer() {
         for (MetaTable table : TABLES.of(db)) {
             if (table.isTable()) {

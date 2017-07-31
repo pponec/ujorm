@@ -18,9 +18,9 @@ package org.ujorm.hibernateSupport;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import javax.annotation.Nullable;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
-
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.property.Getter;
@@ -80,6 +80,7 @@ final public class UjoPropertyGetter implements Getter {
      * inspired from BackrefPropertyAccessor
      **/
     @Override
+    @Nullable
     public Method getMethod() {
         return null;
     }

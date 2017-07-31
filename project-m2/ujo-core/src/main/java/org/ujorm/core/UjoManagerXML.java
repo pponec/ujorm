@@ -27,6 +27,7 @@ import java.io.Writer;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.ListKey;
@@ -88,6 +89,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
 
     /** Create Ujo from XMl file */
+    @Nullable
     public <T extends UjoTextable> T parseXML(File inputFile, Class<T> classType, boolean validating, Object context) throws IllegalStateException {
         InputStream bis = null;
         try {

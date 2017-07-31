@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
@@ -335,6 +336,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     }
 
     /** Finds the first column by ID or returns null. The method is for internal use only. */
+    @Nullable
     MetaColumn findColumn(String id) {
 
         if (OrmTools.isFilled(id)) for (MetaColumn column : COLUMNS.of(this)) {
@@ -392,6 +394,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Returns a parent of the parameter or the null if no parent was not found.<br>
      * The method provides a parent in case of emulated inheritance.
      */
+    @Nullable
     public OrmUjo getParent(final OrmUjo bo) {
 
         final MetaColumn metaColumn = getFirstPK();

@@ -352,6 +352,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
      * @param fullKeys all direct keys
      * @return Primary Key in a KeyList format
      */
+    @Nullable
     protected KeyList<?> findKeyByName(final String keyName, final KeyList<U> fullKeys) {
         for (Key<U, ?> key : fullKeys) {
             if (keyName.equals(key.getName().toUpperCase(Locale.ENGLISH))) {

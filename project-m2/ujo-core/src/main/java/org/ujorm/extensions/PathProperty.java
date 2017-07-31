@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
@@ -699,6 +700,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     }
 
     /** Returns an empty value */
+    @Nullable
     private VALUE getEmptyValue() {
         final Class type = getType();
         if (CharSequence.class.isAssignableFrom(type)) {

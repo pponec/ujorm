@@ -18,6 +18,7 @@ package org.ujorm.core;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 
@@ -101,6 +102,7 @@ public class BeanManager<UJO,VALUE> {
     }
     
     /** Returns a primitive type if can or a null value. */
+    @Nullable
     protected Class getPrimitive(Class objClass) {
         
         if (objClass!=null && !objClass.isPrimitive()) try {
@@ -116,6 +118,7 @@ public class BeanManager<UJO,VALUE> {
     }
     
     @SuppressWarnings("unchecked")
+    @Nullable
     private Method getMethodPlain
     ( final Class ujoClass
     , final Class type

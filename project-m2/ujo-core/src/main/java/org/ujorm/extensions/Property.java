@@ -20,6 +20,7 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
@@ -617,6 +618,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     }
 
     /** Returns an empty value */
+    @Nullable
     private Object getEmptyValue() {
         if (CharSequence.class.isAssignableFrom(type)) {
             return "";

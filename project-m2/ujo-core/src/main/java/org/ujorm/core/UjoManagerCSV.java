@@ -29,6 +29,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -206,6 +207,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
      * @return List of Ujo
      * @throws IllegalStateException can be throwed in case the header check failed
      */
+    @Nullable
     public List<U> loadCSV(File file, Object context) throws IllegalStateException {
         Reader reader = null;
         try {

@@ -23,6 +23,7 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
@@ -72,6 +73,7 @@ final public class MetaRoot extends AbstractMetaModel {
     /** Returns the first database with required name or returns null.
      * @param name If the parameter "name" is null than method returns a first database.
      */
+    @Nullable
     public MetaDatabase getDatabase(String name) {
         for (MetaDatabase database : DATABASES.getList(this)) {
             if (name==null || MetaDatabase.SCHEMA.equals(database, name)) {
@@ -135,6 +137,7 @@ final public class MetaRoot extends AbstractMetaModel {
      * The method is for internal use only.
      * @param databaseId The identifier for looking the database
      */
+    @Nullable
     public MetaDatabase removeDb(String databaseId) {
         if (super.readOnly()) {
             throw new UnsupportedOperationException("The internal state is 'read only'");

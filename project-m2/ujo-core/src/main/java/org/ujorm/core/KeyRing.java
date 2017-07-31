@@ -23,6 +23,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -452,7 +454,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @return If the keys are {@code null}, than the result is the {@code null} too.
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Key<? super UJO, ?>... keys) {
+    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, @Nonnull Key<? super UJO, ?>... keys) {
         if (keys == null) {
             return null;
         }
@@ -508,6 +510,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @return If the keys are {@code null}, than the result is the {@code null} too.
      */
     @SuppressWarnings("unchecked")
+    @Nullable
     public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Collection<Key<? super UJO, ?>> keys) {
         if (!UjoTools.isFilled(keys)) {
             return null;

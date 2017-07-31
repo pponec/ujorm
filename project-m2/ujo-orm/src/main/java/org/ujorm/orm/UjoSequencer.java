@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.annotation.Nullable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -210,6 +211,7 @@ public class UjoSequencer {
      * <br>If no sequence is found then the method returns the value {@code null}.
      * @throws java.io.IOException
      */
+    @Nullable
     public long[] getCurrentDBSequence(final Connection connection, StringBuilder sql) throws SQLException, IOException  {
         if (sql != null) {
             sql.setLength(0);

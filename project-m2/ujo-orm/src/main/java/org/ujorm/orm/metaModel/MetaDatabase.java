@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nullable;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import org.ujorm.Key;
@@ -532,6 +533,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** Finds the first table by ID or returns null.
      * The method is for internal use only.
      */
+    @Nullable
     MetaTable findTable(String id) {
 
         if (OrmTools.isFilled(id)) for (MetaTable table : TABLES.getList(this)) {
@@ -545,8 +547,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** Finds the first procedure by ID or returns null.
      * The method is for internal use only.
      */
+    @Nullable
     MetaProcedure findProcedure(String id) {
-
         if (OrmTools.isFilled(id)) for (MetaProcedure procedure : PROCEDURES.getList(this)) {
             if (MetaProcedure.ID.equals(procedure, id)) {
                 return procedure;

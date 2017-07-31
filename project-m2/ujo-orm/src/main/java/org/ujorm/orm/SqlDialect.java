@@ -28,6 +28,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.ujorm.Key;
@@ -662,7 +664,8 @@ abstract public class SqlDialect {
     /** Print a <strong>value condition phrase</strong> from the criterion.
      * @return A nullable value criterion to assign into the SQL query.
      */
-    public ValueCriterion printCriterion(ValueCriterion crn, Appendable out) throws IOException {
+    @Nullable
+    public ValueCriterion printCriterion(@Nonnull ValueCriterion crn, @Nonnull Appendable out) throws IOException {
         final Operator operator = crn.getOperator();
         final Key key = crn.getLeftNode();
         final ColumnWrapper column = key != null
@@ -720,7 +723,8 @@ abstract public class SqlDialect {
      * Write a right value form criterion
      * @return A value criterion to assign into the SQL query.
      */
-    protected ValueCriterion printCriterionValue(String template, ColumnWrapper column, ValueCriterion crit, Appendable out) throws IOException {
+    @Nullable
+    protected ValueCriterion printCriterionValue(@Nonnull String template, @Nonnull ColumnWrapper column, @Nonnull ValueCriterion crit, @Nonnull Appendable out) throws IOException {
         final Object right = crit.getRightNode();
         if (right instanceof Key) {
             final Key rightProperty = (Key) right;

@@ -18,6 +18,7 @@ package org.ujorm.wicket.component.grid;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.annotation.Nullable;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -54,6 +55,7 @@ public class KeyColumnDate<U extends Ujo> extends KeyColumn<U, java.util.Date> {
 
     /** Create the Label for a Value component */
     @Override
+    @Nullable
     protected Component createValueCoponent(final String componentId, final IModel<?> valueModel, final U ujo) {
         final Label result = new Label(componentId);
         result.setDefaultModel(new Model() {

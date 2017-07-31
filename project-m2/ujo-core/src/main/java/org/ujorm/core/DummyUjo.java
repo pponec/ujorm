@@ -16,6 +16,7 @@
 
 package org.ujorm.core;
 
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -38,6 +39,7 @@ final class DummyUjo implements Ujo {
 
     /** A dummy implementation. */
     @Override
+    @Nullable
     public Object readValue(Key key) { return null;  }
 
     /** Returns unsorted keys. */

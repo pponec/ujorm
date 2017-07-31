@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.transaction.Status;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
@@ -323,7 +325,8 @@ public class Session implements Closeable {
     /** Returns the first "basic" column of criterion.
      * @return Not null result
      */
-    public MetaRelation2Many getBasicColumn(Criterion criterion) {
+    @Nullable
+    public MetaRelation2Many getBasicColumn(@Nonnull Criterion criterion) {
         while (criterion.isBinary()) {
             criterion = ((BinaryCriterion) criterion).getLeftNode();
         }
@@ -843,6 +846,7 @@ public class Session implements Closeable {
     }
 
     /** Find column by a table type. */
+    @Nullable
     private MetaColumn findOrmColumn(MetaTable table, Class tableType) {
         for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
             if (column.isForeignKey()
@@ -982,7 +986,8 @@ public class Session implements Closeable {
      * then the {@code null} value is returned.
      * @param ujo Ujo object
      */
-    public <U extends OrmUjo> U loadBy(U ujo) throws NoSuchElementException {
+    @Nullable
+    public <U extends OrmUjo> U loadBy(@Nullable U ujo) throws NoSuchElementException {
         if (ujo == null) {
             return ujo;
         }

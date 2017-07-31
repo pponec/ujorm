@@ -25,8 +25,9 @@ import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.*;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.orm.ao.UjoStatement;
@@ -284,7 +285,7 @@ public class TypeService implements ITypeService<Object,Object> {
     }
 
     /** Find an enumeration by the Key. */
-    private Object findEnum(final String key, final MetaColumn mColumn) throws IllegalUjormException {
+    private Object findEnum(@Nullable final String key, @Nonnull final MetaColumn mColumn) throws IllegalUjormException {
         if (key==null || key.isEmpty()) {
             return null;
         }
@@ -302,7 +303,7 @@ public class TypeService implements ITypeService<Object,Object> {
 
     /** Create the new StringWrapper by the KEY. */
     @SuppressWarnings("unchecked")
-    private Object createStringWrapper(final String key, final MetaColumn mColumn) throws IllegalUjormException {
+    private Object createStringWrapper(@Nullable final String key, @Nonnull final MetaColumn mColumn) throws IllegalUjormException {
         if (key==null || key.isEmpty()) {
             return null;
         }
@@ -316,7 +317,7 @@ public class TypeService implements ITypeService<Object,Object> {
 
     /** Create the new BytesWrapper by the KEY. */
     @SuppressWarnings("unchecked")
-    private Object createBytesWrapper(final byte[] key, final MetaColumn mColumn) throws IllegalUjormException {
+    private Object createBytesWrapper(@Nullable final byte[] key, @Nonnull final MetaColumn mColumn) throws IllegalUjormException {
         if (key==null || key.length==0) {
             return null;
         }

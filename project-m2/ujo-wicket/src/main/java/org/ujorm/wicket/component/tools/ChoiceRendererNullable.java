@@ -16,6 +16,7 @@
 package org.ujorm.wicket.component.tools;
 
 import java.util.List;
+import javax.annotation.Nullable;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -114,6 +115,7 @@ public class ChoiceRendererNullable<T extends Enum<T>> implements IChoiceRendere
     }
 
     @Override
+    @Nullable
     public T getObject(String id, IModel<? extends List<? extends T>> choices) {
         final List<? extends T> choiceList = choices.getObject();
         for (int i = 0, max = choiceList.size(); i < max; i++) {

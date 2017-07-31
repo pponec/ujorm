@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
@@ -344,11 +345,12 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         }
     }
 
-    /** Returns a unique result or null if no result item (database row) was found.
+    /** Returns a unique result or {@code null} if no result item (database row) was found.
      * @throws NoSuchElementException Result is not unique.
      * @see #iterator()
      * @see #exists()
      */
+    @Nullable
     public UJO uniqueResult() throws NoSuchElementException {
         final UjoIterator<UJO> iterator = iterator();
         if (!iterator.hasNext()) {

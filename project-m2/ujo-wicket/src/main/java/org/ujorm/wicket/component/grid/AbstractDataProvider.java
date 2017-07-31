@@ -141,6 +141,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     }
 
     /** Returns a sorting Key */
+    @Nullable
     public Key<U,?> getSortKey() {
         final SortParam<Object> sort = getSort();
         if (sort != null) {

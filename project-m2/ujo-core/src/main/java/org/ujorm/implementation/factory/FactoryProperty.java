@@ -17,7 +17,7 @@
 package org.ujorm.implementation.factory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
@@ -71,6 +71,7 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
      * <br>A direct call can bypass a important actions implemented in the <code>readProperty(method)</code>.
      */
     @Override
+    @Nullable
     public VALUE readValue(final UJO ujo) throws IllegalArgumentException {
         try {
             final VALUE result = constructor!=null

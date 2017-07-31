@@ -17,6 +17,7 @@
 package org.ujorm.hibernateSupport;
 
 import java.lang.reflect.Method;
+import javax.annotation.Nullable;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
 
@@ -61,6 +62,7 @@ final public class UjoPropertySetter implements Setter {
      * inspired from BackrefPropertyAccessor
      **/
     @Override
+    @Nullable
     public Method getMethod() {
         return null;
     }

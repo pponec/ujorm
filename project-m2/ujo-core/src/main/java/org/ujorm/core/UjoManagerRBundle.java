@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.PropertyResourceBundle;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -111,6 +112,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
     /**
      * Load an Ujo from Java resource bundle
      */
+    @Nullable
     public UJO loadResourceBundle(File inputFile, boolean validate, Object context)
     throws IllegalStateException {
         InputStream inp = null;

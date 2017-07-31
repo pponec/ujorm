@@ -27,6 +27,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -350,6 +351,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
      * @param annotation Annotation type
      * @return  An annotation instance or the {@code null} value
      */
+    @Nullable
     public static <T extends Annotation> T findAnnotation(Key<?,?> key, Class<T> annotation) {
         if (key instanceof CompositeKey) {
             key = ((CompositeKey) key).getFirstKey();
