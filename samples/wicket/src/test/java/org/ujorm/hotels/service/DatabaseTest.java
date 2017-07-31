@@ -61,7 +61,7 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
         final String city = "Prague";
         if (!query(Booking.ID.forAll()).exists()) {
             Customer customer = query(Customer.LOGIN.whereEq(login)).uniqueResult();
-            Hotel hotel = doQuery(Hotel.CITY.add(City.NAME).whereEq(city)).setLimit(1).uniqueResult();
+            Hotel hotel = createQueryDao(Hotel.CITY.add(City.NAME).whereEq(city)).setLimit(1).uniqueResult();
             //
             Booking booking = new Booking();
             booking.setCustomer(customer);
@@ -70,7 +70,7 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
             booking.setPrice(hotel.getPrice());
             booking.setCreationDate(LocalDateTime.now());
 
-            getSession().save(booking);
+            getSessionDao().save(booking);
         }
     }
 
@@ -121,7 +121,7 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
         String[] cities  = {"Prague", "Amsterdam"};
         Criterion crn = bookingCityName.forSqlUnchecked("{0} IN ({1})", cities);
 
-        Query<T> bookings = doQuery(crn);
+        Query<T> bookings = createQueryDao(crn);
         List<T> result = bookings.list();
         assertFalse(result.isEmpty());
     }
@@ -130,7 +130,7 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
     //@Test
     @Transactional
     public void testNativeQuery_1() {
-        OrmHandler handler = getSession().getHandler();
+        OrmHandler handler = getSessionDao().getHandler();
         AliasTable<Booking> booking = handler.tableOf(Booking.class, "a");
         AliasTable<Hotel> hotel = handler.tableOf(Hotel.class, "b");
         AliasTable<City> city = handler.tableOf(City.class, "c");
@@ -175,6 +175,6 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
 
     /** Create a database query with Session */
     final protected <T extends OrmUjo> Query<T> query(Criterion<T> criterion) {
-        return doQuery(criterion);
+        return createQueryDao(criterion);
     }
 }

@@ -38,7 +38,7 @@ import static org.ujorm.core.UjoManager.*;
 import static org.ujorm.hotels.service.DbService.ONE_DAY;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
-import org.ujorm.spring.SimpleDao;
+import org.ujorm.spring.CommonDao;
 /**
  * Common database service implementations
  * @author ponec
@@ -51,7 +51,7 @@ public class DbServiceImpl implements DbService {
     private AuthService authService;
 
     /** DAO layer */
-    @Autowired private SimpleDao<OrmUjo> dao;
+    @Autowired private CommonDao<OrmUjo> dao;
 
     /** Read only sign */
     private boolean readOnly;

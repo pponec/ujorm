@@ -10,8 +10,8 @@ import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
 
 /**
- * Abstract DAO for quick implementation.
- * The class is a single thread ready only.
+ * Abstract <strong>data access object</strong> for quick implementation.
+ * The class is a single thread only.
  * @author Pavel Ponec
  */
 public abstract class AbstractDao<T extends OrmUjo> {
@@ -37,7 +37,8 @@ public abstract class AbstractDao<T extends OrmUjo> {
     }
 
     /** Get a lazy loaded ORM session */
-    protected Session getSession() {
+    @Nonnull
+    protected Session getSessionDao() {
         if (transactionManager == null) {
             transactionManager = (UjormTransactionManager) applContext.getBean(getUjoTransactionBeanName());
         }
@@ -45,48 +46,49 @@ public abstract class AbstractDao<T extends OrmUjo> {
     }
 
     /** Create a new query */
-    final protected <U extends T> Query<U> doQuery(Criterion<U> criteron) {
-        return getSession().createQuery(criteron);
+    @Nonnull
+    final protected <U extends T> Query<U> createQueryDao(Criterion<U> criteron) {
+        return getSessionDao().createQuery(criteron);
     }
 
     /** Save or update an persistent object */
-    final protected <U extends T> void doSaveOrUpdate(@Nonnull U bo) {
-        getSession().saveOrUpdate(bo);
+    final protected <U extends T> void saveOrUpdateDao(@Nonnull U bo) {
+        getSessionDao().saveOrUpdate(bo);
     }
 
     /** Save a persistent object to database */
-    final protected <U extends T> void doSave(@Nonnull U bo) {
-        getSession().save(bo);
+    final protected <U extends T> void saveDao(@Nonnull U bo) {
+        getSessionDao().save(bo);
     }
 
     /** Save list of persistent objects to database */
-    final protected <U extends T> void doSave(@Nonnull List<U> bos) {
-        getSession().save(bos);
+    final protected <U extends T> void saveDao(@Nonnull List<U> bos) {
+        getSessionDao().save(bos);
     }
 
     /** Update a persistent object on database */
     final protected <U extends T> int doUpdate(@Nonnull U bo) {
-        return getSession().delete(bo);
+        return getSessionDao().delete(bo);
     }
 
     /** Update list of persistent objects on database */
-    final protected <U extends T> int doUpdate(@Nonnull List<U> bos) {
-        return getSession().delete(bos);
+    final protected <U extends T> int updateDao(@Nonnull List<U> bos) {
+        return getSessionDao().delete(bos);
     }
 
     /** Delete a persistent object from database */
-    final protected <U extends T> int doDelete(@Nonnull U bo) {
-        return getSession().delete(bo);
+    final protected <U extends T> int deleteDao(@Nonnull U bo) {
+        return getSessionDao().delete(bo);
     }
 
     /** Delete list of persistent objects from database */
-    final protected <U extends T> int doDelete(@Nonnull List<U> bos) {
-        return getSession().delete(bos);
+    final protected <U extends T> int deleteDao(@Nonnull List<U> bos) {
+        return getSessionDao().delete(bos);
     }
 
     /** Delete list of persistent objects from database */
-    final protected <U extends T> boolean doExists(Criterion<U> criteron) {
-        return getSession().exists(criteron);
+    final protected <U extends T> boolean existsDao(@Nonnull Criterion<U> criteron) {
+        return getSessionDao().exists(criteron);
     }
 
 }

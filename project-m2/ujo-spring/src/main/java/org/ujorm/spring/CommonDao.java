@@ -8,61 +8,62 @@ import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
 
 /**
- * Simple DAO for quick implementation.
+ * General <strong>data access object</strong> for quick implementation.
  * The class is a single thread ready only.
  * @author Pavel Ponec
  */
-public class SimpleDao<T extends OrmUjo> extends AbstractDao<T> {
+public class CommonDao<T extends OrmUjo> extends AbstractDao<T> {
+    
+    /** Get session */
+    @Nonnull
+    public Session getSession() {
+        return getSessionDao();
+    }
 
     /** Create a new query */
-    public <U extends T> Query<U> createQuery(Criterion<U> criteron) {
-        return doQuery(criteron);
+    @Nonnull
+    public <U extends T> Query<U> createQuery(@Nonnull Criterion<U> criteron) {
+        return createQueryDao(criteron);
     }
 
     /** Save or update an persistent object */
     public <U extends T> void saveOrUpdate(@Nonnull U bo) {
-        doSaveOrUpdate(bo);
+        saveOrUpdateDao(bo);
     }
 
     /** Save a persistent object to database */
     public <U extends T> void save(@Nonnull U bo) {
-        doSave(bo);
+        saveDao(bo);
     }
 
     /** Save list of persistent objects to database */
     public <U extends T> void save(@Nonnull List<U> bos) {
-        doSave(bos);
+        saveDao(bos);
     }
 
     /** Update a persistent object on database */
     public <U extends T> int update(@Nonnull U bo) {
-        return doDelete(bo);
+        return deleteDao(bo);
     }
 
     /** Update list of persistent objects on database */
     public <U extends T> int update(@Nonnull List<U> bos) {
-        return doDelete(bos);
+        return deleteDao(bos);
     }
 
     /** Delete a persistent object from database */
     public <U extends T> int delete(@Nonnull U bo) {
-        return doDelete(bo);
+        return deleteDao(bo);
     }
 
     /** Delete list of persistent objects from database */
     public <U extends T> int delete(@Nonnull List<U> bos) {
-        return doDelete(bos);
+        return deleteDao(bos);
     }
 
     /** Delete list of persistent objects from database */
-    public <U extends T> boolean exists(Criterion<U> criteron) {
-        return doExists(criteron);
-    }
-
-    /** Get session */
-    @Override
-    public final Session getSession() {
-        return super.getSession();
+    public <U extends T> boolean exists(@Nonnull Criterion<U> criteron) {
+        return existsDao(criteron);
     }
 
 }

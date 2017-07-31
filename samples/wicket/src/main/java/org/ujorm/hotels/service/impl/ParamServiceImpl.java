@@ -47,7 +47,7 @@ import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Comment;
 import static org.ujorm.hotels.entity.ParamValue.*;
 import org.ujorm.orm.OrmUjo;
-import org.ujorm.spring.SimpleDao;
+import org.ujorm.spring.CommonDao;
 
 /**
  * Common database service implementations
@@ -63,7 +63,7 @@ implements ParamService {
     private AuthService authService;
 
     /** DAO layer */
-    @Autowired private SimpleDao<OrmUjo> dao;
+    @Autowired private CommonDao<OrmUjo> dao;
 
     /** Get a value of the key */
     @Override
