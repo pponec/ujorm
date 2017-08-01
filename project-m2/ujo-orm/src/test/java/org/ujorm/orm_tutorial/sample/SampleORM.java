@@ -139,6 +139,7 @@ public class SampleORM {
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
+            params.set(MetaParams.TYPE_SERVICE, TypeServiceForOlderJdbc.class); // If the JDBC is older than 4.2
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
             params.set(MetaParams.MORE_PARAMS.add(MoreParams.JOIN_PHRASE), true);
             params.setQuotedSqlNames(false);
