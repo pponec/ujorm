@@ -39,7 +39,7 @@ public @interface Column {
     /** The primary key */
     boolean pk() default false;
     /** Database column type */
-    DbType type() default DbType.Automatic;
+    DbType type() default DbType.NULL;
     /** Database column maximal length */
     int length() default -1;
     /** Database column precision */

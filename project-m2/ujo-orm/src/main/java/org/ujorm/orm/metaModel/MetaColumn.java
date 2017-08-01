@@ -66,7 +66,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     /** DB primary key */
     public static final Key<MetaColumn,Boolean> PRIMARY_KEY = fa.newKey("primaryKey", false);
     /** Database Type */
-    public static final Key<MetaColumn,DbType> DB_TYPE = fa.newKey("dbType", DbType.Automatic);
+    public static final Key<MetaColumn,DbType> DB_TYPE = fa.newKey("dbType", DbType.NULL);
     /** Column NOT-NULL */
     public static final Key<MetaColumn,Boolean> MANDATORY = fa.newKey("mandatory", false);
     /** Column value length */

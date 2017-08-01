@@ -328,13 +328,13 @@ abstract public class SqlDialect {
     /** Is allowed a column length in a SQL phrase for creating column? The length example can be: NAME CHAR(10) */
     protected boolean isColumnLengthAllowed(final MetaColumn column) {
         switch (MetaColumn.DB_TYPE.of(column)) {
-            case INT:
+            case INTEGER:
             case SMALLINT:
             case BIGINT:
             case DATE:
             case TIME:
             case TIMESTAMP:
-            case TIMESTAMP_WITH_TIME_ZONE:
+            case TIMESTAMP_WITH_TIMEZONE:
             case CLOB:
             case BLOB:
                  return false;
@@ -380,8 +380,8 @@ abstract public class SqlDialect {
     protected String getColumnType(final MetaColumn column) {
         final String sqlType = MetaColumn.DB_TYPE.of(column).name();
         switch (MetaColumn.DB_TYPE.of(column)) {
-            case TIMESTAMP_WITH_TIME_ZONE:
-                return sqlType.replace('_', ' ');
+            case TIMESTAMP_WITH_TIMEZONE:
+                return "TIMESTAMP WITH TIME ZONE";
             default:
                 return sqlType;
         }

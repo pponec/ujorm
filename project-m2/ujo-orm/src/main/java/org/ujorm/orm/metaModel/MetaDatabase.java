@@ -253,7 +253,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             MetaColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
         }
         else if (Integer.class==type || Color.class.isAssignableFrom(type)) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.INT);
+            MetaColumn.DB_TYPE.setValue(column, DbType.INTEGER);
         }
         else if (Short.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.SMALLINT);
@@ -277,7 +277,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
         }
         else if (java.time.OffsetDateTime.class.isAssignableFrom(type)) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP_WITH_TIME_ZONE);
+            MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP_WITH_TIMEZONE);
         }
         else if (java.time.LocalDate.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.DATE);
