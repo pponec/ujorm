@@ -81,7 +81,7 @@ public class TypeService implements ITypeService<Object,Object> {
      * @param column Colum provides a Type, there is supported a relation types too.
      * @return Java type code for frequently used types.
      */
-    public static char getTypeCode(final MetaColumn column) {
+    public static char getTypeCode(@Nonnull final MetaColumn column) {
         final Class type = column.getType();
         if (StringWrapper.class.isAssignableFrom(type)) return type.isEnum()
                 ? EXPORT_ENUM
@@ -132,7 +132,10 @@ public class TypeService implements ITypeService<Object,Object> {
      * @throws SQLException
      */
     @Override
-    public Object getValue(final MetaColumn mColumn, final ResultSet rs, final int c) throws SQLException {
+    public Object getValue
+        ( @Nonnull final MetaColumn mColumn
+        , @Nonnull final ResultSet rs
+        , final int c) throws SQLException {
         final Object r;
         switch (mColumn.getTypeCode()) {
             case BOOLEAN  : r = rs.getBoolean(c); break;
@@ -186,7 +189,10 @@ public class TypeService implements ITypeService<Object,Object> {
      * @throws SQLException
      */
     @Override
-    public Object getValue(final MetaColumn mColumn, final CallableStatement rs, final int c) throws SQLException {
+    public Object getValue
+        ( @Nonnull final MetaColumn mColumn
+        , @Nonnull final CallableStatement rs
+        , final int c) throws SQLException {
         final Object r;
         switch (mColumn.getTypeCode()) {
             case BOOLEAN  : r = rs.getBoolean(c); break;
@@ -239,9 +245,9 @@ public class TypeService implements ITypeService<Object,Object> {
      */
     @Override
     public void setValue
-        ( final MetaColumn mColumn
-        , final PreparedStatement rs
-        , final Object value
+        ( @Nonnull final MetaColumn mColumn
+        , @Nonnull final PreparedStatement rs
+        , @Nullable final Object value
         , final int c
         ) throws SQLException {
 
@@ -280,12 +286,14 @@ public class TypeService implements ITypeService<Object,Object> {
             case LOCAL_DATE_TIME:
             case OFFSET_DATE_TIME:
             case UUID:
-            default: rs.setObject(c, value);
+            default: rs.setObject(c, value, MetaColumn.DB_TYPE.of(mColumn).getSqlType());
         }
     }
 
     /** Find an enumeration by the Key. */
-    private Object findEnum(@Nullable final String key, @Nonnull final MetaColumn mColumn) throws IllegalUjormException {
+    private Object findEnum
+        ( @Nullable final String key
+        , @Nonnull final MetaColumn mColumn) throws IllegalUjormException {
         if (key==null || key.isEmpty()) {
             return null;
         }
@@ -331,7 +339,7 @@ public class TypeService implements ITypeService<Object,Object> {
 
     /** Return an converted Java type to database <b>DDL statements</b> by a generic test. */
     @Override
-    public Class getDbTypeClass(final MetaColumn column) {
+    public Class getDbTypeClass(@Nonnull final MetaColumn column) {
         assert column.getConverter()==this : "Invalid column for this service: " + column;
 
         switch (column.getTypeCode()) {

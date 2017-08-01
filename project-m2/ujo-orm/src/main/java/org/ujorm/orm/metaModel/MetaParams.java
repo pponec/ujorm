@@ -95,6 +95,7 @@ final public class MetaParams extends AbstractMetaModel {
     /** The instance of the parameter class {@see ITypeService} is used for conversion, reading and writing to/from the ResultSet.
      * You can specify a subtype of the class for a column special features.
      * @see org.ujorm.orm.annot.Column#converter()
+     * @see org.ujorm.orm.TypeServiceForOlderJdbc An implementation for an older JDBC API (older version than 4.2)
      */
     public static final Key<MetaParams,Class<? extends ITypeService>> TYPE_SERVICE = f.newClassKey("typeService", TypeService.class);
     /** The class for is used for building a {@link org.ujorm.orm.metaModel.MetaIndex} model.
