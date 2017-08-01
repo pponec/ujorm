@@ -2,10 +2,12 @@ package org.ujorm.spring;
 
 import java.util.List;
 import javax.annotation.Nonnull;
+import org.ujorm.Key;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
+import org.ujorm.orm.metaModel.MetaColumn;
 
 /**
  * General <strong>data access object</strong> for quick implementation.
@@ -65,5 +67,16 @@ public class CommonDao<T extends OrmUjo> extends AbstractDao<T> {
     public <U extends T> boolean exists(@Nonnull Criterion<U> criteron) {
         return existsDao(criteron);
     }
+
+    /** Delete list of persistent objects from database */
+    public <U extends T> boolean exists(@Nonnull final Class<U> entity) {
+        return existsDao(entity);
+    }
+
+    /** Get column model */
+    public <U extends T> MetaColumn getColumnModel(@Nonnull Key<U,?> compositeKey) {
+        return getColumnDao(compositeKey);
+    }
+
 
 }

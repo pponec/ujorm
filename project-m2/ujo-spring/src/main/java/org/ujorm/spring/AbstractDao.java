@@ -4,10 +4,12 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.ujorm.Key;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
+import org.ujorm.orm.metaModel.MetaColumn;
 
 /**
  * Abstract <strong>data access object</strong> for quick implementation.
@@ -89,6 +91,16 @@ public abstract class AbstractDao<T extends OrmUjo> {
     /** Delete list of persistent objects from database */
     final protected <U extends T> boolean existsDao(@Nonnull Criterion<U> criteron) {
         return getSessionDao().exists(criteron);
+    }
+
+    /** Delete list of persistent objects from database */
+    final protected <U extends T> boolean existsDao(final Class<U> entity) {
+        return getSessionDao().exists(entity);
+    }
+
+    /** Get column model */
+    final protected <U extends T> MetaColumn getColumnDao(Key<U,?> compositeKey) {
+        return (MetaColumn) getSessionDao().getHandler().findColumnModel(compositeKey);
     }
 
 }
