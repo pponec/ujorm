@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2015 Pavel Ponec
+ *  Copyright 2009-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -155,86 +155,31 @@ public class MetaDbService {
         newIndexes.clear();
 
         final DatabaseMetaData dbModel = conn.getMetaData();
-        final boolean catalog = isCatalog();
-        final String column = null;
 
         for (MetaTable table : TABLES.of(db)) {
             if (table.isTable()) {
-
-                // ---------- CHECK COLUMNS OF THE TABLE ----------
-
-                final Set<String> existingColumns = new HashSet<>(32);
-                final String schema = dbIdentifier(MetaTable.SCHEMA.of(table),dbModel);
-                try (ResultSet columns = dbModel.getColumns
-                    ( catalog ? schema : null
-                    , catalog ? null  : schema
-                    , dbIdentifier(MetaTable.NAME.of(table),dbModel)
-                    , column
-                    )) {
-                    while(columns.next()) {
-                        existingColumns.add(columns.getString("COLUMN_NAME").toUpperCase());
-                        if (DEBUG_MODE && LOGGER.isLoggable(INFO)) {
-                            final String msg = "DB column: "
-                                + columns.getString("TABLE_CAT") + "."
-                                + columns.getString("TABLE_SCHEM") + "."
-                                + columns.getString("TABLE_NAME") + "."
-                                + columns.getString("COLUMN_NAME")
-                                ;
-                            LOGGER.log(INFO, msg);
-                        }
-                    }
-                }
-
-                final boolean tableExists = existingColumns.size()>0;
+                // CHECK COLUMNS AND INDEXES OF THE TABLE:
+                final boolean tableExists = addNewColumns(dbModel, table, newTables, newColumns);
                 if (tableExists) {
-                    // create columns:
-                    for (MetaColumn mc : MetaTable.COLUMNS.of(table)) {
-
-                        final boolean exists = existingColumns.contains(mc.getName().toUpperCase());
-                        if (!exists) {
-                            LOGGER.log(INFO, "New DB column: {}", mc.getFullName());
-                            newColumns.add(mc);
-                        }
-                    }
-                } else {
-                    LOGGER.log(INFO, "New DB table: {}", MetaTable.NAME.of(table));
-                    newTables.add(table);
-                }
-
-                // ---------- CHECK INDEXES ----------
-
-                existingColumns.clear();
-                if (tableExists) {
-                    try (ResultSet indexes = dbModel.getIndexInfo
-                        ( catalog ? schema : null
-                        , catalog ? null : schema
-                        , dbIdentifier(MetaTable.NAME.of(table),dbModel)
-                        , false // unique
-                        , false // approximate
-                        )) {
-                        while(indexes.next()) {
-                            final String name = indexes.getString("INDEX_NAME");
-                            if (name!=null) {
-                                existingColumns.add(name.toUpperCase());
-                            }
-                        }
-                    }
-                }
-                for (MetaIndex index : table.getIndexCollection()) {
-                    final boolean exists = existingColumns.contains(MetaIndex.NAME.of(index).toUpperCase());
-                    if (!exists) {
-                        LOGGER.log(INFO, "New DB index: {}", index);
-                        newIndexes.add(index);
-                    }
+                    addNewIndexes(dbModel, table, newIndexes);
                 }
             }
         }
 
         final boolean result = !newTables.isEmpty()
                             || !newColumns.isEmpty()
-                            || !newIndexes.isEmpty()
-                            ;
+                            || !newIndexes.isEmpty();
         return result;
+    }
+
+    private void logColumn(final ResultSet columns) throws SQLException {
+        final String msg = "DB column: "
+                + columns.getString("TABLE_CAT") + "."
+                + columns.getString("TABLE_SCHEM") + "."
+                + columns.getString("TABLE_NAME") + "."
+                + columns.getString("COLUMN_NAME")
+                ;
+        LOGGER.log(INFO, msg);
     }
 
     /** Returns a native database identifirer. */
@@ -561,6 +506,93 @@ public class MetaDbService {
      */
     final protected boolean isCatalog() {
         return getDialect().isCatalog();
+    }
+
+    /**
+     *
+     * @param dbModel
+     * @param table required table
+     * @param newTables Output parameter
+     * @param newColumns Output parameter
+     * @return
+     * @throws SQLException
+     */
+    private boolean addNewColumns
+        ( final DatabaseMetaData dbModel
+        , final MetaTable table
+        , final List<MetaTable> newTables
+        , final List<MetaColumn> newColumns
+        ) throws SQLException {
+
+        final boolean catalog = isCatalog();
+        final Set<String> existingColumns = new HashSet<>(32);
+        final String schema = dbIdentifier(MetaTable.SCHEMA.of(table),dbModel);
+        try (ResultSet columns = dbModel.getColumns
+            ( catalog ? schema : null
+            , catalog ? null  : schema
+            , dbIdentifier(MetaTable.NAME.of(table),dbModel)
+            , null // colmn patern
+            )) {
+            while(columns.next()) {
+                existingColumns.add(columns.getString("COLUMN_NAME").toUpperCase());
+                if (DEBUG_MODE && LOGGER.isLoggable(INFO)) {
+                    logColumn(columns);
+                }
+            }
+        }
+
+        final boolean tableExists = existingColumns.size()>0;
+        if (tableExists) {
+            // create columns:
+            for (MetaColumn mc : MetaTable.COLUMNS.of(table)) {
+                final boolean exists = existingColumns.contains(mc.getName().toUpperCase());
+                if (!exists) {
+                    LOGGER.log(INFO, "New DB column: {}", mc.getFullName());
+                    newColumns.add(mc);
+                }
+            }
+        } else {
+            LOGGER.log(INFO, "New DB table: {}", MetaTable.NAME.of(table));
+            newTables.add(table);
+        }
+        return tableExists;
+    }
+
+    /**
+     *
+     * @param dbModel
+     * @param table
+     * @param newIndexes
+     * @throws SQLException
+     */
+    protected void addNewIndexes(final DatabaseMetaData dbModel, final MetaTable table,  List<MetaIndex>  newIndexes) throws SQLException {
+                    final boolean catalog = isCatalog();
+
+        final String schema = dbIdentifier(MetaTable.SCHEMA.of(table),dbModel);
+        final Set<String> existingIndexes = new HashSet<>();
+
+        try (ResultSet indexes = dbModel.getIndexInfo
+            ( catalog ? schema : null
+            , catalog ? null : schema
+            , dbIdentifier(MetaTable.NAME.of(table),dbModel)
+            , false // unique
+            , false // approximate
+            )) {
+            while(indexes.next()) {
+                final String name = indexes.getString("INDEX_NAME");
+                if (name!=null) {
+                    existingIndexes.add(name.toUpperCase());
+                }
+            }
+        }
+
+        for (MetaIndex index : table.getIndexCollection()) {
+            final boolean exists = existingIndexes.contains(MetaIndex.NAME.of(index).toUpperCase());
+            if (!exists) {
+                LOGGER.log(INFO, "New DB index: {}", index);
+                newIndexes.add(index);
+            }
+        }
     }
 
 }
