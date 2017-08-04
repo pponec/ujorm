@@ -18,7 +18,6 @@ package org.ujorm.orm.metaModel;
 import java.io.IOException;
 import java.sql.*;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -64,12 +63,8 @@ public class MetaDbService {
         this.db = metaDatabase;
         Connection conn = session.getConnection(db, true);
         // Missing database entities:
-        List<String>   schemas = new ArrayList<>();
-        List<MetaTable> tables = new ArrayList<>();
-        List<MetaColumn> newColumns = new ArrayList<>();
-        List<MetaColumn> foreignColumns = new ArrayList<>();
-        List<MetaIndex> indexes = new ArrayList<>();
-        int tableTotalCount = db.getTableTotalCount();
+        final DbItems news = new DbItems();
+        final int tableTotalCount = db.getTableTotalCount();
 
         try {
             final boolean createSequenceTable = initialize(conn);
@@ -82,9 +77,9 @@ public class MetaDbService {
                 case VALIDATE:
                 case WARNING:
                 case INHERITED:
-                    boolean change = isModelChanged(conn, schemas, tables, newColumns, indexes);
+                    boolean change = isModelChanged(conn, news);
                     if (change && ddlOnly) {
-                        if (tables.size()<tableTotalCount) {
+                        if (news.getTables().size()<tableTotalCount) {
                             // This is a case of the PARTIAL DDL
                             return;
                         }
@@ -98,21 +93,21 @@ public class MetaDbService {
             // ================================================
 
             // 1. CheckReport keywords:
-            checkReportKeywords(conn, tables, newColumns, indexes);
+            checkReportKeywords(conn, news);
             // 2. Create schemas:
-            createSchema(tableTotalCount, tables, conn);
+            createSchema(tableTotalCount, news.getTables(), conn);
             // 3. Create tables:
-            createTable(tables, foreignColumns);
+            createTable(news);
             // 4. Create new columns:
-            createNewColumn(newColumns, foreignColumns);
+            createNewColumn(news);
             // 5. Create Indexes:
-            changeIndex(indexes);
+            changeIndex(news.getIndexes());
             // 6. Create Foreign Keys:
-            createForeignKey(foreignColumns);
+            createForeignKey(news.getForeignColumns());
             // 7. Create SEQUENCE table:
             createSequenceTable(createSequenceTable);
             // 8. Create table comment for the all tables:
-            createTableComments(tables);
+            createTableComments(news.getTables());
             // 9. Commit:
             conn.commit();
 
@@ -136,39 +131,26 @@ public class MetaDbService {
     /**
      * Find database table or columns to modify.
      * @param conn Database connection
-     * @param schemas
-     * @param newTables
-     * @param newColumns
-     * @param newIndexes
      * @return Output argumens constains list of new entities to create.
      * @throws SQLException
      */
     @SuppressWarnings("LoggerStringConcat")
-    protected boolean isModelChanged(Connection conn
-        , final List<String>     schemas
-        , final List<MetaTable>  newTables
-        , final List<MetaColumn> newColumns
-        , final List<MetaIndex>  newIndexes
-        ) throws SQLException {
-        newTables.clear();
-        newColumns.clear();
-        newIndexes.clear();
-
+    protected boolean isModelChanged(final Connection conn, final DbItems news) throws SQLException {
         final DatabaseMetaData dbModel = conn.getMetaData();
 
         for (MetaTable table : TABLES.of(db)) {
             if (table.isTable()) {
                 // CHECK COLUMNS AND INDEXES OF THE TABLE:
-                final boolean tableExists = addNewColumns(dbModel, table, newTables, newColumns);
+                final boolean tableExists = addNewColumns(dbModel, table, news.getTables(), news.getColumns());
                 if (tableExists) {
-                    addNewIndexes(dbModel, table, newIndexes);
+                    addNewIndexes(dbModel, table, news.getIndexes());
                 }
             }
         }
 
-        final boolean result = !newTables.isEmpty()
-                            || !newColumns.isEmpty()
-                            || !newIndexes.isEmpty();
+        final boolean result = !news.getTables().isEmpty()
+                            || !news.getColumns().isEmpty()
+                            || !news.getIndexes().isEmpty();
         return result;
     }
 
@@ -252,12 +234,12 @@ public class MetaDbService {
     }
 
     /** 1. CheckReport keywords: */
-    protected void checkReportKeywords(Connection conn, List<MetaTable> tables, List<MetaColumn> newColumns, List<MetaIndex> indexes) throws SQLException {
+    protected void checkReportKeywords(final Connection conn, final DbItems news) throws SQLException {
         switch (MetaParams.CHECK_KEYWORDS.of(db.getParams())) {
             case WARNING:
             case EXCEPTION:
                 Set<String> keywords = db.getDialect().getKeywordSet(conn);
-                for (MetaTable table : tables) {
+                for (MetaTable table : news.getTables()) {
                     if (table.isTable()) {
                         checkKeyWord(MetaTable.NAME.of(table), table, keywords);
                         for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
@@ -265,10 +247,10 @@ public class MetaDbService {
                         }
                     }
                 }
-                for (MetaColumn column : newColumns) {
+                for (MetaColumn column : news.getColumns()) {
                     checkKeyWord(MetaColumn.NAME.of(column), column.getTable(), keywords);
                 }
-                for (MetaIndex index : indexes) {
+                for (MetaIndex index : news.getIndexes()) {
                     checkKeyWord(MetaIndex.NAME.of(index), MetaIndex.TABLE.of(index), keywords);
                 }
         }
@@ -296,21 +278,21 @@ public class MetaDbService {
     }
 
     /** 3. Create tables: */
-    protected void createTable(List<MetaTable> tables, List<MetaColumn> foreignColumns) throws IOException, SQLException {
-        for (MetaTable table : tables) {
+    protected void createTable(final DbItems news) throws IOException, SQLException {
+        for (MetaTable table : news.getTables()) {
             if (table.isTable()) {
                 sql.setLength(0);
                 db.getDialect().printTable(table, sql);
                 executeUpdate(sql, table);
-                foreignColumns.addAll(table.getForeignColumns());
+                news.getForeignColumns().addAll(table.getForeignColumns());
                 anyChange = true;
             }
         }
     }
 
     /** 4. Create new columns: */
-    protected void createNewColumn(List<MetaColumn> newColumns, List<MetaColumn> foreignColumns) throws IOException, SQLException {
-        for (MetaColumn column : newColumns) {
+    protected void createNewColumn(final DbItems news) throws IOException, SQLException {
+        for (MetaColumn column : news.getColumns()) {
             sql.setLength(0);
             db.getDialect().printAlterTableAddColumn(column, sql);
             executeUpdate(sql, column.getTable());
@@ -318,7 +300,7 @@ public class MetaDbService {
 
             // Pick up the foreignColumns:
             if (column.isForeignKey()) {
-                foreignColumns.add(column);
+                news.getForeignColumns().add(column);
             }
         }
     }
