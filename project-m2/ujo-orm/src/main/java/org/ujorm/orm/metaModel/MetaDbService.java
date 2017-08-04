@@ -33,9 +33,9 @@ import org.ujorm.orm.Session;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.SqlDialectEx;
 import org.ujorm.orm.UjoSequencer;
+import org.ujorm.orm.ao.CommentPolicy;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.logger.UjoLogger.*;
-import org.ujorm.orm.ao.CommentPolicy;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
 
 /**
@@ -133,10 +133,15 @@ public class MetaDbService {
         return sql;
     }
 
-    /** Find database table or columns to modify.
+    /**
+     * Find database table or columns to modify.
      * @param conn Database connection
-     * @param newTables Output parameter
-     * @param newColumns Output parameter
+     * @param schemas
+     * @param newTables
+     * @param newColumns
+     * @param newIndexes
+     * @return Output argumens constains list of new entities to create.
+     * @throws SQLException
      */
     @SuppressWarnings("LoggerStringConcat")
     protected boolean isModelChanged(Connection conn
@@ -149,7 +154,7 @@ public class MetaDbService {
         newColumns.clear();
         newIndexes.clear();
 
-        final DatabaseMetaData dmd = conn.getMetaData();
+        final DatabaseMetaData dbModel = conn.getMetaData();
         final boolean catalog = isCatalog();
         final String column = null;
 
@@ -159,11 +164,11 @@ public class MetaDbService {
                 // ---------- CHECK TABLE COLUMNS ----------
 
                 final Set<String> existingColumns = new HashSet<>(32);
-                final String schema = dbIdentifier(MetaTable.SCHEMA.of(table),dmd);
-                try (ResultSet columns = dmd.getColumns
+                final String schema = dbIdentifier(MetaTable.SCHEMA.of(table),dbModel);
+                try (ResultSet columns = dbModel.getColumns
                     ( catalog ? schema : null
                             , catalog ? null  : schema
-                            , dbIdentifier(MetaTable.NAME.of(table),dmd)
+                            , dbIdentifier(MetaTable.NAME.of(table),dbModel)
                             , column
                     )) {
                     while(columns.next()) {
@@ -200,10 +205,10 @@ public class MetaDbService {
 
                 existingColumns.clear();
                 if (tableExists) {
-                    try (ResultSet indexes = dmd.getIndexInfo
+                    try (ResultSet indexes = dbModel.getIndexInfo
                         ( catalog ? schema : null
                                 , catalog ? null : schema
-                                , dbIdentifier(MetaTable.NAME.of(table),dmd)
+                                , dbIdentifier(MetaTable.NAME.of(table),dbModel)
                                 , false // unique
                                 , false // approximate
                         )) {
@@ -224,7 +229,7 @@ public class MetaDbService {
                 }
             }
         }
-        
+
         final boolean result = !newTables.isEmpty()
                             || !newColumns.isEmpty()
                             || !newIndexes.isEmpty()
