@@ -31,7 +31,7 @@
     <bean name="ormConfigProvider" class="org.ujorm.hotels.config.DatabaseConfig"
           init-method="init" lazy-init="true" />
 
-    <bean id="simpleDao" class="org.ujorm.spring.SimpleDao"/>
+    <bean id="commonDao" class="org.ujorm.spring.CommonDao"/>
     <bean id="ujormTransactionManager" class="org.ujorm.spring.UjormTransactionManager">
         <property name="ormHandlerProvider" ref="ormConfigProvider"/>
     </bean>
