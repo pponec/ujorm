@@ -48,6 +48,8 @@ public class MetaDbService {
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaDbService.class);
+    /** Debug mode */
+    private static final boolean DEBUG_MODE = false;
     /** Meta Database from constructor */
     protected MetaDatabase db;
     /** SQL Buffer */
@@ -61,6 +63,8 @@ public class MetaDbService {
     public void create(MetaDatabase metaDatabase, Session session) {
         this.db = metaDatabase;
         Connection conn = session.getConnection(db, true);
+        // Missing database entities:
+        List<String>   schemas = new ArrayList<>();
         List<MetaTable> tables = new ArrayList<>();
         List<MetaColumn> newColumns = new ArrayList<>();
         List<MetaColumn> foreignColumns = new ArrayList<>();
@@ -78,7 +82,7 @@ public class MetaDbService {
                 case VALIDATE:
                 case WARNING:
                 case INHERITED:
-                    boolean change = isModelChanged(conn, tables, newColumns, indexes);
+                    boolean change = isModelChanged(conn, schemas, tables, newColumns, indexes);
                     if (change && ddlOnly) {
                         if (tables.size()<tableTotalCount) {
                             // This is a case of the PARTIAL DDL
@@ -136,9 +140,10 @@ public class MetaDbService {
      */
     @SuppressWarnings("LoggerStringConcat")
     protected boolean isModelChanged(Connection conn
-        , List<MetaTable>  newTables
-        , List<MetaColumn> newColumns
-        , List<MetaIndex>  newIndexes
+        , final List<String>     schemas
+        , final List<MetaTable>  newTables
+        , final List<MetaColumn> newColumns
+        , final List<MetaIndex>  newIndexes
         ) throws SQLException {
         newTables.clear();
         newColumns.clear();
@@ -153,35 +158,34 @@ public class MetaDbService {
 
                 // ---------- CHECK TABLE COLUMNS ----------
 
-                final Set<String> items = new HashSet<>(32);
+                final Set<String> existingColumns = new HashSet<>(32);
                 final String schema = dbIdentifier(MetaTable.SCHEMA.of(table),dmd);
-                ResultSet rs = dmd.getColumns
+                try (ResultSet columns = dmd.getColumns
                     ( catalog ? schema : null
-                    , catalog ? null  : schema
-                    , dbIdentifier(MetaTable.NAME.of(table),dmd)
-                    , column
-                    );
-                while(rs.next()) {
-                    items.add(rs.getString("COLUMN_NAME").toUpperCase());
-                    if (false && LOGGER.isLoggable(INFO)) {
-                        // Debug message:
-                        String msg = "DB column: "
-                                   + rs.getString("TABLE_CAT") + "."
-                                   + rs.getString("TABLE_SCHEM") + "."
-                                   + rs.getString("TABLE_NAME") + "."
-                                   + rs.getString("COLUMN_NAME")
-                                   ;
-                        LOGGER.log(INFO, msg);
+                            , catalog ? null  : schema
+                            , dbIdentifier(MetaTable.NAME.of(table),dmd)
+                            , column
+                    )) {
+                    while(columns.next()) {
+                        existingColumns.add(columns.getString("COLUMN_NAME").toUpperCase());
+                        if (DEBUG_MODE && LOGGER.isLoggable(INFO)) {
+                            final String msg = "DB column: "
+                                    + columns.getString("TABLE_CAT") + "."
+                                    + columns.getString("TABLE_SCHEM") + "."
+                                    + columns.getString("TABLE_NAME") + "."
+                                    + columns.getString("COLUMN_NAME")
+                                    ;
+                            LOGGER.log(INFO, msg);
+                        }
                     }
                 }
-                rs.close();
 
-                boolean tableExists = items.size()>0;
+                final boolean tableExists = existingColumns.size()>0;
                 if (tableExists) {
                     // create columns:
                     for (MetaColumn mc : MetaTable.COLUMNS.of(table)) {
 
-                        boolean exists = items.contains(mc.getName().toUpperCase());
+                        final boolean exists = existingColumns.contains(mc.getName().toUpperCase());
                         if (!exists) {
                             LOGGER.log(INFO, "New DB column: {}", mc.getFullName());
                             newColumns.add(mc);
@@ -194,25 +198,25 @@ public class MetaDbService {
 
                 // ---------- CHECK INDEXES ----------
 
-                items.clear();
+                existingColumns.clear();
                 if (tableExists) {
-                    rs = dmd.getIndexInfo
-                    ( catalog ? schema : null
-                    , catalog ? null : schema
-                    , dbIdentifier(MetaTable.NAME.of(table),dmd)
-                    , false // unique
-                    , false // approximate
-                    );
-                    while(rs.next()) {
-                        String name = rs.getString("INDEX_NAME");
-                        if (name!=null) {
-                           items.add(name.toUpperCase());
+                    try (ResultSet indexes = dmd.getIndexInfo
+                        ( catalog ? schema : null
+                                , catalog ? null : schema
+                                , dbIdentifier(MetaTable.NAME.of(table),dmd)
+                                , false // unique
+                                , false // approximate
+                        )) {
+                        while(indexes.next()) {
+                            final String name = indexes.getString("INDEX_NAME");
+                            if (name!=null) {
+                                existingColumns.add(name.toUpperCase());
+                            }
                         }
                     }
-                    rs.close();
                 }
                 for (MetaIndex index : table.getIndexCollection()) {
-                    boolean exists = items.contains(MetaIndex.NAME.of(index).toUpperCase());
+                    final boolean exists = existingColumns.contains(MetaIndex.NAME.of(index).toUpperCase());
                     if (!exists) {
                         LOGGER.log(INFO, "New DB index: {}", index);
                         newIndexes.add(index);
@@ -220,11 +224,11 @@ public class MetaDbService {
                 }
             }
         }
-
-        boolean result = !newTables.isEmpty()
-                      || !newColumns.isEmpty()
-                      || !newIndexes.isEmpty()
-                       ;
+        
+        final boolean result = !newTables.isEmpty()
+                            || !newColumns.isEmpty()
+                            || !newIndexes.isEmpty()
+                            ;
         return result;
     }
 
