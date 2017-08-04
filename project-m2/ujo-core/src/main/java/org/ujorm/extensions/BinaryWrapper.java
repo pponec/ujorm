@@ -15,6 +15,7 @@
  */
 package org.ujorm.extensions;
 
+import java.io.Serializable;
 import java.nio.CharBuffer;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.Arrays;
@@ -26,7 +27,8 @@ import javax.annotation.Nonnull;
  * binary data as a BASE64 String.
  * @author Pavel Ponec
  */
-public class BinaryWrapper implements StringWrapper {
+public class BinaryWrapper implements StringWrapper, Serializable {
+    private static final long serialVersionUID = 2017_08_04L;
 
     /** Binary content */
     @Nonnull
