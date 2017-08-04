@@ -161,25 +161,25 @@ public class MetaDbService {
         for (MetaTable table : TABLES.of(db)) {
             if (table.isTable()) {
 
-                // ---------- CHECK TABLE COLUMNS ----------
+                // ---------- CHECK COLUMNS OF THE TABLE ----------
 
                 final Set<String> existingColumns = new HashSet<>(32);
                 final String schema = dbIdentifier(MetaTable.SCHEMA.of(table),dbModel);
                 try (ResultSet columns = dbModel.getColumns
                     ( catalog ? schema : null
-                            , catalog ? null  : schema
-                            , dbIdentifier(MetaTable.NAME.of(table),dbModel)
-                            , column
+                    , catalog ? null  : schema
+                    , dbIdentifier(MetaTable.NAME.of(table),dbModel)
+                    , column
                     )) {
                     while(columns.next()) {
                         existingColumns.add(columns.getString("COLUMN_NAME").toUpperCase());
                         if (DEBUG_MODE && LOGGER.isLoggable(INFO)) {
                             final String msg = "DB column: "
-                                    + columns.getString("TABLE_CAT") + "."
-                                    + columns.getString("TABLE_SCHEM") + "."
-                                    + columns.getString("TABLE_NAME") + "."
-                                    + columns.getString("COLUMN_NAME")
-                                    ;
+                                + columns.getString("TABLE_CAT") + "."
+                                + columns.getString("TABLE_SCHEM") + "."
+                                + columns.getString("TABLE_NAME") + "."
+                                + columns.getString("COLUMN_NAME")
+                                ;
                             LOGGER.log(INFO, msg);
                         }
                     }
@@ -207,10 +207,10 @@ public class MetaDbService {
                 if (tableExists) {
                     try (ResultSet indexes = dbModel.getIndexInfo
                         ( catalog ? schema : null
-                                , catalog ? null : schema
-                                , dbIdentifier(MetaTable.NAME.of(table),dbModel)
-                                , false // unique
-                                , false // approximate
+                        , catalog ? null : schema
+                        , dbIdentifier(MetaTable.NAME.of(table),dbModel)
+                        , false // unique
+                        , false // approximate
                         )) {
                         while(indexes.next()) {
                             final String name = indexes.getString("INDEX_NAME");
