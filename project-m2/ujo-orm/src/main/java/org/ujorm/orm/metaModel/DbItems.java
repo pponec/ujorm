@@ -27,28 +27,42 @@ public class DbItems {
     private static final int INIT_SIZE = 220;
 
     // --- New database entities ---
-    private final List<String> schemas = new ArrayList<>();
-    private final List<MetaTable> tables = new ArrayList<>(INIT_SIZE);
-    private final List<MetaColumn> columns = new ArrayList<>(INIT_SIZE);
-    private final List<MetaColumn> foreignColumns = new ArrayList<>(INIT_SIZE);
-    private final List<MetaIndex> indexes = new ArrayList<>();
+    private final List<String> schemas;
+    private final List<MetaTable> tables;
+    private final List<MetaColumn> columns;
+    private final List<MetaColumn> foreignColumns;
+    private final List<MetaIndex> indexes;
 
+    /** Constructor */
+    public DbItems(int tableCount, int columnCount) {
+        schemas = new ArrayList<>();
+        tables = new ArrayList<>(tableCount);
+        columns = new ArrayList<>(columnCount);
+        foreignColumns = new ArrayList<>();
+        indexes = new ArrayList<>();
+    }
+
+    /** Get list of the schema names */
     public final List<String> getSchemas() {
         return schemas;
     }
 
+    /** Get list of the table models */
     public final List<MetaTable> getTables() {
         return tables;
     }
 
+    /** Get list of the column models */
     public final List<MetaColumn> getColumns() {
         return columns;
     }
 
+    /** Get list of the column models */
     public final List<MetaColumn> getForeignColumns() {
         return foreignColumns;
     }
 
+    /** Get list of the Index models */
     public List<MetaIndex> getIndexes() {
         return indexes;
     }

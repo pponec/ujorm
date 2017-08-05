@@ -62,9 +62,11 @@ public class MetaDbService {
     public void create(MetaDatabase metaDatabase, Session session) {
         this.db = metaDatabase;
         Connection conn = session.getConnection(db, true);
-        // Missing database entities:
-        final DbItems news = new DbItems();
-        final int tableTotalCount = db.getTableTotalCount();
+        // New database entities:
+        final int[] counts = db.getDbItemCount();
+        final int tableTotalCount = counts[0];
+        final int columnTotalCount = counts[1];
+        final DbItems news = new DbItems(tableTotalCount, columnTotalCount);
 
         try {
             final boolean createSequenceTable = initialize(conn);
@@ -141,7 +143,11 @@ public class MetaDbService {
         for (MetaTable table : TABLES.of(db)) {
             if (table.isTable()) {
                 // CHECK COLUMNS AND INDEXES OF THE TABLE:
-                final boolean tableExists = addNewColumns(dbModel, table, news.getTables(), news.getColumns());
+                final boolean tableExists = addNewColumns
+                          ( dbModel
+                          , table
+                          , news.getTables()
+                          , news.getColumns());
                 if (tableExists) {
                     addNewIndexes(dbModel, table, news.getIndexes());
                 }

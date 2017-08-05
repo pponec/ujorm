@@ -32,11 +32,11 @@ import javax.sql.DataSource;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.UjoAction;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.logger.UjoLogger;
@@ -271,8 +271,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         }
         else if (java.sql.Date.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.DATE);
-        }  
-        else if (java.util.Date.class.isAssignableFrom(type) 
+        }
+        else if (java.util.Date.class.isAssignableFrom(type)
              ||  java.time.LocalDateTime.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
         }
@@ -349,15 +349,17 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         }
     }
 
-    /** Returns a full count of the database tables (views are excluded) */
-    public int getTableTotalCount() {
+    /** Returns a full count of the database tables (views are excluded) and columns */
+    protected int[] getDbItemCount() {
         int tableCount = 0;
+        int columnCount = 0;
         for (MetaTable metaTable : TABLES.getList(this)) {
             if (metaTable.isTable()) {
-                ++tableCount;
+                tableCount  += 1;
+                columnCount += metaTable.getColumns().size();
             }
         }
-        return tableCount;
+        return new int[] {tableCount, columnCount};
     }
 
     /** Create DB */
