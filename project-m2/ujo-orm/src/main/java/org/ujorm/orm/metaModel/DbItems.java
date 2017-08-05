@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017-2017 Effectiva Solutions company
+ *  Copyright 2017-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,36 +17,35 @@ package org.ujorm.orm.metaModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.ujorm.logger.UjoLogger;
-import org.ujorm.logger.UjoLoggerFactory;
 
 /**
- * Metamodel initialization context
+ * Database items tu create
  */
 public class DbItems {
-    /** Logger */
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(DbItems.class);
 
-    // Missing database entities:
+    /** Init size of the lists */
+    private static final int INIT_SIZE = 220;
+
+    // --- New database entities ---
     private final List<String> schemas = new ArrayList<>();
-    private final List<MetaTable> tables = new ArrayList<>();
-    private final List<MetaColumn> columns = new ArrayList<>();
-    private final List<MetaColumn> foreignColumns = new ArrayList<>();
+    private final List<MetaTable> tables = new ArrayList<>(INIT_SIZE);
+    private final List<MetaColumn> columns = new ArrayList<>(INIT_SIZE);
+    private final List<MetaColumn> foreignColumns = new ArrayList<>(INIT_SIZE);
     private final List<MetaIndex> indexes = new ArrayList<>();
 
-    public List<String> getSchemas() {
+    public final List<String> getSchemas() {
         return schemas;
     }
 
-    public List<MetaTable> getTables() {
+    public final List<MetaTable> getTables() {
         return tables;
     }
 
-    public List<MetaColumn> getColumns() {
+    public final List<MetaColumn> getColumns() {
         return columns;
     }
 
-    public List<MetaColumn> getForeignColumns() {
+    public final List<MetaColumn> getForeignColumns() {
         return foreignColumns;
     }
 
