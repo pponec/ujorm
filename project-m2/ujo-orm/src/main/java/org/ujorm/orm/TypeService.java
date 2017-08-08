@@ -66,11 +66,11 @@ public class TypeService implements ITypeService<Object,Object> {
     public static final char ENUM = 22;
     public static final char COLOR = 23;
     public static final char UUID = 24; // An object type
-    public static final char LOCAL_DATE = 25; 
+    public static final char LOCAL_DATE = 25;
     public static final char LOCAL_TIME = 26;
     public static final char LOCAL_DATE_TIME = 27;
     public static final char OFFSET_DATE_TIME = 28;
-    
+
     /** Constructor for the String argument type */
     private static final Class[] STR_ARGS = new Class[] {String.class};
 
@@ -174,7 +174,7 @@ public class TypeService implements ITypeService<Object,Object> {
             case BYTES_WRAP : return createBytesWrapper(rs.getBytes(c), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(c), mColumn);
             case UUID:
-            default         : return rs.getObject(c);
+            default         : return rs.getObject(c, mColumn.getType());
         }
         return rs.wasNull() ? null : r;
     }
@@ -231,7 +231,7 @@ public class TypeService implements ITypeService<Object,Object> {
             case BYTES_WRAP : return createBytesWrapper(rs.getBytes(c), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(c), mColumn);
             case UUID:
-            default         : return rs.getObject(c);
+            default         : return rs.getObject(c, mColumn.getType());
         }
         return rs.wasNull() ? null : r;
     }
