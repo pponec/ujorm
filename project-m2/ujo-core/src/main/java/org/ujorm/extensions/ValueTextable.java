@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
+ */
 
 package org.ujorm.extensions;
 
@@ -56,15 +56,17 @@ package org.ujorm.extensions;
  *       the serialized text must not contain a separator character comma ','
  *   </li>
  * </ul>
- * 
- * 
+ *
+ *
  * @author Pavel Ponec
  * @see UjoTextable
+ * @deprecated Use the {@link StringWrapper} interface rather.
  */
+@Deprecated
 public interface ValueTextable {
-    
+
     /** A result must be acceptable for one constructor parameter (of the same class) to restore an equal object. */
     @Override
     public String toString();
-    
+
 }
