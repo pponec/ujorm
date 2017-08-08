@@ -23,9 +23,6 @@ import java.util.List;
  */
 public class DbItems {
 
-    /** Init size of the lists */
-    private static final int INIT_SIZE = 220;
-
     // --- New database entities ---
     private final List<String> schemas;
     private final List<MetaTable> tables;

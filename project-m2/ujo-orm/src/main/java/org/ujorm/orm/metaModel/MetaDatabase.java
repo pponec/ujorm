@@ -349,7 +349,9 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         }
     }
 
-    /** Returns a full count of the database tables (views are excluded) and columns */
+    /** Returns a full count of the database tables (views are excluded) and columns
+     * @return [tableTotalCount, columnTotalCount]
+     */
     protected int[] getDbItemCount() {
         int tableCount = 0;
         int columnCount = 0;

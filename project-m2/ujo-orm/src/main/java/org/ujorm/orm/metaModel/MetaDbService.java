@@ -21,6 +21,7 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
@@ -97,7 +98,7 @@ public class MetaDbService {
             // 1. CheckReport keywords:
             checkReportKeywords(conn, news);
             // 2. Create schemas:
-            createSchema(tableTotalCount, news.getTables(), conn);
+            createSchema(news.getSchemas(), conn);
             // 3. Create tables:
             createTable(news);
             // 4. Create new columns:
@@ -139,6 +140,7 @@ public class MetaDbService {
     @SuppressWarnings("LoggerStringConcat")
     protected boolean isModelChanged(final Connection conn, final DbItems news) throws SQLException {
         final DatabaseMetaData dbModel = conn.getMetaData();
+        final Set<String> requiredSchemas = new HashSet<>();
 
         for (MetaTable table : TABLES.of(db)) {
             if (table.isTable()) {
@@ -151,8 +153,30 @@ public class MetaDbService {
                 if (tableExists) {
                     addNewIndexes(dbModel, table, news.getIndexes());
                 }
+                switch (table.getOrm2ddlPolicy()) {
+                    case CREATE_DDL:
+                    case CREATE_OR_UPDATE_DDL: {
+                        final String schema = table.getSchema().toUpperCase(Locale.ENGLISH);
+                        if (!requiredSchemas.contains(schema)) {
+                            requiredSchemas.add(schema);
+                        }
+                    }
+                }
             }
         }
+
+        // Check DB schemas:
+        final boolean catalog = isCatalog();
+        final int schemaColumn = catalog ? 1 : 2;
+        try (ResultSet schemas = catalog
+                ? dbModel.getCatalogs()
+                : dbModel.getSchemas()) {
+            while(schemas.next()) {
+                final String schema = schemas.getString(schemaColumn).toUpperCase(Locale.ENGLISH);
+                requiredSchemas.remove(schema);
+            }
+        }
+        news.getSchemas().addAll(requiredSchemas);
 
         final boolean result = !news.getTables().isEmpty()
                             || !news.getColumns().isEmpty()
@@ -263,21 +287,19 @@ public class MetaDbService {
     }
 
     /** 2. Create schemas: */
-    protected void createSchema(int tableTotalCount, List<MetaTable> tables, Connection conn) throws SQLException, IOException {
-        if (tableTotalCount == tables.size()) {
-            for (String schema : db.getSchemas(tables)) {
-                sql.setLength(0);
-                db.getDialect().printCreateSchema(schema, sql);
-                if (OrmTools.isFilled(sql)) {
-                    try {
-                        stat.executeUpdate(sql.toString());
-                    } catch (SQLException e) {
-                        LOGGER.log(INFO, "{}: {}; {}"
-                                , e.getClass().getName()
-                                , sql.toString()
-                                , e.getMessage());
-                        conn.rollback();
-                    }
+    protected void createSchema(List<String> schemas, Connection conn) throws SQLException, IOException {
+        for (String schema : schemas) {
+            sql.setLength(0);
+            db.getDialect().printCreateSchema(schema, sql);
+            if (OrmTools.isFilled(sql)) {
+                try {
+                    stat.executeUpdate(sql.toString());
+                } catch (SQLException e) {
+                    LOGGER.log(INFO, "{}: {}; {}"
+                            , e.getClass().getName()
+                            , sql.toString()
+                            , e.getMessage());
+                    conn.rollback();
                 }
             }
         }
