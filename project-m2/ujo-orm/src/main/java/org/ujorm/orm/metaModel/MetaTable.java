@@ -19,16 +19,17 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.ColumnWrapper;
@@ -372,6 +373,15 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** UJO sequencer */
     public UjoSequencer getSequencer() {
         return sequencer;
+    }
+
+    /** Rerurns database schema.
+     * @since 1.72
+     * @return No schema returns an empty value
+     */
+    @Nonnull
+    public String getSchema() {
+        return SCHEMA.of(this);
     }
 
     /** Create a new collection of the table indexes.
