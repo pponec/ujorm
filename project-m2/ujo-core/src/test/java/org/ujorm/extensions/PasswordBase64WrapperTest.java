@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
  * Test of the class PasswordWrapper
  * @author Pavel Ponec
  */
-public class PasswordWrapperTest {
+public class PasswordBase64WrapperTest {
 
     /** Constructor tests. */
     @Test
@@ -32,10 +32,10 @@ public class PasswordWrapperTest {
         System.out.println("Constructors");
         String password = "ABC";
 
-        PasswordWrapper instance1 = PasswordWrapper.of(password);
-        PasswordWrapper instance2 = new PasswordWrapper(instance1.getBase64());
-        PasswordWrapper instance3 = new PasswordWrapper(password.toCharArray());
-        PasswordWrapper instance4 = new PasswordWrapper();
+        PasswordBase64Wrapper instance1 = PasswordBase64Wrapper.of(password);
+        PasswordBase64Wrapper instance2 = new PasswordBase64Wrapper(instance1.getBase64());
+        PasswordBase64Wrapper instance3 = new PasswordBase64Wrapper(password.toCharArray());
+        PasswordBase64Wrapper instance4 = new PasswordBase64Wrapper();
 
         assertEquals(instance1, instance2);
         assertEquals(instance2, instance3);
@@ -47,7 +47,7 @@ public class PasswordWrapperTest {
     @Test
     public void testToString() {
         System.out.println("toString");
-        PasswordWrapper instance = PasswordWrapper.of("ABC");
+        PasswordBase64Wrapper instance = PasswordBase64Wrapper.of("ABC");
         String expResult = "*";
         String result = instance.toString();
         assertEquals(expResult, result);
@@ -61,7 +61,7 @@ public class PasswordWrapperTest {
     public void testGetPassword() {
         System.out.println("getPassword");
         String expResult = "ABC";
-        PasswordWrapper instance = PasswordWrapper.of(expResult);
+        PasswordBase64Wrapper instance = PasswordBase64Wrapper.of(expResult);
         String result = instance.getPassword();
         assertEquals(expResult, result);
     }
@@ -71,7 +71,7 @@ public class PasswordWrapperTest {
     public void testGetPasswordAsChars() {
         System.out.println("getPasswordAsChars");
         char[] expResult = {'A','B','C'};
-        PasswordWrapper instance = new PasswordWrapper(expResult);
+        PasswordBase64Wrapper instance = new PasswordBase64Wrapper(expResult);
         char[] result = instance.getPasswordAsChars();
         assertArrayEquals(expResult, result);
     }
@@ -92,9 +92,9 @@ public class PasswordWrapperTest {
     public void testOf() {
         System.out.println("of");
         String password = "ABC";
-        PasswordWrapper result = PasswordWrapper.of(password);
+        PasswordBase64Wrapper result = PasswordBase64Wrapper.of(password);
 
-        assertEquals(PasswordWrapper.class, result.getClass());
+        assertEquals(PasswordBase64Wrapper.class, result.getClass());
         assertEquals(password, result.getPassword());
     }
 
@@ -102,11 +102,11 @@ public class PasswordWrapperTest {
     @Test
     public void testFinalize() {
         System.out.println("finalize");
-        PasswordWrapper instance = PasswordWrapper.of("ABC");
+        PasswordBase64Wrapper instance = PasswordBase64Wrapper.of("ABC");
         try {
             instance.finalize();
         } catch (Throwable e) {
-            Logger.getLogger(PasswordWrapperTest.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(PasswordBase64WrapperTest.class.getName()).log(Level.SEVERE, null, e);
         }
         try {
             instance.getPassword();

@@ -16,38 +16,40 @@
 package org.ujorm.extensions;
 
 import java.nio.ByteBuffer;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import javax.annotation.Nonnull;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * A binary array wrapper ready is to save a password as base64 String.
+ * A binary array wrapper ready is to save any text to BASE64 encoded String.
+ * The text inside this class is <strong>not protected</strong> by any security code.
+ * A method {link #toString() returns three asterisks only.
  * @author Pavel Ponec
  * @see ValueTextable#toString()
  */
-public class PasswordWrapper extends BinaryWrapper {
+public class PasswordBase64Wrapper extends BinaryWrapper {
 
     /** Default password */
     private static final String DEFAULT_PASSWORD = "changeit";
 
     /** Constructor for BASE64 encoded text */
-    public PasswordWrapper(String base64) {
+    public PasswordBase64Wrapper(String base64) {
         super(base64);
     }
 
     /** Constroctor for some character list of password */
-    public PasswordWrapper(char[] password) {
+    public PasswordBase64Wrapper(char[] password) {
         super(password);
     }
 
     /** Constructor for default passwrod is {@code changeit} */
-    public PasswordWrapper() {
+    public PasswordBase64Wrapper() {
         super(DEFAULT_PASSWORD.toCharArray());
     }
 
     /** Returns an asterisk character or {@code "null"} for invalidated object. */
     @Override
     public String toString() {
-        return binary != null ? "*" : String.valueOf((Object) null);
+        return binary != null ? "***" : String.valueOf((Object) null);
     }
 
     /** Get an original password as String
@@ -74,8 +76,8 @@ public class PasswordWrapper extends BinaryWrapper {
 
     /** Factory to create an instance of {@link BinaryWrapper} class. */
     @Nonnull
-    public static PasswordWrapper of(@Nonnull String password) {
-        return new PasswordWrapper(password.toCharArray());
+    public static PasswordBase64Wrapper of(@Nonnull String password) {
+        return new PasswordBase64Wrapper(password.toCharArray());
     }
 
 }

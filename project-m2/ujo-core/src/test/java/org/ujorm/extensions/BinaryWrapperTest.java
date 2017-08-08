@@ -104,7 +104,7 @@ public class BinaryWrapperTest {
         try {
             instance.internalClean();
         } catch (Throwable e) {
-            Logger.getLogger(PasswordWrapperTest.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(PasswordBase64WrapperTest.class.getName()).log(Level.SEVERE, null, e);
         }
         try {
             instance.getBinary();
