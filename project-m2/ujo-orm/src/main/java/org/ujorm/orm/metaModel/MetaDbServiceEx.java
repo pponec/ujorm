@@ -37,8 +37,8 @@ import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.dialect.MSSqlDialect;
 import org.ujorm.orm.dialect.MySqlDialect;
-import static org.ujorm.orm.ao.CheckReport.EXCEPTION;
 import static org.ujorm.logger.UjoLogger.*;
+import static org.ujorm.orm.ao.CheckReport.EXCEPTION;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
 
 /**
@@ -88,14 +88,14 @@ public class MetaDbServiceEx extends MetaDbService {
             // kontrola na klíčová slova
             switch (MetaParams.CHECK_KEYWORDS.of(db.getParams())) {
                 case EXCEPTION:
-                    LOGGER.log(INFO, "Checking keywords (tables=" + mappedTables.size() + ", indexes=" + mappedIndexes.size() + ") ...");
+                    LOGGER.log(INFO, "Checking keywords (tables={}, indexes={}) ...", mappedTables.size(), mappedIndexes.size());
                     checkKeywords(conn, mappedTables, null, mappedIndexes);
             }
             // kontrola tabulek (a jejich sloupcu)
-            LOGGER.log(INFO, "Checking tables (tables=" + mappedTables.size() + ") ...");
+            LOGGER.log(INFO, "Checking tables (tables={}) ...", mappedTables.size());
             messages.addAll(checkTables(conn, mappedTables, repairDB));
             // kontrola ujorm_pk_support
-            LOGGER.log(INFO, "Checking ujorm_pk_support sequences (tables=" + mappedTables.size() + ") ...");
+            LOGGER.log(INFO, "Checking ujorm_pk_support sequences (tables={}) ...", mappedTables.size());
             messages.addAll(checkUjormPKSupport(conn, mappedTables, repairDB));
             if (repairDB) {
                 conn.commit();
@@ -181,51 +181,51 @@ public class MetaDbServiceEx extends MetaDbService {
             }
         }
         // 2) CHECK table missing columns
-        LOGGER.log(INFO, "Checking tables (" + mappedTables.size() + ") for missing columns ...");
+        LOGGER.log(INFO, "Checking tables ({}) for missing columns ...", mappedTables.size());
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.isTable()) { // jen reálné tabulky
                 // pro repair mode je treba nastavit povoleni uprav i pokud je jinak zakazano
-                LOGGER.log(INFO, "Checking table '" + mappedTable.getAlias() + "' for missing columns ...");
+                LOGGER.log(INFO, "Checking table '{}' for missing columns ...", mappedTable.getAlias());
                 List<String> checkTableMessages = checkTableForMissingColumns(conn, mappedTable, repairDB);
                 messages.addAll(checkTableMessages);
             }
         }
         // 3) CHECK table columns properties
-        LOGGER.log(INFO, "Checking tables (" + mappedTables.size() + ") for columns properies ...");
+        LOGGER.log(INFO, "Checking tables ({}) for columns properies ...", mappedTables.size());
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.isTable()) { // jen reálné tabulky
                 // pro repair mode je treba nastavit povoleni uprav i pokud je jinak zakazano
-                LOGGER.log(INFO, "Checking table '" + mappedTable.getAlias() + "' for columns properties ...");
+                LOGGER.log(INFO, "Checking table '{}' for columns properties ...", mappedTable.getAlias());
                 List<String> checkTableMessages = checkTableForColumnsProperties(conn, mappedTable, repairDB);
                 messages.addAll(checkTableMessages);
             }
         }
         // 4) CHECK table primary keys
-        LOGGER.log(INFO, "Checking tables (" + mappedTables.size() + ") for missing columns ...");
+        LOGGER.log(INFO, "Checking tables ({}) for missing columns ...", mappedTables.size());
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.isTable()) { // jen reálné tabulky
                 // pro repair mode je treba nastavit povoleni uprav i pokud je jinak zakazano
-                LOGGER.log(INFO, "Checking table '" + mappedTable.getAlias() + "' for primary keys ...");
+                LOGGER.log(INFO, "Checking table '{}' for primary keys ...", mappedTable.getAlias());
                 List<String> checkTableMessages = checkTableForPrimaryKeys(conn, mappedTable, repairDB);
                 messages.addAll(checkTableMessages);
             }
         }
         // 5) CHECK table foreign keys
-        LOGGER.log(INFO, "Checking tables (" + mappedTables.size() + ") for foreign keys ...");
+        LOGGER.log(INFO, "Checking tables ({}) for foreign keys ...", mappedTables.size());
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.isTable()) { // jen reálné tabulky
                 // pro repair mode je treba nastavit povoleni uprav i pokud je jinak zakazano
-                LOGGER.log(INFO, "Checking table '" + mappedTable.getAlias() + "' for foreign keys ...");
+                LOGGER.log(INFO, "Checking table '{}' for foreign keys ...", mappedTable.getAlias());
                 List<String> checkTableMessages = checkTableForForeignKeys(conn, mappedTable, repairDB);
                 messages.addAll(checkTableMessages);
             }
         }
         // 6) CHECK table for indexes
-        LOGGER.log(INFO, "Checking tables (" + mappedTables.size() + ") for indexes ...");
+        LOGGER.log(INFO, "Checking tables ({}) for indexes ...", mappedTables.size());
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.isTable()) { // jen reálné tabulky
                 // pro repair mode je treba nastavit povoleni uprav i pokud je jinak zakazano
-                LOGGER.log(INFO, "Checking table '" + mappedTable.getAlias() + "' for indexes ...");
+                LOGGER.log(INFO, "Checking table '{}' for indexes ...", mappedTable.getAlias());
                 List<String> checkTableMessages = checkTableForIndexes(conn, mappedTable, repairDB);
                 messages.addAll(checkTableMessages);
             }
@@ -245,7 +245,7 @@ public class MetaDbServiceEx extends MetaDbService {
         }
         for (MetaColumn mappedColumn : mappedColumns) {
             String columnName = mappedColumn.get(MetaColumn.NAME).toUpperCase();
-            LOGGER.log(INFO, "  Checking column " + columnName + " ...");
+            LOGGER.log(INFO, "  Checking column {} ...", columnName);
             if (!dbColumns.containsKey(columnName)) {
                 // !!! MISSING COLUMN
                 String msg = "  MISSING db column '" + columnName + "' in table '" + mappedTable.getAlias() + "'";
@@ -270,10 +270,10 @@ public class MetaDbServiceEx extends MetaDbService {
         for (MetaColumn mappedColumn : mappedColumns) {
             String columnName = mappedColumn.get(MetaColumn.NAME).toUpperCase();
             String columnType = mappedColumn.get(MetaColumn.DB_TYPE).name();
-            LOGGER.log(INFO, "  Checking column " + columnName + " ...");
+            LOGGER.log(INFO, "  Checking column {} ...", columnName);
             Map<String, Object> dbColumn = dbColumns.get(columnName);
             if (dbColumn == null) {
-                LOGGER.log(WARN, "  Missing column " + columnName);
+                LOGGER.log(WARN, "  Missing column {}", columnName);
                 continue;
             }
 
@@ -351,7 +351,7 @@ public class MetaDbServiceEx extends MetaDbService {
                 }
 
                 Object mappedDefaultValue = mappedColumn.getJdbcFriendlyDefaultValue();
-                LOGGER.log(INFO, "    Checking column default value '" + mappedDefaultValue + "' ...");
+                LOGGER.log(INFO, "    Checking column default value '{}' ...", mappedDefaultValue);
                 Object dbDefaultValue = dbColumn.get(COLUMN_DEF_DEFAULT_VALUE);
                 if (dbDefaultValue instanceof String) {
                     String tempValue = (String) dbDefaultValue;
@@ -490,7 +490,7 @@ public class MetaDbServiceEx extends MetaDbService {
                 continue;
             }
             String pkeyName = getDialect().getNameProvider().buildPrimaryKeyName(mappedTable, Arrays.asList(mappedColumn));
-            LOGGER.log(INFO, "  Checking primary key '" + pkeyName + "' on column " + columnName + " ...");
+            LOGGER.log(INFO, "  Checking primary key '{}' on column {} ...", pkeyName, columnName);
             if (!dbPKeyColumns.containsKey(pkeyName.toUpperCase())) {
                 String dbPKeyName = null;
                 for (String dbPKey : dbPKeyColumns.keySet()) {
@@ -543,7 +543,7 @@ public class MetaDbServiceEx extends MetaDbService {
         for (MetaColumn mappedColumn : mappedFKeyColumns) {
             String columnName = mappedColumn.get(MetaColumn.NAME).toUpperCase();
             String fkeyName = getDialectEx().buildConstraintName(mappedColumn, mappedTable);
-            LOGGER.log(INFO, "  Checking foreign key '" + fkeyName + "' on column " + columnName + " ...");
+            LOGGER.log(INFO, "  Checking foreign key '{}' on column {} ...", fkeyName, columnName);
             if (!dbFKeyColumns.containsKey(fkeyName.toUpperCase())) {
                 // !!! MISSING FOREIGN KEY
                 String msg = "  MISSING foreign key '" + fkeyName + "' on column '" + columnName + "' in table '" + mappedTable.getAlias() + "'";
@@ -576,7 +576,7 @@ public class MetaDbServiceEx extends MetaDbService {
         for (MetaIndex mappedIndex : mappedIndexes) {
             if (!mappedIndex.get(MetaIndex.UNIQUE)) {
                 String indexName = mappedIndex.get(MetaIndex.NAME).toUpperCase();
-                LOGGER.log(INFO, "  Checking index " + indexName + " ...");
+                LOGGER.log(INFO, "  Checking index {} ...", indexName);
                 if (!dbTableIndexes.contains(indexName)) {
                     // !!! MISSING INDEX
                     String msg = "  MISSING db index '" + indexName + "' in table '" + mappedTable.getAlias() + "'";
@@ -592,7 +592,7 @@ public class MetaDbServiceEx extends MetaDbService {
                 }
             } else {
                 String indexName = getDialect().getNameProvider().getUniqueConstraintName(mappedIndex.get(MetaIndex.COLUMNS)).toUpperCase();
-                LOGGER.log(INFO, "  Checking unique index " + indexName + " ...");
+                LOGGER.log(INFO, "  Checking unique index {} ...", indexName);
                 if (!dbTableIndexes.contains(indexName)) {
                     // !!! MISSING UNIQUE INDEX
                     String msg = "  MISSING db unique index '" + indexName + "' in table '" + mappedTable.getAlias() + "'";
@@ -617,7 +617,7 @@ public class MetaDbServiceEx extends MetaDbService {
 
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.getSequencer().isSequenceTableRequired()) {
-                LOGGER.log(INFO, "Checking ujorm_pk_support for table '" + mappedTable.getAlias() + "' ...");
+                LOGGER.log(INFO, "Checking ujorm_pk_support for table '{}' ...", mappedTable.getAlias());
 
                 // TABLE MAX ID
                 // construct sql
@@ -635,7 +635,7 @@ public class MetaDbServiceEx extends MetaDbService {
                     rs = statement.executeQuery();
                     rs.next();
                     tableMaxID = rs.getLong(1);
-                    LOGGER.log(INFO, "  Table max id = " + tableMaxID);
+                    LOGGER.log(INFO, "  Table max id = {}", tableMaxID);
                 } finally {
                     MetaDatabase.close(null, statement, rs, true);
                 }
@@ -643,7 +643,7 @@ public class MetaDbServiceEx extends MetaDbService {
                 // UJORM MAX ID
                 long[] sqMap = mappedTable.getSequencer().getCurrentDBSequence(conn, null);
                 Long ujormMaxId = sqMap != null ? sqMap[UjoSequencer.SEQ_LIMIT] : null; // returns X as limit (last assigned number), "X+1" will be next assigned ID
-                LOGGER.log(INFO, "  Ujorm max id = " + ujormMaxId);
+                LOGGER.log(INFO, "  Ujorm max id = {}", ujormMaxId);
 
                 if (tableMaxID > 0 && ujormMaxId == null) {
                     // !!! CORRUPTED SEQUENCE
