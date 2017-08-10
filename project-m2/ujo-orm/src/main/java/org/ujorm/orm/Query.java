@@ -31,6 +31,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
@@ -42,7 +43,6 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.utility.OrmTools;
-import org.ujorm.core.IllegalUjormException;
 import static org.ujorm.core.UjoTools.SPACE;
 import static org.ujorm.logger.UjoLogger.WARN;
 
@@ -629,7 +629,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
                 ? new ColumnWrapperImpl(column, relation)
                 : column;
         if (column.isMandatory()) {
-            LOGGER.log(WARN, "The relation is required: " + relation);
+            LOGGER.log(WARN, "The relation is required: {}", relation);
         }
         return outerJoins.add(wColumn);
     }

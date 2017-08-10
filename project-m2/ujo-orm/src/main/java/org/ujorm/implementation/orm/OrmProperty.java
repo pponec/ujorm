@@ -89,7 +89,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                             }
                         case ALLOWED_ANYWHERE_WITH_WARNING:
                             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                                LOGGER.log(UjoLogger.WARN, "The lazy loading on closed session on the key " + getFullName() + " = " + result, e);
+                                LOGGER.log(UjoLogger.WARN, "The lazy loading on closed session on the key {} = {}", getFullName(), result, e);
                             }
                         case ALLOWED_ANYWHERE:
                             // open temporary session if it's closed ;) - because of lazy-loading of detached objects (caches, etc.) */

@@ -79,7 +79,7 @@ public class UjoSequencer {
                 sql = db.getDialect().printSequenceNextValue(this, out).toString();
 
                 if (LOGGER.isLoggable(UjoLogger.TRACE)) {
-                    LOGGER.log(UjoLogger.TRACE, sql + "; [" + tableName + ']');
+                    LOGGER.log(UjoLogger.TRACE, "{}; [{}]", sql, tableName);
                 }
                 final int i = executeSql(connection, sql, tableName);
                 if (i==0) {
@@ -87,7 +87,7 @@ public class UjoSequencer {
                     out.setLength(0);
                     sql = db.getDialect().printSequenceInit(this, out).toString();
                     if (LOGGER.isLoggable(UjoLogger.TRACE)) {
-                        LOGGER.log(UjoLogger.TRACE, sql + "; ["+tableName+']');
+                        LOGGER.log(UjoLogger.TRACE, "{}; [{}]", sql, tableName);
                     }
                     executeSql(connection, sql, tableName);
                 }
@@ -119,7 +119,7 @@ public class UjoSequencer {
                         out.setLength(0);
                         sql = db.getDialect().printSequenceNextValue(this, out).toString();
                         if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                            LOGGER.log(UjoLogger.INFO, sql + "; [" + tableName + ']');
+                            LOGGER.log(UjoLogger.INFO, "{}; [{}]", sql, tableName);
                         }
                         executeSql(connection, sql, tableName);
                     }

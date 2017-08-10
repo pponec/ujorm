@@ -17,8 +17,8 @@ package org.ujorm.implementation.orm;
 
 import java.util.List;
 import org.ujorm.Ujo;
-import org.ujorm.core.UjoIterator;
 import org.ujorm.core.IllegalUjormException;
+import org.ujorm.core.UjoIterator;
 import org.ujorm.extensions.AbstractCollectionProperty;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -94,7 +94,7 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
                         }
                     case ALLOWED_ANYWHERE_WITH_WARNING:
                         if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                            LOGGER.log(UjoLogger.WARN, "The lazy loading on closed session on the key " + getFullName(), e);
+                            LOGGER.log(UjoLogger.WARN, "The lazy loading on closed session on the key {}", getFullName(), e);
                         }
                     case ALLOWED_ANYWHERE:
                         // open temporary session if it's closed ;) - because of lazy-loading of detached objects (caches, etc.)

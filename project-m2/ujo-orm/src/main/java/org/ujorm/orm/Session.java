@@ -35,6 +35,7 @@ import javax.transaction.Status;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoTools;
@@ -55,8 +56,6 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
-import static org.ujorm.core.UjoTools.SPACE;
-import org.ujorm.core.IllegalUjormException;
 
 /**
  * The ORM session.
@@ -205,7 +204,7 @@ public class Session implements Closeable {
                     if (commitRequest!=null) {
                         conn.commit();
                         if (LOGGER.isLoggable(fineLevel)) {
-                            LOGGER.log(fineLevel, commitRequest + database.getId());
+                            LOGGER.log(fineLevel, "{}{}", commitRequest, database.getId());
                         }
                     }
                 } else {
@@ -231,7 +230,7 @@ public class Session implements Closeable {
                     : null;
 
         } catch (RuntimeException | SQLException | OutOfMemoryError e) {
-            LOGGER.log(UjoLogger.ERROR, errMessage + database, e);
+            LOGGER.log(UjoLogger.ERROR, "{}{}", errMessage, database, e);
             throw new IllegalUjormException(errMessage + database, e);
         }
         rollbackOnly = false;
@@ -260,7 +259,7 @@ public class Session implements Closeable {
                 result[i] = conn.setSavepoint();
             }
         } catch (RuntimeException | SQLException |OutOfMemoryError e) {
-            LOGGER.log(UjoLogger.ERROR, errMessage + database, e);
+            LOGGER.log(UjoLogger.ERROR, "{}{}", errMessage, database, e);
             throw new IllegalUjormException(errMessage + database, e);
         }
         rollbackOnly = false;
@@ -473,7 +472,7 @@ public class Session implements Closeable {
                 statement = getStatement(db, sql, true);
                 statement.assignValues(bos, idxFrom, idxTo);
                 if (logEnabled && LOGGER.isLoggable(UjoLogger.DEBUG)) {
-                    LOGGER.log(UjoLogger.DEBUG, SQL_VALUES + statement.getAssignedValues());
+                    LOGGER.log(UjoLogger.DEBUG, "{}{}", SQL_VALUES, statement.getAssignedValues());
                 }
                 statement.executeUpdate(); // execute insert statement
                 MetaDatabase.close(null, statement, null, true);
@@ -522,7 +521,7 @@ public class Session implements Closeable {
             LOGGER.log(UjoLogger.INFO, sql);
             statement = getStatement(db, sql, true);
             statement.assignValues(bo);
-            LOGGER.log(UjoLogger.INFO, SQL_VALUES + statement.getAssignedValues());
+            LOGGER.log(UjoLogger.INFO, "{}{}", SQL_VALUES, statement.getAssignedValues());
             // 4. Execute:
             statement.executeUpdate(); // execute insert statement
             // 5. Clean all flags of modified attributes
@@ -585,7 +584,7 @@ public class Session implements Closeable {
             statement.assignValues(decoder);
 
             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                LOGGER.log(UjoLogger.INFO, sql + SPACE + SQL_VALUES + statement.getAssignedValues());
+                LOGGER.log(UjoLogger.INFO, "{} {}{}", sql, SQL_VALUES, statement.getAssignedValues());
             }
             result = statement.executeUpdate(); // execute update statement
             bo.writeSession(this);
@@ -714,7 +713,7 @@ public class Session implements Closeable {
             statement.assignValues(decoder);
 
             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                LOGGER.log(UjoLogger.INFO, sql + SQL_VALUES + statement.getAssignedValues());
+                LOGGER.log(UjoLogger.INFO, "{}{}", sql, SQL_VALUES, statement.getAssignedValues());
             }
             result = statement.executeUpdate(); // execute delete statement
         } catch (RuntimeException | SQLException | IOException | OutOfMemoryError e) {
@@ -740,7 +739,7 @@ public class Session implements Closeable {
             statement.assignValues(procedure);
 
             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                LOGGER.log(UjoLogger.INFO, sql + SPACE + SQL_VALUES + statement.getAssignedValues());
+                LOGGER.log(UjoLogger.INFO, "{} {}{}", sql, SQL_VALUES, statement.getAssignedValues());
             }
             statement.execute(); // execute call statement
             statement.loadValues(procedure);
@@ -800,7 +799,7 @@ public class Session implements Closeable {
 
             statement = getStatement(db, sql, false);
             statement.assignValues(query);
-            LOGGER.log(UjoLogger.INFO, SQL_VALUES + statement.getAssignedValues());
+            LOGGER.log(UjoLogger.INFO, "{}{}", SQL_VALUES, statement.getAssignedValues());
 
             rs = statement.executeQuery(); // execute a select statement
             result = rs.next() ? rs.getLong(1) : 0;
@@ -835,7 +834,7 @@ public class Session implements Closeable {
             result.assignValues(query);
 
             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                LOGGER.log(UjoLogger.INFO, sql + SPACE + SQL_VALUES + result.getAssignedValues());
+                LOGGER.log(UjoLogger.INFO, "{} {}{}", sql, SQL_VALUES, result.getAssignedValues());
             }
             return result;
 
@@ -1113,7 +1112,7 @@ public class Session implements Closeable {
                         conn.close();
                     }
                 } catch (RuntimeException | SQLException | OutOfMemoryError e) {
-                    LOGGER.log(UjoLogger.ERROR, errMessage + db, e);
+                    LOGGER.log(UjoLogger.ERROR, "{}{}", errMessage, db, e);
                     if (exception == null) {
                         exception = e;
                         database = db;
