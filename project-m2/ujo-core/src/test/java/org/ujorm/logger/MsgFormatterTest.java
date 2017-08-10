@@ -16,10 +16,11 @@
 package org.ujorm.logger;
 
 import org.junit.Test;
+import static junit.framework.TestCase.assertSame;
 import static org.junit.Assert.assertEquals;
 
 /**
- *
+ * Tests of the MsgFormatter class
  * @author Pavel Ponec
  */
 public class MsgFormatterTest {
@@ -113,6 +114,45 @@ public class MsgFormatterTest {
         String expResult = "abc-d-e-{}-x";
         String result = instance.format(template, arguments);
         assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of format method, of class MsgFormatter.
+     */
+    @Test
+    public void testFormat8() {
+        String template = "{}{}{}";
+        Object[] arguments = {"a","b","c"};
+        MsgFormatter instance = new MsgFormatter();
+        String expResult = "abc";
+        String result = instance.format(template, arguments);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of format method, of class MsgFormatter.
+     */
+    @Test
+    public void testFormat9() {
+        String template = "";
+        Object[] arguments = {"a","b","c"};
+        MsgFormatter instance = new MsgFormatter();
+        String expResult = ", a, b, c";
+        String result = instance.format(template, arguments);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of format method, of class MsgFormatter.
+     */
+    @Test
+    public void testFormat10() {
+        String template = "";
+        Object[] arguments = null;
+        MsgFormatter instance = new MsgFormatter();
+        String expResult = template;
+        String result = instance.format(template, arguments);
+        assertSame(expResult, result);
     }
 
 }

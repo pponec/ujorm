@@ -1,5 +1,5 @@
 /*
- *  Copyright 2011-2014 Pavel Ponec
+ *  Copyright 2011-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,10 @@ final public class UjoLoggerFactory implements UjoLogger {
     volatile private static boolean showLog = true;
 
     /** Target Logger */
-    final private Logger logger;
+    private final Logger logger;
+
+    /** An argument formatter */
+    private final MsgFormatter formatter = new MsgFormatter();
 
     private UjoLoggerFactory(String name) {
         this.logger = java.util.logging.Logger.getLogger(name);
@@ -63,13 +66,17 @@ final public class UjoLoggerFactory implements UjoLogger {
     /** {@inheritdoc} */
     @Override
     public void log(final Level level, final String message, final Object parameter) {
-        logger.log(level, message, parameter);
+        if (logger.isLoggable(level)) {
+            logger.log(level, formatter.format(message, parameter));
+        }
     }
 
     /** {@inheritdoc} */
     @Override
     public void log(final Level level, final String message, final Object... parameters) {
-        logger.log(level, message, parameters);
+        if (logger.isLoggable(level)) {
+            logger.log(level, formatter.format(message, parameters));
+        }
     }
 
     // ---------- FACTORY -----------------

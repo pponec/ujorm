@@ -26,6 +26,8 @@ public class MsgFormatter {
 
     /** Parameter mark */
     protected static final String MARK = "{}";
+    /** Separator */
+    protected static final String SEPARATOR = ", ";
 
     /**
      * Format the message
@@ -38,7 +40,7 @@ public class MsgFormatter {
             return template;
         }
 
-        final StringBuilder result = new StringBuilder(template.length() * 2);
+        final StringBuilder result = new StringBuilder(Math.max(24, template.length() * 2));
         int max = template.length();
         int last = 0;
 
@@ -52,7 +54,7 @@ public class MsgFormatter {
                     result.append(template, last, max);
                     last = max;
                 }
-                result.append(", ");
+                result.append(SEPARATOR);
             }
             result.append(arg);
         }
