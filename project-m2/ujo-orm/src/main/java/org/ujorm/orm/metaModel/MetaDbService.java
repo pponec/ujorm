@@ -118,7 +118,7 @@ public class MetaDbService {
             try {
                 conn.rollback();
             } catch (SQLException ex) {
-                LOGGER.log(WARN, "Can't rollback DB" + db.getId(), ex);
+                LOGGER.log(WARN, "Can't rollback DB {}", db.getId(), ex);
             }
             final String msg = Session.SQL_ILLEGAL + getSql();
             LOGGER.log(Level.SEVERE, msg, e);
@@ -166,14 +166,14 @@ public class MetaDbService {
         }
 
         // Check DB schemas:
-        final boolean catalog = isCatalog();
-        final int schemaColumn = catalog ? 1 : 2;
-        try (ResultSet schemas = catalog
-                ? dbModel.getCatalogs()
-                : dbModel.getSchemas()) {
+        try (ResultSet schemas = dbModel.getSchemas()) {
             while(schemas.next()) {
-                final String schema = schemas.getString(schemaColumn).toUpperCase(Locale.ENGLISH);
-                requiredSchemas.remove(schema);
+                final String schema = toUpperCase(schemas.getString(1));
+                final String catalog = toUpperCase(schemas.getString(2));
+                LOGGER.log(UjoLogger.INFO, "Schema: {}.{}", schema, catalog);
+                if (catalog == null || catalog.equals(toUpperCase(conn.getCatalog()))) {
+                      requiredSchemas.remove(schema);
+                }
             }
         }
         news.getSchemas().addAll(requiredSchemas);
@@ -182,6 +182,11 @@ public class MetaDbService {
                             || !news.getColumns().isEmpty()
                             || !news.getIndexes().isEmpty();
         return result;
+    }
+
+    @Nullable
+    private String toUpperCase(@Nullable final String text) {
+        return text != null ? text.toUpperCase(Locale.ENGLISH) : text;
     }
 
     private void logColumn(final ResultSet columns) throws SQLException {
