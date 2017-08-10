@@ -56,7 +56,7 @@ public interface UjoLogger {
      * registered output Handler objects.
      * <p>
      * @param	level   One of the message level identifiers, see for example {@link UjoLogger#ERROR},  {@link UjoLogger#DEBUG}
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   message	The string message (or a key in the message catalog)
      */
     public void log(Level level, String message);
 
@@ -73,8 +73,8 @@ public interface UjoLogger {
      * as a formatting parameter to the LogRecord message key.
      * <p>
      * @param	level   One of the message level identifiers, see for example {@link UjoLogger#ERROR},  {@link UjoLogger#DEBUG}
-     * @param   msg	The string message (or a key in the message catalog)
-     * @param   thrown  Throwable associated with log message.
+     * @param   message	The string message (or a key in the message catalog)
+     * @param   e  Throwable associated with log message.
      */
     public void log(Level level, String message, Throwable e);
 
