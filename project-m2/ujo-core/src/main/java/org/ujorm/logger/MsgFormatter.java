@@ -40,7 +40,7 @@ public class MsgFormatter {
             return template;
         }
 
-        final StringBuilder result = new StringBuilder(Math.max(24, template.length() * 2));
+        final StringBuilder result = new StringBuilder(Math.max(64, template.length() * 2));
         int max = template.length();
         int last = 0;
 

@@ -30,11 +30,11 @@ final public class UjoLoggerFactory implements UjoLogger {
     /** Sign to show a log */
     volatile private static boolean showLog = true;
 
+    /** An argument formatter */
+    private static final MsgFormatter formatter = new MsgFormatter();
+
     /** Target Logger */
     private final Logger logger;
-
-    /** An argument formatter */
-    private final MsgFormatter formatter = new MsgFormatter();
 
     private UjoLoggerFactory(String name) {
         this.logger = java.util.logging.Logger.getLogger(name);
