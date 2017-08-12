@@ -141,6 +141,7 @@ public class MetaDbService {
     protected boolean isModelChanged(final Connection conn, final DbItems news) throws SQLException {
         final DatabaseMetaData dbModel = conn.getMetaData();
         final Set<String> requiredSchemas = new HashSet<>();
+        final Boolean isCatalog = db.getDialect().isCatalog();
 
         for (MetaTable table : TABLES.of(db)) {
             if (table.isTable()) {
@@ -168,11 +169,15 @@ public class MetaDbService {
         // Check DB schemas:
         try (ResultSet schemas = dbModel.getSchemas()) {
             while(schemas.next()) {
-                final String schema = toUpperCase(schemas.getString(1));
-                final String catalog = toUpperCase(schemas.getString(2));
-                LOGGER.log(UjoLogger.INFO, "Schema: {}.{}", schema, catalog);
-                if (catalog == null || catalog.equals(toUpperCase(conn.getCatalog()))) {
-                      requiredSchemas.remove(schema);
+                String schema = toUpperCase(schemas.getString(isCatalog ? 2 : 1));
+                if (LOGGER.isLoggable(UjoLogger.TRACE)) {
+                    LOGGER.log(UjoLogger.TRACE, "Schema: {}.{} supported catalog: {}"
+                            , schemas.getString(1)
+                            , schemas.getString(2)
+                            , isCatalog);
+                }
+                if (schema != null) {
+                   requiredSchemas.remove(schema);
                 }
             }
         }

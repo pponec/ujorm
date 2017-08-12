@@ -481,7 +481,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             }
             result = dataSource.getConnection();
         } else {
-            Class.forName(JDBC_DRIVER.of(this));
+            final Class dbDriver = Class.forName(JDBC_DRIVER.of(this));
+            LOGGER.log(UjoLogger.TRACE, "Database driver {} is loaded.", dbDriver);
             result = DriverManager.getConnection(JDBC_URL.of(this), USER.of(this), PASSWORD.of(this));
         }
 
