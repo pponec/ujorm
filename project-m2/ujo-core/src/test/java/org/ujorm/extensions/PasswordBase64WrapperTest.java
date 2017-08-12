@@ -48,7 +48,7 @@ public class PasswordBase64WrapperTest {
     public void testToString() {
         System.out.println("toString");
         PasswordBase64Wrapper instance = PasswordBase64Wrapper.of("ABC");
-        String expResult = "*";
+        String expResult = "***";
         String result = instance.toString();
         assertEquals(expResult, result);
         //
