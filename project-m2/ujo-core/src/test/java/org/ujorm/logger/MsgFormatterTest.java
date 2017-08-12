@@ -30,10 +30,10 @@ public class MsgFormatterTest {
      */
     @Test
     public void testFormat1() {
-        String template = "";
-        Object[] arguments = null;
+        String template = "abc-{}-{}.";
+        Object[] arguments = {"d","e"};
         MsgFormatter instance = new MsgFormatter();
-        String expResult = "";
+        String expResult = "abc-d-e.";
         String result = instance.format(template, arguments);
         assertEquals(expResult, result);
     }
@@ -43,32 +43,6 @@ public class MsgFormatterTest {
      */
     @Test
     public void testFormat2() {
-        String template = "";
-        Object[] arguments = null;
-        MsgFormatter instance = new MsgFormatter();
-        String expResult = "";
-        String result = instance.format(template, arguments);
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of format method, of class MsgFormatter.
-     */
-    @Test
-    public void testFormat3() {
-        String template = "";
-        Object[] arguments = null;
-        MsgFormatter instance = new MsgFormatter();
-        String expResult = "";
-        String result = instance.format(template, arguments);
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of format method, of class MsgFormatter.
-     */
-    @Test
-    public void testFormat4() {
         String template = "abc";
         Object[] arguments = {"d","e","f"};
         MsgFormatter instance = new MsgFormatter();
@@ -81,11 +55,11 @@ public class MsgFormatterTest {
      * Test of format method, of class MsgFormatter.
      */
     @Test
-    public void testFormat5() {
-        String template = "abc-{}-{}-{}-x";
+    public void testFormat3() {
+        String template = "abc-{}-{}";
         Object[] arguments = {"d","e","f"};
         MsgFormatter instance = new MsgFormatter();
-        String expResult = "abc-d-e-f-x";
+        String expResult = "abc-d-e, f";
         String result = instance.format(template, arguments);
         assertEquals(expResult, result);
     }
@@ -94,24 +68,11 @@ public class MsgFormatterTest {
      * Test of format method, of class MsgFormatter.
      */
     @Test
-    public void testFormat6() {
-        String template = "abc-{}-{}-x";
-        Object[] arguments = {"d","e","f"};
-        MsgFormatter instance = new MsgFormatter();
-        String expResult = "abc-d-e-x, f";
-        String result = instance.format(template, arguments);
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of format method, of class MsgFormatter.
-     */
-    @Test
-    public void testFormat7() {
-        String template = "abc-{}-{}-{}-x";
+    public void testFormat4() {
+        String template = "abc-{}-{}-{}.";
         Object[] arguments = {"d","e"};
         MsgFormatter instance = new MsgFormatter();
-        String expResult = "abc-d-e-{}-x";
+        String expResult = "abc-d-e-{}.";
         String result = instance.format(template, arguments);
         assertEquals(expResult, result);
     }
@@ -120,7 +81,7 @@ public class MsgFormatterTest {
      * Test of format method, of class MsgFormatter.
      */
     @Test
-    public void testFormat8() {
+    public void testFormat5() {
         String template = "{}{}{}";
         Object[] arguments = {"a","b","c"};
         MsgFormatter instance = new MsgFormatter();
@@ -133,7 +94,7 @@ public class MsgFormatterTest {
      * Test of format method, of class MsgFormatter.
      */
     @Test
-    public void testFormat9() {
+    public void testFormat6() {
         String template = "";
         Object[] arguments = {"a","b","c"};
         MsgFormatter instance = new MsgFormatter();
@@ -146,7 +107,20 @@ public class MsgFormatterTest {
      * Test of format method, of class MsgFormatter.
      */
     @Test
-    public void testFormat10() {
+    public void testFormat7() {
+        String template = "{}";
+        Object[] arguments = {null, null, null};
+        MsgFormatter instance = new MsgFormatter();
+        String expResult = "null, null, null";
+        String result = instance.format(template, arguments);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of format method, of class MsgFormatter.
+     */
+    @Test
+    public void testFormat8() {
         String template = "";
         Object[] arguments = null;
         MsgFormatter instance = new MsgFormatter();
