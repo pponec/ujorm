@@ -169,11 +169,12 @@ public class MetaDbService {
         // Check DB schemas:
         try (ResultSet schemas = dbModel.getSchemas()) {
             while(schemas.next()) {
-                String schema = toUpperCase(schemas.getString(isCatalog ? 2 : 1));
-                if (LOGGER.isLoggable(UjoLogger.TRACE)) {
-                    LOGGER.log(UjoLogger.TRACE, "Schema: {}.{} supported catalog: {}"
-                            , schemas.getString(1)
+                final String schema = toUpperCase(schemas.getString(isCatalog ? 2 : 1));
+                final Level levelTrace = UjoLogger.TRACE;
+                if (LOGGER.isLoggable(levelTrace)) {
+                    LOGGER.log(levelTrace, "Schema: {}.{} Catalog: {}"
                             , schemas.getString(2)
+                            , schemas.getString(1)
                             , isCatalog);
                 }
                 if (schema != null) {
