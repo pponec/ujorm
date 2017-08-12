@@ -24,7 +24,9 @@ import java.util.logging.*;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoIterator;
+import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
 import org.ujorm.orm.annot.Comment;
@@ -33,13 +35,11 @@ import org.ujorm.orm.dialect.DerbyDialect;
 import org.ujorm.orm.dialect.FirebirdDialect;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
+import org.ujorm.orm.metaModel.MoreParams;
+import org.ujorm.orm.template.AliasTable;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.Checks.*;
-import org.ujorm.core.KeyFactory;
-import org.ujorm.core.UjoManager;
-import org.ujorm.orm.template.AliasTable;
 import static org.ujorm.criterion.Operator.*;
-import org.ujorm.orm.metaModel.MoreParams;
 import static org.ujorm.orm.template.AliasTable.Build.*;
 
 /**
@@ -265,10 +265,10 @@ public class SampleORM {
         Criterion<Item> crn = Item.ID.where(GE, 1L )
             .and( Item.NOTE.where(CONTAINS, "table" ) )
             .and( Item.ORDER.add(Order.NOTE).whereEq( "My order" ));
-        
+
         Query<Item> query = session.createQuery(crn);
         query.addOuterJoin(Item.ORDER);
-        
+
         for (Item item : query) {
             LocalDateTime created = item.getOrder().getCreated(); // Lazy loading
             System.out.println("Item: " + item + " // created: " + created);
@@ -855,12 +855,12 @@ public class SampleORM {
         final Order item = new Order();
         item.writeSession(session); // Activate a change management:
         item.setCreated(LocalDateTime.now()); // Set a value(s) to the change:
-        
+
         final Criterion<Order> crn1, crn2, crn3;
         crn1 = Order.ID.whereGt(0L);
         crn2 = Order.CREATED.whereNull();
         crn3 = crn1.and(crn2);
-        
+
         int count = session.update(item, crn3);
         session.commit();
         assert count == 0;

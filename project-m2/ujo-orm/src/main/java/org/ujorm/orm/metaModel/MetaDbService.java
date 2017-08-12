@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -140,7 +141,7 @@ public class MetaDbService {
     @SuppressWarnings("LoggerStringConcat")
     protected boolean isModelChanged(final Connection conn, final DbItems news) throws SQLException {
         final DatabaseMetaData dbModel = conn.getMetaData();
-        final Set<String> requiredSchemas = new HashSet<>();
+        final HashMap<String, String> requiredSchemas = new HashMap<>();
         final Boolean isCatalog = db.getDialect().isCatalog();
 
         for (MetaTable table : TABLES.of(db)) {
@@ -157,9 +158,9 @@ public class MetaDbService {
                 switch (table.getOrm2ddlPolicy()) {
                     case CREATE_DDL:
                     case CREATE_OR_UPDATE_DDL: {
-                        final String schema = table.getSchema().toUpperCase(Locale.ENGLISH);
-                        if (!requiredSchemas.contains(schema)) {
-                            requiredSchemas.add(schema);
+                        final String schemaUpper = toUpperCase(table.getSchema());
+                        if (!requiredSchemas.containsKey(schemaUpper)) {
+                            requiredSchemas.put(schemaUpper, table.getSchema());
                         }
                     }
                 }
@@ -169,7 +170,7 @@ public class MetaDbService {
         // Check DB schemas:
         try (ResultSet schemas = dbModel.getSchemas()) {
             while(schemas.next()) {
-                final String schema = toUpperCase(schemas.getString(isCatalog ? 2 : 1));
+                final String schemaUpper = toUpperCase(schemas.getString(isCatalog ? 2 : 1));
                 final Level levelTrace = UjoLogger.TRACE;
                 if (LOGGER.isLoggable(levelTrace)) {
                     LOGGER.log(levelTrace, "Schema: {}.{} Catalog: {}"
@@ -177,12 +178,12 @@ public class MetaDbService {
                             , schemas.getString(1)
                             , isCatalog);
                 }
-                if (schema != null) {
-                   requiredSchemas.remove(schema);
+                if (schemaUpper != null) {
+                   requiredSchemas.remove(schemaUpper);
                 }
             }
         }
-        news.getSchemas().addAll(requiredSchemas);
+        news.getSchemas().addAll(requiredSchemas.values());
 
         final boolean result = !news.getTables().isEmpty()
                             || !news.getColumns().isEmpty()

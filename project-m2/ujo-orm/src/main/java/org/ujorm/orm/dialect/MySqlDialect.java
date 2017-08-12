@@ -18,6 +18,7 @@ package org.ujorm.orm.dialect;
 
 import java.io.IOException;
 import java.util.List;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.TableWrapper;
@@ -28,7 +29,6 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.metaModel.MoreParams;
 import static org.ujorm.core.UjoTools.SPACE;
-import org.ujorm.core.IllegalUjormException;
 
 /** Dialect for the MySQL since release 5.0 for the InnoDB engine.
  * <br><a href="http://dev.mysql.com/">http://dev.mysql.com/</a>

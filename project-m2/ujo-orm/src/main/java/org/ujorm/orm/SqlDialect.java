@@ -34,6 +34,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.TemplateValue;
@@ -47,9 +48,8 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaSelect;
 import org.ujorm.orm.metaModel.MetaTable;
-import static org.ujorm.core.UjoTools.SPACE;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.metaModel.MoreParams;
+import static org.ujorm.core.UjoTools.SPACE;
 
 /**
  * SQL dialect abstract class. Methods of this class print a SQL statement(s) along a metamodel usually.

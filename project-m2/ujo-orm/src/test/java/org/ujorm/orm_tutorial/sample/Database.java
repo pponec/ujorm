@@ -17,11 +17,11 @@
 package org.ujorm.orm_tutorial.sample;
 
 import org.ujorm.Key;
-import org.ujorm.orm.annot.Table;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.annot.Procedure;
+import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.annot.View;
 import org.ujorm.orm.dialect.*;
 
@@ -32,7 +32,7 @@ import org.ujorm.orm.dialect.*;
 @Db(schema="db1", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
 //@Db(schema="db1", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:~/ujorm/db1")
 //@Db(schema="db1", dialect=PostgreSqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:postgresql://127.0.0.1:5432/db1")
-//@Db(schema="db1", dialect=MySqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:mysql://127.0.0.1:3306/")
+//@Db(schema="x_db8", dialect=MySqlDialect.class, user="sa2", password="sa", jdbcUrl="jdbc:mysql://127.0.0.1:3306/?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC")
 //@Db(schema="db1", dialect=DerbyDialect.class, user="sa", password="", jdbcUrl="jdbc:derby:C:\\temp\\derby-sample;create=true")
 //@Db(schema="db1", dialect=HsqldbDialect.class, user="sa", password="", jdbcUrl="jdbc:hsqldb:mem:db1")
 //@Db(schema= ""  , dialect=FirebirdDialect.class, user="sysdba", password="masterkey", jdbcUrl="jdbc:firebirdsql:localhost/3050:c:\\progra~1\\firebird\\db\\db1.fdb?lc_ctype=UTF8")
