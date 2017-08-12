@@ -340,7 +340,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     @Nullable
     MetaColumn findColumn(String id) {
 
-        if (OrmTools.isFilled(id)) for (MetaColumn column : COLUMNS.of(this)) {
+        if (OrmTools.hasLength(id)) for (MetaColumn column : COLUMNS.of(this)) {
             if (MetaColumn.ID.equals(column, id)) {
                 return column;
             }
@@ -351,7 +351,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Finds the first relation by ID or returns null. The method is for internal use only. */
     MetaRelation2Many findRelation(String id) {
 
-        if (OrmTools.isFilled(id)) for (MetaRelation2Many relation : RELATIONS.of(this)) {
+        if (OrmTools.hasLength(id)) for (MetaRelation2Many relation : RELATIONS.of(this)) {
             if (MetaRelation2Many.ID.equals(relation, id)) {
                 return relation;
             }

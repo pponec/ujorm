@@ -209,7 +209,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             @SuppressWarnings("unchecked")
             String schemaKeyName = SCHEMA.of(this);
             RelationToMany relation = new RelationToMany
-                    ( OrmTools.isFilled(schemaKeyName)
+                    ( OrmTools.hasLength(schemaKeyName)
                     ? schemaKeyName
                     : RelationToMany.class.getSimpleName()
                     , database.getClass());
@@ -527,7 +527,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         for (MetaTable table : tables) {
             if (table.isTable()) {
                 String schema = MetaTable.SCHEMA.of(table);
-                if (OrmTools.isFilled(schema)) {
+                if (OrmTools.hasLength(schema)) {
                     result.add(schema);
                 }
             }
@@ -541,7 +541,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     @Nullable
     MetaTable findTable(String id) {
 
-        if (OrmTools.isFilled(id)) for (MetaTable table : TABLES.getList(this)) {
+        if (OrmTools.hasLength(id)) for (MetaTable table : TABLES.getList(this)) {
             if (MetaTable.ID.equals(table, id)) {
                 return table;
             }
@@ -554,7 +554,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      */
     @Nullable
     MetaProcedure findProcedure(String id) {
-        if (OrmTools.isFilled(id)) for (MetaProcedure procedure : PROCEDURES.getList(this)) {
+        if (OrmTools.hasLength(id)) for (MetaProcedure procedure : PROCEDURES.getList(this)) {
             if (MetaProcedure.ID.equals(procedure, id)) {
                 return procedure;
             }

@@ -236,19 +236,19 @@ final public class OrmTools {
      * @return Returns a list of items or the parameter ujos.
      *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
      */
-    public static <UJO extends OrmUjo> List<UJO> loadLazyValues(final Iterable<UJO> ujos, int depth) {
+    public static <U extends OrmUjo> List<U> loadLazyValues(final Iterable<U> ujos, int depth) {
 
-        List<UJO> result = ujos instanceof List
+        List<U> result = ujos instanceof List
                 ? null
-                : new ArrayList<UJO>(64);
-        for (UJO ujo : ujos) {
+                : new ArrayList<U>(64);
+        for (U ujo : ujos) {
             loadLazyValues(ujo, depth);
             if (result!=null) {
                 result.add(ujo);
             }
         }
         if (result==null) {
-            result = (List<UJO>) ujos;
+            result = (List<U>) ujos;
         }
         return result;
     }
@@ -273,14 +273,14 @@ final public class OrmTools {
      *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Iterable<UJO> ujos, Key<UJO, ? extends OrmUjo> key) {
+    public static <U extends ExtendedOrmUjo> List<U> loadLazyValuesAsBatch(final Iterable<U> ujos, Key<U, ? extends OrmUjo> key) {
 
-        final List<UJO> result = new ArrayList<UJO>(ujos instanceof List ? ((List) ujos).size() : 128);
+        final List<U> result = new ArrayList<U>(ujos instanceof List ? ((List) ujos).size() : 128);
         final HashMap<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
         while (key.isComposite()) {
             key = ((CompositeKey)key).getFirstKey();
         }
-        for (UJO u : ujos) {
+        for (U u : ujos) {
             result.add(u);
             final Object fk = u.readValue(key);
             if (fk instanceof ForeignKey) {
@@ -310,7 +310,7 @@ final public class OrmTools {
                 idList.clear();
             }
         }
-        for (UJO u : result) {
+        for (U u : result) {
             final Object fk = u.readValue(key);
             if (fk instanceof ForeignKey) {
                 u.writeSession(null); // switch off the change management
@@ -327,8 +327,8 @@ final public class OrmTools {
      *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Query<UJO> query) {
-        List<UJO> result = query.iterator().toList();
+    public static <U extends ExtendedOrmUjo> List<U> loadLazyValuesAsBatch(final Query<U> query) {
+        List<U> result = query.iterator().toList();
         List<MetaColumn> columns = MetaTable.COLUMNS.getList(query.getTableModel());
         for (MetaColumn col : columns) {
             if (col.isForeignKey()) {
@@ -342,7 +342,7 @@ final public class OrmTools {
      * OR operator however if a one from data parameters is null, than the operator is ignored.
      * @param table NotNull
      * @param crn Nullable
-     * @param foreighKeys Nullable
+     * @param primaryKeys Nullable
      * @return NotNull
      */
     public static Criterion createCriterion
@@ -351,7 +351,7 @@ final public class OrmTools {
             , final List<Object> primaryKeys
             ) {
         Criterion result = crn;
-        if (isFilled(primaryKeys)) {
+        if (OrmTools.hasLength(primaryKeys)) {
             final MetaPKey pKey = MetaTable.PK.of(table);
             if (pKey.getCount()!=1) {
                 throw new IllegalUjormException("There supported only objects with a one primary keys");
@@ -363,20 +363,28 @@ final public class OrmTools {
     }
 
 
-    /** Is the Text not {@code null} and not empty ? */
+    /** Is the Text not {@code null} and not empty ?
+     * @deprecated Use the method {@link #hasLength(java.lang.CharSequence)} rather.
+     */
+    @Deprecated
     public static boolean isFilled(final CharSequence text) {
+        return hasLength(text);
+    }
+
+    /** Is the Text not {@code null} and not empty ? */
+    public static boolean hasLength(final CharSequence text) {
         return text!=null && text.length()>0;
     }
 
     /** Is the Collection not {@code null} and not empty ? */
-    public static boolean isFilled(final Collection collection) {
+    public static boolean hasLength(final Collection collection) {
         return collection!=null && !collection.isEmpty();
     }
 
     /** Returns true, if the argument text is not null and not empty. */
-    public static boolean isFilled(final Object value) {
+    public static boolean hasLength(final Object value) {
         final boolean result = value instanceof CharSequence
-            ? isFilled((CharSequence)value)
+            ? OrmTools.hasLength((CharSequence)value)
             : value!=null
             ;
         return result;

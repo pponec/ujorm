@@ -142,7 +142,7 @@ final public class MetaRoot extends AbstractMetaModel {
         if (super.readOnly()) {
             throw new UnsupportedOperationException("The internal state is 'read only'");
         }
-        if (OrmTools.isFilled(databaseId)) for (MetaDatabase db : DATABASES.getList(this)) { MetaDatabase.ID.of(db);
+        if (OrmTools.hasLength(databaseId)) for (MetaDatabase db : DATABASES.getList(this)) { MetaDatabase.ID.of(db);
             if (MetaDatabase.ID.equals(db, databaseId)) {
                 DATABASES.getList(this).remove(db);
                 return db;

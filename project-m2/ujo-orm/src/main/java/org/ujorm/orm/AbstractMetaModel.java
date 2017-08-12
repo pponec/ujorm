@@ -119,7 +119,7 @@ abstract public class AbstractMetaModel extends AbstractUjo implements UjoLockab
     , final Key<UJO, VALUE> key
     , final VALUE value
     ) {
-        if (key.isDefault(ujo) && OrmTools.isFilled(value)) {
+        if (key.isDefault(ujo) && OrmTools.hasLength(value)) {
             key.setValue(ujo, value);
         }
     }

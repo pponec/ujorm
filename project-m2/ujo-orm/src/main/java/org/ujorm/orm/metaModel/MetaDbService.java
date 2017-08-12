@@ -302,7 +302,7 @@ public class MetaDbService {
         for (String schema : schemas) {
             sql.setLength(0);
             db.getDialect().printCreateSchema(schema, sql);
-            if (OrmTools.isFilled(sql)) {
+            if (OrmTools.hasLength(sql)) {
                 try {
                     stat.executeUpdate(sql.toString());
                 } catch (SQLException e) {
