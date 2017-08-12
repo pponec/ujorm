@@ -2,6 +2,9 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 1.72-SNAPSHOT (2017-09-??)
++ ...
+
 release 1.72-SNAPSHOT (2017-08-12)
 + CORE: Support to store a binary code as BASE64 string
 + ORM: The bug is fixed: database types BLOB and CLOB does not support the length
