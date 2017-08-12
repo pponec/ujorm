@@ -2,9 +2,22 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.72-SNAPSHOT (2017-??+)
+release 1.72-SNAPSHOT (2017-08-12)
 + CORE: Support to store a binary code as BASE64 string
 + ORM: The bug is fixed: database types BLOB and CLOB does not support the length
++ ORM: A creation new schema is fixed in some cases of additional read-only schemas.
++ ORM: The method OrmTools.isFilled() is renamed to the hasLength() according the Spring framework API.
++ CORE: UjoLogger arguments are fixed for java.uitl.Logger redirection.
++ CORE: new class MsgFormatter is implemented for a common use
++ ORM: New method MetaTable.getSchema() is available for common use.
++ ORM: Value of ResultSet is get using a SQL_TYPE allways.
++ CORE: New class PasswordBase64Wrapper is created for common use.
++ CORE: The interface UjoTextable is deprecated.
++ ORM: Code cleaning of the MetaDbService
++ CORE:  The BinaryWrapper is serializable now
++ ORM: A new class TypeServiceForOlderJdbc is redy to support an JDBC versio older than 4.2
++ CORE: Some annotations for a static anylyzer is added.
++ SPRING: A new class CommonDao is available for an easy use.
 
 release 1.71 (2017-07-08)
 + ORM: Support for ZonedDateTime is finished
