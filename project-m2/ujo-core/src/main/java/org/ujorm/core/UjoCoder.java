@@ -40,6 +40,7 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.extensions.StringWrapper;
+import org.ujorm.tools.Check;
 
 /**
  * Ujorm converter to a String format and back.
@@ -95,10 +96,10 @@ public class UjoCoder {
             StringBuilder sb = new StringBuilder(10);
             sb.append(locale.getLanguage());
             String p = locale.getCountry();
-            if (UjoManager.isFilled(p)) {
+            if (Check.hasLength(p)) {
                 sb.append('-').append(p);
                 p = locale.getVariant();
-                if (UjoManager.isFilled(p)) {
+                if (Check.hasLength(p)) {
                     sb.append('-').append(p);
                 }
             }

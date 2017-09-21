@@ -22,7 +22,7 @@ import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.component.toolbar.AbstractToolbar;
-import static org.ujorm.core.UjoManager.*;
+import static org.ujorm.orm.utility.OrmTools.hasLength;
 
 /**
  * The common action panel
@@ -57,11 +57,11 @@ public final class Toolbar<U extends Hotel> extends AbstractToolbar<U> {
     protected void buildCriterion() {
         Criterion<Hotel> result = defaultCriterion;
 
-        if (isFilled(searchHotel.getValue())) {
+        if (hasLength(searchHotel.getValue())) {
             result = result.and(Hotel.NAME.where(Operator.STARTS_CASE_INSENSITIVE
                    , searchHotel.getValue()));
         }
-        if (isFilled(searchCity.getValue())) {
+        if (hasLength(searchCity.getValue())) {
             result = result.and(Hotel.CITY.add(City.NAME).where(Operator.STARTS_CASE_INSENSITIVE
                    , searchCity.getValue()));
         }

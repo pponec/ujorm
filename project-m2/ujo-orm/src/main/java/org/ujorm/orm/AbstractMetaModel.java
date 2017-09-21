@@ -22,13 +22,13 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.core.UjoTools;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.extensions.AbstractUjo;
 import org.ujorm.extensions.UjoLockable;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MoreParams;
 import org.ujorm.orm.utility.OrmTools;
+import org.ujorm.tools.Check;
 
 /**
  * Abstract Metamodel
@@ -72,7 +72,7 @@ abstract public class AbstractMetaModel extends AbstractUjo implements UjoLockab
             if (p instanceof ListKey) {
                final List list = (List) p.of(this);
                // Skip validators:
-               writeValue(p, !UjoTools.isFilled(list)
+               writeValue(p, Check.isEmpty(list)
                    ? Collections.EMPTY_LIST
                    : Collections.unmodifiableList(list)
                );

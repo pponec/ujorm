@@ -67,6 +67,7 @@
                <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
+                <module>project-m2/ujo-tools</module>
                 <module>project-m2/ujo-core</module>
                 <module>project-m2/ujo-orm</module>
                 <module>project-m2/ujo-spring</module>

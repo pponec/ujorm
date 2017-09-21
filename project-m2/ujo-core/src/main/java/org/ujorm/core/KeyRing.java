@@ -33,6 +33,7 @@ import org.ujorm.UjoAction;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.extensions.PathProperty;
+import org.ujorm.tools.Check;
 
 /**
  * The Immutable and Serializable Key Collection including some service methods.
@@ -512,7 +513,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     @SuppressWarnings("unchecked")
     @Nullable
     public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Collection<Key<? super UJO, ?>> keys) {
-        if (!UjoTools.isFilled(keys)) {
+        if (Check.isEmpty(keys)) {
             return null;
         }
         final Key[] ps = new Key[keys.size()];

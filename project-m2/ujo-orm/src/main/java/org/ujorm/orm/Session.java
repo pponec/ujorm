@@ -38,7 +38,6 @@ import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.UjoManager;
-import org.ujorm.core.UjoTools;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.BinaryCriterion;
 import org.ujorm.criterion.Criterion;
@@ -56,6 +55,7 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.tools.Check;
 
 /**
  * The ORM session.
@@ -415,7 +415,7 @@ public class Session implements Closeable {
 
         // ---------------- VALIDATIONS -----------------------------------
 
-        if (! UjoTools.isFilled(bos)) {
+        if (Check.isEmpty(bos)) {
             LOGGER.log(UjoLogger.DEBUG, "The multi insert list is empty");
             return;
         }

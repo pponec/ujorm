@@ -31,6 +31,7 @@ import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.*;
+import org.ujorm.tools.Check;
 import org.ujorm.validator.ValidationError;
 import org.ujorm.validator.ValidatorUtils;
 
@@ -217,7 +218,7 @@ public abstract class UjoTools implements Comparator<Key> {
             }
             return result;
 
-        } catch (RuntimeException | ReflectiveOperationException e) { 
+        } catch (RuntimeException | ReflectiveOperationException e) {
             throw new IllegalUjormException(e.getMessage(), e);
         }
     }
@@ -247,13 +248,15 @@ public abstract class UjoTools implements Comparator<Key> {
     }
 
     /** Returns true, if the text is not null and is not empty. */
+    @Deprecated
     public static boolean isFilled(final CharSequence text) {
-        return text!=null && text.length()>0;
+        return Check.hasLength(text);
     }
 
     /** Returns true, if the list is not null and is not empty. */
+    @Deprecated
     public static boolean isFilled(final Collection<?> list) {
-        return list!=null && !list.isEmpty();
+        return Check.hasLength(list);
     }
 
     /** Validate the argument using all keys from the object. */

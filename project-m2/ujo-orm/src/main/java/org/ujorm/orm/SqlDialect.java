@@ -49,7 +49,9 @@ import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaSelect;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.metaModel.MoreParams;
+import org.ujorm.tools.Check;
 import static org.ujorm.core.UjoTools.SPACE;
+import static org.ujorm.tools.Check.*;
 
 /**
  * SQL dialect abstract class. Methods of this class print a SQL statement(s) along a metamodel usually.
@@ -155,7 +157,7 @@ abstract public class SqlDialect {
         final String tableSchema = MetaTable.SCHEMA.of(table);
         final String tableName = MetaTable.NAME.of(table);
 
-        if (isFilled(tableSchema)) {
+        if (hasLength(tableSchema)) {
             if (printSymbolSchema && table.isDefaultSchema()) {
                 out.append(DEFAULT_SCHEMA_SYMBOL);
             } else {
@@ -171,7 +173,7 @@ abstract public class SqlDialect {
     public void printTableAliasDefinition(final TableWrapper table, final Appendable out) throws IOException {
         printFullTableName(table.getModel(), out);
         final String alias = table.getAlias();
-        if (isFilled(alias)) {
+        if (hasLength(alias)) {
             out.append(SPACE);
             printQuotedName(alias, out);
         }
@@ -475,7 +477,7 @@ abstract public class SqlDialect {
         for (int i=idxFrom; i<idxTo; ++i) {
             out.append(i==idxFrom ? ")\nSELECT " : " UNION ALL\nSELECT ")
                .append(values);
-            if (isFilled(fromPhrase)) {
+            if (hasLength(fromPhrase)) {
                 out.append(SPACE).append(fromPhrase);
             }
         }
@@ -786,7 +788,7 @@ abstract public class SqlDialect {
 
             StringBuilder columnName = new StringBuilder(256);
             String alias = column.getTableAlias();
-            if (isFilled(alias)) {
+            if (hasLength(alias)) {
                 printQuotedName(alias, columnName);
                 columnName.append('.');
             }
@@ -848,7 +850,7 @@ abstract public class SqlDialect {
             } else if (p==MetaSelect.OFFSET && !count && query.getOffset()>0){
                 out.append(p.toString());
                 out.append(String.valueOf(query.getOffset()));
-            } else if (isFilled(value)) {
+            } else if (hasLength(value)) {
                 out.append(p.toString());
                 out.append( value );
             }
@@ -1007,7 +1009,7 @@ abstract public class SqlDialect {
     /** Print the full sequence table */
     protected Appendable printSequenceTableName(final UjoSequencer sequence, final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
-        if (isFilled(schema)) {
+        if (hasLength(schema)) {
             printQuotedName(schema, out);
             out.append('.');
         }
@@ -1021,7 +1023,7 @@ abstract public class SqlDialect {
         Integer cache = MetaParams.SEQUENCE_CACHE.of(db.getParams());
 
         out.append("CREATE TABLE ");
-        if (isFilled(schema)) {
+        if (hasLength(schema)) {
             printQuotedName(schema, out);
             out.append('.');
         }
@@ -1133,8 +1135,9 @@ abstract public class SqlDialect {
     }
 
     /** Returns true, if the argument text is not null and not empty. */
+    @Deprecated
     final protected boolean isFilled(final CharSequence text) {
-        return text!=null && text.length()>0;
+        return Check.hasLength(text);
     }
 
     /** Print the new line. */

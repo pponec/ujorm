@@ -29,7 +29,7 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.component.toolbar.AbstractToolbar;
 import org.ujorm.wicket.component.tools.LocalizedModel;
-import static org.ujorm.core.UjoManager.*;
+import static org.ujorm.orm.utility.OrmTools.hasLength;
 
 /**
  * The common action panel
@@ -71,7 +71,7 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
         Criterion<U> result = null;
         Key key = fields.getFirstKey();
 
-        if (isFilled(searching.getValue())) {
+        if (hasLength(searching.getValue())) {
             final Object value = searching.getModelObject();
 
             if (isStringType()) {

@@ -25,7 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.ujorm.Key;
-import org.ujorm.core.UjoTools;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.DbType;
@@ -39,7 +39,8 @@ import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import static org.ujorm.core.UjoTools.SPACE;
-import org.ujorm.core.IllegalUjormException;
+import static org.ujorm.orm.utility.OrmTools.hasLength;
+import static org.ujorm.tools.Check.isEmpty;
 
 /** Dialect for the MSSQL tested on SQL Server 2008 R2 with Microsoft SQL Server JDBC Driver 3.0
  *  from <a href="http://msdn.microsoft.com/data/jdbc">http://msdn.microsoft.com/data/jdbc</a>
@@ -321,7 +322,7 @@ public class MSSqlDialect extends SqlDialect {
         }
 
         // order by part
-        if (UjoTools.isFilled(query.getOrderBy())) {
+        if (hasLength(query.getOrderBy())) {
             printSelectOrder(query, out, true);
             /* When creating the ROW_NUMBER (), he shall transmit the parameter
              * of the column by which to sort -> RowNum is now sorted itself
@@ -338,7 +339,7 @@ public class MSSqlDialect extends SqlDialect {
             out = super.printSelectTable(query, count, out);
         } else {
             // we have to order over some column...
-            if (!UjoTools.isFilled(query.getOrderBy())) {
+            if (isEmpty(query.getOrderBy())) {
                 query.orderBy(query.getColumnArray()[0].getKey());
             }
             StringBuilder innerPart = new StringBuilder(256);
@@ -444,7 +445,7 @@ public class MSSqlDialect extends SqlDialect {
         final String tableSchema = MetaTable.SCHEMA.of(table);
         final String tableName = MetaTable.NAME.of(table);
 
-        if (isFilled(tableSchema)) {
+        if (hasLength(tableSchema)) {
             if (printSymbolSchema && table.isDefaultSchema()) {
                 out.append(DEFAULT_SCHEMA_SYMBOL);
             } else {
@@ -464,7 +465,7 @@ public class MSSqlDialect extends SqlDialect {
         Integer cache = MetaParams.SEQUENCE_CACHE.of(db.getParams());
 
         out.append("CREATE TABLE ");
-        if (isFilled(schema)) {
+        if (hasLength(schema)) {
             out.append(schema);
             out.append('.');
         }
@@ -486,7 +487,7 @@ public class MSSqlDialect extends SqlDialect {
     @Override
     protected Appendable printSequenceTableName(final UjoSequencer sequence, final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
-        if (isFilled(schema)) {
+        if (hasLength(schema)) {
             printQuotedNameAlways(schema, out);
             out.append('.');
         }

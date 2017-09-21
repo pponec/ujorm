@@ -18,13 +18,13 @@ package org.ujorm.orm;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.ujorm.core.UjoManager;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.implementation.orm.OrmProperty;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.tools.Check;
 
 /**
  * Support for the native database sequences.
@@ -45,7 +45,7 @@ public class NativeDbSequencer extends UjoSequencer {
     @Override
     public synchronized long nextValue(Session session) {
         final String sequenceName = MetaTable.SEQUENCE.of(table);
-        if (UjoManager.isFilled(sequenceName)) {
+        if (Check.hasLength(sequenceName)) {
             try {
                 ResultSet rs = session.getFirstConnection().createStatement().executeQuery(createNextSequence(sequenceName));
                 if (rs.next()) {

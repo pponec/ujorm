@@ -28,11 +28,10 @@ import java.util.List;
 import java.util.logging.Level;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
-import org.ujorm.core.UjoTools;
 import org.ujorm.core.annot.Immutable;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -43,6 +42,7 @@ import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaRoot;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.template.AliasTable;
+import org.ujorm.tools.Check;
 
 /**
  * The basic class for an ORM support.
@@ -291,7 +291,7 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Do the handler have a read-only state? */
     public boolean isReadOnly() {
         final List<MetaDatabase> dbs = getDatabases();
-        final boolean result = UjoTools.isFilled(dbs) ? dbs.get(0).readOnly() : false;
+        final boolean result = Check.hasLength(dbs) ? dbs.get(0).readOnly() : false;
         return result;
     }
 

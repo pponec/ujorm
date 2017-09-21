@@ -40,6 +40,7 @@ import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.core.annot.XmlElementBody;
 import org.ujorm.extensions.*;
 import org.ujorm.swing.UjoKeyRow;
+import org.ujorm.tools.Check;
 import org.ujorm.validator.ValidationError;
 import org.ujorm.validator.ValidatorUtils;
 import static org.ujorm.UjoAction.*;
@@ -307,7 +308,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
             }
             return result;
 
-        } catch (RuntimeException | ReflectiveOperationException e) { 
+        } catch (RuntimeException | ReflectiveOperationException e) {
             throw new IllegalUjormException(e.getMessage(), e);
         }
     }
@@ -456,8 +457,9 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
     }
 
     /** Returns true, if text is not null and is not empty. */
+    @Deprecated
     public static boolean isFilled(final CharSequence text) {
-        return text!=null && text.length()>0;
+        return Check.hasLength(text);
     }
 
     /** Validate the argument using all keys from the object. */

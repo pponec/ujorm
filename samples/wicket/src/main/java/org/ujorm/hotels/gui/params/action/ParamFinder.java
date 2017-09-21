@@ -21,7 +21,7 @@ import org.ujorm.criterion.Operator;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.component.toolbar.AbstractToolbar;
-import static org.ujorm.core.UjoManager.*;
+import static org.ujorm.orm.utility.OrmTools.hasLength;
 
 /**
  * The finder component
@@ -54,7 +54,7 @@ public final class ParamFinder<U extends ParamValue> extends AbstractToolbar<U> 
     protected void buildCriterion() {
         Criterion<ParamValue> result = defaultCriterion;
 
-        if (isFilled(searchParam.getValue())) {
+        if (hasLength(searchParam.getValue())) {
             result = result.and(ParamValue.KEY_NAME$.where(Operator.CONTAINS_CASE_INSENSITIVE
                    , searchParam.getValue()));
         }

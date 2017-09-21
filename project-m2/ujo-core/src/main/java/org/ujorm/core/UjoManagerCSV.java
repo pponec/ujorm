@@ -25,7 +25,6 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -34,6 +33,8 @@ import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
+import org.ujorm.tools.Check;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * A Manager for CSV import / export.
@@ -327,7 +328,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
 
     /** Print Text */
     protected void printValue(Writer out, String value) throws IOException {
-        if (UjoManager.isFilled(value)
+        if (Check.hasLength(value)
         && (value.indexOf(separator) >= 0
         ||  value.indexOf(QUOTATION) >= 0
         ||  value.indexOf(NEW_LINE_CHAR) >= 0)

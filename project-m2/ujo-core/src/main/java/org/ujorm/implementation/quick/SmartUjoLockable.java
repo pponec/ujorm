@@ -18,8 +18,8 @@ package org.ujorm.implementation.quick;
 import java.util.Collections;
 import java.util.List;
 import org.ujorm.Key;
-import org.ujorm.core.UjoTools;
 import org.ujorm.extensions.UjoLockable;
+import org.ujorm.tools.Check;
 
 /**
  * The smart Ujo implementation with a Lock support.
@@ -44,7 +44,7 @@ abstract public class SmartUjoLockable<U extends SmartUjoLockable>
                 if (p.isTypeOf(List.class)) {
                     final List list = (List) p.of((U)this);
                     // Skip validators:
-                    writeValue(p, !UjoTools.isFilled(list)
+                    writeValue(p, Check.isEmpty(list)
                     ? Collections.EMPTY_LIST
                     : Collections.unmodifiableList(list));
                 }

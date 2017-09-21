@@ -21,7 +21,7 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaTable;
-import static org.ujorm.core.UjoManager.isFilled;
+import org.ujorm.tools.Check;
 
 /**
  * SQL name provider
@@ -65,7 +65,7 @@ public class SqlNameProvider {
     /** Print a constraint name */
     protected void printConstraintName(final MetaTable table, final MetaColumn column, final Appendable out) throws IOException {
         final String cn = column.getConstraintName();
-        if (isFilled(cn)) {
+        if (Check.hasLength(cn)) {
             out.append(cn);
         } else {
             out.append("fk_");

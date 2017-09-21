@@ -23,6 +23,7 @@ import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaIndex;
 import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.tools.Check;
 
 /**
  * Extended SQL dialect class.
@@ -65,7 +66,7 @@ public class SqlDialectEx {
     /** SQL Name Provider */
     public String buildConstraintName(final MetaColumn column, final MetaTable table) {
         final String cn = column.getConstraintName();
-        if (dialect.isFilled(cn)) {
+        if (Check.hasLength(cn)) {
             return cn;
         } else {
             return getNameProvider().buildDefaultConstraintName(table, column);

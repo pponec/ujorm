@@ -38,6 +38,7 @@
     </build>
 
     <modules>
+        <module>ujo-tools</module>
         <module>ujo-core</module>
         <module>ujo-orm</module>
         <module>ujo-spring</module>
@@ -48,7 +49,7 @@
 
     <!-- DEPENDENCES -->
     <dependencies>
-        <dependency>
+       <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>

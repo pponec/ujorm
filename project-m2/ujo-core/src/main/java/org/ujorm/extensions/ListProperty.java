@@ -21,9 +21,9 @@ import java.util.List;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
-import org.ujorm.core.UjoComparator;
-import org.ujorm.core.UjoTools;
 import org.ujorm.core.IllegalUjormException;
+import org.ujorm.core.UjoComparator;
+import org.ujorm.tools.Check;
 import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
@@ -136,7 +136,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
                     : getType().newInstance()
                     ;
                 setValue(ujo, result);
-            } catch (RuntimeException | ReflectiveOperationException e) { 
+            } catch (RuntimeException | ReflectiveOperationException e) {
                 throw new IllegalUjormException("Can't create an empty list: " + getType(), e);
             }
         }
@@ -156,7 +156,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     @Override
     public boolean isDefault(UJO ujo) {
         final List<ITEM> list = of(ujo);
-        return !UjoTools.isFilled(list);
+        return Check.isEmpty(list);
     }
 
     // --------- STATIC METHODS -------------------

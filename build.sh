@@ -16,7 +16,7 @@ mvn clean install javadoc:jar source:jar -Pproduction || exit 1
 cd "project-m2"
 
 # For all artefact SIGN and DEPLOY:
-for ARTEFACT in ujo-core ujo-orm ujo-spring ujo-wicket ujo-xsd
+for ARTEFACT in ujo-tools ujo-core ujo-orm ujo-spring ujo-wicket ujo-xsd
 do
     (
 	echo ARTEFACT=$ARTEFACT
