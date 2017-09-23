@@ -127,9 +127,19 @@ public class MsgFormatterTest {
     public void testFormat8() {
         String template = "";
         Object[] arguments = null;
-        String expResult = template;
+        String expResult = "";
         String result = MsgFormatter.format(template, arguments);
         assertSame(expResult, result);
+    }
+
+    /**
+     * Test of format method, of class MsgFormatter.
+     */
+    @Test(expected = NullPointerException.class)
+    public void testFormat9() {
+        String template = null;
+        Object[] arguments = {"a","b","c"};
+        MsgFormatter.format(template, arguments);
     }
 
 }

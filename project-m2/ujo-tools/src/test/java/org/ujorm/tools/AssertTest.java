@@ -34,7 +34,7 @@ public class AssertTest {
      * Test of isTrue method, of class Assert.
      */
     @Test
-    public void testIsTrue_boolean_1() {
+    public void testIsTrue_boolean_ok() {
         System.out.println("isTrue");
         boolean value = true;
         Assert.isTrue(value);
@@ -44,7 +44,7 @@ public class AssertTest {
      * Test of isTrue method, of class Assert.
      */
     @Test
-    public void testIsTrue_boolean_ObjectArr_1() {
+    public void testIsTrue_boolean_ObjectArr_ok() {
         System.out.println("isTrue");
         boolean value = true;
         Assert.isTrue(value, TEST_MESSAGE);
@@ -54,7 +54,7 @@ public class AssertTest {
      * Test of notNull method, of class Assert.
      */
     @Test
-    public void testNotNull_Object_1() {
+    public void testNotNull_Object_ok() {
         System.out.println("notNull");
         Object value = new Object();
         Assert.notNull(value);
@@ -64,7 +64,7 @@ public class AssertTest {
      * Test of notNull method, of class Assert.
      */
     @Test
-    public void testNotNull_Object_ObjectArr_1() {
+    public void testNotNull_Object_ObjectArr_ok() {
         System.out.println("notNull");
         Object value = new Object();
         Assert.notNull(value, TEST_MESSAGE);
@@ -74,7 +74,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testHasLength_byteArr_1() {
+    public void testHasLength_byteArr_ok() {
         System.out.println("hasLength");
         byte[] array = new byte[1];
         Assert.hasLength(array);
@@ -84,7 +84,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testHasLength_byteArr_ObjectArr_1() {
+    public void testHasLength_byteArr_ObjectArr_ok() {
         System.out.println("hasLength");
         byte[] array = new byte[1];
         Assert.hasLength(array, TEST_MESSAGE);
@@ -94,7 +94,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testHasLength_charArr_1() {
+    public void testHasLength_charArr_ok() {
         System.out.println("hasLength");
         char[] array = new char[1];
         Assert.hasLength(array);
@@ -104,7 +104,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testHasLength_charArr_ObjectArr_1() {
+    public void testHasLength_charArr_ObjectArr_ok() {
         System.out.println("hasLength");
         char[] array = new char[1];
         Assert.hasLength(array, TEST_MESSAGE);
@@ -114,7 +114,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testHasLength_ObjectArr_1() {
+    public void testHasLength_ObjectArr_ok() {
         System.out.println("hasLength");
         Object[] values = new Object[1];
         Assert.hasLength(values);
@@ -124,7 +124,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testHasLength_ObjectArr_ObjectArr_1() {
+    public void testHasLength_ObjectArr_ObjectArr_ok() {
         System.out.println("hasLength");
         Object[] values = new Object[1];
         Assert.hasLength(values, TEST_MESSAGE);
@@ -134,7 +134,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testHasLength_Collection_1() {
+    public void testHasLength_Collection_ok() {
         System.out.println("hasLength");
         Collection values = Arrays.asList("A", "B", "C");
         Assert.hasLength(values);
@@ -144,7 +144,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testHasLength_Collection_ObjectArr_1() {
+    public void testHasLength_Collection_ObjectArr_ok() {
         System.out.println("hasLength");
         Collection values = Arrays.asList("A", "B", "C");;
         Assert.hasLength(values, TEST_MESSAGE);
@@ -154,7 +154,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testHasLength_CharSequence_1() {
+    public void testHasLength_CharSequence_ok() {
         System.out.println("hasLength");
         CharSequence value = "ABC";
         Assert.hasLength(value);
@@ -164,7 +164,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testHasLength_CharSequence_ObjectArr_1() {
+    public void testHasLength_CharSequence_ObjectArr_ok() {
         System.out.println("hasLength");
         CharSequence value = "ABC";
         Assert.hasLength(value, TEST_MESSAGE);
@@ -174,7 +174,7 @@ public class AssertTest {
      * Test of isFalse method, of class Assert.
      */
     @Test
-    public void testIsFalse_boolean_1() {
+    public void testIsFalse_boolean_ok() {
         System.out.println("isFalse");
         boolean value = false;
         Assert.isFalse(value);
@@ -184,7 +184,7 @@ public class AssertTest {
      * Test of isFalse method, of class Assert.
      */
     @Test
-    public void testIsFalse_boolean_ObjectArr_1() {
+    public void testIsFalse_boolean_ObjectArr_ok() {
         System.out.println("isFalse");
         boolean value = false;
         Assert.isFalse(value, TEST_MESSAGE);
@@ -194,7 +194,7 @@ public class AssertTest {
      * Test of isNull method, of class Assert.
      */
     @Test
-    public void testIsNull_Object_1() {
+    public void testIsNull_Object_ok() {
         System.out.println("isNull");
         Object value = null;
         Assert.isNull(value);
@@ -204,7 +204,7 @@ public class AssertTest {
      * Test of isNull method, of class Assert.
      */
     @Test
-    public void testIsNull_Object_ObjectArr_1() {
+    public void testIsNull_Object_ObjectArr_ok() {
         System.out.println("isNull");
         Object value = null;
         Assert.isNull(value, TEST_MESSAGE);
@@ -214,7 +214,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test
-    public void testIsEmpty_byteArr_1() {
+    public void testIsEmpty_byteArr_ok() {
         System.out.println("isEmpty");
         byte[] array = new byte[0];
         Assert.isEmpty(array);
@@ -224,7 +224,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test
-    public void testIsEmpty_byteArr_ObjectArr_1() {
+    public void testIsEmpty_byteArr_ObjectArr_ok() {
         System.out.println("isEmpty");
         byte[] array = new byte[0];
         Assert.isEmpty(array, TEST_MESSAGE);
@@ -234,7 +234,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test
-    public void testIsEmpty_charArr_1() {
+    public void testIsEmpty_charArr_ok() {
         System.out.println("isEmpty");
         char[] array = null;
         Assert.isEmpty(array);
@@ -244,7 +244,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test
-    public void testIsEmpty_charArr_ObjectArr_1() {
+    public void testIsEmpty_charArr_ObjectArr_ok() {
         System.out.println("isEmpty");
         char[] array = null;
         Assert.isEmpty(array, TEST_MESSAGE);
@@ -254,7 +254,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test
-    public void testIsEmpty_ObjectArr_1() {
+    public void testIsEmpty_ObjectArr_ok() {
         System.out.println("isEmpty");
         Object[] values = null;
         Assert.isEmpty(values);
@@ -264,7 +264,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test
-    public void testIsEmpty_ObjectArr_ObjectArr_1() {
+    public void testIsEmpty_ObjectArr_ObjectArr_ok() {
         System.out.println("isEmpty");
         Object[] values = null;
         Assert.isEmpty(values, TEST_MESSAGE);
@@ -274,7 +274,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test
-    public void testIsEmpty_Collection_1() {
+    public void testIsEmpty_Collection_ok() {
         System.out.println("isEmpty");
         Collection values = null;
         Assert.isEmpty(values);
@@ -284,7 +284,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test
-    public void testIsEmpty_Collection_ObjectArr_1() {
+    public void testIsEmpty_Collection_ObjectArr_ok() {
         System.out.println("isEmpty");
         Collection values = null;
         Assert.isEmpty(values, TEST_MESSAGE);
@@ -294,7 +294,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test
-    public void testIsEmpty_CharSequence_1() {
+    public void testIsEmpty_CharSequence_ok() {
         System.out.println("isEmpty");
         CharSequence value = null;
         Assert.isEmpty(value);
@@ -304,7 +304,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test
-    public void testIsEmpty_CharSequence_ObjectArr_1() {
+    public void testIsEmpty_CharSequence_ObjectArr_ok() {
         System.out.println("isEmpty");
         CharSequence value = null;
         Assert.isEmpty(value, TEST_MESSAGE);
@@ -316,7 +316,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testNotNull_CharSequence_ObjectArr_3() {
+    public void testNotNull_CharSequence_ObjectArr_Nok() {
         try {
             System.out.println("notNull");
             CharSequence value = "";
@@ -334,7 +334,7 @@ public class AssertTest {
      * Test of isTrue method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsTrue_boolean_2() {
+    public void testIsTrue_boolean_nok() {
         System.out.println("isTrue");
         boolean value = false;
         Assert.isTrue(value);
@@ -344,7 +344,7 @@ public class AssertTest {
      * Test of isTrue method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsTrue_boolean_ObjectArr_2() {
+    public void testIsTrue_boolean_ObjectArr_nok() {
         System.out.println("isTrue");
         boolean value = false;
         Assert.isTrue(value, TEST_MESSAGE);
@@ -354,7 +354,7 @@ public class AssertTest {
      * Test of notNull method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testNotNull_Object_2() {
+    public void testNotNull_Object_nok() {
         System.out.println("notNull");
         Object value = null;
         Assert.notNull(value);
@@ -364,7 +364,7 @@ public class AssertTest {
      * Test of notNull method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testNotNull_Object_ObjectArr_2() {
+    public void testNotNull_Object_ObjectArr_nok() {
         System.out.println("notNull");
         Object value = null;
 
@@ -375,7 +375,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testHasLength_byteArr_2() {
+    public void testHasLength_byteArr_nok() {
         System.out.println("hasLength");
         byte[] array = new byte[0];
         Assert.hasLength(array);
@@ -385,7 +385,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testHasLength_byteArr_ObjectArr_2() {
+    public void testHasLength_byteArr_ObjectArr_nok() {
         System.out.println("hasLength");
         byte[] array = new byte[0];
         Assert.hasLength(array, TEST_MESSAGE);
@@ -395,7 +395,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testHasLength_charArr_2() {
+    public void testHasLength_charArr_nok() {
         System.out.println("hasLength");
         char[] array = new char[0];
         Assert.hasLength(array);
@@ -405,7 +405,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testHasLength_charArr_ObjectArr_2() {
+    public void testHasLength_charArr_ObjectArr_nok() {
         System.out.println("hasLength");
         char[] array = new char[0];
         Assert.hasLength(array, TEST_MESSAGE);
@@ -415,7 +415,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testHasLength_ObjectArr_2() {
+    public void testHasLength_ObjectArr_nok() {
         System.out.println("hasLength");
         Object[] values = null;
         Assert.hasLength(values);
@@ -425,7 +425,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testHasLength_ObjectArr_ObjectArr_2() {
+    public void testHasLength_ObjectArr_ObjectArr_nok() {
         System.out.println("hasLength");
         Object[] values = null;
         Assert.hasLength(values, TEST_MESSAGE);
@@ -435,7 +435,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testHasLength_Collection_2() {
+    public void testHasLength_Collection_nok() {
         System.out.println("hasLength");
         Collection values = null;
         Assert.hasLength(values);
@@ -445,7 +445,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testHasLength_Collection_ObjectArr_2() {
+    public void testHasLength_Collection_ObjectArr_nok() {
         System.out.println("hasLength");
         Collection values = null;
         Assert.hasLength(values, TEST_MESSAGE);
@@ -455,7 +455,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testHasLength_CharSequence_2() {
+    public void testHasLength_CharSequence_nok() {
         System.out.println("hasLength");
         CharSequence value = null;
         Assert.hasLength(value);
@@ -465,7 +465,7 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testHasLength_CharSequence_ObjectArr_2() {
+    public void testHasLength_CharSequence_ObjectArr_nok() {
         System.out.println("hasLength");
         CharSequence value = null;
         Assert.hasLength(value, TEST_MESSAGE);
@@ -475,7 +475,7 @@ public class AssertTest {
      * Test of isFalse method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsFalse_boolean_2() {
+    public void testIsFalse_boolean_nok() {
         System.out.println("isFalse");
         boolean value = true;
         Assert.isFalse(value);
@@ -485,7 +485,7 @@ public class AssertTest {
      * Test of isFalse method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsFalse_boolean_ObjectArr_2() {
+    public void testIsFalse_boolean_ObjectArr_nok() {
         System.out.println("isFalse");
         boolean value = true;
         Assert.isFalse(value, TEST_MESSAGE);
@@ -495,7 +495,7 @@ public class AssertTest {
      * Test of isNull method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsNull_Object_2() {
+    public void testIsNull_Object_nok() {
         System.out.println("isNull");
         Object value = "";
         Assert.isNull(value);
@@ -505,7 +505,7 @@ public class AssertTest {
      * Test of isNull method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsNull_Object_ObjectArr_2() {
+    public void testIsNull_Object_ObjectArr_nok() {
         System.out.println("isNull");
         Object value = "";
         Assert.isNull(value, TEST_MESSAGE);
@@ -515,7 +515,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsEmpty_byteArr_2() {
+    public void testIsEmpty_byteArr_nok() {
         System.out.println("isEmpty");
         byte[] array = new byte[1];
         Assert.isEmpty(array);
@@ -525,7 +525,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsEmpty_byteArr_ObjectArr_2() {
+    public void testIsEmpty_byteArr_ObjectArr_nok() {
         System.out.println("isEmpty");
         byte[] array = new byte[1];
         Assert.isEmpty(array, TEST_MESSAGE);
@@ -535,7 +535,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsEmpty_charArr_2() {
+    public void testIsEmpty_charArr_nok() {
         System.out.println("isEmpty");
         char[] array = new char[1];
         Assert.isEmpty(array);
@@ -545,7 +545,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsEmpty_charArr_ObjectArr_2() {
+    public void testIsEmpty_charArr_ObjectArr_nok() {
         System.out.println("isEmpty");
         char[] array = new char[1];
         Assert.isEmpty(array, TEST_MESSAGE);
@@ -555,7 +555,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsEmpty_ObjectArr_2() {
+    public void testIsEmpty_ObjectArr_nok() {
         System.out.println("isEmpty");
         Object[] values = {"A"};
         Assert.isEmpty(values);
@@ -565,7 +565,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsEmpty_ObjectArr_ObjectArr_2() {
+    public void testIsEmpty_ObjectArr_ObjectArr_nok() {
         System.out.println("isEmpty");
         Object[] values = {"A"};
         Assert.isEmpty(values, TEST_MESSAGE);
@@ -575,7 +575,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsEmpty_Collection_2() {
+    public void testIsEmpty_Collection_nok() {
         System.out.println("isEmpty");
         Collection values = Arrays.asList("A", "B", "C");
         Assert.isEmpty(values);
@@ -585,7 +585,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsEmpty_Collection_ObjectArr_2() {
+    public void testIsEmpty_Collection_ObjectArr_nok() {
         System.out.println("isEmpty");
         Collection values = Arrays.asList("A", "B", "C");
         Assert.isEmpty(values, TEST_MESSAGE);
@@ -595,7 +595,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsEmpty_CharSequence_2() {
+    public void testIsEmpty_CharSequence_nok() {
         System.out.println("isEmpty");
         CharSequence value = "ABC";
         Assert.isEmpty(value);
@@ -605,7 +605,7 @@ public class AssertTest {
      * Test of isEmpty method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsEmpty_CharSequence_ObjectArr_2() {
+    public void testIsEmpty_CharSequence_ObjectArr_nok() {
         System.out.println("isEmpty");
         CharSequence value = "ABC";
         Assert.isEmpty(value, TEST_MESSAGE);
