@@ -70,7 +70,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
 
     /** Assign a table rows */
     public void setRows(List<ROW> rows) {
-        Assert.isNotNull(rows, "Can't assign a {} value", rows);
+        Assert.notNull(rows, "Can't assign a {} value", rows);
         this.rows = rows;
         fireTableDataChanged();
     }

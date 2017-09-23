@@ -1285,6 +1285,6 @@ public class Session implements Closeable {
      * @throws IllegalArgumentException Throw the exception if a ujo argument is {@code null}.
      */
     protected void checkNotNull(OrmUjo ujo, String action) throws IllegalArgumentException {
-        Assert.isNotNull(cache, "A {} object can't be used for the action: {}", cache, action);
+        Assert.notNull(cache, "A {} object can't be used for the action: {}", cache, action);
     }
 }

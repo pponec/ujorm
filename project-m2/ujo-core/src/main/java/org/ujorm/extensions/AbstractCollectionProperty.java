@@ -71,7 +71,7 @@ abstract public class AbstractCollectionProperty<UJO extends Ujo,VALUE,ITEM> ext
     @Override
     protected void checkValidity() throws IllegalArgumentException {
         super.checkValidity();
-        Assert.isNotNull(itemType, "Type must not be null in the {}", this);
+        Assert.notNull(itemType, "Type must not be null in the {}", this);
 
     }
 

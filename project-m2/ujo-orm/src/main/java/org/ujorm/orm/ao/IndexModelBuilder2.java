@@ -54,7 +54,7 @@ public class IndexModelBuilder2  {
 
     /** Initialize the object */
     public void init(MetaTable metaTable) throws IllegalUjormException {
-        Assert.isNotNull(this.metaTable, "The class is initialized by {}", this.metaTable);
+        Assert.notNull(this.metaTable, "The class is initialized by {}", this.metaTable);
         
         this.metaTable = metaTable;
         this.nameProvider = metaTable.getDatabase().getDialect().getNameProvider();

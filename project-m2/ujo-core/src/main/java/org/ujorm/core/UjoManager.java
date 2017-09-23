@@ -140,7 +140,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
                     &&  Key.class.isAssignableFrom(field.getType())
                     ){
                         final Key ujoProp = (Key) field.get(null);
-                        Assert.isNotNull(ujoProp, "The field '{}' of the '{}' is not initialized properly yet. Try to call the current method later."
+                        Assert.notNull(ujoProp, "The field '{}' of the '{}' is not initialized properly yet. Try to call the current method later."
                                 ,field
                                 ,type);
 

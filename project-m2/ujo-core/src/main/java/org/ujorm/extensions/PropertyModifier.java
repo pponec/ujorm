@@ -62,7 +62,7 @@ public class PropertyModifier {
     /** Write an item type into key if it is not locked yet. */
     @SuppressWarnings("unchecked")
     public static void setItemType(Class itemType, AbstractCollectionProperty key) {
-        Assert.isNotNull(itemType, "Item type is undefined for key: {}", key);
+        Assert.notNull(itemType, "Item type is undefined for key: {}", key);
 
         if (!key.isLock()) {
             key.initItemType(itemType);

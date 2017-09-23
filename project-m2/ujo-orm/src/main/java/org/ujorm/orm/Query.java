@@ -124,7 +124,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         } else if (session != null) {
             handler = session.getHandler();
         }
-        Assert.isNotNull(handler, "The base class must be assigned first!");
+        Assert.notNull(handler, "The base class must be assigned first!");
         return handler;
     }
 
@@ -174,7 +174,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see #setCriterion(org.ujorm.criterion.Criterion) setCriterion(..)
      */
     public void addCriterion(Criterion<UJO> criterion) throws IllegalArgumentException {
-        Assert.isNotNull(criterion, "Argument must not be {}", criterion);
+        Assert.notNull(criterion, "Argument must not be {}", criterion);
 
         this.criterion = this.criterion!=null
             ? this.criterion.and(criterion)
@@ -444,7 +444,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     public Query<UJO> addColumn(Key<UJO,?> column) throws IllegalArgumentException {
         clearDecoder();
         final MetaColumn mc = getHandler().findColumnModel(getLastProperty(column));
-        Assert.isNotNull(mc, "Column {} was not foud in the meta-model", column.getFullName());
+        Assert.notNull(mc, "Column {} was not foud in the meta-model", column.getFullName());
 
         final ColumnWrapper wColumn = column.isComposite()
                 ? new ColumnWrapperImpl(mc, column)

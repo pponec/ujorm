@@ -22,6 +22,7 @@ import static org.ujorm.tools.MsgFormatter.format;
 /**
  * Assertion utils, where all method can throw the {@code IllegalArgumentException} exception only.
  * For a message format see the {@link MsgFormatter#format(java.lang.Object...)} method description.
+ * @see https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html
  * @author Pavel Ponec
  */
 public abstract class Assert {
@@ -47,13 +48,13 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not {@code null}. */
-    public static final void isNotNull(@Nullable final Object value)
+    public static final void notNull(@Nullable final Object value)
             throws IllegalArgumentException {
-        isNotNull(value, NO_MESSAGE);
+        notNull(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is not {@code null}. */
-    public static void isNotNull(@Nullable final Object value, @Nullable final Object... message)
+    public static void notNull(@Nullable final Object value, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (value == null) {
             throw new IllegalArgumentException(format(message), new NullPointerException());

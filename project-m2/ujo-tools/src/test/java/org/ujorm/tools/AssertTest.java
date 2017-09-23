@@ -54,20 +54,20 @@ public class AssertTest {
      * Test of notNull method, of class Assert.
      */
     @Test
-    public void testIsNotNull_Object_1() {
+    public void testNotNull_Object_1() {
         System.out.println("notNull");
         Object value = new Object();
-        Assert.isNotNull(value);
+        Assert.notNull(value);
     }
 
     /**
      * Test of notNull method, of class Assert.
      */
     @Test
-    public void testIsNotNull_Object_ObjectArr_1() {
+    public void testNotNull_Object_ObjectArr_1() {
         System.out.println("notNull");
         Object value = new Object();
-        Assert.isNotNull(value, TEST_MESSAGE);
+        Assert.notNull(value, TEST_MESSAGE);
     }
 
     /**
@@ -316,11 +316,11 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testIsNotNull_CharSequence_ObjectArr_3() {
+    public void testNotNull_CharSequence_ObjectArr_3() {
         try {
             System.out.println("notNull");
             CharSequence value = "";
-            Assert.isNotNull(null, TEST_MESSAGE);
+            Assert.notNull(null, TEST_MESSAGE);
             assertTrue(false);
         } catch (IllegalArgumentException e) {
             assertEquals(TEST_MESSAGE[0], e.getMessage());
@@ -354,10 +354,10 @@ public class AssertTest {
      * Test of notNull method, of class Assert.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIsNotNull_Object_2() {
+    public void testNotNull_Object_2() {
         System.out.println("notNull");
         Object value = null;
-        Assert.isNotNull(value);
+        Assert.notNull(value);
     }
 
     /**
@@ -368,7 +368,7 @@ public class AssertTest {
         System.out.println("notNull");
         Object value = null;
 
-        Assert.isNotNull(value, TEST_MESSAGE);
+        Assert.notNull(value, TEST_MESSAGE);
     }
 
     /**

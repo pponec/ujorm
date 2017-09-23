@@ -151,7 +151,7 @@ final class UjoHandlerXML extends DefaultHandler {
             ;
         }
 
-        Assert.isNotNull($elementType, "Tag <{}> can't find class."
+        Assert.notNull($elementType, "Tag <{}> can't find class."
                 , $elementName);
         try {
             boolean isUJO = UjoTextable.class.isAssignableFrom($elementType);

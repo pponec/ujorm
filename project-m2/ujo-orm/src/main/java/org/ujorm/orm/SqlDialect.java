@@ -698,7 +698,7 @@ abstract public class SqlDialect {
         }
 
         final String template = getCriterionTemplate(crn);
-        Assert.isNotNull(template, "Unsupported SQL operator: {}", operator);
+        Assert.notNull(template, "Unsupported SQL operator: {}", operator);
 
         switch (crn.getOperator()) {
             case XFIXED:

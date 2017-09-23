@@ -539,23 +539,23 @@ public class SampleORM {
         // Fetch the Order's CREATED column (and the primary key):
         items.setColumns(true, orderCreated);
         for (Item item : items.list()) {
-            Assert.isNotNull(item.getId()); // due the request: addPrimaryKey
-            Assert.isNotNull(item.get(orderCreated));
-            Assert.isNotNull(item.get(Item.ORDER));
+            Assert.notNull(item.getId()); // due the request: addPrimaryKey
+            Assert.notNull(item.get(orderCreated));
+            Assert.notNull(item.get(Item.ORDER));
             // Assert.isNotNull(item.get(Item.ORDER.add(Order.ID))); // TODO FixIT (?)
             Assert.isNull(item.get(Item.NOTE));
-            Assert.isNotNull(item.get(Item.ORDER.add(Order.NOTE))); // Eeach lazy Order has a not-null NOTE!
+            Assert.notNull(item.get(Item.ORDER.add(Order.NOTE))); // Eeach lazy Order has a not-null NOTE!
         }
 
         // Fetch all the Order columns:
         items.setColumns(true, Item.ORDER);
         for (Item item : items.list()) {
-            Assert.isNotNull(item.getId()); // due the request: addPrimaryKey
+            Assert.notNull(item.getId()); // due the request: addPrimaryKey
             Assert.isNull   (item.get(Item.NOTE));
-            Assert.isNotNull(item.get(Item.ORDER));
-            Assert.isNotNull(item.get(orderCreated));
-            Assert.isNotNull(item.get(Item.ORDER.add(Order.ID)));
-            Assert.isNotNull(item.get(Item.ORDER.add(Order.NOTE)));
+            Assert.notNull(item.get(Item.ORDER));
+            Assert.notNull(item.get(orderCreated));
+            Assert.notNull(item.get(Item.ORDER.add(Order.ID)));
+            Assert.notNull(item.get(Item.ORDER.add(Order.NOTE)));
         }
     }
 

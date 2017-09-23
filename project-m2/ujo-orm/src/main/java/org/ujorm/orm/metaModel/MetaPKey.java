@@ -94,7 +94,7 @@ final public class MetaPKey extends AbstractMetaModel {
             for (int i = 0; i < count; i++) {
                 final MetaColumn column = COLUMNS.getItem(this, i);
                 final Key key = column.getKey();
-                Assert.isNotNull(key.of(bo)
+                Assert.notNull(key.of(bo)
                         , "Table {} must have defined only one primary key type of Long, Integer, Short, Byte, BigInteger or String for an auto-increment support"
                         , bo);
             }

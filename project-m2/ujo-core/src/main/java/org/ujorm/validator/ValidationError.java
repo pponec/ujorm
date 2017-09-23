@@ -87,7 +87,7 @@ public class ValidationError implements Serializable {
 
     /** Check a not null argument */
     private void chechNotNull(Object value, String argumentName, Key key) throws IllegalArgumentException {
-        Assert.isNotNull(value, "The argument '{}' must not be the null in the {} validator"
+        Assert.notNull(value, "The argument '{}' must not be the null in the {} validator"
                 , argumentName
                 , key);
     }

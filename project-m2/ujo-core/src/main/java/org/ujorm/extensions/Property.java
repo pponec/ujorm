@@ -191,9 +191,9 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
     /** Check validity of keys */
     protected void checkValidity() throws IllegalArgumentException {
-        Assert.isNotNull(name, "Name must not be null for key index: #{}", index);
-        Assert.isNotNull(type, "Type must not be null in the {}", this);
-        Assert.isNotNull(domainType, "domainType", name);
+        Assert.notNull(name, "Name must not be null for key index: #{}", index);
+        Assert.notNull(type, "Type must not be null in the {}", this);
+        Assert.notNull(domainType, "domainType", name);
         Assert.isTrue(defaultValue == null || type.isInstance(defaultValue)
                 , "Default value have not properly type in the ", this);
     }

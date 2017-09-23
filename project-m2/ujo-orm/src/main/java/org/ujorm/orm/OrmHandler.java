@@ -413,7 +413,7 @@ public class OrmHandler implements OrmHandlerProvider {
      */
     public MetaProcedure findProcedureModel(Class<? extends DbProcedure> procedureClass) throws IllegalUjormException {
         MetaProcedure result = procedureMap.get(procedureClass);
-        Assert.isNotNull(result
+        Assert.notNull(result
                 , "An procedure mapping bug: the {} is not mapped to the Database."
                 , procedureClass);
         return result;
