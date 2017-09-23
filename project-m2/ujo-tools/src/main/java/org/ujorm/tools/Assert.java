@@ -18,9 +18,6 @@ package org.ujorm.tools;
 import java.util.Collection;
 import javax.annotation.Nullable;
 import static org.ujorm.tools.MsgFormatter.format;
-import static org.ujorm.tools.MsgFormatter.format;
-import static org.ujorm.tools.MsgFormatter.format;
-import static org.ujorm.tools.MsgFormatter.format;
 
 /**
  * Assertion utils, where all method can throw the {@code IllegalArgumentException} exception only.
@@ -29,13 +26,16 @@ import static org.ujorm.tools.MsgFormatter.format;
  */
 public abstract class Assert {
 
+    /** No messge constant */
+    public static final Object[] NO_MESSAGE = null;
+
     /** Static methods are available only */
     private Assert() {
     }
 
     /** Checks if the argument is {@code true}. */
     public static final void isTrue(final boolean value) {
-        isTrue(value, (Object[]) null);
+        isTrue(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is {@code true}. */
@@ -47,7 +47,7 @@ public abstract class Assert {
 
     /** Checks if the argument is not {@code null}. */
     public static final void isNotNull(@Nullable final Object value) throws IllegalArgumentException {
-        isNotNull(value, (Object[]) null);
+        isNotNull(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is not {@code null}. */
@@ -61,7 +61,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}. */
     public static void hasLength(@Nullable final byte... array)
             throws IllegalArgumentException {
-        hasLength(array, (Object[]) null);
+        hasLength(array, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -75,7 +75,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}. */
     public static void hasLength(final char... array)
             throws IllegalArgumentException {
-        hasLength(array, (Object[]) null);
+        hasLength(array, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -89,7 +89,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}. */
     public static void hasLength(@Nullable final Object... values)
             throws IllegalArgumentException {
-        hasLength(values, (Object[]) null);
+        hasLength(values, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -103,7 +103,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}. */
     public static void hasLength(@Nullable final Collection<?> values)
             throws IllegalArgumentException {
-        hasLength(values, (Object[]) null);
+        hasLength(values, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -117,7 +117,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}. */
     public static void hasLength(@Nullable final CharSequence value)
             throws IllegalArgumentException {
-        hasLength(value, (Object[]) null);
+        hasLength(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -132,7 +132,7 @@ public abstract class Assert {
     /** Checks if the argument is {@code false}. */
     public static final void isFalse(final boolean value)
             throws IllegalArgumentException {
-        isFalse(value, (Object[]) null);
+        isFalse(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is {@code false}. */
@@ -145,7 +145,7 @@ public abstract class Assert {
 
     /** Checks if the argument is {@code null}. */
     public static final void isNull(@Nullable final Object value) throws IllegalArgumentException {
-        isNull(value, (Object[]) null);
+        isNull(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is {@code null}. */
@@ -159,7 +159,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}. */
     public static void isEmpty(@Nullable final byte... array)
             throws IllegalArgumentException {
-        isEmpty(array, (Object[]) null);
+        isEmpty(array, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -173,7 +173,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}. */
     public static void isEmpty(@Nullable final char... array)
             throws IllegalArgumentException {
-        isEmpty(array, (Object[]) null);
+        isEmpty(array, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -187,7 +187,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}. */
     public static void isEmpty(@Nullable final Object... values)
             throws IllegalArgumentException {
-        isEmpty(values, (Object[]) null);
+        isEmpty(values, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -201,7 +201,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}. */
     public static void isEmpty(@Nullable final Collection<?> values)
             throws IllegalArgumentException {
-        isEmpty(values, (Object[]) null);
+        isEmpty(values, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -215,7 +215,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}. */
     public static void isEmpty(@Nullable final CharSequence value)
             throws IllegalArgumentException {
-        isEmpty(value, (Object[]) null);
+        isEmpty(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
