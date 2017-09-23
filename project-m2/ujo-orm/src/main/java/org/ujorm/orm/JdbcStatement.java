@@ -25,8 +25,8 @@ import java.util.List;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.core.UjoManager;
 import org.ujorm.core.IllegalUjormException;
+import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.Property;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -34,6 +34,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * JdbcStatement
@@ -174,7 +175,7 @@ public class JdbcStatement {
                 column.getConverter().setValue(column, ps, value, parameterPointer);
             } catch (RuntimeException | OutOfMemoryError e) {
                 String textValue = UjoManager.getInstance().encodeValue(value, false);
-                String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s", key.getType().getSimpleName(), column, parameterPointer, textValue);
+                String msg = MsgFormatter.format("table: {}, column {}, columnOffset: {}, value: {}", key.getType().getSimpleName(), column, parameterPointer, textValue);
                 throw new IllegalUjormException(msg, e);
             }
         }
@@ -273,8 +274,8 @@ public class JdbcStatement {
                 ? UjoManager.getInstance().getText(bo, key, UjoAction.DUMMY)
                 : UjoManager.getInstance().encodeValue(value, false)
                 ;
-            String msg = String.format
-                ( "table: %s, column %s, columnOffset: %d, value: %s"
+            String msg = MsgFormatter.format
+                ( "table: {}, column {}, columnOffset: {}, value: {}"
                 , bo!=null ? bo.getClass().getSimpleName() : "null"
                 , column
                 , parameterPointer
@@ -318,7 +319,7 @@ public class JdbcStatement {
                 String textValue = bo != null
                     ? UjoManager.getInstance().getText(bo, key, UjoAction.DUMMY)
                     : UjoManager.getInstance().encodeValue(value, false);
-                String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s"
+                String msg = MsgFormatter.format("table: {}, column {}, columnOffset: {}, value: {}"
                         , bo != null ? bo.getClass().getSimpleName() : "null"
                         , key
                         , parameterPointer

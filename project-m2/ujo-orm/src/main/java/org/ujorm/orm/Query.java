@@ -44,6 +44,7 @@ import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.MsgFormatter;
 import static org.ujorm.core.UjoTools.SPACE;
 import static org.ujorm.logger.UjoLogger.WARN;
 
@@ -610,8 +611,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
                  ? new ColumnWrapperImpl((MetaColumn) result, key)
                  : (MetaColumn) result;
         } else {
-            final String msg = String.format
-                 ( "The key '%s.%s' is not persistent table column"
+            final String msg = MsgFormatter.format
+                 ( "The key '{}.{}' is not persistent table column"
                  , table.getType().getSimpleName()
                  , key);
             throw new IllegalUjormException(msg);

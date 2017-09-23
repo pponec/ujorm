@@ -24,6 +24,7 @@ import org.ujorm.Key;
 import org.ujorm.hotels.service.ModuleParams;
 import org.ujorm.hotels.service.ParamService;
 import org.ujorm.implementation.quick.SmartUjoLockable;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * Common database service implementations.
@@ -58,7 +59,7 @@ public abstract class AbstractModuleParams<U extends AbstractModuleParams>
             lock();
             LOGGER.info("The parameter module '{}' is initialized", getClass().getName());
         } catch (Exception e) {
-            final String msg = String.format("The parameter module '%s' loading failed", getClass().getName());
+            final String msg = MsgFormatter.format("The parameter module '{}' loading failed", getClass().getName());
             LOGGER.info(msg, e);
             throw new IllegalStateException(msg, e);
         }

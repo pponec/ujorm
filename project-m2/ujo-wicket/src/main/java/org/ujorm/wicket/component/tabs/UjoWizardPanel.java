@@ -25,6 +25,7 @@ import org.apache.wicket.model.Model;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * The ajax wizard is a child of UjoTabbedPanel class.
@@ -52,7 +53,7 @@ public class UjoWizardPanel<T extends UjoTab> extends UjoTabbedPanel<T>  {
             component.setOutputMarkupId(false);
             component.setVisibilityAllowed(false);
         } else {
-            final String msg = String.format("Component with the id '%s' is not found", TABS_BAR_ID);
+            final String msg = MsgFormatter.format("Component with the id '{}' is not found", TABS_BAR_ID);
             LOGGER.log(UjoLogger.WARN, msg, new IllegalUjormException(msg));
         }
     }

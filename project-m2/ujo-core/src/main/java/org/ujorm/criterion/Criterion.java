@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.tools.Assert;
 
 /**
  * An abstract immutable criterion provides a basic interface and static factory methods. You can use it:
@@ -113,19 +114,12 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * If the evaluate method returns false, then the method throws the {@link IllegalArgumentException}
      * with the required message.
      * @param ujo object to validate
-     * @param parameters Text parameters for the message template are located by %s expression. See the
-     *   <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/util/Formatter.html">java.util.Formatter</a>
+     * @param parameters Text parameters for the message template are located by {} expression.
      *   documentation for more information.
      * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo) failed.
      */
     final public void validate(final U ujo, String message, Object ... parameters) throws IllegalArgumentException {
-        if (!evaluate(ujo)) {
-            final String msg = parameters!=null && parameters.length>0
-                    ? String.format(message, parameters)
-                    : message
-                    ;
-            throw new IllegalArgumentException(msg);
-        }
+        Assert.isTrue(evaluate(ujo), message, parameters);
     }
 
     /**
@@ -135,7 +129,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo) failed.
      */
     final public void validate(final U ujo) throws IllegalArgumentException {
-        validate(ujo, "Invalid condition (" + toString() + ") for the " + ujo.toString());
+        validate(ujo, "Invalid condition ({}) for the {}", this, ujo);
     }
 
     /** Join this instance with a second criterion by an operator with a simple logical optimization. */

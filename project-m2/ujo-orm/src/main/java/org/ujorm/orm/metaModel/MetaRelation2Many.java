@@ -29,6 +29,7 @@ import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.annot.Column;
+import org.ujorm.tools.Assert;
 
 /**
  * The database/object relation to many.
@@ -92,7 +93,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
         }
         changeDefault(this, NAME, tableKey.getName());
 
-        assert !getKey().isComposite() : String.format("The key %s must be direct.", getKey().getFullName());
+        Assert.isFalse(getKey().isComposite(), "The key {} must be direct.", getKey().getFullName());
     }
 
     /** It is a DB column (either a value of a foreign key),

@@ -34,6 +34,7 @@ import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.extensions.PathProperty;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * The Immutable and Serializable Key Collection including some service methods.
@@ -559,7 +560,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * "The 'keyname' of the class was not found"
      */
     private void throwException(final String keyName, final Class type, Throwable e) throws IllegalUjormException {
-        final String msg = String.format("The key '%s' of the %s was not found", keyName, type);
+        final String msg = MsgFormatter.format("The key '{}' of the {} was not found", keyName, type);
         throw new IllegalUjormException(msg, e);
     }
 

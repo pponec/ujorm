@@ -42,6 +42,7 @@ import org.ujorm.Ujo;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * Ujorm converter to a String format and back.
@@ -276,9 +277,10 @@ public class UjoCoder {
                             return en;
                         }
                     }
-                    final String msg = String.format
-                            ( "I have found no item for value '%s' in the %s"
-                            , aValue, type);
+                    final String msg = MsgFormatter.format
+                            ( "I have found no item for value '{}' in the {}"
+                            , aValue
+                            , type);
                     throw new IllegalUjormException(msg);
                 } else {
                     return Enum.valueOf(type, aValue);

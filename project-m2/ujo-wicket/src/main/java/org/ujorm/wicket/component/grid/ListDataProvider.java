@@ -115,12 +115,12 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
     @Override
     public Iterator<U> iterator(long first, long count) {
         Args.isTrue(count <= Integer.MAX_VALUE
-                , "The argument '%s' have got limit %s but the current value is %s"
+                , "The argument '{}' have got limit {} but the current value is {}"
                 , "first"
                 , Integer.MAX_VALUE
                 , first);
         Args.isTrue(count <= Integer.MAX_VALUE
-                , "The argument '%s' have got limit %s but the current value is %s"
+                , "The argument '{}' have got limit {} but the current value is {}"
                 , "count"
                 , Integer.MAX_VALUE
                 , count);

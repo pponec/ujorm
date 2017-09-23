@@ -45,6 +45,7 @@ import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.MsgFormatter;
 import static org.ujorm.orm.metaModel.MetaParams.INDEX_MODEL_BUILDER;
 
 /**
@@ -390,8 +391,8 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         try {
             return params.getIndexModelBuilder(this).getIndexModels();
         } catch (Exception e) {
-            final String msg = String.format
-                    ( "The %s with an entity %s fails, see the parameter %s"
+            final String msg = MsgFormatter.format
+                    ( "The {} with an entity {} fails, see the parameter {}"
                     , params.get(INDEX_MODEL_BUILDER)
                     , getType().getSimpleName()
                     , INDEX_MODEL_BUILDER.getFullName()

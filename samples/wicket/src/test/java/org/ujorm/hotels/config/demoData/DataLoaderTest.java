@@ -38,6 +38,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ujorm.hotels.entity.City;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * Class to load hotes.<br>
@@ -86,8 +87,8 @@ public class DataLoaderTest {
      * http://api.hotelsbase.org/search.php?longitude=14.421138&latitude=50.087533
      */
     public URL createDataUrl(City city) throws MalformedURLException {
-        String result = String.format
-                ( "http://api.hotelsbase.org/search.php?latitude=%s&longitude=%s&distanceMax=%s"
+        String result = MsgFormatter.format
+                ( "http://api.hotelsbase.org/search.php?latitude={}&longitude={}&distanceMax={}"
                 , city.get(City.LATITUDE)
                 , city.get(City.LONGITUDE)
                 , DISTANCE_FROM_CENTER // [km]

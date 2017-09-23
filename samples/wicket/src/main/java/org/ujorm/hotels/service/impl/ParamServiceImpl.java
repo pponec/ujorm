@@ -43,11 +43,12 @@ import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.ModuleParams;
 import org.ujorm.hotels.service.ParamService;
 import org.ujorm.hotels.service.param.annot.PersonalParam;
+import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Comment;
-import static org.ujorm.hotels.entity.ParamValue.*;
-import org.ujorm.orm.OrmUjo;
 import org.ujorm.spring.CommonDao;
+import org.ujorm.tools.MsgFormatter;
+import static org.ujorm.hotels.entity.ParamValue.*;
 
 /**
  * Common database service implementations
@@ -198,8 +199,8 @@ implements ParamService {
         session.saveOrUpdate(dbParam);
 
         // Log the value change:
-        final String msg = String.format
-            ( "User '%s' [%s] changed the %s parameter '%s.%s' to a new value: '%s'."
+        final String msg = MsgFormatter.format
+            ( "User '{}' [{}] changed the {} parameter '{}.{}' to a new value: '{}'."
             , user.getLogin()
             , user.getId()
             , param.get(KEY_SYSTEM$) ? "system" : "private"

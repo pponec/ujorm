@@ -246,7 +246,7 @@ public class SampleCORE {
         Criterion<Employee> validator = Employee.WAGE.whereGt(100.0);
         try {
             validator.validate(service.getEmployee()
-                    , "Minimal WAGE is: %s units"
+                    , "Minimal WAGE is: {} units"
                     , validator.getRightNode());
             assert false : Employee.WAGE + " is not valid";
         } catch (IllegalArgumentException e) {

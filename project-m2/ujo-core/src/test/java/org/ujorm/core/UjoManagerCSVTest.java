@@ -10,13 +10,13 @@ package org.ujorm.core;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.ujos.UjoCSV;
+import org.ujorm.tools.MsgFormatter;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ujorm.core.ujos.UjoCSV.*;
 
 /**
@@ -64,8 +64,8 @@ public class UjoManagerCSVTest extends MyTestCase {
         // Save the ujoList to an outputStream:
         manager.saveCSV(out, UTF_8, ujoList, "CSV-Context");
 
-        String outputExpected = MessageFormat.format("P1;P2;P3{0}A;B;C", System.getProperty("line.separator"));
-        String output = new String(out.toByteArray(), "utf-8").trim();
+        String outputExpected = MsgFormatter.format("P1;P2;P3{}A;B;C", System.getProperty("line.separator"));
+        String output = new String(out.toByteArray(), UTF_8).trim();
         assertEquals(outputExpected, output);
 
         // Restore original objects from the byte array:

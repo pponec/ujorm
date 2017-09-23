@@ -49,6 +49,7 @@ import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaSelect;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.metaModel.MoreParams;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import static org.ujorm.core.UjoTools.SPACE;
 import static org.ujorm.tools.Check.*;
@@ -463,10 +464,15 @@ abstract public class SqlDialect {
      * @param fromPhrase For example the Oracle syntax: SELECT 1,2,3 FROM DUAL;
      * @see #isMultiRowInsertSupported()
      */
-    public Appendable printInsertBySelect(final List<? extends OrmUjo> bos, final int idxFrom, final int idxTo, final String fromPhrase, final Appendable out) throws IOException {
+    public Appendable printInsertBySelect
+                ( @Nonnull final List<? extends OrmUjo> bos
+                , final int idxFrom
+                , final int idxTo
+                , @Nonnull final String fromPhrase
+                , @Nonnull final Appendable out) throws IOException {
 
-        MetaTable table = ormHandler.findTableModel(bos.get(idxFrom).getClass());
-        StringBuilder values = new StringBuilder(32);
+        final MetaTable table = ormHandler.findTableModel(bos.get(idxFrom).getClass());
+        final StringBuilder values = new StringBuilder(32);
 
         out.append("INSERT INTO ");
         printFullTableName(table, out);
@@ -496,9 +502,9 @@ abstract public class SqlDialect {
 
     /** Print an SQL UPDATE statement. */
     public Appendable printUpdate
-        ( List<MetaColumn> changedColumns
-        , CriterionDecoder decoder
-        , Appendable out
+        ( @Nonnull final List<MetaColumn> changedColumns
+        , @Nonnull final CriterionDecoder decoder
+        , @Nonnull final Appendable out
         ) throws IOException
     {
         final MetaTable table = decoder.getBaseTable();
@@ -530,8 +536,8 @@ abstract public class SqlDialect {
 
     /** Print an SQL DELETE statement. */
     public Appendable printDelete
-        ( CriterionDecoder decoder
-        , Appendable out
+        ( @Nonnull final CriterionDecoder decoder
+        , @Nonnull final Appendable out
         ) throws IOException
     {
         final MetaTable table = decoder.getBaseTable();
@@ -552,7 +558,7 @@ abstract public class SqlDialect {
     }
 
     /** Create a sub-query for the DELETE/UPDATE statement */
-    protected Query createSubQuery(CriterionDecoder decoder) {
+    protected Query createSubQuery(@Nonnull final CriterionDecoder decoder) {
         final MetaTable baseTable = decoder.getBaseTable();
         final Query result = new Query(baseTable, decoder.getCriterion());
         result.setDecoder(decoder);
@@ -567,14 +573,16 @@ abstract public class SqlDialect {
      *     case EQ:
      *         return "{0}={1}";
      *     case NOT_EQ:
-     *         return "{0}<>{1}";
+     *         return "{0}&lt;&gt;{1}";
      *     case GT:
-     *         return "{0}>{1}";
+     *         return "{0}&gt;{1}";
      *     ...
      * </pre>
+     * @return Template with arguments type of {@code {1}={2}}
      */
     @SuppressWarnings("unchecked")
-    public String getCriterionTemplate(ValueCriterion crit) {
+    @Nonnull
+    public String getCriterionTemplate(@Nonnull final ValueCriterion crit) {
 
         switch (crit.getOperator()) {
             case EQ:
@@ -692,9 +700,7 @@ abstract public class SqlDialect {
         }
 
         final String template = getCriterionTemplate(crn);
-        if (template == null) {
-            throw new UnsupportedOperationException("Unsupported SQL operator: " + operator);
-        }
+        Assert.isNotNull(template, "Unsupported SQL operator: {}", operator);
 
         switch (crn.getOperator()) {
             case XFIXED:
@@ -724,6 +730,11 @@ abstract public class SqlDialect {
     /**
      * Write a right value form criterion
      * @return A value criterion to assign into the SQL query.
+     * @param template Template with arguments type of {@code {1} = {2}}
+     * @param column Column model
+     * @param crit Condition model
+     * @param out Output value
+     * @throws IOException
      */
     @Nullable
     protected ValueCriterion printCriterionValue(@Nonnull String template, @Nonnull ColumnWrapper column, @Nonnull ValueCriterion crit, @Nonnull Appendable out) throws IOException {
@@ -735,12 +746,7 @@ abstract public class SqlDialect {
             if (col2.getModel().isForeignKey()) {
                 throw new UnsupportedOperationException("Foreign key is not supported yet");
             }
-            if (true) {
-                // Better performance:
-                String f = MessageFormat.format(template, getAliasColumnName(column), getAliasColumnName(col2));
-                //String f=String.format(template, column.getColumnAlias(), col2.getColumnAlias());
-                out.append(f);
-            }
+            out.append(MessageFormat.format(template, getAliasColumnName(column), getAliasColumnName(col2)));
         } else if (right instanceof Object[]) {
             final Object[] os = (Object[]) right;
             final StringBuilder sb = new StringBuilder(2 * os.length);

@@ -32,6 +32,7 @@ import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * A type service for popular Java types and more.
@@ -302,7 +303,7 @@ public class TypeService implements ITypeService<Object,Object> {
                 return o;
             }
         }
-        String msg = String.format("No enum was found for the key %s type of %s using the value: '%s'."
+        String msg = MsgFormatter.format("No enum was found for the key {} type of {} using the value: '{}'."
                 , mColumn
                 , mColumn.getType().getSimpleName()
                 , key );

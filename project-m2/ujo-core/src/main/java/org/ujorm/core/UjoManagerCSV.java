@@ -34,6 +34,7 @@ import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.MsgFormatter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -316,8 +317,8 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
             if (skipLastColumns || value.length() == 0) {
                 return;
             }
-            String msg = String.format("Too many columns on the row %s with value '%s'."
-                    + " Try to modify the attribute: %s."
+            String msg = MsgFormatter.format("Too many columns on the row {} with value '{}'."
+                    + " Try to modify the attribute: {}."
                     , lineCounter
                     , value
                     , "skipLastColumns");

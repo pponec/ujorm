@@ -22,6 +22,7 @@ import org.ujorm.Key;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * Relation from the one table to another including alias
@@ -117,7 +118,7 @@ final public class AliasKey {
 
     @Override
     public String toString() {
-        final String result = String.format("%s (%s, %s)"
+        final String result = MsgFormatter.format("{} ({}, {})"
                 , key.getFullName()
                 , aliasFrom
                 , aliasTo);

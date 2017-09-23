@@ -17,10 +17,10 @@ package org.ujorm.wicket;
 
 import java.io.Serializable;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.Session;
+import org.ujorm.tools.Assert;
 
 /**
  * ORM Session Provider
@@ -35,15 +35,11 @@ public class OrmSessionProvider implements Serializable {
     /** Create current ORM Handler */
     public static OrmHandler getOrmHandler() throws IllegalStateException {
         final WebApplication application = WebApplication.get();
-        if (application instanceof OrmHandlerProvider) {
-            return ((OrmHandlerProvider) application).getOrmHandler();
-        } else {
-            final String msg = String.format
-                    ( "The class %s must to implement: %s"
-                    , WebApplication.class.getSimpleName()
-                    , OrmHandlerProvider.class.getName());
-            throw new IllegalUjormException(msg);
-        }
+        Assert.isTrue(application instanceof OrmHandlerProvider
+                , "The {} must to implement: {}"
+                , WebApplication.class
+                , OrmHandlerProvider.class);
+        return ((OrmHandlerProvider) application).getOrmHandler();
     }
 
     /** Create and cache the ORM Session, where created session must be closed later */

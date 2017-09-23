@@ -17,7 +17,6 @@ package org.ujorm.wicket.component.grid;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +29,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NoRecordsToolbar;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.export.IExportableColumn;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -41,9 +41,10 @@ import org.apache.wicket.util.lang.Args;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
-import org.ujorm.core.KeyRing;
 import org.ujorm.core.IllegalUjormException;
+import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.tools.MsgFormatter;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.toolbar.InsertToolbar;
 import org.ujorm.wicket.component.tools.DateTimes;
@@ -262,8 +263,8 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
                     final Constructor<? extends WebMarkupContainer> constr = panelClass.getConstructor(String.class, domainType);
                     item.add(constr.newInstance(componentId, model.getObject()));
                 } catch (RuntimeException | ReflectiveOperationException | OutOfMemoryError e) {
-                    final String msg = String.format
-                            ("The %s must have got two constructor arguments type of '%s' and '%s'."
+                    final String msg = MsgFormatter.format
+                            ("The {} must have got two constructor arguments type of '{}' and '{}'."
                             , panelClass
                             , String.class.getName()
                             , domainType.getName());

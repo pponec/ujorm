@@ -17,7 +17,6 @@ package org.ujorm.orm.metaModel;
 
 import java.io.IOException;
 import java.sql.*;
-import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -255,13 +254,10 @@ public class MetaDbService {
             }
 
             if (LOGGER.isLoggable(INFO)) {
-                logMsg = "Table ''{0}'' {1} available on the database ''{2}''.";
-                logMsg = MessageFormat.format(logMsg
+                LOGGER.log(INFO, "Table '{}' {} available on the database '{}'."
                        , db.getDialect().getSeqTableModel().getTableName()
                        , exception!=null ? "is not" : "is"
-                       , db.getId()
-                       );
-                LOGGER.log(INFO, logMsg);
+                       , db.getId());
             }
 
             try {

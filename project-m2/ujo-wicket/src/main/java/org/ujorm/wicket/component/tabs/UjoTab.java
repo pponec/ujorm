@@ -15,7 +15,6 @@
  */
 package org.ujorm.wicket.component.tabs;
 
-import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -23,6 +22,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.core.IllegalUjormException;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * Convenience class that takes care of common ITab functionality
@@ -112,8 +112,8 @@ public class UjoTab extends AbstractTab {
                  ? panel.getConstructor(String.class, IModel.class).newInstance(panelId, tabModel)
                  : panel.getConstructor(String.class).newInstance(panelId) ;
         } catch(RuntimeException | ReflectiveOperationException e) {
-            String msg = String.format
-                    ( "Can't create an instance of the class %s with %s constructor argument(s)."
+            String msg = MsgFormatter.format
+                    ( "Can't create an instance of the class {} with {} constructor argument(s)."
                     , panel.getName()
                     , tabModel != null ? 2 : 1);
             throw new IllegalUjormException(msg, e);

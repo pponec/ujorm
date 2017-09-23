@@ -36,7 +36,7 @@ public class ValidatorTest extends MyTestCase {
 
     /** Check the input must not be great than 10. */
     public void test_MAX_10() {
-        System.out.println(String.format("test_MAX_10"));
+        System.out.println("test_MAX_10");
 
         Integer maxValidValue = 10;
         Integer wrongValue = 120;
@@ -58,7 +58,7 @@ public class ValidatorTest extends MyTestCase {
 
     /** Check the input must be in a range from 1 to 10 */
     public void test_RANGE_from_1_to_10() {
-        System.out.println(String.format("test_RANGE_from_1_to_10"));
+        System.out.println("test_RANGE_from_1_to_10");
 
         Integer minValidValue = 1;
         Integer maxValidValue = 9;
@@ -82,7 +82,7 @@ public class ValidatorTest extends MyTestCase {
 
     /** Check the input must not be great than 10. */
     public void test_DATE_format() {
-        System.out.println(String.format("test_DATE"));
+        System.out.println("test_DATE");
 
         Date maxDay = getPastDate();
         Date wrongDay = getNextDate(0);

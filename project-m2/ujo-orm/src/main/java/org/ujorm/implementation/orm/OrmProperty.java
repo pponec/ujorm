@@ -25,6 +25,7 @@ import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
+import org.ujorm.tools.MsgFormatter;
 import static org.ujorm.extensions.PropertyModifier.*;
 import static org.ujorm.orm.ao.LazyLoading.*;
 
@@ -79,8 +80,8 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                     switch (mySession.getLazyLoading()) {
                         default:
                             // The method "ujo.toString()" calls a never ending loop here!
-                            final String msg = String.format
-                                   ( "The lazy loading of the key '%s' is disabled due the closed Session"
+                            final String msg = MsgFormatter.format
+                                   ( "The lazy loading of the key '{}' is disabled due the closed Session"
                                     , getFullName());
                             throw new IllegalUjormException(msg);
                         case ALLOWED_ANYWHERE_WITH_STACKTRACE:

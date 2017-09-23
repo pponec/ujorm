@@ -43,6 +43,7 @@ import org.ujorm.extensions.PropertyModifier;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * Serializable key factory is the best tool of Ujorm to create Property implementations.
@@ -181,7 +182,10 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                             r2 = getFieldValue(KeyFactory.class, field);
                         }
                     } catch (RuntimeException | ReflectiveOperationException e) {
-                        final String msg = String.format("Pass the %s attribute of the superlass %s to the constructor of the class %s, please", KeyList.class.getSimpleName(), superClass, getClass().getSimpleName());
+                        final String msg = MsgFormatter.format("Pass the {} attribute of the superlass {} to the constructor of the class {}, please"
+                                , KeyList.class.getSimpleName()
+                                , superClass
+                                , getClass().getSimpleName());
                         throw new IllegalUjormException(msg, e);
                     }
                 }
@@ -332,7 +336,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                 }
             }
         }
-        final String msg = String.format("Can't get a field for the key index #%d - %s.%s"
+        final String msg = MsgFormatter.format("Can't get a field for the key index #{} - {}.{}"
                 , p.getIndex()
                 , tmpStore.holder.getSimpleName()
                 , p.getName());

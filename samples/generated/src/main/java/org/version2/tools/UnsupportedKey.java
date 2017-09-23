@@ -1,6 +1,7 @@
 package org.version2.tools;
 
 import org.ujorm.Key;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * UnsupportedKey
@@ -9,7 +10,7 @@ import org.ujorm.Key;
 public class UnsupportedKey extends IllegalArgumentException {
 
     public UnsupportedKey(Key<?,?> key) {
-        super(String.format("Unsupported key: %s[%s]"
+        super(MsgFormatter.format("Unsupported key: {}[{}]"
                 , key.getFullName()
                 , key.getIndex()));
     }
