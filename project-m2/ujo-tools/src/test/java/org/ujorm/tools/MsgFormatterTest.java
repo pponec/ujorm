@@ -29,10 +29,21 @@ public class MsgFormatterTest {
      * Test of format method, of class MsgFormatter.
      */
     @Test
+    public void testFormat0() {
+        String template = "{}";
+        Object[] arguments = {"A"};
+        String expResult = "A";
+        String result = MsgFormatter.format(template, arguments);
+        assertEquals(expResult, result);
+    }
+    /**
+     * Test of format method, of class MsgFormatter.
+     */
+    @Test
     public void testFormat1() {
-        String template = "abc-{}-{}.";
-        Object[] arguments = {"d","e"};
-        String expResult = "abc-d-e.";
+        String template = "'a'-'{}'-'{}'.";
+        Object[] arguments = {"b","c"};
+        String expResult = "'a'-'b'-'c'.";
         String result = MsgFormatter.format(template, arguments);
         assertEquals(expResult, result);
     }

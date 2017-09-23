@@ -34,24 +34,26 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is {@code true}. */
-    public static final void isTrue(final boolean value) {
+    public static final void isTrue(final boolean value) throws IllegalArgumentException {
         isTrue(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is {@code true}. */
-    public static final void isTrue(final boolean value, Object... message) {
+    public static final void isTrue(final boolean value, final Object... message)
+            throws IllegalArgumentException {
         if (!value) {
             throw new IllegalArgumentException(format(message), new NullPointerException());
         }
     }
 
     /** Checks if the argument is not {@code null}. */
-    public static final void isNotNull(@Nullable final Object value) throws IllegalArgumentException {
+    public static final void isNotNull(@Nullable final Object value)
+            throws IllegalArgumentException {
         isNotNull(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is not {@code null}. */
-    public static void isNotNull(@Nullable final Object value, Object... message)
+    public static void isNotNull(@Nullable final Object value, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (value == null) {
             throw new IllegalArgumentException(format(message), new NullPointerException());
@@ -65,7 +67,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final byte[] array, Object... message)
+    public static void hasLength(@Nullable final byte[] array, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(array)) {
             throw new IllegalArgumentException(format(message));

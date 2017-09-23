@@ -15,13 +15,14 @@
  */
 package org.ujorm.orm.ao;
 
-import org.ujorm.orm.metaModel.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.SqlNameProvider;
+import org.ujorm.orm.metaModel.*;
+import org.ujorm.tools.Assert;
 import static org.ujorm.orm.metaModel.MetaTable.COLUMNS;
 import static org.ujorm.orm.metaModel.MetaTable.DATABASE;
 
@@ -54,9 +55,8 @@ public class IndexModelBuilder  {
 
     /** Initialize the object */
     public void init(MetaTable metaTable) throws IllegalUjormException {
-        if (this.metaTable != null) {
-            throw new IllegalUjormException("The class is initialized by " + metaTable);
-        }
+        Assert.isNull(this.metaTable, "The class is initialized by {}", metaTable);
+
         this.metaTable = metaTable;
         this.nameProvider = metaTable.getDatabase().getDialect().getNameProvider();
         this.mapIndex = new HashMap<>();

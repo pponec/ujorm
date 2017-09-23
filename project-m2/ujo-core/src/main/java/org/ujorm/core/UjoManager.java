@@ -139,16 +139,11 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
                     if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
                     &&  Key.class.isAssignableFrom(field.getType())
                     ){
-                        Key ujoProp = (Key) field.get(null);
-                        if (ujoProp==null) {
-                            final String msg = "The field '"
-                                + field
-                                + "' of the '"
-                                + type
-                                + "' is not initialized properly yet. Try to call the current method later."
-                                ;
-                            throw new IllegalUjormException(msg);
-                        }
+                        final Key ujoProp = (Key) field.get(null);
+                        Assert.isNotNull(ujoProp, "The field '{}' of the '{}' is not initialized properly yet. Try to call the current method later."
+                                ,field
+                                ,type);
+
                         if (!ujoProp.isComposite()) {
                            keyList.add(ujoProp);
 
@@ -792,18 +787,13 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
      * The beneficial side effect is loading a key cache.
      * @throws java.lang.IllegalStateException If an duplicity is found than an exception is throwed.
      */
-    protected void checkUniqueProperties(final Class<? extends Ujo> type, final boolean enabled) throws IllegalStateException {
+    protected void checkUniqueProperties(final Class<? extends Ujo> type, final boolean enabled) throws IllegalArgumentException {
         final HashSet<String> names = new HashSet<>(16);
         if (enabled) for (Key key : readKeys(type)) {
-            //final UjoProperty key = (UjoProperty) _property;
-            if (!names.add(key.getName())) {
-                throw new IllegalUjormException
-                    ( "Key '"
-                    + key
-                    + "' is duplicate in the "
-                    + type
-                    );
-            }
+            Assert.isTrue(names.add(key.getName())
+                    , "Key '{}' is duplicate in the {}"
+                    , key
+                    , type);
         }
     }
 

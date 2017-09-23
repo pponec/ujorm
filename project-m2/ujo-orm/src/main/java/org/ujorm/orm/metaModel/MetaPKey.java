@@ -18,15 +18,16 @@ package org.ujorm.orm.metaModel;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import org.ujorm.ListKey;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Immutable;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.TypeService;
+import org.ujorm.tools.Assert;
 
 /**
  * The table primary key.
@@ -93,10 +94,9 @@ final public class MetaPKey extends AbstractMetaModel {
             for (int i = 0; i < count; i++) {
                 final MetaColumn column = COLUMNS.getItem(this, i);
                 final Key key = column.getKey();
-                if (key.of(bo) == null) {
-                    String msg = "Table " + bo + " must have defined only one primary key type of Long, Integer, Short, Byte, BigInteger or String for an auto-increment support";
-                    throw new IllegalUjormException(msg);
-                }
+                Assert.isNotNull(key.of(bo)
+                        , "Table {} must have defined only one primary key type of Long, Integer, Short, Byte, BigInteger or String for an auto-increment support"
+                        , bo);
             }
             return false;
         }

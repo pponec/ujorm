@@ -28,6 +28,7 @@ import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.tools.Assert;
 
 /**
  * The default sequence provider.
@@ -112,10 +113,12 @@ public class UjoSequencer {
                 if (maxValue!=0L) {
                     if (seqLimit>maxValue) {
                         seqLimit=maxValue;
-                        if (sequence>maxValue) {
-                            String msg = "The sequence '" + tableName + "' needs to raise the maximum value: " + maxValue;
-                            throw new IllegalUjormException(msg);
-                        }
+
+                        Assert.isTrue(sequence <= maxValue
+                                , "The sequence '{}' needs to raise the maximum value: {}"
+                                , tableName
+                                , maxValue);
+
                         out.setLength(0);
                         sql = db.getDialect().printSequenceNextValue(this, out).toString();
                         if (LOGGER.isLoggable(UjoLogger.INFO)) {

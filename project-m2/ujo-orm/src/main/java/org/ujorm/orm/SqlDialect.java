@@ -100,9 +100,7 @@ abstract public class SqlDialect {
 
     /** Set the OrmHandler - the method is for internal call only. */
     public void setHandler(OrmHandler ormHandler) {
-        if (this.ormHandler!=null) {
-            throw new IllegalUjormException("The OrmHandler is assigned yet.");
-        }
+        Assert.isNull(this.ormHandler, "The OrmHandler is assigned yet.");
         this.ormHandler = ormHandler;
     }
 

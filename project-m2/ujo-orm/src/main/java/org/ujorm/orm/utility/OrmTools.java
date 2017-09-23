@@ -46,6 +46,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaPKey;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.tools.Assert;
 
 /**
  * Many useful methods for
@@ -353,9 +354,8 @@ final public class OrmTools {
         Criterion result = crn;
         if (OrmTools.hasLength(primaryKeys)) {
             final MetaPKey pKey = MetaTable.PK.of(table);
-            if (pKey.getCount()!=1) {
-                throw new IllegalUjormException("There supported only objects with a one primary keys");
-            }
+            Assert.isTrue(pKey.getCount()==1, "There are supported objects with a one primary keys only");
+
             final Criterion c = pKey.getFirstColumn().getKey().whereIn(primaryKeys);
             result = result!=null ? result.or(c) : c;
         }

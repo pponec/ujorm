@@ -22,8 +22,8 @@ import java.sql.Savepoint;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.xa.XAResource;
-import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.core.IllegalUjormException;
+import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.orm.metaModel.MetaDatabase;
 
 /**
@@ -92,12 +92,11 @@ final public class Transaction implements javax.transaction.Transaction{
     /** Rollback the current level of the beginTransaction. */
     @Override
     public void rollback() throws IllegalUjormException {
-        if (status==Status.STATUS_ACTIVE) {
-            status = Status.STATUS_ROLLEDBACK;
-            session.commit(false, this);
-        } else {
+        if (status != Status.STATUS_ACTIVE) {
             throw new IllegalUjormException("Transactíon state isn't STATUS_ACTIVE, but " + status);
         }
+        status = Status.STATUS_ROLLEDBACK;
+        session.commit(false, this);
     }
 
     /** Create a nested transaction */

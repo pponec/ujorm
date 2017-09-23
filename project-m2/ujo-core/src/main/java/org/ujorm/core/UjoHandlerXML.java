@@ -27,6 +27,7 @@ import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.UjoTextable;
+import org.ujorm.tools.Assert;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -140,18 +141,19 @@ final class UjoHandlerXML extends DefaultHandler {
 
         // Find an ELEMENT class:
         if ($elementType==null) {
-            if ($parentObj.isRoot()) {
-                throw new IllegalUjormException("Tag <" + $elementName  + "> is missing attribute '" + UjoManagerXML.ATTR_CLASS + "'");
-            }
+            Assert.isFalse($parentObj.isRoot()
+                    , "Tag <{}> has missing attribute '{}'"
+                    , $elementName
+                    , UjoManagerXML.ATTR_CLASS);
             $elementType = $parentObj.isUjo()
             ? ($propertyList != null ? $propertyList.getItemType() : $key.getType())
             : ($parentObj.itemType)
             ;
         }
 
-        if ($elementType==null) {
-            throw new IllegalUjormException("Tag <" + $elementName + "> can't find class.");
-        } else try {
+        Assert.isNotNull($elementType, "Tag <{}> can't find class."
+                , $elementName);
+        try {
             boolean isUJO = UjoTextable.class.isAssignableFrom($elementType);
             boolean isList = List.class.isAssignableFrom($elementType);
             if (isUJO || isList) {

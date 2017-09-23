@@ -25,7 +25,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.ujorm.Key;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.DbType;
@@ -38,6 +37,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.tools.Assert;
 import static org.ujorm.core.UjoTools.SPACE;
 import static org.ujorm.orm.utility.OrmTools.hasLength;
 import static org.ujorm.tools.Check.isEmpty;
@@ -83,9 +83,8 @@ public class MSSqlDialect extends SqlDialect {
 
         for (int i = 0; i < changedColumns.size(); i++) {
             MetaColumn ormColumn = changedColumns.get(i);
-            if (ormColumn.isPrimaryKey()) {
-                throw new IllegalUjormException("Primary key can not be changed: " + ormColumn);
-            }
+            Assert.isFalse(ormColumn.isPrimaryKey(), "Primary key can not be changed: {}", ormColumn);
+            
             out.append(i == 0 ? "" : ", ");
             printQuotedName(ormColumn.getName(), out);
             out.append("=?");

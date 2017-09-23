@@ -27,10 +27,10 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.implementation.orm.RelationToOne;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.DbType;
@@ -45,6 +45,7 @@ import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
+import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidatorUtils;
 
 /**
@@ -277,9 +278,8 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
                 result = Collections.emptyList();
             }
         }
-        if (result.isEmpty()) {
-            throw new IllegalUjormException("The relation column " + this + " have no foreign keys!");
-        }
+
+        Assert.hasLength(result, "The relation column {} have no foreign keys", this);
         return result;
     }
 

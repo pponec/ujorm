@@ -56,10 +56,10 @@ import org.ujorm.wicket.component.form.fields.Field;
 import org.ujorm.wicket.component.form.fields.GridField;
 import org.ujorm.wicket.component.form.fields.LocalDateField;
 import org.ujorm.wicket.component.form.fields.LocalDateTimeField;
+import org.ujorm.wicket.component.form.fields.OfferField;
 import org.ujorm.wicket.component.form.fields.PasswordField;
 import org.ujorm.wicket.component.form.fields.TextAreaField;
 import org.ujorm.wicket.component.form.fields.TextField;
-import org.ujorm.wicket.component.form.fields.OfferField;
 
 /**
  * Field Factory
@@ -104,7 +104,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
      * and set the OutputMarkupPlaceholderTag to value {@code true}. */
     public <T extends Object> Field<T> add(final Field<T> field) {
         final Key key = field.getKey();
-        Field oldField = fields.put(key.getName(), field);
+        final Field oldField = fields.put(key.getName(), field);
         if (oldField != null) {
             throw new IllegalUjormException("Field is assigned for the key: " + field);
         }

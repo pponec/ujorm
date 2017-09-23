@@ -19,11 +19,12 @@ package org.ujorm.core;
 import java.util.HashSet;
 import java.util.Set;
 import org.ujorm.Key;
-import org.ujorm.WeakKey;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
+import org.ujorm.WeakKey;
 import org.ujorm.extensions.WeakKeyImpl;
+import org.ujorm.tools.Assert;
 
 /**
  * Spring Key Factory
@@ -51,7 +52,7 @@ public class WeakKeyFactory extends KeyFactory<Ujo> {
     public final <T> WeakKey<T> newKey() {
         return createKey(null, null, null);
     }
-    
+
     /** Create new Key with a default value */
     @Override
     public final <T> WeakKey<T> newKeyDefault(T defaultValue) {
@@ -72,19 +73,17 @@ public class WeakKeyFactory extends KeyFactory<Ujo> {
         return p;
     }
 
-    /** Test of unique key names, no registration to the UjoManagger. 
+    /** Test of unique key names, no registration to the UjoManagger.
      * @param list List of the Keys
      * @param innerData innerDate for internal use
      * @throws IllegalStateException Returns the exception in case of duplicity Key name.
      */
     @Override
     protected void onCreate(KeyList<Ujo> list, InnerDataStore<Ujo> innerData) throws IllegalStateException {
-        final Set<String> set = new HashSet<>(list.size());        
+        final Set<String> set = new HashSet<>(list.size());
         for (Key<Ujo,?>  key : list) {
-            boolean unique = set.add(key.getName());
-            if (!unique) {
-                throw new IllegalUjormException("The key name is not unique: " + key);
-            }
+            final boolean unique = set.add(key.getName());
+            Assert.isTrue(unique, "The key name is not unique: {}", key);
         }
-    }    
+    }
 }

@@ -57,6 +57,7 @@ import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * The ORM session.
@@ -260,8 +261,9 @@ public class Session implements Closeable {
                 result[i] = conn.setSavepoint();
             }
         } catch (RuntimeException | SQLException |OutOfMemoryError e) {
-            LOGGER.log(UjoLogger.ERROR, "{}{}", errMessage, database, e);
-            throw new IllegalUjormException(errMessage + database, e);
+            final String msg = MsgFormatter.format("{}{}", errMessage, database);
+            LOGGER.log(UjoLogger.ERROR, msg, e);
+            throw new IllegalUjormException(msg, e);
         }
         rollbackOnly = false;
         return result;
@@ -869,9 +871,11 @@ public class Session implements Closeable {
         final MetaColumn fColumn = findOrmColumn(table, value.getClass());
 
         if (fColumn == null) {
-            MetaTable origTable = handler.findTableModel(value.getClass());
+            final MetaTable origTable = handler.findTableModel(value.getClass());
             if (origTable.isPersistent()) { // Is it not a DATABASE ?
-                String msg = "Can't find a foreign key of " + table + " to a " + value.getClass().getSimpleName();
+                final String msg = MsgFormatter.format("Can't find a foreign key of {} to a {}"
+                    , table
+                    , value.getClass().getSimpleName());
                 throw new IllegalUjormException(msg);
             }
         }
@@ -1221,13 +1225,16 @@ public class Session implements Closeable {
      */
     public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> key) throws IllegalUjormException {
         final MetaColumn column = handler.findColumnModel(key);
-        if (column!=null && column.isForeignKey()) {
-            final Object result = column.getForeignColumns().get(0).getKey().of(ujo);
-            return new ForeignKey(result);
-        } else {
-            final String propertyName = ujo.getClass().getSimpleName() + "." + key;
-            throw new IllegalUjormException("The key '" + propertyName + "' is not a foreign key");
+
+        if (column==null || !column.isForeignKey()) {
+            final String message = MsgFormatter.format("The key '{}.{}' is not a foreign key"
+                    , ujo.getClass().getSimpleName()
+                    , key);
+            throw new IllegalUjormException(message);
         }
+
+        final Object result = column.getForeignColumns().get(0).getKey().of(ujo);
+        return new ForeignKey(result);
     }
 
     /** Check dialect type */

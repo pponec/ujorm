@@ -421,9 +421,11 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     }
 
     /** Assert that the table may be changed. */
-    public void assertChangeAllowed() {
+    public void assertChangeAllowed() throws IllegalUjormException {
         if (isReadOnly()) {
-            final String msg = "The table '" + NAME.of(this) + "' have got the READ-ONLY mode. Check the Ujorm meta-model configuration.";
+            final String msg = MsgFormatter.format("The table '{}' have got the READ-ONLY mode. Check the {} meta-model configuration."
+                , NAME.of(this)
+                , "Ujorm");
             throw new IllegalUjormException(msg);
         }
     }

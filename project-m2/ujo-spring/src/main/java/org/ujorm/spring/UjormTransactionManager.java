@@ -113,7 +113,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     }
 
     /** Return a local default session */
-    public Session getLocalSession() throws IllegalStateException {
+    public Session getLocalSession() throws IllegalUjormException {
         final Session result = session.get();
         if (result == null) {
             throw new IllegalUjormException("ORM session does not exists, check pointcut mapping");

@@ -42,6 +42,7 @@ import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaRoot;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.template.AliasTable;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 
 /**
@@ -400,10 +401,10 @@ public class OrmHandler implements OrmHandlerProvider {
      */
     public MetaTable findTableModel(final Class<? extends OrmUjo> dbClass, final boolean throwException) throws IllegalUjormException {
         final MetaTable result = entityMap.get(dbClass);
-        if (result==null && throwException) {
-             final String msg = "An entity mapping bug: the " + dbClass + " is not mapped to the Database.";
-             throw new IllegalUjormException(msg);
-        }
+        Assert.isFalse(result==null && throwException
+                , "An entity mapping bug: the {} is not mapped to the Database."
+                , dbClass);
+
         return result;
     }
 
@@ -412,10 +413,9 @@ public class OrmHandler implements OrmHandlerProvider {
      */
     public MetaProcedure findProcedureModel(Class<? extends DbProcedure> procedureClass) throws IllegalUjormException {
         MetaProcedure result = procedureMap.get(procedureClass);
-        if (result==null) {
-            final String msg = "An procedure mapping bug: the " + procedureClass + " is not mapped to the Database.";
-            throw new IllegalUjormException(msg);
-        }
+        Assert.isNotNull(result
+                , "An procedure mapping bug: the {} is not mapped to the Database."
+                , procedureClass);
         return result;
     }
 

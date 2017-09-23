@@ -56,6 +56,7 @@ import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.utility.OrmTools;
+import org.ujorm.tools.Assert;
 
 /**
  * A logical database description.
@@ -425,7 +426,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                 }
             }
         } catch (RuntimeException | SQLException | OutOfMemoryError e) {
-            String msg = "Can't close a SQL object";
+            final String msg = "Can't close a SQL object";
             if (throwExcepton) {
                 throw new IllegalUjormException(msg, e);
             } else {
@@ -471,14 +472,11 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             final int lastItem = jndi.size()-1;
             for (int i=0; i<lastItem; i++) {
                 initContext = (InitialContext) initContext.lookup(jndi.get(i));
-                if (initContext==null) {
-                    throw new IllegalUjormException("JNDI problem: InitialContext was not found for the: " + jndi.get(i));
-                }
+                Assert.isNotNull(initContext, "JNDI problem: InitialContext was not found for the: {}", jndi.get(i));
             }
-            DataSource dataSource = (DataSource) initContext.lookup(jndi.get(lastItem));
-            if (dataSource==null) {
-                throw new IllegalUjormException("JNDI problem: database connection was not found for the: " + jndi);
-            }
+            final DataSource dataSource = (DataSource) initContext.lookup(jndi.get(lastItem));
+            Assert.isNotNull(dataSource, "JNDI problem: database connection was not found for the: {}", jndi);
+
             result = dataSource.getConnection();
         } else {
             final Class dbDriver = Class.forName(JDBC_DRIVER.of(this));

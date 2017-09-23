@@ -18,7 +18,6 @@ package org.ujorm.orm.dialect;
 
 import java.io.IOException;
 import java.util.List;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.TableWrapper;
@@ -28,6 +27,7 @@ import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.metaModel.MoreParams;
+import org.ujorm.tools.Assert;
 import static org.ujorm.core.UjoTools.SPACE;
 
 /** Dialect for the MySQL since release 5.0 for the InnoDB engine.
@@ -100,9 +100,8 @@ public class MySqlDialect extends SqlDialect {
 
         for (int i=0; i<changedColumns.size(); i++) {
             MetaColumn ormColumn = changedColumns.get(i);
-            if (ormColumn.isPrimaryKey()) {
-                throw new IllegalUjormException("Primary key can not be changed: " + ormColumn);
-            }
+            Assert.isFalse(ormColumn.isPrimaryKey(), "Primary key can not be changed: ", ormColumn);
+            
             out.append(i==0 ? "" :  ", ");
             out.append(ormColumn.getColumnAlias());
             out.append("=?");

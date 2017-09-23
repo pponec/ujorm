@@ -26,7 +26,6 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
@@ -192,18 +191,11 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
     /** Check validity of keys */
     protected void checkValidity() throws IllegalArgumentException {
-        if (name == null) {
-            throw new IllegalUjormException("Name must not be null for key index: #" + index);
-        }
-        if (type == null) {
-            throw new IllegalUjormException("Type must not be null in the " + this);
-        }
-        if (defaultValue != null && !type.isInstance(defaultValue)) {
-            throw new IllegalUjormException("Default value have not properly type in the " + this);
-        }
-        if (this.domainType==null) {
-            throw new IllegalUjormException("Domain type is missing for the key: " + name);
-        }
+        Assert.isNotNull(name, "Name must not be null for key index: #{}", index);
+        Assert.isNotNull(type, "Type must not be null in the {}", this);
+        Assert.isNotNull(domainType, "domainType", name);
+        Assert.isTrue(defaultValue == null || type.isInstance(defaultValue)
+                , "Default value have not properly type in the ", this);
     }
 
     /** Name of Property */

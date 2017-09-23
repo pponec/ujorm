@@ -303,7 +303,8 @@ public class TypeService implements ITypeService<Object,Object> {
                 return o;
             }
         }
-        String msg = MsgFormatter.format("No enum was found for the key {} type of {} using the value: '{}'."
+        final String msg = MsgFormatter.format
+                ( "No enum was found for the key {} type of {} using the value: '{}'."
                 , mColumn
                 , mColumn.getType().getSimpleName()
                 , key );
