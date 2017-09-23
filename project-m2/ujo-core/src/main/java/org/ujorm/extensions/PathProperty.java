@@ -28,11 +28,12 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
+import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidationException;
 
 /**
@@ -86,9 +87,8 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
                 list.add(key);
             }
         }
-        if (list.isEmpty()) {
-            throw new IllegalArgumentException("Argument must not be empty");
-        }
+        Assert.hasLength(list, "Argument must not be empty");
+      
         this.ascending = ascending!=null ? ascending : keys[keys.length-1].isAscending();
         this.keys = list.toArray(new Key[list.size()]);
         this.aliases = alias

@@ -44,6 +44,7 @@ import org.ujorm.orm.annot.View;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.orm.utility.OrmTools;
+import org.ujorm.tools.Assert;
 import static org.ujorm.orm.metaModel.MetaParams.INDEX_MODEL_BUILDER;
 
 /**
@@ -236,15 +237,13 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Assign a PK from framework */
     public void assignPrimaryKey(final OrmUjo bo, final Session session) {
         final Class type = getType();
-        if (type.isInstance(bo)) {
-            try {
-               final MetaPKey pk = PK.of(this);
-               pk.assignPrimaryKey(bo, session);
-            } catch (RuntimeException | OutOfMemoryError e) {
-               throw new IllegalUjormException("DB SEQUENCE is not supported for " + type, e);
-            }
-        } else {
-            throw new IllegalArgumentException("Argument is not type of " + type);
+        Assert.isTrue(type.isInstance(bo), "Argument is not type of {}", type);
+
+        try {
+           final MetaPKey pk = PK.of(this);
+           pk.assignPrimaryKey(bo, session);
+        } catch (RuntimeException | OutOfMemoryError e) {
+           throw new IllegalUjormException("DB SEQUENCE is not supported for " + type, e);
         }
     }
 

@@ -27,10 +27,11 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyRing;
 import org.ujorm.core.UjoCoder;
+import org.ujorm.tools.Assert;
 import static org.ujorm.core.UjoTools.SPACE;
-import org.ujorm.core.IllegalUjormException;
 
 /**
  * The value criterion implementation.
@@ -89,9 +90,8 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
                  String template = value instanceof TemplateValue
                       ? ((TemplateValue)value).getTemplate()
                       : String.valueOf(value);
-                 if (value==null || template.trim().isEmpty()) {
-                     throw new IllegalArgumentException("Value must not be empty");
-                 }
+
+                 Assert.isFalse(value==null || template.trim().isEmpty(), "Value must not be empty");
                  break;
         }
 
@@ -261,25 +261,18 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
      * If parameter is not valid than method throws Exception.
      */
     protected final void makeCharSequenceTest(Object value) throws IllegalArgumentException {
-        if (value instanceof CharSequence
-        ||  value instanceof Key
-        && ((Key)value).isTypeOf(CharSequence.class)
-        ){
-            return;
-        } else {
-            final String msg = "Property type must by String or CharSequence";
-            throw new IllegalArgumentException(msg);
-        }
+        final boolean ok = value instanceof CharSequence
+        || value instanceof Key
+        && ((Key)value).isTypeOf(CharSequence.class);
+
+        Assert.isTrue(ok, "Key type must by String or CharSequence");
     }
 
     /** Test a value is an instance of Iterable.
      * If parameter is not valid than method throws Exception.
      */
     protected final void makeArrayTest(Object value) throws IllegalArgumentException {
-        if (!(value instanceof Object[])) {
-            final String msg = "Value must be an Array type only";
-            throw new IllegalArgumentException(msg);
-        }
+        Assert.isTrue(value instanceof Object[], "Value must be an Array type only");
     }
 
 

@@ -42,6 +42,7 @@ import org.ujorm.extensions.Property;
 import org.ujorm.extensions.PropertyModifier;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
+import org.ujorm.tools.Assert;
 
 /**
  * Serializable key factory is the best tool of Ujorm to create Property implementations.
@@ -409,9 +410,8 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Add new Key for a value type class, index must be undefied */
     public <P extends Property<UJO, ?>> P add(P key) {
-        if (key.getIndex() >= 0) {
-            throw new IllegalArgumentException("Property index must be undefined");
-        }
+        Assert.isTrue(key.getIndex() < 0, "Property index must be undefined");
+
         addKey(key);
         return (P) key;
     }
@@ -420,7 +420,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     protected <T> Key<UJO, T> createKey(final String name, final T defaultValue, final Validator<T> validator) {
         return createPlainKey(name, defaultValue, validator);
     }
-    
+
     /** Original protected factory method to create a plain key */
     protected final <T> Key<UJO, T> createPlainKey(final String name, final T defaultValue, final Validator<T> validator) {
         final Property<UJO, T> p = Property.of(name, null, defaultValue, Property.UNDEFINED_INDEX, validator, false);
@@ -486,7 +486,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     // ================== INNER CLASS ==================
-    
+
     /** A temporary data store. */
     protected static final class InnerDataStore<UJO extends Ujo> {
 
@@ -653,7 +653,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             return new KeyFactory(baseClass, CAMEL_CASE, superKeys);
         }
     }
-    
+
     /** The base factory */
     public static final class SnakeCaseBuilder {
 
@@ -679,7 +679,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             return new KeyFactory(baseClass, CAMEL_CASE, superKeys) {
                 @Override protected String createKeyName(final Field field, final boolean camelCase) {
                     return field.getName().toLowerCase(Locale.ROOT);
-                }  
+                }
             };
         }
     }

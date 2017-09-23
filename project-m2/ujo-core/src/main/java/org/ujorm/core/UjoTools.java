@@ -31,7 +31,9 @@ import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.*;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.MsgFormatter;
 import org.ujorm.validator.ValidationError;
 import org.ujorm.validator.ValidatorUtils;
 
@@ -279,16 +281,10 @@ public abstract class UjoTools implements Comparator<Key> {
 
     /** An assignable test. */
     public static boolean assertDirect(final Key key, final Object value) throws IllegalArgumentException {
-        if (key.isComposite()) {
-            final String msg
-            = "The key \""
-            + key
-            + "\" type of \""
-            + key.getType().getName()
-            + "\" is not a direct type."
+        Assert.isFalse(key.isComposite(), "The key '{}' type of '{}' is not a direct type."
+            , key
+            , key.getType().getName())
             ;
-            throw new IllegalArgumentException(msg);
-        }
         return true;
     }
 
@@ -300,16 +296,11 @@ public abstract class UjoTools implements Comparator<Key> {
             || key.getType().isInstance(value)
             ;
         if (!result) {
-            final String msg
-            = "The value \""
-            + value
-            + "\""
-            + (value!=null ? " (" + value.getClass().getName() + ')' : "")
-            + " can't be assiged to key \""
-            + key
-            + "\" type of \""
-            + key.getType().getName()
-            + "\"."
+            final String msg = MsgFormatter.format("The value '{}' ({}) can't be assiged to key '{}' type of '{}'."
+            , value
+            , (value!=null ? value.getClass().getName() : "")
+            , key
+            , key.getType().getName())
             ;
             throw new IllegalArgumentException(msg);
         }
@@ -320,18 +311,9 @@ public abstract class UjoTools implements Comparator<Key> {
     public static boolean assertUjoType(final Key key, final Ujo ujo) throws IllegalArgumentException {
         final Class type = key.getDomainType();
         final boolean result = type==null || type.isInstance(ujo);
-
-        if (!result) {
-            final String msg
-            = "The ujo \""
-            + ujo.getClass().getName()
-            + "\""
-            + " must by type of \""
-            + key.getDomainType()
-            + "\"."
-            ;
-            throw new IllegalArgumentException(msg);
-        }
+        Assert.isTrue(result, "The ujo '{}' must by type of '{}'."
+            , ujo.getClass().getName()
+            , key.getDomainType());
         return result;
     }
 
@@ -380,13 +362,9 @@ public abstract class UjoTools implements Comparator<Key> {
                 }
             }
         }
-        if (throwException) {
-            final String msg = String.format
-                    ( "The key '%s' was not found in the class '%s'."
+        Assert.isFalse(throwException, "The key '{}' was not found in the class '{}'."
                     , String.valueOf(key)
                     , type.getName());
-            throw new IllegalArgumentException(msg);
-        }
         return null;
     }
 

@@ -55,6 +55,7 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 
 /**
@@ -1277,8 +1278,6 @@ public class Session implements Closeable {
      * @throws IllegalArgumentException Throw the exception if a ujo argument is {@code null}.
      */
     protected void checkNotNull(OrmUjo ujo, String action) throws IllegalArgumentException {
-        if (ujo==null) {
-            throw new IllegalArgumentException("A null object can't be used for the action: " + action);
-        }
+        Assert.isNotNull(cache, "A {} object can't be used for the action: {}", cache, action);
     }
 }

@@ -16,6 +16,7 @@
 
 package org.ujorm.extensions;
 
+import org.ujorm.tools.Assert;
 import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
@@ -61,14 +62,13 @@ public class PropertyModifier {
     /** Write an item type into key if it is not locked yet. */
     @SuppressWarnings("unchecked")
     public static void setItemType(Class itemType, AbstractCollectionProperty key) {
-        if (itemType==null) {
-            throw new IllegalArgumentException("Item type is undefined for key: " + key);
-        }
+        Assert.isNotNull(itemType, "Item type is undefined for key: {}", key);
+
         if (!key.isLock()) {
             key.initItemType(itemType);
         }
     }
-    
+
     /** Write name into key if it is not locked yet. */
     @SuppressWarnings("unchecked")
     public static void setName(String name, Property key) {
@@ -76,12 +76,12 @@ public class PropertyModifier {
             key.init(NAME, name);
         }
     }
-    
+
     /** Set the new index and lock the key if it is not locked yet. */
     @SuppressWarnings("unchecked")
     public static void setIndex(int anIndex, Property key) {
         setIndex(anIndex, key, true);
-    }    
+    }
 
     /** Set the new index */
     @SuppressWarnings("unchecked")

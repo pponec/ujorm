@@ -26,12 +26,13 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.PackagePrivate;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
+import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidationException;
 import static org.ujorm.extensions.PropertyModifier.*;
 
@@ -143,8 +144,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
                 }
                 break;
             default:
-                final String msg = String.format("Undefined field %s with value '%s'", field, value);
-                throw new IllegalArgumentException(msg);
+                Assert.isTrue(false, "Undefined field {} with value '{}'", field, value);
         }
         return this;
     }
@@ -165,18 +165,14 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
         if (name==null) {
             return;
         }
-        if (name.isEmpty()) {
-            final String msg = String.format("Key name '%s' must not be empty"
-                    , name);
-            throw new IllegalArgumentException(msg);
-        }
-        if (isPropertySeparatorDisabled()
-        && name.indexOf(PROPERTY_SEPARATOR)>0) {
-            final String msg = String.format("Key name '%s' must not contain a dot character '%c'."
-                    , name
-                    , PROPERTY_SEPARATOR);
-            throw new IllegalArgumentException(msg);
-        }
+        Assert.hasLength(name, "Key name '{}' must not be empty", name);
+
+        Assert.isFalse(isPropertySeparatorDisabled()
+                && name.indexOf(PROPERTY_SEPARATOR) > 0
+            , "Key name '{}' must not contain a dot character '{}'."
+            , name
+            , PROPERTY_SEPARATOR);
+
         this.name = name;
     }
 

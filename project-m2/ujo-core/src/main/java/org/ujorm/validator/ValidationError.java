@@ -22,6 +22,7 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.KeyRing;
+import org.ujorm.tools.Assert;
 import static org.ujorm.validator.AbstractValidator.*;
 
 /**
@@ -86,9 +87,9 @@ public class ValidationError implements Serializable {
 
     /** Check a not null argument */
     private void chechNotNull(Object value, String argumentName, Key key) throws IllegalArgumentException {
-        if (value==null) {
-            throw new IllegalArgumentException(String.format("The argument '%s' must not be the null in the %s validator", argumentName, key));
-        }
+        Assert.isNotNull(value, "The argument '{}' must not be the null in the {} validator"
+                , argumentName
+                , key);
     }
 
     /** @return the input value */

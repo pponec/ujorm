@@ -18,6 +18,7 @@ package org.ujorm.extensions;
 
 import org.ujorm.Ujo;
 import org.ujorm.core.annot.Immutable;
+import org.ujorm.tools.Assert;
 import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
@@ -70,9 +71,7 @@ abstract public class AbstractCollectionProperty<UJO extends Ujo,VALUE,ITEM> ext
     @Override
     protected void checkValidity() throws IllegalArgumentException {
         super.checkValidity();
-        if (itemType == null) {
-            throw new IllegalArgumentException("Type must not be null in the " + this);
-        }
+        Assert.isNotNull(itemType, "Type must not be null in the {}", this);
 
     }
 

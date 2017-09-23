@@ -43,6 +43,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.utility.OrmTools;
+import org.ujorm.tools.Assert;
 import static org.ujorm.core.UjoTools.SPACE;
 import static org.ujorm.logger.UjoLogger.WARN;
 
@@ -174,9 +175,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see #setCriterion(org.ujorm.criterion.Criterion) setCriterion(..)
      */
     public void addCriterion(Criterion<UJO> criterion) throws IllegalArgumentException {
-        if (criterion==null) {
-            throw new IllegalArgumentException("Argument must not be null");
-        }
+        Assert.isNotNull(criterion, "Argument must not be {}", criterion);
+
         this.criterion = this.criterion!=null
             ? this.criterion.and(criterion)
             : criterion
@@ -445,9 +445,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     public Query<UJO> addColumn(Key<UJO,?> column) throws IllegalArgumentException {
         clearDecoder();
         final MetaColumn mc = getHandler().findColumnModel(getLastProperty(column));
-        if (mc==null) {
-            throw new IllegalArgumentException("Column " + column.getFullName() + " was not foud in the meta-model");
-        }
+        Assert.isNotNull(mc, "Column {} was not foud in the meta-model", column.getFullName());
+
         final ColumnWrapper wColumn = column.isComposite()
                 ? new ColumnWrapperImpl(mc, column)
                 : mc;

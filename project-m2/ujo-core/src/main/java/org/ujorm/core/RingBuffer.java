@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import org.ujorm.tools.Assert;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -58,9 +59,8 @@ final public class RingBuffer implements CharSequence {
      * @throws IllegalArgumentException If the length is smaller than the one.
      */
     public RingBuffer(int length) throws IllegalArgumentException {
-        if (length <= 0) {
-            throw new IllegalArgumentException("The RingBufer must not be empty");
-        }
+        Assert.isTrue(length > 0, "The RingBufer must not be empty");
+        
         this.length = length;
         this.b = new char[length];
     }

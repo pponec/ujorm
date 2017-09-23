@@ -40,7 +40,9 @@ import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.core.annot.XmlElementBody;
 import org.ujorm.extensions.*;
 import org.ujorm.swing.UjoKeyRow;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.MsgFormatter;
 import org.ujorm.validator.ValidationError;
 import org.ujorm.validator.ValidatorUtils;
 import static org.ujorm.UjoAction.*;
@@ -587,16 +589,9 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
 
     /** An assignable test. */
     static public boolean assertDirect(final Key key, final Object value) throws IllegalArgumentException {
-        if (key.isComposite()) {
-            final String msg
-            = "The key \""
-            + key
-            + "\" type of \""
-            + key.getType().getName()
-            + "\" is not a direct type."
-            ;
-            throw new IllegalArgumentException(msg);
-        }
+        Assert.isFalse(key.isComposite(), "The key '{}' type of '{}' is not a direct type."
+            , key
+            , key.getType().getName());
         return true;
     }
 
@@ -609,16 +604,11 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
             || key.getType().isInstance(value)
             ;
         if (!result) {
-            final String msg
-            = "The value \""
-            + value
-            + "\""
-            + (value!=null ? " (" + value.getClass().getName() + ')' : "")
-            + " can't be assiged to key \""
-            + key
-            + "\" type of \""
-            + key.getType().getName()
-            + "\"."
+            final String msg = MsgFormatter.format("The value '{}' ({}) can't be assiged to key '{}' type of '{}'."
+            , value
+            , (value != null ? value.getClass().getName() : "")
+            , key
+            , key.getType().getName())
             ;
             throw new IllegalArgumentException(msg);
         }
@@ -631,13 +621,9 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
         final boolean result = type==null || type.isInstance(ujo);
 
         if (!result) {
-            final String msg
-            = "The ujo \""
-            + ujo.getClass().getName()
-            + "\""
-            + " must by type of \""
-            + key.getDomainType()
-            + "\"."
+            final String msg = MsgFormatter.format("The ujo '{}' must by type of '{}'."
+            , ujo.getClass().getName()
+            , key.getDomainType())
             ;
             throw new IllegalArgumentException(msg);
         }

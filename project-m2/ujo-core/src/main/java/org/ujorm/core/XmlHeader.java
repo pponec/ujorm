@@ -17,6 +17,7 @@ package org.ujorm.core;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.ujorm.tools.Assert;
 
 /**
  * XML header
@@ -38,9 +39,7 @@ public class XmlHeader {
     }
 
     public XmlHeader(String rootElement) {
-        if (rootElement == null) {
-            throw new IllegalArgumentException("Attribute is required");
-        }
+        Assert.isNotNull(rootElement, "Attribute is required");
         this.rootElement = rootElement;
     }
 
