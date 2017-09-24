@@ -2,8 +2,10 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.73-SNAPSHOT (2017-09-??)
-+ ...
+release 1.73 (2017-09-24)
++ TOOLS: new module ujo-tools for common use
++ TOOLS: new clases to validate arguments: Assert
++ TOOLS: new clases to check text arguments: Check
 
 release 1.72 (2017-08-12)
 + CORE: Support to store a binary code as BASE64 string
