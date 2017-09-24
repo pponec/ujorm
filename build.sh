@@ -4,6 +4,8 @@
 # SNAPSHOT deploy: mvn clean deploy -Pproduction -Psign -DskipTests
 ###################################################################
 
+alias mvn='/opt/maven/default/bin/mvn'
+
 # Required Release (example: RELEASE=1.30):
 RELEASE=$( cd project-m2/ujo-core; mvn help:evaluate -Dexpression=project.version | grep -v "\[" )
 echo RELEASE=${RELEASE}
