@@ -22,13 +22,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
+ * Testing the method Assert
  * @author Pavel Ponec
  */
 public class AssertTest {
 
-    /** Demo message */
-    private static final Object[] TEST_MESSAGE = {"TEST MESSAGE"};
+    /** Demo message {@code MESSAGE:ABC} */
+    private static final Object[] TEST_MESSAGE = {"MESSAGE:{}{}{}", "A", "B", "C"};
 
     /**
      * Test of isTrue method, of class Assert.
@@ -317,13 +317,15 @@ public class AssertTest {
      */
     @Test
     public void testNotNull_CharSequence_ObjectArr_Nok() {
+        System.out.println("notNull");
+
+        CharSequence value = null;
+        String expResult = "MESSAGE:ABC";
         try {
-            System.out.println("notNull");
-            CharSequence value = "";
-            Assert.notNull(null, TEST_MESSAGE);
+            Assert.notNull(value, TEST_MESSAGE);
             assertTrue(false);
         } catch (IllegalArgumentException e) {
-            assertEquals(TEST_MESSAGE[0], e.getMessage());
+            assertEquals(expResult, e.getMessage());
             assertTrue(e.getCause() instanceof NullPointerException);
         }
     }

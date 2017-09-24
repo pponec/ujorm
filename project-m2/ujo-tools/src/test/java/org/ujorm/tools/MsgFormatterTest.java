@@ -29,6 +29,16 @@ public class MsgFormatterTest {
      * Test of format method, of class MsgFormatter.
      */
     @Test
+    public void testDemo() {
+        assertEquals("TEST"      , MsgFormatter.format("T{}{}{}", "E", "S", "T"));
+        assertEquals("T, E, S, T", MsgFormatter.format("T", "E", "S", "T"));
+        assertEquals("TES{}"     , MsgFormatter.format("T{}{}{}", "E", "S"));
+    }
+
+    /**
+     * Test of format method, of class MsgFormatter.
+     */
+    @Test
     public void testFormat0() {
         String template = "{}";
         Object[] arguments = {"A"};
@@ -36,6 +46,7 @@ public class MsgFormatterTest {
         String result = MsgFormatter.format(template, arguments);
         assertEquals(expResult, result);
     }
+
     /**
      * Test of format method, of class MsgFormatter.
      */
@@ -135,11 +146,12 @@ public class MsgFormatterTest {
     /**
      * Test of format method, of class MsgFormatter.
      */
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testFormat9() {
         String template = null;
         Object[] arguments = {"a","b","c"};
-        MsgFormatter.format(template, arguments);
+        String expResult = "null, a, b, c";
+        String result = MsgFormatter.format(template, arguments);
+        assertEquals(expResult, result);
     }
-
 }

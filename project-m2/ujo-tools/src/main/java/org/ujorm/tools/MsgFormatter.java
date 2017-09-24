@@ -34,36 +34,23 @@ public abstract class MsgFormatter {
     }
 
     /**
-     * Format the message from Object array
-     * @param templateWithArguments The first argument is a template where parameters are located by {@code "{}"}
-     * text and the next arguments are optional parameters of the template.
-     * @return In case the argument have not a length, the result is {@code null}.
-     */
-    @Nullable
-    public static String format(@Nullable final Object... templateWithArguments) {
-        if (Check.hasLength(templateWithArguments)) {
-            final String template = String.valueOf(templateWithArguments[0]);
-            final Object[] params = new Object[templateWithArguments.length - 1];
-            System.arraycopy(templateWithArguments, 1, params, 0, params.length);
-            return format(template, params);
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Format the message
-     * @param template Template where argument position is marked by the {@code {}} characters.
-     * @param arguments
+     * @param messageTemplate Template where argument position is marked by the {@code {}} characters.
+     * @param arguments Optional arguments
      * @return
      */
-    public static String format(@Nonnull final String template, @Nullable Object... arguments) {
+    @Nonnull
+    public static String format
+        ( @Nullable final String messageTemplate
+        , @Nullable final Object... arguments)
+        {
+        final String template = messageTemplate != null ? messageTemplate : String.valueOf(messageTemplate);
         if (!Check.hasLength(arguments)) {
             return template;
         }
 
         final StringBuilder result = new StringBuilder(Math.max(64, template.length() * 2));
-        int max = template.length();
+        final int max = template.length();
         int last = 0;
 
         for (Object arg : arguments) {
@@ -86,4 +73,21 @@ public abstract class MsgFormatter {
         return result.toString();
     }
 
+    /**
+     * Format the message from Object array
+     * @param templateAndArguments The first item is a template where parameters are located by {@code "{}"}
+     * text and the next arguments are optional parameters of the template.
+     * @return In case the argument have not a length, the result is {@code null}.
+     */
+    @Nonnull
+    public static String format(@Nullable final Object... templateAndArguments) {
+        if (Check.hasLength(templateAndArguments)) {
+            final String template = String.valueOf(templateAndArguments[0]);
+            final Object[] params = new Object[templateAndArguments.length - 1];
+            System.arraycopy(templateAndArguments, 1, params, 0, params.length);
+            return format(template, params);
+        } else {
+            return format (null, templateAndArguments);
+        }
+    }
 }
