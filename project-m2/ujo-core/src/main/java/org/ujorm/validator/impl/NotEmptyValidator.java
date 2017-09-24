@@ -17,7 +17,7 @@ package org.ujorm.validator.impl;
 
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.validator.MessageArg;
+import org.ujorm.tools.MessageArg;
 import org.ujorm.validator.ValidationError;
 
 /**

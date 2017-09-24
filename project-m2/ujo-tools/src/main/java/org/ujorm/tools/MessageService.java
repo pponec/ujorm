@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujorm.validator;
+package org.ujorm.tools;
 
 import java.util.Formatter;
 import java.util.HashMap;
@@ -21,7 +21,6 @@ import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.ujorm.tools.MessageArg;
 
 /**
  * Message Service
@@ -30,9 +29,9 @@ import org.ujorm.tools.MessageArg;
 public class MessageService {
 
     /** Two-character mark ("${") to introducing a template argument. */
-    protected static final String PARAM_BEG = "${";
+    public static final String PARAM_BEG = "${";
     /** The mark ("}") to finishing a template argument. */
-    protected static final char PARAM_END = '}';
+    public static final char PARAM_END = '}';
 
     /** Create a map from man pairs key-value
      * @param args Key-value pairs
@@ -42,8 +41,7 @@ public class MessageService {
         final Map<String, Object> result = new HashMap(max + 3);
         for (int j = 0; j < max; j++) {
             final int i = j << 1;
-            final Object value = args[i + 1];
-            result.put(args[i].toString(), value);
+            result.put(args[i].toString(), convertValue(args[i + 1]));
         }
         return result;
     }
@@ -77,7 +75,7 @@ public class MessageService {
      * @return Target result
      * @see Formatter
      */
-    protected final String format(@Nullable final String msg, @Nullable final Map<String, Object> args, @Nullable Locale locale) {
+    public final String format(@Nullable final String msg, @Nullable final Map<String, Object> args, @Nullable Locale locale) {
         if (msg == null || args == null) {
             return String.valueOf(msg);
         }
@@ -106,6 +104,14 @@ public class MessageService {
         }
         result.append(msg, last, msg.length());
         return result.toString();
+    }
+
+    /** Convert value.
+     * The method can be overwrited for special data types, for example: {@code Key -> Key.getFullName() }.
+     */
+    @Nullable
+    protected Object convertValue(@Nullable final Object value) {
+        return value;
     }
 
     /** Append a value to the output buffer.

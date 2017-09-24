@@ -15,6 +15,8 @@
  */
 package org.ujorm.validator;
 
+import org.ujorm.tools.MessageService;
+import org.ujorm.tools.MessageArg;
 import java.io.Serializable;
 import java.util.Map;
 import org.ujorm.*;

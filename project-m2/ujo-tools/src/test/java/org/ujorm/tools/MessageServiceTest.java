@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.validator;
+package org.ujorm.tools;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -23,8 +23,8 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 /**
- *
- * @author ponec
+ * Tests for the class MessageService
+ * @author Pavel Ponec
  */
 public class MessageServiceTest extends TestCase {
 
