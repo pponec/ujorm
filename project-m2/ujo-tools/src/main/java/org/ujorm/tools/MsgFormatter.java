@@ -20,6 +20,12 @@ import javax.annotation.Nullable;
 
 /**
  * Formatter of log messages where argument is located by the {@code {} } characters.
+ * See the next correct asserts:
+ * <pre class="pre">
+ *  assertEquals("TEST"    , MsgFormatter.format("TE{}T", "S"));
+ *  assertEquals("TE, S, T", MsgFormatter.format("TE", "S", "T"));
+ *  assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
+ * </pre>
  * @author Pavel Ponec
  */
 public abstract class MsgFormatter {
