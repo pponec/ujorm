@@ -92,18 +92,18 @@ public class MessageService {
             final String key = expr.substring(0, formatIndex >= 0 ? formatIndex : expr.length());
             final Object value = args.get(key);
             if (value != null) {
-                result.append(msg.substring(last, i));
+                result.append(msg, last, i);
                 final Object niceValue = formatIndex > 0
                     ? new Formatter(locale).format(expr.substring(1 + formatIndex)
                     , value, value, value, value, value, value) // Simplify Date format
                     : value;
                 appendValue(niceValue.toString(), result);
             } else {
-                result.append(msg.substring(last, end + 1));
+                result.append(msg, last, end + 1);
             }
             last = end + 1;
         }
-        result.append(msg.substring(last));
+        result.append(msg, last, msg.length());
         return result.toString();
     }
 
