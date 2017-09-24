@@ -19,7 +19,6 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import org.ujorm.Key;
 
 /**
  * Message Service
@@ -41,7 +40,7 @@ public class MessageService {
         for (int j = 0; j < max; j++) {
             final int i = j << 1;
             final Object value = args[i + 1];
-            result.put(args[i].toString(), value instanceof Key ? ((Key) value).getFullName() : value);
+            result.put(args[i].toString(), value);
         }
         return result;
     }
