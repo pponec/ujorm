@@ -19,6 +19,8 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Message Service
@@ -34,7 +36,7 @@ public class MessageService {
     /** Create a map from man pairs key-value
      * @param args Key-value pairs
      */
-    public Map<String, Object> map(Object... args) {
+    public Map<String, Object> map(@Nonnull final Object... args) {
         int max = args.length >> 1;
         final Map<String, Object> result = new HashMap(max + 3);
         for (int j = 0; j < max; j++) {
@@ -48,7 +50,7 @@ public class MessageService {
     /** Create a message template from argument pairs key-value
      * @param args Sequence of the Objects and Arguments
      */
-    public String template(Object... args) {
+    public String template(@Nonnull final Object... args) {
         final StringBuilder result = new StringBuilder(256);
         for (Object arg : args) {
             if (arg instanceof MessageArg) {
@@ -74,7 +76,7 @@ public class MessageService {
      * @return Target result
      * @see Formatter
      */
-    protected final String format(final String msg, final Map<String, Object> args, Locale locale) {
+    protected final String format(@Nullable final String msg, @Nullable final Map<String, Object> args, @Nullable Locale locale) {
         if (msg == null || args == null) {
             return String.valueOf(msg);
         }
@@ -108,7 +110,7 @@ public class MessageService {
     /** Append a value to the output buffer.
      * The method can be overwrited to escaping values.
      */
-    protected void appendValue(final String value, final StringBuffer result) {
+    protected void appendValue(@Nullable final String value, @Nonnull final StringBuffer result) {
         result.append(value);
     }
 }
