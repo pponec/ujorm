@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012-2014 Pavel Ponec
+ *  Copyright 2012-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.Map;
 /**
  * Validator Argument
  * @author Pavel Ponec
+ * @see {@link MessageService} class
  */
 public final class MessageArg<T> implements Serializable {
 

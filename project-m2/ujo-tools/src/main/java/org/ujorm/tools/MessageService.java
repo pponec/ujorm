@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012-2014 Pavel Ponec
+ *  Copyright 2012-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,18 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Message Service
+ * Message Service. See the next example
+ * <pre class="pre">
+ *  final MessageService service = new MessageService();
+ *  final MessageArg&lt;String&gt; NAME = new MessageArg&lt;&gt;("NAME");
+ *  String expResult = "The ORM framework Ujorm.";
+ *  String expTemplate = "The ORM framework ${NAME}.";
+ *  String template = service.template("The ORM framework ", NAME, ".");
+ *  Map<String, Object> args = service.map(NAME, "Ujorm");
+ *  String result = service.format(template, args);
+ *  assertEquals(expTemplate, template);
+ *  assertEquals(expResult, result);
+ * </pre>
  * @author Pavel Ponec
  */
 public class MessageService {
@@ -59,6 +70,23 @@ public class MessageService {
             }
         }
         return result.toString();
+    }
+
+    /**
+     * Format a template message using named variables.
+     * Each variable must be surrounded by two marks "${" and "}".
+     * The first mark is forbidden in a common text and can be replaced by the variable #{MARK}.
+     * @param msg Template message, see the simple example:
+     * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%F}"}</pre>
+     * or
+     * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"}</pre>
+     * The format expression is separated by the character (,) a and it is not mandatory.
+     * @param args Key-value map arguments
+     * @return Target result
+     * @see Formatter
+     */
+    public final String format(@Nullable final String msg, @Nullable final Map<String, Object> args) {
+        return format(msg, args, null);
     }
 
     /**
