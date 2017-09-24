@@ -16,6 +16,7 @@
 package org.ujorm.tools;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -134,6 +135,21 @@ public class MessageServiceTest extends TestCase {
         System.out.println("format");
         String expResult = "Date is: 2016-05-04 03:02:01";
         Map<String, Object> args = service.map(DATE, getCalendar().getTime());
+        //
+        String template1 = "Date is: ${DATE,%tY-%tm-%td %tH:%tM:%tS}";
+        String result1 = service.format(template1, args, Locale.ENGLISH);
+        assertEquals(expResult, result1);
+        //
+        String template2 = "Date is: ${DATE,%tF %tT}";
+        String result2 = service.format(template2, args, Locale.ENGLISH);
+        assertEquals(expResult, result2);
+    }
+
+    /** Test of format method, of class MessageService. */
+    public void testFormat_7() {
+        System.out.println("format");
+        String expResult = "Date is: 2016-05-04 03:02:01";
+        Map<String, Object> args = service.map(DATE, LocalDateTime.parse("2016-05-04T03:02:01"));
         //
         String template1 = "Date is: ${DATE,%tY-%tm-%td %tH:%tM:%tS}";
         String result1 = service.format(template1, args, Locale.ENGLISH);
