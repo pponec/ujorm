@@ -22,6 +22,14 @@ import static org.ujorm.tools.MsgFormatter.format;
 /**
  * Assertion utils, where all method can throw the {@code IllegalArgumentException} exception only.
  * For a message format see the {@link MsgFormatter#format(java.lang.Object...)} method description.
+ * See the next correct asserts:
+ * <pre class="pre">
+ *  Assert.isTrue(true);
+ *  Assert.notNull("ABC");
+ *  Assert.hasLength("ABC");
+ *  Assert.hasLength('A','B','C');
+ *  Assert.hasLength(Arrays.asList("A", "B", "C"));
+ * </pre>
  * @see https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html
  * @author Pavel Ponec
  */
@@ -62,7 +70,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final byte... array)
+    public static void hasLength(@Nullable final byte[] array)
             throws IllegalArgumentException {
         hasLength(array, NO_MESSAGE);
     }
@@ -76,7 +84,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(final char... array)
+    public static void hasLength(final char[] array)
             throws IllegalArgumentException {
         hasLength(array, NO_MESSAGE);
     }
@@ -118,7 +126,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final CharSequence value)
+        public static void hasLength(@Nullable final CharSequence value)
             throws IllegalArgumentException {
         hasLength(value, NO_MESSAGE);
     }
@@ -160,7 +168,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final byte... array)
+    public static void isEmpty(@Nullable final byte[] array)
             throws IllegalArgumentException {
         isEmpty(array, NO_MESSAGE);
     }
@@ -174,7 +182,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final char... array)
+    public static void isEmpty(@Nullable final char[] array)
             throws IllegalArgumentException {
         isEmpty(array, NO_MESSAGE);
     }

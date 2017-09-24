@@ -30,9 +30,9 @@ public class MsgFormatterTest {
      */
     @Test
     public void testDemo() {
-        assertEquals("TEST"      , MsgFormatter.format("T{}{}{}", "E", "S", "T"));
-        assertEquals("T, E, S, T", MsgFormatter.format("T", "E", "S", "T"));
-        assertEquals("TES{}"     , MsgFormatter.format("T{}{}{}", "E", "S"));
+        assertEquals("TEST"    , MsgFormatter.format("TE{}T", "S"));
+        assertEquals("TE, S, T", MsgFormatter.format("TE", "S", "T"));
+        assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
     }
 
     /**

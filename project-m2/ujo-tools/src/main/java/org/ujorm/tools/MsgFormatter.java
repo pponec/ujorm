@@ -34,7 +34,12 @@ public abstract class MsgFormatter {
     }
 
     /**
-     * Format the message
+     * Format the message, see the next correct asserts:
+     * <pre class="pre">
+     *  assertEquals("TEST"    , MsgFormatter.format("TE{}T", "S"));
+     *  assertEquals("TE, S, T", MsgFormatter.format("TE", "S", "T"));
+     *  assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
+     * </pre>
      * @param messageTemplate Template where argument position is marked by the {@code {}} characters.
      * @param arguments Optional arguments
      * @return

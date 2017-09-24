@@ -31,6 +31,18 @@ public class AssertTest {
     private static final Object[] TEST_MESSAGE = {"MESSAGE:{}{}{}", "A", "B", "C"};
 
     /**
+     * Test of format method, of class MsgFormatter.
+     */
+    @Test
+    public void testDemo() {
+        Assert.isTrue(true);
+        Assert.notNull("ABC");
+        Assert.hasLength("ABC");
+        Assert.hasLength('A','B','C');
+        Assert.hasLength(Arrays.asList("A", "B", "C"));
+    }
+
+    /**
      * Test of isTrue method, of class Assert.
      */
     @Test

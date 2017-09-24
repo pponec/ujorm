@@ -19,7 +19,12 @@ import java.util.Collection;
 import javax.annotation.Nullable;
 
 /**
- * Common checker
+ * Common checker. See the next positive tests:
+ * <pre class="pre">
+ *  Check.hasLength("ABC");
+ *  Check.hasLength('A','B','C');
+ *  Check.hasLength(Arrays.asList("A", "B", "C"));
+ * </pre>
  * @author Pavel Ponec
  */
 public abstract class Check {
@@ -29,12 +34,12 @@ public abstract class Check {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static boolean hasLength(@Nullable final byte... array) {
+    public static boolean hasLength(@Nullable final byte[] array) {
         return array != null && array.length > 0;
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static boolean hasLength(@Nullable final char... array) {
+    public static boolean hasLength(@Nullable final char[] array) {
         return array != null && array.length > 0;
     }
 
@@ -54,12 +59,12 @@ public abstract class Check {
     }
 
     /** Checks if the argument is empty or {@code null}. */
-    public static boolean isEmpty(@Nullable final byte... array) {
+    public static boolean isEmpty(@Nullable final byte[] array) {
         return !hasLength(array);
     }
 
     /** Checks if the argument is empty or {@code null}. */
-    public static boolean isEmpty(@Nullable final char... array) {
+    public static boolean isEmpty(@Nullable final char[] array) {
         return !hasLength(array);
     }
 
