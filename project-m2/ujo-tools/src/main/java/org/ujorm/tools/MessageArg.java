@@ -19,9 +19,9 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Validator Argument
+ * Message Argument
  * @author Pavel Ponec
- * @see {@link MessageService} class
+ * @see MessageService
  * @since 1.54
  */
 public final class MessageArg<T> implements Serializable {
