@@ -16,6 +16,7 @@
 package org.ujorm.tools;
 
 import java.util.Collection;
+import java.util.Map;
 import javax.annotation.Nullable;
 import static org.ujorm.tools.MsgFormatter.format;
 
@@ -37,6 +38,7 @@ import static org.ujorm.tools.MsgFormatter.format;
  *  Assert.isEmpty((List) null);
  * </pre>
  * @see https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html
+ * @see https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/org/apache/commons/lang3/Validate.html
  * @author Pavel Ponec
  * @since 1.73
  */
@@ -126,6 +128,20 @@ public abstract class Assert {
 
     /** Checks if the argument is not empty, nor {@code null}. */
     public static void hasLength(@Nullable final Collection<?> values, @Nullable final Object... message)
+            throws IllegalArgumentException {
+        if (!Check.hasLength(values)) {
+            throw new IllegalArgumentException(format(message));
+        }
+    }
+
+    /** Checks if the argument is not empty, nor {@code null}. */
+    public static void hasLength(@Nullable final Map<?,?> values)
+            throws IllegalArgumentException {
+        hasLength(values, NO_MESSAGE);
+    }
+
+    /** Checks if the argument is not empty, nor {@code null}. */
+    public static void hasLength(@Nullable final Map<?,?> values, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));
@@ -224,6 +240,20 @@ public abstract class Assert {
 
     /** Checks if the argument is not empty, nor {@code null}. */
     public static void isEmpty(@Nullable final Collection<?> values, @Nullable final Object... message)
+            throws IllegalArgumentException {
+        if (Check.hasLength(values)) {
+            throw new IllegalArgumentException(format(message));
+        }
+    }
+
+    /** Checks if the argument is not empty, nor {@code null}. */
+    public static void isEmpty(@Nullable final Map<?,?> values)
+            throws IllegalArgumentException {
+        isEmpty(values, NO_MESSAGE);
+    }
+
+    /** Checks if the argument is not empty, nor {@code null}. */
+    public static void isEmpty(@Nullable final Map<?,?> values, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));

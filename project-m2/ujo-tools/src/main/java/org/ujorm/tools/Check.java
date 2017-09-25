@@ -16,6 +16,7 @@
 package org.ujorm.tools;
 
 import java.util.Collection;
+import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
@@ -59,6 +60,11 @@ public abstract class Check {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
+    public static boolean hasLength(@Nullable final Map<?,?> values) {
+        return values != null && values.size() > 0;
+    }
+
+    /** Checks if the argument is not empty, nor {@code null}. */
     public static boolean hasLength(@Nullable final CharSequence value) {
         return value != null && value.length() > 0;
     }
@@ -80,6 +86,11 @@ public abstract class Check {
 
     /** Checks if the argument is empty or {@code null}. */
     public static boolean isEmpty(@Nullable final Collection<?> value) {
+        return !hasLength(value);
+    }
+
+    /** Checks if the argument is empty or {@code null}. */
+    public static boolean isEmpty(@Nullable final Map<?,?> value) {
         return !hasLength(value);
     }
 
