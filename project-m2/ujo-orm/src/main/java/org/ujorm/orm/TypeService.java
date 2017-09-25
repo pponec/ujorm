@@ -37,6 +37,7 @@ import org.ujorm.tools.MsgFormatter;
 /**
  * A type service for popular Java types and more.
  * @author Ponec
+ * @see {@link TypeServiceForOlderJdbc} for JDBC version older than 4.2
  */
 public class TypeService implements ITypeService<Object,Object> {
 

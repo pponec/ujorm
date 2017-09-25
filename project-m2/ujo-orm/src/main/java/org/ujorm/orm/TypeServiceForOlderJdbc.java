@@ -33,7 +33,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import static org.ujorm.orm.TypeService.*;
 
 /**
- * A type service support for some JDBC version less than 4.2 .
+ * A type service support for some JDBC version older than 4.2 .
  * The class converts Java8 date types to older API of JDBC.
  * The supported types are:
  * <ul>
@@ -43,6 +43,7 @@ import static org.ujorm.orm.TypeService.*;
  * </ul>
  *
  * @author Pavel Ponec
+ * @since 1.72
  */
 public class TypeServiceForOlderJdbc extends TypeService {
 

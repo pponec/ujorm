@@ -36,6 +36,7 @@ import javax.annotation.Nullable;
  *  assertEquals(expResult, result);
  * </pre>
  * @author Pavel Ponec
+ * @since 1.53
  */
 public class MessageService {
 

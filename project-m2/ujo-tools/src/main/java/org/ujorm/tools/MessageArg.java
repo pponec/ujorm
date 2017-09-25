@@ -22,6 +22,7 @@ import java.util.Map;
  * Validator Argument
  * @author Pavel Ponec
  * @see {@link MessageService} class
+ * @since 1.54
  */
 public final class MessageArg<T> implements Serializable {
 

@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
  *  assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
  * </pre>
  * @author Pavel Ponec
+ * @since 1.73
  */
 public abstract class MsgFormatter {
 

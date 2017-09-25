@@ -32,6 +32,7 @@ import static org.ujorm.tools.MsgFormatter.format;
  * </pre>
  * @see https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html
  * @author Pavel Ponec
+ * @since 1.73
  */
 public abstract class Assert {
 

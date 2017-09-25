@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
  *  Check.hasLength(Arrays.asList("A", "B", "C"));
  * </pre>
  * @author Pavel Ponec
+ * @since 1.73
  */
 public abstract class Check {
 
