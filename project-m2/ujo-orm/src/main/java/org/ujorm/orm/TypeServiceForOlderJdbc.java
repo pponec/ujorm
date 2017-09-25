@@ -17,17 +17,18 @@
 package org.ujorm.orm;
 
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.metaModel.MetaColumn;
 import static org.ujorm.orm.TypeService.*;
 
@@ -75,19 +76,19 @@ public class TypeServiceForOlderJdbc extends TypeService {
     public Object getValue
         ( @Nonnull final MetaColumn mColumn
         , @Nonnull final CallableStatement rs
-        , final int c) throws SQLException {
+        , final int c) throws SQLException, IllegalUjormException {
         switch (mColumn.getTypeCode()) {
             case LOCAL_DATE:
                 final Date sqlDate = rs.getDate(c);
-                return rs.wasNull() ? null : sqlDate.toLocalDate();
+                return sqlDate !=null ? sqlDate.toLocalDate() : null;
             case LOCAL_TIME:
                 final Time sqlTime = rs.getTime(c);
-                return rs.wasNull() ? null : sqlTime.toLocalTime();
+                return sqlTime != null ? sqlTime.toLocalTime() : null;
             case LOCAL_DATE_TIME:
                 final Timestamp timestamp = rs.getTimestamp(c);
-                return rs.wasNull() ? null : timestamp.toLocalDateTime();
+                return timestamp !=null ? timestamp.toLocalDateTime() : null;
             case OFFSET_DATE_TIME:
-                throw new IllegalStateException("Unsupported type: " + mColumn.getType());
+                throw new IllegalUjormException("Unsupported type: " + mColumn.getType());
             default:
                 return super.getValue(mColumn, rs, c);
         }
@@ -95,22 +96,22 @@ public class TypeServiceForOlderJdbc extends TypeService {
 
    /** Get a value from an older ResultSet. */
     @Override
-    public Object getValue 
+    public Object getValue
         ( @Nonnull final MetaColumn mColumn
         , @Nonnull final ResultSet rs
-        , final int c) throws SQLException {
+        , final int c) throws SQLException, IllegalUjormException {
         switch (mColumn.getTypeCode()) {
             case LOCAL_DATE:
                 final Date sqlDate = rs.getDate(c);
-                return rs.wasNull() ? null : sqlDate.toLocalDate();
+                return sqlDate !=null ? sqlDate.toLocalDate() : null;
             case LOCAL_TIME:
                 final Time sqlTime = rs.getTime(c);
-                return rs.wasNull() ? null : sqlTime.toLocalTime();
+                return sqlTime != null ? sqlTime.toLocalTime() : null;
             case LOCAL_DATE_TIME:
                 final Timestamp timestamp = rs.getTimestamp(c);
-                return rs.wasNull() ? null : timestamp.toLocalDateTime();
+                return timestamp !=null ? timestamp.toLocalDateTime() : null;
             case OFFSET_DATE_TIME:
-                throw new IllegalStateException("Unsupported type: " + mColumn.getType());
+                throw new IllegalUjormException("Unsupported type: " + mColumn.getType());
             default:
                 return super.getValue(mColumn, rs, c);
         }
