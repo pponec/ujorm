@@ -17,6 +17,7 @@ package org.ujorm.tools;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -38,8 +39,14 @@ public class AssertTest {
         Assert.isTrue(true);
         Assert.notNull("ABC");
         Assert.hasLength("ABC");
-        Assert.hasLength('A','B','C');
+        Assert.hasLength(new char[]{'A', 'B', 'C'});
         Assert.hasLength(Arrays.asList("A", "B", "C"));
+
+        Assert.isFalse(false);
+        Assert.isNull (null);
+        Assert.isEmpty("");
+        Assert.isEmpty(new char[0]);
+        Assert.isEmpty((List) null);
     }
 
     /**

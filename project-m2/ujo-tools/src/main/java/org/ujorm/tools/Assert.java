@@ -27,8 +27,14 @@ import static org.ujorm.tools.MsgFormatter.format;
  *  Assert.isTrue(true);
  *  Assert.notNull("ABC");
  *  Assert.hasLength("ABC");
- *  Assert.hasLength('A','B','C');
+ *  Assert.hasLength(new char[]{'A','B','C'});
  *  Assert.hasLength(Arrays.asList("A", "B", "C"));
+ *
+ *  Assert.isFalse(false);
+ *  Assert.isNull (null);
+ *  Assert.isEmpty("");
+ *  Assert.isEmpty(new char[0]);
+ *  Assert.isEmpty((List) null);
  * </pre>
  * @see https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html
  * @author Pavel Ponec

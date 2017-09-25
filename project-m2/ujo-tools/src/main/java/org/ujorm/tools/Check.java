@@ -22,8 +22,12 @@ import javax.annotation.Nullable;
  * Common checker. See the next positive tests:
  * <pre class="pre">
  *  Check.hasLength("ABC");
- *  Check.hasLength('A','B','C');
+ *  Check.hasLength(new char[]{'A', 'B', 'C'});
  *  Check.hasLength(Arrays.asList("A", "B", "C"));
+ *
+ *  Check.isEmpty("");
+ *  Check.isEmpty(new char[0]);
+ *  Check.isEmpty((List) null);
  * </pre>
  * @author Pavel Ponec
  * @since 1.73

@@ -17,14 +17,29 @@ package org.ujorm.tools;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
+ * Test of the Check class
  * @author Pavel Ponec
  */
 public class CheckTest {
+
+    /**
+     * Test of format method, of class MsgFormatter.
+     */
+    @Test
+    public void testDemo() {
+        Check.hasLength("ABC");
+        Check.hasLength(new char[]{'A', 'B', 'C'});
+        Check.hasLength(Arrays.asList("A", "B", "C"));
+
+        Check.isEmpty("");
+        Check.isEmpty(new char[0]);
+        Check.isEmpty((List) null);
+    }
 
     /**
      * Test of hasLength method, of class Check.
