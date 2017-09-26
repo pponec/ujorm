@@ -41,6 +41,7 @@ import static org.ujorm.tools.MsgFormatter.format;
  * </pre>
  * @see https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html
  * @see https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/org/apache/commons/lang3/Validate.html
+ * @see https://google.github.io/guava/releases/19.0/api/docs/com/google/common/base/Preconditions.html
  * @author Pavel Ponec
  * @since 1.73
  */
