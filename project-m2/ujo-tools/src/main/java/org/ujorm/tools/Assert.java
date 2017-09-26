@@ -17,6 +17,8 @@ package org.ujorm.tools;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import static org.ujorm.tools.MsgFormatter.format;
 
@@ -25,7 +27,8 @@ import static org.ujorm.tools.MsgFormatter.format;
  * For a message format see the {@link MsgFormatter#format(java.lang.Object...)} method description.
  * See the next correct asserts:
  * <pre class="pre">
- *  Assert.isTrue(true);
+ *  Assert.isTrue(true, "TEST:{}{}", "A", "B");
+ *  Assert.isTrue(30, (x) -> x > 20, "Wrong No");
  *  Assert.notNull("ABC");
  *  Assert.hasLength("ABC");
  *  Assert.hasLength(new char[]{'A','B','C'});
@@ -33,6 +36,7 @@ import static org.ujorm.tools.MsgFormatter.format;
  *  Assert.hasLength(Arrays.asList("A", "B", "C"));
  *
  *  Assert.isFalse(false);
+ *  Assert.isFalse(15, (x) -> x > 20);
  *  Assert.isNull (null);
  *  Assert.isEmpty("");
  *  Assert.isEmpty(new char[0]);
@@ -56,7 +60,7 @@ public abstract class Assert {
 
     /** Checks if the argument is {@code true}. */
     public static final void isTrue(final boolean value) throws IllegalArgumentException {
-        isTrue(value, NO_MESSAGE);
+        Assert.isTrue(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is {@code true}. */
@@ -64,6 +68,18 @@ public abstract class Assert {
             throws IllegalArgumentException {
         if (!value) {
             throw new IllegalArgumentException(format(message), new NullPointerException());
+        }
+    }
+
+    /** Checks if the value is not {@code null} and result of the the method
+     * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}. */
+    public static <T> void isTrue
+        ( @Nullable final T value
+        , @Nonnull final Predicate<T> predicate
+        , final Object... message)
+    {
+        if (value == null || !predicate.test(value)) {
+            throw new IllegalArgumentException(format(message));
         }
     }
 
@@ -141,6 +157,18 @@ public abstract class Assert {
             throws IllegalArgumentException {
         if (value) {
             throw new IllegalArgumentException(format(message), new NullPointerException());
+        }
+    }
+
+    /** Checks if the argument is not {@code null} and result of the the method
+     * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}. */
+    public static <T> void isFalse
+        ( @Nullable final T value
+        , @Nonnull final Predicate<T> predicate
+        , final Object... message)
+    {
+        if (value == null || predicate.test(value)) {
+            throw new IllegalArgumentException(format(message));
         }
     }
 

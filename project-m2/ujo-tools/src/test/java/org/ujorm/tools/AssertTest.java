@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -36,7 +37,8 @@ public class AssertTest {
      */
     @Test
     public void testDemo() {
-        Assert.isTrue(true);
+        Assert.isTrue(true, "TEST:{}{}", "A", "B");
+        Assert.isTrue(10, (x) -> x < 20, "Wrong No");
         Assert.notNull("ABC");
         Assert.hasLength("ABC");
         Assert.hasLength(new char[]{'A', 'B', 'C'});
@@ -44,6 +46,7 @@ public class AssertTest {
         Assert.hasLength(Arrays.asList("A", "B", "C"));
 
         Assert.isFalse(false);
+        Assert.isFalse(30, (x) -> x < 20);
         Assert.isNull (null);
         Assert.isEmpty("");
         Assert.isEmpty(new char[0]);
@@ -69,6 +72,15 @@ public class AssertTest {
         System.out.println("isTrue");
         boolean value = true;
         Assert.isTrue(value, TEST_MESSAGE);
+    }
+
+    /**
+     * Test of isTrue method, of class Assert.
+     */
+    @Test
+    public void testIsTrue_Predicate_ok() {
+        System.out.println("isTrue");
+        Assert.isTrue(10, (x) -> x < 20, TEST_MESSAGE);
     }
 
     /**
@@ -349,6 +361,14 @@ public class AssertTest {
             assertEquals(expResult, e.getMessage());
             assertTrue(e.getCause() instanceof NullPointerException);
         }
+
+        try {
+            Assert.isTrue(value, (x) -> x.length() < 20, TEST_MESSAGE);
+            assertTrue(false);
+        } catch (IllegalArgumentException e) {
+            assertEquals(expResult, e.getMessage());
+            assertNull(e.getCause());
+        }
     }
 
     /**
@@ -389,6 +409,15 @@ public class AssertTest {
         System.out.println("isTrue");
         boolean value = false;
         Assert.isTrue(value, TEST_MESSAGE);
+    }
+
+    /**
+     * Test of isTrue method, of class Assert.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testIsTrue_Predicate_nok() {
+        System.out.println("isTrue");
+        Assert.isTrue(30, (x) -> x < 20, TEST_MESSAGE);
     }
 
     /**
