@@ -24,10 +24,12 @@ import javax.annotation.Nullable;
  * <pre class="pre">
  *  Check.hasLength("ABC");
  *  Check.hasLength(new char[]{'A', 'B', 'C'});
+ *  Check.hasLength(new StringBuilder().append("ABC"));
  *  Check.hasLength(Arrays.asList("A", "B", "C"));
  *
  *  Check.isEmpty("");
  *  Check.isEmpty(new char[0]);
+ *  Check.isEmpty(new StringBuilder());
  *  Check.isEmpty((List) null);
  * </pre>
  * @author Pavel Ponec

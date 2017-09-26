@@ -40,12 +40,14 @@ public class AssertTest {
         Assert.notNull("ABC");
         Assert.hasLength("ABC");
         Assert.hasLength(new char[]{'A', 'B', 'C'});
+        Assert.hasLength(new StringBuilder().append("ABC"));
         Assert.hasLength(Arrays.asList("A", "B", "C"));
 
         Assert.isFalse(false);
         Assert.isNull (null);
         Assert.isEmpty("");
         Assert.isEmpty(new char[0]);
+        Assert.isEmpty(new StringBuilder());
         Assert.isEmpty((List) null);
     }
 
@@ -96,7 +98,7 @@ public class AssertTest {
     public void testHasLength_byteArr_ok() {
         System.out.println("hasLength");
         byte[] array = new byte[1];
-        Assert.hasLength(array);
+        Assert.hasLength(array, Assert.NO_MESSAGE);
     }
 
     /**
@@ -116,7 +118,7 @@ public class AssertTest {
     public void testHasLength_charArr_ok() {
         System.out.println("hasLength");
         char[] array = new char[1];
-        Assert.hasLength(array);
+        Assert.hasLength(array, Assert.NO_MESSAGE);
     }
 
     /**
@@ -136,7 +138,7 @@ public class AssertTest {
     public void testHasLength_ObjectArr_ok() {
         System.out.println("hasLength");
         Object[] values = new Object[1];
-        Assert.hasLength(values);
+        Assert.hasLength(values, Assert.NO_MESSAGE);
     }
 
     /**
@@ -156,7 +158,7 @@ public class AssertTest {
     public void testHasLength_Collection_ok() {
         System.out.println("hasLength");
         Collection values = Arrays.asList("A", "B", "C");
-        Assert.hasLength(values);
+        Assert.hasLength(values, Assert.NO_MESSAGE);
     }
 
     /**
@@ -176,7 +178,7 @@ public class AssertTest {
     public void testHasLength_CharSequence_ok() {
         System.out.println("hasLength");
         CharSequence value = "ABC";
-        Assert.hasLength(value);
+        Assert.hasLength(value, Assert.NO_MESSAGE);
     }
 
     /**
@@ -236,7 +238,7 @@ public class AssertTest {
     public void testIsEmpty_byteArr_ok() {
         System.out.println("isEmpty");
         byte[] array = new byte[0];
-        Assert.isEmpty(array);
+        Assert.isEmpty(array, Assert.NO_MESSAGE);
     }
 
     /**
@@ -256,7 +258,7 @@ public class AssertTest {
     public void testIsEmpty_charArr_ok() {
         System.out.println("isEmpty");
         char[] array = null;
-        Assert.isEmpty(array);
+        Assert.isEmpty(array, Assert.NO_MESSAGE);
     }
 
     /**
@@ -276,7 +278,7 @@ public class AssertTest {
     public void testIsEmpty_ObjectArr_ok() {
         System.out.println("isEmpty");
         Object[] values = null;
-        Assert.isEmpty(values);
+        Assert.isEmpty(values, Assert.NO_MESSAGE);
     }
 
     /**
@@ -296,7 +298,7 @@ public class AssertTest {
     public void testIsEmpty_Collection_ok() {
         System.out.println("isEmpty");
         Collection values = null;
-        Assert.isEmpty(values);
+        Assert.isEmpty(values, Assert.NO_MESSAGE);
     }
 
     /**
@@ -316,7 +318,7 @@ public class AssertTest {
     public void testIsEmpty_CharSequence_ok() {
         System.out.println("isEmpty");
         CharSequence value = null;
-        Assert.isEmpty(value);
+        Assert.isEmpty(value, Assert.NO_MESSAGE);
     }
 
     /**
@@ -335,13 +337,31 @@ public class AssertTest {
      * Test of hasLength method, of class Assert.
      */
     @Test
-    public void testNotNull_CharSequence_ObjectArr_Nok() {
+    public void testNotNull_CharSequence_ObjectArr1_Nok() {
         System.out.println("notNull");
 
         CharSequence value = null;
         String expResult = "MESSAGE:ABC";
         try {
             Assert.notNull(value, TEST_MESSAGE);
+            assertTrue(false);
+        } catch (IllegalArgumentException e) {
+            assertEquals(expResult, e.getMessage());
+            assertTrue(e.getCause() instanceof NullPointerException);
+        }
+    }
+
+    /**
+     * Test of hasLength method, of class Assert.
+     */
+    @Test
+    public void testNotNull_CharSequence_ObjectArr2_Nok() {
+        System.out.println("notNull");
+
+        CharSequence value = null;
+        String expResult = null;
+        try {
+            Assert.notNull(value, Assert.NO_MESSAGE);
             assertTrue(false);
         } catch (IllegalArgumentException e) {
             assertEquals(expResult, e.getMessage());

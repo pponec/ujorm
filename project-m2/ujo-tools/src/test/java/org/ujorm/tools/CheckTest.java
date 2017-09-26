@@ -32,13 +32,27 @@ public class CheckTest {
      */
     @Test
     public void testDemo() {
-        Check.hasLength("ABC");
-        Check.hasLength(new char[]{'A', 'B', 'C'});
-        Check.hasLength(Arrays.asList("A", "B", "C"));
+        boolean resultTrue1,resultTrue2,resultTrue3,resultTrue4;
+        boolean resultTrue5,resultTrue6,resultTrue7,resultTrue8;
 
-        Check.isEmpty("");
-        Check.isEmpty(new char[0]);
-        Check.isEmpty((List) null);
+        resultTrue1 = Check.hasLength("ABC");
+        resultTrue2 = Check.hasLength(new char[]{'A', 'B', 'C'});
+        resultTrue3 = Check.hasLength(new StringBuilder().append("ABC"));
+        resultTrue4 = Check.hasLength(Arrays.asList("A", "B", "C"));
+
+        resultTrue5 = Check.isEmpty("");
+        resultTrue6 = Check.isEmpty(new char[0]);
+        resultTrue7 = Check.isEmpty(new StringBuilder());
+        resultTrue8 = Check.isEmpty((List) null);
+
+        assertTrue(resultTrue1);
+        assertTrue(resultTrue2);
+        assertTrue(resultTrue3);
+        assertTrue(resultTrue4);
+        assertTrue(resultTrue5);
+        assertTrue(resultTrue6);
+        assertTrue(resultTrue7);
+        assertTrue(resultTrue8);
     }
 
     /**

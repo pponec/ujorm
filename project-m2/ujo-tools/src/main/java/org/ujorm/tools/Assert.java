@@ -29,12 +29,14 @@ import static org.ujorm.tools.MsgFormatter.format;
  *  Assert.notNull("ABC");
  *  Assert.hasLength("ABC");
  *  Assert.hasLength(new char[]{'A','B','C'});
+ *  Assert.hasLength(new StringBuilder().append("ABC"));
  *  Assert.hasLength(Arrays.asList("A", "B", "C"));
  *
  *  Assert.isFalse(false);
  *  Assert.isNull (null);
  *  Assert.isEmpty("");
  *  Assert.isEmpty(new char[0]);
+ *  Assert.isEmpty(new StringBuilder());
  *  Assert.isEmpty((List) null);
  * </pre>
  * @see https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html
@@ -79,23 +81,11 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final byte[] array)
-            throws IllegalArgumentException {
-        hasLength(array, NO_MESSAGE);
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
     public static void hasLength(@Nullable final byte[] array, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(array)) {
             throw new IllegalArgumentException(format(message));
         }
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(final char[] array)
-            throws IllegalArgumentException {
-        hasLength(array, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -107,23 +97,11 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final Object... values)
-            throws IllegalArgumentException {
-        hasLength(values, NO_MESSAGE);
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
     public static void hasLength(@Nullable final Object[] values, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));
         }
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final Collection<?> values)
-            throws IllegalArgumentException {
-        hasLength(values, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -135,23 +113,11 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final Map<?,?> values)
-            throws IllegalArgumentException {
-        hasLength(values, NO_MESSAGE);
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
     public static void hasLength(@Nullable final Map<?,?> values, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));
         }
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
-        public static void hasLength(@Nullable final CharSequence value)
-            throws IllegalArgumentException {
-        hasLength(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -191,23 +157,11 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final byte[] array)
-            throws IllegalArgumentException {
-        isEmpty(array, NO_MESSAGE);
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
     public static void isEmpty(final byte[] array, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (Check.hasLength(array)) {
             throw new IllegalArgumentException(format(message));
         }
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final char[] array)
-            throws IllegalArgumentException {
-        isEmpty(array, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -219,23 +173,11 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final Object... values)
-            throws IllegalArgumentException {
-        isEmpty(values, NO_MESSAGE);
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
     public static void isEmpty(@Nullable final Object[] values, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));
         }
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final Collection<?> values)
-            throws IllegalArgumentException {
-        isEmpty(values, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
@@ -247,23 +189,11 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final Map<?,?> values)
-            throws IllegalArgumentException {
-        isEmpty(values, NO_MESSAGE);
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
     public static void isEmpty(@Nullable final Map<?,?> values, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));
         }
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final CharSequence value)
-            throws IllegalArgumentException {
-        isEmpty(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
