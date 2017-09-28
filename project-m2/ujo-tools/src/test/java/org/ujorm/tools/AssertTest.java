@@ -33,7 +33,7 @@ public class AssertTest {
     private static final Object[] TEST_MESSAGE = {"MESSAGE:{}{}{}", "A", "B", "C"};
 
     /**
-     * Test of format method, of class MsgFormatter.
+     * Demo test of the Assert class. All the claims are true.
      */
     @Test
     public void testDemo() {
@@ -52,6 +52,49 @@ public class AssertTest {
         Assert.isEmpty(new char[0]);
         Assert.isEmpty(new StringBuilder());
         Assert.isEmpty((List) null);
+    }
+
+    /**
+     * Test of message building. All the claims are false.
+     */
+    @Test
+    public void testDemoMessage() {
+        Integer value = 20;
+        try {
+            Assert.isTrue(value, (x) -> x < 10, "Wrong number {}", value); // "Wrong number 20"
+            assertTrue(false);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Wrong number 20", e.getMessage());
+        }
+
+        try {
+            Assert.isTrue(value, (x) -> x < 10, "Wrong", value); // "Wrong, 20"
+            assertTrue(false);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Wrong, 20", e.getMessage());
+        }
+
+        try {
+            Assert.isTrue(value, (x) -> x < 10, value); // "20"
+            assertTrue(false);
+        } catch (IllegalArgumentException e) {
+            assertEquals("20", e.getMessage());
+        }
+
+        try {
+            Assert.isTrue(value, (x) -> x < 10); //  null
+            assertTrue(false);
+        } catch (IllegalArgumentException e) {
+            assertEquals(null, e.getMessage());
+        }
+
+        value = null;
+        try {
+            Assert.isTrue(value, (x) -> x < 10, "Wrong number {}", value); // "Wrong number null"
+            assertTrue(false);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Wrong number null", e.getMessage());
+        }
     }
 
     /**
@@ -390,7 +433,6 @@ public class AssertTest {
     }
 
     // ------------- EXCEPTION TESTS -------------
-
     /**
      * Test of isTrue method, of class Assert.
      */
