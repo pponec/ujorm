@@ -2,6 +2,12 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 1.74 (2017-09-28)
++ TOOLS: Assert class supports the Lambda expression by Predicate
++ TOOLS: Assert class supports the Map data type
++ TOOLS: MsgFormatter performance optimization is done
++ CORE: code cleaning
+
 release 1.73 (2017-09-24)
 + TOOLS: new module ujo-tools for common use
 + TOOLS: new clases to validate arguments: Assert
