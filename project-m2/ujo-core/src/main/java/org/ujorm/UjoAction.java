@@ -1,17 +1,17 @@
 /*
- *  Copyright 2007-2014 Pavel Ponec
+ * Copyright 2007-2017 Pavel Ponec, https://github.com/pponec
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.ujorm;
 
@@ -80,16 +80,16 @@ public interface UjoAction {
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_TABLE_SHOW = 100;
-    
-    
+
+
     // ========= DUMMY ACTION =========
-    
+
     /** A dummy action have got an ACTION_UNDEFINED id and the null context. */
     public static final UjoAction DUMMY = new UjoActionImpl(null);
-    
+
     // ========= METHODS =========
-    
-    /** Returns a type of the action. The default type is ACTION_UNDEFINED. 
+
+    /** Returns a type of the action. The default type is ACTION_UNDEFINED.
      * <ul>
      * <li>Numbers are reserved in range (from 0 to 999, inclusive) for an internal usage of the Ujorm</li>
      * <li>Zero is an undefined action</li>
@@ -98,11 +98,11 @@ public interface UjoAction {
      * <br>The number can be useful for a resolution of an action for a different purpose (e.g. export to 2 different XML files).
      */
     public int getType();
-    
+
     /** Returns a context of the action. The value is dedicated to a user usage and the value can be {@code null}. */
     public Object getContext();
 
     /** Returns a default UjoManager */
     // TODO: public org.ujorm.core.UjoManager getManager();
-    
+
 }
