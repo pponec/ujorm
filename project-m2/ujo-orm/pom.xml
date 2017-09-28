@@ -171,14 +171,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Backport of JSR-310 from JDK 8 to JDK 7 and JDK 6. -->
-        <dependency>
-            <groupId>org.threeten</groupId>
-            <artifactId>threetenbp</artifactId>
-            <version>1.2</version>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
