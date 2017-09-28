@@ -61,8 +61,8 @@ public abstract class MsgFormatter {
             return template;
         }
 
-        final StringBuilder result = new StringBuilder(Math.max(64, template.length() * 2));
         final int max = template.length();
+        final StringBuilder result = new StringBuilder(Math.max(32, max + (max >> 1)));
         int last = 0;
 
         for (Object arg : arguments) {
