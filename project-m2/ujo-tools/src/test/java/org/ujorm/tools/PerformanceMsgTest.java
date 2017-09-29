@@ -51,11 +51,11 @@ public class PerformanceMsgTest {
 
     /**
      * MAX_COUNT: 5000000 <br>
-     * MILISEC_U: 1237.0 100.00% <br>
-     * MILISEC_L: 1259.0 98.25% <br>
-     * MILISEC_J: 12895.0 9.59% <br>
-     * MILISEC_S: 2291.0 53.99% <br>
-     * MILISEC_M: 4948.0 25.00% <br>
+     * MILISEC_U: 1195.0 100.00% <br>
+     * MILISEC_L: 1248.0 95.75% <br>
+     * MILISEC_J: 12207.0 9.79% <br>
+     * MILISEC_M: 5070.0 23.57% <br>
+     * MILISEC_S: 2237.0 53.42% <br>
      */
     @Test
     public void testMessagePerformance_3args() {
@@ -113,14 +113,14 @@ public class PerformanceMsgTest {
         System.out.println(PREFIX + "MILISEC_U: " + percent(milisecU, milisecU) + SUFFIX);
         System.out.println(PREFIX + "MILISEC_L: " + percent(milisecU, milisecL) + SUFFIX);
         System.out.println(PREFIX + "MILISEC_J: " + percent(milisecU, milisecJ) + SUFFIX);
-        System.out.println(PREFIX + "MILISEC_S: " + percent(milisecU, milisecS) + SUFFIX);
         System.out.println(PREFIX + "MILISEC_M: " + percent(milisecU, milisecM) + SUFFIX);
+        System.out.println(PREFIX + "MILISEC_S: " + percent(milisecU, milisecS) + SUFFIX);
     }
 
     /**
      * MAX_COUNT: 5000000 <br>
-     * MILISEC_U: 1071.0 100.00% <br>
-     * MILISEC_L: 1124.0 95.28% <br>
+     * MILISEC_U: 1050.0 100.00% <br>
+     * MILISEC_L: 1202.0 87.35% <br>
      */
     @Test
     public void testMessagePerformance_2args() {

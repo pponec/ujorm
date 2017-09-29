@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  *  final MessageService service = new MessageService();
  *  final MessageArg&lt;String&gt; NAME = new MessageArg&lt;&gt;("NAME");
  *  final MessageArg&lt;String&gt; TYPE = new MessageArg&lt;&gt;("TYPE");
- * 
+ *
  *  String expResult = "The ORM framework Ujorm.";
  *  String expTemplate = "The ${TYPE} framework ${NAME}.";
  *  String template = service.template("The ", TYPE, " framework ", NAME, ".");
@@ -115,7 +115,8 @@ public class MessageService {
         if (locale == null) {
             locale = Locale.ENGLISH;
         }
-        final StringBuffer result = new StringBuffer(255);
+        final int max = msg.length();
+        final StringBuffer result = new StringBuffer(Math.max(32, max + (max >> 1)));
         int i, last = 0;
         while ((i = msg.indexOf(PARAM_BEG, last)) >= 0) {
             final int end = msg.indexOf(PARAM_END, i);
@@ -135,7 +136,7 @@ public class MessageService {
             }
             last = end + 1;
         }
-        result.append(msg, last, msg.length());
+        result.append(msg, last, max);
         return result.toString();
     }
 
