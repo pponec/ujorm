@@ -19,6 +19,7 @@ package org.ujorm.logger;
 import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * Bridge to logging framework JSF4J.
@@ -104,19 +105,19 @@ final class UjoLoggerBridge2Slf4j implements UjoLogger {
         final int levelId = level.intValue();
 
         if (levelId >= ERROR_LEVEL) {
-            logger.error(message, param);
+            logger.error(MsgFormatter.format(message, param));
         }
         else if(levelId >= WARN_LEVEL) {
-            logger.warn(message, param);
+            logger.warn(MsgFormatter.format(message, param));
         }
         else if (levelId >= INFO_LEVEL) {
-            logger.info(message, param);
+            logger.info(MsgFormatter.format(message, param));
         }
         else if (levelId >= DEBUG_LEVEL) {
-            logger.debug(message, param);
+            logger.debug(MsgFormatter.format(message, param));
         }
         else /* if (levelId >= TRACE) */ {
-            logger.trace(message, param);
+            logger.trace(MsgFormatter.format(message, param));
         }
     }
 
@@ -126,19 +127,19 @@ final class UjoLoggerBridge2Slf4j implements UjoLogger {
         final int levelId = level.intValue();
 
         if (levelId >= ERROR_LEVEL) {
-            logger.error(message, params);
+            logger.error(MsgFormatter.format(message, params));
         }
         else if(levelId >= WARN_LEVEL) {
-            logger.warn(message, params);
+            logger.warn(MsgFormatter.format(message, params));
         }
         else if (levelId >= INFO_LEVEL) {
-            logger.info(message, params);
+            logger.info(MsgFormatter.format(message, params));
         }
         else if (levelId >= DEBUG_LEVEL) {
-            logger.debug(message, params);
+            logger.debug(MsgFormatter.format(message, params));
         }
         else /* if (levelId >= TRACE) */ {
-            logger.trace(message, params);
+            logger.trace(MsgFormatter.format(message, params));
         }
     }
 }

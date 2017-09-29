@@ -27,10 +27,14 @@ import javax.annotation.Nullable;
  * <pre class="pre">
  *  final MessageService service = new MessageService();
  *  final MessageArg&lt;String&gt; NAME = new MessageArg&lt;&gt;("NAME");
+ *  final MessageArg&lt;String&gt; TYPE = new MessageArg&lt;&gt;("TYPE");
+ * 
  *  String expResult = "The ORM framework Ujorm.";
- *  String expTemplate = "The ORM framework ${NAME}.";
- *  String template = service.template("The ORM framework ", NAME, ".");
- *  Map<String, Object> args = service.map(NAME, "Ujorm");
+ *  String expTemplate = "The ${TYPE} framework ${NAME}.";
+ *  String template = service.template("The ", TYPE, " framework ", NAME, ".");
+ *  Map<String, Object> args = service.map
+ *      ( TYPE, "ORM"
+ *      , NAME, "Ujorm");
  *  String result = service.format(template, args);
  *  assertEquals(expTemplate, template);
  *  assertEquals(expResult, result);

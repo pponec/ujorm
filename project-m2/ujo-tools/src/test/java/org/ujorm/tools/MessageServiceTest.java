@@ -17,6 +17,7 @@ package org.ujorm.tools;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -38,23 +39,32 @@ public class MessageServiceTest extends TestCase {
     /** Message Argument */
     private static MessageArg<BigDecimal> NUMBER = new MessageArg<>("NUMBER");
 
-    public MessageServiceTest() {
-    }
-
-    public MessageServiceTest(String testName) {
-        super(testName);
-    }
-
     /** Demo test. */
     public void testDemo() {
         final MessageService service = new MessageService();
-        final MessageArg<String> NAME = new MessageArg<>("NAME");
+        final MessageArg TYPE = new MessageArg("TYPE");
+        final MessageArg NAME = new MessageArg("NAME");
+
         String expResult = "The ORM framework Ujorm.";
-        String expTemplate = "The ORM framework ${NAME}.";
-        String template = service.template("The ORM framework ", NAME, ".");
-        Map<String, Object> args = service.map(NAME, "Ujorm");
+        String expTemplate = "The ${TYPE} framework ${NAME}.";
+        String template = service.template("The ", TYPE, " framework ", NAME, ".");
+        Map<String, Object> args = service.map
+               ( TYPE, "ORM"
+               , NAME, "Ujorm");
         String result = service.format(template, args);
         assertEquals(expTemplate, template);
+        assertEquals(expResult, result);
+    }
+
+    /** Test of map method, of class MessageService. */
+    public void testFormatTemplate() {
+        final MessageService service = new MessageService();
+        String expResult = "On 2017-01-15, we spent 254.6 EUR.";
+        String template = "On ${DAY,%tY-%tm-%td}, we spent ${PRICE,%.1f} EUR.";
+        Map<String, Object> args = service.map
+               ( "DAY", LocalDateTime.of(2017, Month.JANUARY, 15, 12, 30)
+               , "PRICE", new BigDecimal("254.55"));
+        String result = service.format(template, args);
         assertEquals(expResult, result);
     }
 
