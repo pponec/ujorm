@@ -57,7 +57,7 @@ public class MessageService {
         final Map<String, Object> result = new HashMap(max + 3);
         for (int j = 0; j < max; j++) {
             final int i = j << 1;
-            result.put(args[i].toString(), convertValue(args[i + 1]));
+            result.put(convertKey(args[i]), convertValue(args[i + 1]));
         }
         return result;
     }
@@ -68,11 +68,7 @@ public class MessageService {
     public String template(@Nonnull final Object... args) {
         final StringBuilder result = new StringBuilder(256);
         for (Object arg : args) {
-            if (arg instanceof MessageArg) {
-                result.append(PARAM_BEG).append(arg).append(PARAM_END);
-            } else {
-                result.append(arg);
-            }
+            result.append(arg);
         }
         return result.toString();
     }
@@ -138,6 +134,16 @@ public class MessageService {
         }
         result.append(msg, last, max);
         return result.toString();
+    }
+
+     /** Convert value.
+     * The method can be overwrited for special data types, for example: {@code Key -> Key.getFullName() }.
+     */
+    @Nullable
+    protected String convertKey(@Nonnull final Object key) {
+        return key instanceof MessageArg
+            ? ((MessageArg)key).getName()
+            : key.toString();
     }
 
     /** Convert value.

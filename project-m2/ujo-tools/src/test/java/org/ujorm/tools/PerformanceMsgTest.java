@@ -23,6 +23,8 @@ import java.text.DecimalFormatSymbols;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Formatter;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import org.junit.Test;
@@ -50,16 +52,17 @@ public class PerformanceMsgTest {
             , DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 
     /**
-     * MAX_COUNT: 5000000 <br>
-     * MILISEC_U: 1195.0 100.00% <br>
-     * MILISEC_L: 1248.0 95.75% <br>
-     * MILISEC_J: 12207.0 9.79% <br>
-     * MILISEC_M: 5070.0 23.57% <br>
-     * MILISEC_S: 2237.0 53.42% <br>
+     * MAX_COUNT	: 5000000 <br>
+     * MsgFormatter	: 1158.0 100.00% <br>
+     * MessageFormatter	: 1246.0 92.94% <br>
+     * Formatter	: 12243.0 9.46% <br>
+     * MessageFormat	: 5023.0 23.05% <br>
+     * MessageService	: 2268.0 51.06% <br>
      */
     @Test
     public void testMessagePerformance_3args() {
         System.out.println("testMessage_3args");
+        Map<Class, Long> result = new LinkedHashMap<>();
         String template = "~~~{}~~~{}~~~{}~~~";
         String temp2ate = "~~~%s~~~%s~~~%s~~~";
         String temp3ate = "~~~{0}~~~{1}~~~{2}~~~";
@@ -72,92 +75,98 @@ public class PerformanceMsgTest {
 
         LocalDateTime beg = LocalDateTime.now();
         for (int i = 0; i < MAX_COUNT; i++) {
-            String result = MsgFormatter.format(template, arguments);
-            if (result != null) { continue; }
+            String msg = MsgFormatter.format(template, arguments);
+            if (msg != null) { continue; }
 
         }
-        final double milisecU = beg.until(LocalDateTime.now(), ChronoUnit.MILLIS);
+        result.put(MsgFormatter.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
         beg = LocalDateTime.now();
         for (int i = 0; i < MAX_COUNT; i++) {
-            String result = MessageFormatter.arrayFormat(template, arguments).getMessage();
-            if (result != null) { continue; }
+            String msg = MessageFormatter.arrayFormat(template, arguments).getMessage();
+            if (msg != null) { continue; }
 
         }
-        final double milisecL = beg.until(LocalDateTime.now(), ChronoUnit.MILLIS);
+        result.put(MessageFormatter.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
         beg = LocalDateTime.now();
         for (int i = 0; i < MAX_COUNT; i++) {
-            String result = String.format(temp2ate, arguments);
-            if (result != null) { continue; }
+            String msg = new Formatter().format(temp2ate, arguments).toString();
+            if (msg != null) { continue; }
 
         }
-        final double milisecJ = beg.until(LocalDateTime.now(), ChronoUnit.MILLIS);
+        result.put(Formatter.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
         beg = LocalDateTime.now();
         for (int i = 0; i < MAX_COUNT; i++) {
-            String result = MessageFormat.format(temp3ate, arguments);
-            if (result != null) { continue; }
+            String msg = MessageFormat.format(temp3ate, arguments);
+            if (msg != null) { continue; }
         }
-        final double milisecM = beg.until(LocalDateTime.now(), ChronoUnit.MILLIS);
+        result.put(MessageFormat.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
         beg = LocalDateTime.now();
         for (int i = 0; i < MAX_COUNT; i++) {
-            String result = new MessageService().format(temp4ate, mapArgs);
-            if (result != null) { continue; }
+            String msg = new MessageService().format(temp4ate, mapArgs);
+            if (msg != null) { continue; }
         }
-        final double milisecS = beg.until(LocalDateTime.now(), ChronoUnit.MILLIS);
+        result.put(MessageService.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
-
-        System.out.println(PREFIX + "MAX_COUNT: " + MAX_COUNT + SUFFIX);
-        System.out.println(PREFIX + "MILISEC_U: " + percent(milisecU, milisecU) + SUFFIX);
-        System.out.println(PREFIX + "MILISEC_L: " + percent(milisecU, milisecL) + SUFFIX);
-        System.out.println(PREFIX + "MILISEC_J: " + percent(milisecU, milisecJ) + SUFFIX);
-        System.out.println(PREFIX + "MILISEC_M: " + percent(milisecU, milisecM) + SUFFIX);
-        System.out.println(PREFIX + "MILISEC_S: " + percent(milisecU, milisecS) + SUFFIX);
+        System.out.println(PREFIX + "MAX_COUNT\t: " + MAX_COUNT + SUFFIX);
+        for (Class formatter : result.keySet()) {
+            System.out.println(buildResult(formatter, result));
+        }
     }
 
     /**
-     * MAX_COUNT: 5000000 <br>
-     * MILISEC_U: 1050.0 100.00% <br>
-     * MILISEC_L: 1202.0 87.35% <br>
+     * MAX_COUNT	: 5000000 <br>
+     * MsgFormatter	: 1065.0 100.00% <br>
+     * MessageFormatter	: 1290.0 82.56% <br>
      */
     @Test
     public void testMessagePerformance_2args() {
         System.out.println("testMessage_2args");
+        Map<Class, Long> result = new LinkedHashMap<>();
         String template = "~~~{}~~~{}~~~";
         Object argument1 = "A";
         Object argument2 = "B";
 
         LocalDateTime beg = LocalDateTime.now();
         for (int i = 0; i < MAX_COUNT; i++) {
-            String result = MsgFormatter.format(template, argument1, argument2);
-            if (result != null) { continue; }
+            String msg = MsgFormatter.format(template, argument1, argument2);
+            if (msg != null) { continue; }
 
         }
-        final double milisecU = beg.until(LocalDateTime.now(), ChronoUnit.MILLIS);
+        result.put(MsgFormatter.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
 
         beg = LocalDateTime.now();
         for (int i = 0; i < MAX_COUNT; i++) {
-            String result = MessageFormatter.format(template, argument1, argument2).getMessage();
-            if (result != null) { continue; }
+            String msg = MessageFormatter.format(template, argument1, argument2).getMessage();
+            if (msg != null) { continue; }
 
         }
-        final double milisecL = beg.until(LocalDateTime.now(), ChronoUnit.MILLIS);
+        result.put(MessageFormatter.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
 
-        System.out.println(PREFIX + "MAX_COUNT: " + MAX_COUNT + SUFFIX);
-        System.out.println(PREFIX + "MILISEC_U: " + percent(milisecU, milisecU) + SUFFIX);
-        System.out.println(PREFIX + "MILISEC_L: " + percent(milisecU, milisecL) + SUFFIX);
+        System.out.println(PREFIX + "MAX_COUNT\t: " + MAX_COUNT + SUFFIX);
+        for (Class formatter : result.keySet()) {
+            System.out.println(buildResult(formatter, result));
+        }
     }
 
 
     /** Calculate percent */
-    private static String percent(final double value, final double base) {
-        return MsgFormatter.format("{} {}%", base, DECIMAL.format(value/base*100));
+    private static String buildResult(Class<?> item, Map<Class, Long> result) {
+        final double value = result.get(item);
+        final double base = result.get(MsgFormatter.class);
+        return MsgFormatter.format("{}{}\t: {} {}%{}"
+                , PREFIX
+                , item.getSimpleName()
+                , value
+                , DECIMAL.format(base/value*100)
+                , SUFFIX)
+                ;
     }
-
 
     /** Logback cuts unmatched parameters.*/
     @Test
