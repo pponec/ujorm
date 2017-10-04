@@ -60,14 +60,14 @@ public class MessageServiceTest extends TestCase {
     public void testFormatTemplate() {
         final MessageService service = new MessageService();
         final MessageArg DAY = new MessageArg("DAY", "%tY-%tm-%td");
-        final MessageArg PRICE = new MessageArg("PRICE", "%.1f");
+        final MessageArg PRICE = new MessageArg("PRICE", "%.2f");
 
-        String expResult = "On 2017-01-15, we spent 254.6 EUR.";
-        String expTemplate = "On ${DAY,%tY-%tm-%td}, we spent ${PRICE,%.1f} EUR.";
+        String expResult = "On 2017-01-15, we spent 254.00 EUR.";
+        String expTemplate = "On ${DAY,%tY-%tm-%td}, we spent ${PRICE,%.2f} EUR.";
         String template = service.template("On ", DAY, ", we spent ", PRICE, " EUR.");
         Map<String, Object> args = service.map
                ( DAY, LocalDateTime.of(2017, Month.JANUARY, 15, 12, 30)
-               , PRICE, new BigDecimal("254.55"));
+               , PRICE, new BigDecimal("254"));
         String result = service.format(template, args);
         assertEquals(expTemplate, template);
         assertEquals(expResult, result);

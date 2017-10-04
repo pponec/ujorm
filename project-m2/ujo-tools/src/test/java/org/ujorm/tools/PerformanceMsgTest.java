@@ -18,11 +18,15 @@ package org.ujorm.tools;
 
 
 import ch.qos.logback.classic.Logger;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.Formatter;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -30,7 +34,8 @@ import java.util.Map;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
-import static org.junit.Assert.*;
+import static java.util.Locale.ENGLISH;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests of the Message implementation
@@ -181,6 +186,59 @@ public class PerformanceMsgTest {
 
         Logger logger = (Logger) LoggerFactory.getLogger(PerformanceMsgTest.class);
         logger.info(template, arguments);
+    }
+
+    /** MsgFormatter.*/
+    @Test
+    public void testMsgFormatter() {
+        System.out.println("MsgFormatter");
+
+        String expected = "On 2017-01-15T12:30, we spent 254 EUR.";
+        String template = "On {}, we spent {} EUR.";
+        LocalDateTime day = LocalDateTime.of(2017, Month.JANUARY, 15, 12, 30);
+        String result = MsgFormatter.format(template, day, new BigDecimal("254"));
+        assertEquals(expected, result);
+    }
+
+    /** MsgFormatter.*/
+    @Test
+    public void testMessageService() {
+        System.out.println("MessageService");
+
+        String expected = "On 2017-01-15, we spent 254.00 EUR.";
+        String template = "On ${DAY,%tF}, we spent ${PRICE,%.2f} EUR.";
+        MessageService instance = new MessageService();
+        Map<String,Object> params = instance.map
+              ( "DAY", LocalDateTime.of(2017, Month.JANUARY, 15, 12, 30)
+              , "PRICE", new BigDecimal("254"));
+        String result = new MessageService().format(template, params);
+        assertEquals(expected, result);
+    }
+
+    /** Logback cuts unmatched parameters.*/
+    @Test
+    public void testStringFormat() {
+        System.out.println("MessageFormat");
+
+        String expected = "On 2017-01-15, we spent 254.00 EUR.";
+        String template = "On %tF, we spent %.2f EUR.";
+        LocalDateTime day = LocalDateTime.of(2017, Month.JANUARY, 15, 12, 30);
+        String result = String.format(ENGLISH, template, day, new BigDecimal("254"));
+        assertEquals(expected, result);
+    }
+
+    /** Logback cuts unmatched parameters.*/
+    @Test
+    public void testMessageFormat() {
+        System.out.println("MessageFormat");
+
+        String expected = "On 2017-01-15, we spent 254.00 EUR.";
+        String template = "On {0,date,yyyy-MM-dd}, we spent {1,number,#.00} EUR.";
+        Date day = Date.from(LocalDateTime.of(2017, Month.JANUARY, 15, 12, 30)
+                .atZone(ZoneId.systemDefault()).toInstant());
+        Object[] params = { day, new BigDecimal("254")};
+        String result = new MessageFormat(template, ENGLISH).format(params);
+        assertEquals(expected, result);
     }
 
     /** Ujorm write all unmatched parameters.*/

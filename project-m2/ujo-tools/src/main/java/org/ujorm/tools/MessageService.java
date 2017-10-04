@@ -49,6 +49,20 @@ public class MessageService {
     /** The mark ("}") to finishing a template argument. */
     public static final char PARAM_END = '}';
 
+    /** Default locale */
+    @Nonnull
+    private final Locale defaultLocale;
+
+    /** Create new instance with the {@code Locale.ENGLISH} */
+    public MessageService() {
+        this(Locale.ENGLISH);
+    }
+
+    public MessageService(@Nonnull final Locale defaultLocale) {
+        Assert.notNull(defaultLocale);
+        this.defaultLocale = defaultLocale;
+    }
+
     /** Create a map from man pairs key-value
      * @param args Key-value pairs
      */
@@ -100,16 +114,13 @@ public class MessageService {
      * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"}</pre>
      * The format expression is separated by the character (,) a and it is not mandatory.
      * @param args Key-value map arguments
-     * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the ENGLISH.
+     * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
      * @return Target result
      * @see Formatter
      */
     public final String format(@Nullable final String msg, @Nullable final Map<String, Object> args, @Nullable Locale locale) {
         if (msg == null || args == null) {
             return String.valueOf(msg);
-        }
-        if (locale == null) {
-            locale = Locale.ENGLISH;
         }
         final int max = msg.length();
         final StringBuffer result = new StringBuffer(Math.max(32, max + (max >> 1)));
@@ -123,7 +134,7 @@ public class MessageService {
             if (value != null) {
                 result.append(msg, last, i);
                 final Object niceValue = formatIndex > 0
-                    ? new Formatter(locale).format(expr.substring(1 + formatIndex)
+                    ? new Formatter(locale != null ? locale : defaultLocale).format(expr.substring(1 + formatIndex)
                     , value, value, value, value, value, value) // Simplify Date format
                     : value;
                 appendValue(niceValue.toString(), result);
@@ -160,4 +171,12 @@ public class MessageService {
     protected void appendValue(@Nullable final String value, @Nonnull final StringBuffer result) {
         result.append(value);
     }
+
+    // ---------------- STATIC METHOD ----------------
+
+    /** Format a target message by a template with arguments */
+    public static final String formatMsg(@Nullable final String template, @Nullable final Map<String, Object> args) {
+        return new MessageService().format(template, args);
+    }
+
 }
