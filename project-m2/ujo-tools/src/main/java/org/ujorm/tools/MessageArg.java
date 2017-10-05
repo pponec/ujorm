@@ -50,6 +50,9 @@ public final class MessageArg<T> implements Serializable {
      */
     public MessageArg(@Nonnull String name, @Nullable String format) {
         Assert.notNull(name, "Name is required", name);
+        Assert.isTrue(name.indexOf(PARAM_END)<0  , "Forbidden character {} in argument {}", PARAM_END, name);
+        Assert.isTrue(format == null
+                   || format.indexOf(PARAM_END)<0, "Forbidden character {} in argument {}", PARAM_END, format);
         this.name = name;
         this.format = format;
     }
