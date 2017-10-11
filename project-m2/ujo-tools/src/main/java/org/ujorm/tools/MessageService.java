@@ -15,6 +15,8 @@
  */
 package org.ujorm.tools;
 
+import java.io.CharArrayWriter;
+import java.io.PrintWriter;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
@@ -67,11 +69,10 @@ public class MessageService {
      * @param args Key-value pairs
      */
     public Map<String, Object> map(@Nonnull final Object... args) {
-        int max = args.length >> 1;
-        final Map<String, Object> result = new HashMap(max + 3);
-        for (int j = 0; j < max; j++) {
-            final int i = j << 1;
-            result.put(convertKey(args[i]), convertValue(args[i + 1]));
+        final int max = args.length;
+        final Map<String, Object> result = new HashMap(max >> 1);
+        for (int i = 1; i < max; i += 2) {
+            result.put(convertKey(args[i - 1]), args[i]);
         }
         return result;
     }
@@ -123,7 +124,7 @@ public class MessageService {
             return String.valueOf(msg);
         }
         final int max = msg.length();
-        final StringBuffer result = new StringBuffer(Math.max(32, max + (max >> 1)));
+        final CharArrayWriter result = new CharArrayWriter(Math.max(32, max + (max >> 1)));
         int i, last = 0;
         while ((i = msg.indexOf(PARAM_BEG, last)) >= 0) {
             final int end = msg.indexOf(PARAM_END, i);
@@ -137,7 +138,7 @@ public class MessageService {
                     ? new Formatter(locale != null ? locale : defaultLocale).format(expr.substring(1 + formatIndex)
                     , value, value, value, value, value, value) // Simplify Date format
                     : value;
-                appendValue(niceValue.toString(), result);
+                writeValue(niceValue, result);
             } else {
                 result.append(msg, last, end + 1);
             }
@@ -157,19 +158,16 @@ public class MessageService {
             : key.toString();
     }
 
-    /** Convert value.
-     * The method can be overwrited for special data types, for example: {@code Key -> Key.getFullName() }.
-     */
-    @Nullable
-    protected Object convertValue(@Nullable final Object value) {
-        return value;
-    }
-
     /** Append a value to the output buffer.
      * The method can be overwrited to escaping values.
+     *  The method can be overwrited for special data types.
      */
-    protected void appendValue(@Nullable final String value, @Nonnull final StringBuffer result) {
-        result.append(value);
+    protected void writeValue(@Nonnull final Object value, @Nonnull final CharArrayWriter writer) {
+        if (value instanceof Throwable) {
+            ((Throwable)value).printStackTrace(new PrintWriter(writer, true));
+        } else {
+            writer.append(value.toString());
+        }
     }
 
     // ---------------- STATIC METHOD ----------------
