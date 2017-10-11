@@ -134,11 +134,13 @@ public class MessageService {
             final Object value = args.get(key);
             if (value != null) {
                 result.append(msg, last, i);
-                final Object niceValue = formatIndex > 0
-                    ? new Formatter(locale != null ? locale : defaultLocale).format(expr.substring(1 + formatIndex)
-                    , value, value, value, value, value, value) // Simplify Date format
-                    : value;
-                writeValue(niceValue, result);
+                if (formatIndex > 0) {
+                    new Formatter(result, locale != null ? locale : defaultLocale).format
+                          ( expr.substring(1 + formatIndex)
+                          , value, value, value, value, value, value); // Simplify Date format
+                } else {
+                    writeValue(value, result);
+                }
             } else {
                 result.append(msg, last, end + 1);
             }
@@ -158,7 +160,7 @@ public class MessageService {
             : key.toString();
     }
 
-    /** Append a value to the output buffer.
+    /** Write a value to the output buffer.
      * The method can be overwrited to escaping values.
      *  The method can be overwrited for special data types.
      */
