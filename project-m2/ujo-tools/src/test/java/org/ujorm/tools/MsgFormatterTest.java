@@ -18,6 +18,7 @@ package org.ujorm.tools;
 import org.junit.Test;
 import static junit.framework.TestCase.assertSame;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests of the MsgFormatter class
@@ -153,5 +154,17 @@ public class MsgFormatterTest {
         String expResult = "null, a, b, c";
         String result = MsgFormatter.format(template, arguments);
         assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of format method, of class MsgFormatter.
+     */
+    @Test
+    public void testFormat10() {
+        String template = ">>>{}<<<";
+        Object[] arguments = {new IllegalStateException("TEST")};
+        String expResult = ">>>\njava.lang.IllegalStateException: TEST";
+        String result = MsgFormatter.format(template, arguments);
+        assertTrue(result.startsWith(expResult));
     }
 }
