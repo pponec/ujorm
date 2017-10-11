@@ -53,7 +53,7 @@ public class MessageService {
 
     /** Default locale */
     @Nonnull
-    private final Locale defaultLocale;
+    protected final Locale defaultLocale;
 
     /** Create new instance with the {@code Locale.ENGLISH} */
     public MessageService() {
@@ -139,7 +139,7 @@ public class MessageService {
                           ( expr.substring(1 + formatIndex)
                           , value, value, value, value, value, value); // Simplify Date format
                 } else {
-                    writeValue(value, result);
+                    writeValue(value, result, locale);
                 }
             } else {
                 result.append(msg, last, end + 1);
@@ -164,7 +164,11 @@ public class MessageService {
      * The method can be overwrited to escaping values.
      *  The method can be overwrited for special data types.
      */
-    protected void writeValue(@Nonnull final Object value, @Nonnull final CharArrayWriter writer) {
+    protected void writeValue
+        ( @Nonnull final Object value
+        , @Nonnull final CharArrayWriter writer
+        , @Nullable final Locale locale
+    ) {
         if (value instanceof Throwable) {
             ((Throwable)value).printStackTrace(new PrintWriter(writer, true));
         } else {
