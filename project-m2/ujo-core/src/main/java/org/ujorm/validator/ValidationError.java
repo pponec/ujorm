@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012-2014 Pavel Ponec
+ *  Copyright 2012-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.ujorm.validator;
 
-import org.ujorm.tools.MessageService;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
@@ -24,6 +23,7 @@ import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.KeyRing;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.MessageService;
 import static org.ujorm.validator.AbstractValidator.*;
 
 /**
@@ -81,9 +81,9 @@ public class ValidationError implements Serializable {
         this.localizationKey = localizationKey;
         this.arguments = arguments;
         // Additional message arguments:
-        arguments.put(KEY.toString(), key!=null ? key.getFullName() : "''");
-        arguments.put(INPUT.toString(), value);
-        arguments.put(MARK.toString(), MessageService.PARAM_BEG);
+        arguments.put(KEY.getName(), key!=null ? key.getFullName() : "''");
+        arguments.put(INPUT.getName(), value);
+        arguments.put(MARK.getName(), MessageService.PARAM_BEG);
     }
 
     /** Check a not null argument */
