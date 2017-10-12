@@ -16,8 +16,8 @@
 package org.ujorm.orm.template;
 
 import java.io.IOException;
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.Key;
-import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.*;
 import org.ujorm.orm.impl.ColumnWrapperImpl;

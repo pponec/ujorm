@@ -19,6 +19,7 @@ import java.io.CharArrayWriter;
 import java.io.PrintWriter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Formatter of log messages where argument is located by the {@code {} } characters.
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
  * @author Pavel Ponec
  * @since 1.73
  */
+@Immutable
 public class MsgFormatter {
 
     /** Parameter mark */

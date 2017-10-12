@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Message Service. See the next example
@@ -44,6 +45,7 @@ import javax.annotation.Nullable;
  * @author Pavel Ponec
  * @since 1.53
  */
+@Immutable
 public class MessageService {
 
     /** Two-character mark ("${") to introducing a template argument. */

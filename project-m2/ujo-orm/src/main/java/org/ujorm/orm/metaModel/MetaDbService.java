@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -44,6 +45,7 @@ import static org.ujorm.orm.metaModel.MetaDatabase.*;
  * @author Pavel Ponec
  * @see MetaParams#META_DB_SERVICE
  */
+@Immutable
 public class MetaDbService {
 
     /** Logger */

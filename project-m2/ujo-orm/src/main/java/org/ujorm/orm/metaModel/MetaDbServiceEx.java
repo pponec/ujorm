@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
@@ -48,6 +49,7 @@ import static org.ujorm.orm.metaModel.MetaDatabase.*;
  * @see MetaParams#META_DB_SERVICE
  */
 @SuppressWarnings("unchecked")
+@Immutable
 public class MetaDbServiceEx extends MetaDbService {
 
     /** Logger */

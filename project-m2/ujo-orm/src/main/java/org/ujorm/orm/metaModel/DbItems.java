@@ -17,10 +17,12 @@ package org.ujorm.orm.metaModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Database items tu create
  */
+@Immutable
 public class DbItems {
 
     // --- New database entities ---

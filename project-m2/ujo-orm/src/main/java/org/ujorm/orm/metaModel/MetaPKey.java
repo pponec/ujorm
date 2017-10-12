@@ -18,11 +18,11 @@ package org.ujorm.orm.metaModel;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.core.annot.Immutable;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;

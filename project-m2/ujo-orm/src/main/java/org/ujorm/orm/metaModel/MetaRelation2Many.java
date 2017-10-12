@@ -17,11 +17,11 @@
 package org.ujorm.orm.metaModel;
 
 import java.lang.reflect.Field;
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
-import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.orm.AbstractMetaModel;

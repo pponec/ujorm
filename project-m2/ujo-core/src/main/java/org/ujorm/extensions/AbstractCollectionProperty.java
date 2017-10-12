@@ -16,8 +16,8 @@
 
 package org.ujorm.extensions;
 
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.Ujo;
-import org.ujorm.core.annot.Immutable;
 import org.ujorm.tools.Assert;
 import static org.ujorm.extensions.PropertyModifier.*;
 

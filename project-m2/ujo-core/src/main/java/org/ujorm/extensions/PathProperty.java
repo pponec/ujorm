@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
@@ -30,7 +31,6 @@ import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoManager;
-import org.ujorm.core.annot.Immutable;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.tools.Assert;
@@ -75,7 +75,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
 
     /** Main constructor */
     @SuppressWarnings("unchecked")
-    public PathProperty(Boolean ascending, String lastSpaceName, Key... keys) {
+    public PathProperty(@Nullable Boolean ascending, @Nullable String lastSpaceName, Key... keys) {
         final ArrayList<Key> list = new ArrayList<Key>(keys.length + 3);
         boolean alias = lastSpaceName != null;
         for (Key key : keys) {
@@ -88,7 +88,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
             }
         }
         Assert.hasLength(list, "Argument must not be empty");
-      
+
         this.ascending = ascending!=null ? ascending : keys[keys.length-1].isAscending();
         this.keys = list.toArray(new Key[list.size()]);
         this.aliases = alias

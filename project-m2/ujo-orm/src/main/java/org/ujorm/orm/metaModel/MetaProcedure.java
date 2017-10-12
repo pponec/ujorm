@@ -16,21 +16,21 @@
 package org.ujorm.orm.metaModel;
 
 import java.lang.reflect.Field;
-import org.ujorm.ListKey;
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
-import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.orm.AbstractMetaModel;
-import org.ujorm.orm.annot.Table;
 import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.DbProcedure;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.annot.Parameter;
 import org.ujorm.orm.annot.Procedure;
+import org.ujorm.orm.annot.Table;
 
 
 /**

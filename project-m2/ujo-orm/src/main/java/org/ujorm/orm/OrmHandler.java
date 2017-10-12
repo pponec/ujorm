@@ -26,12 +26,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
-import org.ujorm.core.annot.Immutable;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -297,25 +298,26 @@ public class OrmHandler implements OrmHandlerProvider {
     }
 
     /** Returns database model */
+    @Nonnull
     public MetaRoot getDatabaseModel() {
         return databases;
     }
 
     /** Map a key to the table */
     @SuppressWarnings("unchecked")
-    public void addProcedureModel(MetaProcedure metaProcedure) {
+    public void addProcedureModel(@Nonnull final MetaProcedure metaProcedure) {
         procedureMap.put(MetaProcedure.DB_PROPERTY.of(metaProcedure).getType(), metaProcedure);
     }
 
     /** Map a key to the table */
     @SuppressWarnings("unchecked")
-    public void addTableModel(MetaTable metaTable) {
+    public void addTableModel(@Nonnull final MetaTable metaTable) {
         entityMap.put(metaTable.getType(), metaTable);
     }
 
     /** Map a key to the table */
     @SuppressWarnings("unchecked")
-    public void addColumnModel(MetaRelation2Many column) {
+    public void addColumnModel(@Nonnull MetaRelation2Many column) {
         Key key = column.getKey();
         MetaRelation2Many oldColumn = findColumnModel(key);
 
@@ -377,6 +379,7 @@ public class OrmHandler implements OrmHandlerProvider {
     }
 
     /** Find a base table model with a correct alias by the last direct key. */
+    @Nonnull
     public final TableWrapper findTableModel(final Key key) throws IllegalStateException {
         if (key instanceof CompositeKey) {
             final CompositeKey compositeKey = (CompositeKey) key;
@@ -390,6 +393,7 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Find a table model by the dbCl111ass.
      * If the table model is not found then the IllegalStateException is throwed.
      */
+    @Nonnull
     public final MetaTable findTableModel(final Class<? extends OrmUjo> dbClass) throws IllegalStateException {
         return findTableModel(dbClass, true);
     }
@@ -399,6 +403,7 @@ public class OrmHandler implements OrmHandlerProvider {
      * @param throwException Throw the IllegalArgument exception of no Model was not found
      * @return Returns a related model throw the IllegalArgumentException exception.
      */
+    @Nonnull
     public MetaTable findTableModel(final Class<? extends OrmUjo> dbClass, final boolean throwException) throws IllegalUjormException {
         final MetaTable result = entityMap.get(dbClass);
         Assert.isFalse(result==null && throwException
@@ -411,6 +416,7 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Find a procedure model by the procedureClass.
      * If the procedure model is not found then the IllegalStateException is throwed.
      */
+    @Nonnull
     public MetaProcedure findProcedureModel(Class<? extends DbProcedure> procedureClass) throws IllegalUjormException {
         MetaProcedure result = procedureMap.get(procedureClass);
         Assert.notNull(result
@@ -420,6 +426,7 @@ public class OrmHandler implements OrmHandlerProvider {
     }
 
     /** Returns parameters */
+    @Nonnull
     public MetaParams getParameters() {
         return MetaRoot.PARAMETERS.of(databases);
     }
@@ -431,8 +438,9 @@ public class OrmHandler implements OrmHandlerProvider {
     }
 
     /** Returns all database */
+    @Nonnull
     public List<MetaDatabase> getDatabases() {
-        return MetaRoot.DATABASES.of(databases);
+        return MetaRoot.DATABASES.getList(databases);
     }
 
     /** Find all <strong>persistent</strong> keys with the required type or subtype.
@@ -454,6 +462,7 @@ public class OrmHandler implements OrmHandlerProvider {
     }
 
     /** Returns the same instance */
+    @Nonnull
     public OrmHandler getOrmHandler() {
         return this;
     }

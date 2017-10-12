@@ -18,11 +18,11 @@ package org.ujorm.orm;
 
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.core.annot.Immutable;
 import org.ujorm.extensions.AbstractUjo;
 import org.ujorm.extensions.UjoLockable;
 import org.ujorm.orm.metaModel.MetaParams;

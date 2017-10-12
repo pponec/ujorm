@@ -16,10 +16,10 @@
 package org.ujorm.orm.metaModel;
 
 import java.util.List;
-import org.ujorm.ListKey;
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.orm.AbstractMetaModel;
 

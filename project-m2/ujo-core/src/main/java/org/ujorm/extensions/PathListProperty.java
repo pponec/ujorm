@@ -17,11 +17,11 @@
 package org.ujorm.extensions;
 
 import java.util.List;
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
-import org.ujorm.core.annot.Immutable;
 
 /**
  * A <strong>PathListProperty</strong> class is an composite ending with a ListKey objects.

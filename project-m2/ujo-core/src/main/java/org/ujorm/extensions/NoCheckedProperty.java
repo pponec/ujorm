@@ -15,10 +15,10 @@
  */
 package org.ujorm.extensions;
 
+import javax.annotation.concurrent.Immutable;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.UjoManager;
-import org.ujorm.core.annot.Immutable;
 import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
