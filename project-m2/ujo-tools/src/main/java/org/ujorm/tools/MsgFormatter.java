@@ -72,14 +72,14 @@ public class MsgFormatter {
             if (i >= last) {
                 result.append(template, last, i);
                 last = i + MARK.length();
+                writeValue(arg, result, true);
             } else {
                 if (last < max) {
                     result.append(template, last, max);
                     last = max;
                 }
-                result.append(SEPARATOR);
+                writeValue(arg, result, false);
             }
-            writeValue(arg, result);
         }
         if (last < max) {
             result.append(template, last, max);
@@ -110,12 +110,17 @@ public class MsgFormatter {
      * @param writer Writer
      * @param value Values
      */
-    protected void writeValue(@Nullable final Object value, @Nonnull final CharArrayWriter writer) {
-        if (value instanceof Throwable) {
+    protected void writeValue(@Nullable final Object value, @Nonnull final CharArrayWriter writer, final boolean mark) {
+        if (mark) {
+            writer.append(String.valueOf(value));
+        } else {
+           if (value instanceof Throwable) {
             writer.append('\n');
             ((Throwable)value).printStackTrace(new PrintWriter(writer, true));
-        } else {
-            writer.append(String.valueOf(value));
+           } else {
+               writer.append(SEPARATOR);
+               writer.append(String.valueOf(value));
+           }
         }
     }
 

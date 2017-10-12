@@ -161,7 +161,7 @@ public class MsgFormatterTest {
      */
     @Test
     public void testFormat10() {
-        String template = ">>>{}<<<";
+        String template = ">>>";
         Object[] arguments = {new IllegalStateException("TEST")};
         String expResult = ">>>\njava.lang.IllegalStateException: TEST";
         String result = MsgFormatter.format(template, arguments);
