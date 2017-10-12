@@ -83,6 +83,18 @@ public abstract class Assert {
         }
     }
 
+    /** Checks if the value is result of the the method
+     * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}. */
+    public static <T> void isTrueCommon
+        ( @Nullable final T value
+        , @Nonnull final Predicate<T> predicate
+        , final Object... message)
+    {
+        if (!predicate.test(value)) {
+            throw new IllegalArgumentException(format(message));
+        }
+    }
+
     /** Checks if the argument is not {@code null}. */
     public static final void notNull(@Nullable final Object value)
             throws IllegalArgumentException {
@@ -168,6 +180,18 @@ public abstract class Assert {
         , final Object... message)
     {
         if (value == null || predicate.test(value)) {
+            throw new IllegalArgumentException(format(message));
+        }
+    }
+
+    /** Checks if the argument of the the method
+     * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}. */
+    public static <T> void isFalseCommon
+        ( @Nullable final T value
+        , @Nonnull final Predicate<T> predicate
+        , final Object... message)
+    {
+        if (predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
         }
     }
