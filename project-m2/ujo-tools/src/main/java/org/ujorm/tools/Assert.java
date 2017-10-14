@@ -64,7 +64,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is {@code true}. */
-    public static final void isTrue(final boolean value, final Object... message)
+    public static final void isTrue(final boolean value, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (!value) {
             throw new IllegalArgumentException(format(message), new NullPointerException());
@@ -76,7 +76,7 @@ public abstract class Assert {
     public static <T> void isTrue
         ( @Nullable final T value
         , @Nonnull final Predicate<T> predicate
-        , final Object... message)
+        , @Nullable final Object... message)
     {
         if (value == null || !predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
@@ -84,11 +84,12 @@ public abstract class Assert {
     }
 
     /** Checks if the value is result of the the method
-     * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}. */
-    public static <T> void isTrueCommon
+     * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}.
+     * An argument of the {@code Predicable#test()} method can be {@code null}. */
+    public static <T> void isTrueNullable
         ( @Nullable final T value
-        , @Nonnull final Predicate<T> predicate
-        , final Object... message)
+        , @Nonnull  final Predicate<T> predicate
+        , @Nullable final Object... message)
     {
         if (!predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
@@ -176,8 +177,8 @@ public abstract class Assert {
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}. */
     public static <T> void isFalse
         ( @Nullable final T value
-        , @Nonnull final Predicate<T> predicate
-        , final Object... message)
+        , @Nonnull  final Predicate<T> predicate
+        , @Nullable final Object... message)
     {
         if (value == null || predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
@@ -185,11 +186,13 @@ public abstract class Assert {
     }
 
     /** Checks if the argument of the the method
-     * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}. */
-    public static <T> void isFalseCommon
+     * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}.
+     * An argument of the {@code Predicable#test()} method can be {@code null}.
+     */
+    public static <T> void isFalseNullable
         ( @Nullable final T value
-        , @Nonnull final Predicate<T> predicate
-        , final Object... message)
+        , @Nonnull  final Predicate<T> predicate
+        , @Nullable final Object... message)
     {
         if (predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
