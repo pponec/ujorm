@@ -26,7 +26,7 @@ import org.ujorm.hotels.entity.enums.Module;
 
 /**
  * Service to manage parameters
- * @author ponec
+ * @author Ponec
  */
 public interface ParamService {
     public static final String CACHED = "ParamServiceCached";

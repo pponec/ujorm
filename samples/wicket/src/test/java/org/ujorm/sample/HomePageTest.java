@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.ujorm.hotels.config.SpringContext;
 import org.ujorm.hotels.gui.HomePage;
 import org.ujorm.hotels.gui.MainApplication;
 
@@ -13,7 +14,7 @@ import org.ujorm.hotels.gui.MainApplication;
  * Simple test using the WicketTester
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:org/ujorm/hotels/config/applicationContext.xml"})
+@ContextConfiguration(classes = SpringContext.class)
 public class HomePageTest extends TestCase {
 
     private WicketTester tester;

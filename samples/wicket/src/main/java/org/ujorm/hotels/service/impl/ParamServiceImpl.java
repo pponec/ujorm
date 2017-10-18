@@ -35,6 +35,7 @@ import org.ujorm.Key;
 import org.ujorm.core.UjoCoder;
 import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.hotels.config.SpringContext;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
@@ -54,7 +55,7 @@ import static org.ujorm.hotels.entity.ParamValue.*;
  * Common database service implementations
  * @author Pavel Ponec
  */
-@Transactional
+@Transactional(SpringContext.TRANSACTION_MANAGER)
 @Service(ParamService.NATURAL)
 public class ParamServiceImpl
 implements ParamService {

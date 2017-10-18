@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015, Pavel Ponec
+ * Copyright 2013-2017, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -30,6 +31,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.Key;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.hotels.config.SpringContext;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
@@ -38,30 +40,33 @@ import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.template.AliasTable;
+import org.ujorm.spring.CommonDao;
 import static org.junit.Assert.*;
 import static org.ujorm.orm.template.AliasTable.Build.*;
-import org.ujorm.spring.AbstractDao;
 
 /**
  * Sample code for new article
  * @author Pavel Ponec
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:org/ujorm/hotels/config/applicationContext.xml"})
+@ContextConfiguration(classes = SpringContext.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class DatabaseTest extends AbstractDao<OrmUjo> {
+public class DatabaseTest {
     /** The one day in MILIS */
     private static final Period ONE_DAY = Period.ofDays(1);
 
+    @Inject
+    private CommonDao<OrmUjo> dao;
+
     /** Create a one reservation in the Prague */
     @Before
-    @Transactional
+    @Transactional(SpringContext.TRANSACTION_MANAGER)
     public void setUp() {
         final String login = "test";
         final String city = "Prague";
-        if (!query(Booking.ID.forAll()).exists()) {
-            Customer customer = query(Customer.LOGIN.whereEq(login)).uniqueResult();
-            Hotel hotel = createQueryDao(Hotel.CITY.add(City.NAME).whereEq(city)).setLimit(1).uniqueResult();
+        if (!dao.exists(Booking.ID.forAll())) {
+            Customer customer = dao.createQuery(Customer.LOGIN.whereEq(login)).uniqueResult();
+            Hotel hotel = dao.createQuery(Hotel.CITY.add(City.NAME).whereEq(city)).setLimit(1).uniqueResult();
             //
             Booking booking = new Booking();
             booking.setCustomer(customer);
@@ -70,13 +75,13 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
             booking.setPrice(hotel.getPrice());
             booking.setCreationDate(LocalDateTime.now());
 
-            getSessionDao().save(booking);
+            dao.save(booking);
         }
     }
 
     /** Database query using the Ujorm <strong>Keys</strong> */
     @Test
-    @Transactional
+    @Transactional(SpringContext.TRANSACTION_MANAGER)
     public void testDbQueries() {
 
         // Simple criterion:
@@ -100,7 +105,7 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
         assertEquals(1, crn4.evaluate(getBookings()).size());
 
         // Build query:
-        Query<Booking> bookings = query(crn3);
+        Query<Booking> bookings = dao.createQuery(crn3);
         List<Booking> result = bookings.list();
         assertFalse(result.isEmpty());
 
@@ -113,7 +118,7 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
 
     /** Database query using the Ujorm <strong>Keys</strong> */
     @Test
-    @Transactional
+    @Transactional(SpringContext.TRANSACTION_MANAGER)
     public <T extends Booking> void testNativeCriterion() {
         Key<Booking, String> bookingCityName = Booking.HOTEL
                 .add(Hotel.CITY).add(City.NAME);
@@ -121,16 +126,16 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
         String[] cities  = {"Prague", "Amsterdam"};
         Criterion crn = bookingCityName.forSqlUnchecked("{0} IN ({1})", cities);
 
-        Query<T> bookings = createQueryDao(crn);
+        Query<T> bookings = dao.createQuery(crn);
         List<T> result = bookings.list();
         assertFalse(result.isEmpty());
     }
 
     /** Database query using the Ujorm <strong>Keys</strong> */
     //@Test
-    @Transactional
+    @Transactional(SpringContext.TRANSACTION_MANAGER)
     public void testNativeQuery_1() {
-        OrmHandler handler = getSessionDao().getHandler();
+        OrmHandler handler = dao.getSession().getHandler();
         AliasTable<Booking> booking = handler.tableOf(Booking.class, "a");
         AliasTable<Hotel> hotel = handler.tableOf(Hotel.class, "b");
         AliasTable<City> city = handler.tableOf(City.class, "c");
@@ -173,8 +178,4 @@ public class DatabaseTest extends AbstractDao<OrmUjo> {
         return Booking.CURRENCY.whereEq("USD");
     }
 
-    /** Create a database query with Session */
-    final protected <T extends OrmUjo> Query<T> query(Criterion<T> criterion) {
-        return createQueryDao(criterion);
-    }
 }

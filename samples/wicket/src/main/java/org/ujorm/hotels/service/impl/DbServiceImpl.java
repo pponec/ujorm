@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.hotels.config.SpringContext;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
@@ -39,11 +40,12 @@ import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.hotels.service.DbService.ONE_DAY;
 import static org.ujorm.orm.utility.OrmTools.hasLength;
+import static org.ujorm.orm.utility.OrmTools.hasLength;
 /**
  * Common database service implementations
  * @author ponec
  */
-@Transactional
+@Transactional(SpringContext.TRANSACTION_MANAGER)
 public class DbServiceImpl implements DbService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DbServiceImpl.class);
 

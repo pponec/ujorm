@@ -15,11 +15,13 @@
  */
 package org.ujorm.hotels.gui;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.ujorm.hotels.config.SpringContext;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 
@@ -36,7 +38,7 @@ public class MainApplication extends WebApplication implements OrmHandlerProvide
     public static final String APPLICATION_NAME = "Demo Hotels";
 
     /** OrmHandler Provider */
-    @Autowired
+    @Inject @Named(SpringContext.ORM_HANDLER)
     private OrmHandlerProvider ormProvider;
 
     @Override

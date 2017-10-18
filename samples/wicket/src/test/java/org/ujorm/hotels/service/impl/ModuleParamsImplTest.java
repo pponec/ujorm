@@ -15,7 +15,6 @@
  */
 package org.ujorm.hotels.service.impl;
 
-import org.ujorm.hotels.service.param.TestParams;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,9 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.ujorm.hotels.config.SpringContext;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.ParamService;
+import org.ujorm.hotels.service.param.TestParams;
 import static org.junit.Assert.*;
 
 /**
@@ -36,7 +37,7 @@ import static org.junit.Assert.*;
  * @author Pavel Ponec
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:org/ujorm/hotels/config/applicationContext.xml"})
+@ContextConfiguration(classes = SpringContext.class)
 public class ModuleParamsImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleParamsImplTest.class);
 

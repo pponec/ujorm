@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-	 version="2.4">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4">
 
     <display-name>DemoHotels</display-name>
 
-    <!-- The SpringWebApplicationFactory will need access to a Spring Application context, configured like this... -->
+    <context-param>
+        <param-name>contextClass</param-name>
+        <param-value>
+            org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+        </param-value>
+    </context-param>
+
+    <!-- The SpringWebApplicationFactory will need access to a Spring Application context, configured like this. -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:org/ujorm/hotels/config/applicationContext.xml</param-value>
+        <param-value>org.ujorm.hotels.config.SpringContext</param-value>
     </context-param>
 
     <!-- Spring's context loader listener -->
@@ -17,7 +24,7 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-   <filter>
+    <filter>
         <filter-name>wicket-ujorm</filter-name>
         <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
         <init-param>
