@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.Key;
@@ -61,11 +61,11 @@ public class ParamServiceImpl
 implements ParamService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParamServiceImpl.class);
 
-    @Autowired
+    @Inject
     private AuthService authService;
 
     /** DAO layer */
-    @Autowired private CommonDao<OrmUjo> dao;
+    @Inject private CommonDao<OrmUjo> dao;
 
     /** Get a value of the key */
     @Override

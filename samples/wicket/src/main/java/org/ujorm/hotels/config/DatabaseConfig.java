@@ -15,9 +15,9 @@
  */
 package org.ujorm.hotels.config;
 
+import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.ujorm.hotels.config.demoData.DataLoader;
@@ -37,7 +37,7 @@ public final class DatabaseConfig implements OrmHandlerProvider {
     /** Database meta-model */
     final OrmHandler handler = new OrmHandler();
 
-    @Autowired
+    @Inject
     private ApplicationContext applicationContext;
 
     /** Initializa handler */

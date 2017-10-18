@@ -16,10 +16,10 @@
 package org.ujorm.hotels.service.impl;
 
 import java.io.Serializable;
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.CacheManager;
@@ -42,8 +42,8 @@ public class ParamServiceCacheImpl extends ParamServiceImpl {
     /** See the configuration file {@code ehcache.xml} */
     private static final String CACHE_IDENTIFIER = "parameterObjectCache";
 
-    @Autowired
-    @Qualifier("cacheManager")
+    @Inject
+    @Named("cacheManager")
     private CacheManager cacheManager;
 
     /** Get an instance of the Cache */

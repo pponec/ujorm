@@ -17,7 +17,7 @@ package org.ujorm.hotels.service.impl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.ujorm.hotels.config.SpringContext;
@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 public class DbServiceImplTest {
 
     /** Has service */
-    @Autowired
+    @Inject
     private AuthService service;
 
     /**

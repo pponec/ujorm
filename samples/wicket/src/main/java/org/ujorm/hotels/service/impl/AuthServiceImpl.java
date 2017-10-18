@@ -25,7 +25,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.MainApplication;
@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
     private static final String CUSTOMER_ATTR = "CUSTOMER_ATTR";
 
     /** Common DB service */
-    @Autowired private DbService dbService;
+    @Inject private DbService dbService;
 
     /** Authenticate the user and save the result to the Wicket session */
     @Override

@@ -16,10 +16,10 @@
 package org.ujorm.hotels.service.impl;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.ujorm.Key;
 import org.ujorm.hotels.service.ModuleParams;
 import org.ujorm.hotels.service.ParamService;
@@ -38,8 +38,8 @@ public abstract class AbstractModuleParams<U extends AbstractModuleParams>
     /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModuleParams.class);
 
-    @Autowired
-    @Qualifier(ParamService.CACHED)
+    @Inject
+    @Named(ParamService.CACHED)
     private ParamService paramService;
 
     /** If the instance is not a Spring managed bean,

@@ -15,13 +15,13 @@
  */
 package org.ujorm.hotels.gui.hotel;
 
+import javax.inject.Named;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
@@ -49,7 +49,7 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
 
     @SpringBean DbService dbService;
     @SpringBean AuthService authService;
-    @Qualifier("applParams")
+    @Named("applParams")
     @SpringBean ApplicationParams<ApplicationParams> applParams;
 
     private Toolbar<U> toolbar = new Toolbar("toolbar");

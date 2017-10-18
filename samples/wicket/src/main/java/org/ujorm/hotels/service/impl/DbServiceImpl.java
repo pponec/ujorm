@@ -19,12 +19,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Arrays;
+import javax.inject.Inject;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.config.SpringContext;
@@ -40,7 +40,6 @@ import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.hotels.service.DbService.ONE_DAY;
 import static org.ujorm.orm.utility.OrmTools.hasLength;
-import static org.ujorm.orm.utility.OrmTools.hasLength;
 /**
  * Common database service implementations
  * @author ponec
@@ -49,11 +48,10 @@ import static org.ujorm.orm.utility.OrmTools.hasLength;
 public class DbServiceImpl implements DbService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DbServiceImpl.class);
 
-    @Autowired
-    private AuthService authService;
+    @Inject private AuthService authService;
 
     /** DAO layer */
-    @Autowired private CommonDao<OrmUjo> dao;
+    @Inject private CommonDao<OrmUjo> dao;
 
     /** Read only sign */
     private boolean readOnly;

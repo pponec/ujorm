@@ -1,5 +1,5 @@
 /*
- *  Copyright 2014 Pavel Ponec
+ *  Copyright 2014-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
  */
 package org.ujorm.hotels.service.impl;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.ujorm.hotels.config.SpringContext;
@@ -41,12 +41,12 @@ import static org.junit.Assert.*;
 public class ModuleParamsImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleParamsImplTest.class);
 
-    @Autowired
+    @Inject
     private TestParams testParams;
-    @Autowired
-    @Qualifier(ParamService.CACHED)
+    @Inject
+    @Named(ParamService.CACHED)
     private ParamService paramService;;
-    @Autowired
+    @Inject
     private AuthService authService;
     /** Wicket tester  */
     protected WicketTester tester;
