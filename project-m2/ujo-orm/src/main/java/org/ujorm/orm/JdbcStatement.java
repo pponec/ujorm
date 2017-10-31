@@ -22,11 +22,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.extensions.Property;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -40,28 +43,34 @@ import org.ujorm.tools.MsgFormatter;
  * JdbcStatement
  * @author Pavel Ponec
  */
-public class JdbcStatement {
+public class JdbcStatement /*implements Closeable*/ {
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(JdbcStatement.class);
 
     /** Prepared Statement */
+    @Nonnull
     private final PreparedStatement ps;
+    @Nonnull
     private final ITypeService typeService;
+    /** Log limit */
     private final int logValueLengthLimit;
+    /** Is Loggable level */
+    final private boolean logValues;
 
     /** Parameter pointer */
     private int parameterPointer = 0;
 
+    @Nullable
     private StringBuilder values;
 
-    private boolean logValues;
-
-    public JdbcStatement(final Connection conn, final CharSequence sql, final OrmHandler handler) throws SQLException {
+    /** Constructor for a SQL statement */
+    public JdbcStatement(@Nonnull final Connection conn, @Nonnull final CharSequence sql, @Nonnull final OrmHandler handler) throws SQLException {
         this(conn.prepareStatement(sql.toString()), handler);
     }
 
-    public JdbcStatement(final PreparedStatement ps, final OrmHandler handler) {
+    /** Constructor for a PreparedStatement */
+    public JdbcStatement(@Nonnull final PreparedStatement ps, @Nonnull final OrmHandler handler) {
         this.ps = ps;
         this.typeService = handler.getParameters().getConverter(null);
         logValues = LOGGER.isLoggable(UjoLogger.INFO);
@@ -72,6 +81,7 @@ public class JdbcStatement {
     }
 
     /** Return values in format: [1, "ABC", 2.55] */
+    @Nonnull
     public String getAssignedValues() {
         if (values!=null
         &&  values.length()>0) {
@@ -104,7 +114,7 @@ public class JdbcStatement {
 
     /** Assign values into the prepared statement */
     @SuppressWarnings("unchecked")
-    public void assignValues(OrmUjo bo) throws SQLException {
+    public void assignValues(@Nonnull OrmUjo bo) throws SQLException {
         final MetaTable dbTable = bo.readSession().getHandler().findTableModel((Class) bo.getClass());
         final List<MetaColumn> columns = MetaTable.COLUMNS.getList(dbTable);
         assignValues(bo, columns);
@@ -112,7 +122,7 @@ public class JdbcStatement {
 
     /** Assign values into the prepared statement */
     @SuppressWarnings("unchecked")
-    public void assignValues(List<? extends OrmUjo> bos, int idxFrom, int idxTo) throws SQLException {
+    public void assignValues(@Nonnull List<? extends OrmUjo> bos, int idxFrom, int idxTo) throws SQLException {
         final OrmUjo bo = bos.get(idxFrom);
         final MetaTable dbTable = bo.readSession().getHandler().findTableModel((Class) bo.getClass());
         final List<MetaColumn> columns = MetaTable.COLUMNS.getList(dbTable);
@@ -124,7 +134,7 @@ public class JdbcStatement {
 
     /** Assign values into the prepared statement */
     @SuppressWarnings("unchecked")
-    public void assignValues(OrmUjo table, List<MetaColumn> columns) throws SQLException {
+    public void assignValues(@Nonnull OrmUjo table, @Nonnull List<MetaColumn> columns) throws SQLException {
         for (MetaColumn column : columns) {
             if (column.isForeignKey()) {
                 Key key = column.getKey();
@@ -380,7 +390,8 @@ public class JdbcStatement {
     }
 
     /** Returns prepared statement - for internal use only */
-    PreparedStatement getPreparedStatement() {
+    @Nonnull
+    @PackagePrivate PreparedStatement getPreparedStatement() {
         return ps;
     }
 

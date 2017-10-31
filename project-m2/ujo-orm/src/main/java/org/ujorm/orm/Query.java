@@ -716,6 +716,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Create a PreparedStatement including assigned parameter values */
+    @Nonnull
     public PreparedStatement getStatement() {
         return session.getStatement(this).getPreparedStatement();
     }
