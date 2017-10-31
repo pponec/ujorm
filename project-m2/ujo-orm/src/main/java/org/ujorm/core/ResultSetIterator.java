@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Ujo;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
-import org.ujorm.orm.Session;
 import org.ujorm.orm.metaModel.MetaColumn;
-
 
 /**
  * ResultSet iterator. It is not a thread safe implementation.
@@ -37,12 +37,16 @@ import org.ujorm.orm.metaModel.MetaColumn;
 final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implements Closeable {
 
     /** Base query */
+    @Nonnull
     private final Query query;
     /** Query columns */
+    @Nonnull
     private final ColumnWrapper[] queryColumns;
     /** Result set */
+    @Nullable
     private final ResultSet rs;
     /** If the statemtnt is null then is a sign that it is closed. */
+    @Nullable
     private PreparedStatement statement;
     /** Is the query a view? */
     private final boolean view;
@@ -50,13 +54,12 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
     private long count = -1L;
     /** A state before the first reading a BO. An auxiliary variable.*/
     private boolean initState = true;
-
     /** It the cursor ready for reading? After a row reading the value will be set to false. */
     private boolean cursorReady = false;
     /** Has a resultset a next row? */
     private boolean hasNext = true;
 
-    public ResultSetIterator(Query query) throws IllegalUjormException {
+    public ResultSetIterator(@Nonnull Query query) throws IllegalUjormException {
         try {
             this.query = query;
             this.queryColumns = query.getColumnArray();
@@ -64,9 +67,25 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
             this.rs = statement.executeQuery();
             this.view = query.getTableModel().isSelectModel();
         } catch (SQLException e) {
-            close();
-            throw new IllegalUjormException(Session.SQL_ILLEGAL + query, e);
+            throw newException(e);
         }
+    }
+
+    /** Close all resources and create new exception class */
+    @Nonnull
+    private RuntimeException newException(@Nullable final Throwable e) {
+        close();
+        final boolean noSuchElement = (e == null);
+        final String msg = "Error for SQL: " + query;
+        return noSuchElement
+            ? new NoSuchElementException(msg)
+            : new IllegalUjormException(msg, e);
+    }
+
+   /** Close all resources and create new NoSuchElementException class */
+    @Nonnull
+    private RuntimeException newNoSuchElementException() {
+        return newException(null);
     }
 
     /**
@@ -83,7 +102,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
                 close();
             }
         } catch (SQLException e) {
-            throw new IllegalUjormException("A hasNext() reading exception", e);
+            throw newException(e);
         }
         return hasNext;
     }
@@ -93,12 +112,21 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
      */
     @Override
     public void close() throws IllegalUjormException {
-        if (statement!=null) try {
+        if (statement != null) try {
+            if (rs != null) {
+                rs.close();
+            }
             statement.close();
             statement = null;
         } catch (SQLException e) {
-            throw new IllegalUjormException("Can't close statement: " + statement, e);
+            statement = null; // Forced closure to prevent recursion
+            throw newException(e);
         }
+    }
+
+    /** Is the instance closed? */
+    public boolean isClosed() {
+        return statement == null;
     }
 
     /** Returns a next table row. */
@@ -107,7 +135,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
     public T next() throws NoSuchElementException, IllegalUjormException {
 
         if (!hasNext()) {
-            throw new NoSuchElementException("Query: " + query.toString());
+            throw newNoSuchElementException();
         }
         try {
             cursorReady = false; // switch off the cursor flag.
@@ -134,7 +162,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
             }
             return row;
         } catch (RuntimeException | SQLException | ReflectiveOperationException | OutOfMemoryError e) {
-            throw new IllegalUjormException("Query: " + query, e);
+             throw newException(e);
         }
     }
 
@@ -181,7 +209,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
 //            return hasNext;
 //
 //        } catch (RuntimeException | OutOfMemoryError e) {
-//            throw new UnsupportedOperationException("Skip Query: " + query, e);
+//            throw newException(e);
 //        }
 //    }
 }

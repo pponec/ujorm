@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T>, Closea
 
     /** Returns the same instance */
     @Override
-    public Iterator<T> iterator() {
+    public UjoIterator<T> iterator() {
         return this;
     }
 
@@ -83,8 +83,10 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T>, Closea
     /** Copy items to a new List */
     public List<T> toList() throws IllegalStateException {
         final List<T> result = new ArrayList<>(32);
-        for (T item : this) {
-            result.add(item);
+        try (final UjoIterator<T> it = this.iterator()) {
+            for (final T item : it) {
+                result.add(item);
+            }
         }
         return result;
     }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Pavel Ponec
+ *  Copyright 2009-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -259,6 +259,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Create a new column List. */
+    @Nonnull
     @SuppressWarnings("empty-statement")
     public ColumnWrapper[] getColumnArray() {
         final Collection<ColumnWrapper> resColumns = getColumns();
@@ -351,16 +352,16 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      */
     @Nullable
     public UJO uniqueResult() throws NoSuchElementException {
-        final UjoIterator<UJO> iterator = iterator();
-        if (!iterator.hasNext()) {
-            return null;
+        try (final UjoIterator<UJO> iterator = iterator()) {
+            if (!iterator.hasNext()) {
+                return null;
+            }
+            final UJO result = iterator.next();
+            if (iterator.hasNext()) {
+                throw new NoSuchElementException("Result is not unique for: " + criterion);
+            }
+            return result;
         }
-        final UJO result = iterator.next();
-        if (iterator.hasNext()) {
-            iterator.close();
-            throw new NoSuchElementException("Result is not unique for: " + criterion);
-        }
-        return result;
     }
 
     /** The method performs a new database request and returns result of the function <code>UjoIterator.hasNext()</code>.
@@ -371,11 +372,11 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     public boolean exists() {
         int $limit = limit;
         limit = 1;
-        final UjoIterator<UJO> iterator = iterator();
-        final boolean result = iterator.hasNext();
-        iterator.close();
-        limit = $limit;
-        return result;
+        try (final UjoIterator<UJO> iterator = iterator()) {
+            final boolean result = iterator.hasNext();
+            limit = $limit;
+            return result;
+        }
     }
 
     /** Get the order item list. The method returns a not null result always. */
