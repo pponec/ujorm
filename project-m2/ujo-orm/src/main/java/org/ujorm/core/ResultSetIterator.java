@@ -25,6 +25,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Ujo;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
@@ -35,6 +37,8 @@ import org.ujorm.orm.metaModel.MetaColumn;
  * @author Pavel Ponec
  */
 final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implements Closeable {
+    /** Logger */
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(ResultSetIterator.class);
 
     /** Base query */
     @Nonnull
@@ -74,9 +78,9 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
     /** Close all resources and create new exception class */
     @Nonnull
     private RuntimeException newException(@Nullable final Throwable e) {
-        close();
+        close(false);
         final boolean noSuchElement = (e == null);
-        final String msg = "Error for SQL: " + query;
+        final String msg = "Error for SQL: " + query.getStatementInfo();
         return noSuchElement
             ? new NoSuchElementException(msg)
             : new IllegalUjormException(msg, e);
@@ -112,6 +116,14 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
      */
     @Override
     public void close() throws IllegalUjormException {
+        close(true);
+    }
+
+    /** Close all resources.
+     * If the current iterator moves after the last entry then this method is called automatically.
+     * @param throwException Throws the IllegalUjormException or log an event as WARNING.
+     */
+    private void close(final boolean throwException) throws IllegalUjormException {
         if (statement != null) try {
             if (rs != null) {
                 rs.close();
@@ -120,7 +132,11 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
             statement = null;
         } catch (SQLException e) {
             statement = null; // Forced closure to prevent recursion
-            throw newException(e);
+            if (throwException) {
+               throw newException(e);
+            } else {
+                LOGGER.log(UjoLogger.WARN, "", e);
+            }
         }
     }
 
