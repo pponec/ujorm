@@ -267,7 +267,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
 
     /** Is the instance a database relation model? */
     public boolean isPersistent() {
-        return DATABASE.of(this)!=null;
+        return getDatabase()!=null;
     }
 
     /** Has this table assigned the database default database schema ? */

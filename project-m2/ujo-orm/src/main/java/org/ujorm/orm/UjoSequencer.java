@@ -67,7 +67,7 @@ public class UjoSequencer {
             return ++sequence;
         } else {
 
-            final MetaDatabase db = MetaTable.DATABASE.of(table);
+            final MetaDatabase db = table.getDatabase();
             Connection connection = null;
             String sql = null;
             StringBuilder out = new StringBuilder(64);
@@ -183,8 +183,8 @@ public class UjoSequencer {
     /** Returns table name */
     protected String getTableName() {
         try {
-            final MetaDatabase db = MetaTable.DATABASE.of(table);
-            return db.getDialect().printFullTableName(getTable(), true, new StringBuilder()).toString();
+            final SqlDialect dialect = table.getDatabase().getDialect();
+            return dialect.printFullTableName(getTable(), true, new StringBuilder()).toString();
         } catch (IOException e) {
             throw new IllegalUjormException("TableName failed", e);
         }
@@ -221,7 +221,7 @@ public class UjoSequencer {
         } else {
             sql = new StringBuilder(64);
         }
-        final MetaDatabase db = MetaTable.DATABASE.of(table);
+        final MetaDatabase db = table.getDatabase();
         final String tableName = db.getDialect().printFullTableName(getTable(), true, sql).toString();
 
         sql.setLength(0);

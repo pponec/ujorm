@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import javax.naming.InitialContext;
@@ -231,6 +232,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Returns a SQL dialect for the current database. */
+    @Nonnull
     public SqlDialect getDialect() {
         if (dialect==null) try {
             dialect = (SqlDialect) DIALECT.of(this).newInstance();

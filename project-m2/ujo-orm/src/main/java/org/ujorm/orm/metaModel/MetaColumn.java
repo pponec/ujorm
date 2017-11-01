@@ -166,12 +166,12 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
 
         // DB Type must be assigned after to create the converter instance:
         if (DB_TYPE.isDefault(this)) {
-            MetaTable.DATABASE.of(table).changeDbType(this);
+            table.getDatabase().changeDbType(this);
         }
 
         // The MAX_LENGTH must be after the DB_TYPE:
         if (MAX_LENGTH.isDefault(this)) {
-            MetaTable.DATABASE.of(table).changeDbLength(this);
+            table.getDatabase().changeDbLength(this);
         }
     }
 

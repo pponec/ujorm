@@ -23,7 +23,6 @@ import org.ujorm.orm.SqlNameProvider;
 import org.ujorm.orm.metaModel.*;
 import org.ujorm.tools.Assert;
 import static org.ujorm.orm.metaModel.MetaTable.COLUMNS;
-import static org.ujorm.orm.metaModel.MetaTable.DATABASE;
 
 /** The database index model builder. The builder sorts columns of the composite index
  * according the natural order of Keys in the {@link Ujo} class
@@ -55,7 +54,7 @@ public class IndexModelBuilder2  {
     /** Initialize the object */
     public void init(MetaTable metaTable) throws IllegalUjormException {
         Assert.notNull(this.metaTable, "The class is initialized by {}", this.metaTable);
-        
+
         this.metaTable = metaTable;
         this.nameProvider = metaTable.getDatabase().getDialect().getNameProvider();
         this.mapIndex = new HashMap<>();
@@ -119,7 +118,7 @@ public class IndexModelBuilder2  {
      * @see MoreParams#EXTENTED_INDEX_NAME_STRATEGY
      */
     protected Boolean isExtendedIndexStrategy() {
-        return MetaParams.EXTENTED_INDEX_NAME_STRATEGY.of(DATABASE.of(metaTable).getOrmHandler().getParameters());
+        return MetaParams.EXTENTED_INDEX_NAME_STRATEGY.of(metaTable.getDatabase().getOrmHandler().getParameters());
     }
 
 }

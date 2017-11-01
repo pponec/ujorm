@@ -80,7 +80,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
     private RuntimeException newException(@Nullable final Throwable e) {
         close(false);
         final boolean noSuchElement = (e == null);
-        final String msg = "Error for SQL: " + query.getStatementInfo();
+        final String msg = "Error for SQL: " + query;
         return noSuchElement
             ? new NoSuchElementException(msg)
             : new IllegalUjormException(msg, e);

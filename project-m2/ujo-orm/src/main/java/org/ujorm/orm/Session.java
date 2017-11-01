@@ -423,7 +423,7 @@ public class Session implements Closeable {
             return;
         }
         final MetaTable table = handler.findTableModel(bos.get(0).getClass());
-        final MetaDatabase db = MetaTable.DATABASE.of(table);
+        final MetaDatabase db =table.getDatabase();
         final int bosCount = bos.size();
         table.assertChangeAllowed();
 
@@ -519,7 +519,7 @@ public class Session implements Closeable {
             table.assignPrimaryKey(bo, this);
             // 3. Session must be assigned after assignPrimaryKey(). A bug was fixed thans to Pavel Slovacek
             bo.writeSession(this);
-            MetaDatabase db = MetaTable.DATABASE.of(table);
+            MetaDatabase db = table.getDatabase();
             sql = db.getDialect().printInsert(bo, out(128)).toString();
             LOGGER.log(UjoLogger.INFO, sql);
             statement = getStatement(db, sql, true);
@@ -574,7 +574,7 @@ public class Session implements Closeable {
                 : handler.findTableModel((Class) bo.getClass())
                 ;
             table.assertChangeAllowed();
-            MetaDatabase db = MetaTable.DATABASE.of(table);
+            MetaDatabase db = table.getDatabase();
             List<MetaColumn> changedColumns = getOrmColumns(bo.readChangedProperties(true));
             if (changedColumns.isEmpty()) {
                 LOGGER.log(UjoLogger.WARN, "No changed column to update {}", bo);
@@ -709,7 +709,7 @@ public class Session implements Closeable {
         String sql = "";
 
         try {
-            final MetaDatabase db = MetaTable.DATABASE.of(tableModel);
+            final MetaDatabase db = tableModel.getDatabase();
             final CriterionDecoder decoder = new CriterionDecoder(criterion, tableModel);
             sql = db.getDialect().printDelete(decoder, out(64)).toString();
             statement = getStatement(db, sql, true);
@@ -793,7 +793,7 @@ public class Session implements Closeable {
         ResultSet rs = null;
 
         MetaTable table = query.getTableModel();
-        MetaDatabase db = MetaTable.DATABASE.of(table);
+        MetaDatabase db = table.getDatabase();
         String sql = "";
 
         try {
@@ -817,17 +817,11 @@ public class Session implements Closeable {
     }
 
     /** Run SQL SELECT by query. */
-    public JdbcStatement getStatement(Query query) {
-        JdbcStatement result = null;
-        String sql = "";
-
+    @Nonnull
+    public JdbcStatement getStatement(@Nonnull final Query query) {
         try {
-            MetaTable table = query.getTableModel();
-            MetaDatabase db = MetaTable.DATABASE.of(table);
-
-            sql = db.getDialect().printSelect(table, query, false, out(360)).toString();
-            query.setStatementInfo(sql);
-            result = getStatement(db, sql, false);
+            final MetaDatabase db = query.getTableModel().getDatabase();
+            final JdbcStatement result = getStatement(db, query.getSqlStatement(true), false);
             if (query.getLimit()>=0) {
                 result.getPreparedStatement().setMaxRows(query.getLimit());
             }
@@ -837,13 +831,13 @@ public class Session implements Closeable {
             result.assignValues(query);
 
             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                LOGGER.log(UjoLogger.INFO, "{} {}{}", sql, SQL_VALUES, result.getAssignedValues());
+                LOGGER.log(UjoLogger.INFO, "{} {}{}", query, SQL_VALUES, result.getAssignedValues());
             }
             return result;
 
-        } catch (RuntimeException | SQLException | IOException | OutOfMemoryError e) {
+        } catch (RuntimeException | SQLException | OutOfMemoryError e) {
             rollbackOnly = true;
-            throw new IllegalUjormException(SQL_ILLEGAL + sql, e);
+            throw new IllegalUjormException(SQL_ILLEGAL + query, e);
         }
     }
 
@@ -954,7 +948,7 @@ public class Session implements Closeable {
     }
 
     /** Create new statement and assigng Savepoint for a trnasaction sase. */
-    public JdbcStatement getStatement(MetaDatabase database, CharSequence sql, final boolean toModify) throws SQLException {
+    public JdbcStatement getStatement(@Nonnull MetaDatabase database, @Nonnull CharSequence sql, final boolean toModify) throws SQLException {
         final JdbcStatement result = new JdbcStatement(getConnection(database, toModify), sql, handler);
         return result;
     }

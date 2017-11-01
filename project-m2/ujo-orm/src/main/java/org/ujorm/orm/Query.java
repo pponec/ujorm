@@ -16,6 +16,7 @@
 
 package org.ujorm.orm;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +33,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
@@ -40,11 +42,11 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Assert;
-import static org.ujorm.core.UjoTools.SPACE;
 import static org.ujorm.logger.UjoLogger.WARN;
 
 /**
@@ -58,12 +60,15 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(Query.class);
 
     /** The base table */
+    @Nonnull
     final private MetaTable table;
     /** Modified columns, the default value is the {@code null}.
      * @see #getDefaultColumns()
      */
+    @Nullable
     private ArrayList<ColumnWrapper> columns;
     /** Database session */
+    @Nullable
     private Session session;
     /** Data constraint */
     private Criterion<UJO> criterion;
@@ -71,8 +76,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     private boolean distinct;
     /** An internal decoder */
     private CriterionDecoder decoder;
-    /** An internal info */
-    private String statementInfo;
+    /** SQL statement rendered by a {@link SqlDialect} */
+    @Nullable
+    private String sqlStatement;
 
     /** A list of keys to sorting */
     private List<Key<UJO,?>> orderBy;
@@ -95,7 +101,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @param criterion If criterion is null, then the ForAll criterion is used.
      * @param session Session
      */
-    public Query(final MetaTable table, final Criterion<UJO> criterion, final Session session) {
+    public Query(@Nonnull final MetaTable table, @Nullable final Criterion<UJO> criterion, @Nullable final Session session) {
         this.table = table;
         this.columns = null;
         this.criterion = criterion;
@@ -111,7 +117,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @param criterion If criterion is null, then a TRUE constant criterion is used.
      * @see #setSession(org.ujorm.orm.Session)
      */
-    public Query(final MetaTable table, final Criterion<UJO> criterion) {
+    public Query(@Nonnull final MetaTable table, @Nullable final Criterion<UJO> criterion) {
         this(table, criterion, null);
     }
 
@@ -125,11 +131,13 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             handler = session.getHandler();
         }
         Assert.notNull(handler, "The base class must be assigned first!");
+        assert handler != null;
         return handler;
     }
 
     /** An open session must be assigned before executing a database request. */
-    public Query<UJO> setSession(Session session) {
+    public Query<UJO> setSession(@Nonnull Session session) {
+        Assert.notNull(session, "session");
         this.session = session;
         return this;
     }
@@ -233,7 +241,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** If the attribute 'order by' is changed so the decoder must be clearder. */
     @PackagePrivate void setDecoder(CriterionDecoder decoder) {
         this.decoder = decoder;
-        this.statementInfo = null;
+        this.sqlStatement = null;
     }
 
     /** Session */
@@ -716,20 +724,22 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-    /** Create a PreparedStatement including assigned parameter values */
+        /** Create a PreparedStatement including assigned parameter values */
     @Nonnull
     public PreparedStatement getStatement() {
         return session.getStatement(this).getPreparedStatement();
     }
 
-    /** Get the SQL statement or null, of statement is not known yet. */
-    public String getStatementInfo() {
-        return statementInfo;
-    }
-
-    /** Set the SQL statement */
-    /*default*/ void setStatementInfo(String statementInfo) {
-        this.statementInfo = statementInfo;
+    /** Get or create the SQL statement. */
+    @Nonnull
+    public String getSqlStatement(final boolean clearCache) {
+        if (clearCache || sqlStatement==null) try {
+            final MetaDatabase db = table.getDatabase();
+            sqlStatement = db.getDialect().printSelect(table, this, false, new StringBuilder(360)).toString();
+        } catch (IOException e) {
+            throw new IllegalUjormException(e.getMessage(), e);
+        }
+        return sqlStatement;
     }
 
     /** Pessimistic lock request */
@@ -752,38 +762,10 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return setLockRequest(true);
     }
 
-    @Override
+    /** Get the SQL statement from a cache */
+    @Override @Nonnull
     public String toString() {
-
-        if (statementInfo!=null) {
-            return statementInfo;
-        }
-
-        StringBuilder result = new StringBuilder(64);
-
-        if (table!=null) {
-            result.append('(').append(table.getType().getSimpleName()).append(") ");
-        }
-        if (criterion!=null) {
-            result.append(" criterion: ");
-            result.append(criterion);
-        }
-
-        if (orderBy!=null && orderBy.size() > 0) {
-            result.append(" | ordered by: ");
-            for (Key<UJO, ?> ujoProperty : orderBy) {
-                result.append(ujoProperty)
-                      .append(SPACE)
-                      .append(ujoProperty.isAscending() ? "ASC" : "DESC")
-                      .append(", ")
-                      ;
-            }
-        }
-
-        return result.length()>0
-            ? result.toString()
-            : super.toString()
-            ;
+        return getSqlStatement(false);
     }
 
     /** Select DISTINCT for a unique row result */

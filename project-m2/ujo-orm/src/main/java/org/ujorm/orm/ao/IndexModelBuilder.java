@@ -24,7 +24,6 @@ import org.ujorm.orm.SqlNameProvider;
 import org.ujorm.orm.metaModel.*;
 import org.ujorm.tools.Assert;
 import static org.ujorm.orm.metaModel.MetaTable.COLUMNS;
-import static org.ujorm.orm.metaModel.MetaTable.DATABASE;
 
 /** The database index model builder. The builder sorts columns of the composite index
  * according the natural order of Keys in the {@link Ujo} class
@@ -120,7 +119,7 @@ public class IndexModelBuilder  {
      * @see MoreParams#EXTENTED_INDEX_NAME_STRATEGY
      */
     protected Boolean isExtendedIndexStrategy() {
-        return MetaParams.EXTENTED_INDEX_NAME_STRATEGY.of(DATABASE.of(metaTable).getOrmHandler().getParameters());
+        return MetaParams.EXTENTED_INDEX_NAME_STRATEGY.of(metaTable.getDatabase().getOrmHandler().getParameters());
     }
 
 }

@@ -64,7 +64,7 @@ public class NativeDbSequencer extends UjoSequencer {
 
     /** Create a SQL script for the NEXT SEQUENCE from a native database sequencer */
     public String createNextSequence(String sequenceName) throws IOException {
-        return MetaTable.DATABASE.of(table)
+        return table.getDatabase()
               .getDialect()
               .printNextSequence(sequenceName, table, new StringBuilder(128))
               .toString();
