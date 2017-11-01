@@ -114,7 +114,7 @@ abstract public class AbstractMetaModel extends AbstractUjo implements UjoLockab
     }
 
     /** Assign a 'valid value' over a default UJO key value only */
-    protected <UJO extends Ujo, VALUE> void changeDefault
+    final protected <UJO extends Ujo, VALUE> void changeDefault
     ( final UJO ujo
     , final Key<UJO, VALUE> key
     , final VALUE value
