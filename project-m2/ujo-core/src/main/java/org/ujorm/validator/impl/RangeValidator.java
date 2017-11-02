@@ -29,7 +29,7 @@ public class RangeValidator<VALUE extends Comparable> extends BetweenValidator<V
     /**
      * Between validator
      * @param min Serializable minimum (inclusive)
-     * @param max Serializable maximum (exclusive)
+     * @param max Serializable maximum (inclusive)
      */
     public RangeValidator(VALUE min, VALUE max) {
         super(min, max);
@@ -60,13 +60,9 @@ public class RangeValidator<VALUE extends Comparable> extends BetweenValidator<V
                 , MIN, " and ", MAX, " (including), but the input is: ", INPUT);
     }
 
-    /** Default value is: "org.ujorm.between" by template:
-     * <br>
-     */
+    /** Default value is: "org.ujorm.between" by template */
     @Override
     public String getLocalizationKey() {
         return KEY_PREFIX + "range";
     }
-
-
 }

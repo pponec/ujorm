@@ -120,14 +120,14 @@ public abstract class ValidatorFactory {
         }
     }
 
-    /** Value from min (inxlusive) to max (exclusive)
+    /** Value from min (inclusive) to max (exclusive)
      * @see BetweenValidator
      */
     public static <VALUE extends Comparable> Validator<VALUE> between(VALUE min, VALUE max) {
         return new BetweenValidator(min, max);
     }
 
-    /** Value from min (inxlusive) to max (exclusive)
+    /** Value from min (inclusive) to max (exclusive)
      * @see BetweenValidator
      */
     public static <VALUE extends Comparable> Validator<VALUE> between(CheckType type, VALUE min, VALUE max) {
@@ -135,14 +135,14 @@ public abstract class ValidatorFactory {
         return type == MANDATORY ? NOT_NULL.and(result) : result;
     }
 
-    /** Value from min (inxlusive) to max (inxlusive)
+    /** Value from min (inclusive) to max (inclusive)
      * @see RangeValidator
      */
     public static <VALUE extends Comparable> Validator<VALUE> range(VALUE min, VALUE max) {
         return new RangeValidator(min, max);
     }
 
-    /** Value from min (inxlusive) to max (inxlusive)
+    /** Value from min (inclusive) to max (inclusive)
      * @see RangeValidator
      */
     public static <VALUE extends Comparable> Validator<VALUE> range(CheckType type, VALUE min, VALUE max) {
