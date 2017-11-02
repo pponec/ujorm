@@ -60,12 +60,12 @@ final public class RingBuffer implements CharSequence {
      */
     public RingBuffer(int length) throws IllegalArgumentException {
         Assert.isTrue(length > 0, "The RingBufer must not be empty");
-        
+
         this.length = length;
         this.b = new char[length];
     }
 
-    final public void add(char c) {
+    public final void add(char c) {
         b[pos] = c;
         pos = ++pos % this.length;
     }
@@ -132,7 +132,7 @@ final public class RingBuffer implements CharSequence {
 
     /** Length of the String */
     @Override
-    final public int length() {
+    public final int length() {
         return length;
     }
 

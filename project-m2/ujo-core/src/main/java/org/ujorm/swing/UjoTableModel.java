@@ -102,7 +102,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
      * @deprecated Use a method with column type of Key instead of.
      */
     @Override
-    final public Object getValueAt(int rowIndex, int columnIndex) {
+    public final Object getValueAt(int rowIndex, int columnIndex) {
         return getValueAt(rowIndex, columns[columnIndex]);
     }
 
@@ -111,20 +111,20 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
      * @deprecated Use a method with column type of Key instead of.
      */
     @Override
-    final public void setValueAt(Object value, int rowIndex, int columnIndex) {
+    public final void setValueAt(Object value, int rowIndex, int columnIndex) {
         setValueAt(value, rowIndex, columns[columnIndex]);
     }
 
     /** Column Name */
     @Override
-    final public String getColumnName(int columnIndex) {
+    public final String getColumnName(int columnIndex) {
         return getColumnName(columns[columnIndex]);
     }
 
     /** Is the Cell Editable?
      * @deprecated Use a method with column type of Key instead of.
      */
-    final public boolean isCellEditable(int rowIndex, int columnIndex) {
+    public final boolean isCellEditable(int rowIndex, int columnIndex) {
         return isCellEditable(rowIndex, columns[columnIndex]);
     }
 
@@ -133,7 +133,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
      * @return the common ancestor class of the object values in the model.
      * @deprecated Use a method with column type of Key instead of.
      */
-    final public Class getColumnClass(int columnIndex) {
+    public final Class getColumnClass(int columnIndex) {
         return getColumnClass(columns[columnIndex]);
     }
 

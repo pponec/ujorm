@@ -71,7 +71,7 @@ final public class PathListProperty<U extends Ujo, VALUE>
     }
 
     @Override
-    final public VALUE getItem(U ujo, int index) {
+    public final VALUE getItem(U ujo, int index) {
         return of(ujo, index);
     }
 

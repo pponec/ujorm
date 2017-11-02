@@ -200,13 +200,13 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
     /** Name of Property */
     @Override
-    final public String getName() {
+    public final String getName() {
         return name;
     }
 
     /** {@inheritDoc} */
     @Override
-    final public String getFullName() {
+    public final String getFullName() {
         return domainType != null
              ? domainType.getSimpleName() + '.' + name
              : name ;
@@ -214,19 +214,19 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
     /** Type of Property */
     @Override
-    final public Class<VALUE> getType() {
+    public final Class<VALUE> getType() {
         return type;
     }
 
     /** Type of Property */
     @Override
-    final public Class<U> getDomainType() {
+    public final Class<U> getDomainType() {
         return domainType;
     }
 
     /** Index of Property */
     @Override
-    final public int getIndex() {
+    public final int getIndex() {
         return index;
     }
 

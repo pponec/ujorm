@@ -121,7 +121,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     @Override
-    final public Key<UJO, ?> findDirectKey(final Ujo ujo, final String name, final boolean throwException) throws IllegalArgumentException {
+    public final Key<UJO, ?> findDirectKey(final Ujo ujo, final String name, final boolean throwException) throws IllegalArgumentException {
         return findDirectKey(ujo, name, UjoAction.DUMMY, true, throwException);
     }
 

@@ -107,12 +107,12 @@ public class ComboField<T extends Ujo> extends Field<T> {
     }
 
     /** Get the identifier key */
-    final public Key<T, ?> getKeyId() {
+    public final Key<T, ?> getKeyId() {
         return keys.get(0);
     }
 
     /** Get a key to display */
-    final public Key<T, ?> getKeyDisplay() {
+    public final Key<T, ?> getKeyDisplay() {
         return keys.get(1);
     }
 

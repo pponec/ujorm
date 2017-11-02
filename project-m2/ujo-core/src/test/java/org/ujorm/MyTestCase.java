@@ -17,11 +17,11 @@ import org.ujorm.extensions.UjoTextable;
  * @author Pavel Ponec
  */
 abstract public class MyTestCase extends TestCase {
-    
+
     public MyTestCase(String testName) {
         super(testName);
     }
-    
+
     /** A TimeTest loop size. */
     public int getTimeLoopCount() {
         //return 5*1000*1000;
@@ -29,27 +29,27 @@ abstract public class MyTestCase extends TestCase {
     }
 
     /** Print the time in seconds. */
-    final public void printTime(final String msg, final long time1) {
+    public final void printTime(final String msg, final long time1) {
         long duration = System.currentTimeMillis() - time1;
         System.out.println(msg + duration/1000d + " [sec]");
     }
-    
+
     /** Modify a Test directory */
     public String getTestDir() {
         return System.getProperty("java.io.tmpdir");
     }
-    
+
     /**
      * Compare two Ujo objects.
      */
     @SuppressWarnings("unchecked")
     public static void assertEquals(Ujo expected, Ujo actual) {
-        
+
         if (expected==actual) { return; }
         assertEquals(expected.getClass(), expected.getClass());
-        
+
         KeyList keys = expected.readKeys();
-        
+
         if (expected instanceof UjoTextable) {
             for (int i=keys.size()-1; i>=0; i--) {
                 Key key = keys.get(i);
@@ -58,13 +58,13 @@ abstract public class MyTestCase extends TestCase {
                 assertEquals("Property \"" + key.getName() + "\"", o1, o2);
             }
         }
-       
-        
+
+
         for (int i=keys.size()-1; i>=0; i--) {
             Key<? super Ujo,?> key = keys.get(i);
             Object o1 = key.of(expected);
             Object o2 = key.of(actual);
-            
+
             String item = "Property \"" + key.getName() + "\"";
             if (byte[].class.equals(key.getType())) {
                 assertEquals(item, (byte[]) o1, (byte[]) o2);
@@ -77,32 +77,32 @@ abstract public class MyTestCase extends TestCase {
             }
         }
     }
-    
+
     /**
      * Compare two Ujo objects.
      */
     public static void assertEquals(String item, byte[] expected, byte[] actual) {
         assertTrue(item, Arrays.equals(expected, actual));
     }
-    
+
     /**
      * Compare two Ujo objects.
      */
     public static void assertEquals(String item, char[] expected, char[] actual) {
         assertTrue(item, Arrays.equals(expected, actual));
     }
-    
+
     /**
      * Compare two Ujo objects.
      */
     public static void assertEquals(String item, List expected, List actual) {
         if (expected==actual) { return; }
         assertEquals(item, expected.size(), actual.size());
-        
+
         if (item.endsWith("\"")) {
             item = item.substring(0, item.length()-1);
         }
-        
+
         for (int i=0; i<expected.size(); i++) {
             Object oe = expected.get(i);
             Object oa = actual.get(i);
@@ -110,7 +110,7 @@ abstract public class MyTestCase extends TestCase {
             assertEquals(item+"["+i+"\"]", oe, oa);
         }
     }
-    
+
     /** Call GC and sleep .025 ms */
     protected void callGC() {
         System.gc();
@@ -120,7 +120,7 @@ abstract public class MyTestCase extends TestCase {
             ex.printStackTrace();
         }
     }
-    
+
     protected void sleep(int millis) {
         try {
             Thread.sleep(millis);

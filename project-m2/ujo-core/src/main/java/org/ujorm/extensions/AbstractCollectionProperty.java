@@ -60,7 +60,7 @@ abstract public class AbstractCollectionProperty<UJO extends Ujo,VALUE,ITEM> ext
      * @param itemType Item type
      */
     @SuppressWarnings("unchecked")
-    final protected void initItemType(final Class<ITEM> itemType) {
+    protected final void initItemType(final Class<ITEM> itemType) {
         checkLock();
         if (itemType != null) {
             this.itemType = itemType;

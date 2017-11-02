@@ -208,7 +208,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
      */
     @SuppressWarnings("unchecked")
     @Override
-    final public <ITEM> List<ITEM> getList(final ListKey<? super UJO,ITEM> key) {
+    public final <ITEM> List<ITEM> getList(final ListKey<? super UJO,ITEM> key) {
         return key.getList( (UJO) this);
     }
 

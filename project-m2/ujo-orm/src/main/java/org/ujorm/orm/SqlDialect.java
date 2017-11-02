@@ -144,7 +144,7 @@ abstract public class SqlDialect {
     }
 
     /** Print a full SQL table name by sample: SCHEMA.TABLE  */
-    final public Appendable printFullTableName(final MetaTable table, final Appendable out) throws IOException {
+    public final Appendable printFullTableName(final MetaTable table, final Appendable out) throws IOException {
         return printFullTableName(table, false, out);
     }
 
@@ -1140,12 +1140,12 @@ abstract public class SqlDialect {
 
     /** Returns true, if the argument text is not null and not empty. */
     @Deprecated
-    final protected boolean isFilled(final CharSequence text) {
+    protected final boolean isFilled(final CharSequence text) {
         return Check.hasLength(text);
     }
 
     /** Print the new line. */
-    final public void println(final Appendable out) throws IOException {
+    public final void println(final Appendable out) throws IOException {
         out.append('\n');
     }
 
@@ -1218,7 +1218,7 @@ abstract public class SqlDialect {
     }
 
     /** Escape the special character: "'" */
-    final protected void escape(final CharSequence text, final Appendable out) throws IOException {
+    protected final void escape(final CharSequence text, final Appendable out) throws IOException {
         for (int i=0; i<text.length(); i++) {
             final char c = text.charAt(i);
             switch(c) {
@@ -1250,7 +1250,7 @@ abstract public class SqlDialect {
      * @param sql Target SQL for printing new quoted name
      * @return SQL with printed quoted name
      */
-    final public Appendable printQuotedName(final CharSequence name, final Appendable sql) throws IOException {
+    public final Appendable printQuotedName(final CharSequence name, final Appendable sql) throws IOException {
         if (quoteRequest==null) {
             quoteRequest = ormHandler.getParameters().isQuotedSqlNames();
         }

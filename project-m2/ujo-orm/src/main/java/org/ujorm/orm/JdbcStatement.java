@@ -147,7 +147,7 @@ public class JdbcStatement /*implements Closeable*/ {
     }
 
     /** Assign values into the prepared statement */
-    final public void assignValues(Query query) throws SQLException {
+    public final void assignValues(Query query) throws SQLException {
         if (query.getSqlParameters()!=null) {
             assignExtendedValues(query);
         }

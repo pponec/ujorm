@@ -118,7 +118,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      *   documentation for more information.
      * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo) failed.
      */
-    final public void validate(final U ujo, String message, Object ... parameters) throws IllegalArgumentException {
+    public final void validate(final U ujo, String message, Object ... parameters) throws IllegalArgumentException {
         Assert.isTrue(evaluate(ujo), message, parameters);
     }
 
@@ -128,7 +128,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * with the required message.
      * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo) failed.
      */
-    final public void validate(final U ujo) throws IllegalArgumentException {
+    public final void validate(final U ujo) throws IllegalArgumentException {
         validate(ujo, "Invalid condition ({}) for the {}", this, ujo);
     }
 

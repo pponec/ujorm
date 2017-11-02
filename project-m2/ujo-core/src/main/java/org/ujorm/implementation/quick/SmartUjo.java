@@ -63,7 +63,7 @@ abstract public class SmartUjo<UJO extends SmartUjo>
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
     @Override
-    final public <VALUE> VALUE get(final Key<? super UJO, VALUE> key) {
+    public final <VALUE> VALUE get(final Key<? super UJO, VALUE> key) {
         return key.of((UJO) this);
     }
 
@@ -79,7 +79,7 @@ abstract public class SmartUjo<UJO extends SmartUjo>
      */
     @SuppressWarnings("unchecked")
     @Override
-    final public <VALUE> Ujo set(final Key<? super UJO, VALUE> key, final VALUE value) {
+    public final <VALUE> Ujo set(final Key<? super UJO, VALUE> key, final VALUE value) {
         key.setValue((UJO)this, value);
         return this;
     }
@@ -87,7 +87,7 @@ abstract public class SmartUjo<UJO extends SmartUjo>
     /** Get a not null result */
     @SuppressWarnings("unchecked")
     @Override
-    final public <VALUE> List<VALUE> getList(final ListKey<? super UJO, VALUE> key) {
+    public final <VALUE> List<VALUE> getList(final ListKey<? super UJO, VALUE> key) {
         return key.getList((UJO)this);
     }
 

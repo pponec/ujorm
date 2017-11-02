@@ -44,14 +44,14 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
     /** A delegate for the method {@link #getBean(org.ujorm.Key). */
     @Override
     @SuppressWarnings("unchecked")
-    final public Object readValue(Key key) {
+    public final Object readValue(Key key) {
         return getBean(key);
     }
 
     /** The bean is a factory type, the writeValue method is not supported. */
     @Deprecated
     @Override
-    final public void writeValue(Key key, Object value) throws UnsupportedOperationException {
+    public final void writeValue(Key key, Object value) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Method is not supported");
     }
 
@@ -63,7 +63,7 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
 
     /** Assign the application context by Spring framework only. Do not call the method directly. */
     @Override
-    final public void setApplicationContext(ApplicationContext ac) throws BeansException {
+    public final void setApplicationContext(ApplicationContext ac) throws BeansException {
         if (this.context != null) {
             throw new UnsupportedOperationException("The application context is assigned yet");
         }

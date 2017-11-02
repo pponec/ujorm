@@ -23,9 +23,9 @@ import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.WeakKey;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.WeakKeyFactory;
-import org.ujorm.core.IllegalUjormException;
 import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
@@ -45,7 +45,7 @@ public class WeakKeyImpl<VALUE>
         extends Property<Ujo, VALUE>
         implements WeakKey<VALUE> {
 
-    /** Constructor for an internal use only. 
+    /** Constructor for an internal use only.
      * Use the factory {@link WeakKeyFactory} to create a new instance.
      * @see WeakKeyFactory
      */
@@ -53,7 +53,7 @@ public class WeakKeyImpl<VALUE>
         this(null, null, index);
     }
 
-    /** Constructor for an internal use only. 
+    /** Constructor for an internal use only.
      * Use the factory {@link WeakKeyFactory} to create a new instance.
      * @see WeakKeyFactory
      */
@@ -76,7 +76,7 @@ public class WeakKeyImpl<VALUE>
      * @see #getValue(java.util.Map)
      */
     @Override
-    final public VALUE getValue(Map<String, ? super VALUE> map) {
+    public final VALUE getValue(Map<String, ? super VALUE> map) {
         return of(map);
     }
 
@@ -111,7 +111,7 @@ public class WeakKeyImpl<VALUE>
      * @return Returns a type safe value from the map object.
      */
     @Override
-    final public VALUE getValue(List<? super VALUE> list) {
+    public final VALUE getValue(List<? super VALUE> list) {
         return getValue(list);
     }
 
@@ -125,15 +125,15 @@ public class WeakKeyImpl<VALUE>
         final Object result = i < list.size() ? list.get(i) : null;
         return result != null ? (VALUE) result : getDefault();
     }
-    
+
     /**
      * Returns an value from the Servlet Request.
-     * @param An object type of: javax.servlet.ServletRequest, where the {@code null} result is replaced for a default value
+     * @servletReqest An object type of: javax.servlet.ServletRequest, where the {@code null} result is replaced for a default value
      * @return Returns object converted to a required type.
      */
     @Override
     @SuppressWarnings("unchecked")
-    final public VALUE getRequestValue(Object servletReqest) throws IllegalArgumentException {
+    public final VALUE getRequestValue(Object servletReqest) throws IllegalArgumentException {
         try {
             final Method m = servletReqest.getClass().getMethod("getParameter", String.class);
             final Object result = m.invoke(servletReqest, getName());
@@ -143,7 +143,7 @@ public class WeakKeyImpl<VALUE>
         } catch (RuntimeException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new IllegalUjormException("Can't get parameter " + getName() + " from the servletRequest: " + servletReqest, e);
         }
-    }    
+    }
 
     /** The WeakKeyImpl does not support chaining of the Keys. */
     @Override

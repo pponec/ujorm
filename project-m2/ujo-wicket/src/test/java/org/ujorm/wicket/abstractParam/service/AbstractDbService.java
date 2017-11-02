@@ -15,31 +15,29 @@
  */
 package org.ujorm.wicket.abstractParam.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
 import org.ujorm.spring.UjormTransactionManager;
-import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
 /**
  * Abstract service with basic database tools
  * @author ponec
  */
 abstract public class AbstractDbService {
-    
+
     /** Orm Configuration */
     // @Autowired // TODO
     private UjormTransactionManager manager;
 
     /** Return local session */
-    final protected Session getSession() {
+    protected final Session getSession() {
         return manager.getLocalSession();
     }
 
     /** Create database query with Session */
-    final protected <T extends OrmUjo> Query<T> createQuery(Criterion<T> criterion) {
+    protected final <T extends OrmUjo> Query<T> createQuery(Criterion<T> criterion) {
         return getSession().createQuery(criterion);
     }
 

@@ -256,7 +256,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
 
     /** Returns a base table class. */
     @SuppressWarnings("unchecked")
-    final public Class<OrmUjo> getType() {
+    public final Class<OrmUjo> getType() {
         return DB_PROPERTY.of(this).getItemType();
     }
 
@@ -325,7 +325,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     }
 
     /** Returns the database */
-    final public MetaDatabase getDatabase() {
+    public final MetaDatabase getDatabase() {
         return DATABASE.of(this);
     }
 

@@ -147,7 +147,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
 
     /** Get key value */
     @SuppressWarnings("unchecked")
-    final public Object getValue(Ujo ujo) {
+    public final Object getValue(Ujo ujo) {
         final Object result = getKey().of(ujo);
         return result;
     }

@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import org.ujorm.Ujo;
-import org.ujorm.Key;
 import javax.annotation.*;
+import org.ujorm.Key;
+import org.ujorm.Ujo;
 
 /**
  * A generic comparator for the Ujo objects. A direction is the sorting is controlled by attribute Key.isAscending() .
@@ -103,7 +103,7 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
         if (u1==u2  ) { return  0; }
         if (u1==null) { return +1; }
         if (u2==null) { return -1; }
-        
+
         for (Key key : keys) {
 
             final Comparable c1 = (Comparable) key.of(u1);
@@ -161,7 +161,7 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
     }
 
     /** An equals test */
-    final public boolean equals(final UJO u1, final UJO u2) {
+    public final boolean equals(final UJO u1, final UJO u2) {
         final boolean result = compare(u1, u2)==0;
         return result;
     }

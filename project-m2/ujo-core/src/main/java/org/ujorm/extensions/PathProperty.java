@@ -169,7 +169,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     /** Get the first key of the current object. The result is direct key always. */
     @SuppressWarnings("unchecked")
     @Override
-    final public <U extends Ujo> Key<U, VALUE> getLastKey() {
+    public final <U extends Ujo> Key<U, VALUE> getLastKey() {
         Key result = keys[keys.length - 1];
         return result.isComposite()
             ? ((CompositeKey)result).getLastKey()
@@ -180,7 +180,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     /** Get the first key of the current object. The result is direct key always. */
     @SuppressWarnings("unchecked")
     @Override
-    final public <u extends Ujo> Key<u, VALUE> getFirstKey() {
+    public final <u extends Ujo> Key<u, VALUE> getFirstKey() {
         Key result = keys[0];
         return result.isComposite()
             ? ((CompositeKey)result).getFirstKey()
@@ -215,7 +215,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
 
     /** Full key names with no alias */
     @Override
-    final public String getName() {
+    public final String getName() {
         if (name == null) {
             name = getName(false);
         }
@@ -302,7 +302,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      */
     @SuppressWarnings("unchecked")
     @Override
-    final public VALUE getValue(final U ujo) throws ValidationException {
+    public final VALUE getValue(final U ujo) throws ValidationException {
         return of(ujo);
     }
 
@@ -312,12 +312,12 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @since 1.45
      */
     @Override
-    final public void setValue(final U ujo, final VALUE value) throws ValidationException {
+    public final void setValue(final U ujo, final VALUE value) throws ValidationException {
         setValue(ujo, value, true);
     }
 
     @Override
-    final public void setValue(final U ujo, final VALUE value, boolean createRelations) throws ValidationException {
+    public final void setValue(final U ujo, final VALUE value, boolean createRelations) throws ValidationException {
         final Ujo u = getSemiValue(ujo, createRelations);
         getLastPartialProperty().setValue(u, value);
     }
@@ -326,13 +326,13 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * If a value  (not getLastPartialProperty) is null, then the result is null.
      */
     @Override
-    final public VALUE of(final U ujo) {
+    public final VALUE of(final U ujo) {
         final Ujo u = getSemiValue(ujo, false);
         return  u!=null ? getLastPartialProperty().of(u) : null ;
     }
 
     @Override
-    final public int getIndex() {
+    public final int getIndex() {
         return -1;
     }
 
@@ -365,14 +365,14 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     /** Returns true if the key type is a type or subtype of the parameter class. */
     @SuppressWarnings("unchecked")
     @Override
-    final public boolean isTypeOf(final Class type) {
+    public final boolean isTypeOf(final Class type) {
         return getLastKey().isTypeOf(type);
     }
 
     /** Returns true if the key type is a type or subtype of the parameter class. */
     @SuppressWarnings("unchecked")
     @Override
-    final public boolean isDomainOf(final Class type) {
+    public final boolean isDomainOf(final Class type) {
         return getFirstKey().isDomainOf(type);
     }
 

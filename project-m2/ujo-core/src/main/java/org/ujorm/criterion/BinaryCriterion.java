@@ -82,7 +82,7 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
 
     /** Is it a Binary Criterion */
     @Override
-    final public boolean isBinary() {
+    public final boolean isBinary() {
         return true;
     }
 
@@ -99,7 +99,7 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
         if (parentheses) result.append(')');
 
         return  result.toString();
-    }    
+    }
 
     /** Find a domain class type of {@code Class<UJO>} from its keys.
      * @return returns Method returns the {@code Ujo.class} instance if no domain was found.

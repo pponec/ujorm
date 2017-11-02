@@ -108,19 +108,19 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T>, Closea
 
     /** Create an instance */
     @SuppressWarnings("unchecked")
-    final public static <T> UjoIterator<T> of(final Iterator<T> iterator) {
+    public static final <T> UjoIterator<T> of(final Iterator<T> iterator) {
         return new UjoIteratorImpl(iterator);
     }
 
     /** Create an instance */
     @SuppressWarnings("unchecked")
-    final public static <T> UjoIterator<T> of(final Collection<T> collection) {
+    public static final <T> UjoIterator<T> of(final Collection<T> collection) {
         return new UjoIteratorImpl(collection.iterator(), collection.size());
     }
 
     /** Create an instance */
     @SuppressWarnings("unchecked")
-    final public static <T extends OrmUjo> UjoIterator<T> of(Query<T> query) {
+    public static final <T extends OrmUjo> UjoIterator<T> of(Query<T> query) {
         return new ResultSetIterator(query);
     }
 
@@ -129,7 +129,7 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T>, Closea
      */
     @Deprecated
     @SuppressWarnings("unchecked")
-    final public static <T> UjoIterator<T> getInstance(final Iterator<T> iterator) {
+    public static final <T> UjoIterator<T> getInstance(final Iterator<T> iterator) {
         return new UjoIteratorImpl(iterator);
     }
 
@@ -138,7 +138,7 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T>, Closea
      */
     @Deprecated
     @SuppressWarnings("unchecked")
-    final public static <T> UjoIterator<T> getInstance(final Collection<T> collection) {
+    public static final <T> UjoIterator<T> getInstance(final Collection<T> collection) {
         return new UjoIteratorImpl(collection.iterator(), collection.size());
     }
 
@@ -147,7 +147,7 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T>, Closea
      */
     @Deprecated
     @SuppressWarnings("unchecked")
-    final public static <T extends OrmUjo> UjoIterator<T> getInstance(Query<T> query) {
+    public static final <T extends OrmUjo> UjoIterator<T> getInstance(Query<T> query) {
         return new ResultSetIterator(query);
     }
 

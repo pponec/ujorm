@@ -227,7 +227,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
     @Override
-    final public List<U> evaluate(final Iterable<U> ujoList) {
+    public final List<U> evaluate(final Iterable<U> ujoList) {
         switch (operator) {
             case XFIXED:
                 return Boolean.FALSE.equals(value)
@@ -246,7 +246,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
     @Override
-    final public List<U> evaluate(final U ... ujoList) {
+    public final List<U> evaluate(final U ... ujoList) {
         switch (operator) {
             case XFIXED:
                 return Boolean.FALSE.equals(value)

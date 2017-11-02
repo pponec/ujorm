@@ -40,6 +40,9 @@ import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.hotels.service.DbService.ONE_DAY;
 import static org.ujorm.orm.utility.OrmTools.hasLength;
+import static org.ujorm.orm.utility.OrmTools.hasLength;
+import static org.ujorm.orm.utility.OrmTools.hasLength;
+import static org.ujorm.orm.utility.OrmTools.hasLength;
 /**
  * Common database service implementations
  * @author ponec

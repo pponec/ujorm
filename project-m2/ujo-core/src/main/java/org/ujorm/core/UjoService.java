@@ -23,7 +23,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -70,12 +69,12 @@ abstract public class UjoService<UJO extends Ujo> {
     }
 
     /** Returns BASIC class */
-    final public Class<UJO> getUjoClass() {
+    public final Class<UJO> getUjoClass() {
         return ujoClass;
     }
 
     /** Returns a TRUE value if attribute <strong>ujoClass</strong> of domain class is textable. */
-    final public boolean isTextable() {
+    public final boolean isTextable() {
         return textable;
     }
 

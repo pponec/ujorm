@@ -304,12 +304,12 @@ final class UjoHandlerXML extends DefaultHandler {
     }
 
     /** Returns the getLastKey element from the object list  */
-    final protected Element getLastElement() {
+    protected final Element getLastElement() {
         return elementList[lastElement];
     }
 
     /** Returns the new element from the object list  */
-    final protected Element newElement() {
+    protected final Element newElement() {
         if (++lastElement==elementList.length) {
             Element[] newElem = new Element[lastElement + 32];
             System.arraycopy(elementList, 0, newElem, 0, elementList.length);

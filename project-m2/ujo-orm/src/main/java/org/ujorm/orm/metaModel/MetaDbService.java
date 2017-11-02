@@ -524,7 +524,7 @@ public class MetaDbService {
      * The feature supports: MySqlDialect and MSSqlDialect.
      * @return Result value is provided from a SqlDialog class.
      */
-    final protected boolean isCatalog() {
+    protected final boolean isCatalog() {
         return getDialect().isCatalog();
     }
 

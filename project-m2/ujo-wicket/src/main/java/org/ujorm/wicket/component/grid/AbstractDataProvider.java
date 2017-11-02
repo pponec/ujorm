@@ -132,10 +132,8 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      *
      * @param key
      * sort key
-     * @param order
-     * sort order
      */
-    final public void setSort(Key<? super U, ?> key) {
+    public final void setSort(Key<? super U, ?> key) {
         super.setSort((KeyRing)KeyRing.of(key), key.isAscending()
                 ? SortOrder.ASCENDING
                 : SortOrder.DESCENDING);

@@ -208,7 +208,7 @@ public class OrmHandler implements OrmHandlerProvider {
      * There is not allowed to make any change to the created meta-model.
      */
     @SuppressWarnings("unchecked")
-    final public <UJO extends OrmUjo> void loadDatabase(final Class<UJO> databaseModel) {
+    public final <UJO extends OrmUjo> void loadDatabase(final Class<UJO> databaseModel) {
         loadDatabase(new Class[] {databaseModel});
     }
 
@@ -354,7 +354,7 @@ public class OrmHandler implements OrmHandlerProvider {
      * or a related model type of {@link MetaRelation2Many}
      * or the NULL if no model was found.
      */
-    final public <T extends MetaRelation2Many> T findColumnModel(Key compositeKey) {
+    public final <T extends MetaRelation2Many> T findColumnModel(Key compositeKey) {
         return findColumnModel(compositeKey, false);
     }
 

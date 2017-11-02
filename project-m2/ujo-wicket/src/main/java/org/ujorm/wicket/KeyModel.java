@@ -55,7 +55,7 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
      * @deprecated Use the {@link #getKey()}.
      */
     @Deprecated
-    final public Key<UJO, T> getProperty() {
+    public final Key<UJO, T> getProperty() {
         return getKey();
     }
 
@@ -63,7 +63,7 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
      * Rerurn Key
      */
     @SuppressWarnings("unchecked")
-    final public Key<UJO, T> getKey() {
+    public final Key<UJO, T> getKey() {
         return (Key<UJO, T>) key.getFirstKey();
     }
 

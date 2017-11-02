@@ -93,6 +93,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Pessimistic lock request */
     private boolean lockRequest;
     /** SQL parameters for a Native view */
+    @Nullable
     private SqlParameters sqlParameters;
 
     /**
@@ -215,7 +216,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * The new decoder is cached to a next order by change.
      */
     @SuppressWarnings("unchecked")
-    final public CriterionDecoder getDecoder() {
+    public final CriterionDecoder getDecoder() {
         if (decoder==null) {
             final List<Key> relations = new ArrayList<>(16);
             for (Key key : orderBy) {
@@ -294,7 +295,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see #iterator()
      */
     @Deprecated
-    final public UjoIterator<UJO> iterate() {
+    public final UjoIterator<UJO> iterate() {
         return iterator();
     }
 
@@ -388,13 +389,13 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Get the order item list. The method returns a not null result always. */
-    final public List<Key<UJO,?>> getOrderBy() {
+    public final List<Key<UJO,?>> getOrderBy() {
         return orderBy;
     }
 
     /** Get the order item array. The method returns a not null result always. */
     @SuppressWarnings("unchecked")
-    final public Key<UJO,?>[] getOrderAsArray() {
+    public final Key<UJO,?>[] getOrderAsArray() {
         return orderBy.toArray(new Key[orderBy.size()]);
     }
 
@@ -579,7 +580,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @see #addOrderBy(org.ujorm.Key)
     */
     @SuppressWarnings("unchecked")
-    public Query<UJO> orderBy(Collection<Key<UJO,?>> orderItems) {
+    public Query<UJO> orderBy(@Nullable final Collection<Key<UJO,?>> orderItems) {
         clearDecoder();
         if (orderItems==null) {
             return orderByMany(); // empty sorting
@@ -591,7 +592,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Add an item to the end of order list. */
-    public Query<UJO> addOrderBy(final Key<UJO,?> ... keys) {
+    public Query<UJO> addOrderBy(@Nonnull final Key<UJO,?> ... keys) {
         clearDecoder();
         for (Key<UJO, ?> key : keys) {
            orderBy.add(key);
@@ -600,7 +601,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Add an item to the end of order list. */
-    public Query<UJO> addOrderBy(Key<UJO,?> key) {
+    public Query<UJO> addOrderBy(@Nonnull final Key<UJO,?> key) {
         clearDecoder();
         orderBy.add(key);
         return this;
@@ -609,7 +610,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Returns an order column. A method is for an internal use only.
      * @param i Column index
      * @return ColumnWrapper */
-    public ColumnWrapper readOrderColumn(int i) throws IllegalArgumentException {
+    public ColumnWrapper readOrderColumn(final int i) throws IllegalArgumentException {
         final Key key = orderBy.get(i);
         final MetaRelation2Many result = session.getHandler().findColumnModel(key);
 
@@ -625,7 +626,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Set the one entity / table to LEFT OUTER JOIN */
-    public boolean addOuterJoin(Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
+    public boolean addOuterJoin(@Nonnull final Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
+        this.sqlStatement = null;
         if (outerJoins == null) {
             outerJoins = new HashSet<>();
         }
@@ -652,37 +654,39 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Get the first row to retrieve (offset). Default value is 0. */
-    final public long getOffset() {
+    public final long getOffset() {
         return offset;
     }
 
     /** Get the first row to retrieve (offset). Default value is 0.
      * @see #setLimit(int, int)
      */
-    public Query<UJO> setOffset(int offset) {
+    public Query<UJO> setOffset(final int offset) {
         this.offset = offset;
+        this.sqlStatement = null;
         return this;
     }
 
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
      * @see #getLimit()
      */
-    final public boolean isLimit() {
+    public final boolean isLimit() {
         return limit>0;
     }
 
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
      * @see #isLimit()
      */
-    final public int getLimit() {
+    public final int getLimit() {
         return limit;
     }
 
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
      * @see java.sql.Statement#setMaxRows(int)
      */
-    public Query<UJO> setLimit(int limit) {
+    public Query<UJO> setLimit(final int limit) {
         this.limit = limit;
+        this.sqlStatement = null;
         return this;
     }
 
@@ -693,9 +697,10 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see #setLimit(int)
      * @see #setOffset(int)
      */
-    public Query<UJO> setLimit(int limit, long offset) {
+    public Query<UJO> setLimit(final int limit, final long offset) {
         this.limit = limit;
         this.offset = offset;
+        this.sqlStatement = null;
         return this;
     }
 
@@ -703,7 +708,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see #setLimit(int)
      */
     @Deprecated
-    final public Query<UJO> setMaxRows(int limit) {
+    public final Query<UJO> setMaxRows(final int limit) {
         return setLimit(limit);
     }
 
@@ -719,8 +724,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * Retrieves the number of result set rows that is the default fetch size for ResultSet objects generated from this Statement object.
      * @see java.sql.Statement#setFetchSize(int)
      */
-    public Query<UJO> setFetchSize(int fetchSize) {
+    public Query<UJO> setFetchSize(final int fetchSize) {
         this.fetchSize = fetchSize;
+        this.sqlStatement = null;
         return this;
     }
 
@@ -737,7 +743,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             final MetaDatabase db = table.getDatabase();
             sqlStatement = db.getDialect().printSelect(table, this, false, new StringBuilder(360)).toString();
         } catch (IOException e) {
-            throw new IllegalUjormException(e.getMessage(), e);
+            throw new IllegalUjormException(table.getType().getName(), e);
         }
         return sqlStatement;
     }
@@ -750,8 +756,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Pessimistic lock request. A default value is false.
      * @see org.ujorm.orm.dialect.HsqldbDialect#printLockForSelect(org.ujorm.orm.Query, java.lang.Appendable) HsqldbDialect
      */
-    public Query<UJO> setLockRequest(boolean lockRequest) {
+    public Query<UJO> setLockRequest(final boolean lockRequest) {
         this.lockRequest = lockRequest;
+        this.sqlStatement = null;
         return this;
     }
 
@@ -774,8 +781,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Select DISTINCT for a unique row result */
-    public Query<UJO> setDistinct(boolean distinct) {
+    public Query<UJO> setDistinct(final boolean distinct) {
         this.distinct = distinct;
+        this.sqlStatement = null;
         return this;
     }
 
@@ -785,6 +793,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Get a SQL parameters of the Native view */
+    @Nullable
     public SqlParameters getSqlParameters() {
         return sqlParameters;
     }
@@ -793,7 +802,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see org.ujorm.orm.annot.View
      * @throws IllegalArgumentException The SQL parameters can be used for the VIEW only
      */
-    public Query<UJO> setSqlParameters(SqlParameters sqlParameters) throws IllegalArgumentException {
+    public Query<UJO> setSqlParameters(@Nullable final SqlParameters sqlParameters) throws IllegalArgumentException {
         this.sqlParameters = sqlParameters;
         return this;
     }
@@ -802,7 +811,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see org.ujorm.orm.annot.View
      * @throws IllegalArgumentException The SQL parameters can be used for the VIEW only
      */
-    public Query<UJO> setSqlParameters(Object ... parameters) throws IllegalArgumentException {
+    public Query<UJO> setSqlParameters(@Nonnull final Object ... parameters) throws IllegalArgumentException {
         return setSqlParameters(new SqlParameters(parameters));
     }
 
@@ -810,19 +819,19 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** Compare two keys according to count of the KeyCount on sequence */
     @PackagePrivate static final Comparator<Key> INNER_KEY_COMPARATOR = new Comparator<Key>() {
-            @Override
-            public int compare(final Key k1, final Key k2) {
-                if (!k1.isComposite()) {
-                    return k2.isComposite() ? -1 : 0;
-                }
-                else if (k2.isComposite()) {
-                    final int c1 = ((CompositeKey)k1).getCompositeCount();
-                    final int c2 = ((CompositeKey)k2).getCompositeCount();
-                    return c1 == c2 ? 0
-                         : c1 < c2 ? -1 : 1;
-                } else {
-                    return 1;
-                }
+        @Override
+        public int compare(final Key k1, final Key k2) {
+            if (!k1.isComposite()) {
+                return k2.isComposite() ? -1 : 0;
             }
-        };
+            else if (k2.isComposite()) {
+                final int c1 = ((CompositeKey) k1).getCompositeCount();
+                final int c2 = ((CompositeKey) k2).getCompositeCount();
+                return c1 == c2 ? 0
+                        : c1 < c2 ? -1 : 1;
+            } else {
+                return 1;
+            }
+        }
+    };
 }

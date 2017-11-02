@@ -35,57 +35,57 @@ public abstract class AbstractDao<T extends OrmUjo> {
 
     /** Create a new query */
     @Nonnull
-    final protected <U extends T> Query<U> createQueryDao(@Nonnull final Criterion<U> criteron) {
+    protected final <U extends T> Query<U> createQueryDao(@Nonnull final Criterion<U> criteron) {
         return getSessionDao().createQuery(criteron);
     }
 
     /** Save or update an persistent object */
-    final protected <U extends T> void saveOrUpdateDao(@Nonnull final U bo) {
+    protected final <U extends T> void saveOrUpdateDao(@Nonnull final U bo) {
         getSessionDao().saveOrUpdate(bo);
     }
 
     /** Save a persistent object to database */
-    final protected <U extends T> void saveDao(@Nonnull final U bo) {
+    protected final <U extends T> void saveDao(@Nonnull final U bo) {
         getSessionDao().save(bo);
     }
 
     /** Save list of persistent objects to database */
-    final protected <U extends T> void saveDao(@Nonnull final List<U> bos) {
+    protected final <U extends T> void saveDao(@Nonnull final List<U> bos) {
         getSessionDao().save(bos);
     }
 
     /** Update a persistent object on database */
-    final protected <U extends T> int doUpdate(@Nonnull final U bo) {
+    protected final <U extends T> int doUpdate(@Nonnull final U bo) {
         return getSessionDao().delete(bo);
     }
 
     /** Update list of persistent objects on database */
-    final protected <U extends T> int updateDao(@Nonnull final List<U> bos) {
+    protected final <U extends T> int updateDao(@Nonnull final List<U> bos) {
         return getSessionDao().delete(bos);
     }
 
     /** Delete a persistent object from database */
-    final protected <U extends T> int deleteDao(@Nonnull final U bo) {
+    protected final <U extends T> int deleteDao(@Nonnull final U bo) {
         return getSessionDao().delete(bo);
     }
 
     /** Delete list of persistent objects from database */
-    final protected <U extends T> int deleteDao(@Nonnull final List<U> bos) {
+    protected final <U extends T> int deleteDao(@Nonnull final List<U> bos) {
         return getSessionDao().delete(bos);
     }
 
     /** Delete list of persistent objects from database */
-    final protected <U extends T> boolean existsDao(@Nonnull final Criterion<U> criteron) {
+    protected final <U extends T> boolean existsDao(@Nonnull final Criterion<U> criteron) {
         return getSessionDao().exists(criteron);
     }
 
     /** Delete list of persistent objects from database */
-    final protected <U extends T> boolean existsDao(@Nonnull final Class<U> entity) {
+    protected final <U extends T> boolean existsDao(@Nonnull final Class<U> entity) {
         return getSessionDao().exists(entity);
     }
 
     /** Get column model */
-    final protected <U extends T> MetaColumn getColumnDao(@Nonnull final Key<U,?> compositeKey) {
+    protected final <U extends T> MetaColumn getColumnDao(@Nonnull final Key<U,?> compositeKey) {
         return (MetaColumn) getSessionDao().getHandler().findColumnModel(compositeKey);
     }
 

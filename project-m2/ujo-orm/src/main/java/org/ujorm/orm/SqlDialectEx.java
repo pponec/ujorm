@@ -152,7 +152,7 @@ public class SqlDialectEx {
      * @return Current SQL name provider
      * @throws IllegalStateException A problem during creating an instance.
      */
-    final protected SqlNameProvider getNameProvider() throws IllegalStateException {
+    protected final SqlNameProvider getNameProvider() throws IllegalStateException {
         return dialect.getNameProvider();
     }
 

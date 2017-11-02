@@ -89,7 +89,7 @@ final public class MetaRoot extends AbstractMetaModel {
     }
 
     /** Add a new database into repository. */
-    final public void add(MetaDatabase database) {
+    public final void add(MetaDatabase database) {
         DATABASES.addItem(this, database);
     }
 
