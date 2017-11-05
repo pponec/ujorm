@@ -27,6 +27,7 @@ import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.metaModel.MetaParams;
+import org.ujorm.orm.support.PackageDbConfig;
 
 /** Build and configure database meta-model */
 @Service
@@ -65,7 +66,13 @@ public final class DatabaseConfig implements OrmHandlerProvider {
             handler.config(config, true);
         }
 
-        handler.loadDatabase(DatabaseMapping.class);
+        // Load all table class from package:
+        boolean yesIWantToGetDbModelFromPackage = true;
+         if (yesIWantToGetDbModelFromPackage) {
+             handler.loadDatabase(new PackageDbConfig(DatabaseMapping.class));
+         } else {
+             handler.loadDatabase(DatabaseMapping.class);
+         }
     }
 
     /** {@inheritDoc } */

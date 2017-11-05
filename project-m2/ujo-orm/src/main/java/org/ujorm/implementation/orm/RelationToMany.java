@@ -58,9 +58,29 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
      * @param index An key order (optional)
      */
     @SuppressWarnings("unchecked")
-    public RelationToMany(String name, Class<ITEM> itemType, int index, boolean lock) {
+    public RelationToMany
+            ( final String name
+            , final Class<ITEM> itemType
+            , final int index
+            , final boolean lock) {
+        this(name, (Class<UJO>) null, itemType, index, lock);
+    }
+
+    /** Constructor
+     * @param name Property name.
+     * @param itemType The type of item (optional)
+     * @param index An key order (optional)
+     */
+    @SuppressWarnings("unchecked")
+    public RelationToMany
+            ( final String name
+            , final Class<UJO> domain
+            , final Class<ITEM> itemType
+            , final int index
+            , final boolean lock) {
         super((Class<UjoIterator<ITEM>>) (Class) UjoIterator.class);
         initItemType(itemType);
+        init(DOMAIN_TYPE, domain);
         init(INDEX, index);
         init(NAME, name);
         init(LOCK, lock);

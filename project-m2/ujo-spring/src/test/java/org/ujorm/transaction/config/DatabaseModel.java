@@ -19,7 +19,6 @@ package org.ujorm.transaction.config;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.annot.Db;
-import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.dialect.*;
 import org.ujorm.transaction.domains.Item;
 import org.ujorm.transaction.domains.Order;
@@ -40,11 +39,9 @@ import org.ujorm.transaction.domains.Order;
 public class DatabaseModel extends OrmTable<DatabaseModel> {
 
     /** Customer order. The used annotation overwrites a database schema from the key schema. */
-    @Table("ord_order")
     public static final RelationToMany<DatabaseModel,Order> ORDERS = newRelation();
 
     /** Items of the Customer order */
-    @Table("ord_item")
     public static final RelationToMany<DatabaseModel,Item> ORDER_ITEMS = newRelation();
 
 }

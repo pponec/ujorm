@@ -45,6 +45,7 @@ import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.BytesWrapper;
 import org.ujorm.orm.ColumnSet;
+import org.ujorm.orm.DbConfig;
 import org.ujorm.orm.DbProcedure;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.JdbcStatement;
@@ -148,8 +149,13 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      * @param order Database order
      */
     @SuppressWarnings("LeakingThisInConstructor")
-    public MetaDatabase(OrmHandler ormHandler, OrmUjo database, MetaDatabase param, Integer order) {
+    public MetaDatabase
+        ( final OrmHandler ormHandler
+        , final DbConfig<? extends OrmUjo> databaseConfig
+        , final MetaDatabase param
+        , final Integer order) {
         this.ormHandler = ormHandler;
+        final OrmUjo database = databaseConfig.getDbModel();
         ROOT.setValue(this, database);
         ORDER.setValue(this, order);
 

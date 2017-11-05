@@ -9,9 +9,14 @@ import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
-import static org.ujorm.Validator.Build.*;
+import org.ujorm.orm.annot.Table;
+import static org.ujorm.validator.impl.ValidatorFactory.MANDATORY;
+import static org.ujorm.validator.impl.ValidatorFactory.length;
+import static org.ujorm.validator.impl.ValidatorFactory.mandatory;
+import static org.ujorm.validator.impl.ValidatorFactory.min;
 
 /** Hotel */
+@Table("demo_hotel")
 public class Hotel extends OrmTable<Hotel> {
     /** Index name */
     private static final String INDEX_HOTEL_NAME="idx_hotel_name";

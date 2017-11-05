@@ -17,7 +17,6 @@
 package org.ujorm.hotels.entity;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.hotels.entity.enums.Module;
@@ -25,9 +24,11 @@ import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.annot.Table;
 import static org.ujorm.Validator.Build.*;
 
 /** Parameter value mapping to database */
+@Table("param_value")
 public final class ParamValue extends OrmTable<ParamValue> {
 
     /** Unique index name */

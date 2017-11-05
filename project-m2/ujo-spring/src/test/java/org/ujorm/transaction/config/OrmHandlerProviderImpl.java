@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.metaModel.MetaParams;
+import org.ujorm.orm.support.PackageDbConfig;
 
 /** Build and configure database meta-model */
 @Service
@@ -28,7 +29,7 @@ public final class OrmHandlerProviderImpl implements OrmHandlerProvider{
     @Override
     public OrmHandler getOrmHandler() {
         final OrmHandler result = new OrmHandler();
-        
+
         // There are prefered default properties for a production environment:
         final boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
@@ -44,7 +45,15 @@ public final class OrmHandlerProviderImpl implements OrmHandlerProvider{
             result.config(config, true);
         }
 
-        result.loadDatabase(DatabaseModel.class);        
+        // Load all table class from package:
+        boolean yesIWantToGetDbModelFromPackage = true;
+        if (yesIWantToGetDbModelFromPackage) {
+            result.loadDatabase(new PackageDbConfig(DatabaseModel.class));
+        } else {
+            result.loadDatabase(DatabaseModel.class);
+        }
+
+
         return result;
     }
 

@@ -22,6 +22,7 @@ import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.annot.Table;
 
 /**
  * The column mapping to DB table ITEM (a sample of usage).
@@ -29,6 +30,7 @@ import org.ujorm.orm.annot.Comment;
  * @hidden
  * @Table=bo_item
  */
+@Table("ord_item")
 @Comment("Order item")
 public final class Item extends OrmTable<Item> {
     private static final KeyFactory<Item> f = newCamelFactory(Item.class);
@@ -58,65 +60,65 @@ public final class Item extends OrmTable<Item> {
     public Date getOrderCreated() {
         // An alternative solution for: getOrder().getCreated();
         return get($ORDER_CREATED);
-    }    
+    }
 
     //<editor-fold defaultstate="collapsed" desc="Generated Getters/Setters">
-    
+
     /** Unique key */
     public Long getId() {
         return ID.of(this);
     }
-    
+
     /** Unique key */
     public void setId(Long id) {
         Item.ID.setValue(this, id);
     }
-    
+
     /** User key */
     public Integer getUserId() {
         return USER_ID.of(this);
     }
-    
+
     /** User key */
     public void setUserId(Integer userId) {
         Item.USER_ID.setValue(this, userId);
     }
-    
+
     /** Description of the Item */
     public String getNote() {
         return NOTE.of(this);
     }
-    
+
     /** Description of the Item */
     public void setNote(String note) {
         Item.NOTE.setValue(this, note);
     }
-    
+
     /** Price of the item */
     public BigDecimal getPrice() {
         return PRICE.of(this);
     }
-    
+
     /** Price of the item */
     public void setPrice(BigDecimal price) {
         Item.PRICE.setValue(this, price);
     }
-    
+
     /** A reference to common Order */
     public Order getOrder() {
         return ORDER.of(this);
     }
-    
+
     /** A reference to common Order */
     public void setOrder(Order order) {
         Item.ORDER.setValue(this, order);
     }
-    
+
     /** A composed (or indirect) key provides a 'CREATED' attribute of the Order */
     public Date get$orderCreated() {
         return $ORDER_CREATED.of(this);
     }
-    
+
     /** A composed (or indirect) key provides a 'CREATED' attribute of the Order */
     public void set$orderCreated(Date $orderCreated) {
         Item.$ORDER_CREATED.setValue(this, $orderCreated);

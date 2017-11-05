@@ -25,7 +25,7 @@ import org.ujorm.orm.annot.View;
  * The column mapping to FROM view.
  * @hidden
  */
-@View(select="SELECT * FROM ( "
+@View(name = "ord_order", select="SELECT * FROM ( "
     + "SELECT ord_order_alias.id"
     +         ", count(*) AS item_count"
     + " FROM ${SCHEMA}.ord_order ord_order_alias"
@@ -37,7 +37,7 @@ import org.ujorm.orm.annot.View;
     + ") testView WHERE true"
     , alias="testView"
     )
-  
+
 //  /* MSSQL query */
 //  @View(SELECT * FROM ( "
 //  + " SELECT ord_order_alias.id, count(*) AS item_count"
@@ -50,7 +50,6 @@ import org.ujorm.orm.annot.View;
 //  + ") testView WHERE true"
 //  , alias="testView"
 //  )
-
  public class ViewOrder extends OrmTable<ViewOrder> {
 
     /** Unique key */

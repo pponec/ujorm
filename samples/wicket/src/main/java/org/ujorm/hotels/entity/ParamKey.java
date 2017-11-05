@@ -16,7 +16,6 @@
 package org.ujorm.hotels.entity;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import javax.annotation.Nonnull;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
@@ -25,9 +24,11 @@ import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.annot.Table;
 import static org.ujorm.Validator.Build.*;
 
 /** Key of persistent parameter */
+@Table("param_key")
 final public class ParamKey extends OrmTable<ParamKey> {
 
     /** Unique index name */

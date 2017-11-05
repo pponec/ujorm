@@ -21,12 +21,14 @@ import org.ujorm.KeyList;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
+import org.ujorm.orm.annot.Table;
 
 /**
  * The column mapping to DB table ORDER (a sample of usage).
  * Note, how the Keys are created by the KeyFactory.
  * @hidden
  */
+@Table("ord_customer")
 public final class Customer extends OrmTable<Customer> {
     private static final KeyFactory<Customer> f = newCamelFactory(Customer.class);
 
@@ -58,7 +60,7 @@ public final class Customer extends OrmTable<Customer> {
     }
 
     // --- An optional implementation of commonly used setters and getters ---
-    
+
     public Long getId() {
         return get(ID);
     }

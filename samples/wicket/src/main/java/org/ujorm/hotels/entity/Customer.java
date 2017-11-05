@@ -10,10 +10,16 @@ import org.ujorm.implementation.orm.OrmTableLockable;
 import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.annot.Table;
 import org.ujorm.wicket.component.form.FieldProvider;
-import static org.ujorm.Validator.Build.*;
+import static org.ujorm.validator.impl.ValidatorFactory.MANDATORY;
+import static org.ujorm.validator.impl.ValidatorFactory.NULLABLE;
+import static org.ujorm.validator.impl.ValidatorFactory.email;
+import static org.ujorm.validator.impl.ValidatorFactory.length;
+import static org.ujorm.validator.impl.ValidatorFactory.notNull;
 
 /** Common User */
+@Table("demo_customer")
 public class Customer extends OrmTableLockable<Customer> {
 
     /** Unique index name */

@@ -37,7 +37,7 @@ import org.ujorm.orm.utility.OrmTools;
  * @hidden
  */
 @Comment("Order table for registering the 'order items'")
-@Table(name = "ord_order")
+@Table("ord_order")
 public final class Order extends OrmTable<Order> {
 
     /** Store the value like VARCHAR. */

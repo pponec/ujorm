@@ -22,6 +22,7 @@ import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.annot.Table;
 
 /**
  * The column mapping to DB table ITEM (a sample of usage).
@@ -29,6 +30,7 @@ import org.ujorm.orm.annot.Comment;
  * @hidden
  * @Table=bo_item
  */
+@Table("ord_item")
 @Comment("Order item")
 public final class Item extends OrmTable<Item> {
     private static final KeyFactory<Item> f = newCamelFactory(Item.class);

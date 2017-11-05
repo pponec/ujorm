@@ -161,8 +161,14 @@ public class SampleORM {
             handler.config(config, true);
         }
 
-        // Load Meta-model and lock it to a read-only mode:
-        handler.loadDatabase(Database.class);
+        // Load all table class from package:
+        boolean yesIWantToGetDbModelFromPackage = false;
+         if (yesIWantToGetDbModelFromPackage) {
+             // Depends on the module: ujo-spring
+             // handler.loadDatabase(new PackageDbConfigImpl(Database.class));
+         } else {
+            handler.loadDatabase(Database.class);
+         }
 
         // Open an ORM session (which is no thread safe):
         session = handler.createSession();

@@ -20,9 +20,6 @@ import org.ujorm.Key;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.annot.Db;
-import org.ujorm.orm.annot.Procedure;
-import org.ujorm.orm.annot.Table;
-import org.ujorm.orm.annot.View;
 import org.ujorm.orm.dialect.*;
 
 /**
@@ -41,25 +38,20 @@ import org.ujorm.orm.dialect.*;
 public class Database extends OrmTable<Database> {
 
     /** Customer order. The used annotation overwrites a database schema from the key schema. */
-    @Table("ord_order")
     public static final RelationToMany<Database,Order> ORDERS = newRelation();
 
     /** Items of the Customer order */
-    @Table("ord_item")
     public static final RelationToMany<Database,Item> ORDER_ITEMS = newRelation();
 
     /** View to aggregate data. */
-    @View("ord_order")
     public static final RelationToMany<Database,ViewOrder> VIEW_ORDERS = newRelation();
 
     /** Customer */
-    @Table("ord_customer")
     public static final RelationToMany<Database,Customer> CUSTOMER = newRelation();
 
     // ----- STORED PROCEDURES --------
 
     /** Database stored procedure */
-    @Procedure("ujorm_test")
     public static final Key<Database,MyProcedure> myProcedure = newKey();
 
 }

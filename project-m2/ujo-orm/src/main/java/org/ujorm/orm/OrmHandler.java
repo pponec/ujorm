@@ -190,15 +190,12 @@ public class OrmHandler implements OrmHandlerProvider {
     }
 
     /** LoadInternal a database model from parameter */
-    private <UJO extends OrmUjo> MetaDatabase loadDatabaseInternal(Class<UJO> databaseModel) {
-
-        // Load a configuration parameters:
-        String databaseId = databaseModel.getSimpleName();
-        MetaDatabase paramDb = configuration!=null ? configuration.removeDb(databaseId) : null;
+    private <UJO extends OrmUjo> MetaDatabase loadDatabaseInternal(DbConfig<UJO> dbConfig) {
 
         // Create the ORM DB model:
-        UJO root = getInstance(databaseModel);
-        MetaDatabase dbModel = new MetaDatabase(this, root, paramDb, databases.getDatabaseCount());
+        String databaseId = dbConfig.getDbModel().getClass().getSimpleName();
+        MetaDatabase paramDb = configuration!=null ? configuration.removeDb(databaseId) : null;
+        MetaDatabase dbModel = new MetaDatabase(this, dbConfig, paramDb, databases.getDatabaseCount());
         databases.add(dbModel);
 
         return dbModel;
@@ -209,20 +206,30 @@ public class OrmHandler implements OrmHandlerProvider {
      */
     @SuppressWarnings("unchecked")
     public final <UJO extends OrmUjo> void loadDatabase(final Class<UJO> databaseModel) {
-        loadDatabase(new Class[] {databaseModel});
+        loadDatabase(new NativeDbConfig<UJO>(databaseModel));
     }
 
     /** Load a meta-data, lock it and create database tables.
      * There is not allowed to make any change to the created meta-model.
      */
     public final synchronized <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModel) {
-
-        if (isReadOnly()) {
-            throw new IllegalUjormException("The meta-model is locked and can´t be changed.");
+        final DbConfig[] databases = new DbConfig[databaseModel.length];
+        for (int i = databaseModel.length - 1; i >= 0; --i) {
+            databases[i] = new NativeDbConfig(databaseModel[i]);
         }
+        loadDatabase(databases);
+    }
+
+
+    /** Load a meta-data, lock it and create database tables.
+     * There is not allowed to make any change to the created meta-model.
+     */
+    public final synchronized <UJO extends OrmUjo> void loadDatabase(final DbConfig<UJO> ... databaseModel) {
+        Assert.isFalse(isReadOnly(), "The meta-model is locked and can´t be changed.");
+        Assert.hasLength(databaseModel, "databaseModel is required");
 
         // Load meta-model:
-        for (Class<UJO> db : databaseModel) {
+        for (DbConfig<UJO> db : databaseModel) {
             loadDatabaseInternal(db);
         }
 

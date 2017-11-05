@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ponec.
+ * Copyright 2012-2017 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,10 @@ import static org.ujorm.spring.AplicationContextAdapter.*;
  * @author Pavel Ponec
  */
 public class AbstractAplicationContextAdapterTest extends TestCase {
-    
+
     @Autowired
     private AplicationContextAdapter context;
-    
+
     public AbstractAplicationContextAdapterTest(String testName) {
         super(testName);
     }
@@ -51,10 +51,10 @@ public class AbstractAplicationContextAdapterTest extends TestCase {
      * Test of getBean method, of class AbstractAplicationContextAdapter.
      */
     public void compilationTestGetBean() {
-        
+
         DummySpringService service = context.getBean(dummySpringService);
-        DummySpringController controller = context.getBean(springController);        
-        
+        DummySpringController controller = context.getBean(springController);
+
         assertNotNull(service);
         assertNotNull(controller);
     }
@@ -62,7 +62,7 @@ public class AbstractAplicationContextAdapterTest extends TestCase {
     /**
      * A dummy test.
      */
-    public void testDummy() {        
+    public void testDummy() {
     }
-    
+
 }

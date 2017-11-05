@@ -11,9 +11,16 @@ import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
-import static org.ujorm.Validator.Build.*;
+import org.ujorm.orm.annot.Table;
+import static org.ujorm.validator.impl.ValidatorFactory.MANDATORY;
+import static org.ujorm.validator.impl.ValidatorFactory.length;
+import static org.ujorm.validator.impl.ValidatorFactory.mandatory;
+import static org.ujorm.validator.impl.ValidatorFactory.min;
+import static org.ujorm.validator.impl.ValidatorFactory.notNull;
+import static org.ujorm.validator.impl.ValidatorFactory.range;
 
 /** Reservation */
+@Table("demo_booking")
 public class Booking extends OrmTable<Booking> {
     /** Index name */
     private static final String INDEX_NAME="idx_booking";

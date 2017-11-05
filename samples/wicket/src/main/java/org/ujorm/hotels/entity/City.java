@@ -8,9 +8,13 @@ import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
-import static org.ujorm.Validator.Build.*;
+import org.ujorm.orm.annot.Table;
+import static org.ujorm.validator.impl.ValidatorFactory.MANDATORY;
+import static org.ujorm.validator.impl.ValidatorFactory.length;
+import static org.ujorm.validator.impl.ValidatorFactory.range;
 
 /** City with Country */
+@Table("demo_city")
 public class City extends OrmTable<City> {
 
     /** Unique index name */
