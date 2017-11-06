@@ -18,6 +18,7 @@ package org.ujorm.orm.support;
 import org.junit.Test;
 import org.ujorm.KeyList;
 import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.DbConfig;
 import org.ujorm.transaction.config.DatabaseModel;
 import org.ujorm.transaction.domains.Item;
 import static junit.framework.TestCase.assertEquals;
@@ -32,8 +33,8 @@ public class PackageDbConfigTest {
     @Test
     public void testGetTableList() {
         System.out.println("getTableList");
-        Class<?> dbModelClass = DatabaseModel.class;
-        PackageDbConfig instance = new PackageDbConfig(dbModelClass);
+        Class<DatabaseModel> dbModelClass = DatabaseModel.class;
+        DbConfig<DatabaseModel> instance = PackageDbConfig.of(dbModelClass);
         KeyList result = instance.getTableList();
         assertEquals(2, result.size());
         assertEquals(dbModelClass, result.getFirstKey().getDomainType());

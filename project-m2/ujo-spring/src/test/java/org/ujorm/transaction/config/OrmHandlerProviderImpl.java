@@ -46,9 +46,9 @@ public final class OrmHandlerProviderImpl implements OrmHandlerProvider{
         }
 
         // Load all table class from package:
-        boolean yesIWantToGetDbModelFromPackage = true;
-        if (yesIWantToGetDbModelFromPackage) {
-            result.loadDatabase(new PackageDbConfig(DatabaseModel.class));
+        boolean yesIWantToLoadDbModelFromPackage = true;
+        if (yesIWantToLoadDbModelFromPackage) {
+            result.loadDatabase(PackageDbConfig.of(DatabaseModel.class));
         } else {
             result.loadDatabase(DatabaseModel.class);
         }

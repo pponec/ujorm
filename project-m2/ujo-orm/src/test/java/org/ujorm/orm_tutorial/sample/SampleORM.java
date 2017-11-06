@@ -162,10 +162,10 @@ public class SampleORM {
         }
 
         // Load all table class from package:
-        boolean yesIWantToGetDbModelFromPackage = false;
-         if (yesIWantToGetDbModelFromPackage) {
+        boolean yesIWantToLoadDbModelFromPackage = false;
+         if (yesIWantToLoadDbModelFromPackage) {
              // Depends on the module: ujo-spring
-             // handler.loadDatabase(new PackageDbConfigImpl(Database.class));
+             // handler.loadDatabase(PackageDbConfigImpl.of(Database.class));
          } else {
             handler.loadDatabase(Database.class);
          }

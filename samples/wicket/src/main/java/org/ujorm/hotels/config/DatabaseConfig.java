@@ -67,9 +67,9 @@ public final class DatabaseConfig implements OrmHandlerProvider {
         }
 
         // Load all table class from package:
-        boolean yesIWantToGetDbModelFromPackage = true;
-         if (yesIWantToGetDbModelFromPackage) {
-             handler.loadDatabase(new PackageDbConfig(DatabaseMapping.class));
+        boolean yesIWantToLoadDbModelFromPackage = true;
+         if (yesIWantToLoadDbModelFromPackage) {
+             handler.loadDatabase(PackageDbConfig.of(DatabaseMapping.class));
          } else {
              handler.loadDatabase(DatabaseMapping.class);
          }

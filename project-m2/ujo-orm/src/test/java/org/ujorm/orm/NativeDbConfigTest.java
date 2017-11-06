@@ -22,7 +22,7 @@ import org.ujorm.orm.bo.XOrder;
 import static junit.framework.TestCase.assertEquals;
 
 /**
- *
+ * Testing a native database config class
  * @author Pavel Ponec
  */
 public class NativeDbConfigTest {
@@ -33,7 +33,7 @@ public class NativeDbConfigTest {
     @Test
     public void testGetDbModel() {
         System.out.println("getDbModel");
-        NativeDbConfig instance = new NativeDbConfig(XDatabase.class);
+        DbConfig<XDatabase> instance = NativeDbConfig.of(XDatabase.class);
         assertEquals(XDatabase.class, instance.getDbModel().getClass());
         assertEquals(XOrder.class, ((RelationToMany)instance.getTableList().getFirstKey()).getItemType());
 

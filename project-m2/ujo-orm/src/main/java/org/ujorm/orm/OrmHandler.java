@@ -206,7 +206,7 @@ public class OrmHandler implements OrmHandlerProvider {
      */
     @SuppressWarnings("unchecked")
     public final <UJO extends OrmUjo> void loadDatabase(final Class<UJO> databaseModel) {
-        loadDatabase(new NativeDbConfig<UJO>(databaseModel));
+        loadDatabase(NativeDbConfig.of(databaseModel));
     }
 
     /** Load a meta-data, lock it and create database tables.
@@ -215,7 +215,7 @@ public class OrmHandler implements OrmHandlerProvider {
     public final synchronized <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModel) {
         final DbConfig[] databases = new DbConfig[databaseModel.length];
         for (int i = databaseModel.length - 1; i >= 0; --i) {
-            databases[i] = new NativeDbConfig(databaseModel[i]);
+            databases[i] = NativeDbConfig.of(databaseModel[i]);
         }
         loadDatabase(databases);
     }

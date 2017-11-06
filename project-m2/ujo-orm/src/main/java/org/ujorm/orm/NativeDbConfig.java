@@ -53,4 +53,8 @@ public class NativeDbConfig<U extends OrmUjo> implements DbConfig<U> {
         return keyList;
     }
 
+    /** Create new instance */
+    public static <U extends OrmUjo> DbConfig<U> of(@Nonnull final Class<U> dbClass) {
+        return new NativeDbConfig<U>(dbClass);
+    }
 }

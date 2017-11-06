@@ -36,8 +36,10 @@ import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyRing;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.DbConfig;
 import org.ujorm.orm.NativeDbConfig;
 import org.ujorm.orm.OrmUjo;
+import org.ujorm.orm.annot.Db;
 import org.ujorm.tools.Assert;
 
 /**
@@ -61,9 +63,9 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeDbConfig<U> {
         final List result = new ArrayList<>();
         final List<Class> tables = findTables();
         Collections.sort(tables, (Class c1, Class c2) -> c1.getSimpleName().compareTo(c2.getSimpleName()));
-        int i = 0;
-        for (Class type : tables) {
-            result.add(new RelationToMany(type.getSimpleName(), dbClass, type, i++, true));
+        for (int i = 0, max = tables.size(); i < max; i++) {
+            final Class type = tables.get(i);
+            result.add(new RelationToMany(type.getSimpleName(), dbClass, type, i, true));
         }
         Assert.hasLength(result, "At least one table is needed");
         this.keyList = KeyRing.of(dbClass, result);
@@ -80,7 +82,7 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeDbConfig<U> {
         final Set<Package> result = new HashSet(1 + tableList.size());
 
         if (tableList.isEmpty()) {
-            result.add(getClass().getPackage());
+            result.add(getDbModel().getClass().getPackage());
         } else {
             for (Key<U, Object> key : tableList) {
                 if (key instanceof RelationToMany) {
@@ -104,11 +106,12 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeDbConfig<U> {
                         + resolveBasePackage(basePackage) + "/*.class";
                 final Resource[] resources = resolver.getResources(locationPattern);
 
-                for (org.springframework.core.io.Resource resource : resources) {
+                for (Resource resource : resources) {
                     if (resource.isReadable()) {
-                        final MetadataReader metadataReader = metadataReaderFactory.getMetadataReader(resource);
-                        if (isCandidate(metadataReader)) {
-                            result.add(Class.forName(metadataReader.getClassMetadata().getClassName()));
+                        final MetadataReader reader = metadataReaderFactory.getMetadataReader(resource);
+                        final Class<?> clazz = Class.forName(reader.getClassMetadata().getClassName());
+                        if (isCandidate(clazz)) {
+                            result.add(clazz);
                         }
                     }
                 }
@@ -119,22 +122,27 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeDbConfig<U> {
         }
     }
 
+    /** Resolve Base Package */
     private String resolveBasePackage(@Nonnull final String basePackage) {
         return ClassUtils.convertClassNameToResourcePath(SystemPropertyUtils.resolvePlaceholders(basePackage));
     }
 
-    private boolean isCandidate(@Nonnull final MetadataReader reader) throws ReflectiveOperationException {
-        final Class c = Class.forName(reader.getClassMetadata().getClassName());
-        if (!OrmTable.class.isAssignableFrom(c)) {
+    /** Check a candidate */
+    protected boolean isCandidate(@Nonnull final Class<?> clazz) throws ReflectiveOperationException {
+        if (!OrmTable.class.isAssignableFrom(clazz)) {
             return false;
         }
-        if (c.getAnnotation(OrmTable.class) != null) {
+        if (clazz.getAnnotation(Db.class) != null) {
             return false;
         }
-        if (getDbModel().getClass().equals(c)) {
+        if (getDbModel().getClass().equals(clazz)) {
             return false;
         }
         return true;
     }
 
+    /** Create new instance */
+    public static <U extends OrmUjo> DbConfig<U> of(@Nonnull final Class<U> dbClass) {
+        return new PackageDbConfig<U>(dbClass);
+    }
 }
