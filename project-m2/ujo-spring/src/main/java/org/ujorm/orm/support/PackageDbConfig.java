@@ -50,7 +50,7 @@ import org.ujorm.tools.Assert;
 public class PackageDbConfig<U extends OrmUjo> extends NativeDbConfig<U> {
 
     @Nonnull
-    private final KeyList<U> keyList;
+    protected final KeyList<U> keyList;
 
     /**
      * Constructor
@@ -78,11 +78,11 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeDbConfig<U> {
 
     /** Return a list of the packages */
     private Set<Package> getPackages() {
-        final KeyList<U> tableList = super.getTableList();
+        final KeyList<U> tableList = dbModel.readKeys();
         final Set<Package> result = new HashSet(1 + tableList.size());
 
         if (tableList.isEmpty()) {
-            result.add(getDbModel().getClass().getPackage());
+            result.add(dbModel.getClass().getPackage());
         } else {
             for (Key<U, Object> key : tableList) {
                 if (key instanceof RelationToMany) {
@@ -135,7 +135,7 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeDbConfig<U> {
         if (clazz.getAnnotation(Db.class) != null) {
             return false;
         }
-        if (getDbModel().getClass().equals(clazz)) {
+        if (dbModel.getClass().equals(clazz)) {
             return false;
         }
         return true;

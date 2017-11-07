@@ -26,12 +26,11 @@ import org.ujorm.core.IllegalUjormException;
  */
 public class NativeDbConfig<U extends OrmUjo> implements DbConfig<U> {
 
-    private final U dbModel;
-    private final KeyList<U> keyList;
+    /** Instance of the configuration */
+    protected final U dbModel;
 
     public <U extends OrmUjo> NativeDbConfig(@Nonnull Class<U> dbClass) {
         this.dbModel = getInstance(dbClass);
-        this.keyList = dbModel.readKeys();
     }
 
     /** Create an instance from the class */
@@ -50,7 +49,7 @@ public class NativeDbConfig<U extends OrmUjo> implements DbConfig<U> {
 
     @Override
     public KeyList<U> getTableList() {
-        return keyList;
+        return dbModel.readKeys();
     }
 
     /** Create new instance */
