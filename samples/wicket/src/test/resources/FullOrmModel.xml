@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.56-SNAPSHOT was created 2015-04-17 20:23 -->
-<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.56.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!-- The Ujorm configuration file release 1.75-SNAPSHOT was created 2017-11-07 21:30 -->
+<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.71.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <database id="DatabaseMapping">
         <schema>demoHotels</schema>
         <readOnly>false</readOnly>
@@ -10,9 +10,9 @@
         <user>sa</user>
         <sequencer>org.ujorm.orm.UjoSequencer</sequencer>
         <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
-        <table id="HOTEL">
-            <name>demo_hotel</name>
-            <alias>demo_hotel</alias>
+        <table id="Booking">
+            <name>demo_booking</name>
+            <alias>demo_booking</alias>
             <schema>demoHotels</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
             <column id="ID">
@@ -21,50 +21,35 @@
                 <dbType>BIGINT</dbType>
                 <comment>The Primary Key</comment>
             </column>
-            <column id="NAME">
-                <name>NAME</name>
-                <dbType>VARCHAR</dbType>
+            <column id="HOTEL">
+                <name>HOTEL</name>
+                <dbType>BIGINT</dbType>
                 <mandatory>true</mandatory>
-                <maxLength>40</maxLength>
-                <index>idx_hotel_name</index>
-                <comment>Name of the Hotel</comment>
+                <index>idx_booking</index>
+                <comment>Relation to hotel</comment>
             </column>
-            <column id="NOTE">
-                <name>NOTE</name>
-                <dbType>VARCHAR</dbType>
-                <maxLength>256</maxLength>
-                <comment>Description of the hotel</comment>
-            </column>
-            <column id="CITY">
-                <name>CITY</name>
-                <dbType>INT</dbType>
+            <column id="CUSTOMER">
+                <name>CUSTOMER</name>
+                <dbType>INTEGER</dbType>
                 <mandatory>true</mandatory>
-                <comment>Relation to the City address</comment>
+                <index>idx_booking</index>
+                <comment>Relation to customer</comment>
             </column>
-            <column id="STREET">
-                <name>STREET</name>
-                <dbType>VARCHAR</dbType>
+            <column id="DATE_FROM">
+                <name>DATE_FROM</name>
+                <dbType>DATE</dbType>
                 <mandatory>true</mandatory>
-                <maxLength>128</maxLength>
-                <comment>Street of address</comment>
+                <comment>Date from</comment>
             </column>
-            <column id="PHONE">
-                <name>PHONE</name>
-                <dbType>VARCHAR</dbType>
-                <maxLength>20</maxLength>
-                <comment>Phone</comment>
+            <column id="NIGHTS">
+                <name>NIGHTS</name>
+                <dbType>SMALLINT</dbType>
+                <comment>Number of nights</comment>
             </column>
-            <column id="STARS">
-                <name>STARS</name>
-                <dbType>REAL</dbType>
-                <mandatory>true</mandatory>
-                <comment>Stars</comment>
-            </column>
-            <column id="HOME_PAGE">
-                <name>HOME_PAGE</name>
-                <dbType>VARCHAR</dbType>
-                <maxLength>100</maxLength>
-                <comment>URL to the HomePage</comment>
+            <column id="PERSONS">
+                <name>PERSONS</name>
+                <dbType>SMALLINT</dbType>
+                <comment>Number of persons (limit from 1 to 50)</comment>
             </column>
             <column id="PRICE">
                 <name>PRICE</name>
@@ -72,24 +57,69 @@
                 <mandatory>true</mandatory>
                 <maxLength>8</maxLength>
                 <precision>2</precision>
-                <comment>Price per night in USD</comment>
+                <comment>Total price</comment>
             </column>
             <column id="CURRENCY">
                 <name>CURRENCY</name>
                 <dbType>VARCHAR</dbType>
                 <mandatory>true</mandatory>
                 <maxLength>3</maxLength>
-                <comment>Currency of the price</comment>
+                <comment>Currency of the total price</comment>
             </column>
-            <column id="ACTIVE">
-                <name>ACTIVE</name>
-                <dbType>BOOLEAN</dbType>
+            <column id="CREATION_DATE">
+                <name>CREATION_DATE</name>
+                <dbType>TIMESTAMP</dbType>
                 <mandatory>true</mandatory>
-                <index>idx_hotel_name</index>
-                <comment>Hotel state (the true or null is required)</comment>
+                <comment>Creation datetime of booking.</comment>
             </column>
         </table>
-        <table id="CUSTOMER">
+        <table id="City">
+            <name>demo_city</name>
+            <alias>demo_city</alias>
+            <schema>demoHotels</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <column id="ID">
+                <name>ID</name>
+                <primaryKey>true</primaryKey>
+                <dbType>INTEGER</dbType>
+                <comment>The Primary Key</comment>
+            </column>
+            <column id="NAME">
+                <name>NAME</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>40</maxLength>
+                <uniqueIndex>idx_unique_city</uniqueIndex>
+                <comment>City name</comment>
+            </column>
+            <column id="COUNTRY">
+                <name>COUNTRY</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>3</maxLength>
+                <comment>Two characters country code along the ISO 3166</comment>
+            </column>
+            <column id="COUNTRY_NAME">
+                <name>COUNTRY_NAME</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>40</maxLength>
+                <comment>Country name will be located in the another entity in a real application</comment>
+            </column>
+            <column id="LATITUDE">
+                <name>LATITUDE</name>
+                <dbType>REAL</dbType>
+                <mandatory>true</mandatory>
+                <comment>A geographic coordinate for north-south position on the Earth</comment>
+            </column>
+            <column id="LONGITUDE">
+                <name>LONGITUDE</name>
+                <dbType>REAL</dbType>
+                <mandatory>true</mandatory>
+                <comment>A geographic coordinate for east-west position on the Earth</comment>
+            </column>
+        </table>
+        <table id="Customer">
             <name>demo_customer</name>
             <alias>demo_customer</alias>
             <schema>demoHotels</schema>
@@ -97,7 +127,7 @@
             <column id="ID">
                 <name>ID</name>
                 <primaryKey>true</primaryKey>
-                <dbType>INT</dbType>
+                <dbType>INTEGER</dbType>
                 <comment>The Primary Key</comment>
             </column>
             <column id="LOGIN">
@@ -153,78 +183,15 @@
                 <comment>Customer is allowed to login (the true or null values are required)</comment>
             </column>
         </table>
-        <table id="BOOKING">
-            <name>demo_booking</name>
-            <alias>demo_booking</alias>
+        <table id="Hotel">
+            <name>demo_hotel</name>
+            <alias>demo_hotel</alias>
             <schema>demoHotels</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
             <column id="ID">
                 <name>ID</name>
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
-                <comment>The Primary Key</comment>
-            </column>
-            <column id="HOTEL">
-                <name>HOTEL</name>
-                <dbType>BIGINT</dbType>
-                <mandatory>true</mandatory>
-                <index>idx_booking</index>
-                <comment>Relation to hotel</comment>
-            </column>
-            <column id="CUSTOMER">
-                <name>CUSTOMER</name>
-                <dbType>INT</dbType>
-                <mandatory>true</mandatory>
-                <index>idx_booking</index>
-                <comment>Relation to customer</comment>
-            </column>
-            <column id="DATE_FROM">
-                <name>DATE_FROM</name>
-                <dbType>DATE</dbType>
-                <mandatory>true</mandatory>
-                <comment>Date from</comment>
-            </column>
-            <column id="NIGHTS">
-                <name>NIGHTS</name>
-                <dbType>SMALLINT</dbType>
-                <comment>Number of nights</comment>
-            </column>
-            <column id="PERSONS">
-                <name>PERSONS</name>
-                <dbType>SMALLINT</dbType>
-                <comment>Number of persons (limit from 1 to 50)</comment>
-            </column>
-            <column id="PRICE">
-                <name>PRICE</name>
-                <dbType>DECIMAL</dbType>
-                <mandatory>true</mandatory>
-                <maxLength>8</maxLength>
-                <precision>2</precision>
-                <comment>Total price</comment>
-            </column>
-            <column id="CURRENCY">
-                <name>CURRENCY</name>
-                <dbType>VARCHAR</dbType>
-                <mandatory>true</mandatory>
-                <maxLength>3</maxLength>
-                <comment>Currency of the total price</comment>
-            </column>
-            <column id="CREATION_DATE">
-                <name>CREATION_DATE</name>
-                <dbType>TIMESTAMP</dbType>
-                <mandatory>true</mandatory>
-                <comment>Creation datetime of booking.</comment>
-            </column>
-        </table>
-        <table id="CITY">
-            <name>demo_city</name>
-            <alias>demo_city</alias>
-            <schema>demoHotels</schema>
-            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
-            <column id="ID">
-                <name>ID</name>
-                <primaryKey>true</primaryKey>
-                <dbType>INT</dbType>
                 <comment>The Primary Key</comment>
             </column>
             <column id="NAME">
@@ -232,37 +199,70 @@
                 <dbType>VARCHAR</dbType>
                 <mandatory>true</mandatory>
                 <maxLength>40</maxLength>
-                <uniqueIndex>idx_unique_city</uniqueIndex>
-                <comment>City name</comment>
+                <index>idx_hotel_name</index>
+                <comment>Name of the Hotel</comment>
             </column>
-            <column id="COUNTRY">
-                <name>COUNTRY</name>
+            <column id="NOTE">
+                <name>NOTE</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>256</maxLength>
+                <comment>Description of the hotel</comment>
+            </column>
+            <column id="CITY">
+                <name>CITY</name>
+                <dbType>INTEGER</dbType>
+                <mandatory>true</mandatory>
+                <comment>Relation to the City address</comment>
+            </column>
+            <column id="STREET">
+                <name>STREET</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>128</maxLength>
+                <comment>Street of address</comment>
+            </column>
+            <column id="PHONE">
+                <name>PHONE</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>20</maxLength>
+                <comment>Phone</comment>
+            </column>
+            <column id="STARS">
+                <name>STARS</name>
+                <dbType>REAL</dbType>
+                <mandatory>true</mandatory>
+                <comment>Stars</comment>
+            </column>
+            <column id="HOME_PAGE">
+                <name>HOME_PAGE</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>100</maxLength>
+                <comment>URL to the HomePage</comment>
+            </column>
+            <column id="PRICE">
+                <name>PRICE</name>
+                <dbType>DECIMAL</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>8</maxLength>
+                <precision>2</precision>
+                <comment>Price per night in USD</comment>
+            </column>
+            <column id="CURRENCY">
+                <name>CURRENCY</name>
                 <dbType>VARCHAR</dbType>
                 <mandatory>true</mandatory>
                 <maxLength>3</maxLength>
-                <comment>Two characters country code along the ISO 3166</comment>
+                <comment>Currency of the price</comment>
             </column>
-            <column id="COUNTRY_NAME">
-                <name>COUNTRY_NAME</name>
-                <dbType>VARCHAR</dbType>
+            <column id="ACTIVE">
+                <name>ACTIVE</name>
+                <dbType>BOOLEAN</dbType>
                 <mandatory>true</mandatory>
-                <maxLength>40</maxLength>
-                <comment>Country name will be located in the another entity in a real application</comment>
-            </column>
-            <column id="LATITUDE">
-                <name>LATITUDE</name>
-                <dbType>REAL</dbType>
-                <mandatory>true</mandatory>
-                <comment>A geographic coordinate for north-south position on the Earth</comment>
-            </column>
-            <column id="LONGITUDE">
-                <name>LONGITUDE</name>
-                <dbType>REAL</dbType>
-                <mandatory>true</mandatory>
-                <comment>A geographic coordinate for east-west position on the Earth</comment>
+                <index>idx_hotel_name</index>
+                <comment>Hotel state (the true or null is required)</comment>
             </column>
         </table>
-        <table id="PARAM_KEY">
+        <table id="ParamKey">
             <name>param_key</name>
             <alias>param_key</alias>
             <schema>demoHotels</schema>
@@ -270,7 +270,7 @@
             <column id="ID">
                 <name>ID</name>
                 <primaryKey>true</primaryKey>
-                <dbType>INT</dbType>
+                <dbType>INTEGER</dbType>
                 <comment>The primary identifier</comment>
             </column>
             <column id="NAME">
@@ -327,7 +327,7 @@
                 <comment>Date of the last parameter modification</comment>
             </column>
         </table>
-        <table id="PARAM_VALUE">
+        <table id="ParamValue">
             <name>param_value</name>
             <alias>param_value</alias>
             <schema>demoHotels</schema>
@@ -335,19 +335,19 @@
             <column id="ID">
                 <name>ID</name>
                 <primaryKey>true</primaryKey>
-                <dbType>INT</dbType>
+                <dbType>INTEGER</dbType>
                 <comment>The identifier must have an ascending sort for defautl personal rows</comment>
             </column>
             <column id="PARAM_KEY">
                 <name>PARAM_KEY</name>
-                <dbType>INT</dbType>
+                <dbType>INTEGER</dbType>
                 <mandatory>true</mandatory>
                 <uniqueIndex>idx_unique_param_value</uniqueIndex>
                 <comment>Parameter Key where the NULL value means a &apos;system parameter&apos;</comment>
             </column>
             <column id="CUSTOMER">
                 <name>CUSTOMER</name>
-                <dbType>INT</dbType>
+                <dbType>INTEGER</dbType>
                 <uniqueIndex>idx_unique_param_value</uniqueIndex>
                 <comment>Related customer or the null value for the system parameter</comment>
             </column>
