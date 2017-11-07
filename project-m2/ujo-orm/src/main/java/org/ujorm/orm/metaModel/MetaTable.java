@@ -43,10 +43,10 @@ import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.annot.View;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.impl.TableWrapperImpl;
+import static org.ujorm.orm.metaModel.MetaParams.INDEX_MODEL_BUILDER;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.MsgFormatter;
-import static org.ujorm.orm.metaModel.MetaParams.INDEX_MODEL_BUILDER;
 
 /**
  * DB table or view meta-model.
@@ -375,13 +375,22 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return sequencer;
     }
 
-    /** Rerurns database schema.
+    /** Returns database schema.
      * @since 1.72
      * @return No schema returns an empty value
      */
     @Nonnull
     public String getSchema() {
         return SCHEMA.of(this);
+    }
+    
+     /** Returns database schema.
+     * @since 1.75
+     * @return No schema returns an empty value
+     */
+    @Nonnull
+    public String getName() {
+        return NAME.of(this);
     }
 
     /** Create a new collection of the table indexes.

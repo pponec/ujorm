@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2016 Pavel Ponec
+ *  Copyright 2009-2017 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -144,7 +144,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /**
      * Create a new Database.
      * @param ormHandler ORM handler
-     * @param database Database instance
+     * @param databaseConfig Database model
      * @param param Configuration data from a XML file
      * @param order Database order
      */
@@ -191,11 +191,11 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         changeDefault(this, JDBC_DRIVER, getDialect().getJdbcDriver());
         changeDefault(this, ORM2DLL_POLICY, MetaParams.ORM2DLL_POLICY.of(getParams()));
         changeDefault(this, ORM2DLL_POLICY, MetaParams.ORM2DLL_POLICY.getDefault());
-
+        
+        final Set<String> uniqueTableSet = new HashSet<>(128);
         for (Key tableProperty : databaseConfig.getTableList()) {
-            if (tableProperty.isTypeOf(ColumnSet.class)) {
-                // TODO: include a set of tables ?
-                continue;
+            if (tableProperty.isTypeOf(ColumnSet.class)) {              
+                continue; // TODO: include a set of tables?
             }
             if (tableProperty instanceof RelationToMany) {
                 RelationToMany tProperty = (RelationToMany) tableProperty;
@@ -203,6 +203,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                 MetaTable table = new MetaTable(this, tProperty, par);
                 TABLES.addItem(this, table);
                 ormHandler.addTableModel(table);
+                String fullName = table.getSchema() + "." + table.getName();
+                Assert.isTrue(uniqueTableSet.add(fullName), "DB table '{}' doesn’t have a unique name", fullName);
             }
             else if (tableProperty.isTypeOf(DbProcedure.class)) {
                 Key tProcedure = tableProperty;

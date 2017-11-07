@@ -31,9 +31,9 @@ import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
+import static org.ujorm.extensions.PropertyModifier.*;
 import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidationException;
-import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * The main implementation of the interface {@link Key}.
@@ -164,7 +164,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
         if (name==null) {
             return;
         }
-        Assert.hasLength(name, "Key name '{}' must not be empty", name);
+        Assert.hasLength(name, "Key name of the '{}' must not be empty", domainType);
 
         Assert.isFalse(isPropertySeparatorDisabled()
                 && name.indexOf(PROPERTY_SEPARATOR) > 0
