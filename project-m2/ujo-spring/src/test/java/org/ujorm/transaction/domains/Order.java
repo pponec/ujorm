@@ -24,6 +24,7 @@ import org.ujorm.extensions.StringWrapper;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.DbType;
+import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
@@ -47,30 +48,35 @@ public final class Order extends OrmTable<Order> {
         }
     }
 
+    private static final OrmKeyFactory<Order> f = newCamelFactory(Order.class);
+
     /** The Primary Key */
     @Comment("The Primary Key")
     @Column(pk = true)
-    public static final Key<Order, Long> ID = newKey();
+    public static final Key<Order, Long> ID = f.newKey();
     /** Order STATE, default is ACTIVE */
     @Comment("Order state, default value is ACTIVE")
-    public static final Key<Order, State> STATE = newKey(State.ACTIVE);
+    public static final Key<Order, State> STATE = f.newKeyDefault(State.ACTIVE);
     /** User key */
-    public static final Key<Order, Integer> USER_ID = newKey();
+    public static final Key<Order, Integer> USER_ID = f.newKey();
     /** Description of the Order */
     @Comment("Description of the Order")
     @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
-    public static final Key<Order, String> NOTE = newKey();
+    public static final Key<Order, String> NOTE = f.newKey();
     /** Date of creation */
-    public static final Key<Order, Date> CREATED = newKey();
+    public static final Key<Order, Date> CREATED = f.newKey();
     /** Text file */
     @Transient
-    public static final Key<Order, Clob> TEXT_FILE = newKey();
+    public static final Key<Order, Clob> TEXT_FILE = f.newKey();
     /** Binary file */
     @Transient
-    public static final Key<Order, Blob> BINARY_FILE = newKey();
+    public static final Key<Order, Blob> BINARY_FILE = f.newKey();
     /** Reference to Items */
-    public static final RelationToMany<Order, Item> ITEMS = newRelation();
+    public static final RelationToMany<Order, Item> ITEMS = f.newRelation();
 
+    /** Lock the factory */
+    static { f.lock(); }
+    
     // --- Constructors ---
 
     public Order() {

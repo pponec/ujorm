@@ -18,8 +18,8 @@ package org.ujorm.transaction.domains;
 import java.math.BigDecimal;
 import java.util.Date;
 import org.ujorm.Key;
-import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
@@ -33,7 +33,7 @@ import org.ujorm.orm.annot.Table;
 @Table("ord_item")
 @Comment("Order item")
 public final class Item extends OrmTable<Item> {
-    private static final KeyFactory<Item> f = newCamelFactory(Item.class);
+    private static final OrmKeyFactory<Item> f = newCamelFactory(Item.class);
 
     /** Unique key */
     @Column(pk = true)
@@ -52,7 +52,9 @@ public final class Item extends OrmTable<Item> {
     public static final Key<Item,Order> ORDER = f.newKey();
     /** A composed (or indirect) key provides a 'CREATED' attribute of the Order */
     public static final Key<Item,Date> $ORDER_CREATED = Item.ORDER.add(Order.CREATED);
-
+    
+    /** Lock the factory */
+    static { f.lock(); }
 
     // --- An optional implementation of commonly used setters and getters ---
 

@@ -15,13 +15,13 @@
  */
 package org.ujorm.orm.support;
 
+import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 import org.ujorm.KeyList;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.DbConfig;
 import org.ujorm.transaction.config.DatabaseModel;
-import org.ujorm.transaction.domains.Item;
-import static junit.framework.TestCase.assertEquals;
+import org.ujorm.transaction.domains.Aaa;
 
 /**
  * PackageDbConfig Test
@@ -36,9 +36,9 @@ public class PackageDbConfigTest {
         Class<DatabaseModel> dbModelClass = DatabaseModel.class;
         DbConfig<DatabaseModel> instance = PackageDbConfig.of(dbModelClass);
         KeyList result = instance.getTableList();
-        assertEquals(2, result.size());
+        assertEquals(3, result.size());
         assertEquals(dbModelClass, result.getFirstKey().getDomainType());
-        assertEquals(Item.class, ((RelationToMany)instance.getTableList().getFirstKey()).getItemType());
+        assertEquals(Aaa.class, ((RelationToMany)instance.getTableList().getFirstKey()).getItemType());
 
     }
 
