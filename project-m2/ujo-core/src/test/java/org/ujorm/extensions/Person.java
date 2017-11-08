@@ -16,12 +16,12 @@
 
 package org.ujorm.extensions;
 
+import java.util.Date;
+import java.util.List;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.quick.SmartUjo;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Person BO
@@ -39,6 +39,10 @@ public class Person extends SmartUjo<Person> {
         f.lock();
     }
 
+    /** Default constructor */
+    public Person() {
+        this(0);
+    }
     /** Constructor */
     public Person(Integer id) {
         ID.setValue(this, id);

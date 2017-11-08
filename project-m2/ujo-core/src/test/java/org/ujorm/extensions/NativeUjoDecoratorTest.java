@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 pavel.
+ * Copyright 2017 Pavel Ponec.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.orm;
+package org.ujorm.extensions;
 
 import org.junit.Test;
-import org.ujorm.implementation.orm.RelationToMany;
-import org.ujorm.orm.bo.XDatabase;
-import org.ujorm.orm.bo.XOrder;
+import org.ujorm.UjoDecorator;
 import static junit.framework.TestCase.assertEquals;
 
 /**
  * Testing a native database config class
  * @author Pavel Ponec
  */
-public class NativeDbConfigTest {
+public class NativeUjoDecoratorTest {
 
-    /**
-     * Test of getDbModel method, of class NativeDbConfig.
-     */
+    /** Test the getDbModel method of the class NativeDbConfig. */
     @Test
-    public void testGetDbModel() {
-        System.out.println("getDbModel");
-        DbConfig<XDatabase> instance = NativeDbConfig.of(XDatabase.class);
-        assertEquals(XDatabase.class, instance.getDbModel().getClass());
-        assertEquals(XOrder.class, ((RelationToMany)instance.getTableList().getFirstKey()).getItemType());
+    public void testGetKeys() {
+        System.out.println("NativeUjoDecorator");
+        UjoDecorator<Person> instance = NativeUjoDecorator.of(Person.class);
+        assertEquals(Person.class, instance.getDomain().getClass());
+        assertEquals(Person.ID, instance.getKeys().getFirstKey());
 
     }
 

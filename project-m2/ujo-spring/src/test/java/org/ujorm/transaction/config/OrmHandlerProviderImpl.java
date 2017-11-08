@@ -53,7 +53,6 @@ public final class OrmHandlerProviderImpl implements OrmHandlerProvider{
             result.loadDatabase(DatabaseModel.class);
         }
 
-
         return result;
     }
 

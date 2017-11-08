@@ -34,6 +34,7 @@ import javax.sql.DataSource;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.UjoAction;
+import org.ujorm.UjoDecorator;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Transient;
@@ -45,7 +46,6 @@ import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.BytesWrapper;
 import org.ujorm.orm.ColumnSet;
-import org.ujorm.orm.DbConfig;
 import org.ujorm.orm.DbProcedure;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.JdbcStatement;
@@ -151,11 +151,11 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     @SuppressWarnings("LeakingThisInConstructor")
     public MetaDatabase
         ( final OrmHandler ormHandler
-        , final DbConfig<? extends OrmUjo> databaseConfig
+        , final UjoDecorator<? extends OrmUjo> databaseConfig
         , final MetaDatabase param
         , final Integer order) {
         this.ormHandler = ormHandler;
-        final OrmUjo database = databaseConfig.getDbModel();
+        final OrmUjo database = databaseConfig.getDomain();
         ROOT.setValue(this, database);
         ORDER.setValue(this, order);
 
@@ -191,10 +191,10 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         changeDefault(this, JDBC_DRIVER, getDialect().getJdbcDriver());
         changeDefault(this, ORM2DLL_POLICY, MetaParams.ORM2DLL_POLICY.of(getParams()));
         changeDefault(this, ORM2DLL_POLICY, MetaParams.ORM2DLL_POLICY.getDefault());
-        
+
         final Set<String> uniqueTableSet = new HashSet<>(128);
-        for (Key tableProperty : databaseConfig.getTableList()) {
-            if (tableProperty.isTypeOf(ColumnSet.class)) {              
+        for (Key tableProperty : databaseConfig.getKeys()) {
+            if (tableProperty.isTypeOf(ColumnSet.class)) {
                 continue; // TODO: include a set of tables?
             }
             if (tableProperty instanceof RelationToMany) {
@@ -204,7 +204,11 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                 TABLES.addItem(this, table);
                 ormHandler.addTableModel(table);
                 String fullName = table.getSchema() + "." + table.getName();
-                Assert.isTrue(uniqueTableSet.add(fullName), "DB table '{}' doesn’t have a unique name", fullName);
+                Assert.isTrue(uniqueTableSet.add(fullName)
+                        , "DB table '{}' doesn’t have a unique name for the {}"
+                        , fullName
+                        , tProperty.getItemType()
+                );
             }
             else if (tableProperty.isTypeOf(DbProcedure.class)) {
                 Key tProcedure = tableProperty;

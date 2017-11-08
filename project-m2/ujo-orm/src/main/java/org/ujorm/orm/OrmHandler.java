@@ -30,9 +30,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
+import org.ujorm.UjoDecorator;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
+import org.ujorm.extensions.NativeUjoDecorator;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -190,10 +192,10 @@ public class OrmHandler implements OrmHandlerProvider {
     }
 
     /** LoadInternal a database model from parameter */
-    private <UJO extends OrmUjo> MetaDatabase loadDatabaseInternal(DbConfig<UJO> dbConfig) {
+    private <UJO extends OrmUjo> MetaDatabase loadDatabaseInternal(UjoDecorator<UJO> dbConfig) {
 
         // Create the ORM DB model:
-        String databaseId = dbConfig.getDbModel().getClass().getSimpleName();
+        String databaseId = dbConfig.getDomain().getClass().getSimpleName();
         MetaDatabase paramDb = configuration!=null ? configuration.removeDb(databaseId) : null;
         MetaDatabase dbModel = new MetaDatabase(this, dbConfig, paramDb, databases.getDatabaseCount());
         databases.add(dbModel);
@@ -206,16 +208,16 @@ public class OrmHandler implements OrmHandlerProvider {
      */
     @SuppressWarnings("unchecked")
     public final <UJO extends OrmUjo> void loadDatabase(final Class<UJO> databaseModel) {
-        loadDatabase(NativeDbConfig.of(databaseModel));
+        loadDatabase(NativeUjoDecorator.of(databaseModel));
     }
 
     /** Load a meta-data, lock it and create database tables.
      * There is not allowed to make any change to the created meta-model.
      */
     public final synchronized <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModel) {
-        final DbConfig[] databases = new DbConfig[databaseModel.length];
+        final UjoDecorator[] databases = new UjoDecorator[databaseModel.length];
         for (int i = databaseModel.length - 1; i >= 0; --i) {
-            databases[i] = NativeDbConfig.of(databaseModel[i]);
+            databases[i] = NativeUjoDecorator.of(databaseModel[i]);
         }
         loadDatabase(databases);
     }
@@ -224,12 +226,12 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Load a meta-data, lock it and create database tables.
      * There is not allowed to make any change to the created meta-model.
      */
-    public final synchronized <UJO extends OrmUjo> void loadDatabase(final DbConfig<UJO> ... databaseModel) {
+    public final synchronized <UJO extends OrmUjo> void loadDatabase(final UjoDecorator<UJO> ... databaseModel) {
         Assert.isFalse(isReadOnly(), "The meta-model is locked and can´t be changed.");
         Assert.hasLength(databaseModel, "databaseModel is required");
 
         // Load meta-model:
-        for (DbConfig<UJO> db : databaseModel) {
+        for (UjoDecorator<UJO> db : databaseModel) {
             loadDatabaseInternal(db);
         }
 

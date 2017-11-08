@@ -13,21 +13,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujorm.orm;
-
-import org.ujorm.KeyList;
+package org.ujorm;
 
 /**
  * Database configuration
  * @author Pavel Ponec
  * @see org.ujorm.extensions.StringWraper
  */
-public interface DbConfig<U extends OrmUjo>  {
+public interface UjoDecorator<U extends Ujo> {
 
     /** Get database model */
-    public U getDbModel();
+    public U getDomain();
 
     /** Get table model */
-    public KeyList<U> getTableList();
+    public KeyList<U> getKeys();
+
+    /** Getter based on the Key */
+    public <VALUE> VALUE get(Key<? super U, VALUE> key);
+
+    /** Setter based on the Key */
+    public <VALUE> void set(Key<? super U, VALUE> key, VALUE value);
 
 }

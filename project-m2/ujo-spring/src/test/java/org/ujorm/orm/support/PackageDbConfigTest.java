@@ -15,13 +15,13 @@
  */
 package org.ujorm.orm.support;
 
-import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 import org.ujorm.KeyList;
+import org.ujorm.UjoDecorator;
 import org.ujorm.implementation.orm.RelationToMany;
-import org.ujorm.orm.DbConfig;
 import org.ujorm.transaction.config.DatabaseModel;
 import org.ujorm.transaction.domains.Aaa;
+import static junit.framework.TestCase.assertEquals;
 
 /**
  * PackageDbConfig Test
@@ -29,16 +29,16 @@ import org.ujorm.transaction.domains.Aaa;
  */
 public class PackageDbConfigTest {
 
-    /** Test of getTableList method, of class PackageDbConfig. */
+    /** Test of getKeys method, of class PackageDbConfig. */
     @Test
     public void testGetTableList() {
         System.out.println("getTableList");
         Class<DatabaseModel> dbModelClass = DatabaseModel.class;
-        DbConfig<DatabaseModel> instance = PackageDbConfig.of(dbModelClass);
-        KeyList result = instance.getTableList();
+        UjoDecorator<DatabaseModel> instance = PackageDbConfig.of(dbModelClass);
+        KeyList result = instance.getKeys();
         assertEquals(3, result.size());
         assertEquals(dbModelClass, result.getFirstKey().getDomainType());
-        assertEquals(Aaa.class, ((RelationToMany)instance.getTableList().getFirstKey()).getItemType());
+        assertEquals(Aaa.class, ((RelationToMany)instance.getKeys().getFirstKey()).getItemType());
 
     }
 

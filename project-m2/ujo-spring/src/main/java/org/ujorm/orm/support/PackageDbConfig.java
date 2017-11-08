@@ -32,12 +32,13 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.SystemPropertyUtils;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.Ujo;
+import org.ujorm.UjoDecorator;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyRing;
+import org.ujorm.extensions.NativeUjoDecorator;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
-import org.ujorm.orm.DbConfig;
-import org.ujorm.orm.NativeDbConfig;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.annot.Db;
 import org.ujorm.tools.Assert;
@@ -47,7 +48,7 @@ import org.ujorm.tools.Assert;
  * @author Pavel Ponec
  * @see org.ujorm.extensions.StringWraper
  */
-public class PackageDbConfig<U extends OrmUjo> extends NativeDbConfig<U> {
+public class PackageDbConfig<U extends OrmUjo> extends NativeUjoDecorator<U> {
 
     @Nonnull
     protected final KeyList<U> keyList;
@@ -72,17 +73,17 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeDbConfig<U> {
     }
 
     @Override @Nonnull
-    public KeyList<U> getTableList() {
+    public KeyList<U> getKeys() {
         return keyList;
     }
 
     /** Return a list of the packages */
     private Set<Package> getPackages() {
-        final KeyList<U> tableList = dbModel.readKeys();
+        final KeyList<U> tableList = domain.readKeys();
         final Set<Package> result = new HashSet(1 + tableList.size());
 
         if (tableList.isEmpty()) {
-            result.add(dbModel.getClass().getPackage());
+            result.add(domain.getClass().getPackage());
         } else {
             for (Key<U, Object> key : tableList) {
                 if (key instanceof RelationToMany) {
@@ -135,14 +136,14 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeDbConfig<U> {
         if (clazz.getAnnotation(Db.class) != null) {
             return false;
         }
-        if (dbModel.getClass().equals(clazz)) {
+        if (domain.getClass().equals(clazz)) {
             return false;
         }
         return true;
     }
 
     /** Create new instance */
-    public static <U extends OrmUjo> DbConfig<U> of(@Nonnull final Class<U> dbClass) {
-        return new PackageDbConfig<U>(dbClass);
+    public static <U extends Ujo> UjoDecorator<U> of(@Nonnull final Class<U> dbClass) {
+        return new PackageDbConfig(dbClass);
     }
 }

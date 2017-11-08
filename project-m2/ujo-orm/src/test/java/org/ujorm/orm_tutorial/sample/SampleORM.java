@@ -425,7 +425,7 @@ public class SampleORM {
     @SuppressWarnings("unchecked")
     public void useSelectWithAliasTable() {
         final Long excludedId = -7L;
-        final AliasTable order = handler.tableOf(ViewOrder.class, "o");
+        final AliasTable order = handler.tableOf(Order.class, "o");
         final AliasTable item = handler.tableOf(Item.class, "i");
 
         String expected = "SELECT o.ID"
