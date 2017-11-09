@@ -86,13 +86,13 @@ public abstract class AbstractValidator<VALUE> implements Validator<VALUE>, Seri
     */
     protected abstract String getDefaultTemplate();
 
-    /** @{@inheritDoc} */
+    /** {@inheritDoc} */
     @Override
     public final Validator<VALUE> and(Validator<VALUE> validator) {
         return new CompositeValidator<>(this, BinaryOperator.AND, validator);
     }
 
-    /** @{@inheritDoc} */
+    /** {@inheritDoc} */
     @Override
     public final Validator<VALUE> or(Validator<VALUE> validator) {
         return new CompositeValidator<>(this, BinaryOperator.OR, validator);

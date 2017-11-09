@@ -46,7 +46,7 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
     public void exportKeys(Collection<Key<?,?>> result);
 
     /** Returns a {@code directKey} for the required level.
-     * @param level Level no. 0 returns the {@link null} value always.
+     * @param level Level no. 0 returns the {@code null} value always.
      * @see #getCompositeCount()
      */
     public Key<?,?> getDirectKey(int level);
@@ -54,12 +54,10 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
     /** The method writes a {@code value} to the domain object
      * and creates all missing relations.
      * <br>The method calls a method
-     * {@link Ujo#writeValue(org.ujorm.Key, java.lang.Object)}
-     * always.
+     * {@link Ujo#writeValue(org.ujorm.Key, java.lang.Object)} always.
      * @param ujo Related Ujo object
      * @param value A value to assign.
-     * @param createRelations  Value {@code true} creates missing domain relations (but no based entity)
-     * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
+     * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
@@ -73,7 +71,7 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
      * @param ujo Related Ujo object
      * @param value A value to assign.
      * @param createRelations  Value {@code true} creates missing domain relations (but no based entity)
-     * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
+     * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     public void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException;
@@ -93,7 +91,7 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
     public int getCompositeCount();
 
     /** Returns a {@code spaceName} for the required level.
-     * @param level Level no. 0 returns the {@link null} value always.
+     * @param level Level no. 0 returns the {@code null} value always.
      * @return The value is used to distinguish the same entities
      * in different spaces. Examples of use are different alias for a table in SQL queries.
      * <br>The attribute is not serializable in the current Ujorm release.

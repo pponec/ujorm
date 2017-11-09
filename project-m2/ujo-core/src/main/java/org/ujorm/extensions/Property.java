@@ -31,9 +31,9 @@ import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
-import static org.ujorm.extensions.PropertyModifier.*;
 import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidationException;
+import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * The main implementation of the interface {@link Key}.
@@ -95,11 +95,8 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
     /**
      * Property initialization.
-     * @param name Replace the Name of key if the one is NULL.
-     * @param index Replace index always, the value -1 invoke a next number from the internal sequencer.
-     * @param type Replace the Type of key if the one is NULL.
-     * @param defaultValue Replace the Optional default value if the one is NULL.
-     * @param lock Lock the key.
+     * @param field Field number
+     * @param value Field value
      */
     @SuppressWarnings("unchecked")
     protected final Property<U,VALUE> init(final int field, final Object value) {
@@ -251,10 +248,10 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
      * @param ujo Related Ujo object
      * @param value A value to assign.
      * @param createRelations create related UJO objects in case of the composite key
-     * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
+     * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
-    public final void setValue(final U ujo, final VALUE value, boolean createRelations) throws ValidationException{
+    public final void setValue(final U ujo, final VALUE value, boolean createRelations) throws ValidationException {
         setValue(ujo, value);
     }
 

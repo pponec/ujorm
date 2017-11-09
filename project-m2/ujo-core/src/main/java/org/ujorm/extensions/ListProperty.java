@@ -56,7 +56,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     }
 
     /**
-     * Returns a value of key. The result is the same, like {@link Ujo#of(UjoPropertyList).get(index)} .
+     * Returns a value of key. The result is the same, like {@code Ujo.of(UjoPropertyList).get(index)} .
      */
     @Override
     public ITEM getItem(final UJO ujo, final int index) {

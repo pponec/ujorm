@@ -96,7 +96,7 @@ final public class RingBuffer implements CharSequence {
     }
 
     /** The equals test for an internal use only.
-     * @param s Sequence must not be the {@code null] and must have got the <strong>same length</strong> as the RingBuffer
+     * @param s Sequence must not be the {@code null} and must have got the <strong>same length</strong> as the RingBuffer
      * @return Returns true, ir the sequence equalsTo this object.
      * @throws IndexOutOfBoundsException if the argument have not the same length
      */

@@ -490,7 +490,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         return ! isComposite();
     }
 
-    /** @{@inheritDoc} */
+    /** {@inheritDoc} */
     @Override
     public boolean isComposite() {
         return true;
@@ -587,7 +587,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     }
 
     /** Returns a {@code spaceName} for the required level.
-     * Level no. 0 returns the {@link null} value always.
+     * Level no. 0 returns the {@code null} value always.
      */
     @Override
     public final String getAlias(int level) {
@@ -761,7 +761,6 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
      *       of target application to ensure database compatibility</li>
      * </ul>
-     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
      * A substring {@code {0}} will be replaced for the current column name;
      * @param value a condition value

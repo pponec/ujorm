@@ -23,7 +23,6 @@ import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * The abstract implementation for the {@link Key} of the collection type.
- * @see AbstracCollectionProperty
  * @author Pavel Ponec
  */
 @Immutable

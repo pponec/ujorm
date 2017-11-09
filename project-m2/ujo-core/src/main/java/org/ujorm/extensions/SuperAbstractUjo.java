@@ -121,7 +121,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * <li>UjoCloneable</li>
      * <li>List</li>
      * <li>array of privitive values</li>
-     * <ul>
+     * </ul>
      *
      * @param depth Depth of clone.
      * @param context A context of the action.

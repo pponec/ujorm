@@ -68,7 +68,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * always.
      * @param ujo Related Ujo object
      * @param value A value to assign.
-     * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
+     * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     public void setValue(@Nonnull UJO ujo, @Nullable VALUE value) throws ValidationException;
@@ -82,7 +82,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @param ujo Related Ujo object
      * @param value A value to assign.
      * @param createRelations create related UJO objects in case of the composite key
-     * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
+     * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
 //    public void setValue(UJO ujo, VALUE value, boolean createRelations) throws ValidationException;

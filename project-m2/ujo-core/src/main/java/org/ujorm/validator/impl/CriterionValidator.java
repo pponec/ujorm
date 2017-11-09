@@ -67,7 +67,7 @@ public class CriterionValidator<VALUE extends Ujo> extends AbstractValidator<VAL
         return KEY_PREFIX + "criterion";
     }
 
-    /** @{@inheritDoc} */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return super.toString() + ": " + crn.toString();

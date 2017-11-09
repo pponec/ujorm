@@ -63,7 +63,7 @@ public enum Operator implements AbstractOperator {
     USER,
     /** The operator for an internal use only where a result is
      * <strong>not dependent</strong> on the value.
-     * The result of the {@link Criterion#getRightNode()} method is the {@Link Boolean} type always.
+     * The result of the {@link Criterion#getRightNode()} method is the {@link Boolean} type always.
      * @see Criterion#constant(org.ujorm.Key, boolean)
      */
     XFIXED,

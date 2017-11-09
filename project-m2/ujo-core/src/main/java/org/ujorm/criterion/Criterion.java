@@ -116,7 +116,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param ujo object to validate
      * @param parameters Text parameters for the message template are located by {} expression.
      *   documentation for more information.
-     * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo) failed.
+     * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo)} failed.
      */
     public final void validate(final U ujo, String message, Object ... parameters) throws IllegalArgumentException {
         Assert.isTrue(evaluate(ujo), message, parameters);
@@ -126,7 +126,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * Evaluate an object along this criterion.
      * If the evaluate method returns false, then the method throws the {@link IllegalArgumentException}
      * with the required message.
-     * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo) failed.
+     * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo)} failed.
      */
     public final void validate(final U ujo) throws IllegalArgumentException {
         validate(ujo, "Invalid condition ({}) for the {}", this, ujo);
@@ -145,7 +145,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
     }
 
     /**
-     * Join a criterion by the {@link BinaryOperator.AND} operator.
+     * Join a criterion by the {@link BinaryOperator#AND} operator.
      * @param criterion Criterion to join
      * @return Result
      */
@@ -154,7 +154,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
     }
 
     /**
-     * Join a criterion by the {@link BinaryOperator.OR} operator.
+     * Join a criterion by the {@link BinaryOperator#OR} operator.
      * @param criterion Criterion to join
      * @return Result
      */
@@ -163,7 +163,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
     }
 
     /**
-     * Join this criterion by the {@link BinaryOperator.NOT} operator.
+     * Join this criterion by the {@link BinaryOperator#NOT} operator.
      * @return Result
      */
     public final Criterion<U> not() {
@@ -427,8 +427,8 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
 
     /** This is an constane criterion independed on an entity.
      * The method is <strong>deprecated</strong> in the ORM, use rather a one method from
-     * {@line #forAll(org.ujorm.Key) forAll} or
-     * {@line #forNone(org.ujorm.Key) forNone} .
+     * {@link #forAll(org.ujorm.Key) forAll} or
+     * {@link #forNone(org.ujorm.Key) forNone} .
      * @see #forAll(org.ujorm.Key)
      * @see #forNone(org.ujorm.Key)
      */
