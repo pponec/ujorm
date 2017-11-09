@@ -16,7 +16,6 @@ package org.ujorm.tools;
  * limitations under the License.
  */
 
-
 import ch.qos.logback.classic.Logger;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -58,11 +57,11 @@ public class PerformanceMsgTest {
 
     /**
      * MAX_COUNT	: 5000000 <br>
-     * MsgFormatter	: 1158.0 100.00% <br>
-     * MessageFormatter	: 1246.0 92.94% <br>
-     * Formatter	: 12243.0 9.46% <br>
-     * MessageFormat	: 5023.0 23.05% <br>
-     * MessageService	: 2268.0 51.06% <br>
+     * MsgFormatter	: 1867.0 100.00% <br>
+     * MessageFormatter	: 1243.0 150.20% <br>
+     * Formatter	: 12185.0 15.32% <br>
+     * MessageFormat	: 5047.0 36.99% <br>
+     * MessageService	: 2778.0 67.21% <br>
      */
     @Test
     public void testMessagePerformance_3args() {
@@ -124,8 +123,8 @@ public class PerformanceMsgTest {
 
     /**
      * MAX_COUNT	: 5000000 <br>
-     * MsgFormatter	: 1065.0 100.00% <br>
-     * MessageFormatter	: 1290.0 82.56% <br>
+     * MsgFormatter	: 2415.0 100.00% <br>
+     * MessageFormatter	: 1147.0 210.55% <br>
      */
     @Test
     public void testMessagePerformance_2args() {
@@ -158,7 +157,6 @@ public class PerformanceMsgTest {
             System.out.println(buildResult(formatter, result));
         }
     }
-
 
     /** Calculate percent */
     private static String buildResult(Class<?> item, Map<Class, Long> result) {

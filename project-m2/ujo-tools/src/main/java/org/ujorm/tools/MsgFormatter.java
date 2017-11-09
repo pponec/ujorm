@@ -114,7 +114,9 @@ public class MsgFormatter {
      */
     protected void writeValue(@Nullable final Object value, @Nonnull final CharArrayWriter writer, final boolean mark) {
         if (mark) {
-            writer.append(String.valueOf(value));
+            writer.append(value != null
+                    ? value.toString()
+                    : String.valueOf(value));
         } else {
            if (value instanceof Throwable) {
             writer.append('\n');
