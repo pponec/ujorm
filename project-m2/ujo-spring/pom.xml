@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-spring</artifactId>
     <packaging>jar</packaging>
-    <version>1.75-SNAPSHOT</version>
+    <version>1.76-SNAPSHOT</version>
     <name>ujo-spring</name>
     <description>Quick ORM implementation based on the UJO objects.</description>
     <url>http://ujorm.org</url>
@@ -129,7 +129,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>1.75-SNAPSHOT</version>
+            <version>1.76-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
