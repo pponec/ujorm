@@ -25,7 +25,9 @@ import org.ujorm.orm.DbType;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
-import static org.ujorm.Validator.Build.*;
+import static org.ujorm.validator.impl.ValidatorFactory.MANDATORY;
+import static org.ujorm.validator.impl.ValidatorFactory.length;
+import static org.ujorm.validator.impl.ValidatorFactory.mandatory;
 
 /** Key of persistent parameter */
 @Table("param_key")
@@ -99,7 +101,7 @@ final public class ParamKey extends OrmTable<ParamKey> {
         }
     }
 
-    // --- Generated Getters / Setters ---
+    // --- Generated Getters / Setters powered by: UjoCodeGenerator-1.1.2.nbm ---
 
     /** The primary identifier */
     public Integer getId() {

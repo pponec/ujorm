@@ -54,7 +54,7 @@ public class Hotel extends OrmTable<Hotel> {
         f.lock();
     }
 
-    // --- Generated Getters / Setters ---
+    // --- Generated Getters / Setters powered by: UjoCodeGenerator-1.1.2.nbm ---
 
     /** The Primary Key */
     public Long getId() {

@@ -54,7 +54,7 @@ public class Booking extends OrmTable<Booking> {
         f.lock();
     }
 
-    // --- Generated Getters / Setters ---
+    // --- Generated Getters / Setters powered by: UjoCodeGenerator-1.1.2.nbm ---
 
     /** The Primary Key */
     public Long getId() {

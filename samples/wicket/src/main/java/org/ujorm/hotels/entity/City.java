@@ -42,7 +42,7 @@ public class City extends OrmTable<City> {
         f.lock();
     }
 
-    // --- Generated Getters / Setters ---
+    // --- Generated Getters / Setters powered by: UjoCodeGenerator-1.1.2.nbm ---
 
     /** The Primary Key */
     public Integer getId() {

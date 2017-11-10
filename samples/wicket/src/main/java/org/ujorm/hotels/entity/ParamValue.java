@@ -25,7 +25,7 @@ import org.ujorm.orm.DbType;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
-import static org.ujorm.Validator.Build.*;
+import static org.ujorm.validator.impl.ValidatorFactory.mandatory;
 
 /** Parameter value mapping to database */
 @Table("param_value")
@@ -90,7 +90,7 @@ public final class ParamValue extends OrmTable<ParamValue> {
         return !KEY_SYSTEM$.of(this);
     }
 
-    // --- Generated Getters / Setters ---
+    // --- Generated Getters / Setters powered by: UjoCodeGenerator-1.1.2.nbm ---
 
     /** The identifier must have an ascending sort for personal rows. */
     public Integer getId() {
