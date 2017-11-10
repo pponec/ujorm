@@ -32,6 +32,7 @@ import org.ujorm.orm.dialect.*;
  * @hidden
  */
 @Db(schema="demoHotels", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
+//@Db(schema="demoHotels", dialect=H2Dialect.class, jndi = "java:comp/env/jdbc/demohotels") // JNDI support
 //@Db(schema="demoHotels", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:~/ujorm/db1")
 //@Db(schema="demoHotels", dialect=PostgreSqlDialect.class, jndi = "java:comp/env/jdbc/dbtest")
 //@Db(schema="demoHotels", dialect=PostgreSqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:postgresql://127.0.0.1:5432/db1")
