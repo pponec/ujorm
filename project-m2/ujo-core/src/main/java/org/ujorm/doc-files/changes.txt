@@ -2,6 +2,17 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 1.75 (2017-11-10)
++ ORM: Bugfix: closing JDBC resources
++ ORM: The new class PackageDbConfig to loading a database model from a package is implemented
++ ORM: Checking a unique DB table name is implemented
++ CORE: Static analyzator is suppoorted using annotations form JSR305
++ CORE: JavaDoc is fixed
++ TOOLS: MessageArg class supports an optional format of the value
++ TOOLS: An stack trace of an exception can be formatted using the MsgFormatter class
++ HOTELS: code clenaing
++ HOTELS: java based spring configuraion is implemented
+
 release 1.74 (2017-09-28)
 + TOOLS: Assert class supports the Lambda expression by Predicate
 + TOOLS: Assert class supports the Map data type
