@@ -24,39 +24,28 @@ public class Hotel extends OrmTable<Hotel> {
     /** Factory */
     private static final OrmKeyFactory<Hotel> f = newFactory(Hotel.class);
 
-    /** The Primary Key */
     @Comment("The Primary Key")
     @Column(pk = true)
     public static final Key<Hotel, Long> ID = f.newKey();
-    /** Description of the Company */
     @Comment("Name of the Hotel")
     @Column(index=INDEX_HOTEL_NAME)
     public static final Key<Hotel, String> NAME = f.newKey(length(MANDATORY, 2, 40));
-    /** Description of the hotel */
     @Comment("Description of the hotel")
     public static final Key<Hotel, String> NOTE = f.newKey(length(256));
-    /** Relation to the City */
     @Comment("Relation to the City address")
     public static final Key<Hotel, City> CITY = f.newKey(mandatory(City.class));
-    /** Street of address */
     @Comment("Street of address")
     public static final Key<Hotel, String> STREET = f.newKey(length(MANDATORY, 128));
-    /** Description of the Company */
     @Comment("Phone")
     public static final Key<Hotel, String> PHONE = f.newKey(length(20));
-    /** Stars */
     @Comment("Stars")
     public static final Key<Hotel, Float> STARS = f.newKey(min(MANDATORY, 0f));
-    /** URL to the HomePage */
     @Comment("URL to the HomePage")
     public static final Key<Hotel, String> HOME_PAGE = f.newKey(length(100));
-    /** Price per night in USD */
     @Comment("Price per night in USD")
     public static final Key<Hotel, BigDecimal> PRICE = f.newKey(min(MANDATORY, BigDecimal.ZERO));
-    /** Currency of the price */
     @Comment("Currency of the price")
     public static final Key<Hotel, String> CURRENCY = f.newKeyDefault("USD", length(MANDATORY, 3, 3));
-    /** Hotel state, default is ACTIVE (the true or null is required) */
     @Comment("Hotel state (the true or null is required)")
     @Column(index=INDEX_HOTEL_NAME)
     public static final Key<Hotel, Boolean> ACTIVE = f.newKeyDefault(true, mandatory(Boolean.class));
@@ -77,12 +66,12 @@ public class Hotel extends OrmTable<Hotel> {
         ID.setValue(this, id);
     }
 
-    /** Description of the Company */
+    /** Name of the Hotel */
     public String getName() {
         return NAME.of(this);
     }
 
-    /** Description of the Company */
+    /** Name of the Hotel */
     public void setName(String name) {
         NAME.setValue(this, name);
     }
@@ -97,12 +86,12 @@ public class Hotel extends OrmTable<Hotel> {
         NOTE.setValue(this, note);
     }
 
-    /** Relation to the City */
+    /** Relation to the City address */
     public City getCity() {
         return CITY.of(this);
     }
 
-    /** Relation to the City */
+    /** Relation to the City address */
     public void setCity(City city) {
         CITY.setValue(this, city);
     }
@@ -117,12 +106,12 @@ public class Hotel extends OrmTable<Hotel> {
         STREET.setValue(this, street);
     }
 
-    /** Description of the Company */
+    /** Phone */
     public String getPhone() {
         return PHONE.of(this);
     }
 
-    /** Description of the Company */
+    /** Phone */
     public void setPhone(String phone) {
         PHONE.setValue(this, phone);
     }
@@ -167,12 +156,12 @@ public class Hotel extends OrmTable<Hotel> {
         CURRENCY.setValue(this, currency);
     }
 
-    /** Hotel state, default is ACTIVE (the true or null is required) */
+    /** Hotel state (the true or null is required) */
     public Boolean getActive() {
         return ACTIVE.of(this);
     }
 
-    /** Hotel state, default is ACTIVE (the true or null is required) */
+    /** Hotel state (the true or null is required) */
     public void setActive(Boolean active) {
         ACTIVE.setValue(this, active);
     }

@@ -23,24 +23,18 @@ public class City extends OrmTable<City> {
     /** Factory */
     private static final OrmKeyFactory<City> f = newFactory(City.class);
 
-    /** The Primary Key */
     @Comment("The Primary Key")
     @Column(pk = true)
     public static final Key<City, Integer> ID = f.newKey();
-    /** City name */
     @Comment("City name")
     @Column(uniqueIndex=UNIQUE_CITY)
     public static final Key<City, String> NAME = f.newKey(length(MANDATORY, 40));
-    /** Two characters country code along the ISO 3166 */
     @Comment("Two characters country code along the ISO 3166")
     public static final Key<City, String> COUNTRY = f.newKey("COUNTRY", length(MANDATORY, 3));
-    /** Country name will be located in the another entity in a real application */
     @Comment("Country name will be located in the another entity in a real application")
     public static final Key<City, String> COUNTRY_NAME = f.newKey(length(MANDATORY, 40));
-    /** A geographic coordinate for east-west position on the Earth */
     @Comment("A geographic coordinate for north-south position on the Earth")
     public static final Key<City, Float> LATITUDE = f.newKey(range(MANDATORY, -90f, 90f));
-    /** A geographic coordinate for north-south position on the Earth */
     @Comment("A geographic coordinate for east-west position on the Earth")
     public static final Key<City, Float> LONGITUDE = f.newKey(range(MANDATORY, -180f, 180f));
 
@@ -90,22 +84,22 @@ public class City extends OrmTable<City> {
         COUNTRY_NAME.setValue(this, countryName);
     }
 
-    /** A geographic coordinate for east-west position on the Earth */
+    /** A geographic coordinate for north-south position on the Earth */
     public Float getLatitude() {
         return LATITUDE.of(this);
     }
 
-    /** A geographic coordinate for east-west position on the Earth */
+    /** A geographic coordinate for north-south position on the Earth */
     public void setLatitude(Float latitude) {
         LATITUDE.setValue(this, latitude);
     }
 
-    /** A geographic coordinate for north-south position on the Earth */
+    /** A geographic coordinate for east-west position on the Earth */
     public Float getLongitude() {
         return LONGITUDE.of(this);
     }
 
-    /** A geographic coordinate for north-south position on the Earth */
+    /** A geographic coordinate for east-west position on the Earth */
     public void setLongitude(Float longitude) {
         LONGITUDE.setValue(this, longitude);
     }

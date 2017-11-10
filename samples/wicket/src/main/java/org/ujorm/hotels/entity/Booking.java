@@ -28,34 +28,25 @@ public class Booking extends OrmTable<Booking> {
     /** Factory */
     private static final OrmKeyFactory<Booking> f = newFactory(Booking.class);
 
-    /** The Primary Key */
     @Comment("The Primary Key")
     @Column(pk = true)
     public static final Key<Booking, Long> ID = f.newKey();
-    /** Relation to hotel */
     @Comment("Relation to hotel")
     @Column(index=INDEX_NAME)
     public static final Key<Booking, Hotel> HOTEL = f.newKey(notNull(Hotel.class));
-    /** Relation to customer */
     @Comment("Relation to customer")
     @Column(index=INDEX_NAME)
     public static final Key<Booking, Customer> CUSTOMER = f.newKey(notNull(Customer.class));
-    /** Date from */
     @Comment("Date from")
     public static final Key<Booking, LocalDate> DATE_FROM = f.newKey(mandatory(LocalDate.class));
-    /** Number of nights */
     @Comment("Number of nights")
     public static final Key<Booking, Short> NIGHTS = f.newKeyDefault((short)1, range((short)1, (short)365));
-    /** Number of persons (limit from 1 to 20) */
     @Comment("Number of persons (limit from 1 to 50)")
     public static final Key<Booking, Short> PERSONS = f.newKeyDefault((short)1, range((short)1, (short)50));
-    /** Total price */
     @Comment("Total price")
     public static final Key<Booking, BigDecimal> PRICE = f.newKeyDefault(BigDecimal.ZERO, min(MANDATORY, BigDecimal.ZERO));
-    /** Currency of the price */
     @Comment("Currency of the total price")
     public static final Key<Booking, String> CURRENCY = f.newKeyDefault("USD", length(MANDATORY, 3, 3));
-    /** Creation datetime of booking. */
     @Comment("Creation datetime of booking.")
     public static final Key<Booking, LocalDateTime> CREATION_DATE = f.newKey(mandatory(LocalDateTime.class));
 
@@ -96,12 +87,12 @@ public class Booking extends OrmTable<Booking> {
     }
 
     /** Date from */
-    public java.time.LocalDate getDateFrom() {
+    public LocalDate getDateFrom() {
         return DATE_FROM.of(this);
     }
 
     /** Date from */
-    public void setDateFrom(java.time.LocalDate dateFrom) {
+    public void setDateFrom(LocalDate dateFrom) {
         DATE_FROM.setValue(this, dateFrom);
     }
 
@@ -115,12 +106,12 @@ public class Booking extends OrmTable<Booking> {
         NIGHTS.setValue(this, nights);
     }
 
-    /** Number of persons (limit from 1 to 20) */
+    /** Number of persons (limit from 1 to 50) */
     public Short getPersons() {
         return PERSONS.of(this);
     }
 
-    /** Number of persons (limit from 1 to 20) */
+    /** Number of persons (limit from 1 to 50) */
     public void setPersons(Short persons) {
         PERSONS.setValue(this, persons);
     }
@@ -135,12 +126,12 @@ public class Booking extends OrmTable<Booking> {
         PRICE.setValue(this, price);
     }
 
-    /** Currency of the price */
+    /** Currency of the total price */
     public String getCurrency() {
         return CURRENCY.of(this);
     }
 
-    /** Currency of the price */
+    /** Currency of the total price */
     public void setCurrency(String currency) {
         CURRENCY.setValue(this, currency);
     }

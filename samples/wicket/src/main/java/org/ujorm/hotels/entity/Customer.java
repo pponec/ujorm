@@ -28,36 +28,27 @@ public class Customer extends OrmTableLockable<Customer> {
     /** Factory */
     private static final OrmKeyFactory<Customer> f = newFactory(Customer.class);
 
-    /** The Primary Key */
     @Comment("The Primary Key")
     @Column(pk = true)
     public static final Key<Customer, Integer> ID = f.newKey();
-    /** Unique login */
     @Comment("Unique login")
     @Column(uniqueIndex=UNIQUE_LOGIN)
     public static final Key<Customer, String> LOGIN = f.newKey(length(MANDATORY, 4, 30));
-    /** A form field only where the {@code null} value means: no password chage */
+    @Comment("A form field only where the {@code null} value means: no password chage")
     @Transient
     public static final Key<Customer, String> PASSWORD = f.newKey(FieldProvider.PASSWORD_KEY_NAME, length(NULLABLE, 4, 100));
-    /** Password hash */
     @Comment("Password hash")
     public static final Key<Customer, Long> PASSWORD_HASH = f.newKey(notNull(Long.class));
-    /** Title */
     @Comment("Title")
     public static final Key<Customer, TitleEnum> TITLE = f.newKey();
-    /** First name */
-    @Comment("Firstname")
+    @Comment("First name")
     public static final Key<Customer, String> FIRSTNAME = f.newKey(length(MANDATORY, 2, 60));
-    /** Surname */
     @Comment("Surname")
     public static final Key<Customer, String> SURNAME = f.newKey(length(MANDATORY, 2, 60));
-    /** Email */
     @Comment("Email")
     public static final Key<Customer, String> EMAIL = f.newKey(email(MANDATORY));
-    /** Administrator role sign */
     @Comment("Administrator role sign")
     public static final Key<Customer, Boolean> ADMIN = f.newKeyDefault(false);
-    /** Customer state (the true or null values are required) */
     @Comment("Customer is allowed to login (the true or null values are required)")
     @Column(uniqueIndex=UNIQUE_LOGIN)
     public static final Key<Customer, Boolean> ACTIVE = f.newKeyDefault(true);
@@ -167,12 +158,12 @@ public class Customer extends OrmTableLockable<Customer> {
         ADMIN.setValue(this, admin);
     }
 
-    /** Customer state (the true or null values are required) */
+    /** Customer is allowed to login (the true or null values are required) */
     public Boolean getActive() {
         return ACTIVE.of(this);
     }
 
-    /** Customer state (the true or null values are required) */
+    /** Customer is allowed to login (the true or null values are required) */
     public void setActive(Boolean active) {
         ACTIVE.setValue(this, active);
     }
