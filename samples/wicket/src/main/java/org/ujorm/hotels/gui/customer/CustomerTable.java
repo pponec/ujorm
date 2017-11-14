@@ -23,7 +23,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
-import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.DbService;
 import org.ujorm.validator.ValidationException;
@@ -133,9 +132,6 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
                     dbService.deleteCustomer(event.getDomain());
                     reloadTable(event);
                 }
-            }
-            else if (event.isAction(Toolbar.FILTER_ACTION)) {
-                reloadTable(event);
             }
             else if (event.isAction(LOGIN)) {
                 if (event.showDialog()) {
