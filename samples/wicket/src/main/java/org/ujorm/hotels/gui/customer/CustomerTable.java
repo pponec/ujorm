@@ -26,13 +26,13 @@ import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.DbService;
 import org.ujorm.validator.ValidationException;
+import static org.ujorm.wicket.CommonActions.*;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import org.ujorm.wicket.component.grid.CommonAction;
 import org.ujorm.wicket.component.grid.OrmDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
-import static org.ujorm.wicket.CommonActions.*;
-import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 
 /**
  * Customer Panel
@@ -110,8 +110,8 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
     @Override
     public void onEvent(IEvent<?> argEvent) {
         final UjoEvent<Customer> event = UjoEvent.get(argEvent);
-        if (event != null) {
-            if (event.isAction(UPDATE)) {
+        switch (event.getAction()) {
+            case UPDATE:
                 if (event.showDialog()) {
                     String key = event.getDomain().getId() == null
                             ? "dialog.create.title"
@@ -121,19 +121,17 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
                     dbService.saveOrUpdateCustomer(event.getDomain());
                     reloadTable(event);
                 }
-            }
-            else if (event.isAction(DELETE)) {
+                break;
+            case DELETE:
                 if (event.showDialog()) {
                     removeDialog.setMessage(new Model("Do you want to remove selected Customer really?"));
-                    removeDialog.show(event
-                            , new LocalizedModel("dialog.delete.title")
-                            , "delete");
+                    removeDialog.show(event, new LocalizedModel("dialog.delete.title"), "delete");
                 } else {
                     dbService.deleteCustomer(event.getDomain());
                     reloadTable(event);
                 }
-            }
-            else if (event.isAction(LOGIN)) {
+                break;
+            case LOGIN:
                 if (event.showDialog()) {
                     loginDialog.show(event, new LocalizedModel("dialog.login.title"));
                 } else if (event.getDomain() != null) {
@@ -143,8 +141,8 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
                     send(getPage(), Broadcast.DEPTH, new UjoEvent(LOGIN_CHANGED, null, event.getTarget()));
                 }
                 argEvent.stop();
-            }
-        }
+                break;
+        }        
     }
 
     /** Reload the data table */

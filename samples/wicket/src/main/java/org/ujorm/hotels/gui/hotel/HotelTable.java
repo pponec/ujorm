@@ -31,15 +31,15 @@ import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.DbService;
 import org.ujorm.hotels.service.param.ApplicationParams;
+import static org.ujorm.wicket.CommonActions.*;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import org.ujorm.wicket.component.grid.KeyColumn;
+import static org.ujorm.wicket.component.grid.KeyColumn.*;
 import org.ujorm.wicket.component.grid.OrmDataProvider;
 import org.ujorm.wicket.component.toolbar.InsertToolbar;
 import org.ujorm.wicket.component.tools.LocalizedModel;
-import static org.ujorm.wicket.CommonActions.*;
-import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
-import static org.ujorm.wicket.component.grid.KeyColumn.*;
 
 /**
  * Hotel Table
@@ -91,8 +91,8 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
     @Override
     public void onEvent(IEvent<?> argEvent) {
         final UjoEvent<Hotel> event = UjoEvent.get(argEvent);
-        if (event != null) {
-            if (event.isAction(UPDATE)) {
+        switch (event.getAction()) {
+            case UPDATE:
                 if (event.showDialog()) {
                     String key = event.getDomain().getId() == null
                             ? "dialog.create.title"
@@ -102,8 +102,8 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
                     dbService.saveOrUpdateHotel(event.getDomain());
                     reloadTable(event);
                 }
-            }
-            else if (event.isAction(DELETE)) {
+                break;
+            case DELETE:
                 if (event.showDialog()) {
                     removeDialog.setMessage(new Model("Do you want to remove selected Hotel really?"));
                     removeDialog.show(event
@@ -113,8 +113,8 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
                     dbService.deleteHotel(event.getDomain());
                     reloadTable(event);
                 }
-            }
-            else if (event.isAction(BookingEditor.BOOKING_ACTION)) {
+                break;
+            case BookingEditor.BOOKING_ACTION:
                 if (event.showDialog()) {
                     //bookingDialog.setEnabled(Booking.CUSTOMER.add(Customer.LOGIN), true); // TODO
                     bookingDialog.setAction(event.getAction());
@@ -124,10 +124,10 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
                     dbService.saveBooking(bookingEvent.getDomain());
                     send(getPage(), Broadcast.DEPTH, new UjoEvent(LOGIN_CHANGED, null, event.getTarget()));
                 }
-            }
-            else if (event.isAction(Toolbar.FILTER_ACTION)) {
+                break;
+            case Toolbar.FILTER_ACTION:
                 reloadTable(event);
-            }
+                break;
         }
     }
 

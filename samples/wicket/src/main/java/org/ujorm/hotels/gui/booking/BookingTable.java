@@ -26,12 +26,12 @@ import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.gui.booking.action.BookActionPanel;
 import org.ujorm.hotels.service.DbService;
+import static org.ujorm.wicket.CommonActions.*;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import org.ujorm.wicket.component.grid.OrmDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
-import static org.ujorm.wicket.CommonActions.*;
-import static org.ujorm.wicket.component.grid.OrmDataProvider.*;
 
 /**
  * BookingTable
@@ -75,8 +75,8 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
     @Override
     public void onEvent(IEvent<?> argEvent) {
         final UjoEvent<Booking> event = UjoEvent.get(argEvent);
-        if (event != null) {
-            if (event.isAction(DELETE)) {
+        switch (event.getAction()) {
+            case DELETE:
                 if (event.showDialog()) {
                     removeDialog.setMessage(new Model("Do you want to remove selected Booking really?"));
                     removeDialog.show(event
@@ -86,9 +86,9 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
                     dbService.deleteBooking(event.getDomain());
                     reloadTable(event);
                 }
-            }
+                break;
         }
-    }
+     }
 
     /** Reload the data table */
     private void reloadTable(UjoEvent event) {

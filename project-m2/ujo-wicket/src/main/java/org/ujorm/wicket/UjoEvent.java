@@ -16,18 +16,31 @@
 package org.ujorm.wicket;
 
 import java.io.Serializable;
+import java.util.Collection;
+import javax.annotation.Nonnull;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.ILogData;
+import org.apache.wicket.request.IRequestCycle;
+import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
+import org.ujorm.tools.Assert;
 
 /**
  * UjoEvent
  * @author Pavel Ponec
  */
 public class UjoEvent<U> {
+    
+    /** Undefined event with {@code null} action */
+    public static final UjoEvent EMPTY_EVENT = new UjoEvent(CommonActions.UNDEFINED, new DummyTarget());
 
     final private String action;
     final private boolean showDialog;
@@ -39,7 +52,7 @@ public class UjoEvent<U> {
      * @param action Required action code
      * @param target target
      */
-    public UjoEvent(String action, AjaxRequestTarget target) {
+    public UjoEvent(@Nonnull String action, @Nonnull AjaxRequestTarget target) {
         this(action, (U) null, target);
     }
 
@@ -49,7 +62,7 @@ public class UjoEvent<U> {
      * @param ujo Optional data context
      * @param target target
      */
-    public UjoEvent(String action, U ujo, AjaxRequestTarget target) {
+    public UjoEvent(@Nonnull String action, @Nonnull U ujo, @Nonnull AjaxRequestTarget target) {
         this(action, true, ujo, target);
     }
 
@@ -60,7 +73,7 @@ public class UjoEvent<U> {
      * @param ujo Optional data context type of Ujo
      * @param target Target
      */
-    public UjoEvent(String action, boolean dialogRequest, U ujo, AjaxRequestTarget target) {
+    public UjoEvent(@Nonnull String action, boolean dialogRequest, @Nonnull U ujo, @Nonnull AjaxRequestTarget target) {
         this.action = Args.notNull(action, "action");
         this.domain = ujo;
         this.showDialog = dialogRequest;
@@ -68,22 +81,25 @@ public class UjoEvent<U> {
     }
 
     /** Get the ujo domain object */
+    @Nonnull 
     public U getDomain() {
         return domain;
     }
 
     /** Get Ujo domain model */
+    @Nonnull 
     public IModel<U> getUjoModel() {
         return new Model((Serializable)domain);
     }
 
     /** Get target */
+    @Nonnull 
     public AjaxRequestTarget getTarget() {
         return target;
     }
 
     /** Add required component to the target */
-    public void addTarget(Component... components) {
+    public void addTarget(@Nonnull Component... components) {
         target.add(components);
     }
 
@@ -97,7 +113,7 @@ public class UjoEvent<U> {
      * @param action Nullable argument
      * @return The true value for the match.
      */
-    public final boolean isAction(final String action) {
+    public final boolean isAction(@Nonnull final String action) {
         return action != null
             && this.action.hashCode() == action.hashCode()
             && this.action.equals(action);
@@ -118,10 +134,10 @@ public class UjoEvent<U> {
 
     /**
      * Check the the required actions from argument to match.
-     * @param action Nullable argument
+     * @param actions An nonnull argument
      * @return The true value for the match.
      */
-    public final boolean isAction(String ... actions) {
+    public final boolean isAction(@Nonnull String ... actions) {
         for (String act : actions) {
             if (isAction(act)) {
                 return true;
@@ -147,12 +163,123 @@ public class UjoEvent<U> {
 
     // ----------- STATIC ------------
 
-    /** Get Payload type UjoEvent from the argument */
-    public static <T> UjoEvent<T> get(IEvent<?> argEvent) {
+    /** Get Payload type UjoEvent from the argument or return the {@link EMPTY_EVENT}*/
+    @Nonnull
+    public static <T> UjoEvent<T> get(@Nonnull IEvent<?> argEvent) {
+        Assert.notNull(argEvent, "argEvent");
         final Object payLoad = argEvent.getPayload();
         return payLoad instanceof UjoEvent
                 ? (UjoEvent<T>) payLoad
-                : null ;
+                : EMPTY_EVENT;
+    }
+
+    // ----------- CLASSES ------------
+    
+    /** Dumy AjaxRequestTarget */
+    private static final class DummyTarget implements AjaxRequestTarget {
+        private UnsupportedOperationException newException() {
+            return new UnsupportedOperationException(getClass().getSimpleName());
+        }
+        
+        @Override
+        public void addListener(AjaxRequestTarget.IListener listener) {
+            throw newException();
+        }
+
+        @Override
+        public void registerRespondListener(AjaxRequestTarget.ITargetRespondListener listener) {
+            throw newException();
+        }
+
+        @Override
+        public String getLastFocusedElementId() {
+            throw newException();
+        }
+
+        @Override
+        public Page getPage() {
+            throw newException();
+        }
+
+        @Override
+        public void add(Component component, String markupId) {
+            throw newException();
+        }
+
+        @Override
+        public void add(Component... components) {
+            throw newException();
+        }
+
+        @Override
+        public void addChildren(MarkupContainer parent, Class<?> childCriteria) {
+            throw newException();
+        }
+
+        @Override
+        public void appendJavaScript(CharSequence javascript) {
+            throw newException();
+        }
+
+        @Override
+        public void prependJavaScript(CharSequence javascript) {
+            throw newException();
+        }
+
+        @Override
+        public void focusComponent(Component component) {
+            throw newException();
+        }
+
+        @Override
+        public Collection<? extends Component> getComponents() {
+            throw newException();
+        }
+
+        @Override
+        public IHeaderResponse getHeaderResponse() {
+            throw newException();
+        }
+
+        @Override
+        public Integer getPageId() {
+            throw newException();
+        }
+
+        @Override
+        public boolean isPageInstanceCreated() {
+            throw newException();
+        }
+
+        @Override
+        public Integer getRenderCount() {
+            throw newException();
+        }
+
+        @Override
+        public Class<? extends IRequestablePage> getPageClass() {
+            throw newException();
+        }
+
+        @Override
+        public PageParameters getPageParameters() {
+            throw newException();
+        }
+
+        @Override
+        public void respond(IRequestCycle irc) {
+            throw newException();
+        }
+
+        @Override
+        public void detach(IRequestCycle irc) {
+            throw newException();
+        }
+
+        @Override
+        public ILogData getLogData() {
+            throw newException();
+        }
     }
 
 }

@@ -29,9 +29,9 @@ import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.ParamService;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.UjoEvent;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import org.ujorm.wicket.component.grid.CommonAction;
 import org.ujorm.wicket.component.grid.ListDataProvider;
-import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 
 
 /**
@@ -79,21 +79,21 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
     @Override
     public void onEvent(IEvent<?> argEvent) {
         final UjoEvent<U> event = UjoEvent.get(argEvent);
-        if (event != null) {
-            if (event.isAction(ParamFinder.FILTER_ACTION)) {
+        switch (event.getAction()) {
+            case ParamFinder.FILTER_ACTION:
                 reloadTable(event, false);
-            }
-            else if (event.isAction(CommonActions.LOGIN_CHANGED)) {
+                break;
+            case CommonActions.LOGIN_CHANGED:
                 reloadTable(event, true);
-            }
-            else if (event.isAction(CommonActions.UPDATE)) {
+                break;
+            case CommonActions.UPDATE:
                 if (event.showDialog()) {
                     editDialog.show(event, Model.of("Edit parameter"));
                 } else {
                     paramService.updateValue(event.getDomain());
                     reloadTable(event, true);
                 }
-            }
+                break;
         }
     }
 

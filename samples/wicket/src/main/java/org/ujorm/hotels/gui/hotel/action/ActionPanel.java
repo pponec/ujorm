@@ -33,7 +33,7 @@ import static org.ujorm.wicket.CommonActions.*;
  */
 public class ActionPanel<U extends Hotel> extends GenericPanel<U> {
 
-        /** Default value is the same like the field */
+    /** Default value is the same like the field */
     public static final String BOOKING = "BOOKING";
 
     @SpringBean
