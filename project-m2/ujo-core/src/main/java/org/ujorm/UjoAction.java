@@ -66,7 +66,7 @@ public interface UjoAction {
      */
     public static final int ACTION_COPY = 21;
     /**
-     * An authorization action (of a Key) for a method: toString()
+     * An authorization action (of a Key) for a method: {@link org.ujorm.extensions.SuperAbstractUjo#toString()}
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_TO_STRING = 22;
