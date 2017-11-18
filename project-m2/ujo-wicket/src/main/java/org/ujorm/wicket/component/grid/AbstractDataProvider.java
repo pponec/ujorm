@@ -17,6 +17,7 @@ package org.ujorm.wicket.component.grid;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -218,6 +219,9 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     public <V> KeyColumn<? super U, V> createKeyColumn(Key<? super U, V> column) {
         if (column.isTypeOf(Boolean.class)) {
             return KeyColumnBoolean.of(column, isSortingEnabled((Key) column));
+        }
+        if (column.isTypeOf(BigDecimal.class)) {
+            return KeyColumnDecimal.of(column, isSortingEnabled((Key)column), "decimal");
         }
         if (column.isTypeOf(Number.class)) {
             return KeyColumn.of(column, isSortingEnabled((Key)column), "number");
