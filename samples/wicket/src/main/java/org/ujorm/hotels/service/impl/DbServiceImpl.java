@@ -33,16 +33,13 @@ import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.DbService;
+import static org.ujorm.hotels.service.DbService.ONE_DAY;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.spring.CommonDao;
+import static org.ujorm.tools.Check.hasLength;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
-import static org.ujorm.hotels.service.DbService.ONE_DAY;
-import static org.ujorm.orm.utility.OrmTools.hasLength;
-import static org.ujorm.orm.utility.OrmTools.hasLength;
-import static org.ujorm.orm.utility.OrmTools.hasLength;
-import static org.ujorm.orm.utility.OrmTools.hasLength;
 /**
  * Common database service implementations
  * @author ponec

@@ -22,7 +22,7 @@ import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.component.toolbar.AbstractToolbar;
-import static org.ujorm.orm.utility.OrmTools.hasLength;
+import static org.ujorm.tools.Check.hasLength;
 
 /**
  * The common action panel
