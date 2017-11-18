@@ -34,7 +34,7 @@ import org.ujorm.core.XmlHeader;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
-import org.ujorm.orm.utility.OrmTools;
+import static org.ujorm.tools.Check.hasLength;
 
 /**
  * A logical database description.
@@ -142,7 +142,7 @@ final public class MetaRoot extends AbstractMetaModel {
         if (super.readOnly()) {
             throw new UnsupportedOperationException("The internal state is 'read only'");
         }
-        if (OrmTools.hasLength(databaseId)) for (MetaDatabase db : DATABASES.getList(this)) { MetaDatabase.ID.of(db);
+        if (hasLength(databaseId)) for (MetaDatabase db : DATABASES.getList(this)) { MetaDatabase.ID.of(db);
             if (MetaDatabase.ID.equals(db, databaseId)) {
                 DATABASES.getList(this).remove(db);
                 return db;

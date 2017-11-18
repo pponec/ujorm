@@ -27,8 +27,8 @@ import org.ujorm.extensions.AbstractUjo;
 import org.ujorm.extensions.UjoLockable;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MoreParams;
-import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Check;
+import static org.ujorm.tools.Check.hasLength;
 
 /**
  * Abstract Metamodel
@@ -119,7 +119,7 @@ abstract public class AbstractMetaModel extends AbstractUjo implements UjoLockab
     , final Key<UJO, VALUE> key
     , final VALUE value
     ) {
-        if (key.isDefault(ujo) && OrmTools.hasLength(value)) {
+        if (key.isDefault(ujo) && hasLength(value)) {
             key.setValue(ujo, value);
         }
     }

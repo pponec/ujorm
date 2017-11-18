@@ -57,8 +57,8 @@ import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.ao.UjoStatement;
-import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Assert;
+import static org.ujorm.tools.Check.hasLength;
 
 /**
  * A logical database description.
@@ -223,7 +223,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             @SuppressWarnings("unchecked")
             String schemaKeyName = SCHEMA.of(this);
             RelationToMany relation = new RelationToMany
-                    ( OrmTools.hasLength(schemaKeyName)
+                    ( hasLength(schemaKeyName)
                     ? schemaKeyName
                     : RelationToMany.class.getSimpleName()
                     , database.getClass());
@@ -541,7 +541,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         for (MetaTable table : tables) {
             if (table.isTable()) {
                 String schema = MetaTable.SCHEMA.of(table);
-                if (OrmTools.hasLength(schema)) {
+                if (hasLength(schema)) {
                     result.add(schema);
                 }
             }
@@ -555,7 +555,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     @Nullable
     MetaTable findTable(String id) {
 
-        if (OrmTools.hasLength(id)) for (MetaTable table : TABLES.getList(this)) {
+        if (hasLength(id)) for (MetaTable table : TABLES.getList(this)) {
             if (MetaTable.ID.equals(table, id)) {
                 return table;
             }
@@ -568,7 +568,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      */
     @Nullable
     MetaProcedure findProcedure(String id) {
-        if (OrmTools.hasLength(id)) for (MetaProcedure procedure : PROCEDURES.getList(this)) {
+        if (hasLength(id)) for (MetaProcedure procedure : PROCEDURES.getList(this)) {
             if (MetaProcedure.ID.equals(procedure, id)) {
                 return procedure;
             }

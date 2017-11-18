@@ -39,7 +39,7 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.tools.Assert;
 import static org.ujorm.core.UjoTools.SPACE;
-import static org.ujorm.orm.utility.OrmTools.hasLength;
+import static org.ujorm.tools.Check.hasLength;
 import static org.ujorm.tools.Check.isEmpty;
 
 /** Dialect for the MSSQL tested on SQL Server 2008 R2 with Microsoft SQL Server JDBC Driver 3.0

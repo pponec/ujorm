@@ -44,8 +44,8 @@ import org.ujorm.orm.annot.View;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.impl.TableWrapperImpl;
 import static org.ujorm.orm.metaModel.MetaParams.INDEX_MODEL_BUILDER;
-import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Assert;
+import static org.ujorm.tools.Check.hasLength;
 import org.ujorm.tools.MsgFormatter;
 
 /**
@@ -340,7 +340,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     @Nullable
     MetaColumn findColumn(String id) {
 
-        if (OrmTools.hasLength(id)) for (MetaColumn column : COLUMNS.of(this)) {
+        if (hasLength(id)) for (MetaColumn column : COLUMNS.of(this)) {
             if (MetaColumn.ID.equals(column, id)) {
                 return column;
             }
@@ -351,7 +351,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Finds the first relation by ID or returns null. The method is for internal use only. */
     MetaRelation2Many findRelation(String id) {
 
-        if (OrmTools.hasLength(id)) for (MetaRelation2Many relation : RELATIONS.of(this)) {
+        if (hasLength(id)) for (MetaRelation2Many relation : RELATIONS.of(this)) {
             if (MetaRelation2Many.ID.equals(relation, id)) {
                 return relation;
             }

@@ -25,7 +25,6 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +46,7 @@ import org.ujorm.orm.metaModel.MetaPKey;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.tools.Assert;
+import static org.ujorm.tools.Check.hasLength;
 
 /**
  * Many useful methods for
@@ -352,7 +352,7 @@ final public class OrmTools {
             , final List<Object> primaryKeys
             ) {
         Criterion result = crn;
-        if (OrmTools.hasLength(primaryKeys)) {
+        if (hasLength(primaryKeys)) {
             final MetaPKey pKey = MetaTable.PK.of(table);
             Assert.isTrue(pKey.getCount()==1, "There are supported objects with a one primary keys only");
 
@@ -361,35 +361,7 @@ final public class OrmTools {
         }
         return result!=null ? result : table.getFirstPK().getKey().forNone();
     }
-
-
-    /** Is the Text not {@code null} and not empty ?
-     * @deprecated Use the method {@link #hasLength(java.lang.CharSequence)} rather.
-     */
-    @Deprecated
-    public static boolean isFilled(final CharSequence text) {
-        return hasLength(text);
-    }
-
-    /** Is the Text not {@code null} and not empty ? */
-    public static boolean hasLength(final CharSequence text) {
-        return text!=null && text.length()>0;
-    }
-
-    /** Is the Collection not {@code null} and not empty ? */
-    public static boolean hasLength(final Collection collection) {
-        return collection!=null && !collection.isEmpty();
-    }
-
-    /** Returns true, if the argument text is not null and not empty. */
-    public static boolean hasLength(final Object value) {
-        final boolean result = value instanceof CharSequence
-            ? OrmTools.hasLength((CharSequence)value)
-            : value!=null
-            ;
-        return result;
-    }
-
+            
     /** Clone the argument entity using all direct keys
      * including the original ORM session, if any.
      * All lazy relations will be loaded.

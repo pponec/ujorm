@@ -29,15 +29,15 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
+import static org.ujorm.logger.UjoLogger.*;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.SqlDialectEx;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.ao.CommentPolicy;
-import org.ujorm.orm.utility.OrmTools;
-import static org.ujorm.logger.UjoLogger.*;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
+import static org.ujorm.tools.Check.hasLength;
 
 /**
  * A service method for the MetaDatabase class.
@@ -301,7 +301,7 @@ public class MetaDbService {
         for (String schema : schemas) {
             sql.setLength(0);
             db.getDialect().printCreateSchema(schema, sql);
-            if (OrmTools.hasLength(sql)) {
+            if (hasLength(sql)) {
                 try {
                     stat.executeUpdate(sql.toString());
                 } catch (SQLException e) {
