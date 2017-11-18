@@ -29,7 +29,7 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.component.toolbar.AbstractToolbar;
 import org.ujorm.wicket.component.tools.LocalizedModel;
-import static org.ujorm.orm.utility.OrmTools.hasLength;
+import static org.ujorm.tools.Check.hasLength;
 
 /**
  * The common action panel
