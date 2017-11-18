@@ -19,9 +19,9 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.hotels.entity.ParamValue;
+import static org.ujorm.tools.Check.hasLength;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.component.toolbar.AbstractToolbar;
-import static org.ujorm.tools.Check.hasLength;
 
 /**
  * The finder component
@@ -53,14 +53,13 @@ public final class ParamFinder<U extends ParamValue> extends AbstractToolbar<U> 
     @Override
     protected void buildCriterion() {
         Criterion<ParamValue> result = defaultCriterion;
-
-        if (hasLength(searchParam.getValue())) {
-            result = result.and(ParamValue.KEY_NAME$.where(Operator.CONTAINS_CASE_INSENSITIVE
-                   , searchParam.getValue()));
+        String value = searchParam.getValue();
+        if (hasLength(value)) {
+            result = result.and(ParamValue.KEY_NAME$.where
+                   ( Operator.CONTAINS_CASE_INSENSITIVE
+                   , value));
         }
-
-        final Criterion<U> resultCast = result.cast();
-        getCriterion().setObject(resultCast);
+        getCriterion().setObject(result.cast());
     }
 
     /** Default action name is {@link CommonActions#FILTER} */

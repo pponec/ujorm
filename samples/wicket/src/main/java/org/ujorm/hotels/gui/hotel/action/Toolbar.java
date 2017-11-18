@@ -20,9 +20,9 @@ import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
+import static org.ujorm.tools.Check.hasLength;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.component.toolbar.AbstractToolbar;
-import static org.ujorm.tools.Check.hasLength;
 
 /**
  * The common action panel
@@ -56,18 +56,18 @@ public final class Toolbar<U extends Hotel> extends AbstractToolbar<U> {
     @Override
     protected void buildCriterion() {
         Criterion<Hotel> result = defaultCriterion;
-
-        if (hasLength(searchHotel.getValue())) {
-            result = result.and(Hotel.NAME.where(Operator.STARTS_CASE_INSENSITIVE
-                   , searchHotel.getValue()));
+        
+        String value = searchHotel.getValue();
+        if (hasLength(value)) {
+            result = result.and(Hotel.NAME.where(Operator.STARTS_CASE_INSENSITIVE, value));
         }
-        if (hasLength(searchCity.getValue())) {
-            result = result.and(Hotel.CITY.add(City.NAME).where(Operator.STARTS_CASE_INSENSITIVE
-                   , searchCity.getValue()));
+        
+        value = searchCity.getValue();
+        if (hasLength(value)) {
+            result = result.and(Hotel.CITY.add(City.NAME).where(Operator.STARTS_CASE_INSENSITIVE, value));
         }
 
-        final Criterion<U> resultCast = result.cast();
-        getCriterion().setObject(resultCast);
+        getCriterion().setObject(result.cast());
     }
 
     /** Default action name is {@link CommonActions#FILTER} */
