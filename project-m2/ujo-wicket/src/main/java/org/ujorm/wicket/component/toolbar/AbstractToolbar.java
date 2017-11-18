@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.ThrottlingSettings;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.form.AbstractChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -98,7 +99,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
         final TextField result = new TextField(componentId, new Model(), type);
         result.add(new AttributeModifier("placeholder", placeholder));
         result.setOutputMarkupId(true);
-        result.add(createChangeBehavior(result));
+        addChangeBehavior(result);
         return result;
     }
 
@@ -117,8 +118,8 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
      * @param field Field is not used by default, however it can be a switch for different results for example.
      * @return
      */
-    protected AjaxEventBehavior createChangeBehavior(final FormComponent field) {
-        return new AjaxFormComponentUpdatingBehavior("keyup") {
+    protected void addChangeBehavior(@Nonnull final FormComponent field) {
+        final AjaxEventBehavior behavior = new AjaxFormComponentUpdatingBehavior("keyup") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 buildCriterion();
@@ -132,6 +133,21 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
                         ("thrId", DEFAULT_DELAY, true));
             }
         };
+        field.add(behavior);
+    }
+
+    /** Create an Updating Behavior with "onchange" event for Combo
+     * @param field Field is not used by default, however it can be a switch for different results for example.
+     * @return
+     */
+    protected void addChangeBehavior(@Nonnull final AbstractChoice field) {
+        final AjaxEventBehavior behavior =  new AjaxFormComponentUpdatingBehavior("onchange") {
+            @Override protected void onUpdate(AjaxRequestTarget target) {
+                buildCriterion();
+                AbstractToolbar.this.onUpdate(target);
+            }
+        };
+        field.add(behavior);
     }
 
     /** On update event */
