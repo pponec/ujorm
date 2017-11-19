@@ -120,20 +120,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
      * @return
      */
     protected void addChangeBehavior(@Nonnull final FormComponent field) {
-        final AjaxEventBehavior behavior = new AjaxFormComponentUpdatingBehavior("keyup") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-                buildCriterion();
-                AbstractToolbar.this.onUpdate(target);
-            }
-
-            @Override
-            protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
-                super.updateAjaxAttributes(attributes);
-                attributes.setThrottlingSettings(new ThrottlingSettings
-                        ("thrId", DEFAULT_DELAY, true));
-            }
-        };
+        final AjaxEventBehavior behavior = createAjaxUpdateingBehaviorWithDelay();
         field.add(behavior);
     }
 
@@ -142,13 +129,36 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
      * @return
      */
     protected void addChangeBehavior(@Nonnull final AbstractChoice field) {
-        final AjaxEventBehavior behavior =  new AjaxFormComponentUpdatingBehavior("onchange") {
-            @Override protected void onUpdate(AjaxRequestTarget target) {
+        field.add(createAjaxUpdateingBehavior("onchange"));
+        field.add(createAjaxUpdateingBehavior("onkeyup"));
+    }
+    
+    /** Create new AjaxFormComponentUpdatingBehavior with delay 300 ms. */
+    protected AjaxFormComponentUpdatingBehavior createAjaxUpdateingBehaviorWithDelay() {
+        return new AjaxFormComponentUpdatingBehavior("keyup") {
+            @Override
+            protected void onUpdate(final AjaxRequestTarget target) {
                 buildCriterion();
                 AbstractToolbar.this.onUpdate(target);
             }
+
+            @Override
+            protected void updateAjaxAttributes(final AjaxRequestAttributes attributes) {
+                super.updateAjaxAttributes(attributes);
+                attributes.setThrottlingSettings(new ThrottlingSettings
+                                ("thrId", DEFAULT_DELAY, true));
+            }
         };
-        field.add(behavior);
+    }
+    
+    /** Create new AjaxFormComponentUpdatingBehavior with no delay. */
+    protected AjaxEventBehavior createAjaxUpdateingBehavior(final String jsEvent) {
+        return new AjaxFormComponentUpdatingBehavior(jsEvent) {
+            @Override protected void onUpdate(final AjaxRequestTarget target) {
+                 buildCriterion();
+                 AbstractToolbar.this.onUpdate(target);
+            }
+        };
     }
 
     /** On update event */
