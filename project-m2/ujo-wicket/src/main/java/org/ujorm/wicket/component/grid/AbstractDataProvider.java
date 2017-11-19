@@ -95,11 +95,13 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     /** Data size */
     protected Long size;
     /** Data criterion model for filtering the data resource */
-    protected IModel<Criterion<U>> filter;
+    @Nonnull
+    protected final IModel<Criterion<U>> filter;
     /** Data criterion model for highlighting data rows */
     protected IModel<Criterion<U>> highlighting;
     /** Visible table columns */
-    private List<IColumn<U, ?>> columns = new ArrayList<IColumn<U, ?>>();
+    @Nonnull
+    private final List<IColumn<U, ?>> columns = new ArrayList<>();
     /** Default column sorting for the method {@link #addColumn(org.ujorm.Key) }
      * where the feature is enabled by default
      */

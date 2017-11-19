@@ -45,9 +45,10 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
     protected static final Duration DEFAULT_DELAY = Duration.milliseconds(400);
 
     /** Model criterion */
-    private IModel<Criterion<U>> criterionModel = Model.of();
+    @Nonnull
+    private final IModel<Criterion<U>> criterionModel = Model.of();
 
-    public AbstractToolbar(String id) {
+    public AbstractToolbar(@Nonnull final String id) {
         super(id);
     }
 
