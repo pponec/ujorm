@@ -14,6 +14,7 @@ package org.ujorm.wicket.component.toolbar;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import java.util.Arrays;
 import javax.annotation.Nonnull;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -23,6 +24,7 @@ import org.apache.wicket.ajax.attributes.ThrottlingSettings;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.AbstractChoice;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -34,6 +36,7 @@ import org.ujorm.Ujo;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.UjoEvent;
+import org.ujorm.wicket.component.tools.ChoiceRendererNullable;
 
 /**
  * The common Toolbar panel
@@ -99,6 +102,19 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
     protected TextField createSearchFiled(String componentId, Class<?> type, IModel<String> placeholder) {
         final TextField result = new TextField(componentId, new Model(), type);
         result.add(new AttributeModifier("placeholder", placeholder));
+        result.setOutputMarkupId(true);
+        addChangeBehavior(result);
+        return result;
+    }
+    
+    /** Create new DropDownChoice component */
+    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final E defaultValue) {
+        final DropDownChoice<E> result = new DropDownChoice<E>
+           ( id
+           , Arrays.asList(defaultValue.getDeclaringClass().getEnumConstants())
+           , new ChoiceRendererNullable<>(this));
+        
+        result.setModel(Model.of(defaultValue));
         result.setOutputMarkupId(true);
         addChangeBehavior(result);
         return result;
