@@ -31,7 +31,7 @@ import static org.ujorm.validator.impl.ValidatorFactory.mandatory;
 
 /** Key of persistent parameter */
 @Table("param_key")
-final public class ParamKey extends OrmTable<ParamKey> {
+public final class ParamKey extends OrmTable<ParamKey> {
 
     /** Unique index name */
     private static final String UNIQUE_PARAM_KEY = "idx_unique_param_key";

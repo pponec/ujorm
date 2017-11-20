@@ -21,7 +21,7 @@ import static org.ujorm.validator.impl.ValidatorFactory.range;
 
 /** Reservation */
 @Table("demo_booking")
-public class Booking extends OrmTable<Booking> {
+public final class Booking extends OrmTable<Booking> {
     /** Index name */
     private static final String INDEX_NAME="idx_booking";
 

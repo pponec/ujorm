@@ -17,7 +17,7 @@ import static org.ujorm.validator.impl.ValidatorFactory.min;
 
 /** Hotel */
 @Table("demo_hotel")
-public class Hotel extends OrmTable<Hotel> {
+public final class Hotel extends OrmTable<Hotel> {
     /** Index name */
     private static final String INDEX_HOTEL_NAME="idx_hotel_name";
 

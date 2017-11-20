@@ -15,7 +15,7 @@ import static org.ujorm.validator.impl.ValidatorFactory.range;
 
 /** City with Country */
 @Table("demo_city")
-public class City extends OrmTable<City> {
+public final class City extends OrmTable<City> {
 
     /** Unique index name */
     private static final String UNIQUE_CITY = "idx_unique_city";
