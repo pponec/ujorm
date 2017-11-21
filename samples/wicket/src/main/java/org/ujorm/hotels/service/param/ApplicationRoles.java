@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.hotels.entity.enums.Module;
+import org.ujorm.hotels.entity.enums.ModuleEnum;
 import org.ujorm.hotels.service.impl.AbstractModuleParams;
 import org.ujorm.hotels.service.param.annot.PersonalParam;
 import org.ujorm.orm.annot.Comment;
@@ -28,7 +28,7 @@ import org.ujorm.orm.annot.Comment;
  * Common database service implementations
  * @author Ponec
  */
-@Service("applRole")
+@Service("applRoles")
 public class ApplicationRoles<U extends ApplicationRoles> extends AbstractModuleParams {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationRoles.class);
 
@@ -48,11 +48,11 @@ public class ApplicationRoles<U extends ApplicationRoles> extends AbstractModule
     static { f.lock(); }
 
     @Override
-    public Module getModule() {
-        return Module.ROLE;
+    public ModuleEnum getModule() {
+        return ModuleEnum.ROLE;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Generated getters">
+    // --- Generated Getters / Setters powered by: UjoCodeGenerator-1.1.2.nbm ---
 
     /** The Manager role of a user */
     public Boolean getManager() {
@@ -86,7 +86,5 @@ public class ApplicationRoles<U extends ApplicationRoles> extends AbstractModule
         final Boolean result = getService();
         return result != null && result;
     }
-
-    //</editor-fold>
-
+    
 }

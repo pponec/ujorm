@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.hotels.entity.enums.Module;
+import org.ujorm.hotels.entity.enums.ModuleEnum;
 import org.ujorm.hotels.service.impl.AbstractModuleParams;
 import org.ujorm.hotels.service.param.annot.PersonalParam;
 import org.ujorm.orm.annot.Comment;
@@ -39,7 +39,7 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     @PersonalParam
     public static final Key<ApplicationParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
     @Comment("The production application is running")
-    public static final Key<ApplicationParams, Boolean> PRODUCTION = f.newKey("Production", true);
+    public static final Key<ApplicationParams, Boolean> DEBUG_MODE = f.newKey("DebugMode", false);
     @Comment("Parameter Test1 for the system")
     public static final Key<ApplicationParams, String> TEST1 = f.newKey("Test1", "A");
     @Comment("Parameter Test2 for the user")
@@ -49,11 +49,11 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     static { f.lock(); }
 
     @Override
-    public Module getModule() {
-        return Module.HOTEL;
+    public ModuleEnum getModule() {
+        return ModuleEnum.APPLICATION;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Generated getters">
+     // --- Generated Getters / Setters powered by: UjoCodeGenerator-1.1.2.nbm ---
 
     /** Count of rows per a page in the table for a user */
     public Integer getRowsPerPage() {
@@ -61,13 +61,13 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     }
 
     /** The production application is running */
-    public Boolean getProduction() {
-        return PRODUCTION.of(this);
+    public Boolean getDebugMode() {
+        return DEBUG_MODE.of(this);
     }
 
     /** The production application is running */
-    public boolean isProduction() {
-        final Boolean result = getProduction();
+    public boolean isDebugMode() {
+        final Boolean result = getDebugMode();
         return result != null && result;
     }
 
@@ -81,5 +81,4 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
         return TEST2.of(this);
     }
 
-    //</editor-fold>
 }

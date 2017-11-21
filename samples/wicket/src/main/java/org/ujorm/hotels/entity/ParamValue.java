@@ -19,7 +19,7 @@ package org.ujorm.hotels.entity;
 import java.time.LocalDateTime;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.hotels.entity.enums.Module;
+import org.ujorm.hotels.entity.enums.ModuleEnum;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.annot.Column;
@@ -69,7 +69,7 @@ public final class ParamValue extends OrmTable<ParamValue> {
     /** Composite KeyName */
     public static final Key<ParamValue, String> KEY_NAME$ = PARAM_KEY.add(ParamKey.NAME);
     /** Composite KeyModule */
-    public static final Key<ParamValue, Module> KEY_MODULE$ = PARAM_KEY.add(ParamKey.MODULE);
+    public static final Key<ParamValue, ModuleEnum> KEY_MODULE$ = PARAM_KEY.add(ParamKey.MODULE);
     /** System parameter */
     public static final Key<ParamValue, Boolean> KEY_SYSTEM$ = PARAM_KEY.add(ParamKey.SYSTEM_PARAM);
 

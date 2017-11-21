@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import javax.annotation.Nonnull;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.hotels.entity.enums.Module;
+import org.ujorm.hotels.entity.enums.ModuleEnum;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.annot.Column;
@@ -50,7 +50,7 @@ public final class ParamKey extends OrmTable<ParamKey> {
     /** Parameter module */
     @Comment("Parameter module")
     @Column(name="module_code", uniqueIndex=UNIQUE_PARAM_KEY)
-    public static final Key<ParamKey, Module> MODULE = f.newKey(mandatory(Module.class));
+    public static final Key<ParamKey, ModuleEnum> MODULE = f.newKey(mandatory(ModuleEnum.class));
     /** The System parameter has a the TRUE value and the User parameter has the FALSE value */
     @Comment("The System parameter has a the TRUE value and the User parameter has the FALSE value")
     public static final Key<ParamKey, Boolean> SYSTEM_PARAM = f.newKeyDefault(true);
@@ -80,7 +80,7 @@ public final class ParamKey extends OrmTable<ParamKey> {
     }
 
     /** Key constructor */
-    public ParamKey(@Nonnull final String name, @Nonnull final Module module) {
+    public ParamKey(@Nonnull final String name, @Nonnull final ModuleEnum module) {
         setName(name);
         setModule(module);
     }
@@ -124,12 +124,12 @@ public final class ParamKey extends OrmTable<ParamKey> {
     }
 
     /** Parameter module */
-    public Module getModule() {
+    public ModuleEnum getModule() {
         return MODULE.of(this);
     }
 
     /** Parameter module */
-    public void setModule(Module module) {
+    public void setModule(ModuleEnum module) {
         MODULE.setValue(this, module);
     }
 

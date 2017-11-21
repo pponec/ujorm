@@ -23,19 +23,19 @@ import org.ujorm.extensions.StringWrapper;
  * Parameter module
  * @author Pavel Ponec
  */
-public enum Module implements StringWrapper {
+public enum ModuleEnum implements StringWrapper {
 
-    /** The base application parameters */
-    HOTEL("hl"),
+    /** Customize the application */
+    APPLICATION("ap"),
     /** The roles of the user */
-    ROLE("re"),
-    /** Test module */
-    TEST("tt");
+    ROLE("ro"),
+    /** System mode */
+    SYSTEM("sy");
 
     /** Short identifier */
     private final String id;
 
-    private Module(String id) {
+    private ModuleEnum(String id) {
         this.id = id;
     }
 

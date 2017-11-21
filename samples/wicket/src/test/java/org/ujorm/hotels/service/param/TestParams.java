@@ -20,10 +20,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.hotels.entity.enums.Module;
+import org.ujorm.hotels.entity.enums.ModuleEnum;
 import org.ujorm.hotels.service.impl.AbstractModuleParams;
 import org.ujorm.hotels.service.param.annot.PersonalParam;
-import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.annot.Comment; 
 /**
  * Common database service implementations
  * @author Ponec
@@ -45,11 +45,13 @@ public class TestParams<U extends TestParams> extends AbstractModuleParams {
     static { f.lock(); }
 
     @Override
-    public Module getModule() {
-        return Module.TEST;
+    public ModuleEnum getModule() {
+        return ModuleEnum.SYSTEM;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Generated Getters">
+     // --- Generated Getters / Setters powered by: UjoCodeGenerator-1.1.2.nbm ---
+
+    /** Count of rows per a page in the table */
     public Integer getRowsPerPage() {
         return ROWS_PER_PAGE.of(this);
     }
@@ -65,5 +67,4 @@ public class TestParams<U extends TestParams> extends AbstractModuleParams {
     public String getTest3() {
         return TEST3.of(this);
     }
-    //</editor-fold>
 }

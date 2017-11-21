@@ -39,7 +39,7 @@ import org.ujorm.hotels.config.SpringContext;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
-import org.ujorm.hotels.entity.enums.Module;
+import org.ujorm.hotels.entity.enums.ModuleEnum;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.ModuleParams;
 import org.ujorm.hotels.service.ParamService;
@@ -81,13 +81,13 @@ implements ParamService {
 
     /** Get a value of the key for the logged user */
     @Override
-    public final <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module) {
+    public final <U extends ModuleParams, T> T getValue(Key<? super U, T> key, ModuleEnum module) {
         return getValue(key, module, authService.getLoggedCustomer());
     }
 
     /** Get a value of the key for the logged user */
     @Override
-    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module, Customer customer) {
+    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, ModuleEnum module, Customer customer) {
         final Criterion<ParamValue> crn1, crn2, crn3, crn4, crn5;
         crn1 = ParamValue.KEY_NAME$.whereEq(key.getName());
         crn2 = ParamValue.KEY_MODULE$.whereEq(module);

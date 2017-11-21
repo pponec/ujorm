@@ -22,7 +22,7 @@ import org.ujorm.Key;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.ParamValue;
-import org.ujorm.hotels.entity.enums.Module;
+import org.ujorm.hotels.entity.enums.ModuleEnum;
 
 /**
  * Service to manage parameters
@@ -36,10 +36,10 @@ public interface ParamService {
     public <U extends ModuleParams, T> T getValue(Key<? super U, T> key);
 
     /** Get a value of the key where the module have got special parameter for getter performance */
-    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module);
+    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, ModuleEnum module);
 
     /** Get a value of the key where the module have got special parameter for getter performance */
-    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, Module module, Customer customer);
+    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, ModuleEnum module, Customer customer);
 
     /** Get all parameters for a required Customer and an additional Customer */
     public List<? super ParamValue> getValues(@Nullable Customer customer, Criterion<ParamValue> criterion);

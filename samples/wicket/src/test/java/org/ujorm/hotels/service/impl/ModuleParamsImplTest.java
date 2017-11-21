@@ -42,7 +42,7 @@ public class ModuleParamsImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleParamsImplTest.class);
 
     @Inject
-    private TestParams testParams;
+    private TestParams systemParams;
     @Inject
     @Named(ParamService.CACHED)
     private ParamService paramService;;
@@ -60,7 +60,7 @@ public class ModuleParamsImplTest {
     @Test
     public void testReadValue() {
         LOGGER.info("testReadValue");
-        assertEquals(TestParams.TEST1.getDefault(), testParams.getTest1());
+        assertEquals(TestParams.TEST1.getDefault(), systemParams.getTest1());
         //
         boolean logged = authService.authenticate(getLoggedUser());
         assertEquals(true, logged);

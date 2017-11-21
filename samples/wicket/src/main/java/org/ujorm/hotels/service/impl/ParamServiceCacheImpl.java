@@ -28,7 +28,7 @@ import org.ujorm.Key;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
-import org.ujorm.hotels.entity.enums.Module;
+import org.ujorm.hotels.entity.enums.ModuleEnum;
 import org.ujorm.hotels.service.ModuleParams;
 import org.ujorm.hotels.service.ParamService;
 /**
@@ -53,7 +53,7 @@ public class ParamServiceCacheImpl extends ParamServiceImpl {
 
     /** Cache the value */
     @Override
-    public <U extends ModuleParams, T> T getValue(final Key<? super U, T> key, final Module module, final Customer customer) {
+    public <U extends ModuleParams, T> T getValue(final Key<? super U, T> key, final ModuleEnum module, final Customer customer) {
         final T result;
         final Cache cache = getObjectCache();
         final CacheKey cacheKey = new CacheKey(key.getName(), module, customer);
@@ -96,10 +96,10 @@ public class ParamServiceCacheImpl extends ParamServiceImpl {
     static class CacheKey implements Serializable {
         private final int customerId;
         private final String keyName;
-        private final Module module;
+        private final ModuleEnum module;
         private int hash;
 
-        public CacheKey(final String keyName, final Module module, final Customer customer) {
+        public CacheKey(final String keyName, final ModuleEnum module, final Customer customer) {
             Integer custId = customer != null ? customer.getId() : null;
             this.customerId = custId != null ? custId : Integer.MIN_VALUE;
             this.keyName = keyName;
