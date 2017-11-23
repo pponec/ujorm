@@ -71,6 +71,7 @@ public class SampleORM {
             sample.createMetaModel();
             sample.useInsert();
             sample.useSelect();
+            sample.useSelectWithFetch();
             sample.useSelectOuterJoin();
             sample.useBatchInsert();
             sample.useCriterions();
@@ -234,23 +235,67 @@ public class SampleORM {
     /** Now, how to select Orders from a database by Criterions? <br>
      * The generated SQL code from this example
      * will be similar like the next statement:
-     * <pre>
-     * SELECT * FROM item
-     * JOIN order ON order.id = item.id_order
-     * WHERE item.id >= 1
-     *   AND item.note LIKE '%table%'
-     *   AND order.note = 'My order';
+     * <pre class="pre">
+     * SELECT ord_item_alias.ID
+     *       , ord_item_alias.USER_ID
+     *       , ord_item_alias.NOTE
+     *       , ord_item_alias.PRICE
+     *       , ord_item_alias.fk_order
+     * FROM db1.ord_item ord_item_alias
+     * INNER JOIN db1.ord_order ord_order_alias ON ord_order_alias.ID=ord_item_alias.fk_order
+     * WHERE ord_item_alias.ID >= 1 
+     *   AND ord_item_alias.NOTE LIKE '%table%' 
+     *   AND ord_order_alias.NOTE = 'My order'
      * </pre>
      * where both parameters are passed by a 'question mark' notation
-     * for a better security.
+     * for a top security.
      */
     public void useSelect() {
-        Criterion<Item> crn = Item.ID.where(GE, 1L )
-            .and( Item.NOTE.where(CONTAINS, "table" ) )
-            .and( Item.ORDER.add(Order.NOTE).whereEq( "My order" ));
+        final Criterion<Item> crn1, crn2, crn3, crn4;
+        crn1 = Item.ID.where(GE, 1L);
+        crn2 = Item.NOTE.where(CONTAINS, "table");
+        crn3 = Item.ORDER.add(Order.NOTE).whereEq( "My order" );
+        crn4 = crn1.and(crn2).and(crn3);
 
-        for (Item item : session.createQuery(crn)) {
+        for (Item item : session.createQuery(crn4)) {
             LocalDateTime created = item.getOrder().getCreated(); // Lazy loading
+            System.out.println("Item: " + item + " // created: " + created);
+        }
+    }
+
+    /** Now, how to select Orders from a database by Criterions with fetching for the Order? <br>
+     * The generated SQL code from this example
+     * will be similar like the next statement:
+     * <pre class="pre">
+     * SELECT ord_item_alias.ID
+     *      , ord_item_alias.USER_ID
+     *      , ord_item_alias.NOTE
+     *      , ord_item_alias.PRICE
+     *      , ord_order_alias.ID
+     *      , ord_order_alias.STATE
+     *      , ord_order_alias.USER_ID
+     *      , ord_order_alias.NOTE
+     *      , ord_order_alias.CREATED
+     *      , ord_order_alias.fk_customer
+     *      , ord_order_alias.NEW_COLUMN
+     * FROM db1.ord_item ord_item_alias
+     * INNER JOIN db1.ord_order ord_order_alias ON ord_order_alias.ID=ord_item_alias.fk_order
+     * WHERE ord_item_alias.ID >= 1 
+     *   AND ord_item_alias.NOTE LIKE '%table%' 
+     *   AND ord_order_alias.NOTE = 'My order'
+     * </pre>
+     * where both parameters are passed by a 'question mark' notation
+     * for a top security.
+     */
+    public void useSelectWithFetch() {
+        final Criterion<Item> crn1, crn2, crn3, crn4;
+        crn1 = Item.ID.where(GE, 1L);
+        crn2 = Item.NOTE.where(CONTAINS, "table");
+        crn3 = Item.ORDER.add(Order.NOTE).whereEq( "My order" );
+        crn4 = crn1.and(crn2).and(crn3);
+
+        for (Item item : session.createQuery(crn4).fetchAll()) {
+            LocalDateTime created = item.getOrder().getCreated(); // Fetched on the first request
             System.out.println("Item: " + item + " // created: " + created);
         }
     }

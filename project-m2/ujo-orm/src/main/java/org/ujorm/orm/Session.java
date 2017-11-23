@@ -290,33 +290,38 @@ public class Session implements Closeable {
      *  without the Class parameter.
      * @see #createQuery(org.ujorm.criterion.Criterion)
      */
-    public final <U extends OrmUjo> Query<U> createQuery(final Criterion<U> criterion, final Class<U> aClass) {
+    public final <U extends OrmUjo> Query<U> createQuery
+        ( @Nonnull final Criterion<U> criterion
+        , @Nonnull final Class<U> aClass) {
         final MetaTable metaTable = handler.findTableModel(aClass);
         return new Query<>(metaTable, criterion, this);
     }
 
     /** The table class is derived from the first criterion column. */
-    public final <U extends OrmUjo> Query<U> createQuery(final Criterion<U> criterion) {
+    public final <U extends OrmUjo> Query<U> createQuery(@Nonnull final Criterion<U> criterion) {
         final MetaRelation2Many column = getBasicColumn(criterion);
         final MetaTable table = MetaRelation2Many.TABLE.of(column);
         return new Query<>(table, criterion, this);
     }
 
     /** Returns {@code true} if exists any database row with the required condition. */
-    public final <U extends OrmUjo> boolean exists(final Criterion<U> criterion) {
+    public final <U extends OrmUjo> boolean exists(@Nonnull final Criterion<U> criterion) {
         final MetaTable table = MetaRelation2Many.TABLE.of(getBasicColumn(criterion));
         return exists(table, criterion, table.getFirstPK().getKey());
     }
 
     /** Returns {@code true} if exists any database row for the required entity. */
-    public final <U extends OrmUjo> boolean exists(final Class<U> entity) {
+    public final <U extends OrmUjo> boolean exists(@Nonnull final Class<U> entity) {
         final MetaTable table = handler.findTableModel(entity);
         final Key pk = table.getFirstPK().getKey();
         return exists(table, pk.forAll(), pk);
     }
 
     /** Returns {@code true} if exists any database row for the required criterion. */
-    protected final <U extends OrmUjo> boolean exists( MetaTable table, Criterion<U> criterion, Key pk) {
+    protected final <U extends OrmUjo> boolean exists
+        ( @Nonnull final MetaTable table
+        , @Nullable final Criterion<U> criterion
+        , @Nonnull final Key<U,?> pk) {
         final Ujo result = new Query<>(table, criterion, this)
                 .setColumn(pk)
                 .setLimit(1)

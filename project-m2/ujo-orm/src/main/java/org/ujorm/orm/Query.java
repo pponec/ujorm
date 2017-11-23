@@ -58,6 +58,9 @@ import static org.ujorm.logger.UjoLogger.WARN;
 public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(Query.class);
+    
+    /** Prefix for generated aliases */
+    protected static final String GENERATED_ALIAS_PREFIX = "ujorm_alias_";
 
     /** The base table */
     @Nonnull
@@ -102,7 +105,12 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @param criterion If criterion is null, then the ForAll criterion is used.
      * @param session Session
      */
-    public Query(@Nonnull final MetaTable table, @Nullable final Criterion<UJO> criterion, @Nullable final Session session) {
+    public Query
+        ( @Nonnull final MetaTable table
+        , @Nullable final Criterion<UJO> criterion
+        , @Nullable final Session session) {
+            
+        Assert.notNull(table, "table");
         this.table = table;
         this.columns = null;
         this.criterion = criterion;
@@ -182,7 +190,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see Session#createQuery(org.ujorm.criterion.Criterion) createQuery(Criterion)
      * @see #setCriterion(org.ujorm.criterion.Criterion) setCriterion(..)
      */
-    public void addCriterion(Criterion<UJO> criterion) throws IllegalArgumentException {
+    public void addCriterion(@Nonnull Criterion<UJO> criterion) throws IllegalArgumentException {
         Assert.notNull(criterion, "Argument must not be {}", criterion);
 
         this.criterion = this.criterion!=null
@@ -198,11 +206,10 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see Session#createQuery(org.ujorm.criterion.Criterion) createQuery(Criterion)
      * @see #addCriterion(org.ujorm.criterion.Criterion) addCriterion(..)
      **/
-    public Query<UJO> setCriterion(Criterion<UJO> criterion) {
+    public Query<UJO> setCriterion(@Nullable final Criterion<UJO> criterion) {
         this.criterion = criterion != null
             ? criterion
-            : ((Criterion<UJO>) (Criterion) Criterion.where(true))
-            ;
+            : Criterion.where(true);
         clearDecoder();
         return this;
     }
@@ -442,8 +449,38 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         }
         return this;
     }
+    
+    /** Fetch all columns including all direct relations.
+     * Method cleans all columns assigned before.
+     * @see #addColumn(org.ujorm.Key) 
+     */
+    public Query<UJO> fetchAll() throws IllegalArgumentException {
+        clearDecoder();   
+        final List<MetaColumn> mTables = MetaTable.COLUMNS.getList(table);
+        final Set<Class> fkClass = new HashSet<>();    
+        fkClass.add(getTableModel().getClass()); // For a case of recursion relation
+        
+        if (columns == null) {
+            columns = new ArrayList<>(mTables.size());
+        } else {
+            columns.clear();
+        }
+        int order = 1;
+        for (MetaColumn mc : MetaTable.COLUMNS.getList(table)) {
+            if (mc.isForeignKey()) {
+                final boolean unique = fkClass.add(mc.getType());
+                final ColumnWrapper cw = unique
+                        ? mc
+                        : new ColumnWrapperImpl(mc, GENERATED_ALIAS_PREFIX + order++);     
+                addMissingColumn(cw, true, false);
+            } else {
+                columns.add(mc);
+            }
+        }
+        return this;       
+    }
 
-   /** Set the one column to reading from database table.
+   /** Set the one column to fetch database table(s).
     * Other columns will return a default value, no exception will be throwed.
     * <br>WARNING 1: assigning an column from a view is forbidden.
     * <br>WARNING 2: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
@@ -457,7 +494,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         Assert.notNull(mc, "Column {} was not foud in the meta-model", column.getFullName());
 
         final ColumnWrapper wColumn = column.isComposite()
-                ? new ColumnWrapperImpl(mc, column)
+                ? new ColumnWrapperImpl(mc, column) 
                 : mc;
         if (columns==null) {
             columns = new ArrayList<>(getDefaultColumns());
@@ -466,7 +503,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-   /** Set the one column to reading from database table.
+   /** Set the one column to fetch database table.
     * Other columns will return a default value, no exception will be throwed.
     * <br>WARNING: assigning an column from a view is forbidden.
     * @param column A Property to select. A composite Property is allowed however only the first item will be used.
@@ -477,7 +514,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return setColumns(false, column);
     }
 
-   /** Set an list of required columns to reading from database table.
+   /** Set an list of required columns to fetch database table(s).
     * Other columns (out of the list) will return a default value, no exception will be throwed.
     * @param addPrimaryKey If the column list does not contains a primary key then the one can be included.
     * @param columns A Key list including a compositer one to database select. The method does not check column duplicities.
@@ -489,7 +526,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return setColumns(addPrimaryKey, true, columns);
     }
 
-  /** Set an list of required columns to reading from database table.
+  /** Set an list of required columns to fetch database table(s).
     * Other columns (out of the list) will return a default value, no exception will be throwed.
     * <br>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
     * <br>WARNING 2: assigning an column from a view is forbidden.
@@ -503,7 +540,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-   /** Set an list of required columns to reading from database table.
+   /** Set an list of required columns to fetch database table(s).
     * Other columns (out of the list) will return a default value, no exception will be throwed.
     * <br>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
     * <br>WARNING 2: assigning an column from a view is forbidden.
@@ -541,11 +578,11 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @param addChilds Add all children of the <strong>foreign key</strong>.
      * @param checkDuplicities Check a duplicity column
      */
-    protected void addMissingColumn(final ColumnWrapper column, final boolean addChilds, final boolean checkDuplicities) {
-        final int hashCode = column.hashCode();
+    protected void addMissingColumn(@Nonnull final ColumnWrapper column, final boolean addChilds, final boolean checkDuplicities) {
         final MetaColumn model = column.getModel();
 
         if (checkDuplicities && !model.isForeignKey()) {
+            final int hashCode = column.hashCode();
             for (final ColumnWrapper c : columns) {
                 if (c.hashCode()==hashCode && column.equals(c)) {
                     return; // The same column is assigned
@@ -568,7 +605,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Only direct keys are supported */
-    private Key getLastProperty(Key<UJO,?> p) {
+    private Key getLastProperty(@Nonnull final Key<UJO,?> p) {
         return p.isComposite()
             ? ((CompositeKey)p).getLastKey()
             : p ;
