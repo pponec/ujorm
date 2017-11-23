@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.tools.Assert;
@@ -424,27 +425,25 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
     public static <U extends Ujo, TYPE> Criterion<U> whereNotNull(Key<U,TYPE> key) {
         return new ValueCriterion<>(key, Operator.NOT_EQ, (TYPE)null);
     }
-
+    
     /** This is an constane criterion independed on an entity.
      * The method is <strong>deprecated</strong> in the ORM, use rather a one method from
      * {@link #forAll(org.ujorm.Key) forAll} or
      * {@link #forNone(org.ujorm.Key) forNone} .
      * @see #forAll(org.ujorm.Key)
      * @see #forNone(org.ujorm.Key)
-     */
-    @SuppressWarnings("unchecked")
-    public static <U extends Ujo> Criterion<U> where(boolean value) {
-        return (Criterion<U>) (value
-            ? ValueCriterion.TRUE
-            : ValueCriterion.FALSE
-            );
+     */    @SuppressWarnings("unchecked")
+    public static <U extends Ujo> Criterion<U> where(final boolean value) {
+        return value
+            ? (Criterion<U>) ValueCriterion.TRUE
+            : (Criterion<U>) ValueCriterion.FALSE;
     }
 
     /** This is a special constant criterion independed on the key or the ujo entity. A result is the same like the parameter constant always.
      * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @see Operator#XFIXED
      */
-    public static <U extends Ujo> Criterion<U> constant(Key<U,?> key, boolean constant) {
+    public static <U extends Ujo> Criterion<U> constant(@Nonnull final Key<U,?> key, final boolean constant) {
         return new ValueCriterion<>(key, Operator.XFIXED, constant);
     }
 

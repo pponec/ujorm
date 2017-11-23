@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
@@ -61,7 +62,10 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
     }
 
     /** An undefined operator (null) is replaced by EQ. */
-    public ValueCriterion(Key<U,? extends Object> key, Operator operator, Object value) {
+    public ValueCriterion
+        ( @Nullable final Key<U,? extends Object> key
+        , @Nullable Operator operator
+        , @Nullable Object value) {
 
         if (key==null) {
             value = (Boolean) value; // Type test for the CriterionConstant.
