@@ -36,14 +36,23 @@ import javax.annotation.concurrent.Immutable;
 public class MsgFormatter {
 
     /** Parameter mark */
-    protected static final String MARK = "{}";
+    protected static final String DEFAULT_MARK = "{}";
     /** Separator */
     protected static final String SEPARATOR = ", ";
+    
+    /** The parameter mark in the template. */ 
+    private final String mark;
 
     /** Static methods are available only */
     protected MsgFormatter() {
+        this(DEFAULT_MARK);
     }
-
+    
+    /** Static methods are available only */
+    protected MsgFormatter(@Nonnull final String mark) {
+        this.mark = mark;
+    }
+    
     /**
      * Format the message, see the next correct asserts:
      * <pre class="pre">
@@ -70,10 +79,10 @@ public class MsgFormatter {
         int last = 0;
 
         for (Object arg : arguments) {
-            final int i = template.indexOf(MARK, last);
+            final int i = template.indexOf(mark, last);
             if (i >= last) {
                 result.append(template, last, i);
-                last = i + MARK.length();
+                last = i + mark.length();
                 writeValue(arg, result, true);
             } else {
                 if (last < max) {
@@ -112,8 +121,8 @@ public class MsgFormatter {
      * @param writer Writer
      * @param value Values
      */
-    protected void writeValue(@Nullable final Object value, @Nonnull final CharArrayWriter writer, final boolean mark) {
-        if (mark) {
+    protected void writeValue(@Nullable final Object value, @Nonnull final CharArrayWriter writer, final boolean marked) {
+        if (marked) {
             writer.append(value != null
                     ? value.toString()
                     : String.valueOf(value));
@@ -143,11 +152,10 @@ public class MsgFormatter {
      */
     @Nonnull
     public static String format
-        ( @Nullable final String messageTemplate
-        , @Nullable final Object... arguments)
-        {
-            return new MsgFormatter().formatMsg(messageTemplate, arguments);
-        }
+    ( @Nullable final String messageTemplate
+    , @Nullable final Object... arguments) {
+        return new MsgFormatter().formatMsg(messageTemplate, arguments);
+    }
 
     /**
      * Format the message from Object array
