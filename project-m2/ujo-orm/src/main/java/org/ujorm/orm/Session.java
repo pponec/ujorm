@@ -721,6 +721,7 @@ public class Session implements Closeable {
             statement.assignValues(decoder);
 
             if (LOGGER.isLoggable(UjoLogger.INFO)) {
+                // TODO: String msg = org.ujorm.tools.ValueFormatter.formatSql(sql, parameters); 
                 LOGGER.log(UjoLogger.INFO, "{}{}", sql, SQL_VALUES, statement.getAssignedValues());
             }
             result = statement.executeUpdate(); // execute delete statement
