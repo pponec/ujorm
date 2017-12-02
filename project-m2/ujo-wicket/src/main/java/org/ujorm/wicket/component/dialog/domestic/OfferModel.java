@@ -315,7 +315,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     /** Display column of the UjoField */
     @Nullable
     public <D extends Ujo> Key<D,U> getDisplay() {
-        return display != null ? (Key<D, U>) display.getFirstKey() : null;
+        return display != null ? (Key) display.getFirstKey() : null;
     }
 
     /** Display column of the UjoField */

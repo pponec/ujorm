@@ -34,7 +34,7 @@ public class UjoTab extends AbstractTab {
     private final String cssClass;
     /** Default class for creating a panel of the tab */
     private final Class<? extends WebMarkupContainer> panel;
-    /** Model for constructor of the Tab components */
+    /** Model for tab's component panel */
     private IModel<?> tabModel;
     /** Optional visible model */
     private IModel<Boolean> visibleModel;
@@ -85,9 +85,10 @@ public class UjoTab extends AbstractTab {
         return tabModel;
     }
 
-    /** Model for constructor of the Tab components */
-    public void setTabModel(IModel<?> tabModel) {
+    /** Model for tab's component panel */
+    public UjoTab setTabModel(IModel<?> tabModel) {
         this.tabModel = tabModel;
+        return this;
     }
 
     /** Model for constructor of the Tab components */

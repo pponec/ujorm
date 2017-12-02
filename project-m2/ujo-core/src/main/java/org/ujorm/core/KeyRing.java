@@ -17,6 +17,8 @@
 package org.ujorm.core;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +46,7 @@ import org.ujorm.tools.MsgFormatter;
  */
 @Immutable
 @SuppressWarnings("deprecation")
-public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
+public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
     static final long serialVersionUID = 20140128L;
 
     /** Property Separator */
@@ -56,11 +58,11 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
             + PROPERTY_SEPARATOR
             ;
     /** The the domain class of related Keys. The value can be {@code null} if the Key array is empty. */
-    private Class<UJO> type;
+    private Class<U> type;
     /** Property size */
     private int size;
     /** Transient keys */
-    transient protected Key<UJO, ?>[] keys;
+    transient protected Key<U, ?>[] keys;
     /** Default hash code. */
     transient private int hashCode;
 
@@ -69,7 +71,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @param keys Property array
      * @see #of(java.lang.Class, org.ujorm.Key<T,?>[])
      */
-    public KeyRing(Key<UJO, ?>... keys) {
+    public KeyRing(Key<U, ?>... keys) {
         this(null, keys);
     }
 
@@ -79,7 +81,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @param keys Property array
      * @see #of(java.lang.Class, org.ujorm.Key<T,?>[])
      */
-    protected KeyRing(Class<UJO> domainClass, Key<UJO, ?>... keys) {
+    protected KeyRing(Class<U> domainClass, Key<U, ?>... keys) {
         this.type = domainClass;
         this.keys = keys;
         this.size = keys.length;
@@ -88,7 +90,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     /** The the domain class of related Keys.
      * The value can be {@code null} if the Key array is empty. */
     @Override
-    public Class<UJO> getType() {
+    public Class<U> getType() {
         if (type==null) {
             type = getBaseType(keys);
         }
@@ -104,7 +106,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public Key<UJO, ?> findDirectKey(final String name, final boolean throwException) throws IllegalArgumentException {
+    public <T> Key<U, T> findDirectKey(final String name, final boolean throwException) throws IllegalArgumentException {
         int nameHash = name.hashCode();
 
         for (Key prop : keys) {
@@ -121,7 +123,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     @Override
-    public final Key<UJO, ?> findDirectKey(final Ujo ujo, final String name, final boolean throwException) throws IllegalArgumentException {
+    public final <T> Key<U, T> findDirectKey(final Ujo ujo, final String name, final boolean throwException) throws IllegalArgumentException {
         return findDirectKey(ujo, name, UjoAction.DUMMY, true, throwException);
     }
 
@@ -135,7 +137,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      */
     @SuppressWarnings("deprecation")
     @Override
-    public Key<UJO, ?> findDirectKey(final Ujo ujo, final String name, final UjoAction action, final boolean result, final boolean throwException) throws IllegalArgumentException {
+    public <T> Key<U, T> findDirectKey(final Ujo ujo, final String name, final UjoAction action, final boolean result, final boolean throwException) throws IllegalArgumentException {
         if (ujo == null) {
             return null;
         }
@@ -163,7 +165,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Key find(String names, boolean throwException) {
+    public <T> Key<U,T> find(String names, boolean throwException) {
         if (names.indexOf(KeyRing.PROPERTY_SEPARATOR) < 0) {
             return findDirectKey(names, throwException);
         }
@@ -207,31 +209,41 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @return .
      */
     @Override
-    public Key<UJO, ?> find(String name) throws IllegalArgumentException {
+    public <T> Key<U,T> find(String name) throws IllegalArgumentException {
         return find(name, true);
     }
 
     /** Get The First Keys */
     @Override
-    public Key<UJO, ?> getFirstKey() {
-        return get(0);
-    }
-
-    /** Get The First value */
-    public Object getFirstValue(UJO ujo) {
-        return get(0).of(ujo);
+    public <T> Key<U, T> getFirstKey() {
+        return (Key<U, T>) get(0);
     }
 
     /** Get The Last Keys */
     @Override
-    public Key<UJO, ?> getLastKey() {
-        return get(size - 1);
+    public <T> Key<U,T> getLastKey() {
+        return (Key<U,T>) get(size - 1);
+    }
+
+    /** Get The First value */
+    public final Object getFirstValue(@Nonnull final U ujo) {
+        return getValue(ujo, 0);
+    }
+
+    /** Get The First value */
+    public final Object getLastValue(@Nonnull final U ujo) {
+        return getValue(ujo, this.size - 1);
+    }
+
+    /** Get The First value */
+    public final Object getValue(@Nonnull final U ujo, int i) {
+        return get(i).of(ujo);
     }
 
     /** Get one Property */
     @Override
-    public Key<UJO, ?> get(int i) {
-        return keys[i];
+    public <T> Key<U,T> get(int i) {
+        return (Key<U,T>) keys[i];
     }
 
     /** Returns or create UjoManager.
@@ -255,16 +267,16 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** Create Key Iterator */
     @Override
-    public Iterator<Key<UJO, Object>> iterator() {
-        return new Iterator<Key<UJO, Object>>() {
+    public final Iterator<Key<U, Object>> iterator() {
+        return new Iterator<Key<U, Object>>() {
             int i = -1;
 
             @Override public boolean hasNext() {
                 return (i + 1) < size;
             }
 
-            @Override public Key<UJO,Object> next() {
-                return (Key<UJO,Object>) get(++i);
+            @Override public Key<U,Object> next() {
+                return (Key<U,Object>) get(++i);
             }
 
             /** The method is not supported. */
@@ -285,10 +297,10 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** Create new Instance of the Base Ujo object */
     @Override
-    public UJO newBaseUjo() throws IllegalStateException {
+    public U newBaseUjo() throws IllegalStateException {
         try {
             @SuppressWarnings("unchecked")
-            UJO result = (UJO) type.newInstance();
+            final U result = (U) type.newInstance();
             return result;
 
         } catch (RuntimeException | ReflectiveOperationException e) {
@@ -307,11 +319,10 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 //    public boolean contains(Object key) {
 //        return Arrays.asList(keys).contains(key);
 //    }
-//
 
     /** Returns true if list contains key from the parameter. */
     @Override
-    public boolean contains(Key<?, ?> o) {
+    public boolean contains(final Key<?, ?> o) {
         for (Key p : keys) {
             if (p.equals(o)) {
                 return true;
@@ -336,7 +347,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof KeyRing) {
-            final KeyRing<UJO> o = (KeyRing<UJO>) obj;
+            final KeyRing<U> o = (KeyRing<U>) obj;
             if (this.size() != o.size()) {
                 return false;
             }
@@ -372,7 +383,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** Serialization method */
     @SuppressWarnings("unused")
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void writeObject(@Nonnull final ObjectOutputStream out) throws IOException {
         out.writeObject(this.getType());
         out.writeObject(createPropertyNames());
         out.writeObject(createAliasNames());
@@ -380,8 +391,8 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** De-serialization method */
     @SuppressWarnings({"unused", "unchecked"})
-    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-        this.type = (Class<UJO>) in.readObject();
+    private void readObject(@Nonnull final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        this.type = (Class<U>) in.readObject();
         final String[] nameProperties = (String[]) in.readObject();
         final String[][] spaces = (String[][]) in.readObject();
         this.keys = restoreProperties(type, nameProperties, spaces);
@@ -420,8 +431,8 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** Create Keys */
     @SuppressWarnings("unchecked")
-    private Key<UJO, ?>[] restoreProperties(Class type, String[] nameProperties, String[][] spaces) {
-        final Key<UJO, ?>[] result = new Key[nameProperties.length];
+    private Key<U, ?>[] restoreProperties(@Nonnull final Class type, @Nonnull final String[] nameProperties, @Nonnull final String[][] spaces) {
+        final Key<U, ?>[] result = new Key[nameProperties.length];
         final KeyList<?> propertyList = getUjoManager().readKeys(type);
         for (int i = 0; i < nameProperties.length; i++) {
             final String pNameRaw = nameProperties[i];
@@ -444,7 +455,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @return If the keys are {@code null}, than the result is the {@code null} too.
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo> KeyRing<UJO> of(Key<? super UJO, ?> key) {
+    public static <UJO extends Ujo> KeyRing<UJO> of(@Nonnull final Key<? super UJO, ?> key) {
         return key != null
              ? new KeyRing<>((Class<UJO>) key.getDomainType(), new Key[] {key})
              : null;
@@ -456,7 +467,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @return If the keys are {@code null}, than the result is the {@code null} too.
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, @Nonnull Key<? super UJO, ?>... keys) {
+    public static <UJO extends Ujo> KeyRing<UJO> of(@Nonnull final Class<UJO> domainClass, @Nonnull Key<? super UJO, ?>... keys) {
         if (keys == null) {
             return null;
         }
@@ -468,7 +479,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     /** Returns all domain keys excluding the argument keys.
      * @param excludedKeys Array of the <strong>direct</strong> excluded keys.
      */
-    public static <UJO extends Ujo> KeyRing<UJO> ofExcluding(Key<?, ?>... excludedKeys) {
+    public static <UJO extends Ujo> KeyRing<UJO> ofExcluding(@Nonnull final Key<?, ?>... excludedKeys) {
         return ofExcluding(getBaseType((Key<UJO, ?>[]) excludedKeys), excludedKeys);
     }
 
@@ -477,7 +488,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @param domainClass The domain class where a not null value is recommended for better performance.
      * @param excludedKeys Array of the <strong>direct</strong> excluded keys.
      */
-    public static <UJO extends Ujo> KeyRing<UJO> ofExcluding(Class<UJO> domainClass, Key<?, ?>... excludedKeys) {
+    public static <UJO extends Ujo> KeyRing<UJO> ofExcluding(@Nonnull final Class<UJO> domainClass, Key<?, ?>... excludedKeys) {
         final List<Key<? super UJO, ?>> keys = new ArrayList<>();
         main:
         for (Key<UJO,?> key : of(domainClass)) {
@@ -495,7 +506,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @param domainClass Mandatory domain class
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass) {
+    public static <UJO extends Ujo> KeyRing<UJO> of(@Nonnull final Class<UJO> domainClass) {
         try {
             final KeyList result = domainClass.newInstance().readKeys();
             return result instanceof KeyRing
@@ -513,7 +524,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      */
     @SuppressWarnings("unchecked")
     @Nullable
-    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Collection<Key<? super UJO, ?>> keys) {
+    public static <UJO extends Ujo> KeyRing<UJO> of(@Nonnull final Class<UJO> domainClass, @Nonnull final Collection<Key<? super UJO, ?>> keys) {
         if (Check.isEmpty(keys)) {
             return null;
         }
@@ -526,19 +537,19 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     /** Create a new instance, the parameters is cloned. */
-    public static <UJO extends Ujo> KeyRing<UJO> of(Key<? super UJO, ?>... keys) {
+    public static <UJO extends Ujo> KeyRing<UJO> of(@Nonnull final Key<? super UJO, ?>... keys) {
         return of(null, keys);
     }
 
     /** Create a new instance */
-    public static <UJO extends Ujo> KeyRing<UJO> of(Collection<Key<? super UJO, ?>> keys) {
+    public static <UJO extends Ujo> KeyRing<UJO> of(@Nonnull final Collection<Key<? super UJO, ?>> keys) {
         return of(null, keys);
     }
 
     /** Returns the Common Base Type or value {code null}, of keys are empty.
      * @return If any key is from a child domain class, than the farthest child is returned.
      */
-    @PackagePrivate static <UJO extends Ujo> Class<UJO> getBaseType(Key<UJO, ?>... keys) {
+    @PackagePrivate static <UJO extends Ujo> Class<UJO> getBaseType(@Nonnull final Key<UJO, ?>... keys) {
         Class<UJO> result = null;
         for (Key<UJO, ?> key : keys) {
             if (result==null || result.isAssignableFrom(getDomainType(key))) {
@@ -551,7 +562,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     /** Returns a domain type,
      * The result is not null always where an undefine value have got result the {@link Ujo}
      */
-    private static Class<?> getDomainType(Key<?,?> key) {
+    private static Class<?> getDomainType(@Nonnull final Key<?,?> key) {
         Class<?> result = key.getDomainType();
         return result!=null ? result : Ujo.class;
     }
@@ -559,7 +570,10 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     /** Throws an {@link IllegalArgumentException} exception with the text:<br>
      * "The 'keyname' of the class was not found"
      */
-    private void throwException(final String keyName, final Class type, Throwable e) throws IllegalUjormException {
+    private void throwException
+        ( @Nonnull final String keyName
+        , @Nonnull final Class type
+        , @Nonnull final Throwable e) throws IllegalUjormException {
         final String msg = MsgFormatter.format("The key '{}' of the {} was not found", keyName, type);
         throw new IllegalUjormException(msg, e);
     }

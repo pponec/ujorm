@@ -15,19 +15,20 @@
  */
 package org.ujorm.wicket;
 
+import javax.annotation.Nonnull;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 
-public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
+public class KeyModel<U extends Ujo, T> implements IModel<T> {
 
     private static final long serialVersionUID = 1L;
     /** Object model */
-    private final UJO modelObject;
+    private final U domain;
     /** Serializable key. */
-    private final KeyRing<UJO> key;
+    private final KeyRing<U> key;
 
     /**
      * Protected Construct with a wrapped (IModel) or unwrapped (non-IModel) object and a key expression
@@ -38,8 +39,8 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
      * @see #of(org.ujorm.Ujo, org.ujorm.Key)
      */
     @SuppressWarnings("unchecked")
-    protected KeyModel(final UJO modelObject, final Key<UJO, T> key) {
-        this.modelObject = modelObject;
+    protected KeyModel(final U modelObject, final Key<U, T> key) {
+        this.domain = modelObject;
         this.key = KeyRing.of(key);
     }
 
@@ -55,7 +56,7 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
      * @deprecated Use the {@link #getKey()}.
      */
     @Deprecated
-    public final Key<UJO, T> getProperty() {
+    public final Key<U, T> getProperty() {
         return getKey();
     }
 
@@ -63,22 +64,22 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
      * Rerurn Key
      */
     @SuppressWarnings("unchecked")
-    public final Key<UJO, T> getKey() {
-        return (Key<UJO, T>) key.getFirstKey();
+    public final Key<U, T> getKey() {
+        return key.getFirstKey();
     }
 
     @Override
     public T getObject() {
-        return getKey().of(modelObject);
+        return getKey().of(domain);
     }
 
     @Override
-    public void setObject(T object) {
-        getKey().setValue(modelObject, object);
+    public void setObject(final T object) {
+        getKey().setValue(domain, object);
     }
 
     /** Return a class of the base domainObject */
-    public Class<? super UJO> getBaseClass() {
+    public Class<? super U> getBaseClass() {
         return key.getType();
     }
 
@@ -86,7 +87,7 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
     public void detach() {
     }
 
-    // ------ STATIDC ------
+    // ------ STATIC ------
 
     /**
      * Type-infering factory method
@@ -94,19 +95,19 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
      * @param key key path
      * @return {@link PropertyModel} instance
      */
-    public static <UJO extends Ujo, T> KeyModel<UJO, T> of(UJO parent, Key<UJO, T> key) {
-        return new KeyModel<UJO, T>(parent, key);
+    public static <U extends Ujo, T> KeyModel<U, T> of(@Nonnull final U parent, @Nonnull final Key<U, T> key) {
+        return new KeyModel<U, T>(parent, key);
     }
 
     /**
      * Type-infering factory method
-     * @param parent object that contains the key
+     * @param domain object that contains the key
      * @param key the first key (path)
      * @return {@link PropertyModel} instance
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, T> KeyModel<UJO, T> of(IModel<UJO> parent, KeyRing<UJO> key) {
-        return (KeyModel<UJO, T>) of(parent.getObject(), key.getFirstKey());
+    public static <U extends Ujo, T> KeyModel<U, T> of(@Nonnull final IModel<U> domain, @Nonnull final KeyRing<U> key) {
+        return (KeyModel<U, T>) of(domain.getObject(), key.getFirstKey());
     }
 
     /**

@@ -223,7 +223,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
             return KeyColumnBoolean.of(column, isSortingEnabled((Key) column));
         }
         if (column.isTypeOf(BigDecimal.class)) {
-            return KeyColumnDecimal.of(column, isSortingEnabled((Key)column), "decimal");
+            return KeyColumnDecimal.of(column, isSortingEnabled((Key)column), "number");
         }
         if (column.isTypeOf(Number.class)) {
             return KeyColumn.of(column, isSortingEnabled((Key)column), "number");

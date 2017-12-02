@@ -34,6 +34,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.time.Duration;
 import org.ujorm.Ujo;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.tools.Assert;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.tools.ChoiceRendererNullable;
@@ -109,12 +110,19 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
     
     /** Create new DropDownChoice component */
     protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final E defaultValue) {
+        return createSearchChoice(id, Model.of(defaultValue));
+    }
+    
+    /** Create new DropDownChoice component */
+    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final IModel<E> defaultValueModel) {
+        final E defaultValue = defaultValueModel.getObject();
+        Assert.notNull(defaultValue, "defaultValue");
         final DropDownChoice<E> result = new DropDownChoice<E>
            ( id
            , Arrays.asList(defaultValue.getDeclaringClass().getEnumConstants())
            , new ChoiceRendererNullable<>(this));
         
-        result.setModel(Model.of(defaultValue));
+        result.setModel(defaultValueModel);
         result.setOutputMarkupId(true);
         addChangeBehavior(result);
         return result;

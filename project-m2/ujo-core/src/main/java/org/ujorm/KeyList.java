@@ -21,18 +21,18 @@ import java.util.Iterator;
 /**
  * The immutable list of the Keys.
  * The KeyList class is a subset of the methods from class List&lt;Key&gt;.
- * @param <UJO> Base Ujo implementation
+ * @param <U> Base Ujo implementation
  * @author Pavel Ponec
  * @composed 1 - N Key
  */
-public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
+public interface KeyList<U extends Ujo> extends Iterable<Key<U,Object>> {
 
     /**
      * Find (both direct or indirect) key by key name from parameter.
      * @param name A key name by sample "user.address.street".
      * @return Key
      */
-    public Key<UJO,?> find(String name) throws IllegalArgumentException;
+    public <T> Key<U,T> find(String name) throws IllegalArgumentException;
 
     /**
      * Find (both direct or indirect) direct or indirect key by key name from parameter.
@@ -40,7 +40,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
      * @param name A key name.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      */
-    public Key<UJO,?> find
+    public <T> Key<U,T> find
     ( final String name
     , final boolean throwException
     ) throws IllegalArgumentException;
@@ -55,7 +55,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
      * @hidden
      */
     @SuppressWarnings("deprecation")
-    public Key<UJO,?> findDirectKey
+    public <T> Key<U,T> findDirectKey
     ( final Ujo ujo
     , final String name
     , final UjoAction action
@@ -70,13 +70,13 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @return Key
      */
-    public Key<UJO,?> findDirectKey
+    public <T> Key<U,T> findDirectKey
     ( final String name
     , final boolean throwException
     ) throws IllegalArgumentException;
 
     /** Find Key by name */
-    public Key<UJO,?> findDirectKey
+    public <T> Key<U,T> findDirectKey
     ( final Ujo ujo
     , final String name
     , final boolean throwException
@@ -86,26 +86,26 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
     public Key[] toArray();
 
     /** Get the first Property */
-    public Key<UJO,?> getFirstKey();
+    public <T> Key<U,T> getFirstKey();
 
     /** Get the last Property */
-    public Key<UJO,?> getLastKey();
+    public <T> Key<U,T> getLastKey();
 
     /** The the domain class of related Keys.
      * The value can be {@code null} if the Key array is empty. */
-    public Class<UJO> getType();
+    public Class<U> getType();
 
     /** Returns a base class name of the related UJO */
     public String getTypeName();
 
     /** Create new Instance */
-    public UJO newBaseUjo() throws IllegalStateException;
+    public U newBaseUjo() throws IllegalStateException;
 
 
     // ----------------- LIST IMPLEMENTATION ------------------------
 
     /** Get key on requered index */
-    public Key<UJO,?> get(final int index);
+    public <T> Key<U,T> get(final int index);
 
     /** Returns a total count of its keys */
     public int size();
@@ -121,7 +121,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
      * in feature it will be replaced by the Key interface.
      */
     @Override
-    public Iterator<Key<UJO,Object>> iterator();
+    public Iterator<Key<U,Object>> iterator();
 
     /** Returns or create UjoManager.
      * In your own implementation keep in a mind a simple serialization feature of the current object.
