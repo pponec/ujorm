@@ -35,15 +35,6 @@ public class CriterionTest extends MyTestCase {
         return suite;
     }
 
-    private Person newPerson(String name, Double cash) {
-        Person result = new Person();
-        result.set(NAME, name);
-        result.set(CASH, cash);
-
-        persons.add(result);
-        return result;
-    }
-
     /** Filled */
     public void testFilled() {
         Person p = new Person();
@@ -161,7 +152,6 @@ public class CriterionTest extends MyTestCase {
         assertEquals(false, result.evaluate(person));
     }
 
-
     /** Serialization 1 */
     public void testSerialization_1() throws Exception {
         System.out.println("testSerialization_1: ");
@@ -216,6 +206,24 @@ public class CriterionTest extends MyTestCase {
         person.init();
         assertEquals(expected.evaluate(person), result.evaluate(person));
     }
+    
+    /** Serialization 1 */
+    public void testSerialization_4() throws Exception {
+        System.out.println("testSerialization_4: ");
+
+        SerialSupplier<String> value = () -> "Lucy";
+        Criterion<Person> expected = Person.NAME.whereEq(value);
+        Criterion<Person> result = serialize(expected);
+        //
+        assertSame(expected.getLeftNode(), result.getLeftNode());
+        assertSame(expected.getOperator(), result.getOperator());
+        assertEquals(expected.getRightNode(), result.getRightNode());
+        assertEquals(expected.toString(), result.toString());
+        //
+        final Person person = new Person();
+        person.init();
+        assertEquals(expected.evaluate(person), result.evaluate(person));
+    }
 
     /** Serialization 3 */
     @SuppressWarnings("unchecked")
@@ -247,16 +255,15 @@ public class CriterionTest extends MyTestCase {
     private <T extends Serializable> T serialize(T object) throws Exception {
         ByteArrayOutputStream os = new ByteArrayOutputStream(8000);
 
-        ObjectOutputStream encoder = new ObjectOutputStream(os);
-        encoder.writeObject(object);
-        encoder.close();
+        try (ObjectOutputStream encoder = new ObjectOutputStream(os)) {
+            encoder.writeObject(object);
+        }
         //
         InputStream is = new ByteArrayInputStream(os.toByteArray());
-        ObjectInputStream decoder = new ObjectInputStream(is);
-        Object result = (Serializable) decoder.readObject();
-        decoder.close();
-
-        return (T) result;
+        try (ObjectInputStream decoder = new ObjectInputStream(is)) {
+            Object result = (Serializable) decoder.readObject();
+            return (T) result;
+        }
     }
 
     public static void main(java.lang.String[] argList) {

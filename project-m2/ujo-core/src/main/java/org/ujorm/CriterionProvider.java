@@ -17,6 +17,8 @@
 package org.ujorm;
 
 import java.util.Collection;
+import java.util.function.Supplier;
+import javax.annotation.Nonnull;
 import org.ujorm.criterion.*;
 
 public interface CriterionProvider<U extends Ujo, VALUE> {
@@ -37,8 +39,24 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
         );
 
     /**
+     * Create a new Criterion where this key value is related to a parameter value along the {@link Operator}.
+     * @param operator Operator
+     * <ul>
+     * <li>VALUE - the parameter value</li>
+     * <li>Key - reference to a related entity</li>
+     * <li>List&lt;TYPE&gt; - list of values (TODO - this type is planned in the future)</li>
+     * </ul>
+     * @return A new criterion
+     * @see SerialSupplier
+     */
+    @Nonnull
+    public Criterion<U> where
+        ( @Nonnull Operator operator
+        , @Nonnull Supplier<VALUE> value
+        );
+
+    /**
      * Create a new Criterion where this key is related to the value along the parameter {@link Operator}.
-     * @param key Key
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
@@ -47,89 +65,132 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * </ul>
      * @return A new criterion
      */
+    @Nonnull
     public Criterion<U> where
-        ( Operator operator
-        , Key<?,VALUE> value
+        ( @Nonnull Operator operator
+        , @Nonnull Key<?,VALUE> value
         );
 
     /**
      * Create a new Criterion where this key equals the parameter value.
-     * @param key Key
-     * <ul>
-     * <li>TYPE - parameter value</li>
-     * <li>List&lt;TYPE&gt; - list of values</li>
-     * <li>Key - reference to a related entity</li>
-     * </ul>
      * @return The new immutable Criterion
      */
+    @Nonnull
     public Criterion<U> whereEq(VALUE value);
+
+    /**
+     * Create a new Criterion where this key equals the parameter value.
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @return The new immutable Criterion
+     * @see SerialSupplier
+     */
+    @Nonnull
+    public Criterion<U> whereEq(@Nonnull Supplier<VALUE> valueFunction);
 
     /**
      * Create a new Criterion where this key value equals the parameter value.
      * @param key Key can be type a direct of indirect (for a relation) key
      * @return The new immutable Criterion
      */
+    @Nonnull
     public Criterion<U> whereEq(Key<U,VALUE> key);
 
     /**
      * Create new Criterion where this key value is in the one of parameter values.
-     * @param key A direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return The new immutable Criterion.
      */
+    @Nonnull
     public Criterion<U> whereIn
-        ( Collection<VALUE> list
+        ( @Nonnull Collection<VALUE> list
         );
 
     /**
      * Create new Criterion where this key value is not in any of parameter values.
-     * @param key A direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return The new immutable Criterion.
      */
+    @Nonnull
     public Criterion<U> whereNotIn
-        ( Collection<VALUE> list
+        ( @Nonnull Collection<VALUE> list
         );
 
     /**
      * Create new Criterion where this key value is in the one of parameter values.
-     * @param key A reference to a related entity
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return The new immutable Criterion
      */
+    @Nonnull
     public Criterion<U> whereIn
-        ( VALUE... list
+        ( @Nonnull VALUE... list
         );
 
     /**
      * Create new Criterion where this key value is not in any of parameter values.
-     * @param key A key direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return The new immutable Criterion.
      */
+    @Nonnull
     public Criterion<U> whereNotIn
-        ( VALUE... list
+        ( @Nonnull VALUE... list
         );
 
     /** Create a new Criterion where this key value is not equals the value
      * @see org.ujorm.criterion.Operator#NOT_EQ */
+    @Nonnull
     public Criterion<U> whereNeq(VALUE value);
+
+    /** Create a new Criterion where this key value is not equals the value
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @see SerialSupplier
+     * @see org.ujorm.criterion.Operator#NOT_EQ */
+    @Nonnull
+    public Criterion<U> whereNeq(@Nonnull Supplier<VALUE> valueFunction);
 
     /** Create a new Criterion where this key is great then the value
      * @see org.ujorm.criterion.Operator#GT */
     public Criterion<U> whereGt(VALUE value);
 
+    /** Create a new Criterion where this key is great then the value
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @see SerialSupplier
+     * @see org.ujorm.criterion.Operator#GT */
+    @Nonnull
+    public Criterion<U> whereGt(@Nonnull Supplier<VALUE> valueFunction);
+
     /** Create a new Criterion where this key is great or equals the value
      * @see org.ujorm.criterion.Operator#GE */
     public Criterion<U> whereGe(VALUE value);
+
+    /** Create a new Criterion where this key is great or equals the value
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @see SerialSupplier
+     * @see org.ujorm.criterion.Operator#GE */
+    @Nonnull
+    public Criterion<U> whereGe(@Nonnull Supplier<VALUE> valueFunction);
 
     /** Create a new Criterion where this key is less then the value
      * @see org.ujorm.criterion.Operator#LT */
     public Criterion<U> whereLt(VALUE value);
 
+    /** Create a new Criterion where this key is less then the value
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @see SerialSupplier
+     * @see org.ujorm.criterion.Operator#LT */
+    @Nonnull
+    public Criterion<U> whereLt(@Nonnull Supplier<VALUE> valueFunction);
+
     /** Create a new Criterion where this key is less or equals than the value
      * @see org.ujorm.criterion.Operator#LE */
     public Criterion<U> whereLe(VALUE value);
+
+    /** Create a new Criterion where this key is less or equals than the value
+     * @see SerialSupplier
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @see SerialSupplier
+     * @see org.ujorm.criterion.Operator#LE */
+    @Nonnull
+    public Criterion<U> whereLe(@Nonnull Supplier<VALUE> valueFunction);
 
     /**
      * Create a new Criterion where this key is {@code null}.
@@ -137,10 +198,10 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * <pre class="pre">
      * Criterin.where(Order.NOTE_PROPERTY, Operator.EQ, (String) null) </pre>
      * for the String key type in this case.
-     * @param key Key
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
+    @Nonnull
     public Criterion<U> whereNull();
 
     /**
@@ -149,26 +210,26 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * <pre class="pre">
      * Criterin.where(Order.NOTE_PROPERTY, Operator.EQ, (String) null) </pre>
      * for the String key type in this case.
-     * @param key Key
      * @see #whereNull(org.ujorm.Key)
      * @see Operator#NOT_EQ
      */
+    @Nonnull
     public Criterion<U> whereNotNull();
 
     /**
      * Create a new Criterion where this key is not {@code null} and is no empty text or empty list.
-     * @param key Key
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
+    @Nonnull
     public Criterion<U> whereFilled();
 
     /**
      * Create a new Criterion where this key is a {@code null} or it is empty string or list.
-     * @param key Key
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
+    @Nonnull
     public Criterion<U> whereNotFilled();
 
     /** Create a new Criterion for a Native Criterion in SQL statement format.
@@ -181,11 +242,12 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
      *       of target application to ensure database compatibility</li>
      * </ul>
-     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlCondition a SQL condition in the String format, the NULL value or empty string is not accepted.
      * A substring {@code {0}} will be replaced for the current column name;
+     * @see SerialSupplier
      * @see Operator#XSQL
      */
+    @Nonnull
     public Criterion<U> forSql(String sqlCondition);
     /** Create a new Criterion for a Native Criterion in SQL statement format.
      * Special features:
@@ -197,13 +259,13 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
      *       of target application to ensure database compatibility</li>
      * </ul>
-     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted.
      * A substring {@code {0}} will be replaced for the current column name
      * and the substring {@code {1}} will be replaced for the required value.
      * @param value a condition value, array, list or an another key
      * @see Operator#XSQL
      */
+    @Nonnull
     public Criterion<U> forSql(String sqlTemplate, VALUE value);
     /** Create a new Criterion for a Native Criterion in SQL statement format.
      * Special features:
@@ -221,22 +283,27 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @param value a condition value, array, list or an another key
      * @see Operator#XSQL
      */
-    public Criterion<U> forSqlUnchecked(String sqlTemplate, Object value);
+    @Nonnull
+    public Criterion<U> forSqlUnchecked(@Nonnull String sqlTemplate, @Nonnull Object value);
 
     /** Create a new Criterion for this key where all results will be true (the result is independed on the value).
      *  The method evaluate(ujo) returns TRUE always.
      */
+    @Nonnull
     public Criterion<U> forAll();
 
     /** Create a new Criterion for this key where all results will be false (the result is independed on the value).
      *  The  method evaluate(method) returns FALSE always.
      */
+    @Nonnull
     public Criterion<U> forNone();
 
     /** An alias for the method: {@link #forAll() } */
+    @Nonnull
     public Criterion<U> whereAll();
 
     /** An alias for the method: {@link #forNone() } */
+    @Nonnull
     public Criterion<U> whereNone();
 
 

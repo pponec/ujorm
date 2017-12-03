@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Supplier;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import org.ujorm.CompositeKey;
@@ -628,73 +630,73 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> where(Operator operator, VALUE value) {
         return Criterion.where(this, operator, value);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> where(Operator operator, Key<?, VALUE> value) {
         return Criterion.where(this, operator, value);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereEq(VALUE value) {
         return Criterion.where(this, value);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereEq(Key<U, VALUE> value) {
         return Criterion.where(this, value);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereIn(Collection<VALUE> list) {
         return Criterion.whereIn(this, list);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereNotIn(Collection<VALUE> list) {
         return Criterion.whereNotIn(this, list);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereIn(VALUE... list) {
         return Criterion.whereIn(this, list);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereNotIn(VALUE... list) {
         return Criterion.whereNotIn(this, list);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereNull() {
         return Criterion.whereNull(this);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereNotNull() {
         return Criterion.whereNotNull(this);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereFilled() {
         return Criterion.whereNotNull(this).and(Criterion.where(this, Operator.NOT_EQ, getEmptyValue()));
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereNotFilled(){
         return Criterion.whereNull(this).or(Criterion.where(this, getEmptyValue()));
     }
@@ -716,37 +718,37 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereNeq(VALUE value) {
         return Criterion.where(this, Operator.NOT_EQ, value);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereGt(VALUE value) {
         return Criterion.where(this, Operator.GT, value);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereGe(VALUE value) {
         return Criterion.where(this, Operator.GE, value);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereLt(VALUE value) {
         return Criterion.where(this, Operator.LT, value);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> whereLe(VALUE value) {
         return Criterion.where(this, Operator.LE, value);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> forSql(String sqlCondition) {
         return Criterion.forSql(this, sqlCondition);
     }
@@ -768,47 +770,120 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @see Operator#XSQL
      */
 
-    @Override
+    @Override @Nonnull
     public Criterion<U> forSql(String sqlTemplate, VALUE value) {
         return Criterion.forSql(this, sqlTemplate, value);
     }
 
-    @Override
+    @Override @Nonnull
     public Criterion<U> forSqlUnchecked(String sqlTemplate, Object value) {
         return Criterion.forSqlUnchecked(this, sqlTemplate, value);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> forAll() {
         return Criterion.forAll(this);
     }
 
    /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public final Criterion<U> whereAll() {
         return forAll();
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public Criterion<U> forNone() {
         return Criterion.forNone(this);
     }
 
     /** {@inheritDoc} */
-    @Override
+    @Override @Nonnull
     public final Criterion<U> whereNone() {
         return forNone();
     }
+    
+    /**
+     * Criterion factory
+     * @param operator Value  operator
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @return New instance of Criterion
+     */
+    @Override @Nonnull
+    public Criterion<U> where(@Nonnull final Operator operator, @Nonnull final Supplier<VALUE> valueFunction) {
+        return Criterion.where(this, operator, valueFunction);
+    }
 
+    /**
+     * Criterion factory
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @return New instance of Criterion
+     */
+    @Override @Nonnull
+    public Criterion<U> whereEq(@Nonnull final Supplier<VALUE> valueFunction) {
+        return Criterion.where(this, Operator.EQ, valueFunction);
+    }
+
+    /**
+     * Criterion factory
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @return New instance of Criterion
+     */
+    @Override @Nonnull
+    public Criterion<U> whereNeq(@Nonnull final Supplier<VALUE> valueFunction) {
+        return Criterion.where(this, Operator.NOT_EQ, valueFunction);
+    }
+
+    /**
+     * Criterion factory
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @return New instance of Criterion
+     */
+    @Override @Nonnull
+    public Criterion<U> whereGt(@Nonnull final Supplier<VALUE> valueFunction) {
+        return Criterion.where(this, Operator.GT, valueFunction);
+    }
+
+    /**
+     * Criterion factory
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @return New instance of Criterion
+     */
+    @Override @Nonnull
+    public Criterion<U> whereGe(@Nonnull final Supplier<VALUE> valueFunction) {
+        return Criterion.where(this, Operator.GE, valueFunction);
+    }
+
+    /**
+     * Criterion factory
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @return New instance of Criterion
+     */
+    @Override @Nonnull
+    public Criterion<U> whereLt(@Nonnull final Supplier<VALUE> valueFunction) {
+        return Criterion.where(this, Operator.LT, valueFunction);
+    }
+
+    /**
+     * Criterion factory
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @return New instance of Criterion
+     */
+    @Override @Nonnull
+    public Criterion<U> whereLe(@Nonnull final Supplier<VALUE> valueFunction) {
+        return Criterion.where(this, Operator.LE, valueFunction);
+    }
+    
     // ============= STATIC METHODS =============
 
     /** Create a new instance of key with a new sort attribute value.
      * @hidden
      */
     @SuppressWarnings("deprecation")
-    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> sort(final Key<? super UJO, VALUE> key, final boolean ascending) {
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> sort
+        ( @Nonnull final Key<? super UJO, VALUE> key
+        , final boolean ascending) {
         if (key.isAscending()==ascending) {
             return (Key<UJO, VALUE>) key;
         }
@@ -823,14 +898,17 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @hidden
      * @see #sort(org.ujorm.Key, boolean) sort(..)
      */
-    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> of(final Key<? super UJO, VALUE> key, final boolean ascending) {
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> of
+        ( @Nonnull final Key<? super UJO, VALUE> key
+        , final boolean ascending) {
         return sort(key, ascending);
     }
 
     /** Quick instance for the direct key.
      * @hidden
      */
-    public static <UJO extends Ujo, VALUE> CompositeKey<UJO, VALUE> of(final Key<? super UJO, VALUE> key) {
+    public static <UJO extends Ujo, VALUE> CompositeKey<UJO, VALUE> of
+        ( @Nonnull final Key<? super UJO, VALUE> key) {
         return key.isComposite()
             ? new PathProperty<>(key.isAscending(), CompositeKey.DEFAULT_ALIAS, key)
             : new PathProperty<>(new Key[]{key}, NO_ALIAS, key.isAscending())
@@ -841,8 +919,8 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> CompositeKey<UJO1, VALUE> of
-        ( final Key<? super UJO1, UJO2> key1
-        , final Key<UJO2, VALUE> key2
+        ( @Nonnull final Key<? super UJO1, UJO2> key1
+        , @Nonnull final Key<UJO2, VALUE> key2
         ) {
         return key1.isComposite() || key2.isComposite()
             ? new PathProperty<>(key2.isAscending(), DEFAULT_ALIAS, key1, key2)
@@ -854,9 +932,9 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> CompositeKey<UJO1, VALUE> of
-        ( final Key<? super UJO1, UJO2> key1
-        , final Key<UJO2, UJO3> key2
-        , final Key<UJO3, VALUE> key3
+        ( @Nonnull final Key<? super UJO1, UJO2> key1
+        , @Nonnull final Key<UJO2, UJO3> key2
+        , @Nonnull final Key<UJO3, VALUE> key3
         ) {
         return new PathProperty<>(DEFAULT_ALIAS, key1, key2, key3);
     }
@@ -865,10 +943,10 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> CompositeKey<UJO1, VALUE> of
-        ( final Key<? super UJO1, UJO2> key1
-        , final Key<UJO2, UJO3> key2
-        , final Key<UJO3, UJO4> key3
-        , final Key<UJO4, VALUE> key4
+        ( @Nonnull final Key<? super UJO1, UJO2> key1
+        , @Nonnull final Key<UJO2, UJO3> key2
+        , @Nonnull final Key<UJO3, UJO4> key3
+        , @Nonnull final Key<UJO4, VALUE> key4
         ) {
         return new PathProperty<>(DEFAULT_ALIAS, key1, key2, key3, key4);
     }
@@ -877,7 +955,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <U extends Ujo, VALUE> CompositeKey<U, VALUE> create(final List keys) {
+    public static <U extends Ujo, VALUE> CompositeKey<U, VALUE> create(@Nonnull final List keys) {
         return new PathProperty(DEFAULT_ALIAS, (Key[]) keys.toArray(new Key[keys.size()]));
     }
 
@@ -886,7 +964,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo, VALUE> CompositeKey<UJO, VALUE> create
-            ( Key<UJO, ? extends Object>... keys) {
+            ( @Nonnull final Key<UJO, ? extends Object>... keys) {
         return new PathProperty(DEFAULT_ALIAS, keys);
     }
 
@@ -896,7 +974,9 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @deprecated See the {@link #of(org.ujorm.Key, org.ujorm.Key)
      * @hidden
      */
-    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> newInstance(final Key<UJO, VALUE> key, final boolean ascending) {
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> newInstance
+        ( final Key<UJO, VALUE> key
+        , final boolean ascending) {
         return sort(key, ascending);
     }
 
@@ -904,7 +984,8 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @deprecated See the {@link #of(org.ujorm.Key, org.ujorm.Key)
      * @hidden
      */
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final Key<UJO, VALUE> key) {
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance
+        ( final Key<UJO, VALUE> key) {
         return key.isComposite()
             ? new PathProperty<>(key.isAscending(), CompositeKey.DEFAULT_ALIAS, key)
             : new PathProperty<>(new Key[]{key}, NO_ALIAS, key.isAscending())
@@ -916,8 +997,8 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
-        ( final Key<UJO1, UJO2> key1
-        , final Key<UJO2, VALUE> key2
+        ( @Nonnull final Key<UJO1, UJO2> key1
+        , @Nonnull final Key<UJO2, VALUE> key2
         ) {
         return key1.isComposite() || key2.isComposite()
             ? new PathProperty<>(key2.isAscending(), DEFAULT_ALIAS, key1, key2)
@@ -930,9 +1011,9 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
-        ( final Key<? super UJO1, UJO2> key1
-        , final Key<UJO2, UJO3> key2
-        , final Key<UJO3, VALUE> key3
+        ( @Nonnull final Key<? super UJO1, UJO2> key1
+        , @Nonnull final Key<UJO2, UJO3> key2
+        , @Nonnull final Key<UJO3, VALUE> key3
         ) {
         return new PathProperty<>(DEFAULT_ALIAS, key1, key2, key3);
     }
@@ -942,10 +1023,10 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
-        ( final Key<? super UJO1, UJO2> key1
-        , final Key<UJO2, UJO3> key2
-        , final Key<UJO3, UJO4> key3
-        , final Key<UJO4, VALUE> key4
+        ( @Nonnull final Key<? super UJO1, UJO2> key1
+        , @Nonnull final Key<UJO2, UJO3> key2
+        , @Nonnull final Key<UJO3, UJO4> key3
+        , @Nonnull final Key<UJO4, VALUE> key4
         ) {
         return new PathProperty<>(DEFAULT_ALIAS, key1, key2, key3, key4);
     }

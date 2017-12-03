@@ -32,6 +32,7 @@ import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyRing;
 import org.ujorm.core.UjoCoder;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.MsgFormatter;
 import static org.ujorm.core.UjoTools.SPACE;
 
 /**
@@ -52,12 +53,15 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
     protected Object value;
 
     /** Create an Criterion constant */
-    public ValueCriterion(boolean value) {
+    public ValueCriterion(final boolean value) {
         this(null, Operator.XFIXED, value);
     }
 
     /** An undefined operator (null) is replaced by EQ. */
-    public ValueCriterion(Key<U,? extends Object> key, Operator operator, Key<U,Object> value) {
+    public ValueCriterion
+        ( @Nullable final Key<U,? extends Object> key
+        , @Nullable final Operator operator
+        , @Nullable final Key<U,Object> value) {
         this(key, operator, (Object) value);
     }
 
@@ -112,7 +116,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
 
     /** Returns the right node of the parent */
     @Override
-    public final Object getRightNode() {
+    public Object getRightNode() {
         return value;
     }
 
@@ -138,28 +142,31 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
     @Override
     public boolean evaluate(final U ujo) {
         if (operator==Operator.XSQL) {
-            throw new UnsupportedOperationException("The operator " + operator + " can't be evaluated (" + value + ")");
+            final String msg = MsgFormatter.format("The operator {} can't evaluate '{}'"
+                    , operator
+                    , getRightNode());
+            throw new UnsupportedOperationException(msg);
         }
 
         if (operator==Operator.XFIXED) {
             return (Boolean) value;
         }
-        Object value2 = value instanceof Key
+        final Object myValue = value instanceof Key
             ? ((Key)value).of(ujo)
-            : value
+            : getRightNode();
             ;
         boolean caseInsensitve = true;
 
         switch (operator) {
             case EQ:
             case NOT_EQ:
-                boolean result = key.equals(ujo, value2);
+                boolean result = key.equals(ujo, myValue);
                 return operator==Operator.EQ ? result : !result ;
             case REGEXP:
             case NOT_REGEXP:
-                Pattern p = value2 instanceof Pattern
-                    ? (Pattern) value2
-                    : Pattern.compile(value2.toString())
+                Pattern p = myValue instanceof Pattern
+                    ? (Pattern) myValue
+                    : Pattern.compile(myValue.toString())
                     ;
                 Object val1 = key.of(ujo);
                 boolean result2 = val1!=null && p.matcher(val1.toString()).matches();
@@ -173,11 +180,11 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
             case ENDS_CASE_INSENSITIVE:
             case CONTAINS_CASE_INSENSITIVE: {
                 Object object = key.of(ujo);
-                if (object==value2              ) { return true ; }
-                if (object==null || value2==null) { return false; }
+                if (object==myValue              ) { return true ; }
+                if (object==null || myValue==null) { return false; }
 
                 String t1 = object.toString();
-                String t2 = value2.toString();
+                String t2 = myValue.toString();
 
                 if (caseInsensitve) {
                     t1 = t1.toUpperCase(Locale.ENGLISH);
@@ -203,7 +210,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
             case NOT_IN:
                  caseInsensitve = false; // match result
             case IN:
-                for(Object o : (Object[]) value2) {
+                for(Object o : (Object[]) myValue) {
                     if (key.equals(ujo, o)) {
                         return caseInsensitve;
                     }
@@ -211,9 +218,9 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
                 return !caseInsensitve;
         }
 
-        Comparable val2 = (Comparable) value2;
+        final Comparable val2 = (Comparable) myValue;
         if (null== val2)  {return false; }
-        Comparable val1 = (Comparable) key.of(ujo);
+        final Comparable val1 = (Comparable) key.of(ujo);
         if (null== val1)  {return false; }
         int result = compare(val1, val2);
 
@@ -234,7 +241,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
     public final List<U> evaluate(final Iterable<U> ujoList) {
         switch (operator) {
             case XFIXED:
-                return Boolean.FALSE.equals(value)
+                return Boolean.FALSE.equals(getRightNode())
                      ? Collections.<U>emptyList()
                      : ujoList instanceof List
                      ? (List) ujoList
@@ -264,12 +271,12 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
     /** Test a value is an instance of CharSequence or a type Key is type of CharSequence.
      * If parameter is not valid than method throws Exception.
      */
-    protected final void makeCharSequenceTest(Object value) throws IllegalArgumentException {
+    protected void makeCharSequenceTest(Object value) throws IllegalArgumentException {
         final boolean ok = value instanceof CharSequence
         || value instanceof Key
         && ((Key)value).isTypeOf(CharSequence.class);
 
-        Assert.isTrue(ok, "Key type must by String or CharSequence");
+        Assert.isTrue(ok, "Key type must be a {}", CharSequence.class);
     }
 
     /** Test a value is an instance of Iterable.
@@ -315,7 +322,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
         final StringBuilder out = new StringBuilder(256).append('(');
 
         if (operator==Operator.XSQL) {
-            out.append(value);
+            out.append(getRightNode());
             return out.append(')').toString();
         }
 
@@ -327,7 +334,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
             .append(SPACE);
         }
 
-        printValue(value, out);
+        printValue(getRightNode(), out);
         return out.append(')').toString();
     }
 

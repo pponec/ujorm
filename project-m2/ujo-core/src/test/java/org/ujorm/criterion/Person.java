@@ -15,6 +15,7 @@
  */
 package org.ujorm.criterion;
 
+import java.time.LocalDate;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.extensions.PathProperty;
@@ -33,6 +34,7 @@ public class Person<U extends Person> extends SmartUjo<U> {
     public static final Key<Person, Double> CASH = f.newKey("cash", 0d);
     public static final Key<Person, Person> MOTHER = f.newKey("mother");
     public static final Key<Person, String> ADDRESS = f.newKey("address");
+    public static final Key<Person, LocalDate> BORN = f.newKey("born", LocalDate.parse("1970-01-01"));
 
     static {
         f.lock();

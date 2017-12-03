@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Supplier;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.tools.Assert;
@@ -119,7 +121,10 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      *   documentation for more information.
      * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo)} failed.
      */
-    public final void validate(final U ujo, String message, Object ... parameters) throws IllegalArgumentException {
+    public final void validate
+        ( @Nonnull final U ujo
+        , @Nonnull final String message
+        , @Nonnull final Object ... parameters) throws IllegalArgumentException {
         Assert.isTrue(evaluate(ujo), message, parameters);
     }
 
@@ -129,12 +134,14 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * with the required message.
      * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo)} failed.
      */
-    public final void validate(final U ujo) throws IllegalArgumentException {
+    public final void validate(@Nonnull final U ujo) throws IllegalArgumentException {
         validate(ujo, "Invalid condition ({}) for the {}", this, ujo);
     }
 
     /** Join this instance with a second criterion by an operator with a simple logical optimization. */
-    public Criterion<U> join(final BinaryOperator operator, final Criterion<U> criterion) {
+    public Criterion<U> join
+        ( @Nonnull final BinaryOperator operator
+        , @Nonnull final Criterion<U> criterion) {
         if (criterion.getOperator() == Operator.XFIXED) {
             final boolean rightValue = (Boolean) criterion.getRightNode();
             switch (operator) {
@@ -150,7 +157,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param criterion Criterion to join
      * @return Result
      */
-    public final Criterion<U> and(Criterion<U> criterion) {
+    public final Criterion<U> and(@Nonnull final Criterion<U> criterion) {
         return join(BinaryOperator.AND, criterion);
     }
 
@@ -159,7 +166,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param criterion Criterion to join
      * @return Result
      */
-    public final Criterion<U> or(Criterion<U> criterion) {
+    public final Criterion<U> or(@Nonnull final Criterion<U> criterion) {
         return join(BinaryOperator.OR, criterion);
     }
 
@@ -172,14 +179,18 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
     }
 
     /** Returns the left node of the parent. */
+    @Nonnull
     abstract public Object getLeftNode();
     /** Returns the right node of the parent */
+    @Nullable
     abstract public Object getRightNode();
     /** Returns an operator */
+    @Nonnull
     abstract public AbstractOperator getOperator();
     /** Find a domain class type of {@code Class<U>} from its keys.
      * @return returns Method returns the {@code Ujo.class} instance if no domain was found.
      */
+    @Nonnull
     abstract public Class<?> getDomain();
 
 
@@ -195,7 +206,8 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         return (Criterion<T>) this;
     }
 
-    /** Print the Criterion including the main domain name along the example: Order(id EQ 1)  */
+    /** Print the Criterion including the main domain name along the example: Order(id EQ 1) */
+    @Nonnull
     public String toStringFull() {
         final Class domain = getDomain();
         return domain.getSimpleName() + this;
@@ -214,15 +226,33 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * </ul>
      * @return A new criterion
      */
+    @Nonnull
     public static <U extends Ujo, TYPE> Criterion<U> where
-        ( Key<U,TYPE> key
-        , Operator operator
-        , TYPE value
+        ( @Nonnull final Key<U,TYPE> key
+        , @Nonnull final Operator operator
+        , @Nullable final TYPE value
         ) {
         return new ValueCriterion<>(key, operator, value);
     }
 
     /**
+     * New criterion instance
+     * @param key Key
+     * @param operator Operator
+     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @return A new criterion
+     * @see SerialSupplier
+     */
+    @Nonnull
+    public static <U extends Ujo, TYPE> Criterion<U> where
+        ( @Nonnull final Key<U,TYPE> key
+        , @Nonnull final Operator operator
+        , @Nonnull final Supplier<TYPE> valueFunction
+        ) {
+        return new FunctionCriterion<>(key, operator, valueFunction);
+    }
+
+     /**
      * New criterion instance
      * @param key Key
      * @param operator Operator
@@ -233,10 +263,11 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * </ul>
      * @return A new criterion
      */
+    @Nonnull
     public static <U extends Ujo, TYPE> Criterion<U> where
-        ( Key<U,TYPE> key
-        , Operator operator
-        , Key<?,TYPE> value
+        ( @Nonnull final Key<U,TYPE> key
+        , @Nonnull final Operator operator
+        , @Nullable final Key<?,TYPE> value
         ) {
         return new ValueCriterion<>(key, operator, value);
     }
@@ -251,9 +282,10 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * </ul>
      * @return The new immutable Criterion
      */
+    @Nonnull
     public static <U extends Ujo, TYPE> Criterion<U> where
-        ( Key<U,TYPE> key
-        , TYPE value
+        ( @Nonnull final Key<U,TYPE> key
+        , @Nullable final TYPE value
         ) {
         return new ValueCriterion<>(key, null, value);
     }
@@ -264,9 +296,10 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return The new immutable Criterion.
      */
+    @Nonnull
     public static <U extends Ujo, TYPE> Criterion<U> whereIn
-        ( Key<U,TYPE> key
-        , Collection<TYPE> list
+        ( @Nonnull final Key<U,TYPE> key
+        , @Nonnull final Collection<TYPE> list
         ) {
 
         return list.isEmpty()
@@ -281,9 +314,10 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return The new immutable Criterion.
      */
+    @Nonnull
     public static <U extends Ujo, TYPE> Criterion<U> whereNotIn
-        ( Key<U,TYPE> key
-        , Collection<TYPE> list
+        ( @Nonnull final Key<U,TYPE> key
+        , @Nonnull final Collection<TYPE> list
         ) {
         return list.isEmpty()
                 ? Criterion.constant(key, true)
@@ -297,9 +331,10 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return The new immutable Criterion
      */
+    @Nonnull
     public static <U extends Ujo, TYPE> Criterion<U> whereIn
-        ( Key<U,TYPE> key
-        , TYPE... list
+        ( @Nonnull final Key<U,TYPE> key
+        , @Nonnull final TYPE... list
         ) {
         return list.length==0
                 ? Criterion.constant(key, false)
@@ -312,9 +347,10 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return The new immutable Criterion.
      */
+    @Nonnull
     public static <U extends Ujo, TYPE> Criterion<U> whereNotIn
-        ( Key<U,TYPE> key
-        , TYPE... list
+        ( @Nonnull final Key<U,TYPE> key
+        , @Nonnull final TYPE... list
         ) {
         return list.length==0
                 ? Criterion.constant(key, true)
@@ -329,10 +365,11 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param relatedKey The one key related to the one attribute of TYPE object.
      * @return The new immutable Criterion.
      */
+    @Nonnull
     public static <U extends Ujo, ITEM extends Ujo, TYPE> Criterion<U> whereIn
-        ( Key<U,TYPE> key
-        , Collection<ITEM> list
-        , Key<ITEM, TYPE> relatedKey
+        ( @Nonnull final Key<U,TYPE> key
+        , @Nonnull final Collection<ITEM> list
+        , @Nonnull final Key<ITEM, TYPE> relatedKey
         ) {
 
         return whereIn(true, key, list, relatedKey);
@@ -345,10 +382,11 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param relatedKey The one key related to the one attribute of TYPE object.
      * @return The new immutable Criterion.
      */
+    @Nonnull
     public static <U extends Ujo, ITEM extends Ujo, TYPE> Criterion<U> whereNotIn
-        ( Key<U,TYPE> key
-        , Collection<ITEM> list
-        , Key<ITEM, TYPE> relatedKey
+        ( @Nonnull final Key<U,TYPE> key
+        , @Nonnull final Collection<ITEM> list
+        , @Nonnull final Key<ITEM, TYPE> relatedKey
         ) {
 
         return whereIn(false, key, list, relatedKey);
@@ -362,11 +400,12 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param positive The false value uses the NOT_IN operator.
      * @return The new immutable Criterion.
      */
+    @Nonnull
     private static <U extends Ujo, ITEM extends Ujo, TYPE> Criterion<U> whereIn
-        ( boolean positive
-        , Key<U,TYPE> key
-        , Collection<ITEM> list
-        , Key<ITEM, TYPE> relatedKey
+        ( final boolean positive
+        , @Nonnull final Key<U,TYPE> key
+        , @Nonnull final Collection<ITEM> list
+        , @Nonnull final Key<ITEM, TYPE> relatedKey
         ) {
 
         if (list.isEmpty()) {
@@ -391,9 +430,10 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param value Value or Key can be type a direct of indirect (for a relation) key
      * @return The new immutable Criterion
      */
+    @Nonnull
     public static <U extends Ujo, TYPE> Criterion<U> where
-        ( Key<U,TYPE> key
-        , Key<U,TYPE> value
+        ( @Nonnull final Key<U,TYPE> key
+        , @Nullable final Key<U,TYPE> value
         ) {
         return new ValueCriterion<>(key, null, value);
     }
@@ -408,7 +448,8 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
-    public static <U extends Ujo, TYPE> Criterion<U> whereNull(Key<U,TYPE> key) {
+    @Nonnull
+    public static <U extends Ujo, TYPE> Criterion<U> whereNull(@Nonnull final Key<U,TYPE> key) {
         return new ValueCriterion<>(key, Operator.EQ, (TYPE)null);
     }
 
@@ -422,7 +463,8 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @see #whereNull(org.ujorm.Key)
      * @see Operator#NOT_EQ
      */
-    public static <U extends Ujo, TYPE> Criterion<U> whereNotNull(Key<U,TYPE> key) {
+    @Nonnull
+    public static <U extends Ujo, TYPE> Criterion<U> whereNotNull(@Nonnull final Key<U,TYPE> key) {
         return new ValueCriterion<>(key, Operator.NOT_EQ, (TYPE)null);
     }
     
@@ -443,7 +485,10 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @see Operator#XFIXED
      */
-    public static <U extends Ujo> Criterion<U> constant(@Nonnull final Key<U,?> key, final boolean constant) {
+    @Nonnull
+    public static <U extends Ujo> Criterion<U> constant
+        ( @Nonnull final Key<U,?> key
+        , final boolean constant) {
         return new ValueCriterion<>(key, Operator.XFIXED, constant);
     }
 
@@ -462,7 +507,10 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * A substring {@code {0}} will be replaced for the current column name;
      * @see Operator#XSQL
      */
-    public static <U extends Ujo> Criterion<U> forSql(Key<U,?> key, String sqlCondition) {
+    @Nonnull
+    public static <U extends Ujo> Criterion<U> forSql
+        ( @Nonnull final Key<U,?> key
+        , @Nonnull final String sqlCondition) {
         return new ValueCriterion<>(key, Operator.XSQL, sqlCondition);
     }
 
@@ -483,7 +531,11 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * A substring {@code {1}} will be replaced for the current column name;
      * @see Operator#XSQL
      */
-    public static <U extends Ujo, VALUE> Criterion<U> forSql(Key<U,VALUE> key, String sqlTemplate, VALUE value) {
+    @Nonnull
+    public static <U extends Ujo, VALUE> Criterion<U> forSql
+        ( @Nonnull final Key<U,VALUE> key
+        , @Nonnull final String sqlTemplate
+        , VALUE value) {
         return new ValueCriterion<>(key, Operator.XSQL, new TemplateValue(sqlTemplate, value));
     }
 
@@ -504,7 +556,11 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * A substring {@code {1}} will be replaced for the current column name;
      * @see Operator#XSQL
      */
-    public static <U extends Ujo, VALUE> Criterion<U> forSqlUnchecked(Key<U,VALUE> key, String sqlTemplate, Object value) {
+    @Nonnull
+    public static <U extends Ujo, VALUE> Criterion<U> forSqlUnchecked
+        ( @Nonnull final Key<U,VALUE> key
+        , @Nonnull final String sqlTemplate
+        , @Nullable final Object value) {
         return new ValueCriterion<>(key, Operator.XSQL, new TemplateValue(sqlTemplate, value));
     }
 
@@ -512,7 +568,8 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      *  The method evaluate(ujo) returns TRUE always.
      * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      */
-    public static <U extends Ujo> Criterion<U> forAll(Key<U,?> key) {
+    @Nonnull
+    public static <U extends Ujo> Criterion<U> forAll(@Nonnull final Key<U,?> key) {
         return constant(key, true);
     }
 
@@ -520,7 +577,8 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      *  The  method evaluate(method) returns FALSE always.
      * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      */
-    public static <U extends Ujo> Criterion<U> forNone(Key<U,?> key) {
+    @Nonnull
+    public static <U extends Ujo> Criterion<U> forNone(@Nonnull final Key<U,?> key) {
         return constant(key, false);
     }
 
