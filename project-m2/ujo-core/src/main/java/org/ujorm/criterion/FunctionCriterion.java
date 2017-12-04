@@ -61,8 +61,8 @@ public final class FunctionCriterion<U extends Ujo, T> extends ValueCriterion<U>
         Assert.isTrue(value instanceof Supplier, "Only {} is supported", Supplier.class);
     }
 
-    /** Create a new instance with a fixed value */
-    public ValueCriterion<U> lockValue() {
+    /** Freeze the the criterion to an immutable implementation. */
+    public ValueCriterion<U> freeze() {
         return new ValueCriterion(this);
     }
 

@@ -93,6 +93,7 @@ public class SampleORM {
             sample.useHierarchicalQueryMore();
             sample.useOptimizedSelect();
             sample.useOneRequestLoading();
+            sample.useSelectByLambda();
             sample.useNativeCriterion();
             sample.useReloading();
             sample.useLazyLoadingOnClosedSession();
@@ -243,8 +244,8 @@ public class SampleORM {
      *       , ord_item_alias.fk_order
      * FROM db1.ord_item ord_item_alias
      * INNER JOIN db1.ord_order ord_order_alias ON ord_order_alias.ID=ord_item_alias.fk_order
-     * WHERE ord_item_alias.ID >= 1 
-     *   AND ord_item_alias.NOTE LIKE '%table%' 
+     * WHERE ord_item_alias.ID >= 1
+     *   AND ord_item_alias.NOTE LIKE '%table%'
      *   AND ord_order_alias.NOTE = 'My order'
      * </pre>
      * where both parameters are passed by a 'question mark' notation
@@ -280,8 +281,8 @@ public class SampleORM {
      *      , ord_order_alias.NEW_COLUMN
      * FROM db1.ord_item ord_item_alias
      * INNER JOIN db1.ord_order ord_order_alias ON ord_order_alias.ID=ord_item_alias.fk_order
-     * WHERE ord_item_alias.ID >= 1 
-     *   AND ord_item_alias.NOTE LIKE '%table%' 
+     * WHERE ord_item_alias.ID >= 1
+     *   AND ord_item_alias.NOTE LIKE '%table%'
      *   AND ord_order_alias.NOTE = 'My order'
      * </pre>
      * where both parameters are passed by a 'question mark' notation
@@ -342,31 +343,31 @@ public class SampleORM {
         crn = null;
 
         // Simple condition: Order.ID>99
-        assert crnId.evaluate(order);
+        Assert.isTrue(crnId.evaluate(order));
 
         // Compound condition: Order.ID>99 or Order.NOTE='another'
         crn = crnId.or(crnNote);
-        assert crn.evaluate(order);
+        Assert.isTrue(crn.evaluate(order));
 
         // Compound condition with parentheses: Order.CREATED<=now() and (Order.NOTE='another' or Order.ID>99)
         crn = crnCreated.and(crnNote.or(crnId));
-        assert crn.evaluate(order);
+        Assert.isTrue(crn.evaluate(order));
 
         // Another condition: (Order.CREATED<=now() or Order.NOTE='another') and Order.ID>99
         crn = (crnCreated.or(crnNote)).and(crnId);
-        assert crn.evaluate(order);
+        Assert.isTrue(crn.evaluate(order));
 
         // ... or simple by a native priority:
         crn = crnCreated.or(crnNote).and(crnId);
-        assert crn.evaluate(order);
+        Assert.isTrue(crn.evaluate(order));
     }
 
     /** Sort orders by two keys: NOTE and CREATED descending. */
     public void useSortOrders() {
-
-        Query<Order> orders = session.createQuery(Order.class);
-        orders.orderBy( Order.NOTE
-                      , Order.CREATED.descending() );
+        Query<Order> orders = session
+            .createQuery(Order.class)
+            .orderBy( Order.NOTE
+                    , Order.CREATED.descending());
 
         logInfo("View-order count: {}", orders.getCount());
     }
@@ -488,7 +489,7 @@ public class SampleORM {
                 + GROUP_BY(order.column(Order.ID))
                 + ORDER_BY(order.column(Order.ID));
 
-        assert expected.equals(innerSql);
+        Assert.isTrue(expected.equals(innerSql));
         String sql = SELECT("*") + FROM("(" + innerSql + ")") + "  testView " + WHERE("true");
 
         SqlParameters sqlParam = new SqlParameters().setSqlStatement(sql).setParameters(excludedId);
@@ -600,7 +601,7 @@ public class SampleORM {
     public void useSelectItems_7() {
         List<Order> orders = session.createQuery(Order.ID.forAll()).setLimit(1).list();
         List<Item> items = session.createQuery(Item.ORDER.whereIn(orders)).list();
-        assert items.size() > 0 : "The result have got two Items";
+        Assert.hasLength(items, "The result have got two Items");
     }
 
     /** Sample for a DB query with relations to yourself.<br>
@@ -619,8 +620,8 @@ public class SampleORM {
         createHierarchicalCustomers("Smith", "Brown");
         Customer customer = session.createQuery(crn3).uniqueResult();
 
-        assert customer != null : "The result have got the one customers";
-        assert Customer.SURNAME.equals(customer, "Brown") : "Wrong customer";
+        Assert.notNull(customer, "The result have got the one customers");
+        Assert.isTrue(Customer.SURNAME.equals(customer, "Brown"), "Wrong customer");
     }
 
     /**
@@ -637,10 +638,11 @@ public class SampleORM {
                 .orderBy(parentName)
                 .uniqueResult();
 
-        assert customer != null : "The result have got the one customers";
-        assert Customer.PARENT instanceof CompositeKey : "The key is type of CompositeKey" + Customer.PARENT.getClass();
-        assert parentName.getFullName().equals("Customer.parent[customerAlias].surname") : "The wrong implementation CompositeKey.toString()";
-        assert "Smith".equals(customer.get(parentName));
+        Assert.notNull(customer != null, "The result have got the one customers");
+        Assert.isTrue(Customer.PARENT instanceof CompositeKey, "The key is type of CompositeKey {}", Customer.PARENT);
+        Assert.isTrue(parentName.getFullName().equals("Customer.parent[customerAlias].surname"),
+                "The wrong implementation CompositeKey.toString()");
+        Assert.isTrue("Smith".equals(customer.get(parentName)));
     }
 
     /** DB query with relations to yourself as a value of Criterion */
@@ -652,7 +654,7 @@ public class SampleORM {
                .add(Customer.SURNAME));
 
         Customer customer = session.createQuery(crn1).uniqueResult();
-        assert customer != null : "The result have got the one customers";
+        Assert.notNull(customer, "The result have got the one customers");
     }
 
     /** Create a SELECT for the one column only
@@ -667,9 +669,28 @@ public class SampleORM {
             logInfo("Note: {}", item.getNote());
 
             // Other columns have got the default value always:
-            assert item.getId() == Item.ID.getDefault();
-            assert item.getOrder() == Item.ORDER.getDefault();
+            Assert.isTrue(item.getId() == Item.ID.getDefault());
+            Assert.isTrue(item.getOrder() == Item.ORDER.getDefault());
         }
+    }
+
+    /** Create a SELECT for the one column only
+     * with no duplicate rows for a better performance.
+     */
+    public void useSelectByLambda() {
+        final Item filter = new Item();
+        filter.setId(1L);
+        filter.setNote("TEST");
+
+        final Criterion<Item> crn1, crn2, crn3;
+        crn1 = Item.ID.where(Operator.GE, () -> filter.getId());
+        crn2 = Item.NOTE.where(Operator.NOT_EQ, () -> filter.getNote());
+        crn3 = crn1.and(crn2);
+        Assert.isTrue(session.createQuery(crn3).getCount() == 15);
+
+        // Change the filter:
+        filter.setId(2L);
+        Assert.isTrue(session.createQuery(crn3).getCount() == 14);
     }
 
     /** Fetch column from related tables */
@@ -741,12 +762,13 @@ public class SampleORM {
                 .uniqueResult();
         item.readSession().close();
 
+        RuntimeException exeption = null;
         try {
-            Order order2 = item.getOrder();
-            assert false : "Lazy-loading for a closed session is disabled by default, the Item is: " + order2.getId();
+            item.getOrder();
         } catch (RuntimeException e) {
-            logInfo("OK: {}", e.getClass().getSimpleName());
+            exeption = e;
         }
+        Assert.notNull(exeption, "Lazy-loading for a closed session is disabled by default");
 
         item.readSession().setLazyLoading(LazyLoading.ALLOWED_ANYWHERE_WITH_WARNING); // Enable lazy-loading
         Order order3 = item.getOrder();
@@ -917,7 +939,7 @@ public class SampleORM {
 
         int count = session.update(item, crn3);
         session.commit();
-        assert count == 0;
+        Assert.isTrue(count == 0);
     }
 
     /** Using the pessimistic database UPDATE by the method: setLockRequest(). */

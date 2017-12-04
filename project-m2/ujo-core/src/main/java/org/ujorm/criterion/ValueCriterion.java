@@ -294,8 +294,8 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
         Assert.isTrue(value instanceof Object[], "Value must be an Array type only");
     }
 
-    /** Returns an instance with a locked value */
-    public ValueCriterion<U> lockValue() {
+    /** This instance is an immutable implementation. */
+    public ValueCriterion<U> freeze() {
         return this;
     }
 

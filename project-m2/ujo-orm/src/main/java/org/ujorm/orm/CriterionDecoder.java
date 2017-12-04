@@ -103,7 +103,7 @@ public class CriterionDecoder {
         if (c.isBinary()) {
             unpackBinary((BinaryCriterion)c, sql);
         } else try {
-            final ValueCriterion origCriterion = ((ValueCriterion) c).lockValue();
+            final ValueCriterion origCriterion = ((ValueCriterion) c).freeze();
             final ValueCriterion valueCriterion = dialect.printCriterion(origCriterion, sql);
             if (valueCriterion != null) {
                 values.add(valueCriterion);
