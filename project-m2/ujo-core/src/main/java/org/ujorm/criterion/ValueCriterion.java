@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
@@ -63,6 +64,13 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
         , @Nullable final Operator operator
         , @Nullable final Key<U,Object> value) {
         this(key, operator, (Object) value);
+    }
+
+    /** An constructor for an internal cloning */
+    protected ValueCriterion(@Nonnull final ValueCriterion criterion) {
+        this.key = criterion.key;
+        this.operator = criterion.operator;
+        this.value = criterion.getRightNode();
     }
 
     /** An undefined operator (null) is replaced by EQ. */
@@ -286,6 +294,10 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
         Assert.isTrue(value instanceof Object[], "Value must be an Array type only");
     }
 
+    /** Returns an instance with a locked value */
+    public ValueCriterion<U> lockValue() {
+        return this;
+    }
 
     /** Compare two object */
     @SuppressWarnings("unchecked")

@@ -99,7 +99,7 @@ abstract public class SqlDialect {
     }
 
     /** Set the OrmHandler - the method is for internal call only. */
-    public void setHandler(OrmHandler ormHandler) {
+    public void setHandler(@Nonnull final OrmHandler ormHandler) {
         Assert.isNull(this.ormHandler, "The OrmHandler is assigned yet.");
         this.ormHandler = ormHandler;
     }
@@ -111,12 +111,12 @@ abstract public class SqlDialect {
     abstract public String getJdbcDriver();
 
     /** Create a new database connection */
-    public Connection createConnection(final MetaDatabase db) throws Exception {
+    public Connection createConnection(@Nonnull final MetaDatabase db) throws Exception {
         return db.createInternalConnection();
     }
 
     /** Get or create an Initial Context for the JNDI lookup. */
-    public InitialContext createJndiInitialContext(final MetaDatabase db) throws NamingException {
+    public InitialContext createJndiInitialContext(@Nonnull final MetaDatabase db) throws NamingException {
           return new InitialContext();
     }
 
@@ -129,7 +129,7 @@ abstract public class SqlDialect {
     }
 
     /** Print SQL 'CREATE SCHEMA' */
-    public Appendable printCreateSchema(String schema, Appendable out) throws IOException {
+    public Appendable printCreateSchema(String schema, @Nonnull final Appendable out) throws IOException {
         out.append("CREATE SCHEMA IF NOT EXISTS ");
         printQuotedName(schema, out);
         return out;
@@ -137,14 +137,14 @@ abstract public class SqlDialect {
 
     /** Print SQL 'SET SCHEMA'. The method is not used yet. */
     @Deprecated
-    public Appendable printDefaultSchema(String schema, Appendable out) throws IOException {
+    public Appendable printDefaultSchema(String schema, @Nonnull final Appendable out) throws IOException {
         out.append("SET SCHEMA ");
         printQuotedName(schema, out);
         return out;
     }
 
     /** Print a full SQL table name by sample: SCHEMA.TABLE  */
-    public final Appendable printFullTableName(final MetaTable table, final Appendable out) throws IOException {
+    public final Appendable printFullTableName(final MetaTable table, @Nonnull final Appendable out) throws IOException {
         return printFullTableName(table, false, out);
     }
 
@@ -152,7 +152,7 @@ abstract public class SqlDialect {
      * @param printSymbolSchema True parameter replaces a <strong>default schema</strong> name for the symbol "~" by the example: ~.TABLE
      * @throws IOException
      */
-    public Appendable printFullTableName(final MetaTable table, final boolean printSymbolSchema, final Appendable out) throws IOException {
+    public Appendable printFullTableName(final MetaTable table, final boolean printSymbolSchema, @Nonnull final Appendable out) throws IOException {
         final String tableSchema = MetaTable.SCHEMA.of(table);
         final String tableName = MetaTable.NAME.of(table);
 
@@ -169,7 +169,7 @@ abstract public class SqlDialect {
     }
 
     /** Print a SQL database and table name and an alias definition - by sample: SCHEMA.TABLE ALIAS */
-    public void printTableAliasDefinition(final TableWrapper table, final Appendable out) throws IOException {
+    public void printTableAliasDefinition(final TableWrapper table, @Nonnull final Appendable out) throws IOException {
         printFullTableName(table.getModel(), out);
         final String alias = table.getAlias();
         if (hasLength(alias)) {
@@ -179,7 +179,7 @@ abstract public class SqlDialect {
     }
 
     /** Print a full SQL column alias name by sample: "TABLE_ALIAS"."ORIG_COLUMN" */
-    public Appendable printColumnAlias(final ColumnWrapper column, final Appendable out) throws IOException {
+    public Appendable printColumnAlias(final ColumnWrapper column, @Nonnull final Appendable out) throws IOException {
         printQuotedName(column.getTableAlias(), out);
         out.append('.');
         printQuotedName(column.getName(), out);
@@ -187,7 +187,7 @@ abstract public class SqlDialect {
     }
 
     /** Print a SQL script to create table */
-    public Appendable printTable(MetaTable table, Appendable out) throws IOException {
+    public Appendable printTable(MetaTable table, @Nonnull final Appendable out) throws IOException {
         out.append("CREATE TABLE ");
         printFullTableName(table, out);
         String separator = NEW_LINE_SEPARATOR.concat("( ");
@@ -206,12 +206,12 @@ abstract public class SqlDialect {
     }
 
     /** Print a SQL script to add a new column to the table */
-    public Appendable printAlterTableAddColumn(MetaColumn column, Appendable out) throws IOException {
+    public Appendable printAlterTableAddColumn(MetaColumn column, @Nonnull final Appendable out) throws IOException {
         return printAlterTableColumn(column, true, out);
     }
 
     /** Print a SQL script to add a new column to the table */
-    public Appendable printAlterTableColumn(MetaColumn column, boolean add, Appendable out) throws IOException {
+    public Appendable printAlterTableColumn(MetaColumn column, boolean add, @Nonnull final Appendable out) throws IOException {
         out.append("ALTER TABLE ");
         printFullTableName(column.getTable(), out);
         out.append(add
@@ -229,7 +229,7 @@ abstract public class SqlDialect {
     }
 
     /** Print a SQL phrase for the DEFAULT VALUE, for example: DEFAULT 777 */
-    public Appendable printDefaultValue(final MetaColumn column, final Appendable out) throws IOException {
+    public Appendable printDefaultValue(final MetaColumn column, @Nonnull final Appendable out) throws IOException {
         Object value = column.getJdbcFriendlyDefaultValue();
         boolean isDefault = value != null;
         String quotMark = "";
@@ -267,7 +267,7 @@ abstract public class SqlDialect {
      * Print foreign key for the parameter column
      * @return More statements separated by the ';' characters are enabled
      */
-    public Appendable printForeignKey(MetaColumn column, Appendable out) throws IOException {
+    public Appendable printForeignKey(MetaColumn column, @Nonnull final Appendable out) throws IOException {
 
         MetaTable table = column.getTable();
         List<MetaColumn> fColumns = column.getForeignColumns();
@@ -305,7 +305,7 @@ abstract public class SqlDialect {
      * Print an INDEX for the parameter column.
      * @return More statements separated by the ';' characters are enabled
      */
-    public Appendable printIndex(final MetaIndex index, final Appendable out) throws IOException {
+    public Appendable printIndex(final MetaIndex index, @Nonnull final Appendable out) throws IOException {
 
         out.append("CREATE ");
         if (MetaIndex.UNIQUE.of(index)) {
@@ -354,7 +354,10 @@ abstract public class SqlDialect {
      * @param aName The name parameter is not mandatory, the not null value means a foreign key.
      * @throws java.io.IOException
      */
-    public Appendable printColumnDeclaration(MetaColumn column, String aName, Appendable out) throws IOException {
+    public Appendable printColumnDeclaration
+        ( @Nonnull final MetaColumn column
+        , @Nonnull final String aName
+        , @Nonnull final Appendable out) throws IOException {
 
         String name = aName!=null ? aName : column.getName();
         printQuotedName(name, out);
@@ -389,7 +392,9 @@ abstract public class SqlDialect {
     }
 
     /** Print a SQL to create foreign keys. */
-    public Appendable printFKColumnsDeclaration(MetaColumn column, Appendable out) throws IOException {
+    public Appendable printFKColumnsDeclaration
+        ( @Nonnull final MetaColumn column
+        , @Nonnull final Appendable out) throws IOException {
 
         final List<MetaColumn> columns = column.getForeignColumns();
 
@@ -411,7 +416,9 @@ abstract public class SqlDialect {
     }
 
     /** Print an SQL INSERT statement.  */
-    public Appendable printInsert(final OrmUjo bo, final Appendable out) throws IOException {
+    public Appendable printInsert
+            ( @Nonnull final OrmUjo bo
+            , @Nonnull final Appendable out) throws IOException {
 
         MetaTable table = ormHandler.findTableModel((Class) bo.getClass());
         StringBuilder values = new StringBuilder();
@@ -436,7 +443,7 @@ abstract public class SqlDialect {
      * @param idxTo Finished index from list (excluded)
      * @see #isMultiRowInsertSupported()
      */
-    public Appendable printInsert(final List<? extends OrmUjo> bos, final int idxFrom, final int idxTo, final Appendable out) throws IOException {
+    public Appendable printInsert(final List<? extends OrmUjo> bos, final int idxFrom, final int idxTo, @Nonnull final Appendable out) throws IOException {
 
         MetaTable table = ormHandler.findTableModel(bos.get(idxFrom).getClass());
         StringBuilder values = new StringBuilder(32);
@@ -463,11 +470,11 @@ abstract public class SqlDialect {
      * @see #isMultiRowInsertSupported()
      */
     public Appendable printInsertBySelect
-                ( @Nonnull final List<? extends OrmUjo> bos
-                , final int idxFrom
-                , final int idxTo
-                , @Nonnull final String fromPhrase
-                , @Nonnull final Appendable out) throws IOException {
+            ( @Nonnull final List<? extends OrmUjo> bos
+            , final int idxFrom
+            , final int idxTo
+            , @Nonnull final String fromPhrase
+            , @Nonnull final Appendable out) throws IOException {
 
         final MetaTable table = ormHandler.findTableModel(bos.get(idxFrom).getClass());
         final StringBuilder values = new StringBuilder(32);
@@ -633,7 +640,10 @@ abstract public class SqlDialect {
      * @param out Table columns output.
      * @throws java.io.IOException
      */
-    public void printTableColumns(Collection<? extends ColumnWrapper> columns, Appendable values, Appendable out) throws IOException {
+    public void printTableColumns
+        ( @Nonnull final Collection<? extends ColumnWrapper> columns
+        , @Nonnull final Appendable values
+        , @Nonnull final Appendable out) throws IOException {
         String separator = "";
         boolean select = values==null; // SELECT
         for (ColumnWrapper wColumn : columns) {
@@ -673,14 +683,13 @@ abstract public class SqlDialect {
      * @return A nullable value criterion to assign into the SQL query.
      */
     @Nullable
-    public ValueCriterion printCriterion(@Nonnull ValueCriterion crn, @Nonnull Appendable out) throws IOException {
-        final Operator operator = crn.getOperator();
+    public ValueCriterion printCriterion(@Nonnull final ValueCriterion crn, @Nonnull final Appendable out) throws IOException {
         final Key key = crn.getLeftNode();
+        final Operator operator = crn.getOperator();
+        final Object right = crn.getRightNode();
         final ColumnWrapper column = key != null
-                ? AliasKey.getLastKey(key).getColumn(ormHandler)
-                : null;
-
-        Object right = crn.getRightNode();
+            ? AliasKey.getLastKey(key).getColumn(ormHandler)
+            : null;
         if (right == null ) {
             switch (operator) {
                 case EQ:
@@ -700,18 +709,18 @@ abstract public class SqlDialect {
         final String template = getCriterionTemplate(crn);
         Assert.notNull(template, "Unsupported SQL operator: {}", operator);
 
-        switch (crn.getOperator()) {
+        switch (operator) {
             case XFIXED:
                 out.append( template );
                 break;
             case XSQL:
                 if (right instanceof TemplateValue) {
-                    right = ((TemplateValue) right).getRightVale();
-                    ValueCriterion crit2 = (ValueCriterion) Criterion.where
-                            ( crn.getLeftNode()
-                            , Operator.EQ // The hack
-                            , right);
-                    return printCriterionValue(template, column, crit2, out);
+                    final Object myValue = ((TemplateValue) right).getRightVale();
+                    final ValueCriterion myCrn = (ValueCriterion) Criterion.where
+                            ( key
+                            , Operator.EQ // An hack
+                            , myValue);
+                    return printCriterionValue(template, column, myCrn, out);
                 }
                 if (template.contains("{0}")) {
                     out.append(MessageFormat.format(template, getAliasColumnName(column)));
@@ -735,7 +744,11 @@ abstract public class SqlDialect {
      * @throws IOException
      */
     @Nullable
-    protected ValueCriterion printCriterionValue(@Nonnull String template, @Nonnull ColumnWrapper column, @Nonnull ValueCriterion crit, @Nonnull Appendable out) throws IOException {
+    protected ValueCriterion printCriterionValue
+        ( @Nonnull final String template
+        , @Nonnull final ColumnWrapper column
+        , @Nonnull final ValueCriterion crit
+        , @Nonnull final Appendable out) throws IOException {
         final Object right = crit.getRightNode();
         if (right instanceof Key) {
             final Key rightProperty = (Key) right;
@@ -751,14 +764,14 @@ abstract public class SqlDialect {
             for (int i = 0; i < os.length; i++) {
                 sb.append(i > 0 ? ",?" : "?");
             }
-            String f = MessageFormat.format(template, getAliasColumnName(column), sb.toString());
+            final String f = MessageFormat.format(template, getAliasColumnName(column), sb.toString());
             out.append(f);
             return crit;
         } else if (column.getModel().isForeignKey()) {
             printForeignKey(crit, column, template, out);
             return crit;
         } else {
-            String f = MessageFormat.format(template, getAliasColumnName(column), "?");
+            final String f = MessageFormat.format(template, getAliasColumnName(column), "?");
             out.append(f);
             return crit;
         }
@@ -776,10 +789,10 @@ abstract public class SqlDialect {
 
     /** Print all items of the foreign key */
     public void printForeignKey
-        ( final ValueCriterion crit
-        , final ColumnWrapper column
-        , final String template
-        , final Appendable out
+        ( @Nonnull final ValueCriterion crit
+        , @Nonnull final ColumnWrapper column
+        , @Nonnull final String template
+        , @Nonnull final Appendable out
         ) throws IOException
     {
         int size = column.getModel().getForeignColumns().size();
@@ -807,10 +820,10 @@ abstract public class SqlDialect {
      * @param count only count of items is required;
      */
     final public Appendable printSelect
-        ( final TableWrapper table
-        , final Query query
+        ( @Nonnull final TableWrapper table
+        , @Nonnull final Query query
         , final boolean count
-        , final Appendable out
+        , @Nonnull final Appendable out
         ) throws IOException {
 
         return table.isView()
@@ -823,7 +836,11 @@ abstract public class SqlDialect {
      * @param query The UJO query
      * @param count only count of items is required;
      */
-    protected Appendable printSelectView(TableWrapper table, Query query, boolean count, Appendable out) throws IOException {
+    protected Appendable printSelectView
+        ( @Nonnull final TableWrapper table
+        , @Nonnull final Query query
+        , final boolean count
+        , @Nonnull final Appendable out) throws IOException {
         final String userSql = query.getSqlParameters()!=null
                 ? query.getSqlParameters().getSqlStatement()
                 : null
@@ -866,7 +883,10 @@ abstract public class SqlDialect {
      * @param query The UJO query
      * @param count only count of items is required;
      */
-    protected Appendable printSelectTable(final Query query, final boolean count, final Appendable out) throws IOException {
+    protected Appendable printSelectTable
+        ( @Nonnull final  Query query
+        , final boolean count
+        , @Nonnull final Appendable out) throws IOException {
         if (count && query.isDistinct()) {
             out.append("SELECT COUNT(*) FROM (");
             printSelectTableBase(query, count, out);
@@ -883,7 +903,10 @@ abstract public class SqlDialect {
      * @param query The UJO query
      * @param count only count of items is required;
      */
-    protected void printSelectTableBase(final Query query, final boolean count, final Appendable out) throws IOException {
+    protected void printSelectTableBase
+        ( final @Nonnull Query query
+        , final boolean count
+        , @Nonnull final Appendable out) throws IOException {
         out.append("SELECT ");
 
         if (count!=query.isDistinct()) {
@@ -952,13 +975,17 @@ abstract public class SqlDialect {
      * <br>The method prints a text "FOR UPDATE".
      * @param query The UJO query
      */
-    protected Appendable printLockForSelect(final Query query, final Appendable out) throws IOException, UnsupportedOperationException {
+    protected Appendable printLockForSelect
+        ( @Nonnull final Query query
+        , @Nonnull final Appendable out) throws IOException, UnsupportedOperationException {
         out.append("FOR UPDATE");
         return out;
     }
 
     /** Print SQL ORDER BY */
-    protected void printSelectOrder(Query query, Appendable out) throws IOException {
+    protected void printSelectOrder
+        ( @Nonnull final Query query
+        , @Nonnull final Appendable out) throws IOException {
 
         out.append(" ORDER BY ");
         final List<Key> props = query.getOrderBy();
@@ -978,9 +1005,11 @@ abstract public class SqlDialect {
     /** Print the call of a stored procedure by template: <br>
      * {? = call procedure_when(?,?)}
      */
-    public Appendable printCall(MetaProcedure procedure, Appendable out) throws IOException {
+    public Appendable printCall
+        ( @Nonnull final MetaProcedure procedure
+        , @Nonnull final Appendable out) throws IOException {
 
-        List<MetaColumn> propList = MetaProcedure.PARAMETERS.of(procedure);
+        final List<MetaColumn> propList = MetaProcedure.PARAMETERS.of(procedure);
 
         out.append('{').append(SPACE);
         if (!propList.get(0).isVoid()) {
@@ -1001,7 +1030,9 @@ abstract public class SqlDialect {
     }
 
     /** Print an OFFSET of the statement SELECT. */
-    public void printOffset(Query query, Appendable out) throws IOException {
+    public void printOffset
+        ( @Nonnull final Query query
+        , @Nonnull final Appendable out) throws IOException {
         int limit = query.isLimit()
             ? query.getLimit()
             : Integer.MAX_VALUE
@@ -1011,7 +1042,9 @@ abstract public class SqlDialect {
     }
 
     /** Print the full sequence table */
-    protected Appendable printSequenceTableName(final UjoSequencer sequence, final Appendable out) throws IOException {
+    protected Appendable printSequenceTableName
+        ( final @Nonnull UjoSequencer sequence
+        , @Nonnull final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
         if (hasLength(schema)) {
             printQuotedName(schema, out);
@@ -1022,7 +1055,9 @@ abstract public class SqlDialect {
     }
 
     /** Print SQL CREATE SEQUENCE. No JDBC parameters. */
-    public Appendable printSequenceTable(final MetaDatabase db, final Appendable out) throws IOException {
+    public Appendable printSequenceTable
+        ( @Nonnull final MetaDatabase db
+        , @Nonnull final Appendable out) throws IOException {
         String schema = MetaDatabase.SCHEMA.of(db);
         Integer cache = MetaParams.SEQUENCE_CACHE.of(db.getParams());
 
@@ -1048,12 +1083,18 @@ abstract public class SqlDialect {
     /**
      * Print SQL CREATE SEQUENCE (insert sequence row). No JDBC parameters.
      */
-    public Appendable printSequenceInit(final UjoSequencer sequence, final Appendable out) throws IOException {
-        Integer cache = MetaParams.SEQUENCE_CACHE.of(sequence.getDatabase().getParams());
+    public Appendable printSequenceInit
+        ( @Nonnull final UjoSequencer sequence
+        , @Nonnull final Appendable out) throws IOException {
+        final Integer cache = MetaParams.SEQUENCE_CACHE.of(sequence.getDatabase().getParams());
         return printSequenceInitWithValues(sequence, cache, cache, out);
     }
 
-    public Appendable printSequenceInitWithValues(final UjoSequencer sequence, long seq, int cache, final Appendable out) throws IOException {
+    public Appendable printSequenceInitWithValues
+        ( @Nonnull final UjoSequencer sequence
+        , final long seq
+        , final int cache
+        , @Nonnull final Appendable out) throws IOException {
         out.append("INSERT INTO ");
         printSequenceTableName(sequence, out);
         out.append(" (");
@@ -1072,7 +1113,9 @@ abstract public class SqlDialect {
     /**
      * Print SQL UPDATE NEXT SEQUENCE value.
      */
-    public Appendable printSequenceNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
+    public Appendable printSequenceNextValue
+        ( @Nonnull final UjoSequencer sequence
+        , @Nonnull final Appendable out) throws IOException {
         out.append("UPDATE ");
         printSequenceTableName(sequence, out);
         out.append(" SET ");
@@ -1088,7 +1131,9 @@ abstract public class SqlDialect {
     }
 
     /** Set sequence to the max value. */
-    public Appendable printSetMaxSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
+    public Appendable printSetMaxSequence
+        ( @Nonnull final UjoSequencer sequence
+        , @Nonnull final Appendable out) throws IOException {
         out.append("UPDATE ");
         printSequenceTableName(sequence, out);
         out.append(" SET ");
@@ -1106,7 +1151,9 @@ abstract public class SqlDialect {
      * The SQL columns are always selected in the order: sequence, cache, maxValue.
      * current cache.
      */
-    public Appendable printSequenceCurrentValue(final UjoSequencer sequence, final Appendable out) throws IOException {
+    public Appendable printSequenceCurrentValue
+        ( @Nonnull final UjoSequencer sequence
+        , @Nonnull final Appendable out) throws IOException {
         final SeqTableModel tm = getSeqTableModel();
 
         out.append("SELECT ");
@@ -1126,7 +1173,10 @@ abstract public class SqlDialect {
     }
 
     /** Print SQL DELETE SEQUENCE BY ID. */
-    public Appendable printSequenceDeleteById(final UjoSequencer sequence, String id, final Appendable out) throws IOException {
+    public Appendable printSequenceDeleteById
+        ( @Nonnull final UjoSequencer sequence
+        , @Nonnull final String id
+        , @Nonnull final Appendable out) throws IOException {
         final SeqTableModel tm = getSeqTableModel();
 
         out.append("DELETE FROM ");
@@ -1156,7 +1206,9 @@ abstract public class SqlDialect {
     }
 
     /** Print a Comment to a database Table */
-    public Appendable printComment(MetaTable table, Appendable out) throws IOException {
+    public Appendable printComment
+        ( @Nonnull final MetaTable table
+        , @Nonnull final Appendable out) throws IOException {
         out.append("COMMENT ON TABLE ");
         printFullTableName(table, out);
         out.append(" IS '");
@@ -1166,7 +1218,9 @@ abstract public class SqlDialect {
     }
 
     /** Print a Comment to a database Column */
-    public Appendable printComment(MetaColumn column, Appendable out) throws IOException {
+    public Appendable printComment
+        ( @Nonnull final MetaColumn column
+        , @Nonnull final Appendable out) throws IOException {
         out.append("COMMENT ON COLUMN ");
         printFullTableName(MetaColumn.TABLE.of(column), out);
         out.append('.');
@@ -1178,7 +1232,7 @@ abstract public class SqlDialect {
     }
 
     /** Return database SQL keyword set in the upper case. */
-    public Set<String> getKeywordSet(Connection conn) {
+    public Set<String> getKeywordSet(@Nonnull final Connection conn) {
         Set<String> result = new HashSet<String>(128);
         Reader reader = null;
         try {
@@ -1204,7 +1258,7 @@ abstract public class SqlDialect {
     }
 
     /** Assign keywords from reader to a set */
-    private void assignKeywords(Set<String> result, Reader reader) throws IOException {
+    private void assignKeywords(@Nonnull final Set<String> result, @Nonnull final Reader reader) throws IOException {
         StringBuilder builder = new StringBuilder();
         int c;
         while ((c=reader.read())!=-1) {
@@ -1218,7 +1272,7 @@ abstract public class SqlDialect {
     }
 
     /** Escape the special character: "'" */
-    protected final void escape(final CharSequence text, final Appendable out) throws IOException {
+    protected final void escape(@Nonnull final CharSequence text, @Nonnull final Appendable out) throws IOException {
         for (int i=0; i<text.length(); i++) {
             final char c = text.charAt(i);
             switch(c) {
@@ -1240,7 +1294,10 @@ abstract public class SqlDialect {
      * @see http://technet.microsoft.com/en-us/library/ms378791%28v=sql.110%29.aspx
      * @see Connection#releaseSavepoint(java.sql.Savepoint)
      */
-    public void releaseSavepoint(final Connection conn, final Savepoint savepoint, final boolean afterRollback) throws SQLException {
+    public void releaseSavepoint
+        ( @Nonnull final Connection conn
+        , @Nonnull final Savepoint savepoint
+        , final boolean afterRollback) throws SQLException {
         conn.releaseSavepoint(savepoint);
     }
 
@@ -1250,7 +1307,9 @@ abstract public class SqlDialect {
      * @param sql Target SQL for printing new quoted name
      * @return SQL with printed quoted name
      */
-    public final Appendable printQuotedName(final CharSequence name, final Appendable sql) throws IOException {
+    public final Appendable printQuotedName
+        ( @Nonnull final CharSequence name
+        , @Nonnull final Appendable sql) throws IOException {
         if (quoteRequest==null) {
             quoteRequest = ormHandler.getParameters().isQuotedSqlNames();
         }
@@ -1269,7 +1328,9 @@ abstract public class SqlDialect {
      * @param sql Target SQL for printing new quoted name
      * @return SQL with printed quoted name
      */
-    protected Appendable printQuotedNameAlways(final CharSequence name, final Appendable sql) throws IOException {
+    protected Appendable printQuotedNameAlways
+        ( @Nonnull final CharSequence name
+        , @Nonnull final Appendable sql) throws IOException {
         sql.append('"'); // quotation start character based on SQL dialect
         sql.append(name);
         sql.append('"'); // quotation end character based on SQL dialect
@@ -1277,7 +1338,7 @@ abstract public class SqlDialect {
     }
 
     /** Prints quoted name (identifier) to SQL - always. */
-    protected final String getQuotedName(final CharSequence name) throws IOException {
+    protected final String getQuotedName(@Nonnull final CharSequence name) throws IOException {
         final StringBuilder result = new StringBuilder(name.length()+4);
         printQuotedNameAlways(name, result);
         return result.toString();
@@ -1308,7 +1369,10 @@ abstract public class SqlDialect {
     }
 
     /** Create a SQL script for the NEXT SEQUENCE from a native database sequencer */
-    public Appendable printNextSequence(String sequenceName, MetaTable table, Appendable out) throws IOException {
+    public Appendable printNextSequence
+        ( @Nonnull final String sequenceName
+        , @Nonnull final MetaTable table
+        , @Nonnull final Appendable out) throws IOException {
         out.append("SELECT NEXTVAL('");
         out.append(sequenceName);
         out.append("')");
