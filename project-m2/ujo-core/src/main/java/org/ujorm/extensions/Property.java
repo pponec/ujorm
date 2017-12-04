@@ -20,7 +20,6 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -32,6 +31,7 @@ import org.ujorm.Validator;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
+import org.ujorm.criterion.ProxyValue;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidationException;
@@ -532,8 +532,8 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> where(@Nonnull final Operator operator, @Nullable final Supplier<VALUE> value) {
-        return Criterion.where(this, operator, value);
+    public Criterion<U> where(@Nonnull final Operator operator, @Nullable final ProxyValue<VALUE> proxyValue) {
+        return Criterion.where(this, operator, proxyValue);
     }
 
     /** {@inheritDoc} */
@@ -553,11 +553,11 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     public Criterion<U> whereEq(@Nonnull final Key<U, VALUE> value) {
         return Criterion.where(this, value);
     }
-    
+
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereEq(@Nonnull final Supplier<VALUE> value) {
-        return Criterion.where(this, Operator.EQ, value);
+    public Criterion<U> whereEq(@Nonnull final ProxyValue<VALUE> proxyValue) {
+        return Criterion.where(this, Operator.EQ, proxyValue);
     }
 
     /** {@inheritDoc} */
@@ -599,7 +599,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
-    public Criterion<U> whereFilled() {
+    public Criterion<U> whereHasLength() {
         final Criterion<U> result = whereNotNull()
             .and(Criterion.where(this, Operator.NOT_EQ, (VALUE) getEmptyValue()))
                 ;
@@ -609,10 +609,9 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
-    public Criterion<U> whereNotFilled(){
+    public Criterion<U> whereIsEmpty() {
         final Criterion<U> result = whereNull()
-            .or(new ValueCriterion(this, Operator.EQ, getEmptyValue()))
-                ;
+                .or(ValueCriterion.where(this, Operator.EQ, (VALUE) getEmptyValue()));
         return result;
     }
 
@@ -639,19 +638,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereNeq(@Nonnull final Supplier<VALUE> value) {
-        return Criterion.where(this, Operator.NOT_EQ, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public Criterion<U> whereGt(@Nullable final VALUE value) {
-        return Criterion.where(this, Operator.GT, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion<U> whereGt(@Nonnull final Supplier<VALUE> value) {
         return Criterion.where(this, Operator.GT, value);
     }
 
@@ -663,31 +650,13 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereGe(@Nonnull final Supplier<VALUE> value) {
-        return Criterion.where(this, Operator.GE, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public Criterion<U> whereLt(@Nullable final VALUE value) {
         return Criterion.where(this, Operator.LT, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> whereLt(@Nonnull final Supplier<VALUE> value) {
-        return Criterion.where(this, Operator.LT, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public Criterion<U> whereLe(@Nullable final VALUE value) {
-        return Criterion.where(this, Operator.LE, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion<U> whereLe(@Nonnull final Supplier<VALUE> value) {
         return Criterion.where(this, Operator.LE, value);
     }
 

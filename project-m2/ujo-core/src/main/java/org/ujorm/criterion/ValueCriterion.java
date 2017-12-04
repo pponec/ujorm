@@ -41,7 +41,7 @@ import static org.ujorm.core.UjoTools.SPACE;
  * @author Pavel Ponec
  */
 public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Serializable {
-    static final long serialVersionUID = 20140128L;
+    static final long serialVersionUID = 2017_12_04;
 
     /** True constant criterion */
     public static final Criterion<Ujo> TRUE  = new ValueCriterion<>(true);
@@ -53,12 +53,12 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
     protected Object value;
 
     /** Create an Criterion constant */
-    public ValueCriterion(final boolean value) {
+    protected ValueCriterion(final boolean value) {
         this(null, Operator.XFIXED, value);
     }
 
     /** An undefined operator (null) is replaced by EQ. */
-    public ValueCriterion
+    protected ValueCriterion
         ( @Nullable final Key<U,? extends Object> key
         , @Nullable final Operator operator
         , @Nullable final Key<U,Object> value) {
@@ -66,7 +66,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
     }
 
     /** An undefined operator (null) is replaced by EQ. */
-    public ValueCriterion
+    protected ValueCriterion
         ( @Nullable final Key<U,? extends Object> key
         , @Nullable Operator operator
         , @Nullable Object value) {

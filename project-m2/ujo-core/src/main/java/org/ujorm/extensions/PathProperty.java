@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -35,6 +34,7 @@ import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
+import org.ujorm.criterion.ProxyValue;
 import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidationException;
 
@@ -691,13 +691,13 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
 
     /** {@inheritDoc} */
     @Override @Nonnull
-    public Criterion<U> whereFilled() {
+    public Criterion<U> whereHasLength() {
         return Criterion.whereNotNull(this).and(Criterion.where(this, Operator.NOT_EQ, getEmptyValue()));
     }
 
     /** {@inheritDoc} */
     @Override @Nonnull
-    public Criterion<U> whereNotFilled(){
+    public Criterion<U> whereIsEmpty(){
         return Criterion.whereNull(this).or(Criterion.where(this, getEmptyValue()));
     }
 
@@ -803,78 +803,28 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     public final Criterion<U> whereNone() {
         return forNone();
     }
-    
+
     /**
      * Criterion factory
      * @param operator Value  operator
-     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @param proxyValue An function for the value where the {@null} value is not supported in ORM.
      * @return New instance of Criterion
      */
     @Override @Nonnull
-    public Criterion<U> where(@Nonnull final Operator operator, @Nonnull final Supplier<VALUE> valueFunction) {
-        return Criterion.where(this, operator, valueFunction);
+    public Criterion<U> where(@Nonnull final Operator operator, @Nonnull final ProxyValue<VALUE> proxyValue) {
+        return Criterion.where(this, operator, proxyValue);
     }
 
     /**
      * Criterion factory
-     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @param proxyValue An function for the value where the {@null} value is not supported in ORM.
      * @return New instance of Criterion
      */
     @Override @Nonnull
-    public Criterion<U> whereEq(@Nonnull final Supplier<VALUE> valueFunction) {
-        return Criterion.where(this, Operator.EQ, valueFunction);
+    public Criterion<U> whereEq(@Nonnull final ProxyValue<VALUE> proxyValue) {
+        return Criterion.where(this, Operator.EQ, proxyValue);
     }
 
-    /**
-     * Criterion factory
-     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
-     * @return New instance of Criterion
-     */
-    @Override @Nonnull
-    public Criterion<U> whereNeq(@Nonnull final Supplier<VALUE> valueFunction) {
-        return Criterion.where(this, Operator.NOT_EQ, valueFunction);
-    }
-
-    /**
-     * Criterion factory
-     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
-     * @return New instance of Criterion
-     */
-    @Override @Nonnull
-    public Criterion<U> whereGt(@Nonnull final Supplier<VALUE> valueFunction) {
-        return Criterion.where(this, Operator.GT, valueFunction);
-    }
-
-    /**
-     * Criterion factory
-     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
-     * @return New instance of Criterion
-     */
-    @Override @Nonnull
-    public Criterion<U> whereGe(@Nonnull final Supplier<VALUE> valueFunction) {
-        return Criterion.where(this, Operator.GE, valueFunction);
-    }
-
-    /**
-     * Criterion factory
-     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
-     * @return New instance of Criterion
-     */
-    @Override @Nonnull
-    public Criterion<U> whereLt(@Nonnull final Supplier<VALUE> valueFunction) {
-        return Criterion.where(this, Operator.LT, valueFunction);
-    }
-
-    /**
-     * Criterion factory
-     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
-     * @return New instance of Criterion
-     */
-    @Override @Nonnull
-    public Criterion<U> whereLe(@Nonnull final Supplier<VALUE> valueFunction) {
-        return Criterion.where(this, Operator.LE, valueFunction);
-    }
-    
     // ============= STATIC METHODS =============
 
     /** Create a new instance of key with a new sort attribute value.

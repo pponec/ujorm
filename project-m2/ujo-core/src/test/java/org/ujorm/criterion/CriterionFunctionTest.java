@@ -69,16 +69,16 @@ public class CriterionFunctionTest extends MyTestCase {
 
     public void testInit_01() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        SerialSupplier<Double> value = () -> 10.0;
+        ProxyValue<Double> value = () -> 10.0;
         Criterion<Person>  ex1 = Criterion.where(CASH, Operator.EQ, value);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
-        assertEquals("John", result.get(0).get(NAME) );
+        assertEquals("John", result.get(0).get(NAME));
     }
 
     public void testInit_02a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        SerialSupplier<Double> value = () -> 10.0;
+        ProxyValue<Double> value = () -> 10.0;
         Criterion<Person>  ex1 = Criterion.where(CASH, Operator.GT, value);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(3, result.size());
@@ -87,7 +87,7 @@ public class CriterionFunctionTest extends MyTestCase {
 
     public void testInit_02b() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        SerialSupplier<Double> value = () -> 20.0;
+        ProxyValue<Double> value = () -> 20.0;
         Criterion<Person>  ex1 = Criterion.where(CASH, Operator.LT, value);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
@@ -97,7 +97,7 @@ public class CriterionFunctionTest extends MyTestCase {
 
     public void testInit_03a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        SerialSupplier<Double> value = () -> 20.0;
+        ProxyValue<Double> value = () -> 20.0;
         Criterion<Person>  ex1 = Criterion.where(MOTHER_CASH, Operator.GT, value);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(2, result.size());
@@ -105,7 +105,7 @@ public class CriterionFunctionTest extends MyTestCase {
 
     public void testInit_03b() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        SerialSupplier<Double> value = () -> 20.0;
+        ProxyValue<Double> value = () -> 20.0;
         Criterion<Person>  ex1 = Criterion.where(MOTHER_CASH, Operator.EQ, value);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
@@ -114,18 +114,18 @@ public class CriterionFunctionTest extends MyTestCase {
 
     public void testInit_04a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        Criterion<Person>  ex1 = Criterion.where(CASH, Operator.GT, (SerialSupplier<Double>) () -> 10.0);
-        Criterion<Person>  ex2 = Criterion.where(CASH, Operator.LT, (SerialSupplier<Double>) () -> 30.0);
+        Criterion<Person>  ex1 = Criterion.where(CASH, Operator.GT, (ProxyValue<Double>) () -> 10.0);
+        Criterion<Person>  ex2 = Criterion.where(CASH, Operator.LT, (ProxyValue<Double>) () -> 30.0);
         Criterion<Person>  exp = ex1.join(BinaryOperator.AND, ex2);
         List<Person> result = uc.select(persons, exp);
         assertEquals(1, result.size());
         assertEquals("Marry", result.get(0).get(NAME) );
         assertEquals(20.0, result.get(0).get(CASH) );
     }
-    
+
     public void testInit_05a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        SerialSupplier<LocalDate> value = () -> LocalDate.now();
+        ProxyValue<LocalDate> value = () -> LocalDate.now();
         Criterion<Person>  ex1 = Criterion.where(BORN, Operator.LT, value);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(4, result.size());

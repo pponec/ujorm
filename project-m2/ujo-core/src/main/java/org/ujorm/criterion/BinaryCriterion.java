@@ -33,10 +33,10 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
     final private Criterion<UJO> crn2;
     /** Operator */
     final private BinaryOperator operator;
-    /** A domoain class of sub Criterions like a backup */
+    /** A domain class of sub Criterions like a backup */
     private Class<?> domain;
 
-    public BinaryCriterion
+    protected BinaryCriterion
         ( final Criterion<UJO> criterion1
         , final BinaryOperator operator
         , final Criterion<UJO> criterion2

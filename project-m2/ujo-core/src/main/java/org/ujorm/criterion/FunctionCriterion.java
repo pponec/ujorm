@@ -25,24 +25,25 @@ import org.ujorm.tools.Assert;
 
 /**
  * The criterion for a value function where a lambda expression is supported.
- * @since 0.90
+ * @since 1.76
  * @author Pavel Ponec
  */
 public final class FunctionCriterion<U extends Ujo, T> extends ValueCriterion<U> {
-    static final long serialVersionUID = 20140128L;
+    static final long serialVersionUID = 2017_12_04L;
 
     /**
-     * Common constructor 
+     * Common constructor
      * @param key Key
      * @param operator Value operator
-     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @param proxyValue An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @see #where(org.ujorm.Key, org.ujorm.Key)
      */
-    public FunctionCriterion
+    protected FunctionCriterion
         ( @Nonnull final Key<U, ? extends Object> key
         , @Nonnull final Operator operator
-        , @Nonnull final Supplier<T> valueFunction) {
-        super(key, operator, valueFunction);
-        Assert.notNull(valueFunction, "Function is required");
+        , @Nonnull final Supplier<T> proxyValue) {
+        super(key, operator, proxyValue);
+        Assert.notNull(proxyValue, "Proxy is required");
         Assert.isFalse(operator == Operator.XFIXED, "Unsupported operator {}", operator);
     }
 
@@ -51,7 +52,7 @@ public final class FunctionCriterion<U extends Ujo, T> extends ValueCriterion<U>
     public final T getRightNode() {
         return ((Supplier<T>) super.value).get();
     }
-    
+
     /** Test a value is an instance of CharSequence or a type Key is type of CharSequence.
      * If parameter is not valid than method throws Exception.
      */

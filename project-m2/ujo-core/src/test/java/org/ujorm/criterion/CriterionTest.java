@@ -41,32 +41,32 @@ public class CriterionTest extends MyTestCase {
 
         boolean expected = true;
         p.set(p.NAME, "aa");
-        boolean filled = p.NAME.whereFilled().evaluate(p);
+        boolean filled = p.NAME.whereHasLength().evaluate(p);
         assertEquals(expected, filled);
 
         expected = false;
         p.set(p.NAME, "");
-        filled = p.NAME.whereFilled().evaluate(p);
+        filled = p.NAME.whereHasLength().evaluate(p);
         assertEquals(expected, filled);
 
         expected = false;
         p.set(p.NAME, null);
-        filled = p.NAME.whereFilled().evaluate(p);
+        filled = p.NAME.whereHasLength().evaluate(p);
         assertEquals(expected, filled);
 
         expected = false;
         p.set(p.NAME, "xxx");
-        boolean noFilled = p.NAME.whereNotFilled().evaluate(p);
+        boolean noFilled = p.NAME.whereIsEmpty().evaluate(p);
         assertEquals(expected, noFilled);
 
         expected = true;
         p.set(p.NAME, "");
-        noFilled = p.NAME.whereNotFilled().evaluate(p);
+        noFilled = p.NAME.whereIsEmpty().evaluate(p);
         assertEquals(expected, noFilled);
 
         expected = true;
         p.set(p.NAME, null);
-        noFilled = p.NAME.whereNotFilled().evaluate(p);
+        noFilled = p.NAME.whereIsEmpty().evaluate(p);
         assertEquals(expected, noFilled);
     }
 
@@ -206,12 +206,12 @@ public class CriterionTest extends MyTestCase {
         person.init();
         assertEquals(expected.evaluate(person), result.evaluate(person));
     }
-    
+
     /** Serialization 1 */
     public void testSerialization_4() throws Exception {
         System.out.println("testSerialization_4: ");
 
-        SerialSupplier<String> value = () -> "Lucy";
+        ProxyValue<String> value = () -> "Lucy";
         Criterion<Person> expected = Person.NAME.whereEq(value);
         Criterion<Person> result = serialize(expected);
         //

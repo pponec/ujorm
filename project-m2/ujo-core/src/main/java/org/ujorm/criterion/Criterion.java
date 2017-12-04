@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
@@ -80,6 +79,7 @@ import org.ujorm.tools.Assert;
  * @composed 1 - 1 AbstractOperator
  */
 public abstract class Criterion<U extends Ujo> implements Serializable {
+    static final long serialVersionUID = 2017_12_04;
 
     /** Apply the criterion to the UJO object
      * @return Returns the value {@code true} in case the ujo object satisfies the condition.
@@ -117,6 +117,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * If the evaluate method returns false, then the method throws the {@link IllegalArgumentException}
      * with the required message.
      * @param ujo object to validate
+     * @param message An exeption message/template
      * @param parameters Text parameters for the message template are located by {} expression.
      *   documentation for more information.
      * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo)} failed.
@@ -239,17 +240,17 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * New criterion instance
      * @param key Key
      * @param operator Operator
-     * @param valueFunction An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
+     * @param proxyValue An function for the value
      * @return A new criterion
-     * @see SerialSupplier
+     * @see ProxyValue A proxy for the value
      */
     @Nonnull
     public static <U extends Ujo, TYPE> Criterion<U> where
         ( @Nonnull final Key<U,TYPE> key
         , @Nonnull final Operator operator
-        , @Nonnull final Supplier<TYPE> valueFunction
+        , @Nonnull final ProxyValue<TYPE> proxyValue
         ) {
-        return new FunctionCriterion<>(key, operator, valueFunction);
+        return new FunctionCriterion<>(key, operator, proxyValue);
     }
 
      /**
@@ -467,7 +468,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
     public static <U extends Ujo, TYPE> Criterion<U> whereNotNull(@Nonnull final Key<U,TYPE> key) {
         return new ValueCriterion<>(key, Operator.NOT_EQ, (TYPE)null);
     }
-    
+
     /** This is an constane criterion independed on an entity.
      * The method is <strong>deprecated</strong> in the ORM, use rather a one method from
      * {@link #forAll(org.ujorm.Key) forAll} or

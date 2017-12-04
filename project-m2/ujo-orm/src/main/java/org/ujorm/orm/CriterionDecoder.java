@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
+import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.BinaryCriterion;
 import org.ujorm.criterion.Criterion;
@@ -36,7 +37,6 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.metaModel.MoreParams;
 import static org.ujorm.core.UjoTools.SPACE;
-import org.ujorm.core.IllegalUjormException;
 
 /**
  * SQL Criterion Decoder.
@@ -86,9 +86,9 @@ public class CriterionDecoder {
         this.dialect = database.getDialect();
         this.orderBy = orderByItems;
         this.handler = database.getOrmHandler();
-        this.values = new ArrayList<ValueCriterion>();
-        this.nullValues = new ArrayList<ValueCriterion>();
-        this.tables = new LinkedHashSet<TableWrapper>(); // Predicable order is required
+        this.values = new ArrayList<>();
+        this.nullValues = new ArrayList<>();
+        this.tables = new LinkedHashSet<>(); // Predicable order is required
         this.tables.add(baseTable);
         this.printAllJoinedTables = MetaParams.MORE_PARAMS.add(MoreParams.PRINT_All_JOINED_TABLES).of(handler.getParameters());
         this.where = initWhere();
