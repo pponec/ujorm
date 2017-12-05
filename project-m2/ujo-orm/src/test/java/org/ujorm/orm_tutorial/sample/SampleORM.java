@@ -674,9 +674,7 @@ public class SampleORM {
         }
     }
 
-    /** Create a SELECT for the one column only
-     * with no duplicate rows for a better performance.
-     */
+    /** Build a Query with with modifiable parameters */
     public void useSelectByLambda() {
         final Item filter = new Item();
         filter.setId(1L);

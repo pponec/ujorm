@@ -45,6 +45,7 @@ public class MainApplication extends WebApplication implements OrmHandlerProvide
     protected void init() {
         super.init();
         // getMarkupSettings().setStripWicketTags(true); // jQuery UI recommendation
+        getResourceSettings().setThrowExceptionOnMissingResource(false); 
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));
         mountPage("/home", HomePage.class);
     }
