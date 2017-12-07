@@ -31,7 +31,6 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyRing;
-import org.ujorm.core.UjoCoder;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.MsgFormatter;
 import static org.ujorm.core.UjoTools.SPACE;
@@ -329,67 +328,27 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
         return operator==Operator.XFIXED || operator==Operator.XSQL;
     }
 
-    @Override
+   @Override
     public String toString() {
-        final StringBuilder out = new StringBuilder(256).append('(');
-
-        if (operator==Operator.XSQL) {
-            out.append(getRightNode());
-            return out.append(')').toString();
+        return toPrinter(new ValuePrinter(128)).toString();
+    }
+    
+    @Override
+    public ValuePrinter toPrinter(@Nonnull final ValuePrinter out) {
+        out.append('(');
+        if (operator == Operator.XSQL) {  
+            out.appendValue(getRightNode());
+            return out.append(')');
         }
-
-        if (operator!=Operator.XFIXED) {
+        else if (operator != Operator.XFIXED) {
             out
             .append(key)
             .append(SPACE)
             .append(operator.name())
             .append(SPACE);
         }
-
-        printValue(getRightNode(), out);
-        return out.append(')').toString();
-    }
-
-    /** Print an Ujo value
-     * @param value Not null value
-     */
-    @SuppressWarnings("unchecked")
-    protected void printValue(final Object value, final StringBuilder out) {
-        if (value instanceof Ujo) {
-            final Ujo ujo = (Ujo) value;
-            final Key firstProperty = ujo.readKeys().get(0);
-            final Object firstValue = firstProperty.of(ujo);
-
-            out.append(ujo.getClass().getSimpleName());
-            out.append('[');
-            out.append(firstProperty);
-            out.append('=');
-            printValue(firstValue, out);
-            out.append(']');
-        } else {
-            if (value instanceof CharSequence) {
-                String quotation = value instanceof Key ? "" : "\"";
-                out.append(quotation)
-                   .append(value)
-                   .append(quotation)
-                   ;
-            } else if (value instanceof Object[]) {
-                boolean first = true;
-                for (Object object : (Object[]) value) {
-                    if (first) {
-                        first = !first;
-                    } else {
-                        out.append(", ");
-                    }
-                    printValue(object, out);
-                }
-            } else {
-                out.append(value instanceof Number
-                    ? value.toString()
-                    : new UjoCoder().encodeValue(value, false)
-                );
-            }
-        }
+        out.appendValue(getRightNode());
+        return out.append(')');
     }
 
     /** Find a domain class type of {@code Class<UJO>} from its keys.

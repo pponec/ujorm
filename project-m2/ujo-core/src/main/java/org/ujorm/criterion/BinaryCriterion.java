@@ -14,9 +14,9 @@
  *  limitations under the License.
  */
 
-
 package org.ujorm.criterion;
 
+import javax.annotation.Nonnull;
 import org.ujorm.Ujo;
 import static org.ujorm.core.UjoTools.SPACE;
 
@@ -89,16 +89,20 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
     /** Print the condition in a human reading format. */
     @Override
     public String toString() {
-        final StringBuilder result = new StringBuilder();
+        return toPrinter(new ValuePrinter(256)).toString();
+    }
+   
+    /** Print the condition in a human reading format. */
+    @Override
+    public ValuePrinter toPrinter(@Nonnull ValuePrinter out) {
         final boolean parentheses = operator != BinaryOperator.AND;
         final boolean notOperator = operator == BinaryOperator.NOT;
-        if ( parentheses) result.append('(');
-        if (!notOperator) result.append(crn1).append(SPACE);
-        result.append(operator.name()).append(SPACE);
-        result.append(crn2);
-        if (parentheses) result.append(')');
-
-        return  result.toString();
+        if ( parentheses) out.append('(');
+        if (!notOperator) crn1.toPrinter(out).append(SPACE);
+        out.append(operator.name()).append(SPACE);
+        crn2.toPrinter(out);
+        if (parentheses) out.append(')');
+        return out;
     }
 
     /** Find a domain class type of {@code Class<UJO>} from its keys.

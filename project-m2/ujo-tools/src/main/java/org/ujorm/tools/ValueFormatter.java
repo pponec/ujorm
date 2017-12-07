@@ -60,49 +60,51 @@ public class ValueFormatter extends MsgFormatter {
 
     /**
      * Print argument to the Writter with an optional format.
-     * @param writer Writer
+     * @param out Writer
      * @param value Values
      */
     @Override
-    protected void writeValue(@Nullable final Object value, @Nonnull final CharArrayWriter writer, final boolean marked) {
+    protected void writeValue(@Nullable final Object value, @Nonnull final CharArrayWriter out, final boolean marked) {
         if (!marked) {
-            writer.append(SEPARATOR);        
+            out.append(SEPARATOR);        
         }
         if (value == null) {
-            writer.append(null);
+            out.append(null);
         } else if (value instanceof CharSequence) {
-            writer.append(valueBorder);
-            writeLongValue(value.toString(), writer);
-            writer.append(valueBorder);
+            out.append(valueBorder);
+            writeLongValue((CharSequence) value, out);
+            out.append(valueBorder);
         } else if (value instanceof Number) {
-            writer.append(String.valueOf(value));
+            out.append(String.valueOf(value));
         } else if (value instanceof Date) {
-            writer.append(valueBorder);
+            out.append(valueBorder);
             final String format = value instanceof java.sql.Date
                     ? "yyyy-MM-dd" 
                     : "yyyy-MM-dd'T'HH:mm:ss.SSS";
-            writer.append(new SimpleDateFormat(format, Locale.ENGLISH).format((Date)value));
-            writer.append(valueBorder);
+            out.append(new SimpleDateFormat(format, Locale.ENGLISH).format((Date)value));
+            out.append(valueBorder);
         } else if (value instanceof byte[]) {
-            writer.append(valueBorder);
-            writeByteArray((byte[]) value, writer);
-            writer.append(valueBorder);
+            out.append(valueBorder);
+            writeByteArray((byte[]) value, out);
+            out.append(valueBorder);
         } else if (value instanceof Character) {
-            writer.append(valueBorder);
-            writer.append((Character) value);
-            writer.append(valueBorder);
-            writer.append(((Throwable)value).getMessage());
+            out.append(valueBorder);
+            out.append((Character) value);
+            out.append(valueBorder);
+            out.append(((Throwable)value).getMessage());
+        } else if (value instanceof Enum) {
+            out.append(((Enum) value).name());
         } else if (value instanceof Throwable) {
-            writer.append(value.getClass().getSimpleName());
-            writer.append(':');
-            writer.append(((Throwable)value).getMessage());
+            out.append(value.getClass().getSimpleName());
+            out.append(':');
+            out.append(((Throwable)value).getMessage());
         } else {
-            writeLongValue(String.valueOf(value), writer);
+            writeLongValue(String.valueOf(value), out);
         }
     }
     
     /** Write bytes as hexa */
-    protected void writeByteArray(@Nonnull byte[] bytes, @Nonnull final CharArrayWriter writer) {
+    protected void writeByteArray(@Nonnull byte[] bytes, @Nonnull final CharArrayWriter out) {
         final int length = bytes != null ? bytes.length : -1; // Length of the bytes
         final int limit = getSizeLimit() >> 1;                // Limit for the bytes
         final int half = (limit - 4) >> 1;
@@ -110,35 +112,35 @@ public class ValueFormatter extends MsgFormatter {
 
         for (int i = 0; i < max; i++ ) {
             final int v = bytes[i] & 0xFF;
-            writer.append(HEX_ARRAY[v >>> 4]);
-            writer.append(HEX_ARRAY[v & 0x0F]);
+            out.append(HEX_ARRAY[v >>> 4]);
+            out.append(HEX_ARRAY[v & 0x0F]);
         }
         if (length > limit) {
-            writer.append(THREE_DOTS);
-            writer.append(String.valueOf(length));
-            writer.append(THREE_DOTS);            
+            out.append(THREE_DOTS);
+            out.append(String.valueOf(length));
+            out.append(THREE_DOTS);            
             
             for (int i = length-half; i < length; i++ ) {
                 final int v = bytes[i] & 0xFF;
-                writer.append(HEX_ARRAY[v >>> 4]);
-                writer.append(HEX_ARRAY[v & 0x0F]);
+                out.append(HEX_ARRAY[v >>> 4]);
+                out.append(HEX_ARRAY[v & 0x0F]);
             }
         }
     }
     
     /** You can call the method from a child class */
-    protected void writeLongValue(@Nonnull final String value, @Nonnull final CharArrayWriter writer) {
+    protected void writeLongValue(@Nonnull final CharSequence value, @Nonnull final CharArrayWriter out) {
         final int length = value != null ? value.length() : -1;
         final int limit = getSizeLimit();
         final int half = (limit - 4) >> 1;
         if (length > limit) {
-            writer.append(value, 0, half);
-            writer.append(THREE_DOTS);
-            writer.append(String.valueOf(length));
-            writer.append(THREE_DOTS);
-            writer.append(value, length - half, length);
+            out.append(value, 0, half);
+            out.append(THREE_DOTS);
+            out.append(String.valueOf(length));
+            out.append(THREE_DOTS);
+            out.append(value, length - half, length);
         } else {
-            writer.append(value);
+            out.append(value);
         }
     }
     

@@ -75,27 +75,27 @@ public class MsgFormatter {
         }
 
         final int max = template.length();
-        final CharArrayWriter result = new CharArrayWriter(Math.max(32, max + (max >> 1)));
+        final CharArrayWriter out = new CharArrayWriter(Math.max(32, max + (max >> 1)));
         int last = 0;
 
         for (Object arg : arguments) {
             final int i = template.indexOf(mark, last);
             if (i >= last) {
-                result.append(template, last, i);
+                out.append(template, last, i);
                 last = i + mark.length();
-                writeValue(arg, result, true);
+                writeValue(arg, out, true);
             } else {
                 if (last < max) {
-                    result.append(template, last, max);
+                    out.append(template, last, max);
                     last = max;
                 }
-                writeValue(arg, result, false);
+                writeValue(arg, out, false);
             }
         }
         if (last < max) {
-            result.append(template, last, max);
+            out.append(template, last, max);
         }
-        return result.toString();
+        return out.toString();
     }
 
     /**
@@ -118,21 +118,21 @@ public class MsgFormatter {
 
     /**
      * Print argument to the Writter with an optional format.
-     * @param writer Writer
+     * @param out Writer
      * @param value Values
      */
-    protected void writeValue(@Nullable final Object value, @Nonnull final CharArrayWriter writer, final boolean marked) {
+    protected void writeValue(@Nullable final Object value, @Nonnull final CharArrayWriter out, final boolean marked) {
         if (marked) {
-            writer.append(value != null
+            out.append(value != null
                     ? value.toString()
                     : String.valueOf(value));
         } else {
            if (value instanceof Throwable) {
-            writer.append('\n');
-            ((Throwable)value).printStackTrace(new PrintWriter(writer, true));
+            out.append('\n');
+            ((Throwable)value).printStackTrace(new PrintWriter(out, true));
            } else {
-               writer.append(SEPARATOR);
-               writer.append(String.valueOf(value));
+               out.append(SEPARATOR);
+               out.append(String.valueOf(value));
            }
         }
     }
