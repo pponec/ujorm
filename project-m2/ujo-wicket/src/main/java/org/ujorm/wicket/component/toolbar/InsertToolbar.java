@@ -15,6 +15,7 @@
  */
 package org.ujorm.wicket.component.toolbar;
 
+import javax.annotation.Nullable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -23,6 +24,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractTool
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
@@ -38,6 +40,10 @@ public class InsertToolbar<U extends Ujo> extends AbstractToolbar {
     /** Type of a domain object */
     private final Class<U> domainType;
 
+    /** Actions are enabled  */
+    @Nullable
+    private IModel<Boolean> disableModel;
+
     /**
      * Constructor with a default action name {@link org.ujorm.wicket.CommonActions#UPDATE}
      * @param dataTable DataTable
@@ -52,7 +58,7 @@ public class InsertToolbar<U extends Ujo> extends AbstractToolbar {
      * @param dataTable DataTable
      * @param domainType Type of the domain object
      */
-    public InsertToolbar(DataTable dataTable, Class<U> domainType, String actionName) {
+    public InsertToolbar(final DataTable dataTable, final Class<U> domainType, final String actionName) {
         super(dataTable);
         super.setOutputMarkupPlaceholderTag(true);
         this.domainType = domainType;
@@ -64,6 +70,14 @@ public class InsertToolbar<U extends Ujo> extends AbstractToolbar {
         final AjaxLink link = createLink(actionName);
         add(link);
         link.add(createLabel("label"));
+    }
+
+    /** Is visible */
+    @Override
+    public boolean isVisible() {
+        return disableModel != null
+            ? !disableModel.getObject()
+            : super.isVisible();
     }
 
     /** Create action Link and registre an event on the click */
@@ -103,4 +117,14 @@ public class InsertToolbar<U extends Ujo> extends AbstractToolbar {
         return domainType;
     }
 
+    /** @return the disableModel */
+    public IModel<Boolean> getDisableModel() {
+        return disableModel;
+    }
+
+    /** @param disableModel the disableModel to set */
+    public InsertToolbar setDisableModel(IModel<Boolean> disableModel) {
+        this.disableModel = disableModel;
+        return this;
+    }
 }

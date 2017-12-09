@@ -287,8 +287,9 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Extended visible model, the {@code null} value means a default manner. */
-    public void setVisibleModel(IModel<Boolean> visibleModel) {
+    public Field setVisibleModel(@Nonnull final IModel<Boolean> visibleModel) {
         this.visibleModel = visibleModel;
+        return this;
     }
 
     /** Set enabled the input component */

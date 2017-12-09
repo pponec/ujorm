@@ -79,7 +79,6 @@ public class KeyColumn<U extends Ujo, T> extends AbstractColumn<U, KeyRing<U>> {
      * Creates a sortable key column
      * @param key Ujorm key to display in the column
      * @param sortKey Optional persistent ujorm key to sorting
-     * @param cssClass optional argument for a CSS class
      */
     public KeyColumn(final KeyRing<U> key, final KeyRing<U> sortKey) {
         this(new ResourceModel(PROPERTY_PREFIX

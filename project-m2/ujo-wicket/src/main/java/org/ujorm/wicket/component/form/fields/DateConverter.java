@@ -64,6 +64,15 @@ public class DateConverter {
                 dateFormat = dateFormat.replace("EEE", "D");
             }
 
+            // No time:
+            // http://momentjs.com/docs/#/parsing/string-format/ :
+            // HH - Hours (24 hour time)
+            // mm - Minutes
+            // ss - Seconds
+            if (dateFormat.contains("HH:mm")) {
+                dateFormat = dateFormat.replace("HH:mm", "");
+            }
+
             return dateFormat;
         }
     }
