@@ -2,6 +2,17 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 1.76 (2017-12-09)
++ ORM: new method Query.fetchAll() for fetching all related tables in the first level + jUnit test is extended + JavaDoc is extended + bugfixing
++ ORM: Connection closing in the NativeDbSequencer class is fixed
++ CORE: Criterion supports a value of function (including the lambda expression)
++ CORE: The method Criterion.toString() is optimized
++ TOOLS: Value formatter is implemented
++ TOOLS: Formatting the SQL statement is supported now.
++ WICKET: new features and extended API
++ WICKET: API of the AbstractToolbar is fixed
++ WICKET: The method UjoEvent.get() returns newer NULL    
+
 release 1.75 (2017-11-10)
 + ORM: Bugfix: closing JDBC resources
 + ORM: The new class PackageDbConfig to loading a database model from a package is implemented
