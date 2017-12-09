@@ -2,6 +2,8 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 1.77-SNAPSHOT
+
 release 1.76 (2017-12-09)
 + ORM: new method Query.fetchAll() for fetching all related tables in the first level + jUnit test is extended + JavaDoc is extended + bugfixing
 + ORM: Connection closing in the NativeDbSequencer class is fixed

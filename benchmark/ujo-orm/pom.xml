@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>benchmark.ujorm</artifactId>
     <packaging>jar</packaging>
-    <version>1.76-SNAPSHOT</version>
+    <version>1.77-SNAPSHOT</version>
     <name>xBenchmark-Ujorm</name>
     <url>http://ujorm.org</url>
     <build>
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>1.76-SNAPSHOT</version>
+            <version>1.77-SNAPSHOT</version>
         </dependency>
 
         <!-- JTA (Java Transacton API) -->
