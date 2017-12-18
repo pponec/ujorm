@@ -5,7 +5,6 @@ package org.ujorm.hotels.gui.about;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.jar.JarFile;
@@ -64,7 +63,7 @@ public class BuildInfo extends Label {
             Attributes mainAttribs = new Manifest(is).getMainAttributes();
             return mainAttribs.getValue("Build-Time");
         } catch (Exception e) {
-            LOGGER.warn("Illegal file {}", JarFile.MANIFEST_NAME, e);
+            LOGGER.debug("Illegal file {}", JarFile.MANIFEST_NAME, e);
             return "-";
         } finally {
             if (is != null) {
