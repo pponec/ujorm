@@ -69,7 +69,7 @@ public class UjoComparatorTest extends MyTestCase {
     /** Sort by name */
     @SuppressWarnings("unchecked")
     public void testInit_01() {
-        List<Person> result = UjoComparator.<Person>of(NAME).sort(persons);
+        List<Person> result = UjoComparator.of(NAME).sort(persons);
         assertEquals("Eva", result.get(0).get(NAME) );
     }
 
