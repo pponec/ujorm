@@ -61,9 +61,7 @@ public interface Validator<VALUE> {
      * Throw an exception if input value is not valid.
      * @param value Value to validation
      * @param key UJO Key
-     * @param bo Target Domain object
-     * @return the ValidationError instance or the {
-     * @null value} if the result is ok.
+     * @param bo Target Domain object @null value} if the result is ok.
      */
     public <UJO extends Ujo> void checkValue(VALUE value, Key<UJO, VALUE> key, UJO bo) throws ValidationException;
 

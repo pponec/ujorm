@@ -17,6 +17,7 @@ package org.ujorm.validator.impl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.validator.AbstractValidator;
@@ -37,21 +38,31 @@ public class LocalDateTimeValidator<VALUE extends LocalDateTime> extends Abstrac
     /** A sing for Past {@code true} / Future {@code false} */
     private final boolean past;
     private final String pastWord;
+    private final ZoneId zoneId;
 
     /**
      * Between validator
      * @param past Serializable maximum valuem (inclusive)
      */
     public LocalDateTimeValidator(boolean past) {
+        this(past, ZoneId.systemDefault());
+    }
+    
+    /**
+     * Between validator
+     * @param past Serializable maximum valuem (inclusive)
+     */
+    public LocalDateTimeValidator(boolean past, ZoneId zoneId) {
         this.past = past;
         this.pastWord = past ? "past" : "future";
+        this.zoneId = zoneId;
     }
 
     /** {@inheritDoc} */
     @Override
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
 
-            final LocalDateTime now = LocalDateTime.now();
+            final LocalDateTime now = LocalDateTime.now(zoneId);
             final boolean ok = input==null
                     || ((input.compareTo(now) <= 0) == past)
                     ;
