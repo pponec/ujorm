@@ -45,6 +45,7 @@ import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.dialog.domestic.OfferModel;
@@ -75,10 +76,12 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     private Map<String, Field> fields;
     private U domain;
     /** Enable method {@link #requestFocus(AjaxRequestTarget)}. The default value is {@code true} */
-    private boolean focusRequestEnabled = true;
+    private final boolean focusRequestEnabled = true;
     private transient OrmHandler ormHandler;
     /** Disable new fields if the argument is {@code true} */
     private boolean disableRequest = false;
+    /** The last field */
+    private transient Field<?> lastField;
 
     /** Default constructor */
     public FieldProvider(String repeatingViewId) {
@@ -231,18 +234,23 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Returns the related Field component */
-    public final <F extends Field> F getField(final Key<? super U,?> key) {
-        return (F) fields.get(key.getName());
+    @Nonnull
+    public <V, F extends Field<V>> F getField(final Key<? super U,V> key) {
+        final F result = (F) fields.get(key.getName());
+        Assert.notNull(result, "Filed nebyl nalezen pro {}", key.getFullName());
+        return result;
     }
 
     /** Returns the last field or throw an exception
      * @return Not {@code null} always
      * @throws ArrayIndexOutOfBoundsException No last filed was found.
      */
-    public <T extends Field> T getLast() throws ArrayIndexOutOfBoundsException {
-        return (T) repeatingView.get(repeatingView.size() - 1);
+    @Nonnull
+    public <V, T extends Field<V>> T getLast() throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
+        Assert.notNull(lastField);
+        return (T) lastField;
     }
-
+    
     /** Return all keys in a String format */
     protected Set<String> getKeyNames() {
         return fields.keySet();

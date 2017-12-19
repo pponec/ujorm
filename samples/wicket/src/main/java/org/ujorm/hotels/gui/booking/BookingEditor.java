@@ -21,6 +21,7 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.ujorm.Validator;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
@@ -52,6 +53,7 @@ public class BookingEditor<U extends Booking> extends EntityDialogPane<U> {
         fields.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
         fields.add(Booking.PERSONS);
         fields.add(Booking.DATE_FROM).addCssStyle("date");
+        fields.getField(Booking.DATE_FROM).addValidator(Validator.Build.futureDate()); 
         fields.add(Booking.NIGHTS);
         fields.add(Booking.PRICE);
         fields.add(Booking.CURRENCY);
