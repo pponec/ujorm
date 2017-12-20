@@ -107,12 +107,12 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
         addChangeBehavior(result);
         return result;
     }
-    
+
     /** Create new DropDownChoice component */
     protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final E defaultValue) {
         return createSearchChoice(id, Model.of(defaultValue));
     }
-    
+
     /** Create new DropDownChoice component */
     protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final IModel<E> defaultValueModel) {
         final E defaultValue = defaultValueModel.getObject();
@@ -121,7 +121,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
            ( id
            , Arrays.asList(defaultValue.getDeclaringClass().getEnumConstants())
            , new ChoiceRendererNullable<>(this));
-        
+
         result.setModel(defaultValueModel);
         result.setOutputMarkupId(true);
         addChangeBehavior(result);
@@ -156,7 +156,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
         field.add(createAjaxUpdateingBehavior("onchange"));
         field.add(createAjaxUpdateingBehavior("onkeyup"));
     }
-    
+
     /** Create new AjaxFormComponentUpdatingBehavior with delay 300 ms. */
     protected AjaxFormComponentUpdatingBehavior createAjaxUpdateingBehaviorWithDelay() {
         return new AjaxFormComponentUpdatingBehavior("keyup") {
@@ -174,7 +174,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
             }
         };
     }
-    
+
     /** Create new AjaxFormComponentUpdatingBehavior with no delay. */
     protected AjaxEventBehavior createAjaxUpdateingBehavior(final String jsEvent) {
         return new AjaxFormComponentUpdatingBehavior(jsEvent) {

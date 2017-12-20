@@ -47,7 +47,6 @@ public class CommonAction<U extends Ujo> implements Serializable, CommonActions 
     /** Constructor with full arguments
      * @param actionId Action identifier, see common constants from the class {@link CommonActions}.
      * @param label Optional Label, the {@code null} value is replaced by the key: {@code "label.action." + actionId}.
-     * @param visibleModel Visible model is optional
      * @see CommonActions
      */
     public CommonAction(@Nonnull String actionId, @Nullable IModel<String> label) {
@@ -78,7 +77,7 @@ public class CommonAction<U extends Ujo> implements Serializable, CommonActions 
      * @see CommonActions class
      * @return CommonActions
      */
-    public static CommonAction[] of(String ... actions) {
+    public static CommonAction[] of(String... actions) {
         final CommonAction[] result = new CommonAction[actions.length];
         for (int i = result.length - 1; i >= 0; i--) {
             result[i] = new CommonAction(actions[i]);
