@@ -21,7 +21,7 @@ public final class City extends OrmTable<City> {
     private static final String UNIQUE_CITY = "idx_unique_city";
 
     /** Factory */
-    private static final OrmKeyFactory<City> f = newFactory(City.class);
+    private static final OrmKeyFactory<City> f = newCamelFactory(City.class);
 
     @Comment("The Primary Key")
     @Column(pk = true)
@@ -30,7 +30,7 @@ public final class City extends OrmTable<City> {
     @Column(uniqueIndex=UNIQUE_CITY)
     public static final Key<City, String> NAME = f.newKey(length(MANDATORY, 40));
     @Comment("Two characters country code along the ISO 3166")
-    public static final Key<City, String> COUNTRY = f.newKey("COUNTRY", length(MANDATORY, 3));
+    public static final Key<City, String> COUNTRY = f.newKey(length(MANDATORY, 3));
     @Comment("Country name will be located in the another entity in a real application")
     public static final Key<City, String> COUNTRY_NAME = f.newKey(length(MANDATORY, 40));
     @Comment("A geographic coordinate for north-south position on the Earth")

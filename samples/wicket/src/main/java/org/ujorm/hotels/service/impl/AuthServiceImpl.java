@@ -16,22 +16,22 @@
 package org.ujorm.hotels.service.impl;
 
 import java.math.BigInteger;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.MainApplication;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.DbService;
 import org.ujorm.logger.UjoLoggerFactory;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Common database service implementations
@@ -46,6 +46,8 @@ public class AuthServiceImpl implements AuthService {
 
     /** Common DB service */
     @Inject private DbService dbService;
+
+    //@Value("${test}") private String test;
 
     /** Authenticate the user and save the result to the Wicket session */
     @Override

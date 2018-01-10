@@ -37,7 +37,7 @@ public final class ParamKey extends OrmTable<ParamKey> {
     private static final String UNIQUE_PARAM_KEY = "idx_unique_param_key";
 
     /** Factory */
-    private static final KeyFactory<ParamKey> f = newFactory(ParamKey.class);
+    private static final KeyFactory<ParamKey> f = newCamelFactory(ParamKey.class);
 
     /** The primary identifier */
     @Comment("The primary identifier")

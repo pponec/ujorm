@@ -22,7 +22,7 @@ public final class Hotel extends OrmTable<Hotel> {
     private static final String INDEX_HOTEL_NAME="idx_hotel_name";
 
     /** Factory */
-    private static final OrmKeyFactory<Hotel> f = newFactory(Hotel.class);
+    private static final OrmKeyFactory<Hotel> f = newCamelFactory(Hotel.class);
 
     @Comment("The Primary Key")
     @Column(pk = true)

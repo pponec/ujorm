@@ -33,7 +33,7 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationParams.class);
 
     /** Factory */
-    private static final KeyFactory<ApplicationParams> f = newFactory(ApplicationParams.class);
+    private static final KeyFactory<ApplicationParams> f = newCamelFactory(ApplicationParams.class);
 
     @Comment("Count of rows per a page in the table for a user")
     @PersonalParam

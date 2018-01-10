@@ -33,7 +33,7 @@ public class ApplicationRoles<U extends ApplicationRoles> extends AbstractModule
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationRoles.class);
 
     /** Factory */
-    private static final KeyFactory<ApplicationRoles> f = newFactory(ApplicationRoles.class);
+    private static final KeyFactory<ApplicationRoles> f = newCamelFactory(ApplicationRoles.class);
 
     @Comment("The Manager role of a user")
     @PersonalParam

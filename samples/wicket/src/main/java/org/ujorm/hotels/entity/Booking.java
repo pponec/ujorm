@@ -26,7 +26,7 @@ public final class Booking extends OrmTable<Booking> {
     private static final String INDEX_NAME="idx_booking";
 
     /** Factory */
-    private static final OrmKeyFactory<Booking> f = newFactory(Booking.class);
+    private static final OrmKeyFactory<Booking> f = newCamelFactory(Booking.class);
 
     @Comment("The Primary Key")
     @Column(pk = true)

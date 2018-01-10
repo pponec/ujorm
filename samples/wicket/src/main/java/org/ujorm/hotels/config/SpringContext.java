@@ -86,4 +86,18 @@ public class SpringContext {
         result.setShared(true);
         return result;
     }
+
+//    @Bean
+//    public static PropertyPlaceholderConfigurer properties() {
+//        PropertyPlaceholderConfigurer result = new PropertyPlaceholderConfigurer();
+//        Resource[] resources = new Resource[]
+//        { new ClassPathResource("default.properties")
+//        , new PathResource("$(user.home)/a.properties")
+//        };
+//        result.setLocations(resources);
+//        result.setIgnoreUnresolvablePlaceholders(true);
+//        return result;
+//
+//    }
+
 }

@@ -26,7 +26,7 @@ public final class Customer extends OrmTableLockable<Customer> {
     private static final String UNIQUE_LOGIN = "idx_unique_login";
 
     /** Factory */
-    private static final OrmKeyFactory<Customer> f = newFactory(Customer.class);
+    private static final OrmKeyFactory<Customer> f = newCamelFactory(Customer.class);
 
     @Comment("The Primary Key")
     @Column(pk = true)

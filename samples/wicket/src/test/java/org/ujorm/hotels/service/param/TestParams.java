@@ -33,7 +33,7 @@ public class TestParams<U extends TestParams> extends AbstractModuleParams {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestParams.class);
 
     /** Factory */
-    private static final KeyFactory<TestParams> f = newFactory(TestParams.class);
+    private static final KeyFactory<TestParams> f = newCamelFactory(TestParams.class);
 
     @Comment("Count of rows per a page in the table")
     public static final Key<TestParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);

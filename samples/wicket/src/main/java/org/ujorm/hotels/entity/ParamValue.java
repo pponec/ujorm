@@ -35,7 +35,7 @@ public final class ParamValue extends OrmTable<ParamValue> {
     private static final String UNIQUE_PARAM_VALUE = "idx_unique_param_value";
 
     /** Factory */
-    private static final KeyFactory<ParamValue> f = newFactory(ParamValue.class);
+    private static final KeyFactory<ParamValue> f = newCamelFactory(ParamValue.class);
 
     /** The identifier must have an ascending sort for personal rows. */
     @Comment("The identifier must have an ascending sort for defautl personal rows")
