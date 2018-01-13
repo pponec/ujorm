@@ -30,7 +30,7 @@ import org.ujorm.hotels.service.AuthService;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
 import org.ujorm.wicket.component.form.FieldEvent;
 import org.ujorm.wicket.component.tools.LocalizedModel;
-import static org.ujorm.Validator.Build.*;
+import static org.ujorm.validator.impl.ValidatorFactory.futureLocalDate;
 /**
  * Booking Editor
  * @author Pavel Ponec
@@ -53,7 +53,7 @@ public class BookingEditor<U extends Booking> extends EntityDialogPane<U> {
         fields.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
         fields.add(Booking.PERSONS);
         fields.add(Booking.DATE_FROM).addCssStyle("date");
-        fields.getField(Booking.DATE_FROM).addValidator(Validator.Build.futureDate()); 
+        fields.getField(Booking.DATE_FROM).addValidator(Validator.Build.futureLocalDate());
         fields.add(Booking.NIGHTS);
         fields.add(Booking.PRICE);
         fields.add(Booking.CURRENCY);
@@ -63,7 +63,7 @@ public class BookingEditor<U extends Booking> extends EntityDialogPane<U> {
         fields.setEnabled(Booking.HOTEL.add(Hotel.CITY).add(City.NAME), false);
         fields.setEnabled(Booking.PRICE, false);
         fields.setEnabled(Booking.CURRENCY, false);
-        fields.addValidatorUnchecked(Booking.DATE_FROM, future());
+        fields.addValidatorUnchecked(Booking.DATE_FROM, futureLocalDate());
 
         // Ajax Events.
         fields.onChange(Booking.NIGHTS);
