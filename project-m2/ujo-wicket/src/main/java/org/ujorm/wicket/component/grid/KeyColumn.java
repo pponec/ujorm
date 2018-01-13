@@ -169,7 +169,7 @@ public class KeyColumn<U extends Ujo, T> extends AbstractColumn<U, KeyRing<U>> {
     }
 
     // =============== STATIC METHODS ===============
-    
+
     /** A factory method */
     public static <U extends Ujo, T> KeyColumn<U, T> of(Key<U, T> key, boolean sorted) {
         return of(key, sorted, null);

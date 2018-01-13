@@ -15,8 +15,16 @@
  */
 package org.ujorm.wicket.component.form.fields;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.tools.Check;
 import org.ujorm.wicket.component.tools.DateTimes;
 
 /**
@@ -43,4 +51,25 @@ public class LocalDateTimeField<T> extends LocalDateField<T> {
         return getLocalizer().getString(key, this, DateTimes.getDefaultPattern(key));
     }
 
+    /** A LocalDateTime converter factory */
+    @Override
+    protected IConverter<?> createDateConverter() {
+        return new IConverter<LocalDateTime>() {
+            @Override public LocalDateTime convertToObject(@Nullable final String localDate, @Nullable final Locale locale) throws ConversionException {
+                return Check.hasLength(localDate) 
+                     ? LocalDateTime.parse(localDate, getFormatter(locale))
+                     : null;
+            }
+
+            @Override public String convertToString(@Nullable final LocalDateTime localDate, @Nullable final Locale locale) {
+                return localDate != null 
+                      ? localDate.format(getFormatter(locale))
+                      : "";
+            }
+
+            @Nonnull private DateTimeFormatter getFormatter(@Nullable final Locale locale) {
+                return DateTimeFormatter.ofPattern(getDatePattern(), locale);
+            }
+        };
+    }
 }

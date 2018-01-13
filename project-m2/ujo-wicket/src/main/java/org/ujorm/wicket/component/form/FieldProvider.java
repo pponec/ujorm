@@ -70,7 +70,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(FieldProvider.class);
 
     /** Password key name to create a component PasswordField */
-    public static final String PASSWORD_KEY_NAME = "PASSWORD";
+    public static final String PASSWORD_KEY_NAME = "password";
 
     private RepeatingView repeatingView;
     private Map<String, Field> fields;
@@ -250,7 +250,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         Assert.notNull(lastField);
         return (T) lastField;
     }
-    
+
     /** Return all keys in a String format */
     protected Set<String> getKeyNames() {
         return fields.keySet();

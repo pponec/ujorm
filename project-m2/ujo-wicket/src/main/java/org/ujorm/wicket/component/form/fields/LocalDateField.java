@@ -16,11 +16,19 @@
 package org.ujorm.wicket.component.form.fields;
 
 import com.googlecode.wicket.jquery.core.Options;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.tools.Check;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.tools.DateTimes;
 
@@ -46,12 +54,34 @@ public class LocalDateField<T> extends Field<T> {
     @SuppressWarnings("unchecked")
     protected FormComponent createInput(final String componentId, final IModel<T> model) {
         final DateTextField result = new com.googlecode.wicket.jquery.ui.form.datepicker.AjaxDatePicker
-                (componentId, (IModel) model, getDatePattern(), createJQueryOptions());
+            (componentId, (IModel) model, getDatePattern(), createJQueryOptions()) {
+            @Override
+            protected IConverter<?> createConverter(final Class<?> type) {
+                return LocalDateField.this.createDateConverter();
+            }
+        };
         result.add(new CssAppender(getInputCssClass()));
 
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
         return result;
+    }
+
+    /** Create new LocalDate converter */
+    protected IConverter<?> createDateConverter() {
+        return new IConverter<LocalDate>() {
+            @Override public LocalDate convertToObject(@Nullable final String localDate, @Nullable final Locale locale) throws ConversionException {
+                return Check.hasLength(localDate) ? LocalDate.parse(localDate, getFormatter(locale)) : null;
+            }
+
+            @Override public String convertToString(@Nullable final LocalDate localDate, @Nullable final Locale locale) {
+                return localDate != null ? localDate.format(getFormatter(locale)) :  "";
+            }
+
+            @Nonnull private DateTimeFormatter getFormatter(@Nullable final Locale locale) {
+                return DateTimeFormatter.ofPattern(getDatePattern(), locale);
+            }
+        };
     }
 
     /** Returns localizadDate pattern */
