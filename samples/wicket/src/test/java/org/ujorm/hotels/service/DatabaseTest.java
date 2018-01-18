@@ -96,7 +96,7 @@ public class DatabaseTest {
         Key<City, String> cityName = City.NAME;
         Key<Booking, String> bookingCityName;
         bookingCityName = bookingHotel.add(hotelCity).add(cityName);
-        assertEquals("HOTEL.CITY.NAME", bookingCityName.toString());
+        assertEquals("hotel.city.name", bookingCityName.toString());
 
         // Building criterions:
         Criterion<Booking> crn2 = bookingCityName.whereEq("Prague");
