@@ -18,6 +18,8 @@ package org.ujorm.implementation.orm;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
@@ -28,11 +30,11 @@ import org.ujorm.extensions.Property;
 import org.ujorm.implementation.quick.QuickUjo;
 import org.ujorm.orm.ExtendedOrmUjo;
 import org.ujorm.orm.ForeignKey;
+import org.ujorm.orm.LowerCaseKeyFactory;
 import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
-import org.ujorm.orm.LowerCaseKeyFactory;
 
 /**
  * This abstract implementation of the OrmUjo interface is situable
@@ -143,7 +145,7 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
 
     /** Test an authorization of the action. */
     @Override
-    public boolean readAuthorization(UjoAction action, Key key, Object value) {
+    public boolean readAuthorization(@Nonnull final UjoAction action, @Nonnull final Key key, @Nullable final Object value) {
         switch (action.getType()) {
             case UjoAction.ACTION_TO_STRING:
                 return !(key instanceof RelationToMany);

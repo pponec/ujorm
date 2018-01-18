@@ -16,6 +16,10 @@
 
 package org.ujorm;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.ujorm.core.annot.XmlElementBody;
+
 /**
  * <a href="http://ujorm.org/" class="undecor"><img style="width: 32px; height: 32px;" alt="UJO Icons" src="doc-files/ujo32.png">
  * UJO</a> means a <i>Unified Java Object</i> and its implementations provides a similar service like a JavaBeans class.
@@ -63,7 +67,7 @@ public interface Ujo {
      * @see Key#getValue(org.ujorm.Ujo)
      * @see Key#isDirect()
      */
-    public Object readValue(Key<?,?> key);
+    public Object readValue(@Nonnull Key<?,?> key);
 
 
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
@@ -77,7 +81,7 @@ public interface Ujo {
      * @see Key#setValue(Ujo,Object)
      * @see Key#isDirect()
      */
-    public void writeValue(Key<?,?> key, Object value);
+    public void writeValue(@Nonnull Key<?,?> key, @Nullable Object value);
 
     /** Returns all direct keys.
      * There is recommended to be a "name" of each key is unique (but it is NOT a necessary condition).
@@ -100,6 +104,6 @@ public interface Ujo {
      * @return Returns a TRUE value in case the key is authorized successfully.
      * @see UjoAction
      */
-    public boolean readAuthorization(UjoAction action, Key<?,?> key, Object value);
+    public boolean readAuthorization(@Nonnull UjoAction action, @Nonnull Key<?,?> key, @Nullable Object value);
 
 }

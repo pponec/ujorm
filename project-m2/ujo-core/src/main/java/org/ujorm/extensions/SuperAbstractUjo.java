@@ -16,6 +16,8 @@
 
 package org.ujorm.extensions;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -88,7 +90,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * @see UjoAction Action Constants
      */
     @Override
-    public boolean readAuthorization(final UjoAction action, final Key key, final Object value) {
+    public boolean readAuthorization(@Nonnull final UjoAction action, @Nonnull final Key key, @Nullable final Object value) {
         return true;
     }
 

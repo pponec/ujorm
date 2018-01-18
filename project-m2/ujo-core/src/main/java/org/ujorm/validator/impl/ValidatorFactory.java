@@ -266,15 +266,24 @@ public abstract class ValidatorFactory {
 
     /** Check the date is in the future in compare to a local time
      * @see DateValidator
+     * @deprecated Use the {@link #futureDate()} rather
      */
+    @Deprecated
     public static <VALUE extends Date> Validator<VALUE> future() {
+        return futureDate();
+    }
+
+    /** Check the date is in the future in compare to a local time
+     * @see DateValidator
+     */
+    public static <VALUE extends Date> Validator<VALUE> futureDate() {
         return new DateValidator<>(false);
     }
 
-   /** Check the date is in the future in compare to a local time
+    /** Check the date is in the future in compare to a local time
      * @see LocalDateValidator
      */
-    public static <VALUE extends LocalDate> Validator<VALUE> futureDate() {
+    public static <VALUE extends LocalDate> Validator<VALUE> futureLocalDate() {
         return new LocalDateValidator<>(false);
     }
 
@@ -295,15 +304,24 @@ public abstract class ValidatorFactory {
 
     /** Check the date is in the past or equals to now in compare to the local time
      * @see NotNullValidator
+     * @deprecated Use the {@link #pastDate()} rather
      */
+    @Deprecated
     public static <VALUE extends Date> Validator<VALUE> past() {
+        return pastDate();
+    }
+
+    /** Check the date is in the past or equals to now in compare to the local time
+     * @see NotNullValidator
+     */
+    public static <VALUE extends Date> Validator<VALUE> pastDate() {
         return new DateValidator<>(true);
     }
 
     /** Check the date is in the past or equals to now in compare to the local time
      * @see LocalDateValidator
      */
-    public static <VALUE extends LocalDate> Validator<VALUE> pastDate() {
+    public static <VALUE extends LocalDate> Validator<VALUE> pastLocalDate() {
         return new LocalDateValidator<>(true);
     }
 

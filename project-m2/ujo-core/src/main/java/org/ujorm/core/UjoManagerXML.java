@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -35,6 +34,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.UjoTextable;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ujorm.core.UjoTools.SPACE;
 
 /**
