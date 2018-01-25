@@ -317,7 +317,7 @@ abstract public class SqlDialect {
         printFullTableName(MetaIndex.TABLE.of(index), out);
         String separator = " (";
 
-        for (MetaColumn column : MetaIndex.COLUMNS.of(index)) {
+        for (MetaColumn column : MetaIndex.COLUMNS.getList(index)) {
             out.append(separator);
             printQuotedName(column.getName(), out);
             separator = ", ";

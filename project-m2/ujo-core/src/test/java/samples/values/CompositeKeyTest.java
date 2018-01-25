@@ -29,7 +29,7 @@ public class CompositeKeyTest extends TestCase {
 
     public void testCompositeKey2f() {
         CompositeKey<Person,String> ck = Person.FATHERS_NAME;
-        List<Key<?,?>> keys = new ArrayList<Key<?,?>>();
+        List<Key<?,?>> keys = new ArrayList<>();
         for (Key<?,?> keyItem : ck) {
             keys.add(keyItem);
         }
@@ -41,7 +41,7 @@ public class CompositeKeyTest extends TestCase {
 
     public void testCompositeKey3m() {
         CompositeKey<Person,String> ck = Person.GRANDMOTHERS_NAME;
-        List<Key> keys = new ArrayList<Key>();
+        List<Key> keys = new ArrayList<>();
         for (Key keyItem : ck) {
             keys.add(keyItem);
         }

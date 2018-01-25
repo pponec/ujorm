@@ -578,7 +578,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Method returns true in case any table requires the internal table 'ujorm_pk_support' to get a next sequence value. */
     public boolean isSequenceTableRequired() {
-        for (MetaTable table : TABLES.of(this)) {
+        for (MetaTable table : TABLES.getList(this)) {
             if (table.isTable()
             &&  table.getSequencer().isSequenceTableRequired()) {
                 return true;
@@ -609,7 +609,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public List<MetaIndex> getIndexList() {
         final List<MetaIndex> result = new ArrayList<>(32);
 
-        for (MetaTable table : TABLES.of(this)) {
+        for (MetaTable table : TABLES.getList(this)) {
             result.addAll(table.getIndexCollection());
         }
         return result;

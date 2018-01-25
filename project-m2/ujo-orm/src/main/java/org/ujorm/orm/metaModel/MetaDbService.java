@@ -29,13 +29,13 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
-import static org.ujorm.logger.UjoLogger.*;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.SqlDialectEx;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.ao.CommentPolicy;
+import static org.ujorm.logger.UjoLogger.*;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
 import static org.ujorm.tools.Check.hasLength;
 
@@ -145,7 +145,7 @@ public class MetaDbService {
         final HashMap<String, String> requiredSchemas = new HashMap<>();
         final Boolean isCatalog = db.getDialect().isCatalog();
 
-        for (MetaTable table : TABLES.of(db)) {
+        for (MetaTable table : TABLES.getList(db)) {
             if (table.isTable()) {
                 // CHECK COLUMNS AND INDEXES OF THE TABLE:
                 final boolean tableExists = addNewColumns
@@ -282,7 +282,7 @@ public class MetaDbService {
                 for (MetaTable table : news.getTables()) {
                     if (table.isTable()) {
                         checkKeyWord(MetaTable.NAME.of(table), table, keywords);
-                        for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
+                        for (MetaColumn column : MetaTable.COLUMNS.getList(table)) {
                             checkKeyWord(column.getName(), table, keywords);
                         }
                     }
@@ -423,7 +423,7 @@ public class MetaDbService {
                                 final Appendable sql = db.getDialect().printComment(table, out);
                                 executeUpdate(sql, table);
                             }
-                            for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
+                            for (MetaColumn column : MetaTable.COLUMNS.getList(table)) {
                                 if (column.isCommented()) {
                                     out.setLength(0);
                                     final Appendable sql = db.getDialect().printComment(column, out);
@@ -498,7 +498,7 @@ public class MetaDbService {
     /** Find the first sequence of the database or returns null if no sequence was not found. */
     @Nullable
     protected UjoSequencer findFirstSequencer() {
-        for (MetaTable table : TABLES.of(db)) {
+        for (MetaTable table : TABLES.getList(db)) {
             if (table.isTable()) {
                 return table.getSequencer();
             }
@@ -564,7 +564,7 @@ public class MetaDbService {
         final boolean tableExists = existingColumns.size()>0;
         if (tableExists) {
             // create columns:
-            for (MetaColumn mc : MetaTable.COLUMNS.of(table)) {
+            for (MetaColumn mc : MetaTable.COLUMNS.getList(table)) {
                 final boolean exists = existingColumns.contains(mc.getName().toUpperCase());
                 if (!exists) {
                     LOGGER.log(INFO, "New DB column: {}", mc.getFullName());

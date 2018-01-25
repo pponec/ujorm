@@ -516,7 +516,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             this.holder = holder;
             this.camelCase = propertyCamelCase;
             this.superKeys = abstractSuperKeys;
-            this.propertyList = new ArrayList<Key<UJO, ?>>(32);
+            this.propertyList = new ArrayList<>(32);
             this.annotationsMap = new HashMap<Key<UJO, ?>, Map<Class<? extends Annotation>, Annotation>>();
         }
 

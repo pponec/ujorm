@@ -36,7 +36,6 @@ import org.ujorm.core.UjoManagerCSV;
 import org.ujorm.criterion.*;
 import org.ujorm.validator.ValidationException;
 import static org.ujorm.core.UjoTools.SPACE;
-import org.ujorm.core.IllegalUjormException;
 import static org.ujorm.ujo_core.Company.CITY;
 import static org.ujorm.ujo_core.Employee.*;
 
@@ -374,7 +373,7 @@ public class SampleCORE {
 
         /** Create the List of Persons */
         private List<Employee> getEmployees() {
-            final List<Employee> result = new ArrayList<Employee>();
+            final List<Employee> result = new ArrayList<>();
 
             result.add(createEmployee(10L, "Pavel", 50.00, getCompany()));
             result.add(createEmployee(20L, "Petr", 80.00, getCompany()));

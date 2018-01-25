@@ -16,13 +16,13 @@
 package org.ujorm.orm.ao;
 
 import java.util.ArrayList;
-import org.ujorm.orm.metaModel.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.ujorm.core.annot.PackagePrivate;
+import org.ujorm.orm.metaModel.*;
 
 /** Database meta index model builder with a user ordered columns support.
  * Two columns of a database composite index can be ordered according a number
@@ -118,7 +118,7 @@ public class IndexModelOrderedBuilder extends IndexModelBuilder {
     public Collection<MetaIndex> getIndexModels() {
         super.addColumnsToIndex();
 
-        final List<MetaIndex> result = new ArrayList<MetaIndex>();
+        final List<MetaIndex> result = new ArrayList<>();
         for (List<OrderedColumn> columns : idxMap.values()) {
             addToResult(columns, result);
         }

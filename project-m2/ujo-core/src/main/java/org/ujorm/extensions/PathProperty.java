@@ -78,7 +78,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     /** Main constructor */
     @SuppressWarnings("unchecked")
     public PathProperty(@Nullable Boolean ascending, @Nullable String lastSpaceName, Key... keys) {
-        final ArrayList<Key> list = new ArrayList<Key>(keys.length + 3);
+        final ArrayList<Key> list = new ArrayList<>(keys.length + 3);
         boolean alias = lastSpaceName != null;
         for (Key key : keys) {
             if (key.isComposite()) {

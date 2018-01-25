@@ -37,7 +37,7 @@ public class UseTable {
         jTable.setModel(model);
         
         // We can set an data optionaly:
-        List<Person> persons = new ArrayList();
+        List<Person> persons = new ArrayList<>();
         model.setRows(persons);
         
     }

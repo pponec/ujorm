@@ -19,8 +19,8 @@ package org.ujorm.listener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 
 /**
  * A Property Change Support for the UJO objects.
@@ -86,7 +86,7 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
         List<UjoPropertyChangeListener> result = listenerMap.get(key);
         
         if (result==null) {
-            result = new ArrayList<UjoPropertyChangeListener>(1);
+            result = new ArrayList<>(1);
             listenerMap.put(key, result);
         }
         return result;

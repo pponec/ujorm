@@ -131,7 +131,7 @@ public class MetaDbServiceEx extends MetaDbService {
             for (MetaTable table : tables) {
                 if (table.isTable()) {
                     checkKeyWord(MetaTable.NAME.of(table), table, keywords);
-                    for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
+                    for (MetaColumn column : MetaTable.COLUMNS.getList(table)) {
                         checkKeyWord(MetaColumn.NAME.of(column), table, keywords);
                     }
                 }
@@ -153,7 +153,7 @@ public class MetaDbServiceEx extends MetaDbService {
     }
 
     private List<String> checkTables(Connection conn, List<MetaTable> mappedTables, boolean repairDB) throws Exception {
-        ArrayList<String> messages = new ArrayList<String>();
+        ArrayList<String> messages = new ArrayList<>();
         // 1) CHECK table exists
         LOGGER.log(INFO, "Checking tables (" + mappedTables.size() + ") for existence ...");
         for (MetaTable mappedTable : mappedTables) {

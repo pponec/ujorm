@@ -53,7 +53,7 @@ public class TXmlTest_2 extends TestCase {
     protected AbstractUjo createUjoRoot() {
         TXmlUjoRoot_2 ujb = new TXmlUjoRoot_2();
 
-        ArrayList<Integer> list = new ArrayList<Integer>();
+        ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
         list.add(3);

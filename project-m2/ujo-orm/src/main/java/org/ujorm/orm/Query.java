@@ -443,7 +443,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     @SuppressWarnings("unchecked")
     public final Query<UJO> orderByMany(Key... orderItems) {
         clearDecoder();
-        this.orderBy = new ArrayList(Math.max(orderItems.length, 4));
+        this.orderBy = new ArrayList<>(Math.max(orderItems.length, 4));
         for (final Key p : orderItems) {
             this.orderBy.add(p);
         }
@@ -536,7 +536,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     */
     public final Query<UJO> setColumns(Collection<ColumnWrapper> columns) throws IllegalArgumentException {
         clearDecoder();
-        this.columns = new ArrayList<ColumnWrapper>(columns);
+        this.columns = new ArrayList<>(columns);
         return this;
     }
 
@@ -558,7 +558,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             // For exmample use the set Item[order.id, order.date] instead of Item[order, order.date]
             Arrays.sort(columns, INNER_KEY_COMPARATOR);
         }
-        this.columns = new ArrayList<ColumnWrapper>(columns.length + 3);
+        this.columns = new ArrayList<>(columns.length + 3);
         final OrmHandler handler = getHandler();
         for (Key key : columns) {
             final MetaColumn mc = handler.findColumnModel(getLastProperty(key), true);

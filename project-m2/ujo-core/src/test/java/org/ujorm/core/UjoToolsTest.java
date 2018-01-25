@@ -52,7 +52,7 @@ public class UjoToolsTest extends TestCase {
         List<String> list = null;
         assertEquals(false, UjoTools.isFilled(list));
         //
-        list = new ArrayList();
+        list = new ArrayList<>();
         assertEquals(false, UjoTools.isFilled(list));
         //
         list.add("ABC");

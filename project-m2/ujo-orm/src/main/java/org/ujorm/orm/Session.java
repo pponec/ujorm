@@ -850,7 +850,7 @@ public class Session implements Closeable {
     /** Find column by a table type. */
     @Nullable
     private MetaColumn findOrmColumn(MetaTable table, Class tableType) {
-        for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
+        for (MetaColumn column : MetaTable.COLUMNS.getList(table)) {
             if (column.isForeignKey()
             &&  column.getType()==tableType) {                   // 1
             //  column.getForeignTable().getType()==tableType) { // 2
@@ -1000,7 +1000,7 @@ public class Session implements Closeable {
         final boolean fk = ujo instanceof ExtendedOrmUjo;
 
         Criterion<U> criterion = null;
-        for (MetaColumn c : MetaPKey.COLUMNS.of(pkeys)) {
+        for (MetaColumn c : MetaPKey.COLUMNS.getList(pkeys)) {
             final Object pk = c.getValue(ujo);
             if (pk == null) {
                 return null;
@@ -1037,7 +1037,7 @@ public class Session implements Closeable {
 
         // Copy all key values back to the original object:
         ujo.writeSession(null);
-        for (MetaColumn c : MetaTable.COLUMNS.of(metaTable)) {
+        for (MetaColumn c : MetaTable.COLUMNS.getList(metaTable)) {
 
             if (fk && c.isForeignKey()) {
                 // Copy the foreign key only (the workaround for lazy loading):

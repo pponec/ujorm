@@ -159,13 +159,13 @@ public class CriterionValueTest extends MyTestCase {
     }
 
     public void testInit_in_07() {
-        Criterion<Employee> crn = Criterion.whereNotIn(Employee.NAME, new ArrayList<Person>(), Person.NAME);
+        Criterion<Employee> crn = Criterion.whereNotIn(Employee.NAME, new ArrayList<>(), Person.NAME);
         boolean ok = crn.evaluate(new Employee("Julia"));
         assertTrue(ok);
     }
 
     public void testInit_in_08() {
-        Criterion<Employee> crn = Criterion.whereIn(Employee.NAME, new ArrayList<Person>(), Person.NAME);
+        Criterion<Employee> crn = Criterion.whereIn(Employee.NAME, new ArrayList<>(), Person.NAME);
         boolean ok = !crn.evaluate(new Employee("Julya"));
         assertTrue(ok);
     }

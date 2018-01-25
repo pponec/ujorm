@@ -46,7 +46,7 @@ public class CriteriaWeakTest extends MyTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        persons = new ArrayList<Person>();
+        persons = new ArrayList<>();
 
         Person p = newPerson("John" , 10.0);
         Person m = newPerson("Marry", 20.0);

@@ -41,7 +41,7 @@ public class KeyTest extends MyTestCase {
 
         // ---
 
-        from.set(PERS, new ArrayList<PersonExt>());
+        from.set(PERS, new ArrayList<>());
         PERS.copy(from, to);
         assertSame(from.get(PERS), to.get(PERS));
     }

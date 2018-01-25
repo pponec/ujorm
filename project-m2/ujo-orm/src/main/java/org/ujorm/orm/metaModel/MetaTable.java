@@ -43,10 +43,10 @@ import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.annot.View;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.impl.TableWrapperImpl;
-import static org.ujorm.orm.metaModel.MetaParams.INDEX_MODEL_BUILDER;
 import org.ujorm.tools.Assert;
-import static org.ujorm.tools.Check.hasLength;
 import org.ujorm.tools.MsgFormatter;
+import static org.ujorm.orm.metaModel.MetaParams.INDEX_MODEL_BUILDER;
+import static org.ujorm.tools.Check.hasLength;
 
 /**
  * DB table or view meta-model.
@@ -340,7 +340,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     @Nullable
     MetaColumn findColumn(String id) {
 
-        if (hasLength(id)) for (MetaColumn column : COLUMNS.of(this)) {
+        if (hasLength(id)) for (MetaColumn column : COLUMNS.getList(this)) {
             if (MetaColumn.ID.equals(column, id)) {
                 return column;
             }
@@ -351,7 +351,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Finds the first relation by ID or returns null. The method is for internal use only. */
     MetaRelation2Many findRelation(String id) {
 
-        if (hasLength(id)) for (MetaRelation2Many relation : RELATIONS.of(this)) {
+        if (hasLength(id)) for (MetaRelation2Many relation : RELATIONS.getList(this)) {
             if (MetaRelation2Many.ID.equals(relation, id)) {
                 return relation;
             }
@@ -361,7 +361,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
 
     /** Get all foreign columns */
     public List<MetaColumn> getForeignColumns() {
-        final List<MetaColumn> result = new ArrayList<MetaColumn>();
+        final List<MetaColumn> result = new ArrayList<>();
         for (MetaColumn column : COLUMNS.getList(this)) {
             if (column.isForeignKey()) {
                 result.add(column);

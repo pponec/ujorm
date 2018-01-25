@@ -102,10 +102,10 @@ public class IndexModelBuilder2  {
     protected void addColumnsToIndex() {
         final boolean extendedStrategy = isExtendedIndexStrategy();
         for (MetaColumn column : COLUMNS.getList(metaTable)) {
-            for (String idx : MetaColumn.UNIQUE_INDEX.of(column)) {
+            for (String idx : MetaColumn.UNIQUE_INDEX.getList(column)) {
                 addIndex(idx, column, true);
             }
-            for (String idx : MetaColumn.INDEX.of(column)) {
+            for (String idx : MetaColumn.INDEX.getList(column)) {
                 addIndex(idx, column, false);
             }
             if (extendedStrategy && column.isForeignKey()) {

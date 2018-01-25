@@ -15,17 +15,17 @@
  */
 package org.ujorm.extensions;
 
-import org.ujorm.core.WeakKeyFactory;
-import samples.weakKey.MyService;
 import java.math.BigDecimal;
-import org.ujorm.WeakKey;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.ujorm.WeakKey;
 import org.ujorm.core.KeyFactory;
+import org.ujorm.core.WeakKeyFactory;
+import samples.weakKey.MyService;
 import static java.lang.Boolean.*;
 import static java.math.BigDecimal.*;
 
@@ -120,7 +120,7 @@ public class WeakKeyTest extends TestCase {
      */
     public void testSetValue2List_1() {
         System.out.println("testSetValue2List_1");
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         
         assertEquals(null, NAME.of(list));
         assertEquals(TRUE, WIFE.of(list));
@@ -187,7 +187,7 @@ public class WeakKeyTest extends TestCase {
      */
     public void testSetValue2List_3() {
         System.out.println("testSetValue2List_3");
-        List<BigDecimal> list = new ArrayList<BigDecimal>();        
+        List<BigDecimal> list = new ArrayList<>();        
         assertEquals(ZERO, CASH.of(list));                
         BigDecimal cash = TEN;        
         CASH.setValue(list, cash);

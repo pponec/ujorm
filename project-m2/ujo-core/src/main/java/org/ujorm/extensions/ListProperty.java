@@ -132,7 +132,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
         if (result==null) {
             try {
                 result = getType().isInterface()
-                    ? (List<ITEM>) new ArrayList()
+                    ? new ArrayList<>()
                     : getType().newInstance()
                     ;
                 setValue(ujo, result);

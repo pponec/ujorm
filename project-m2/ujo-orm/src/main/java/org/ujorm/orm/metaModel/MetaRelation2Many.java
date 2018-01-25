@@ -62,7 +62,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     /** The factory initialization */
     static{fa.lock();}
 
-    /** Table alias for a better performance, the resource is: {@code TABLE.of(this).getAlias()} */
+    /** Table alias for a better performance, the resource is: {@code TABLE.getList(this).getAlias()} */
     private final String tableAlias;
 
     public MetaRelation2Many() {

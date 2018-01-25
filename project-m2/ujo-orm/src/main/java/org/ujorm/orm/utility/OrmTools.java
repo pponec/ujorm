@@ -241,7 +241,7 @@ final public class OrmTools {
 
         List<U> result = ujos instanceof List
                 ? null
-                : new ArrayList<U>(64);
+                : new ArrayList<>(64);
         for (U ujo : ujos) {
             loadLazyValues(ujo, depth);
             if (result!=null) {
@@ -276,7 +276,7 @@ final public class OrmTools {
     @SuppressWarnings("unchecked")
     public static <U extends ExtendedOrmUjo> List<U> loadLazyValuesAsBatch(final Iterable<U> ujos, Key<U, ? extends OrmUjo> key) {
 
-        final List<U> result = new ArrayList<U>(ujos instanceof List ? ((List) ujos).size() : 128);
+        final List<U> result = new ArrayList<>(ujos instanceof List ? ((List) ujos).size() : 128);
         final HashMap<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
         while (key.isComposite()) {
             key = ((CompositeKey)key).getFirstKey();
@@ -297,7 +297,7 @@ final public class OrmTools {
         final Query<OrmUjo> query = session.createQuery(pkColumn.getTable().getType());
         final int limit = session.getParameters().get(MetaParams.MAX_ITEM_COUNT_4_IN);
         final int count = map.size();
-        final List<Object> idList = new ArrayList(Math.min(limit, count));
+        final List<Object> idList = new ArrayList<>(Math.min(limit, count));
         final Iterator<Object> keys = map.keySet().iterator();
 
         for (int i = 1; i <= count; i++) {

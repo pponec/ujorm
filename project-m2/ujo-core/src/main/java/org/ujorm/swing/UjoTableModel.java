@@ -60,7 +60,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
 
     /** An Initialization */
     protected void initData() {
-        rows = new ArrayList<ROW>();
+        rows = new ArrayList<>();
     }
 
     /** Returns an UjoManager */

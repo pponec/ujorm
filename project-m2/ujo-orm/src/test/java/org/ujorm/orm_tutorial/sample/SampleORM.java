@@ -221,7 +221,7 @@ public class SampleORM {
     public void useBatchInsert() {
 
         Order order = session.createQuery(Order.class).orderBy(Order.ID.descending()).setLimit(1).uniqueResult();
-        List<Item> itemList = new ArrayList<Item>();
+        List<Item> itemList = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
             Item item = new Item();

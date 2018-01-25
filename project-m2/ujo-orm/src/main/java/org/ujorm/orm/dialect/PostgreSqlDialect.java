@@ -81,7 +81,7 @@ public class PostgreSqlDialect extends SqlDialect {
      */
     public Appendable printIndexCondition(final MetaIndex index, final Appendable out) throws IOException {
         String prefix = " WHERE ";
-        for (MetaColumn column : MetaIndex.COLUMNS.of(index)) {
+        for (MetaColumn column : MetaIndex.COLUMNS.getList(index)) {
             if (!column.hasDefaultValue()) {
                 out.append(prefix);
                 printQuotedName(column.getName(), out);
