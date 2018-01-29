@@ -146,7 +146,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
         for (final Key prop : keys) {
             if (prop.getName().hashCode() == nameHash // speed up
             &&  prop.getName().equals(name)
-            && (getUjoManager().isXmlAttribute(prop)) != result) {
+            && (getUjoManager().isXmlAttribute(prop) != result)) {
                 return prop;
             }
         }
