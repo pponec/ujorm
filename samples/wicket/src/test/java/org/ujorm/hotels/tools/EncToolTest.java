@@ -1,5 +1,5 @@
 /*
- ** Copyright 2013, Pavel Ponec
+ * Copyright 2018, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,46 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.service.impl;
+package org.ujorm.hotels.tools;
 
-import javax.inject.Inject;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.ujorm.hotels.config.SpringContext;
-import org.ujorm.hotels.service.AuthService;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.ujorm.hotels.tools.EncTool.getHash;
 
 /**
- * Some tests for the DbServiceImpl class
+ * EncTool Test
  * @author Pavel Ponec
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringContext.class)
-@WebAppConfiguration
-public class DbServiceImplTest {
+public class EncToolTest {
 
-    /** Has service */
-    @Inject
-    private AuthService service;
-
-    /**
-     * Test of getHash method, of class DbServiceImpl.
-     */
+    /** Test of getHash method, of class DbServiceImpl. */
     @Test
     public void testGetHash() {
         System.out.println("getHash");
         //
         String text = "demo";
         long expResult = 7808322132654054122L;
-        long result = service.getHash(text);
+        long result = getHash(text);
         assertEquals(expResult, result);
         //
         String text2 = "test";
         long expResult2 = -3360410906529887736L;
-        long result2 = service.getHash(text2);
+        long result2 = getHash(text2);
         assertEquals(expResult2, result2);
     }
 }

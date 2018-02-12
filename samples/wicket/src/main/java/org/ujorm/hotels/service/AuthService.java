@@ -52,8 +52,4 @@ public interface AuthService {
     @Nonnull
     public Customer getLoggedCustomer(@Nonnull Customer defaultValue);
 
-    /** Get a hash from the text */
-    public long getHash(@Nullable String text) throws IllegalStateException;
-
-
 }

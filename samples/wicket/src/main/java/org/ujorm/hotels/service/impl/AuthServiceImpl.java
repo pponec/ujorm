@@ -15,9 +15,6 @@
  */
 package org.ujorm.hotels.service.impl;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
@@ -32,7 +29,6 @@ import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.DbService;
 import org.ujorm.hotels.service.SessionService;
 import org.ujorm.logger.UjoLoggerFactory;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Common database service implementations
@@ -120,21 +116,6 @@ public class AuthServiceImpl implements AuthService {
     public boolean isLogged(Customer customer) {
         final Customer lc =  getSession().getLoggedCustomer();
         return lc != null && lc.getLogin().equals(customer.getLogin());
-    }
-
-    /** Get a hash from the text */
-    @Override
-    public long getHash(@Nullable String text) throws IllegalStateException {
-        if (text == null) {
-            text = "";
-        }
-        try {
-            final MessageDigest md = MessageDigest.getInstance("SHA-256");
-            final byte[] digest = md.digest(text.getBytes(UTF_8));
-            return new BigInteger(digest).longValue();
-        } catch (NoSuchAlgorithmException | RuntimeException | OutOfMemoryError e) {
-            throw new IllegalStateException("Method getHash() failed. ", e);
-        }
     }
 
     /** Get session service */

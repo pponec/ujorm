@@ -33,13 +33,14 @@ import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.DbService;
-import static org.ujorm.hotels.service.DbService.ONE_DAY;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.spring.CommonDao;
-import static org.ujorm.tools.Check.hasLength;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
+import static org.ujorm.hotels.service.DbService.ONE_DAY;
+import static org.ujorm.hotels.tools.EncTool.getHash;
+import static org.ujorm.tools.Check.hasLength;
 /**
  * Common database service implementations
  * @author ponec
@@ -138,7 +139,7 @@ public class DbServiceImpl implements DbService {
         final String password = customer.getPassword();
         if (hasLength(password)) {
             customer.writeSession(newMode ? null : dao.getSession() ); // Activate modifications for EditMode
-            customer.setPasswordHash(authService.getHash(password));
+            customer.setPasswordHash(getHash(password));
         }
         dao.saveOrUpdate(customer);
     }
@@ -148,7 +149,7 @@ public class DbServiceImpl implements DbService {
     public Customer findCustomer(String login, String password) {
         final Criterion<Customer> crn1, crn2, crn3, crn4;
         crn1 = Customer.LOGIN.whereEq(login);
-        crn2 = Customer.PASSWORD_HASH.whereEq(authService.getHash(password));
+        crn2 = Customer.PASSWORD_HASH.whereEq(getHash(password));
         crn3 = Customer.ACTIVE.whereEq(true);
         crn4 = crn1.and(crn2).and(crn3);
 
