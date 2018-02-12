@@ -18,7 +18,10 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>org.ujorm.hotels.config.SpringContext</param-value>
     </context-param>
-
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+    
     <!-- Spring's context loader listener -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

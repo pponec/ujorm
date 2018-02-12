@@ -15,11 +15,12 @@
  */
 package org.ujorm.hotels.service.impl;
 
+import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import javax.inject.Inject;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.ujorm.hotels.config.SpringContext;
 import org.ujorm.hotels.service.AuthService;
 import static org.junit.Assert.*;
@@ -30,6 +31,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringContext.class)
+@WebAppConfiguration
 public class DbServiceImplTest {
 
     /** Has service */

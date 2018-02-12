@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015, Pavel Ponec
+ * Copyright 2013-2018, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,19 @@ package org.ujorm.hotels.service.impl;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.apache.wicket.Session;
-import org.apache.wicket.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.MainApplication;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.DbService;
+import org.ujorm.hotels.service.SessionService;
 import org.ujorm.logger.UjoLoggerFactory;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -41,11 +42,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class AuthServiceImpl implements AuthService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
 
-    /** Session attribute name */
-    private static final String CUSTOMER_ATTR = "CUSTOMER_ATTR";
-
     /** Common DB service */
-    @Inject private DbService dbService;
+    @Inject
+    private DbService dbService;
+
+    /** Spring application context */
+    @Inject
+    private ApplicationContext springContext;
 
     //@Value("${test}") private String test;
 
@@ -59,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
 
         if (result != null) {
             result.lock();
-            getThreadSession().setAttribute(CUSTOMER_ATTR, result);
+            getSession().saveToSession(result);
             return true;
         } else {
             try {
@@ -76,58 +79,52 @@ public class AuthServiceImpl implements AuthService {
     /** Logout */
     @Override
     public void logout() {
-        getThreadSession().setAttribute(CUSTOMER_ATTR, null);
-        // session.invalidate(); // restoring tabs
+        getSession().logout();
     }
 
     /** Is logged user ? */
     @Override
     public boolean isLogged() {
-        return getLoggedCustomer() != null;
+        return getSession().isLogged();
     }
 
     /** Get a login of the current Customer or the {@code null} value */
     @Override
     @Nullable
     public String getLogin() {
-        final Customer lc = getLoggedCustomer();
+        final Customer lc = getSession().getLoggedCustomer();
         return lc != null ? lc.getLogin() : null;
     }
 
     /** Get a current customer from session or the {@code null} value */
-    @Nullable
-    @Override
+    @Override @Nullable
     public Customer getLoggedCustomer() {
-        final Session session = getThreadSession();
-        final Object result = session != null
-                ? session.getAttribute(CUSTOMER_ATTR) : null;
-        return (Customer) result;
+        return getSession().getLoggedCustomer();
     }
 
     /** Get an immutable logged Customer from session of returns the default Value  */
-    @Override
-    public Customer getLoggedCustomer(Customer defaultValue) {
-        final Customer result = getLoggedCustomer();
-        return result != null ? result : defaultValue;
+    @Override @Nonnull
+    public Customer getLoggedCustomer(@Nonnull Customer defaultValue) {
+        return getSession().getLoggedCustomer(defaultValue);
     }
 
     /** Is logged admin */
     @Override
     public boolean isAdmin() {
-        final Customer lc = getLoggedCustomer();
+        final Customer lc = getSession().getLoggedCustomer();
         return lc !=null && lc.getAdmin();
     }
 
     /** Is logged selected user */
     @Override
     public boolean isLogged(Customer customer) {
-        final Customer lc = getLoggedCustomer();
+        final Customer lc =  getSession().getLoggedCustomer();
         return lc != null && lc.getLogin().equals(customer.getLogin());
     }
 
     /** Get a hash from the text */
     @Override
-    public long getHash(String text) throws IllegalStateException {
+    public long getHash(@Nullable String text) throws IllegalStateException {
         if (text == null) {
             text = "";
         }
@@ -140,9 +137,9 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    /** Return a Session or {@code null} if no session was found. */
-    private Session getThreadSession() {
-        return ThreadContext.getSession();
+    /** Get session service */
+    private SessionService getSession() {
+        return springContext.getBean(SessionService.class);
     }
 
     /** Log environment information */

@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.ujorm.hotels.config.SpringContext;
 import org.ujorm.hotels.gui.HomePage;
 import org.ujorm.hotels.gui.MainApplication;
@@ -15,6 +16,7 @@ import org.ujorm.hotels.gui.MainApplication;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringContext.class)
+@WebAppConfiguration
 public class HomePageTest extends TestCase {
 
     private WicketTester tester;

@@ -20,40 +20,26 @@ import javax.annotation.Nullable;
 import org.ujorm.hotels.entity.Customer;
 
 /**
- * Common database service
+ * Common session service
  * @author Pavel Ponec
  */
-public interface AuthService {
+public interface SessionService {
 
     /** Authenticate the user and save the result to the Wicket session */
-    public boolean authenticate(Customer customer);
+    public void saveToSession(@Nullable Customer user);
+    
+   /** Get a current customer from session or the {@code null} value */
+    @Nullable
+    public Customer getLoggedCustomer();
+
+    /** Get an immutable logged Customer from session of returns the default Value  */
+    @Nonnull
+    public Customer getLoggedCustomer(@Nonnull Customer defaultValue) ;
 
     /** Logout */
     public void logout();
 
-    /** Is logged any user ? */
+    /** Is logged user ? */
     public boolean isLogged();
-
-    /** Is logged an administrator ? */
-    public boolean isAdmin();
-
-    /** Is logged selected user */
-    public boolean isLogged(Customer customer);
-
-    /** Get a login of the current Customer or the {@code null} value */
-    @Nullable
-    public String getLogin();
-
-    /** Get an immutable logged customer from session */
-    @Nullable
-    public Customer getLoggedCustomer();
-
-    /** Get an immutable logged customer from session or returns a default value  */
-    @Nonnull
-    public Customer getLoggedCustomer(@Nonnull Customer defaultValue);
-
-    /** Get a hash from the text */
-    public long getHash(@Nullable String text) throws IllegalStateException;
-
 
 }
