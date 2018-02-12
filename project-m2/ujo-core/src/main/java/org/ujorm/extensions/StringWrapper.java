@@ -17,6 +17,8 @@
 
 package org.ujorm.extensions;
 
+import javax.annotation.Nonnull;
+
 /**
  * The method {@link #exportToString()} replaces the original {@link ValueTextable#toString()}.
  * @author Pavel Ponec
@@ -27,6 +29,7 @@ public interface StringWrapper extends ValueTextable {
     /** Export the value as String.
      * The method replaces the original {@link ValueTextable#toString()}.
      */
+    @Nonnull 
     public String exportToString();
 
 }
