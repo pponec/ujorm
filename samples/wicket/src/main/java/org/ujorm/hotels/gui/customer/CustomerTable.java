@@ -26,13 +26,13 @@ import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.DbService;
 import org.ujorm.validator.ValidationException;
-import static org.ujorm.wicket.CommonActions.*;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
-import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import org.ujorm.wicket.component.grid.CommonAction;
 import org.ujorm.wicket.component.grid.OrmDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
+import static org.ujorm.wicket.CommonActions.*;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 
 /**
  * Customer Panel
@@ -142,7 +142,7 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
                 }
                 argEvent.stop();
                 break;
-        }        
+        }
     }
 
     /** Reload the data table */
