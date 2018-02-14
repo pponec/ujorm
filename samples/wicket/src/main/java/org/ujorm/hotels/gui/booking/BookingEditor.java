@@ -83,7 +83,7 @@ public class BookingEditor<U extends Booking> extends EntityDialogPane<U> {
     @Override
     public void onEvent(IEvent<?> iEvent) {
         final FieldEvent event = FieldEvent.get(iEvent);
-        if (event != null) {
+        if (event.hasAction()) {
             try {
                 short nights = fields.getValue(Booking.NIGHTS);
                 short persons = fields.getValue(Booking.PERSONS);
@@ -92,6 +92,7 @@ public class BookingEditor<U extends Booking> extends EntityDialogPane<U> {
                 fields.setValue(Booking.PRICE, price, event.getRequestTarget());
                 iEvent.stop();
             } catch (Exception e) {
+                e.printStackTrace();
                 fields.setValue(Booking.PRICE, BigDecimal.ZERO, event.getRequestTarget());
             }
         }

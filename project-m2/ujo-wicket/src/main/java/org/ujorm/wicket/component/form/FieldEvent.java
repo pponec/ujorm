@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Pavel Ponec
+ * Copyright 2013-2018 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,27 @@
  */
 package org.ujorm.wicket.component.form;
 
+import javax.annotation.Nonnull;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
+import org.ujorm.core.UjoManager;
+import org.ujorm.tools.Check;
+import org.ujorm.wicket.CommonActions;
+import org.ujorm.wicket.UjoEvent;
 
 /**
  * FieldEvent
  * @author Pavel Ponec
  */
 public class FieldEvent {
+
+    /** Undefined event with {@code null} action */
+    public static final FieldEvent EMPTY_EVENT = new FieldEvent
+            ( CommonActions.UNDEFINED
+            , (KeyRing) UjoManager.getInstance().readKeys(DummyUjo.class)
+            , UjoEvent.EMPTY_EVENT.getTarget());
 
     final private String action;
     final private KeyRing sourceKey;
@@ -34,6 +45,11 @@ public class FieldEvent {
         this.action = action;
         this.sourceKey = sourceKey;
         this.target = target;
+    }
+
+    /** Check of the action has an length */
+    public boolean hasAction() {
+        return Check.hasLength(action);
     }
 
     public String getAction() {
@@ -61,7 +77,7 @@ public class FieldEvent {
 
     /**
      * Check the the required actions from argument to match.
-     * @param action Nullable argument
+     * @param actions Nullable argument
      * @return The true value for the match.
      */
     public final boolean isAction(String ... actions) {
@@ -85,11 +101,12 @@ public class FieldEvent {
     // ----------- STATIC ------------
 
     /** Get Payload type UjoEvent from the argument */
-    public static FieldEvent get(IEvent<?> argEvent) {
+    @Nonnull
+    public static FieldEvent get(@Nonnull final IEvent<?> argEvent) {
         final Object payLoad = argEvent.getPayload();
         return payLoad instanceof FieldEvent
                 ? (FieldEvent) payLoad
-                : null ;
+                : EMPTY_EVENT ;
     }
 
 }
