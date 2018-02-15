@@ -16,6 +16,8 @@
 
 package org.ujorm.extensions;
 
+import java.util.List;
+import org.ujorm.Ujo;
 import org.ujorm.tools.Assert;
 import static org.ujorm.extensions.PropertyModifier.*;
 
@@ -43,7 +45,7 @@ public class PropertyModifier {
 
     /** Write key type into key if it is not locked yet. */
     @SuppressWarnings("unchecked")
-    public static void setType(Class type, Property key) {
+    public static <U extends Ujo, V> void setType(Class<V> type, Property<U,V> key) {
         if (!key.isLock()) {
             key.init(TYPE, type);
             key.init(INDEX, key.getIndex());
@@ -52,7 +54,7 @@ public class PropertyModifier {
 
     /** Write domain type into key if it is not locked yet. */
     @SuppressWarnings("unchecked")
-    public static void setDomainType(Class domainType, Property key) {
+    public static <U extends Ujo, V> void setDomainType(Class<U> domainType, Property<U,V> key) {
         if (!key.isLock()) {
             key.init(DOMAIN_TYPE, domainType);
             key.init(INDEX, key.getIndex());
@@ -61,7 +63,7 @@ public class PropertyModifier {
 
     /** Write an item type into key if it is not locked yet. */
     @SuppressWarnings("unchecked")
-    public static void setItemType(Class itemType, AbstractCollectionProperty key) {
+    public static <U extends Ujo, V> void setItemType(Class<V> itemType, AbstractCollectionProperty<U,List,V> key) {
         Assert.notNull(itemType, "Item type is undefined for key: {}", key);
 
         if (!key.isLock()) {
@@ -74,6 +76,14 @@ public class PropertyModifier {
     public static void setName(String name, Property key) {
         if (!key.isLock()) {
             key.init(NAME, name);
+        }
+    }
+
+    /** Write a default value. */
+    @SuppressWarnings("unchecked")
+    public static <U extends Ujo, V> void setDefaultValue(V value, Property<U, V> key) {
+        if (!key.isLock()) {
+            key.init(DEFAULT_VALUE, value);
         }
     }
 
