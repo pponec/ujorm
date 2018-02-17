@@ -446,6 +446,15 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     }
 
     /**
+     * Returns true, if the key value equals to a parameter value. The key value can be {@code null}.
+     * @param key An another key.
+     */
+    @Override
+    public boolean equals(@Nullable final Object key) {
+        return this == key;
+    }
+
+    /**
      * Returns true, if the key name equals to the parameter value.
      */
     @Override

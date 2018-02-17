@@ -137,6 +137,18 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     public boolean isDefault(@Nonnull UJO ujo);
 
     /**
+     * Returns the {@code true}:
+     * <ul>
+     *   <li>For adirect Key: if argument is the same.</li>
+     *   <li>For a composite Key: if all items are the same.</li>
+     * </ul>
+     * Note: Any Alias names are ignored, there is necessary to use another comparator for it.
+     * @param key A checked {@link CompositeKey} implementation
+     */
+    @Override
+    public boolean equals(final Object key);
+
+    /**
      * Returns true, if the key value equals to a parameter value. The key value can be null.
      *
      * @param ujo A basic Ujo.
