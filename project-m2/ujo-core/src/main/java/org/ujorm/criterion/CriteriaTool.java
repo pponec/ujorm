@@ -64,17 +64,17 @@ public class CriteriaTool<UJO extends Ujo> {
     }
 
     /** Filter the list from parameter by a Criterion.
-     * @see Criterion#evaluate(java.lang.Iterable)
+     * @see Criterion#findAll(java.lang.Iterable)
      */
     public List<UJO> select(List<UJO> list, Criterion<UJO> criterion) {
-        return criterion.evaluate(list);
+        return criterion.findAll(list);
     }
 
     /** Filter the list from parameter by a Criterion and sort the result.
-     * @see Criterion#evaluate(java.lang.Iterable)
+     * @see Criterion#findAll(java.lang.Iterable)
      */
     public List<UJO> select(List<UJO> list, Criterion<UJO> criterion, UjoComparator<UJO> comparator) {
-        final List<UJO> result = criterion.evaluate(list);
+        final List<UJO> result = criterion.findAll(list);
         if (comparator != null) {
             Collections.sort(result, comparator);
         }

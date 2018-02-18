@@ -259,7 +259,7 @@ public class SampleCORE {
     public void criterionAsFilter() {
         List<Employee> employees = COMPANY.add(CITY)
                 .whereEq("Prague")
-                .evaluate(service.getEmployees());
+                .findAll(service.getEmployees());
 
         for (Employee employee : employees) {
             System.out.println(employee.getCompany().getCity() + SPACE + employee.getName());
@@ -272,7 +272,7 @@ public class SampleCORE {
     public void criterionAsFilterWithKey() {
         List<Employee> employees = COMPANY.add(CITY)
                 .whereEq(Employee.NAME) // The employee NAME can be a correct value of the Criterion
-                .evaluate(service.getEmployees());
+                .findAll(service.getEmployees());
 
         for (Employee employee : employees) {
             System.out.println(employee.getCompany().getCity() + SPACE + employee.getName());

@@ -87,7 +87,7 @@ public class DatabaseTest {
         // Simple criterion:
         Key<Booking, LocalDate> dateFrom = Booking.DATE_FROM;
         Criterion<Booking> crn1 = dateFrom.whereGt(now());
-        List<Booking> futureAccommodations = crn1.evaluate(getBookings());
+        List<Booking> futureAccommodations = crn1.findAll(getBookings());
         assertEquals(1, futureAccommodations.size());
 
         // Composite keys:
@@ -102,7 +102,7 @@ public class DatabaseTest {
         Criterion<Booking> crn2 = bookingCityName.whereEq("Prague");
         Criterion<Booking> crn3 = crn1.and(crn2);
         Criterion<Booking> crn4 = crn1.and(crn2.or(anotherCriterion()));
-        assertEquals(1, crn4.evaluate(getBookings()).size());
+        assertEquals(1, crn4.findAll(getBookings()).size());
 
         // Build query:
         Query<Booking> bookings = dao.createQuery(crn3);

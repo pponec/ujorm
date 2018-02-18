@@ -86,10 +86,22 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      */
     public abstract boolean evaluate(U ujo);
 
+    /** Returns a first evaluated item from an iterable collection. */
+    @Nullable
+    public U findFirst(final @Nonnull Iterable<U> ujoList) {
+        for (final U ujo : ujoList) {
+            if (evaluate(ujo)) {
+                return ujo;
+            }
+        }
+        return null;
+    }
+
     /** Returns a list of items which satisfies the condition in this Criterion.
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
-    public List<U> evaluate(final Iterable<U> ujoList) {
+    @Nonnull
+    public List<U> findAll(final @Nonnull Iterable<U> ujoList) {
         final List<U> result = new ArrayList<>();
         for (final U ujo : ujoList) {
             if (evaluate(ujo)) {
@@ -102,7 +114,8 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
     /** Returns a list of items which satisfies the condition in this Criterion.
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
-    public List<U> evaluate(final U ... ujoList) {
+    @Nonnull
+    public List<U> findAll(final @Nonnull U ... ujoList) {
         final List<U> result = new ArrayList<>();
         for (final U ujo : ujoList) {
             if (evaluate(ujo)) {
@@ -110,6 +123,24 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
             }
         }
         return result;
+    }
+
+    /** Returns a list of items which satisfies the condition in this Criterion.
+     * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
+     * @deprecated Use the method {@link #findAll(java.lang.Iterable)} rather.
+     */
+    @Nonnull @Deprecated
+    public List<U> evaluate(final @Nonnull Iterable<U> ujoList) {
+        return findAll(ujoList);
+    }
+
+    /** Returns a list of items which satisfies the condition in this Criterion.
+     * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
+     * @deprecated Use the method {@link #findAll(org.ujorm.Ujo...)} rather.
+     */
+    @Nonnull @Deprecated
+    public List<U> evaluate(final @Nonnull U ... ujoList) {
+        return findAll(ujoList);
     }
 
     /**
@@ -213,7 +244,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         final ValuePrinter printer = new ValuePrinter(128).append(getDomain().getSimpleName());
         return toPrinter(printer).toString();
     }
-    
+
     /** Print the Criterion including the main domain name along the example: Order(id EQ 1) */
     @Nonnull
     public ValuePrinter toPrinter(ValuePrinter out) {
