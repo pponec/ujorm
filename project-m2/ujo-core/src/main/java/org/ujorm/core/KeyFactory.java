@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Pavel Ponec
+ * Copyright 2012-2018 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -422,11 +422,6 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Common protected factory method */
     protected <T> Key<UJO, T> createKey(final String name, final T defaultValue, final Validator<T> validator) {
-        return createPlainKey(name, defaultValue, validator);
-    }
-
-    /** Original protected factory method to create a plain key */
-    protected final <T> Key<UJO, T> createPlainKey(final String name, final T defaultValue, final Validator<T> validator) {
         final Property<UJO, T> p = Property.of(name, null, defaultValue, Property.UNDEFINED_INDEX, validator, false);
         addKey(p);
         return p;
