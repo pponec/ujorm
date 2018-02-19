@@ -58,7 +58,7 @@ import static org.ujorm.logger.UjoLogger.WARN;
 public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(Query.class);
-    
+
     /** Prefix for generated aliases */
     protected static final String GENERATED_ALIAS_PREFIX = "ujorm_alias_";
 
@@ -109,7 +109,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         ( @Nonnull final MetaTable table
         , @Nullable final Criterion<UJO> criterion
         , @Nullable final Session session) {
-            
+
         Assert.notNull(table, "table");
         this.table = table;
         this.columns = null;
@@ -449,17 +449,17 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         }
         return this;
     }
-    
+
     /** Fetch all columns including all direct relations.
      * Method cleans all columns assigned before.
-     * @see #addColumn(org.ujorm.Key) 
+     * @see #addColumn(org.ujorm.Key)
      */
     public Query<UJO> fetchAll() throws IllegalArgumentException {
-        clearDecoder();   
+        clearDecoder();
         final List<MetaColumn> mTables = MetaTable.COLUMNS.getList(table);
-        final Set<Class> fkClass = new HashSet<>();    
+        final Set<Class> fkClass = new HashSet<>();
         fkClass.add(getTableModel().getClass()); // For a case of recursion relation
-        
+
         if (columns == null) {
             columns = new ArrayList<>(mTables.size());
         } else {
@@ -471,13 +471,13 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
                 final boolean unique = fkClass.add(mc.getType());
                 final ColumnWrapper cw = unique
                         ? mc
-                        : new ColumnWrapperImpl(mc, GENERATED_ALIAS_PREFIX + order++);     
+                        : new ColumnWrapperImpl(mc, GENERATED_ALIAS_PREFIX + order++);
                 addMissingColumn(cw, true, false);
             } else {
                 columns.add(mc);
             }
         }
-        return this;       
+        return this;
     }
 
    /** Set the one column to fetch database table(s).
@@ -494,7 +494,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         Assert.notNull(mc, "Column {} was not foud in the meta-model", column.getFullName());
 
         final ColumnWrapper wColumn = column.isComposite()
-                ? new ColumnWrapperImpl(mc, column) 
+                ? new ColumnWrapperImpl(mc, column)
                 : mc;
         if (columns==null) {
             columns = new ArrayList<>(getDefaultColumns());
@@ -663,7 +663,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Set the one entity / table to LEFT OUTER JOIN */
-    public boolean addOuterJoin(@Nonnull final Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
+    public Query<UJO> addOuterJoin(@Nonnull final Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
         this.sqlStatement = null;
         if (outerJoins == null) {
             outerJoins = new HashSet<>();
@@ -675,7 +675,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         if (column.isMandatory()) {
             LOGGER.log(WARN, "The relation is required: {}", relation);
         }
-        return outerJoins.add(wColumn);
+        return this;
     }
 
     /** Return a non-null list of the outer joins */
