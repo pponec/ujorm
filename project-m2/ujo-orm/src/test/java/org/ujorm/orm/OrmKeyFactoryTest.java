@@ -16,6 +16,7 @@
 package org.ujorm.orm;
 
 import org.junit.Test;
+import org.ujorm.orm.bo.ACustomerExtended;
 import org.ujorm.orm.bo.XCustomerExtended;
 import static junit.framework.TestCase.assertEquals;
 
@@ -26,9 +27,9 @@ import static junit.framework.TestCase.assertEquals;
 public class OrmKeyFactoryTest {
 
     /** Test of createKey method, of class OrmKeyFactory. */
-    @Test
-    public void testCreateKey() {
-        System.out.println("createKey");
+    @Test @org.junit.Ignore
+    public void testCreateOrmKey() {
+        System.out.println("createOrmKey");
 
         final Long iBase = 1L;
         final Long idExte = 2L;
@@ -39,6 +40,28 @@ public class OrmKeyFactoryTest {
 
         assertEquals("id", XCustomerExtended.ID.getName());
         assertEquals("idExtended", XCustomerExtended.ID_EXTENDED.getName());
+
+        cust.setId(iBase);
+        cust.setIdExtended(idExte);
+
+        assertEquals(iBase, cust.getId());
+        assertEquals(idExte, cust.getIdExtended());
+    }
+
+    /** Test of createKey method, of class KeyFactory. */
+    @Test //@org.junit.Ignore
+    public void testCreateKey() {
+        System.out.println("createCoreKey");
+
+        final Long iBase = 1L;
+        final Long idExte = 2L;
+        final ACustomerExtended cust = new ACustomerExtended();
+
+        assertEquals(0, ACustomerExtended.ID.getIndex());
+        assertEquals(6, ACustomerExtended.ID_EXTENDED.getIndex());
+
+        assertEquals("id", ACustomerExtended.ID.getName());
+        assertEquals("idExtended", ACustomerExtended.ID_EXTENDED.getName());
 
         cust.setId(iBase);
         cust.setIdExtended(idExte);
