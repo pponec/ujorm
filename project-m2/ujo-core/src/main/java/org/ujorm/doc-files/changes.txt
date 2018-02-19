@@ -2,7 +2,25 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.77-SNAPSHOT
+release 1.77 (2018-02-19)
++ CORE: A new method Key.equals(Object) is implemented
++ CORE: Key names are build by the CamelFactory.class
++ CORE: UjoComparator code cleaning
++ CORE: ValidatorFactory supports LocalDate and LocalDateTime
++ CORE: new method PropertyModifier.setDefaultValue()
++ CORE: new three methods are available: Criterion.findFirst(Collection), Criterion.findAll(Collection), Criterion.findAll(Array)
++ HOTELS: Login by Spring service with a scope session
++ ORM: Method Query.addOuterJoin() returns this.
++ ORM: New implementation of the method: MetaDatabase.toString()
++ ORM: New method: MetaTable.getFullName()
++ ORM: StringWrapper annotation is extended
++ ORM: Test the ORM Ujorm bug of an ingeritance.
++ WICKET: BuildInfo class cleaning
++ WICKET: FieldProvider is extended
++ WICKET: The component LocalDateFiled is fixed
++ WICKET: The method FieldEvent.get() returns an nonnull value always
++ ALL: code cleaning
++ ALL: Javadoc is extended
 
 release 1.76 (2017-12-09)
 + ORM: new method Query.fetchAll() for fetching all related tables in the first level + jUnit test is extended + JavaDoc is extended + bugfixing
