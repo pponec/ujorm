@@ -617,7 +617,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
 
-    /** Returns an JNDI or a connection URL */
+    /** Returns an JNDI or a JDBC URL */
     @Nonnull
     public String toString() {
         final String jndi = JNDI.getFirstItem(this);
