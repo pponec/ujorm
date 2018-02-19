@@ -383,7 +383,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     public String getSchema() {
         return SCHEMA.of(this);
     }
-    
+
      /** Returns database schema.
      * @since 1.75
      * @return No schema returns an empty value
@@ -391,6 +391,11 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     @Nonnull
     public String getName() {
         return NAME.of(this);
+    }
+
+    /** Returns a table name including a schema */
+    public String getFullName() {
+        return MsgFormatter.format("{}.{}", SCHEMA.of(this), NAME.of(this));
     }
 
     /** Create a new collection of the table indexes.
