@@ -58,6 +58,7 @@ import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
 import static org.ujorm.tools.Check.hasLength;
 
 /**
@@ -615,14 +616,14 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         return result;
     }
 
-    @Override
+
+    /** Returns an JNDI or a connection URL */
+    @Nonnull
     public String toString() {
-        final String msg = ID.of(this)
-            + '['
-            + MetaDatabase.TABLES.getItemCount(this)
-            + ']'
-            ;
-	     return msg;
+        final String jndi = JNDI.getFirstItem(this);
+        return Check.hasLength(jndi)
+            ? jndi
+            : JDBC_URL.of(this);
     }
 
     /** Compare the object by ORDER. */
