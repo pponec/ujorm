@@ -30,7 +30,7 @@ public class XCustomerExtended extends XCustomer {
     private static KeyFactory<XCustomerExtended> f = newCamelFactory(XCustomerExtended.class);
 
     /** Extended key */
-    public static final Key<XCustomerExtended, Long> ID_EXTENDED = f.newKey();
+    public static final Key<XCustomerExtended, Long> ID_EXTENDED = f.newKeyDefault(202L);
 
     static {
         f.lock();

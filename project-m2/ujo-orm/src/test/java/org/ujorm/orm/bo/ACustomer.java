@@ -32,7 +32,7 @@ public class ACustomer extends SmartUjo<ACustomer> {
 
     /** Unique key */
     @Column(pk = true, converter=TypeService.class)
-    public static final Key<ACustomer, Long> ID = f.newKey();
+    public static final Key<ACustomer, Long> ID = f.newKeyDefault(100L);
     /** Personal Number */
     public static final Key<ACustomer, Integer> PIN = f.newKey();
     /** Surename */

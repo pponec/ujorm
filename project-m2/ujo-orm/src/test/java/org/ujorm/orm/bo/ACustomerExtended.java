@@ -28,7 +28,7 @@ public class ACustomerExtended extends ACustomer {
     private static KeyFactory<ACustomerExtended> f = newCamelFactory(ACustomerExtended.class);
 
     /** Extended key */
-    public static final Key<ACustomerExtended, Long> ID_EXTENDED = f.newKey();
+    public static final Key<ACustomerExtended, Long> ID_EXTENDED = f.newKeyDefault(101L);
 
     static {
         f.lock();

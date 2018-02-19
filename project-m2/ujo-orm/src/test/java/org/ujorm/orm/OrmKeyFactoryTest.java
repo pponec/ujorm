@@ -27,7 +27,7 @@ import static junit.framework.TestCase.assertEquals;
 public class OrmKeyFactoryTest {
 
     /** Test of createKey method, of class OrmKeyFactory. */
-    @Test @org.junit.Ignore
+    @Test
     public void testCreateOrmKey() {
         System.out.println("createOrmKey");
 
@@ -49,7 +49,7 @@ public class OrmKeyFactoryTest {
     }
 
     /** Test of createKey method, of class KeyFactory. */
-    @Test //@org.junit.Ignore
+    @Test
     public void testCreateKey() {
         System.out.println("createCoreKey");
 
