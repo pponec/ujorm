@@ -393,9 +393,10 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return NAME.of(this);
     }
 
-    /** Returns a table name including a schema */
+    /** Returns a table name including a database schema */
     public String getFullName() {
-        return MsgFormatter.format("{}.{}", SCHEMA.of(this), NAME.of(this));
+        final String schema = SCHEMA.of(this);
+        return MsgFormatter.format("{}.{}", schema != null ? schema : "public", getName());
     }
 
     /** Create a new collection of the table indexes.
