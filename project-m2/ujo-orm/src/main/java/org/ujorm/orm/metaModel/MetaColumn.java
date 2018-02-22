@@ -47,6 +47,7 @@ import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidatorUtils;
+import static org.ujorm.tools.Check.isEmpty;
 
 /**
  * Database column meta-data
@@ -186,11 +187,6 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         }
     }
 
-    /** Check the empty value */
-    private static boolean isEmpty(final String value) {
-        return value == null || value.isEmpty();
-    }
-
     /** It is a DB column (either a value of a foreign key),
      * not a relation to many.
      */
@@ -201,44 +197,48 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
 
     /** Is it a Foreign Key ? */
     @Override
-    public boolean isForeignKey() {
+    public final boolean isForeignKey() {
         return foreignKey;
     }
 
     /** Is it a Primary Key? */
-    public boolean isPrimaryKey() {
-        final boolean result = PRIMARY_KEY.of(this);
-        return result;
+    public final boolean isPrimaryKey() {
+        return PRIMARY_KEY.of(this);
+    }
+
+    /** Returns true if the column is an optional relation */
+    public final boolean isOptionalRelation() {
+        return foreignKey && !MANDATORY.of(this);
     }
 
     /** Has the instance assigned a non empty comment? */
-    public boolean isCommented() {
+    public final boolean isCommented() {
         return !COMMENT.isDefault(this);
     }
 
     /** Get a Comment from meta-model annotation.
      * @see org.ujorm.orm.annot.Comment
      */
-    public String getComment() {
+    public final String getComment() {
         return COMMENT.of(this);
     }
 
     /** Returns a maximal db column length in the database.
      * @return If key is undefined then the method returns value -1.
      */
-    public int getMaxLength() {
+    public final int getMaxLength() {
         return MAX_LENGTH.of(this);
     }
 
     /** Returns the db column precision.
      * @return If key is undefined then the method returns value -1.
      */
-    public int getPrecision() {
+    public final int getPrecision() {
         return PRECISION.of(this);
     }
 
     /** Returns true if the related db column is NOT NULL. */
-    public boolean isMandatory() {
+    public final boolean isMandatory() {
         return MANDATORY.of(this);
     }
 
