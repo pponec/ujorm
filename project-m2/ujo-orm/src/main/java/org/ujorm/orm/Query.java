@@ -481,7 +481,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
                 final ColumnWrapper cw = unique
                         ? mc
                         : new ColumnWrapperImpl(mc, GENERATED_ALIAS_PREFIX + order++);
-                addMissingColumn(cw, true, false);
+                addMissingColumn(cw, true, false, mc.isMandatory());
             } else {
                 columns.add(mc);
             }
@@ -509,7 +509,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         if (columns==null) {
             columns = new ArrayList<>(getDefaultColumns());
         }
-        addMissingColumn(wColumn, true, true);
+        addMissingColumn(wColumn, true, true, mc.isMandatory());
         return this;
     }
 
@@ -582,10 +582,10 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             final ColumnWrapper column = key.isComposite()
                     ? new ColumnWrapperImpl(mc, key)
                     : mc;
-            addMissingColumn(column, addChilds, false);
+            addMissingColumn(column, addChilds, false, mc.isMandatory());
         }
         if (addPrimaryKey) {
-            addMissingColumn(table.getFirstPK(), false, true);
+            addMissingColumn(table.getFirstPK(), false, true, false);
         }
         return this;
     }
@@ -594,13 +594,20 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @param column Add the column for case it is missing in the column list
      * @param addChilds Add all children of the <strong>foreign key</strong>.
      * @param checkDuplicities Check a duplicity column
+     * @param mandatory Is the column reqired?
      */
     protected void addMissingColumn
         ( @Nonnull final ColumnWrapper column
         , final boolean addChilds
-        , final boolean checkDuplicities) {
+        , final boolean checkDuplicities
+        , final boolean mandatory) {
+
+        final Key key = column.getKey();
         final MetaColumn model = column.getModel();
 
+        if (!mandatory) {
+            addOuterJoin(key);
+        }
         if (checkDuplicities && !model.isForeignKey()) {
             final int hashCode = column.hashCode();
             for (final ColumnWrapper c : columns) {
@@ -612,9 +619,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         if (addChilds) {
             if (model.isForeignKey()) {
                 for (ColumnWrapper columnWrapper : model.getForeignTable().getColumns()) {
-                    final Key myKey = column.getKey().add(columnWrapper.getKey());
+                    final Key myKey = key.add(columnWrapper.getKey());
                     final ColumnWrapper cw = new ColumnWrapperImpl(columnWrapper.getModel(), myKey);
-                    addMissingColumn(cw, false, true);
+                    addMissingColumn(cw, false, true, false);
                 }
             } else {
                columns.add(column);
@@ -685,9 +692,23 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     }
 
-    /** Set the one entity / table to LEFT OUTER JOIN */
+    /** A nullable Ujo property (mandatory=false) have got a SQL join of type LEFT OUTER JOIN by default */
+    @Nonnull
+    public Query<UJO> addInnerJoin(@Nonnull final Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
+        return modifyJoin(true, relation);
+    }
+
+
+    /** A nullable Ujo property (mandatory=false) have got a SQL join of type LEFT OUTER JOIN by default */
     @Nonnull
     public Query<UJO> addOuterJoin(@Nonnull final Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
+        return modifyJoin(false, relation);
+    }
+
+    /** Modify a SQL JOIN to OUTER or INNER */
+
+    @Nonnull
+    protected Query<UJO> modifyJoin(final boolean outerJoin, @Nonnull final Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
         this.sqlStatement = null;
         if (outerJoins == null) {
             outerJoins = new HashSet<>();
@@ -696,9 +717,13 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         final ColumnWrapper wColumn = relation.isComposite()
                 ? new ColumnWrapperImpl(column, relation)
                 : column;
-        outerJoins.add(wColumn);
-        if (column.isMandatory()) {
-            LOGGER.log(WARN, "The relation is required: {}", relation);
+        if (outerJoin) {
+            outerJoins.add(wColumn);
+            if (column.isMandatory()) {
+                LOGGER.log(WARN, "The relation is required: {}", relation);
+            }
+        } else {
+            outerJoins.remove(wColumn);
         }
         return this;
     }
