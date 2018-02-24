@@ -19,7 +19,6 @@ package org.ujorm.orm;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,9 +32,7 @@ import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
-import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
-import org.ujorm.orm.metaModel.MoreParams;
 import static org.ujorm.core.UjoTools.SPACE;
 
 /**
@@ -57,8 +54,6 @@ public class CriterionDecoder {
     /** All table set where a predicable order is required (by inserts) */
     final protected Set<TableWrapper> tables;
     final protected MetaTable baseTable;
-    /** EFFECTIVA REQUEST: to enforce printing all Ujorm joined tables */
-    final protected boolean printAllJoinedTables;
     /** Relations */
     final List<Relation> relations = new ArrayList<Relation>();
     /** The WHERE condition in SQL format */
@@ -90,7 +85,6 @@ public class CriterionDecoder {
         this.nullValues = new ArrayList<>();
         this.tables = new LinkedHashSet<>(); // Predicable order is required
         this.tables.add(baseTable);
-        this.printAllJoinedTables = MetaParams.MORE_PARAMS.add(MoreParams.PRINT_All_JOINED_TABLES).of(handler.getParameters());
         this.where = initWhere();
     }
 
@@ -266,12 +260,7 @@ public class CriterionDecoder {
         }
 
         final Collection<AliasKey> relations = getPropertyRelations();
-//        final boolean parenthesis = sql.length() > 0 && !relations.isEmpty();
-//        if (parenthesis) {
-//            sql.append(" AND (");
-//        }
 
-        boolean andOperator = true;
         for (AliasKey key : relations) try {
             final ColumnWrapper fk1 = key.getColumn(handler);
             final MetaTable tab1 = fk1.getModel().getTable();
@@ -281,27 +270,11 @@ public class CriterionDecoder {
             tables.add(tab1.addAlias(key.getAliasFrom()));
             tables.add(tab2.addAlias(key.getAliasTo()));
 
-            if (dialect.isInnerJoin()) {
-                this.relations.add(new Relation(fk1, pk2));
-            } else {
-                // TODO: for all foreign columns:
-                if (andOperator) {
-                    sql.append(" AND ");
-                } else {
-                    andOperator = true;
-                }
-
-                dialect.printColumnAlias(fk1, sql);
-                sql.append(" = ");
-                dialect.printColumnAlias(pk2, sql);
-            }
-        } catch (IOException e) {
+            this.relations.add(new Relation(fk1, pk2));
+        } catch (RuntimeException e) {
             throw new IllegalUjormException(e.getMessage(), e);
         }
 
-//        if (parenthesis) {
-//            sql.append(")");
-//        }
     }
 
     /** Returns the unique direct key relation set with the predicable order (by inserts). */
@@ -345,34 +318,7 @@ public class CriterionDecoder {
 
     /** Returns all participated tables include the parameter table. */
     public TableWrapper[] getTables() {
-        if (printAllJoinedTables) {
-            final Set<TableWrapper> result = new HashSet<>();
-            result.addAll(tables);
-
-            //EFFECTIVA REQUEST: TR-1771: to enforce printing Ujorm joined tables
-            ArrayList<ValueCriterion> allValues = new ArrayList<>(values.size() + nullValues.size());
-            allValues.addAll(values);
-            allValues.addAll(nullValues);
-            for (ValueCriterion value : allValues) {
-                Object o1 = value.getLeftNode();
-                Object o2 = value.getRightNode();
-                if (o1 instanceof Key) {
-                  //final TableWrapper table = handler.findColumnModel((Key) o1).getTable();
-                    final TableWrapper table = handler.findTableModel((Key) o1);
-                    result.add(table);
-                }
-                if (o2 instanceof Key) {
-                  //final TableWrapper table = handler.findColumnModel((Key) o2).getTable();
-                    final TableWrapper table = handler.findTableModel((Key) o2);
-                    result.add(table);
-                }
-            }
-
-            return result.toArray(new TableWrapper[result.size()]);
-        } else {
-            // The original Ujorm code:
-            return tables.toArray(new TableWrapper[tables.size()]);
-        }
+        return tables.toArray(new TableWrapper[tables.size()]);
     }
 
     /** Returns all participated tables include the parameter table. The 'baseTable' is on the first position always. */

@@ -37,13 +37,6 @@ final public class MoreParams extends AbstractMetaModel {
      */
     public static final Key<MoreParams,String> DIALECT_MYSQL_ENGINE_TYPE = f.newKey("dialectMySqlEngineType", "ENGINE = InnoDB");
 
-    /** Render the SQL with JOIN phrase */
-    @Deprecated
-    public static final Key<MoreParams,Boolean> JOIN_PHRASE = f.newKey("joinPhrase", true);
-
-    /** EFFECTIVA REQUEST: to enforce printing all Ujorm joined tables */
-    public static final Key<MoreParams,Boolean> PRINT_All_JOINED_TABLES = f.newKey("printAllJoinedTables", false);
-
     /** EFFECTIVA REQUEST: enable to unlock the immutable MetaTable model */
     public static final Key<MoreParams,Boolean> ENABLE_TO_UNLOCK_IMMUTABLE_METAMODEL = f.newKey("enableToUnlockImmutableMeta-model", false);
 

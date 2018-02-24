@@ -48,7 +48,6 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaSelect;
 import org.ujorm.orm.metaModel.MetaTable;
-import org.ujorm.orm.metaModel.MoreParams;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import static org.ujorm.core.UjoTools.SPACE;
@@ -86,17 +85,6 @@ abstract public class SqlDialect {
 
     /** Prints quoted name (identifier) to SQL */
     private Boolean quoteRequest;
-
-    /** An INNER JOIN syntax request */
-    private Boolean _innerJoin;
-
-    /** Inner join */
-    public boolean isInnerJoin() {
-        if (_innerJoin == null) {
-            _innerJoin = MetaParams.MORE_PARAMS.add(MoreParams.JOIN_PHRASE).of(ormHandler.getParameters());
-        }
-        return _innerJoin;
-    }
 
     /** Set the OrmHandler - the method is for internal call only. */
     public void setHandler(@Nonnull final OrmHandler ormHandler) {
@@ -923,28 +911,18 @@ abstract public class SqlDialect {
         if (query.getCriterion() != null) {
             final CriterionDecoder ed = query.getDecoder();
 
-            if (isInnerJoin()) {
-                printTableAliasDefinition(ed.getBaseTable(), out);
-                for (CriterionDecoder.Relation relation : ed.getRelations()) {
-                    out.append(NEW_LINE_SEPARATOR);
-                    out.append(query.getOuterJoins().contains(relation.getLeft()) // TODO.pop ?
-                            ? "LEFT OUTER"
-                            : "INNER");
-                    out.append(" JOIN ");
-                    printTableAliasDefinition(relation.getRight().buildTableWrapper(), out);
-                    out.append(" ON ");
-                    printColumnAlias(relation.getRight(), out);
-                    out.append('=');
-                    printColumnAlias(relation.getLeft(), out);
-                }
-            } else {
-                final TableWrapper[] tables = ed.getTables();
-                for (int i=0; i<tables.length; ++i) {
-                    if (i>0) {
-                        out.append(", ");
-                    }
-                    printTableAliasDefinition(tables[i], out);
-                }
+            printTableAliasDefinition(ed.getBaseTable(), out);
+            for (CriterionDecoder.Relation relation : ed.getRelations()) {
+                out.append(NEW_LINE_SEPARATOR);
+                out.append(query.getOuterJoins().contains(relation.getLeft()) // TODO.pop ?
+                        ? "LEFT OUTER"
+                        : "INNER");
+                out.append(" JOIN ");
+                printTableAliasDefinition(relation.getRight().buildTableWrapper(), out);
+                out.append(" ON ");
+                printColumnAlias(relation.getRight(), out);
+                out.append('=');
+                printColumnAlias(relation.getLeft(), out);
             }
 
             final String where = ed.getWhere();

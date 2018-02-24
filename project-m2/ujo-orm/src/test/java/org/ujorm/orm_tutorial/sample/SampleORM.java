@@ -35,7 +35,6 @@ import org.ujorm.orm.dialect.DerbyDialect;
 import org.ujorm.orm.dialect.FirebirdDialect;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
-import org.ujorm.orm.metaModel.MoreParams;
 import org.ujorm.orm.template.AliasTable;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Assert;
@@ -144,7 +143,6 @@ public class SampleORM {
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.TYPE_SERVICE, TypeServiceForOlderJdbc.class); // If the JDBC is older than 4.2
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
-            params.set(MetaParams.MORE_PARAMS.add(MoreParams.JOIN_PHRASE), true);
             params.setQuotedSqlNames(false);
             params.set(MetaParams.INITIALIZATION_BATCH, new InitializationBatch() {
                 @Override public void run(Session session) throws Exception {
