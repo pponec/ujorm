@@ -191,6 +191,18 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
                 + "' due a missing Session");
     }
 
+    /** Clone the first level */
+    @Override
+    public U clone() {
+        return clone(1, null);
+    }
+
+    /** Clone the Ujo object */
+    @Override
+    public U clone(int depth, @Nullable Object context) {
+        return (U) super.clone(depth, context);
+    }
+
     // ===== STATIC METHODS: Key Facotory =====
 
     /** Create a factory with a camel-case Key name generator.

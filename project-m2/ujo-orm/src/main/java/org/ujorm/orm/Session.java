@@ -547,8 +547,49 @@ public class Session implements Closeable {
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
-    public int update(OrmUjo bo) throws IllegalStateException {
+    public int update(@Nonnull final OrmUjo bo) throws IllegalStateException {
         return update(bo, createPkCriterion(bo), true);
+    }
+
+    /** Database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
+     * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
+     * It is recommended to fetch all original relational objects to eliminate lazy-loading.
+     * The method cleans all flags of modified attributes.
+     * @param bo Object to update
+     * @param original A optiona object for Parameter Comparison
+     * @return The row count.
+     * @see OrmUjo#readChangedProperties(boolean)
+     */
+    public <U extends OrmUjo> int updateSafely(@Nonnull final U bo, @Nullable final U original) throws IllegalStateException {
+        Criterion<U> crn = createPkCriterion(bo);
+        if (original != null) {
+            original.writeSession(this);
+            for (final Key<U,Object> key : bo.readChangedProperties(false)) {
+                crn = crn.and(key.whereEq(key.of(original)));
+            }
+        }
+        return update(bo, crn);
+    }
+
+    /** The method updates just one database row, otherwise it throws a runtime exception (@link IllegalStateException).
+     * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
+     * It is recommended to fetch all original relational objects to eliminate lazy-loading.
+     * The method cleans all flags of modified attributes.
+     * @param bo Object to update
+     * @param original Object for Parameter Comparison
+     * @see OrmUjo#readChangedProperties(boolean)
+     */
+    public  <U extends OrmUjo> void updateRequired(@Nonnull final U bo, @Nullable final U original) throws IllegalStateException {
+        final int count = updateSafely(bo, original);
+        final int expected = 1;
+        if (count != expected) {
+            String msg = MsgFormatter.format("The method expects {} modified line, but the actual count is {} for {}({})."
+                , expected
+                , count
+                , bo.getClass().getSimpleName()
+                , bo.readKeys().getFirstKey().of(bo));
+            throw new IllegalStateException(msg);
+        }
     }
 
     /** Database Batch UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} along a criterion.
@@ -721,7 +762,7 @@ public class Session implements Closeable {
             statement.assignValues(decoder);
 
             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                // TODO: String msg = org.ujorm.tools.ValueFormatter.formatSql(sql, parameters); 
+                // TODO: String msg = org.ujorm.tools.ValueFormatter.formatSql(sql, parameters);
                 LOGGER.log(UjoLogger.INFO, "{}{}", sql, SQL_VALUES, statement.getAssignedValues());
             }
             result = statement.executeUpdate(); // execute delete statement

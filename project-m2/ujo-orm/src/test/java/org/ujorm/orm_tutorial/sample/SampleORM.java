@@ -103,6 +103,7 @@ public class SampleORM {
             sample.useRelation();
             sample.useStoredProcedure();
             sample.useUpdate();
+            sample.useUpdateSafely();
             sample.useBatchUpdate();
             sample.useExtendedUpdate();
             sample.usePesimisticUpdate();
@@ -905,6 +906,23 @@ public class SampleORM {
         session.update(order);
         session.commit();
     }
+
+    /** Using the database UPDATE */
+    public void useUpdateSafely() {
+        Order order = session.load(Order.class, anyOrderId);
+        Order original = order.clone();
+        order.setCreated(LocalDateTime.now());
+        order.setNote("Test order");
+
+        int count = session.updateSafely(order, original);
+        session.commit();
+        Assert.isTrue(count == 1);
+
+        count = session.updateSafely(order, original);
+        session.commit();
+        Assert.isTrue(count == 0);
+    }
+
 
     /** The batch UPDATE of selected columns for required database rows. <br>
      * The example updates one database column (CREATED) to the current date for all Orders where ID>=1 .

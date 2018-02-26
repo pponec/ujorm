@@ -27,6 +27,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
@@ -262,14 +263,15 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
      * In other cases the same instance is used. The feature can be useful for a Final object like a String, Integer etc.
      *
      * @param ujo An Ujo with no parameter constructor.
-     * @param depth A depth of the cloning.
+     * @param depth A depth of the cloning where a value 1 means the first level.
      * @param context Context of the action.
      * @return A clone
      * @see UjoAction#ACTION_CLONE
      * @throws java.lang.IllegalStateException
      */
     @SuppressWarnings("unchecked")
-    public static Ujo clone(Ujo ujo, int depth, Object context) throws IllegalStateException {
+    public static Ujo clone(@Nonnull final Ujo ujo, int depth, @Nullable final Object context)
+            throws IllegalStateException {
         final UjoAction action = new UjoActionImpl(UjoAction.ACTION_CLONE, context);
         if (--depth < 0
         || ujo==null
@@ -277,8 +279,8 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
             return ujo;
         }
         try {
-            Ujo result = ujo.getClass().newInstance();
-            for (Key<Ujo,?> key : ujo.readKeys()) {
+            final Ujo result = ujo.getClass().newInstance();
+            for (final Key<Ujo,?> key : ujo.readKeys()) {
                 Object value = ujo.readValue(key);
                 if (ujo.readAuthorization(action, key, value)) {
 

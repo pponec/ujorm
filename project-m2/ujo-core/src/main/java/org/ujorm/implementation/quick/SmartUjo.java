@@ -16,6 +16,7 @@
 package org.ujorm.implementation.quick;
 
 import java.util.List;
+import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -117,5 +118,11 @@ abstract public class SmartUjo<UJO extends SmartUjo>
     @Override
     public KeyList<UJO> readKeyList() {
         return super.readKeys();
+    }
+
+    /** Clone the Ujo object */
+    @Override
+    public UJO clone(int depth, @Nullable Object context) {
+        return (UJO) super.clone(depth, context);
     }
 }

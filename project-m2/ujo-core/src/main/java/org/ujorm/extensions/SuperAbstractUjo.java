@@ -125,7 +125,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * <li>array of privitive values</li>
      * </ul>
      *
-     * @param depth Depth of clone.
+     * @param depth A depth of the cloning where a value 1 means the first level.
      * @param context A context of the action.
      * <br>Sample: value "0" returns the same object, value "1" returns the same attribute values, etc.
      * @return A clone of current class

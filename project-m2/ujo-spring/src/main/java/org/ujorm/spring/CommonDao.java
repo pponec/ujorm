@@ -2,6 +2,7 @@ package org.ujorm.spring;
 
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmUjo;
@@ -50,12 +51,17 @@ public class CommonDao<T extends OrmUjo> extends AbstractDao<T> {
 
     /** Update a persistent object on database */
     public <U extends T> int update(@Nonnull final U bo) {
-        return deleteDao(bo);
+        return updateDao(bo);
     }
 
-    /** Update list of persistent objects on database */
-    public <U extends T> int update(@Nonnull final List<U> bos) {
-        return deleteDao(bos);
+    /** Update a persistent object on database secure */
+    public <U extends T> int updateSecure(@Nonnull final U bo, @Nullable final U original) {
+        return updateSafelyDao(bo, original);
+    }
+
+    /** The method updates just one database row, otherwise it throws a runtime exception. */
+    public <U extends T> void updateRequired(@Nonnull final U bo, @Nullable final U original) throws IllegalStateException {
+        updateRequiredDao(bo, original);
     }
 
     /** Delete a persistent object from database */
@@ -82,6 +88,5 @@ public class CommonDao<T extends OrmUjo> extends AbstractDao<T> {
     public <U extends T> MetaColumn getColumnModel(@Nonnull final Key<U,?> compositeKey) {
         return getColumnDao(compositeKey);
     }
-
 
 }

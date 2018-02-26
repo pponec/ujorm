@@ -2,6 +2,7 @@ package org.ujorm.spring;
 
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmUjo;
@@ -55,13 +56,18 @@ public abstract class AbstractDao<T extends OrmUjo> {
     }
 
     /** Update a persistent object on database */
-    protected final <U extends T> int doUpdate(@Nonnull final U bo) {
-        return getSessionDao().delete(bo);
+    protected final <U extends T> int updateDao(@Nonnull final U bo) {
+        return getSessionDao().update(bo);
     }
 
-    /** Update list of persistent objects on database */
-    protected final <U extends T> int updateDao(@Nonnull final List<U> bos) {
-        return getSessionDao().delete(bos);
+    /** Update a persistent object on database secure */
+    protected final <U extends T> int updateSafelyDao(@Nonnull final U bo, @Nullable final U original) {
+        return getSessionDao().updateSafely(bo, original);
+    }
+
+    /** The method updates just one database row, otherwise it throws a runtime exception. */
+    protected final <U extends T> void updateRequiredDao(@Nonnull final U bo, @Nullable final U original) throws IllegalStateException {
+        getSessionDao().updateRequired(bo, original);
     }
 
     /** Delete a persistent object from database */

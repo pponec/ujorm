@@ -53,10 +53,4 @@ public class Person extends SmartUjo<Person> {
         return UjoManager.getInstance().equalsUjo(this, (Ujo) obj);
     }
 
-    /** Equals */
-    @Override
-    public Object clone(int depth, Object context) {
-        return UjoManager.getInstance().clone(this, depth, context);
-    }
-
 }
