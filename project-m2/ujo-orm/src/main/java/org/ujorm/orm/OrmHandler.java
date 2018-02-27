@@ -290,15 +290,6 @@ public class OrmHandler implements OrmHandlerProvider {
         }
     }
 
-    /** Create an instance from the class */
-    private <UJO extends OrmUjo> UJO getInstance(Class<UJO> databaseModel) {
-        try {
-            return databaseModel.newInstance();
-        } catch (RuntimeException | ReflectiveOperationException e) {
-            throw new IllegalUjormException("Can't create instance of " + databaseModel, e);
-        }
-    }
-
     /** Do the handler have a read-only state? */
     public boolean isReadOnly() {
         final List<MetaDatabase> dbs = getDatabases();
