@@ -25,6 +25,7 @@ import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
+import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.tools.MsgFormatter;
 import static org.ujorm.extensions.PropertyModifier.*;
 import static org.ujorm.orm.ao.LazyLoading.*;
@@ -64,13 +65,25 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
     @Override
     @Nullable
     public VALUE of(@Nonnull final U ujo) {
-        Session mySession = ujo.readSession();  // maybe readSession() is better?
+        final Session mySession = ujo.readSession();
         Object result = ujo.readValue(this);
 
         if (isTypeOf(OrmUjo.class)) {
             if (result instanceof ForeignKey) {
                 if (mySession == null) {
                     return null;
+                }
+                if (CREATE_STUB.equalsTo(mySession.getLazyLoading())) {
+                    try {
+                        final Object pk = ((ForeignKey)result).getValue();
+                        final OrmUjo relation = (OrmUjo) getType().newInstance();
+                        final MetaColumn basicCol = mySession.getHandler().findColumnModel(this, true);
+                        final MetaColumn relateCol = basicCol.findRelatedColumn(mySession);
+                        relateCol.setValue(relation, pk);
+                        return (VALUE) relation;
+                    } catch (InstantiationException | IllegalAccessException e) {
+                        throw new IllegalStateException(e);
+                    }
                 }
                 if (DISABLED.equalsTo(mySession.getLazyLoading())) {
                     throw new IllegalUjormException("The lazy loading is disabled in the current Session.");

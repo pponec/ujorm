@@ -1263,6 +1263,7 @@ public class Session implements Closeable {
     /** Build new Foreign key.
      * @param key The key must be a relation type of "many to one".
      * @throws IllegalStateException If a parameter key is not a foreign key.
+     * @see #readFKValue(org.ujorm.Ujo, org.ujorm.Key) 
      */
     public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> key) throws IllegalUjormException {
         final MetaColumn column = handler.findColumnModel(key);
@@ -1276,6 +1277,20 @@ public class Session implements Closeable {
 
         final Object result = column.getForeignColumns().get(0).getKey().of(ujo);
         return new ForeignKey(result);
+    }
+
+    /** Get a Foreign key without database loading.
+     * @param key The key must be a relation type of "many to one".
+     * @throws IllegalStateException If a parameter key is not a foreign key.
+     */
+    public <U extends Ujo, V> V readFKValue(final U ujo, final Key<U, V> key) throws IllegalUjormException {
+        final LazyLoading orig = getLazyLoading();
+        try {
+            setLazyLoading(LazyLoading.CREATE_STUB);
+            return (V) key.of(ujo);
+        } finally {
+            setLazyLoading(orig);
+        }
     }
 
     /** Check dialect type */

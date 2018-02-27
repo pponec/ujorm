@@ -38,7 +38,9 @@ public enum LazyLoading {
     ALLOWED_ANYWHERE_WITH_STACKTRACE,
     /** Lazy loading is allowed on an open or closed sessions, for the second case Ujorm creates new temporary session.
      * The action is newer logged. */
-    ALLOWED_ANYWHERE;
+    ALLOWED_ANYWHERE,
+    /** Relation object is created as a STUB with the ID */
+    CREATE_STUB;
 
     /** Type safe equalsTo */
     public boolean equalsTo(final LazyLoading another) {

@@ -98,7 +98,8 @@ public class SampleORM {
             sample.useLazyLoadingOnClosedSession();
             sample.useLimitAndOffset();
             sample.useSelectCount();
-            sample.useForeignKey();
+            sample.useForeignKey_1();
+            sample.useForeignKey_2();
             sample.useIteratorSkip();
             sample.useRelation();
             sample.useStoredProcedure();
@@ -792,13 +793,34 @@ public class SampleORM {
     }
 
     /** How to get a Foreign Key without lazy loading */
-    public void useForeignKey() {
+    public void useForeignKey_1() {
         Database db = session.getFirstDatabase();
         for (Item item : db.get(Database.ORDER_ITEMS)) {
             ForeignKey fk1 = item.readFK(Item.ORDER);   // before lazy loading
             item.get(Item.ORDER);                       // the lazy loading
             ForeignKey fk2 = item.readFK(Item.ORDER);   // after lazy loading
             logInfo("FK1: {} where FK1 eq FK2: {}", fk1, fk1.equals(fk2));
+        }
+    }
+
+    /** How to get a Foreign Key without lazy loading */
+    public void useForeignKey_2() {
+        Database db = session.getFirstDatabase();
+        Key<Item, Long> orderIdKey = Item.ORDER.add(Order.ID);
+
+        for (Item item : db.get(Database.ORDER_ITEMS)) {
+            final Long fk1, fk2;
+
+            final LazyLoading orig = session.getLazyLoading();
+            try {
+                session.setLazyLoading(LazyLoading.CREATE_STUB);
+                fk1 = orderIdKey.of(item);
+            } finally {
+                session.setLazyLoading(orig);
+            }
+
+            fk2 = orderIdKey.of(item);
+            Assert.isTrue(fk1 == fk2);
         }
     }
 

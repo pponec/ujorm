@@ -26,6 +26,7 @@ import org.ujorm.criterion.*;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.orm.*;
 import org.ujorm.orm.ao.CheckReport;
+import org.ujorm.orm.ao.LazyLoading;
 import org.ujorm.orm.dialect.DerbyDialect;
 import org.ujorm.orm.dialect.FirebirdDialect;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -76,7 +77,8 @@ public class Orm2Test extends TestCase {
             sample.useReloading();
             sample.useLimitAndOffset();
             sample.useSelectCount();
-            sample.useForeignKey();
+            sample.useForeignKey_1();
+            sample.useForeignKey_2();
             sample.useIteratorSkip();
             sample.useRelation();
           //sample.useStoredProcedure(); // create db procedure first
@@ -309,7 +311,7 @@ public class Orm2Test extends TestCase {
     }
 
     /** How to get a Foreign Key without lazy loading */
-    public void useForeignKey() {
+    public void useForeignKey_1() {
         Database db = session.getFirstDatabase();
         for (Item item : db.get(Database.ORDER_ITEMS)) {
             ForeignKey fk1 = item.readFK(Item.order);   // before lazy loading
@@ -319,6 +321,27 @@ public class Orm2Test extends TestCase {
         }
     }
 
+    /** How to get a Foreign Key without lazy loading */
+    public void useForeignKey_2() {
+        Database db = session.getFirstDatabase();
+        Key<Item, String> orderIdKey = Item.order.add(Order.sid);
+
+        for (Item item : db.get(Database.ORDER_ITEMS)) {
+            final String fk1, fk2;
+
+            final LazyLoading orig = session.getLazyLoading();
+            try {
+                session.setLazyLoading(LazyLoading.CREATE_STUB);
+                fk1 = orderIdKey.of(item);
+            } finally {
+                session.setLazyLoading(orig);
+            }
+
+            fk2 = orderIdKey.of(item);
+            assertSame(fk1, fk2);
+            System.out.println("FK: " + fk1 + " " + fk1.equals(fk2));
+        }
+    }
 
     /** How to skip items? */
     public void useIteratorSkip() {

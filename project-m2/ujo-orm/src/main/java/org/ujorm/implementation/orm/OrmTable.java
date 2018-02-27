@@ -169,17 +169,6 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
         if (value==null || value instanceof ForeignKey) {
             return (ForeignKey) value;
         }
-//      if (key instanceof RelationToOne) {
-//          // TODO: fix the case the key is a relation:
-//          final Key key = ((RelationToOne)key).getRelatedKey();
-//          return value instanceof ExtendedOrmUjo
-//                  ? ((ExtendedOrmUjo)value).readFK(key)
-//                  : new ForeignKey(key.of((Ujo)value));
-//      }
-// Effectiva: toto se volá cyklicky a navíc se předává špatná key (z původního objektu místo z cizího), pak se vrací nesmysly
-//      if (value instanceof ExtendedOrmUjo) {
-//          return ((ExtendedOrmUjo) value).readFK(key);
-//      }
         if (session!=null) {
             final OrmUjo ujo = value instanceof OrmUjo
                     ? (OrmUjo) value

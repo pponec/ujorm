@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
@@ -37,6 +38,7 @@ import org.ujorm.orm.DbType;
 import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.ITypeService;
 import org.ujorm.orm.OrmUjo;
+import org.ujorm.orm.Session;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.SqlNameProvider;
 import org.ujorm.orm.TableWrapper;
@@ -46,6 +48,7 @@ import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.MsgFormatter;
 import org.ujorm.validator.ValidatorUtils;
 import static org.ujorm.tools.Check.isEmpty;
 
@@ -501,8 +504,24 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
      */
     public final ColumnWrapper addTableAlias(final String alias) {
         return alias != null
-             ? new ColumnWrapperImpl(this, alias)
-             : this ;
+            ? new ColumnWrapperImpl(this, alias)
+            : this ;
     }
 
+    /** Find a related key */
+    @Nonnull
+    public MetaColumn findRelatedColumn(@Nonnull final Session session) {
+        if (!foreignKey) {
+            final String msg = MsgFormatter.format("The {} column is not relation", this);
+            throw new IllegalArgumentException(msg);
+        }
+        final Key localKey = TABLE_KEY.of(this);
+        if (localKey instanceof RelationToOne) {
+            final Key relatedKey = ((RelationToOne)localKey).getRelatedKey();
+            return session.getHandler().findColumnModel(relatedKey, true);
+        } else {
+            final MetaTable relatedTable = session.getHandler().findTableModel(localKey.getType(), true);
+            return MetaTable.PK.of(relatedTable).getFirstColumn();
+        }
+    }
 }
