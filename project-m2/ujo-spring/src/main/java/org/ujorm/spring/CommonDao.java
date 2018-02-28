@@ -1,9 +1,11 @@
 package org.ujorm.spring;
 
 import java.util.List;
+import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
+import org.ujorm.core.enums.OptionEnum;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
@@ -59,9 +61,20 @@ public class CommonDao<T extends OrmUjo> extends AbstractDao<T> {
         return updateSafelyDao(bo, original);
     }
 
-    /** The method updates just one database row, otherwise it throws a runtime exception. */
-    public <U extends T> void updateRequired(@Nonnull final U bo, @Nullable final U original) throws IllegalStateException {
-        updateRequiredDao(bo, original);
+    /** A database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
+     * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
+     * @param <U> Type of the business object
+     * @param bo Business Object
+     * @param updateBatch Batch to modify attributes of business object.
+     * @param attributes The first attribute {@code REQUIRED} means the update is required, or the method throws an IllegalStateException.
+     * @see OrmUjo#readChangedProperties(boolean)
+     * @return The row count.
+     */
+    public <U extends OrmUjo> int updateSafely
+        ( @Nonnull final U bo
+        , @Nonnull final Consumer<U> updateBatch
+        , @Nullable final OptionEnum ... attributes) {
+        return updateSafelyDao(bo, updateBatch, attributes);
     }
 
     /** Delete a persistent object from database */

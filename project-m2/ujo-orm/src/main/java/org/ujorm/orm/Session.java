@@ -582,7 +582,11 @@ public class Session implements Closeable {
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
-    public <U extends OrmUjo> int updateSafely(@Nonnull final U bo, @Nonnull final Consumer<U> updateBatch, @Nonnull final OptionEnum ... attributes) {
+    public <U extends OrmUjo> int updateSafely
+        ( @Nonnull final U bo
+        , @Nonnull final Consumer<U> updateBatch
+        , @Nullable final OptionEnum ... attributes)
+        {
         int result = 0;
         final boolean throwException = Check.firstItem(OptionEnum.REQUIRED, attributes);
         final U original = (U) bo.cloneUjo();
@@ -605,27 +609,6 @@ public class Session implements Closeable {
             throw new IllegalStateException(msg);
         }
         return result;
-    }
-
-    /** The method updates just one database row, otherwise it throws a runtime exception (@link IllegalStateException).
-     * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
-     * It is recommended to fetch all original relational objects to eliminate lazy-loading.
-     * The method cleans all flags of modified attributes.
-     * @param bo Object to update
-     * @param original Object for Parameter Comparison
-     * @see OrmUjo#readChangedProperties(boolean)
-     */
-    public  <U extends OrmUjo> void updateRequired(@Nonnull final U bo, @Nullable final U original) throws IllegalStateException {
-        final int count = updateSafely(bo, original);
-        final int expected = 1;
-        if (count != expected) {
-            String msg = MsgFormatter.format("The method expects {} modified line, but the actual count is {} for {}({})."
-                , expected
-                , count
-                , bo.getClass().getSimpleName()
-                , bo.readKeys().getFirstKey().of(bo));
-            throw new IllegalStateException(msg);
-        }
     }
 
     /** Database Batch UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} along a criterion.

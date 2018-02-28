@@ -949,16 +949,17 @@ public class SampleORM {
 
     /** Using the database UPDATE */
     public void useUpdateSafely_2() {
-        Order order = session.load(Order.class, anyOrderId);
-        Consumer<Order> updateBatch = (ord) -> ord.setCreated(LocalDateTime.now());
+        final Order order1 = session.load(Order.class, anyOrderId);
+        final Order order2 = session.load(Order.class, anyOrderId);
+        final Consumer<Order> updateBatch = (ord) -> ord.setCreated(LocalDateTime.now());
 
-        int count =  session.updateSafely(order, updateBatch);
+        int count =  session.updateSafely(order1, updateBatch);
         session.commit();
         Assert.isTrue(count == 1);
 
-        count = session.updateSafely(order, updateBatch);
+        int count2 = session.updateSafely(order2, updateBatch);
         session.commit();
-        Assert.isTrue(count == 0);
+        Assert.isTrue(count2 == 0);
     }
 
     /** The batch UPDATE of selected columns for required database rows. <br>
