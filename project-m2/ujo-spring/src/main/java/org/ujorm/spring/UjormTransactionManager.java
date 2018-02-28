@@ -15,16 +15,17 @@
  */
 package org.ujorm.spring;
 
+import javax.annotation.Nonnull;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import org.springframework.transaction.support.DefaultTransactionStatus;
-import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.Session;
+import org.ujorm.tools.Assert;
 
 /**
  * UjormTransactionManager, the singleton class
@@ -39,15 +40,16 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     /** Thrad local session */
     final private ThreadLocal<Session> session = new ThreadLocal<Session>();
     /** Dummy transaction object */
+    @Nonnull
     final private Object dummy = new Object();
 
     /** Assign a provider of the OrmHandler */
-    public void setOrmHandlerProvider(OrmHandlerProvider ormHandlerProvider) {
+    public void setOrmHandlerProvider(@Nonnull final OrmHandlerProvider ormHandlerProvider) {
         this.handler = ormHandlerProvider.getOrmHandler();
     }
 
     /** Return a transaction object for the current transaction state. */
-    @Override
+    @Override @Nonnull
     protected Object doGetTransaction() throws TransactionException {
         LOGGER.log(UjoLogger.TRACE, "GetTransaction is running");
         return dummy;
@@ -55,7 +57,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
 
     /** Begin a new transaction with semantics according to the given transaction */
     @Override
-    protected void doBegin(Object tr, TransactionDefinition td) throws TransactionException {
+    protected void doBegin(final Object tr, final TransactionDefinition td) throws TransactionException {
         LOGGER.log(UjoLogger.TRACE, "Auto transaction registred/started");
         Session localSession = session.get();
         if (localSession == null) {
@@ -66,7 +68,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     }
 
     /** Begin a new transaction with semantics according to the given transaction */
-    protected void doEnd(boolean commit, Session localSession) throws TransactionException {
+    protected void doEnd(final boolean commit, @Nonnull final Session localSession) throws TransactionException {
         if (localSession.isClosed()) {
             final String msg = "Transaction is closed, can't be " + (commit ? "commited" : "rollbacked");
             throw new TransactionException(msg) {
@@ -97,7 +99,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
 
     /** Perform an actual commit of the given transaction. */
     @Override
-    protected void doCommit(DefaultTransactionStatus dts) throws TransactionException {
+    protected void doCommit(@Nonnull final DefaultTransactionStatus dts) throws TransactionException {
         final Session localSession = getLocalSession();
         final boolean rollbackOnly = dts.isGlobalRollbackOnly() || localSession.isRollbackOnly();
         if (rollbackOnly) {
@@ -108,16 +110,15 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
 
     /** Perform an actual rollback of the given transaction. */
     @Override
-    protected void doRollback(DefaultTransactionStatus dts) throws TransactionException {
+    protected void doRollback(final DefaultTransactionStatus dts) throws TransactionException {
         doEnd(false, getLocalSession());
     }
 
     /** Return a local default session */
-    public Session getLocalSession() throws IllegalUjormException {
+    @Nonnull
+    public Session getLocalSession() throws IllegalStateException {
         final Session result = session.get();
-        if (result == null) {
-            throw new IllegalUjormException("ORM session does not exists, check pointcut mapping");
-        }
+        Assert.validState(result != null, "ORM session does not exists, check pointcut mapping");
         return result;
     }
 }

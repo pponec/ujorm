@@ -58,15 +58,24 @@ public abstract class Assert {
     private Assert() {
     }
 
-    /** Checks if the argument is {@code true}. */
-    public static final void isTrue(final boolean value) throws IllegalArgumentException {
-        Assert.isTrue(value, NO_MESSAGE);
+    /** If the value Checks if the argument is {@code true}.
+     * @throws IllegalStateException When the condtion is false */
+    public static final void validState(final boolean condition, @Nullable final Object... message)
+            throws IllegalStateException {
+        if (!condition) {
+            throw new IllegalStateException(format(message), new NullPointerException());
+        }
     }
 
     /** Checks if the argument is {@code true}. */
-    public static final void isTrue(final boolean value, @Nullable final Object... message)
+    public static final void isTrue(final boolean condition) throws IllegalArgumentException {
+        Assert.isTrue(condition, NO_MESSAGE);
+    }
+
+    /** Checks if the argument is {@code true}. */
+    public static final void isTrue(final boolean condition, @Nullable final Object... message)
             throws IllegalArgumentException {
-        if (!value) {
+        if (!condition) {
             throw new IllegalArgumentException(format(message), new NullPointerException());
         }
     }
@@ -74,11 +83,11 @@ public abstract class Assert {
     /** Checks if the value is not {@code null} and result of the the method
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}. */
     public static <T> void isTrue
-        ( @Nullable final T value
+        ( @Nullable final T condition
         , @Nonnull final Predicate<T> predicate
         , @Nullable final Object... message)
     {
-        if (value == null || !predicate.test(value)) {
+        if (condition == null || !predicate.test(condition)) {
             throw new IllegalArgumentException(format(message));
         }
     }
@@ -160,15 +169,15 @@ public abstract class Assert {
 
     // ---- NEGATIONS ----
     /** Checks if the argument is {@code false}. */
-    public static final void isFalse(final boolean value)
+    public static final void isFalse(final boolean condition)
             throws IllegalArgumentException {
-        isFalse(value, NO_MESSAGE);
+        isFalse(condition, NO_MESSAGE);
     }
 
     /** Checks if the argument is {@code false}. */
-    public static final void isFalse(final boolean value, @Nullable final Object... message)
+    public static final void isFalse(final boolean condition, @Nullable final Object... message)
             throws IllegalArgumentException {
-        if (value) {
+        if (condition) {
             throw new IllegalArgumentException(format(message), new NullPointerException());
         }
     }
