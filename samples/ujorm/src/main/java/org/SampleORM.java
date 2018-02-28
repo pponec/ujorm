@@ -35,7 +35,7 @@ import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
 import org.ujorm.orm.annot.Comment;
-import org.ujorm.orm.ao.LazyLoading;
+import org.ujorm.orm.ao.LoadingPolicy;
 import org.ujorm.orm.dialect.DerbyDialect;
 import org.ujorm.orm.dialect.FirebirdDialect;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -607,7 +607,7 @@ public class SampleORM {
             logInfo("OK: {}", e.getClass().getSimpleName());
         }
 
-        item.readSession().setLazyLoading(LazyLoading.ALLOWED_ANYWHERE_WITH_WARNING); // Enable lazy-loading
+        item.readSession().setLazyLoading(LoadingPolicy.ALLOWED_ANYWHERE_WITH_WARNING); // Enable lazy-loading
         Order order3 = item.getOrder();
         Item item4 = order3.getItems().next(); // Lazy loading type of one to many
         logInfo("Lazy Order: {} and Item: {}", order3, item4);

@@ -30,7 +30,7 @@ import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
 import org.ujorm.orm.annot.Comment;
-import org.ujorm.orm.ao.LazyLoading;
+import org.ujorm.orm.ao.LoadingPolicy;
 import org.ujorm.orm.dialect.DerbyDialect;
 import org.ujorm.orm.dialect.FirebirdDialect;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -768,7 +768,7 @@ public class SampleORM {
         }
         Assert.notNull(exeption, "Lazy-loading for a closed session is disabled by default");
 
-        item.readSession().setLazyLoading(LazyLoading.ALLOWED_ANYWHERE_WITH_WARNING); // Enable lazy-loading
+        item.readSession().setLazyLoading(LoadingPolicy.ALLOWED_ANYWHERE_WITH_WARNING); // Enable lazy-loading
         Order order3 = item.getOrder();
         Item item4 = order3.getItems().next(); // Lazy loading type of one to many
         logInfo("Lazy Order: {} and Item: {}", order3, item4);
@@ -811,9 +811,9 @@ public class SampleORM {
         for (Item item : db.get(Database.ORDER_ITEMS)) {
             final Long fk1, fk2;
 
-            final LazyLoading orig = session.getLazyLoading();
+            final LoadingPolicy orig = session.getLazyLoading();
             try {
-                session.setLazyLoading(LazyLoading.CREATE_STUB);
+                session.setLazyLoading(LoadingPolicy.CREATE_STUB);
                 fk1 = orderIdKey.of(item);
             } finally {
                 session.setLazyLoading(orig);

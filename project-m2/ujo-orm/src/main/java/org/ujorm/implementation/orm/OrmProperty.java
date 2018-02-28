@@ -28,7 +28,7 @@ import org.ujorm.orm.Session;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.tools.MsgFormatter;
 import static org.ujorm.extensions.PropertyModifier.*;
-import static org.ujorm.orm.ao.LazyLoading.*;
+import static org.ujorm.orm.ao.LoadingPolicy.*;
 
 /** The special Key pro a LazyLoading */
 public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {

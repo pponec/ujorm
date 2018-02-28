@@ -25,7 +25,7 @@ import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ExtendedOrmUjo;
 import org.ujorm.orm.Session;
 import static org.ujorm.extensions.PropertyModifier.*;
-import static org.ujorm.orm.ao.LazyLoading.*;
+import static org.ujorm.orm.ao.LoadingPolicy.*;
 
 /**
  * The relation 1:N to another UJO type items

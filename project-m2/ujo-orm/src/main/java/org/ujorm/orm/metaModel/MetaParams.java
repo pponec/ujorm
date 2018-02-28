@@ -35,7 +35,7 @@ import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.ao.CommentPolicy;
 import org.ujorm.orm.ao.IndexModelBuilder;
-import org.ujorm.orm.ao.LazyLoading;
+import org.ujorm.orm.ao.LoadingPolicy;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.utility.OrmTools;
 
@@ -69,12 +69,12 @@ final public class MetaParams extends AbstractMetaModel {
     public static final Key<MetaParams,Integer> SEQUENCE_CACHE = f.newKey("sequenceCache", 100);
     /** The parameter 'lazyLoading' specify a lazy-loading policy in case
      * that UJO objects have got any session. Argument options are described
-     * in the enum {@link org.ujorm.orm.ao.LazyLoading}.
+     * in the enum {@link org.ujorm.orm.ao.LoadingPolicy}.
      * In case the object have assigned no session, the key returns the {@code null} value
      * as well as common javabeans. A default key value is the
-     * {@link org.ujorm.orm.ao.LazyLoading#ALLOWED_USING_OPEN_SESSION}.
-     * @see org.ujorm.orm.ao.LazyLoading */
-    public static final Key<MetaParams,LazyLoading> LAZY_LOADING = f.newKey("lazyLoading", LazyLoading.ALLOWED_USING_OPEN_SESSION);
+     * {@link org.ujorm.orm.ao.LoadingPolicy#ALLOWED_USING_OPEN_SESSION}.
+     * @see org.ujorm.orm.ao.LoadingPolicy */
+    public static final Key<MetaParams,LoadingPolicy> LAZY_LOADING = f.newKey("lazyLoading", LoadingPolicy.ALLOWED_USING_OPEN_SESSION);
     /** A policy to defining the database structure by a DDL.
      * The default value is option: CREATE_OR_UPDATE_DDL.
      * @see Orm2ddlPolicy Parameter values

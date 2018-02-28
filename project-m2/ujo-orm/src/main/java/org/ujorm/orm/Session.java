@@ -47,7 +47,7 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ao.CacheKey;
 import org.ujorm.orm.ao.CachePolicy;
-import org.ujorm.orm.ao.LazyLoading;
+import org.ujorm.orm.ao.LoadingPolicy;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaPKey;
@@ -93,7 +93,7 @@ public class Session implements Closeable {
     /** Enable a lazy-loading of related Ujo object.
      * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
      */
-    private LazyLoading lazyLoading;
+    private LoadingPolicy lazyLoading;
     /** Closed session */
     private boolean closed = false;
     /** Transaction */
@@ -1284,9 +1284,9 @@ public class Session implements Closeable {
      * @throws IllegalStateException If a parameter key is not a foreign key.
      */
     public <U extends Ujo, V> V readFKValue(final U ujo, final Key<U, V> key) throws IllegalUjormException {
-        final LazyLoading orig = getLazyLoading();
+        final LoadingPolicy orig = getLazyLoading();
         try {
-            setLazyLoading(LazyLoading.CREATE_STUB);
+            setLazyLoading(LoadingPolicy.CREATE_STUB);
             return (V) key.of(ujo);
         } finally {
             setLazyLoading(orig);
@@ -1323,14 +1323,14 @@ public class Session implements Closeable {
     /** Enable a lazy-loading of related Ujo object.
      * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
      * @return the lazyLoadingEnabled */
-    public LazyLoading getLazyLoading() {
+    public LoadingPolicy getLazyLoading() {
         return lazyLoading;
     }
 
     /** Enable a lazy-loading of related Ujo object.
      * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
      * @param lazyLoadingEnabled the lazyLoadingEnabled to set */
-    public void setLazyLoading(LazyLoading lazyLoadingEnabled) {
+    public void setLazyLoading(LoadingPolicy lazyLoadingEnabled) {
         this.lazyLoading = lazyLoadingEnabled;
     }
 

@@ -14,17 +14,13 @@
  *  limitations under the License.
  */
 
-
 package org.ujorm.orm.ao;
 
-import org.ujorm.orm.annot.Comment;
-
 /**
- * Lazy loading policy.
+ * Loading policy.
  * @author Pavel Ponec
  */
-@Comment
-public enum LazyLoading {
+public enum LoadingPolicy {
 
     /** Lazy loading is disabled */
     DISABLED,
@@ -43,7 +39,7 @@ public enum LazyLoading {
     CREATE_STUB;
 
     /** Type safe equalsTo */
-    public boolean equalsTo(final LazyLoading another) {
+    public boolean equalsTo(final LoadingPolicy another) {
         return this == another;
     }
 
