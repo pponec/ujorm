@@ -71,28 +71,30 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
     @PackagePrivate
     static final Key[] EMPTY = new Key[0];
     /** ORM session */
+    @Nullable
     transient private Session session;
     /** Set of changes */
+    @Nullable
     transient private Set<Key> changes = null;
 
     public OrmTable() {
     }
 
     /** Read a session */
-    @Override
+    @Override @Nullable
     public Session readSession() {
         return session;
     }
 
     /** Write a session */
     @Override
-    public void writeSession(Session session) {
+    public void writeSession(@Nullable final Session session) {
         this.session = session;
     }
 
     /** A method for an internal use only. */
     @Override
-    public void writeValue(Key<?,?> key, Object value) {
+    public void writeValue(@Nonnull final Key<?,?> key, final Object value) {
         if (session!=null) {
             if (changes==null) {
                 changes = new HashSet<>(8);
@@ -111,7 +113,7 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
      * @return Key array of the modified values.
      */
     @Override
-    public Key[] readChangedProperties(boolean clear) {
+    public Key[] readChangedProperties(final boolean clear) {
         final Key[] result
             = (changes==null || changes.isEmpty())
             ? EMPTY
@@ -125,7 +127,7 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
 
     /** Getter based on Key implemented by a pattern UjoExt */
     @SuppressWarnings("unchecked")
-    public final <UJO extends U, VALUE> VALUE get(final Key<UJO, VALUE> key) {
+    public final <UJO extends U, VALUE> VALUE get(@Nonnull final Key<UJO, VALUE> key) {
         final VALUE result = key.of((UJO)this);
         return result;
     }
@@ -135,7 +137,7 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
      */
     @SuppressWarnings({"unchecked"})
     public final <UJO extends U, VALUE> U set
-        ( final Key<UJO, VALUE> key
+        ( @Nonnull final Key<UJO, VALUE> key
         , final VALUE value
         ) {
         UjoManager.assertAssign(key, value);
@@ -164,7 +166,7 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
      * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the key.
      */
     @Override
-    public <UJO extends U> ForeignKey readFK(Key<UJO, ? extends OrmUjo> key) throws IllegalStateException {
+    public <UJO extends U> ForeignKey readFK(@Nonnull final Key<UJO, ? extends OrmUjo> key) throws IllegalStateException {
         final Object value = super.readValue(key);
         if (value==null || value instanceof ForeignKey) {
             return (ForeignKey) value;
@@ -181,15 +183,9 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
     }
 
     /** Clone the first level */
-    @Override
-    public U clone() {
-        return clone(1, null);
-    }
-
-    /** Clone the Ujo object */
-    @Override
-    public U clone(int depth, @Nullable Object context) {
-        return (U) super.clone(depth, context);
+    @Override @Nonnull
+    public U cloneUjo() {
+        return (U) clone(1, null);
     }
 
     // ===== STATIC METHODS: Key Facotory =====

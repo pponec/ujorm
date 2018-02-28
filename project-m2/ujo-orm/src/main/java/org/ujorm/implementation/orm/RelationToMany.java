@@ -99,18 +99,18 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
         if (mySession != null
         &&  mySession.getHandler().isPersistent(this)) {
 
-            if (DISABLED.equalsTo(mySession.getLazyLoading())) {
+            if (DISABLED.equalsTo(mySession.getLoadingPolicy())) {
                 throw new IllegalUjormException("The lazy loading is disabled in the current Session.");
             }
 
             if (mySession.isClosed()) {
                 IllegalStateException e = null;
-                switch (mySession.getLazyLoading()) {
+                switch (mySession.getLoadingPolicy()) {
                     default:
                         throw new IllegalUjormException("The lazy loading is disabled in the closed Session.");
                     case ALLOWED_ANYWHERE_WITH_STACKTRACE:
                         if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                            e = new IllegalUjormException(mySession.getLazyLoading().name());
+                            e = new IllegalUjormException(mySession.getLoadingPolicy().name());
                         }
                     case ALLOWED_ANYWHERE_WITH_WARNING:
                         if (LOGGER.isLoggable(UjoLogger.INFO)) {

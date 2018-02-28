@@ -17,6 +17,7 @@ package org.ujorm.tools;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import javax.annotation.Nullable;
 
 /**
@@ -99,6 +100,11 @@ public abstract class Check {
     /** Checks if the argument is empty or {@code null}. */
     public static boolean isEmpty(@Nullable final CharSequence value) {
         return !hasLength(value);
+    }
+
+    /** Method returns {@code true} if the first item equals the {@code value} */
+    public static <T> boolean firstItem(@Nullable final T value, @Nullable final T ... array) {
+        return hasLength(array) && Objects.equals(array[0], value);
     }
 
 }

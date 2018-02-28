@@ -16,6 +16,9 @@
 
 package org.ujorm.orm;
 
+import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.implementation.orm.RelationToMany;
@@ -41,10 +44,11 @@ import org.ujorm.implementation.orm.RelationToMany;
 public interface OrmUjo extends Ujo {
 
     /** Read an ORM session where the session is an transient key. */
+    @Nullable
     public Session readSession();
 
     /** Write an ORM session. */
-    public void writeSession(Session session);
+    public void writeSession(@Nullable Session session);
 
     /**
      * Returns keys of changed values in a time when any <strong>session</strong> is assigned.
@@ -56,5 +60,8 @@ public interface OrmUjo extends Ujo {
      */
     public Key[] readChangedProperties(boolean clear);
 
+    /** Clone the first level of properties */
+    @Nonnull
+    public OrmUjo cloneUjo();
 
 }

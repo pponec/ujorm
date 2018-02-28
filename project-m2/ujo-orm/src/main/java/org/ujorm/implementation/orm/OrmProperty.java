@@ -73,7 +73,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                 if (mySession == null) {
                     return null;
                 }
-                if (CREATE_STUB.equalsTo(mySession.getLazyLoading())) {
+                if (CREATE_STUB.equalsTo(mySession.getLoadingPolicy())) {
                     try {
                         final Object pk = ((ForeignKey)result).getValue();
                         final OrmUjo relation = (OrmUjo) getType().newInstance();
@@ -85,12 +85,12 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                         throw new IllegalStateException(e);
                     }
                 }
-                if (DISABLED.equalsTo(mySession.getLazyLoading())) {
+                if (DISABLED.equalsTo(mySession.getLoadingPolicy())) {
                     throw new IllegalUjormException("The lazy loading is disabled in the current Session.");
                 }
                 if (mySession.isClosed()) {
                    IllegalStateException e = null;
-                    switch (mySession.getLazyLoading()) {
+                    switch (mySession.getLoadingPolicy()) {
                         default:
                             // The method "ujo.toString()" calls a never ending loop here!
                             final String msg = MsgFormatter.format
@@ -99,7 +99,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                             throw new IllegalUjormException(msg);
                         case ALLOWED_ANYWHERE_WITH_STACKTRACE:
                             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                                e = new IllegalUjormException(mySession.getLazyLoading().name());
+                                e = new IllegalUjormException(mySession.getLoadingPolicy().name());
                             }
                         case ALLOWED_ANYWHERE_WITH_WARNING:
                             if (LOGGER.isLoggable(UjoLogger.INFO)) {

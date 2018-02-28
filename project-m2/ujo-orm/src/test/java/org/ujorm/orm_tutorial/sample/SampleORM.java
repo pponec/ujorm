@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.logging.*;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
@@ -104,7 +105,8 @@ public class SampleORM {
             sample.useRelation();
             sample.useStoredProcedure();
             sample.useUpdate();
-            sample.useUpdateSafely();
+            sample.useUpdateSafely_1();
+            sample.useUpdateSafely_2();
             sample.useBatchUpdate();
             sample.useExtendedUpdate();
             sample.usePesimisticUpdate();
@@ -768,7 +770,7 @@ public class SampleORM {
         }
         Assert.notNull(exeption, "Lazy-loading for a closed session is disabled by default");
 
-        item.readSession().setLazyLoading(LoadingPolicy.ALLOWED_ANYWHERE_WITH_WARNING); // Enable lazy-loading
+        item.readSession().setLoadingPolicy(LoadingPolicy.ALLOWED_ANYWHERE_WITH_WARNING); // Enable lazy-loading
         Order order3 = item.getOrder();
         Item item4 = order3.getItems().next(); // Lazy loading type of one to many
         logInfo("Lazy Order: {} and Item: {}", order3, item4);
@@ -811,12 +813,12 @@ public class SampleORM {
         for (Item item : db.get(Database.ORDER_ITEMS)) {
             final Long fk1, fk2;
 
-            final LoadingPolicy orig = session.getLazyLoading();
+            final LoadingPolicy orig = session.getLoadingPolicy();
             try {
-                session.setLazyLoading(LoadingPolicy.CREATE_STUB);
+                session.setLoadingPolicy(LoadingPolicy.CREATE_STUB);
                 fk1 = orderIdKey.of(item);
             } finally {
-                session.setLazyLoading(orig);
+                session.setLoadingPolicy(orig);
             }
 
             fk2 = orderIdKey.of(item);
@@ -930,9 +932,9 @@ public class SampleORM {
     }
 
     /** Using the database UPDATE */
-    public void useUpdateSafely() {
+    public void useUpdateSafely_1() {
         Order order = session.load(Order.class, anyOrderId);
-        Order original = order.clone();
+        Order original = order.cloneUjo();
         order.setCreated(LocalDateTime.now());
         order.setNote("Test order");
 
@@ -945,6 +947,19 @@ public class SampleORM {
         Assert.isTrue(count == 0);
     }
 
+    /** Using the database UPDATE */
+    public void useUpdateSafely_2() {
+        Order order = session.load(Order.class, anyOrderId);
+        Consumer<Order> updateBatch = (ord) -> ord.setCreated(LocalDateTime.now());
+
+        int count =  session.updateSafely(order, updateBatch);
+        session.commit();
+        Assert.isTrue(count == 1);
+
+        count = session.updateSafely(order, updateBatch);
+        session.commit();
+        Assert.isTrue(count == 0);
+    }
 
     /** The batch UPDATE of selected columns for required database rows. <br>
      * The example updates one database column (CREATED) to the current date for all Orders where ID>=1 .

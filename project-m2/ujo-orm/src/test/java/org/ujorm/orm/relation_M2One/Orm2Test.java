@@ -329,12 +329,12 @@ public class Orm2Test extends TestCase {
         for (Item item : db.get(Database.ORDER_ITEMS)) {
             final String fk1, fk2;
 
-            final LoadingPolicy orig = session.getLazyLoading();
+            final LoadingPolicy orig = session.getLoadingPolicy();
             try {
-                session.setLazyLoading(LoadingPolicy.CREATE_STUB);
+                session.setLoadingPolicy(LoadingPolicy.CREATE_STUB);
                 fk1 = orderIdKey.of(item);
             } finally {
-                session.setLazyLoading(orig);
+                session.setLoadingPolicy(orig);
             }
 
             fk2 = orderIdKey.of(item);

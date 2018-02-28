@@ -607,7 +607,7 @@ public class SampleORM {
             logInfo("OK: {}", e.getClass().getSimpleName());
         }
 
-        item.readSession().setLazyLoading(LoadingPolicy.ALLOWED_ANYWHERE_WITH_WARNING); // Enable lazy-loading
+        item.readSession().setLoadingPolicy(LoadingPolicy.ALLOWED_ANYWHERE_WITH_WARNING); // Enable lazy-loading
         Order order3 = item.getOrder();
         Item item4 = order3.getItems().next(); // Lazy loading type of one to many
         logInfo("Lazy Order: {} and Item: {}", order3, item4);

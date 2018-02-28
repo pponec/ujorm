@@ -74,7 +74,7 @@ final public class MetaParams extends AbstractMetaModel {
      * as well as common javabeans. A default key value is the
      * {@link org.ujorm.orm.ao.LoadingPolicy#ALLOWED_USING_OPEN_SESSION}.
      * @see org.ujorm.orm.ao.LoadingPolicy */
-    public static final Key<MetaParams,LoadingPolicy> LAZY_LOADING = f.newKey("lazyLoading", LoadingPolicy.ALLOWED_USING_OPEN_SESSION);
+    public static final Key<MetaParams,LoadingPolicy> LOADING_POLICY = f.newKey("loadingPolicy", LoadingPolicy.ALLOWED_USING_OPEN_SESSION);
     /** A policy to defining the database structure by a DDL.
      * The default value is option: CREATE_OR_UPDATE_DDL.
      * @see Orm2ddlPolicy Parameter values

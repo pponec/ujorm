@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.WeakHashMap;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,6 +40,7 @@ import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.PackagePrivate;
+import org.ujorm.core.enums.OptionEnum;
 import org.ujorm.criterion.BinaryCriterion;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.ValueCriterion;
@@ -93,7 +95,7 @@ public class Session implements Closeable {
     /** Enable a lazy-loading of related Ujo object.
      * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
      */
-    private LoadingPolicy lazyLoading;
+    private LoadingPolicy loadingPolicy;
     /** Closed session */
     private boolean closed = false;
     /** Transaction */
@@ -103,7 +105,7 @@ public class Session implements Closeable {
     Session(OrmHandler handler) {
         this.handler = handler;
         this.params = handler.getParameters();
-        this.lazyLoading = MetaParams.LAZY_LOADING.of(params);
+        this.loadingPolicy = MetaParams.LOADING_POLICY.of(params);
         clearCache(MetaParams.CACHE_POLICY.of(params));
     }
 
@@ -551,7 +553,7 @@ public class Session implements Closeable {
         return update(bo, createPkCriterion(bo), true);
     }
 
-    /** Database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
+    /** A database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
      * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
      * It is recommended to fetch all original relational objects to eliminate lazy-loading.
      * The method cleans all flags of modified attributes.
@@ -569,6 +571,40 @@ public class Session implements Closeable {
             }
         }
         return update(bo, crn);
+    }
+
+    /** A database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
+     * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
+     * @param <U> Type of the business object
+     * @param bo Business Object
+     * @param updateBatch Batch to modify attributes of business object.
+     * @param attributes The first attribute {@code REQUIRED} means the update is required, or the method throws an IllegalStateException.
+     * @see OrmUjo#readChangedProperties(boolean)
+     * @return The row count.
+     */
+    public <U extends OrmUjo> int updateSafely(@Nonnull final U bo, @Nonnull final Consumer<U> updateBatch, @Nonnull final OptionEnum ... attributes) {
+        int result = 0;
+        final boolean throwException = Check.firstItem(OptionEnum.REQUIRED, attributes);
+        final U original = (U) bo.cloneUjo();
+        bo.readChangedProperties(true); // Clear all changes
+        bo.writeSession(this);  // Enable a change manager
+        updateBatch.accept(bo); // Update required columns
+        final LoadingPolicy originalPolicy = getLoadingPolicy();
+        try {
+            setLoadingPolicy(LoadingPolicy.CREATE_STUB); // Assign a STUB loading policy for primary keys
+            result = updateSafely(bo, original);
+        } finally {
+            setLoadingPolicy(originalPolicy); // Restore the original policy
+        }
+        if (result != 1 && throwException) {
+            String msg = MsgFormatter.format("The method expects {} modified line, but the actual count is {} for {}({})."
+                , throwException
+                , result
+                , bo.getClass().getSimpleName()
+                , bo.readKeys().getFirstKey().of(bo));
+            throw new IllegalStateException(msg);
+        }
+        return result;
     }
 
     /** The method updates just one database row, otherwise it throws a runtime exception (@link IllegalStateException).
@@ -1263,7 +1299,7 @@ public class Session implements Closeable {
     /** Build new Foreign key.
      * @param key The key must be a relation type of "many to one".
      * @throws IllegalStateException If a parameter key is not a foreign key.
-     * @see #readFKValue(org.ujorm.Ujo, org.ujorm.Key) 
+     * @see #readFKValue(org.ujorm.Ujo, org.ujorm.Key)
      */
     public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> key) throws IllegalUjormException {
         final MetaColumn column = handler.findColumnModel(key);
@@ -1284,12 +1320,12 @@ public class Session implements Closeable {
      * @throws IllegalStateException If a parameter key is not a foreign key.
      */
     public <U extends Ujo, V> V readFKValue(final U ujo, final Key<U, V> key) throws IllegalUjormException {
-        final LoadingPolicy orig = getLazyLoading();
+        final LoadingPolicy orig = getLoadingPolicy();
         try {
-            setLazyLoading(LoadingPolicy.CREATE_STUB);
+            setLoadingPolicy(LoadingPolicy.CREATE_STUB);
             return (V) key.of(ujo);
         } finally {
-            setLazyLoading(orig);
+            setLoadingPolicy(orig);
         }
     }
 
@@ -1322,16 +1358,38 @@ public class Session implements Closeable {
 
     /** Enable a lazy-loading of related Ujo object.
      * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
-     * @return the lazyLoadingEnabled */
-    public LoadingPolicy getLazyLoading() {
-        return lazyLoading;
+     * @return the lazyLoadingEnabled
+     * @deprecated Use the {@link #getLoadingPolicy() } rather.
+     */
+    @Deprecated
+    public final LoadingPolicy getLazyLoading() {
+        return getLoadingPolicy();
+    }
+
+    /** Enable a lazy-loading of related Ujo object.
+     * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
+     * @param loadingPolicy the lazyLoadingEnabled to set
+     * @deprecated Use the {@link #setLoadingPolicy(org.ujorm.orm.ao.LoadingPolicy) } rather.
+     */
+    @Deprecated
+    public final void setLazyLoading(LoadingPolicy loadingPolicy) {
+        setLoadingPolicy(loadingPolicy);
+    }
+
+    /** Enable a lazy-loading of related Ujo object.
+     * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
+     * @return the lazyLoadingEnabled
+
+     */
+    public LoadingPolicy getLoadingPolicy() {
+        return loadingPolicy;
     }
 
     /** Enable a lazy-loading of related Ujo object.
      * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
      * @param lazyLoadingEnabled the lazyLoadingEnabled to set */
-    public void setLazyLoading(LoadingPolicy lazyLoadingEnabled) {
-        this.lazyLoading = lazyLoadingEnabled;
+    public void setLoadingPolicy(LoadingPolicy lazyLoadingEnabled) {
+        this.loadingPolicy = lazyLoadingEnabled;
     }
 
     /**

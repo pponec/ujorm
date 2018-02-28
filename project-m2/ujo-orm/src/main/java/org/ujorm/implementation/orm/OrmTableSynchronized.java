@@ -18,6 +18,7 @@ package org.ujorm.implementation.orm;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
@@ -153,10 +154,6 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
         if (value==null || value instanceof ForeignKey) {
             return (ForeignKey) value;
         }
-// Effectiva: toto se volá cyklicky a navíc se předává špatná key (z původního objektu místo z cizího), pak se vrací nesmysly
-//        if (value instanceof ExtendedOrmUjo) {
-//            return ((ExtendedOrmUjo) value).readFK(key);
-//        }
         final Session session = readSession();
         if (session!=null) {
             final OrmUjo ujo = value instanceof OrmUjo
@@ -165,6 +162,12 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
             return session.readFK(ujo, key);
         }
         throw new NullPointerException("Can't get FK form the key '"+key+"' due the missing Session");
+    }
+
+    /** Clone the first level */
+    @Override @Nonnull
+    public U cloneUjo() {
+        return (U) clone(1, null);
     }
 
     // ===== STATIC METHODS: Key Facotory =====
