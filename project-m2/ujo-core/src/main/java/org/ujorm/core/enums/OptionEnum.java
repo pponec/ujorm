@@ -18,6 +18,7 @@ package org.ujorm.core.enums;
 /**
  * Common attribues for many methods.
  * @author Pavel Ponec
+ * @see org.ujorm.tools.Check#firstItem(java.lang.Object, java.lang.Object...) 
  */
 public enum OptionEnum {
 
