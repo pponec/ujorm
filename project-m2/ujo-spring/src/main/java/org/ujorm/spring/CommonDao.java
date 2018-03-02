@@ -56,9 +56,20 @@ public class CommonDao<T extends OrmUjo> extends AbstractDao<T> {
         return updateDao(bo);
     }
 
-    /** Update a persistent object on database secure */
-    public <U extends T> int updateSecure(@Nonnull final U bo, @Nullable final U original) {
-        return updateSafelyDao(bo, original);
+    /** A database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
+     * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
+     * @param <U> Type of the business object
+     * @param bo Business Object
+     * @param original Original bo to compare
+     * @param required The first attribute {@code REQUIRED} means the update is required, or the method throws an IllegalStateException.
+     * @see OrmUjo#readChangedProperties(boolean)
+     * @return The row count.
+     */
+    public <U extends T> int updateSecure
+        ( @Nonnull final U bo
+        , @Nullable final U original
+        , @Nullable final OptionEnum ... required) {
+        return updateSafelyDao(bo, original, required);
     }
 
     /** A database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
@@ -66,15 +77,15 @@ public class CommonDao<T extends OrmUjo> extends AbstractDao<T> {
      * @param <U> Type of the business object
      * @param bo Business Object
      * @param updateBatch Batch to modify attributes of business object.
-     * @param attributes The first attribute {@code REQUIRED} means the update is required, or the method throws an IllegalStateException.
+     * @param required The first attribute {@code REQUIRED} means the update is required, or the method throws an IllegalStateException.
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
     public <U extends OrmUjo> int updateSafely
         ( @Nonnull final U bo
         , @Nonnull final Consumer<U> updateBatch
-        , @Nullable final OptionEnum ... attributes) {
-        return updateSafelyDao(bo, updateBatch, attributes);
+        , @Nullable final OptionEnum ... required) {
+        return updateSafelyDao(bo, updateBatch, required);
     }
 
     /** Delete a persistent object from database */

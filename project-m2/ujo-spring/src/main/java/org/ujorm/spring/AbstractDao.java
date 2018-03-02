@@ -63,8 +63,11 @@ public abstract class AbstractDao<T extends OrmUjo> {
     }
 
     /** Update a persistent object on database secure */
-    protected final <U extends T> int updateSafelyDao(@Nonnull final U bo, @Nullable final U original) {
-        return getSessionDao().updateSafely(bo, original);
+    protected final <U extends T> int updateSafelyDao
+        ( @Nonnull final U bo
+        , @Nullable final U original
+        , @Nullable final OptionEnum ... required) {
+        return getSessionDao().updateSafely(bo, original, required);
     }
 
     /** A database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
@@ -72,16 +75,17 @@ public abstract class AbstractDao<T extends OrmUjo> {
      * @param <U> Type of the business object
      * @param bo Business Object
      * @param updateBatch Batch to modify attributes of business object.
-     * @param attributes The first attribute {@code REQUIRED} means the update is required, or the method throws an IllegalStateException.
+     * @param required Required result expected the one row modified exactly,
+     * else method throws an {@link IllegalStateException} exception.
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
     protected <U extends OrmUjo> int updateSafelyDao
         ( @Nonnull final U bo
         , @Nonnull final Consumer<U> updateBatch
-        , @Nullable final OptionEnum ... attributes)
+        , @Nullable final OptionEnum ... required)
         {
-        return getSessionDao().updateSafely(bo, updateBatch, attributes);
+        return getSessionDao().updateSafely(bo, updateBatch, required);
     }
 
     /** Delete a persistent object from database */

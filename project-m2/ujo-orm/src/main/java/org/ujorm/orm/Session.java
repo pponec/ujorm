@@ -559,10 +559,16 @@ public class Session implements Closeable {
      * The method cleans all flags of modified attributes.
      * @param bo Object to update
      * @param original A optiona object for Parameter Comparison
+     * @param required Required result expected the one row modified exactly,
+     * else method throws an {@link IllegalStateException} exception.
      * @return The row count.
      * @see OrmUjo#readChangedProperties(boolean)
      */
-    public <U extends OrmUjo> int updateSafely(@Nonnull final U bo, @Nullable final U original) throws IllegalStateException {
+    public <U extends OrmUjo> int updateSafely
+        ( @Nonnull final U bo
+        , @Nullable final U original
+        , @Nullable final OptionEnum ... required
+        ) throws IllegalStateException {
         Criterion<U> crn = createPkCriterion(bo);
         if (original != null) {
             original.writeSession(this);
@@ -570,7 +576,17 @@ public class Session implements Closeable {
                 crn = crn.and(key.whereEq(key.of(original)));
             }
         }
-        return update(bo, crn);
+        final int result =  update(bo, crn);
+        final int expectedResult = 1;
+        if (result != expectedResult && Check.firstItem(OptionEnum.REQUIRED, required)) {
+            final String msg = MsgFormatter.format("The method expects {} modified row,"
+                + " but the real count is {} for the condition: {}"
+                , expectedResult
+                , result
+                , crn.toStringFull());
+            throw new IllegalStateException(msg);
+        }
+        return result;
     }
 
     /** A database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
@@ -578,17 +594,17 @@ public class Session implements Closeable {
      * @param <U> Type of the business object
      * @param bo Business Object
      * @param updateBatch Batch to modify attributes of business object.
-     * @param attributes The first attribute {@code REQUIRED} means the update is required, or the method throws an IllegalStateException.
+     * @param required Required result expected the one row modified exactly,
+     * else method throws an {@link IllegalStateException} exception.
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
     public <U extends OrmUjo> int updateSafely
         ( @Nonnull final U bo
         , @Nonnull final Consumer<U> updateBatch
-        , @Nullable final OptionEnum ... attributes)
+        , @Nullable final OptionEnum ... required)
         {
         int result = 0;
-        final boolean throwException = Check.firstItem(OptionEnum.REQUIRED, attributes);
         final U original = (U) bo.cloneUjo();
         bo.readChangedProperties(true); // Clear all changes
         bo.writeSession(this);  // Enable a change manager
@@ -596,17 +612,9 @@ public class Session implements Closeable {
         final LoadingPolicy originalPolicy = getLoadingPolicy();
         try {
             setLoadingPolicy(LoadingPolicy.CREATE_STUB); // Assign a STUB loading policy for primary keys
-            result = updateSafely(bo, original);
+            result = updateSafely(bo, original, required);
         } finally {
             setLoadingPolicy(originalPolicy); // Restore the original policy
-        }
-        if (result != 1 && throwException) {
-            String msg = MsgFormatter.format("The method expects {} modified line, but the actual count is {} for {}({})."
-                , throwException
-                , result
-                , bo.getClass().getSimpleName()
-                , bo.readKeys().getFirstKey().of(bo));
-            throw new IllegalStateException(msg);
         }
         return result;
     }
