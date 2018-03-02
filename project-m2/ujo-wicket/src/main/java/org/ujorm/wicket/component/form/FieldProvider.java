@@ -246,9 +246,9 @@ public class FieldProvider<U extends Ujo> implements Serializable {
      * @throws ArrayIndexOutOfBoundsException No last filed was found.
      */
     @Nonnull
-    public <V, T extends Field<V>> T getLast() throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
+    public <T> Field<T> getLast() throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
         Assert.notNull(lastField);
-        return (T) lastField;
+        return (Field<T>) lastField;
     }
 
     /** Return all keys in a String format */
