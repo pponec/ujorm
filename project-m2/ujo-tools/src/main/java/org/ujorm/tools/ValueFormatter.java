@@ -19,6 +19,7 @@ import java.io.CharArrayWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -36,22 +37,22 @@ import javax.annotation.concurrent.Immutable;
  */
 @Immutable
 public class ValueFormatter extends MsgFormatter {
-    
+
     /** Three dots symbol */
     private static final char THREE_DOTS = '…';
-    
+
     /** Hexa characters */
     private final char[] HEX_ARRAY = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-    
+
     /** Border of the byte array */
-    protected final String valueBorder; 
+    protected final String valueBorder;
 
     /** Static methods are available only */
     protected ValueFormatter() {
         super();
         this.valueBorder = "";
     }
-    
+
     /** Static methods are available only */
     protected ValueFormatter(@Nonnull final String mark, @Nonnull final String textBorder) {
         super(mark);
@@ -61,48 +62,51 @@ public class ValueFormatter extends MsgFormatter {
     /**
      * Print argument to the Writter with an optional format.
      * @param out Writer
-     * @param value Values
+     * @param value A one value where the {@code Supplier} interface is supported.
      */
     @Override
     protected void writeValue(@Nullable final Object value, @Nonnull final CharArrayWriter out, final boolean marked) {
+        final Object val = value instanceof Supplier
+                ? ((Supplier)value).get()
+                : value;
         if (!marked) {
-            out.append(SEPARATOR);        
+            out.append(SEPARATOR);
         }
-        if (value == null) {
+        if (val == null) {
             out.append(null);
-        } else if (value instanceof CharSequence) {
+        } else if (val instanceof CharSequence) {
             out.append(valueBorder);
-            writeLongValue((CharSequence) value, out);
+            writeLongValue((CharSequence) val, out);
             out.append(valueBorder);
-        } else if (value instanceof Number) {
-            out.append(String.valueOf(value));
-        } else if (value instanceof Date) {
+        } else if (val instanceof Number) {
+            out.append(String.valueOf(val));
+        } else if (val instanceof Date) {
             out.append(valueBorder);
-            final String format = value instanceof java.sql.Date
-                    ? "yyyy-MM-dd" 
+            final String format = val instanceof java.sql.Date
+                    ? "yyyy-MM-dd"
                     : "yyyy-MM-dd'T'HH:mm:ss.SSS";
-            out.append(new SimpleDateFormat(format, Locale.ENGLISH).format((Date)value));
+            out.append(new SimpleDateFormat(format, Locale.ENGLISH).format((Date)val));
             out.append(valueBorder);
-        } else if (value instanceof byte[]) {
+        } else if (val instanceof byte[]) {
             out.append(valueBorder);
-            writeByteArray((byte[]) value, out);
+            writeByteArray((byte[]) val, out);
             out.append(valueBorder);
-        } else if (value instanceof Character) {
+        } else if (val instanceof Character) {
             out.append(valueBorder);
-            out.append((Character) value);
+            out.append((Character) val);
             out.append(valueBorder);
-            out.append(((Throwable)value).getMessage());
-        } else if (value instanceof Enum) {
-            out.append(((Enum) value).name());
-        } else if (value instanceof Throwable) {
-            out.append(value.getClass().getSimpleName());
+            out.append(((Throwable)val).getMessage());
+        } else if (val instanceof Enum) {
+            out.append(((Enum) val).name());
+        } else if (val instanceof Throwable) {
+            out.append(val.getClass().getSimpleName());
             out.append(':');
-            out.append(((Throwable)value).getMessage());
+            out.append(((Throwable)val).getMessage());
         } else {
-            writeLongValue(String.valueOf(value), out);
+            writeLongValue(String.valueOf(val), out);
         }
     }
-    
+
     /** Write bytes as hexa */
     protected void writeByteArray(@Nonnull byte[] bytes, @Nonnull final CharArrayWriter out) {
         final int length = bytes != null ? bytes.length : -1; // Length of the bytes
@@ -118,8 +122,8 @@ public class ValueFormatter extends MsgFormatter {
         if (length > limit) {
             out.append(THREE_DOTS);
             out.append(String.valueOf(length));
-            out.append(THREE_DOTS);            
-            
+            out.append(THREE_DOTS);
+
             for (int i = length-half; i < length; i++ ) {
                 final int v = bytes[i] & 0xFF;
                 out.append(HEX_ARRAY[v >>> 4]);
@@ -127,7 +131,7 @@ public class ValueFormatter extends MsgFormatter {
             }
         }
     }
-    
+
     /** You can call the method from a child class */
     protected void writeLongValue(@Nonnull final CharSequence value, @Nonnull final CharArrayWriter out) {
         final int length = value != null ? value.length() : -1;
@@ -143,7 +147,7 @@ public class ValueFormatter extends MsgFormatter {
             out.append(value);
         }
     }
-    
+
     /** Default lenhth is 32*/
     protected int getSizeLimit() {
         return 32;
@@ -168,7 +172,7 @@ public class ValueFormatter extends MsgFormatter {
     , @Nullable final Object... arguments) {
         return new ValueFormatter().formatMsg(messageTemplate, arguments);
     }
-    
+
    /**
      * Format the SQL where makup character is {@code '?'}.
      * <pre class="pre">

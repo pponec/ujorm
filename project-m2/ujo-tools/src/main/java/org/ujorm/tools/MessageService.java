@@ -21,6 +21,7 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -116,7 +117,7 @@ public class MessageService {
      * or
      * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"}</pre>
      * The format expression is separated by the character (,) a and it is not mandatory.
-     * @param args Key-value map arguments
+     * @param args Key-value map arguments where arguments type of {@link Supplier} ares supported.
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
      * @return Target result
      * @see Formatter
@@ -134,14 +135,17 @@ public class MessageService {
             final int formatIndex = expr.indexOf(',');
             final String key = expr.substring(0, formatIndex >= 0 ? formatIndex : expr.length());
             final Object value = args.get(key);
-            if (value != null) {
+            final Object val = value instanceof Supplier
+                ? ((Supplier)value).get()
+                : value;
+            if (val != null) {
                 result.append(msg, last, i);
                 if (formatIndex > 0) {
                     new Formatter(result, locale != null ? locale : defaultLocale).format
                           ( expr.substring(1 + formatIndex)
-                          , value, value, value, value, value, value); // Simplify Date format
+                          , val, val, val, val, val, val); // Simplify Date format
                 } else {
-                    writeValue(value, result, locale);
+                    writeValue(val, result, locale);
                 }
             } else {
                 result.append(msg, last, end + 1);
