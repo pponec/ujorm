@@ -81,6 +81,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     /** Disable new fields if the argument is {@code true} */
     private boolean disableRequest = false;
     /** The last field */
+    @Nullable
     private transient Field<?> lastField;
 
     /** Default constructor */
@@ -112,6 +113,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             throw new IllegalUjormException("Field is assigned for the key: " + field);
         }
         repeatingView.add(field);
+        lastField = field;
         addValidator(key, field);
         field.setOutputMarkupPlaceholderTag(true);
         if (disableRequest) {
