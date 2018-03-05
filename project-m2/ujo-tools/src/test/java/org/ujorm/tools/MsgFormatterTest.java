@@ -15,6 +15,7 @@
  */
 package org.ujorm.tools;
 
+import java.util.function.Supplier;
 import org.junit.Test;
 import static junit.framework.TestCase.assertSame;
 import static org.junit.Assert.assertEquals;
@@ -166,5 +167,19 @@ public class MsgFormatterTest {
         String expResult = ">>>\njava.lang.IllegalStateException: TEST";
         String result = MsgFormatter.format(template, arguments);
         assertTrue(result.startsWith(expResult));
+    }
+
+    /**
+     * Test of the argument type of {@link Supplier}.
+     */
+    @Test
+    public void testFormat11() {
+        String template = "{}{}{}";
+        Supplier<Object> sa = () -> "a";
+        Supplier<Object> sb = () -> "b";
+        Supplier<Object> sc = () -> "c";
+        String expResult = "abc";
+        String result = MsgFormatter.format(template, sa, sb, sc);
+        assertEquals(expResult, result);
     }
 }

@@ -17,6 +17,7 @@ package org.ujorm.tools;
 
 import java.io.CharArrayWriter;
 import java.io.PrintWriter;
+import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -39,20 +40,20 @@ public class MsgFormatter {
     protected static final String DEFAULT_MARK = "{}";
     /** Separator */
     protected static final String SEPARATOR = ", ";
-    
-    /** The parameter mark in the template. */ 
+
+    /** The parameter mark in the template. */
     private final String mark;
 
     /** Static methods are available only */
     protected MsgFormatter() {
         this(DEFAULT_MARK);
     }
-    
+
     /** Static methods are available only */
     protected MsgFormatter(@Nonnull final String mark) {
         this.mark = mark;
     }
-    
+
     /**
      * Format the message, see the next correct asserts:
      * <pre class="pre">
@@ -61,7 +62,7 @@ public class MsgFormatter {
      *  assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
      * </pre>
      * @param messageTemplate Template where argument position is marked by the {@code {}} characters.
-     * @param arguments Optional arguments
+     * @param arguments Optional arguments, where the {@code Supplier} interface is supported.
      * @return
      */
     @Nonnull
@@ -69,7 +70,9 @@ public class MsgFormatter {
         ( @Nullable final String messageTemplate
         , @Nullable final Object... arguments)
         {
-        final String template = messageTemplate != null ? messageTemplate : String.valueOf(messageTemplate);
+        final String template = messageTemplate != null
+                ? messageTemplate
+                : String.valueOf(messageTemplate);
         if (!Check.hasLength(arguments)) {
             return template;
         }
@@ -78,7 +81,7 @@ public class MsgFormatter {
         final CharArrayWriter out = new CharArrayWriter(Math.max(32, max + (max >> 1)));
         int last = 0;
 
-        for (Object arg : arguments) {
+        for (final Object arg : arguments) {
             final int i = template.indexOf(mark, last);
             if (i >= last) {
                 out.append(template, last, i);
@@ -119,21 +122,22 @@ public class MsgFormatter {
     /**
      * Print argument to the Writter with an optional format.
      * @param out Writer
-     * @param value Values
+     * @param value Value where the {@code Supplier} interface is supported.
      */
     protected void writeValue(@Nullable final Object value, @Nonnull final CharArrayWriter out, final boolean marked) {
+        final Object val = value instanceof Supplier
+                ? ((Supplier)value).get()
+                : value;
         if (marked) {
-            out.append(value != null
-                    ? value.toString()
-                    : String.valueOf(value));
-        } else {
-           if (value instanceof Throwable) {
+            out.append(val != null
+                    ? val.toString()
+                    : String.valueOf(val));
+        } else if (val instanceof Throwable) {
             out.append('\n');
-            ((Throwable)value).printStackTrace(new PrintWriter(out, true));
-           } else {
-               out.append(SEPARATOR);
-               out.append(String.valueOf(value));
-           }
+            ((Throwable)val).printStackTrace(new PrintWriter(out, true));
+        } else {
+            out.append(SEPARATOR);
+            out.append(String.valueOf(val));
         }
     }
 
@@ -147,7 +151,7 @@ public class MsgFormatter {
      *  assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
      * </pre>
      * @param messageTemplate Template where argument position is marked by the {@code {}} characters.
-     * @param arguments Optional arguments
+     * @param arguments Optional arguments, where the {@code Supplier} interface is supported.
      * @return
      */
     @Nonnull
@@ -159,7 +163,8 @@ public class MsgFormatter {
 
     /**
      * Format the message from Object array
-     * @param templateAndArguments The first item is a template where parameters are located by {@code "{}"}
+     * @param templateAndArguments The first item is a template where parameters are located by {@code "{}"}.
+     * The {@code Supplier} interface is supported.
      * text and the next arguments are optional parameters of the template.
      * @return In case the argument have no length, the result message is {@code null}.
      */
