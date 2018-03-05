@@ -2,8 +2,20 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.82-SNAPSHOT
-+ ...
+release 1.82-SNAPSHOT  (2018-03-*)
++ TOOLS: The MessageService class supports arguments type of Supplier
++ TOOLS: The MsgFormatter class supports arguments type of Supplier
++ TOOLS: New method Assert.validState(); 
++ ORM: New method for a safe update is implemented: Query.updateSafely(Ujo bo, Consumer updateBatch)
++ ORM: Parameter MetaParams.LAZY_LOADING is renamed to LOADING_POLICY ("loadingPolicy")
++ ORM: A LazyLoading enumerator is renamed to the LoadingPolicy enumerator
++ ORM: Some annotation in the UjormTransactionManager class
++ ORM: Some obsolete code is removed
++ ORM: A new method OrmTable.clone() for clonning first of parameters level. 
++ ORM: A method update() of the CommonDao class is fixed 
++ ORM: A new methods CommonDao.updateSafely() are implemented 
++ SPRING: Spring module supports the new method for a safe update
++ WICKET: The method FieldProvider.getLast() is fixed
 
 release 1.81 (2018-02-22)
 + A nullable Ujo property (mandatory=false) have got a SQL join of type LEFT OUTER JOIN by default
