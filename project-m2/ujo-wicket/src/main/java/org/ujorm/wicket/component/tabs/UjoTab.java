@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 Pavel Ponec
+ * Copyright 2013-2018 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.tools.MsgFormatter;
+import org.ujorm.wicket.function.UjoSupplier;
 
 /**
  * Convenience class that takes care of common ITab functionality
@@ -37,21 +38,33 @@ public class UjoTab extends AbstractTab {
     /** Model for tab's component panel */
     private IModel<?> tabModel;
     /** Optional visible model */
-    private IModel<Boolean> visibleModel;
+    private UjoSupplier<Boolean> visible;
 
     /** Constructor */
-    public UjoTab(IModel<String> title, Class<? extends WebMarkupContainer> panel) {
+    public UjoTab(@Nonnull final IModel<String> title, @Nonnull final Class<? extends WebMarkupContainer> panel) {
         this(title, null, panel);
     }
 
     /** Constructor */
-    public UjoTab(String title, String cssClass, Class<? extends WebMarkupContainer> panel) {
+    public UjoTab(@Nonnull final String title, String cssClass, @Nonnull final Class<? extends WebMarkupContainer> panel) {
         this(Model.of(title), cssClass, panel);
     }
 
     /** Constructor */
-    public UjoTab(IModel<String> title, String cssClass, Class<? extends WebMarkupContainer> panel) {
-        this(title, cssClass, panel, (Model<Boolean>) null);
+    public UjoTab
+        ( @Nonnull final String title
+        , @Nullable final String cssClass
+        , @Nonnull final Class<? extends WebMarkupContainer> panel
+        , @Nullable final UjoSupplier<Boolean> visible) {
+        this(Model.of(title), cssClass, panel, visible);
+    }
+
+    /** Constructor */
+    public UjoTab
+        ( @Nonnull final IModel<String> title
+        , @Nullable final String cssClass
+        , @Nonnull final Class<? extends WebMarkupContainer> panel) {
+        this(title, cssClass, panel, (UjoSupplier<Boolean>) null);
     }
 
     /**
@@ -65,19 +78,19 @@ public class UjoTab extends AbstractTab {
             ( @Nonnull IModel<String> title
             , @Nullable String cssClass
             , @Nonnull Class<? extends WebMarkupContainer> panel
-            , @Nullable IModel<Boolean> visible) {
+            , @Nullable UjoSupplier<Boolean> visible) {
         super(title);
         this.cssClass = cssClass;
         this.panel = panel;
-        this.visibleModel = visible;
+        this.visible = visible;
     }
 
     /** The method get a visibleModel if any */
     @Override
     public boolean isVisible() {
-        return visibleModel != null
-                ? Boolean.TRUE.equals(visibleModel.getObject())
-                : super.isVisible();
+        return visible != null
+             ? Boolean.TRUE.equals(visible.get())
+             : super.isVisible();
     }
 
     /** Model for constructor of the Tab components */
