@@ -692,7 +692,7 @@ abstract public class SqlDialect {
                     return null;
                 default:
                     final String msg = MsgFormatter.format
-                             ( "The NULL comparison by the {} operator is forbidden."
+                            ( "The NULL comparison by the {} operator is forbidden."
                             , operator);
                     throw new UnsupportedOperationException(msg);
             }
