@@ -50,6 +50,7 @@ import org.ujorm.orm.metaModel.MetaSelect;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.MsgFormatter;
 import static org.ujorm.core.UjoTools.SPACE;
 import static org.ujorm.tools.Check.*;
 
@@ -690,7 +691,10 @@ abstract public class SqlDialect {
                     out.append(" IS NOT NULL");
                     return null;
                 default:
-                    throw new UnsupportedOperationException("Comparation the NULL value is forbiden by the operator: " + operator);
+                    final String msg = MsgFormatter.format
+                             ( "The NULL comparison by the {} operator is forbidden."
+                            , operator);
+                    throw new UnsupportedOperationException(msg);
             }
         }
 

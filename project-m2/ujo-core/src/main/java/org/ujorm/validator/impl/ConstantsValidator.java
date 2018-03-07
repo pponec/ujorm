@@ -20,8 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 /**
@@ -42,12 +42,12 @@ public class ConstantsValidator<VALUE> extends AbstractValidator<VALUE> {
 
     /**
      * Validator compares an input value with a set of constants by the hashCode() and equals() methods.
-     * @param forbiden A sign if the input value is a forbidden ({@code true}) or required ({@code false}) set.
+     * @param forbidden A sign if the input value is a forbidden ({@code true}) or required ({@code false}) set.
      * @param values Serializable values must have implemented both methods: equals() and hashCode().
      * and value {@code false} means minimal limit (inclusive).
      */
-    public ConstantsValidator(boolean forbiden, VALUE ... values) {
-        this.forbidden = forbiden;
+    public ConstantsValidator(boolean forbidden, VALUE ... values) {
+        this.forbidden = forbidden;
         this.set = new HashSet(values.length);
 
         for (VALUE value : values) {
