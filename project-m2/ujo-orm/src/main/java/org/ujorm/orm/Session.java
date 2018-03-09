@@ -377,8 +377,8 @@ public class Session implements Closeable {
      * must be saved using an another call of the method.
      * The method cleans all flags of modified attributes.
      */
-    public void saveOrUpdate(final OrmUjo bo) throws IllegalStateException {
-        checkNotNull(bo, "saveOrUpdate");
+    public void saveOrUpdate(final @Nonnull OrmUjo bo) throws IllegalStateException {
+        Assert.notNull(bo);
         if (bo.readSession() == null) {
             save(bo);
         } else {
@@ -513,8 +513,8 @@ public class Session implements Closeable {
 
     /** Save all persistent attributes into DB table by an INSERT SQL statement.
      * The method cleans all flags of modified attributes. */
-    public void save(final OrmUjo bo) throws IllegalStateException {
-        checkNotNull(bo, "save");
+    public void save(final @Nonnull OrmUjo bo) throws IllegalStateException {
+        Assert.notNull(bo);
         JdbcStatement statement = null;
         String sql = "";
 
@@ -625,7 +625,7 @@ public class Session implements Closeable {
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
-    public <U extends OrmUjo> int update(U bo, Criterion<U> criterion) {
+    public <U extends OrmUjo> int update(@Nonnull U bo, @Nonnull Criterion<U> criterion) {
         return update(bo, criterion, false);
     }
 
@@ -634,15 +634,15 @@ public class Session implements Closeable {
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
-    private <U extends OrmUjo> int update(U bo, Criterion<U> criterion, boolean singleObject) {
-        checkNotNull(bo, "update");
+    private <U extends OrmUjo> int update(@Nonnull final U bo, @Nonnull final Criterion<U> criterion, boolean singleObject) {
+        Assert.notNull(bo);
 
         int result = 0;
         JdbcStatement statement = null;
         String sql = null;
 
         try {
-            MetaTable table = singleObject
+            final MetaTable table = singleObject
                 ? modifyParent(bo)
                 : handler.findTableModel((Class) bo.getClass())
                 ;
@@ -1383,13 +1383,4 @@ public class Session implements Closeable {
         this.loadingPolicy = lazyLoadingEnabled;
     }
 
-    /**
-     * Check the Ujo object to not null.
-     * @param ujo
-     * @param action
-     * @throws IllegalArgumentException Throw the exception if a ujo argument is {@code null}.
-     */
-    protected void checkNotNull(OrmUjo ujo, String action) throws IllegalArgumentException {
-        Assert.notNull(cache, "A {} object can't be used for the action: {}", cache, action);
-    }
 }
