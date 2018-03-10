@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -404,24 +405,27 @@ public class Session implements Closeable {
     }
 
     /** INSERT object into table using the <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29">Multirow inserts</a>.
-     * @param bos Business objects
+     * @param domains Business objects
      * @throws IllegalStateException
      * @see MetaParams#INSERT_MULTIROW_ITEM_LIMIT
      */
-    public void save(final List<? extends OrmUjo> bos) throws IllegalStateException {
+    public void save(final Collection<? extends OrmUjo> domains) throws IllegalStateException {
         final int multiLimit = params.get(MetaParams.INSERT_MULTIROW_ITEM_LIMIT);
-        save(bos, multiLimit);
+        save(domains, multiLimit);
     }
 
     /** INSERT object into table using the <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29">Multirow inserts</a>.
      * The method cleans all flags of modified attributes.
-     * @param bos List of the business object of the same class. If the list must not contain object of different types
+     * @param domains List of the business object of the same class. If the list must not contain object of different types
      * @param multiLimit Row limit for the one insert.
      *        If the value will be out of range <1,bos.size()> than the value will be corrected.
      *        If the list item count is greater than multi limit so insert will be separated by more multirow inserts.
      * @throws IllegalStateException
      */
-    public void save(final List<? extends OrmUjo> bos, int multiLimit) throws IllegalUjormException {
+    public void save(final Collection<? extends OrmUjo> domains, int multiLimit) throws IllegalUjormException {
+        final List<? extends OrmUjo> bos = domains instanceof List
+                ? (List<? extends OrmUjo>) domains
+                : new ArrayList(domains);
 
         // ---------------- VALIDATIONS -----------------------------------
 
