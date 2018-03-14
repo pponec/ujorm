@@ -15,16 +15,17 @@
  */
 package org.ujorm.orm.dialect;
 
+import javax.annotation.Nonnull;
+import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.orm.SqlDialect;
 
 /** H2 (http://www.h2database.com) */
-@SuppressWarnings("unchecked")
 public class H2Dialect extends SqlDialect {
 
     /** Returns a default JDBC URL.
-     * <br>For a PostgreSQL simulation use: 
+     * <br>For a PostgreSQL simulation use:
      * {@code jdbc:h2:mem:db1;MODE=PostgreSQL}
-     */    
+     */
     @Override
     public String getJdbcUrl() {
         return "jdbc:h2:mem:db1";
@@ -34,6 +35,21 @@ public class H2Dialect extends SqlDialect {
     @Override
     public String getJdbcDriver() {
         return "org.h2.Driver";
+    }
+
+    /** The implementation suppoorts {@code ILIKE} operator
+     * @return Template with arguments type of {@code {1}={2}}
+     */
+    @Nonnull  @Override
+    public String getCriterionTemplate(@Nonnull final ValueCriterion crit) {
+        switch (crit.getOperator()) {
+            case STARTS_CASE_INSENSITIVE:
+            case ENDS_CASE_INSENSITIVE:
+            case CONTAINS_CASE_INSENSITIVE:
+                return "{0} ILIKE {1}";
+            default:
+                return super.getCriterionTemplate(crit);
+        }
     }
 
     // --- SEQUENCE BEG ---

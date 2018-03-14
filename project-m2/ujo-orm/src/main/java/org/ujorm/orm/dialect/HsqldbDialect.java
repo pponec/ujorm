@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 import org.ujorm.orm.Query;
+import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaTable;
 
@@ -28,12 +29,12 @@ import org.ujorm.orm.metaModel.MetaTable;
  * Hsqldb dialect (http://hsqldb.org)
  * @author Pavel Ponec
  */
-public class HsqldbDialect extends H2Dialect {
-    
+public class HsqldbDialect extends SqlDialect {
+
     /** Returns a default JDBC URL.
-     * <br>For a PostgreSQL simulation use: 
+     * <br>For a PostgreSQL simulation use:
      * {@code jdbc:hsqldb:mem:db1;sql.syntax_pgs=true}
-     */    
+     */
     @Override
     public String getJdbcUrl() {
         return "jdbc:hsqldb:mem:db1";
@@ -99,6 +100,5 @@ public class HsqldbDialect extends H2Dialect {
         if (!afterRollback) {
             conn.releaseSavepoint(savepoint);
         }
-
     }
 }

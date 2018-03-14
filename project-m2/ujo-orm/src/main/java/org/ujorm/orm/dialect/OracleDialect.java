@@ -18,6 +18,8 @@ package org.ujorm.orm.dialect;
 
 import java.io.IOException;
 import java.util.List;
+import javax.annotation.Nonnull;
+import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -161,6 +163,21 @@ public class OracleDialect extends PostgreSqlDialect {
         out.append(sequenceName);
         out.append(".NEXTVAL FROM DUAL");
         return out;
+    }
+
+    /** The implementation NOT suppoorts {@code ILIKE} operator
+     * @return Template with arguments type of {@code {1}={2}}
+     */
+    @Nonnull @Override
+    public String getCriterionTemplate(@Nonnull final ValueCriterion crit) {
+        switch (crit.getOperator()) {
+            case STARTS_CASE_INSENSITIVE:
+            case ENDS_CASE_INSENSITIVE:
+            case CONTAINS_CASE_INSENSITIVE:
+                return "LOWER({0}) LIKE {1}";
+            default:
+                return super.getCriterionTemplate(crit);
+        }
     }
 
 }

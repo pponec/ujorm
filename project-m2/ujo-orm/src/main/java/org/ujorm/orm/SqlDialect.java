@@ -574,7 +574,6 @@ abstract public class SqlDialect {
      * </pre>
      * @return Template with arguments type of {@code {1}={2}}
      */
-    @SuppressWarnings("unchecked")
     @Nonnull
     public String getCriterionTemplate(@Nonnull final ValueCriterion crit) {
 
