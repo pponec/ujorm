@@ -18,6 +18,7 @@ package org.ujorm.wicket.component.grid;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -87,13 +88,13 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
      * @param criterion Model of a condition to a database query
      * @param defaultSort Default sorting can be assigned optionally
      */
-    public OrmDataProvider(IModel<Criterion<U>> criterion, Key<? super U,?> defaultSort) {
+    public OrmDataProvider(@Nonnull final IModel<Criterion<U>> criterion, @Nonnull final Key<? super U,?> defaultSort) {
         super(criterion, defaultSort);
         this.ormSession = new OrmSessionProvider();
     }
 
     /** Add the hidden column for a fetch loading from database */
-    public void addHidden(Key<? super U, ?> column) {
+    public void addHidden(@Nonnull final Key<? super U, ?> column) {
         if (hiddenColumns == null) {
              hiddenColumns = new ArrayList<KeyRing<U>>();
         }
@@ -103,8 +104,8 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
     /** Build a JDBC ResultSet always.
      * Overwrite the method for an optimization.<br>
      */
-    @Override
-    public Iterator<U> iterator(long first, long count) {
+    @Override @Nonnull
+    public Iterator<U> iterator(final long first, final long count) {
         Args.isTrue(count <= Integer.MAX_VALUE
                 , "The argument '{}' have got limit {} but the current value is {}"
                 , "count"
@@ -131,6 +132,7 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
     }
 
     /** Returns ORM Session */
+    @Nonnull
     protected Session getOrmSession() {
         return ormSession.getSession();
     }
@@ -143,7 +145,8 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
     }
 
     /** Create default Query */
-    protected Query<U> createQuery(Criterion<U> criterion) {
+    @Nonnull
+    protected Query<U> createQuery(@Nonnull final Criterion<U> criterion) {
         return getOrmSession().createQuery(criterion);
     }
 
@@ -152,7 +155,7 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
      * @see #isDefaultColumnSorting()
      */
     @Override
-    protected boolean isSortingEnabled(final Key<U, ?> column) throws IllegalArgumentException {
+    protected boolean isSortingEnabled(@Nonnull final Key<U, ?> column) throws IllegalArgumentException {
         return super.isSortingEnabled(column)
             && getOrmSession().getHandler().findColumnModel(column, false) != null;
     }
@@ -167,7 +170,7 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
      * so it can be a performance problem in some cases.
      * @see #isFetchDatabaseColumns()
      */
-    protected void fetchDatabaseColumns(Query<U> query) {
+    protected void fetchDatabaseColumns(@Nonnull final Query<U> query) {
         if (getColumns().isEmpty()) {
             return; // Keep the default state
         }
@@ -233,22 +236,22 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
     // ============= STATIC METHOD =============
 
     /** Factory for the class */
-    public static <T extends OrmUjo> OrmDataProvider<T> of(IModel<Criterion<T>> criterion, Key<? super T,?> defaultSort) {
+    public static <T extends OrmUjo> OrmDataProvider<T> of(@Nonnull final IModel<Criterion<T>> criterion, @Nonnull final Key<? super T,?> defaultSort) {
         return new OrmDataProvider<T>(criterion, defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> OrmDataProvider<T> of(IModel<Criterion<T>> criterion) {
+    public static <T extends OrmUjo> OrmDataProvider<T> of(@Nonnull final IModel<Criterion<T>> criterion) {
         return new OrmDataProvider<T>(criterion, null);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> OrmDataProvider<T> of(Criterion<T> criterion, Key<? super T,?> defaultSort) {
+    public static <T extends OrmUjo> OrmDataProvider<T> of(@Nonnull final Criterion<T> criterion, @Nonnull final Key<? super T,?> defaultSort) {
         return new OrmDataProvider<T>(new Model(criterion), defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> OrmDataProvider<T> of(Criterion<T> criterion) {
+    public static <T extends OrmUjo> OrmDataProvider<T> of(@Nonnull final Criterion<T> criterion) {
         return new OrmDataProvider<T>(new Model(criterion), null);
     }
 

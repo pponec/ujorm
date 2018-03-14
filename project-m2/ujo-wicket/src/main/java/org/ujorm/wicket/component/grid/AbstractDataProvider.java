@@ -307,17 +307,17 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     }
 
     /** Create AJAX-based DataTable with a {@link #DEFAULT_DATATABLE_ID} */
-    public final <S> DataTable<U,S> createDataTable(final int rowsPerPage) {
+    public <S> DataTable<U,S> createDataTable(final int rowsPerPage) {
         return createDataTable(DEFAULT_DATATABLE_ID, rowsPerPage);
     }
 
     /** Create AJAX-based DataTable */
-    public final <S> DataTable<U,S> createDataTable(final String id, final int rowsPerPage) {
+    public <S> DataTable<U,S> createDataTable(final String id, final int rowsPerPage) {
         return createDataTable(id, rowsPerPage, false);
     }
 
     /** Create AJAX-based DataTable */
-    public final <S> DataTable<U,S> createDataTable(final int rowsPerPage, boolean insertToolbar) {
+    public <S> DataTable<U,S> createDataTable(final int rowsPerPage, boolean insertToolbar) {
         return createDataTable(DEFAULT_DATATABLE_ID, rowsPerPage, insertToolbar);
     }
 
