@@ -106,12 +106,20 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
      */
     @Override @Nonnull
     public Iterator<U> iterator(final long first, final long count) {
+        return iterator(first, count, filter.getObject());
+    }
+
+    /** Build a JDBC ResultSet always.
+     * Overwrite the method for an optimization.<br>
+     */
+    @Nonnull
+    protected Iterator<U> iterator(final long first, final long count, @Nonnull final Criterion<U> crn) {
         Args.isTrue(count <= Integer.MAX_VALUE
                 , "The argument '{}' have got limit {} but the current value is {}"
                 , "count"
                 , Integer.MAX_VALUE
                 , count);
-        Query<U> query = createQuery(filter.getObject())
+        Query<U> query = createQuery(crn)
                 .setLimit((int) count, first)
                 .addOrderBy(getSortKeys());
         fetchDatabaseColumns(query);
