@@ -1,7 +1,5 @@
-package org.ujorm.tools;
-
 /*
- * Copyright 2017-2017 Pavel Ponec, https://github.com/pponec
+ * Copyright 2017-2018 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +13,7 @@ package org.ujorm.tools;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.ujorm.tools;
 
 import ch.qos.logback.classic.Logger;
 import java.math.BigDecimal;
