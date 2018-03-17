@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
@@ -259,6 +260,20 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         result = result * 57 + getLeftNode().hashCode();
         result = result * 57 + (rightNode != null ? rightNode.hashCode() : 0);
         return result;
+    }
+
+    /** Check an second criterion to quals.
+     * The method assumes that the equals() method works correctly for value parameters.
+     */
+    @Override
+    public final boolean equals(@Nullable Object value) {
+        if (value instanceof Criterion) {
+            final Criterion crn = (Criterion) value;
+            return Objects.equals(getOperator(), crn.getOperator())
+                && Objects.equals(getLeftNode(), crn.getLeftNode())
+                && Objects.equals(getRightNode(), crn.getRightNode());
+        }
+        return false;
     }
 
     // ------ STATIC FACTORY --------
