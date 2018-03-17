@@ -23,7 +23,8 @@ import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATAT
 public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> {
 
     /** Duration of data cache */
-    private Duration dataLife = Duration.ofMinutes(1);
+    @Nonnull
+    private Duration dataLife = Duration.ofMinutes(2);
 
     /** Duration of data cache */
     private LocalDateTime nextUpdate = LocalDateTime.now();
@@ -61,7 +62,7 @@ public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> 
         final int newHash = calculageHash(crn);
 
         if (now.isAfter(nextUpdate) || lastFilterHash != newHash) {
-            nextUpdate = now.plus(dataLife);
+            nextUpdate = now.plus(getDataLife());
             lastFilterHash = newHash;
             refreshRows(crn);
         }
@@ -114,6 +115,11 @@ public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> 
         return result;
     }
 
+    /** Cache duration is 2 minutes by default */
+    @Nonnull
+    public Duration getDataLife() {
+        return dataLife;
+    }
 
     // ============= STATIC METHOD =============
 
