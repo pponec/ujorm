@@ -446,7 +446,8 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     }
 
     /**
-     * Returns true, if the key value equals to a parameter value. The key value can be {@code null}.
+     * Returns {@code true}, if the key is the same like the checked argument.
+     * The key value can be {@code null}.
      * @param key An another key.
      */
     @Override
@@ -460,6 +461,14 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     @Override
     public boolean equalsName(final CharSequence name) {
         return name!=null && name.toString().equals(this.name);
+    }
+
+    /** Returns a native hash
+     * @see java.lang.System#identityHashCode(java.lang.Object)
+     */
+    @Override
+    public final int hashCode() {
+        return super.hashCode();
     }
 
     /** Compare to another Key object by the index and name of the key.

@@ -347,7 +347,7 @@ public class Session implements Closeable {
         }
         Key key = exprValue.getLeftNode();
         while (key.isComposite()) {
-            key = ((CompositeKey) key).getFirstKey();
+            key = ((CompositeKey) key).getKey(0);
         }
 
         MetaRelation2Many result = handler.findColumnModel(key, true);

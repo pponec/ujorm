@@ -58,7 +58,7 @@ public class ColumnWrapperImpl implements ColumnWrapper {
 
     /** Returns an alias of the key or the {@code nul} value */
     private static String getAlias(final CompositeKey key) {
-        final int count = key.getCompositeCount();
+        final int count = key.getKeyCount();
         return count > 1 ? key.getAlias(count - 2) : null;
     }
 

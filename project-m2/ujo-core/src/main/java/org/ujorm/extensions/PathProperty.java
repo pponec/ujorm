@@ -54,16 +54,16 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     /** No alias is used */
     protected static final String[] NO_ALIAS = null;
 
-    /** Array of <strong>direct</strong> keys */
+    /** An array of <strong>direct</strong> keys (called sub-keys) */
     private final Key[] keys;
-    /** Array of <strong>aliases</strong> keys */
+    /** An array of <strong>aliases</strong> keys */
     private final String[] aliases;
     /** Is key ascending / descending */
     private final boolean ascending;
     private String name;
 
-    public PathProperty(String lastSpaceName, List<Key> keys) {
-        this(lastSpaceName, keys.toArray(new Key[keys.size()]));
+    public PathProperty(String lastAliasName, List<Key> keys) {
+        this(lastAliasName, keys.toArray(new Key[keys.size()]));
     }
 
     /** The main constructor. It is recommended to use the factory method
@@ -71,15 +71,15 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      * for better performance in some cases.
      * @see #of(org.ujorm.Key, org.ujorm.Key) of(..)
      */
-    public PathProperty(String lastSpaceName, Key... keys) {
-        this(null, lastSpaceName, keys);
+    public PathProperty(String lastAliasName, Key... keys) {
+        this(null, lastAliasName, keys);
     }
 
     /** Main constructor */
     @SuppressWarnings("unchecked")
-    public PathProperty(@Nullable Boolean ascending, @Nullable String lastSpaceName, Key... keys) {
+    public PathProperty(@Nullable Boolean ascending, @Nullable String lastAliasName, Key... keys) {
         final ArrayList<Key> list = new ArrayList<>(keys.length + 3);
-        boolean alias = lastSpaceName != null;
+        boolean alias = lastAliasName != null;
         for (Key key : keys) {
             if (key.isComposite()) {
                 final CompositeKey cKey = ((CompositeKey)key);
@@ -111,15 +111,15 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
                     i++;
                 }
             }
-            if (lastSpaceName != null) {
-               this.aliases[this.aliases.length - 1] = lastSpaceName;
+            if (lastAliasName != null) {
+               this.aliases[this.aliases.length - 1] = lastAliasName;
             }
         }
     }
 
     /** A constructor for a better performance. For an internal use only. */
-    private PathProperty(final Key[] keys, final String[] spaces, final boolean ascending) {
-        this.aliases = spaces;
+    private PathProperty(final Key[] keys, final String[] aliases, final boolean ascending) {
+        this.aliases = aliases;
         this.keys = keys;
         this.ascending = ascending;
 
@@ -127,8 +127,8 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     }
 
     /** A constructor for a better performance */
-    public PathProperty(final Key<?,?> keys, final String[] spaces, final boolean ascending) {
-        this.aliases = spaces;
+    public PathProperty(final Key<?,?> keys, final String[] aliases, final boolean ascending) {
+        this.aliases = aliases;
         this.keys = createKeyArray(keys);
         this.ascending = ascending;
 
@@ -143,7 +143,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
             }
 
             final CompositeKey cKey = (CompositeKey) keys;
-            final Key[] result = new Key[cKey.getCompositeCount()];
+            final Key[] result = new Key[cKey.getKeyCount()];
             for (int i = cKey.length() - 1; i >= 0 ; i--) {
                 result[i] = cKey.getDirectKey(i);
             }
@@ -157,7 +157,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     private void checkAttributes() throws IllegalStateException {
         if (aliases != null && aliases.length != keys.length) {
             throw new IllegalUjormException
-                    ( "The spaces have hot a bad count: "
+                    ( "The aliases have hot a bad count: "
                     + (aliases != null ? aliases.length : -1));
         }
     }
@@ -168,33 +168,31 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         return keys[keys.length - 1];
     }
 
-    /** Get the first key of the current object. The result is direct key always. */
-    @SuppressWarnings("unchecked")
+    /** Get the a count of the direct keys. */
     @Override
-    public final <U extends Ujo> Key<U, VALUE> getLastKey() {
-        Key result = keys[keys.length - 1];
-        return result.isComposite()
-            ? ((CompositeKey)result).getLastKey()
-            : result
-            ;
+    public int getKeyCount() {
+        return keys.length;
     }
 
     /** Get the first key of the current object. The result is direct key always. */
     @SuppressWarnings("unchecked")
     @Override
-    public final <u extends Ujo> Key<u, VALUE> getFirstKey() {
-        Key result = keys[0];
-        return result.isComposite()
-            ? ((CompositeKey)result).getFirstKey()
-            : result
-            ;
+    public final <U extends Ujo> Key<U, VALUE> getKey(final int i) {
+        return keys[i];
+    }
+
+    /** Get the first key of the current object. The result is direct key always. */
+    @SuppressWarnings("unchecked")
+    @Override
+    public final <U extends Ujo> Key<U, VALUE> getLastKey() {
+        return keys[keys.length - 1];
     }
 
     /** Method implements iterator */
     @Override
     public Iterator<Key<?, ?>> iterator() {
         return new Iterator<Key<?, ?>>() {
-            private final int max = getCompositeCount();
+            private final int max = getKeyCount();
             private int i = 0;
 
             @Override
@@ -375,7 +373,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     @SuppressWarnings("unchecked")
     @Override
     public final boolean isDomainOf(final Class type) {
-        return getFirstKey().isDomainOf(type);
+        return getKey(0).isDomainOf(type);
     }
 
     /**
@@ -407,31 +405,36 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
     }
 
     /**
-     * Returns the {@code true}, if the values
-     * {@link CompositeKey#getName() } and
-     * {@link CompositeKey#getDomainType()}
-     * of an another {@link CompositeKey} implementation are equals to the current object.
-     * Note: Any Alias names are ignored, there is necessary to use another comparator for it.
+     * Returns the {@code true}, if the checked argument is type of {@link CompositeKey} and all sub-keys equals.
+     * Note 1: Any Alias names are ignored, there is necessary to use another comparator for it.
+     * Note 2: A descending flag is ignored, there is necessary to use another comparator for it.
      * @param key A checked {@link CompositeKey} implementation
      */
     @Override
-    public boolean equals(final Object key) {
+    public boolean equals(@Nullable final Object key) {
         if (key instanceof CompositeKey) {
-            final CompositeKey argument = (CompositeKey) (key);
-            return this.getName().equals(argument.getName())
-                && this.getDomainType().equals(argument.getDomainType());
-        } else {
-            return false;
+            final CompositeKey items = (CompositeKey) key;
+            if (keys.length != items.getKeyCount()) {
+                return false;
+            }
+            for (int i = keys.length - 1; i >= 0; --i) {
+                if (!keys[i].equals(items.getKey(i))) {
+                    return false;
+                }
+            }
+            return true;
         }
+        return false;
     }
 
     /** HashCode from the {@code name} and {@code domainType} attributes */
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 67 * hash + this.getName().hashCode();
-        hash = 67 * hash + this.getDomainType().hashCode();
-        return hash;
+        int result = keys.length;
+        for (int i = result - 1; i >= 0; --i) {
+            result = result * 57 + keys[i].hashCode();
+        }
+        return result;
     }
 
     @Override
@@ -538,7 +541,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
 
     /** Returns a {@code directKey} for the required level.
      * @param level Level of the composite key.
-     * @see #getCompositeCount()
+     * @see #getKeyCount()
      */
     @Override
     public Key<?,?> getDirectKey(int level) {
@@ -569,7 +572,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         return new PathProperty(alias, this, key);
     }
 
-    /** ListKey, method does not support the name spaces */
+    /** ListKey, method does not support the name aliases */
     @SuppressWarnings("unchecked")
     @Override
     public <T> ListKey<U, T> add(ListKey<? super VALUE, T> key) {
@@ -580,7 +583,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         return new PathListProperty(DEFAULT_ALIAS, props);
     }
 
-    /** Create new composite (indirect) instance with a required space
+    /** Create new composite (indirect) instance with a required alias
      * @since 1.43
      */
     @Override
@@ -588,7 +591,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         return new PathProperty<>(alias, this);
     }
 
-    /** Returns a {@code spaceName} for the required level.
+    /** Returns a {@code aliasName} for the required level.
      * Level no. 0 returns the {@code null} value always.
      */
     @Override
@@ -598,7 +601,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
             : this.aliases[level];
     }
 
-    /** Returns the {@code true} if the composite key contains any name space */
+    /** Returns the {@code true} if the composite key contains any name alias */
     @Override
     public boolean hasAlias() {
         return this.aliases != NO_ALIAS;
@@ -621,12 +624,6 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         final Key[] result = new Key[this.keys.length];
         System.arraycopy(this.keys, 0, result, 0, result.length);
         return result;
-    }
-
-    /** Returns a count of inner key items of this composite key */
-    @Override
-    public int getCompositeCount() {
-        return this.keys.length;
     }
 
     /** {@inheritDoc} */

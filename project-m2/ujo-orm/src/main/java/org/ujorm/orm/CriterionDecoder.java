@@ -239,7 +239,7 @@ public class CriterionDecoder {
             }
         }
         while(UjoManager.isCompositeKey(result)) {
-            result = ((CompositeKey)result).getFirstKey();
+            result = ((CompositeKey)result).getKey(0);
         }
         return result;
     }

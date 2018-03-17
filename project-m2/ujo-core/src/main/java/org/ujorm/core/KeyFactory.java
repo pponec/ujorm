@@ -330,8 +330,8 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             final Object fk = field.get(null);
             if (fk instanceof CompositeKey) {
                 final CompositeKey ck = (CompositeKey) fk;
-                if (ck.getCompositeCount() == 1
-                &&  ck.getFirstKey() == p) {
+                if (ck.getKeyCount() == 1
+                &&  ck.getKey(0) == p) {
                     return field;
                 }
             }

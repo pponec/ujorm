@@ -36,18 +36,21 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
     /** Default name space have got the {@code null} value */
     public static final String DEFAULT_ALIAS = null;
 
-    /** Get the first key of the current object. The result is direct key always. */
-    public <U extends Ujo> Key<U, VALUE> getLastKey();
+    /** Get the a count of the <string>direct keys</strong>. */
+    public int getKeyCount();
+
+    /** Get required key */
+    public <U extends Ujo> Key<U, VALUE> getKey(int i);
 
     /** Get the first key of the current object. The result is direct key always. */
-    public <U extends Ujo> Key<U, VALUE> getFirstKey();
+    public <U extends Ujo> Key<U, VALUE> getLastKey();
 
     /** Export all <strong>direct</strong> keys to the list from parameter. */
     public void exportKeys(Collection<Key<?,?>> result);
 
     /** Returns a {@code directKey} for the required level.
      * @param level Level no. 0 returns the {@code null} value always.
-     * @see #getCompositeCount()
+     * @see #getKeyCount()
      */
     public Key<?,?> getDirectKey(int level);
 
@@ -85,17 +88,13 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
      */
     public Ujo getSemiValue(UJO ujo, boolean create);
 
-    /** Returns a count of inner key items of this composite key
-     * @see #exportKeys(java.util.Collection)
-     */
-    public int getCompositeCount();
 
     /** Returns a {@code spaceName} for the required level.
      * @param level Level no. 0 returns the {@code null} value always.
      * @return The value is used to distinguish the same entities
      * in different spaces. Examples of use are different alias for a table in SQL queries.
      * <br>The attribute is not serializable in the current Ujorm release.
-     * @see #getCompositeCount()
+     * @see #getKeyCount()
      */
     public String getAlias(int level);
 

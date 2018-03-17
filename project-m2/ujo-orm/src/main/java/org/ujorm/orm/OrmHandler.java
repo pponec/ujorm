@@ -384,7 +384,7 @@ public class OrmHandler implements OrmHandlerProvider {
         if (key instanceof CompositeKey) {
             final CompositeKey compositeKey = (CompositeKey) key;
             final Key<OrmUjo,?> lastKey = compositeKey.getLastKey();
-            final String alias = compositeKey.getAlias(compositeKey.getCompositeCount() - 1);
+            final String alias = compositeKey.getAlias(compositeKey.getKeyCount() - 1);
             return findTableModel(lastKey.getDomainType()).addAlias(alias);
         }
         return findTableModel(key.getDomainType());

@@ -328,7 +328,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         for (Field field : getFields()) {
             final Key key = field.getKey();
             if (key instanceof CompositeKey) { // Test for the Instance
-                result = Math.max(result, ((CompositeKey) key).getCompositeCount());
+                result = Math.max(result, ((CompositeKey) key).getKeyCount());
             }
         }
         return result;

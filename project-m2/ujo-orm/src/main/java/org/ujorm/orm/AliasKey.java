@@ -134,7 +134,7 @@ final public class AliasKey {
     public static void addRelations(final Key<?,?> key, final Collection<AliasKey> out) {
         if (key.isComposite()) {
             final CompositeKey<?,?> cKey = (CompositeKey<?,?>) key;
-            addConditions(cKey, 0, cKey.getCompositeCount() - 1, out);
+            addConditions(cKey, 0, cKey.getKeyCount() - 1, out);
         }
     }
 
@@ -145,7 +145,7 @@ final public class AliasKey {
     public static void addKeys(final Key<?,?> key, final Collection<AliasKey> out) {
         if (key.isComposite()) {
             final CompositeKey<?,?> cKey = (CompositeKey<?,?>) key;
-            addConditions(cKey, 0, cKey.getCompositeCount(), out);
+            addConditions(cKey, 0, cKey.getKeyCount(), out);
         } else {
             out.add(new AliasKey(key));
         }
@@ -158,7 +158,7 @@ final public class AliasKey {
     public static void addLastKey(final Key<?,?> key, final Collection<AliasKey> out) {
         if (key.isComposite()) {
             final CompositeKey<?,?> cKey = (CompositeKey<?,?>) key;
-            final int count = cKey.getCompositeCount();
+            final int count = cKey.getKeyCount();
             addConditions(cKey, count - 1, count, out);
         } else {
             out.add(new AliasKey(key));

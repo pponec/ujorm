@@ -251,6 +251,16 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         return out.appendValue(String.valueOf(getDomain()));
     }
 
+    /** Calculate hash */
+    @Override
+    public final int hashCode() {
+        Object rightNode = getRightNode();
+        int result = getOperator().hashCode();
+        result = result * 57 + getLeftNode().hashCode();
+        result = result * 57 + (rightNode != null ? rightNode.hashCode() : 0);
+        return result;
+    }
+
     // ------ STATIC FACTORY --------
 
     /**
@@ -460,7 +470,6 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
                     );
         }
     }
-
 
     /**
      * New equals instance

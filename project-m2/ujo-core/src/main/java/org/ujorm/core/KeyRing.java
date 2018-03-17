@@ -47,7 +47,7 @@ import org.ujorm.tools.MsgFormatter;
 @Immutable
 @SuppressWarnings("deprecation")
 public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
-    static final long serialVersionUID = 20140128L;
+    static final long serialVersionUID = 2018_03_17L;
 
     /** Property Separator */
     protected static final char PROPERTY_SEPARATOR = '.';
@@ -59,8 +59,6 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
             ;
     /** The the domain class of related Keys. The value can be {@code null} if the Key array is empty. */
     private Class<U> type;
-    /** Property size */
-    private int size;
     /** Transient keys */
     transient protected Key<U, ?>[] keys;
     /** Default hash code. */
@@ -84,7 +82,6 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
     protected KeyRing(Class<U> domainClass, Key<U, ?>... keys) {
         this.type = domainClass;
         this.keys = keys;
-        this.size = keys.length;
     }
 
     /** The the domain class of related Keys.
@@ -222,7 +219,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
     /** Get The Last Keys */
     @Override
     public <T> Key<U,T> getLastKey() {
-        return (Key<U,T>) get(size - 1);
+        return (Key<U,T>) get(keys.length - 1);
     }
 
     /** Get The First value */
@@ -232,7 +229,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
 
     /** Get The First value */
     public final Object getLastValue(@Nonnull final U ujo) {
-        return getValue(ujo, this.size - 1);
+        return getValue(ujo, keys.length - 1);
     }
 
     /** Get The First value */
@@ -256,13 +253,13 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
     /** Size */
     @Override
     public int size() {
-        return size;
+        return keys.length;
     }
 
     /** Is the collection empty? */
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return keys.length == 0;
     }
 
     /** Create Key Iterator */
@@ -272,7 +269,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
             int i = -1;
 
             @Override public boolean hasNext() {
-                return (i + 1) < size;
+                return (i + 1) < keys.length;
             }
 
             @Override public Key<U,Object> next() {
@@ -290,7 +287,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
     /** Convert Keys to a new Array */
     @Override
     public Key[] toArray() {
-        final Key[] result = new Key[size];
+        final Key[] result = new Key[keys.length];
         System.arraycopy(keys, 0, result, 0, result.length);
         return result;
     }
@@ -354,7 +351,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
             if (!this.getType().equals(o.getType())) {
                 return false;
             }
-            for (int i = 0; i < size; ++i) {
+            for (int i = keys.length -1 ; i >= 0; --i) {
                 final Key p1 = this.get(i);
                 final Key p2 = o.get(i);
                 if (!p1.equals(p2)) {
@@ -396,7 +393,6 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
         final String[] nameProperties = (String[]) in.readObject();
         final String[][] spaces = (String[][]) in.readObject();
         this.keys = restoreProperties(type, nameProperties, spaces);
-        this.size = keys.length;
     }
 
     /** Create a new text Array of key names */
@@ -419,8 +415,8 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
             if (key.isComposite()) {
                 final CompositeKey cKey = (CompositeKey) key;
                 if (cKey.hasAlias()) {
-                    result[i] = new String[cKey.getCompositeCount()];
-                    for (int j = 0; j < cKey.getCompositeCount(); j++) {
+                    result[i] = new String[cKey.getKeyCount()];
+                    for (int j = 0; j < cKey.getKeyCount(); j++) {
                         result[i][j] = cKey.getAlias(j);
                     }
                 }

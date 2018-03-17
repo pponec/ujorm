@@ -279,7 +279,7 @@ final public class OrmTools {
         final List<U> result = new ArrayList<>(ujos instanceof List ? ((List) ujos).size() : 128);
         final HashMap<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
         while (key.isComposite()) {
-            key = ((CompositeKey)key).getFirstKey();
+            key = ((CompositeKey)key).getKey(0);
         }
         for (U u : ujos) {
             result.add(u);
@@ -361,7 +361,7 @@ final public class OrmTools {
         }
         return result!=null ? result : table.getFirstPK().getKey().forNone();
     }
-            
+
     /** Clone the argument entity using all direct keys
      * including the original ORM session, if any.
      * All lazy relations will be loaded.

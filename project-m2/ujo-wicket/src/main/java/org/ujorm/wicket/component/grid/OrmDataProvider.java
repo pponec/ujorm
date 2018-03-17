@@ -200,7 +200,7 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
             if (iColumn instanceof KeyColumn) {
                 Key<U,?> key = ((KeyColumn) iColumn).getKey();
                 if (key.isComposite()
-                && ((CompositeKey)key).getCompositeCount() > 1
+                && ((CompositeKey)key).getKeyCount() > 1
                 && handler.findColumnModel(key) != null) {
                     query.addColumn(key);
                 }

@@ -64,9 +64,9 @@ public class KeyRingTest extends TestCase {
      * Test of the excluded keys
      */
     public void testExcludedKeys() throws Exception {
-          KeyRing<UjoCSV> ring = KeyRing.ofExcluding(UjoCSV.class, UjoCSV.P1, UjoCSV.P2);
-          assertEquals(1, ring.size());
-          assertEquals(UjoCSV.P3.getName(), ring.getFirstKey().getName());
+        KeyRing<UjoCSV> ring = KeyRing.ofExcluding(UjoCSV.class, UjoCSV.P1, UjoCSV.P2);
+        assertEquals(1, ring.size());
+        assertEquals(UjoCSV.P3.getName(), ring.getFirstKey().getName());
     }
 
     /**
@@ -76,20 +76,21 @@ public class KeyRingTest extends TestCase {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
 
-        KeyRing<UjoCSV> props1, props2;
-        props1 = KeyRing.of(UjoCSV.class, UjoCSV.P1, UjoCSV.P3);
-        props2 = serialize(props1);
+        KeyRing<UjoCSV> ring1, ring2;
+        ring1 = KeyRing.of(UjoCSV.class, UjoCSV.P1, UjoCSV.P3);
+        ring2 = serialize(ring1);
 
-        assertEquals(props1.size(), props2.size());
-        assertSame(props1.getFirstKey(), props2.getFirstKey());
-        assertSame(props1.getFirstKey().of(ujo), props2.getFirstKey().of(ujo));
-        assertSame(props1.getFirstKey().isAscending(), props2.getFirstKey().isAscending());
-        assertEquals(props1.getLastKey(), props2.getLastKey());
-        assertEquals(((CompositeKey)props1.getLastKey()).getAlias(0), ((CompositeKey)props2.getLastKey()).getAlias(0));
-        assertSame(props1.getLastKey().of(ujo), props2.getLastKey().of(ujo));
-        assertTrue(props2.contains(props1.getFirstKey()));
-        assertFalse(props2.contains(UjoCSV.P2));
-        assertTrue(props2.equals(props1));
+        assertEquals(ring1.size(), ring2.size());
+        assertSame(ring1.getFirstKey(), ring2.getFirstKey());
+        assertSame(ring1.getFirstKey().of(ujo), ring2.getFirstKey().of(ujo));
+        assertSame(ring1.getFirstKey().isAscending(), ring2.getFirstKey().isAscending());
+        assertTrue(ring1.getLastKey().equals( ring2.getLastKey()));
+        assertEquals(ring1.getLastKey(), ring2.getLastKey());
+        assertEquals(((CompositeKey)ring1.getLastKey()).getAlias(0), ((CompositeKey)ring2.getLastKey()).getAlias(0));
+        assertSame(ring1.getLastKey().of(ujo), ring2.getLastKey().of(ujo));
+        assertTrue(ring2.contains(ring1.getFirstKey()));
+        assertFalse(ring2.contains(UjoCSV.P2));
+        assertTrue(ring2.equals(ring1));
     }
 
     /**
@@ -157,14 +158,6 @@ public class KeyRingTest extends TestCase {
         assertTrue(props2.contains(props1.getFirstKey()));
         assertFalse(props2.contains(UjoCSV.P2));
         assertTrue(props2.equals(props1));
-    }
-
-    private UjoCSV createUjoInstance() {
-        UjoCSV ujo = new UjoCSV();
-        UjoCSV.P1.setValue(ujo, "text1");
-        UjoCSV.P2.setValue(ujo, "text2");
-        UjoCSV.P3.setValue(ujo, "text3");
-        return ujo;
     }
 
     // ------------ KEY SPACES ------------
@@ -262,6 +255,14 @@ public class KeyRingTest extends TestCase {
     }
 
     // ------------ HELP ------------
+
+    private UjoCSV createUjoInstance() {
+        UjoCSV ujo = new UjoCSV();
+        UjoCSV.P1.setValue(ujo, "text1");
+        UjoCSV.P2.setValue(ujo, "text2");
+        UjoCSV.P3.setValue(ujo, "text3");
+        return ujo;
+    }
 
     /** Object serialization */
     @SuppressWarnings("unchecked")

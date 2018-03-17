@@ -234,7 +234,7 @@ public abstract class UjoTools implements Comparator<Key> {
     @Nullable
     public static <T extends Annotation> T findAnnotation(Key<?,?> key, Class<T> annotation) {
         if (key instanceof CompositeKey) {
-            key = ((CompositeKey) key).getFirstKey();
+            key = ((CompositeKey) key).getKey(0);
         }
         try {
             for (Field field : key.getDomainType().getFields()) {
