@@ -24,7 +24,7 @@ public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> 
 
     /** Duration of data cache */
     @Nonnull
-    private Duration dataLife = Duration.ofMinutes(2);
+    private static final Duration dataLife = Duration.ofMinutes(2);
 
     /** Duration of data cache */
     private LocalDateTime nextUpdate = LocalDateTime.now();
@@ -33,7 +33,7 @@ public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> 
     private int lastFilterHash = 0;
 
     /** Max page count */
-    private static final int MAX_PAGES = 9;
+    protected final int maxPages = 9;
 
     /** Default value */
     private int rowsPerPage = 10;
@@ -79,7 +79,7 @@ public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> 
     /** Refresh rows */
     private void refreshRows(@Nonnull final Criterion<U> crn) {
         rows.clear();
-        final Iterator<U> it = iterator(0L, rowsPerPage * MAX_PAGES, crn);
+        final Iterator<U> it = iterator(0L, getRowCountLimit(), crn);
         while(it.hasNext()) {
             rows.add(it.next());
         }
@@ -119,6 +119,11 @@ public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> 
     @Nonnull
     public Duration getDataLife() {
         return dataLife;
+    }
+
+    /** Get max row count limit */
+    protected int getRowCountLimit() {
+        return rowsPerPage * maxPages;
     }
 
     // ============= STATIC METHOD =============

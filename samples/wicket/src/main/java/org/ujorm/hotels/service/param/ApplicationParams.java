@@ -38,6 +38,9 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     @Comment("Count of rows per a page in the table for a user")
     @PersonalParam
     public static final Key<ApplicationParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
+    @Comment("Optimized table data loading")
+    @PersonalParam
+    public static final Key<ApplicationParams, Boolean> OPTIMIZED_TABLES = f.newKey("OptimizedTables", true);
     @Comment("The production application is running")
     public static final Key<ApplicationParams, Boolean> DEBUG_MODE = f.newKey("DebugMode", false);
     @Comment("Parameter Test1 for the system")
@@ -58,6 +61,17 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     /** Count of rows per a page in the table for a user */
     public Integer getRowsPerPage() {
         return ROWS_PER_PAGE.of(this);
+    }
+
+    /** Optimized table data loading */
+    public Boolean getOptimizedTables() {
+        return OPTIMIZED_TABLES.of(this);
+    }
+
+    /** Optimized table data loading */
+    public boolean isOptimizedTables() {
+        final Boolean result = getOptimizedTables();
+        return result != null && result;
     }
 
     /** The production application is running */

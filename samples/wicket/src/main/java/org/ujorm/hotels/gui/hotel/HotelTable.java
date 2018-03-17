@@ -31,15 +31,16 @@ import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.DbService;
 import org.ujorm.hotels.service.param.ApplicationParams;
-import static org.ujorm.wicket.CommonActions.*;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
-import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import org.ujorm.wicket.component.grid.KeyColumn;
-import static org.ujorm.wicket.component.grid.KeyColumn.*;
 import org.ujorm.wicket.component.grid.OrmDataProvider;
+import org.ujorm.wicket.component.grid.OrmDataProviderCached;
 import org.ujorm.wicket.component.toolbar.InsertToolbar;
 import org.ujorm.wicket.component.tools.LocalizedModel;
+import static org.ujorm.wicket.CommonActions.*;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
+import static org.ujorm.wicket.component.grid.KeyColumn.*;
 
 /**
  * Hotel Table
@@ -50,7 +51,7 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
     @SpringBean DbService dbService;
     @SpringBean AuthService authService;
     @Named("applParams")
-    @SpringBean ApplicationParams<ApplicationParams> applParams;
+    @SpringBean ApplicationParams<ApplicationParams> params;
 
     private Toolbar<U> toolbar = new Toolbar("toolbar");
     private HotelEditor editDialog;
@@ -60,7 +61,10 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
     public HotelTable(String id) {
         super(id);
 
-        OrmDataProvider<U> columns = OrmDataProvider.of(toolbar.getCriterion());
+        final OrmDataProvider<U> columns = params.isOptimizedTables()
+                ? OrmDataProviderCached.of(toolbar.getCriterion())
+                : OrmDataProvider.of(toolbar.getCriterion());
+
         columns.add(Hotel.NAME);
         columns.add(Hotel.CITY.add(City.NAME)); // An example of relations
         columns.add(Hotel.STREET);
@@ -70,7 +74,7 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
         columns.add(Hotel.PHONE);
         columns.add(Hotel.ID, ActionPanel.class);
         columns.setSort(Hotel.NAME);
-        add(columns.createDataTable(DEFAULT_DATATABLE_ID, applParams.getRowsPerPage()));
+        add(columns.createDataTable(DEFAULT_DATATABLE_ID, params.getRowsPerPage()));
 
         add(toolbar);
         add((editDialog = HotelEditor.create("editDialog", 700, 410)).getModalWindow());

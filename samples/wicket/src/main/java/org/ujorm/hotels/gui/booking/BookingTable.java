@@ -26,12 +26,13 @@ import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.gui.booking.action.BookActionPanel;
 import org.ujorm.hotels.service.DbService;
-import static org.ujorm.wicket.CommonActions.*;
+import org.ujorm.hotels.service.param.ApplicationParams;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
-import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import org.ujorm.wicket.component.grid.OrmDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
+import static org.ujorm.wicket.CommonActions.*;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 
 /**
  * BookingTable
@@ -39,13 +40,19 @@ import org.ujorm.wicket.component.tools.LocalizedModel;
  */
 public class BookingTable<U extends Booking> extends GenericPanel<U> {
 
-    @SpringBean DbService dbService;
+    @SpringBean
+    private ApplicationParams params;
+
+    @SpringBean
+    private DbService dbService;
+
     private MessageDialogPane removeDialog;
 
     public BookingTable(String id) {
         super(id);
 
-        OrmDataProvider<U> columns = OrmDataProvider.of(getCriterionModel());
+        final OrmDataProvider<U> columns = OrmDataProvider.of(getCriterionModel());
+
         columns.add(Booking.DATE_FROM);
         columns.add(Booking.HOTEL.add(Hotel.NAME));
         columns.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
@@ -57,7 +64,7 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
         columns.add(Booking.CREATION_DATE);
         columns.add(Booking.ID, BookActionPanel.class);
         columns.setSort(Booking.DATE_FROM);
-        add(columns.createDataTable(10));
+        add(columns.createDataTable(params.getRowsPerPage()));
 
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
     }
