@@ -2,6 +2,9 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 1.8-SNAPSHOT
++ 
+
 release 1.82 (2018-03-18)
 + TOOLS: The MessageService class supports arguments type of Supplier
 + TOOLS: The MsgFormatter class supports arguments type of Supplier
