@@ -27,11 +27,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Implementation of the Map interface where the the methods
- * {@code hash() } and {@code equals() } can be defined by a user.
+ * Implementation of the Map interface where methods
+ * {@code hash() } and {@code equals() } can be customized for all the Map.
  * @author Pavel Ponec
  */
-public class UjoMap<K, V> implements Map<K, V>, Serializable {
+public class CustomMap<K, V> implements Map<K, V>, Serializable {
 
     /** Original implementation */
     @Nonnull
@@ -42,17 +42,17 @@ public class UjoMap<K, V> implements Map<K, V>, Serializable {
     private final Function<K, MapKeyProxy<K>> keyFactory;
 
     /** The same mapper as a {@link  HashMap} */
-    public UjoMap() {
+    public CustomMap() {
         this((K key) -> new DefaultMapKey(key));
     }
 
     /** Mapper with a required equals and hasCode maker */
-    public UjoMap(@Nonnull final Function<K, MapKeyProxy<K>> keyFactory) {
+    public CustomMap(@Nonnull final Function<K, MapKeyProxy<K>> keyFactory) {
         this(new HashMap<>(), keyFactory);
     }
 
     /** Full configuration mapper */
-    public UjoMap(@Nonnull final HashMap<MapKeyProxy<K>, V> impl, @Nonnull final Function<K, MapKeyProxy<K>> keyFactory) {
+    public CustomMap(@Nonnull final HashMap<MapKeyProxy<K>, V> impl, @Nonnull final Function<K, MapKeyProxy<K>> keyFactory) {
         this.impl = impl;
         this.keyFactory = keyFactory;
     }

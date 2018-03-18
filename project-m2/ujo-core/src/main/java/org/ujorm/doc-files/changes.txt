@@ -2,21 +2,32 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.82-SNAPSHOT  (2018-03-*)
+release 1.82 (2018-03-18)
 + TOOLS: The MessageService class supports arguments type of Supplier
 + TOOLS: The MsgFormatter class supports arguments type of Supplier
-+ TOOLS: New method Assert.validState(); 
-+ ORM: New method for a safe update is implemented: Query.updateSafely(Ujo bo, Consumer updateBatch)
++ TOOLS: New method Assert.validState()
++ TOOLS: New class CustomMap implementats a Map interface where methods equals() and hash() can be customized for all the Map.
++ ORM: New method for a safe update is implemented: Session.updateSafely(Ujo bo, Consumer updateBatch)
 + ORM: Parameter MetaParams.LAZY_LOADING is renamed to LOADING_POLICY ("loadingPolicy")
++ ORM: the Criterion class implements methods equals() and hashCode()
 + ORM: A LazyLoading enumerator is renamed to the LoadingPolicy enumerator
 + ORM: Some annotation in the UjormTransactionManager class
 + ORM: Some obsolete code is removed
 + ORM: A new method OrmTable.clone() for clonning first of parameters level. 
 + ORM: A method update() of the CommonDao class is fixed 
 + ORM: A new methods CommonDao.updateSafely() are implemented 
++ ORM: Mysql is supported to version 3.1.14 only
++ ORM: A method CompositeKey.getCompositeCount() is renamed to CompositeKey.getKeyCount() +
++ ORM: A method CompositeKey.getKey(int) is created 
++ ORM: A method CompositeKey.getFirstKey() is deleted 
++ ORM: A Criterion class implements methods equals() and hashCode()
++ ORM: A SQL operator ILIKE is supported for dialects: PostrgreSQL and H2
++ ORM: The method Session.save() accept a domain list type of Collection now.
 + SPRING: Spring module supports the new method for a safe update
++ WICKET: New optimized OrmDataProvider with a a cache is available now
 + WICKET: The method FieldProvider.getLast() is fixed
-
++ WICKET: Create a wicket model by Lambda expression (Supplier) WICKET: UjoTab supports a visibility (by a Supplier)
+    
 release 1.81 (2018-02-22)
 + A nullable Ujo property (mandatory=false) have got a SQL join of type LEFT OUTER JOIN by default
 

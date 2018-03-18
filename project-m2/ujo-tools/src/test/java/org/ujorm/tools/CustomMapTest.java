@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
  * Test of UjoMap class where the result is the same like HashMap class.
  * @author Pavel Ponec
  */
-public class UjoMapTest {
+public class CustomMapTest {
 
     /**
      * Test of size method, of class UjoMap.
@@ -34,7 +34,7 @@ public class UjoMapTest {
     @Test
     public void testSize() {
         System.out.println("size");
-        UjoMap<Integer,String> instance = createUjoMap(3);
+        CustomMap<Integer,String> instance = createUjoMap(3);
         int expResult = 3;
         int result = instance.size();
         assertEquals(expResult, result);
@@ -47,7 +47,7 @@ public class UjoMapTest {
     @Test
     public void testIsEmpty() {
         System.out.println("isEmpty");
-        UjoMap<Integer,String> instance = createUjoMap(0);
+        CustomMap<Integer,String> instance = createUjoMap(0);
         boolean expResult = true;
         boolean result = instance.isEmpty();
         assertEquals(expResult, result);
@@ -61,7 +61,7 @@ public class UjoMapTest {
     public void testContainsKey() {
         System.out.println("containsKey");
 
-        UjoMap<Integer,String> instance = createUjoMap(3);
+        CustomMap<Integer,String> instance = createUjoMap(3);
         assertTrue(instance.containsKey(1));
         assertTrue(instance.containsKey(2));
         assertTrue(instance.containsKey(3));
@@ -76,7 +76,7 @@ public class UjoMapTest {
     public void testContainsValue() {
         System.out.println("containsValue");
         Object value = null;
-        UjoMap<Integer,String> instance = createUjoMap(3);
+        CustomMap<Integer,String> instance = createUjoMap(3);
         boolean expResult = false;
         boolean result = instance.containsValue(value);
         assertEquals(expResult, result);
@@ -90,7 +90,7 @@ public class UjoMapTest {
     public void testGet() {
         System.out.println("get");
         Integer key = 2;
-        UjoMap<Integer,String> instance = createUjoMap(3);
+        CustomMap<Integer,String> instance = createUjoMap(3);
         String expResult = "B";
         String result = instance.get(key);
         assertEquals(expResult, result);
@@ -105,7 +105,7 @@ public class UjoMapTest {
         System.out.println("put");
         final Integer key = 9;
         String value1 = "Z";
-        UjoMap<Integer,String> instance = createUjoMap(3);
+        CustomMap<Integer,String> instance = createUjoMap(3);
         Object expResult = null;
         String result = instance.put(key, value1);
         assertEquals(expResult, result);
@@ -125,7 +125,7 @@ public class UjoMapTest {
     public void testRemove() {
         System.out.println("remove");
         Integer key = 2;
-        UjoMap<Integer,String> instance = createUjoMap(3);
+        CustomMap<Integer,String> instance = createUjoMap(3);
         String expResult = "B";
         String result = instance.remove(key);
         assertEquals(expResult, result);
@@ -144,7 +144,7 @@ public class UjoMapTest {
     public void testPutAll() {
         System.out.println("putAll");
         Map<Integer,String> map = createHashMap(3);
-        UjoMap<Integer,String> instance = createUjoMap(0);
+        CustomMap<Integer,String> instance = createUjoMap(0);
         instance.putAll(map);
         assertEquals(map.size(), instance.size());
         assertEquals(3, instance.size());
@@ -167,7 +167,7 @@ public class UjoMapTest {
     @Test
     public void testClear() {
         System.out.println("clear");
-        UjoMap<Integer,String> instance = createUjoMap(3);
+        CustomMap<Integer,String> instance = createUjoMap(3);
         instance.clear();
         assertEquals(0, instance.size());
     }
@@ -178,7 +178,7 @@ public class UjoMapTest {
     @Test
     public void testKeySet() {
         System.out.println("keySet");
-        UjoMap<Integer,String> instance = createUjoMap(3);
+        CustomMap<Integer,String> instance = createUjoMap(3);
         Set result = instance.keySet();
         assertTrue(result.contains(1));
         assertTrue(result.contains(2));
@@ -193,7 +193,7 @@ public class UjoMapTest {
     @Test
     public void testKeySetProxy() {
         System.out.println("keySetProxy");
-        UjoMap<Integer,String> instance = createUjoMap(3);
+        CustomMap<Integer,String> instance = createUjoMap(3);
         Set<MapKeyProxy<Integer>> result = instance.keySetProxy();
         assertEquals(3, result.size());
     }
@@ -204,7 +204,7 @@ public class UjoMapTest {
     @Test
     public void testValues() {
         System.out.println("values");
-        UjoMap<Integer,String> instance = createUjoMap(3);
+        CustomMap<Integer,String> instance = createUjoMap(3);
         Collection result = instance.values();
         assertFalse(result.isEmpty());
         assertEquals("A", result.iterator().next());
@@ -214,8 +214,8 @@ public class UjoMapTest {
     // --- HELP METHODS ---
 
     /** Create a test map: 1-A, 2-B, 3-C, ... */
-    private UjoMap<Integer, String> createUjoMap(int count) {
-        final UjoMap<Integer, String> result = new UjoMap<>();
+    private CustomMap<Integer, String> createUjoMap(int count) {
+        final CustomMap<Integer, String> result = new CustomMap<>();
         for (int i = 0; i < count; i++) {
             result.put(1 + i, String.valueOf((char)('A' + i)));
         }
