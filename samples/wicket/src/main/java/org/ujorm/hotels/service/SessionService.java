@@ -27,14 +27,15 @@ public interface SessionService {
 
     /** Authenticate the user and save the result to the Wicket session */
     public void saveToSession(@Nullable Customer user);
-    
+
    /** Get a current customer from session or the {@code null} value */
     @Nullable
     public Customer getLoggedCustomer();
 
-    /** Get an immutable logged Customer from session of returns the default Value  */
+    /** Get an immutable logged Customer from session of returns the default Value
+     * @return  */
     @Nonnull
-    public Customer getLoggedCustomer(@Nonnull Customer defaultValue) ;
+    public Customer getLoggedCustomer(@Nonnull Customer defaultValue);
 
     /** Logout */
     public void logout();

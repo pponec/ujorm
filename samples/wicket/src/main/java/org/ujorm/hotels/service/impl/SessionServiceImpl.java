@@ -15,10 +15,12 @@
  */
 package org.ujorm.hotels.service.impl;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.service.SessionService;
@@ -48,11 +50,13 @@ public class SessionServiceImpl implements SessionService {
         return loggedUser;
     }
 
-    /** Get an immutable logged Customer from session of returns the default Value  */
-    @Override
-    public Customer getLoggedCustomer(Customer defaultValue) {
-        final Customer result = getLoggedCustomer();
-        return result != null ? result : defaultValue;
+    /** Get an immutable logged Customer from session of returns the default Value */
+    @Override @Nonnull
+    public Customer getLoggedCustomer(@Nonnull final Customer defaultValue) {
+        final Customer customer = getLoggedCustomer();
+        final Customer result = customer != null ? customer : defaultValue;
+        Assert.notNull(result, "Default value is required");
+        return result;
     }
 
     /** Logout */
