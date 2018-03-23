@@ -507,10 +507,8 @@ abstract public class SqlDialect {
         out.append(NEW_LINE_SEPARATOR).append("SET ");
 
         for (int i=0; i<changedColumns.size(); i++) {
-            MetaColumn ormColumn = changedColumns.get(i);
-            if (ormColumn.isPrimaryKey()) {
-                throw new IllegalUjormException("Primary key can not be changed: " + ormColumn);
-            }
+            final MetaColumn ormColumn = changedColumns.get(i);
+            Assert.isFalse(ormColumn.isPrimaryKey(), "Primary key can not be changed: {}", ormColumn);
             out.append(i==0 ? "" :  ", ");
             printQuotedName(ormColumn.getName(), out);
             out.append("=?");
