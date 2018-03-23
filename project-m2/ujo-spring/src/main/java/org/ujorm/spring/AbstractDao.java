@@ -74,18 +74,18 @@ public abstract class AbstractDao<T extends OrmUjo> {
      * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
      * @param <U> Type of the business object
      * @param bo Business Object
-     * @param updateBatch Batch to modify attributes of business object.
+     * @param batch An update batch to modify attributes of business object.
      * @param required Required result expected the one row modified exactly,
      * else method throws an {@link IllegalStateException} exception.
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
-    protected <U extends OrmUjo> int updateSafelyByDao
-        ( @Nonnull final U bo
-        , @Nonnull final Consumer<U> updateBatch
+    protected <U extends OrmUjo> int updateSafelyDao
+        ( @Nonnull final Consumer<U> batch
+        , @Nonnull final U bo
         , @Nullable final OptionEnum ... required)
         {
-        return getSessionDao().updateSafelyBy(bo, updateBatch, required);
+        return getSessionDao().updateSafely(batch, bo, required);
     }
 
     /** Delete a persistent object from database */

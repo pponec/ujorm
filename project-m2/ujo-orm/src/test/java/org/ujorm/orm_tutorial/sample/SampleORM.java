@@ -951,13 +951,13 @@ public class SampleORM {
     public void useUpdateSafelyBy() {
         final Order order1 = session.load(Order.class, anyOrderId);
         final Order order2 = session.load(Order.class, anyOrderId);
-        final Consumer<Order> updateBatch = (ord) -> ord.setCreated(LocalDateTime.now());
+        final Consumer<Order> batch = (ord) -> ord.setCreated(LocalDateTime.now());
 
-        int count =  session.updateSafelyBy(order1, updateBatch);
+        int count =  session.updateSafely(batch, order1);
         session.commit();
         Assert.isTrue(count == 1);
 
-        int count2 = session.updateSafelyBy(order2, updateBatch);
+        int count2 = session.updateSafely(batch, order2);
         session.commit();
         Assert.isTrue(count2 == 0);
     }

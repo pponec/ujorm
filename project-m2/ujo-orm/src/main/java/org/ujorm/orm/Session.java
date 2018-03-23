@@ -597,22 +597,22 @@ public class Session implements Closeable {
      * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
      * @param <U> Type of the business object
      * @param bo Business Object
-     * @param updateBatch Batch to modify attributes of business object.
+     * @param batch An update batch to modify attributes of business object.
      * @param required Required result expected the one row modified exactly,
      * else method throws an {@link IllegalStateException} exception.
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
-    public <U extends OrmUjo> int updateSafelyBy
-        ( @Nonnull final U bo
-        , @Nonnull final Consumer<U> updateBatch
+    public <U extends OrmUjo> int updateSafely
+        ( @Nonnull final Consumer<U> batch
+        , @Nonnull final U bo
         , @Nullable final OptionEnum ... required)
         {
         int result = 0;
         final U original = (U) bo.cloneUjo();
         bo.readChangedProperties(true); // Clear all changes
         bo.writeSession(this);  // Enable a change manager
-        updateBatch.accept(bo); // Update required columns
+        batch.accept(bo); // Update required columns
         final LoadingPolicy originalPolicy = getLoadingPolicy();
         try {
             setLoadingPolicy(LoadingPolicy.CREATE_STUB); // Assign a STUB loading policy for primary keys
