@@ -72,7 +72,7 @@ public class CommonDao<T extends OrmUjo> extends AbstractDao<T> {
         return updateSafelyDao(bo, original, required);
     }
 
-    /** A database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
+    /** UPDATE database safely by a batch for the all {@link OrmUjo#readChangedProperties(boolean) modified columns} .
      * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
      * @param <U> Type of the business object
      * @param bo Business Object
@@ -81,11 +81,11 @@ public class CommonDao<T extends OrmUjo> extends AbstractDao<T> {
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
-    public <U extends OrmUjo> int updateSafely
+    public <U extends OrmUjo> int updateSafelyBy
         ( @Nonnull final U bo
         , @Nonnull final Consumer<U> updateBatch
         , @Nullable final OptionEnum ... required) {
-        return updateSafelyDao(bo, updateBatch, required);
+        return updateSafelyByDao(bo, updateBatch, required);
     }
 
     /** Delete a persistent object from database */

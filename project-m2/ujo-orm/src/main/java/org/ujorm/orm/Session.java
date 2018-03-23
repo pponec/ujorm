@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2015 Pavel Ponec
+ *  Copyright 2009-2018 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -593,7 +593,7 @@ public class Session implements Closeable {
         return result;
     }
 
-    /** A database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
+    /** UPDATE database safely by a batch for the all {@link OrmUjo#readChangedProperties(boolean) modified columns} .
      * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
      * @param <U> Type of the business object
      * @param bo Business Object
@@ -603,7 +603,7 @@ public class Session implements Closeable {
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
-    public <U extends OrmUjo> int updateSafely
+    public <U extends OrmUjo> int updateSafelyBy
         ( @Nonnull final U bo
         , @Nonnull final Consumer<U> updateBatch
         , @Nullable final OptionEnum ... required)

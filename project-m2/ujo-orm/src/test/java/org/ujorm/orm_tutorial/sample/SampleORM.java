@@ -105,8 +105,8 @@ public class SampleORM {
             sample.useRelation();
             sample.useStoredProcedure();
             sample.useUpdate();
-            sample.useUpdateSafely_1();
-            sample.useUpdateSafely_2();
+            sample.useUpdateSafely();
+            sample.useUpdateSafelyBy();
             sample.useBatchUpdate();
             sample.useExtendedUpdate();
             sample.usePesimisticUpdate();
@@ -932,7 +932,7 @@ public class SampleORM {
     }
 
     /** Using the database UPDATE */
-    public void useUpdateSafely_1() {
+    public void useUpdateSafely() {
         Order order = session.load(Order.class, anyOrderId);
         Order original = order.cloneUjo();
         order.setCreated(LocalDateTime.now());
@@ -948,16 +948,16 @@ public class SampleORM {
     }
 
     /** Using the database UPDATE */
-    public void useUpdateSafely_2() {
+    public void useUpdateSafelyBy() {
         final Order order1 = session.load(Order.class, anyOrderId);
         final Order order2 = session.load(Order.class, anyOrderId);
         final Consumer<Order> updateBatch = (ord) -> ord.setCreated(LocalDateTime.now());
 
-        int count =  session.updateSafely(order1, updateBatch);
+        int count =  session.updateSafelyBy(order1, updateBatch);
         session.commit();
         Assert.isTrue(count == 1);
 
-        int count2 = session.updateSafely(order2, updateBatch);
+        int count2 = session.updateSafelyBy(order2, updateBatch);
         session.commit();
         Assert.isTrue(count2 == 0);
     }
