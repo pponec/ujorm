@@ -75,7 +75,7 @@ public class CommonDao<T extends OrmUjo> extends AbstractDao<T> {
     /** UPDATE database safely by a batch for the all {@link OrmUjo#readChangedProperties(boolean) modified columns} .
      * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
      * @param <U> Type of the business object
-     * @param bo Business Object
+     * @param bo Original business object object
      * @param batch An update batch to modify attributes of business object.
      * @param required The first attribute {@code REQUIRED} means the update is required, or the method throws an IllegalStateException.
      * @see OrmUjo#readChangedProperties(boolean)

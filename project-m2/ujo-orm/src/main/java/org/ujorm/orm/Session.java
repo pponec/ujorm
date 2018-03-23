@@ -596,7 +596,7 @@ public class Session implements Closeable {
     /** UPDATE database safely by a batch for the all {@link OrmUjo#readChangedProperties(boolean) modified columns} .
      * Execution of the UPDATE SQL statement is conditional on the match of the original values with the database.
      * @param <U> Type of the business object
-     * @param bo Business Object
+     * @param bo Original business object object
      * @param batch An update batch to modify attributes of business object.
      * @param required Required result expected the one row modified exactly,
      * else method throws an {@link IllegalStateException} exception.
