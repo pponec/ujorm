@@ -30,7 +30,6 @@ import org.apache.wicket.request.ILogData;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.Args;
 import org.ujorm.tools.Assert;
 
 /**
@@ -38,7 +37,7 @@ import org.ujorm.tools.Assert;
  * @author Pavel Ponec
  */
 public class UjoEvent<U> {
-    
+
     /** Undefined event with {@code null} action */
     public static final UjoEvent EMPTY_EVENT = new UjoEvent(CommonActions.UNDEFINED, new DummyTarget());
 
@@ -73,27 +72,28 @@ public class UjoEvent<U> {
      * @param ujo Optional data context type of Ujo
      * @param target Target
      */
-    public UjoEvent(@Nonnull String action, boolean dialogRequest, @Nonnull U ujo, @Nonnull AjaxRequestTarget target) {
-        this.action = Args.notNull(action, "action");
+    public UjoEvent(@Nonnull final String action, boolean dialogRequest, @Nonnull U ujo, @Nonnull AjaxRequestTarget target) {
+        Assert.notNull(action, "action");
+        this.action = action;
         this.domain = ujo;
         this.showDialog = dialogRequest;
         this.target = target;
     }
 
     /** Get the ujo domain object */
-    @Nonnull 
+    @Nonnull
     public U getDomain() {
         return domain;
     }
 
     /** Get Ujo domain model */
-    @Nonnull 
+    @Nonnull
     public IModel<U> getUjoModel() {
         return new Model((Serializable)domain);
     }
 
     /** Get target */
-    @Nonnull 
+    @Nonnull
     public AjaxRequestTarget getTarget() {
         return target;
     }
@@ -174,13 +174,13 @@ public class UjoEvent<U> {
     }
 
     // ----------- CLASSES ------------
-    
+
     /** Dumy AjaxRequestTarget */
     private static final class DummyTarget implements AjaxRequestTarget {
         private UnsupportedOperationException newException() {
             return new UnsupportedOperationException(getClass().getSimpleName());
         }
-        
+
         @Override
         public void addListener(AjaxRequestTarget.IListener listener) {
             throw newException();

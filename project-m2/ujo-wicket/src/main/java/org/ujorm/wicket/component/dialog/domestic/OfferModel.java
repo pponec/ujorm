@@ -43,6 +43,7 @@ import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaIndex;
 import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.tools.Assert;
 import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.form.Closeable;
 import org.ujorm.wicket.component.grid.AbstractDataProvider;
@@ -98,8 +99,9 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     }
 
     /** Filtering */
-    public OfferModel(final Criterion<U> filter) {
-        this.filter = Args.notNull(filter, "filter");
+    public OfferModel(@Nonnull final Criterion<U> filter) {
+        Assert.notNull(filter, "filter");
+        this.filter = filter;
         this.filterModel = Model.of(filter);
         this.highliting = new Model<Criterion<U>>(null);
     }
@@ -381,8 +383,9 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     }
 
     /** Closable object */
-    public void setClosable(@Nonnull Closeable<U> closable) {
-        this.closable = Args.notNull(closable, "closable");
+    public void setClosable(@Nonnull final Closeable<U> closable) {
+        Assert.notNull(closable, "closable");
+        this.closable = closable;
     }
 
     /** Enable finder */

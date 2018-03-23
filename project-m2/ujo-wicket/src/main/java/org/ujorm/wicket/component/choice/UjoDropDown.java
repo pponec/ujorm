@@ -22,10 +22,10 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.util.WildcardListModel;
-import org.apache.wicket.util.lang.Args;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
+import org.ujorm.tools.Assert;
 
 /**
  * Ujo Dropdown choice
@@ -45,8 +45,8 @@ public class UjoDropDown<U extends Ujo> extends DropDownChoice<U> {
      */
     public UjoDropDown(final String id, final List<? extends U> choices, Key<U, ?> index, Key<U, ?> display) {
         this(id, choices, KeyRing.<U>of(index, display));
-        Args.notNull(display, "display");
-        Args.notNull(index, "index");
+        Assert.notNull(display, "display");
+        Assert.notNull(index, "index");
     }
 
         /** Constructor

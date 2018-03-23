@@ -22,7 +22,6 @@ import java.util.Arrays;
 import javax.inject.Inject;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +35,7 @@ import org.ujorm.hotels.service.DbService;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.spring.CommonDao;
+import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.hotels.service.DbService.ONE_DAY;
@@ -199,7 +199,8 @@ public class DbServiceImpl implements DbService {
     /** Save new booking */
     @Override
     public void saveBooking(Booking booking) {
-        Customer cust = Args.notNull(booking.getCustomer(), Booking.CUSTOMER.getFullName());
+        Customer cust = booking.getCustomer();
+        Assert.notNull(booking.getCustomer(), Booking.CUSTOMER.getFullName());
         if (cust.getId()==null) {
             if (!authService.authenticate(cust)) {
                 throw new ValidationException("login.failed", "Login failed");

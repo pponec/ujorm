@@ -28,7 +28,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.repeater.RepeatingView;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.validation.IValidator;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
@@ -336,7 +335,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Assign values to required component fields in a transaction for a lazy loading case */
     protected U copyToFields(U domain) {
-        Args.notNull(domain, "domain");
+        Assert.notNull(domain, "domain");
         for (Field field : getFields()) {
             final Key k = field.getKey();
             field.setModelValue(k.of(domain));

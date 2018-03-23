@@ -25,10 +25,9 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.apache.wicket.util.lang.Args;
+import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.Key;
@@ -48,6 +47,7 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.spring.CommonDao;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.MsgFormatter;
 import static org.ujorm.hotels.entity.ParamValue.*;
 
@@ -138,7 +138,7 @@ implements ParamService {
      */
     @Override
     public List<ParamValue> getValues(@Nullable Customer customer, @Nonnull Criterion<ParamValue> criterion) {
-        Args.notNull(criterion, "criterion");
+        Assert.notNull(criterion, "criterion");
 
         final Criterion<ParamValue> crn1,crn2,crn3;
         crn1 = ParamValue.CUSTOMER.whereNull();
@@ -164,8 +164,10 @@ implements ParamService {
     public final void updateValue(ParamValue param) {
         param.writeSession(dao.getSession());
         if (param.getCustomer()!=null && param.isPersonalParam()) {
-            Args.isTrue(param.getCustomer().getId().equals(authService.getLoggedCustomer().getId())
-            , "User " + authService.getLoggedCustomer().getId() + " is modyfing foreign parameters " + param);
+            Assert.isTrue(param.getCustomer().getId().equals(authService.getLoggedCustomer().getId())
+                , "User {} is modyfing foreign parameters {}"
+                , authService.getLoggedCustomer(new Customer()).getId()
+                , param);
         }
         updateValue(param, this.authService.getLoggedCustomer());
     }

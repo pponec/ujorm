@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.lang.Args;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
@@ -31,6 +30,7 @@ import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
+import org.ujorm.tools.Assert;
 import org.ujorm.wicket.OrmSessionProvider;
 
 /**
@@ -114,7 +114,7 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
      */
     @Nonnull
     protected Iterator<U> iterator(final long first, final long count, @Nonnull final Criterion<U> crn) {
-        Args.isTrue(count <= Integer.MAX_VALUE
+        Assert.isTrue(count <= Integer.MAX_VALUE
                 , "The argument '{}' have got limit {} but the current value is {}"
                 , "count"
                 , Integer.MAX_VALUE

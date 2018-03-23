@@ -18,7 +18,6 @@ package org.ujorm.wicket.component.form;
 import java.io.Serializable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
@@ -26,6 +25,7 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.KeyRing;
+import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidationError;
 
 /**
@@ -57,7 +57,8 @@ public class UiValidator<T> implements IValidator<T>, INullAcceptingValidator<T>
      * @param key Optional key
      */
     public UiValidator(@Nonnull Validator<T> validator, @Nullable KeyRing key) {
-        this.validator = Args.notNull(validator, "validator");
+        Assert.notNull(validator, "validator");
+        this.validator = validator;
         this.key = key;
     }
 

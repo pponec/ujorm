@@ -22,12 +22,12 @@ import javax.annotation.Nonnull;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.lang.Args;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.tools.Assert;
 
 /**
  * <p>This class called <strong>ListDataProvider</strong> is a {@link List} based DataProvider.
@@ -114,12 +114,12 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
      */
     @Override
     public Iterator<U> iterator(long first, long count) {
-        Args.isTrue(count <= Integer.MAX_VALUE
+        Assert.isTrue(count <= Integer.MAX_VALUE
                 , "The argument '{}' have got limit {} but the current value is {}"
                 , "first"
                 , Integer.MAX_VALUE
                 , first);
-        Args.isTrue(count <= Integer.MAX_VALUE
+        Assert.isTrue(count <= Integer.MAX_VALUE
                 , "The argument '{}' have got limit {} but the current value is {}"
                 , "count"
                 , Integer.MAX_VALUE

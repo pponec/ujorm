@@ -38,13 +38,13 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.lang.Args;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.MsgFormatter;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.toolbar.InsertToolbar;
@@ -119,9 +119,10 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @param defaultSort Default sorting can be assigned optionally
      */
     public AbstractDataProvider
-            ( @Nonnull IModel<Criterion<U>> filter
+            ( @Nonnull final IModel<Criterion<U>> filter
             , @Nullable Key<? super U,?> defaultSort) {
-        this.filter = (IModel) Args.notNull(filter, "The filter is required");
+        Assert.notNull(filter, "Filter is required");
+        this.filter = filter;
 
         if (defaultSort == null) {
             KeyRing<U> keys = KeyRing.of((Class<U>)filter.getObject().getDomain());
