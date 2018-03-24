@@ -45,6 +45,7 @@ import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.MsgFormatter;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.toolbar.InsertToolbar;
@@ -260,7 +261,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * </ul>
      */
     public <V> void add(final Key<? super U,V> column, final Class<? extends WebMarkupContainer> panelClass) {
-         add(column, panelClass, false);
+         add(column, panelClass, false, null);
     }
 
     /** Create new instance of a Panel from the argument {@code panelClass}
@@ -273,8 +274,8 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      *    <li>U - a row object type of {@link Key#getDomainType()}</li>
      * </ul>
      */
-    public <V> void add(@Nonnull final Key<? super U,V> column, @Nonnull final Class<? extends WebMarkupContainer> panelClass, final boolean sortable) {
-         add(column, panelClass, sortable ? column : null);
+    public <V> void add(@Nonnull final Key<? super U,V> column, @Nonnull final Class<? extends WebMarkupContainer> panelClass, final boolean sortable, @Nullable final String cssClass) {
+         add(column, panelClass, sortable ? column : null, null);
     }
 
     /** Create new instance of a Panel from the argument {@code panelClass}
@@ -287,14 +288,15 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      *    <li>U - a row object type of {@link Key#getDomainType()}</li>
      * </ul>
      */
-    public <V> void add(@Nonnull final Key<? super U,V> column, @Nonnull final Class<? extends WebMarkupContainer> panelClass, @Nullable final Key<? super U,V> sortColumn) {
+    public <V> void add(@Nonnull final Key<? super U,V> column, @Nonnull final Class<? extends WebMarkupContainer> panelClass, @Nullable final Key<? super U,V> sortColumn, @Nullable final String cssClass ) {
         final Class<? super U> domainType = column.getDomainType();
         final KeyRing<U> keyCol = KeyRing.<U>of(column);
         final KeyRing<U> sortCol = sortColumn == null
                 ? null
                 : column.equals(sortColumn)
                 ? keyCol
-                : KeyRing.<U>of(sortColumn);
+                : KeyRing.<U>of(sortColumn)
+                ;
         add(new KeyColumn<U, Object>(keyCol, sortCol) {
             @Override
             public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
@@ -309,6 +311,12 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
                             , domainType.getName());
                     throw new IllegalUjormException(msg, e);
                 }
+            }
+            @Override
+            public String getCssClass() {
+                return Check.hasLength(cssClass)
+                     ? cssClass
+                     : createKeyColumn(keyCol.getFirstKey()).getCssClass();
             }
         });
     }
