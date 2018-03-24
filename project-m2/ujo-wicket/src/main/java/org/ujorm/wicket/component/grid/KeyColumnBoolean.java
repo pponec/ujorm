@@ -26,7 +26,7 @@ import org.ujorm.wicket.CssAppender;
 /**
  * Key column for a boolean data type
  * @author Pavel Ponec
- * @param <UJO extends Ujo>
+ * @param <U extends Ujo>
  *            The Model object type
  */
 public class KeyColumnBoolean<U extends Ujo> extends KeyColumn<U, Boolean> {

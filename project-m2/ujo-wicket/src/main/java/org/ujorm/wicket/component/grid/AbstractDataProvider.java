@@ -250,7 +250,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     }
 
     /** Create new instance of a Panel from the argument {@code panelClass}
-     * and add the result to the grid as new column.
+     * and add the result to the grid as new column. Column is no-sorted
      * @param <V> Value type
      * @param column Key for the column, where the Key can't get data.
      * @param panelClass A panel with two constructor arguments:
@@ -260,8 +260,42 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * </ul>
      */
     public <V> void add(final Key<? super U,V> column, final Class<? extends WebMarkupContainer> panelClass) {
+         add(column, panelClass, false);
+    }
+
+    /** Create new instance of a Panel from the argument {@code panelClass}
+     * and add the result to the grid as new column.
+     * @param <V> Value type
+     * @param column Key for the column, where the Key can't get data.
+     * @param panelClass A panel with two constructor arguments:
+     * <ul>
+     *    <li>String - component identifier</li>
+     *    <li>U - a row object type of {@link Key#getDomainType()}</li>
+     * </ul>
+     */
+    public <V> void add(@Nonnull final Key<? super U,V> column, @Nonnull final Class<? extends WebMarkupContainer> panelClass, final boolean sortable) {
+         add(column, panelClass, sortable ? column : null);
+    }
+
+    /** Create new instance of a Panel from the argument {@code panelClass}
+     * and add the result to the grid as new column.
+     * @param <V> Value type
+     * @param column Key for the column, where the Key can't get data.
+     * @param panelClass A panel with two constructor arguments:
+     * <ul>
+     *    <li>String - component identifier</li>
+     *    <li>U - a row object type of {@link Key#getDomainType()}</li>
+     * </ul>
+     */
+    public <V> void add(@Nonnull final Key<? super U,V> column, @Nonnull final Class<? extends WebMarkupContainer> panelClass, @Nullable final Key<? super U,V> sortColumn) {
         final Class<? super U> domainType = column.getDomainType();
-        add(new KeyColumn<U, Object>(KeyRing.<U>of(column), null) {
+        final KeyRing<U> keyCol = KeyRing.<U>of(column);
+        final KeyRing<U> sortCol = sortColumn == null
+                ? null
+                : column.equals(sortColumn)
+                ? keyCol
+                : KeyRing.<U>of(sortColumn);
+        add(new KeyColumn<U, Object>(keyCol, sortCol) {
             @Override
             public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
                 try {
@@ -284,7 +318,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @param column Key for the column, where the Key can't get data.
      * @param actions Action array
      */
-    public <V> void add(final Key<? super U,V> column, final CommonAction ... actions) {
+    public <V> void add(@Nonnull final Key<? super U,V> column, final CommonAction ... actions) {
         final KeyColumn<U, Object> col = new KeyColumn<U, Object>(KeyRing.<U>of(column), null) {
             @Override public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
                 item.add(new CommonActionPanel(componentId, model.getObject(), actions));
