@@ -44,6 +44,7 @@ import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.extensions.ValueWrapper;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.MsgFormatter;
@@ -221,28 +222,32 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
 
     /** Create new object type of {@link KeyColumn} */
     public <V> KeyColumn<? super U, V> createKeyColumn(Key<? super U, V> column) {
-        if (column.isTypeOf(Boolean.class)) {
+        final Class colType = column.isTypeOf(ValueWrapper.class)
+                ? ValueWrapper.getInstance((Class)column.getType()).readPersistentClass()
+                : column.getType();
+
+        if (Boolean.class.isAssignableFrom(colType)) {
             return KeyColumnBoolean.of(column, isSortingEnabled((Key) column));
         }
-        if (column.isTypeOf(BigDecimal.class)) {
+        if (BigDecimal.class.isAssignableFrom(colType)) {
             return KeyColumnDecimal.of(column, isSortingEnabled((Key)column), "number");
         }
-        if (column.isTypeOf(Number.class)) {
+        if (Number.class.isAssignableFrom(colType)) {
             return KeyColumn.of(column, isSortingEnabled((Key)column), "number");
         }
-        if (column.isTypeOf(java.sql.Date.class)) {
+        if (java.sql.Date.class.isAssignableFrom(colType)) {
             return KeyColumnDate.of(column, isSortingEnabled((Key)column), KeyColumnDate.DEFAULT_CSS_CLASS);
         }
-        if (column.isTypeOf(java.util.Date.class)) {
+        if (java.util.Date.class.isAssignableFrom(colType)) {
             return KeyColumnDate.of(column, isSortingEnabled((Key)column), "datetime", DateTimes.LOCALE_DATETIME_FORMAT_KEY);
         }
-        if (column.isTypeOf(java.time.LocalDateTime.class)) {
+        if (java.time.LocalDateTime.class.isAssignableFrom(colType)) {
             return KeyColumnLocalDateTime.of(column, isSortingEnabled((Key)column), "datetime", DateTimes.LOCALE_DATETIME_FORMAT_KEY);
         }
-        if (column.isTypeOf(java.time.LocalDate.class)) {
+        if (java.time.LocalDate.class.isAssignableFrom(colType)) {
             return KeyColumnLocalDate.of(column, isSortingEnabled((Key)column), "datetime", DateTimes.LOCALE_DATE_FORMAT_KEY);
         }
-        if (column.isTypeOf(Enum.class)) {
+        if (Enum.class.isAssignableFrom(colType)) {
             return KeyColumnEnum.of(column, isSortingEnabled((Key)column), "enum");
         }
 

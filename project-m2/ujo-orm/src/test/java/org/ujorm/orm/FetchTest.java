@@ -20,6 +20,7 @@ import java.util.Date;
 import junit.framework.TestCase;
 import org.ujorm.Key;
 import org.ujorm.criterion.*;
+import org.ujorm.extensions.types.UnsignedShort;
 import org.ujorm.orm.bo.*;
 import static org.ujorm.criterion.Operator.*;
 
@@ -211,6 +212,13 @@ public class FetchTest extends TestCase {
             break; // The one loop is sufficient.
         }
 
+        // ------ A ValueWrapper test ------
+
+        XCustomer cust = session.createQuery(XCustomer.BENEFIT.whereEq(XCustomer.BENEFIT.getDefault())).setLimit(1).uniqueResult();
+        assertNotNull(cust);
+        assertEquals(XCustomer.BENEFIT.getDefault(), cust.getBenefit());
+
+
         // ------ CLOSE ------
         session.close();
     }
@@ -279,7 +287,8 @@ public class FetchTest extends TestCase {
         XCustomer.FIRSTNAME.setValue(customer, "Lucy");
         XCustomer.LASTNAME.setValue(customer, "Smith" + name);
         XCustomer.CREATED.setValue(customer, new Date());
-        XCustomer.PIN.setValue(customer, 1000001);
+        XCustomer.PIN.setValue(customer, UnsignedShort.of(65_000));
+        XCustomer.BENEFIT.setValue(customer, XCustomer.BENEFIT.getDefault());
 
         XOrder order = new XOrder();
         XOrder.CREATED.setValue(order, new Date());

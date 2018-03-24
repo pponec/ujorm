@@ -40,6 +40,7 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.extensions.StringWrapper;
+import org.ujorm.extensions.ValueWrapper;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.MsgFormatter;
@@ -119,6 +120,8 @@ public class UjoCoder {
             result = ((File) value).getPath();
         } else if (value instanceof Dimension) {
             result = ((Dimension) value).width + "," + ((Dimension) value).height;
+        } else if (value instanceof ValueWrapper) {
+            result = encodeValue(((ValueWrapper) value).readPersistentValue(), false);
         } else if (value instanceof StringWrapper) {
             result = ((StringWrapper) value).exportToString();
         } else if (value instanceof Enum) {
@@ -282,7 +285,23 @@ public class UjoCoder {
                             , aValue
                             , type);
                     throw new IllegalUjormException(msg);
-                } else {
+                }
+                else if (ValueWrapper.class.isAssignableFrom(type)) {
+                    final int hash = aValue.hashCode();
+                    for (Object en : type.getEnumConstants()) {
+                        final String exportedTxt = ((ValueWrapper)en).readPersistentValue().toString();
+                        if (hash == exportedTxt.hashCode()
+                        && aValue.equals(exportedTxt)) {
+                            return en;
+                        }
+                    }
+                    final String msg = MsgFormatter.format
+                            ( "I have found no item for value '{}' in the {}"
+                            , aValue
+                            , type);
+                    throw new IllegalUjormException(msg);
+                }
+                else {
                     return Enum.valueOf(type, aValue);
                 }
             }
@@ -339,6 +358,11 @@ public class UjoCoder {
             }
             if (Charset.class.isAssignableFrom(type)) {
                 final Charset result = Charset.forName(aValue);
+                return result;
+            }
+            if (ValueWrapper.class.isAssignableFrom(type)) {
+                final Object val = decodeValue(ValueWrapper.getInstance(type).readPersistentClass(), aValue);
+                final ValueWrapper result = ValueWrapper.getInstance(type, val);
                 return result;
             }
             if (true) {

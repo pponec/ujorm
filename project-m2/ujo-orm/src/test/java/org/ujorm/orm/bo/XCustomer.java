@@ -18,6 +18,7 @@ package org.ujorm.orm.bo;
 import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
+import org.ujorm.extensions.types.UnsignedShort;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.TypeService;
 import org.ujorm.orm.annot.Column;
@@ -34,7 +35,7 @@ public class XCustomer extends OrmTable<XCustomer> {
     @Column(pk = true, converter=TypeService.class)
     public static final Key<XCustomer, Long> ID = f.newKey();
     /** Personal Number */
-    public static final Key<XCustomer, Integer> PIN = f.newKey();
+    public static final Key<XCustomer, UnsignedShort> PIN = f.newKey();
     /** Surename */
     @Column(uniqueIndex="idx_xcustomer_full_name")
     public static final Key<XCustomer, String> FIRSTNAME = f.newKey();
@@ -45,26 +46,84 @@ public class XCustomer extends OrmTable<XCustomer> {
     public static final Key<XCustomer, Date> CREATED = f.newKey();
     /** Date of creation */
     public static final Key<XCustomer, XCustomer> SUPERIOR = f.newKey("superior");
+    /** Date of creation */
+    @Column(mandatory = true)
+    public static final Key<XCustomer, UnsignedShort> BENEFIT = f.newKeyDefault(UnsignedShort.of(123));
 
     static {
         f.lock();
     }
 
     // --- An optional implementation of commonly used setters and getters ---
+
+    /** Unique key */
     public Long getId() {
-        return get(ID);
+        return ID.of(this);
     }
 
+    /** Unique key */
     public void setId(Long id) {
-        set(ID, id);
+        ID.setValue(this, id);
     }
 
-    public Integer getUsrId() {
-        return get(PIN);
+    /** Personal Number */
+    public UnsignedShort getPin() {
+        return PIN.of(this);
     }
 
-    public void setUsrId(Integer usrId) {
-        set(PIN, usrId);
+    /** Personal Number */
+    public void setPin(UnsignedShort pin) {
+        PIN.setValue(this, pin);
+    }
+
+    /** Surename */
+    public String getFirstname() {
+        return FIRSTNAME.of(this);
+    }
+
+    /** Surename */
+    public void setFirstname(String firstname) {
+        FIRSTNAME.setValue(this, firstname);
+    }
+
+    /** Lastname */
+    public String getLastname() {
+        return LASTNAME.of(this);
+    }
+
+    /** Lastname */
+    public void setLastname(String lastname) {
+        LASTNAME.setValue(this, lastname);
+    }
+
+    /** Date of creation */
+    public Date getCreated() {
+        return CREATED.of(this);
+    }
+
+    /** Date of creation */
+    public void setCreated(Date created) {
+        CREATED.setValue(this, created);
+    }
+
+    /** Date of creation */
+    public XCustomer getSuperior() {
+        return SUPERIOR.of(this);
+    }
+
+    /** Date of creation */
+    public void setSuperior(XCustomer superior) {
+        SUPERIOR.setValue(this, superior);
+    }
+
+    /** Date of creation */
+    public UnsignedShort getBenefit() {
+        return BENEFIT.of(this);
+    }
+
+    /** Date of creation */
+    public void setBenefit(UnsignedShort benefit) {
+        BENEFIT.setValue(this, benefit);
     }
 
 }

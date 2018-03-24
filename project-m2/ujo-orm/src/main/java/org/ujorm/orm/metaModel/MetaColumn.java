@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
@@ -32,6 +33,7 @@ import org.ujorm.Validator;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
+import org.ujorm.extensions.ValueWrapper;
 import org.ujorm.implementation.orm.RelationToOne;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.DbType;
@@ -103,10 +105,12 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     private String[] foreignNames = null;
     private static final String[] EMPTY_NAMES = new String[0];
     /** A <b>Java Type Code<b> to a quick JDBC management.
-     * @see TypeService#getTypeCode(org.ujorm.orm.metaModel.MetaColumn)
-     */
+     * @see TypeService#getTypeCode(org.ujorm.orm.metaModel.MetaColumn) */
     private char typeCode;
-    private boolean foreignKey;
+    /** If the column is a {@code foreign key} */
+    private final boolean foreignKey;
+    /** If the type is instance of the class {@code } */
+    private final boolean isValueWrapper;
     /** Type converter. Value is Notnull always. */
     private final ITypeService converter;
 
@@ -117,12 +121,15 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
 
     public MetaColumn(ITypeService converter) {
         this.converter = converter;
+        foreignKey = false;
+        isValueWrapper = false;
     }
 
     @SuppressWarnings({"LeakingThisInConstructor", "unchecked"})
-    public MetaColumn(MetaTable table, Key tableProperty, MetaColumn param) {
+    public MetaColumn(@Nonnull final MetaTable table, @Nonnull final Key tableProperty, @Nullable final MetaColumn param) {
         super(table, tableProperty, param);
         this.foreignKey = isTypeOf(OrmUjo.class);
+        this.isValueWrapper = isTypeOf(ValueWrapper.class);
 
         Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
@@ -202,6 +209,12 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     @Override
     public final boolean isForeignKey() {
         return foreignKey;
+    }
+
+    /** Is the value type of ValueWrapper? */
+    @Override
+    public final boolean isValueWrapper() {
+        return isValueWrapper;
     }
 
     /** Is it a Primary Key? */
@@ -335,11 +348,24 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     }
 
     /** Returns a key value from a table
+     * @param ujo Related Ujo object where a candiate to the ValueWrapper is supported
+     * @param value A value to assign.
+     */
+    @SuppressWarnings("unchecked")
+    public void setValueRaw(@Nonnull final Ujo bo, @Nullable final Object value) {
+        if (isValueWrapper) {
+            setValue(bo, ValueWrapper.getInstance(getType(), value));
+        } else {
+            setValue(bo, value);
+        }
+    }
+
+    /** Returns a key value from a table
      * @param ujo Related Ujo object
      * @param value A value to assign.
      */
     @SuppressWarnings("unchecked")
-    public void setValue(final Ujo bo, Object value) {
+    public void setValue(@Nonnull final Ujo bo, @Nullable Object value) {
         final Key key = super.getKey();
 
         if (isForeignKey()

@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.StringWrapper;
+import org.ujorm.extensions.ValueWrapper;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.tools.MsgFormatter;
@@ -84,7 +85,10 @@ public class TypeService implements ITypeService<Object,Object> {
      * @return Java type code for frequently used types.
      */
     public static char getTypeCode(@Nonnull final MetaColumn column) {
-        final Class type = column.getType();
+        final Class appType = column.getType();
+        final Class type = column.isValueWrapper()
+                ? ValueWrapper.getInstance(appType).readPersistentClass()
+                : appType;
         if (StringWrapper.class.isAssignableFrom(type)) return type.isEnum()
                 ? EXPORT_ENUM
                 : STRING_WRAP;
@@ -241,7 +245,7 @@ public class TypeService implements ITypeService<Object,Object> {
     /** GetValue from the result set by position.
      * @param mColumn Meta-model column, where the {@link MetaColumn#getTypeCode() typeCode} must be assigned before.
      * @param rs PreparedStatement
-     * @param value Value to assign
+     * @param dbValue Value to assign where a special type {@link ValueWrapper} is supported
      * @param c The database column index starts at #1
      * @throws SQLException
      */
@@ -249,15 +253,18 @@ public class TypeService implements ITypeService<Object,Object> {
     public void setValue
         ( @Nonnull final MetaColumn mColumn
         , @Nonnull final PreparedStatement rs
-        , @Nullable final Object value
+        , @Nullable final Object dbValue
         , final int c
         ) throws SQLException {
 
-        if (value==null) {
+        if (dbValue==null) {
            final int sqlType = MetaColumn.DB_TYPE.of(mColumn).getSqlType();
            rs.setNull(c, sqlType);
            return;
         }
+        final Object value = mColumn.isValueWrapper()
+                ? ((ValueWrapper)dbValue).readPersistentValue()
+                : dbValue;
 
         switch (mColumn.getTypeCode()) {
             case BOOLEAN  : rs.setBoolean(c, (Boolean)value); break;
@@ -350,7 +357,11 @@ public class TypeService implements ITypeService<Object,Object> {
             case CHAR: return column.getType();
         }
 
-        final Class type = column.getType();
+        final Class appType = column.getType();
+        final Class type = column.isValueWrapper()
+                ? ValueWrapper.getInstance(appType).readPersistentClass()
+                : appType;
+
         Object testValue = column.getKey().getDefault();
         if (testValue != null) {
             // It is OK;

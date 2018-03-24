@@ -352,7 +352,7 @@ public class JdbcStatement /*implements Closeable*/ {
             for (MetaColumn c : MetaProcedure.PARAMETERS.getList(procedure)) {
                 if (procedure.isOutput(c)) {
                     final Object value = c.getConverter().getValue(c, ps, ++i);
-                    c.setValue(bo, value);
+                    c.setValueRaw(bo, value);
                 }
                 else if (procedure.isInput(c)) {
                     ++i;

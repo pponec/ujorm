@@ -166,10 +166,10 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
 
                 if (colWrap.isCompositeKey()) {
                     final Ujo semiRow = ((CompositeKey)colWrap.getKey()).getSemiValue(row, true);
-                    column.setValue(semiRow, value);
+                    column.setValueRaw(semiRow, value);
                     // A session of the related object will be assigned using the OrmProperty later.
                 } else {
-                    column.setValue(row, value);
+                    column.setValueRaw(row, value);
                 }
             }
             row.writeSession(query.getSession());

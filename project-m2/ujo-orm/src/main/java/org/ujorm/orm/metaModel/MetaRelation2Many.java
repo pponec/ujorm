@@ -17,6 +17,8 @@
 package org.ujorm.orm.metaModel;
 
 import java.lang.reflect.Field;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
@@ -74,7 +76,8 @@ public class MetaRelation2Many extends AbstractMetaModel {
      * @param table Related Table
      * @param tableKey The direct Key
      * @param param XML content
-     */    public MetaRelation2Many(MetaTable table, Key tableKey, MetaRelation2Many param) {
+     */
+    public MetaRelation2Many(@Nonnull final MetaTable table, @Nonnull final Key tableKey, @Nullable final MetaRelation2Many param) {
         this.tableAlias = table.getAlias();
         Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableKey, false);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
@@ -108,6 +111,11 @@ public class MetaRelation2Many extends AbstractMetaModel {
         return false;
     }
 
+    /** Is the value type of ValueWrapper? */
+    public boolean isValueWrapper() {
+        return false;
+    }
+
     /** Returns the ID of the column  */
     public final String getId() {
         return ID.of(this);
@@ -124,7 +132,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     }
 
     /** Returns true if the key type is a type or subtype of the parameter class. */
-    public final boolean isTypeOf(Class type) {
+    public final boolean isTypeOf(@Nonnull final Class type) {
         return getKey().isTypeOf(type);
     }
 

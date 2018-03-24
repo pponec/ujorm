@@ -16,6 +16,7 @@
 package org.ujorm.orm;
 
 import org.junit.Test;
+import org.ujorm.extensions.types.UnsignedShort;
 import org.ujorm.orm.bo.ACustomerExtended;
 import org.ujorm.orm.bo.XCustomerExtended;
 import static junit.framework.TestCase.assertEquals;
@@ -36,13 +37,14 @@ public class OrmKeyFactoryTest {
         final XCustomerExtended cust = new XCustomerExtended();
 
         assertEquals(0, XCustomerExtended.ID.getIndex());
-        assertEquals(6, XCustomerExtended.ID_EXTENDED.getIndex());
+        assertEquals(7, XCustomerExtended.ID_EXTENDED.getIndex());
 
         assertEquals("id", XCustomerExtended.ID.getName());
         assertEquals("idExtended", XCustomerExtended.ID_EXTENDED.getName());
 
         cust.setId(iBase);
         cust.setIdExtended(idExte);
+        cust.setPin(UnsignedShort.of(1234));
 
         assertEquals(iBase, cust.getId());
         assertEquals(idExte, cust.getIdExtended());
