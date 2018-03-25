@@ -278,7 +278,7 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newKey(Key p) {
+    public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newKey(Key<UJO,VALUE> p) {
         return Property.of(p.getName(), p.getType(), p.getDefault(), -1, false);
     }
 

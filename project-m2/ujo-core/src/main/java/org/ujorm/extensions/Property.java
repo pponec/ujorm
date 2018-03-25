@@ -802,7 +802,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> of(Key p, int index) {
+    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> of(final Key<UJO,VALUE> p, int index) {
          return of(p.getName(), p.getType(), p.getDefault(), index, true);
     }
 
@@ -812,8 +812,8 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> of(Key p) {
-         return of(p.getName(), p.getType(), p.getDefault(), UNDEFINED_INDEX, false);
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> of(final Key<UJO,VALUE> p) {
+         return of(p.getName(), p.getType(), (VALUE) p.getDefault(), UNDEFINED_INDEX, false);
     }
 
     // --------- DEPRECATED STATIC METHODS -------------------
@@ -906,7 +906,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(Key p, int index) {
+    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(final Key<UJO,VALUE> p, int index) {
          return newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
     }
 
@@ -917,7 +917,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> newInstance(Key p) {
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> newInstance(final Key<UJO,VALUE> p) {
          return newInstance(p.getName(), p.getType(), p.getDefault(), UNDEFINED_INDEX, false);
     }
 

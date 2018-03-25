@@ -534,7 +534,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
 
     /** Create a new instance, the parameters is cloned. */
     public static <UJO extends Ujo> KeyRing<UJO> of(@Nonnull final Key<? super UJO, ?>... keys) {
-        return of(null, keys);
+        return of(null, (Key<Ujo,Object>[]) keys);
     }
 
     /** Create a new instance */

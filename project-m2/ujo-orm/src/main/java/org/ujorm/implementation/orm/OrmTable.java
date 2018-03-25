@@ -314,7 +314,7 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newKey(Key p) {
+    public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newKey(Key<UJO,VALUE> p) {
         return (Property<UJO, VALUE>) new OrmProperty(UNDEFINED_INDEX, p.getName(), p.getDefault(), null);
     }
 

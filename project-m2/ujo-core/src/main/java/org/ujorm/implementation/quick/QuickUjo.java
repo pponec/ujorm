@@ -118,7 +118,7 @@ public abstract class QuickUjo extends AbstractUjo {
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newKey(Key p) {
+    public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newKey(final Key<UJO,VALUE> p) {
         return Property.of(p.getName(), p.getType(), p.getDefault(), -1, false);
     }
 
@@ -232,7 +232,7 @@ public abstract class QuickUjo extends AbstractUjo {
      */
     @SuppressWarnings("unchecked")
     @Deprecated
-    public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newProperty(Key p) {
+    public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newProperty(final Key<UJO,VALUE> p) {
         return Property.of(p.getName(), p.getType(), p.getDefault(), -1, false);
     }
 

@@ -20,8 +20,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import org.ujorm.Key;
 import org.ujorm.core.UjoManager;
-import org.ujorm.extensions.Property;
 import org.ujorm.extensions.ListProperty;
+import org.ujorm.extensions.Property;
 import org.ujorm.extensions.SuperAbstractUjo;
 
 /**
@@ -115,7 +115,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newKey(Key p, int index) {
+    public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newKey(Key<UJO,VALUE> p, int index) {
         return Property.of(p.getName(), p.getType(), p.getDefault(), index, true);
     }
 
@@ -155,7 +155,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
      */
     @SuppressWarnings("unchecked")
     @Deprecated
-    public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newProperty(Key p, int index) {
+    public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newProperty(final Key<UJO,VALUE> p, int index) {
         return Property.of(p.getName(), p.getType(), p.getDefault(), index, true);
     }
 
