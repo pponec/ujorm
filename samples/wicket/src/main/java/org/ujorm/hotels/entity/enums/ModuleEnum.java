@@ -28,9 +28,7 @@ public enum ModuleEnum implements StringWrapper {
     /** Customize the application */
     APPLICATION("ap"),
     /** The roles of the user */
-    ROLE("ro"),
-    /** System mode */
-    SYSTEM("sy");
+    ROLE("ro");
 
     /** Short identifier */
     private final String id;

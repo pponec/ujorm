@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014, Pavel Ponec
+ * Copyright 2013-2018, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public abstract class AbstractModuleParams<U extends AbstractModuleParams>
     }
 
     /** Load default values into database */
-    @PostConstruct
+    @PostConstruct 
     public void init() throws IllegalStateException {
         if (paramService != null) try {
             paramService.init((ModuleParams) this);

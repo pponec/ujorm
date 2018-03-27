@@ -107,22 +107,43 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
         addChangeBehavior(result);
         return result;
     }
-    
+
     /** Create new DropDownChoice component */
-    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final E defaultValue) {
-        return createSearchChoice(id, Model.of(defaultValue));
+    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final E defaultItem) {
+        return createSearchChoice(id, Model.of(defaultItem));
     }
-    
+
     /** Create new DropDownChoice component */
-    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final IModel<E> defaultValueModel) {
-        final E defaultValue = defaultValueModel.getObject();
+    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final E offerItem, final boolean required) {
+        return createSearchChoice(id, Model.of(offerItem), required);
+    }
+
+        /** Create new DropDownChoice component */
+    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final IModel<E> defaultItemModel) {
+         return createSearchChoice(id, defaultItemModel, false);
+    }
+
+    /**
+     * Create new DropDownChoice component
+     * @param <E> Enum type
+     * @param id Component ID
+     * @param offerItem OfferItem to make offer
+     * @param required Optionally choice have got a empty default value.
+     * @return New GUI component
+     */
+    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final IModel<E> offerItem, final boolean required) {
+        final E defaultValue = offerItem.getObject();
         Assert.notNull(defaultValue, "defaultValue");
         final DropDownChoice<E> result = new DropDownChoice<E>
            ( id
            , Arrays.asList(defaultValue.getDeclaringClass().getEnumConstants())
-           , new ChoiceRendererNullable<>(this));
-        
-        result.setModel(defaultValueModel);
+           , new ChoiceRendererNullable<>(this))
+           ;
+        if (!required) {
+            offerItem.setObject(null);
+        }
+        result.setRequired(required);
+        result.setModel(offerItem);
         result.setOutputMarkupId(true);
         addChangeBehavior(result);
         return result;
@@ -156,7 +177,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
         field.add(createAjaxUpdateingBehavior("onchange"));
         field.add(createAjaxUpdateingBehavior("onkeyup"));
     }
-    
+
     /** Create new AjaxFormComponentUpdatingBehavior with delay 300 ms. */
     protected AjaxFormComponentUpdatingBehavior createAjaxUpdateingBehaviorWithDelay() {
         return new AjaxFormComponentUpdatingBehavior("keyup") {
@@ -174,7 +195,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
             }
         };
     }
-    
+
     /** Create new AjaxFormComponentUpdatingBehavior with no delay. */
     protected AjaxEventBehavior createAjaxUpdateingBehavior(final String jsEvent) {
         return new AjaxFormComponentUpdatingBehavior(jsEvent) {

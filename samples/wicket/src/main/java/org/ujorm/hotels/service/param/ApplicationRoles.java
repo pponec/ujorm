@@ -86,5 +86,5 @@ public class ApplicationRoles<U extends ApplicationRoles> extends AbstractModule
         final Boolean result = getService();
         return result != null && result;
     }
-    
+
 }

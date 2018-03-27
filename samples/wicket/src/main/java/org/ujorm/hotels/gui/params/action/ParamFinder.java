@@ -1,6 +1,6 @@
 package org.ujorm.hotels.gui.params.action;
 /*
- * Copyright 2014, Pavel Ponec
+ * Copyright 2014-2018, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@ package org.ujorm.hotels.gui.params.action;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.hotels.entity.ParamValue;
-import static org.ujorm.tools.Check.hasLength;
+import org.ujorm.hotels.entity.enums.ModuleEnum;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.component.toolbar.AbstractToolbar;
+import static org.ujorm.tools.Check.hasLength;
 
 /**
  * The finder component
@@ -34,7 +36,9 @@ public final class ParamFinder<U extends ParamValue> extends AbstractToolbar<U> 
     /** Default criterion */
     public static final Criterion<ParamValue> defaultCriterion = ParamValue.ID.forAll();
 
-    /** searchHotel */
+    /** Search parameter */
+    private DropDownChoice<ModuleEnum> searchModule;
+    /** Search parameter */
     private TextField searchParam;
 
     public ParamFinder(String id) {
@@ -42,6 +46,7 @@ public final class ParamFinder<U extends ParamValue> extends AbstractToolbar<U> 
 
         final Form form = new Form("form");
         this.add(form);
+        form.add(searchModule = createSearchChoice("searchModule", ModuleEnum.APPLICATION, false));
         form.add(searchParam = createSearchFiled("searchParam"));
 
         buildCriterion();
@@ -52,14 +57,20 @@ public final class ParamFinder<U extends ParamValue> extends AbstractToolbar<U> 
      */
     @Override
     protected void buildCriterion() {
-        Criterion<ParamValue> result = defaultCriterion;
-        String value = searchParam.getValue();
-        if (hasLength(value)) {
-            result = result.and(ParamValue.KEY_NAME$.where
-                   ( Operator.CONTAINS_CASE_INSENSITIVE
-                   , value));
-        }
-        getCriterion().setObject(result.cast());
+        final ModuleEnum module = searchModule.getModelObject();
+        final String value = searchParam.getValue();
+        final Criterion<ParamValue> crn1, crn2, crn3, crn4;
+
+        crn1 = defaultCriterion;
+        crn2 = module != null
+             ? ParamValue.KEY_MODULE$.whereEq(module)
+             : ParamValue.KEY_MODULE$.forAll();
+        crn3 = hasLength(value)
+             ? ParamValue.KEY_NAME$.where(Operator.CONTAINS_CASE_INSENSITIVE, value)
+             : ParamValue.KEY_NAME$.forAll();
+        crn4 = crn1.and(crn2).and(crn3);
+
+        getCriterion().setObject(crn4.cast());
     }
 
     /** Default action name is {@link CommonActions#FILTER} */

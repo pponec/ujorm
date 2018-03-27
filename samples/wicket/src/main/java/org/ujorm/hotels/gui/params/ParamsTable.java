@@ -27,12 +27,12 @@ import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.gui.params.action.ParamFinder;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.ParamService;
+import org.ujorm.hotels.service.param.ApplicationRoles;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.UjoEvent;
-import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import org.ujorm.wicket.component.grid.CommonAction;
 import org.ujorm.wicket.component.grid.ListDataProvider;
-
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 
 /**
  * ParamValue Panel
@@ -43,10 +43,13 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
     @SpringBean private AuthService authService;
     @SpringBean(name=ParamService.CACHED)
     private ParamService paramService;
-
     private ListDataProvider<U> columns;
     private ParamFinder<U> toolbar = new ParamFinder("paramFinder");
     private ParamsEditor editDialog;
+
+    /** Use the service to calling a PostConstruct method */
+    @SpringBean
+    protected ApplicationRoles appRoles;
 
     public ParamsTable(String id) {
         super(id);

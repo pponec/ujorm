@@ -30,7 +30,7 @@ import org.ujorm.hotels.config.SpringContext;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.ParamService;
-import org.ujorm.hotels.service.param.TestParams;
+import org.ujorm.hotels.service.param.ApplicationParams;
 import static org.junit.Assert.*;
 
 /**
@@ -44,10 +44,10 @@ public class ModuleParamsImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleParamsImplTest.class);
 
     @Inject
-    private TestParams systemParams;
+    private ApplicationParams appParams;
     @Inject
     @Named(ParamService.CACHED)
-    private ParamService paramService;;
+    private ParamService paramService;
     @Inject
     private AuthService authService;
     /** Wicket tester  */
@@ -62,7 +62,7 @@ public class ModuleParamsImplTest {
     @Test
     public void testReadValue() {
         LOGGER.info("testReadValue");
-        assertEquals(TestParams.TEST1.getDefault(), systemParams.getTest1());
+        assertEquals(ApplicationParams.TEST1.getDefault(), appParams.getTest1());
         //
         boolean logged = authService.authenticate(getLoggedUser());
         assertEquals(true, logged);
