@@ -40,6 +40,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.validation.IValidator;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
@@ -200,9 +201,18 @@ public class Field<T> extends GenericPanel<T> {
         return this;
     }
 
+    /** Add a CSS style according the Key */
+    public Field<T> addCssStyle() {
+        final Key localKey = key.getFirstKey();
+        final Key css = localKey.isComposite()
+                ? ((CompositeKey)localKey).getLastKey()
+                : localKey;
+        return addCssStyle(css);
+    }
+
     /** Add a CSS style to the current field */
-    public Field<T> addCssStyle(@Nonnull final String cssStyle) {
-        add(new CssAppender(cssStyle));
+    public Field<T> addCssStyle(@Nonnull final CharSequence cssStyle) {
+        add(new CssAppender(cssStyle.toString()));
         return this;
     }
 
