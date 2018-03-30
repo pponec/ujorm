@@ -55,7 +55,6 @@ import org.ujorm.wicket.component.form.fields.EnumField;
 import org.ujorm.wicket.component.form.fields.Field;
 import org.ujorm.wicket.component.form.fields.GridField;
 import org.ujorm.wicket.component.form.fields.LocalDateField;
-import org.ujorm.wicket.component.form.fields.LocalDateTimeField;
 import org.ujorm.wicket.component.form.fields.OfferField;
 import org.ujorm.wicket.component.form.fields.PasswordField;
 import org.ujorm.wicket.component.form.fields.TextAreaField;
@@ -146,7 +145,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         } else if (key.isTypeOf(java.time.LocalDate.class)) {
             field = new LocalDateField(newChildId(), key, null);
         } else if (key.isTypeOf(java.time.LocalDateTime.class)) {
-            field = new LocalDateTimeField(newChildId(), key, null); // TODO DateTime field
+            field = new Field(newChildId(), key, null); // The common field
+            //field = new LocalDateTimeField(newChildId(), key, null); // TODO DateTime field
         } else if (key.isTypeOf(java.sql.Date.class)) {
             field = new DateField(newChildId(), key, null);
         } else if (key.isTypeOf(java.util.Date.class)) {
