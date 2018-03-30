@@ -564,7 +564,7 @@ public class Session implements Closeable {
      * @param bo Object to update
      * @param original A optiona object for Parameter Comparison
      * @param required Required result expected the one row modified exactly,
-     * else method throws an {@link IllegalStateException} exception.
+     * else method throws an {@link IllegalStateException} exception. The count value {@code -1} is ignored.
      * @return The row count.
      * @see OrmUjo#readChangedProperties(boolean)
      */
@@ -582,7 +582,7 @@ public class Session implements Closeable {
         }
         final int result =  update(bo, crn);
         final int expectedResult = 1;
-        if (result != expectedResult && Check.firstItem(OptionEnum.REQUIRED, required)) {
+        if (result >= 0 && result != expectedResult && Check.firstItem(OptionEnum.REQUIRED, required)) {
             final String msg = MsgFormatter.format("The method expects {} modified row,"
                 + " but the real count is {} for the condition: {}"
                 , expectedResult
@@ -601,7 +601,7 @@ public class Session implements Closeable {
      * @param required Required result expected the one row modified exactly,
      * else method throws an {@link IllegalStateException} exception.
      * @see OrmUjo#readChangedProperties(boolean)
-     * @return The row count.
+     * @return The row count where value -1  means: No changed column to update
      */
     public <U extends OrmUjo> int updateSafely
         ( @Nonnull final Consumer<U> batch
@@ -627,7 +627,7 @@ public class Session implements Closeable {
      * The method cleans all flags of modified attributes.
      * <br>Warning: method does affect to parent objects, see the {@link MetaParams#INHERITANCE_MODE} for more information.
      * @see OrmUjo#readChangedProperties(boolean)
-     * @return The row count.
+     * @return The row count where value -1  means: No changed column to update
      */
     public <U extends OrmUjo> int update(@Nonnull U bo, @Nonnull Criterion<U> criterion) {
         return update(bo, criterion, false);
@@ -636,7 +636,7 @@ public class Session implements Closeable {
     /** Database Batch UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} along a criterion.
      * The method cleans all flags of modified attributes.
      * @see OrmUjo#readChangedProperties(boolean)
-     * @return The row count.
+     * @return The row count where value -1  means: No changed column to update
      */
     private <U extends OrmUjo> int update(@Nonnull final U bo, @Nonnull final Criterion<U> criterion, boolean singleObject) {
         Assert.notNull(bo);
@@ -655,7 +655,7 @@ public class Session implements Closeable {
             List<MetaColumn> changedColumns = getOrmColumns(bo.readChangedProperties(true));
             if (changedColumns.isEmpty()) {
                 LOGGER.log(UjoLogger.WARN, "No changed column to update {}", bo);
-                return result;
+                return -1;
             }
             final CriterionDecoder decoder = new CriterionDecoder(criterion, table);
             sql = db.getDialect().printUpdate(changedColumns, decoder, out(64)).toString();
