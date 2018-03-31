@@ -580,7 +580,7 @@ public class Session implements Closeable {
                 crn = crn.and(key.whereEq(key.of(original)));
             }
         }
-        final int result =  update(bo, crn);
+        final int result = update(bo, crn);
         final int expectedResult = 1;
         if (result >= 0 && result != expectedResult && Check.firstItem(OptionEnum.REQUIRED, required)) {
             final String msg = MsgFormatter.format("The method expects {} modified row,"
