@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Pavel Ponec
+ * Copyright 2013-2018 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.ujorm.wicket;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
@@ -43,6 +44,7 @@ public class UjoEvent<U> {
 
     final private String action;
     final private boolean showDialog;
+    @Nullable
     final private U domain;
     final private AjaxRequestTarget target;
 
@@ -61,7 +63,7 @@ public class UjoEvent<U> {
      * @param ujo Optional data context
      * @param target target
      */
-    public UjoEvent(@Nonnull String action, @Nonnull U ujo, @Nonnull AjaxRequestTarget target) {
+    public UjoEvent(@Nonnull String action, @Nullable U ujo, @Nonnull AjaxRequestTarget target) {
         this(action, true, ujo, target);
     }
 
@@ -72,7 +74,7 @@ public class UjoEvent<U> {
      * @param ujo Optional data context type of Ujo
      * @param target Target
      */
-    public UjoEvent(@Nonnull final String action, boolean dialogRequest, @Nonnull U ujo, @Nonnull AjaxRequestTarget target) {
+    public UjoEvent(@Nonnull final String action, boolean dialogRequest, @Nullable U ujo, @Nonnull AjaxRequestTarget target) {
         Assert.notNull(action, "action");
         this.action = action;
         this.domain = ujo;
@@ -81,7 +83,7 @@ public class UjoEvent<U> {
     }
 
     /** Get the ujo domain object */
-    @Nonnull
+    @Nullable
     public U getDomain() {
         return domain;
     }
