@@ -130,13 +130,13 @@ public class UnsignedShortTest {
         System.out.println("testPlusMinus");
         final UnsignedShort value20 = UnsignedShort.of(20);
 
-        assertEquals(UnsignedShort.PERS_ZERO +  0, value20.minus(30).readPersistentValue().intValue());
-        assertEquals(UnsignedShort.PERS_ZERO +  0, value20.minus(20).readPersistentValue().intValue());
-        assertEquals(UnsignedShort.PERS_ZERO + 10, value20.minus(10).readPersistentValue().intValue());
-        assertEquals(UnsignedShort.PERS_ZERO + 20, value20.minus(0).readPersistentValue().intValue());
-        assertEquals(UnsignedShort.PERS_ZERO + 20, value20.plus( 0).readPersistentValue().intValue());
-        assertEquals(UnsignedShort.PERS_ZERO + 30, value20.plus(10).readPersistentValue().intValue());
-        assertEquals(UnsignedShort.PERS_ZERO + 40, value20.plus(20).readPersistentValue().intValue());
+        assertEquals(UnsignedShort.DB_ZERO +  0, value20.minus(30).readPersistentValue().intValue());
+        assertEquals(UnsignedShort.DB_ZERO +  0, value20.minus(20).readPersistentValue().intValue());
+        assertEquals(UnsignedShort.DB_ZERO + 10, value20.minus(10).readPersistentValue().intValue());
+        assertEquals(UnsignedShort.DB_ZERO + 20, value20.minus(0).readPersistentValue().intValue());
+        assertEquals(UnsignedShort.DB_ZERO + 20, value20.plus( 0).readPersistentValue().intValue());
+        assertEquals(UnsignedShort.DB_ZERO + 30, value20.plus(10).readPersistentValue().intValue());
+        assertEquals(UnsignedShort.DB_ZERO + 40, value20.plus(20).readPersistentValue().intValue());
         assertEquals(Short.MAX_VALUE, value20.plus(UnsignedShort.MAX_VALUE).readPersistentValue().intValue());
     }
 

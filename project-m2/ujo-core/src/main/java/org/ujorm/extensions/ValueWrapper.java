@@ -25,7 +25,7 @@ import org.ujorm.tools.MsgFormatter;
 /**
  * A generic interface to mapping any Java Type to any JDBC type.
  * A default constructor with one argument type of {@code DbType} is required and
- * the one public static constant {@code $PERSISTENT_DEFAULT_VALUE} with non-null is required for non-null value - for a Technical issues only).
+ * the one public static constant {@code _PERSISTENT_DEFAULT_VALUE} with non-null is required for non-null value - for a Technical issues only).
  *
  * <h3>How to get a persistent type:</h3>
  * <code pre="code">

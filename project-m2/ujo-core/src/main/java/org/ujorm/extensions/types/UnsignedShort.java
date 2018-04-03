@@ -32,20 +32,20 @@ public class UnsignedShort extends AbstractValueWrapper<Short, Integer> {
     public static final int MAX_VALUE = Short.MAX_VALUE - Short.MIN_VALUE;
 
     /** Persistent value 0 */
-    protected static final Short PERS_ZERO = Short.MIN_VALUE;
+    protected static final Short DB_ZERO = Short.MIN_VALUE;
     /** Persistent value 1 */
-    protected static final Short PERS_ONE = (short) (PERS_ZERO + 1);
+    protected static final Short DB_ONE = (short) (DB_ZERO + 1);
     /** Persistent value 2 */
-    protected static final Short PERS_TWO = (short) (PERS_ZERO + 2);
+    protected static final Short DB_TWO = (short) (DB_ZERO + 2);
     /** Persistent value 3 */
-    protected static final Short PERS_THREE = (short) (PERS_ZERO + 3);
+    protected static final Short DB_THREE = (short) (DB_ZERO + 3);
 
     /** Default persistent value a request of the {@link interface} */
-    public static final Short _PERSISTENT_DEFAULT_VALUE = PERS_ZERO;
+    public static final Short _PERSISTENT_DEFAULT_VALUE = DB_ZERO;
 
     /** Public constructor for a <stong>persistent</stong> value where the type {@link Object} is required. */
     public UnsignedShort(@Nonnull final Short dbValue) {
-        super(toApplValue((Short)dbValue));
+        super(toApplValue(dbValue));
     }
 
     /** Protected constructor */
@@ -55,7 +55,7 @@ public class UnsignedShort extends AbstractValueWrapper<Short, Integer> {
 
     /** Value converter from a {@code dbType} to an {@code appType} */
     private static int toApplValue(final Short dbValue) {
-        return dbValue - PERS_ZERO;
+        return dbValue - DB_ZERO;
     }
 
     /** Value of of border is trimmed. */
@@ -68,19 +68,19 @@ public class UnsignedShort extends AbstractValueWrapper<Short, Integer> {
         } else
         if (value < MIN_VALUE) {
             value = MIN_VALUE;
-            Assert.isTrue(adjustValueToRange(), "Value {} is out the limit {}.", value, MAX_VALUE);
+            Assert.isTrue(adjustValueToRange(), "Value {} is out the limit {}.", value, MIN_VALUE);
         }
         switch (value) {
             case 0:
-                return PERS_ZERO;
+                return DB_ZERO;
             case 1:
-                return PERS_ONE;
+                return DB_ONE;
             case 2:
-                return PERS_TWO;
+                return DB_TWO;
             case 3:
-                return PERS_THREE;
+                return DB_THREE;
             default:
-                return (short) (PERS_ZERO + value);
+                return (short) (DB_ZERO + value);
         }
     }
 
