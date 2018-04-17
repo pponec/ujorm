@@ -399,6 +399,12 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return MsgFormatter.format("{}.{}", schema != null ? schema : "public", getName());
     }
 
+    /** Returns schema + table */
+    @Override @Nonnull
+    public String toString() {
+        return getFullName();
+    }
+
     /** Create a new collection of the table indexes.
      * @return Collection of the MetaIndex objects */
     public Collection<MetaIndex> getIndexCollection() {

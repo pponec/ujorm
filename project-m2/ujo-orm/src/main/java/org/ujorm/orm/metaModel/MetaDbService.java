@@ -50,6 +50,8 @@ public class MetaDbService {
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaDbService.class);
+    /** Default log level */
+    private static final Level INFO = UjoLogger.INFO;
     /** Debug mode */
     private static final boolean DEBUG_MODE = false;
     /** Meta Database from constructor */
@@ -170,17 +172,21 @@ public class MetaDbService {
 
         // Check DB schemas:
         try (ResultSet schemas = dbModel.getSchemas()) {
+            final Level levelTrace = UjoLogger.TRACE;
             while(schemas.next()) {
-                final String schemaUpper = toUpperCase(schemas.getString(isCatalog ? 2 : 1));
-                final Level levelTrace = UjoLogger.TRACE;
+                final String schemaOrig = schemas.getString(isCatalog ? 2 : 1);
+                final String schemaUpper = toUpperCase(schemaOrig);
                 if (LOGGER.isLoggable(levelTrace)) {
-                    LOGGER.log(levelTrace, "Schema: {}.{} Catalog: {}"
+                    LOGGER.log(levelTrace, "DB schema: {}.{} by catalog: {}"
                             , schemas.getString(2)
                             , schemas.getString(1)
                             , isCatalog);
                 }
                 if (schemaUpper != null) {
-                   requiredSchemas.remove(schemaUpper);
+                    if (requiredSchemas.containsKey(schemaUpper)) {
+                        LOGGER.log(levelTrace, "The db schema '{}' already exists", schemaOrig);
+                        requiredSchemas.remove(schemaUpper);
+                    }
                 }
             }
         }
@@ -198,13 +204,11 @@ public class MetaDbService {
     }
 
     private void logColumn(final ResultSet columns) throws SQLException {
-        final String msg = "DB column: "
-                + columns.getString("TABLE_CAT") + "."
-                + columns.getString("TABLE_SCHEM") + "."
-                + columns.getString("TABLE_NAME") + "."
-                + columns.getString("COLUMN_NAME")
-                ;
-        LOGGER.log(INFO, msg);
+        LOGGER.log(INFO, "DB column: {}.{}.{}.{}"
+                , columns.getString("TABLE_CAT")
+                , columns.getString("TABLE_SCHEM")
+                , columns.getString("TABLE_NAME")
+                , columns.getString("COLUMN_NAME"));
     }
 
     /** Returns a native database identifirer. */
@@ -243,7 +247,7 @@ public class MetaDbService {
                 exception = e;
             }
 
-            if (exception!=null) {
+            if (exception != null) {
                 switch (ORM2DLL_POLICY.of(db)) {
                     case VALIDATE:
                     case WARNING:
@@ -572,7 +576,7 @@ public class MetaDbService {
                 }
             }
         } else {
-            LOGGER.log(INFO, "New DB table: {}", MetaTable.NAME.of(table));
+            LOGGER.log(INFO, "New DB table: {}", table);
             newTables.add(table);
         }
         return tableExists;
