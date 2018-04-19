@@ -41,6 +41,7 @@ import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.MsgFormatter;
 import static org.ujorm.criterion.Operator.*;
+import org.ujorm.orm.ao.CheckReport;
 import static org.ujorm.orm.template.AliasTable.Build.*;
 
 /**
@@ -147,7 +148,7 @@ public class SampleORM {
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.TYPE_SERVICE, TypeServiceForOlderJdbc.class); // If the JDBC is older than 4.2
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
-            params.setQuotedSqlNames(false);
+            params.set(MetaParams.QUOTATION_POLICY, CheckReport.EXCEPTION);
             params.set(MetaParams.INITIALIZATION_BATCH, new InitializationBatch() {
                 @Override public void run(Session session) throws Exception {
                     if (!session.exists(Customer.class)) {
@@ -435,7 +436,7 @@ public class SampleORM {
     public void useSelectWithNativeSQL() {
         // Some dialects must have got special SQL statements:
         if (session.hasDialect(ViewOrder.class, DerbyDialect.class, FirebirdDialect.class)
-        ||  session.getParameters().isQuotedSqlNames()){ // Columns must be quoted
+        ||  session.getParameters().isQuotedSqlNames()) { // Columns must not be quoted
             return;
         }
 
@@ -735,7 +736,7 @@ public class SampleORM {
 
         // Special using without arguments:
         if (session.getParameters().isQuotedSqlNames()) {
-            return;  // Columns must be quoted
+            return;  // Columns must not be quoted
         }
 
         crn = Order.STATE.forSql("ord_order_alias.id > 0")
@@ -935,16 +936,20 @@ public class SampleORM {
     public void useUpdateSafely() {
         Order order = session.load(Order.class, anyOrderId);
         Order original = order.cloneUjo();
+        
         order.setCreated(LocalDateTime.now());
-        order.setNote("Test order");
-
         int count = session.updateSafely(order, original);
         session.commit();
         Assert.isTrue(count == 1);
 
+        order.setCreated(LocalDateTime.now());
         count = session.updateSafely(order, original);
         session.commit();
         Assert.isTrue(count == 0);
+        
+        count = session.updateSafely(order, original);
+        session.commit();
+        Assert.isTrue(count == -1); // No column changed
     }
 
     /** Using the database UPDATE */

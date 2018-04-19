@@ -78,6 +78,9 @@ public final class Order extends OrmTable<Order> {
     /** Customer */
     @Column(name="fk_customer")
     public static final Key<Order, Customer> CUSTOMER = f.newKey();
+    /** Customer with FK type of String */
+    @Column(name="fk_currency", mandatory = false)
+    public static final Key<Order, Currency> CURENCY = f.newKey();
     /** New column*/
     @Column(mandatory=true) public static final Key<Order, Integer> NEW_COLUMN = f.newKeyDefault(777);
 

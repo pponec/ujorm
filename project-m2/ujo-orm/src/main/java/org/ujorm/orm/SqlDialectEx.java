@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
+import org.ujorm.orm.ao.QuoteEnum;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaIndex;
 import org.ujorm.orm.metaModel.MetaTable;
@@ -29,6 +30,7 @@ import org.ujorm.tools.Check;
  * Extended SQL dialect class.
  * @author Effectiva Solutions company
  */
+@Deprecated
 @SuppressWarnings("unchecked")
 public class SqlDialectEx {
 
@@ -103,7 +105,7 @@ public class SqlDialectEx {
         String separator = "";
         for (MetaColumn column : columns) {
             out.append(separator);
-            dialect.printQuotedName(column.getName(), out);
+            dialect.printColumnName(column, out);
             separator = ",";
         }
         out.append(")");
@@ -118,7 +120,7 @@ public class SqlDialectEx {
         out.append(" PRIMARY KEY ");
         String pkOverColumn = buildPrimaryKeyOverColumn(table, columns);
         out.append("(");
-        dialect.printQuotedName(pkOverColumn, out);
+        dialect.printQuotedName(pkOverColumn, QuoteEnum.BY_CONFIG, out);
         out.append(")");
     }
 

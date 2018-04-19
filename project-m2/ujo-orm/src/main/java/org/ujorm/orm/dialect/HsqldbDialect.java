@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Savepoint;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.SqlDialect;
+import org.ujorm.orm.ao.QuoteEnum;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaTable;
 
@@ -49,7 +50,7 @@ public class HsqldbDialect extends SqlDialect {
     @Override
     public Appendable printCreateSchema(String schema, Appendable out) throws IOException {
         out.append("CREATE SCHEMA ");
-        printQuotedName(schema, out);
+        printQuotedName(schema, QuoteEnum.BY_CONFIG, out);
         out.append(" AUTHORIZATION DBA");
         return out;
     }

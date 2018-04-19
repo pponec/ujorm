@@ -21,6 +21,7 @@ import java.util.List;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.TableWrapper;
+import org.ujorm.orm.ao.QuoteEnum;
 import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
@@ -65,7 +66,7 @@ public class MySqlDialect extends SqlDialect {
         ) throws IOException
     {
         out.append("DELETE ");
-        printQuotedName(decoder.getBaseTable().getAlias(), out);
+        printQuotedName(decoder.getBaseTable().getAlias(), QuoteEnum.BY_CONFIG, out);
         out.append(" FROM ");
 
         final TableWrapper[] tables = decoder.getTablesSorted();
@@ -101,7 +102,7 @@ public class MySqlDialect extends SqlDialect {
         for (int i=0; i<changedColumns.size(); i++) {
             MetaColumn ormColumn = changedColumns.get(i);
             Assert.isFalse(ormColumn.isPrimaryKey(), "Primary key can not be changed: ", ormColumn);
-            
+
             out.append(i==0 ? "" :  ", ");
             out.append(ormColumn.getColumnAlias());
             out.append("=?");
@@ -117,7 +118,7 @@ public class MySqlDialect extends SqlDialect {
         String where = decoder.getWhere();
         if (tables.length==1) {
             String fullTableName = printFullTableName(decoder.getBaseTable(), new StringBuilder(64)).toString();
-            String tableAlias = printQuotedName(decoder.getBaseTable().getAlias(), new StringBuilder(64)).toString();
+            String tableAlias = printQuotedName(decoder.getBaseTable().getAlias(), QuoteEnum.BY_CONFIG, new StringBuilder(64)).toString();
             where = where.replace(tableAlias + '.', fullTableName + '.');
         }
         out.append(where);
@@ -193,12 +194,12 @@ public class MySqlDialect extends SqlDialect {
 
         if (column.isPrimaryKey()) {
             String pk = " PRIMARY KEY"; // Due:  Multiple primary key defined.
-            String statement = printColumnDeclaration(column, null, new StringBuilder()).toString();
+            String statement = printColumnDeclaration(column, new StringBuilder()).toString();
             out.append(statement.replaceAll(pk, " "));
         } else if(column.isForeignKey()) {
             printFKColumnsDeclaration(column, out);
         } else {
-            printColumnDeclaration(column, null, out);
+            printColumnDeclaration(column, out);
         }
 
         out.append(" COMMENT '");
@@ -208,14 +209,13 @@ public class MySqlDialect extends SqlDialect {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns a quote character
+     * @param first Value {@code true} means the FIRST character and value {@code false} means the LAST one.
+     * @return
      */
     @Override
-    public Appendable printQuotedNameAlways(CharSequence name, Appendable sql) throws IOException {
-        sql.append('`'); // quotation start character based on SQL dialect
-        sql.append(name);
-        sql.append('`'); // quotation end character based on SQL dialect
-        return sql;
+    protected char getQuoteChar(final boolean first) {
+        return '`';
     }
 
     /** Create a SQL script for the NEXT SEQUENCE from a native database sequencer

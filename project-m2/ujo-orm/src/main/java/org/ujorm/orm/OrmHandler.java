@@ -243,9 +243,6 @@ public class OrmHandler implements OrmHandlerProvider {
             }
         }
 
-        // Lock the meta-model:
-        databases.lock();
-
         // Log the meta-model:
         final Level level = MetaParams.LOG_METAMODEL_INFO.of(params)
             ? UjoLogger.INFO
@@ -288,6 +285,9 @@ public class OrmHandler implements OrmHandlerProvider {
                 }
             }
         }
+        
+        // Lock the meta-model:
+        databases.lock();        
     }
 
     /** Do the handler have a read-only state? */

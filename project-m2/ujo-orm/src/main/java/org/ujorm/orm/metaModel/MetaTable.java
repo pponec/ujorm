@@ -42,6 +42,7 @@ import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.annot.View;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
+import org.ujorm.orm.ao.QuoteEnum;
 import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.MsgFormatter;
@@ -67,6 +68,8 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     public static final Key<MetaTable,String> ID = fa.newKey("id", Table.NULL);
     /** DB table name */
     public static final Key<MetaTable,String> NAME = fa.newKey("name", Table.NULL);
+    /** Quoting request for table */
+    public static final Key<MetaTable,QuoteEnum> QUOTED = fa.newKey("quoted", QuoteEnum.BY_CONFIG);
     /** The unique table/view name over all Databases in scope one OrmHandler */
     public static final Key<MetaTable,String> ALIAS = fa.newKey("alias", Table.NULL);
     /** Name of table schema. */
@@ -90,7 +93,8 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Table Columns (no relations) */
     public static final ListKey<MetaTable,MetaColumn> COLUMNS = fa.newListKey("column");
     /** Table relations to many */
-    public static final ListKey<MetaTable,MetaRelation2Many> RELATIONS = fa.newListKey("relation2m");
+    public static final ListKey<MetaTable,MetaRelation2Many> RELATIONS = fa.newListKey("relation2m");    
+    
     /** SQL SELECT model. Note: this key must not be persistent due a blank spaces in key names! */
     @Transient
     public static final Key<MetaTable,MetaSelect> SELECT_MODEL = fa.newKey("selectModel");
@@ -146,6 +150,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
             changeDefault(this, SELECT, SELECT.of(parTable));
             changeDefault(this, VIEW  , VIEW.of(parTable));
             changeDefault(this, COMMENT, COMMENT.of(parTable));
+            changeDefault(this, QUOTED, QUOTED.of(parTable));
         }
 
         if (VIEW.of(this)) {
@@ -169,6 +174,8 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
             if (table1!=null) changeDefault(this, READ_ONLY, table1.readOnly());
             if (table1!=null) changeDefault(this, ORM2DLL_POLICY, table1.orm2ddlPolicy());
             if (table1!=null) changeDefault(this, SEQUENCE,table1.sequence());
+            if (table1!=null) changeDefault(this, QUOTED, table1.quoted());
+            
             if (table2!=null) changeDefault(this, NAME  , table2.name());
             if (table2!=null) changeDefault(this, NAME  , table2.value());
             if (table2!=null) changeDefault(this, ALIAS , table2.alias());
@@ -176,6 +183,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
             if (table2!=null) changeDefault(this, READ_ONLY, table2.readOnly());
             if (table2!=null) changeDefault(this, ORM2DLL_POLICY, table2.orm2ddlPolicy());
             if (table2!=null) changeDefault(this, SEQUENCE,table2.sequence());
+            if (table2!=null) changeDefault(this, QUOTED, table2.quoted());
         }
 
         changeDefault(this, SCHEMA, MetaDatabase.SCHEMA.of(database));
@@ -195,7 +203,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         if (VIEW.of(this) && !SELECT.isDefault(this)) {
             SELECT_MODEL.setValue(this, new MetaSelect(this));
         }
-
+        
         // -----------------------------------------------
 
         MetaPKey dpk = new MetaPKey(this);
@@ -227,6 +235,21 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
                 }
             }
         }
+        
+        // Quoted table name by configuraton:
+        if (QUOTED.isDefault(this)) {
+            switch (dbHandler.getParameters().get(MetaParams.QUOTATION_POLICY)) {
+                case QUOTE_SQL_NAMES:
+                    QUOTED.setValue(this, QuoteEnum.YES);
+                    break;
+                case QUOTE_ONLY_SQL_KEYWORDS:
+                    QUOTED.setValue(this, QuoteEnum.BY_CONFIG);
+                    break;                
+                default:
+                    QUOTED.setValue(this, QuoteEnum.NO);
+                    break;                
+            }
+        }        
     }
 
     /** Returns all columns from the class  */
@@ -480,5 +503,16 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return alias != null
              ? new TableWrapperImpl(this, alias)
              : this ;
+    } 
+    
+    /** Quotation request */
+    public boolean isQuoted() {
+        switch (QUOTED.of(this)) {
+            case YES:
+                return true;
+            default:
+                return false;
+        }
     }
+        
 }

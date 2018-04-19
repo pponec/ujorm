@@ -81,7 +81,7 @@ final public class AliasKey {
     public ColumnWrapper getColumn(OrmHandler handler) {
         final MetaColumn column = handler.findColumnModel(key, true);
         return aliasFrom != null
-             ? new ColumnWrapperImpl(column, aliasFrom)
+             ? ColumnWrapper.forAlias(column, aliasFrom)
              : column;
     }
 

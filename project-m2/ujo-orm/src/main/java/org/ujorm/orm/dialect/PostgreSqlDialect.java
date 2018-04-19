@@ -86,7 +86,7 @@ public class PostgreSqlDialect extends SqlDialect {
         for (MetaColumn column : MetaIndex.COLUMNS.getList(index)) {
             if (!column.hasDefaultValue()) {
                 out.append(prefix);
-                printQuotedName(column.getName(), out);
+                printColumnName(column, out);
                 out.append(" IS NOT NULL");
                 prefix = " AND ";
             }

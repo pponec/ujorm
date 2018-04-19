@@ -461,24 +461,25 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Returns array of generic parameters
      * @param field Base field
-     * @param typeResult Value {@code true} means a key TYPE, other it is required key DOMAIN.
+     * @param valueType Argument {@code true} requires a VALUE class, other it is required DOMAIN class.
      * @return type
      * @throws IllegalArgumentException
      */
     @PackagePrivate
-    static Class getGenericClass(final Field field, final boolean typeResult) throws IllegalArgumentException {
+    static Class getGenericClass(final Field field, final boolean valueType) throws IllegalArgumentException {
         try {
             final ParameterizedType type = (ParameterizedType) field.getGenericType();
             final Type[] types = type.getActualTypeArguments();
-            final Type result = types[typeResult
-                    ? types.length - 1
-                    : 0];
+            final Type rawType = types[valueType ? types.length - 1 : 0];
+            final Type result = valueType && rawType instanceof ParameterizedType
+                    ? ((ParameterizedType)rawType).getRawType()
+                    : rawType;            
             return (result instanceof Class)
                     ? (Class) result
                     : Class.class;
         } catch (Exception e) {
-            LOGGER.log(UjoLogger.WARN, "The generic scan failed on the field '{}'", field.getName());
-            return typeResult
+            LOGGER.log(UjoLogger.WARN, "The generic scan failed on the field '{}'", field.getName(), e);
+            return valueType
                     ? Object.class
                     : Ujo.class;
         }

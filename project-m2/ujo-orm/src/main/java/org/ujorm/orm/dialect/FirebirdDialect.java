@@ -17,6 +17,7 @@ package org.ujorm.orm.dialect;
 
 import java.io.IOException;
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -68,7 +69,7 @@ public class FirebirdDialect extends org.ujorm.orm.SqlDialect {
         if (column.isForeignKey()) {
             printFKColumnsDeclaration(column, out);
         } else {
-            printColumnDeclaration(column, null, out);
+            printColumnDeclaration(column, out);
         }
 
         if (column.hasDefaultValue()) {
@@ -113,10 +114,12 @@ public class FirebirdDialect extends org.ujorm.orm.SqlDialect {
      * @return SQL with printed quoted name
      */
     @Override
-    protected Appendable printQuotedNameAlways(final CharSequence name, final Appendable sql) throws IOException {
+    protected Appendable printQuotedNameAlways
+        ( @Nonnull final CharSequence name
+        , @Nonnull final Appendable sql) throws IOException {
         //sql.append('"'); // quotation start character based on SQL dialect
         sql.append(name);
         //sql.append('"'); // quotation end character based on SQL dialect
         return sql;
-    }
+    } 
 }

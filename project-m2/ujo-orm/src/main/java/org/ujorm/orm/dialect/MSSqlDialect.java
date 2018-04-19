@@ -33,6 +33,7 @@ import org.ujorm.orm.Query;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.UjoSequencer;
+import org.ujorm.orm.ao.QuoteEnum;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
@@ -78,7 +79,7 @@ public class MSSqlDialect extends SqlDialect {
     public Appendable printUpdate(List<MetaColumn> changedColumns, CriterionDecoder decoder, Appendable out) throws IOException {
         final MetaTable table = decoder.getBaseTable();
         out.append("UPDATE ");
-        printQuotedName(table.getAlias(), out);
+        printQuotedName(table.getAlias(), QuoteEnum.BY_CONFIG, out);
         out.append("\n\tSET ");
 
         for (int i = 0; i < changedColumns.size(); i++) {
@@ -86,7 +87,7 @@ public class MSSqlDialect extends SqlDialect {
             Assert.isFalse(ormColumn.isPrimaryKey(), "Primary key can not be changed: {}", ormColumn);
 
             out.append(i == 0 ? "" : ", ");
-            printQuotedName(ormColumn.getName(), out);
+            printColumnName(ormColumn, out);
             out.append("=?");
         }
         out.append("\n\tFROM ");
@@ -101,7 +102,7 @@ public class MSSqlDialect extends SqlDialect {
     public Appendable printDelete(CriterionDecoder decoder, Appendable out) throws IOException {
         final MetaTable table = decoder.getBaseTable();
         out.append("DELETE ");
-        printQuotedName(table.getAlias(), out);
+        printQuotedName(table.getAlias(), QuoteEnum.BY_CONFIG, out);
         out.append("\n\tFROM ");
         printTableAliasDefinition(decoder, out);
         out.append(" WHERE ");
@@ -140,9 +141,9 @@ public class MSSqlDialect extends SqlDialect {
                 for (int i = 0; i < column.getForeignColumns().size(); ++i) {
                     out.append(separator);
 
-                    printQuotedName(column.getTableAlias(), out);
+                    printQuotedName(column.getTableAlias(), QuoteEnum.BY_CONFIG, out);
                     out.append('.');
-                    printQuotedName(column.getForeignColumnName(i), out);
+                    printQuotedName(column.getForeignColumnName(i), QuoteEnum.BY_CONFIG, out);
 
                     out.append(" AS ");
                     printColumnUnderAlias(column, out);
@@ -408,12 +409,12 @@ public class MSSqlDialect extends SqlDialect {
 
         if (column.isPrimaryKey()) {
             String pk = " PRIMARY KEY"; // Due:  Multiple primary key defined.
-            String statement = printColumnDeclaration(column, null, new StringBuilder()).toString();
+            String statement = printColumnDeclaration(column, new StringBuilder()).toString();
             out.append(statement.replaceAll(pk, " "));
         } else if (column.isForeignKey()) {
             printFKColumnsDeclaration(column, out);
         } else {
-            printColumnDeclaration(column, null, out);
+            printColumnDeclaration(column, out);
         }
 
         out.append(" COMMENT '");
@@ -429,7 +430,7 @@ public class MSSqlDialect extends SqlDialect {
         out.append(schema);
         out.append("') ");
         out.append("BEGIN CREATE DATABASE ");
-        printQuotedName(schema, out);
+        printQuotedName(schema, QuoteEnum.BY_CONFIG, out);
         out.append(" END ");
         return out;
     }
@@ -448,12 +449,12 @@ public class MSSqlDialect extends SqlDialect {
             if (printSymbolSchema && table.isDefaultSchema()) {
                 out.append(DEFAULT_SCHEMA_SYMBOL);
             } else {
-                printQuotedName(tableSchema, out);
+                printQuotedName(tableSchema, QuoteEnum.BY_CONFIG, out);
             }
             out.append('.');
         }
         out.append("dbo.");
-        printQuotedName(tableName, out);
+        printQuotedName(tableName, QuoteEnum.BY_CONFIG, out);
         return out;
     }
 
@@ -473,7 +474,7 @@ public class MSSqlDialect extends SqlDialect {
         final MetaColumn pkType = new MetaColumn(db.getParams().getConverter(null));
         MetaColumn.DB_TYPE.setValue(pkType, DbType.BIGINT);
 
-        printQuotedName(getSeqTableModel().getTableName(), out);
+        printQuotedName(getSeqTableModel().getTableName(), QuoteEnum.BY_CONFIG, out);
         out.append ( ""
             + "\n\t( " + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
             + "\n\t, " + getQuotedName(getSeqTableModel().getSequence()) + SPACE + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
@@ -505,7 +506,7 @@ public class MSSqlDialect extends SqlDialect {
         if (column.isForeignKey()) {
             printFKColumnsDeclaration(column, out);
         } else {
-            printColumnDeclaration(column, null, out);
+            printColumnDeclaration(column, out);
         }
         if (column.hasDefaultValue()) {
             printDefaultValue(column, out);
@@ -568,13 +569,16 @@ public class MSSqlDialect extends SqlDialect {
     }
 
     @Override
-    public Appendable printColumnDeclaration(MetaColumn column, String aName, Appendable out) throws IOException {
+    public Appendable printColumnDeclaration(ColumnWrapper columnWrapper, Appendable out) throws IOException {
+        final MetaColumn column = columnWrapper.getModel();
         if (!MetaColumn.MAX_LENGTH.isDefault(column)) {
             //TODO : probably MAX_ALLOWED_SIZE is used to all types not only for BLOB
-            if ((column.getType().equals(Blob.class) || MetaColumn.DB_TYPE.of(column).equals(DbType.VARCHAR)) && (MetaColumn.MAX_LENGTH.of(column) > MSSQL_MAX_ALLOWED_SIZE)) {
-
-                String name = aName != null ? aName : MetaColumn.NAME.of(column);
-                printQuotedName(name, out);
+            if ((column.getType().equals(Blob.class)
+            || MetaColumn.DB_TYPE.of(column).equals(DbType.VARCHAR))
+            && MetaColumn.MAX_LENGTH.of(column) > MSSQL_MAX_ALLOWED_SIZE)
+            {
+                final String aName = columnWrapper.getName();
+                printColumnName(columnWrapper, out);
                 out.append(SPACE);
                 out.append(getColumnType(column));
 
@@ -594,7 +598,7 @@ public class MSSqlDialect extends SqlDialect {
             }
         }
 
-        return super.printColumnDeclaration(column, aName, out);
+        return super.printColumnDeclaration(columnWrapper, out);
     }
 
     /** Middle select with RowNumber for sorting */
@@ -624,14 +628,13 @@ public class MSSqlDialect extends SqlDialect {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns a quote character
+     * @param first Value {@code true} means the FIRST character and value {@code false} means the LAST one.
+     * @return
      */
     @Override
-    public Appendable printQuotedNameAlways(CharSequence name, Appendable sql) throws IOException {
-        sql.append('['); // quotation start character based on SQL dialect
-        sql.append(name);
-        sql.append(']'); // quotation end character based on SQL dialect
-        return sql;
+    protected char getQuoteChar(final boolean first) {
+        return first ? '[' : ']';
     }
 
     /** Print table alias definition */

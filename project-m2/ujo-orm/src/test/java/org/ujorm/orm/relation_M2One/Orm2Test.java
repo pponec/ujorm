@@ -114,7 +114,7 @@ public class Orm2Test extends TestCase {
             MetaParams params = new MetaParams();
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
             params.set(MetaParams.SEQUENCE_CACHE, 1);
-            params.set(MetaParams.CHECK_KEYWORDS, CheckReport.EXCEPTION);
+            params.set(MetaParams.QUOTATION_POLICY, CheckReport.EXCEPTION);
             handler.config(params);
         }
 
@@ -217,7 +217,7 @@ public class Orm2Test extends TestCase {
     public void useSelectViewOrders() {
         // Some dialects must have got special SQL statements:
         if (session.hasDialect(ViewOrder.class, DerbyDialect.class, FirebirdDialect.class)
-        ||  session.getParameters().isQuotedSqlNames()){ // Columns must be quoted
+        ||  session.getParameters().isQuotedSqlNames()) { // Columns must not be quoted
             return;
         }
 

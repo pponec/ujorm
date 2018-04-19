@@ -26,6 +26,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaIndex;
 import org.ujorm.orm.metaModel.MetaTable;
 import static org.ujorm.core.UjoTools.SPACE;
+import org.ujorm.orm.ColumnWrapper;
 
 /** Oracle (www.oracle.com/) release 9.0 */
 public class OracleDialect extends PostgreSqlDialect {
@@ -118,8 +119,7 @@ public class OracleDialect extends PostgreSqlDialect {
      */
     public Appendable printColumnDeclaration_2(MetaColumn column, String aName, Appendable out) throws IOException {
 
-        String name = aName!=null ? aName : column.getName();
-        printQuotedName(name, out);
+        printColumnName(aName != null ? ColumnWrapper.forName(column, aName) : column, out);
         out.append(SPACE);
         out.append(getColumnType(column));
 

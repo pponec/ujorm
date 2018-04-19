@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2016 Pavel Ponec
+ *  Copyright 2009-2018 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,6 +42,8 @@ import org.ujorm.criterion.TemplateValue;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
+import org.ujorm.orm.ao.CheckReport;
+import org.ujorm.orm.ao.QuoteEnum;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaIndex;
@@ -71,11 +74,13 @@ abstract public class SqlDialect {
     final private SeqTableModel pkTableModel = new SeqTableModel();
 
     /** The table key for a common sequence emulator. */
-    public static final String COMMON_SEQ_TABLE_KEY = "<ALL>";
+    protected static final String COMMON_SEQ_TABLE_KEY = "<ALL>";
     /** The default schema symbol */
-    public static final String DEFAULT_SCHEMA_SYMBOL = "~";
+    protected static final String DEFAULT_SCHEMA_SYMBOL = "~";
     /** The new line separator for SQL statements */
-    public static final String NEW_LINE_SEPARATOR = "\n\t";
+    protected static final String NEW_LINE_SEPARATOR = "\n\t";
+    /** The default quote character */
+    private static final char QUOTE_CHARACTER = '"';
 
     /** The ORM handler */
     protected OrmHandler ormHandler;
@@ -83,9 +88,8 @@ abstract public class SqlDialect {
     private SqlNameProvider nameProvider;
     /** Extended dialect */
     private SqlDialectEx extentedDialect;
-
-    /** Prints quoted name (identifier) to SQL */
-    private Boolean quoteRequest;
+    /** Quoting policy */
+    private CheckReport quotingPolicy;
 
     /** Set the OrmHandler - the method is for internal call only. */
     public void setHandler(@Nonnull final OrmHandler ormHandler) {
@@ -120,7 +124,7 @@ abstract public class SqlDialect {
     /** Print SQL 'CREATE SCHEMA' */
     public Appendable printCreateSchema(String schema, @Nonnull final Appendable out) throws IOException {
         out.append("CREATE SCHEMA IF NOT EXISTS ");
-        printQuotedName(schema, out);
+        printQuotedName(schema, QuoteEnum.BY_CONFIG, out);
         return out;
     }
 
@@ -128,7 +132,7 @@ abstract public class SqlDialect {
     @Deprecated
     public Appendable printDefaultSchema(String schema, @Nonnull final Appendable out) throws IOException {
         out.append("SET SCHEMA ");
-        printQuotedName(schema, out);
+        printQuotedName(schema, QuoteEnum.BY_CONFIG, out);
         return out;
     }
 
@@ -149,11 +153,11 @@ abstract public class SqlDialect {
             if (printSymbolSchema && table.isDefaultSchema()) {
                 out.append(DEFAULT_SCHEMA_SYMBOL);
             } else {
-                printQuotedName(tableSchema, out);
+                printQuotedName(tableSchema, table.get(MetaTable.QUOTED), out);
             }
             out.append('.');
         }
-        printQuotedName(tableName, out);
+        printQuotedName(tableName, table.get(MetaTable.QUOTED), out);
         return out;
     }
 
@@ -163,15 +167,15 @@ abstract public class SqlDialect {
         final String alias = table.getAlias();
         if (hasLength(alias)) {
             out.append(SPACE);
-            printQuotedName(alias, out);
+            printQuotedName(alias, QuoteEnum.BY_CONFIG, out);
         }
     }
 
     /** Print a full SQL column alias name by sample: "TABLE_ALIAS"."ORIG_COLUMN" */
     public Appendable printColumnAlias(final ColumnWrapper column, @Nonnull final Appendable out) throws IOException {
-        printQuotedName(column.getTableAlias(), out);
+        printQuotedName(column.getTableAlias(), QuoteEnum.BY_CONFIG, out);
         out.append('.');
-        printQuotedName(column.getName(), out);
+        printColumnName(column, out);
         return out;
     }
 
@@ -187,7 +191,7 @@ abstract public class SqlDialect {
             if (column.isForeignKey()) {
                 printFKColumnsDeclaration(column, out);
             } else {
-                printColumnDeclaration(column, null, out);
+                printColumnDeclaration(column, out);
             }
         }
         out.append(NEW_LINE_SEPARATOR).append(')');
@@ -209,7 +213,7 @@ abstract public class SqlDialect {
         if (column.isForeignKey()) {
             printFKColumnsDeclaration(column, out);
         } else {
-            printColumnDeclaration(column, null, out);
+            printColumnDeclaration(column, out);
         }
         if (column.hasDefaultValue()) {
             printDefaultValue(column, out);
@@ -245,7 +249,7 @@ abstract public class SqlDialect {
             out.append("ALTER TABLE ");
             printFullTableName(table, out);
             out.append(" ALTER COLUMN ");
-            printQuotedName(column.getName(), out);
+            printColumnName(column, out);
             out.append(" SET ");
             printDefaultValue(column, out);
         }
@@ -271,21 +275,18 @@ abstract public class SqlDialect {
 
         for (int i=0; i<columnsSize; ++i) {
             out.append(i==0 ? "(" : ", ");
-            final String name = column.getForeignColumnName(i);
-            printQuotedName(name, out);
+            printQuotedName(column.getForeignColumnName(i), column.get(MetaColumn.QUOTED), out);
         }
 
         out.append(')').append(NEW_LINE_SEPARATOR).append("REFERENCES ");
         printFullTableName(foreignTable, out);
-        String separator = "(";
 
-        for (MetaColumn fColumn : fColumns) {
-            out.append(separator);
-            separator = ", ";
-            printQuotedName(fColumn.getName(), out);
+        for (int i = 0, max = fColumns.size(); i < max; i++) {
+            out.append(i == 0 ? "(" : ", ");
+            printColumnName(fColumns.get(i), out);
         }
 
-        out.append(")");
+        out.append(')');
         //out.append("\tON DELETE CASCADE");
         return out;
     }
@@ -308,7 +309,7 @@ abstract public class SqlDialect {
 
         for (MetaColumn column : MetaIndex.COLUMNS.getList(index)) {
             out.append(separator);
-            printQuotedName(column.getName(), out);
+            printColumnName(column, out);
             separator = ", ";
         }
         out.append(')');
@@ -339,31 +340,31 @@ abstract public class SqlDialect {
 
     /**
      *  Print a SQL to create column
-     * @param column Database Column
-     * @param aName The name parameter is not mandatory, the not null value means a foreign key.
+     * @param columnWrapper Database Column
      * @throws java.io.IOException
      */
     public Appendable printColumnDeclaration
-        ( @Nonnull final MetaColumn column
-        , @Nonnull final String aName
+        ( @Nonnull final ColumnWrapper columnWrapper
         , @Nonnull final Appendable out) throws IOException {
 
-        String name = aName!=null ? aName : column.getName();
-        printQuotedName(name, out);
+        printColumnName(columnWrapper, out);
+        final MetaColumn column = columnWrapper.getModel();
         out.append(SPACE);
         out.append(getColumnType(column));
 
         if (isColumnLengthAllowed(column)) {
-            out.append("(" + MetaColumn.MAX_LENGTH.of(column));
+            out.append('(').append(MetaColumn.MAX_LENGTH.of(column).toString());
             if (!MetaColumn.PRECISION.isDefault(column)) {
-                out.append("," + MetaColumn.PRECISION.of(column));
+                out.append(',').append(MetaColumn.PRECISION.of(column).toString());
             }
-            out.append(")");
+            out.append(')');
         }
-        if (MetaColumn.MANDATORY.of(column) && aName == null) {
+
+        final boolean isModel = columnWrapper instanceof MetaColumn;
+        if (isModel && MetaColumn.MANDATORY.of(column)) {
             out.append(" NOT NULL");
         }
-        if (MetaColumn.PRIMARY_KEY.of(column) && aName == null) {
+        if (isModel && MetaColumn.PRIMARY_KEY.of(column)) {
             out.append(" PRIMARY KEY");
         }
         return out;
@@ -387,13 +388,11 @@ abstract public class SqlDialect {
 
         final List<MetaColumn> columns = column.getForeignColumns();
 
-        for (int i=0; i<columns.size(); ++i) {
-            final MetaColumn col = columns.get(i);
-            final String name = column.getForeignColumnName(i);
+        for (int i = 0; i < columns.size(); ++i) {
             if (i > 0) {
                 out.append(COMMON_SEQ_TABLE_KEY).append(", ");
             }
-            printColumnDeclaration(col, name, out);
+            printColumnDeclaration(ColumnWrapper.forName(columns.get(i), column.getForeignColumnName(i)), out);
             if (MetaColumn.MANDATORY.of(column)) {
                 out.append(" NOT NULL");
             }
@@ -420,7 +419,7 @@ abstract public class SqlDialect {
 
         out.append(") VALUES (")
            .append(values)
-           .append(")")
+           .append(')')
            ;
 
         return out;
@@ -447,7 +446,7 @@ abstract public class SqlDialect {
             out.append(i==idxFrom ? ") VALUES \n(" : "),\n(")
                .append(values);
         }
-        out.append(")");
+        out.append(')');
         return out;
     }
 
@@ -510,16 +509,16 @@ abstract public class SqlDialect {
             final MetaColumn ormColumn = changedColumns.get(i);
             Assert.isFalse(ormColumn.isPrimaryKey(), "Primary key can not be changed: {}", ormColumn);
             out.append(i==0 ? "" :  ", ");
-            printQuotedName(ormColumn.getName(), out);
+            printColumnName(ormColumn, out);
             out.append("=?");
         }
         out.append(NEW_LINE_SEPARATOR).append("WHERE ");
 
         if (decoder.getTableCount() > 1) {
-            printQuotedName(table.getFirstPK().getName(), out);
+            printColumnName(table.getFirstPK(), out);
             out.append(" IN (");
             printSelectTableBase(createSubQuery(decoder), false, out);
-            out.append(")");
+            out.append(')');
         } else {
             out.append(decoder.getWhere());
         }
@@ -538,10 +537,10 @@ abstract public class SqlDialect {
         out.append(" WHERE ");
 
         if (decoder.getTableCount() > 1) {
-            printQuotedName(table.getFirstPK().getName(), out);
+            printColumnName(table.getFirstPK(), out);
             out.append(" IN (");
             printSelectTableBase(createSubQuery(decoder), false, out);
-            out.append(")");
+            out.append(')');
         } else {
             //String where = decoder.getWhere().replace(tableAlias + '.', fullTableName + '.');
             out.append(decoder.getWhere());
@@ -638,10 +637,10 @@ abstract public class SqlDialect {
                 for (int i = 0; i < column.getForeignColumns().size(); ++i) {
                     out.append(separator);
                     if (select) {
-                        printQuotedName(wColumn.getTableAlias(), out);
+                        printQuotedName(wColumn.getTableAlias(), QuoteEnum.BY_CONFIG, out);
                         out.append('.');
                     }
-                    printQuotedName(column.getForeignColumnName(i), out);
+                    printQuotedName(column.getForeignColumnName(i), wColumn.getModel().get(MetaColumn.QUOTED), out);
                     if (values != null) {
                         values.append(separator);
                         values.append("?");
@@ -653,7 +652,7 @@ abstract public class SqlDialect {
                 if (select) {
                     printColumnAlias(wColumn, out);
                 } else {
-                    printQuotedName(column.getName(), out);
+                    printColumnName(column, out);
                 }
                 if (values != null) {
                     values.append(separator);
@@ -770,9 +769,9 @@ abstract public class SqlDialect {
     /** Returns quoted column name including the alias table */
     protected String getAliasColumnName(ColumnWrapper column) throws IOException {
         final Appendable out = new StringBuilder(32);
-        printQuotedName(column.getTableAlias(), out);
+        printQuotedName(column.getTableAlias(), QuoteEnum.BY_CONFIG, out);
         out.append('.');
-        printQuotedName(column.getName(), out);
+        printColumnName(column, out);
         return out.toString();
     }
 
@@ -795,10 +794,10 @@ abstract public class SqlDialect {
             StringBuilder columnName = new StringBuilder(256);
             String alias = column.getTableAlias();
             if (hasLength(alias)) {
-                printQuotedName(alias, columnName);
+                printQuotedName(alias, QuoteEnum.BY_CONFIG, columnName);
                 columnName.append('.');
             }
-            printQuotedName(column.getModel().getForeignColumnName(i), columnName);
+            printQuotedName(column.getModel().getForeignColumnName(i), QuoteEnum.BY_CONFIG, columnName);
             String f = MessageFormat.format(template, columnName, "?");
             out.append(f);
         }
@@ -1026,10 +1025,10 @@ abstract public class SqlDialect {
         , @Nonnull final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
         if (hasLength(schema)) {
-            printQuotedName(schema, out);
+            printQuotedName(schema, QuoteEnum.BY_CONFIG, out);
             out.append('.');
         }
-        printQuotedName(getSeqTableModel().getTableName(), out);
+        printQuotedName(getSeqTableModel().getTableName(), QuoteEnum.BY_CONFIG, out);
         return out;
     }
 
@@ -1042,14 +1041,14 @@ abstract public class SqlDialect {
 
         out.append("CREATE TABLE ");
         if (hasLength(schema)) {
-            printQuotedName(schema, out);
+            printQuotedName(schema, QuoteEnum.BY_CONFIG, out);
             out.append('.');
         }
 
         final MetaColumn pkType = new MetaColumn();
         MetaColumn.DB_TYPE.setValue(pkType, DbType.BIGINT);
 
-        printQuotedName(getSeqTableModel().getTableName(), out);
+        printQuotedName(getSeqTableModel().getTableName(), QuoteEnum.BY_CONFIG, out);
         out.append ( ""
         + NEW_LINE_SEPARATOR.concat("( ") + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
         + NEW_LINE_SEPARATOR.concat(", ") + getQuotedName(getSeqTableModel().getSequence()) + SPACE + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
@@ -1078,13 +1077,13 @@ abstract public class SqlDialect {
         printSequenceTableName(sequence, out);
         out.append(" (");
         printQuotedNameAlways(getSeqTableModel().getId(), out);
-        out.append(",");
+        out.append(',');
         printQuotedNameAlways(getSeqTableModel().getSequence(), out);
-        out.append(",");
+        out.append(',');
         printQuotedNameAlways(getSeqTableModel().getCache(), out);
-        out.append(",");
+        out.append(',');
         printQuotedNameAlways(getSeqTableModel().getMaxValue(), out);
-        out.append(") VALUES (?," + seq).append("," + cache).append(",0)");
+        out.append(") VALUES (?," + seq).append(',').append(Integer.toString(cache)).append(",0)");
 
         return out;
     }
@@ -1238,11 +1237,15 @@ abstract public class SqlDialect {
 
     /** Assign keywords from reader to a set */
     private void assignKeywords(@Nonnull final Set<String> result, @Nonnull final Reader reader) throws IOException {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
+        final char separator = ',';
         int c;
-        while ((c=reader.read())!=-1) {
-            if (c==',') {
-                result.add(builder.toString().trim().toUpperCase());
+        while ((c = reader.read()) != -1) {
+            if (c == separator) {
+                final String keyword = builder.toString().trim().toUpperCase(Locale.ENGLISH);
+                if (!keyword.startsWith("--")) {
+                    result.add(keyword);
+                }
                 builder.setLength(0);
             } else {
                 builder.append((char)c);
@@ -1281,21 +1284,54 @@ abstract public class SqlDialect {
     }
 
     /**
-     * Prints quoted name (identifier) to SQL according the parameter {@link MetaParams.QUOTE_SQL_NAMES}.
-     * @param name Name (identifier) for quoting
+     * Prints database column using its model.
+     * @param column Column model
      * @param sql Target SQL for printing new quoted name
      * @return SQL with printed quoted name
      */
-    public final Appendable printQuotedName
-        ( @Nonnull final CharSequence name
+    protected final Appendable printColumnName
+        ( @Nonnull final ColumnWrapper column
         , @Nonnull final Appendable sql) throws IOException {
-        if (quoteRequest==null) {
-            quoteRequest = ormHandler.getParameters().isQuotedSqlNames();
-        }
-        if (quoteRequest) {
-            printQuotedNameAlways(name, sql);
-        } else {
-            sql.append(name);
+        return printQuotedName(column.getName(), column.getModel().get(MetaColumn.QUOTED), sql);
+    }
+
+    /**
+     * Prints quoted name (identifier) to SQL according the parameter {@link MetaParams.QUOTE_SQL_NAMES}.
+     * @param name Name (identifier) for quoting
+     * @param quotingPolicy quoting Policy
+     * @param sql Target SQL for printing new quoted name
+     * @return SQL with printed quoted name
+     */
+    public Appendable printQuotedName
+        ( @Nonnull final CharSequence name
+        , @Nonnull final QuoteEnum quotingPolicy
+        , @Nonnull final Appendable sql) throws IOException {
+
+        switch (quotingPolicy) {
+            case BY_CONFIG:
+                switch (getQuotingPolicy()) {
+                    case QUOTE_SQL_NAMES:
+                        printQuotedNameAlways(name, sql);
+                        break;
+                    case QUOTE_ONLY_SQL_KEYWORDS:
+                        if (ormHandler.getParameters().get(MetaParams.KEYWORD_SET).contains(name.toString().toUpperCase(Locale.ENGLISH))) {
+                           printQuotedNameAlways(name, sql);
+                        } else {
+                           sql.append(name);
+                        }
+                        break;
+                    default:
+                        sql.append(name);
+                }
+                break;
+            case YES:
+                printQuotedNameAlways(name, sql);
+                break;
+            case NO:
+                sql.append(name);
+                break;
+            default:
+                throw new IllegalStateException("Unsupported policy: " + quotingPolicy);
         }
         return sql;
     }
@@ -1310,10 +1346,28 @@ abstract public class SqlDialect {
     protected Appendable printQuotedNameAlways
         ( @Nonnull final CharSequence name
         , @Nonnull final Appendable sql) throws IOException {
-        sql.append('"'); // quotation start character based on SQL dialect
+        sql.append(getQuoteChar(true)); // quotation start character based on SQL dialect
         sql.append(name);
-        sql.append('"'); // quotation end character based on SQL dialect
+        sql.append(getQuoteChar(false)); // quotation end character based on SQL dialect
         return sql;
+    }
+
+    /**
+     * Returns a quote character
+     * @param first Value {@code true} means the FIRST character and value {@code false} means the LAST one.
+     * @return
+     */
+    protected char getQuoteChar(final boolean first) {
+        return QUOTE_CHARACTER;
+    }
+
+    /** Get quoted policy */
+    @Nonnull
+    protected CheckReport getQuotingPolicy() {
+        if (quotingPolicy == null) {
+            quotingPolicy = ormHandler.getParameters().getQuotationPolicy();
+        }
+        return quotingPolicy;
     }
 
     /** Prints quoted name (identifier) to SQL - always. */

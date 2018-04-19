@@ -49,9 +49,11 @@ public class Database extends OrmTable<Database> {
     /** Customer */
     public static final RelationToMany<Database,Customer> CUSTOMER = newRelation();
 
+    /** Currency with FK type of String */
+    public static final RelationToMany<Database,Currency> CURRENCY = newRelation();
+
     // ----- STORED PROCEDURES --------
 
     /** Database stored procedure */
     public static final Key<Database,MyProcedure> myProcedure = newKey();
-
 }

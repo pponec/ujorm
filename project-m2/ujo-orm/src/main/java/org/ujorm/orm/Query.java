@@ -480,7 +480,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
                 final boolean unique = fkClass.add(mc.getType());
                 final ColumnWrapper cw = unique
                         ? mc
-                        : new ColumnWrapperImpl(mc, GENERATED_ALIAS_PREFIX + order++);
+                        : ColumnWrapper.forAlias(mc, GENERATED_ALIAS_PREFIX + order++);
                 addMissingColumn(cw, true, false, mc.isOptionalRelation());
             } else {
                 columns.add(mc);

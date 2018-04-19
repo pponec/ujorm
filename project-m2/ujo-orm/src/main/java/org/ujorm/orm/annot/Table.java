@@ -17,6 +17,7 @@
 package org.ujorm.orm.annot;
 import java.lang.annotation.*;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
+import org.ujorm.orm.ao.QuoteEnum;
 
 /**
  * Use the annotation to mark a Key static field like XML Attribute.
@@ -63,5 +64,7 @@ public @interface Table {
      * @see Orm2ddlPolicy#CREATE_OR_UPDATE_DDL
      */
     Orm2ddlPolicy orm2ddlPolicy() default Orm2ddlPolicy.INHERITED;
-
+    
+    /** Quoting policy for database table */
+    QuoteEnum quoted() default QuoteEnum.BY_CONFIG;
 }

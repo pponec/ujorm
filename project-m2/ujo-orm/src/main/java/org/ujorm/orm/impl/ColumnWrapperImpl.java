@@ -16,11 +16,14 @@
 
 package org.ujorm.orm.impl;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.tools.Assert;
 
 /**
  * Wrapper for a MetaColumn
@@ -35,11 +38,11 @@ public class ColumnWrapperImpl implements ColumnWrapper {
     /** The base key */
     private Key key;
 
-    public ColumnWrapperImpl(MetaColumn column, String tableAlias) {
+    public ColumnWrapperImpl(@Nonnull final MetaColumn column, @Nullable final String tableAlias) {
         this(column, tableAlias, column.getKey());
     }
 
-    public ColumnWrapperImpl(final MetaColumn column, final Key key) {
+    public ColumnWrapperImpl(@Nonnull final MetaColumn column, @Nullable final Key key) {
         this(column, key.isComposite() ? getAlias((CompositeKey)key) : null, key);
     }
 
@@ -49,16 +52,16 @@ public class ColumnWrapperImpl implements ColumnWrapper {
      * @param tableAlias Optional table
      * @param key Optional Key
      */
-    public ColumnWrapperImpl(MetaColumn column, String tableAlias, Key key) {
-        assert column != null : "The MetaColumn is required";
+    public ColumnWrapperImpl(@Nonnull final MetaColumn column, @Nullable final String tableAlias, @Nullable final Key key) {
+        Assert.notNull(column, "MetaColumn is required");
         this.column = column;
         this.tableAlias = tableAlias != null ? tableAlias : column.getTableAlias();
         this.key = key != null ? key : column.getKey();
     }
 
     /** Returns an alias of the key or the {@code nul} value */
-    private static String getAlias(final CompositeKey key) {
-        final int count = key.getKeyCount();
+    private static String getAlias(@Nullable final CompositeKey key) {
+        final int count = key != null ? key.getKeyCount() : 0;
         return count > 1 ? key.getAlias(count - 2) : null;
     }
 
@@ -103,7 +106,7 @@ public class ColumnWrapperImpl implements ColumnWrapper {
      * the same for the same domain type
      * with the same table alias. */
     @Override
-    public boolean equals(Object relation) {
+    public boolean equals(@Nullable final Object relation) {
         if (relation instanceof ColumnWrapper) {
             final ColumnWrapper relColumn = (ColumnWrapper) relation;
             final Key argKey = relColumn.getKey();

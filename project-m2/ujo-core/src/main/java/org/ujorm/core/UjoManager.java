@@ -612,7 +612,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
         return result;
     }
 
-    /** An assignable test. */
+    /** Check domain type of the Key is related to ujo. */
     static public boolean assertUjoType(final Key key, final Ujo ujo) throws IllegalArgumentException {
         final Class type = key.getDomainType();
         final boolean result = type==null || type.isInstance(ujo);

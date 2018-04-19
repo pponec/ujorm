@@ -47,6 +47,7 @@ import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.TypeService;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.ao.QuoteEnum;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.tools.Assert;
@@ -96,8 +97,13 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     public static final Key<MetaColumn,Class<? extends ITypeService>> CONVERTER = fa.newClassKey("converter", ITypeService.class);
     /** Comment of the database column */
     public static final Key<MetaColumn,String> COMMENT = fa.newKey("comment", Comment.NULL);
+    /** Quoting request */
+    public static final Key<MetaColumn,QuoteEnum> QUOTED = fa.newKey("quoted", QuoteEnum.BY_CONFIG);
+
     /** The key initialization */
-    static{fa.lock();}
+    static {
+        fa.lock();
+    }
 
     /** If current column is a foreign key than related model is a related table column (primary key by default). */
     private List<MetaColumn> relatedModel;
@@ -144,6 +150,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
             changeDefault(this, UNIQUE_INDEX,UNIQUE_INDEX.of(param));
             changeDefault(this, COMMENT    , COMMENT.of(param));
             changeDefault(this, CONVERTER  , CONVERTER.of(param));
+            changeDefault(this, QUOTED     , QUOTED.of(param));
         }
         if (column!=null) {
             changeDefault(this, PRIMARY_KEY, column.pk());
@@ -155,8 +162,9 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
             changeDefault(this, UNIQUE_INDEX,toList(column.uniqueIndex()));
             changeDefault(this, CONSTRAINT_NAME, column.constraintName());
             changeDefault(this, CONVERTER  , column.converter());
+            changeDefault(this, QUOTED     , column.quoted());
         }
-
+        
         final Validator validator = tableProperty.getValidator();
         if (validator != null) {
             changeDefault(this, MANDATORY , ValidatorUtils.isMandatoryValidator(validator));
@@ -183,6 +191,22 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         // The MAX_LENGTH must be after the DB_TYPE:
         if (MAX_LENGTH.isDefault(this)) {
             table.getDatabase().changeDbLength(this);
+        }
+        
+        // Quoted column name by configuraton:
+        if (QUOTED.isDefault(this)) {
+            switch (getHandler().getParameters().get(MetaParams.QUOTATION_POLICY)) {
+                case QUOTE_SQL_NAMES:
+                    QUOTED.setValue(this, QuoteEnum.YES);
+                    break;
+                case QUOTE_ONLY_SQL_KEYWORDS:
+                    // String name = NAME.of(this);
+                    // break;                
+                    QUOTED.setValue(this, QuoteEnum.BY_CONFIG);
+                default:
+                    QUOTED.setValue(this, QuoteEnum.NO);
+                    break;                
+            }
         }
     }
 
@@ -304,7 +328,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
      */
     @SuppressWarnings("unchecked")
     private String[] getForeignColumnNames() {
-        if (foreignNames==null) {
+        if (foreignNames == null) {
             if (isForeignKey()) {
                 List<MetaColumn> dbColumns = getForeignColumns();
                 final StringTokenizer tokenizer = new StringTokenizer(dbColumns.size()==1
@@ -334,9 +358,8 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     }
 
     /** Returns a name of foreign column by index */
-    public String getForeignColumnName(int index) {
-        final String result = getForeignColumnNames()[index];
-        return result;
+    public final String getForeignColumnName(final int index) {
+        return getForeignColumnNames()[index];
     }
 
     /** Returns a key value from a table */
@@ -423,9 +446,9 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         SqlDialect dialect = TABLE.of(this)
                 .getDatabase()
                 .getDialect();
-        dialect.printQuotedName(getTableAlias(), out);
-        out.append('.');
-        dialect.printQuotedName(getForeignColumnNames()[index], out);
+        dialect.printQuotedName(getTableAlias(), QuoteEnum.BY_CONFIG, out);
+        out.append('.');        
+        dialect.printQuotedName(getForeignColumnNames()[index], QuoteEnum.BY_CONFIG, out);
     }
 
     /** A TypeCode
@@ -530,7 +553,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
      */
     public final ColumnWrapper addTableAlias(final String alias) {
         return alias != null
-            ? new ColumnWrapperImpl(this, alias)
+            ? ColumnWrapper.forAlias(this, alias)
             : this ;
     }
 
@@ -550,4 +573,14 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
             return MetaTable.PK.of(relatedTable).getFirstColumn();
         }
     }
+        
+    /** Quotation request */
+    public boolean isQuoted() {
+        switch (QUOTED.of(this)) {
+            case YES:
+                return true;
+            default:
+                return false;
+        }
+    }    
 }

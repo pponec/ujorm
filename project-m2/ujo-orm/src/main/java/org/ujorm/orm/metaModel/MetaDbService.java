@@ -38,6 +38,7 @@ import org.ujorm.orm.ao.CommentPolicy;
 import static org.ujorm.logger.UjoLogger.*;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
 import static org.ujorm.tools.Check.hasLength;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * A service method for the MetaDatabase class.
@@ -279,20 +280,29 @@ public class MetaDbService {
 
     /** 1. CheckReport keywords: */
     protected void checkReportKeywords(final Connection conn, final DbItems news) throws SQLException {
-        switch (MetaParams.CHECK_KEYWORDS.of(db.getParams())) {
+        switch (db.getParams().get(MetaParams.QUOTATION_POLICY)) {
+            case QUOTE_ONLY_SQL_KEYWORDS:
+                db.getParams().set(MetaParams.KEYWORD_SET, db.getDialect().getKeywordSet(conn));
+                break;
             case WARNING:
             case EXCEPTION:
-                Set<String> keywords = db.getDialect().getKeywordSet(conn);
+                final Set<String> keywords = db.getDialect().getKeywordSet(conn);
                 for (MetaTable table : news.getTables()) {
                     if (table.isTable()) {
-                        checkKeyWord(MetaTable.NAME.of(table), table, keywords);
+                        if (!table.isQuoted()) {
+                            checkKeyWord(MetaTable.NAME.of(table), table, keywords);
+                        }
                         for (MetaColumn column : MetaTable.COLUMNS.getList(table)) {
-                            checkKeyWord(column.getName(), table, keywords);
+                            if (!column.isQuoted()) {
+                                checkKeyWord(column.getName(), table, keywords);
+                            }
                         }
                     }
                 }
                 for (MetaColumn column : news.getColumns()) {
-                    checkKeyWord(MetaColumn.NAME.of(column), column.getTable(), keywords);
+                    if (!column.isQuoted()) {
+                        checkKeyWord(MetaColumn.NAME.of(column), column.getTable(), keywords);
+                    }
                 }
                 for (MetaIndex index : news.getIndexes()) {
                     checkKeyWord(MetaIndex.NAME.of(index), MetaIndex.TABLE.of(index), keywords);
@@ -446,12 +456,13 @@ public class MetaDbService {
     /** Check the keyword */
     protected void checkKeyWord(String word, MetaTable table, Set<String> keywords) throws IllegalUjormException {
         if (keywords.contains(word.toUpperCase())) {
-            String msg = "The database table or column called '" + word
-                + "' is a SQL keyword. See the class: "
-                + table.getType().getName()
-                + ".\nNOTE: the keyword checking can be disabled by the Ujorm parameter: " + MetaParams.CHECK_KEYWORDS.getFullName()
-                ;
-            switch (MetaParams.CHECK_KEYWORDS.of(db.getParams())) {
+            String msg = MsgFormatter.format("The database table or column called '{}' is a SQL keyword of table '{}'."
+                + "\nNOTE: the keyword checking can be disabled by the Ujorm parameter: {}"
+                , word
+                , table.getType()
+                , MetaParams.QUOTATION_POLICY.getFullName()
+            );
+            switch (db.getParams().get(MetaParams.QUOTATION_POLICY)) {
                 case EXCEPTION:
                     throw new IllegalUjormException(msg);
                 case WARNING:

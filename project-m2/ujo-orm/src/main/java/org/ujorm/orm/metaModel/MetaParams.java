@@ -17,8 +17,10 @@
 package org.ujorm.orm.metaModel;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.concurrent.Immutable;
 import org.ujorm.Key;
 import org.ujorm.core.IllegalUjormException;
@@ -45,7 +47,7 @@ import org.ujorm.orm.utility.OrmTools;
  * @author Pavel Ponec
  */
 @Immutable
-final public class MetaParams extends AbstractMetaModel {
+public final class MetaParams extends AbstractMetaModel {
     private static final Class<MetaParams> CLASS = MetaParams.class;
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(CLASS);
     private static final String INSTANCE_FAILED_MSG = "Instance of the class failed: ";
@@ -111,12 +113,11 @@ final public class MetaParams extends AbstractMetaModel {
     public static final Key<MetaParams,Class<? extends MetaDbService>> META_DB_SERVICE = f.newClassKey("metaDbService", MetaDbService.class);
     /** Default SQL name provider for special names of database is called: {@link SqlNameProvider} */
     public static final Key<MetaParams,Class<? extends SqlNameProvider>> SQL_NAME_PROVIDER = f.newClassKey("sqlNameProvider", SqlNameProvider.class);
-    /** CheckReport a keyword in the database table or colum name inside the meta-model.
-     * The default value is EXCEPTION.
+    /** The quotation policy in the SQL statement, where default is no quotatio with an EXCEPTION if any keyword is found.
      * @see CheckReport Parameter values
      * @see #QUOTE_SQL_NAMES
      */
-    public static final Key<MetaParams,CheckReport> CHECK_KEYWORDS = f.newKey("checkKeywords", CheckReport.EXCEPTION);
+    public static final Key<MetaParams,CheckReport> QUOTATION_POLICY = f.newKey("checkKeywords", CheckReport.EXCEPTION);
     /** The maximal count of items for the SQL IN operator, default value is 500 items
      * The limit is used inside the method {@link OrmTools#loadLazyValuesAsBatch(java.lang.Iterable, org.ujorm.Key) loadLazyValuesAsBatch(..)}.
      @see OrmTools#loadLazyValuesAsBatch(java.lang.Iterable, org.ujorm.Key)
@@ -173,13 +174,26 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Key<MetaParams,Integer> LOG_VALUE_LENGTH_LIMIT = f.newKey("logValueLengthLimit", 128);
 
+    /** SQL keyword set (upper case) only for case: QUOTATION_POLICY = QUOTE_ONLY_SQL_KEYWORDS */
+    @Transient
+    public static final Key<MetaParams,Set<String>> KEYWORD_SET = f.newKey("keywordSet", Collections.EMPTY_SET);
+
     /** An application context for initialization of the customer components of the meta-model. */
     @Transient
     public static final Key<MetaParams,Object> APPL_CONTEXT = f.newKey("applContext");
 
     /** The key initialization */
-    static{f.lock();}
-
+    static { 
+        f.lock();
+    }
+    
+    /** CheckReport a keyword in the database table or colum name inside the meta-model.
+     * The default value is EXCEPTION.
+     * @see CheckReport Parameter values
+     * @see #QUOTE_SQL_NAMES
+     */
+    public static final Key<MetaParams,CheckReport> CHECK_KEYWORDS = QUOTATION_POLICY;
+    
     /** An extended index name strategy
      * @see MoreParams#EXTENTED_INDEX_NAME_STRATEGY
      */
@@ -252,22 +266,33 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** Skip the check test and Quote all SQL columns, tables and alias names.
      * <br>NOTE: The change of the parameter value affects the native SQL statements in Ujorm views.
-     * @see #CHECK_KEYWORDS
+     * @see #QUOTATION_POLICY
      * @see CheckReport#SKIP_AND_QUOTE_SQL_NAMES
      */
     public boolean isQuotedSqlNames() {
-        return CheckReport.QUOTE_SQL_NAMES==CHECK_KEYWORDS.of(this);
+        switch (QUOTATION_POLICY.of(this)) {
+            case QUOTE_SQL_NAMES:
+            case QUOTE_ONLY_SQL_KEYWORDS:
+                return true;
+            default:
+                return false;            
+        }
+    }
+
+    /** Return quoting policy */
+    public CheckReport getQuotationPolicy() {
+        return QUOTATION_POLICY.of(this);
     }
 
     /** Skip the check test and Quote all SQL columns, tables and alias names.
      * <br>NOTE: The change of the parameter value affects the native SQL statements in Ujorm views.
      * @param quote Parameter {@code true} affects to an escaping the database names,
      * else the {@code false} value will affects to checked a database KeyWords in the names.
-     * @see #CHECK_KEYWORDS
+     * @see #QUOTATION_POLICY
      * @see CheckReport#SKIP_AND_QUOTE_SQL_NAMES
      */
     public void setQuotedSqlNames(boolean quote) {
-        CHECK_KEYWORDS.setValue(this, quote
+        QUOTATION_POLICY.setValue(this, quote
                 ? CheckReport.QUOTE_SQL_NAMES
                 : null // The default value
                 );

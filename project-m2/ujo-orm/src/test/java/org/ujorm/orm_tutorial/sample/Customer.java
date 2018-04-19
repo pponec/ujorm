@@ -22,6 +22,7 @@ import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Table;
+import org.ujorm.orm.ao.QuoteEnum;
 
 /**
  * The column mapping to DB table ORDER (a sample of usage).
@@ -43,7 +44,8 @@ public final class Customer extends OrmTable<Customer> {
     /** Surname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
     public static final Key<Customer, String> SURNAME = f.newKey();
-    /** Date of creation */
+    /** Date of creation column name is a SQL keyword */
+    @Column(name = "start", quoted = QuoteEnum.YES)
     public static final Key<Customer, Date> CREATED = f.newKey();
     /** A parent (father or mother) with an alias called {@code "parent"} */
     public static final Key<Customer, Customer> PARENT = f.newKeyAlias("customerAlias");

@@ -160,7 +160,7 @@ public class AliasTable<UJO extends OrmUjo> {
      */
     protected StringBuilder printColumn(MetaColumn column, final CharSequence columnAlias, StringBuilder out) throws IllegalUjormException {
         try {
-            getDialect().printColumnAlias(new ColumnWrapperImpl(column, table.getAlias()), out);
+            getDialect().printColumnAlias(ColumnWrapper.forAlias(column, table.getAlias()), out);
             if (columnAlias != null) {
                 out.append(" AS ").append(columnAlias);
             }

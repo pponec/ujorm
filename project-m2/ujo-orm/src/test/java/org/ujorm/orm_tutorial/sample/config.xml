@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.71 was created 2017-06-24 09:27 -->
-<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.70.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!-- The Ujorm configuration file release 1.83-SNAPSHOT was created 2018-04-19 22:04 -->
+<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.71.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <database id="Database">
         <schema>db1</schema>
         <readOnly>false</readOnly>
@@ -12,6 +12,7 @@
         <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
         <table id="ORDERS">
             <name>ord_order</name>
+            <quoted>NO</quoted>
             <alias>ord_order_alias</alias>
             <schema>db1</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
@@ -21,16 +22,19 @@
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
                 <comment>The Primary Key</comment>
+                <quoted>NO</quoted>
             </column>
             <column id="STATE">
                 <name>STATE</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>1</maxLength>
                 <comment>Order state, default value is ACTIVE</comment>
+                <quoted>NO</quoted>
             </column>
             <column id="USER_ID">
                 <name>USER_ID</name>
-                <dbType>INT</dbType>
+                <dbType>INTEGER</dbType>
+                <quoted>NO</quoted>
             </column>
             <column id="NOTE">
                 <name>NOTE</name>
@@ -38,19 +42,28 @@
                 <mandatory>true</mandatory>
                 <maxLength>128</maxLength>
                 <comment>Description of the Order</comment>
+                <quoted>NO</quoted>
             </column>
             <column id="CREATED">
                 <name>CREATED</name>
                 <dbType>TIMESTAMP</dbType>
+                <quoted>NO</quoted>
             </column>
             <column id="CUSTOMER">
                 <name>fk_customer</name>
                 <dbType>BIGINT</dbType>
+                <quoted>NO</quoted>
+            </column>
+            <column id="CURENCY">
+                <name>fk_currency</name>
+                <dbType>VARCHAR</dbType>
+                <quoted>NO</quoted>
             </column>
             <column id="NEW_COLUMN">
                 <name>NEW_COLUMN</name>
-                <dbType>INT</dbType>
+                <dbType>INTEGER</dbType>
                 <mandatory>true</mandatory>
+                <quoted>NO</quoted>
             </column>
             <relation2m id="ITEMS">
                 <name>ITEMS</name>
@@ -58,6 +71,7 @@
         </table>
         <table id="ORDER_ITEMS">
             <name>ord_item</name>
+            <quoted>NO</quoted>
             <alias>ord_item_alias</alias>
             <schema>db1</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
@@ -66,15 +80,18 @@
                 <name>ID</name>
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
+                <quoted>NO</quoted>
             </column>
             <column id="USER_ID">
                 <name>USER_ID</name>
-                <dbType>INT</dbType>
+                <dbType>INTEGER</dbType>
+                <quoted>NO</quoted>
             </column>
             <column id="NOTE">
                 <name>NOTE</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>128</maxLength>
+                <quoted>NO</quoted>
             </column>
             <column id="PRICE">
                 <name>PRICE</name>
@@ -82,15 +99,18 @@
                 <maxLength>8</maxLength>
                 <precision>2</precision>
                 <comment>Price of the item</comment>
+                <quoted>NO</quoted>
             </column>
             <column id="ORDER">
                 <name>fk_order</name>
                 <dbType>BIGINT</dbType>
                 <comment>A reference to the Order</comment>
+                <quoted>NO</quoted>
             </column>
         </table>
         <table id="VIEW_ORDERS" view="true">
-            <name>ord_order</name>
+            <name>view_order</name>
+            <quoted>NO</quoted>
             <alias>testView</alias>
             <schema>db1</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
@@ -99,14 +119,17 @@
                 <name>id</name>
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
+                <quoted>NO</quoted>
             </column>
             <column id="ITEM_COUNT">
                 <name>item_count</name>
-                <dbType>INT</dbType>
+                <dbType>INTEGER</dbType>
+                <quoted>NO</quoted>
             </column>
         </table>
         <table id="CUSTOMER">
             <name>ord_customer</name>
+            <quoted>NO</quoted>
             <alias>ord_customer_alias</alias>
             <schema>db1</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
@@ -114,39 +137,66 @@
                 <name>id</name>
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
+                <quoted>NO</quoted>
             </column>
             <column id="pin">
                 <name>pin</name>
-                <dbType>INT</dbType>
+                <dbType>INTEGER</dbType>
+                <quoted>NO</quoted>
             </column>
             <column id="firstname">
                 <name>firstname</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>50</maxLength>
                 <uniqueIndex>idx_customer_full_name</uniqueIndex>
+                <quoted>NO</quoted>
             </column>
             <column id="surname">
                 <name>surname</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>50</maxLength>
                 <uniqueIndex>idx_customer_full_name</uniqueIndex>
+                <quoted>NO</quoted>
             </column>
             <column id="created">
-                <name>created</name>
+                <name>start</name>
                 <dbType>TIMESTAMP</dbType>
+                <quoted>YES</quoted>
             </column>
             <column id="parent">
                 <name>parent</name>
                 <dbType>BIGINT</dbType>
+                <quoted>NO</quoted>
+            </column>
+        </table>
+        <table id="CURRENCY">
+            <name>ord_currency</name>
+            <quoted>NO</quoted>
+            <alias>ord_currency_alias</alias>
+            <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <column id="code">
+                <name>code</name>
+                <primaryKey>true</primaryKey>
+                <dbType>VARCHAR</dbType>
+                <maxLength>3</maxLength>
+                <quoted>NO</quoted>
+            </column>
+            <column id="note">
+                <name>note</name>
+                <dbType>INTEGER</dbType>
+                <quoted>NO</quoted>
             </column>
         </table>
         <table id="db1">
             <name>db1</name>
+            <quoted>NO</quoted>
             <alias>db1_alias</alias>
             <schema>db1</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
             <column id="myProcedure">
                 <name>myProcedure</name>
+                <quoted>NO</quoted>
             </column>
             <relation2m id="ORDERS">
                 <name>ORDERS</name>
@@ -160,26 +210,33 @@
             <relation2m id="CUSTOMER">
                 <name>CUSTOMER</name>
             </relation2m>
+            <relation2m id="CURRENCY">
+                <name>CURRENCY</name>
+            </relation2m>
         </table>
         <procedure id="myProcedure">
             <name>ujorm_test</name>
             <schema>db1</schema>
             <parameter id="RESULT">
                 <name>RESULT</name>
-                <dbType>INT</dbType>
+                <dbType>INTEGER</dbType>
+                <quoted>NO</quoted>
             </parameter>
             <parameter id="PARAM_CODE">
                 <name>PARAM_CODE</name>
-                <dbType>INT</dbType>
+                <dbType>INTEGER</dbType>
+                <quoted>NO</quoted>
             </parameter>
             <parameter id="PARAM_ENABLED">
                 <name>PARAM_ENABLED</name>
                 <dbType>BOOLEAN</dbType>
+                <quoted>NO</quoted>
             </parameter>
         </procedure>
     </database>
     <parameters>
         <tableAliasSuffix>_alias</tableAliasSuffix>
+        <typeService>org.ujorm.orm.TypeServiceForOlderJdbc</typeService>
         <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
         <moreParams></moreParams>
     </parameters>

@@ -22,16 +22,20 @@ package org.ujorm.orm.ao;
  */
 public enum CheckReport {
 
-    /** Skip the check test. */
+    /** No quoting, skip the keword check. */
     SKIP,
-    /** Skip the check test and Quote all SQL columns, tables and alias names.
+    /** Quote all SQL columns, tables, columns and skip any keword checking.
      * <br>NOTE: The change of the parameter value affects the native SQL statements in Ujorm views.
      */
     QUOTE_SQL_NAMES,
-    /** Log a WARNING with the conflict message. */
-    WARNING,
-    /** Throw an EXCEPTION with the conflict message.
-     * This is the default option.
+    /** Quote SQL keywords only, but a buiding the SQL statement can be a bit slower.
+     * <br>NOTE: Consider that SQL keywords may vary across different databases and their versions.
      */
+    @Deprecated
+    QUOTE_ONLY_SQL_KEYWORDS,
+    /** No quoting, but log a WARNING if any keyword is found. */
+    WARNING,
+    /** No quoting, but all names are compared to keywords on starting. If a keyword is found, the <strong>exception</strong> is throwed.
+     * This is the default option. */
     EXCEPTION;
 }

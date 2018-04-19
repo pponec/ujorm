@@ -50,7 +50,6 @@ abstract public class SmartUjoLockable<U extends SmartUjoLockable>
                 }
             }
         }
-
     }
 
     /** {@inheritDoc} */

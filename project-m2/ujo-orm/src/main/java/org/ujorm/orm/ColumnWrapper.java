@@ -16,7 +16,9 @@
 
 package org.ujorm.orm;
 
+import javax.annotation.Nonnull;
 import org.ujorm.Key;
+import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
 
 /**
@@ -46,5 +48,23 @@ public interface ColumnWrapper {
     /** Method returns the {@code true} value if two attributes Keys are the same */
     @Override
     public boolean equals(Object column);
+
+    // --- STATIC METHOD ----
+
+    /** Create new instance for a required name */
+    @Nonnull
+    public static ColumnWrapper forName(@Nonnull final MetaColumn column, @Nonnull final String name) {
+        return new ColumnWrapperImpl(column, column.getColumnAlias()) {
+            @Override public String getName() {
+                return name;
+            }
+        };
+    }
+
+    /** Create new instance for a required name */
+    @Nonnull
+    public static ColumnWrapper forAlias(@Nonnull final MetaColumn column, @Nonnull final String alias) {
+        return new ColumnWrapperImpl(column, alias);
+    }
 
 }

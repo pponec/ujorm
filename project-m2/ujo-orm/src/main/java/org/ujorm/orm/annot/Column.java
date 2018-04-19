@@ -19,6 +19,7 @@ package org.ujorm.orm.annot;
 import java.lang.annotation.*;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.ITypeService;
+import org.ujorm.orm.ao.QuoteEnum;
 
 /**
  * Use the annotation to mark a Key static field like XML Attribute.
@@ -60,5 +61,7 @@ public @interface Column {
      * @see ITypeService
      */
     Class<? extends ITypeService> converter() default ITypeService.class;
+    /** Quoting policy where default value is the {@code QuoteEnum#BY_CONFIG} */
+    QuoteEnum quoted() default QuoteEnum.BY_CONFIG;
 
 }
