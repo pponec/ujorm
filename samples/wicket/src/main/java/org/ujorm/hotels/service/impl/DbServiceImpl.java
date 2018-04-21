@@ -196,7 +196,7 @@ public class DbServiceImpl implements DbService {
         return Model.of(result);
     }
 
-    /** Save new booking */
+    /** Insert new booking */
     @Override
     public void saveBooking(Booking booking) {
         Customer cust = booking.getCustomer();
@@ -207,6 +207,9 @@ public class DbServiceImpl implements DbService {
             }
             booking.setCustomer(authService.getLoggedCustomer());
         }
+        booking.setPrice(booking.getHotel().getPrice()
+            .multiply(new BigDecimal(booking.getPersons().intValue() * booking.getNights().intValue())));
+
         // TODO: validations ...
 
         booking.setPrice(totalPrice(booking));
