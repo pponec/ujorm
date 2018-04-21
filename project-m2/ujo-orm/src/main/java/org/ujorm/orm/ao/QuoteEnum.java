@@ -15,9 +15,6 @@
  */
 package org.ujorm.orm.ao;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
  * Enum of allowed quoting policy.
  * @author Pavel Ponec
@@ -29,18 +26,5 @@ public enum QuoteEnum {
     /** No the name will not be quoted */
     NO,
     /** Using of quotation marks depends on the global configuration (default value). */
-    BY_CONFIG {
-        @Override @Nonnull
-        public QuoteEnum changeBy(@Nullable QuoteEnum altenative) {
-            return altenative != null ? altenative : this;
-        }
-    },
-    ;
-
-    /** Change default */
-    @Nonnull
-    public QuoteEnum changeBy(@Nullable QuoteEnum altenative) {
-        return this;
-    }
-
+    BY_CONFIG;
 }

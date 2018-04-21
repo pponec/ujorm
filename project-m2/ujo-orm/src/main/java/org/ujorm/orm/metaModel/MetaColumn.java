@@ -73,6 +73,8 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     private static final KeyFactory<MetaColumn> fa = KeyFactory.CamelBuilder.get(CLASS);
     /** DB primary key */
     public static final Key<MetaColumn,Boolean> PRIMARY_KEY = fa.newKey("primaryKey", false);
+    /** Column name is quoted */
+    public static final Key<MetaColumn,QuoteEnum> QUOTED = fa.newKey("quoted", QuoteEnum.BY_CONFIG);
     /** Database Type */
     public static final Key<MetaColumn,DbType> DB_TYPE = fa.newKey("dbType", DbType.NULL);
     /** Column NOT-NULL */
@@ -97,8 +99,6 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     public static final Key<MetaColumn,Class<? extends ITypeService>> CONVERTER = fa.newClassKey("converter", ITypeService.class);
     /** Comment of the database column */
     public static final Key<MetaColumn,String> COMMENT = fa.newKey("comment", Comment.NULL);
-    /** Quoting request */
-    public static final Key<MetaColumn,QuoteEnum> QUOTED = fa.newKey("quoted", QuoteEnum.BY_CONFIG);
 
     /** The key initialization */
     static {

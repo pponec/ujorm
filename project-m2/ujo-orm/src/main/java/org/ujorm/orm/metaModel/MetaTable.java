@@ -66,7 +66,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** The meta-model id */
     @XmlAttribute
     public static final Key<MetaTable,String> ID = fa.newKey("id", Table.NULL);
-    /** DB table name */
+    /** Table name is quoted */
     public static final Key<MetaTable,String> NAME = fa.newKey("name", Table.NULL);
     /** Quoting request for table */
     public static final Key<MetaTable,QuoteEnum> QUOTED = fa.newKey("quoted", QuoteEnum.BY_CONFIG);
