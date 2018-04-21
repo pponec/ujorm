@@ -2,8 +2,22 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.8-SNAPSHOT
-+ 
+release 1.84-SNAPSHOT
++ ...
+
+release 1.83
++ CORE New persistent interface called ValueWrapper where a sample implementation is the UnsignedShort class.  
++ ORM: New persistent interface called ValueWrapper is supported in ORM.
++ ORM: Optional quoting of individual database items by an annotation argument 
++ ORM: New method Session.updateSafely(batch)
++ SQL keyword list of SQL:2011
++ WICKET: Simple LocalDateTimeField implementation
++ WICKET: New method to add a default CSS to the Field is available
++ WICKET: CSS support for a table column with Panel
++ WICKET: TableColumn with a panelClass can by sortable by an argument
++ WICKET: Class Args is changed to Assert
++ ALL: code cleaning
++ ALL : JavaDoc is fixed
 
 release 1.82 (2018-03-18)
 + TOOLS: The MessageService class supports arguments type of Supplier
