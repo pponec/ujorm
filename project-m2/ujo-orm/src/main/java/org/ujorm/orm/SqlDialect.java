@@ -86,8 +86,6 @@ abstract public class SqlDialect {
     protected OrmHandler ormHandler;
     /** The name provider */
     private SqlNameProvider nameProvider;
-    /** Extended dialect */
-    private SqlDialectEx extentedDialect;
     /** Quoting policy */
     private CheckReport quotingPolicy;
 
@@ -1391,14 +1389,6 @@ abstract public class SqlDialect {
             }
         }
         return nameProvider;
-    }
-
-    /** Get an Extended dialect */
-    public SqlDialectEx getExtentedDialect() {
-        if (extentedDialect == null) {
-            extentedDialect = new SqlDialectEx(this);
-        }
-        return extentedDialect;
     }
 
     /** Create a SQL script for the NEXT SEQUENCE from a native database sequencer */

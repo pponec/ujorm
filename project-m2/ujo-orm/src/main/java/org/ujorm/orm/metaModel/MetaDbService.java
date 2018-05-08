@@ -32,13 +32,12 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.SqlDialect;
-import org.ujorm.orm.SqlDialectEx;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.ao.CommentPolicy;
+import org.ujorm.tools.MsgFormatter;
 import static org.ujorm.logger.UjoLogger.*;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
 import static org.ujorm.tools.Check.hasLength;
-import org.ujorm.tools.MsgFormatter;
 
 /**
  * A service method for the MetaDatabase class.
@@ -528,11 +527,6 @@ public class MetaDbService {
 
     protected SqlDialect getDialect() {
         return db.getDialect();
-    }
-
-    /** Returns an extended dialect */
-    protected SqlDialectEx getDialectEx() {
-        return db.getDialect().getExtentedDialect();
     }
 
     /** Does the database support a catalog?
