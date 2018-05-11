@@ -126,6 +126,12 @@ public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> 
         return rowsPerPage * maxPages;
     }
 
+    /** Clerar cache, if any */
+    @Override
+    public void clearCache() {
+        nextUpdate = LocalDateTime.now();
+    }
+
     // ============= STATIC METHOD =============
 
     /** Factory for the class */

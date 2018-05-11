@@ -240,6 +240,9 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
         this.fetchDatabaseColumns = fetchDatabaseColumns;
     }
 
+    /** Do nothing */
+    public void clearCache() {
+    }
 
     // ============= STATIC METHOD =============
 

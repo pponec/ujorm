@@ -278,9 +278,15 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      *    <li>String - component identifier</li>
      *    <li>U - a row object type of {@link Key#getDomainType()}</li>
      * </ul>
+     * @param sortable Column sorting is required
+     * @param cssClass CSS class
      */
-    public <V> void add(@Nonnull final Key<? super U,V> column, @Nonnull final Class<? extends WebMarkupContainer> panelClass, final boolean sortable, @Nullable final String cssClass) {
-         add(column, panelClass, sortable ? column : null, null);
+    public <V> void add
+            ( @Nonnull final Key<? super U,V> column
+            , @Nonnull final Class<? extends WebMarkupContainer> panelClass
+            , final boolean sortable
+            , @Nullable final String cssClass) {
+         add(column, panelClass, sortable ? column : null, cssClass);
     }
 
     /** Create new instance of a Panel from the argument {@code panelClass}
@@ -292,8 +298,14 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      *    <li>String - component identifier</li>
      *    <li>U - a row object type of {@link Key#getDomainType()}</li>
      * </ul>
+     * @param sortColumn Sorting column
+     * @param cssClass CSS class
      */
-    public <V> void add(@Nonnull final Key<? super U,V> column, @Nonnull final Class<? extends WebMarkupContainer> panelClass, @Nullable final Key<? super U,V> sortColumn, @Nullable final String cssClass ) {
+    public <V> void add
+            ( @Nonnull final Key<? super U,V> column
+            , @Nonnull final Class<? extends WebMarkupContainer> panelClass
+            , @Nullable final Key<? super U,V> sortColumn
+            , @Nullable final String cssClass ) {
         final Class<? super U> domainType = column.getDomainType();
         final KeyRing<U> keyCol = KeyRing.<U>of(column);
         final KeyRing<U> sortCol = sortColumn == null
@@ -302,7 +314,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
                 ? keyCol
                 : KeyRing.<U>of(sortColumn)
                 ;
-        add(new KeyColumn<U, Object>(keyCol, sortCol) {
+        final KeyColumn<U, Object> keyColumn = new KeyColumn<U, Object>(keyCol, sortCol) {
             @Override
             public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
                 try {
@@ -323,7 +335,13 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
                      ? cssClass
                      : createKeyColumn(keyCol.getFirstKey()).getCssClass();
             }
-        });
+        };
+        if (Check.hasLength(cssClass)) {
+            keyColumn.setCssClass(cssClass);
+
+        }
+        add(keyColumn);
+
     }
 
     /** Create new instance of an Action Panel using actions from the argument list.
