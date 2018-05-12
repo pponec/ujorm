@@ -15,16 +15,33 @@
  */
 package org.ujorm.orm.ao;
 
+import javax.annotation.Nonnull;
+import org.ujorm.extensions.StringWrapper;
+import org.ujorm.tools.Assert;
+
 /**
  * Enum of allowed quoting policy.
  * @author Pavel Ponec
  */
-public enum QuoteEnum {
+public enum QuoteEnum implements StringWrapper {
 
     /** Yes the name will be quoted */
-    YES,
+    YES("yes"),
     /** No the name will not be quoted */
-    NO,
+    NO("no"),
     /** Using of quotation marks depends on the global configuration (default value). */
-    BY_CONFIG;
+    BY_CONFIG("byConfig");
+
+    @Nonnull
+    private final String id;
+
+    private QuoteEnum(@Nonnull final String id) {
+        Assert.hasLength(id);
+        this.id = id;
+    }
+
+    @Override @Nonnull
+    public String exportToString() {
+        return id;
+    }
 }

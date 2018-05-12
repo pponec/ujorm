@@ -566,13 +566,14 @@ public class Session implements Closeable {
      * @param required Required result expected the one row modified exactly,
      * else method throws an {@link IllegalStateException} exception. The count value {@code -1} is ignored.
      * @return The row count.
+     * @throws NoSuchElementException The row can not be updated because the modified columns have been changed.
      * @see OrmUjo#readChangedProperties(boolean)
      */
     public <U extends OrmUjo> int updateSafely
         ( @Nonnull final U bo
         , @Nullable final U original
         , @Nullable final OptionEnum ... required
-        ) throws IllegalStateException {
+        ) throws NoSuchElementException {
         Criterion<U> crn = createPkCriterion(bo);
         if (original != null) {
             original.writeSession(this);
@@ -588,7 +589,7 @@ public class Session implements Closeable {
                 , expectedResult
                 , result
                 , crn.toStringFull());
-            throw new IllegalStateException(msg);
+            throw new NoSuchElementException(msg);
         }
         return result;
     }
@@ -600,13 +601,15 @@ public class Session implements Closeable {
      * @param batch An update batch to modify attributes of business object.
      * @param required Required result expected the one row modified exactly,
      * else method throws an {@link IllegalStateException} exception.
-     * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count where value -1  means: No changed column to update
+     * @throws NoSuchElementException The row can not be updated because the modified columns have been changed.
+     * @see OrmUjo#readChangedProperties(boolean)
      */
     public <U extends OrmUjo> int updateSafely
         ( @Nonnull final Consumer<U> batch
         , @Nonnull final U bo
-        , @Nullable final OptionEnum ... required)
+        , @Nullable final OptionEnum ... required
+        ) throws NoSuchElementException
         {
         int result = 0;
         final U original = (U) bo.cloneUjo();
