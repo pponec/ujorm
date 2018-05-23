@@ -75,7 +75,7 @@ public class DatabaseTest {
             booking.setPrice(hotel.getPrice());
             booking.setCreationDate(LocalDateTime.now());
 
-            dao.save(booking);
+            dao.insert(booking);
         }
     }
 

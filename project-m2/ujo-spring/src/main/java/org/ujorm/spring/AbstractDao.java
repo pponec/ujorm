@@ -42,18 +42,18 @@ public abstract class AbstractDao<T extends OrmUjo> {
         return getSessionDao().createQuery(criteron);
     }
 
-    /** Save or update an persistent object */
-    protected final <U extends T> void saveOrUpdateDao(@Nonnull final U bo) {
+    /** Insert or update an persistent object */
+    protected final <U extends T> void insertOrUpdateDao(@Nonnull final U bo) {
         getSessionDao().insertOrUpdate(bo);
     }
 
-    /** Save a persistent object to database */
-    protected final <U extends T> void saveDao(@Nonnull final U bo) {
+    /** Insert a persistent object to database */
+    protected final <U extends T> void insertDao(@Nonnull final U bo) {
         getSessionDao().insert(bo);
     }
 
-    /** Save list of persistent objects to database */
-    protected final <U extends T> void saveDao(@Nonnull final List<U> bos) {
+    /** Insert list of persistent objects to database */
+    protected final <U extends T> void insertDao(@Nonnull final List<U> bos) {
         getSessionDao().insert(bos);
     }
 

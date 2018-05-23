@@ -238,7 +238,7 @@ implements ParamService {
             paramKey.setLastUpdate(now);
             paramKey.setSystemParam(isSystemParam(key));
             paramKey.setNote(getComment(key));
-            dao.saveOrUpdate(paramKey);
+            dao.insertOrUpdate(paramKey);
         }
 
         // --- VALUES ----
@@ -250,7 +250,7 @@ implements ParamService {
                 paramValue = new ParamValue(paramKeyMap.get(key.getName()));
                 paramValue.setCustomer(null);
                 paramValue.setLastUpdate(now);
-                dao.save(paramValue);
+                dao.insert(paramValue);
             }
         }
     }

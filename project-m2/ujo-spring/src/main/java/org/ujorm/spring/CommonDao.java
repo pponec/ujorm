@@ -36,19 +36,49 @@ public class CommonDao<T extends OrmUjo> extends AbstractDao<T> {
         return createQueryDao(criteron);
     }
 
-    /** Save or update an persistent object */
-    public <U extends T> void saveOrUpdate(@Nonnull final U bo) {
-        saveOrUpdateDao(bo);
+    /** Insert or update an persistent object
+     * @deprecated Use the method insertOrUpdate() rather
+     */
+    @Deprecated
+    public final <U extends T> void saveOrUpdate(@Nonnull final U bo) {
+        insertOrUpdate(bo);
     }
 
-    /** Save a persistent object to database */
-    public <U extends T> void save(@Nonnull final U bo) {
-        saveDao(bo);
+    /** Insert a persistent object to database
+     * @deprecated Use the method insertOrUpdate() rather
+     */
+    @Deprecated
+    public final <U extends T> void save(@Nonnull final U bo) {
+        insert(bo);
     }
 
-    /** Save list of persistent objects to database */
-    public <U extends T> void save(@Nonnull final List<U> bos) {
-        saveDao(bos);
+    /** Insert list of persistent objects to database
+     * @deprecated Use the method insertOrUpdate() rather
+     */
+    @Deprecated
+    public final <U extends T> void save(@Nonnull final List<U> bos) {
+        insert(bos);
+    }
+
+    /** Insert or update an persistent object
+     * @since 1.84
+     */
+    public <U extends T> void insertOrUpdate(@Nonnull final U bo) {
+        insertOrUpdateDao(bo);
+    }
+
+    /** Insert a persistent object to database
+     * @since 1.84
+     */
+    public <U extends T> void insert(@Nonnull final U bo) {
+        insertDao(bo);
+    }
+
+    /** Insert list of persistent objects to database
+     * @since 1.84
+     */
+    public <U extends T> void insert(@Nonnull final List<U> bos) {
+        insertDao(bos);
     }
 
     /** Update a persistent object on database */

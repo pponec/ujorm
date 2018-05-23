@@ -102,7 +102,7 @@ public class DbServiceImpl implements DbService {
     public void saveOrUpdateHotel(Hotel hotel) {
         LOGGER.info("Save or update hotel {}", hotel);
         checkReadOnly(hotel);
-        dao.saveOrUpdate(hotel);
+        dao.insertOrUpdate(hotel);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class DbServiceImpl implements DbService {
             customer.writeSession(newMode ? null : dao.getSession() ); // Activate modifications for EditMode
             customer.setPasswordHash(getHash(password));
         }
-        dao.saveOrUpdate(customer);
+        dao.insertOrUpdate(customer);
     }
 
     /** Authenticate the user */
@@ -214,7 +214,7 @@ public class DbServiceImpl implements DbService {
 
         booking.setPrice(totalPrice(booking));
         booking.setCreationDate(LocalDateTime.now());
-        dao.save(booking);
+        dao.insert(booking);
     }
 
     /** Booking in the feature can be removed by its customer, or an administrator */
