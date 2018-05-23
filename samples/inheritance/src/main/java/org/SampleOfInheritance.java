@@ -51,8 +51,8 @@ public class SampleOfInheritance {
         customer.setDiscount(10);
         //
         Session session = handler.getSession();
-        session.save(customer.getUser());
-        session.save(customer);
+        session.insert(customer.getUser());
+        session.insert(customer);
         session.commit();
 
         IUser user = customer; // A test of the INHERITANCE

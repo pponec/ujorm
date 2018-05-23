@@ -377,11 +377,23 @@ public class Session implements Closeable {
      * according to attribute {@link Session}. Related objects
      * must be saved using an another call of the method.
      * The method cleans all flags of modified attributes.
+     * @deprecated Use the method insertOrUpdate() rather
      */
-    public void saveOrUpdate(final @Nonnull OrmUjo bo) throws IllegalStateException {
+    @Deprecated
+    public final void saveOrUpdate(final @Nonnull OrmUjo bo) throws IllegalStateException {
+        insertOrUpdate(bo);
+    }
+
+    /** Make a statement INSERT or UPDATE into a database table
+     * according to attribute {@link Session}. Related objects
+     * must be saved using an another call of the method.
+     * The method cleans all flags of modified attributes.
+     * @since 1.84
+     */
+    public void insertOrUpdate(final @Nonnull OrmUjo bo) throws IllegalStateException {
         Assert.notNull(bo);
         if (bo.readSession() == null) {
-            save(bo);
+            insert(bo);
         } else {
             update(bo);
         }
@@ -398,7 +410,7 @@ public class Session implements Closeable {
         if (MetaParams.INHERITANCE_MODE.of(params)) {
             final OrmUjo parent = table.getParent(bo);
             if (parent != null) {
-                saveOrUpdate(parent);
+                insertOrUpdate(parent);
             }
         }
         return table;
@@ -408,10 +420,22 @@ public class Session implements Closeable {
      * @param domains Business objects
      * @throws IllegalStateException
      * @see MetaParams#INSERT_MULTIROW_ITEM_LIMIT
+     * @deprecated Use the method insert() rather
      */
-    public void save(final Collection<? extends OrmUjo> domains) throws IllegalStateException {
+    @Deprecated
+    public final void save(final Collection<? extends OrmUjo> domains) throws IllegalStateException {
+        Session.this.insert(domains);
+    }
+
+    /** INSERT object into table using the <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29">Multirow inserts</a>.
+     * @param domains Business objects
+     * @throws IllegalStateException
+     * @see MetaParams#INSERT_MULTIROW_ITEM_LIMIT
+     * @since 1.84
+     */
+    public void insert(final Collection<? extends OrmUjo> domains) throws IllegalStateException {
         final int multiLimit = params.get(MetaParams.INSERT_MULTIROW_ITEM_LIMIT);
-        save(domains, multiLimit);
+        Session.this.insert(domains, multiLimit);
     }
 
     /** INSERT object into table using the <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29">Multirow inserts</a>.
@@ -421,8 +445,23 @@ public class Session implements Closeable {
      *        If the value will be out of range <1,bos.size()> than the value will be corrected.
      *        If the list item count is greater than multi limit so insert will be separated by more multirow inserts.
      * @throws IllegalStateException
+     * @deprecated Use the method insert() rather
      */
-    public void save(final Collection<? extends OrmUjo> domains, int multiLimit) throws IllegalUjormException {
+    @Deprecated
+    public final void save(final Collection<? extends OrmUjo> domains, int multiLimit) throws IllegalUjormException {
+         Session.this.insert(domains, multiLimit);
+    }
+
+    /** INSERT object into table using the <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29">Multirow inserts</a>.
+     * The method cleans all flags of modified attributes.
+     * @param domains List of the business object of the same class. If the list must not contain object of different types
+     * @param multiLimit Row limit for the one insert.
+     *        If the value will be out of range <1,bos.size()> than the value will be corrected.
+     *        If the list item count is greater than multi limit so insert will be separated by more multirow inserts.
+     * @throws IllegalStateException
+     * @since 1.84
+     */
+    public void insert(final Collection<? extends OrmUjo> domains, int multiLimit) throws IllegalUjormException {
         final List<? extends OrmUjo> bos = domains instanceof List
                 ? (List<? extends OrmUjo>) domains
                 : new ArrayList(domains);
@@ -440,7 +479,7 @@ public class Session implements Closeable {
 
         if (!db.getDialect().isMultiRowInsertSupported()) {
             for (OrmUjo bo : bos) {
-                save(bo);
+                insert(bo);
             }
             return;
         }
@@ -454,7 +493,7 @@ public class Session implements Closeable {
             if (ihneritanceMode) {
                 final OrmUjo parent = table.getParent(bo);
                 if (parent != null) {
-                    saveOrUpdate(parent);
+                    insertOrUpdate(parent);
                 }
             }
             // 2. Assign primary key
@@ -514,10 +553,20 @@ public class Session implements Closeable {
         return value;
     }
 
+    /** Save all persistent attributes into DB table by an INSERT SQL statement.
+     * The method cleans all flags of modified attributes.
+     * @deprecated Use the method insert() rather
+     */
+    @Deprecated
+    public final void save(final @Nonnull OrmUjo bo) throws IllegalStateException {
+        insert(bo);
+    }
 
     /** Save all persistent attributes into DB table by an INSERT SQL statement.
-     * The method cleans all flags of modified attributes. */
-    public void save(final @Nonnull OrmUjo bo) throws IllegalStateException {
+     * The method cleans all flags of modified attributes.
+     * @since 1.84
+     */
+    public void insert(final @Nonnull OrmUjo bo) throws IllegalStateException {
         Assert.notNull(bo);
         JdbcStatement statement = null;
         String sql = "";

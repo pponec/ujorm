@@ -58,7 +58,7 @@ public class SampleOfInheritance extends TestCase {
         //
         Session session = handler.getDefaultSession();
         // session.save(customer.getUser()); // Since Ujorm 1.20 the statement is not necessary.
-        session.save(customer);
+        session.insert(customer);
         session.commit();
 
         IUser user = customer; // A test of the INHERITANCE

@@ -199,7 +199,7 @@ implements ParamService {
 
         dbParam.setTextValue(param.getTextValue());
         dbParam.setLastUpdate(LocalDateTime.now());
-        session.saveOrUpdate(dbParam);
+        session.insertOrUpdate(dbParam);
 
         // Log the value change:
         final String msg = MsgFormatter.format

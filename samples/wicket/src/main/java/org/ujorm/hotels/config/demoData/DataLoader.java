@@ -35,13 +35,13 @@ public class DataLoader implements InitializationBatch {
     @Override
     public void run(Session session) {
         if (!session.exists(City.class)) {
-            session.save(getCities());
+            session.insert(getCities());
         }
         if (!session.exists(Hotel.class)) {
-            session.save(getHotels());
+            session.insert(getHotels());
         }
         if (!session.exists(Customer.class)) {
-            session.save(getCustomers());
+            session.insert(getCustomers());
         }
     }
 

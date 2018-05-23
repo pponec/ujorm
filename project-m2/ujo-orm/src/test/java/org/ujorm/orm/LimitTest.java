@@ -204,10 +204,10 @@ public class LimitTest extends TestCase {
         XItem.NOTE.setValue(item3, name + "-3");
         XItem.ORDER.setValue(item3, order);
 
-        session.save(order);
-        session.save(item1);
-        session.save(item2);
-        session.save(item3);
+        session.insert(order);
+        session.insert(item1);
+        session.insert(item2);
+        session.insert(item3);
 
         session.commit();
     }

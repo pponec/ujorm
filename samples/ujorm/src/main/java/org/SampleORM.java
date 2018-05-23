@@ -187,15 +187,15 @@ public class SampleORM {
         System.out.println("item2: " + item2);
 
         final Transaction tr = session.beginTransaction();
-        session.save(order);
-        session.save(item1);
-        session.save(item2);
+        session.insert(order);
+        session.insert(item1);
+        session.insert(item2);
 
         for (int i = 0; i < 10; i++) {
             Item item3 = new Item();
             item3.setOrder(order);
             item3.setNote("Green window " + i);
-            session.save(item3);
+            session.insert(item3);
         }
 
         if (true) {
@@ -219,7 +219,7 @@ public class SampleORM {
             item.setNote("Item number #i");
             itemList.add(item);
         }
-        session.save(itemList);
+        session.insert(itemList);
         session.commit();
     }
 
@@ -876,9 +876,9 @@ public class SampleORM {
             Customer.FIRSTNAME.setValue(c0, "Lucy");
             Customer.PARENT.setValue(c0, c1);
             //
-            session.save(c2);
-            session.save(c1);
-            session.save(c0);
+            session.insert(c2);
+            session.insert(c1);
+            session.insert(c0);
         }
     }
 }

@@ -44,17 +44,17 @@ public abstract class AbstractDao<T extends OrmUjo> {
 
     /** Save or update an persistent object */
     protected final <U extends T> void saveOrUpdateDao(@Nonnull final U bo) {
-        getSessionDao().saveOrUpdate(bo);
+        getSessionDao().insertOrUpdate(bo);
     }
 
     /** Save a persistent object to database */
     protected final <U extends T> void saveDao(@Nonnull final U bo) {
-        getSessionDao().save(bo);
+        getSessionDao().insert(bo);
     }
 
     /** Save list of persistent objects to database */
     protected final <U extends T> void saveDao(@Nonnull final List<U> bos) {
-        getSessionDao().save(bos);
+        getSessionDao().insert(bos);
     }
 
     /** Update a persistent object on database */

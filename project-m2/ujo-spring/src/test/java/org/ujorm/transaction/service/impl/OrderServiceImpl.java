@@ -35,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void save(Order order) {
-        manager.getLocalSession().save(order);
+        manager.getLocalSession().insert(order);
     }
 
     /** Aktualizuje měnu */

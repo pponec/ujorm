@@ -103,7 +103,7 @@ public class UjoSequencerTest extends TestCase {
     private Order createAndSaveOrder(Session session) {
         final Order result = new Order();
         result.setNote("test");
-        session.save(result);
+        session.insert(result);
         return result;
     }
 

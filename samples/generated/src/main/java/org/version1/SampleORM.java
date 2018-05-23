@@ -137,9 +137,9 @@ public class SampleORM {
         System.out.println("item1: " + item1);
         System.out.println("item2: " + item2);
 
-        session.save(order);
-        session.save(item1);
-        session.save(item2);
+        session.insert(order);
+        session.insert(item1);
+        session.insert(item2);
 
         if (true) {
             session.commit();

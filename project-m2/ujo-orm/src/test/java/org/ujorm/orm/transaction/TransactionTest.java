@@ -53,21 +53,21 @@ public class TransactionTest extends TestCase {
         session.delete(User.id.forAll());
         session.commit();
         //
-        session.save(new User());
+        session.insert(new User());
         assertEquals(1L, session.createQuery(User.class).getCount());
         assertEquals(null, session.getTransaction());
         { // 1st Level
             session.beginTransaction();
-            session.save(new User());
+            session.insert(new User());
             assertEquals(2L, session.createQuery(User.class).getCount());
             assertEquals(true, session.getTransaction().isRoot());
             { // 2md Level
                 session.beginTransaction();
-                session.save(new User());
+                session.insert(new User());
                 assertEquals(3L, session.createQuery(User.class).getCount());
                 { // 3rd Level
                     session.beginTransaction();
-                    session.save(new User());
+                    session.insert(new User());
                     assertEquals(4L, session.createQuery(User.class).getCount());
                     session.rollbackTransaction();
                 }
@@ -94,21 +94,21 @@ public class TransactionTest extends TestCase {
         session.delete(User.id.forAll());
         session.commit();
         //
-        session.save(new User());
+        session.insert(new User());
         assertEquals(1L, session.createQuery(User.class).getCount());
         assertEquals(null, session.getTransaction());
         { // 1st Level
             session.beginTransaction();
-            session.save(new User());
+            session.insert(new User());
             assertEquals(2L, session.createQuery(User.class).getCount());
             assertEquals(true, session.getTransaction().isRoot());
             { // 2md Level
                 session.beginTransaction();
-                session.save(new User());
+                session.insert(new User());
                 assertEquals(3L, session.createQuery(User.class).getCount());
                 { // 3rd Level
                     session.beginTransaction();
-                    session.save(new User());
+                    session.insert(new User());
                     assertEquals(4L, session.createQuery(User.class).getCount());
                     session.commitTransaction();
                 }
@@ -134,21 +134,21 @@ public class TransactionTest extends TestCase {
         session.delete(User.id.forAll());
         session.commit();
         //
-        session.save(new User());
+        session.insert(new User());
         assertEquals(1L, session.createQuery(User.class).getCount());
         assertEquals(null, session.getTransaction());
         { // 1st Level
             session.beginTransaction();
-            session.save(new User());
+            session.insert(new User());
             assertEquals(2L, session.createQuery(User.class).getCount());
             assertEquals(true, session.getTransaction().isRoot());
             { // 2md Level
                 session.beginTransaction();
-                session.save(new User());
+                session.insert(new User());
                 assertEquals(3L, session.createQuery(User.class).getCount());
                 { // 3rd Level
                     session.beginTransaction();
-                    session.save(new User());
+                    session.insert(new User());
                     assertEquals(4L, session.createQuery(User.class).getCount());
                     session.commitTransaction();
                 }

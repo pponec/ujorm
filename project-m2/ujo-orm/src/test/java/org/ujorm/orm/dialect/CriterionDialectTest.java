@@ -58,7 +58,7 @@ public class CriterionDialectTest extends TestCase {
         final Session session = new OrmHandler(XDatabase.class).createSession();
         session.delete(XItem.ID.forAll());
         session.delete(XOrder.ID.forAll());
-        session.save(user);
+        session.insert(user);
         session.commit();
         //
         final Criterion<XOrder> crnA, crnB, crnC, criterion;
@@ -84,7 +84,7 @@ public class CriterionDialectTest extends TestCase {
         final Session session = new OrmHandler(XDatabase.class).createSession();
         session.delete(XItem.ID.forAll());
         session.delete(XOrder.ID.forAll());
-        session.save(user);
+        session.insert(user);
         session.commit();
         //
         final Criterion<XOrder> crnA, crnB, crnC, criterion;

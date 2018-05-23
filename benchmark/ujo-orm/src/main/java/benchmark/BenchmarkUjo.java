@@ -92,13 +92,13 @@ public class BenchmarkUjo {
         user1.set(UjoUser.LASTNAME, "Lorem ipsum dolor");
         user1.set(UjoUser.SURENAME, "Sit amet consectetur");
         user1.set(UjoUser.PERSONAL_ID, "12345678");
-        session.save(user1);
+        session.insert(user1);
 
         UjoUser user2 = new UjoUser();
         user2.set(UjoUser.LASTNAME, "Lorem ipsum dolor");
         user2.set(UjoUser.SURENAME, "Sit amet consectetur");
         user2.set(UjoUser.PERSONAL_ID, "12345678");
-        session.save(user2);
+        session.insert(user2);
 
         for (int i = 1; i <= ORDER_COUNT; i++) {
             UjoOrder order = new UjoOrder();
@@ -112,7 +112,7 @@ public class BenchmarkUjo {
             order.set(UjoOrder.PAYMENT_TYPE, "C");
             order.set(UjoOrder.PUBLIC_ID, "P" + String.valueOf(1001000 + i));
             order.set(UjoOrder.USER, user1);
-            session.save(order);
+            session.insert(order);
 
             for (int j = 1; j <= ITEM_COUNT; j++) {
                 UjoOrderItem item = new UjoOrderItem();
@@ -123,7 +123,7 @@ public class BenchmarkUjo {
                 item.set(UjoOrderItem.PRICE, new BigDecimal(1000 + j));
                 item.set(UjoOrderItem.PUBLIC_ID, "xxss-" + j);
                 item.set(UjoOrderItem.USER, user2);
-                session.save(item);
+                session.insert(item);
             }
         }
 
