@@ -375,7 +375,7 @@ public class Session implements Closeable {
 
     /** Make a statement INSERT or UPDATE into a database table
      * according to attribute {@link Session}. Related objects
-     * must be saved using an another call of the method.
+     * must be inserted using an another call of the method.
      * The method cleans all flags of modified attributes.
      * @deprecated Use the method insertOrUpdate() rather
      */
@@ -386,7 +386,7 @@ public class Session implements Closeable {
 
     /** Make a statement INSERT or UPDATE into a database table
      * according to attribute {@link Session}. Related objects
-     * must be saved using an another call of the method.
+     * must be inserted using an another call of the method.
      * The method cleans all flags of modified attributes.
      * @since 1.84
      */
@@ -402,7 +402,6 @@ public class Session implements Closeable {
     /**
      * If parameter {@link MetaParams#INHERITANCE_MODE INHERITANCE_MODE} is TRUE so modify all parrents.
      * @param bo Object to an action
-     * @param saveActio Value TRUE means SAVE, value FALSE means UPDATE.
      * @return Returns Table model for the parameter object.
      */
     private MetaTable modifyParent(final OrmUjo bo) {
@@ -553,7 +552,7 @@ public class Session implements Closeable {
         return value;
     }
 
-    /** Save all persistent attributes into DB table by an INSERT SQL statement.
+    /** Insert all persistent attributes into DB table by an INSERT SQL statement.
      * The method cleans all flags of modified attributes.
      * @deprecated Use the method insert() rather
      */
