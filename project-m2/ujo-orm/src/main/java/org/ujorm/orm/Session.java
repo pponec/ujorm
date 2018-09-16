@@ -380,7 +380,7 @@ public class Session implements Closeable {
      * @deprecated Use the method insertOrUpdate() rather
      */
     @Deprecated
-    public final void saveOrUpdate(final @Nonnull OrmUjo bo) throws IllegalStateException {
+    public final void saveOrUpdate(@Nonnull final OrmUjo bo) throws IllegalStateException {
         insertOrUpdate(bo);
     }
 
@@ -390,7 +390,7 @@ public class Session implements Closeable {
      * The method cleans all flags of modified attributes.
      * @since 1.84
      */
-    public void insertOrUpdate(final @Nonnull OrmUjo bo) throws IllegalStateException {
+    public void insertOrUpdate(@Nonnull final OrmUjo bo) throws IllegalStateException {
         Assert.notNull(bo);
         if (bo.readSession() == null) {
             insert(bo);
@@ -557,7 +557,7 @@ public class Session implements Closeable {
      * @deprecated Use the method insert() rather
      */
     @Deprecated
-    public final void save(final @Nonnull OrmUjo bo) throws IllegalStateException {
+    public final void save(@Nonnull final OrmUjo bo) throws IllegalStateException {
         insert(bo);
     }
 
@@ -565,7 +565,7 @@ public class Session implements Closeable {
      * The method cleans all flags of modified attributes.
      * @since 1.84
      */
-    public void insert(final @Nonnull OrmUjo bo) throws IllegalStateException {
+    public void insert(@Nonnull final OrmUjo bo) throws IllegalStateException {
         Assert.notNull(bo);
         JdbcStatement statement = null;
         String sql = "";

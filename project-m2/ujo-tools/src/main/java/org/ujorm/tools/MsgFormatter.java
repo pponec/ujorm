@@ -62,20 +62,22 @@ public class MsgFormatter {
      *  assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
      * </pre>
      * @param messageTemplate Template where argument position is marked by the {@code {}} characters.
-     * @param arguments Optional arguments, where the {@code Supplier} interface is supported.
-     * @return
+     * @param argumentValues Optional arguments, where the {@code Supplier} interface is supported.
+     * @return A result text
      */
     @Nonnull
     public String formatMsg
-        ( @Nullable final String messageTemplate
-        , @Nullable final Object... arguments)
+        ( @Nullable final CharSequence messageTemplate
+        , @Nullable final Object... argumentValues)
         {
-        final String template = messageTemplate != null
-                ? messageTemplate
-                : String.valueOf(messageTemplate);
-        if (!Check.hasLength(arguments)) {
+        final String template = String.valueOf(messageTemplate);
+        if (!Check.hasLength(argumentValues)) {
             return template;
         }
+        final Object[] arguments = argumentValues.length == 1
+            && argumentValues[0] instanceof Object[]
+            ? (Object[]) argumentValues[0] // Convert a single argument type of array
+            : argumentValues;
 
         final int max = template.length();
         final CharArrayWriter out = new CharArrayWriter(Math.max(32, max + (max >> 1)));

@@ -436,22 +436,16 @@ public class MSSqlDialect extends SqlDialect {
     }
 
     /** Print a extended SQL table name by sample: SCHEMA.TABLE
-     * @param printSymbolSchema True parameter replaces a <strong>default schema</strong> name for the symbol "~" by the example: ~.TABLE
      * @throws IOException
      */
     @Override
-    public Appendable printFullTableName(final MetaTable table, final boolean printSymbolSchema, final Appendable out) throws IOException {
+    public Appendable printFullTableName(final MetaTable table, final Appendable out) throws IOException {
 
         final String tableSchema = MetaTable.SCHEMA.of(table);
         final String tableName = MetaTable.NAME.of(table);
 
         if (hasLength(tableSchema)) {
-            if (printSymbolSchema && table.isDefaultSchema()) {
-                out.append(DEFAULT_SCHEMA_SYMBOL);
-            } else {
-                printQuotedName(tableSchema, QuoteEnum.BY_CONFIG, out);
-            }
-            out.append('.');
+            printQuotedName(tableSchema, QuoteEnum.BY_CONFIG, out).append('.');
         }
         out.append("dbo.");
         printQuotedName(tableName, QuoteEnum.BY_CONFIG, out);
@@ -488,11 +482,11 @@ public class MSSqlDialect extends SqlDialect {
     protected Appendable printSequenceTableName(final UjoSequencer sequence, final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
         if (hasLength(schema)) {
-            printQuotedNameAlways(schema, out);
+            printQuotedName(schema, out);
             out.append('.');
         }
         out.append("dbo.");
-        printQuotedNameAlways(getSeqTableModel().getTableName(), out);
+        printQuotedName(getSeqTableModel().getTableName(), out);
         return out;
     }
 

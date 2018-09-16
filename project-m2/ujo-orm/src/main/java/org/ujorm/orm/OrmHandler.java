@@ -285,9 +285,9 @@ public class OrmHandler implements OrmHandlerProvider {
                 }
             }
         }
-        
+
         // Lock the meta-model:
-        databases.lock();        
+        databases.lock();
     }
 
     /** Do the handler have a read-only state? */

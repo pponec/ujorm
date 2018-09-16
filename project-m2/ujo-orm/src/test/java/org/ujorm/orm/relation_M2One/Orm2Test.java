@@ -16,6 +16,9 @@
 
 package org.ujorm.orm.relation_M2One;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.*;
 import junit.framework.TestCase;
@@ -29,12 +32,13 @@ import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.ao.LoadingPolicy;
 import org.ujorm.orm.dialect.DerbyDialect;
 import org.ujorm.orm.dialect.FirebirdDialect;
-import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.orm.jdbc.JdbcBuillder;
+import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.orm_tutorial.sample.MyProcedure;
 import org.ujorm.orm_tutorial.sample.ViewOrder;
-
+import static junit.framework.TestCase.assertEquals;
 /**
  * The tutorial in the class for the Ujorm <br>
  * --------------------------------------- <br>
@@ -46,18 +50,6 @@ import org.ujorm.orm_tutorial.sample.ViewOrder;
  * Copyright 2010, Pavel Ponec
  */
 public class Orm2Test extends TestCase {
-
-    public Orm2Test(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return Orm2Test.class;
-    }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
 
     // ------- TUTORIAL MENU: -------
 
@@ -86,7 +78,6 @@ public class Orm2Test extends TestCase {
             sample.useDelete_0();
             sample.useDelete_1();
             sample.useDelete_2();
-            sample.useMetadata();
         } finally {
             sample.useCloseSession();
         }
@@ -114,7 +105,8 @@ public class Orm2Test extends TestCase {
             MetaParams params = new MetaParams();
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
             params.set(MetaParams.SEQUENCE_CACHE, 1);
-            params.set(MetaParams.QUOTATION_POLICY, CheckReport.EXCEPTION);
+            params.set(MetaParams.QUOTATION_POLICY, CheckReport.QUOTE_SQL_NAMES);
+            params.set(MetaParams.FIXING_TABLE_SEQUENCES, MyFixingTableSequences.class);
             handler.config(params);
         }
 
@@ -472,21 +464,6 @@ public class Orm2Test extends TestCase {
         System.out.println("There are DELETED rows: " + count);
     }
 
-    /** Print some meta-data of the key Order.note. */
-    public void useMetadata() {
-        MetaColumn c = (MetaColumn) handler.findColumnModel(Order.note);
-
-        StringBuilder msg = new StringBuilder()
-            .append("** METADATA OF COLUMN: " + Order.note)
-            .append("\n\t Length : " + c.getMaxLength())
-            .append("\n\t NotNull: " + c.isMandatory())
-            .append("\n\t PrimKey: " + c.isPrimaryKey())
-            .append("\n\t DB name: " + c.getFullName())
-            .append("\n\t Dialect: " + c.getDialectClass().getSimpleName())
-            ;
-        System.out.println(msg);
-    }
-
     /** Close Ujorm session to clear a session cache
      * and database connection(s).
      */
@@ -496,4 +473,68 @@ public class Orm2Test extends TestCase {
         }
     }
 
+    /** Testing class */
+    public static class MyFixingTableSequences extends FixingTableSequences {
+
+        /** Squence meta model */
+        private final SeqTableModel seqModel = new SeqTableModel();
+
+        public MyFixingTableSequences(MetaDatabase db, Connection conn) throws Exception {
+            super(db, conn);
+        }
+
+        @Override
+        protected void onBefore(Connection conn)
+            throws SQLException, IOException {
+
+           assertEquals(0, count(conn));
+
+           long value = 10;
+           insert("db_m.ord_order", ++value, 10, conn);
+           insert("\"db_m\".\"ord_order\"", ++value, 10, conn);
+           insert("\"db_m\".\"ord_item\"", ++value, 10, conn);
+           insert("\"db_m\".\"undefined_table\"", ++value, 10, conn);
+
+           assertEquals(4, count(conn));
+        }
+
+        @Override
+        protected void onAfter(Connection conn)
+            throws SQLException, IOException {
+
+           assertEquals(3, count(conn));
+           deleteSequences(conn);
+        }
+
+        private void insert(String id, long value, int cache, Connection conn) throws SQLException, IOException {
+           final long max = 1_000_000L;
+           JdbcBuillder sql = new JdbcBuillder()
+                .write("INSERT INTO")
+                .write(sequenceTableName)
+                .write("(")
+                .columnInsert(dialect.getQuotedName(seqModel.getId()), id)
+                .columnInsert(dialect.getQuotedName(seqModel.getSequence()), value)
+                .columnInsert(dialect.getQuotedName(seqModel.getCache()), cache)
+                .columnInsert(dialect.getQuotedName(seqModel.getMaxValue()), max)
+                .write(")")
+                ;
+           sql.executeUpdate(conn);
+        }
+
+        private int count(Connection connection) throws SQLException {
+           JdbcBuillder sql = new JdbcBuillder()
+                .write("SELECT COUNT(*) FROM")
+                .write(sequenceTableName)
+                ;
+           return sql.uniqueValue(Integer.class, connection);
+        }
+
+        private int deleteSequences(Connection connection) throws SQLException {
+           JdbcBuillder sql = new JdbcBuillder()
+                .write("DELETE FROM")
+                .write(sequenceTableName)
+                ;
+           return sql.executeUpdate(connection);
+        }
+    }
 }

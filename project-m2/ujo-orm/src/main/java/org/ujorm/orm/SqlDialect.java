@@ -75,8 +75,6 @@ abstract public class SqlDialect {
 
     /** The table key for a common sequence emulator. */
     protected static final String COMMON_SEQ_TABLE_KEY = "<ALL>";
-    /** The default schema symbol */
-    protected static final String DEFAULT_SCHEMA_SYMBOL = "~";
     /** The new line separator for SQL statements */
     protected static final String NEW_LINE_SEPARATOR = "\n\t";
     /** The default quote character */
@@ -134,28 +132,20 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print a full SQL table name by sample: SCHEMA.TABLE  */
-    public final Appendable printFullTableName(final MetaTable table, @Nonnull final Appendable out) throws IOException {
-        return printFullTableName(table, false, out);
+    /** Print a extended SQL table name by sample: SCHEMA.TABLE */
+    public Appendable printFullTableName(final MetaTable table, @Nonnull final Appendable out) throws IOException {
+        return printFullTableName(table, table.get(MetaTable.QUOTED), out);
     }
 
-    /** Print a extended SQL table name by sample: SCHEMA.TABLE
-     * @param printSymbolSchema True parameter replaces a <strong>default schema</strong> name for the symbol "~" by the example: ~.TABLE
-     * @throws IOException
-     */
-    public Appendable printFullTableName(final MetaTable table, final boolean printSymbolSchema, @Nonnull final Appendable out) throws IOException {
+    /** Print a extended SQL table name by sample: SCHEMA.TABLE_NAME */
+    public Appendable printFullTableName(final MetaTable table, @Nonnull final QuoteEnum quoted, @Nonnull final Appendable out) throws IOException {
         final String tableSchema = MetaTable.SCHEMA.of(table);
         final String tableName = MetaTable.NAME.of(table);
 
         if (hasLength(tableSchema)) {
-            if (printSymbolSchema && table.isDefaultSchema()) {
-                out.append(DEFAULT_SCHEMA_SYMBOL);
-            } else {
-                printQuotedName(tableSchema, table.get(MetaTable.QUOTED), out);
-            }
-            out.append('.');
+            printQuotedName(tableSchema, quoted, out).append('.');
         }
-        printQuotedName(tableName, table.get(MetaTable.QUOTED), out);
+        printQuotedName(tableName, quoted, out);
         return out;
     }
 
@@ -890,7 +880,7 @@ abstract public class SqlDialect {
      * @param count only count of items is required;
      */
     protected void printSelectTableBase
-        ( final @Nonnull Query query
+        ( @Nonnull final Query query
         , final boolean count
         , @Nonnull final Appendable out) throws IOException {
         out.append("SELECT ");
@@ -1019,9 +1009,15 @@ abstract public class SqlDialect {
 
     /** Print the full sequence table */
     protected Appendable printSequenceTableName
-        ( final @Nonnull UjoSequencer sequence
+        ( @Nonnull final UjoSequencer sequence
         , @Nonnull final Appendable out) throws IOException {
-        String schema = sequence.getDatabaseSchema();
+            return printSequenceTableName(sequence.getDatabaseSchema(), out);
+    }
+
+    /** Print the full sequence table */
+    public Appendable printSequenceTableName
+        ( @Nonnull final String schema
+        , @Nonnull final Appendable out) throws IOException {
         if (hasLength(schema)) {
             printQuotedName(schema, QuoteEnum.BY_CONFIG, out);
             out.append('.');
@@ -1034,19 +1030,13 @@ abstract public class SqlDialect {
     public Appendable printSequenceTable
         ( @Nonnull final MetaDatabase db
         , @Nonnull final Appendable out) throws IOException {
-        String schema = MetaDatabase.SCHEMA.of(db);
-        Integer cache = MetaParams.SEQUENCE_CACHE.of(db.getParams());
-
-        out.append("CREATE TABLE ");
-        if (hasLength(schema)) {
-            printQuotedName(schema, QuoteEnum.BY_CONFIG, out);
-            out.append('.');
-        }
-
+        final Integer cache = MetaParams.SEQUENCE_CACHE.of(db.getParams());
         final MetaColumn pkType = new MetaColumn();
         MetaColumn.DB_TYPE.setValue(pkType, DbType.BIGINT);
 
-        printQuotedName(getSeqTableModel().getTableName(), QuoteEnum.BY_CONFIG, out);
+        out.append("CREATE TABLE ");
+        printSequenceTableName(MetaDatabase.SCHEMA.of(db), out);
+
         out.append ( ""
         + NEW_LINE_SEPARATOR.concat("( ") + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
         + NEW_LINE_SEPARATOR.concat(", ") + getQuotedName(getSeqTableModel().getSequence()) + SPACE + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
@@ -1074,13 +1064,13 @@ abstract public class SqlDialect {
         out.append("INSERT INTO ");
         printSequenceTableName(sequence, out);
         out.append(" (");
-        printQuotedNameAlways(getSeqTableModel().getId(), out);
+        printQuotedName(getSeqTableModel().getId(), out);
         out.append(',');
-        printQuotedNameAlways(getSeqTableModel().getSequence(), out);
+        printQuotedName(getSeqTableModel().getSequence(), out);
         out.append(',');
-        printQuotedNameAlways(getSeqTableModel().getCache(), out);
+        printQuotedName(getSeqTableModel().getCache(), out);
         out.append(',');
-        printQuotedNameAlways(getSeqTableModel().getMaxValue(), out);
+        printQuotedName(getSeqTableModel().getMaxValue(), out);
         out.append(") VALUES (?," + seq).append(',').append(Integer.toString(cache)).append(",0)");
 
         return out;
@@ -1095,29 +1085,31 @@ abstract public class SqlDialect {
         out.append("UPDATE ");
         printSequenceTableName(sequence, out);
         out.append(" SET ");
-        printQuotedNameAlways(getSeqTableModel().getSequence(), out);
+        printQuotedName(getSeqTableModel().getSequence(), out);
         out.append("=");
-        printQuotedNameAlways(getSeqTableModel().getSequence(), out);
+        printQuotedName(getSeqTableModel().getSequence(), out);
         out.append("+");
-        printQuotedNameAlways(getSeqTableModel().getCache(), out);
+        printQuotedName(getSeqTableModel().getCache(), out);
         out.append(" WHERE ");
-        printQuotedNameAlways(getSeqTableModel().getId(), out);
+        printQuotedName(getSeqTableModel().getId(), out);
         out.append("=?");
         return out;
     }
 
-    /** Set sequence to the max value. */
+    /** Set sequence to the max value. 
+     * @TODO.pop: use JDBCV arguments
+     */
     public Appendable printSetMaxSequence
         ( @Nonnull final UjoSequencer sequence
         , @Nonnull final Appendable out) throws IOException {
         out.append("UPDATE ");
         printSequenceTableName(sequence, out);
         out.append(" SET ");
-        printQuotedNameAlways(getSeqTableModel().getSequence(), out);
+        printQuotedName(getSeqTableModel().getSequence(), out);
         out.append("=");
-        printQuotedNameAlways(getSeqTableModel().getMaxValue(), out);
+        printQuotedName(getSeqTableModel().getMaxValue(), out);
         out.append(" WHERE ");
-        printQuotedNameAlways(getSeqTableModel().getId(), out);
+        printQuotedName(getSeqTableModel().getId(), out);
         out.append("=?");
         return out;
     }
@@ -1133,16 +1125,16 @@ abstract public class SqlDialect {
         final SeqTableModel tm = getSeqTableModel();
 
         out.append("SELECT ");
-        printQuotedNameAlways(tm.getSequence(), out);
+        printQuotedName(tm.getSequence(), out);
         out.append(", ");
-        printQuotedNameAlways(tm.getCache(), out);
+        printQuotedName(tm.getCache(), out);
         out.append(", ");
-        printQuotedNameAlways(tm.getMaxValue(), out);
+        printQuotedName(tm.getMaxValue(), out);
         out.append(" FROM ");
 
         printSequenceTableName(sequence, out);
         out.append(" WHERE ");
-        printQuotedNameAlways(tm.getId(), out);
+        printQuotedName(tm.getId(), out);
         out.append("=?");
 
         return out;
@@ -1158,7 +1150,7 @@ abstract public class SqlDialect {
         out.append("DELETE FROM ");
         printSequenceTableName(sequence, out);
         out.append(" WHERE ");
-        printQuotedNameAlways(tm.getId(), out);
+        printQuotedName(tm.getId(), out);
         out.append("=?");
 
         return out;
@@ -1309,11 +1301,11 @@ abstract public class SqlDialect {
             case BY_CONFIG:
                 switch (getQuotingPolicy()) {
                     case QUOTE_SQL_NAMES:
-                        printQuotedNameAlways(name, sql);
+                        printQuotedName(name, sql);
                         break;
                     case QUOTE_ONLY_SQL_KEYWORDS:
                         if (ormHandler.getParameters().get(MetaParams.KEYWORD_SET).contains(name.toString().toUpperCase(Locale.ENGLISH))) {
-                           printQuotedNameAlways(name, sql);
+                           printQuotedName(name, sql);
                         } else {
                            sql.append(name);
                         }
@@ -1323,7 +1315,7 @@ abstract public class SqlDialect {
                 }
                 break;
             case YES:
-                printQuotedNameAlways(name, sql);
+                printQuotedName(name, sql);
                 break;
             case NO:
                 sql.append(name);
@@ -1341,7 +1333,7 @@ abstract public class SqlDialect {
      * @param sql Target SQL for printing new quoted name
      * @return SQL with printed quoted name
      */
-    protected Appendable printQuotedNameAlways
+    public Appendable printQuotedName
         ( @Nonnull final CharSequence name
         , @Nonnull final Appendable sql) throws IOException {
         sql.append(getQuoteChar(true)); // quotation start character based on SQL dialect
@@ -1369,9 +1361,9 @@ abstract public class SqlDialect {
     }
 
     /** Prints quoted name (identifier) to SQL - always. */
-    protected final String getQuotedName(@Nonnull final CharSequence name) throws IOException {
+    public final String getQuotedName(@Nonnull final CharSequence name) throws IOException {
         final StringBuilder result = new StringBuilder(name.length()+4);
-        printQuotedNameAlways(name, result);
+        printQuotedName(name, result);
         return result.toString();
     }
 

@@ -91,7 +91,6 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * A shortcut for the method {@link #of(org.ujorm.Ujo)}.
      * @see #of(Ujo)
      */
-    @Nullable
     public VALUE getValue(@Nonnull UJO ujo);
 
     /**
@@ -105,7 +104,6 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see Ujo#readValue(Key)
      * @see #getValue(org.ujorm.Ujo)
      */
-    @Nullable
     public VALUE of(@Nonnull UJO ujo);
 
 

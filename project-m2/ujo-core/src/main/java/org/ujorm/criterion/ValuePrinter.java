@@ -33,14 +33,19 @@ public class ValuePrinter extends ValueFormatter {
     protected final CharArrayWriter out;
 
     /** Constructor */
+    public ValuePrinter(final int size) {
+        this(new CharArrayWriter(size));
+    }
+
+    /** Constructor */
     public ValuePrinter(@Nonnull final CharArrayWriter out) {
-        super("?", "\"");
-        this.out = out; 
+        this("?", "\"", out);
     }
     
     /** Constructor */
-    public ValuePrinter(final int size) {
-        this(new CharArrayWriter(size));
+    public ValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final CharArrayWriter out) {
+        super(mark, textBorder);
+        this.out = out;
     }
     
     /** Append value */

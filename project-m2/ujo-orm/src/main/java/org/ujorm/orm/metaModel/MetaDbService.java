@@ -115,7 +115,12 @@ public class MetaDbService {
             createSequenceTable(createSequenceTable);
             // 8. Create table comment for the all tables:
             createTableComments(news.getTables());
-            // 9. Commit:
+            // 8. Create table comment for the all tables:
+            createTableComments(news.getTables());
+            // 9. Fixing the sequences and commit it:
+            sql.setLength(0);
+            db.getParams().getFixingTableSequences(db, conn).run();
+            // 10. Commit:
             conn.commit();
 
         } catch (SQLException | IOException | RuntimeException | OutOfMemoryError e) {

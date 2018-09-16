@@ -149,6 +149,7 @@ public class SampleORM {
             params.set(MetaParams.TYPE_SERVICE, TypeServiceForOlderJdbc.class); // If the JDBC is older than 4.2
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
             params.set(MetaParams.QUOTATION_POLICY, CheckReport.EXCEPTION);
+            params.set(MetaParams.FIXING_TABLE_SEQUENCES, FixingTableSequencesDisabled.class);
             params.set(MetaParams.INITIALIZATION_BATCH, new InitializationBatch() {
                 @Override public void run(Session session) throws Exception {
                     if (!session.exists(Customer.class)) {

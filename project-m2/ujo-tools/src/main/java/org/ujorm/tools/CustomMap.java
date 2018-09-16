@@ -78,7 +78,7 @@ public class CustomMap<K, V> implements Map<K, V>, Serializable {
     }
 
     @Override
-    public V get(final @Nonnull Object key) {
+    public V get(@Nonnull final Object key) {
         return impl.get(keyFactory.apply((K) key));
     }
 

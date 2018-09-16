@@ -3,7 +3,8 @@ The Ujorm release notes
 *******************************
 
 release 1.84-SNAPSHOT
-+ ...
++ fixing the table sequences using the class FixingTableSequences.
++ new tools for a JDBC operation called JdbcBuilder is available (see jUnit test for usage)
 
 release 1.83
 + CORE New persistent interface called ValueWrapper where a sample implementation is the UnsignedShort class.  

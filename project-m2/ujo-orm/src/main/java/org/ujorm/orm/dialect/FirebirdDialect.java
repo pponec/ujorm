@@ -114,7 +114,7 @@ public class FirebirdDialect extends org.ujorm.orm.SqlDialect {
      * @return SQL with printed quoted name
      */
     @Override
-    protected Appendable printQuotedNameAlways
+    public Appendable printQuotedName
         ( @Nonnull final CharSequence name
         , @Nonnull final Appendable sql) throws IOException {
         //sql.append('"'); // quotation start character based on SQL dialect

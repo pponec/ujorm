@@ -89,7 +89,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
 
     /** Returns a first evaluated item from an iterable collection. */
     @Nullable
-    public U findFirst(final @Nonnull Iterable<U> ujoList) {
+    public U findFirst(@Nonnull final Iterable<U> ujoList) {
         for (final U ujo : ujoList) {
             if (evaluate(ujo)) {
                 return ujo;
@@ -102,7 +102,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
     @Nonnull
-    public List<U> findAll(final @Nonnull Iterable<U> ujoList) {
+    public List<U> findAll(@Nonnull final Iterable<U> ujoList) {
         final List<U> result = new ArrayList<>();
         for (final U ujo : ujoList) {
             if (evaluate(ujo)) {
@@ -116,7 +116,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
     @Nonnull
-    public List<U> findAll(final @Nonnull U ... ujoList) {
+    public List<U> findAll(@Nonnull final U ... ujoList) {
         final List<U> result = new ArrayList<>();
         for (final U ujo : ujoList) {
             if (evaluate(ujo)) {
@@ -131,7 +131,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @deprecated Use the method {@link #findAll(java.lang.Iterable)} rather.
      */
     @Nonnull @Deprecated
-    public List<U> evaluate(final @Nonnull Iterable<U> ujoList) {
+    public List<U> evaluate(@Nonnull final Iterable<U> ujoList) {
         return findAll(ujoList);
     }
 
@@ -140,7 +140,7 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
      * @deprecated Use the method {@link #findAll(org.ujorm.Ujo...)} rather.
      */
     @Nonnull @Deprecated
-    public List<U> evaluate(final @Nonnull U ... ujoList) {
+    public List<U> evaluate(@Nonnull final U ... ujoList) {
         return findAll(ujoList);
     }
 

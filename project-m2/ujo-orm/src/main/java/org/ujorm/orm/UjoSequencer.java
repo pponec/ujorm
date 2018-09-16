@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
@@ -29,6 +30,7 @@ import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.tools.Assert;
+import static org.ujorm.tools.Check.hasLength;
 
 /**
  * The default sequence provider.
@@ -40,6 +42,8 @@ public class UjoSequencer {
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoSequencer.class);
 
+    /** The default schema symbol */
+    protected static final String DEFAULT_SCHEMA_SYMBOL = "~";
     /** DB field: seqLimit */
     public static final int SEQ_LIMIT = 1;
     /** DB field: step */
@@ -49,6 +53,8 @@ public class UjoSequencer {
 
     /** Basic table. */
     final protected MetaTable table;
+    /** Basic database */
+    transient private MetaDatabase db = null;
     /** Current sequence value */
     protected long sequence = 0;
     /** Buffer limit */
@@ -56,7 +62,7 @@ public class UjoSequencer {
     /** Total limit, zero means no restriction */
     protected long maxValue = 0;
 
-    public UjoSequencer(MetaTable table) {
+    public UjoSequencer(@Nonnull MetaTable table) {
         this.table = table;
     }
 
@@ -66,14 +72,13 @@ public class UjoSequencer {
         if (sequence<seqLimit) {
             return ++sequence;
         } else {
-
-            final MetaDatabase db = table.getDatabase();
+            final MetaDatabase db = getDatabase();
             Connection connection = null;
             String sql = null;
             StringBuilder out = new StringBuilder(64);
             try {
                 connection = session.getSeqConnection(db);
-                String tableName = db.getDialect().printFullTableName(getTable(), true, out).toString();
+                String tableName = getTableName();
 
                 // UPDATE the next sequence:
                 out.setLength(0);
@@ -126,7 +131,7 @@ public class UjoSequencer {
                         }
                         executeSql(connection, sql, tableName);
                     }
-                    if (maxValue>Long.MAX_VALUE-step) {
+                    if (maxValue > Long.MAX_VALUE - step) {
                         String msg = "The sequence attribute '"
                             + tableName
                             + ".maxValue' is too hight,"
@@ -161,7 +166,7 @@ public class UjoSequencer {
 
     /** The UJO cache is the number of pre-allocated numbers inside the OrmUjo framework. */
     public int getIncrement() {
-        final int result = MetaParams.SEQUENCE_CACHE.of(table.getDatabase().getParams());
+        final int result = MetaParams.SEQUENCE_CACHE.of(getDatabase().getParams());
         return result;
     }
 
@@ -172,22 +177,29 @@ public class UjoSequencer {
 
     /** Returns model of the database */
     public MetaDatabase getDatabase() {
-        return MetaTable.DATABASE.of(table);
+        if (db == null) {
+            db = MetaTable.DATABASE.of(table);
+        }
+        return db;
     }
 
     /** Returns a related table or null if sequence is general for the all MetaDatabase space */
+    @Nullable
     public MetaTable getTable() {
         return table;
     }
 
-    /** Returns table name */
+    /** Returns related table name with no quoting */
     protected String getTableName() {
-        try {
-            final SqlDialect dialect = table.getDatabase().getDialect();
-            return dialect.printFullTableName(getTable(), true, new StringBuilder()).toString();
-        } catch (IOException e) {
-            throw new IllegalUjormException("TableName failed", e);
+        final StringBuilder result = new StringBuilder(32);
+        final String tableSchema = MetaTable.SCHEMA.of(table);
+        final String tableName = MetaTable.NAME.of(table);
+
+        if (hasLength(tableSchema)) {
+            result.append(table.isDefaultSchema() ? DEFAULT_SCHEMA_SYMBOL : tableSchema).append('.');
         }
+        result.append(tableName);
+        return result.toString();
     }
 
     /** Method returns true because the internal table 'ujorm_pk_support' is required to get a next sequence value.
@@ -203,7 +215,9 @@ public class UjoSequencer {
         maxValue = 0;
 
         LOGGER.log(UjoLogger.INFO
-              , getClass().getSimpleName() + ": reset the sequencer for the table " + getTableName());
+              , "{}: reset the sequencer for the table {}"
+              , getClass().getSimpleName()
+              , getTableName());
     }
 
     /** Returns current db sequence for an actual table with a performance optimizations.
@@ -221,11 +235,10 @@ public class UjoSequencer {
         } else {
             sql = new StringBuilder(64);
         }
-        final MetaDatabase db = table.getDatabase();
-        final String tableName = db.getDialect().printFullTableName(getTable(), true, sql).toString();
+        final String tableName = getTableName();
 
         sql.setLength(0);
-        db.getDialect().printSequenceCurrentValue(this, sql);
+        getDatabase().getDialect().printSequenceCurrentValue(this, sql);
 
         PreparedStatement statement = null;
         ResultSet res = null;
@@ -247,18 +260,21 @@ public class UjoSequencer {
         }
     }
 
-    /** Executes UPDATE for required parameters */
+    /**
+     * Executes UPDATE for required parameters
+     * @param connection JDBC connection
+     * @param sql The SQL statement
+     * @param tableName full table name (including schema, if any)
+     * @return The count of modified database rows.
+     * @throws SQLException
+     */
     protected int executeSql
-            ( final Connection connection
-            , final String sql
-            , final String tableName) throws SQLException {
-        PreparedStatement statement = null;
-        try {
-            statement = connection.prepareStatement(sql);
+            ( @Nonnull final Connection connection
+            , @Nonnull final String sql
+            , @Nonnull final String tableName) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, tableName);
             return statement.executeUpdate();
-        } finally {
-            MetaDatabase.close(null, statement, null, true);
         }
     }
 }

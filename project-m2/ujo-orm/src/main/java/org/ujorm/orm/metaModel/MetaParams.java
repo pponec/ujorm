@@ -17,10 +17,13 @@
 package org.ujorm.orm.metaModel;
 
 import java.io.File;
+import java.sql.Connection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import org.ujorm.Key;
 import org.ujorm.core.IllegalUjormException;
@@ -29,6 +32,8 @@ import org.ujorm.core.annot.Transient;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
+import org.ujorm.orm.FixingTableSequences;
+import org.ujorm.orm.FixingTableSequencesDisabled;
 import org.ujorm.orm.ITypeService;
 import org.ujorm.orm.InitializationBatch;
 import org.ujorm.orm.SqlNameProvider;
@@ -173,6 +178,10 @@ public final class MetaParams extends AbstractMetaModel {
      * the value {@link Integer.MAX_VALUE} means an unlimited.
      */
     public static final Key<MetaParams,Integer> LOG_VALUE_LENGTH_LIMIT = f.newKey("logValueLengthLimit", 128);
+
+    /** Class for th efixing the table sequences for Ujorm before 1.84 (excluding)
+     * @see FixingTableSequencesDisabled */
+    public static final Key<MetaParams,Class<? extends FixingTableSequences>> FIXING_TABLE_SEQUENCES = f.newKey("fixingTableSequences", FixingTableSequences.class);
 
     /** SQL keyword set (upper case) only for case: QUOTATION_POLICY = QUOTE_ONLY_SQL_KEYWORDS */
     @Transient
@@ -323,6 +332,16 @@ public final class MetaParams extends AbstractMetaModel {
             return result;
         } catch (RuntimeException | ReflectiveOperationException e) {
             return throwInstantiationException(INDEX_MODEL_BUILDER.of(this), e);
+        }
+    }
+
+    /** Returns an instance of the initialization batch */
+    public FixingTableSequences getFixingTableSequences(@Nullable final MetaDatabase db, @Nonnull Connection conn) throws IllegalStateException {
+        final Class<? extends FixingTableSequences> resultType = FIXING_TABLE_SEQUENCES.of(this);
+        try {
+            return resultType.getConstructor(MetaDatabase.class, Connection.class).newInstance(db, conn);
+        } catch (RuntimeException | ReflectiveOperationException e) {
+            return throwInstantiationException(resultType, e);
         }
     }
 
