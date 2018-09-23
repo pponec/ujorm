@@ -487,23 +487,27 @@ public class Orm2Test extends TestCase {
         protected void onBefore(Connection conn)
             throws SQLException, IOException {
 
-           assertEquals(0, count(conn));
+            assertEquals(0, count(conn));
 
-           long value = 10;
-           insert("db_m.ord_order", ++value, 10, conn);
-           insert("\"db_m\".\"ord_order\"", ++value, 10, conn);
-           insert("\"db_m\".\"ord_item\"", ++value, 10, conn);
-           insert("\"db_m\".\"undefined_table\"", ++value, 10, conn);
+            long value = 10;
+            insert("db_m.ord_order", ++value, 10, conn);
+            insert("\"db_m\".\"ord_order\"", ++value, 10, conn);
+            insert("\"db_m\".\"ord_item\"", ++value, 10, conn);
+            insert("\"db_m\".\"undefined_table\"", ++value, 10, conn);
 
-           assertEquals(4, count(conn));
+            assertEquals(4, count(conn));
         }
 
         @Override
         protected void onAfter(Connection conn)
             throws SQLException, IOException {
 
-           assertEquals(3, count(conn));
-           deleteSequences(conn);
+            assertEquals(3, count(conn));
+            assertEquals(1, countForId("db_m.ord_order", connection));
+            assertEquals(1, countForId("db_m.ord_item", connection));
+            assertEquals(1, countForId("\"db_m\".\"undefined_table\"", connection));
+
+            deleteSequences(conn);
         }
 
         private void insert(String id, long value, int cache, Connection conn) throws SQLException, IOException {
@@ -525,6 +529,16 @@ public class Orm2Test extends TestCase {
            JdbcBuillder sql = new JdbcBuillder()
                 .write("SELECT COUNT(*) FROM")
                 .write(sequenceTableName)
+                ;
+           return sql.uniqueValue(Integer.class, connection);
+        }
+
+        private int countForId(String id, Connection connection) throws SQLException, IOException {
+           JdbcBuillder sql = new JdbcBuillder()
+                .write("SELECT COUNT(*) FROM")
+                .write(sequenceTableName)
+                .write("WHERE")
+                .andCondition(dialect.getQuotedName(seqModel.getId()), "=", id)
                 ;
            return sql.uniqueValue(Integer.class, connection);
         }

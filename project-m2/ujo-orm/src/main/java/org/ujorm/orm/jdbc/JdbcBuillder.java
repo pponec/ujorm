@@ -156,7 +156,7 @@ public final class JdbcBuillder {
      * @param value The value od the condition (a replacement for the question character)
      */
     @Nonnull
-    public JdbcBuillder andCondition(@Nonnull String sqlCondition, @Nullable Object value) {
+    public JdbcBuillder andCondition(@Nonnull CharSequence sqlCondition, @Nullable Object value) {
         return andCondition(sqlCondition, null, value);
     }
 
@@ -167,7 +167,7 @@ public final class JdbcBuillder {
      * @param value The value od the condition (a replacement for the question character)
      */
     @Nonnull
-    public JdbcBuillder andCondition(@Nonnull String sqlCondition, @Nullable String operator, @Nullable Object value) {
+    public JdbcBuillder andCondition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value) {
         return condition(sqlCondition, operator, value, true);
     }
 
@@ -177,7 +177,7 @@ public final class JdbcBuillder {
      * @param value The value od the condition (a replacement for the question character)
      */
     @Nonnull
-    public JdbcBuillder orCondition(@Nonnull String sqlCondition, @Nullable Object value) {
+    public JdbcBuillder orCondition(@Nonnull CharSequence sqlCondition, @Nullable Object value) {
         return orCondition(sqlCondition, null, value);
     }
 
@@ -188,7 +188,7 @@ public final class JdbcBuillder {
      * @param value The value od the condition (a replacement for the question character)
      */
     @Nonnull
-    public JdbcBuillder orCondition(@Nonnull String sqlCondition, @Nullable String operator, @Nullable Object value) {
+    public JdbcBuillder orCondition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value) {
         return condition(sqlCondition, operator, value, false);
     }
 
@@ -198,7 +198,7 @@ public final class JdbcBuillder {
      * @param value The value od the condition (a replacement for the question character)
      */
     @Nonnull
-    public JdbcBuillder condition(@Nonnull String sqlCondition, @Nullable Object value, final @Nullable Boolean andOperator) {
+    public JdbcBuillder condition(@Nonnull CharSequence sqlCondition, @Nullable Object value, final @Nullable Boolean andOperator) {
         return condition(sqlCondition, null, value, andOperator);
     }
 
@@ -209,7 +209,7 @@ public final class JdbcBuillder {
      * @param value The value od the condition (a replacement for the question character)
      */
     @Nonnull
-    public JdbcBuillder condition(@Nonnull String sqlCondition, @Nullable String operator, @Nullable Object value, final @Nullable Boolean andOperator) {
+    public JdbcBuillder condition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value, final @Nullable Boolean andOperator) {
         if (Check.hasLength(sqlCondition)) {
             if (conditionCounter++ > 0 && andOperator != null) {
                 sql.append(andOperator ? " AND " : " OR ");

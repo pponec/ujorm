@@ -20,7 +20,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -38,9 +37,9 @@ import org.ujorm.tools.Assert;
 public class FixingTableSequences implements Runnable {
 
     /** DB column order */
-    private static final int COLUMN_ID = 1;
+    protected static final int COLUMN_ID = 1;
     /** DB column order */
-    private static final int COLUMN_VALUE = COLUMN_ID + 1;
+    protected static final int COLUMN_VALUE = COLUMN_ID + 1;
 
     /** Full table name of sequence */
     protected final Connection connection;
