@@ -32,12 +32,12 @@ import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.ao.LoadingPolicy;
 import org.ujorm.orm.dialect.DerbyDialect;
 import org.ujorm.orm.dialect.FirebirdDialect;
-import org.ujorm.orm.jdbc.JdbcBuillder;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.orm_tutorial.sample.MyProcedure;
 import org.ujorm.orm_tutorial.sample.ViewOrder;
+import org.ujorm.tools.JdbcBuillder;
 import static junit.framework.TestCase.assertEquals;
 /**
  * The tutorial in the class for the Ujorm <br>

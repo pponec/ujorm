@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujorm.orm.jdbc;
+package org.ujorm.tools;
 
 import java.io.CharArrayWriter;
 import java.sql.Connection;
@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.ujorm.criterion.ValuePrinter;
-import org.ujorm.tools.Assert;
-import org.ujorm.tools.Check;
 
 /**
  * PrepareStatement builder support
@@ -295,7 +292,7 @@ public final class JdbcBuillder {
     /** Returns a SQL including values */
     @Override @Nonnull
     public String toString() {
-        return new ValuePrinter
+        return new SimpleValuePrinter
             ( String.valueOf(VALUE_MARKER)
             , "'"
             , new CharArrayWriter(64))

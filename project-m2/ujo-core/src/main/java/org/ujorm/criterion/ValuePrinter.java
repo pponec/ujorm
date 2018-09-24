@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017-2017 Pavel Ponec
+ *  Copyright 2017-2018 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,54 +21,50 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.tools.ValueFormatter;
+import org.ujorm.tools.SimpleValuePrinter;
 
 /**
  * Print values to an output
  * @author Pavel Ponec
  */
-public class ValuePrinter extends ValueFormatter {
-    
-    /** Writer */
-    protected final CharArrayWriter out;
+public class ValuePrinter extends SimpleValuePrinter {
 
     /** Constructor */
-    public ValuePrinter(final int size) {
-        this(new CharArrayWriter(size));
+    public ValuePrinter(int size) {
+        super(size);
     }
 
     /** Constructor */
     public ValuePrinter(@Nonnull final CharArrayWriter out) {
-        this("?", "\"", out);
+        super(out);
     }
-    
+
     /** Constructor */
     public ValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final CharArrayWriter out) {
-        super(mark, textBorder);
-        this.out = out;
+        super(mark, textBorder, out);
     }
-    
+
     /** Append value */
     @Nonnull
     public ValuePrinter append(final char c) {
         out.append(c);
         return this;
     }
-    
+
     /** Append value */
     @Nonnull
     public ValuePrinter append(@Nullable final Object value) {
         out.append(value != null ? value.toString() : null);
         return this;
     }
-    
+
     /** Append value */
     @Nonnull
     public ValuePrinter append(@Nullable final CharSequence value) {
         out.append(value);
         return this;
     }
-    
+
     /** Append value */
     @Nonnull
     public ValuePrinter appendValue(@Nullable final Object value) {
@@ -87,18 +83,8 @@ public class ValuePrinter extends ValueFormatter {
             out.append('=');
             appendValue(firstValue);
             out.append(']');
-        } else if (value instanceof Object[]) {
-            boolean first = true;
-            for (Object object : (Object[]) value) {
-                if (first) {
-                    first = !first;
-                } else {
-                    out.append(", ");
-                }
-                appendValue(object);
-            }
         } else {
-           super.writeValue(value, out, true); 
+            super.writeValue(value, out, true);
         }
         return this;
     }
@@ -107,11 +93,11 @@ public class ValuePrinter extends ValueFormatter {
     public CharArrayWriter getWriter() {
         return out;
     }
-    
+
     /** Writer result */
     @Override @Nonnull
     public String toString() {
         return out.toString();
     }
-    
+
 }

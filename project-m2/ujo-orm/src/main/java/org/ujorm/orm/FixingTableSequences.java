@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.ujorm.orm.jdbc.JdbcBuillder;
+import org.ujorm.tools.JdbcBuillder;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.tools.Assert;
