@@ -123,7 +123,7 @@ public class JdbcBuillderTest {
 
     /** How to SELECT single value */
     public void showSelect(@Nonnull Connection connection) {
-        System.out.println("SELECT");
+        System.out.println("Show SELECT");
         JdbcBuillder sql = new JdbcBuillder()
             .write("SELECT")
             .column("t.name")
@@ -134,9 +134,9 @@ public class JdbcBuillderTest {
         assertEquals("Test", name);
     }
 
-    /** How to UPDATE single value */
+    /** How to UPDATE single value (no commit) */
     public void showUpdate(@Nonnull Connection connection) {
-        System.out.println("UPDATE");
+        System.out.println("Show UPDATE");
         JdbcBuillder sql = new JdbcBuillder()
             .write("UPDATE testTable SET")
             .columnUpdate("date", SOME_DATE)
