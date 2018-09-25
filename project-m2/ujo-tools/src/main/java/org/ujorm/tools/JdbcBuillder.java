@@ -17,6 +17,7 @@
 package org.ujorm.tools;
 
 import java.io.CharArrayWriter;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +33,7 @@ import javax.annotation.Nullable;
  * @author Pavel Ponec
  * @sa.date 2015-12-08T09:03:39+0100
  */
-public final class JdbcBuillder {
+public final class JdbcBuillder implements Serializable {
 
     /** Separator of database columns */
     protected static final char ITEM_SEPARATOR = ',';

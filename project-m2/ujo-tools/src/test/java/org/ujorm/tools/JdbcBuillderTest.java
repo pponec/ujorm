@@ -17,7 +17,9 @@
 package org.ujorm.tools;
 
 
+import java.sql.Connection;
 import java.time.LocalDate;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -95,7 +97,7 @@ public class JdbcBuillderTest {
         assertEquals(10, sql.getArguments()[0]);
     }
 
-    /** Test SQL INSERT of class JdbcBuillder. */
+    /** Test SQL UPDATE of class JdbcBuillder. */
     @Test
     public void testUpdate() {
         System.out.println("UPDATE");
@@ -119,4 +121,28 @@ public class JdbcBuillderTest {
         assertEquals(20, sql.getArguments()[3]);
     }
 
+    /** How to SELECT single value */
+    public void showSelect(@Nonnull Connection connection) {
+        System.out.println("SELECT");
+        JdbcBuillder sql = new JdbcBuillder()
+            .write("SELECT")
+            .column("t.name")
+            .write("FROM testTable t WHERE")
+            .andCondition("t.id", "=", 1);
+
+        String name = sql.uniqueValue(String.class, connection);
+        assertEquals("Test", name);
+    }
+
+    /** How to UPDATE single value */
+    public void showUpdate(@Nonnull Connection connection) {
+        System.out.println("UPDATE");
+        JdbcBuillder sql = new JdbcBuillder()
+            .write("UPDATE testTable SET")
+            .columnUpdate("date", SOME_DATE)
+            .write("WHERE")
+            .andCondition("id", "=", 1);
+
+        sql.executeUpdate(connection);
+    }
 }
