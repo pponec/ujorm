@@ -3,10 +3,13 @@ The Ujorm release notes
 *******************************
 
 release 1.84-SNAPSHOT
-+ fixing the table sequences using the class FixingTableSequences.
-+ new tools for a JDBC operation called JdbcBuilder is available (see jUnit test for usage)
++ todo ...
 
-release 1.83
+release 1.84 (2018-09-26)
++ ORM: fixing the table sequences using the class FixingTableSequences.
++ TOOLS: new tools for a JDBC operation called JdbcBuilder is available (see jUnit test for usage)
+
+release 1.83 (2018-04-21)
 + CORE New persistent interface called ValueWrapper where a sample implementation is the UnsignedShort class.  
 + ORM: New persistent interface called ValueWrapper is supported in ORM.
 + ORM: Optional quoting of individual database items by an annotation argument 
