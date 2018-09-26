@@ -60,6 +60,7 @@ public final class JdbcBuilder implements Serializable {
     /** Condition counter */
     protected int conditionCounter = 0;
 
+    /** An insert sign for different rendering */
     protected boolean insertMode = false;
 
     /** Default constructor */
@@ -72,10 +73,10 @@ public final class JdbcBuilder implements Serializable {
         this.sql = sql;
     }
 
-    /** Add another statement */
+    /** Concatenates the specified statement to the end of this statement. */
     @Nonnull
-    public JdbcBuilder add(@Nonnull final JdbcBuilder builder) {
-        this.sql.append(builder.sql);
+    public JdbcBuilder concat(@Nonnull final JdbcBuilder builder) {
+        this.sql.append(builder.getSql());
         this.arguments.add(builder.arguments);
         this.columnCounter += builder.columnCounter;
         this.conditionCounter += builder.conditionCounter;
@@ -96,9 +97,9 @@ public final class JdbcBuilder implements Serializable {
         return this;
     }
 
-    /** Write argument with no spaces */
+    /** Write argument with no space */
     @Nonnull
-    public JdbcBuilder rowWrite(@Nonnull final CharSequence sqlFragment) {
+    public JdbcBuilder rawWrite(@Nonnull final CharSequence sqlFragment) {
         if (emptySql) {
             emptySql = false;
         }
@@ -239,10 +240,22 @@ public final class JdbcBuilder implements Serializable {
     }
 
     /** Array of JDBC argumets
-     * @return Pole argumentů */
+     * @return Array of arguments */
     @Nonnull
     public Object[] getArguments() {
         return arguments.toArray(new Object[arguments.size()]);
+    }
+
+    /** Add raw arguments for special use
+     * @see #rawWrite(java.lang.CharSequence)
+     */
+    @Nonnull
+    public JdbcBuilder rawArguments(final @Nonnull Object ... values) {
+        final Object[] vals = values.length == 1 && values[0] instanceof Object[] ? (Object[]) values[0] : values;
+        for (int i = 0; i < vals.length; i++) {
+            arguments.add(values[i]);
+        }
+        return this;
     }
 
     /** Build the PreparedStatement with arguments */
