@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>sample-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.84-SNAPSHOT</version>
+    <version>1.85-SNAPSHOT</version>
     <name>sample-core</name>
     <description>The project learns to you how to use basic skils from core module</description>
     <url>http://ujorm.org</url>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>1.84-SNAPSHOT</version>
+            <version>1.85-SNAPSHOT</version>
         </dependency>
 
         <dependency>
