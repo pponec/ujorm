@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * @author Pavel Ponec
  * @sa.date 2015-12-08T09:03:39+0100
  */
-public final class JdbcBuillder implements Serializable {
+public final class JdbcBuilder implements Serializable {
 
     /** Separator of database columns */
     protected static final char ITEM_SEPARATOR = ',';
@@ -63,18 +63,30 @@ public final class JdbcBuillder implements Serializable {
     protected boolean insertMode = false;
 
     /** Default constructor */
-    public JdbcBuillder() {
+    public JdbcBuilder() {
         this(new StringBuilder(32));
     }
 
     /** StringBuilder construcor */
-    public JdbcBuillder(@Nonnull final StringBuilder sql) {
+    public JdbcBuilder(@Nonnull final StringBuilder sql) {
         this.sql = sql;
+    }
+
+    /** Add another statement */
+    @Nonnull
+    public JdbcBuilder add(@Nonnull final JdbcBuilder builder) {
+        this.sql.append(builder.sql);
+        this.arguments.add(builder.arguments);
+        this.columnCounter += builder.columnCounter;
+        this.conditionCounter += builder.conditionCounter;
+        this.emptySql = false;
+
+        return this;
     }
 
     /** If buffer is an empty, than the space is introduced */
     @Nonnull
-    public JdbcBuillder write(@Nonnull final CharSequence sqlFragment) {
+    public JdbcBuilder write(@Nonnull final CharSequence sqlFragment) {
         if (emptySql) {
             emptySql = false;
         } else {
@@ -86,7 +98,7 @@ public final class JdbcBuillder implements Serializable {
 
     /** Write argument with no spaces */
     @Nonnull
-    public JdbcBuillder rowWrite(@Nonnull final CharSequence sqlFragment) {
+    public JdbcBuilder rowWrite(@Nonnull final CharSequence sqlFragment) {
         if (emptySql) {
             emptySql = false;
         }
@@ -97,7 +109,7 @@ public final class JdbcBuillder implements Serializable {
 
     /** Add new column */
     @Nonnull
-    public JdbcBuillder column(@Nonnull final CharSequence column) {
+    public JdbcBuilder column(@Nonnull final CharSequence column) {
         if (columnCounter++ > 0) {
             sql.append(ITEM_SEPARATOR);
         }
@@ -108,7 +120,7 @@ public final class JdbcBuillder implements Serializable {
 
     /** Set new value to column by template {@code name = ? */
     @Nonnull
-    public JdbcBuillder columnUpdate(@Nonnull final CharSequence column, @Nonnull final Object value) {
+    public JdbcBuilder columnUpdate(@Nonnull final CharSequence column, @Nonnull final Object value) {
         Assert.validState(!insertMode, "The insertion mode has been started.");
         if (!arguments.isEmpty()) {
             sql.append(ITEM_SEPARATOR);
@@ -126,7 +138,7 @@ public final class JdbcBuillder implements Serializable {
 
     /** Set new value to column by template {@code name = ? */
     @Nonnull
-    public JdbcBuillder columnInsert(@Nonnull final CharSequence column, @Nonnull final Object value) {
+    public JdbcBuilder columnInsert(@Nonnull final CharSequence column, @Nonnull final Object value) {
         insertMode = true;
         if (!arguments.isEmpty()) {
             sql.append(ITEM_SEPARATOR);
@@ -138,7 +150,7 @@ public final class JdbcBuillder implements Serializable {
 
     /** Add new value */
     @Nonnull
-    public JdbcBuillder value(@Nonnull Object param) {
+    public JdbcBuilder value(@Nonnull Object param) {
         if (!arguments.isEmpty()) {
             sql.append(ITEM_SEPARATOR);
         }
@@ -154,7 +166,7 @@ public final class JdbcBuillder implements Serializable {
      * @param value The value od the condition (a replacement for the question character)
      */
     @Nonnull
-    public JdbcBuillder andCondition(@Nonnull CharSequence sqlCondition, @Nullable Object value) {
+    public JdbcBuilder andCondition(@Nonnull CharSequence sqlCondition, @Nullable Object value) {
         return andCondition(sqlCondition, null, value);
     }
 
@@ -165,7 +177,7 @@ public final class JdbcBuillder implements Serializable {
      * @param value The value od the condition (a replacement for the question character)
      */
     @Nonnull
-    public JdbcBuillder andCondition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value) {
+    public JdbcBuilder andCondition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value) {
         return condition(sqlCondition, operator, value, true);
     }
 
@@ -175,7 +187,7 @@ public final class JdbcBuillder implements Serializable {
      * @param value The value od the condition (a replacement for the question character)
      */
     @Nonnull
-    public JdbcBuillder orCondition(@Nonnull CharSequence sqlCondition, @Nullable Object value) {
+    public JdbcBuilder orCondition(@Nonnull CharSequence sqlCondition, @Nullable Object value) {
         return orCondition(sqlCondition, null, value);
     }
 
@@ -186,7 +198,7 @@ public final class JdbcBuillder implements Serializable {
      * @param value The value od the condition (a replacement for the question character)
      */
     @Nonnull
-    public JdbcBuillder orCondition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value) {
+    public JdbcBuilder orCondition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value) {
         return condition(sqlCondition, operator, value, false);
     }
 
@@ -196,7 +208,7 @@ public final class JdbcBuillder implements Serializable {
      * @param value The value od the condition (a replacement for the question character)
      */
     @Nonnull
-    public JdbcBuillder condition(@Nonnull CharSequence sqlCondition, @Nullable Object value, final @Nullable Boolean andOperator) {
+    public JdbcBuilder condition(@Nonnull CharSequence sqlCondition, @Nullable Object value, final @Nullable Boolean andOperator) {
         return condition(sqlCondition, null, value, andOperator);
     }
 
@@ -207,7 +219,7 @@ public final class JdbcBuillder implements Serializable {
      * @param value The value od the condition (a replacement for the question character)
      */
     @Nonnull
-    public JdbcBuillder condition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value, final @Nullable Boolean andOperator) {
+    public JdbcBuilder condition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value, final @Nullable Boolean andOperator) {
         if (Check.hasLength(sqlCondition)) {
             if (conditionCounter++ > 0 && andOperator != null) {
                 sql.append(andOperator ? " AND " : " OR ");

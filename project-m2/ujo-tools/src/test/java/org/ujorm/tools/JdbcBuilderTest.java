@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
  * Testing the JdbcBuillder class
  * @author Test Ponec
  */
-public class JdbcBuillderTest {
+public class JdbcBuilderTest {
 
     /** Some testing date */
     private static final LocalDate SOME_DATE = LocalDate.parse("2018-09-12");
@@ -36,7 +36,7 @@ public class JdbcBuillderTest {
     @Test
     public void testSelect() {
         System.out.println("SELECT");
-        JdbcBuillder sql = new JdbcBuillder()
+        JdbcBuilder sql = new JdbcBuilder()
             .write("SELECT")
             .column("t.id")
             .column("t.name")
@@ -57,7 +57,7 @@ public class JdbcBuillderTest {
     @Test
     public void testInsert() {
         System.out.println("INSERT INTO");
-        JdbcBuillder sql = new JdbcBuillder()
+        JdbcBuilder sql = new JdbcBuilder()
             .write("INSERT INTO testTable (")
             .columnInsert("id", 10)
             .columnInsert("name", "Test")
@@ -77,7 +77,7 @@ public class JdbcBuillderTest {
     @Test
     public void testInsertRaw() {
         System.out.println("INSERT INTO");
-        JdbcBuillder sql = new JdbcBuillder()
+        JdbcBuilder sql = new JdbcBuilder()
             .write("INSERT INTO testTable (")
             .column("id")
             .column("name")
@@ -101,7 +101,7 @@ public class JdbcBuillderTest {
     @Test
     public void testUpdate() {
         System.out.println("UPDATE");
-        JdbcBuillder sql = new JdbcBuillder()
+        JdbcBuilder sql = new JdbcBuilder()
             .write("UPDATE testTable SET")
             .columnUpdate("name", "Test")
             .columnUpdate("date", SOME_DATE)
@@ -124,7 +124,7 @@ public class JdbcBuillderTest {
     /** How to SELECT single value */
     public void showSelect(@Nonnull Connection connection) {
         System.out.println("Show SELECT");
-        JdbcBuillder sql = new JdbcBuillder()
+        JdbcBuilder sql = new JdbcBuilder()
             .write("SELECT")
             .column("t.name")
             .write("FROM testTable t WHERE")
@@ -137,7 +137,7 @@ public class JdbcBuillderTest {
     /** How to UPDATE single value (no commit) */
     public void showUpdate(@Nonnull Connection connection) {
         System.out.println("Show UPDATE");
-        JdbcBuillder sql = new JdbcBuillder()
+        JdbcBuilder sql = new JdbcBuilder()
             .write("UPDATE testTable SET")
             .columnUpdate("date", SOME_DATE)
             .write("WHERE")
