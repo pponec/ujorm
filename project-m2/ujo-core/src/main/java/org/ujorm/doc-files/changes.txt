@@ -8,6 +8,7 @@ release 1.84-SNAPSHOT
 release 1.84 (2018-09-26)
 + ORM: fixing the table sequences using the class FixingTableSequences.
 + TOOLS: new tools for a JDBC operation called JdbcBuilder is available (see jUnit test for usage)
++ An alternative home page: http://pponec.github.io/ujorm/
 
 release 1.83 (2018-04-21)
 + CORE New persistent interface called ValueWrapper where a sample implementation is the UnsignedShort class.  
