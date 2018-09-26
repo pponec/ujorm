@@ -24,10 +24,10 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.ujorm.tools.JdbcBuillder;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.JdbcBuilder;
 
 /**
  * Optional correction the internal Ujorm sequences
@@ -88,7 +88,7 @@ public class FixingTableSequences implements Runnable {
     protected void runInternal() throws SQLException, IOException {
         final Set<String> wrongSet = new HashSet<>();
         final String id = "%" + dialect.getQuoteChar(true) + "%" + dialect.getQuoteChar(false);
-        
+
         try (PreparedStatement ps = selectFromSequence(id, COLUMN_ID, true); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 wrongSet.add(rs.getString(COLUMN_ID));
@@ -108,7 +108,8 @@ public class FixingTableSequences implements Runnable {
                     final Long value = max(v1, v2);
 
                     if (v1 == null) {
-                        insertSequence(table, value);
+                        insertSequence(tableIdOk, table);
+                        updateSequence(tableIdOk, value);
                     } else if (v1 < value) {
                         updateSequence(tableIdOk, value);
                     }
@@ -121,11 +122,11 @@ public class FixingTableSequences implements Runnable {
     }
 
     /** Insert new sequence record to table by a dialect */
-    public void insertSequence(MetaTable table, long value)
+    public void insertSequence(String id, MetaTable table)
         throws IOException, SQLException {
         final String sql = dialect.printSequenceInit(table.getSequencer(), new StringBuilder()).toString();
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setLong(1, value);
+            ps.setString(1, id);
             ps.executeUpdate();
         }
     }
@@ -164,7 +165,7 @@ public class FixingTableSequences implements Runnable {
     /** Return the first column from sequences table<br>
      * SELECT {}, {} FROM {} WHERE {} LIKE '?' */
     protected PreparedStatement selectFromSequence(@Nonnull final String id, final int dbColumn, boolean likeOp) throws SQLException, IOException {
-        final JdbcBuillder sql = new JdbcBuillder()
+        final JdbcBuilder sql = new JdbcBuilder()
            .write("SELECT")
            .column(dialect.getQuotedName(seqModel.getId())) // 1
            .column(dialect.getQuotedName(seqModel.getSequence())) // 2
@@ -178,7 +179,7 @@ public class FixingTableSequences implements Runnable {
 
     /** UPDATE {} SET {} = ? WHERE {} = '?' */
     protected int updateSequence(@Nonnull final String id, final long value) throws SQLException, IOException {
-        final JdbcBuillder sql = new JdbcBuillder()
+        final JdbcBuilder sql = new JdbcBuilder()
            .write("UPDATE")
            .write(sequenceTableName)
            .write("SET")
@@ -191,12 +192,12 @@ public class FixingTableSequences implements Runnable {
 
     /** DELETE FROM {} WHERE {} = '?' */
     protected int deleteSequence(@Nonnull final String id) throws SQLException, IOException {
-        final JdbcBuillder sql = new JdbcBuillder()
+        final JdbcBuilder sql = new JdbcBuilder()
            .write("DELETE FROM")
            .write(sequenceTableName)
            .write("WHERE")
            .andCondition(dialect.getQuotedName(seqModel.getId()), "=", id);
-        
+
         return sql.executeUpdate(connection);
     }
 

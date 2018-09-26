@@ -37,7 +37,7 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.orm_tutorial.sample.MyProcedure;
 import org.ujorm.orm_tutorial.sample.ViewOrder;
-import org.ujorm.tools.JdbcBuillder;
+import org.ujorm.tools.JdbcBuilder;
 import static junit.framework.TestCase.assertEquals;
 /**
  * The tutorial in the class for the Ujorm <br>
@@ -512,7 +512,7 @@ public class Orm2Test extends TestCase {
 
         private void insert(String id, long value, int cache, Connection conn) throws SQLException, IOException {
            final long max = 1_000_000L;
-           JdbcBuillder sql = new JdbcBuillder()
+           JdbcBuilder sql = new JdbcBuilder()
                 .write("INSERT INTO")
                 .write(sequenceTableName)
                 .write("(")
@@ -526,7 +526,7 @@ public class Orm2Test extends TestCase {
         }
 
         private int count(Connection connection) throws SQLException {
-           JdbcBuillder sql = new JdbcBuillder()
+           JdbcBuilder sql = new JdbcBuilder()
                 .write("SELECT COUNT(*) FROM")
                 .write(sequenceTableName)
                 ;
@@ -534,7 +534,7 @@ public class Orm2Test extends TestCase {
         }
 
         private int countForId(String id, Connection connection) throws SQLException, IOException {
-           JdbcBuillder sql = new JdbcBuillder()
+           JdbcBuilder sql = new JdbcBuilder()
                 .write("SELECT COUNT(*) FROM")
                 .write(sequenceTableName)
                 .write("WHERE")
@@ -544,7 +544,7 @@ public class Orm2Test extends TestCase {
         }
 
         private int deleteSequences(Connection connection) throws SQLException {
-           JdbcBuillder sql = new JdbcBuillder()
+           JdbcBuilder sql = new JdbcBuilder()
                 .write("DELETE FROM")
                 .write(sequenceTableName)
                 ;
