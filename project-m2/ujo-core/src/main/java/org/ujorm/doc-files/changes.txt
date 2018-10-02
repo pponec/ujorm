@@ -2,8 +2,11 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.84-SNAPSHOT
+release 1.86-SNAPSHOT
 + todo ...
+
+release 1.85
++ ORM: fixing the table sequences using the class FixingTableSequences.
 
 release 1.84 (2018-09-26)
 + TOOLS: new tools for a JDBC operation called JdbcBuilder is available (see jUnit test for usage)

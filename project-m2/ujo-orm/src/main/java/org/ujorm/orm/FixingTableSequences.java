@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.orm.metaModel.MetaDatabase;
+import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.JdbcBuilder;
@@ -99,8 +100,25 @@ public class FixingTableSequences implements Runnable {
         }
         for (MetaTable table : MetaDatabase.TABLES.getList(db)) {
             if (table.isTable()) {
-                final String tableIdOk = table.getSequencer().getTableName();
-                final String tableIdWrong = dialect.printFullTableName(table, new StringBuilder(32)).toString();
+                String tableIdOk = table.getSequencer().getTableName();
+                String tableIdWrong = dialect.printFullTableName(table, new StringBuilder(32)).toString();
+
+                switch (db.getParams().get(MetaParams.QUOTATION_POLICY)) {
+                    default:
+                        continue;
+                    case QUOTE_SQL_NAMES:
+                    case QUOTE_ONLY_SQL_KEYWORDS:
+                        // Do conversion ...
+                }
+                if (db.getParams().get(MetaParams.SEQUENCE_SCHEMA_SYMBOL)) {
+                    int i = tableIdWrong.indexOf('.');
+                    if (i > 0) {
+                        tableIdWrong = UjoSequencer.DEFAULT_SCHEMA_SYMBOL + tableIdWrong.substring(i);
+                    }
+                }
+                if (tableIdOk.equals(tableIdWrong)) {
+                    continue;
+                }
 
                 if (wrongSet.contains(tableIdWrong)) {
                     final Long v1 = selectValueFromSequence(tableIdOk, COLUMN_VALUE);

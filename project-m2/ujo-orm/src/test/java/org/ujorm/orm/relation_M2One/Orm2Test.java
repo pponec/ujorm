@@ -51,6 +51,9 @@ import static junit.framework.TestCase.assertEquals;
  */
 public class Orm2Test extends TestCase {
 
+    /** The parameter value TRUE affects to a Sequence key name in the internal sequence generator. */
+    public static final boolean SEQUENCE_SCHEMA_SYMBOL = false;
+
     // ------- TUTORIAL MENU: -------
 
     public void testMain() {
@@ -103,6 +106,7 @@ public class Orm2Test extends TestCase {
         boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
+            params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, Orm2Test.SEQUENCE_SCHEMA_SYMBOL);
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
             params.set(MetaParams.SEQUENCE_CACHE, 1);
             params.set(MetaParams.QUOTATION_POLICY, CheckReport.QUOTE_SQL_NAMES);
@@ -476,7 +480,7 @@ public class Orm2Test extends TestCase {
     /** Testing class */
     public static class MyFixingTableSequences extends FixingTableSequences {
 
-        /** Squence meta model */
+        /** Sequence meta model */
         private final SeqTableModel seqModel = new SeqTableModel();
 
         public MyFixingTableSequences(MetaDatabase db, Connection conn) throws Exception {
@@ -488,12 +492,19 @@ public class Orm2Test extends TestCase {
             throws SQLException, IOException {
 
             assertEquals(0, count(conn));
-
             long value = 10;
-            insert("db_m.ord_order", ++value, 10, conn);
-            insert("\"db_m\".\"ord_order\"", ++value, 10, conn);
-            insert("\"db_m\".\"ord_item\"", ++value, 10, conn);
-            insert("\"db_m\".\"undefined_table\"", ++value, 10, conn);
+
+            if (Orm2Test.SEQUENCE_SCHEMA_SYMBOL) {
+                insert("~.ord_order", ++value, 10, conn);
+                insert("~.\"ord_order\"", ++value, 10, conn);
+                insert("~.\"ord_item\"", ++value, 10, conn);
+                insert("~.\"undefined_table\"", ++value, 10, conn);
+            } else {
+                insert("db_m.ord_order", ++value, 10, conn);
+                insert("\"db_m\".\"ord_order\"", ++value, 10, conn);
+                insert("\"db_m\".\"ord_item\"", ++value, 10, conn);
+                insert("\"db_m\".\"undefined_table\"", ++value, 10, conn);
+            }
 
             assertEquals(4, count(conn));
         }
@@ -503,9 +514,16 @@ public class Orm2Test extends TestCase {
             throws SQLException, IOException {
 
             assertEquals(3, count(conn));
-            assertEquals(1, countForId("db_m.ord_order", connection));
-            assertEquals(1, countForId("db_m.ord_item", connection));
-            assertEquals(1, countForId("\"db_m\".\"undefined_table\"", connection));
+
+            if (Orm2Test.SEQUENCE_SCHEMA_SYMBOL) {
+                assertEquals(1, countForId("~.ord_order", connection));
+                assertEquals(1, countForId("~.ord_item", connection));
+                assertEquals(1, countForId("~.\"undefined_table\"", connection));
+            } else {
+                assertEquals(1, countForId("db_m.ord_order", connection));
+                assertEquals(1, countForId("db_m.ord_item", connection));
+                assertEquals(1, countForId("\"db_m\".\"undefined_table\"", connection));
+            }
 
             deleteSequences(conn);
         }
