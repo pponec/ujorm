@@ -43,7 +43,7 @@ public class UjoSequencer {
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoSequencer.class);
 
     /** The default schema symbol */
-    protected static final String DEFAULT_SCHEMA_SYMBOL = "~";
+    public static final String DEFAULT_SCHEMA_SYMBOL = "~";
     /** DB field: seqLimit */
     public static final int SEQ_LIMIT = 1;
     /** DB field: step */
