@@ -24,8 +24,9 @@ The Ujorm (original name was UJO Framework) is designed primarily for the rapid 
 *    internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException
 *    database indexes are created by the meta-model, added support for unique, non-unique indexes including the composed one
 
-## Home Page
-http://ujorm.org/
+## Home Pages
+# [http://ujorm.org/](http://ujorm.org/)
+# [https://pponec.github.io/ujorm/](https://pponec.github.io/ujorm/)
 
 ## Maven Repository
 
