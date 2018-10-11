@@ -25,7 +25,7 @@ The Ujorm (original name was UJO Framework) is designed primarily for the rapid 
 *    database indexes are created by the meta-model, added support for unique, non-unique indexes including the composed one
 
 ## Home Pages
-1. [http://ujorm.org/](http://ujorm.org/)
+1. [https://ujorm.org/](http://ujorm.org/)
 2. [https://pponec.github.io/ujorm/](https://pponec.github.io/ujorm/)
 
 ## Maven Repository
