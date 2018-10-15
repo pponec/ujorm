@@ -44,6 +44,10 @@ public class XmlElement {
     protected static final char XML_2QUOT = '"';
     /** A special XML character */
     protected static final char CHAR_SPACE = ' ';
+    /** A CDATA beg markup sequence */
+    protected static final String CDATA_BEG = "<![CDATA[";
+    /** A CDATA end markup sequence */
+    protected static final String CDATA_END = "]]>";
 
     /** Element name */
     protected final String name;
@@ -51,7 +55,7 @@ public class XmlElement {
     /** Attributes */
     private Map<String, Object> attributes;
 
-    /** Childs */
+    /** Child elements */
     private List<Object> childs;
 
     /** New element */
@@ -62,10 +66,11 @@ public class XmlElement {
     /** New element with a parent */
     public XmlElement(@Nonnull final CharSequence name, @Nonnull final XmlElement parent) {
         this(name);
-        parent.addChild(this);
+        parent.getChilds().add(this);
     }
 
-    /** Return attributes */
+    /** Return attributes
+     * @return This instance */
     @Nonnull
     protected Map<String, Object> getAttribs() {
         if (attributes == null) {
@@ -74,10 +79,11 @@ public class XmlElement {
         return attributes;
     }
 
-    /** Add an attribute */
+    /** Add an attribute
+     * @return This instance */
     @Nonnull
-    public XmlElement addAttrib(@Nonnull final CharSequence key, @Nonnull final Object value) {
-        getAttribs().put(key.toString(), value);
+    public XmlElement addAttrib(@Nonnull final CharSequence name, @Nonnull final Object value) {
+        getAttribs().put(name.toString(), value);
         return this;
     }
 
@@ -92,36 +98,56 @@ public class XmlElement {
     }
 
     /**
-     * Add the child
-     * @param child
-     * @return Returns this.
-     */
+     * Add a child element
+     * @param element A child element
+     * @return This instance */
     @Nonnull
-    public XmlElement addChild(@Nonnull final Object child) {
-        getChilds().add(child);
+    public XmlElement addElement(@Nonnull final XmlElement element) {
+        getChilds().add(element);
         return this;
     }
 
-    /** Create a new child {@link XmlElement} for a required name.
+    /** Create a new {@link XmlElement} for a required name and add it to children.
      * @param name Name of the new XmlElement.
-     * @return new XmlElement An instance of the new element!
+     * @return The new XmlElement!
      */
     @Nonnull
-    public XmlElement createChildElement(@Nonnull final CharSequence name) {
+    public XmlElement addElement(@Nonnull final CharSequence name) {
         return new XmlElement(name, this);
     }
 
-    /** Insert an unformatted XML code */
+    /**
+     * Add a text
+     * @param text text
+     * @return This instance */
+    @Nonnull
+    public XmlElement addText(@Nonnull final CharSequence text) {
+        getChilds().add(text);
+        return this;
+    }
+
+    /** Insert an unformatted XML code
+     * @return This instance */
     @Nonnull
     public XmlElement addXmlCode(@Nonnull final CharSequence code) {
         getChilds().add(new RawXmlEnvelope(code));
         return this;
     }
 
+    /**
+     * Add a character data in {@code CDATA} format
+     * @param text The text is not checked for the final DATA sequence
+     * @return This instance
+     */
     @Nonnull
-    public XmlElement addTo(@Nonnull final XmlElement parent) {
-        parent.addChild(this);
-        return this;
+    public XmlElement addCDATA(@Nonnull final CharSequence text) {
+        return addXmlCode(new StringBuilder
+                ( CDATA_BEG.length()
+                + text.length()
+                + CDATA_END.length())
+                .append(CDATA_BEG)
+                .append(text)
+                .append(CDATA_END));
     }
 
     /** Write escaped value to the output */
@@ -207,7 +233,6 @@ public class XmlElement {
 
     /** Raw XML code evelope */
     protected static final class RawXmlEnvelope {
-
         /** Xml content */
         private final CharSequence body;
 

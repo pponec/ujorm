@@ -27,13 +27,12 @@ public class HtmlElementTest {
 
     /** Simple HTML message building example */
     @Test
-    public void tesBuildHtmlMessage() {
+    public void testHtmlMessageBuilding() {
         System.out.println("BuildHtmlMessage");
 
         final HtmlElement html = new HtmlElement("Test");
-
-        new XmlElement("div", html.getBody())
-                .addChild("Hello word!");
+        html.getBody().addElement("div")
+                      .addText("Hello word!");
 
         String result = html.toString();
         String expected = "<!DOCTYPE html>"
@@ -49,7 +48,7 @@ public class HtmlElementTest {
 
     /** HTML form building example */
     @Test
-    public void testBuildHtmlForm() {
+    public void testHtmlFormBuilding() {
         System.out.println("BuildHtmlForm");
 
         final String title = "User form";
@@ -60,17 +59,17 @@ public class HtmlElementTest {
                                , new Field("Nickname", "nick")
                                , new Field(" ", "submit", true) };
         final HtmlElement html = new HtmlElement(title);
-        final XmlElement form = html.getBody().createChildElement("form");
-        form.createChildElement("h1").addChild(title);
-        final XmlElement table = form.createChildElement("table");
+        final XmlElement form = html.getBody().addElement("form");
+        form.addElement("h1").addText(title);
+        final XmlElement table = form.addElement("table");
         for (Field field : fields) {
-            final XmlElement row = table.createChildElement("tr");
-            row.createChildElement("td")
-                    .createChildElement("label")
+            final XmlElement row = table.addElement("tr");
+            row.addElement("td")
+                    .addElement("label")
                     .addAttrib("for", field.getName())
-                    .addChild(field.getLabel());
-            row.createChildElement("td")
-                    .createChildElement("input")
+                    .addText(field.getLabel());
+            row.addElement("td")
+                    .addElement("input")
                     .addAttrib("id", field.getName())
                     .addAttrib("type", field.isSubmit() ? "submit" : "text");
         }

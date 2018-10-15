@@ -45,11 +45,11 @@ public class HtmlElement extends XmlElement {
     public HtmlElement(@Nonnull final String title, Charset charset) {
         super("html");
 
-        addChild(head = new XmlElement("head"));
-        addChild(body = new XmlElement("body"));
+        head = addElement("head");
+        head.addElement("meta").addAttrib("charset", charset);
 
-        head.createChildElement("meta").addAttrib("charset", charset);
-        head.createChildElement("title").addChild(title);
+        body = addElement("body");
+        head.addElement("title").addText(title);
     }
 
     /** Returns header element */

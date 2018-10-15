@@ -25,20 +25,19 @@ import static org.junit.Assert.*;
 public class XmlElementTest {
 
     @Test
-    public void testAdd() {
-        System.out.println("add");
+    public void testXmlBuilding() {
+        System.out.println("XmlBuilding");
 
-        final XmlElement root = new XmlElement("root");
-        new XmlElement("childA")
+        XmlElement root = new XmlElement("root");
+        root.addElement("childA")
                 .addAttrib("x", 1)
-                .addAttrib("y", 2)
-                .addTo(root);
-        new XmlElement("childB")
+                .addAttrib("y", 2);
+        root.addElement("childB")
                 .addAttrib("x", 3)
                 .addAttrib("y", 4)
-                .addChild("A text message <&\">")
-                .addTo(root);
+                .addText("A text message <&\">");
         root.addXmlCode("\n<rawXml/>\n");
+        root.addCDATA("A character data");
 
         String result = root.toString();
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
@@ -46,7 +45,8 @@ public class XmlElementTest {
                 + "\n<childA x=\"1\" y=\"2\"/>"
                 + "\n<childB x=\"3\" y=\"4\">A text message &lt;&#38;&#34;&gt;</childB>"
                 + "\n<rawXml/>"
-                + "\n</root>";
+                + "\n<![CDATA[A character data]]>"
+                + "</root>";
         assertNotNull(result);
         assertEquals(expected, result);
     }
