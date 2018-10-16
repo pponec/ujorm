@@ -64,16 +64,19 @@ public class HtmlElement extends XmlElement {
         return body;
     }
 
+    /** Create a new CSS element and return it */
+    public XmlElement addCss(@Nonnull final String css) {
+        return head.addElement("style")
+                .addAttrib("type", "text/css")
+                .addRawText(css);
+    }
+
     /** Render the HTML code including header */
     @Override @Nonnull
     public String toString() {
-        return toString(new CharArrayWriter(512).append(HEADER).append('\n')).toString();
+        return toWriter(new CharArrayWriter(512)
+                .append(HEADER)
+                .append('\n'))
+                .toString();
     }
-
-    /** Render the HTML code without header */
-    @Nonnull
-    public CharArrayWriter toString(@Nonnull final CharArrayWriter out) {
-        return super.toString(out);
-    }
-
 }

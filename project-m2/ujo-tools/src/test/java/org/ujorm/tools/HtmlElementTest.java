@@ -59,6 +59,7 @@ public class HtmlElementTest {
                                , new Field("Nickname", "nick")
                                , new Field(" ", "submit", true) };
         final HtmlElement html = new HtmlElement(title);
+        html.addCss("h1{color:SteelBlue;} td:first-child{text-align:right;}");
         final XmlElement form = html.getBody().addElement("form");
         form.addElement("h1").addText(title);
         final XmlElement table = form.addElement("table");
@@ -79,7 +80,8 @@ public class HtmlElementTest {
                 + "\n<html>"
                 + "\n<head>"
                 + "\n<meta charset=\"UTF-8\"/>"
-                + "\n<title>User form</title></head>"
+                + "\n<title>User form</title>"
+                + "\n<style type=\"text/css\">h1{color:SteelBlue;} td:first-child{text-align:right;}</style></head>"
                 + "\n<body>"
                 + "\n<form>"
                 + "\n<h1>User form</h1>"

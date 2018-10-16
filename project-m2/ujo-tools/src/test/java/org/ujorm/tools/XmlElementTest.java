@@ -36,8 +36,8 @@ public class XmlElementTest {
                 .addAttrib("x", 3)
                 .addAttrib("y", 4)
                 .addText("A text message <&\">");
-        root.addXmlCode("\n<rawXml/>\n");
-        root.addCDATA("A character data");
+        root.addRawText("\n<rawXml/>\n");
+        root.addCDATA("A character data <&\">");
 
         String result = root.toString();
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
@@ -45,9 +45,35 @@ public class XmlElementTest {
                 + "\n<childA x=\"1\" y=\"2\"/>"
                 + "\n<childB x=\"3\" y=\"4\">A text message &lt;&#38;&#34;&gt;</childB>"
                 + "\n<rawXml/>"
-                + "\n<![CDATA[A character data]]>"
+                + "\n<![CDATA[A character data <&\">]]>"
                 + "</root>";
-        assertNotNull(result);
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void testAddCDATA() {
+        System.out.println("AddCDATA");
+
+        XmlElement root = new XmlElement("root");
+        root.addCDATA(MsgFormatter.format("A{}B{}C", XmlElement.CDATA_BEG, XmlElement.CDATA_END));
+        String expected =XmlElement.HEADER + "\n<root><![CDATA[A<![CDATA[B]]>]]&gt;<![CDATA[C]]></root>";
+        assertEquals(expected, root.toString());
+
+        root = new XmlElement("root");
+        root.addCDATA(MsgFormatter.format("{}ABC{}", XmlElement.CDATA_BEG, XmlElement.CDATA_END));
+        expected =XmlElement.HEADER + "\n<root><![CDATA[<![CDATA[ABC]]>]]&gt;<![CDATA[]]></root>";
+        assertEquals(expected, root.toString());
+
+        root = new XmlElement("root");
+        root.addCDATA(MsgFormatter.format("A{}{}C", XmlElement.CDATA_BEG, XmlElement.CDATA_END));
+        expected =XmlElement.HEADER + "\n<root><![CDATA[A<![CDATA[]]>]]&gt;<![CDATA[C]]></root>";
+        assertEquals(expected, root.toString());
+
+        root = new XmlElement("root");
+        root.addCDATA("");
+        expected =XmlElement.HEADER + "\n<root/>";
+        assertEquals(expected, root.toString());
+
+
     }
 }

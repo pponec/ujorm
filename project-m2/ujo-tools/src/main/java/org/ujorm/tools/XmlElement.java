@@ -17,11 +17,14 @@
 package org.ujorm.tools;
 
 import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * XML element model to rendering a XML file
@@ -50,27 +53,29 @@ public class XmlElement {
     protected static final String CDATA_END = "]]>";
 
     /** Element name */
-    protected final String name;
+    @Nonnull
+    protected final CharSequence name;
 
     /** Attributes */
+    @Nullable
     private Map<String, Object> attributes;
 
     /** Child elements */
-    private List<Object> childs;
+    @Nullable
+    private List<Object> children;
 
     /** New element */
     public XmlElement(@Nonnull final CharSequence name) {
-        this.name = name.toString();
+        this.name = name;
     }
 
     /** New element with a parent */
     public XmlElement(@Nonnull final CharSequence name, @Nonnull final XmlElement parent) {
         this(name);
-        parent.getChilds().add(this);
+        parent.getChildren().add(this);
     }
 
-    /** Return attributes
-     * @return This instance */
+    /** Return attributes */
     @Nonnull
     protected Map<String, Object> getAttribs() {
         if (attributes == null) {
@@ -82,77 +87,99 @@ public class XmlElement {
     /** Add an attribute
      * @return This instance */
     @Nonnull
-    public XmlElement addAttrib(@Nonnull final CharSequence name, @Nonnull final Object value) {
+    public <T extends XmlElement> T addAttrib(@Nonnull final CharSequence name, @Nonnull final Object value) {
         getAttribs().put(name.toString(), value);
-        return this;
+        return (T) this;
     }
 
-
-    /** Return attributes */
+    /** Return child entities */
     @Nonnull
-    protected List<Object> getChilds() {
-        if (childs == null) {
-            childs = new ArrayList<>();
+    protected List<Object> getChildren() {
+        if (children == null) {
+            children = new ArrayList<>();
         }
-        return childs;
+        return children;
     }
 
     /**
      * Add a child element
-     * @param element A child element
+     * @param element Add a child element. An undefined argument is ignored.
      * @return This instance */
     @Nonnull
-    public XmlElement addElement(@Nonnull final XmlElement element) {
-        getChilds().add(element);
-        return this;
+    public <T extends XmlElement> T addElement(@Nullable final XmlElement element) {
+        if (element != null) {
+            getChildren().add(element);
+        }
+        return (T) this;
     }
 
     /** Create a new {@link XmlElement} for a required name and add it to children.
-     * @param name Name of the new XmlElement.
+     * @param name A name of the new XmlElement is requred.
      * @return The new XmlElement!
      */
     @Nonnull
     public XmlElement addElement(@Nonnull final CharSequence name) {
+        Assert.hasLength(name, "Undefined element name");
         return new XmlElement(name, this);
     }
 
     /**
-     * Add a text
-     * @param text text
+     * Add a text and escape special character
+     * @param text text An empty argument is ignored.
      * @return This instance */
     @Nonnull
-    public XmlElement addText(@Nonnull final CharSequence text) {
-        getChilds().add(text);
-        return this;
+    public <T extends XmlElement> T addText(@Nonnull final CharSequence text) {
+        if (Check.hasLength(text)) {
+            getChildren().add(text);
+        }
+        return (T) this;
     }
 
-    /** Insert an unformatted XML code
+    /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
+     * @param rawText text An empty argument is ignored.
      * @return This instance */
     @Nonnull
-    public XmlElement addXmlCode(@Nonnull final CharSequence code) {
-        getChilds().add(new RawXmlEnvelope(code));
-        return this;
+    public <T extends XmlElement> T addRawText(@Nullable final CharSequence rawText) {
+        if (Check.hasLength(rawText)) {
+            getChildren().add(new RawEnvelope(rawText));
+        }
+        return (T) this;
     }
 
     /**
-     * Add a character data in {@code CDATA} format
-     * @param text The text is not checked for the final DATA sequence
+     * Add a <strong>character data</strong> in {@code CDATA} format to XML only.
+     * The CDATA structure isn't really for HTML at all.
+     * @param charData A text including the final DATA sequence. An empty argument is ignored.
      * @return This instance
      */
     @Nonnull
-    public XmlElement addCDATA(@Nonnull final CharSequence text) {
-        return addXmlCode(new StringBuilder
-                ( CDATA_BEG.length()
-                + text.length()
-                + CDATA_END.length())
-                .append(CDATA_BEG)
-                .append(text)
-                .append(CDATA_END));
+    public <T extends XmlElement> T addCDATA(@Nullable final CharSequence charData) {
+        if (Check.hasLength(charData)) {
+            addRawText(CDATA_BEG);
+            final String text = charData.toString();
+            int i = 0, j;
+            while ((j = text.indexOf(CDATA_END, i)) >= 0) {
+                j += CDATA_END.length();
+                addRawText(text.subSequence(i, j));
+                i = j;
+                addText(CDATA_END);
+                addRawText(CDATA_BEG);
+            }
+            addRawText(i == 0 ? text : text.substring(i));
+            addRawText(CDATA_END);
+        }
+        return (T) this;
     }
 
-    /** Write escaped value to the output */
-    protected void writeValue(@Nonnull final Object value, @Nonnull final CharArrayWriter out) {
-        final String text = String.valueOf(value);
+    /**
+     * Write escaped value to the output
+     * @param value A value
+     * @param attribute Render the value to an element attribute, or a text
+     * @param out An output writer
+     * @throws IOException
+     */
+    protected void writeValue(@Nonnull final Object value, final boolean attribute, @Nonnull final Writer out) throws IOException {
+        final CharSequence text = value instanceof CharSequence ? (CharSequence) value : String.valueOf(value);
         for (int i = 0, max = text.length(); i < max; i++) {
             final char c = text.charAt(i);
             switch (c) {
@@ -187,61 +214,66 @@ public class XmlElement {
     /** Render the XML code including header */
     @Override @Nonnull
     public String toString() {
-        return toString(new CharArrayWriter(512).append(HEADER).append('\n')).toString();
+        return toWriter(new CharArrayWriter(512).append(HEADER).append('\n')).toString();
     }
 
     /** Render the XML code without header */
     @Nonnull
-    public CharArrayWriter toString(@Nonnull final CharArrayWriter out) {
-        out.append(XML_LT);
-        out.append(name);
+    public Writer toWriter(@Nonnull final Writer out) throws IllegalStateException {
+        try {
+            out.append(XML_LT);
+            out.append(name);
 
-        if (attributes != null) {
-            for (String key : attributes.keySet()) {
-                out.append(CHAR_SPACE);
-                out.append(key);
-                out.append('=');
-                out.append(XML_2QUOT);
-                writeValue(attributes.get(key), out);
-                out.append(XML_2QUOT);
-            }
-        }
-        if (childs != null) {
-            out.append(XML_GT);
-            for (Object child : childs) {
-                if (child instanceof XmlElement) {
-                    out.append('\n');
-                    ((XmlElement)child).toString(out);
-                } else if (child instanceof RawXmlEnvelope) {
-                    out.append(((RawXmlEnvelope) child).getBody());
-                } else {
-                    writeValue(child, out);
+            if (Check.hasLength(attributes)) {
+                for (String key : attributes.keySet()) {
+                    out.append(CHAR_SPACE);
+                    out.append(key);
+                    out.append('=');
+                    out.append(XML_2QUOT);
+                    writeValue(attributes.get(key), true, out);
+                    out.append(XML_2QUOT);
                 }
             }
-            out.append(XML_LT);
-            out.append('/');
-            out.append(name);
-        } else {
-            out.append('/');
-        }
-        out.append(XML_GT);
+            if (Check.hasLength(children)) {
+                out.append(XML_GT);
+                for (Object child : children) {
+                    if (child instanceof XmlElement) {
+                        out.append('\n');
+                        ((XmlElement)child).toWriter(out);
+                    } else if (child instanceof RawEnvelope) {
+                        out.append(((RawEnvelope) child).get());
+                    } else {
+                        writeValue(child, false, out);
+                    }
+                }
+                out.append(XML_LT);
+                out.append('/');
+                out.append(name);
+            } else {
+                out.append('/');
+            }
+            out.append(XML_GT);
 
-        return out;
+            return out;
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
     }
 
     // -------- Inner class --------
 
-    /** Raw XML code evelope */
-    protected static final class RawXmlEnvelope {
+    /** Raw XML code envelope */
+    protected static final class RawEnvelope {
         /** Xml content */
         private final CharSequence body;
 
-        public RawXmlEnvelope(@Nonnull final CharSequence body) {
+        public RawEnvelope(@Nonnull final CharSequence body) {
             this.body = body;
         }
 
+        /** Get the body */
         @Nonnull
-        public CharSequence getBody() {
+        public CharSequence get() {
             return body;
         }
     }
