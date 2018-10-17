@@ -16,7 +16,9 @@
 
 package org.ujorm.tools;
 
+import java.io.IOException;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletResponse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -123,6 +125,29 @@ public class HtmlElementTest {
 
         assertNotNull(result);
         assertEquals(expected, result);
+    }
+
+    /** Test rendering to the HttpServletResponse */
+    @Test
+    public void testToResponse() throws IOException {
+        System.out.println("HttpServletResponse");
+
+        final HtmlElement html = new HtmlElement("Test");
+        html.getBody().addElement("div")
+                      .addText("Hello word!");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        html.toResponse(response, false);
+
+        String expected = "<!DOCTYPE html>"
+                + "\n<html>"
+                + "\n<head>"
+                + "\n<meta charset=\"UTF-8\"/>"
+                + "\n<title>Test</title></head>"
+                + "\n<body>"
+                + "\n<div>Hello word!</div></body></html>";
+        assertEquals("UTF-8", response.getCharacterEncoding());
+        assertEquals("text/html; charset=UTF-8", response.getContentType());
+        assertEquals(expected, response.getContentAsString());
     }
 
     /** Form field description */

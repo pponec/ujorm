@@ -27,7 +27,28 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * XML element model to rendering a XML file
+ * XML element model to rendering a XML file.
+ * The main benefits are:
+ * <ul>
+ *     <li>secure building well-formed XML documents  by the Java code</li>
+ *     <li>a simple API built on a single XmlElement class</li>
+ *     <li>creating XML components by a subclass is possible</li>
+ *     <li>small memory footprint</li>
+ * </ul>¨
+ * <h3>How to use the class:</h3>
+ * <pre class="pre">
+ *  XmlElement root = new XmlElement("root");
+ *  root.addElement("childA")
+ *          .addAttrib("x", 1)
+ *          .addAttrib("y", 2);
+ *  root.addElement("childB")
+ *          .addAttrib("x", 3)
+ *          .addAttrib("y", 4)
+ *          .addText("A text message &lt;&\"&gt;");
+ *  root.addRawText("\n&lt;rawXml/&gt;\n");
+ *  root.addCDATA("A character data &lt;&\"&gt;");
+ *  String result = root.toString();
+ * </pre>
  * @author Pavel Ponec
  */
 public class XmlElement {
@@ -84,14 +105,6 @@ public class XmlElement {
         return attributes;
     }
 
-    /** Add an attribute
-     * @return This instance */
-    @Nonnull
-    public <T extends XmlElement> T addAttrib(@Nonnull final CharSequence name, @Nonnull final Object value) {
-        getAttribs().put(name.toString(), value);
-        return (T) this;
-    }
-
     /** Return child entities */
     @Nonnull
     protected List<Object> getChildren() {
@@ -103,14 +116,13 @@ public class XmlElement {
 
     /**
      * Add a child element
-     * @param element Add a child element. An undefined argument is ignored.
-     * @return This instance */
+     * @param element Add a child element is required. An undefined argument is ignored.
+     * @return The argument type of XmlElement! */
     @Nonnull
-    public <T extends XmlElement> T addElement(@Nullable final XmlElement element) {
-        if (element != null) {
-            getChildren().add(element);
-        }
-        return (T) this;
+    public <T extends XmlElement> T addElement(@Nonnull final T element) {
+        Assert.notNull(element, "element");
+        getChildren().add(element);
+        return element;
     }
 
     /** Create a new {@link XmlElement} for a required name and add it to children.
@@ -123,12 +135,23 @@ public class XmlElement {
         return new XmlElement(name, this);
     }
 
+    /** Add an attribute
+     * @return This instance */
+    @Nonnull
+    public <T extends XmlElement> T addAttrib(@Nonnull final CharSequence name, @Nullable final Object value) {
+        Assert.hasLength(name, "name");
+        if (value != null) {
+            getAttribs().put(name.toString(), value);
+        }
+        return (T) this;
+    }
+
     /**
      * Add a text and escape special character
      * @param text text An empty argument is ignored.
      * @return This instance */
     @Nonnull
-    public <T extends XmlElement> T addText(@Nonnull final CharSequence text) {
+    public <T extends XmlElement> T addText(@Nullable final CharSequence text) {
         if (Check.hasLength(text)) {
             getChildren().add(text);
         }

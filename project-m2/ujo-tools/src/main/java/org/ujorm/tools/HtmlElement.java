@@ -17,8 +17,12 @@
 package org.ujorm.tools;
 
 import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -36,14 +40,19 @@ public class HtmlElement extends XmlElement {
     /** Body */
     private final XmlElement body;
 
+    /** Charset */
+    @Nonnull
+    protected final Charset charset;
+
     /** Constructor for codepage UTF-8 */
     public HtmlElement(@Nonnull final String title) {
         this(title, UTF_8);
     }
 
     /** Generaic Constructor */
-    public HtmlElement(@Nonnull final String title, Charset charset) {
+    public HtmlElement(@Nonnull final String title, @Nonnull Charset charset) {
         super("html");
+        this.charset = charset;
 
         head = addElement("head");
         head.addElement("meta").addAttrib("charset", charset);
@@ -65,7 +74,7 @@ public class HtmlElement extends XmlElement {
     }
 
     /** Create a new CSS element and return it */
-    public XmlElement addCss(@Nonnull final String css) {
+    public XmlElement addCss(@Nullable final String css) {
         return head.addElement("style")
                 .addAttrib("type", "text/css")
                 .addRawText(css);
@@ -78,5 +87,33 @@ public class HtmlElement extends XmlElement {
                 .append(HEADER)
                 .append('\n'))
                 .toString();
+    }
+
+    /**
+     * Render the component to a <a href="https://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletResponse.html">HTML response</a>
+     * @param httpServletResponse Argument type of {@code javax.servlet.http.HttpServletResponse} is required.
+     * @param noCache Add a header attributes to switch off a cache.
+     * @throws IOException An writting error.
+     * @throws IllegalArgumentException Wrong argument type
+     */
+    public void toResponse(@Nonnull final Object httpServletResponse, final boolean noCache) throws IOException, IllegalArgumentException {
+        try {
+            final Method setEncoding = httpServletResponse.getClass().getMethod("setCharacterEncoding", String.class);
+            final Method setHeader = httpServletResponse.getClass().getMethod("setHeader", String.class, String.class);
+            final Method getWriter = httpServletResponse.getClass().getMethod("getWriter");
+
+            setEncoding.invoke(httpServletResponse, charset.toString());
+            setHeader.invoke(httpServletResponse, "Content-Type", "text/html; charset=" + charset);
+            if (noCache) {
+                setHeader.invoke(httpServletResponse, "Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+                setHeader.invoke(httpServletResponse, "Pragma", "no-cache"); // HTTP 1.0
+                setHeader.invoke(httpServletResponse, "Expires", "0"); // Proxies
+            }
+
+            final Writer writer = (Writer) getWriter.invoke(httpServletResponse);
+            toWriter(writer.append(HtmlElement.HEADER).append('\n'));
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
+        }
     }
 }
