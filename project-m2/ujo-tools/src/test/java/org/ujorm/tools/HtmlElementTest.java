@@ -21,22 +21,24 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.ujorm.tools.HtmlElementTest.Html.*;
 
 /**
  * @author Pavel Ponec
  */
 public class HtmlElementTest {
 
-    /** Simple HTML message building example */
+    /** Test rendering to the HttpServletResponse */
     @Test
-    public void testHtmlMessageBuilding() {
-        System.out.println("BuildHtmlMessage");
+    public void testToResponse() throws IOException {
+        System.out.println("HttpServletResponse");
 
         final HtmlElement html = new HtmlElement("Test");
-        html.getBody().addElement("div")
+        html.getBody().addElement(DIV)
                       .addText("Hello word!");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        html.toResponse(response, false);
 
-        String result = html.toString();
         String expected = "<!DOCTYPE html>"
                 + "\n<html>"
                 + "\n<head>"
@@ -44,8 +46,9 @@ public class HtmlElementTest {
                 + "\n<title>Test</title></head>"
                 + "\n<body>"
                 + "\n<div>Hello word!</div></body></html>";
-        assertNotNull(result);
-        assertEquals(expected, result);
+        assertEquals(expected, response.getContentAsString());
+        assertEquals("UTF-8", response.getCharacterEncoding());
+        assertEquals("text/html; charset=UTF-8", response.getContentType());
     }
 
     /** HTML form building example */
@@ -60,21 +63,23 @@ public class HtmlElementTest {
                                , new Field("Phone number", "phone")
                                , new Field("Nickname", "nick")
                                , new Field(" ", "submit", true) };
+        
         final HtmlElement html = new HtmlElement(title);
-        html.addCss("h1{color:SteelBlue;} td:first-child{text-align:right;}");
-        final XmlElement form = html.getBody().addElement("form");
-        form.addElement("h1").addText(title);
-        final XmlElement table = form.addElement("table");
+        html.addCssBody("h1{color:SteelBlue;} td:first-child{text-align:right;}");
+        final XmlElement form = html.getBody().addElement(FORM);
+        form.addElement(H1).addText(title);
+        final XmlElement table = form.addElement(TABLE);
         for (Field field : fields) {
-            final XmlElement row = table.addElement("tr");
-            row.addElement("td")
-                    .addElement("label")
-                    .addAttrib("for", field.getName())
+            final XmlElement row = table.addElement(TR);
+            row.addElement(TD)
+                    .addElement(LABEL)
+                    .addAttrib(A_FOR, field.getName())
                     .addText(field.getLabel());
-            row.addElement("td")
-                    .addElement("input")
-                    .addAttrib("id", field.getName())
-                    .addAttrib("type", field.isSubmit() ? "submit" : "text");
+            row.addElement(TD)
+                    .addElement(INPUT)
+                    .addAttrib(A_ID, field.getName())
+                    .addAttrib(A_NAME, field.getName())
+                    .addAttrib(A_TYPE, field.isSubmit() ? V_SUBMIT : V_TEXT);
         }
 
         String result = html.toString();
@@ -92,32 +97,32 @@ public class HtmlElementTest {
                 + "\n<td>"
                 + "\n<label for=\"firstname\">First name</label></td>"
                 + "\n<td>"
-                + "\n<input id=\"firstname\" type=\"text\"/></td></tr>"
+                + "\n<input id=\"firstname\" name=\"firstname\" type=\"text\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
                 + "\n<label for=\"lastname\">Last name</label></td>"
                 + "\n<td>"
-                + "\n<input id=\"lastname\" type=\"text\"/></td></tr>"
+                + "\n<input id=\"lastname\" name=\"lastname\" type=\"text\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
                 + "\n<label for=\"email\">E-mail</label></td>"
                 + "\n<td>"
-                + "\n<input id=\"email\" type=\"text\"/></td></tr>"
+                + "\n<input id=\"email\" name=\"email\" type=\"text\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
                 + "\n<label for=\"phone\">Phone number</label></td>"
                 + "\n<td>"
-                + "\n<input id=\"phone\" type=\"text\"/></td></tr>"
+                + "\n<input id=\"phone\" name=\"phone\" type=\"text\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
                 + "\n<label for=\"nick\">Nickname</label></td>"
                 + "\n<td>"
-                + "\n<input id=\"nick\" type=\"text\"/></td></tr>"
+                + "\n<input id=\"nick\" name=\"nick\" type=\"text\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
                 + "\n<label for=\"submit\"> </label></td>"
                 + "\n<td>"
-                + "\n<input id=\"submit\" type=\"submit\"/></td></tr>"
+                + "\n<input id=\"submit\" name=\"submit\" type=\"submit\"/></td></tr>"
                + "</table>"
                + "</form>"
                + "</body>"
@@ -127,27 +132,32 @@ public class HtmlElementTest {
         assertEquals(expected, result);
     }
 
-    /** Test rendering to the HttpServletResponse */
-    @Test
-    public void testToResponse() throws IOException {
-        System.out.println("HttpServletResponse");
+    /** HTML constants */
+    public interface Html {
 
-        final HtmlElement html = new HtmlElement("Test");
-        html.getBody().addElement("div")
-                      .addText("Hello word!");
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        html.toResponse(response, false);
+        // --- Element names ---
 
-        String expected = "<!DOCTYPE html>"
-                + "\n<html>"
-                + "\n<head>"
-                + "\n<meta charset=\"UTF-8\"/>"
-                + "\n<title>Test</title></head>"
-                + "\n<body>"
-                + "\n<div>Hello word!</div></body></html>";
-        assertEquals("UTF-8", response.getCharacterEncoding());
-        assertEquals("text/html; charset=UTF-8", response.getContentType());
-        assertEquals(expected, response.getContentAsString());
+        String BODY = "body";
+        String DIV = "div";
+        String FORM = "form";
+        String H1 = "h1";
+        String TABLE = "table";
+        String TR = "tr";
+        String TD = "td";
+        String LABEL = "label";
+        String INPUT = "input";
+
+        // --- Attribute names ---
+
+        String A_FOR = "for";
+        String A_ID = "id";
+        String A_NAME = "name";
+        String A_TYPE = "type";
+
+        // --- HTML Values ---
+
+        String V_SUBMIT = "submit";
+        String V_TEXT = "text";
     }
 
     /** Form field description */
@@ -179,5 +189,4 @@ public class HtmlElementTest {
             return submit;
         }
     }
-
 }

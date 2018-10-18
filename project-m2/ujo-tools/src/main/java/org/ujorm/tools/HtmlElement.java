@@ -26,7 +26,15 @@ import javax.annotation.Nullable;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * XML element model to rendering a XML file
+ * XML element model to rendering a HTML file
+ * <h3>How to use the class:</h3>
+ * <pre class="pre">
+ * final HtmlElement html = new HtmlElement("Test");
+ * html.getBody().addElement("div")
+ *               .addText("Hello word!");
+ * HttpServletResponse response = new MockHttpServletResponse();
+ * html.toResponse(response, false);
+ * </pre>
  * @author Pavel Ponec
  */
 public class HtmlElement extends XmlElement {
@@ -73,8 +81,22 @@ public class HtmlElement extends XmlElement {
         return body;
     }
 
-    /** Create a new CSS element and return it */
-    public XmlElement addCss(@Nullable final String css) {
+    /** Create a new CSS element and return it
+     * @param css Add a CSS link
+     * @return New CSS element
+     */
+    public XmlElement addCssLink(String css) {
+        return head.addElement("link")
+                .addAttrib("href", css)
+                .addAttrib("rel", "stylesheet")
+                .addAttrib("type", "text/css");
+    }
+
+    /** Create a new CSS element and return it
+     * @param css CSS content
+     * @return New CSS element
+     */
+    public XmlElement addCssBody(@Nullable final String css) {
         return head.addElement("style")
                 .addAttrib("type", "text/css")
                 .addRawText(css);
