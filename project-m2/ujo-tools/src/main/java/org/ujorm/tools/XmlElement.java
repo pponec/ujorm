@@ -237,50 +237,50 @@ public class XmlElement {
     /** Render the XML code including header */
     @Override @Nonnull
     public String toString() {
-        return toWriter(new CharArrayWriter(512).append(HEADER).append('\n')).toString();
+        try {
+            return toWriter(new CharArrayWriter(512).append(HEADER).append('\n')).toString();
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
     }
 
     /** Render the XML code without header */
     @Nonnull
-    public Writer toWriter(@Nonnull final Writer out) throws IllegalStateException {
-        try {
-            out.append(XML_LT);
-            out.append(name);
+    public Writer toWriter(@Nonnull final Writer out) throws IOException {
+        out.append(XML_LT);
+        out.append(name);
 
-            if (Check.hasLength(attributes)) {
-                for (String key : attributes.keySet()) {
-                    out.append(CHAR_SPACE);
-                    out.append(key);
-                    out.append('=');
-                    out.append(XML_2QUOT);
-                    writeValue(attributes.get(key), true, out);
-                    out.append(XML_2QUOT);
-                }
+        if (Check.hasLength(attributes)) {
+            for (String key : attributes.keySet()) {
+                out.append(CHAR_SPACE);
+                out.append(key);
+                out.append('=');
+                out.append(XML_2QUOT);
+                writeValue(attributes.get(key), true, out);
+                out.append(XML_2QUOT);
             }
-            if (Check.hasLength(children)) {
-                out.append(XML_GT);
-                for (Object child : children) {
-                    if (child instanceof XmlElement) {
-                        out.append('\n');
-                        ((XmlElement)child).toWriter(out);
-                    } else if (child instanceof RawEnvelope) {
-                        out.append(((RawEnvelope) child).get());
-                    } else {
-                        writeValue(child, false, out);
-                    }
-                }
-                out.append(XML_LT);
-                out.append('/');
-                out.append(name);
-            } else {
-                out.append('/');
-            }
-            out.append(XML_GT);
-
-            return out;
-        } catch (IOException e) {
-            throw new IllegalStateException(e.getMessage(), e);
         }
+        if (Check.hasLength(children)) {
+            out.append(XML_GT);
+            for (Object child : children) {
+                if (child instanceof XmlElement) {
+                    out.append('\n');
+                    ((XmlElement)child).toWriter(out);
+                } else if (child instanceof RawEnvelope) {
+                    out.append(((RawEnvelope) child).get());
+                } else {
+                    writeValue(child, false, out);
+                }
+            }
+            out.append(XML_LT);
+            out.append('/');
+            out.append(name);
+        } else {
+            out.append('/');
+        }
+        out.append(XML_GT);
+
+        return out;
     }
 
     // -------- Inner class --------

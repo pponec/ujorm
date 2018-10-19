@@ -104,11 +104,15 @@ public class HtmlElement extends XmlElement {
 
     /** Render the HTML code including header */
     @Override @Nonnull
-    public String toString() {
-        return toWriter(new CharArrayWriter(512)
-                .append(HEADER)
-                .append('\n'))
-                .toString();
+    public String toString() throws IllegalStateException {
+        try {
+            return toWriter(new CharArrayWriter(512)
+                    .append(HEADER)
+                    .append('\n'))
+                    .toString();
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
     }
 
     /**
