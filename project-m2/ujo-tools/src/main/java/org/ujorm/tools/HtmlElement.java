@@ -108,7 +108,7 @@ public class HtmlElement extends XmlElement {
         try {
             return toWriter(new CharArrayWriter(512)
                     .append(HEADER)
-                    .append('\n'))
+                    .append(CHAR_NEW_LINE))
                     .toString();
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage(), e);
@@ -137,7 +137,7 @@ public class HtmlElement extends XmlElement {
             }
 
             final Writer writer = (Writer) getWriter.invoke(httpServletResponse);
-            toWriter(writer.append(HtmlElement.HEADER).append('\n'));
+            toWriter(writer.append(HtmlElement.HEADER).append(CHAR_NEW_LINE));
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
         }

@@ -68,6 +68,8 @@ public class XmlElement {
     protected static final char XML_2QUOT = '"';
     /** A special XML character */
     protected static final char CHAR_SPACE = ' ';
+    /** A new line character */
+    protected static final char CHAR_NEW_LINE = '\n';
     /** A CDATA beg markup sequence */
     protected static final String CDATA_BEG = "<![CDATA[";
     /** A CDATA end markup sequence */
@@ -238,7 +240,7 @@ public class XmlElement {
     @Override @Nonnull
     public String toString() {
         try {
-            return toWriter(new CharArrayWriter(512).append(HEADER).append('\n')).toString();
+            return toWriter(new CharArrayWriter(512).append(HEADER).append(CHAR_NEW_LINE)).toString();
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
@@ -262,14 +264,21 @@ public class XmlElement {
         }
         if (Check.hasLength(children)) {
             out.append(XML_GT);
+            boolean writeNewLine = true;
             for (Object child : children) {
                 if (child instanceof XmlElement) {
-                    out.append('\n');
+                    if (writeNewLine) {
+                       out.append(CHAR_NEW_LINE);
+                    } else {
+                        writeNewLine = true;
+                    }
                     ((XmlElement)child).toWriter(out);
                 } else if (child instanceof RawEnvelope) {
                     out.append(((RawEnvelope) child).get());
+                    writeNewLine = false;
                 } else {
                     writeValue(child, false, out);
+                    writeNewLine = false;
                 }
             }
             out.append(XML_LT);

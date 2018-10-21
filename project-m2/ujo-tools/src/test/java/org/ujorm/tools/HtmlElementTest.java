@@ -17,11 +17,12 @@
 package org.ujorm.tools;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.ujorm.tools.HtmlElementTest.Html.*;
+import static org.ujorm.tools.Html.*;
 
 /**
  * @author Pavel Ponec
@@ -56,14 +57,15 @@ public class HtmlElementTest {
     public void testHtmlFormBuilding() {
         System.out.println("BuildHtmlForm");
 
+        final Map<String,String> input = new HashMap<>();
         final String title = "User form";
         final Field[] fields = { new Field("First name", "firstname")
                                , new Field("Last name", "lastname")
                                , new Field("E-mail", "email")
                                , new Field("Phone number", "phone")
                                , new Field("Nickname", "nick")
-                               , new Field(" ", "submit", true) };
-        
+                               , new Field("", "submit", true) };
+
         final HtmlElement html = new HtmlElement(title);
         html.addCssBody("h1{color:SteelBlue;} td:first-child{text-align:right;}");
         final XmlElement form = html.getBody().addElement(FORM);
@@ -79,7 +81,8 @@ public class HtmlElementTest {
                     .addElement(INPUT)
                     .addAttrib(A_ID, field.getName())
                     .addAttrib(A_NAME, field.getName())
-                    .addAttrib(A_TYPE, field.isSubmit() ? V_SUBMIT : V_TEXT);
+                    .addAttrib(A_TYPE, field.isSubmit() ? V_SUBMIT : V_TEXT)
+                    .addAttrib(A_VALUE, input.get(field.getName()));
         }
 
         String result = html.toString();
@@ -95,27 +98,27 @@ public class HtmlElementTest {
                 + "\n<table>"
                 + "\n<tr>"
                 + "\n<td>"
-                + "\n<label for=\"firstname\">First name</label></td>"
+                + "\n<label for=\"firstname\">First name:</label></td>"
                 + "\n<td>"
                 + "\n<input id=\"firstname\" name=\"firstname\" type=\"text\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
-                + "\n<label for=\"lastname\">Last name</label></td>"
+                + "\n<label for=\"lastname\">Last name:</label></td>"
                 + "\n<td>"
                 + "\n<input id=\"lastname\" name=\"lastname\" type=\"text\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
-                + "\n<label for=\"email\">E-mail</label></td>"
+                + "\n<label for=\"email\">E-mail:</label></td>"
                 + "\n<td>"
                 + "\n<input id=\"email\" name=\"email\" type=\"text\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
-                + "\n<label for=\"phone\">Phone number</label></td>"
+                + "\n<label for=\"phone\">Phone number:</label></td>"
                 + "\n<td>"
                 + "\n<input id=\"phone\" name=\"phone\" type=\"text\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
-                + "\n<label for=\"nick\">Nickname</label></td>"
+                + "\n<label for=\"nick\">Nickname:</label></td>"
                 + "\n<td>"
                 + "\n<input id=\"nick\" name=\"nick\" type=\"text\"/></td></tr>"
                 + "\n<tr>"
@@ -127,37 +130,7 @@ public class HtmlElementTest {
                + "</form>"
                + "</body>"
                + "</html>";
-
-        assertNotNull(result);
         assertEquals(expected, result);
-    }
-
-    /** HTML constants */
-    public interface Html {
-
-        // --- Element names ---
-
-        String BODY = "body";
-        String DIV = "div";
-        String FORM = "form";
-        String H1 = "h1";
-        String TABLE = "table";
-        String TR = "tr";
-        String TD = "td";
-        String LABEL = "label";
-        String INPUT = "input";
-
-        // --- Attribute names ---
-
-        String A_FOR = "for";
-        String A_ID = "id";
-        String A_NAME = "name";
-        String A_TYPE = "type";
-
-        // --- HTML Values ---
-
-        String V_SUBMIT = "submit";
-        String V_TEXT = "text";
     }
 
     /** Form field description */
@@ -178,7 +151,7 @@ public class HtmlElementTest {
         }
 
         public String getLabel() {
-            return label;
+            return label + (submit || label.isEmpty() ? ' ' : ':');
         }
 
         public String getName() {

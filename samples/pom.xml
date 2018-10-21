@@ -45,8 +45,9 @@
         <module>inheritance</module>
         <module>binding</module>
         <module>wicket</module>
+        <module>servlet</module>
         <module>generated</module>
-    </modules>
+  </modules>
 
 
     <!-- DEPENDENCES -->
@@ -61,7 +62,3 @@
 
 
 </project>
-
-
-
-
