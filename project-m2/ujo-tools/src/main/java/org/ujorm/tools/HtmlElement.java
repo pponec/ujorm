@@ -53,20 +53,21 @@ public class HtmlElement extends XmlElement {
     protected final Charset charset;
 
     /** Constructor for codepage UTF-8 */
-    public HtmlElement(@Nonnull final String title) {
+    public HtmlElement(@Nonnull final CharSequence title) {
         this(title, UTF_8);
     }
 
     /** Generaic Constructor */
-    public HtmlElement(@Nonnull final String title, @Nonnull Charset charset) {
-        super("html");
+    public HtmlElement(@Nonnull final CharSequence title, @Nonnull Charset charset) {
+        super(Html.HTML);
         this.charset = charset;
 
-        head = addElement("head");
-        head.addElement("meta").addAttrib("charset", charset);
-
-        body = addElement("body");
-        head.addElement("title").addText(title);
+        head = addElement(Html.HEAD);
+        head.addElement(Html.META)
+                .addAttrib(Html.A_CHARSET, charset);
+        body = addElement(Html.BODY);
+        head.addElement(Html.TITLE)
+                .addText(title);
     }
 
     /** Returns header element */
@@ -86,10 +87,10 @@ public class HtmlElement extends XmlElement {
      * @return New CSS element
      */
     public XmlElement addCssLink(String css) {
-        return head.addElement("link")
-                .addAttrib("href", css)
-                .addAttrib("rel", "stylesheet")
-                .addAttrib("type", "text/css");
+        return head.addElement(Html.LINK)
+                .addAttrib(Html.A_HREF, css)
+                .addAttrib(Html.A_REL, "stylesheet")
+                .addAttrib(Html.A_TYPE, "text/css");
     }
 
     /** Create a new CSS element and return it
@@ -97,8 +98,8 @@ public class HtmlElement extends XmlElement {
      * @return New CSS element
      */
     public XmlElement addCssBody(@Nullable final String css) {
-        return head.addElement("style")
-                .addAttrib("type", "text/css")
+        return head.addElement(Html.STYLE)
+                .addAttrib(Html.A_TYPE, "text/css")
                 .addRawText(css);
     }
 
@@ -138,8 +139,34 @@ public class HtmlElement extends XmlElement {
 
             final Writer writer = (Writer) getWriter.invoke(httpServletResponse);
             toWriter(writer.append(HtmlElement.HEADER).append(CHAR_NEW_LINE));
+            writer.flush();
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
         }
     }
+
+    /** Some HTML constants ,
+    * but this is certainly not a whole list of HTML elements ,
+    * attributes and allowed values */
+    public static interface Html {
+
+        // --- Element names ---
+
+        String HTML = "html";
+        String HEAD = "head";
+        String META = "meta";
+        String BODY = "body";
+        String TITLE = "title";
+        String LINK = "link";
+        String STYLE = "style";
+
+        // --- Attribute names ---
+
+        String A_CHARSET = "charset";
+        String A_CONTENT = "content";
+        String A_HREF = "href";
+        String A_REL = "rel";
+        String A_TYPE = "type";
+    }
+
 }

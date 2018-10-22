@@ -73,7 +73,17 @@ public class XmlElementTest {
         root.addCDATA("");
         expected =XmlElement.HEADER + "\n<root/>";
         assertEquals(expected, root.toString());
+    }
 
+    @Test
+    public void testAddComment() {
+        System.out.println("testAddComment");
 
+        XmlElement root = new XmlElement("root");
+        root.addComment("Sample text <&\">");
+
+        String expected = XmlElement.HEADER
+                + "\n<root><!-- Sample text <&\"> --></root>";
+        assertEquals(expected, root.toString());
     }
 }

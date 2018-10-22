@@ -22,23 +22,25 @@ package org.ujorm.ujoservlet;
 public interface Html {
 
     // --- Element names ---
-
-    String META = "meta";
     String BODY = "body";
-    String H1 = "h1";
+    String META = "meta";
     String DIV = "div";
     String P = "p";
     String FORM = "form";
+    String H1 = "h1";
     String TABLE = "table";
     String TR = "tr";
     String TD = "td";
     String LABEL = "label";
     String INPUT = "input";
+    String SELECT = "select";
+    String OPTION = "option";
     String A = "a";
 
     // --- Attribute names ---
 
     String A_CHECKED = "checked";
+    String A_CLASS = "class";
     String A_CONTENT = "content";
     String A_FOR = "for";
     String A_HREF = "href";
@@ -48,6 +50,7 @@ public interface Html {
     String A_METHOD = "method";
     String A_NAME = "name";
     String A_READONLY = "readonly";
+    String A_SELECTED = "selected";
     String A_TARGET = "target";
     String A_TYPE = "type";
     String A_VALUE = "value";

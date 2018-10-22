@@ -74,6 +74,10 @@ public class XmlElement {
     protected static final String CDATA_BEG = "<![CDATA[";
     /** A CDATA end markup sequence */
     protected static final String CDATA_END = "]]>";
+    /** A CDATA beg markup sequence */
+    protected static final String COMMENT_BEG = "<!--";
+    /** A CDATA end markup sequence */
+    protected static final String COMMENT_END = "-->";
 
     /** Element name */
     @Nonnull
@@ -132,7 +136,7 @@ public class XmlElement {
      * @return The new XmlElement!
      */
     @Nonnull
-    public XmlElement addElement(@Nonnull final CharSequence name) {
+    public final XmlElement addElement(@Nonnull final CharSequence name) {
         Assert.hasLength(name, "Undefined element name");
         return new XmlElement(name, this);
     }
@@ -140,7 +144,7 @@ public class XmlElement {
     /** Add an attribute
      * @return This instance */
     @Nonnull
-    public <T extends XmlElement> T addAttrib(@Nonnull final CharSequence name, @Nullable final Object value) {
+    public final <T extends XmlElement> T addAttrib(@Nonnull final CharSequence name, @Nullable final Object value) {
         Assert.hasLength(name, "name");
         if (value != null) {
             getAttribs().put(name.toString(), value);
@@ -153,9 +157,23 @@ public class XmlElement {
      * @param text text An empty argument is ignored.
      * @return This instance */
     @Nonnull
-    public <T extends XmlElement> T addText(@Nullable final CharSequence text) {
+    public final <T extends XmlElement> T addText(@Nullable final CharSequence text) {
         if (Check.hasLength(text)) {
             getChildren().add(text);
+        }
+        return (T) this;
+    }
+
+    /**
+     * Add a text including a space (before and after the text)
+     * @param text text An empty argument is ignored.
+     * @return This instance */
+    @Nonnull
+    public final <T extends XmlElement> T addTextWithSpace(@Nullable final CharSequence text) {
+        if (Check.hasLength(text)) {
+            getChildren().add(CHAR_SPACE);
+            getChildren().add(text);
+            getChildren().add(CHAR_SPACE);
         }
         return (T) this;
     }
@@ -164,9 +182,32 @@ public class XmlElement {
      * @param rawText text An empty argument is ignored.
      * @return This instance */
     @Nonnull
-    public <T extends XmlElement> T addRawText(@Nullable final CharSequence rawText) {
+    public final <T extends XmlElement> T addRawText(@Nullable final CharSequence rawText) {
         if (Check.hasLength(rawText)) {
             getChildren().add(new RawEnvelope(rawText));
+        }
+        return (T) this;
+    }
+
+    /**
+     * Add a <strong>comment text</strong>.
+     * The CDATA structure isn't really for HTML at all.
+     * @param comment A comment text must not contain a string {@code -->} .
+     * @return This instance
+     */
+    @Nonnull
+    public final <T extends XmlElement> T addComment(@Nullable final CharSequence comment) {
+        if (Check.hasLength(comment)) {
+            Assert.isTrue(!comment.toString().contains(COMMENT_END), "The text contains a forbidden string: " + COMMENT_END);
+            StringBuilder msg = new StringBuilder
+                     ( COMMENT_BEG.length()
+                     + COMMENT_END.length()
+                     + comment.length() + 2);
+            addRawText(msg.append(COMMENT_BEG)
+                    .append(CHAR_SPACE)
+                    .append(comment)
+                    .append(CHAR_SPACE)
+                    .append(COMMENT_END));
         }
         return (T) this;
     }
@@ -178,7 +219,7 @@ public class XmlElement {
      * @return This instance
      */
     @Nonnull
-    public <T extends XmlElement> T addCDATA(@Nullable final CharSequence charData) {
+    public final <T extends XmlElement> T addCDATA(@Nullable final CharSequence charData) {
         if (Check.hasLength(charData)) {
             addRawText(CDATA_BEG);
             final String text = charData.toString();

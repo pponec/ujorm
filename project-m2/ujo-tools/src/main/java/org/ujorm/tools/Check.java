@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * @author Pavel Ponec
  * @since 1.73
  */
-public abstract class Check {
+    public abstract class Check {
 
     /** Only static method are implemented */
     private Check() {

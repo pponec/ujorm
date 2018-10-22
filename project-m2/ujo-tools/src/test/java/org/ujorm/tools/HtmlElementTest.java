@@ -22,7 +22,6 @@ import java.util.Map;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
 import static org.junit.Assert.assertEquals;
-import static org.ujorm.tools.Html.*;
 
 /**
  * @author Pavel Ponec
@@ -35,7 +34,7 @@ public class HtmlElementTest {
         System.out.println("HttpServletResponse");
 
         final HtmlElement html = new HtmlElement("Test");
-        html.getBody().addElement(DIV)
+        html.getBody().addElement(Html.DIV)
                       .addText("Hello word!");
         MockHttpServletResponse response = new MockHttpServletResponse();
         html.toResponse(response, false);
@@ -68,21 +67,21 @@ public class HtmlElementTest {
 
         final HtmlElement html = new HtmlElement(title);
         html.addCssBody("h1{color:SteelBlue;} td:first-child{text-align:right;}");
-        final XmlElement form = html.getBody().addElement(FORM);
-        form.addElement(H1).addText(title);
-        final XmlElement table = form.addElement(TABLE);
+        final XmlElement form = html.getBody().addElement(Html.FORM);
+        form.addElement(Html.H1).addText(title);
+        final XmlElement table = form.addElement(Html.TABLE);
         for (Field field : fields) {
-            final XmlElement row = table.addElement(TR);
-            row.addElement(TD)
-                    .addElement(LABEL)
-                    .addAttrib(A_FOR, field.getName())
-                    .addText(field.getLabel());
-            row.addElement(TD)
-                    .addElement(INPUT)
-                    .addAttrib(A_ID, field.getName())
-                    .addAttrib(A_NAME, field.getName())
-                    .addAttrib(A_TYPE, field.isSubmit() ? V_SUBMIT : V_TEXT)
-                    .addAttrib(A_VALUE, input.get(field.getName()));
+            final XmlElement row = table.addElement(Html.TR);
+            row.addElement(Html.TD)
+                    .addElement(Html.LABEL)
+                    .addAttrib(Html.A_FOR, field.getName())
+                    .addText(field.getLabelSeparated());
+            row.addElement(Html.TD)
+                    .addElement(Html.INPUT)
+                    .addAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
+                    .addAttrib(Html.A_ID, field.getName())
+                    .addAttrib(Html.A_NAME, field.getName())
+                    .addAttrib(Html.A_VALUE, input.get(field.getName()));
         }
 
         String result = html.toString();
@@ -100,32 +99,32 @@ public class HtmlElementTest {
                 + "\n<td>"
                 + "\n<label for=\"firstname\">First name:</label></td>"
                 + "\n<td>"
-                + "\n<input id=\"firstname\" name=\"firstname\" type=\"text\"/></td></tr>"
+                + "\n<input type=\"text\" id=\"firstname\" name=\"firstname\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
                 + "\n<label for=\"lastname\">Last name:</label></td>"
                 + "\n<td>"
-                + "\n<input id=\"lastname\" name=\"lastname\" type=\"text\"/></td></tr>"
+                + "\n<input type=\"text\" id=\"lastname\" name=\"lastname\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
                 + "\n<label for=\"email\">E-mail:</label></td>"
                 + "\n<td>"
-                + "\n<input id=\"email\" name=\"email\" type=\"text\"/></td></tr>"
+                + "\n<input type=\"text\" id=\"email\" name=\"email\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
                 + "\n<label for=\"phone\">Phone number:</label></td>"
                 + "\n<td>"
-                + "\n<input id=\"phone\" name=\"phone\" type=\"text\"/></td></tr>"
+                + "\n<input type=\"text\" id=\"phone\" name=\"phone\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
                 + "\n<label for=\"nick\">Nickname:</label></td>"
                 + "\n<td>"
-                + "\n<input id=\"nick\" name=\"nick\" type=\"text\"/></td></tr>"
+                + "\n<input type=\"text\" id=\"nick\" name=\"nick\"/></td></tr>"
                 + "\n<tr>"
                 + "\n<td>"
                 + "\n<label for=\"submit\"> </label></td>"
                 + "\n<td>"
-                + "\n<input id=\"submit\" name=\"submit\" type=\"submit\"/></td></tr>"
+                + "\n<input type=\"submit\" id=\"submit\" name=\"submit\"/></td></tr>"
                + "</table>"
                + "</form>"
                + "</body>"
@@ -150,8 +149,9 @@ public class HtmlElementTest {
             this.submit = submit;
         }
 
-        public String getLabel() {
-            return label + (submit || label.isEmpty() ? ' ' : ':');
+        public String getLabelSeparated() {
+            char separator = submit || label.isEmpty() ? ' ' : ':';
+            return label + separator;
         }
 
         public String getName() {
