@@ -29,6 +29,7 @@ import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
+import org.ujorm.tools.MsgFormatter;
 
 /**
  * A Manager for Java Property Resources Bundle.
@@ -147,7 +148,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
                 if (prop!=null) {
                     setText(ujo, prop, null, value, action);
                 } else if (validate) {
-                    throw new IllegalStateException("An attribute \""+key+"\" was not found in " + ujo.getClass());
+                    throw new IllegalStateException(MsgFormatter.format("The '{}' was not found in '{}',", key, ujo.getClass()));
                 }
             }
         } catch (RuntimeException | ReflectiveOperationException | IOException e) {
