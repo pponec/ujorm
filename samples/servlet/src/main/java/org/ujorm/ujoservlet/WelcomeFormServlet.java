@@ -1,12 +1,15 @@
 package org.ujorm.ujoservlet;
 
+import com.sun.istack.internal.Nullable;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.HtmlElement;
 import org.ujorm.tools.XmlElement;
+import static org.ujorm.tools.Check.hasLength;
 
 /**
  * A live example of the HtmlElement inside a servlet.
@@ -44,7 +47,7 @@ public class WelcomeFormServlet extends HttpServlet {
                     .addAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
                     .addAttrib(Html.A_ID, field.getName())
                     .addAttrib(Html.A_NAME, field.getName())
-                    .addAttrib(Html.A_VALUE, input.getParameter(field.getName()));
+                    .addAttrib(Html.A_VALUE, getParameter(input, field));
         }
         XmlElement footer = html.addElement(Html.DIV).addAttrib(Html.A_CLASS, "footer");
         footer.addTextWithSpace("The source of the")
@@ -67,6 +70,15 @@ public class WelcomeFormServlet extends HttpServlet {
                         , new Field("Nickname", "nick")
                         , new Field("", "submit", true)};
         return reslt;
+    }
+
+    /** Get parameter from request */
+    @Nullable
+    private String getParameter(HttpServletRequest input, Field field) {
+        final String value = input.getParameter(field.getName());
+        return hasLength(value)
+                ? new String(value.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8)
+                : null;
     }
 
     /** Form field description class */
