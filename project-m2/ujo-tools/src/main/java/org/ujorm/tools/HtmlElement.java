@@ -1,5 +1,6 @@
 /*
  * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec
+ * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/HtmlElement.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +31,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * <h3>How to use the class:</h3>
  * <pre class="pre">
  * final HtmlElement html = new HtmlElement("Test");
- * html.getBody().addElement("div")
+ * html.getBody().addElement(Html.DIV)
  *               .addText("Hello word!");
  * HttpServletResponse response = new MockHttpServletResponse();
  * html.toResponse(response, false);
@@ -145,9 +146,7 @@ public class HtmlElement extends XmlElement {
         }
     }
 
-    /** Some HTML constants ,
-    * but this is certainly not a whole list of HTML elements ,
-    * attributes and allowed values */
+    /** Some HTML constants */
     public static interface Html {
 
         // --- Element names ---
