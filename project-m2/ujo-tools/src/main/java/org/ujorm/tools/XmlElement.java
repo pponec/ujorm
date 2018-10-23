@@ -69,7 +69,9 @@ public class XmlElement implements Element {
     @Nullable
     private List<Object> children;
 
-    /** New element */
+    /** The new element constructor
+     * @param name The parameter must not be empty or contain any special HTML characters.
+     */
     public XmlElement(@Nonnull final CharSequence name) {
         this.name = name;
     }

@@ -39,6 +39,7 @@ public interface Html {
 
     // --- Attribute names ---
 
+    String A_ACTION = "action";
     String A_CHECKED = "checked";
     String A_CLASS = "class";
     String A_CONTENT = "content";

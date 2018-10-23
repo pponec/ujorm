@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Simple user form</title>
+        <link href="welcomeForm.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <form method="post">
+            <h1>Simple user form</h1>
+            <table>
+                <tr>
+                    <td>
+                        <label for="firstname">First name:</label>
+                    </td>
+                    <td>
+                        <input type="text" id="firstname" name="firstname" value=""/>
+                        <div class="error">Required field</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="lastname">Last name:</label>
+                    </td>
+                    <td>
+                        <input type="text" id="lastname" name="lastname" value=""/>
+                        <div class="error">Required field</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="email">E-mail:</label>
+                    </td>
+                    <td>
+                        <input type="text" id="email" name="email" value=""/>
+                        <div class="error">Required field</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="phone">Phone number:</label>
+                    </td>
+                    <td>
+                        <input type="text" id="phone" name="phone" value=""/>
+                        <div class="error">Required field</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="nick">Nickname:</label>
+                    </td>
+                    <td>
+                        <input type="text" id="nick" name="nick" value=""/>
+                        <div class="error">Required field</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="submit"> </label>
+                    </td>
+                    <td>
+                        <input type="submit" id="submit" name="submit" value="Odeslat dotaz"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div class="footer"> See a  <a href="https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/WelcomeFormServlet.java#L36" target="_blank">WelcomeFormServlet</a> class of the Ujorm framework. </div>
+    </body>
+</html>

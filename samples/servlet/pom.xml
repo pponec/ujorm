@@ -26,6 +26,13 @@
             <artifactId>ujo-tools</artifactId>
             <version>1.86-SNAPSHOT</version>
         </dependency>
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -73,6 +80,17 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+         
+            <!-- Run http://localhost:9090/ by: mvn tomcat7:run --> 
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>9090</port>
+                    <path>/</path>
+                </configuration>
             </plugin>
         </plugins>
     </build>
