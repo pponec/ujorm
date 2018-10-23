@@ -98,6 +98,15 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
 
     // ===== STATIC METHODS =====
 
+    /** Create a factory with a camel-case Key name generator with the off validator.
+     * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
+     * <br>In case of OrmUjo the method is called by a Ujorm framework
+     */
+    @SuppressWarnings("unchecked")
+    protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newNoChickFactory(Class<? extends UJO> ujoClass) {
+        return (FACTORY) KeyFactory.NoCheckBuilder.get(ujoClass);
+    }
+
     /** Create a factory with a camel-case Key name generator.
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
      * <br>In case of OrmUjo the method is called by a Ujorm framework
@@ -106,7 +115,7 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
     protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newCamelFactory(Class<? extends UJO> ujoClass) {
         return (FACTORY) KeyFactory.CamelBuilder.get(ujoClass);
     }
-    
+
     /** Create a factory with a camel-case Key name generator.
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
      * <br>In case of OrmUjo the method is called by a Ujorm framework
