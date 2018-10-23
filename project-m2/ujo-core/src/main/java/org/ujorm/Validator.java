@@ -47,8 +47,15 @@ import org.ujorm.validator.impl.ValidatorFactory;
  */
 public interface Validator<VALUE> {
 
-    /**
-     * Validate the input value and return an non-null result, if the input ís not valid;
+    /** Validate the input value and return an non-null result, if the input ís not valid;
+     * @param key UJO Key
+     * @param bo Target Domain object is not mandatory
+     * @return the ValidationError instance or the {
+     * @null value} if the result is ok.
+     */
+    public <UJO extends Ujo> ValidationError validate(Key<UJO, VALUE> key, UJO bo);
+
+    /** Validate the input value and return an non-null result, if the input ís not valid;
      * @param input The input value to validation
      * @param key UJO Key
      * @param bo Target Domain object is not mandatory
@@ -57,13 +64,18 @@ public interface Validator<VALUE> {
      */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo);
 
-    /**
-     * Throw an exception if input value is not valid.
+    /** Throw an exception if input value is not valid.
      * @param value Value to validation
      * @param key UJO Key
      * @param bo Target Domain object @null value} if the result is ok.
      */
     public <UJO extends Ujo> void checkValue(VALUE value, Key<UJO, VALUE> key, UJO bo) throws ValidationException;
+
+    /** Throw an exception if input value is not valid.
+     * @param key UJO Key
+     * @param bo Target Domain object @null value} if the result is ok.
+     */
+    public <UJO extends Ujo> void checkValue(Key<UJO, VALUE> key, UJO bo) throws ValidationException;
 
     /** Returns a unique localization key for a constrain type. Two instances
      * of the same Validator class may returns two different keys

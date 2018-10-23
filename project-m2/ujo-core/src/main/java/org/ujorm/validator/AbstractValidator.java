@@ -15,12 +15,12 @@
  */
 package org.ujorm.validator;
 
-import org.ujorm.tools.MessageService;
-import org.ujorm.tools.MessageArg;
 import java.io.Serializable;
 import java.util.Map;
 import org.ujorm.*;
 import org.ujorm.criterion.BinaryOperator;
+import org.ujorm.tools.MessageArg;
+import org.ujorm.tools.MessageService;
 import org.ujorm.validator.impl.CompositeValidator;
 
 /**
@@ -42,6 +42,18 @@ public abstract class AbstractValidator<VALUE> implements Validator<VALUE>, Seri
 
     /** Localization Key Prefix */
     public static final String KEY_PREFIX = "validator.";
+
+    /** {@inheritDoc} */
+    @Override
+    public final <UJO extends Ujo> ValidationError validate(Key<UJO, VALUE> key, UJO bo) {
+        return validate(key.of(bo), key, bo);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final <UJO extends Ujo> void checkValue(final Key<UJO, VALUE> key, final UJO bo) throws ValidationException {
+        checkValue(key.of(bo), key, bo);
+    }
 
     /** Check the value without context */
     public final <UJO extends Ujo> void checkValue(VALUE input) throws ValidationException {
