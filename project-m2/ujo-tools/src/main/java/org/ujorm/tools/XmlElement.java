@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec,
+ * Copyright 2018-2018 Pavel Ponec,
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/XmlElement.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -121,8 +121,12 @@ public class XmlElement implements Element {
         return (T) new XmlElement(name, this);
     }
 
-    /** Add an attribute
-     * @return This instance */
+    /**
+     * Add an attribute
+     * @param name Required element name
+     * @param value The {@code null} value is ignored.
+     * @return The original element
+     */
     @Override @Nonnull
     public final <T extends Element> T addAttrib(@Nonnull final CharSequence name, @Nullable final Object value) {
         Assert.hasLength(name, "name");

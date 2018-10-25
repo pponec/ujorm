@@ -1,0 +1,22 @@
+/** The CSS for the WelcomeForm servlet */
+
+body {
+    padding: 5px 15px;
+    font-family: "DejaVu Sans", verdana, arial, sans-serif;
+    background-color: #f3f6f7;
+}
+h1 {
+    color:SteelBlue;
+}
+td {
+    text-align: right;
+}
+td:first-child, tr:first-child td {
+    background-color: lightblue;
+}
+.footer {
+    margin-top: 25px;
+    margin-left: 7px;
+    font-style: italic;
+    color: gray;
+}

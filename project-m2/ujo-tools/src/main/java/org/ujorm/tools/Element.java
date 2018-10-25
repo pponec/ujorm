@@ -85,8 +85,12 @@ public interface Element {
     @Nonnull
     public <T extends Element> T addElement(@Nonnull CharSequence name);
 
-    /** Add an attribute
-     * @return This instance */
+    /**
+     * Add an attribute
+     * @param name Required element name
+     * @param value The {@code null} value is ignored.
+     * @return The original element
+     */
     @Nonnull
     public  <T extends Element> T addAttrib(@Nonnull CharSequence name, @Nullable  Object value);
 

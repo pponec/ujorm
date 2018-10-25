@@ -1,17 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    
     <servlet>
-        <servlet-name>WelcomeForm</servlet-name>
-        <servlet-class>org.ujorm.ujoservlet.WelcomeFormServlet</servlet-class>
+        <servlet-name>helloServlet</servlet-name>
+        <servlet-class>org.ujorm.ujoservlet.HelloServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>menuServlet</servlet-name>
+        <servlet-class>org.ujorm.ujoservlet.MenuServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>tableServlet</servlet-name>
+        <servlet-class>org.ujorm.ujoservlet.TableServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>formServlet</servlet-name>
+        <servlet-class>org.ujorm.ujoservlet.FormServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
-        <servlet-name>WelcomeForm</servlet-name>
-        <url-pattern>/WelcomeForm</url-pattern>
+        <servlet-name>helloServlet</servlet-name>
+        <url-pattern>/helloServlet</url-pattern>
+    </servlet-mapping>   
+    <servlet-mapping>
+        <servlet-name>menuServlet</servlet-name>
+        <url-pattern>/menuServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>tableServlet</servlet-name>
+        <url-pattern>/tableServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>formServlet</servlet-name>
+        <url-pattern>/formServlet</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>WelcomeForm</welcome-file>
+        <welcome-file>menuServlet</welcome-file>
     </welcome-file-list>
 </web-app>

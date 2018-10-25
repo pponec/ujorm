@@ -1,5 +1,6 @@
 /*
- * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2018 Pavel Ponec,
+ * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.ujoservlet;
+package org.ujorm.ujoservlet.tools;
 
 /** Some HTML constants,
 * but this is certainly not a whole list of HTML elements,
@@ -22,20 +23,43 @@ package org.ujorm.ujoservlet;
 public interface Html {
 
     // --- Element names ---
+
+    /** Body element */
     String BODY = "body";
+    /** Meta element */
     String META = "meta";
+    /** Divission element */
     String DIV = "div";
+    /** Span element */
+    String SPAN = "span";
+    /** Paragraph element */
     String P = "p";
+    /** Form element */
     String FORM = "form";
+    /** Header element level 1 */
     String H1 = "h1";
+    /** Table element */
     String TABLE = "table";
+    /** Table row element */
     String TR = "tr";
+    /** Table detail element */
     String TD = "td";
+    /** Label element */
     String LABEL = "label";
+    /** Input element  */
     String INPUT = "input";
+    /** Select element */
     String SELECT = "select";
+    /** Option element */
     String OPTION = "option";
+    /** Anchor element */
     String A = "a";
+    /** Unordered list element */
+    String UL = "ul";
+    /** Ordered list element */
+    String OL = "ol";
+    /** List item element */
+    String LI = "li";
 
     // --- Attribute names ---
 
@@ -56,15 +80,13 @@ public interface Html {
     String A_TYPE = "type";
     String A_VALUE = "value";
 
-    // --- HTML Values ---
+    // --- Some attribute values ---
 
     String V_BLANK = "_blank";
     String V_CHECKBOX = "checkbox";
-    String V_DEVICE = "width=device-width, initial-scale=1.0";
     String V_GET = "get";
     String V_HIDDEN = "hidden";
     String V_POST = "post";
     String V_SUBMIT = "submit";
     String V_TEXT = "text";
-    String V_VIEWPORT = "viewport";
 }

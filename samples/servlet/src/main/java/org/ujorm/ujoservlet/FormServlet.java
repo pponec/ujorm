@@ -1,8 +1,22 @@
+/*
+ * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.ujorm.ujoservlet;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.servlet.ServletException;
@@ -12,35 +26,35 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.HtmlElement;
 import org.ujorm.tools.XmlElement;
+import org.ujorm.ujoservlet.tools.Html;
+import org.ujorm.ujoservlet.tools.HtmlTools;
 
 /**
  * A live example of the HtmlElement inside a servlet.
  * @author Pavel Ponec
  */
-public class WelcomeFormServlet extends HttpServlet {
+public class FormServlet extends HttpServlet {
 
-    /** A HTML code page */
-    private static final Charset CODE_PAGE = StandardCharsets.UTF_8; // Charset.forName("windows-1250");
-
-    /** Link to the source code */
-    public static final String SOURCE_LINK = "https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/"
-            + WelcomeFormServlet.class.getName().replace('.', '/') + ".java#L" + 36;
+    /** Show the first line of soufce code */
+    public static final short SHOW_LINE = 49;
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+     * Handles the HTTP <code>GET</code> or <code>POST</code> method.
      * @param input servlet request
      * @param output servlet response
+     * @param postMethod A sign of the POST method
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        input.setCharacterEncoding(CODE_PAGE.toString());
+    protected void processRequest(HttpServletRequest input, HttpServletResponse output, boolean postMethod) throws ServletException, IOException {
+        input.setCharacterEncoding(HtmlTools.CODE_PAGE.toString());
+
         final String title = "Simple user form";
-        final HtmlElement html = new HtmlElement(title, CODE_PAGE);
+        final HtmlElement html = new HtmlElement(title, HtmlTools.CODE_PAGE);
         html.addCssLink("welcomeForm.css");
         final XmlElement form = html.getBody().addElement(Html.FORM)
                 .addAttrib(Html.A_METHOD, Html.V_POST)
-                .addAttrib(Html.A_ACTION, null /* input.getRequestURI() */);
+                .addAttrib(Html.A_ACTION, postMethod ? null : input.getRequestURI());
         form.addElement(Html.H1).addText(title);
         final XmlElement table = form.addElement(Html.TABLE);
         for (Field field : getFieldDescription()) {
@@ -55,18 +69,12 @@ public class WelcomeFormServlet extends HttpServlet {
                     .addAttrib(Html.A_ID, field.getName())
                     .addAttrib(Html.A_NAME, field.getName())
                     .addAttrib(Html.A_VALUE, input.getParameter(field.getName()));
-            field.getErrorMessage(input).ifPresent(msg -> valueCell.addElement(Html.DIV)
+            field.getErrorMessage(input, postMethod).ifPresent(msg -> valueCell.addElement(Html.DIV)
                     .addAttrib(Html.A_CLASS, "error")
-                    .addText(msg)); // A validation message
+                    .addText(msg)); // Raw validation message
         }
-        XmlElement footer = html.getBody().addElement(Html.DIV)
-                .addAttrib(Html.A_CLASS, "footer");
-        footer.addTextWithSpace("See a ")
-                .addElement(Html.A)
-                .addAttrib(Html.A_HREF, SOURCE_LINK)
-                .addAttrib(Html.A_TARGET, Html.V_BLANK)
-                .addText(getClass().getSimpleName());
-        footer.addTextWithSpace("class of the Ujorm framework.");
+
+        HtmlTools.addFooter(html.getBody(), this, SHOW_LINE);
         html.toResponse(output, true); // Render the result
     }
 
@@ -113,8 +121,8 @@ public class WelcomeFormServlet extends HttpServlet {
         }
 
         /** Check the POST value and regurn an error message */
-        public Optional<String> getErrorMessage(HttpServletRequest input) {
-            if (Html.V_POST.equalsIgnoreCase(input.getMethod())) {
+        public Optional<String> getErrorMessage(HttpServletRequest input, boolean postMethod) {
+            if (postMethod) {
                 final String value = input.getParameter(name);
                 if (Check.isEmpty(value)) {
                     return Optional.of("Required field");
@@ -136,7 +144,7 @@ public class WelcomeFormServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        processRequest(input, output);
+        processRequest(input, output, false);
     }
 
     /**
@@ -148,15 +156,6 @@ public class WelcomeFormServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        processRequest(input, output);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return getClass().getSimpleName();
+        processRequest(input, output, true);
     }
 }

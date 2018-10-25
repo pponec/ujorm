@@ -76,6 +76,19 @@ public class XmlElementTest {
     }
 
     @Test
+    public void testAddAttrib() {
+        System.out.println("testaddAttrib");
+
+        String expected1 = XmlElement.HEADER + "\n<input readonly=\"\"/>";
+        String result1 = new XmlElement(Html.INPUT).addAttrib(Html.A_READONLY, "").toString();
+        assertEquals(expected1, result1);
+
+        String expected2 = XmlElement.HEADER + "\n<input/>";
+        String result2 = new XmlElement(Html.INPUT).addAttrib(Html.A_READONLY, null).toString();
+        assertEquals(expected2, result2);
+    }
+
+    @Test
     public void testAddComment() {
         System.out.println("testAddComment");
 

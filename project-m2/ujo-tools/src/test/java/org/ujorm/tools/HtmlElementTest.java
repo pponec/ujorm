@@ -34,7 +34,7 @@ public class HtmlElementTest {
         System.out.println("HttpServletResponse");
 
         final HtmlElement html = new HtmlElement("Test");
-        html.getBody().addElement(Html.DIV)
+        html.getBody().addElement(Html.H1)
                       .addText("Hello word!");
         MockHttpServletResponse response = new MockHttpServletResponse();
         html.toResponse(response, false);
@@ -45,7 +45,7 @@ public class HtmlElementTest {
                 + "\n<meta charset=\"UTF-8\"/>"
                 + "\n<title>Test</title></head>"
                 + "\n<body>"
-                + "\n<div>Hello word!</div></body></html>";
+                + "\n<h1>Hello word!</h1></body></html>";
         assertEquals(expected, response.getContentAsString());
         assertEquals("UTF-8", response.getCharacterEncoding());
         assertEquals("text/html; charset=UTF-8", response.getContentType());
