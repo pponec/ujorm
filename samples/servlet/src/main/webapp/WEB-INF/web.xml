@@ -19,6 +19,10 @@
         <servlet-name>formServlet</servlet-name>
         <servlet-class>org.ujorm.ujoservlet.FormServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>dom4jServlet</servlet-name>
+        <servlet-class>org.ujorm.ujoservlet.dom4j.Dom4jServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>helloServlet</servlet-name>
@@ -35,6 +39,10 @@
     <servlet-mapping>
         <servlet-name>formServlet</servlet-name>
         <url-pattern>/formServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dom4jServlet</servlet-name>
+        <url-pattern>/dom4jServlet</url-pattern>
     </servlet-mapping>
 
     <session-config>

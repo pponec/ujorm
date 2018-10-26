@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.ujoservlet.tools;
+package org.ujorm.ujoservlet.dom4j;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServlet;
+import org.dom4j.Element;
 import org.ujorm.tools.MsgFormatter;
-import org.ujorm.tools.XmlElement;
+import org.ujorm.ujoservlet.tools.Html;
+import org.ujorm.ujoservlet.tools.HtmlTools;
 
 /**
- * Common static tools
+ * Common static tools for Dom4j library
  * @author Pavel Ponec
  */
-public abstract class HtmlTools {
+public abstract class Dom4jHtmlTools {
 
     /** A HTML code page. Try the {@code  Charset.forName("windows-1250")} for example. */
-    public static final Charset CODE_PAGE = StandardCharsets.UTF_8;
+    public static final Charset CODE_PAGE = HtmlTools.CODE_PAGE;
 
     /** Template for a source link */
-    public static final String SOURCE_LINK_TEMPLATE = "https://github.com/pponec/ujorm/blob/master"
-            + "/samples/servlet/src/main/java/{}.java#L{}";
+    private static final String SOURCE_LINK_TEMPLATE = HtmlTools.SOURCE_LINK_TEMPLATE;
 
     /** Static methods only */
-    private HtmlTools() {
+    private Dom4jHtmlTools() {
     }
 
     /** Create a link to the source code on the GitHub */
@@ -43,16 +43,15 @@ public abstract class HtmlTools {
         return MsgFormatter.format(SOURCE_LINK_TEMPLATE, servletClass.getName().replace('.', '/'), firstLine);
     }
 
-    /** Add a common footer */
-    public static void addFooter(final XmlElement parent, HttpServlet servlet, short showLine) {
-        XmlElement footer = parent.addElement(Html.DIV)
-                .addAttrib(Html.A_CLASS, "footer");
-        footer.addTextWithSpace("See a")
+    /** Add a common footer for Dom4j library */
+    public static void addFooterDom4j(final Element parent, HttpServlet servlet, short showLine) {
+        Element footer = parent.addElement(Html.DIV)
+                .addAttribute(Html.A_CLASS, "footer");
+        footer.addText("See a ")
                 .addElement(Html.A)
-                .addAttrib(Html.A_HREF, getSourceLink(servlet.getClass(), showLine))
-                .addAttrib(Html.A_TARGET, Html.V_BLANK)
+                .addAttribute(Html.A_HREF, getSourceLink(servlet.getClass(), showLine))
+                .addAttribute(Html.A_TARGET, Html.V_BLANK)
                 .addText(servlet.getClass().getSimpleName());
-        footer.addTextWithSpace("source class of the Ujorm framework.");
+        footer.addText(" source class of the Ujorm framework.");
     }
-
 }

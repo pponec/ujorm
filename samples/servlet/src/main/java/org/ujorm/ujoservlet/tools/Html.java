@@ -25,9 +25,19 @@ public interface Html {
     // --- Element names ---
 
     /** Body element */
-    String BODY = "body";
+    String HTML = "html";
+    /** Head element */
+    String HEAD = "head";
     /** Meta element */
     String META = "meta";
+    /** Body element */
+    String BODY = "body";
+    /** Title element */
+    String TITLE = "title";
+    /** Link element */
+    String LINK = "link";
+    /** Style element */
+    String STYLE = "style";
     /** Divission element */
     String DIV = "div";
     /** Span element */
@@ -79,6 +89,7 @@ public interface Html {
     String A_TARGET = "target";
     String A_TYPE = "type";
     String A_VALUE = "value";
+    String A_REL = "rel";
 
     // --- Some attribute values ---
 

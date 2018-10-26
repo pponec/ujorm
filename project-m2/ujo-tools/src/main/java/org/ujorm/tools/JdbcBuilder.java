@@ -64,7 +64,8 @@ import javax.annotation.Nullable;
  *     .andCondition("id", "&lt;", 20);
  * sql.executeUpdate(dbConnection);
  * </pre>
- * For more information see a <a href="https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/test/java/org/ujorm/tools/JdbcBuilderTest.java#L30">jUnit</a> test.
+ * For more information see a <a target="_blank"
+ * href="https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/test/java/org/ujorm/tools/jdbc/JdbcBuilderTest.java#L33">jUnit</a> test.
  * @author Pavel Ponec
  */
 public final class JdbcBuilder implements Serializable {

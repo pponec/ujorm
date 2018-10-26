@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.ujorm.ujoservlet;
+package org.ujorm.ujoservlet.dom4j;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -23,17 +22,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.HTMLWriter;
+import org.dom4j.io.OutputFormat;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.HtmlElement;
-import org.ujorm.tools.XmlElement;
 import org.ujorm.ujoservlet.tools.Html;
 import org.ujorm.ujoservlet.tools.HtmlTools;
 
 /**
- * A live example of the HtmlElement inside a servlet.
+ * A live example of the HtmlElement inside a servlet using a Dom4j library.
  * @author Pavel Ponec
  */
-public class FormServlet extends HttpServlet {
+public class Dom4jServlet extends HttpServlet {
 
     /** Show the first line of soufce code */
     public static final short SHOW_LINE = 49;
@@ -49,48 +51,70 @@ public class FormServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest input, HttpServletResponse output, boolean postMethod) throws ServletException, IOException {
         input.setCharacterEncoding(HtmlTools.CODE_PAGE.toString());
 
-        final String title = "Simple user form";
-        final HtmlElement html = new HtmlElement(title, HtmlTools.CODE_PAGE);
-        html.addCssLink("welcomeForm.css");
-        final XmlElement form = html.addElementToBody(Html.FORM)
-                .addAttrib(Html.A_METHOD, Html.V_POST)
-                .addAttrib(Html.A_ACTION, postMethod ? null : input.getRequestURI());
+        final String title = "Simple user form using a Dom4j library";
+        Document document = DocumentHelper.createDocument();
+        Element html = document.addElement(Html.HTML);
+        Element head = html.addElement(Html.HEAD);
+        head.addElement(Html.LINK)
+                .addAttribute(Html.A_HREF, "welcomeForm.css")
+                .addAttribute(Html.A_REL, "stylesheet")
+                .addAttribute(Html.A_TYPE, "text/css");
+        final Element body = html.addElement(Html.BODY);
+        final Element form = body.addElement(Html.FORM)
+                .addAttribute(Html.A_METHOD, Html.V_POST)
+                .addAttribute(Html.A_ACTION, postMethod ? null : input.getRequestURI());
         form.addElement(Html.H1).addText(title);
-        final XmlElement table = form.addElement(Html.TABLE);
+        final Element table = form.addElement(Html.TABLE);
         for (Field field : getFieldDescription()) {
-            final XmlElement row = table.addElement(Html.TR);
+            final Element row = table.addElement(Html.TR);
             row.addElement(Html.TD)
                     .addElement(Html.LABEL)
-                    .addAttrib(Html.A_FOR, field.getName())
+                    .addAttribute(Html.A_FOR, field.getName())
                     .addText(field.getLabelSeparated());
-            XmlElement valueCell = row.addElement(Html.TD);
+            Element valueCell = row.addElement(Html.TD);
             valueCell.addElement(Html.INPUT)
-                    .addAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
-                    .addAttrib(Html.A_ID, field.getName())
-                    .addAttrib(Html.A_NAME, field.getName())
-                    .addAttrib(Html.A_VALUE, input.getParameter(field.getName()));
+                    .addAttribute(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
+                    .addAttribute(Html.A_ID, field.getName())
+                    .addAttribute(Html.A_NAME, field.getName())
+                    .addAttribute(Html.A_VALUE, input.getParameter(field.getName()));
             field.getErrorMessage(input, postMethod).ifPresent(msg -> valueCell.addElement(Html.DIV)
-                    .addAttrib(Html.A_CLASS, "error")
+                    .addAttribute(Html.A_CLASS, "error")
                     .addText(msg)); // Raw validation message
         }
 
-        HtmlTools.addFooter(html.getBody(), this, SHOW_LINE);
-        html.toResponse(output, true); // Render the result
+        Dom4jHtmlTools.addFooterDom4j(body, this, SHOW_LINE);
+        renderHtml(document, output, true);
+    }
+
+    /** Rendering the HTML for Dom4j */
+    private void renderHtml(Document document, HttpServletResponse output, boolean noCache) throws IOException {
+        output.setCharacterEncoding(Dom4jHtmlTools.CODE_PAGE.toString());
+        if (noCache) {
+            output.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            output.setHeader("Pragma", "no-cache");
+            output.setHeader("Expires", "0");
+        }
+        OutputFormat format = OutputFormat.createPrettyPrint();
+        format.setNewlines(true);
+        HTMLWriter writer = new HTMLWriter(output.getWriter(), format);
+        writer.write(document);
+        writer.flush();
     }
 
     /** Form field description data */
     private Field[] getFieldDescription() {
-        Field[] reslt = { new Field("First name", "firstname", "^.{2,99}$")
-                        , new Field("Last name", "lastname", "^.{2,99}$")
-                        , new Field("E-mail", "email", "^[\\w\\.=-]+@[\\w\\.-]+\\.[\\w]{2,3}$")
-                        , new Field("Phone number", "phone", "^\\+?[ \\d]{9,15}$")
-                        , new Field("Nickname", "nick", "^.{3,10}$")
-                        , new Field("", "submit", "", true)};
+        Field[] reslt = {new Field("First name", "firstname", "^.{2,99}$"),
+             new Field("Last name", "lastname", "^.{2,99}$"),
+             new Field("E-mail", "email", "^[\\w\\.=-]+@[\\w\\.-]+\\.[\\w]{2,3}$"),
+             new Field("Phone number", "phone", "^\\+?[ \\d]{9,15}$"),
+             new Field("Nickname", "nick", "^.{3,10}$"),
+             new Field("", "submit", "", true)};
         return reslt;
     }
 
     /** Form field description class */
     static class Field {
+
         private final String label;
         private final String name;
         private final String regexp;
@@ -128,7 +152,7 @@ public class FormServlet extends HttpServlet {
                     return Optional.of("Required field");
                 }
                 if (Check.hasLength(regexp) && !Pattern.matches(regexp, value)) {
-                     return Optional.of("Wrong value for: " + regexp); // localiza it!
+                    return Optional.of("Wrong value for: " + regexp); // localiza it!
                 }
             }
             return Optional.empty();
