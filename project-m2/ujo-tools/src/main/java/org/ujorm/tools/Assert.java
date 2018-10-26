@@ -25,7 +25,7 @@ import static org.ujorm.tools.MsgFormatter.format;
 /**
  * Assertion utils, where all method can throw the {@code IllegalArgumentException} exception only.
  * For a message format see the {@link MsgFormatter#format(java.lang.Object...)} method description.
- * See the next correct asserts:
+ * <h3>See the next correct asserts</h3>
  * <pre class="pre">
  *  Assert.isTrue(true, "TEST:{}{}", "A", "B");
  *  Assert.isTrue(30, (x) -> x > 20, "Wrong No");

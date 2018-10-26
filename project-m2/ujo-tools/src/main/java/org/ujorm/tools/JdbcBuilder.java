@@ -30,8 +30,42 @@ import javax.annotation.Nullable;
 
 /**
  * PrepareStatement builder support
+ *
+ * <h3>How to use a SELECT</h3>
+ * <pre class="pre">
+ * JdbcBuilder sql = new JdbcBuilder()
+ *     .write("SELECT")
+ *     .column("t.name")
+ *     .column("t.id")
+ *     .write("FROM testTable t WHERE")
+ *     .andCondition("t.name", "=", "Test")
+ *     .andCondition("t.date", "&gt;", SOME_DATE);
+ * </pre>
+ *
+ * <h3>How to use a INSERT</h3>
+ * <pre class="pre">
+ * JdbcBuilder sql = new JdbcBuilder()
+ *     .write("INSERT INTO testTable (")
+ *     .columnInsert("id", 10)
+ *     .columnInsert("name", "Test")
+ *     .columnInsert("date", SOME_DATE)
+ *     .write(")");
+ * sql.executeUpdate(dbConnection);
+ * </pre>
+ *
+ * <h3>How to use a UPDATE</h3>
+ * <pre class="pre">
+ * JdbcBuilder sql = new JdbcBuilder()
+ *     .write("UPDATE testTable SET")
+ *     .columnUpdate("name", "Test")
+ *     .columnUpdate("date", SOME_DATE)
+ *     .write("WHERE")
+ *     .andCondition("id", "&gt;", 10)
+ *     .andCondition("id", "&lt;", 20);
+ * sql.executeUpdate(dbConnection);
+ * </pre>
+ * For more information see a <a href="https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/test/java/org/ujorm/tools/JdbcBuilderTest.java#L30">jUnit</a> test.
  * @author Pavel Ponec
- * @sa.date 2015-12-08T09:03:39+0100
  */
 public final class JdbcBuilder implements Serializable {
 

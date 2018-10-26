@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  *     <li>secure building well-formed XML documents  by the Java code</li>
  *     <li>a simple API built on a single XmlElement class</li>
  *     <li>creating XML components by a subclass is possible</li>
- *     <li>small memory footprint</li>
+ *     <li>great performance and small memory footprint</li>
  * </ul>¨
  * <h3>How to use the class:</h3>
  * <pre class="pre">
@@ -50,6 +50,7 @@ import javax.annotation.Nullable;
  *  root.addCDATA("A character data &lt;&\"&gt;");
  *  String result = root.toString();
  * </pre>
+ * @see HtmlElement
  * @author Pavel Ponec
  */
 public class XmlElement implements Element {

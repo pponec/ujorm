@@ -18,14 +18,18 @@ package org.ujorm.tools;
 
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 import javax.annotation.Nonnull;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
  * Testing the JdbcBuillder class
- * @author Test Ponec
+ * @author Pavel Ponec
  */
 public class JdbcBuilderTest {
 
@@ -62,7 +66,7 @@ public class JdbcBuilderTest {
             .columnInsert("id", 10)
             .columnInsert("name", "Test")
             .columnInsert("date", SOME_DATE)
-            .write(")");
+            .write(")")
             ;
         String expResult1 = "INSERT INTO testTable ( id, name, date ) VALUES ( ?, ?, ? )";
         String expResult2 = "INSERT INTO testTable ( id, name, date ) VALUES ( 10, 'Test', 2018-09-12 )";
@@ -122,7 +126,7 @@ public class JdbcBuilderTest {
     }
 
     /** How to SELECT single value */
-    public void showSelect(@Nonnull Connection connection) {
+    public void showSelect(@Nonnull Connection dbConnection) {
         System.out.println("Show SELECT");
         JdbcBuilder sql = new JdbcBuilder()
             .write("SELECT")
@@ -130,8 +134,19 @@ public class JdbcBuilderTest {
             .write("FROM testTable t WHERE")
             .andCondition("t.id", "=", 1);
 
-        String name = sql.uniqueValue(String.class, connection);
+        String name = sql.uniqueValue(String.class, dbConnection);
         assertEquals("Test", name);
+
+        // Or use a general solution:
+        try (PreparedStatement ps = sql.prepareStatement(dbConnection);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                String nameValue = rs.getString(1);
+                assertNotNull(nameValue);
+            }
+        } catch (SQLException | NoSuchElementException e) {
+            throw new IllegalStateException(sql.getSql(), e);
+        }
     }
 
     /** How to UPDATE single value (no commit) */

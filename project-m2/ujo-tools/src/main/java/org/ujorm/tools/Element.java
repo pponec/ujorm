@@ -28,22 +28,8 @@ import javax.annotation.Nullable;
  *     <li>secure building well-formed XML documents  by the Java code</li>
  *     <li>a simple API built on a single XmlElement class</li>
  *     <li>creating XML components by a subclass is possible</li>
- *     <li>small memory footprint</li>
  * </ul>¨
- * <h3>How to use the class:</h3>
- * <pre class="pre">
- *  XmlElement root = new XmlElement("root");
- *  root.addElement("childA")
- *          .addAttrib("x", 1)
- *          .addAttrib("y", 2);
- *  root.addElement("childB")
- *          .addAttrib("x", 3)
- *          .addAttrib("y", 4)
- *          .addText("A text message &lt;&\"&gt;");
- *  root.addRawText("\n&lt;rawXml/&gt;\n");
- *  root.addCDATA("A character data &lt;&\"&gt;");
- *  String result = root.toString();
- * </pre>
+ * @see XmlElement
  * @author Pavel Ponec
  */
 public interface Element {
@@ -66,9 +52,9 @@ public interface Element {
     String CDATA_BEG = "<![CDATA[";
     /** A CDATA end markup sequence */
     String CDATA_END = "]]>";
-    /** A CDATA beg markup sequence */
+    /** A comment beg sequence */
     String COMMENT_BEG = "<!--";
-    /** A CDATA end markup sequence */
+    /** A comment end sequence */
     String COMMENT_END = "-->";
 
     /**
