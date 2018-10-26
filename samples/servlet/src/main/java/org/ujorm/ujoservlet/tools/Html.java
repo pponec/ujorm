@@ -46,7 +46,7 @@ public interface Html {
     String TD = "td";
     /** Label element */
     String LABEL = "label";
-    /** Input element  */
+    /** Input element */
     String INPUT = "input";
     /** Select element */
     String SELECT = "select";

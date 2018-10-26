@@ -47,7 +47,7 @@ public class HelloServlet extends HttpServlet {
 
         final HtmlElement html = new HtmlElement(getClass().getSimpleName(), HtmlTools.CODE_PAGE);
         html.addCssLink("welcomeForm.css");
-        html.getBody().addElement(Html.H1)
+        html.addElementToBody(Html.H1)
                 .addText("Hello, World!");
 
         HtmlTools.addFooter(html.getBody(), this, SHOW_LINE);

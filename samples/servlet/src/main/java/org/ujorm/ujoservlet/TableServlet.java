@@ -49,9 +49,9 @@ public class TableServlet extends HttpServlet {
 
         final HtmlElement html = new HtmlElement(getClass().getSimpleName(), HtmlTools.CODE_PAGE);
         html.addCssLink("tableForm.css");
-        html.getBody().addElement(Html.H1)
+        html.addElementToBody(Html.H1)
                 .addText("Show table");
-        final XmlElement table = html.getBody().addElement(Html.TABLE)
+        final XmlElement table = html.addElementToBody(Html.TABLE)
                 .addAttrib(Html.A_CLASS, "numbers");
         for (Object[] rowValue : getTableData()) {
             final XmlElement rowElement = table.addElement(Html.TR);
@@ -65,6 +65,7 @@ public class TableServlet extends HttpServlet {
         html.toResponse(output, true); // Render the result
     }
 
+    /** A number array */
     private Object[][] getTableData() {
         Random random = new Random();
         int size = 20 + 1;
@@ -78,9 +79,7 @@ public class TableServlet extends HttpServlet {
                         : random.nextInt(500);
             }
         }
-
         return result;
-
     }
 
     /** No implementation */

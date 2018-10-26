@@ -49,9 +49,9 @@ public class MenuServlet extends HttpServlet {
         final String title = "List of samples";
         final HtmlElement html = new HtmlElement(title, HtmlTools.CODE_PAGE);
         html.addCssLink("welcomeForm.css");
-        html.getBody().addElement(Html.H1)
+        html.addElementToBody(Html.H1)
                 .addText(title);
-        XmlElement list = html.getBody().addElement(Html.OL);
+        XmlElement list = html.addElementToBody(Html.OL);
         for (Item item : getItems(title)) {
             list.addElement(Html.LI)
                     .addElement(Html.A)

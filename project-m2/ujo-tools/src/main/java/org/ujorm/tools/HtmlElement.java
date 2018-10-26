@@ -83,6 +83,22 @@ public class HtmlElement extends XmlElement {
         return body;
     }
 
+    /** A shortcut for {@code HtmlList.getHead().addElement(CharSequence) }
+     * @param name A name of the new XmlElement is requred.
+     * @return The new XmlElement!
+     */
+    public XmlElement addElementToHead(@Nonnull final CharSequence name) {
+        return head.addElement(name);
+    }
+
+    /** A shortcut for {@code HtmlList.getBody().addElement(CharSequence) }
+     * @param name A name of the new XmlElement is requred.
+     * @return The new XmlElement!
+     */
+    public XmlElement addElementToBody(@Nonnull final CharSequence name) {
+        return body.addElement(name);
+    }
+
     /** Create a new CSS element and return it
      * @param css Add a CSS link
      * @return New CSS element
@@ -151,12 +167,19 @@ public class HtmlElement extends XmlElement {
 
         // --- Element names ---
 
+        /** Body element */
         String HTML = "html";
+        /** Head element */
         String HEAD = "head";
+        /** Meta element */
         String META = "meta";
+        /** Body element */
         String BODY = "body";
+        /** Title element */
         String TITLE = "title";
+        /** Link element */
         String LINK = "link";
+        /** Style element */
         String STYLE = "style";
 
         // --- Attribute names ---
@@ -167,5 +190,4 @@ public class HtmlElement extends XmlElement {
         String A_REL = "rel";
         String A_TYPE = "type";
     }
-
 }

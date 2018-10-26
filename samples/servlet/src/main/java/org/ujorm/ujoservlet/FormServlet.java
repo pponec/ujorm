@@ -52,7 +52,7 @@ public class FormServlet extends HttpServlet {
         final String title = "Simple user form";
         final HtmlElement html = new HtmlElement(title, HtmlTools.CODE_PAGE);
         html.addCssLink("welcomeForm.css");
-        final XmlElement form = html.getBody().addElement(Html.FORM)
+        final XmlElement form = html.addElementToBody(Html.FORM)
                 .addAttrib(Html.A_METHOD, Html.V_POST)
                 .addAttrib(Html.A_ACTION, postMethod ? null : input.getRequestURI());
         form.addElement(Html.H1).addText(title);
