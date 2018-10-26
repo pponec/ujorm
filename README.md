@@ -28,6 +28,11 @@ The Ujorm (original name was UJO Framework) is designed primarily for the rapid 
 1. [https://ujorm.org/](https://ujorm.org/)
 2. [https://pponec.github.io/ujorm/](https://pponec.github.io/ujorm/)
 
+## JavaDoc
+
+* [Module ujo-orm](https://ujorm.org/javadoc/org/ujorm/orm/package-summary.html)
+* [Module ujo-tools](https://pponec.github.io/ujorm/javadoc/1.86/ujo-tools/)
+
 ## Maven Repository
 
  The ORM module:
