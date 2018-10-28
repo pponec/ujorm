@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools;
+package org.ujorm.tools.msg;
 
 import java.io.Serializable;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import static org.ujorm.tools.MessageService.PARAM_BEG;
-import static org.ujorm.tools.MessageService.PARAM_END;
+import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
+import static org.ujorm.tools.msg.MessageService.PARAM_BEG;
+import static org.ujorm.tools.msg.MessageService.PARAM_END;
 
 /**
  * Message Argument

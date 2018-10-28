@@ -42,7 +42,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.criterion.Operator.*;
 
 

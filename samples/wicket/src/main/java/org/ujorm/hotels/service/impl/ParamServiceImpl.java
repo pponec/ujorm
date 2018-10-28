@@ -48,7 +48,7 @@ import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.spring.CommonDao;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.hotels.entity.ParamValue.*;
 
 /**

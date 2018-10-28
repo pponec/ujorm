@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.tools.SimpleValuePrinter;
+import org.ujorm.tools.msg.SimpleValuePrinter;
 
 /**
  * Print values to an output

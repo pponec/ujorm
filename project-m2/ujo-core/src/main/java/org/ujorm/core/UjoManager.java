@@ -43,7 +43,7 @@ import org.ujorm.extensions.*;
 import org.ujorm.swing.UjoKeyRow;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.validator.ValidationError;
 import org.ujorm.validator.ValidatorUtils;
 import static org.ujorm.UjoAction.*;

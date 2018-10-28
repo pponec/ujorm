@@ -23,7 +23,7 @@ import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.KeyRing;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.MessageService;
+import org.ujorm.tools.msg.MessageService;
 import static org.ujorm.validator.AbstractValidator.*;
 
 /**

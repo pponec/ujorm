@@ -7,7 +7,7 @@
 
 package org.ujorm.validator;
 
-import org.ujorm.tools.MessageService;
+import org.ujorm.tools.msg.MessageService;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools;
+package org.ujorm.tools.msg;
 
 import java.io.CharArrayWriter;
 import java.io.PrintWriter;
@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
+import org.ujorm.tools.Check;
 
 /**
  * Formatter of log messages where argument is located by the {@code {} } characters.

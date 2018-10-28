@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools;
+package org.ujorm.tools.dom;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
 
 /**
  * XML element model to rendering a XML file.
@@ -51,6 +53,7 @@ import javax.annotation.Nullable;
  *  String result = root.toString();
  * </pre>
  * @see HtmlElement
+ * @since 1.86
  * @author Pavel Ponec
  */
 public class XmlElement implements Element {

@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.HtmlElement;
-import org.ujorm.tools.XmlElement;
+import org.ujorm.tools.dom.HtmlElement;
+import org.ujorm.tools.dom.XmlElement;
 import org.ujorm.ujoservlet.tools.Html;
 import org.ujorm.ujoservlet.tools.HtmlTools;
 

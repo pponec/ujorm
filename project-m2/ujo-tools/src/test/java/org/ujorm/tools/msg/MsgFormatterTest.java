@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools;
+package org.ujorm.tools.msg;
 
+import org.ujorm.tools.msg.MsgFormatter;
 import java.util.function.Supplier;
 import org.junit.Test;
 import static junit.framework.TestCase.assertSame;

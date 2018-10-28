@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujorm.tools;
+package org.ujorm.tools.jdbc;
 
 import java.io.CharArrayWriter;
 import java.io.Serializable;
@@ -27,6 +27,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
+import org.ujorm.tools.msg.SimpleValuePrinter;
+import org.ujorm.tools.set.LoopingIterator;
 
 /**
  * PrepareStatement builder support
@@ -35,11 +39,17 @@ import javax.annotation.Nullable;
  * <pre class="pre">
  * JdbcBuilder sql = new JdbcBuilder()
  *     .write("SELECT")
- *     .column("t.name")
  *     .column("t.id")
+ *     .column("t.name")
  *     .write("FROM testTable t WHERE")
+ *     .write("WHERE")
  *     .andCondition("t.name", "=", "Test")
- *     .andCondition("t.date", "&gt;", SOME_DATE);
+ *     .andCondition("t.date", "&gt;=", SOME_DATE);
+ *
+ * for (ResultSet rs : sql.executeSelect(dbConnection)) {
+ *      int id = rs.getInt(1);
+ *      String name = rs.getString(2);
+ * }
  * </pre>
  *
  * <h3>How to use a INSERT</h3>
@@ -303,6 +313,12 @@ public final class JdbcBuilder implements Serializable {
         return result;
     }
 
+    /** Create an iterator ready to a <strong>loop</strong> statement {@code for ( ; ; )}
+     * Supported SQL statements are: INSERT, UPDATE, DELETE .
+     */
+    public LoopingIterator<ResultSet> executeSelect(@Nonnull final Connection connection) throws IllegalStateException, SQLException {
+        return new RowIterator(prepareStatement(connection));
+    }
     /** Create statement and call {@link PreparedStatement.executeUpdate() }.
      * Supported SQL statements are: INSERT, UPDATE, DELETE .
      */
@@ -315,7 +331,7 @@ public final class JdbcBuilder implements Serializable {
     }
 
     /** Return the first column value of a unique resultset, else returns {@code null} value */
-    public <T> T uniqueValue(@Nonnull Class<T> resultType, @Nonnull final Connection connection) throws IllegalStateException {
+    public <T> T uniqueValue(@Nonnull Class<T> resultType, @Nonnull final Connection connection) {
         try (PreparedStatement ps = prepareStatement(connection); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 final T result = rs.getObject(1, resultType);

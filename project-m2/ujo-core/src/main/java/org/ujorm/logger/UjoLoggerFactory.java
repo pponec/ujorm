@@ -17,7 +17,7 @@ package org.ujorm.logger;
 
 import java.util.logging.*;
 import javax.annotation.Nonnull;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 
 /**
  * Bridge to logging framework JSF4J.

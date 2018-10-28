@@ -19,8 +19,8 @@ import java.io.Serializable;
 import java.util.Map;
 import org.ujorm.*;
 import org.ujorm.criterion.BinaryOperator;
-import org.ujorm.tools.MessageArg;
-import org.ujorm.tools.MessageService;
+import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.tools.msg.MessageService;
 import org.ujorm.validator.impl.CompositeValidator;
 
 /**

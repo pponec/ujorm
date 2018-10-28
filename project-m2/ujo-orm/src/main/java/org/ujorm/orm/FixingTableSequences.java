@@ -28,7 +28,7 @@ import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.JdbcBuilder;
+import org.ujorm.tools.jdbc.JdbcBuilder;
 
 /**
  * Optional correction the internal Ujorm sequences

@@ -18,8 +18,8 @@ package org.ujorm.ujoservlet.tools;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServlet;
-import org.ujorm.tools.MsgFormatter;
-import org.ujorm.tools.XmlElement;
+import org.ujorm.tools.msg.MsgFormatter;
+import org.ujorm.tools.dom.XmlElement;
 
 /**
  * Common static tools

@@ -14,15 +14,14 @@
  *  limitations under the License.
  */
 
-package org.ujorm.tools;
-
+package org.ujorm.tools.jdbc;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
 import javax.annotation.Nonnull;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -46,10 +45,10 @@ public class JdbcBuilderTest {
             .column("t.name")
             .write("FROM testTable t WHERE")
             .andCondition("t.name", "=", "Test")
-            .andCondition("t.date", ">", SOME_DATE)
+            .andCondition("t.created", ">=", SOME_DATE)
             ;
-        String expResult1 = "SELECT t.id, t.name FROM testTable t WHERE t.name = ? AND t.date > ?";
-        String expResult2 = "SELECT t.id, t.name FROM testTable t WHERE t.name = 'Test' AND t.date > 2018-09-12";
+        String expResult1 = "SELECT t.id, t.name FROM testTable t WHERE t.name = ? AND t.created >= ?";
+        String expResult2 = "SELECT t.id, t.name FROM testTable t WHERE t.name = 'Test' AND t.created >= 2018-09-12";
 
         assertEquals(expResult1, sql.getSql());
         assertEquals(expResult2, sql.toString());
@@ -64,12 +63,12 @@ public class JdbcBuilderTest {
         JdbcBuilder sql = new JdbcBuilder()
             .write("INSERT INTO testTable (")
             .columnInsert("id", 10)
-            .columnInsert("name", "Test")
-            .columnInsert("date", SOME_DATE)
+            .columnInsert("name", "A name")
+            .columnInsert("created", SOME_DATE)
             .write(")")
             ;
-        String expResult1 = "INSERT INTO testTable ( id, name, date ) VALUES ( ?, ?, ? )";
-        String expResult2 = "INSERT INTO testTable ( id, name, date ) VALUES ( 10, 'Test', 2018-09-12 )";
+        String expResult1 = "INSERT INTO testTable ( id, name, created ) VALUES ( ?, ?, ? )";
+        String expResult2 = "INSERT INTO testTable ( id, name, created ) VALUES ( 10, 'A name', 2018-09-12 )";
 
         assertEquals(expResult1, sql.getSql());
         assertEquals(expResult2, sql.toString());
@@ -85,15 +84,15 @@ public class JdbcBuilderTest {
             .write("INSERT INTO testTable (")
             .column("id")
             .column("name")
-            .column("date")
+            .column("created")
             .write(") VALUES (")
             .value(10)
-            .value("Test")
+            .value("A test")
             .value(SOME_DATE)
             .write(")");
             ;
-        String expResult1 = "INSERT INTO testTable ( id, name, date ) VALUES ( ?, ?, ? )";
-        String expResult2 = "INSERT INTO testTable ( id, name, date ) VALUES ( 10, 'Test', 2018-09-12 )";
+        String expResult1 = "INSERT INTO testTable ( id, name, created ) VALUES ( ?, ?, ? )";
+        String expResult2 = "INSERT INTO testTable ( id, name, created ) VALUES ( 10, 'A test', 2018-09-12 )";
 
         assertEquals(expResult1, sql.getSql());
         assertEquals(expResult2, sql.toString());
@@ -108,13 +107,13 @@ public class JdbcBuilderTest {
         JdbcBuilder sql = new JdbcBuilder()
             .write("UPDATE testTable SET")
             .columnUpdate("name", "Test")
-            .columnUpdate("date", SOME_DATE)
+            .columnUpdate("created", SOME_DATE)
             .write("WHERE")
             .andCondition("id", ">", 10)
             .andCondition("id", "<", 20)
             ;
-        String expResult1 = "UPDATE testTable SET name = ?, date = ? WHERE id > ? AND id < ?";
-        String expResult2 = "UPDATE testTable SET name = 'Test', date = 2018-09-12 WHERE id > 10 AND id < 20";
+        String expResult1 = "UPDATE testTable SET name = ?, created = ? WHERE id > ? AND id < ?";
+        String expResult2 = "UPDATE testTable SET name = 'Test', created = 2018-09-12 WHERE id > 10 AND id < 20";
 
         assertEquals(expResult1, sql.getSql());
         assertEquals(expResult2, sql.toString());
@@ -125,28 +124,67 @@ public class JdbcBuilderTest {
         assertEquals(20, sql.getArguments()[3]);
     }
 
+    @Test
+    public void testShowUsage() throws ClassNotFoundException, SQLException {
+        try (Connection conn = createTable(createDbConnection()))  {
+            showInsert(conn);
+            showSelect(conn);
+            showSelectForSingleValue(conn);
+            showUpdate(conn);
+        }
+    }
+
+    /** How to UPDATE single value (no commit) */
+    public void showInsert(@Nonnull Connection connection) throws SQLException {
+        System.out.println("Show INSERT");
+        JdbcBuilder sql = new JdbcBuilder()
+            .write("INSERT INTO testTable (")
+            .columnInsert("id", 10)
+            .columnInsert("name", "A name")
+            .columnInsert("created", SOME_DATE)
+            .write(")")
+            ;
+        int count = sql.executeUpdate(connection);
+
+        connection.commit();
+        assertEquals(1, count);
+    }
+
     /** How to SELECT single value */
-    public void showSelect(@Nonnull Connection dbConnection) {
+    public void showSelect(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
+        System.out.println("Show SELECT");
+        JdbcBuilder sql = new JdbcBuilder()
+            .write("SELECT")
+            .column("t.id")
+            .column("t.name")
+            .write("FROM testTable t WHERE")
+            .andCondition("t.name", "=", "A name")
+            .andCondition("t.created", ">=", SOME_DATE)
+            ;
+        ResultSet tempRs = null;
+        for (ResultSet rs : sql.executeSelect(dbConnection)) {
+            int id = rs.getInt(1);
+            String name = rs.getString(2);
+
+            assertEquals(10, id);
+            assertEquals("A name", name);
+            tempRs = rs;
+        }
+        assertNotNull(tempRs);
+        assertTrue(tempRs.isClosed());
+    }
+
+    /** How to SELECT single value */
+    public void showSelectForSingleValue(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         JdbcBuilder sql = new JdbcBuilder()
             .write("SELECT")
             .column("t.name")
             .write("FROM testTable t WHERE")
-            .andCondition("t.id", "=", 1);
-
+            .andCondition("t.id", "=", 10)
+            ;
         String name = sql.uniqueValue(String.class, dbConnection);
-        assertEquals("Test", name);
-
-        // Or use a general solution:
-        try (PreparedStatement ps = sql.prepareStatement(dbConnection);
-             ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                String nameValue = rs.getString(1);
-                assertNotNull(nameValue);
-            }
-        } catch (SQLException | NoSuchElementException e) {
-            throw new IllegalStateException(sql.getSql(), e);
-        }
+        assertEquals("A name", name);
     }
 
     /** How to UPDATE single value (no commit) */
@@ -154,10 +192,34 @@ public class JdbcBuilderTest {
         System.out.println("Show UPDATE");
         JdbcBuilder sql = new JdbcBuilder()
             .write("UPDATE testTable SET")
-            .columnUpdate("date", SOME_DATE)
+            .columnUpdate("created", SOME_DATE.plusDays(1))
             .write("WHERE")
-            .andCondition("id", "=", 1);
-
+            .andCondition("id", "=", 10)
+            ;
         sql.executeUpdate(connection);
+    }
+
+    /** Crete new DB connection */
+    private Connection createDbConnection() throws ClassNotFoundException, SQLException {
+        Class.forName(org.h2.Driver.class.getName());
+        Connection result = DriverManager.getConnection("jdbc:h2:mem:test", "", "");
+        result.setAutoCommit(false);
+        return result;
+    }
+
+    /** Crete new DB connection */
+    private Connection createTable(Connection connection) throws ClassNotFoundException, SQLException {
+        String sql = "CREATE TABLE testTable"
+            + "\n( id INTEGER PRIMARY KEY"
+            + "\n, name VARCHAR(256)"
+            + "\n, xxx VARCHAR(1)" // Unused column
+            + "\n, created TIMESTAMP"
+            + "\n)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.execute();
+            connection.commit();
+        }
+        return connection;
     }
 }

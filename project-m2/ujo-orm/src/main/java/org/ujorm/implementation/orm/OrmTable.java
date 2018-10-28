@@ -63,7 +63,7 @@ import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
  * @author Pavel Ponec
  * @param <U> The current BO type
  * @see org.ujorm.implementation.orm.RelationToMany
- * @see org.ujorm.core.UjoIterator
+ * @see org.ujorm.tools.UjoIterator
  */
 public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements ExtendedOrmUjo<U> {
 

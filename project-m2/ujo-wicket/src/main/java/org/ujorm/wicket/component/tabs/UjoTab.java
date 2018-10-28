@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.core.IllegalUjormException;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.wicket.function.UjoSupplier;
 
 /**

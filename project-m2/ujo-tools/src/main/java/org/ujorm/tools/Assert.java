@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import static org.ujorm.tools.MsgFormatter.format;
+import static org.ujorm.tools.msg.MsgFormatter.format;
 
 /**
  * Assertion utils, where all method can throw the {@code IllegalArgumentException} exception only.

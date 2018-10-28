@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 
 /**
  * A generic interface to mapping any Java Type to any JDBC type.

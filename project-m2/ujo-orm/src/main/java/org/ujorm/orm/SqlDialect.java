@@ -53,7 +53,7 @@ import org.ujorm.orm.metaModel.MetaSelect;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.core.UjoTools.SPACE;
 import static org.ujorm.tools.Check.*;
 

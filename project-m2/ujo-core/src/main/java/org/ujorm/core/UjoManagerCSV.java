@@ -34,7 +34,7 @@ import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**

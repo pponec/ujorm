@@ -33,7 +33,7 @@ import org.ujorm.extensions.StringWrapper;
 import org.ujorm.extensions.ValueWrapper;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.metaModel.MetaColumn;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 
 /**
  * A type service for popular Java types and more.

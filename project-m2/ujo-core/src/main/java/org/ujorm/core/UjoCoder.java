@@ -43,7 +43,7 @@ import org.ujorm.extensions.StringWrapper;
 import org.ujorm.extensions.ValueWrapper;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 
 /**
  * Ujorm converter to a String format and back.

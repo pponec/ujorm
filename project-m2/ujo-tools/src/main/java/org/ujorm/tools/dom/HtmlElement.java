@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools;
+package org.ujorm.tools.dom;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
@@ -36,6 +36,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * HttpServletResponse response = new MockHttpServletResponse();
  * html.toResponse(response, false);
  * </pre>
+ * @since 1.86
  * @author Pavel Ponec
  */
 public class HtmlElement extends XmlElement {
@@ -43,11 +44,13 @@ public class HtmlElement extends XmlElement {
     /** XML header */
     public static final String HEADER = "<!DOCTYPE html>";
 
-    /** Head */
-    private final XmlElement head;
+    /** Head element */
+    @Nonnull
+    private final Element head;
 
-    /** Body */
-    private final XmlElement body;
+    /** Body element */
+    @Nonnull
+    private final Element body;
 
     /** Charset */
     @Nonnull
@@ -73,21 +76,21 @@ public class HtmlElement extends XmlElement {
 
     /** Returns header element */
     @Nonnull
-    public XmlElement getHead() {
-        return head;
+    public <T extends Element> T  getHead() {
+        return (T) head;
     }
 
     /** Returns body element */
     @Nonnull
-    public XmlElement getBody() {
-        return body;
+    public <T extends Element> T  getBody() {
+        return (T) body;
     }
 
     /** A shortcut for {@code HtmlList.getHead().addElement(CharSequence) }
      * @param name A name of the new XmlElement is requred.
      * @return The new XmlElement!
      */
-    public XmlElement addElementToHead(@Nonnull final CharSequence name) {
+    public <T extends Element> T  addElementToHead(@Nonnull final CharSequence name) {
         return head.addElement(name);
     }
 
@@ -95,7 +98,7 @@ public class HtmlElement extends XmlElement {
      * @param name A name of the new XmlElement is requred.
      * @return The new XmlElement!
      */
-    public XmlElement addElementToBody(@Nonnull final CharSequence name) {
+    public <T extends Element> T  addElementToBody(@Nonnull final CharSequence name) {
         return body.addElement(name);
     }
 
@@ -103,7 +106,7 @@ public class HtmlElement extends XmlElement {
      * @param css Add a CSS link
      * @return New CSS element
      */
-    public XmlElement addCssLink(String css) {
+    public <T extends Element> T  addCssLink(String css) {
         return head.addElement(Html.LINK)
                 .addAttrib(Html.A_HREF, css)
                 .addAttrib(Html.A_REL, "stylesheet")
@@ -114,7 +117,7 @@ public class HtmlElement extends XmlElement {
      * @param css CSS content
      * @return New CSS element
      */
-    public XmlElement addCssBody(@Nullable final String css) {
+    public <T extends Element> T  addCssBody(@Nullable final String css) {
         return head.addElement(Html.STYLE)
                 .addAttrib(Html.A_TYPE, "text/css")
                 .addRawText(css);

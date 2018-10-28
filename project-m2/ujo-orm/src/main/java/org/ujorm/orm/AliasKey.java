@@ -22,7 +22,7 @@ import org.ujorm.Key;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 
 /**
  * Relation from the one table to another including alias

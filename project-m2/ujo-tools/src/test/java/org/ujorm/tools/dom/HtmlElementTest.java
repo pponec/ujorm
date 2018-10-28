@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools;
+package org.ujorm.tools.dom;
 
 import java.io.IOException;
 import java.util.HashMap;

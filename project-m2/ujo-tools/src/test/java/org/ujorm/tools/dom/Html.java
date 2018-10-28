@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools;
+package org.ujorm.tools.dom;
 
 /** Some HTML constants,
 * but this is certainly not a whole list of HTML elements,

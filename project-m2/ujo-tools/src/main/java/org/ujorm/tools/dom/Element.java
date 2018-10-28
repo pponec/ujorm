@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools;
+package org.ujorm.tools.dom;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
  *     <li>creating XML components by a subclass is possible</li>
  * </ul>¨
  * @see XmlElement
+ * @since 1.86
  * @author Pavel Ponec
  */
 public interface Element {

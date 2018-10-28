@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.ujos.UjoCSV;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ujorm.core.ujos.UjoCSV.*;
 

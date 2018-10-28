@@ -26,7 +26,7 @@ import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.metaModel.MetaColumn;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.extensions.PropertyModifier.*;
 import static org.ujorm.orm.ao.LoadingPolicy.*;
 

@@ -32,7 +32,7 @@ import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyRing;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.core.UjoTools.SPACE;
 
 /**

@@ -37,7 +37,7 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.orm_tutorial.sample.MyProcedure;
 import org.ujorm.orm_tutorial.sample.ViewOrder;
-import org.ujorm.tools.JdbcBuilder;
+import org.ujorm.tools.jdbc.JdbcBuilder;
 import static junit.framework.TestCase.assertEquals;
 /**
  * The tutorial in the class for the Ujorm <br>

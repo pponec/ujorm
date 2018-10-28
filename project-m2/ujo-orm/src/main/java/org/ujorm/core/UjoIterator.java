@@ -16,7 +16,6 @@
 
 package org.ujorm.core;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,6 +23,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
+import org.ujorm.tools.set.LoopingIterator;
 
 /**
  * Ujo iterator have got some extended functions:
@@ -34,7 +34,7 @@ import org.ujorm.orm.Query;
  * </ul>
  * @author Pavel Ponec
  */
-abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T>, Closeable {
+abstract public class UjoIterator<T> implements LoopingIterator<T> {
 
 
     /** Tests if this enumeration contains more elements. */

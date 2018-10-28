@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools;
+package org.ujorm.tools.msg;
 
+import org.ujorm.tools.msg.MessageService;
+import org.ujorm.tools.msg.MsgFormatter;
 import ch.qos.logback.classic.Logger;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;

@@ -39,7 +39,7 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.template.AliasTable;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.criterion.Operator.*;
 import org.ujorm.orm.ao.CheckReport;
 import static org.ujorm.orm.template.AliasTable.Build.*;

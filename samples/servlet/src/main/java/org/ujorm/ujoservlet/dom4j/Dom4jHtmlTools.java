@@ -18,7 +18,7 @@ package org.ujorm.ujoservlet.dom4j;
 import java.nio.charset.Charset;
 import javax.servlet.http.HttpServlet;
 import org.dom4j.Element;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.ujoservlet.tools.Html;
 import org.ujorm.ujoservlet.tools.HtmlTools;
 

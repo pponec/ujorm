@@ -45,7 +45,7 @@ import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.ao.QuoteEnum;
 import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.orm.metaModel.MetaParams.INDEX_MODEL_BUILDER;
 import static org.ujorm.tools.Check.hasLength;
 

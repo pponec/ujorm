@@ -1,7 +1,7 @@
 package org.version2.tools;
 
 import org.ujorm.Key;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 
 /**
  * UnsupportedKey

@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujorm.tools;
+package org.ujorm.tools.msg;
 
 import java.io.CharArrayWriter;
 import javax.annotation.Nonnull;

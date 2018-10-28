@@ -43,7 +43,7 @@ import org.ujorm.extensions.PropertyModifier;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 
 /**
  * Serializable key factory is the best tool of Ujorm to create Property implementations.

@@ -34,7 +34,7 @@ import org.ujorm.orm.Session;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.ao.CommentPolicy;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.logger.UjoLogger.*;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
 import static org.ujorm.tools.Check.hasLength;

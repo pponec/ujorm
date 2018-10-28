@@ -25,7 +25,7 @@ import org.apache.wicket.model.Model;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 
 /**
  * The ajax wizard is a child of UjoTabbedPanel class.

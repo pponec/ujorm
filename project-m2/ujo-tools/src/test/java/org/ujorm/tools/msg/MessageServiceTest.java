@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools;
+package org.ujorm.tools.msg;
 
+import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.tools.msg.MessageService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;

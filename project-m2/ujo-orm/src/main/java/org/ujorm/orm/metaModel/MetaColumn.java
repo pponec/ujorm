@@ -50,7 +50,7 @@ import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.ao.QuoteEnum;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.validator.ValidatorUtils;
 import static org.ujorm.tools.Check.isEmpty;
 

@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.tools.MessageArg;
+import org.ujorm.tools.msg.MessageArg;
 import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 

@@ -24,7 +24,7 @@ import org.ujorm.Key;
 import org.ujorm.hotels.service.ModuleParams;
 import org.ujorm.hotels.service.ParamService;
 import org.ujorm.implementation.quick.SmartUjoLockable;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 
 /**
  * Common database service implementations.

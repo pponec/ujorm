@@ -87,14 +87,14 @@ public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
             final Constructor<U> constructor = clazz.getConstructor(v.getClass());
 
             return constructor.newInstance(v);
-        } catch ( ClassNotFoundException 
-                | InstantiationException 
-                | InvocationTargetException 
-                | IllegalAccessException 
-                | NoSuchMethodException 
-                | RuntimeException 
+        } catch ( ClassNotFoundException
+                | InstantiationException
+                | InvocationTargetException
+                | IllegalAccessException
+                | NoSuchMethodException
+                | RuntimeException
                 | OutOfMemoryError e) {
-            throw new IllegalUjormException(e.getMessage(), e);
+            throw new IllegalUjormException(e);
         }
     }
 
@@ -107,12 +107,12 @@ public class DefaultUjoConverter<U extends Ujo> extends XmlAdapter<U, Object> {
         try {
             final Method method = v.getClass().getMethod(ORIGINAL_METHOD);
             return method.invoke(v);
-        } catch ( IllegalAccessException 
-                | InvocationTargetException 
-                | NoSuchMethodException 
-                | RuntimeException 
+        } catch ( IllegalAccessException
+                | InvocationTargetException
+                | NoSuchMethodException
+                | RuntimeException
                 | OutOfMemoryError e) {
-            throw new IllegalUjormException(e.getMessage(), e);
+            throw new IllegalUjormException(e);
         }
     }
 

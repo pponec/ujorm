@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools;
+package org.ujorm.tools.dom;
 
+import org.ujorm.tools.msg.MsgFormatter;
+import org.ujorm.tools.dom.XmlElement;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

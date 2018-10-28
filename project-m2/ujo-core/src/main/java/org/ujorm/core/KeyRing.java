@@ -36,7 +36,7 @@ import org.ujorm.UjoAction;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.extensions.PathProperty;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.MsgFormatter;
+import org.ujorm.tools.msg.MsgFormatter;
 
 /**
  * The Immutable and Serializable Key Collection including some service methods.

@@ -21,7 +21,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.ujorm.tools.MessageArg;
+import org.ujorm.tools.msg.MessageArg;
 
 /**
  * Message Service
