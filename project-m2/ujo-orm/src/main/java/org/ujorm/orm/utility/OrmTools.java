@@ -67,7 +67,7 @@ final public class OrmTools {
         try {
             return bytes!=null ? new SerialBlob(bytes) : null;
         } catch (Exception e) {
-            throw new IllegalUjormException(e.getMessage(), e);
+            throw new IllegalUjormException(e);
         }
     }
 
@@ -137,7 +137,7 @@ final public class OrmTools {
         try {
             return text!=null ? new SerialClob(text) : null;
         } catch (Exception e) {
-            throw new IllegalUjormException(e.getMessage(), e);
+            throw new IllegalUjormException(e);
         }
     }
 

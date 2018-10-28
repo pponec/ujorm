@@ -272,7 +272,7 @@ public class CriterionDecoder {
 
             this.relations.add(new Relation(fk1, pk2));
         } catch (RuntimeException e) {
-            throw new IllegalUjormException(e.getMessage(), e);
+            throw new IllegalUjormException(e);
         }
 
     }

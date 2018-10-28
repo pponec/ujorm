@@ -25,8 +25,12 @@ public class IllegalUjormException extends IllegalStateException {
         super(s);
     }
 
+    public IllegalUjormException(Throwable cause) {
+        super(cause);
+    }
+
     public IllegalUjormException(String message, Throwable cause) {
         super(message, cause);
     }
-    
+
 }

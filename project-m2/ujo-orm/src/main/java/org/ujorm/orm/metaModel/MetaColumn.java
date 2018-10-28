@@ -49,7 +49,6 @@ import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.ao.QuoteEnum;
 import org.ujorm.orm.ao.UjoStatement;
-import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.MsgFormatter;
 import org.ujorm.validator.ValidatorUtils;
@@ -164,7 +163,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
             changeDefault(this, CONVERTER  , column.converter());
             changeDefault(this, QUOTED     , column.quoted());
         }
-        
+
         final Validator validator = tableProperty.getValidator();
         if (validator != null) {
             changeDefault(this, MANDATORY , ValidatorUtils.isMandatoryValidator(validator));
@@ -192,7 +191,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         if (MAX_LENGTH.isDefault(this)) {
             table.getDatabase().changeDbLength(this);
         }
-        
+
         // Quoted column name by configuraton:
         if (QUOTED.isDefault(this)) {
             switch (getHandler().getParameters().get(MetaParams.QUOTATION_POLICY)) {
@@ -201,11 +200,11 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
                     break;
                 case QUOTE_ONLY_SQL_KEYWORDS:
                     // String name = NAME.of(this);
-                    // break;                
+                    // break;
                     QUOTED.setValue(this, QuoteEnum.BY_CONFIG);
                 default:
                     QUOTED.setValue(this, QuoteEnum.NO);
-                    break;                
+                    break;
             }
         }
     }
@@ -423,7 +422,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
             out.append(getName());
             return out.toString();
         } catch (IOException e) {
-            throw new IllegalUjormException(e.getMessage(), e);
+            throw new IllegalUjormException(e);
         }
     }
 
@@ -437,7 +436,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
                 .toString();
             return result;
         } catch (IOException e) {
-            throw new IllegalUjormException(e.getMessage(), e);
+            throw new IllegalUjormException(e);
         }
     }
 
@@ -447,7 +446,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
                 .getDatabase()
                 .getDialect();
         dialect.printQuotedName(getTableAlias(), QuoteEnum.BY_CONFIG, out);
-        out.append('.');        
+        out.append('.');
         dialect.printQuotedName(getForeignColumnNames()[index], QuoteEnum.BY_CONFIG, out);
     }
 
@@ -573,7 +572,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
             return MetaTable.PK.of(relatedTable).getFirstColumn();
         }
     }
-        
+
     /** Quotation request */
     public boolean isQuoted() {
         switch (QUOTED.of(this)) {
@@ -582,5 +581,5 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
             default:
                 return false;
         }
-    }    
+    }
 }

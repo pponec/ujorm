@@ -268,7 +268,7 @@ public class XmlElement implements Element {
         try {
             return toWriter(new CharArrayWriter(512).append(HEADER).append(CHAR_NEW_LINE)).toString();
         } catch (IOException e) {
-            throw new IllegalStateException(e.getMessage(), e);
+            throw new IllegalStateException(e);
         }
     }
 

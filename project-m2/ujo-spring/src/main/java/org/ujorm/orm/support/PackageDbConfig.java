@@ -119,7 +119,7 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeUjoDecorator<U> {
             }
             return result;
         } catch (IOException | ReflectiveOperationException | RuntimeException e) {
-            throw new IllegalUjormException(e.getMessage(), e);
+            throw new IllegalUjormException(e);
         }
     }
 

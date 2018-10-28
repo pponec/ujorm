@@ -509,7 +509,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
             ? (KeyRing) result
             : of(domainClass, (Collection) result);
         } catch (RuntimeException | ReflectiveOperationException e) {
-            throw new IllegalUjormException(e.getMessage(), e);
+            throw new IllegalUjormException(e);
         }
     }
 

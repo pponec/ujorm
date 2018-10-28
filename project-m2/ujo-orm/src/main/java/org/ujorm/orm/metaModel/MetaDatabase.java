@@ -361,7 +361,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             }
             return maxLenght;
         } catch (SQLException e) {
-            throw new IllegalUjormException(e.getMessage(), e);
+            throw new IllegalUjormException(e);
         }
     }
 

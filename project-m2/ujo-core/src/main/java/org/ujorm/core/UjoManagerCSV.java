@@ -418,7 +418,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
             printHeaders(result);
             return result.toString();
         } catch (IOException e) {
-            throw new IllegalUjormException(e.getMessage(), e);
+            throw new IllegalUjormException(e);
         }
     }
 

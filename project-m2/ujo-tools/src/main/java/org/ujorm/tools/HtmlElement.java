@@ -129,7 +129,7 @@ public class HtmlElement extends XmlElement {
                     .append(CHAR_NEW_LINE))
                     .toString();
         } catch (IOException e) {
-            throw new IllegalStateException(e.getMessage(), e);
+            throw new IllegalStateException(e);
         }
     }
 

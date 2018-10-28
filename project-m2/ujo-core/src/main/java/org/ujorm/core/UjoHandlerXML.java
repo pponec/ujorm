@@ -135,8 +135,8 @@ final class UjoHandlerXML extends DefaultHandler {
                 default:
                     $attributes.add(new String[]{attribName, attribs.getValue(i)});
             }
-        } catch (ClassNotFoundException ex) {
-            throw new IllegalUjormException(ex.getMessage(), ex);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalUjormException(e.getMessage(), e);
         }
 
         // Find an ELEMENT class:
