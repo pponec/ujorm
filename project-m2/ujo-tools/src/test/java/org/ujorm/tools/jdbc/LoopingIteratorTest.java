@@ -7,11 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
 import org.ujorm.tools.jdbc.mock.AbstractPreparedStatement;
 import org.ujorm.tools.jdbc.mock.AbstractResultSet;
 import org.ujorm.tools.set.LoopingIterator;
@@ -91,33 +88,11 @@ public class LoopingIteratorTest {
             }
         }
         assertFalse(AbstractResultSet.of().isClosed());
-
     }
 
-
-    /** Creating a mock connection for many rows in ResultSet */
+   /** Creating a mock connection for many rows in ResultSet */
     private Connection createConnection( List<Object[]> tableValues) throws SQLException, IOException {
-        AbstractResultSet resultSet = AbstractResultSet.of();
-        for (Object[] rowValues : tableValues) {
-            resultSet.addRow(rowValues);
-        }
-
-        PreparedStatement statement = Mockito.mock(AbstractPreparedStatement.class);
-        Mockito.when(statement.executeQuery()).thenReturn(resultSet);
-        Mockito.doCallRealMethod().when(statement).close();
-        Mockito.doCallRealMethod().when(statement).isClosed();
-
-        Connection jdbcConnection = Mockito.mock(Connection.class);
-        Mockito.when(jdbcConnection.prepareStatement(Matchers.<String>any()))
-                .thenReturn(statement);
-
-        return jdbcConnection;
-    }
-
-
-    /** Creating a mock connection for many a single word ResultSet */
-    private Connection createConnection(Object word) throws SQLException, IOException {
-        return createConnection(Arrays.asList(new Object[]{word}));
+        return AbstractPreparedStatement.createConnection(tableValues);
     }
 
     /** Create 4 column values for DB table */

@@ -65,12 +65,12 @@ public class RowIterator implements LoopingIterator<ResultSet> {
                 try {
                     close();
                 } catch (IOException e) {
-                    throw new IllegalStateException(e.getMessage(), e);
+                    throw new IllegalStateException(e);
                 }
             }
             cursorReady = true;
         } catch (SQLException e) {
-            throw new IllegalStateException(e.getMessage(), e);
+            throw new IllegalStateException(e);
         }
         return hasNext;
     }
@@ -92,7 +92,7 @@ public class RowIterator implements LoopingIterator<ResultSet> {
                 cursorReady = true;
                 hasNext = false;
             } catch (SQLException e) {
-                throw new IllegalStateException(e.getMessage(), e);
+                throw new IllegalStateException(e);
             }
         }
     }
