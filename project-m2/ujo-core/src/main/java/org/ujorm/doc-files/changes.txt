@@ -2,8 +2,17 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.86-SNAPSHOT
-+ todo ...
+release 1.87-SNAPSHOT
++ ...
+
+release 1.86
++ TOOLS: A new XmlElement class for HTML site generation was introduced
++ TOOLS: A new JdbcBuilder.executeSelect() method for reading ResultSet was introduced
++ TOOLS: Some classes was moved to separated packages
++ TOOLS: JavaDoc and some tests was extended
++ TOOLS: A project for demonstrating the use of the XmlElement class was introduced (https://servlet.ujorm.org/)
++ CORE: A new AbstractUjo.newNoCheckFactory() method for building a special Key instances was introduced
++ DOC: The HomePage fixing
 
 release 1.85
 + ORM: fixing the table sequences using the class FixingTableSequences.
