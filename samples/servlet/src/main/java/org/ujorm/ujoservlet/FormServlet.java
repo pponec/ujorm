@@ -17,6 +17,8 @@
 package org.ujorm.ujoservlet;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.servlet.ServletException;
@@ -36,7 +38,10 @@ import org.ujorm.ujoservlet.tools.HtmlTools;
 public class FormServlet extends HttpServlet {
 
     /** Show the first line of soufce code */
-    public static final short SHOW_LINE = 49;
+    public static final short SHOW_LINE = 54;
+
+    /* A common code page form request and response. Try the {@code  Charset.forName("windows-1250")} for example. */
+    private final Charset charset = StandardCharsets.UTF_8;
 
     /**
      * Handles the HTTP <code>GET</code> or <code>POST</code> method.
@@ -47,10 +52,10 @@ public class FormServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest input, HttpServletResponse output, boolean postMethod) throws ServletException, IOException {
-        input.setCharacterEncoding(HtmlTools.CODE_PAGE.toString());
+        input.setCharacterEncoding(charset.toString());
 
         final String title = "Simple user form";
-        final HtmlElement html = new HtmlElement(title, HtmlTools.CODE_PAGE);
+        final HtmlElement html = new HtmlElement(title, charset);
         html.addCssLink("welcomeForm.css");
         final XmlElement form = html.addElementToBody(Html.FORM)
                 .addAttrib(Html.A_METHOD, Html.V_POST)

@@ -17,6 +17,7 @@
 package org.ujorm.ujoservlet;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +34,7 @@ import org.ujorm.ujoservlet.tools.HtmlTools;
 public class MenuServlet extends HttpServlet {
 
     /** Show the first line of soufce code */
-    public static final short SHOW_LINE = 46;
+    public static final short SHOW_LINE = 47;
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -44,10 +45,8 @@ public class MenuServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        input.setCharacterEncoding(HtmlTools.CODE_PAGE.toString());
-
         final String title = "List of samples";
-        final HtmlElement html = new HtmlElement(title, HtmlTools.CODE_PAGE);
+        final HtmlElement html = new HtmlElement(title, StandardCharsets.UTF_8);
         html.addCssLink("welcomeForm.css");
         html.addElementToBody(Html.H1)
                 .addText(title);

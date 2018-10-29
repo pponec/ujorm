@@ -31,7 +31,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * <h3>How to use the class:</h3>
  * <pre class="pre">
  * final HtmlElement html = new HtmlElement("Test");
- * html.getBody().addElement(Html.DIV)
+ * html.getBody().addElement("div")
  *               .addText("Hello word!");
  * HttpServletResponse response = new MockHttpServletResponse();
  * html.toResponse(response, false);

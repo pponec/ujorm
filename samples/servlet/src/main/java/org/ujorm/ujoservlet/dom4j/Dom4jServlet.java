@@ -16,6 +16,8 @@
 package org.ujorm.ujoservlet.dom4j;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.servlet.ServletException;
@@ -29,7 +31,6 @@ import org.dom4j.io.HTMLWriter;
 import org.dom4j.io.OutputFormat;
 import org.ujorm.tools.Check;
 import org.ujorm.ujoservlet.tools.Html;
-import org.ujorm.ujoservlet.tools.HtmlTools;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
@@ -38,7 +39,10 @@ import org.ujorm.ujoservlet.tools.HtmlTools;
 public class Dom4jServlet extends HttpServlet {
 
     /** Show the first line of soufce code */
-    public static final short SHOW_LINE = 49;
+    public static final short SHOW_LINE = 55;
+
+    /* A common code page form request and response. Try the {@code  Charset.forName("windows-1250")} for example. */
+    private final Charset charset = StandardCharsets.UTF_8;
 
     /**
      * Handles the HTTP <code>GET</code> or <code>POST</code> method.
@@ -49,7 +53,7 @@ public class Dom4jServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest input, HttpServletResponse output, boolean postMethod) throws ServletException, IOException {
-        input.setCharacterEncoding(HtmlTools.CODE_PAGE.toString());
+        input.setCharacterEncoding(charset.toString());
 
         final String title = "Simple user form using a Dom4j library";
         Document document = DocumentHelper.createDocument();
@@ -88,7 +92,7 @@ public class Dom4jServlet extends HttpServlet {
 
     /** Rendering the HTML for Dom4j */
     private void renderHtml(Document document, HttpServletResponse output, boolean noCache) throws IOException {
-        output.setCharacterEncoding(Dom4jHtmlTools.CODE_PAGE.toString());
+        output.setCharacterEncoding(charset.toString());
         if (noCache) {
             output.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
             output.setHeader("Pragma", "no-cache");

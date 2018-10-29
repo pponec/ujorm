@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
  * Testing the JdbcBuillder class
  * @author Pavel Ponec
  */
-public class JdbcBuilderTest {
+public class JdbcBuilderOriginalTest {
 
     /** Some testing date */
     private final LocalDate someDate = LocalDate.parse("2018-09-12");
@@ -40,14 +40,12 @@ public class JdbcBuilderTest {
     public void testSelect() {
         System.out.println("SELECT");
         JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.SELECT)
+            .write("SELECT")
             .column("t.id")
             .column("t.name")
-            .write(Sql.FROM)
-            .write("testTable t")
-            .write(Sql.WHERE)
-            .andCondition("t.name", Sql.EQ, "Test")
-            .andCondition("t.created", Sql.GE, someDate)
+            .write("FROM testTable t WHERE")
+            .andCondition("t.name", "=", "Test")
+            .andCondition("t.created", ">=", someDate)
             ;
         String expResult1 = "SELECT t.id, t.name FROM testTable t WHERE t.name = ? AND t.created >= ?";
         String expResult2 = "SELECT t.id, t.name FROM testTable t WHERE t.name = 'Test' AND t.created >= 2018-09-12";
@@ -63,13 +61,11 @@ public class JdbcBuilderTest {
     public void testInsert() {
         System.out.println("INSERT");
         JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.INSERT_INTO)
-            .write("testTable")
-            .write(Sql.BEG_BRACKET)
+            .write("INSERT INTO testTable (")
             .columnInsert("id", 10)
             .columnInsert("name", "A name")
             .columnInsert("created", someDate)
-            .write(Sql.END_BRACKET)
+            .write(")")
             ;
         String expResult1 = "INSERT INTO testTable ( id, name, created ) VALUES ( ?, ?, ? )";
         String expResult2 = "INSERT INTO testTable ( id, name, created ) VALUES ( 10, 'A name', 2018-09-12 )";
@@ -81,23 +77,19 @@ public class JdbcBuilderTest {
     }
 
     /** Test raw SQL INSERT of class JdbcBuillder for a better performace and general use. */
-    @Test @Deprecated
+    @Test
     public void testInsertRaw() {
         System.out.println("INSERT");
         JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.INSERT_INTO)
-            .write("testTable")
-            .write(Sql.BEG_BRACKET)
+            .write("INSERT INTO testTable (")
             .column("id")
             .column("name")
             .column("created")
-            .write(Sql.END_BRACKET)
-            .write(Sql.VALUES)
-            .write(Sql.BEG_BRACKET)
+            .write(") VALUES (")
             .value(10)
             .value("A test")
             .value(someDate)
-            .write(Sql.END_BRACKET);
+            .write(")");
             ;
         String expResult1 = "INSERT INTO testTable ( id, name, created ) VALUES ( ?, ?, ? )";
         String expResult2 = "INSERT INTO testTable ( id, name, created ) VALUES ( 10, 'A test', 2018-09-12 )";
@@ -113,14 +105,12 @@ public class JdbcBuilderTest {
     public void testUpdate() {
         System.out.println("UPDATE");
         JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.UPDATE)
-            .write("testTable")
-            .write(Sql.SET)
+            .write("UPDATE testTable SET")
             .columnUpdate("name", "Test")
             .columnUpdate("created", someDate)
-            .write(Sql.WHERE)
-            .andCondition("id", Sql.GT, 10)
-            .andCondition("id", Sql.LT, 20)
+            .write("WHERE")
+            .andCondition("id", ">", 10)
+            .andCondition("id", "<", 20)
             ;
         String expResult1 = "UPDATE testTable SET name = ?, created = ? WHERE id > ? AND id < ?";
         String expResult2 = "UPDATE testTable SET name = 'Test', created = 2018-09-12 WHERE id > 10 AND id < 20";
@@ -148,13 +138,11 @@ public class JdbcBuilderTest {
     public void showInsert(@Nonnull Connection dbConnection) throws SQLException {
         System.out.println("Show INSERT");
         JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.INSERT_INTO)
-            .write("testTable")
-            .write(Sql.BEG_BRACKET)
+            .write("INSERT INTO testTable (")
             .columnInsert("id", 10)
             .columnInsert("name", "A name")
             .columnInsert("created", someDate)
-            .write(Sql.END_BRACKET)
+            .write(")")
             ;
         int count = sql.executeUpdate(dbConnection);
 
@@ -166,14 +154,12 @@ public class JdbcBuilderTest {
     public void showSelect(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.SELECT)
+            .write("SELECT")
             .column("t.id")
             .column("t.name")
-            .write(Sql.FROM)
-            .write("testTable t")
-            .write(Sql.WHERE)
-            .andCondition("t.name", Sql.EQ, "A name")
-            .andCondition("t.created", Sql.LE, someDate)
+            .write("FROM testTable t WHERE")
+            .andCondition("t.name", "=", "A name")
+            .andCondition("t.created", ">=", someDate)
             ;
         ResultSet tempRs = null;
         for (ResultSet rs : sql.executeSelect(dbConnection)) {
@@ -192,12 +178,10 @@ public class JdbcBuilderTest {
     public void showSelectForSingleValue(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.SELECT)
+            .write("SELECT")
             .column("t.name")
-            .write(Sql.FROM)
-            .write("testTable t")
-            .write(Sql.WHERE)
-            .andCondition("t.id", Sql.EQ, 10)
+            .write("FROM testTable t WHERE")
+            .andCondition("t.id", "=", 10)
             ;
         String name = sql.uniqueValue(String.class, dbConnection);
         assertEquals("A name", name);
@@ -207,12 +191,10 @@ public class JdbcBuilderTest {
     public void showUpdate(@Nonnull Connection dbConnection) {
         System.out.println("Show UPDATE");
         JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.UPDATE)
-            .write("testTable")
-            .write(Sql.SET)
+            .write("UPDATE testTable SET")
             .columnUpdate("created", someDate.plusDays(1))
-            .write(Sql.WHERE)
-            .andCondition("id", Sql.EQ, 10)
+            .write("WHERE")
+            .andCondition("id", "=", 10)
             ;
         sql.executeUpdate(dbConnection);
     }

@@ -15,7 +15,6 @@
  */
 package org.ujorm.ujoservlet.dom4j;
 
-import java.nio.charset.Charset;
 import javax.servlet.http.HttpServlet;
 import org.dom4j.Element;
 import org.ujorm.tools.msg.MsgFormatter;
@@ -27,9 +26,6 @@ import org.ujorm.ujoservlet.tools.HtmlTools;
  * @author Pavel Ponec
  */
 public abstract class Dom4jHtmlTools {
-
-    /** A HTML code page. Try the {@code  Charset.forName("windows-1250")} for example. */
-    public static final Charset CODE_PAGE = HtmlTools.CODE_PAGE;
 
     /** Template for a source link */
     private static final String SOURCE_LINK_TEMPLATE = HtmlTools.SOURCE_LINK_TEMPLATE;

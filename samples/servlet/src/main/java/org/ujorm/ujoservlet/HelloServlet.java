@@ -17,6 +17,7 @@
 package org.ujorm.ujoservlet;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,9 +44,7 @@ public class HelloServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        input.setCharacterEncoding(HtmlTools.CODE_PAGE.toString());
-
-        final HtmlElement html = new HtmlElement(getClass().getSimpleName(), HtmlTools.CODE_PAGE);
+        final HtmlElement html = new HtmlElement("My name", StandardCharsets.UTF_8);
         html.addCssLink("welcomeForm.css");
         html.addElementToBody(Html.H1)
                 .addText("Hello, World!");

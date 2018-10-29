@@ -17,6 +17,7 @@
 package org.ujorm.ujoservlet;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,7 +35,7 @@ import org.ujorm.ujoservlet.tools.HtmlTools;
 public class TableServlet extends HttpServlet {
 
     /** Show the first line of soufce code */
-    public static final short SHOW_LINE = 45;
+    public static final short SHOW_LINE = 48;
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -45,9 +46,7 @@ public class TableServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        input.setCharacterEncoding(HtmlTools.CODE_PAGE.toString());
-
-        final HtmlElement html = new HtmlElement(getClass().getSimpleName(), HtmlTools.CODE_PAGE);
+        final HtmlElement html = new HtmlElement(getClass().getSimpleName(), StandardCharsets.UTF_8);
         html.addCssLink("tableForm.css");
         html.addElementToBody(Html.H1)
                 .addText("Show table");

@@ -14,8 +14,14 @@ A simple servlet to building HTML code based on a Java code model (with no HTML 
  * [https://servlet.ujorm.org/](https://servlet.ujorm.org/)
 
 ## Home Pages
-1. [https://ujorm.org/](https://ujorm.org/)
-2. [https://pponec.github.io/ujorm/](https://pponec.github.io/ujorm/)
+
+ 1. [https://ujorm.org/](https://ujorm.org/)
+ 2. [https://pponec.github.io/ujorm/](https://pponec.github.io/ujorm/)
+
+## JavaDoc
+
+ 1. [https://ujorm.org/](https://ujorm.org/)
+ 2. [https://pponec.github.io/ujorm/](https://pponec.github.io/ujorm/)
 
 
 ## How to open the Ujorm project
@@ -23,10 +29,10 @@ A simple servlet to building HTML code based on a Java code model (with no HTML 
 The Java 7.0 is required to compile of the project souces, the Java 6+ is required to runtime.
 Use a one of the preferred tools to open the project:
 
-  *  NetBeans IDE,
-  *  InteliJ IDEA,
-  *  Eclipse with some Maven pluggin, or use the
-  *  Maven toolkit if you like a console command line
+*  NetBeans IDE,
+*  InteliJ IDEA,
+*  Eclipse with some Maven pluggin, or use the
+*  Maven toolkit if you like a console command line
 
 
 

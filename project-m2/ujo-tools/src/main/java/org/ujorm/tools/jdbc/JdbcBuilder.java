@@ -142,16 +142,35 @@ public final class JdbcBuilder implements Serializable {
         return this;
     }
 
-    /** Write argument with no space */
+    /** If buffer is an empty, than the space is introduced */
     @Nonnull
     public JdbcBuilder rawWrite(@Nonnull final CharSequence sqlFragment) {
         if (emptySql) {
             emptySql = false;
+        } else {
+            sql.append(SPACE);
         }
         sql.append(sqlFragment);
         return this;
     }
 
+    /** If buffer is an empty, than the space is introduced */
+    @Nonnull
+    public JdbcBuilder writeMany(@Nonnull CharSequence... sqlFragments) {
+        for (CharSequence text : sqlFragments) {
+            write(text);
+        }
+        return this;
+    }
+
+    /** Write argument with no space */
+    @Nonnull
+    public JdbcBuilder rawWriteMany(@Nonnull final CharSequence ... sqlFragments) {
+        for (CharSequence text : sqlFragments) {
+            rawWrite(text);
+        }
+        return this;
+    }
 
     /** Add new column */
     @Nonnull
