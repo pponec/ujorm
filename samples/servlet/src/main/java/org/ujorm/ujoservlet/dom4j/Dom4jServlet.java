@@ -86,7 +86,7 @@ public class Dom4jServlet extends HttpServlet {
                     .addText(msg)); // Raw validation message
         }
 
-        Dom4jHtmlTools.addFooterDom4j(body, this, SHOW_LINE);
+        ApplDom4jService.addFooterDom4j(body, this, SHOW_LINE);
         renderHtml(document, output, true);
     }
 

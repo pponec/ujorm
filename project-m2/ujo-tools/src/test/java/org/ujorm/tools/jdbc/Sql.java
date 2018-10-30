@@ -42,7 +42,5 @@ public interface Sql {
     // --- Others ---
 
     String VALUES = "VALUES";
-    String BEG_BRACKET = "(";
-    String END_BRACKET = ")";
 
 }

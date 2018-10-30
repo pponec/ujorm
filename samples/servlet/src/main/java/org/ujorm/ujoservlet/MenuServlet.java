@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.dom.HtmlElement;
 import org.ujorm.tools.dom.XmlElement;
 import org.ujorm.ujoservlet.tools.Html;
-import org.ujorm.ujoservlet.tools.HtmlTools;
+import org.ujorm.ujoservlet.tools.ApplService;
 
 /**
  * A live example of the HtmlElement inside a servlet.
@@ -58,7 +58,7 @@ public class MenuServlet extends HttpServlet {
                     .addText(item.label);
         }
 
-        HtmlTools.addFooter(html.getBody(), this, SHOW_LINE);
+        ApplService.addFooter(html.getBody(), this, SHOW_LINE);
         html.toResponse(output, true); // Render the result
     }
 

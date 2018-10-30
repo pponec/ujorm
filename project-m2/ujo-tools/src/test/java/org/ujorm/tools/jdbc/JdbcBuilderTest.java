@@ -65,11 +65,11 @@ public class JdbcBuilderTest {
         JdbcBuilder sql = new JdbcBuilder()
             .write(Sql.INSERT_INTO)
             .write("testTable")
-            .write(Sql.BEG_BRACKET)
+            .write("(")
             .columnInsert("id", 10)
             .columnInsert("name", "A name")
             .columnInsert("created", someDate)
-            .write(Sql.END_BRACKET)
+            .write(")")
             ;
         String expResult1 = "INSERT INTO testTable ( id, name, created ) VALUES ( ?, ?, ? )";
         String expResult2 = "INSERT INTO testTable ( id, name, created ) VALUES ( 10, 'A name', 2018-09-12 )";
@@ -87,17 +87,17 @@ public class JdbcBuilderTest {
         JdbcBuilder sql = new JdbcBuilder()
             .write(Sql.INSERT_INTO)
             .write("testTable")
-            .write(Sql.BEG_BRACKET)
+            .write("(")
             .column("id")
             .column("name")
             .column("created")
-            .write(Sql.END_BRACKET)
+            .write(")")
             .write(Sql.VALUES)
-            .write(Sql.BEG_BRACKET)
+            .write("(")
             .value(10)
             .value("A test")
             .value(someDate)
-            .write(Sql.END_BRACKET);
+            .write(")");
             ;
         String expResult1 = "INSERT INTO testTable ( id, name, created ) VALUES ( ?, ?, ? )";
         String expResult2 = "INSERT INTO testTable ( id, name, created ) VALUES ( 10, 'A test', 2018-09-12 )";
@@ -150,11 +150,11 @@ public class JdbcBuilderTest {
         JdbcBuilder sql = new JdbcBuilder()
             .write(Sql.INSERT_INTO)
             .write("testTable")
-            .write(Sql.BEG_BRACKET)
+            .write("(")
             .columnInsert("id", 10)
             .columnInsert("name", "A name")
             .columnInsert("created", someDate)
-            .write(Sql.END_BRACKET)
+            .write(")")
             ;
         int count = sql.executeUpdate(dbConnection);
 
