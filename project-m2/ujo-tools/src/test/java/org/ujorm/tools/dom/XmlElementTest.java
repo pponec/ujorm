@@ -16,9 +16,8 @@
 
 package org.ujorm.tools.dom;
 
-import org.ujorm.tools.msg.MsgFormatter;
-import org.ujorm.tools.dom.XmlElement;
 import org.junit.Test;
+import org.ujorm.tools.msg.MsgFormatter;
 import static org.junit.Assert.*;
 
 /**

@@ -325,7 +325,7 @@ public class XmlElement implements Element {
 
     /** Raw XML code envelope */
     protected static final class RawEnvelope {
-        /** Xml content */
+        /** XML content */
         private final CharSequence body;
 
         public RawEnvelope(@Nonnull final CharSequence body) {

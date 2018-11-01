@@ -82,26 +82,20 @@ import org.ujorm.tools.set.LoopingIterator;
 public final class JdbcBuilder implements Serializable {
 
     /** Separator of database columns */
-    protected static final char ITEM_SEPARATOR = ',';
+    public static final Envelope ITEM_SEPARATOR = new Envelope(",");
 
     /** A value marker for SQL */
-    protected static final char VALUE_MARKER = '?';
+    protected static final String VALUE_MARKER = "?";
 
     /** A value marker for SQL */
     protected static final char SPACE = ' ';
 
-    /** Opening SQL string */
+    /** SQL string fragments */
     @Nonnull
-    protected final StringBuilder sql;
+    protected final List<CharSequence> sql;
 
-    /** Seznam argumentů */
-    protected final List<Object> arguments = new ArrayList<>();
-
-    /** The SQL buffer has assigned an character */
-    protected boolean emptySql = true;
-
-    /** Column counter */
-    protected int columnCounter = 0;
+    /** Argument list */
+    protected final List<Object> arguments;
 
     /** Condition counter */
     protected int conditionCounter = 0;
@@ -111,47 +105,40 @@ public final class JdbcBuilder implements Serializable {
 
     /** Default constructor */
     public JdbcBuilder() {
-        this(new StringBuilder(32));
+        this(new ArrayList<>(), new ArrayList<>());
     }
 
-    /** StringBuilder construcor */
-    public JdbcBuilder(@Nonnull final StringBuilder sql) {
+    /** Default constructor */
+    public JdbcBuilder(final @Nonnull List<CharSequence> sql, final @Nonnull List<Object> arguments) {
         this.sql = sql;
+        this.arguments = arguments;
     }
 
     /** Concatenates the specified statement to the end of this statement. */
     @Nonnull
     public JdbcBuilder concat(@Nonnull final JdbcBuilder builder) {
-        this.sql.append(builder.getSql());
-        this.arguments.add(builder.arguments);
-        this.columnCounter += builder.columnCounter;
+        this.sql.addAll(builder.sql);
+        this.arguments.addAll(builder.arguments);
         this.conditionCounter += builder.conditionCounter;
-        this.emptySql = false;
 
         return this;
     }
 
-    /** If buffer is an empty, than the space is introduced */
+    /** Write a sql fragment */
     @Nonnull
-    public JdbcBuilder write(@Nonnull final CharSequence sqlFragment) {
-        if (emptySql) {
-            emptySql = false;
-        } else {
-            sql.append(SPACE);
+    public JdbcBuilder write(@Nullable final CharSequence sqlFragment) {
+        if (Check.hasLength(sqlFragment)) {
+            sql.add(sqlFragment);
         }
-        sql.append(sqlFragment);
         return this;
     }
 
     /** If buffer is an empty, than the space is introduced */
     @Nonnull
     public JdbcBuilder rawWrite(@Nonnull final CharSequence sqlFragment) {
-        if (emptySql) {
-            emptySql = false;
-        } else {
-            sql.append(SPACE);
+        if (Check.hasLength(sqlFragment)) {
+            sql.add(new Envelope(sqlFragment));
         }
-        sql.append(sqlFragment);
         return this;
     }
 
@@ -176,27 +163,17 @@ public final class JdbcBuilder implements Serializable {
     /** Add new column */
     @Nonnull
     public JdbcBuilder column(@Nonnull final CharSequence column) {
-        if (columnCounter++ > 0) {
-            sql.append(ITEM_SEPARATOR);
-        }
-        sql.append(SPACE);
-        sql.append(column);
+        sql.add(new Envelope(column, true));
         return this;
     }
 
     /** Set new value to column by template {@code name = ? */
     @Nonnull
     public JdbcBuilder columnUpdate(@Nonnull final CharSequence column, @Nonnull final Object value) {
-        Assert.validState(!insertMode, "The insertion mode has been started.");
-        if (!arguments.isEmpty()) {
-            sql.append(ITEM_SEPARATOR);
-        }
-        sql.append(SPACE)
-           .append(column)
-           .append(SPACE)
-           .append('=')
-           .append(SPACE)
-           .append(VALUE_MARKER);
+        Assert.validState(!insertMode, "An insertion mode has been started.");
+        sql.add(new Envelope(column, true));
+        sql.add("=");
+        sql.add(VALUE_MARKER);
 
         arguments.add(value);
         return this;
@@ -206,10 +183,7 @@ public final class JdbcBuilder implements Serializable {
     @Nonnull
     public JdbcBuilder columnInsert(@Nonnull final CharSequence column, @Nonnull final Object value) {
         insertMode = true;
-        if (!arguments.isEmpty()) {
-            sql.append(ITEM_SEPARATOR);
-        }
-        sql.append(SPACE).append(column);
+        sql.add(new Envelope(column, true));
         arguments.add(value);
         return this;
     }
@@ -218,10 +192,9 @@ public final class JdbcBuilder implements Serializable {
     @Nonnull
     public JdbcBuilder value(@Nonnull Object param) {
         if (!arguments.isEmpty()) {
-            sql.append(ITEM_SEPARATOR);
+            sql.add(ITEM_SEPARATOR);
         }
-        sql.append(SPACE);
-        sql.append(VALUE_MARKER);
+        sql.add(VALUE_MARKER);
         arguments.add(param);
         return this;
     }
@@ -288,16 +261,12 @@ public final class JdbcBuilder implements Serializable {
     public JdbcBuilder condition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value, final @Nullable Boolean andOperator) {
         if (Check.hasLength(sqlCondition)) {
             if (conditionCounter++ > 0 && andOperator != null) {
-                sql.append(andOperator ? " AND " : " OR ");
-            } else {
-                sql.append(SPACE);
+                sql.add(andOperator ? "AND" : "OR");
             }
-            sql.append(sqlCondition);
+            sql.add(sqlCondition);
             if (Check.hasLength(operator)) {
-                sql.append(SPACE);
-                sql.append(operator);
-                sql.append(SPACE);
-                sql.append(VALUE_MARKER);
+                sql.add(operator);
+                sql.add(VALUE_MARKER);
             }
             arguments.add(value);
         }
@@ -311,11 +280,11 @@ public final class JdbcBuilder implements Serializable {
         return arguments.toArray(new Object[arguments.size()]);
     }
 
-    /** Add raw arguments for special use
+    /** Add arguments for special use
      * @see #rawWrite(java.lang.CharSequence)
      */
     @Nonnull
-    public JdbcBuilder rawArguments(final @Nonnull Object ... values) {
+    public JdbcBuilder addArguments(final @Nonnull Object ... values) {
         final Object[] vals = values.length == 1 && values[0] instanceof Object[] ? (Object[]) values[0] : values;
         for (int i = 0; i < vals.length; i++) {
             arguments.add(values[i]);
@@ -369,21 +338,39 @@ public final class JdbcBuilder implements Serializable {
     /** Returns a SQL text */
     @Nonnull
     public String getSql() {
-        if (insertMode) {
-            final String valuesBeg = " VALUES (";
-            final String valuesEnd = " )";
-            final StringBuilder result = new StringBuilder(sql.length() + valuesBeg.length() + arguments.size() * 3 + valuesEnd.length());
-            result.append(sql);
-            result.append(valuesBeg);
-            for (int i = 0, max = arguments.size(); i < max; i++) {
-                result.append(i > 0 ? "" + ITEM_SEPARATOR : "").append(SPACE).append(VALUE_MARKER);
+        final StringBuilder result = new StringBuilder(getBufferSizeEstimation());
+        int columnCounter = 0;
+
+        for (int i = 0, max = sql.size(); i < max; i++) {
+            final CharSequence item = sql.get(i);
+            if (item instanceof Envelope) {
+                if (((Envelope) item).isColumn()) {
+                    if (columnCounter++ > 0) {
+                        result.append(ITEM_SEPARATOR);
+                    }
+                    result.append(SPACE);
+                }
+            } else if (i > 0) {
+                result.append(SPACE);
             }
-            result.append(valuesEnd);
-            return result.toString();
+            result.append(item);
         }
-        else {
-            return sql.toString();
+
+        if (insertMode) {
+            result.append(" VALUES (");
+            for (int i = 0, max = arguments.size(); i < max; i++) {
+                result.append(i > 0 ? ITEM_SEPARATOR : "")
+                      .append(SPACE)
+                      .append(VALUE_MARKER);
+            }
+            result.append(" )");
         }
+        return result.toString();
+    }
+
+    /** Estimate a buffer size */
+    protected int getBufferSizeEstimation() {
+        return (sql.size() + 2) * 8 + (insertMode ? arguments.size() * 3 : 0);
     }
 
     /** Returns a SQL including values */
@@ -396,8 +383,48 @@ public final class JdbcBuilder implements Serializable {
             .formatMsg(getSql(), getArguments());
     }
 
+    // -------- Inner class --------
+
+    /** Raw XML code envelope */
+    protected static final class Envelope implements CharSequence {
+        /** SQL content */
+        private final CharSequence body;
+
+        private final boolean column;
+
+        public Envelope(@Nonnull final CharSequence body) {
+            this(body, false);
+        }
+
+        public Envelope(@Nonnull final CharSequence body, final boolean column) {
+            this.body = body;
+            this.column = column;
+        }
+
+        /** A column sign */
+        public boolean isColumn() {
+            return column;
+        }
+
+        @Override
+        public int length() {
+            return body.length();
+        }
+
+        @Override
+        public char charAt(final int index) {
+            return body.charAt(index);
+        }
+
+        @Override
+        public CharSequence subSequence(int start, int end) {
+            return body.subSequence(start, end);
+        }
+
+        @Override
+        public String toString() {
+            return body.toString();
+        }
+    }
 }
-
-
-
 
