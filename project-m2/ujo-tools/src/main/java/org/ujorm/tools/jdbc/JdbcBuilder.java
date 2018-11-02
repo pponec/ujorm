@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Pavel Ponec
+ * Copyright 2018-2018 Pavel Ponec
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/jdbc/JdbcBuilder.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -105,7 +105,7 @@ public final class JdbcBuilder implements Serializable {
 
     /** Default constructor */
     public JdbcBuilder() {
-        this(new ArrayList<>(), new ArrayList<>());
+        this(new ArrayList<>(32), new ArrayList<>());
     }
 
     /** Default constructor */
@@ -188,9 +188,145 @@ public final class JdbcBuilder implements Serializable {
         return this;
     }
 
-    /** Add new value */
+    /** Add a condition for a valid <strong>argument</strong> joined with AND operator
+     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
+     * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
+     */
     @Nonnull
-    public JdbcBuilder value(@Nonnull Object param) {
+    public JdbcBuilder andCondition(@Nonnull final CharSequence sqlCondition, @Nullable final Object value) {
+        return andCondition(sqlCondition, null, value);
+    }
+
+    /**
+     * Add a condition for a valid <strong>argument</strong> joined by AND operator
+     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
+     * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
+     * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
+     */
+    @Nonnull
+    public JdbcBuilder andCondition(@Nonnull final CharSequence sqlCondition, @Nullable final String operator, @Nullable final Object value) {
+        return condition(true, sqlCondition, operator, value);
+    }
+
+    /**
+     * Add a condition for a multivalue <strong>argument</strong> joined by AND operator
+     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
+     * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
+     * @param values The value of the condition (a replacement for the question character)
+     */
+    @Nonnull
+    public JdbcBuilder andCondition(@Nonnull final CharSequence sqlCondition, @Nonnull final String operator, @Nullable final Object... values) {
+        return condition(true, sqlCondition, operator, values);
+    }
+
+    /**
+     * Add a condition for a valid <strong>argument</strong> joined by OR operator
+     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
+     * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
+     */
+    @Nonnull
+    public JdbcBuilder orCondition(@Nonnull final CharSequence sqlCondition, @Nullable final Object value) {
+        return orCondition(sqlCondition, null, value);
+    }
+
+    /**
+     * Add a condition for a valid <strong>argument</strong> joined by OR operator
+     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
+     * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
+     * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
+     */
+    @Nonnull
+    public JdbcBuilder orCondition(@Nonnull final CharSequence sqlCondition, @Nullable final String operator, @Nullable final Object value) {
+        return condition(false, sqlCondition, operator, value);
+    }
+
+    /**
+     * Add a condition for a multivalue <strong>argument</strong> joined by OR operator
+     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
+     * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
+     * @param values The value of the condition (a replacement for the question character)
+     */
+    @Nonnull
+    public JdbcBuilder orCondition(@Nonnull final CharSequence sqlCondition, @Nonnull final String operator, @Nullable final Object... values) {
+        return condition(false, sqlCondition, operator, values);
+    }
+
+   /**
+     * Add a condition for an <strong>argument</strong> with length
+     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}. To ignore the method, send a {@code null} value.
+     * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
+     */
+    @Nonnull
+    public JdbcBuilder condition(@Nonnull final CharSequence sqlCondition, @Nullable final Object value, final @Nullable Boolean andOperator) {
+        return condition(andOperator, sqlCondition, null, value);
+    }
+
+    /** Add a condition for an <strong>argument</strong> with length
+     * @param andOperator Print a join operator, or nothing for {@code null} value
+     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}. To ignore the method, send a {@code null} value.
+     * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
+     * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
+     */
+    @Nonnull
+    public JdbcBuilder condition(@Nullable final Boolean andOperator, @Nonnull final CharSequence sqlCondition, @Nullable final String operator, @Nullable final Object value) {
+        if (Check.hasLength(sqlCondition)) {
+            writeOperator(andOperator, conditionCounter++ > 0);
+            sql.add(sqlCondition);
+            if (Check.hasLength(operator)) {
+                sql.add(operator);
+                if (value != null) {
+                    sql.add(VALUE_MARKER);
+                }
+            }
+            if (value != null) {
+               arguments.add(value);
+            }
+        }
+        return this;
+    }
+
+    /**
+     *  Write an opetaror AND / OR
+     * @param andOperator
+     * @param enabled
+     */
+    protected void writeOperator(@Nullable final Boolean andOperator, final boolean enabled) {
+        if (andOperator != null && enabled) {
+            sql.add(andOperator ? "AND" : "OR");
+        }
+    }
+
+    /**
+     * Add a condition for an <strong>argument</strong> with length
+     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
+     * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
+     * @param values Values of the condition (a replacement for the question character). To ignore the method, send a {@code null} value.
+     */
+    @Nonnull
+    public JdbcBuilder condition(@Nullable final Boolean andOperator, @Nonnull final CharSequence sqlCondition, @Nonnull final String operator, @Nullable Object... values) {
+        if (Check.hasLength(sqlCondition) && Check.hasLength(values)) {
+            assert values != null;
+            writeOperator(andOperator, conditionCounter++ > 0);
+            sql.add(sqlCondition);
+            sql.add(operator);
+            sql.add("(");
+            for (int i = 0; i < values.length; i++) {
+                if (i > 0) {
+                    sql.add(ITEM_SEPARATOR);
+                }
+                sql.add(VALUE_MARKER);
+                arguments.add(values[i]);
+            }
+            sql.add(")");
+        }
+        return this;
+    }
+
+    /** Add an argument value (including a SEPARATOR and a MARKER) for buidling a SQL INSERT statement
+     * @see #addArguments(java.lang.Object...)
+     */
+    @Nonnull
+    public JdbcBuilder value(@Nonnull final Object param) {
         if (!arguments.isEmpty()) {
             sql.add(ITEM_SEPARATOR);
         }
@@ -199,88 +335,8 @@ public final class JdbcBuilder implements Serializable {
         return this;
     }
 
-    /**
-     * Add an condition for a valid <strong>argument</strong> joined by AND operator
-     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
-     * @param value The value od the condition (a replacement for the question character)
-     */
-    @Nonnull
-    public JdbcBuilder andCondition(@Nonnull CharSequence sqlCondition, @Nullable Object value) {
-        return andCondition(sqlCondition, null, value);
-    }
-
-    /**
-     * Add an equals condition for a valid <strong>argument</strong> joined by AND operator
-     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
-     * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
-     * @param value The value od the condition (a replacement for the question character)
-     */
-    @Nonnull
-    public JdbcBuilder andCondition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value) {
-        return condition(sqlCondition, operator, value, true);
-    }
-
-    /**
-     * Add an condition for a valid <strong>argument</strong> joined by OR operator
-     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
-     * @param value The value od the condition (a replacement for the question character)
-     */
-    @Nonnull
-    public JdbcBuilder orCondition(@Nonnull CharSequence sqlCondition, @Nullable Object value) {
-        return orCondition(sqlCondition, null, value);
-    }
-
-    /**
-     * Add an equals condition for a valid <strong>argument</strong> joined by OR operator
-     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
-     * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
-     * @param value The value od the condition (a replacement for the question character)
-     */
-    @Nonnull
-    public JdbcBuilder orCondition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value) {
-        return condition(sqlCondition, operator, value, false);
-    }
-
-   /**
-     * Add an condition for an <strong>argument</strong> with length
-     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
-     * @param value The value od the condition (a replacement for the question character)
-     */
-    @Nonnull
-    public JdbcBuilder condition(@Nonnull CharSequence sqlCondition, @Nullable Object value, final @Nullable Boolean andOperator) {
-        return condition(sqlCondition, null, value, andOperator);
-    }
-
-    /**
-     * Add an condition for an <strong>argument</strong> with length
-     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
-     * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
-     * @param value The value od the condition (a replacement for the question character)
-     */
-    @Nonnull
-    public JdbcBuilder condition(@Nonnull CharSequence sqlCondition, @Nullable String operator, @Nullable Object value, final @Nullable Boolean andOperator) {
-        if (Check.hasLength(sqlCondition)) {
-            if (conditionCounter++ > 0 && andOperator != null) {
-                sql.add(andOperator ? "AND" : "OR");
-            }
-            sql.add(sqlCondition);
-            if (Check.hasLength(operator)) {
-                sql.add(operator);
-                sql.add(VALUE_MARKER);
-            }
-            arguments.add(value);
-        }
-        return this;
-    }
-
-    /** Array of JDBC argumets
-     * @return Array of arguments */
-    @Nonnull
-    public Object[] getArguments() {
-        return arguments.toArray(new Object[arguments.size()]);
-    }
-
-    /** Add arguments for special use
+    /** Add argument values with no SAPARATOR and no MARKER (for a common use)
+     * @see #value(java.lang.Object)
      * @see #rawWrite(java.lang.CharSequence)
      */
     @Nonnull
@@ -290,6 +346,13 @@ public final class JdbcBuilder implements Serializable {
             arguments.add(values[i]);
         }
         return this;
+    }
+
+    /** Returns an array of all JDBC arguments
+     * @return Array of arguments */
+    @Nonnull
+    public Object[] getArguments() {
+        return arguments.toArray(new Object[arguments.size()]);
     }
 
     /** Build the PreparedStatement with arguments */
@@ -368,9 +431,10 @@ public final class JdbcBuilder implements Serializable {
         return result.toString();
     }
 
-    /** Estimate a buffer size */
+    /** Estimate a buffer size in characters */
     protected int getBufferSizeEstimation() {
-        return (sql.size() + 2) * 8 + (insertMode ? arguments.size() * 3 : 0);
+        final int averageItemSize = 8;
+        return (sql.size() + 2 - (insertMode ? 0 : arguments.size())) * averageItemSize + arguments.size() * 3;
     }
 
     /** Returns a SQL including values */

@@ -119,19 +119,30 @@ public class JdbcBuilderTest {
             .columnUpdate("name", "Test")
             .columnUpdate("created", someDate)
             .write(Sql.WHERE)
-            .andCondition("id", Sql.GT, 10)
-            .andCondition("id", Sql.LT, 20)
+            .andCondition("created", Sql.EQ, someDate)
+            .andCondition("id", Sql.IN, 10, 20, 30)
+            .andCondition("name", "IS NOT NULL", Sql.UNDEFINED)
             ;
-        String expResult1 = "UPDATE testTable SET name = ?, created = ? WHERE id > ? AND id < ?";
-        String expResult2 = "UPDATE testTable SET name = 'Test', created = 2018-09-12 WHERE id > 10 AND id < 20";
+        String expResult1 = "UPDATE testTable"
+                + " SET name = ?"
+                +    ", created = ?"
+                + " WHERE created = ?"
+                + " AND id IN ( ?, ?, ? )"
+                + " AND name IS NOT NULL";
+        String expResult2 = "UPDATE testTable"
+                + " SET name = 'Test'"
+                +    ", created = 2018-09-12"
+                + " WHERE created = 2018-09-12"
+                + " AND id IN ( 10, 20, 30 )"
+                + " AND name IS NOT NULL";
 
         assertEquals(expResult1, sql.getSql());
         assertEquals(expResult2, sql.toString());
-        assertEquals(4, sql.getArguments().length);
+        assertEquals(6, sql.getArguments().length);
         assertEquals("Test", sql.getArguments()[0]);
         assertEquals(someDate, sql.getArguments()[1]);
-        assertEquals(10, sql.getArguments()[2]);
-        assertEquals(20, sql.getArguments()[3]);
+        assertEquals(10, sql.getArguments()[3]);
+        assertEquals(20, sql.getArguments()[4]);
     }
 
     @Test

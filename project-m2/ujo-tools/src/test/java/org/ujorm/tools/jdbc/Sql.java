@@ -38,9 +38,13 @@ public interface Sql {
     String LT = "<";
     String LE = "<=";
     String NOT_EQ = "<>";
+    String IN = "IN";
 
     // --- Others ---
 
     String VALUES = "VALUES";
+    String IS_NULL = "IS NULL";
+    String IS_NOT_NULL = "IS NOT NULL";
+    String UNDEFINED = null;
 
 }

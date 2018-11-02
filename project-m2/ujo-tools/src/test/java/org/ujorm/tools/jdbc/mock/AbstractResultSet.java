@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
@@ -44,7 +45,7 @@ public abstract class AbstractResultSet implements ResultSet {
     /** Create a one row
      * @param values Object array is supported
      */
-    public void addRow(Object... values) {
+    public void addRow(@Nonnull Object... values) {
         if (values.length == 1 && values[0] instanceof Object[]) {
             values = (Object[]) values[0];
         }
