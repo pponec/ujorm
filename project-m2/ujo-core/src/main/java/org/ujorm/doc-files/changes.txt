@@ -5,7 +5,11 @@ The Ujorm release notes
 release 1.87-SNAPSHOT
 + ...
 
-release 1.86
+release 1.87 (2018-11-03)
++ TOOLS: An API of the JdbcBuilder class is extended
++ TOOLS: A SimpleValuePrinter class was renamed to a ValuePrinter
+
+release 1.86 (2018-10-28)
 + TOOLS: A new XmlElement class for HTML site generation was introduced
 + TOOLS: A new JdbcBuilder.executeSelect() method for reading ResultSet was introduced
 + TOOLS: Some classes was moved to separated packages
