@@ -21,53 +21,53 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.tools.msg.SimpleValuePrinter;
+import org.ujorm.tools.msg.ValuePrinter;
 
 /**
  * Print values to an output
  * @author Pavel Ponec
  */
-public class ValuePrinter extends SimpleValuePrinter {
+public class SimpleValuePrinter extends ValuePrinter {
 
     /** Constructor */
-    public ValuePrinter(int size) {
+    public SimpleValuePrinter(int size) {
         super(size);
     }
 
     /** Constructor */
-    public ValuePrinter(@Nonnull final CharArrayWriter out) {
+    public SimpleValuePrinter(@Nonnull final CharArrayWriter out) {
         super(out);
     }
 
     /** Constructor */
-    public ValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final CharArrayWriter out) {
+    public SimpleValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final CharArrayWriter out) {
         super(mark, textBorder, out);
     }
 
     /** Append value */
     @Nonnull
-    public ValuePrinter append(final char c) {
+    public SimpleValuePrinter append(final char c) {
         out.append(c);
         return this;
     }
 
     /** Append value */
     @Nonnull
-    public ValuePrinter append(@Nullable final Object value) {
+    public SimpleValuePrinter append(@Nullable final Object value) {
         out.append(value != null ? value.toString() : null);
         return this;
     }
 
     /** Append value */
     @Nonnull
-    public ValuePrinter append(@Nullable final CharSequence value) {
+    public SimpleValuePrinter append(@Nullable final CharSequence value) {
         out.append(value);
         return this;
     }
 
     /** Append value */
     @Nonnull
-    public ValuePrinter appendValue(@Nullable final Object value) {
+    public SimpleValuePrinter appendValue(@Nullable final Object value) {
         if (value == null) {
            out.append(null);
         } else if (value instanceof Key) {

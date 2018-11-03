@@ -242,13 +242,13 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
     /** Print the Criterion including the main domain name along the example: Order(id EQ 1) */
     @Nonnull
     public String toStringFull() {
-        final ValuePrinter printer = new ValuePrinter(128).append(getDomain().getSimpleName());
+        final SimpleValuePrinter printer = new SimpleValuePrinter(128).append(getDomain().getSimpleName());
         return toPrinter(printer).toString();
     }
 
     /** Print the Criterion including the main domain name along the example: Order(id EQ 1) */
     @Nonnull
-    public ValuePrinter toPrinter(ValuePrinter out) {
+    public SimpleValuePrinter toPrinter(SimpleValuePrinter out) {
         return out.appendValue(String.valueOf(getDomain()));
     }
 

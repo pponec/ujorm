@@ -24,30 +24,30 @@ import javax.annotation.Nullable;
  * Print values to an output
  * @author Pavel Ponec
  */
-public class SimpleValuePrinter extends ValueFormatter {
+public class ValuePrinter extends ValueFormatter {
 
     /** Writer */
     protected final CharArrayWriter out;
 
     /** Constructor */
-    public SimpleValuePrinter(final int size) {
+    public ValuePrinter(final int size) {
         this(new CharArrayWriter(size));
     }
 
     /** Constructor */
-    public SimpleValuePrinter(@Nonnull final CharArrayWriter out) {
+    public ValuePrinter(@Nonnull final CharArrayWriter out) {
         this("?", "\"", out);
     }
 
     /** Constructor */
-    public SimpleValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final CharArrayWriter out) {
+    public ValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final CharArrayWriter out) {
         super(mark, textBorder);
         this.out = out;
     }
 
     /** Append value */
     @Nonnull
-    public SimpleValuePrinter appendValue(@Nullable final Object value) {
+    public ValuePrinter appendValue(@Nullable final Object value) {
         if (value instanceof Object[]) {
             boolean first = true;
             for (Object object : (Object[]) value) {

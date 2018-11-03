@@ -330,11 +330,11 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
 
    @Override
     public String toString() {
-        return toPrinter(new ValuePrinter(128)).toString();
+        return toPrinter(new SimpleValuePrinter(128)).toString();
     }
     
     @Override
-    public ValuePrinter toPrinter(@Nonnull final ValuePrinter out) {
+    public SimpleValuePrinter toPrinter(@Nonnull final SimpleValuePrinter out) {
         out.append('(');
         if (operator == Operator.XSQL) {  
             out.appendValue(getRightNode());

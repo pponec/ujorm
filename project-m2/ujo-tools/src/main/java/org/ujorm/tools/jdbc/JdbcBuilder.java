@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.msg.SimpleValuePrinter;
+import org.ujorm.tools.msg.ValuePrinter;
 import org.ujorm.tools.set.LoopingIterator;
 
 /**
@@ -43,9 +43,8 @@ import org.ujorm.tools.set.LoopingIterator;
  *     .column("t.id")
  *     .column("t.name")
  *     .write("FROM testTable t WHERE")
- *     .write("WHERE")
- *     .andCondition("t.name", "=", "Test")
- *     .andCondition("t.date", "&gt;=", SOME_DATE);
+ *     .andCondition("t.date", "&gt;=", someDate);
+ *     .andCondition("t.id", "IN", 10, 20, 30);
  *
  * for (ResultSet rs : sql.executeSelect(dbConnection)) {
  *      int id = rs.getInt(1);
@@ -59,7 +58,7 @@ import org.ujorm.tools.set.LoopingIterator;
  *     .write("INSERT INTO testTable (")
  *     .columnInsert("id", 10)
  *     .columnInsert("name", "Test")
- *     .columnInsert("date", SOME_DATE)
+ *     .columnInsert("date", someDate)
  *     .write(")");
  * sql.executeUpdate(dbConnection);
  * </pre>
@@ -82,7 +81,7 @@ import org.ujorm.tools.set.LoopingIterator;
 public final class JdbcBuilder implements Serializable {
 
     /** Separator of database columns */
-    public static final Envelope ITEM_SEPARATOR = new Envelope(",");
+    public static final SqlEnvelope ITEM_SEPARATOR = new SqlEnvelope(",");
 
     /** A value marker for SQL */
     protected static final String VALUE_MARKER = "?";
@@ -95,6 +94,7 @@ public final class JdbcBuilder implements Serializable {
     protected final List<CharSequence> sql;
 
     /** Argument list */
+    @Nonnull
     protected final List<Object> arguments;
 
     /** Condition counter */
@@ -124,7 +124,9 @@ public final class JdbcBuilder implements Serializable {
         return this;
     }
 
-    /** Write a sql fragment */
+    /** Write a sql fragment including a space before
+     * @param sqlFragment An empty or {@code null} value is ignored.
+     */
     @Nonnull
     public JdbcBuilder write(@Nullable final CharSequence sqlFragment) {
         if (Check.hasLength(sqlFragment)) {
@@ -133,16 +135,18 @@ public final class JdbcBuilder implements Serializable {
         return this;
     }
 
-    /** If buffer is an empty, than the space is introduced */
+    /** Write a sql fragment with no space before
+     * @param sqlFragment An empty or null fragment is ignored.
+     */
     @Nonnull
-    public JdbcBuilder rawWrite(@Nonnull final CharSequence sqlFragment) {
+    public JdbcBuilder writeNoSpace(@Nonnull final CharSequence sqlFragment) {
         if (Check.hasLength(sqlFragment)) {
-            sql.add(new Envelope(sqlFragment));
+            sql.add(new SqlEnvelope(sqlFragment));
         }
         return this;
     }
 
-    /** If buffer is an empty, than the space is introduced */
+    /** Write many sql fragments including a space before */
     @Nonnull
     public JdbcBuilder writeMany(@Nonnull CharSequence... sqlFragments) {
         for (CharSequence text : sqlFragments) {
@@ -151,11 +155,11 @@ public final class JdbcBuilder implements Serializable {
         return this;
     }
 
-    /** Write argument with no space */
+    /** Write many sql fragments with no space before */
     @Nonnull
-    public JdbcBuilder rawWriteMany(@Nonnull final CharSequence ... sqlFragments) {
+    public JdbcBuilder writeManyNoSpace(@Nonnull final CharSequence ... sqlFragments) {
         for (CharSequence text : sqlFragments) {
-            rawWrite(text);
+            writeNoSpace(text);
         }
         return this;
     }
@@ -163,7 +167,7 @@ public final class JdbcBuilder implements Serializable {
     /** Add new column */
     @Nonnull
     public JdbcBuilder column(@Nonnull final CharSequence column) {
-        sql.add(new Envelope(column, true));
+        sql.add(new SqlEnvelope(column, true));
         return this;
     }
 
@@ -171,11 +175,10 @@ public final class JdbcBuilder implements Serializable {
     @Nonnull
     public JdbcBuilder columnUpdate(@Nonnull final CharSequence column, @Nonnull final Object value) {
         Assert.validState(!insertMode, "An insertion mode has been started.");
-        sql.add(new Envelope(column, true));
+        sql.add(new SqlEnvelope(column, true));
         sql.add("=");
-        sql.add(VALUE_MARKER);
+        addValue(value);
 
-        arguments.add(value);
         return this;
     }
 
@@ -183,18 +186,9 @@ public final class JdbcBuilder implements Serializable {
     @Nonnull
     public JdbcBuilder columnInsert(@Nonnull final CharSequence column, @Nonnull final Object value) {
         insertMode = true;
-        sql.add(new Envelope(column, true));
+        sql.add(new SqlEnvelope(column, true));
         arguments.add(value);
         return this;
-    }
-
-    /** Add a condition for a valid <strong>argument</strong> joined with AND operator
-     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
-     * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
-     */
-    @Nonnull
-    public JdbcBuilder andCondition(@Nonnull final CharSequence sqlCondition, @Nullable final Object value) {
-        return andCondition(sqlCondition, null, value);
     }
 
     /**
@@ -222,16 +216,6 @@ public final class JdbcBuilder implements Serializable {
     /**
      * Add a condition for a valid <strong>argument</strong> joined by OR operator
      * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
-     * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
-     */
-    @Nonnull
-    public JdbcBuilder orCondition(@Nonnull final CharSequence sqlCondition, @Nullable final Object value) {
-        return orCondition(sqlCondition, null, value);
-    }
-
-    /**
-     * Add a condition for a valid <strong>argument</strong> joined by OR operator
-     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
      * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
      * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
      */
@@ -251,35 +235,44 @@ public final class JdbcBuilder implements Serializable {
         return condition(false, sqlCondition, operator, values);
     }
 
-   /**
-     * Add a condition for an <strong>argument</strong> with length
-     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}. To ignore the method, send a {@code null} value.
-     * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
-     */
-    @Nonnull
-    public JdbcBuilder condition(@Nonnull final CharSequence sqlCondition, @Nullable final Object value, final @Nullable Boolean andOperator) {
-        return condition(andOperator, sqlCondition, null, value);
-    }
-
     /** Add a condition for an <strong>argument</strong> with length
      * @param andOperator Print a join operator, or nothing for {@code null} value
-     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}. To ignore the method, send a {@code null} value.
+     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}. Send a {@code null} value to ignore the method.
      * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
-     * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
+     * @param value Add a value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}. An array is supported
      */
     @Nonnull
-    public JdbcBuilder condition(@Nullable final Boolean andOperator, @Nonnull final CharSequence sqlCondition, @Nullable final String operator, @Nullable final Object value) {
+    public JdbcBuilder condition(@Nullable final Boolean andOperator, @Nullable final CharSequence sqlCondition, @Nullable final String operator, @Nonnull final Object value) {
+        final boolean multiValue = value instanceof Object[];
         if (Check.hasLength(sqlCondition)) {
             writeOperator(andOperator, conditionCounter++ > 0);
-            sql.add(sqlCondition);
             if (Check.hasLength(operator)) {
+                final Object[] values =  multiValue? (Object[]) value : new Object[]{value};
+                sql.add(sqlCondition);
                 sql.add(operator);
-                if (value != null) {
-                    sql.add(VALUE_MARKER);
+                if (multiValue) {
+                    sql.add("(");
                 }
-            }
-            if (value != null) {
-               arguments.add(value);
+                for (int i = 0; i < values.length; i++) {
+                    if (i > 0) {
+                        sql.add(ITEM_SEPARATOR);
+                    }
+                    addValue(values[i]);
+                }
+                if (multiValue) {
+                    sql.add(")");
+                }
+            } else {
+                Assert.isTrue(!multiValue, "Many arguments are disabled inside a function");
+                int i = value != null ? sqlCondition.toString().indexOf(VALUE_MARKER) : -1;
+                if (i >= 0) {
+                    int i2 = i - (i > 0 && sqlCondition.charAt(i - 1 ) == SPACE ? 1 : 0); // Remove last space, if any
+                    write(sqlCondition.subSequence(0, i2));
+                    addValue(value);
+                    writeNoSpace(sqlCondition.subSequence(i + VALUE_MARKER.length(), sqlCondition.length()));
+                } else {
+                    sql.add(sqlCondition);
+                }
             }
         }
         return this;
@@ -296,48 +289,33 @@ public final class JdbcBuilder implements Serializable {
         }
     }
 
-    /**
-     * Add a condition for an <strong>argument</strong> with length
-     * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}
-     * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
-     * @param values Values of the condition (a replacement for the question character). To ignore the method, send a {@code null} value.
-     */
-    @Nonnull
-    public JdbcBuilder condition(@Nullable final Boolean andOperator, @Nonnull final CharSequence sqlCondition, @Nonnull final String operator, @Nullable Object... values) {
-        if (Check.hasLength(sqlCondition) && Check.hasLength(values)) {
-            assert values != null;
-            writeOperator(andOperator, conditionCounter++ > 0);
-            sql.add(sqlCondition);
-            sql.add(operator);
-            sql.add("(");
-            for (int i = 0; i < values.length; i++) {
-                if (i > 0) {
-                    sql.add(ITEM_SEPARATOR);
-                }
-                sql.add(VALUE_MARKER);
-                arguments.add(values[i]);
-            }
-            sql.add(")");
-        }
-        return this;
-    }
-
     /** Add an argument value (including a SEPARATOR and a MARKER) for buidling a SQL INSERT statement
      * @see #addArguments(java.lang.Object...)
      */
     @Nonnull
-    public JdbcBuilder value(@Nonnull final Object param) {
-        if (!arguments.isEmpty()) {
-            sql.add(ITEM_SEPARATOR);
+    public JdbcBuilder value(@Nonnull final Object value) {
+        if (value != null && !arguments.isEmpty()) {
+                sql.add(ITEM_SEPARATOR);
         }
-        sql.add(VALUE_MARKER);
-        arguments.add(param);
+        return addValue(value);
+    }
+
+    /** Add a value to SQL (inlucing MARKER)
+     * @param value A {@code null} value is ignored
+     * @see #addArguments(java.lang.Object...)
+     */
+    @Nonnull
+    protected JdbcBuilder addValue(@Nullable final Object value) {
+        if (value != null) {
+            sql.add(new MarkerEnvelope(value));
+            arguments.add(value);
+        }
         return this;
     }
 
     /** Add argument values with no SAPARATOR and no MARKER (for a common use)
      * @see #value(java.lang.Object)
-     * @see #rawWrite(java.lang.CharSequence)
+     * @see #writeNoSpace(java.lang.CharSequence)
      */
     @Nonnull
     public JdbcBuilder addArguments(final @Nonnull Object ... values) {
@@ -400,14 +378,15 @@ public final class JdbcBuilder implements Serializable {
 
     /** Returns a SQL text */
     @Nonnull
-    public String getSql() {
-        final StringBuilder result = new StringBuilder(getBufferSizeEstimation());
+    public String getSql(final boolean preview) {
+        final CharArrayWriter result = new CharArrayWriter(getBufferSizeEstimation(preview));
+        final ValuePrinter printer = preview ? createValuePrinter(result) : null;
         int columnCounter = 0;
 
         for (int i = 0, max = sql.size(); i < max; i++) {
             final CharSequence item = sql.get(i);
-            if (item instanceof Envelope) {
-                if (((Envelope) item).isColumn()) {
+            if (item instanceof SqlEnvelope) {
+                if (((SqlEnvelope) item).isColumn()) {
                     if (columnCounter++ > 0) {
                         result.append(ITEM_SEPARATOR);
                     }
@@ -416,52 +395,84 @@ public final class JdbcBuilder implements Serializable {
             } else if (i > 0) {
                 result.append(SPACE);
             }
-            result.append(item);
+            if (printer != null && item instanceof MarkerEnvelope) {
+                printer.appendValue(((MarkerEnvelope) item).getValue());
+            } else {
+                result.append(item);
+            }
         }
 
         if (insertMode) {
             result.append(" VALUES (");
             for (int i = 0, max = arguments.size(); i < max; i++) {
-                result.append(i > 0 ? ITEM_SEPARATOR : "")
-                      .append(SPACE)
-                      .append(VALUE_MARKER);
+                result.append(i > 0 ? ITEM_SEPARATOR : "").append(SPACE);
+                if (printer != null) {
+                    printer.appendValue(arguments.get(i));
+                } else {
+                    result.append(VALUE_MARKER);
+                }
             }
             result.append(" )");
         }
         return result.toString();
     }
 
+    /** Create a value printer */
+    @Nonnull
+    protected static ValuePrinter createValuePrinter(@Nonnull final CharArrayWriter result) {
+        return new ValuePrinter(VALUE_MARKER,  "'",  result);
+    }
+
     /** Estimate a buffer size in characters */
-    protected int getBufferSizeEstimation() {
+    protected int getBufferSizeEstimation(final boolean preview) {
         final int averageItemSize = 8;
-        return (sql.size() + 2 - (insertMode ? 0 : arguments.size())) * averageItemSize + arguments.size() * 3;
+        return (sql.size() + 2 - (insertMode ? 0 : arguments.size())) * averageItemSize + arguments.size() * (preview ? 10 : 3);
     }
 
-    /** Returns a SQL including values */
-    @Override @Nonnull
+    /** Returns a SQL statement */
+    @Nonnull
+    public String getSql() {
+        return getSql(false);
+    }
+
+    /** Returns a SQL preview including values */
+    @Nonnull
     public String toString() {
-        return new SimpleValuePrinter
-            ( String.valueOf(VALUE_MARKER)
-            , "'"
-            , new CharArrayWriter(64))
-            .formatMsg(getSql(), getArguments());
+        return getSql(true);
     }
 
-    // -------- Inner class --------
+    // -------- Inner classes --------
 
-    /** Raw XML code envelope */
-    protected static final class Envelope implements CharSequence {
-        /** SQL content */
-        private final CharSequence body;
+    /** A value marker envelope */
+    protected static class MarkerEnvelope extends ProxySequence {
+        /** Value argumenent */
+        @Nonnull
+        private final Object value;
 
-        private final boolean column;
-
-        public Envelope(@Nonnull final CharSequence body) {
-            this(body, false);
+        protected MarkerEnvelope(@Nonnull final Object value) {
+            super(VALUE_MARKER);
+            this.value = value;
         }
 
-        public Envelope(@Nonnull final CharSequence body, final boolean column) {
-            this.body = body;
+        /** SQL argumenent */
+        @Nonnull
+        public Object getValue() {
+            return value;
+        }
+    }
+
+    /** A SQL fragment */
+    protected static class SqlEnvelope extends ProxySequence {
+
+        /** Is a column description */
+        private final boolean column;
+
+        protected SqlEnvelope(@Nonnull final CharSequence sql) {
+            this(sql, false);
+        }
+
+        protected SqlEnvelope(@Nonnull final CharSequence sql, final boolean column) {
+            super(sql);
             this.column = column;
         }
 
@@ -469,26 +480,5 @@ public final class JdbcBuilder implements Serializable {
         public boolean isColumn() {
             return column;
         }
-
-        @Override
-        public int length() {
-            return body.length();
-        }
-
-        @Override
-        public char charAt(final int index) {
-            return body.charAt(index);
-        }
-
-        @Override
-        public CharSequence subSequence(int start, int end) {
-            return body.subSequence(start, end);
-        }
-
-        @Override
-        public String toString() {
-            return body.toString();
-        }
     }
 }
-

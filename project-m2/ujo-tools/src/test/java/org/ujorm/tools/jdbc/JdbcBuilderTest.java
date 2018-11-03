@@ -119,20 +119,20 @@ public class JdbcBuilderTest {
             .columnUpdate("name", "Test")
             .columnUpdate("created", someDate)
             .write(Sql.WHERE)
-            .andCondition("created", Sql.EQ, someDate)
+            .andCondition("created = ( ? )", Sql.UNDEFINED, someDate)
             .andCondition("id", Sql.IN, 10, 20, 30)
-            .andCondition("name", "IS NOT NULL", Sql.UNDEFINED)
+            .andCondition("name", Sql.IS_NOT_NULL, null)
             ;
         String expResult1 = "UPDATE testTable"
                 + " SET name = ?"
                 +    ", created = ?"
-                + " WHERE created = ?"
+                + " WHERE created = ( ? )"
                 + " AND id IN ( ?, ?, ? )"
                 + " AND name IS NOT NULL";
         String expResult2 = "UPDATE testTable"
                 + " SET name = 'Test'"
                 +    ", created = 2018-09-12"
-                + " WHERE created = 2018-09-12"
+                + " WHERE created = ( 2018-09-12 )"
                 + " AND id IN ( 10, 20, 30 )"
                 + " AND name IS NOT NULL";
 

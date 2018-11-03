@@ -109,20 +109,20 @@ public class JdbcBuilderOriginalTest {
             .columnUpdate("name", "Test")
             .columnUpdate("created", someDate)
             .write("WHERE")
-            .andCondition("created = ?", someDate)
+            .andCondition("created = ( ? )", null, someDate)
             .andCondition("id", "IN", 10, 20, 30)
-            .andCondition("name", "IS NOT NULL", (String) null)
+            .andCondition("name", "IS NOT NULL", null)
             ;
         String expResult1 = "UPDATE testTable"
                 + " SET name = ?"
                 +    ", created = ?"
-                + " WHERE created = ?"
+                + " WHERE created = ( ? )"
                 + " AND id IN ( ?, ?, ? )"
                 + " AND name IS NOT NULL";
         String expResult2 = "UPDATE testTable"
                 + " SET name = 'Test'"
                 +    ", created = 2018-09-12"
-                + " WHERE created = 2018-09-12"
+                + " WHERE created = ( 2018-09-12 )"
                 + " AND id IN ( 10, 20, 30 )"
                 + " AND name IS NOT NULL";
 
@@ -206,7 +206,7 @@ public class JdbcBuilderOriginalTest {
             .columnUpdate("created", someDate.plusDays(1))
             .write("WHERE")
             .andCondition("name", "IS NOT NULL", (String) null)
-            .andCondition("created = ?", someDate)
+            .andCondition("created = ?", null, someDate)
             .andCondition("id", "IN", 10, 20, 30)
             ;
         sql.executeUpdate(dbConnection);

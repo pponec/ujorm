@@ -89,12 +89,12 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
     /** Print the condition in a human reading format. */
     @Override
     public String toString() {
-        return toPrinter(new ValuePrinter(256)).toString();
+        return toPrinter(new SimpleValuePrinter(256)).toString();
     }
    
     /** Print the condition in a human reading format. */
     @Override
-    public ValuePrinter toPrinter(@Nonnull ValuePrinter out) {
+    public SimpleValuePrinter toPrinter(@Nonnull SimpleValuePrinter out) {
         final boolean parentheses = operator != BinaryOperator.AND;
         final boolean notOperator = operator == BinaryOperator.NOT;
         if ( parentheses) out.append('(');
