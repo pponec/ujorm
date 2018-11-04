@@ -110,25 +110,25 @@ public class JdbcBuilderOriginalTest {
             .columnUpdate("created", someDate)
             .write("WHERE")
             .andCondition("id", "IN", 10, 20, 30)
-            .andCondition("created = ( ? )", null, someDate)
+            .andCondition("created BETWEEN ? AND ?", null, someDate, someDate.plusMonths(1))
             .andCondition("name", "IS NOT NULL", null)
             ;
         String expResult1 = "UPDATE testTable"
                 + " SET name = ?"
                 +    ", created = ?"
                 + " WHERE id IN ( ?, ?, ? )"
-                + " AND created = ( ? )"
+                + " AND created BETWEEN ? AND ?"
                 + " AND name IS NOT NULL";
         String expResult2 = "UPDATE testTable"
                 + " SET name = 'Test'"
                 +    ", created = 2018-09-12"
                 + " WHERE id IN ( 10, 20, 30 )"
-                + " AND created = ( 2018-09-12 )"
+                + " AND created BETWEEN 2018-09-12 AND 2018-10-12"
                 + " AND name IS NOT NULL";
 
         assertEquals(expResult1, sql.getSql());
         assertEquals(expResult2, sql.toString());
-        assertEquals(6, sql.getArguments().length);
+        assertEquals(7, sql.getArguments().length);
         assertEquals("Test", sql.getArguments()[0]);
         assertEquals(someDate, sql.getArguments()[1]);
         assertEquals(10, sql.getArguments()[2]);
@@ -137,7 +137,7 @@ public class JdbcBuilderOriginalTest {
 
     @Test
     public void testShowUsage() throws ClassNotFoundException, SQLException {
-        try (Connection dbConnection = createTable(createDbConnection()))  {
+        try (Connection dbConnection = createTable(createDbConnection())) {
             showInsert(dbConnection);
             showSelect(dbConnection);
             showSelectForSingleValue(dbConnection);
@@ -205,11 +205,12 @@ public class JdbcBuilderOriginalTest {
             .write("UPDATE testTable SET")
             .columnUpdate("created", someDate.plusDays(1))
             .write("WHERE")
-            .andCondition("name", "IS NOT NULL", (String) null)
-            .andCondition("created = ?", null, someDate)
             .andCondition("id", "IN", 10, 20, 30)
+            .andCondition("created BETWEEN ? AND ?", null, someDate, someDate.plusMonths(1))
+            .andCondition("name", "IS NOT NULL", null)
             ;
-        sql.executeUpdate(dbConnection);
+        int count = sql.executeUpdate(dbConnection);
+        assertEquals(1, count);
     }
 
     /** Crete new DB connection */

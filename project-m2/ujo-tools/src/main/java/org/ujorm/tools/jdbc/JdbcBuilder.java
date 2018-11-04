@@ -70,7 +70,7 @@ import org.ujorm.tools.set.LoopingIterator;
  *     .columnUpdate("date", SOME_DATE)
  *     .write("WHERE")
  *     .andCondition("id", "IN", 10, 20, 30)
- *     .andCondition("created = (?)", <strong>null</strong>, someDate)
+ *     .andCondition("created BETWEEN ? AND ?", <strong>null</strong>, someDate, someDate.plusMonths(1))
  *     .andCondition("name", "IS NOT NULL", <strong>null</strong>)
  * sql.executeUpdate(dbConnection);
  * </pre>
@@ -243,11 +243,11 @@ public final class JdbcBuilder implements Serializable {
      */
     @Nonnull
     public JdbcBuilder condition(@Nullable final Boolean andOperator, @Nullable final CharSequence sqlCondition, @Nullable final String operator, @Nonnull final Object value) {
-        final boolean multiValue = value instanceof Object[];
         if (Check.hasLength(sqlCondition)) {
             writeOperator(andOperator, conditionCounter++ > 0);
+            final boolean multiValue = value instanceof Object[];
+            final Object[] values =  multiValue ? (Object[]) value : new Object[]{value};
             if (Check.hasLength(operator)) {
-                final Object[] values =  multiValue? (Object[]) value : new Object[]{value};
                 sql.add(sqlCondition);
                 sql.add(operator);
                 if (multiValue) {
@@ -263,16 +263,20 @@ public final class JdbcBuilder implements Serializable {
                     sql.add(")");
                 }
             } else {
-                Assert.isTrue(!multiValue, "Many arguments are disabled inside a function");
-                int i = value != null ? sqlCondition.toString().indexOf(VALUE_MARKER) : -1;
-                if (i >= 0) {
-                    int i2 = i - (i > 0 && sqlCondition.charAt(i - 1 ) == SPACE ? 1 : 0); // Remove last space, if any
-                    write(sqlCondition.subSequence(0, i2));
-                    addValue(value);
-                    writeNoSpace(sqlCondition.subSequence(i + VALUE_MARKER.length(), sqlCondition.length()));
-                } else {
-                    sql.add(sqlCondition);
+                writeNoSpace(String.valueOf(SPACE));
+                String cond = String.valueOf(sqlCondition);
+                for (Object val : values) {
+                    int i = cond.indexOf(VALUE_MARKER);
+                    if (i >= 0) {
+                        int i2 = i - (i > 0 && cond.charAt(i - 1 ) == SPACE ? 1 : 0); // Remove last space, if any
+                        writeNoSpace(cond.subSequence(0, i2));
+                        addValue(val);
+                    } else {
+                        sql.add(cond);
+                    }
+                    cond = cond.substring(i + VALUE_MARKER.length());
                 }
+                writeNoSpace(cond);
             }
         }
         return this;

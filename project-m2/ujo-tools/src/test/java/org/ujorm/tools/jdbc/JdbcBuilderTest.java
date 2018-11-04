@@ -120,25 +120,25 @@ public class JdbcBuilderTest {
             .columnUpdate("created", someDate)
             .write(Sql.WHERE)
             .andCondition("id", Sql.IN, 10, 20, 30)
-            .andCondition("created = ( ? )", Sql.UNDEFINED, someDate)
+            .andCondition("created" + Sql.BETWEEN, Sql.UNDEFINED, someDate, someDate.plusMonths(1))
             .andCondition("name", Sql.IS_NOT_NULL, Sql.UNDEFINED)
             ;
         String expResult1 = "UPDATE testTable"
                 + " SET name = ?"
                 +    ", created = ?"
                 + " WHERE id IN ( ?, ?, ? )"
-                + " AND created = ( ? )"
+                + " AND created BETWEEN ? AND ?"
                 + " AND name IS NOT NULL";
         String expResult2 = "UPDATE testTable"
                 + " SET name = 'Test'"
                 +    ", created = 2018-09-12"
                 + " WHERE id IN ( 10, 20, 30 )"
-                + " AND created = ( 2018-09-12 )"
+                + " AND created BETWEEN 2018-09-12 AND 2018-10-12"
                 + " AND name IS NOT NULL";
 
         assertEquals(expResult1, sql.getSql());
         assertEquals(expResult2, sql.toString());
-        assertEquals(6, sql.getArguments().length);
+        assertEquals(7, sql.getArguments().length);
         assertEquals("Test", sql.getArguments()[0]);
         assertEquals(someDate, sql.getArguments()[1]);
         assertEquals(10, sql.getArguments()[2]);
@@ -223,9 +223,12 @@ public class JdbcBuilderTest {
             .write(Sql.SET)
             .columnUpdate("created", someDate.plusDays(1))
             .write(Sql.WHERE)
-            .andCondition("id", Sql.EQ, 10)
+            .andCondition("id", Sql.IN, 10, 20, 30)
+            .andCondition("created" + Sql.BETWEEN, null, someDate, someDate.plusMonths(1))
+            .andCondition("name", Sql.IS_NOT_NULL, Sql.UNDEFINED)
             ;
-        sql.executeUpdate(dbConnection);
+        int count = sql.executeUpdate(dbConnection);
+        assertEquals(1, count);
     }
 
     /** Crete new DB connection */

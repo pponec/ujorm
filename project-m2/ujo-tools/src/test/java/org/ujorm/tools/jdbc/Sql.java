@@ -39,6 +39,7 @@ public interface Sql {
     String LE = "<=";
     String NOT_EQ = "<>";
     String IN = "IN";
+    String BETWEEN = " BETWEEN ? AND ?";
 
     // --- Others ---
 
