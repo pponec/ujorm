@@ -2,7 +2,7 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.87-SNAPSHOT
+release 1.88-SNAPSHOT
 + ...
 
 release 1.87 (2018-11-03)
