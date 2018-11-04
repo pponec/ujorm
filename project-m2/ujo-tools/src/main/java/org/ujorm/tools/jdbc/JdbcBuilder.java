@@ -38,14 +38,13 @@ import org.ujorm.tools.set.LoopingIterator;
  *
  * <h3>How to use a SELECT</h3>
  * <pre class="pre">
- * JdbcBuilder sql = new JdbcBuilder()
+ * JdbcBuilder sql = <strong>new</strong> JdbcBuilder()
  *     .write("SELECT")
  *     .column("t.id")
  *     .column("t.name")
  *     .write("FROM testTable t WHERE")
- *     .andCondition("t.date", "&gt;=", someDate);
- *     .andCondition("t.id", "IN", 10, 20, 30);
- *
+ *     .andCondition("t.name", "=", "Test")
+ *     .andCondition("t.created", "&gt;=", someDate);
  * for (ResultSet rs : sql.executeSelect(dbConnection)) {
  *      int id = rs.getInt(1);
  *      String name = rs.getString(2);
@@ -54,7 +53,7 @@ import org.ujorm.tools.set.LoopingIterator;
  *
  * <h3>How to use a INSERT</h3>
  * <pre class="pre">
- * JdbcBuilder sql = new JdbcBuilder()
+ * JdbcBuilder sql = <strong>new</strong> JdbcBuilder()
  *     .write("INSERT INTO testTable (")
  *     .columnInsert("id", 10)
  *     .columnInsert("name", "Test")
@@ -65,13 +64,14 @@ import org.ujorm.tools.set.LoopingIterator;
  *
  * <h3>How to use a UPDATE</h3>
  * <pre class="pre">
- * JdbcBuilder sql = new JdbcBuilder()
+ * JdbcBuilder sql = <strong>new</strong> JdbcBuilder()
  *     .write("UPDATE testTable SET")
  *     .columnUpdate("name", "Test")
  *     .columnUpdate("date", SOME_DATE)
  *     .write("WHERE")
- *     .andCondition("id", "&gt;", 10)
- *     .andCondition("id", "&lt;", 20);
+ *     .andCondition("id", "IN", 10, 20, 30)
+ *     .andCondition("created = (?)", <strong>null</strong>, someDate)
+ *     .andCondition("name", "IS NOT NULL", <strong>null</strong>)
  * sql.executeUpdate(dbConnection);
  * </pre>
  * For more information see a <a target="_blank"
