@@ -28,8 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.dom.HtmlElement;
 import org.ujorm.tools.dom.XmlElement;
-import org.ujorm.ujoservlet.tools.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
+import org.ujorm.ujoservlet.tools.Html;
 
 /**
  * A live example of the HtmlElement inside a servlet.
@@ -73,7 +73,7 @@ public class FormServlet extends HttpServlet {
                     .addAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
                     .addAttrib(Html.A_ID, field.getName())
                     .addAttrib(Html.A_NAME, field.getName())
-                    .addAttrib(Html.A_VALUE, input.getParameter(field.getName()));
+                    .addAttrib(Html.A_VALUE, field.getValue(input));
             field.getErrorMessage(input, postMethod).ifPresent(msg -> valueCell.addElement(Html.DIV)
                     .addAttrib(Html.A_CLASS, "error")
                     .addText(msg)); // Raw validation message
@@ -137,6 +137,11 @@ public class FormServlet extends HttpServlet {
                 }
             }
             return Optional.empty();
+        }
+
+        /** Get a request value */
+        public String getValue(HttpServletRequest input) {
+            return submit ? "Submit" : input.getParameter(name);
         }
     }
 
