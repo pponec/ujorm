@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.dom.HtmlElement;
-import org.ujorm.ujoservlet.tools.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
+import org.ujorm.ujoservlet.tools.Html;
 
 /**
  * A live example of the HtmlElement inside a servlet.
@@ -44,7 +44,7 @@ public class HelloServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        final HtmlElement html = new HtmlElement("My name", StandardCharsets.UTF_8);
+        final HtmlElement html = new HtmlElement("Demo", StandardCharsets.UTF_8);
         html.addCssLink("welcomeForm.css");
         html.addElementToBody(Html.H1)
                 .addText("Hello, World!");
