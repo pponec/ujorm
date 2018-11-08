@@ -57,25 +57,23 @@ public class FormServlet extends HttpServlet {
         final String title = "Simple user form";
         final HtmlElement html = new HtmlElement(title, charset);
         html.addCssLink("welcomeForm.css");
+        html.addElementToBody(Html.H1).addText(title);
         final XmlElement form = html.addElementToBody(Html.FORM)
                 .addAttrib(Html.A_METHOD, Html.V_POST)
                 .addAttrib(Html.A_ACTION, postMethod ? null : input.getRequestURI());
-        form.addElement(Html.H1).addText(title);
-        final XmlElement table = form.addElement(Html.TABLE);
         for (Field field : getFieldDescription()) {
-            final XmlElement row = table.addElement(Html.TR);
-            row.addElement(Html.TD)
-                    .addElement(Html.LABEL)
+            final XmlElement row = form.addElement(Html.DIV)
+                    .addAttrib(Html.A_CLASS, field.isSubmit() ? "submit" : null);
+            row.addElement(Html.LABEL)
                     .addAttrib(Html.A_FOR, field.getName())
-                    .addText(field.getLabelSeparated());
-            XmlElement valueCell = row.addElement(Html.TD);
-            valueCell.addElement(Html.INPUT)
+                    .addText(field.getLabel());
+            XmlElement inputBox = row.addElement(Html.DIV);
+            inputBox.addElement(Html.INPUT)
                     .addAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
                     .addAttrib(Html.A_ID, field.getName())
                     .addAttrib(Html.A_NAME, field.getName())
                     .addAttrib(Html.A_VALUE, field.getValue(input));
-            field.getErrorMessage(input, postMethod).ifPresent(msg -> valueCell.addElement(Html.DIV)
-                    .addAttrib(Html.A_CLASS, "error")
+            field.getErrorMessage(input, postMethod).ifPresent(msg -> inputBox.addElement(Html.SPAN)
                     .addText(msg)); // Raw validation message
         }
 
@@ -90,7 +88,7 @@ public class FormServlet extends HttpServlet {
                         , new Field("E-mail", "email", "^[\\w\\.=-]+@[\\w\\.-]+\\.[\\w]{2,3}$")
                         , new Field("Phone number", "phone", "^\\+?[ \\d]{9,15}$")
                         , new Field("Nickname", "nick", "^.{3,10}$")
-                        , new Field("", "submit", "", true)};
+                        , new Field(" ", "submit", "", true)};
         return reslt;
     }
 
@@ -112,9 +110,8 @@ public class FormServlet extends HttpServlet {
             this.submit = submit;
         }
 
-        public String getLabelSeparated() {
-            char separator = submit || label.isEmpty() ? ' ' : ':';
-            return label + separator;
+        public String getLabel() {
+            return label;
         }
 
         public String getName() {

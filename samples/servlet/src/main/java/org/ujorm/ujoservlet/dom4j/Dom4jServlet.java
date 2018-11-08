@@ -59,30 +59,32 @@ public class Dom4jServlet extends HttpServlet {
         Document document = DocumentHelper.createDocument();
         Element html = document.addElement(Html.HTML);
         Element head = html.addElement(Html.HEAD);
+        head.addElement(Html.META)
+                .addAttribute(Html.A_CHARSET, charset.toString());
+        head.addElement(Html.TITLE)
+                .addText(title);
         head.addElement(Html.LINK)
                 .addAttribute(Html.A_HREF, "welcomeForm.css")
                 .addAttribute(Html.A_REL, "stylesheet")
                 .addAttribute(Html.A_TYPE, "text/css");
         final Element body = html.addElement(Html.BODY);
+        body.addElement(Html.H1).addText(title);
         final Element form = body.addElement(Html.FORM)
                 .addAttribute(Html.A_METHOD, Html.V_POST)
                 .addAttribute(Html.A_ACTION, postMethod ? null : input.getRequestURI());
-        form.addElement(Html.H1).addText(title);
-        final Element table = form.addElement(Html.TABLE);
         for (Field field : getFieldDescription()) {
-            final Element row = table.addElement(Html.TR);
-            row.addElement(Html.TD)
-                    .addElement(Html.LABEL)
+            final Element row = form.addElement(Html.DIV)
+                    .addAttribute(Html.A_CLASS, field.isSubmit() ? "submit" : null);
+            row.addElement(Html.LABEL)
                     .addAttribute(Html.A_FOR, field.getName())
-                    .addText(field.getLabelSeparated());
-            Element valueCell = row.addElement(Html.TD);
-            valueCell.addElement(Html.INPUT)
+                    .addText(field.getLabel());
+            Element inputBox = row.addElement(Html.DIV);
+            inputBox.addElement(Html.INPUT)
                     .addAttribute(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
                     .addAttribute(Html.A_ID, field.getName())
                     .addAttribute(Html.A_NAME, field.getName())
-                    .addAttribute(Html.A_VALUE, input.getParameter(field.getName()));
-            field.getErrorMessage(input, postMethod).ifPresent(msg -> valueCell.addElement(Html.DIV)
-                    .addAttribute(Html.A_CLASS, "error")
+                    .addAttribute(Html.A_VALUE, field.getValue(input));
+            field.getErrorMessage(input, postMethod).ifPresent(msg -> inputBox.addElement(Html.SPAN)
                     .addText(msg)); // Raw validation message
         }
 
@@ -100,6 +102,9 @@ public class Dom4jServlet extends HttpServlet {
         }
         OutputFormat format = OutputFormat.createPrettyPrint();
         format.setNewlines(true);
+        format.setEncoding(charset.toString());
+        format.setXHTML(true);
+        output.getWriter().write( "<!DOCTYPE html>");
         HTMLWriter writer = new HTMLWriter(output.getWriter(), format);
         writer.write(document);
         writer.flush();
@@ -107,18 +112,17 @@ public class Dom4jServlet extends HttpServlet {
 
     /** Form field description data */
     private Field[] getFieldDescription() {
-        Field[] reslt = {new Field("First name", "firstname", "^.{2,99}$"),
-             new Field("Last name", "lastname", "^.{2,99}$"),
-             new Field("E-mail", "email", "^[\\w\\.=-]+@[\\w\\.-]+\\.[\\w]{2,3}$"),
-             new Field("Phone number", "phone", "^\\+?[ \\d]{9,15}$"),
-             new Field("Nickname", "nick", "^.{3,10}$"),
-             new Field("", "submit", "", true)};
+        Field[] reslt = { new Field("First name", "firstname", "^.{2,99}$")
+                        , new Field("Last name", "lastname", "^.{2,99}$")
+                        , new Field("E-mail", "email", "^[\\w\\.=-]+@[\\w\\.-]+\\.[\\w]{2,3}$")
+                        , new Field("Phone number", "phone", "^\\+?[ \\d]{9,15}$")
+                        , new Field("Nickname", "nick", "^.{3,10}$")
+                        , new Field(" ", "submit", "", true)};
         return reslt;
     }
 
     /** Form field description class */
     static class Field {
-
         private final String label;
         private final String name;
         private final String regexp;
@@ -135,9 +139,8 @@ public class Dom4jServlet extends HttpServlet {
             this.submit = submit;
         }
 
-        public String getLabelSeparated() {
-            char separator = submit || label.isEmpty() ? ' ' : ':';
-            return label + separator;
+        public String getLabel() {
+            return label;
         }
 
         public String getName() {
@@ -156,10 +159,15 @@ public class Dom4jServlet extends HttpServlet {
                     return Optional.of("Required field");
                 }
                 if (Check.hasLength(regexp) && !Pattern.matches(regexp, value)) {
-                    return Optional.of("Wrong value for: " + regexp); // localiza it!
+                     return Optional.of("Wrong value for: " + regexp); // localiza it!
                 }
             }
             return Optional.empty();
+        }
+
+        /** Get a request value */
+        public String getValue(HttpServletRequest input) {
+            return submit ? "Submit" : input.getParameter(name);
         }
     }
 
