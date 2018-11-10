@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.dom.HtmlElement;
 import org.ujorm.tools.dom.XmlElement;
-import org.ujorm.ujoservlet.tools.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
+import org.ujorm.ujoservlet.tools.Html;
 
 /**
  * A live example of the HtmlElement inside a servlet.
@@ -84,5 +84,6 @@ public class TableServlet extends HttpServlet {
     /** No implementation */
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+        doGet(input, output);
     }
 }
