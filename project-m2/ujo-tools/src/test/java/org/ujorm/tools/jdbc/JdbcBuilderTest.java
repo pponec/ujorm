@@ -80,6 +80,38 @@ public class JdbcBuilderTest {
         assertEquals(10, sql.getArguments()[0]);
     }
 
+    /** Test SQL INSERT By SELECT */
+    @Test
+    public void testInsertBySelect() {
+        System.out.println("INSERT by SELECT");
+        JdbcBuilder select = new JdbcBuilder()
+            .write(Sql.SELECT)
+            .column("t.id + 100")
+            .column("t.name")
+            .column("t.created")
+            .write(Sql.FROM)
+            .write("testTable t")
+            .write(Sql.WHERE)
+            .andCondition("t.id", Sql.LT, 100)
+            ;
+        JdbcBuilder sql = new JdbcBuilder()
+            .write(Sql.INSERT_INTO)
+            .write("testTable")
+            .write("(")
+            .column("id")
+            .column("name")
+            .column("created")
+            .write(")")
+            .write(select)
+            ;
+        String expResult1 = "INSERT INTO testTable ( id, name, created ) SELECT t.id + 100, t.name, t.created FROM testTable t WHERE t.id < ?";
+        String expResult2 = "INSERT INTO testTable ( id, name, created ) SELECT t.id + 100, t.name, t.created FROM testTable t WHERE t.id < 100";
+
+        assertEquals(expResult1, sql.getSql());
+        assertEquals(expResult2, sql.toString());
+        assertEquals(1, sql.getArguments().length);
+    }
+
     /** Test raw SQL INSERT of class JdbcBuillder for a better performace and general use. */
     @Test @Deprecated
     public void testInsertRaw() {
@@ -199,7 +231,7 @@ public class JdbcBuilderTest {
         }
     }
 
-    /** How to UPDATE single value (no commit) */
+    /** How to INSERT (no commit) */
     public void showInsert(@Nonnull Connection dbConnection) throws SQLException {
         System.out.println("Show INSERT");
         JdbcBuilder sql = new JdbcBuilder()
@@ -269,7 +301,7 @@ public class JdbcBuilderTest {
             .write(Sql.WHERE)
             .andCondition("id", Sql.IN, 10, 20, 30)
             .andCondition("created" + Sql.BETWEEN, null, someDate, someDate.plusMonths(1))
-            .andCondition("name", Sql.IS_NOT_NULL, Sql.UNDEFINED)
+            .andCondition("name", Sql.IS_NOT_NULL)
             ;
         int count = sql.executeUpdate(dbConnection);
         assertEquals(1, count);

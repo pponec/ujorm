@@ -76,6 +76,34 @@ public class JdbcBuilderOriginalTest {
         assertEquals(10, sql.getArguments()[0]);
     }
 
+    /** Test SQL INSERT By SELECT */
+    @Test
+    public void testInsertBySelect() {
+        System.out.println("INSERT by SELECT");
+        JdbcBuilder select = new JdbcBuilder()
+            .write("SELECT")
+            .column("t.id + 100")
+            .column("t.name")
+            .column("t.created")
+            .write("FROM testTable t WHERE")
+            .andCondition("t.id", Sql.LT, 100)
+            ;
+        JdbcBuilder sql = new JdbcBuilder()
+            .write("INSERT INTO testTable (")
+            .column("id")
+            .column("name")
+            .column("created")
+            .write(")")
+            .write(select)
+            ;
+        String expResult1 = "INSERT INTO testTable ( id, name, created ) SELECT t.id + 100, t.name, t.created FROM testTable t WHERE t.id < ?";
+        String expResult2 = "INSERT INTO testTable ( id, name, created ) SELECT t.id + 100, t.name, t.created FROM testTable t WHERE t.id < 100";
+
+        assertEquals(expResult1, sql.getSql());
+        assertEquals(expResult2, sql.toString());
+        assertEquals(1, sql.getArguments().length);
+    }
+
     /** Test raw SQL INSERT of class JdbcBuillder for a better performace and general use. */
     @Test
     public void testInsertRaw() {
@@ -111,7 +139,7 @@ public class JdbcBuilderOriginalTest {
             .write("WHERE")
             .andCondition("id", "IN", 10, 20, 30)
             .andCondition("created BETWEEN ? AND ?", null, someDate, someDate.plusMonths(1))
-            .andCondition("name", "IS NOT NULL", null)
+            .andCondition("name", "IS NOT NULL")
             ;
         String expResult1 = "UPDATE testTable"
                 + " SET name = ?"
@@ -174,7 +202,6 @@ public class JdbcBuilderOriginalTest {
         assertEquals(expResult2, sql.toString());
         assertEquals(3, sql.getArguments().length);
     }
-
 
     @Test
     public void testShowUsage() throws ClassNotFoundException, SQLException {
@@ -248,7 +275,7 @@ public class JdbcBuilderOriginalTest {
             .write("WHERE")
             .andCondition("id", "IN", 10, 20, 30)
             .andCondition("created BETWEEN ? AND ?", null, someDate, someDate.plusMonths(1))
-            .andCondition("name", "IS NOT NULL", null)
+            .andCondition("name", "IS NOT NULL")
             ;
         int count = sql.executeUpdate(dbConnection);
         assertEquals(1, count);
