@@ -100,6 +100,9 @@ public final class JdbcBuilder implements Serializable {
     /** Condition counter */
     protected int conditionCounter = 0;
 
+    /** Column counter */
+    protected int columnCounter = 0;
+
     /** An insert sign for different rendering */
     protected boolean insertMode = false;
 
@@ -114,12 +117,11 @@ public final class JdbcBuilder implements Serializable {
         this.arguments = arguments;
     }
 
-    /** Concatenates the specified statement to the end of this statement. */
+    /** Add a another statement to the end of this statement. */
     @Nonnull
-    public JdbcBuilder concat(@Nonnull final JdbcBuilder builder) {
+    public JdbcBuilder write(@Nonnull final JdbcBuilder builder) {
         this.sql.addAll(builder.sql);
         this.arguments.addAll(builder.arguments);
-        this.conditionCounter += builder.conditionCounter;
 
         return this;
     }
@@ -167,7 +169,7 @@ public final class JdbcBuilder implements Serializable {
     /** Add new column */
     @Nonnull
     public JdbcBuilder column(@Nonnull final CharSequence column) {
-        sql.add(new SqlEnvelope(column, true));
+        sql.add(new SqlEnvelope(column, columnCounter++));
         return this;
     }
 
@@ -175,7 +177,7 @@ public final class JdbcBuilder implements Serializable {
     @Nonnull
     public JdbcBuilder columnUpdate(@Nonnull final CharSequence column, @Nonnull final Object value) {
         Assert.validState(!insertMode, "An insertion mode has been started.");
-        sql.add(new SqlEnvelope(column, true));
+        sql.add(new SqlEnvelope(column, columnCounter++));
         sql.add("=");
         addValue(value);
 
@@ -186,7 +188,7 @@ public final class JdbcBuilder implements Serializable {
     @Nonnull
     public JdbcBuilder columnInsert(@Nonnull final CharSequence column, @Nonnull final Object value) {
         insertMode = true;
-        sql.add(new SqlEnvelope(column, true));
+        sql.add(new SqlEnvelope(column, columnCounter++));
         arguments.add(value);
         return this;
     }
@@ -391,13 +393,13 @@ public final class JdbcBuilder implements Serializable {
     public String getSql(final boolean preview) {
         final CharArrayWriter result = new CharArrayWriter(getBufferSizeEstimation(preview));
         final ValuePrinter printer = preview ? createValuePrinter(result) : null;
-        int columnCounter = 0;
 
         for (int i = 0, max = sql.size(); i < max; i++) {
             final CharSequence item = sql.get(i);
             if (item instanceof SqlEnvelope) {
-                if (((SqlEnvelope) item).isColumn()) {
-                    if (columnCounter++ > 0) {
+                final SqlEnvelope env = (SqlEnvelope) item;
+                if (env.isColumn()) {
+                    if (env.getColumnOrder() > 0) {
                         result.append(ITEM_SEPARATOR);
                     }
                     result.append(SPACE);
@@ -475,20 +477,30 @@ public final class JdbcBuilder implements Serializable {
     protected static class SqlEnvelope extends ProxySequence {
 
         /** Is a column description */
-        private final boolean column;
+        private final short columnOrder;
 
+        /** Default constructor */
         protected SqlEnvelope(@Nonnull final CharSequence sql) {
-            this(sql, false);
+            this(sql, (short) -1);
         }
 
-        protected SqlEnvelope(@Nonnull final CharSequence sql, final boolean column) {
+        /**
+         * Column constructor
+         * @param sql
+         * @param columnOrder The first position have got zero.
+         */
+        protected SqlEnvelope(@Nonnull final CharSequence sql, final int columnOrder) {
             super(sql);
-            this.column = column;
+            this.columnOrder = (short) columnOrder;
         }
 
         /** A column sign */
         public boolean isColumn() {
-            return column;
+            return columnOrder >= 0;
+        }
+
+        public int getColumnOrder() {
+            return columnOrder;
         }
     }
 }

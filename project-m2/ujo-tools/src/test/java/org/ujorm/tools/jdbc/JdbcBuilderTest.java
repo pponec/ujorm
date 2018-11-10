@@ -145,6 +145,50 @@ public class JdbcBuilderTest {
         assertEquals(20, sql.getArguments()[3]);
     }
 
+    /** Test SQL UPDATE of class JdbcBuillder. */
+    @Test
+    public void testUpdateBySelect() {
+        System.out.println("UPDATE by SELECT");
+
+        JdbcBuilder select = new JdbcBuilder()
+            .write(Sql.SELECT)
+            .column("t.id")
+            .write(Sql.FROM)
+            .write("testTable t")
+            .write(Sql.WHERE)
+            .andCondition("t.created", Sql.GE, someDate)
+            ;
+        JdbcBuilder sql = new JdbcBuilder()
+            .write(Sql.UPDATE)
+            .write("testTable")
+            .write(Sql.SET)
+            .columnUpdate("name", "Test")
+            .columnUpdate("created", someDate.plusDays(11))
+            .write(Sql.WHERE)
+            .writeMany("id", Sql.IN, "(")
+            .write(select)
+            .write(")")
+            ;
+
+        String expResult1 = "UPDATE testTable"
+                + " SET name = ?"
+                +    ", created = ?"
+                + " WHERE id IN ("
+                + " SELECT t.id FROM testTable t WHERE t.created >= ?"
+                + " )"
+                ;
+        String expResult2 = "UPDATE testTable"
+                + " SET name = 'Test'"
+                +    ", created = 2018-09-23"
+                + " WHERE id IN ("
+                + " SELECT t.id FROM testTable t WHERE t.created >= 2018-09-12"
+                + " )"
+                ;
+        assertEquals(expResult1, sql.getSql());
+        assertEquals(expResult2, sql.toString());
+        assertEquals(3, sql.getArguments().length);
+    }
+
     @Test
     public void testShowUsage() throws ClassNotFoundException, SQLException {
         try (Connection dbConnection = createTable(createDbConnection()))  {
