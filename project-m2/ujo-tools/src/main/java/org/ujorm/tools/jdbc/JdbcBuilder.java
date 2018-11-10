@@ -199,7 +199,8 @@ public final class JdbcBuilder implements Serializable {
      */
     @Nonnull
     public JdbcBuilder andCondition(@Nonnull final CharSequence sqlCondition, @Nullable final String operator, @Nullable final Object value) {
-        return condition(true, sqlCondition, operator, value);
+        writeOperator(true, conditionCounter++ > 0);
+        return condition(sqlCondition, operator, value);
     }
 
     /**
@@ -210,7 +211,10 @@ public final class JdbcBuilder implements Serializable {
      */
     @Nonnull
     public JdbcBuilder andCondition(@Nonnull final CharSequence sqlCondition, @Nonnull final String operator, @Nullable final Object... values) {
-        return condition(true, sqlCondition, operator, values);
+        writeOperator(true, conditionCounter++ > 0);
+        return Check.hasLength(values)
+             ? condition(sqlCondition, operator, values)
+             : condition(sqlCondition, operator, null);
     }
 
     /**
@@ -221,7 +225,8 @@ public final class JdbcBuilder implements Serializable {
      */
     @Nonnull
     public JdbcBuilder orCondition(@Nonnull final CharSequence sqlCondition, @Nullable final String operator, @Nullable final Object value) {
-        return condition(false, sqlCondition, operator, value);
+        writeOperator(false, conditionCounter++ > 0);
+        return condition(sqlCondition, operator, value);
     }
 
     /**
@@ -232,19 +237,20 @@ public final class JdbcBuilder implements Serializable {
      */
     @Nonnull
     public JdbcBuilder orCondition(@Nonnull final CharSequence sqlCondition, @Nonnull final String operator, @Nullable final Object... values) {
-        return condition(false, sqlCondition, operator, values);
+        writeOperator(false, conditionCounter++ > 0);
+        return Check.hasLength(values)
+             ? condition(sqlCondition, operator, values)
+             : condition(sqlCondition, operator, null);
     }
 
     /** Add a condition for an <strong>argument</strong> with length
-     * @param andOperator Print a join operator, or nothing for {@code null} value
      * @param sqlCondition A condition in the SQL format like the next: {@code "table.id = ?"}. Send a {@code null} value to ignore the method.
      * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
      * @param value Add a value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}. An array is supported
      */
     @Nonnull
-    public JdbcBuilder condition(@Nullable final Boolean andOperator, @Nullable final CharSequence sqlCondition, @Nullable final String operator, @Nonnull final Object value) {
+    public JdbcBuilder condition(@Nullable final CharSequence sqlCondition, @Nullable final String operator, @Nonnull final Object value) {
         if (Check.hasLength(sqlCondition)) {
-            writeOperator(andOperator, conditionCounter++ > 0);
             final boolean multiValue = value instanceof Object[];
             final Object[] values =  multiValue ? (Object[]) value : new Object[]{value};
             if (Check.hasLength(operator)) {
@@ -287,8 +293,8 @@ public final class JdbcBuilder implements Serializable {
      * @param andOperator
      * @param enabled
      */
-    protected void writeOperator(@Nullable final Boolean andOperator, final boolean enabled) {
-        if (andOperator != null && enabled) {
+    protected void writeOperator(@Nullable final boolean andOperator, final boolean enabled) {
+        if (enabled) {
             sql.add(andOperator ? "AND" : "OR");
         }
     }
