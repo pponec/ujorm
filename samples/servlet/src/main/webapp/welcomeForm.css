@@ -30,6 +30,14 @@ form {
     width: 450px;
 }
 
+
+span {
+    color: #b06464;
+    font-style: italic;
+    display: block;
+    margin-bottom: 3px;
+}
+
 /** The CSS based on the Bootstrap framework (https://getbootstrap.com/docs/4.1/components/forms/?gridRadios=option2#horizontal-form) */
 
 form > div {
@@ -93,6 +101,7 @@ input[type=text] {
 }
 
 input[type=submit] {
+    cursor: pointer;
     margin-top: 20px;
     min-width: 100px;
 
@@ -113,10 +122,4 @@ input[type=submit] {
     border-radius: .25rem;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     text-transform: none;
-}
-
-span {
-    color: #b06464;
-    font-style: italic;
-    margin-bottom: 4px;
 }
