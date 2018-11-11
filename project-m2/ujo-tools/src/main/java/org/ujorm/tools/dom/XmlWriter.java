@@ -21,11 +21,12 @@ import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.tools.Check;
 
 /**
  * A XML writer
- * @see XmlElement
+ * @see XmlElement Default implementation of the ElementWriter
  * @since 1.88
  * @author Pavel Ponec
  */
@@ -35,19 +36,37 @@ public class XmlWriter<T extends XmlElement> implements ElementWriter<T> {
     @Nonnull
     protected final Writer out;
 
-    /** Default constructor */
+    /** An element offset is enabled */
+    protected final boolean offsetEnabled;
+
+    /** An offset space */
+    @Nullable
+    protected final String offsetSpace;
+
+    /** Default constructor a zero offset */
     public XmlWriter() {
         this(new CharArrayWriter(512));
     }
 
-    /** Writer constructor */
+    /** Writer constructor with a zero offset */
     public XmlWriter(@Nonnull final Writer out) {
+        this(out, "");
+    }
+
+    /**
+     * A writer constructor
+     * @param out A writer
+     * @param offsetSpace String for a one level offset.
+     */
+    public XmlWriter(@Nonnull final Writer out, @Nullable final String offsetSpace) {
         this.out = out;
+        this.offsetEnabled = Check.hasLength(offsetSpace);
+        this.offsetSpace = offsetSpace;
     }
 
     /** Render the XML code without header */
     @Override @Nonnull
-    public ElementWriter write(@Nonnull final T element) throws IOException {
+    public ElementWriter write(final int level, @Nonnull final T element) throws IOException {
         out.append(XML_LT);
         out.append(element.name);
 
@@ -67,11 +86,11 @@ public class XmlWriter<T extends XmlElement> implements ElementWriter<T> {
             for (Object child : element.children) {
                 if (child instanceof XmlElement) {
                     if (writeNewLine) {
-                       out.append(CHAR_NEW_LINE);
+                        newLine(level);
                     } else {
                         writeNewLine = true;
                     }
-                    write((T)child);
+                    write(level + 1, (T)child);
                 } else if (child instanceof XmlElement.RawEnvelope) {
                     out.append(((XmlElement.RawEnvelope) child).get());
                     writeNewLine = false;
@@ -81,14 +100,23 @@ public class XmlWriter<T extends XmlElement> implements ElementWriter<T> {
                 }
             }
             out.append(XML_LT);
-            out.append('/');
+            out.append(FORWARD_SLASH);
             out.append(element.name);
         } else {
-            out.append('/');
+            out.append(FORWARD_SLASH);
         }
         out.append(XML_GT);
-
         return this;
+    }
+
+    /** Write a new line with an offset */
+    protected void newLine(final int level) throws IOException {
+        out.append(CHAR_NEW_LINE);
+        if (offsetEnabled) {
+            for (int i = level - 1; i >= 0; i--) {
+                out.append(offsetSpace);
+            }
+        }
     }
 
     /**
@@ -138,7 +166,5 @@ public class XmlWriter<T extends XmlElement> implements ElementWriter<T> {
              ? result
              : String.valueOf(result);
     }
-
-
 
 }

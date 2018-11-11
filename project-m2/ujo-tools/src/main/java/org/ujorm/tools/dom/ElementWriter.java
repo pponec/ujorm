@@ -41,6 +41,8 @@ public interface ElementWriter<T extends Element> {
     char CHAR_SPACE = ' ';
     /** A new line character */
     char CHAR_NEW_LINE = '\n';
+    /** A forward slash character */
+    char FORWARD_SLASH = '/';
     /** A CDATA beg markup sequence */
     String CDATA_BEG = "<![CDATA[";
     /** A CDATA end markup sequence */
@@ -52,7 +54,7 @@ public interface ElementWriter<T extends Element> {
 
     /** Render an XML element */
     @Nonnull
-    public ElementWriter write(@Nonnull T element) throws IOException;
+    public ElementWriter write(final int level, @Nonnull T element) throws IOException;
 
 
 }

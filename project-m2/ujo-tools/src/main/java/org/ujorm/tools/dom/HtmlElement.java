@@ -127,7 +127,7 @@ public class HtmlElement extends XmlElement {
     @Override @Nonnull
     public String toString() throws IllegalStateException {
         try {
-            return toWriter(new XmlWriter<>(new CharArrayWriter(512)
+            return toWriter(0, new XmlWriter<>(new CharArrayWriter(512)
                     .append(HEADER)
                     .append(CHAR_NEW_LINE)))
                     .toString();
@@ -158,7 +158,7 @@ public class HtmlElement extends XmlElement {
             }
 
             final Writer writer = (Writer) getWriter.invoke(httpServletResponse);
-            toWriter(new XmlWriter<>(writer.append(HtmlElement.HEADER).append(CHAR_NEW_LINE)));
+            toWriter(0, new XmlWriter<>(writer.append(HtmlElement.HEADER).append(CHAR_NEW_LINE)));
             writer.flush();
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);

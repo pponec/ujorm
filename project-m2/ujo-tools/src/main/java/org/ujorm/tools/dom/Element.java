@@ -120,7 +120,7 @@ public interface Element {
 
     /** Render the XML code without header */
     @Nonnull
-    public ElementWriter toWriter(@Nonnull final ElementWriter out) throws IOException;
+    public ElementWriter toWriter(final int level, @Nonnull final ElementWriter out) throws IOException;
 
 
 }
