@@ -17,7 +17,6 @@
 package org.ujorm.tools.dom;
 
 import java.io.IOException;
-import java.io.Writer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -121,7 +120,7 @@ public interface Element {
 
     /** Render the XML code without header */
     @Nonnull
-    public Writer toWriter(@Nonnull Writer out) throws IOException;
+    public ElementWriter toWriter(@Nonnull final ElementWriter out) throws IOException;
 
 
 }

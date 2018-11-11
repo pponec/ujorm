@@ -19,7 +19,6 @@ package org.ujorm.tools.dom;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -67,11 +66,11 @@ public class XmlElement implements Element {
 
     /** Attributes */
     @Nullable
-    private Map<String, Object> attributes;
+    protected Map<String, Object> attributes;
 
     /** Child elements */
     @Nullable
-    private List<Object> children;
+    protected List<Object> children;
 
     /** The new element constructor
      * @param name The parameter must not be empty or contain any special HTML characters.
@@ -225,51 +224,14 @@ public class XmlElement implements Element {
         return (T) this;
     }
 
-    /**
-     * Write escaped value to the output
-     * @param value A value
-     * @param attribute Render the value to an element attribute, or a text
-     * @param out An output writer
-     * @throws IOException
-     */
-    protected void writeValue(@Nonnull final Object value, final boolean attribute, @Nonnull final Writer out) throws IOException {
-        final CharSequence text = value instanceof CharSequence ? (CharSequence) value : String.valueOf(value);
-        for (int i = 0, max = text.length(); i < max; i++) {
-            final char c = text.charAt(i);
-            switch (c) {
-                case XML_LT:
-                    out.append(XML_AMP).append("lt;");
-                    break;
-                case XML_GT:
-                    out.append(XML_AMP).append("gt;");
-                    break;
-                case XML_AMP:
-                    out.append(XML_AMP).append("#38;");
-                    break;
-                case XML_QUOT:
-                    out.append(XML_AMP).append("#39;");
-                    break;
-                case XML_2QUOT:
-                    out.append(XML_AMP).append("#34;");
-                    break;
-                default: {
-                    if (c > 32 || c == CHAR_SPACE) {
-                        out.append(c);
-                    } else {
-                        out.append(XML_AMP).append("#");
-                        out.append(Integer.toString(c));
-                        out.append(";");
-                    }
-                }
-            }
-        }
-    }
-
-    /** Render the XML code including header */
+    /** Render the XML code including a header */
     @Override @Nonnull
     public String toString() {
         try {
-            return toWriter(new CharArrayWriter(512).append(HEADER).append(CHAR_NEW_LINE)).toString();
+            return toWriter(new XmlWriter<>(new CharArrayWriter(512)
+                    .append(HEADER)
+                    .append(CHAR_NEW_LINE))
+            ).toString();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -277,49 +239,10 @@ public class XmlElement implements Element {
 
     /** Render the XML code without header */
     @Override @Nonnull
-    public Writer toWriter(@Nonnull final Writer out) throws IOException {
-        out.append(XML_LT);
-        out.append(name);
-
-        if (Check.hasLength(attributes)) {
-            for (String key : attributes.keySet()) {
-                out.append(CHAR_SPACE);
-                out.append(key);
-                out.append('=');
-                out.append(XML_2QUOT);
-                writeValue(attributes.get(key), true, out);
-                out.append(XML_2QUOT);
-            }
-        }
-        if (Check.hasLength(children)) {
-            out.append(XML_GT);
-            boolean writeNewLine = true;
-            for (Object child : children) {
-                if (child instanceof XmlElement) {
-                    if (writeNewLine) {
-                       out.append(CHAR_NEW_LINE);
-                    } else {
-                        writeNewLine = true;
-                    }
-                    ((XmlElement)child).toWriter(out);
-                } else if (child instanceof RawEnvelope) {
-                    out.append(((RawEnvelope) child).get());
-                    writeNewLine = false;
-                } else {
-                    writeValue(child, false, out);
-                    writeNewLine = false;
-                }
-            }
-            out.append(XML_LT);
-            out.append('/');
-            out.append(name);
-        } else {
-            out.append('/');
-        }
-        out.append(XML_GT);
-
-        return out;
+    public ElementWriter toWriter(@Nonnull final ElementWriter out) throws IOException {
+        return out.write(this);
     }
+
 
     // -------- Inner class --------
 
