@@ -20,17 +20,44 @@ package org.ujorm.tools.dom;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Check;
 
 /**
  * A XML writer
- * @see XmlElement Default implementation of the ElementWriter
+ * @see XmlElement Default implementation of the XmlWriter
  * @since 1.88
  * @author Pavel Ponec
  */
-public class XmlWriter<T extends XmlElement> implements ElementWriter<T> {
+public class XmlWriter {
+
+    /** A special XML character */
+    public static final char XML_GT = '>';
+    /** A special XML character */
+    public static final char XML_LT = '<';
+    /** A special XML character */
+    public static final char XML_AMP = '&';
+    /** A special XML character */
+    public static final char XML_QUOT = '\'';
+    /** A special XML character */
+    public static final char XML_2QUOT = '"';
+    /** A special XML character */
+    public static final char CHAR_SPACE = ' ';
+    /** A new line character */
+    public static final char CHAR_NEW_LINE = '\n';
+    /** A forward slash character */
+    public static final char FORWARD_SLASH = '/';
+    /** A CDATA beg markup sequence */
+    public static final String CDATA_BEG = "<![CDATA[";
+    /** A CDATA end markup sequence */
+    public static final String CDATA_END = "]]>";
+    /** A comment beg sequence */
+    public static final String COMMENT_BEG = "<!--";
+    /** A comment end sequence */
+    public static final String COMMENT_END = "-->";
 
     /** Writer */
     @Nonnull
@@ -65,32 +92,44 @@ public class XmlWriter<T extends XmlElement> implements ElementWriter<T> {
     }
 
     /** Render the XML code without header */
-    @Override @Nonnull
-    public ElementWriter write(final int level, @Nonnull final T element) throws IOException {
-        out.append(XML_LT);
-        out.append(element.name);
+    @Nonnull
+    public final XmlWriter write(final int level, @Nonnull final XmlElement element) throws IOException {
+        return write(level, element.name, element.attributes, element.children, element);
+    }
 
-        if (Check.hasLength(element.attributes)) {
-            for (String key : element.attributes.keySet()) {
+    /** Render the XML code without header */
+    @Nonnull
+    protected XmlWriter write(final int level
+            , @Nonnull final CharSequence name
+            , @Nullable final Map<String, Object> attributes
+            , @Nullable final List<Object> children
+            , @Nonnull final XmlElement element) throws IOException {
+        out.append(XML_LT);
+        out.append(name);
+
+        if (Check.hasLength(attributes)) {
+            assert attributes != null; // For static analyzer only
+            for (String key : attributes.keySet()) {
                 out.append(CHAR_SPACE);
                 out.append(key);
                 out.append('=');
                 out.append(XML_2QUOT);
-                writeValue(element.attributes.get(key), true, out);
+                writeValue(attributes.get(key), true, out);
                 out.append(XML_2QUOT);
             }
         }
-        if (Check.hasLength(element.children)) {
+        if (Check.hasLength(children)) {
+            assert children != null; // For static analyzer only
             out.append(XML_GT);
             boolean writeNewLine = true;
-            for (Object child : element.children) {
+            for (Object child : children) {
                 if (child instanceof XmlElement) {
                     if (writeNewLine) {
                         newLine(level);
                     } else {
                         writeNewLine = true;
                     }
-                    write(level + 1, (T)child);
+                    write(level + 1, (XmlElement) child);
                 } else if (child instanceof XmlElement.RawEnvelope) {
                     out.append(((XmlElement.RawEnvelope) child).get());
                     writeNewLine = false;
@@ -101,7 +140,7 @@ public class XmlWriter<T extends XmlElement> implements ElementWriter<T> {
             }
             out.append(XML_LT);
             out.append(FORWARD_SLASH);
-            out.append(element.name);
+            out.append(name);
         } else {
             out.append(FORWARD_SLASH);
         }

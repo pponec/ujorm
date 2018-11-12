@@ -56,17 +56,17 @@ public class XmlElementTest {
         System.out.println("AddCDATA");
 
         XmlElement root = new XmlElement("root");
-        root.addCDATA(MsgFormatter.format("A{}B{}C", XmlElement.CDATA_BEG, XmlElement.CDATA_END));
+        root.addCDATA(MsgFormatter.format("A{}B{}C", XmlWriter.CDATA_BEG, XmlWriter.CDATA_END));
         String expected =XmlElement.HEADER + "\n<root><![CDATA[A<![CDATA[B]]>]]&gt;<![CDATA[C]]></root>";
         assertEquals(expected, root.toString());
 
         root = new XmlElement("root");
-        root.addCDATA(MsgFormatter.format("{}ABC{}", XmlElement.CDATA_BEG, XmlElement.CDATA_END));
+        root.addCDATA(MsgFormatter.format("{}ABC{}", XmlWriter.CDATA_BEG, XmlWriter.CDATA_END));
         expected =XmlElement.HEADER + "\n<root><![CDATA[<![CDATA[ABC]]>]]&gt;<![CDATA[]]></root>";
         assertEquals(expected, root.toString());
 
         root = new XmlElement("root");
-        root.addCDATA(MsgFormatter.format("A{}{}C", XmlElement.CDATA_BEG, XmlElement.CDATA_END));
+        root.addCDATA(MsgFormatter.format("A{}{}C", XmlWriter.CDATA_BEG, XmlWriter.CDATA_END));
         expected =XmlElement.HEADER + "\n<root><![CDATA[A<![CDATA[]]>]]&gt;<![CDATA[C]]></root>";
         assertEquals(expected, root.toString());
 

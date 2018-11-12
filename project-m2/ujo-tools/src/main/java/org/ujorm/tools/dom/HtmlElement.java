@@ -25,6 +25,7 @@ import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.ujorm.tools.dom.XmlWriter.CHAR_NEW_LINE;
 
 /**
  * XML element model to rendering a HTML file
@@ -46,11 +47,11 @@ public class HtmlElement extends XmlElement {
 
     /** Head element */
     @Nonnull
-    private final Element head;
+    private final XmlElement head;
 
     /** Body element */
     @Nonnull
-    private final Element body;
+    private final XmlElement body;
 
     /** Charset */
     @Nonnull
@@ -76,13 +77,13 @@ public class HtmlElement extends XmlElement {
 
     /** Returns header element */
     @Nonnull
-    public <T extends Element> T  getHead() {
+    public <T extends XmlElement> T  getHead() {
         return (T) head;
     }
 
     /** Returns body element */
     @Nonnull
-    public <T extends Element> T  getBody() {
+    public <T extends XmlElement> T  getBody() {
         return (T) body;
     }
 
@@ -90,7 +91,7 @@ public class HtmlElement extends XmlElement {
      * @param name A name of the new XmlElement is requred.
      * @return The new XmlElement!
      */
-    public <T extends Element> T  addElementToHead(@Nonnull final CharSequence name) {
+    public <T extends XmlElement> T  addElementToHead(@Nonnull final CharSequence name) {
         return head.addElement(name);
     }
 
@@ -98,7 +99,7 @@ public class HtmlElement extends XmlElement {
      * @param name A name of the new XmlElement is requred.
      * @return The new XmlElement!
      */
-    public <T extends Element> T  addElementToBody(@Nonnull final CharSequence name) {
+    public <T extends XmlElement> T  addElementToBody(@Nonnull final CharSequence name) {
         return body.addElement(name);
     }
 
@@ -106,7 +107,7 @@ public class HtmlElement extends XmlElement {
      * @param css Add a CSS link
      * @return New CSS element
      */
-    public <T extends Element> T  addCssLink(String css) {
+    public <T extends XmlElement> T  addCssLink(String css) {
         return head.addElement(Html.LINK)
                 .addAttrib(Html.A_HREF, css)
                 .addAttrib(Html.A_REL, "stylesheet")
@@ -117,7 +118,7 @@ public class HtmlElement extends XmlElement {
      * @param css CSS content
      * @return New CSS element
      */
-    public <T extends Element> T  addCssBody(@Nullable final String css) {
+    public <T extends XmlElement> T  addCssBody(@Nullable final String css) {
         return head.addElement(Html.STYLE)
                 .addAttrib(Html.A_TYPE, "text/css")
                 .addRawText(css);
@@ -127,7 +128,7 @@ public class HtmlElement extends XmlElement {
     @Override @Nonnull
     public String toString() throws IllegalStateException {
         try {
-            return toWriter(0, new XmlWriter<>(new CharArrayWriter(512)
+            return toWriter(0, new XmlWriter(new CharArrayWriter(512)
                     .append(HEADER)
                     .append(CHAR_NEW_LINE)))
                     .toString();
@@ -158,7 +159,7 @@ public class HtmlElement extends XmlElement {
             }
 
             final Writer writer = (Writer) getWriter.invoke(httpServletResponse);
-            toWriter(0, new XmlWriter<>(writer.append(HtmlElement.HEADER).append(CHAR_NEW_LINE)));
+            toWriter(0, new XmlWriter(writer.append(HtmlElement.HEADER).append(XmlWriter.CHAR_NEW_LINE)));
             writer.flush();
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);

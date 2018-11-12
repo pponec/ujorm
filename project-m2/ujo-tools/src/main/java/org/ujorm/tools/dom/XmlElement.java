@@ -27,6 +27,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.dom.XmlElement.RawEnvelope;
+import static org.ujorm.tools.dom.XmlWriter.*;
 
 /**
  * XML element model to rendering a XML file.
@@ -55,7 +57,7 @@ import org.ujorm.tools.Check;
  * @since 1.86
  * @author Pavel Ponec
  */
-public class XmlElement implements Element {
+public class XmlElement {
 
     /** XML header */
     public static final String HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
@@ -107,8 +109,8 @@ public class XmlElement implements Element {
      * Add a child element
      * @param element Add a child element is required. An undefined argument is ignored.
      * @return The argument type of XmlElement! */
-    @Override @Nonnull
-    public final <T extends Element> T addElement(@Nonnull final T element) {
+    @Nonnull
+    public final <T extends XmlElement> T addElement(@Nonnull final T element) {
         Assert.notNull(element, "element");
         getChildren().add(element);
         return element;
@@ -118,8 +120,8 @@ public class XmlElement implements Element {
      * @param name A name of the new XmlElement is requred.
      * @return The new XmlElement!
      */
-    @Override @Nonnull
-    public final <T extends Element> T addElement(@Nonnull final CharSequence name) {
+    @Nonnull
+    public final <T extends XmlElement> T addElement(@Nonnull final CharSequence name) {
         Assert.hasLength(name, "Undefined element name");
         return (T) new XmlElement(name, this);
     }
@@ -130,8 +132,8 @@ public class XmlElement implements Element {
      * @param value The {@code null} value is ignored.
      * @return The original element
      */
-    @Override @Nonnull
-    public final <T extends Element> T addAttrib(@Nonnull final CharSequence name, @Nullable final Object value) {
+    @Nonnull
+    public final <T extends XmlElement> T addAttrib(@Nonnull final CharSequence name, @Nullable final Object value) {
         Assert.hasLength(name, "name");
         if (value != null) {
             getAttribs().put(name.toString(), value);
@@ -143,8 +145,8 @@ public class XmlElement implements Element {
      * Add a text and escape special character
      * @param text text An empty argument is ignored.
      * @return This instance */
-    @Override @Nonnull
-    public final <T extends Element> T addText(@Nullable final CharSequence text) {
+    @Nonnull
+    public final <T extends XmlElement> T addText(@Nullable final CharSequence text) {
         if (Check.hasLength(text)) {
             getChildren().add(text);
         }
@@ -155,8 +157,8 @@ public class XmlElement implements Element {
      * Add a text including a space (before and after the text)
      * @param text text An empty argument is ignored.
      * @return This instance */
-    @Override @Nonnull
-    public final <T extends Element> T addTextWithSpace(@Nullable final CharSequence text) {
+    @Nonnull
+    public final <T extends XmlElement> T addTextWithSpace(@Nullable final CharSequence text) {
         if (Check.hasLength(text)) {
             getChildren().add(CHAR_SPACE);
             getChildren().add(text);
@@ -168,8 +170,8 @@ public class XmlElement implements Element {
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param rawText text An empty argument is ignored.
      * @return This instance */
-    @Override @Nonnull
-    public final <T extends Element> T addRawText(@Nullable final CharSequence rawText) {
+    @Nonnull
+    public final <T extends XmlElement> T addRawText(@Nullable final CharSequence rawText) {
         if (Check.hasLength(rawText)) {
             getChildren().add(new RawEnvelope(rawText));
         }
@@ -182,8 +184,8 @@ public class XmlElement implements Element {
      * @param comment A comment text must not contain a string {@code -->} .
      * @return This instance
      */
-    @Override @Nonnull
-    public final <T extends Element> T addComment(@Nullable final CharSequence comment) {
+    @Nonnull
+    public final <T extends XmlElement> T addComment(@Nullable final CharSequence comment) {
         if (Check.hasLength(comment)) {
             Assert.isTrue(!comment.toString().contains(COMMENT_END), "The text contains a forbidden string: " + COMMENT_END);
             StringBuilder msg = new StringBuilder
@@ -205,8 +207,8 @@ public class XmlElement implements Element {
      * @param charData A text including the final DATA sequence. An empty argument is ignored.
      * @return This instance
      */
-    @Override @Nonnull
-    public final <T extends Element> T addCDATA(@Nullable final CharSequence charData) {
+    @Nonnull
+    public final <T extends XmlElement> T addCDATA(@Nullable final CharSequence charData) {
         if (Check.hasLength(charData)) {
             addRawText(CDATA_BEG);
             final String text = charData.toString();
@@ -228,7 +230,7 @@ public class XmlElement implements Element {
     @Override @Nonnull
     public String toString() {
         try {
-            return toWriter(0, new XmlWriter<>(new CharArrayWriter(512)
+            return toWriter(0, new XmlWriter(new CharArrayWriter(512)
                     .append(HEADER)
                     .append(CHAR_NEW_LINE))
             ).toString();
@@ -238,8 +240,8 @@ public class XmlElement implements Element {
     }
 
     /** Render the XML code without header */
-    @Override @Nonnull
-    public ElementWriter toWriter(final int level, @Nonnull final ElementWriter out) throws IOException {
+    @Nonnull
+    public XmlWriter toWriter(final int level, @Nonnull final XmlWriter out) throws IOException {
         return out.write(level, this);
     }
 
