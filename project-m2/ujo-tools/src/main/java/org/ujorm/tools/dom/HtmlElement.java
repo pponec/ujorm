@@ -159,11 +159,21 @@ public class HtmlElement extends XmlElement {
             }
 
             final Writer writer = (Writer) getWriter.invoke(httpServletResponse);
-            toWriter(0, new XmlWriter(writer.append(HtmlElement.HEADER).append(XmlWriter.CHAR_NEW_LINE)));
+            toWriter(new XmlWriter(writer.append(HtmlElement.HEADER).append(XmlWriter.CHAR_NEW_LINE)));
             writer.flush();
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
         }
+    }
+
+    /**
+     * Render the component to a {@link XmlWriter}
+     * @param xmlWriter An instance of the XmlWriter is required.
+     * @throws IOException An writting error.
+     * @throws IllegalArgumentException Wrong argument type
+     */
+    public void toWriter(@Nonnull final XmlWriter xmlWriter) throws IOException, IllegalArgumentException {
+            toWriter(0, xmlWriter);
     }
 
     /** Some HTML constants */
