@@ -28,7 +28,7 @@ import org.ujorm.tools.Check;
 
 /**
  * If you need special formatting, overwrite responsible methods.
- * @see XmlElement Default implementation of the XmlWriter
+ * @see XmlElement
  * @since 1.88
  * @author Pavel Ponec
  */
