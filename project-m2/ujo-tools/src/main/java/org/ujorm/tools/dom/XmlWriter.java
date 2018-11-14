@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import org.ujorm.tools.Check;
 
 /**
- * A XML writer
+ * If you need special formatting, overwrite responsible methods.
  * @see XmlElement Default implementation of the XmlWriter
  * @since 1.88
  * @author Pavel Ponec
@@ -97,7 +97,14 @@ public class XmlWriter {
         return write(level, element.name, element.attributes, element.children, element);
     }
 
-    /** Render the XML code without header */
+    /** Render the XML code without header
+     * @param level Element nesting level.
+     * @param name Name of element
+     * @param attributes Attributes of the element
+     * @param children Childern of the element
+     * @param element Original element
+     * @return This
+     */
     @Nonnull
     protected XmlWriter write(final int level
             , @Nonnull final CharSequence name
@@ -114,7 +121,7 @@ public class XmlWriter {
                 out.append(key);
                 out.append('=');
                 out.append(XML_2QUOT);
-                writeValue(attributes.get(key), true, out);
+                writeValue(attributes.get(key), name, true, out);
                 out.append(XML_2QUOT);
             }
         }
@@ -134,7 +141,7 @@ public class XmlWriter {
                     out.append(((XmlElement.RawEnvelope) child).get());
                     writeNewLine = false;
                 } else {
-                    writeValue(child, false, out);
+                    writeValue(child, name, false, out);
                     writeNewLine = false;
                 }
             }
@@ -161,11 +168,12 @@ public class XmlWriter {
     /**
      * Write escaped value to the output
      * @param value A value
+     * @param elementName A name of the element
      * @param attribute Render the value to an element attribute, or a text
      * @param out An output writer
      * @throws IOException
      */
-    protected void writeValue(@Nonnull final Object value, final boolean attribute, @Nonnull final Writer out) throws IOException {
+    protected void writeValue(@Nonnull final Object value, @Nonnull final CharSequence elementName, final boolean attribute, @Nonnull final Writer out) throws IOException {
         final CharSequence text = value instanceof CharSequence ? (CharSequence) value : String.valueOf(value);
         for (int i = 0, max = text.length(); i < max; i++) {
             final char c = text.charAt(i);
