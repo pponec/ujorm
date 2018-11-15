@@ -93,7 +93,7 @@ public class XmlWriter {
 
     /** Render the XML code without header */
     @Nonnull
-    public final XmlWriter write(final int level, @Nonnull final XmlElement element) throws IOException {
+    public XmlWriter write(final int level, @Nonnull final XmlElement element) throws IOException {
         return write(level, element.name, element.attributes, element.children, element);
     }
 
@@ -121,7 +121,7 @@ public class XmlWriter {
                 out.append(key);
                 out.append('=');
                 out.append(XML_2QUOT);
-                writeValue(attributes.get(key), name, true, out);
+                writeValue(attributes.get(key), element, key, out);
                 out.append(XML_2QUOT);
             }
         }
@@ -141,7 +141,7 @@ public class XmlWriter {
                     out.append(((XmlElement.RawEnvelope) child).get());
                     writeNewLine = false;
                 } else {
-                    writeValue(child, name, false, out);
+                    writeValue(child, element, null, out);
                     writeNewLine = false;
                 }
             }
@@ -165,15 +165,13 @@ public class XmlWriter {
         }
     }
 
-    /**
-     * Write escaped value to the output
-     * @param value A value
-     * @param elementName A name of the element
-     * @param attribute Render the value to an element attribute, or a text
+    /** Write escaped value to the output
+     * @param value A value to write
+     * @param element The element
+     * @param attribute A name of the XML attribute of {@code null} value for a XML text.
      * @param out An output writer
-     * @throws IOException
      */
-    protected void writeValue(@Nonnull final Object value, @Nonnull final CharSequence elementName, final boolean attribute, @Nonnull final Writer out) throws IOException {
+    protected void writeValue(@Nonnull final Object value, @Nonnull final XmlElement element, final @Nullable String attribute, @Nonnull final Writer out) throws IOException {
         final CharSequence text = value instanceof CharSequence ? (CharSequence) value : String.valueOf(value);
         for (int i = 0, max = text.length(); i < max; i++) {
             final char c = text.charAt(i);
@@ -213,5 +211,4 @@ public class XmlWriter {
              ? result
              : String.valueOf(result);
     }
-
 }

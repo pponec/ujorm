@@ -20,6 +20,7 @@ package org.ujorm.tools.dom;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,7 @@ public class XmlElement {
     /** New element with a parent */
     public XmlElement(@Nonnull final CharSequence name, @Nonnull final XmlElement parent) {
         this(name);
-        parent.getChildren().add(this);
+        parent.addChild(this);
     }
 
     /** Return attributes */
@@ -96,13 +97,13 @@ public class XmlElement {
         return attributes;
     }
 
-    /** Return child entities */
+    /** Add a child entity */
     @Nonnull
-    protected List<Object> getChildren() {
+    protected void addChild(@Nonnull final Object child) {
         if (children == null) {
             children = new ArrayList<>();
         }
-        return children;
+        children.add(child);
     }
 
     /**
@@ -112,7 +113,7 @@ public class XmlElement {
     @Nonnull
     public final <T extends XmlElement> T addElement(@Nonnull final T element) {
         Assert.notNull(element, "element");
-        getChildren().add(element);
+        addChild(element);
         return element;
     }
 
@@ -136,7 +137,10 @@ public class XmlElement {
     public final <T extends XmlElement> T addAttrib(@Nonnull final CharSequence name, @Nullable final Object value) {
         Assert.hasLength(name, "name");
         if (value != null) {
-            getAttribs().put(name.toString(), value);
+            if (attributes == null) {
+                attributes = new LinkedHashMap<>();
+            }
+            attributes.put(name.toString(), value);
         }
         return (T) this;
     }
@@ -148,7 +152,7 @@ public class XmlElement {
     @Nonnull
     public final <T extends XmlElement> T addText(@Nullable final CharSequence text) {
         if (Check.hasLength(text)) {
-            getChildren().add(text);
+            addChild(text);
         }
         return (T) this;
     }
@@ -160,9 +164,9 @@ public class XmlElement {
     @Nonnull
     public final <T extends XmlElement> T addTextWithSpace(@Nullable final CharSequence text) {
         if (Check.hasLength(text)) {
-            getChildren().add(CHAR_SPACE);
-            getChildren().add(text);
-            getChildren().add(CHAR_SPACE);
+            addChild(CHAR_SPACE);
+            addChild(text);
+            addChild(CHAR_SPACE);
         }
         return (T) this;
     }
@@ -173,7 +177,7 @@ public class XmlElement {
     @Nonnull
     public final <T extends XmlElement> T addRawText(@Nullable final CharSequence rawText) {
         if (Check.hasLength(rawText)) {
-            getChildren().add(new RawEnvelope(rawText));
+            addChild(new RawEnvelope(rawText));
         }
         return (T) this;
     }
@@ -226,7 +230,29 @@ public class XmlElement {
         return (T) this;
     }
 
-    /** Render the XML code including a header */
+    /** Get an element name */
+    @Nonnull
+    public String getName() {
+        return name.toString();
+    }
+
+    /** Get an unmodifiable map of attributes */
+    @Nonnull
+    public Map<String, Object> getAttributes() {
+        return attributes != null
+            ? Collections.unmodifiableMap(attributes)
+            : Collections.emptyMap();
+    }
+
+    /** Get an unmodifiable list of children */
+    @Nonnull
+    public List<Object> getChildren() {
+        return children != null
+            ? Collections.unmodifiableList(children)
+            : Collections.emptyList();
+    }
+
+    /** Render the XML code including header */
     @Override @Nonnull
     public String toString() {
         try {
