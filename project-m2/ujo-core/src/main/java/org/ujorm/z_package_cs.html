@@ -570,33 +570,28 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
         <h2 id="faq">FAQ</h2>
         <ul>
             <li>Q: Seznam objektů Keys je seřazený?</li>
-            <ul><li>A: Záleží to na implementaci.
+            <li>A: Záleží to na implementaci.
                     Třída ArrayUjo vrací seznam seřazený vždy. 
                     Třída MapUjo vrací Keys zpravidla v pořadí ve kterém jsou zapsány ve zdrojovém kódu.
                     Protože však metoda Java reflexe toto pořadí negarantuje, tak v případě, 
                     že je chybné pořadí keys může být kritické je doporučeno nějaké řešení na principu ArrayUjo.
-            </li></ul>
+            </li>
             
             <li>Q: Jaký bude výsledek při čtení hodnot UJO, které nebyly dosud iniciované? </li>
-            <ul><li>A: výsledek je závislý na implementaci UJO objektu</li>
+            <li>A: výsledek je závislý na implementaci UJO objektu</li>
                 <li>B: Výchozí implementaci (AbstractUjo) vrací defaultní hodnotu z Key.</li>
-            </ul>
             
             <li>Q: Je možné nějak vyčistit Keys cache?</li>
-            <ul><li>A: Ano, metodou ve třídě UjoManager.</li>
-            </ul>
+            <li>A: Ano, metodou ve třídě UjoManager.</li>
             
             <li>Q: Jak lokalizovat názvy keys?</li>
-            <ul><li>A: Názvy keys lze použít jako klíč pro vyledání v objektu typu <span style="font-style: italic;">java.util.ResourceBundle</span></li>
-            </ul>
+            <li>A: Názvy keys lze použít jako klíč pro vyledání v objektu typu <span style="font-style: italic;">java.util.ResourceBundle</span></li>
             
             <li>Q: Jsou někde další příklady použití UJO?</li>
-            <ul><li>A: Další příklady najdete kromě aplikace JWorkSheet i v JUnitových testech Ujormu.</li>
-            </ul>
+            <li>A: Další příklady najdete kromě aplikace JWorkSheet i v JUnitových testech Ujormu.</li>
             
             <li>Q: Není zpracování UJO pomalé?</li>
-            <ul><li>A: Implementace je velice rychlá, viz kapitola <a href="package.html#performance">Výkon</a>.</li>
-            </ul>
+            <li>A: Implementace je velice rychlá, viz kapitola <a href="package.html#performance">Výkon</a>.</li>
         </ul>
         
         <!--

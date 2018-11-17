@@ -31,7 +31,7 @@ The Ujorm (original name was UJO Framework) is designed primarily for the rapid 
 ## JavaDoc
 
 * [Module ujo-orm](https://ujorm.org/javadoc/org/ujorm/orm/package-summary.html)
-* [Module ujo-tools](https://pponec.github.io/ujorm/javadoc/1.87/ujo-tools/)
+* [Module ujo-tools](https://pponec.github.io/ujorm/javadoc/1.88/ujo-tools/)
 
 ## Maven Repository
 

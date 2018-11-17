@@ -2,8 +2,12 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.88-SNAPSHOT
+release 1.89-SNAPSHOT
 + ...
+
+release 1.88-SNAPSHOT
++ TOOLS: An API of the XmlElement class is extended
++ TOOLS: An API of the JdbcBuilder class is extended
 
 release 1.87 (2018-11-03)
 + TOOLS: An API of the JdbcBuilder class is extended

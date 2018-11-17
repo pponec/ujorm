@@ -71,7 +71,7 @@ import org.ujorm.tools.set.LoopingIterator;
  *     .write("WHERE")
  *     .andCondition("id", "IN", 10, 20, 30)
  *     .andCondition("created BETWEEN ? AND ?", <strong>null</strong>, someDate, someDate.plusMonths(1))
- *     .andCondition("name", "IS NOT NULL", <strong>null</strong>)
+ *     .andCondition("name", "IS NOT NULL")
  * sql.executeUpdate(dbConnection);
  * </pre>
  * For more information see a <a target="_blank"
