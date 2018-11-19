@@ -53,7 +53,6 @@ public class HelloServlet extends HttpServlet {
         html.toResponse(output, true); // Render the result
     }
 
-    /** No implementation */
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         doGet(input, output);

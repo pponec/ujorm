@@ -81,7 +81,6 @@ public class TableServlet extends HttpServlet {
         return result;
     }
 
-    /** No implementation */
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         doGet(input, output);

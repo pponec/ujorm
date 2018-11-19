@@ -87,7 +87,6 @@ public class MenuServlet extends HttpServlet {
         }
     }
 
-    /** No implementation */
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         doGet(input, output);
