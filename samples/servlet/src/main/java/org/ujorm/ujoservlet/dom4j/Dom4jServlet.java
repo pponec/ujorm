@@ -151,7 +151,7 @@ public class Dom4jServlet extends HttpServlet {
             return submit;
         }
 
-        /** Check the POST value and regurn an error message */
+        /** Check the POST value and return an error message */
         public Optional<String> getErrorMessage(HttpServletRequest input, boolean postMethod) {
             if (postMethod) {
                 final String value = input.getParameter(name);

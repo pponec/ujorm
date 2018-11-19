@@ -34,8 +34,7 @@ import static org.ujorm.tools.dom.XmlWriter.CHAR_NEW_LINE;
  * final HtmlElement html = new HtmlElement("Test");
  * html.getBody().addElement("div")
  *               .addText("Hello word!");
- * HttpServletResponse response = new MockHttpServletResponse();
- * html.toResponse(response, false);
+ * html.toResponse(new MockHttpServletResponse(), false);
  * </pre>
  * @since 1.86
  * @author Pavel Ponec
