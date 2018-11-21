@@ -147,25 +147,25 @@ public class XmlElement {
 
     /**
      * Add a text and escape special character
-     * @param text text An empty argument is ignored.
+     * @param data text An empty argument is ignored.
      * @return This instance */
     @Nonnull
-    public final <T extends XmlElement> T addText(@Nullable final CharSequence text) {
-        if (Check.hasLength(text)) {
-            addChild(text);
+    public final <T extends XmlElement> T addText(@Nullable final Object data) {
+        if (data instanceof CharSequence ? Check.hasLength((CharSequence)data) : data != null) {
+            addChild(data);
         }
         return (T) this;
     }
 
     /**
      * Add a text including a space (before and after the text)
-     * @param text text An empty argument is ignored.
+     * @param data text An empty argument is ignored.
      * @return This instance */
     @Nonnull
-    public final <T extends XmlElement> T addTextWithSpace(@Nullable final CharSequence text) {
-        if (Check.hasLength(text)) {
+    public final <T extends XmlElement> T addTextWithSpace(@Nullable final Object data) {
+        if (data instanceof CharSequence ? Check.hasLength((CharSequence)data) : data != null) {
             addChild(CHAR_SPACE);
-            addChild(text);
+            addChild(data);
             addChild(CHAR_SPACE);
         }
         return (T) this;

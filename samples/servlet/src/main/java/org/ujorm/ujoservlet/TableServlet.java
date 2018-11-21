@@ -56,7 +56,7 @@ public class TableServlet extends HttpServlet {
             final XmlElement rowElement = table.addElement(Html.TR);
             for (Object value : rowValue) {
                 rowElement.addElement(Html.TD)
-                        .addText(String.valueOf(value));
+                        .addText(value);
             }
         }
 
