@@ -152,7 +152,7 @@ public class JdbcBuilderTest {
             .columnUpdate("created", someDate)
             .write(Sql.WHERE)
             .andCondition("id", Sql.IN, 10, 20, 30)
-            .andCondition("created" + Sql.BETWEEN, Sql.UNDEFINED, someDate, someDate.plusMonths(1))
+            .andCondition("created" + Sql.BETWEEN_X_AND_Y, Sql.UNDEFINED, someDate, someDate.plusMonths(1))
             .andCondition("name", Sql.IS_NOT_NULL)
             ;
         String expResult1 = "UPDATE testTable"
@@ -300,7 +300,7 @@ public class JdbcBuilderTest {
             .columnUpdate("created", someDate.plusDays(1))
             .write(Sql.WHERE)
             .andCondition("id", Sql.IN, 10, 20, 30)
-            .andCondition("created" + Sql.BETWEEN, null, someDate, someDate.plusMonths(1))
+            .andCondition("created" + Sql.BETWEEN_X_AND_Y, null, someDate, someDate.plusMonths(1))
             .andCondition("name", Sql.IS_NOT_NULL)
             ;
         int count = sql.executeUpdate(dbConnection);
