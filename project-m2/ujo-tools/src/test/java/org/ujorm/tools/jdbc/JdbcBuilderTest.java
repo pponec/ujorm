@@ -152,7 +152,7 @@ public class JdbcBuilderTest {
             .columnUpdate("created", someDate)
             .write(Sql.WHERE)
             .andCondition("id", Sql.IN, 10, 20, 30)
-            .andCondition("created  BETWEEN ? AND ?", Sql.UNDEFINED, someDate, someDate.plusMonths(1))
+            .andCondition("created BETWEEN ? AND ?", Sql.UNDEFINED, someDate, someDate.plusMonths(1))
             .andCondition("name", Sql.IS_NOT_NULL)
             ;
         String expResult1 = "UPDATE testTable"

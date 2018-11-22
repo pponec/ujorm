@@ -130,24 +130,28 @@ public class XmlElement {
     /**
      * Add an attribute
      * @param name Required element name
-     * @param value The {@code null} value is ignored.
+     * @param data The {@code null} value is ignored. Formatting is performed by the
+     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
+     *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
     @Nonnull
-    public final <T extends XmlElement> T addAttrib(@Nonnull final CharSequence name, @Nullable final Object value) {
+    public final <T extends XmlElement> T addAttrib(@Nonnull final CharSequence name, @Nullable final Object data) {
         Assert.hasLength(name, "name");
-        if (value != null) {
+        if (data != null) {
             if (attributes == null) {
                 attributes = new LinkedHashMap<>();
             }
-            attributes.put(name.toString(), value);
+            attributes.put(name.toString(), data);
         }
         return (T) this;
     }
 
     /**
      * Add a text and escape special character
-     * @param data text An empty argument is ignored.
+     * @param data An empty argument is ignored. Formatting is performed by the
+     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
+     *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Nonnull
     public final <T extends XmlElement> T addText(@Nullable final Object data) {
