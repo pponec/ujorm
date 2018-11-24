@@ -229,7 +229,7 @@ public class JdbcBuilderOriginalTest {
         assertEquals(1, count);
     }
 
-    /** How to SELECT single value */
+    /** How to SELECT value(s) */
     public void showSelect(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         JdbcBuilder sql = new JdbcBuilder()
