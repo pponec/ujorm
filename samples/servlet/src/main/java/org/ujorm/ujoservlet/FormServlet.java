@@ -61,7 +61,7 @@ public class FormServlet extends HttpServlet {
         final XmlElement form = html.addElementToBody(Html.FORM)
                 .addAttrib(Html.A_METHOD, Html.V_POST)
                 .addAttrib(Html.A_ACTION, postMethod ? null : input.getRequestURI());
-        for (Field field : getFieldDescription()) {
+        for (Field field : getFieldDescriptions()) {
             final XmlElement row = form.addElement(Html.DIV)
                     .addAttrib(Html.A_CLASS, field.isSubmit() ? "submit" : null);
             row.addElement(Html.LABEL)
@@ -82,7 +82,7 @@ public class FormServlet extends HttpServlet {
     }
 
     /** Form field description data */
-    private Field[] getFieldDescription() {
+    private Field[] getFieldDescriptions() {
         Field[] reslt = { new Field("First name", "firstname", "^.{2,99}$")
                         , new Field("Last name", "lastname", "^.{2,99}$")
                         , new Field("E-mail", "email", "^[\\w\\.=-]+@[\\w\\.-]+\\.[\\w]{2,3}$")

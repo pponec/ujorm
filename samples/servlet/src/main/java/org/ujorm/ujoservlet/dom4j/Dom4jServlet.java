@@ -72,7 +72,7 @@ public class Dom4jServlet extends HttpServlet {
         final Element form = body.addElement(Html.FORM)
                 .addAttribute(Html.A_METHOD, Html.V_POST)
                 .addAttribute(Html.A_ACTION, postMethod ? null : input.getRequestURI());
-        for (Field field : getFieldDescription()) {
+        for (Field field : getFieldDescriptions()) {
             final Element row = form.addElement(Html.DIV)
                     .addAttribute(Html.A_CLASS, field.isSubmit() ? "submit" : null);
             row.addElement(Html.LABEL)
@@ -111,7 +111,7 @@ public class Dom4jServlet extends HttpServlet {
     }
 
     /** Form field description data */
-    private Field[] getFieldDescription() {
+    private Field[] getFieldDescriptions() {
         Field[] reslt = { new Field("First name", "firstname", "^.{2,99}$")
                         , new Field("Last name", "lastname", "^.{2,99}$")
                         , new Field("E-mail", "email", "^[\\w\\.=-]+@[\\w\\.-]+\\.[\\w]{2,3}$")
