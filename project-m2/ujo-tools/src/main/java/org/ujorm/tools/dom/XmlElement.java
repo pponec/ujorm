@@ -63,9 +63,12 @@ public class XmlElement {
     /** XML header */
     public static final String HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
 
+    /** Assertion message template */
+    protected static final String REQUIRED_MSG = "The {} is required";
+
     /** Element name */
     @Nonnull
-    protected final CharSequence name;
+    protected final String name;
 
     /** Attributes */
     @Nullable
@@ -78,12 +81,13 @@ public class XmlElement {
     /** The new element constructor
      * @param name The parameter must not be empty or contain any special HTML characters.
      */
-    public XmlElement(@Nonnull final CharSequence name) {
+    public XmlElement(@Nonnull final String name) {
+        Assert.notNull(name, REQUIRED_MSG, "name");
         this.name = name;
     }
 
     /** New element with a parent */
-    public XmlElement(@Nonnull final CharSequence name, @Nonnull final XmlElement parent) {
+    public XmlElement(@Nonnull final String name, @Nonnull final XmlElement parent) {
         this(name);
         parent.addChild(this);
     }
@@ -100,6 +104,7 @@ public class XmlElement {
     /** Add a child entity */
     @Nonnull
     protected void addChild(@Nonnull final Object child) {
+        Assert.notNull(child, REQUIRED_MSG, "child");
         if (children == null) {
             children = new ArrayList<>();
         }
@@ -112,18 +117,17 @@ public class XmlElement {
      * @return The argument type of XmlElement! */
     @Nonnull
     public final <T extends XmlElement> T addElement(@Nonnull final T element) {
-        Assert.notNull(element, "element");
+        Assert.notNull(element, REQUIRED_MSG, "element");
         addChild(element);
         return element;
     }
 
     /** Create a new {@link XmlElement} for a required name and add it to children.
-     * @param name A name of the new XmlElement is requred.
+     * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
      */
     @Nonnull
-    public final <T extends XmlElement> T addElement(@Nonnull final CharSequence name) {
-        Assert.hasLength(name, "Undefined element name");
+    public final <T extends XmlElement> T addElement(@Nonnull final String name) {
         return (T) new XmlElement(name, this);
     }
 
@@ -136,26 +140,26 @@ public class XmlElement {
      * @return The original element
      */
     @Nonnull
-    public final <T extends XmlElement> T addAttrib(@Nonnull final CharSequence name, @Nullable final Object data) {
-        Assert.hasLength(name, "name");
+    public final <T extends XmlElement> T addAttrib(@Nonnull final String name, @Nullable final Object data) {
+        Assert.hasLength(name, REQUIRED_MSG, "name");
         if (data != null) {
             if (attributes == null) {
                 attributes = new LinkedHashMap<>();
             }
-            attributes.put(name.toString(), data);
+            attributes.put(name, data);
         }
         return (T) this;
     }
 
     /**
      * Add a text and escape special character
-     * @param data An empty argument is ignored. Formatting is performed by the
+     * @param data The {@code null} value is ignored. Formatting is performed by the
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Nonnull
     public final <T extends XmlElement> T addText(@Nullable final Object data) {
-        if (data instanceof CharSequence ? Check.hasLength((CharSequence)data) : data != null) {
+        if (data != null) {
             addChild(data);
         }
         return (T) this;
@@ -163,11 +167,11 @@ public class XmlElement {
 
     /**
      * Add a text including a space (before and after the text)
-     * @param data text An empty argument is ignored.
+     * @param data The {@code null} value is ignored.
      * @return This instance */
     @Nonnull
     public final <T extends XmlElement> T addTextWithSpace(@Nullable final Object data) {
-        if (data instanceof CharSequence ? Check.hasLength((CharSequence)data) : data != null) {
+        if (data != null) {
             addChild(CHAR_SPACE);
             addChild(data);
             addChild(CHAR_SPACE);
@@ -176,12 +180,12 @@ public class XmlElement {
     }
 
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
-     * @param rawText text An empty argument is ignored.
+     * @param data The {@code null} value is ignored.
      * @return This instance */
     @Nonnull
-    public final <T extends XmlElement> T addRawText(@Nullable final CharSequence rawText) {
-        if (Check.hasLength(rawText)) {
-            addChild(new RawEnvelope(rawText));
+    public final <T extends XmlElement> T addRawText(@Nullable final Object data) {
+        if (data != null) {
+            addChild(new RawEnvelope(data));
         }
         return (T) this;
     }
@@ -281,15 +285,16 @@ public class XmlElement {
     /** Raw XML code envelope */
     protected static final class RawEnvelope {
         /** XML content */
-        private final CharSequence body;
+        @Nonnull
+        private final Object body;
 
-        public RawEnvelope(@Nonnull final CharSequence body) {
+        public RawEnvelope(@Nonnull final Object body) {
             this.body = body;
         }
 
         /** Get the body */
         @Nonnull
-        public CharSequence get() {
+        public Object get() {
             return body;
         }
     }

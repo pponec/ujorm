@@ -132,13 +132,13 @@ public class XmlWriter {
             for (Object child : children) {
                 if (child instanceof XmlElement) {
                     if (writeNewLine) {
-                        newLine(level);
+                        writeNewLine(level);
                     } else {
                         writeNewLine = true;
                     }
                     write(level + 1, (XmlElement) child);
                 } else if (child instanceof XmlElement.RawEnvelope) {
-                    out.append(((XmlElement.RawEnvelope) child).get());
+                    writeRawValue(((XmlElement.RawEnvelope) child).get(), element);
                     writeNewLine = false;
                 } else {
                     writeValue(child, element, null, out);
@@ -155,8 +155,8 @@ public class XmlWriter {
         return this;
     }
 
-    /** Write a new line with an offset */
-    protected void newLine(final int level) throws IOException {
+    /** Write a new line with an offset by the current level */
+    protected void writeNewLine(final int level) throws IOException {
         out.append(CHAR_NEW_LINE);
         if (offsetEnabled) {
             for (int i = level - 1; i >= 0; i--) {
@@ -202,6 +202,15 @@ public class XmlWriter {
                 }
             }
         }
+    }
+
+    /**
+     * Write the content of an envelope
+     * @param rawValue A raw value to print
+     * @param element An original element
+     */
+    protected void writeRawValue(@Nonnull final Object rawValue, @Nonnull final XmlElement element) throws IOException {
+        out.append(rawValue.toString());
     }
 
     @Override @Nonnull

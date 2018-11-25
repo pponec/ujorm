@@ -23,7 +23,7 @@ import java.io.Writer;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.ujorm.tools.Assert;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ujorm.tools.dom.XmlWriter.CHAR_NEW_LINE;
 
@@ -90,7 +90,7 @@ public class HtmlElement extends XmlElement {
      * @param name A name of the new XmlElement is requred.
      * @return The new XmlElement!
      */
-    public <T extends XmlElement> T  addElementToHead(@Nonnull final CharSequence name) {
+    public <T extends XmlElement> T  addElementToHead(@Nonnull final String name) {
         return head.addElement(name);
     }
 
@@ -98,7 +98,7 @@ public class HtmlElement extends XmlElement {
      * @param name A name of the new XmlElement is requred.
      * @return The new XmlElement!
      */
-    public <T extends XmlElement> T  addElementToBody(@Nonnull final CharSequence name) {
+    public <T extends XmlElement> T  addElementToBody(@Nonnull final String name) {
         return body.addElement(name);
     }
 
@@ -106,7 +106,8 @@ public class HtmlElement extends XmlElement {
      * @param css Add a CSS link
      * @return New CSS element
      */
-    public <T extends XmlElement> T  addCssLink(String css) {
+    public <T extends XmlElement> T addCssLink(@Nonnull final CharSequence css) {
+        Assert.notNull(name, REQUIRED_MSG, "css");
         return head.addElement(Html.LINK)
                 .addAttrib(Html.A_HREF, css)
                 .addAttrib(Html.A_REL, "stylesheet")
@@ -117,7 +118,8 @@ public class HtmlElement extends XmlElement {
      * @param css CSS content
      * @return New CSS element
      */
-    public <T extends XmlElement> T  addCssBody(@Nullable final String css) {
+    public <T extends XmlElement> T addCssBody(@Nonnull final CharSequence css) {
+        Assert.notNull(name, REQUIRED_MSG, "css");
         return head.addElement(Html.STYLE)
                 .addAttrib(Html.A_TYPE, "text/css")
                 .addRawText(css);
@@ -198,7 +200,6 @@ public class HtmlElement extends XmlElement {
         // --- Attribute names ---
 
         String A_CHARSET = "charset";
-        String A_CONTENT = "content";
         String A_HREF = "href";
         String A_REL = "rel";
         String A_TYPE = "type";
