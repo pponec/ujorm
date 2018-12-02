@@ -76,13 +76,13 @@ public class HtmlElement extends XmlElement {
 
     /** Returns header element */
     @Nonnull
-    public <T extends XmlElement> T  getHead() {
+    public <T extends XmlElement> T getHead() {
         return (T) head;
     }
 
     /** Returns body element */
     @Nonnull
-    public <T extends XmlElement> T  getBody() {
+    public <T extends XmlElement> T getBody() {
         return (T) body;
     }
 
