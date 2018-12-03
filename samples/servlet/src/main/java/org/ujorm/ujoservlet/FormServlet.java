@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,50 +36,67 @@ import org.ujorm.ujoservlet.tools.Html;
  * A live example of the HtmlElement inside a servlet.
  * @author Pavel Ponec
  */
+@WebServlet(FormServlet.URL_PATTER)
 public class FormServlet extends HttpServlet {
 
-    /** Show the first line of soufce code */
-    public static final short SHOW_LINE = 54;
+    /** URL pattern */
+    public static final String URL_PATTER = "/formServlet";
 
     /* A common code page form request and response. Try the {@code  Charset.forName("windows-1250")} for example. */
     private final Charset charset = StandardCharsets.UTF_8;
 
+    /** Show the first line of soufce code */
+    public static final short SHOW_LINE = 59;
+
+    /** A sign of the POST method */
+    private boolean postMethod;
+
     /**
      * Handles the HTTP <code>GET</code> or <code>POST</code> method.
-     * @param input servlet request
-     * @param output servlet response
-     * @param postMethod A sign of the POST method
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @param input Servlet request
+     * @param output Servlet response
+     * @throws ServletException If a servlet-specific error occurs
+     * @throws IOException If an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest input, HttpServletResponse output, boolean postMethod) throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         input.setCharacterEncoding(charset.toString());
 
-        final String title = "Simple user form";
-        final HtmlElement html = new HtmlElement(title, charset);
-        html.addCssLink("welcomeForm.css");
-        html.addElementToBody(Html.H1).addText(title);
-        final XmlElement form = html.addElementToBody(Html.FORM)
+        HtmlElement html = createHtmlElement("Simple user form", "userForm.css");
+        XmlElement form = html.addElementToBody(Html.FORM)
                 .addAttrib(Html.A_METHOD, Html.V_POST)
                 .addAttrib(Html.A_ACTION, postMethod ? null : input.getRequestURI());
         for (Field field : getFieldDescriptions()) {
-            final XmlElement row = form.addElement(Html.DIV)
-                    .addAttrib(Html.A_CLASS, field.isSubmit() ? "submit" : null);
-            row.addElement(Html.LABEL)
-                    .addAttrib(Html.A_FOR, field.getName())
-                    .addText(field.getLabel());
-            XmlElement inputBox = row.addElement(Html.DIV);
-            inputBox.addElement(Html.INPUT)
-                    .addAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
-                    .addAttrib(Html.A_ID, field.getName())
-                    .addAttrib(Html.A_NAME, field.getName())
-                    .addAttrib(Html.A_VALUE, field.getValue(input));
-            field.getErrorMessage(input, postMethod).ifPresent(msg -> inputBox.addElement(Html.SPAN)
-                    .addText(msg)); // Raw validation message
+            createInputField(field, form, input);
         }
 
         ApplService.addFooter(html.getBody(), this, SHOW_LINE);
         html.toResponse(output, true); // Render the result
+    }
+
+    /** Create new HtmlElement incliding title and CSS style */
+    private HtmlElement createHtmlElement(String title, String css) {
+        final HtmlElement result = new HtmlElement(title, charset);
+        result.addCssLink(css);
+        result.addElementToBody(Html.H1).addText(title);
+        return result;
+    }
+
+    /** Create an input field including label and validation message */
+    private XmlElement createInputField(Field field, XmlElement form, HttpServletRequest input) {
+        XmlElement result = new XmlElement(Html.DIV) // An envelope
+                .addAttrib(Html.A_CLASS, field.isSubmit() ? "submit" : null);
+        result.addElement(Html.LABEL)
+                .addAttrib(Html.A_FOR, field.getName())
+                .addText(field.getLabel());
+        XmlElement inputBox = result.addElement(Html.DIV);
+        inputBox.addElement(Html.INPUT)
+                .addAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
+                .addAttrib(Html.A_ID, field.getName())
+                .addAttrib(Html.A_NAME, field.getName())
+                .addAttrib(Html.A_VALUE, field.getValue(input));
+        field.getErrorMessage(input, postMethod).ifPresent(msg -> inputBox.addElement(Html.SPAN)
+                .addText(msg)); // Raw validation message
+        return result;
     }
 
     /** Form field description data */
@@ -151,7 +169,8 @@ public class FormServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        processRequest(input, output, false);
+        postMethod = false;
+        processRequest(input, output);
     }
 
     /**
@@ -163,6 +182,7 @@ public class FormServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        processRequest(input, output, true);
+        postMethod = true;
+        processRequest(input, output);
     }
 }

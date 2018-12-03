@@ -1,13 +1,15 @@
 /** The CSS for the WelcomeForm servlet */
 
+h1 {
+    color:SteelBlue;
+}
+
 body {
     padding: 5px 15px;
     font-family: "DejaVu Sans", verdana, arial, sans-serif;
     background-color: #f3f6f7;
 }
-h1 {
-    color:SteelBlue;
-}
+
 td {
     text-align: right;
 }

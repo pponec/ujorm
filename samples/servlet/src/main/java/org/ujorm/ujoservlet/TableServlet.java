@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,10 +33,14 @@ import org.ujorm.ujoservlet.tools.Html;
  * A live example of the HtmlElement inside a servlet.
  * @author Pavel Ponec
  */
+@WebServlet(TableServlet.URL_PATTER)
 public class TableServlet extends HttpServlet {
 
+    /** URL pattern */
+    public static final String URL_PATTER = "/tableServlet";
+
     /** Show the first line of soufce code */
-    public static final short SHOW_LINE = 48;
+    public static final short SHOW_LINE = 53;
 
     /**
      * Handles the HTTP <code>GET</code> method.

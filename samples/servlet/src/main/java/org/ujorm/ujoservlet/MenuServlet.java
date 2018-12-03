@@ -19,6 +19,7 @@ package org.ujorm.ujoservlet;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,10 +32,14 @@ import org.ujorm.ujoservlet.tools.Html;
  * A live example of the HtmlElement inside a servlet.
  * @author Pavel Ponec
  */
+@WebServlet({MenuServlet.URL_PATTER, ""})
 public class MenuServlet extends HttpServlet {
 
+    /** URL pattern */
+    public static final String URL_PATTER = "/menuServlet";
+
     /** Show the first line of soufce code */
-    public static final short SHOW_LINE = 47;
+    public static final short SHOW_LINE = 52;
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -47,7 +52,7 @@ public class MenuServlet extends HttpServlet {
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         final String title = "List of samples";
         final HtmlElement html = new HtmlElement(title, StandardCharsets.UTF_8);
-        html.addCssLink("welcomeForm.css");
+        html.addCssLink("userForm.css");
         html.addElementToBody(Html.H1)
                 .addText(title);
         XmlElement list = html.addElementToBody(Html.OL);
@@ -64,9 +69,10 @@ public class MenuServlet extends HttpServlet {
 
     /** Form field description data */
     private Item[] getItems(String title) {
-        Item[] result = { new Item("helloServlet", "Hello, World!")
-                       , new Item("tableServlet", "Show table")
-                       , new Item("formServlet?firstname=It's+Me!", "Simple user form")};
+        Item[] result = { new Item(HelloServlet.URL_PATTER, "Hello, World!")
+                        , new Item(TableServlet.URL_PATTER, "Show table")
+                        , new Item(FormServlet.URL_PATTER + "?firstname=It's+Me!", "Simple user form")
+                        , new Item(BoardServlet.URL_PATTER + "?board=eJxjYHDgYvBgYNC8qRS6comW6OQlTIwAKGwE0g&c80", "Painting border")};
         return result;
     }
 

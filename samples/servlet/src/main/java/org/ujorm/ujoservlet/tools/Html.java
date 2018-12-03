@@ -18,8 +18,8 @@
 package org.ujorm.ujoservlet.tools;
 
 /** Some HTML constants,
-* but this is certainly not a whole list of HTML elements,
-* attributes and allowed values. */
+ * but this is certainly not a whole list of HTML elements,
+ * attributes and allowed values. */
 public interface Html {
 
     // --- Element names ---
@@ -91,12 +91,15 @@ public interface Html {
     String A_TYPE = "type";
     String A_VALUE = "value";
     String A_REL = "rel";
+    String A_CELLSPACING = "cellspacing";
+    String A_CELLPADDING = "cellpadding";
 
     // --- Some attribute values ---
 
     String V_BLANK = "_blank";
     String V_CHECKBOX = "checkbox";
     String V_GET = "get";
+    String V_RESET = "reset";
     String V_HIDDEN = "hidden";
     String V_POST = "post";
     String V_SUBMIT = "submit";

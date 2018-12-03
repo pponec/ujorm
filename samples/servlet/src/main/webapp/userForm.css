@@ -1,4 +1,8 @@
-/** The CSS for the WelcomeForm servlet */
+/** The CSS for the Boead servlet */
+
+h1 {
+    color:SteelBlue;
+}
 
 body {
     padding: 5px 15px;
@@ -10,15 +14,13 @@ body {
     line-height: 1.5;
     text-align: left;
 }
-h1 {
-    color:SteelBlue;
-}
 
 .error {
     color: #b06464;
     font-style: italic;
     margin-bottom: 4px;
 }
+
 .footer {
     margin-top: 25px;
     margin-left: 7px;
@@ -29,7 +31,6 @@ h1 {
 form {
     width: 450px;
 }
-
 
 span {
     color: #b06464;
