@@ -74,7 +74,7 @@ public class BenchmarkPresent extends HttpServlet {
                     .addText("JFall 2013 Presentations - htmlApi");
             head.addElement(Html.LINK,
                      Html.A_REL, "Stylesheet",
-                     Html.A_CONTENT, "/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css",
+                     Html.A_HREF, "/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css",
                      Html.A_MEDIA, "screen");
         }
 

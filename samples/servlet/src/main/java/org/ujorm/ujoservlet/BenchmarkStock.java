@@ -59,18 +59,27 @@ public class BenchmarkStock extends HttpServlet {
         stock(output);
     }
 
+    /**
+     * <title>Stock Prices</title>
+     * <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+     * <meta http-equiv="Content-Style-Type" content="text/css">
+     * <meta http-equiv="Content-Script-Type" content="text/javascript">
+     * <link rel="shortcut icon" href="/images/favicon.ico">
+     * <link rel="stylesheet" type="text/css" href="/css/style.css" media="all">
+     * <script type="text/javascript" src="/js/util.js"></script>
+     * <style type="text/css">...
+     * @return
+     */
     public void stock(HttpServletResponse output) throws IOException, IllegalArgumentException {
         final int[] index = {0};
 
         HtmlElement html = new HtmlElement(UTF_8);
         try (XmlElement head = html.getHead()) {
-            head.addElement(Html.META, Html.A_CHARSET, UTF_8);
-            head.addElement(Html.META)
-                    .addElement(Html.TITLE)
-                    .addText("JFall 2013 Presentations - htmlApi");
+            head.addElement(Html.TITLE)
+                    .addText("Stock Prices");
             head.addElement(Html.META
                     , "http-equiv", "Content-Type"
-                    , Html.A_CONTENT, "text/html; charset=" + UTF_8);
+                    , Html.A_CONTENT, "text/html; charset=UTF-8");
             head.addElement(Html.META
                     , "http-equiv", "Content-Style-Type"
                     , Html.A_CONTENT, "text/css");
@@ -108,12 +117,12 @@ public class BenchmarkStock extends HttpServlet {
                 List<Stock> stocks = dummyItems();
                 for (int itemIndex = 0, max = stocks.size(); itemIndex < max; itemIndex++) {
                     Stock stock = stocks.get(itemIndex);
-                    try (XmlElement row = table.addElement(Html.TR, Html.A_CLASS, index[0]++ % 2 == 0 ? "even" : "odd")) {
+                    try (XmlElement row = table.addElement(Html.TR, Html.A_CLASS, index[0]++ % 2 == 0 ? "odd" : "even")) {
                         row.addElement(Html.TD).addText(index[0]);
                         row.addElement(Html.TD).addElement(Html.A, Html.A_HREF, "/stocks/" + stock.getSymbol())
                                 .addText(stock.getSymbol());
                         row.addElement(Html.TD).addElement(Html.A, Html.A_HREF, stock.getUrl())
-                                .addText(stock.getSymbol());
+                                .addText(stock.getName());
                         row.addElement(Html.TD).addElement("strong").addText(stock.getPrice());
                         row.addElement(Html.TD, Html.A_CLASS, stock.getChange() < 0 ? "minus" : null)
                                 .addText(stock.getChange());
