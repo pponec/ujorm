@@ -64,7 +64,7 @@ public class XmlElement {
     public static final String HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
 
     /** Assertion message template */
-    protected static final String REQUIRED_MSG = "The {} is required";
+    protected static final String REQUIRED_MSG = "The argument {} is required";
 
     /** Element name */
     @Nonnull
@@ -79,7 +79,7 @@ public class XmlElement {
     protected List<Object> children;
 
     /** The new element constructor
-     * @param name The parameter must not be empty or contain any special HTML characters.
+     * @param name The element name must not be empty or contain any special HTML characters.
      */
     public XmlElement(@Nonnull final String name) {
         Assert.notNull(name, REQUIRED_MSG, "name");
@@ -131,6 +131,28 @@ public class XmlElement {
         return (T) new XmlElement(name, this);
     }
 
+    /** Create a new {@link XmlElement} for a required name and add it to children with many attributes.
+     * @param elementName  A name of the new XmlElement is required.
+     * @param attributeName An attribute key
+     * @param attributeData An attribute value
+     * @param attributes Pairs of attribute - value. An attribute with no value is ignored silently.
+     * @return The new XmlElement!
+     */
+    @Nonnull
+    public final <T extends XmlElement> T addElement
+        ( @Nonnull final String elementName
+        , @Nonnull final String attributeName
+        , @Nullable final Object attributeData
+        , @Nonnull final Object... attributes)
+        {
+        final T result = addElement(elementName);
+        result.addAttrib(attributeName, attributeData);
+        for (int i = 1, max = attributes.length; i < max; i += 2) {
+             result.addAttrib((String) attributes[i-1], attributes[i]);
+        }
+        return result;
+    }
+
     /**
      * Add an attribute
      * @param name Required element name
@@ -153,15 +175,13 @@ public class XmlElement {
 
     /**
      * Add a text and escape special character
-     * @param data The {@code null} value is ignored. Formatting is performed by the
+     * @param data The {@code null} value is allowed. Formatting is performed by the
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Nonnull
     public final <T extends XmlElement> T addText(@Nullable final Object data) {
-        if (data != null) {
-            addChild(data);
-        }
+        addChild(data);
         return (T) this;
     }
 

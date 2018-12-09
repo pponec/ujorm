@@ -56,22 +56,26 @@ public class HtmlElement extends XmlElement {
     @Nonnull
     protected final Charset charset;
 
-    /** Constructor for codepage UTF-8 */
-    public HtmlElement(@Nonnull final CharSequence title) {
+    /** Create new instance with empty html headers */
+    public HtmlElement(@Nonnull final Charset charset) {
+        super(Html.HTML);
+        
+        Assert.notNull(charset, REQUIRED_MSG, "charset");
+        this.charset = charset;
+        this.head = addElement(Html.HEAD);
+        this.body = addElement(Html.BODY);
+    }
+
+    /** Constructor buliding default html headers with codepage UTF-8 */
+    public HtmlElement(@Nonnull final Object title) {
         this(title, UTF_8);
     }
 
-    /** Generaic Constructor */
-    public HtmlElement(@Nonnull final CharSequence title, @Nonnull Charset charset) {
-        super(Html.HTML);
-        this.charset = charset;
-
-        head = addElement(Html.HEAD);
-        head.addElement(Html.META)
-                .addAttrib(Html.A_CHARSET, charset);
-        body = addElement(Html.BODY);
-        head.addElement(Html.TITLE)
-                .addText(title);
+    /** Generic constructor buliding default html headers */
+    public HtmlElement(@Nonnull final Object title, @Nonnull Charset charset) {
+        this(charset);
+        head.addElement(Html.META).addAttrib(Html.A_CHARSET, charset);
+        head.addElement(Html.TITLE).addText(title);
     }
 
     /** Returns header element */
@@ -173,8 +177,9 @@ public class HtmlElement extends XmlElement {
      * @throws IOException An writting error.
      * @throws IllegalArgumentException Wrong argument type
      */
-    public void toWriter(@Nonnull final XmlWriter xmlWriter) throws IOException, IllegalArgumentException {
+    public XmlWriter toWriter(@Nonnull final XmlWriter xmlWriter) throws IOException, IllegalArgumentException {
             toWriter(0, xmlWriter);
+            return xmlWriter;
     }
 
     /** Some HTML constants */
