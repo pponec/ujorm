@@ -101,7 +101,7 @@ public class XmlWriter {
      * @param level Element nesting level.
      * @param name Name of element
      * @param attributes Attributes of the element
-     * @param children Childern of the element
+     * @param children Childern of the element including {@code null} items
      * @param element Original element
      * @return This
      */
@@ -171,7 +171,7 @@ public class XmlWriter {
      * @param attribute A name of the XML attribute of {@code null} value for a XML text.
      * @param out An output writer
      */
-    protected void writeValue(@Nonnull final Object value, @Nonnull final XmlElement element, final @Nullable String attribute, @Nonnull final Writer out) throws IOException {
+    protected void writeValue(@Nullable final Object value, @Nonnull final XmlElement element, final @Nullable String attribute, @Nonnull final Writer out) throws IOException {
         final CharSequence text = value instanceof CharSequence ? (CharSequence) value : String.valueOf(value);
         for (int i = 0, max = text.length(); i < max; i++) {
             final char c = text.charAt(i);

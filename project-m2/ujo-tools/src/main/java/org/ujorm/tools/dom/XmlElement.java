@@ -18,6 +18,7 @@
 package org.ujorm.tools.dom;
 
 import java.io.CharArrayWriter;
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,11 +55,14 @@ import static org.ujorm.tools.dom.XmlWriter.*;
  *  root.addCDATA("A character data &lt;&\"&gt;");
  *  String result = root.toString();
  * </pre>
+ *
+ * The XmlElement class implements the {@link Closeable} implementation
+ * for an optional highlighting the tree structure in the source code.
  * @see HtmlElement
  * @since 1.86
  * @author Pavel Ponec
  */
-public class XmlElement {
+public class XmlElement implements Closeable {
 
     /** XML header */
     public static final String HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
@@ -74,7 +78,7 @@ public class XmlElement {
     @Nullable
     protected Map<String, Object> attributes;
 
-    /** Child elements */
+    /** Child elements with a {@code null} items */
     @Nullable
     protected List<Object> children;
 
@@ -103,8 +107,7 @@ public class XmlElement {
 
     /** Add a child entity */
     @Nonnull
-    protected void addChild(@Nonnull final Object child) {
-        Assert.notNull(child, REQUIRED_MSG, "child");
+    protected void addChild(@Nullable final Object child) {
         if (children == null) {
             children = new ArrayList<>();
         }
@@ -187,15 +190,13 @@ public class XmlElement {
 
     /**
      * Add a text including a space (before and after the text)
-     * @param data The {@code null} value is ignored.
+     * @param data Anu data
      * @return This instance */
     @Nonnull
     public final <T extends XmlElement> T addTextWithSpace(@Nullable final Object data) {
-        if (data != null) {
-            addChild(CHAR_SPACE);
-            addChild(data);
-            addChild(CHAR_SPACE);
-        }
+        addChild(CHAR_SPACE);
+        addChild(data);
+        addChild(CHAR_SPACE);
         return (T) this;
     }
 
@@ -297,6 +298,11 @@ public class XmlElement {
     @Nonnull
     public XmlWriter toWriter(final int level, @Nonnull final XmlWriter out) throws IOException {
         return out.write(level, this);
+    }
+
+    /** An empty method */
+    @Override
+    public final void close() throws IOException {
     }
 
 
