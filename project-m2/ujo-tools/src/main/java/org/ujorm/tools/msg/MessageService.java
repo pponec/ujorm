@@ -15,8 +15,6 @@
  */
 package org.ujorm.tools.msg;
 
-import java.io.CharArrayWriter;
-import java.io.PrintWriter;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
@@ -128,7 +126,7 @@ public class MessageService {
             return String.valueOf(msg);
         }
         final int max = msg.length();
-        final CharArrayWriter result = new CharArrayWriter(Math.max(32, max + (max >> 1)));
+        final StringBuilder result = new StringBuilder(Math.max(32, max + (max >> 1)));
         int i, last = 0;
         while ((i = msg.indexOf(PARAM_BEG, last)) >= 0) {
             final int end = msg.indexOf(PARAM_END, i);
@@ -173,11 +171,11 @@ public class MessageService {
      */
     protected void writeValue
         ( @Nonnull final Object value
-        , @Nonnull final CharArrayWriter writer
+        , @Nonnull final StringBuilder writer
         , @Nullable final Locale locale
-    ) {
+        ) {
         if (value instanceof Throwable) {
-            ((Throwable)value).printStackTrace(new PrintWriter(writer, true));
+           ((Throwable)value).printStackTrace(MsgFormatter.getPrintWriter(writer));
         } else {
             writer.append(value.toString());
         }

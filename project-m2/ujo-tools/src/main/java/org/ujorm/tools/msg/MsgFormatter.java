@@ -15,8 +15,9 @@
  */
 package org.ujorm.tools.msg;
 
-import java.io.CharArrayWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -81,7 +82,7 @@ public class MsgFormatter {
             : argumentValues;
 
         final int max = template.length();
-        final CharArrayWriter out = new CharArrayWriter(Math.max(32, max + (max >> 1)));
+        final StringBuilder out = new StringBuilder(Math.max(32, max + (max >> 1)));
         int last = 0;
 
         for (final Object arg : arguments) {
@@ -127,7 +128,7 @@ public class MsgFormatter {
      * @param out Writer
      * @param value Value where the {@code Supplier} interface is supported.
      */
-    protected void writeValue(@Nullable final Object value, @Nonnull final CharArrayWriter out, final boolean marked) {
+    protected void writeValue(@Nullable final Object value, @Nonnull final StringBuilder out, final boolean marked) {
         final Object val = value instanceof Supplier
                 ? ((Supplier)value).get()
                 : value;
@@ -137,7 +138,7 @@ public class MsgFormatter {
                     : String.valueOf(val));
         } else if (val instanceof Throwable) {
             out.append('\n');
-            ((Throwable)val).printStackTrace(new PrintWriter(out, true));
+            ((Throwable)val).printStackTrace(getPrintWriter(out));
         } else {
             out.append(SEPARATOR);
             out.append(String.valueOf(val));
@@ -174,5 +175,23 @@ public class MsgFormatter {
     @Nullable
     public static String format(@Nullable final Object... templateAndArguments) {
         return new MsgFormatter().formatMsg(templateAndArguments);
+    }
+
+    /** Convert appendable to object type of PrintWriter */
+    @Nonnull
+    protected static PrintWriter getPrintWriter(@Nonnull final Appendable appendable) {
+        final Writer myWriter = new Writer() {
+            @Override
+            public void flush() throws IOException {}
+            @Override
+            public void close() throws IOException {}
+            @Override
+            public void write(final char[] cbuf, final int off, final int len) throws IOException {
+                for (int i = 0, max = off + len; i < max; i++) {
+                    appendable.append(cbuf[i]);
+                }
+            }
+        };
+        return new PrintWriter(myWriter, false);
     }
 }

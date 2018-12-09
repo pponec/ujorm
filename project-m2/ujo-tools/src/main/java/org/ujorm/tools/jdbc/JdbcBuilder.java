@@ -17,7 +17,6 @@
 
 package org.ujorm.tools.jdbc;
 
-import java.io.CharArrayWriter;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -391,7 +390,7 @@ public final class JdbcBuilder implements Serializable {
     /** Returns a SQL text */
     @Nonnull
     public String getSql(final boolean preview) {
-        final CharArrayWriter result = new CharArrayWriter(getBufferSizeEstimation(preview));
+        final StringBuilder result = new StringBuilder(getBufferSizeEstimation(preview));
         final ValuePrinter printer = preview ? createValuePrinter(result) : null;
 
         for (int i = 0, max = sql.size(); i < max; i++) {
@@ -431,7 +430,7 @@ public final class JdbcBuilder implements Serializable {
 
     /** Create a value printer */
     @Nonnull
-    protected static ValuePrinter createValuePrinter(@Nonnull final CharArrayWriter result) {
+    protected static ValuePrinter createValuePrinter(@Nonnull final StringBuilder result) {
         return new ValuePrinter(VALUE_MARKER,  "'",  result);
     }
 
