@@ -19,7 +19,6 @@ package org.ujorm.tools.dom;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
@@ -61,7 +60,7 @@ public class XmlWriter {
 
     /** Writer */
     @Nonnull
-    protected final Writer out;
+    protected final Appendable out;
 
     /** An element offset is enabled */
     protected final boolean offsetEnabled;
@@ -76,7 +75,7 @@ public class XmlWriter {
     }
 
     /** Writer constructor with a zero offset */
-    public XmlWriter(@Nonnull final Writer out) {
+    public XmlWriter(@Nonnull final Appendable out) {
         this(out, "");
     }
 
@@ -85,7 +84,7 @@ public class XmlWriter {
      * @param out A writer
      * @param offsetSpace String for a one level offset.
      */
-    public XmlWriter(@Nonnull final Writer out, @Nullable final String offsetSpace) {
+    public XmlWriter(@Nonnull final Appendable out, @Nullable final String offsetSpace) {
         this.out = out;
         this.offsetEnabled = Check.hasLength(offsetSpace);
         this.offsetSpace = offsetSpace;
@@ -171,7 +170,7 @@ public class XmlWriter {
      * @param attribute A name of the XML attribute of {@code null} value for a XML text.
      * @param out An output writer
      */
-    protected void writeValue(@Nullable final Object value, @Nonnull final XmlElement element, final @Nullable String attribute, @Nonnull final Writer out) throws IOException {
+    protected void writeValue(@Nullable final Object value, @Nonnull final XmlElement element, final @Nullable String attribute, @Nonnull final Appendable out) throws IOException {
         final CharSequence text = value instanceof CharSequence ? (CharSequence) value : String.valueOf(value);
         for (int i = 0, max = text.length(); i < max; i++) {
             final char c = text.charAt(i);

@@ -17,7 +17,6 @@
 
 package org.ujorm.tools.dom;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Method;
@@ -59,7 +58,7 @@ public class HtmlElement extends XmlElement {
     /** Create new instance with empty html headers */
     public HtmlElement(@Nonnull final Charset charset) {
         super(Html.HTML);
-        
+
         Assert.notNull(charset, REQUIRED_MSG, "charset");
         this.charset = charset;
         this.head = addElement(Html.HEAD);
@@ -133,7 +132,7 @@ public class HtmlElement extends XmlElement {
     @Override @Nonnull
     public String toString() throws IllegalStateException {
         try {
-            return toWriter(0, new XmlWriter(new CharArrayWriter(512)
+            return toWriter(0, new XmlWriter(new StringBuilder(512)
                     .append(HEADER)
                     .append(CHAR_NEW_LINE)))
                     .toString();
