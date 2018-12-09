@@ -36,11 +36,11 @@ import org.ujorm.ujoservlet.tools.Html;
  * A live example of the HtmlElement inside a servlet.
  * @author Pavel Ponec
  */
-@WebServlet(FormServlet.URL_PATTER)
+@WebServlet(FormServlet.URL_PATTERN)
 public class FormServlet extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTER = "/formServlet";
+    public static final String URL_PATTERN = "/formServlet";
 
     /* A common code page form request and response. Try the {@code  Charset.forName("windows-1250")} for example. */
     private final Charset charset = StandardCharsets.UTF_8;

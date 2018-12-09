@@ -33,11 +33,11 @@ import org.ujorm.ujoservlet.tools.Html;
  * A live example of the HtmlElement inside a servlet.
  * @author Pavel Ponec
  */
-@WebServlet(TableServlet.URL_PATTER)
+@WebServlet(TableServlet.URL_PATTERN)
 public class TableServlet extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTER = "/tableServlet";
+    public static final String URL_PATTERN = "/tableServlet";
 
     /** Show the first line of soufce code */
     public static final short SHOW_LINE = 53;
@@ -86,7 +86,6 @@ public class TableServlet extends HttpServlet {
         return result;
     }
 
-    /** No implementation */
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         doGet(input, output);

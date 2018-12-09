@@ -34,11 +34,11 @@ import org.ujorm.ujoservlet.tools.ApplService;
 import org.ujorm.ujoservlet.tools.BoardModel;
 import org.ujorm.ujoservlet.tools.Html;
 
-@WebServlet(BoardServlet.URL_PATTER)
+@WebServlet(BoardServlet.URL_PATTERN)
 public class BoardServlet extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTER = "/boardServlet";
+    public static final String URL_PATTERN = "/boardServlet";
 
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(BoardServlet.class.getName());

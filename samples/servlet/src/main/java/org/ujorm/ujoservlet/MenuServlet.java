@@ -69,10 +69,13 @@ public class MenuServlet extends HttpServlet {
 
     /** Form field description data */
     private Item[] getItems(String title) {
-        Item[] result = { new Item(HelloServlet.URL_PATTER, "Hello, World!")
-                        , new Item(TableServlet.URL_PATTER, "Show table")
-                        , new Item(FormServlet.URL_PATTER + "?firstname=It's+Me!", "Simple user form")
-                        , new Item(BoardServlet.URL_PATTER + "?board=eJxjYHDgYvBgYNC8qRS6comW6OQlTIwAKGwE0g&c80", "Painting border")};
+        Item[] result = { new Item(HelloServlet.URL_PATTERN, "Hello, World!")
+                        , new Item(TableServlet.URL_PATTERN, "Show table")
+                        , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
+                        , new Item(BoardServlet.URL_PATTERN + "?board=eJxjYHDgYvBgYNC8qRS6comW6OQlTIwAKGwE0g&c80", "Painting border")
+                        , new Item(BenchmarkStock.URL_PATTERN, "Report for a stock benchmark")
+                        , new Item(BenchmarkPresent.URL_PATTERN, "Report for a presentation benchmark")
+                        };
         return result;
     }
 
@@ -93,7 +96,6 @@ public class MenuServlet extends HttpServlet {
         }
     }
 
-    /** No implementation */
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         doGet(input, output);
