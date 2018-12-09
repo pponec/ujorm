@@ -71,8 +71,6 @@ public class BenchmarkStock extends HttpServlet {
      * @return
      */
     public void stock(HttpServletResponse output) throws IOException, IllegalArgumentException {
-        final int[] index = {0};
-
         HtmlElement html = new HtmlElement(UTF_8);
         try (XmlElement head = html.getHead()) {
             head.addElement(Html.TITLE)
@@ -117,8 +115,8 @@ public class BenchmarkStock extends HttpServlet {
                 List<Stock> stocks = dummyItems();
                 for (int itemIndex = 0, max = stocks.size(); itemIndex < max; itemIndex++) {
                     Stock stock = stocks.get(itemIndex);
-                    try (XmlElement row = table.addElement(Html.TR, Html.A_CLASS, index[0]++ % 2 == 0 ? "odd" : "even")) {
-                        row.addElement(Html.TD).addText(index[0]);
+                    try (XmlElement row = table.addElement(Html.TR, Html.A_CLASS, itemIndex % 2 == 0 ? "odd" : "even")) {
+                        row.addElement(Html.TD).addText(itemIndex + 1);
                         row.addElement(Html.TD).addElement(Html.A, Html.A_HREF, "/stocks/" + stock.getSymbol())
                                 .addText(stock.getSymbol());
                         row.addElement(Html.TD).addElement(Html.A, Html.A_HREF, stock.getUrl())

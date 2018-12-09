@@ -16,7 +16,6 @@
 
 package org.ujorm.criterion;
 
-import java.io.CharArrayWriter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
@@ -35,12 +34,12 @@ public class SimpleValuePrinter extends ValuePrinter {
     }
 
     /** Constructor */
-    public SimpleValuePrinter(@Nonnull final CharArrayWriter out) {
+    public SimpleValuePrinter(@Nonnull final StringBuilder out) {
         super(out);
     }
 
     /** Constructor */
-    public SimpleValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final CharArrayWriter out) {
+    public SimpleValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final StringBuilder out) {
         super(mark, textBorder, out);
     }
 
@@ -69,7 +68,7 @@ public class SimpleValuePrinter extends ValuePrinter {
     @Nonnull
     public SimpleValuePrinter appendValue(@Nullable final Object value) {
         if (value == null) {
-           out.append(null);
+           out.append((String) null);
         } else if (value instanceof Key) {
             out.append((Key) value);
         } else if (value instanceof Ujo) {
@@ -90,7 +89,7 @@ public class SimpleValuePrinter extends ValuePrinter {
     }
 
     /** Standarad writter */
-    public CharArrayWriter getWriter() {
+    public StringBuilder getWriter() {
         return out;
     }
 
