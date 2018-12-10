@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.ujoservlet;
+package org.ujorm.ujoservlet.xmlElement;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -24,21 +24,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.dom.HtmlElement;
+import org.ujorm.tools.dom.XmlElement;
+import org.ujorm.tools.xml.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
-import org.ujorm.ujoservlet.tools.Html;
 
 /**
  * A live example of the HtmlElement inside a servlet.
  * @author Pavel Ponec
  */
-@WebServlet(HelloServlet.URL_PATTERN)
-public class HelloServlet extends HttpServlet {
+@WebServlet({MenuServlet.URL_PATTER, ""})
+public class MenuServlet extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTERN = "/helloServlet";
+    public static final String URL_PATTER = "/menuServlet";
 
     /** Show the first line of soufce code */
-    public static final short SHOW_LINE = 51;
+    public static final short SHOW_LINE = 52;
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -49,13 +50,50 @@ public class HelloServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        final HtmlElement html = new HtmlElement("Demo", StandardCharsets.UTF_8);
+        final String title = "List of samples";
+        final HtmlElement html = new HtmlElement(title, StandardCharsets.UTF_8);
         html.addCssLink("userForm.css");
         html.addElementToBody(Html.H1)
-                .addText("Hello, World!");
+                .addText(title);
+        XmlElement list = html.addElementToBody(Html.OL);
+        for (Item item : getItems(title)) {
+            list.addElement(Html.LI)
+                    .addElement(Html.A)
+                    .setAttrib(Html.A_HREF, item.getLink())
+                    .addText(item.label);
+        }
 
         ApplService.addFooter(html.getBody(), this, SHOW_LINE);
         html.toResponse(output, true); // Render the result
+    }
+
+    /** Form field description data */
+    private Item[] getItems(String title) {
+        Item[] result = { new Item(HelloServlet.URL_PATTERN, "Hello, World!")
+                        , new Item(TableServlet.URL_PATTERN, "Show table")
+                        , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
+                        , new Item(BoardServlet.URL_PATTERN + "?board=eJxjYHDgYvBgYNC8qRS6comW6OQlTIwAKGwE0g&c80", "Painting border")
+                        , new Item(BenchmarkStock.URL_PATTERN, "Report for a stock benchmark")
+                        , new Item(BenchmarkPresent.URL_PATTERN, "Report for a presentation benchmark")
+                        };
+        return result;
+    }
+
+   /** Item description */
+    static class Item {
+        private final String link;
+        private final String label;
+
+        public Item(String link, String label) {
+            this.link = link;
+            this.label = label;
+        }
+        public String getLink() {
+            return link;
+        }
+        public String getLabel() {
+            return label;
+        }
     }
 
     @Override

@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServlet;
 import org.ujorm.tools.dom.XmlElement;
 import org.ujorm.tools.msg.MsgFormatter;
+import org.ujorm.tools.xml.Html;
 
 /**
  * Common services with static methdos
@@ -46,11 +47,11 @@ public abstract class ApplService {
     /** Add a common footer */
     public static void addFooter(final XmlElement parent, HttpServlet servlet, short showLine) {
         XmlElement footer = parent.addElement(Html.DIV)
-                .addAttrib(Html.A_CLASS, "footer");
+                .setAttrib(Html.A_CLASS, "footer");
         footer.addTextWithSpace("See a")
                 .addElement(Html.A)
-                .addAttrib(Html.A_HREF, getSourceLink(servlet.getClass(), showLine))
-                .addAttrib(Html.A_TARGET, Html.V_BLANK)
+                .setAttrib(Html.A_HREF, getSourceLink(servlet.getClass(), showLine))
+                .setAttrib(Html.A_TARGET, Html.V_BLANK)
                 .addText(servlet.getClass().getSimpleName());
         footer.addTextWithSpace("source class of the Ujorm framework.");
     }

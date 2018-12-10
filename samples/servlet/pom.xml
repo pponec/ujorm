@@ -27,6 +27,12 @@
             <version>1.89-SNAPSHOT</version>
         </dependency>
         
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-web</artifactId>
+            <version>1.89-SNAPSHOT</version>
+        </dependency>
+        
         <!--  An optional dependency -->
         <dependency>
             <groupId>org.dom4j</groupId>

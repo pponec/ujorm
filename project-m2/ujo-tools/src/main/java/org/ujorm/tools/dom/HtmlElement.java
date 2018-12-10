@@ -73,7 +73,7 @@ public class HtmlElement extends XmlElement {
     /** Generic constructor buliding default html headers */
     public HtmlElement(@Nonnull final Object title, @Nonnull Charset charset) {
         this(charset);
-        head.addElement(Html.META).addAttrib(Html.A_CHARSET, charset);
+        head.addElement(Html.META).setAttrib(Html.A_CHARSET, charset);
         head.addElement(Html.TITLE).addText(title);
     }
 
@@ -112,9 +112,9 @@ public class HtmlElement extends XmlElement {
     public <T extends XmlElement> T addCssLink(@Nonnull final CharSequence css) {
         Assert.notNull(name, REQUIRED_MSG, "css");
         return head.addElement(Html.LINK)
-                .addAttrib(Html.A_HREF, css)
-                .addAttrib(Html.A_REL, "stylesheet")
-                .addAttrib(Html.A_TYPE, "text/css");
+                .setAttrib(Html.A_HREF, css)
+                .setAttrib(Html.A_REL, "stylesheet")
+                .setAttrib(Html.A_TYPE, "text/css");
     }
 
     /** Create a new CSS element and return it
@@ -124,7 +124,7 @@ public class HtmlElement extends XmlElement {
     public <T extends XmlElement> T addCssBody(@Nonnull final CharSequence css) {
         Assert.notNull(name, REQUIRED_MSG, "css");
         return head.addElement(Html.STYLE)
-                .addAttrib(Html.A_TYPE, "text/css")
+                .setAttrib(Html.A_TYPE, "text/css")
                 .addRawText(css);
     }
 

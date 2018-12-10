@@ -45,11 +45,11 @@ import static org.ujorm.tools.dom.XmlWriter.*;
  * <pre class="pre">
  *  XmlElement root = new XmlElement("root");
  *  root.addElement("childA")
- *          .addAttrib("x", 1)
- *          .addAttrib("y", 2);
+ *          .setAttrib("x", 1)
+ *          .setAttrib("y", 2);
  *  root.addElement("childB")
- *          .addAttrib("x", 3)
- *          .addAttrib("y", 4)
+ *          .setAttrib("x", 3)
+ *          .setAttrib("y", 4)
  *          .addText("A text message &lt;&\"&gt;");
  *  root.addRawText("\n&lt;rawXml/&gt;\n");
  *  root.addCDATA("A character data &lt;&\"&gt;");
@@ -149,15 +149,25 @@ public class XmlElement implements Closeable {
         , @Nonnull final Object... attributes)
         {
         final T result = addElement(elementName);
-        result.addAttrib(attributeName, attributeData);
+        result.setAttrib(attributeName, attributeData);
         for (int i = 1, max = attributes.length; i < max; i += 2) {
-             result.addAttrib((String) attributes[i-1], attributes[i]);
+             result.setAttrib((String) attributes[i-1], attributes[i]);
         }
         return result;
     }
 
     /**
-     * Add an attribute
+     * Set one attribute
+     * @deprecated Uset the method {@link #setAttrib(java.lang.String, java.lang.Object) } instead of
+     * @return The original element
+     */
+    @Nonnull @Deprecated
+    public final <T extends XmlElement> T addAttrib(@Nonnull final String name, @Nullable final Object data) {
+        return setAttrib(name, data);
+    }
+
+    /**
+     * Set one attribute
      * @param name Required element name
      * @param data The {@code null} value is ignored. Formatting is performed by the
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
@@ -165,7 +175,7 @@ public class XmlElement implements Closeable {
      * @return The original element
      */
     @Nonnull
-    public final <T extends XmlElement> T addAttrib(@Nonnull final String name, @Nullable final Object data) {
+    public final <T extends XmlElement> T setAttrib(@Nonnull final String name, @Nullable final Object data) {
         Assert.hasLength(name, REQUIRED_MSG, "name");
         if (data != null) {
             if (attributes == null) {

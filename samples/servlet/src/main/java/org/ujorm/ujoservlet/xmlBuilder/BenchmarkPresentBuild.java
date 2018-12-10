@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.ujoservlet;
+package org.ujorm.ujoservlet.xmlBuilder;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -27,28 +27,23 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.ujorm.tools.dom.HtmlElement;
-import org.ujorm.tools.dom.XmlElement;
-import org.ujorm.tools.dom.XmlWriter;
-import org.ujorm.ujoservlet.tools.Html;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import org.ujorm.tools.xml.Html;
+import org.ujorm.tools.xml.XmlBuilder;
+import org.ujorm.tools.xml.XmlPriter;
 
 /**
  * A live example of the HtmlElement inside a servlet.
  * @see https://dzone.com/articles/modern-type-safe-template-engines-part-2
  * @author Pavel Ponec
  */
-@WebServlet(BenchmarkPresent.URL_PATTERN)
-public class BenchmarkPresent extends HttpServlet {
+@WebServlet(BenchmarkPresentBuild.URL_PATTERN)
+public class BenchmarkPresentBuild extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTERN = "/benchmarkPresent";
+    public static final String URL_PATTERN = "/benchmarkPresentkBulid";
 
     /** Show the first line of soufce code */
     public static final short SHOW_LINE = 53;
-
-    /** Data */
-    private Collection<Presentation> presentations = dummyItems();
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -59,50 +54,47 @@ public class BenchmarkPresent extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        HtmlElement html = new HtmlElement(UTF_8);
 
-        // The heder section:
-        try (XmlElement head = html.getHead()) {
-            head.addElement(Html.META, Html.A_CHARSET, "utf-8");
-            head.addElement(Html.META,
-                    Html.A_NAME, "viewport",
-                    Html.A_CONTENT, "width=device-width, initial-scale=1.0");
-            head.addElement(Html.META,
-                    "http-equiv", "content-language",
-                    Html.A_CONTENT, "IE=Edge");
-            head.addElement(Html.TITLE)
-                    .addText("JFall 2013 Presentations - htmlApi");
-            head.addElement(Html.LINK,
-                     Html.A_REL, "Stylesheet",
-                     Html.A_HREF, "/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css",
-                     Html.A_MEDIA, "screen");
-        }
-
-        // The body section:
-        try (XmlElement body = html.getBody()) {
-            try (XmlElement container = body.addAttrib(Html.A_CLASS, "container")) {
-                XmlElement pageHeader = container.addElement(Html.DIV, Html.A_CLASS, "page-header");
-                pageHeader.addElement(Html.H1).addText("JFall 2013 Presentations - htmlApi");
-
-                for (Presentation presentation : presentations) {
-                    XmlElement panelDefault = container.addElement(Html.DIV, Html.A_CLASS, "panel panel-default");
-                    try (XmlElement panelHeading = panelDefault.addElement(Html.DIV, Html.A_CLASS, "panel-heading")) {
-                        panelHeading.addElement(Html.H3, Html.A_CLASS, "panel-title")
-                                .addText(presentation.getTitle())
-                                .addText(" - ")
-                                .addText(presentation.getSpeakerName());
-                        container.addElement(Html.DIV, Html.A_CLASS, "panel-body")
-                                .addRawText(presentation.getSummary());
-                    }
-                }
+        final XmlPriter writer = XmlPriter.forHtml(output);
+        try (XmlBuilder html = new XmlBuilder(Html.HTML, writer)) {
+            try (XmlBuilder head = html.addElement(Html.HEAD)) {
+                head.addElement(Html.META, Html.A_CHARSET, "utf-8");
+                head.addElement(Html.META,
+                        Html.A_NAME, "viewport",
+                        Html.A_CONTENT, "width=device-width, initial-scale=1.0");
+                head.addElement(Html.META,
+                        "http-equiv", "content-language",
+                        Html.A_CONTENT, "IE=Edge");
+                head.addElement(Html.TITLE)
+                        .addText("JFall 2013 Presentations - htmlApi");
+                head.addElement(Html.LINK,
+                         Html.A_REL, "Stylesheet",
+                         Html.A_HREF, "/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css",
+                         Html.A_MEDIA, "screen");
             }
 
-            body.addElement(Html.SCRIPT, Html.A_SRC, "/webjars/jquery/3.1.1/jquery.min.js").addText("");
-            body.addElement(Html.SCRIPT, Html.A_SRC, "/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js").addText("");
-        }
+            try (XmlBuilder container = html.addElement(Html.BODY, Html.A_CLASS, "container")) {
+                try (XmlBuilder pageHeader = container.addElement(Html.DIV, Html.A_CLASS, "page-header")) {
+                    pageHeader.addElement(Html.H1).addText("JFall 2013 Presentations - htmlApi");
 
-        output.setCharacterEncoding(UTF_8.toString());
-        html.toWriter(new XmlWriter(output.getWriter().append(HtmlElement.HEADER).append("\n"), "\t"));
+                    Collection<Presentation> presentations = dummyItems();
+                    for (Presentation presentation : presentations) {
+                        XmlBuilder panelDefault = container.addElement(Html.DIV, Html.A_CLASS, "panel panel-default");
+                        try (XmlBuilder panelHeading = panelDefault.addElement(Html.DIV, Html.A_CLASS, "panel-heading")) {
+                            panelHeading.addElement(Html.H3, Html.A_CLASS, "panel-title")
+                                    .addText(presentation.getTitle())
+                                    .addText(" - ")
+                                    .addText(presentation.getSpeakerName());
+                            container.addElement(Html.DIV, Html.A_CLASS, "panel-body")
+                                    .addRawText(presentation.getSummary());
+                        }
+                    }
+                }
+
+                container.addElement(Html.SCRIPT, Html.A_SRC, "/webjars/jquery/3.1.1/jquery.min.js").addText("");
+                container.addElement(Html.SCRIPT, Html.A_SRC, "/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js").addText("");
+            }
+        }
     }
 
     private static class Presentation {

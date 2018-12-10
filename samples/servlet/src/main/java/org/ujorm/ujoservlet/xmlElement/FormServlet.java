@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.ujoservlet;
+package org.ujorm.ujoservlet.xmlElement;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -29,8 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.dom.HtmlElement;
 import org.ujorm.tools.dom.XmlElement;
+import org.ujorm.tools.xml.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
-import org.ujorm.ujoservlet.tools.Html;
 
 /**
  * A live example of the HtmlElement inside a servlet.
@@ -63,8 +63,8 @@ public class FormServlet extends HttpServlet {
 
         HtmlElement html = createHtmlElement("Simple user form", "userForm.css");
         XmlElement form = html.addElementToBody(Html.FORM)
-                .addAttrib(Html.A_METHOD, Html.V_POST)
-                .addAttrib(Html.A_ACTION, postMethod ? null : input.getRequestURI());
+                .setAttrib(Html.A_METHOD, Html.V_POST)
+                .setAttrib(Html.A_ACTION, postMethod ? null : input.getRequestURI());
         for (Field field : getFieldDescriptions()) {
             createInputField(field, form, input);
         }
@@ -84,16 +84,16 @@ public class FormServlet extends HttpServlet {
     /** Create an input field including label and validation message */
     private XmlElement createInputField(Field field, XmlElement form, HttpServletRequest input) {
         XmlElement result = new XmlElement(Html.DIV) // An envelope
-                .addAttrib(Html.A_CLASS, field.isSubmit() ? "submit" : null);
+                .setAttrib(Html.A_CLASS, field.isSubmit() ? "submit" : null);
         result.addElement(Html.LABEL)
-                .addAttrib(Html.A_FOR, field.getName())
+                .setAttrib(Html.A_FOR, field.getName())
                 .addText(field.getLabel());
         XmlElement inputBox = result.addElement(Html.DIV);
         inputBox.addElement(Html.INPUT)
-                .addAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
-                .addAttrib(Html.A_ID, field.getName())
-                .addAttrib(Html.A_NAME, field.getName())
-                .addAttrib(Html.A_VALUE, field.getValue(input));
+                .setAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
+                .setAttrib(Html.A_ID, field.getName())
+                .setAttrib(Html.A_NAME, field.getName())
+                .setAttrib(Html.A_VALUE, field.getValue(input));
         field.getErrorMessage(input, postMethod).ifPresent(msg -> inputBox.addElement(Html.SPAN)
                 .addText(msg)); // Raw validation message
         return result;

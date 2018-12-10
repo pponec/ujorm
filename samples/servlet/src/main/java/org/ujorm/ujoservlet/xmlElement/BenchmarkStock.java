@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.ujoservlet;
+package org.ujorm.ujoservlet.xmlElement;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.dom.HtmlElement;
 import org.ujorm.tools.dom.XmlElement;
 import org.ujorm.tools.dom.XmlWriter;
-import org.ujorm.ujoservlet.tools.Html;
+import org.ujorm.tools.xml.Html;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**

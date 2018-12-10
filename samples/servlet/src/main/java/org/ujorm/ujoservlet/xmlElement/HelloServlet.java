@@ -14,33 +14,31 @@
  * limitations under the License.
  */
 
-package org.ujorm.ujoservlet;
+package org.ujorm.ujoservlet.xmlElement;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.dom.HtmlElement;
-import org.ujorm.tools.dom.XmlElement;
+import org.ujorm.tools.xml.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
-import org.ujorm.ujoservlet.tools.Html;
 
 /**
  * A live example of the HtmlElement inside a servlet.
  * @author Pavel Ponec
  */
-@WebServlet(TableServlet.URL_PATTERN)
-public class TableServlet extends HttpServlet {
+@WebServlet(HelloServlet.URL_PATTERN)
+public class HelloServlet extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTERN = "/tableServlet";
+    public static final String URL_PATTERN = "/helloServlet";
 
     /** Show the first line of soufce code */
-    public static final short SHOW_LINE = 53;
+    public static final short SHOW_LINE = 51;
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -51,39 +49,13 @@ public class TableServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        final HtmlElement html = new HtmlElement(getClass().getSimpleName(), StandardCharsets.UTF_8);
-        html.addCssLink("tableForm.css");
+        final HtmlElement html = new HtmlElement("Demo", StandardCharsets.UTF_8);
+        html.addCssLink("userForm.css");
         html.addElementToBody(Html.H1)
-                .addText("Show table");
-        final XmlElement table = html.addElementToBody(Html.TABLE)
-                .addAttrib(Html.A_CLASS, "numbers");
-        for (Object[] rowValue : getTableData()) {
-            final XmlElement rowElement = table.addElement(Html.TR);
-            for (Object value : rowValue) {
-                rowElement.addElement(Html.TD)
-                        .addText(value);
-            }
-        }
+                .addText("Hello, World!");
 
         ApplService.addFooter(html.getBody(), this, SHOW_LINE);
         html.toResponse(output, true); // Render the result
-    }
-
-    /** A number array */
-    private Object[][] getTableData() {
-        Random random = new Random();
-        int size = 20 + 1;
-        Object[][] result = new Object[size][size];
-        for (int i = 0; i < result.length; i++) {
-            for (int j = 0; j < result[i].length; j++) {
-                result[i][j] = i == 0
-                        ? String.valueOf((char)('A' + j - 1))
-                        : j == 0
-                        ? i
-                        : random.nextInt(500);
-            }
-        }
-        return result;
     }
 
     @Override

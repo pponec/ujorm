@@ -31,11 +31,11 @@ public class XmlElementTest {
 
         XmlElement root = new XmlElement("root");
         root.addElement("childA")
-                .addAttrib("x", 1)
-                .addAttrib("y", 2);
+                .setAttrib("x", 1)
+                .setAttrib("y", 2);
         root.addElement("childB")
-                .addAttrib("x", 3)
-                .addAttrib("y", 4)
+                .setAttrib("x", 3)
+                .setAttrib("y", 4)
                 .addText("A text message <&\">");
         root.addRawText("\n<rawXml/>\n");
         root.addCDATA("A character data <&\">");
@@ -81,11 +81,11 @@ public class XmlElementTest {
         System.out.println("testaddAttrib");
 
         String expected1 = XmlElement.HEADER + "\n<input readonly=\"\"/>";
-        String result1 = new XmlElement(Html.INPUT).addAttrib(Html.A_READONLY, "").toString();
+        String result1 = new XmlElement(Html.INPUT).setAttrib(Html.A_READONLY, "").toString();
         assertEquals(expected1, result1);
 
         String expected2 = XmlElement.HEADER + "\n<input/>";
-        String result2 = new XmlElement(Html.INPUT).addAttrib(Html.A_READONLY, null).toString();
+        String result2 = new XmlElement(Html.INPUT).setAttrib(Html.A_READONLY, null).toString();
         assertEquals(expected2, result2);
     }
 

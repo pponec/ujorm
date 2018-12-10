@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec,
+ * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,20 @@
  * limitations under the License.
  */
 
-package org.ujorm.ujoservlet.tools;
+package org.ujorm.tools.xml;
 
-/** Some HTML constants,
- * but this is certainly not a whole list of HTML elements,
- * attributes and allowed values. */
+import org.ujorm.tools.dom.HtmlElement;
+import org.ujorm.tools.dom.XmlElement;
+
+/** Some HTML constants, but this not a whole list of HTML elements,
+* attributes and allowed values. */
 public interface Html {
+
+
+    /** HTML doctype */
+    public static final String DOCTYPE = HtmlElement.HEADER;
+    /** XML header */
+    public static final String XML_HEADER = XmlElement.HEADER;
 
     // --- Element names ---
 

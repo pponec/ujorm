@@ -76,14 +76,14 @@ public class HtmlElementTest {
             final XmlElement row = table.addElement(Html.TR);
             row.addElement(Html.TD)
                     .addElement(Html.LABEL)
-                    .addAttrib(Html.A_FOR, field.getName())
+                    .setAttrib(Html.A_FOR, field.getName())
                     .addText(field.getLabelSeparated());
             row.addElement(Html.TD)
                     .addElement(Html.INPUT)
-                    .addAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
-                    .addAttrib(Html.A_ID, field.getName())
-                    .addAttrib(Html.A_NAME, field.getName())
-                    .addAttrib(Html.A_VALUE, input.get(field.getName()));
+                    .setAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
+                    .setAttrib(Html.A_ID, field.getName())
+                    .setAttrib(Html.A_NAME, field.getName())
+                    .setAttrib(Html.A_VALUE, input.get(field.getName()));
         }
 
         String result = html.toString();

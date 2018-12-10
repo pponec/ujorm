@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.ujoservlet;
+package org.ujorm.ujoservlet.xmlElement;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,9 +30,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.dom.HtmlElement;
 import org.ujorm.tools.dom.XmlElement;
+import org.ujorm.tools.xml.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
 import org.ujorm.ujoservlet.tools.BoardModel;
-import org.ujorm.ujoservlet.tools.Html;
 
 @WebServlet(BoardServlet.URL_PATTERN)
 public class BoardServlet extends HttpServlet {
@@ -90,39 +90,39 @@ public class BoardServlet extends HttpServlet {
     /** Create a form element including a hidden fields */
     private XmlElement buildFormElement(final XmlElement parent, BoardModel board) {
         XmlElement result = parent.addElement(Html.FORM)
-                .addAttrib(Html.A_METHOD, Html.V_GET);
+                .setAttrib(Html.A_METHOD, Html.V_GET);
         result.addElement(Html.INPUT)
-                .addAttrib(Html.A_TYPE, Html.V_HIDDEN)
-                .addAttrib(Html.A_NAME, BOARD_PARAM)
-                .addAttrib(Html.A_VALUE, board.exportBoard());
+                .setAttrib(Html.A_TYPE, Html.V_HIDDEN)
+                .setAttrib(Html.A_NAME, BOARD_PARAM)
+                .setAttrib(Html.A_VALUE, board.exportBoard());
         return result;
     }
 
     /** Create a clear button element */
     private void buildResetButton(XmlElement parent) {
         parent.addElement(Html.INPUT)
-                .addAttrib(Html.A_CLASS, Html.V_RESET)
-                .addAttrib(Html.A_TYPE, Html.V_SUBMIT)
-                .addAttrib(Html.A_NAME, RESET_ACTION)
-                .addAttrib(Html.A_VALUE, "Draw your own picture");
+                .setAttrib(Html.A_CLASS, Html.V_RESET)
+                .setAttrib(Html.A_TYPE, Html.V_SUBMIT)
+                .setAttrib(Html.A_NAME, RESET_ACTION)
+                .setAttrib(Html.A_VALUE, "Draw your own picture");
     }
 
     /** Create the boad element */
     protected void buildTheBoard(XmlElement parent, BoardModel board) {
         final XmlElement table = parent.addElement(Html.TABLE)
-                .addAttrib(Html.A_CELLPADDING, 0)
-                .addAttrib(Html.A_CELLSPACING, 0)
-                .addAttrib(Html.A_CLASS, "board")
+                .setAttrib(Html.A_CELLPADDING, 0)
+                .setAttrib(Html.A_CELLSPACING, 0)
+                .setAttrib(Html.A_CLASS, "board")
                 ;
         for (int y = 0; y < board.getHeight(); y++) {
             final XmlElement rowElement = table.addElement(Html.TR);
             for (int x = 0; x < board.getWidth(); x++) {
                 rowElement.addElement(Html.TD)
-                        .addAttrib(Html.A_CLASS, board.isStone(x, y) ? "s" : null)
+                        .setAttrib(Html.A_CLASS, board.isStone(x, y) ? "s" : null)
                         .addElement(Html.INPUT)
-                        .addAttrib(Html.A_TYPE, Html.V_SUBMIT)
-                        .addAttrib(Html.A_NAME, CELL_PREFIX_PARAM + (y * board.getWidth() + x))
-                        .addAttrib(Html.A_VALUE, "");
+                        .setAttrib(Html.A_TYPE, Html.V_SUBMIT)
+                        .setAttrib(Html.A_NAME, CELL_PREFIX_PARAM + (y * board.getWidth() + x))
+                        .setAttrib(Html.A_VALUE, "");
             }
         }
     }
