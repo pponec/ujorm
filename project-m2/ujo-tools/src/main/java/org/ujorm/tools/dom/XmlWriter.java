@@ -120,7 +120,7 @@ public class XmlWriter {
                 out.append(key);
                 out.append('=');
                 out.append(XML_2QUOT);
-                writeValue(attributes.get(key), element, key, out);
+                writeValue(attributes.get(key), element, key);
                 out.append(XML_2QUOT);
             }
         }
@@ -140,7 +140,7 @@ public class XmlWriter {
                     writeRawValue(((XmlElement.RawEnvelope) child).get(), element);
                     writeNewLine = false;
                 } else {
-                    writeValue(child, element, null, out);
+                    writeValue(child, element, null);
                     writeNewLine = false;
                 }
             }
@@ -168,9 +168,8 @@ public class XmlWriter {
      * @param value A value to write
      * @param element The element
      * @param attribute A name of the XML attribute of {@code null} value for a XML text.
-     * @param out An output writer
      */
-    protected void writeValue(@Nullable final Object value, @Nonnull final XmlElement element, final @Nullable String attribute, @Nonnull final Appendable out) throws IOException {
+    protected void writeValue(@Nullable final Object value, @Nonnull final XmlElement element, final @Nullable String attribute) throws IOException {
         final CharSequence text = value instanceof CharSequence ? (CharSequence) value : String.valueOf(value);
         for (int i = 0, max = text.length(); i < max; i++) {
             final char c = text.charAt(i);
