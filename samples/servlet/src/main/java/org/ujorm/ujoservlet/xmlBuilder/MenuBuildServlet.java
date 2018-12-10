@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.ujoservlet.xmlElement;
+package org.ujorm.ujoservlet.xmlBuilder;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -27,16 +27,17 @@ import org.ujorm.tools.dom.HtmlElement;
 import org.ujorm.tools.dom.XmlElement;
 import org.ujorm.tools.xml.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
+import org.ujorm.ujoservlet.xmlElement.*;
 
 /**
  * A live example of the HtmlElement inside a servlet.
  * @author Pavel Ponec
  */
-@WebServlet({MenuServlet.URL_PATTER, ""})
-public class MenuServlet extends HttpServlet {
+@WebServlet({MenuBuildServlet.URL_PATTER})
+public class MenuBuildServlet extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTER = "/dom";
+    public static final String URL_PATTER = "/builder";
 
     /** Show the first line of soufce code */
     public static final short SHOW_LINE = 52;
@@ -50,7 +51,7 @@ public class MenuServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        final String title = "List of samples (dom)";
+        final String title = "List of samples (builder)";
         final HtmlElement html = new HtmlElement(title, StandardCharsets.UTF_8);
         html.addCssLink("userForm.css");
         html.addElementToBody(Html.H1)
@@ -69,10 +70,10 @@ public class MenuServlet extends HttpServlet {
 
     /** Form field description data */
     private Item[] getItems(String title) {
-        Item[] result = { new Item(HelloServlet.URL_PATTERN, "Hello, World!")
-                        , new Item(TableServlet.URL_PATTERN, "Show table")
-                        , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
-                        , new Item(BoardServlet.URL_PATTERN + "?board=eJxjYHDgYvBgYNC8qRS6comW6OQlTIwAKGwE0g&c80", "Painting border")
+        Item[] result = { new Item(HelloBuildServlet.URL_PATTERN, "Hello, World!")
+                        , new Item(TableBuildServlet.URL_PATTERN, "Show table")
+                        , new Item(FormBuildServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
+                        , new Item(BoardBuildServlet.URL_PATTERN + "?board=eJxjYHDgYvBgYNC8qRS6comW6OQlTIwAKGwE0g&c80", "Painting border")
                         , new Item(BenchmarkStock.URL_PATTERN, "Report for a stock benchmark")
                         , new Item(BenchmarkPresent.URL_PATTERN, "Report for a presentation benchmark")
                         };

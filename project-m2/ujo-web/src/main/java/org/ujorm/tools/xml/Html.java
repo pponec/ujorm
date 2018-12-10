@@ -123,5 +123,7 @@ public interface Html {
     String V_POST = "post";
     String V_RESET = "reset";
     String V_SUBMIT = "submit";
+    String V_STYLESHEET = "stylesheet";
     String V_TEXT = "text";
+    String V_TEXT_CSS = "text/css";
 }

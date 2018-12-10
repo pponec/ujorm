@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package org.ujorm.ujoservlet.xmlElement;
+package org.ujorm.ujoservlet.xmlBuilder;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,14 +33,14 @@ import org.ujorm.ujoservlet.tools.ApplService;
  * A live example of the HtmlElement inside a servlet.
  * @author Pavel Ponec
  */
-@WebServlet({MenuServlet.URL_PATTER, ""})
-public class MenuServlet extends HttpServlet {
+@WebServlet(TableBuildServlet.URL_PATTERN)
+public class TableBuildServlet extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTER = "/dom";
+    public static final String URL_PATTERN = "/tableBuidServlet";
 
     /** Show the first line of soufce code */
-    public static final short SHOW_LINE = 52;
+    public static final short SHOW_LINE = 53;
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -50,50 +51,39 @@ public class MenuServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        final String title = "List of samples (dom)";
-        final HtmlElement html = new HtmlElement(title, StandardCharsets.UTF_8);
-        html.addCssLink("userForm.css");
+        final HtmlElement html = new HtmlElement(getClass().getSimpleName(), StandardCharsets.UTF_8);
+        html.addCssLink("tableForm.css");
         html.addElementToBody(Html.H1)
-                .addText(title);
-        XmlElement list = html.addElementToBody(Html.OL);
-        for (Item item : getItems(title)) {
-            list.addElement(Html.LI)
-                    .addElement(Html.A)
-                    .setAttrib(Html.A_HREF, item.getLink())
-                    .addText(item.label);
+                .addText("Show table");
+        final XmlElement table = html.addElementToBody(Html.TABLE)
+                .setAttrib(Html.A_CLASS, "numbers");
+        for (Object[] rowValue : getTableData()) {
+            final XmlElement rowElement = table.addElement(Html.TR);
+            for (Object value : rowValue) {
+                rowElement.addElement(Html.TD)
+                        .addText(value);
+            }
         }
 
         ApplService.addFooter(html.getBody(), this, SHOW_LINE);
         html.toResponse(output, true); // Render the result
     }
 
-    /** Form field description data */
-    private Item[] getItems(String title) {
-        Item[] result = { new Item(HelloServlet.URL_PATTERN, "Hello, World!")
-                        , new Item(TableServlet.URL_PATTERN, "Show table")
-                        , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
-                        , new Item(BoardServlet.URL_PATTERN + "?board=eJxjYHDgYvBgYNC8qRS6comW6OQlTIwAKGwE0g&c80", "Painting border")
-                        , new Item(BenchmarkStock.URL_PATTERN, "Report for a stock benchmark")
-                        , new Item(BenchmarkPresent.URL_PATTERN, "Report for a presentation benchmark")
-                        };
+    /** A number array */
+    private Object[][] getTableData() {
+        Random random = new Random();
+        int size = 20 + 1;
+        Object[][] result = new Object[size][size];
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result[i].length; j++) {
+                result[i][j] = i == 0
+                        ? String.valueOf((char)('A' + j - 1))
+                        : j == 0
+                        ? i
+                        : random.nextInt(500);
+            }
+        }
         return result;
-    }
-
-   /** Item description */
-    static class Item {
-        private final String link;
-        private final String label;
-
-        public Item(String link, String label) {
-            this.link = link;
-            this.label = label;
-        }
-        public String getLink() {
-            return link;
-        }
-        public String getLabel() {
-            return label;
-        }
     }
 
     @Override

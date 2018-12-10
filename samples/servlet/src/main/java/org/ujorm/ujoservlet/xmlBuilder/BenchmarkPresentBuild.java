@@ -40,7 +40,7 @@ import org.ujorm.tools.xml.XmlPriter;
 public class BenchmarkPresentBuild extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTERN = "/benchmarkPresentkBulid";
+    public static final String URL_PATTERN = "/PresentkBuildServler";
 
     /** Show the first line of soufce code */
     public static final short SHOW_LINE = 53;

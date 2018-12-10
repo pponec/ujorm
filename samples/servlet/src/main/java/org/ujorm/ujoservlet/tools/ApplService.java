@@ -15,12 +15,14 @@
  */
 package org.ujorm.ujoservlet.tools;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServlet;
 import org.ujorm.tools.dom.XmlElement;
 import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.xml.Html;
+import org.ujorm.tools.xml.XmlBuilder;
 
 /**
  * Common services with static methdos
@@ -44,7 +46,7 @@ public abstract class ApplService {
         return MsgFormatter.format(SOURCE_LINK_TEMPLATE, servletClass.getName().replace('.', '/'), firstLine);
     }
 
-    /** Add a common footer */
+    /** Add a common footer for DOM */
     public static void addFooter(final XmlElement parent, HttpServlet servlet, short showLine) {
         XmlElement footer = parent.addElement(Html.DIV)
                 .setAttrib(Html.A_CLASS, "footer");
@@ -56,4 +58,16 @@ public abstract class ApplService {
         footer.addTextWithSpace("source class of the Ujorm framework.");
     }
 
+
+    /** Add a common footer for BUILDER */
+    public static void addFooter(XmlBuilder parent, HttpServlet servlet, short showLine) throws  IOException {
+        XmlBuilder footer = parent.addElement(Html.DIV)
+                .setAttrib(Html.A_CLASS, "footer");
+        footer.addTextWithSpace("See a")
+                .addElement(Html.A)
+                .setAttrib(Html.A_HREF, getSourceLink(servlet.getClass(), showLine))
+                .setAttrib(Html.A_TARGET, Html.V_BLANK)
+                .addText(servlet.getClass().getSimpleName());
+        footer.addTextWithSpace("source class of the Ujorm framework.");
+    }
 }
