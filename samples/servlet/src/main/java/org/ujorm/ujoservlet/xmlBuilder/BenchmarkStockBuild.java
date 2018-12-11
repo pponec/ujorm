@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.xml.Html;
 import org.ujorm.tools.xml.XmlBuilder;
-import org.ujorm.tools.xml.XmlPriter;
+import org.ujorm.tools.xml.XmlPrinter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -71,7 +71,7 @@ public class BenchmarkStockBuild extends HttpServlet {
      */
     public void stock(HttpServletResponse output) throws IOException, IllegalArgumentException {
 
-        final XmlPriter writer = XmlPriter.forHtml(output);
+        final XmlPrinter writer = XmlPrinter.forHtml(output);
         try (XmlBuilder html = new XmlBuilder(Html.HTML, writer)) {
             try (XmlBuilder head = html.addElement(Html.HEAD)) {
                 head.addElement(Html.TITLE)

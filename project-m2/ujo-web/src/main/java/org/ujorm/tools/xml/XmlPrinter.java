@@ -31,7 +31,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * @since 1.88
  * @author Pavel Ponec
  */
-public class XmlPriter {
+public class XmlPrinter {
 
     /** A special XML character */
     public static final char XML_GT = '>';
@@ -70,17 +70,17 @@ public class XmlPriter {
     protected final String offsetSpace;
 
     /** Default constructor a zero offset */
-    public XmlPriter() {
+    public XmlPrinter() {
         this(new CharArrayWriter(512));
     }
 
     /** Writer constructor with a zero offset */
-    public XmlPriter(@Nonnull final Appendable out) {
+    public XmlPrinter(@Nonnull final Appendable out) {
         this(out, "");
     }
 
     /** Writer constructor with a zero offset */
-    public XmlPriter(@Nonnull final Appendable out, @Nullable final boolean offset, Object... initTexts) {
+    public XmlPrinter(@Nonnull final Appendable out, @Nullable final boolean offset, Object... initTexts) {
         this(out, offset ? "\t" : null);
         try {
             for (Object text : initTexts) {
@@ -96,7 +96,7 @@ public class XmlPriter {
      * @param out A writer
      * @param offsetSpace String for a one level offset.
      */
-    public XmlPriter(@Nonnull final Appendable out, @Nullable final String offsetSpace) {
+    public XmlPrinter(@Nonnull final Appendable out, @Nullable final String offsetSpace) {
         this.out = out;
         this.offsetEnabled = Check.hasLength(offsetSpace);
         this.offsetSpace = offsetSpace;
@@ -212,26 +212,26 @@ public class XmlPriter {
     /** Crete a new instance including a XML_HEADER.
      * The result provides a method {@link #toString() }
      */
-    public static XmlPriter forXml() {
-        return new XmlPriter(new StringBuilder(512), false, Html.XML_HEADER);
+    public static XmlPrinter forXml() {
+        return new XmlPrinter(new StringBuilder(512), false, Html.XML_HEADER);
     }
 
     /** Crete a new instance including a DOCTYPE.
      * The result provides a method {@link #toString() }
      */
-    public static XmlPriter forHtml() {
-        return new XmlPriter(new StringBuilder(512), false, Html.DOCTYPE);
+    public static XmlPrinter forHtml() {
+        return new XmlPrinter(new StringBuilder(512), false, Html.DOCTYPE);
     }
 
     /** Crete a new instance including a DOCTYPE */
-    public static XmlPriter forHtml(final Appendable out) {
-        return new XmlPriter(out, false, Html.DOCTYPE);
+    public static XmlPrinter forHtml(final Appendable out) {
+        return new XmlPrinter(out, false, Html.DOCTYPE);
     }
 
     /** Create XmlPrinter for UTF-8 */
-    public static XmlPriter forHtml(HttpServletResponse output) throws IOException {
+    public static XmlPrinter forHtml(HttpServletResponse output) throws IOException {
         output.setCharacterEncoding(UTF_8.toString());
-        return new XmlPriter(output.getWriter(), false, Html.DOCTYPE);
+        return new XmlPrinter(output.getWriter(), false, Html.DOCTYPE);
 
     }
 }

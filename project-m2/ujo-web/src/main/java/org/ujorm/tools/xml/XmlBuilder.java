@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.dom.*;
-import static org.ujorm.tools.dom.XmlWriter.*;
+import static org.ujorm.tools.xml.XmlPrinter.CHAR_SPACE;
 
 /**
  * A XML builder.
@@ -56,18 +56,14 @@ import static org.ujorm.tools.dom.XmlWriter.*;
  * @since 1.86
  * @author Pavel Ponec
  */
-public class XmlBuilder implements Closeable {
+public class XmlBuilder extends AbstractElement<XmlBuilder> {
 
     /** Assertion message template */
     protected static final String REQUIRED_MSG = "The argument {} is required";
 
-    /** Element name */
-    @Nonnull
-    protected final String name;
-
     /** Node writer */
     @Nonnull
-    private final XmlPriter writer;
+    private final XmlPrinter writer;
 
     /** Element level */
     private int level;
@@ -90,10 +86,10 @@ public class XmlBuilder implements Closeable {
     /** The new element constructor
      * @param name The element name must not be empty or contain any special HTML characters.
      */
-    public XmlBuilder(@Nonnull final String name, @Nonnull final XmlPriter writer, final int level) throws IOException {
+    public XmlBuilder(@Nonnull final String name, @Nonnull final XmlPrinter writer, final int level) throws IOException {
+        super(name);
         Assert.notNull(name, REQUIRED_MSG, "name");
         Assert.notNull(writer, REQUIRED_MSG, "writer");
-        this.name = name;
         this.writer = writer;
 
         if (level == 0) {
@@ -102,18 +98,17 @@ public class XmlBuilder implements Closeable {
     }
 
     /** New element with a parent */
-    public XmlBuilder(@Nonnull final String name, @Nonnull final XmlPriter writer) throws IOException {
+    public XmlBuilder(@Nonnull final String name, @Nonnull final XmlPrinter writer) throws IOException {
         this(name, writer, 0);
     }
 
-
     /**
      * Settup states
-     * @param node A child Node or {@code null} value for a text data
+     * @param element A child Node or {@code null} value for a text data
      * @throws IOException
      */
     @Nonnull
-    protected <T extends XmlBuilder> T nextChild(@Nullable XmlBuilder node) throws IOException {
+    protected XmlBuilder nextChild(@Nullable final XmlBuilder element) throws IOException {
         Assert.isFalse(closed, "The node {} was closed", this.name);
         if (!filled) {
             writer.writeMid(this);
@@ -121,16 +116,16 @@ public class XmlBuilder implements Closeable {
         if (lastChild != null) {
             lastChild.close();
         }
-        if (node != null) {
-            writer.writeBeg(node);
+        if (element != null) {
+            writer.writeBeg(element);
         }
 
         filled = true;
         attributeMode = false;
-        lastChild = node;
-        lastText = node == null;
+        lastChild = element;
+        lastText = element == null;
 
-        return (T) node;
+        return element;
     }
 
     /**
@@ -138,7 +133,7 @@ public class XmlBuilder implements Closeable {
      * @param element Add a child element is required. An undefined argument is ignored.
      * @return The argument type of XmlElement! */
     @Nonnull @Deprecated
-    public final <T extends XmlBuilder> T addElement(@Nonnull final T element) throws IOException {
+    public <T extends XmlBuilder> T addElement(@Nonnull final T element) throws IOException {
         Assert.notNull(element, REQUIRED_MSG, "element");
         nextChild(element);
         return element;
@@ -150,36 +145,15 @@ public class XmlBuilder implements Closeable {
      */
     @Nonnull
     public final <T extends XmlBuilder> T addElement(@Nonnull final String name) throws IOException {
-        return nextChild(new XmlBuilder(name, writer, level + 1));
+        return (T) nextChild(new XmlBuilder(name, writer, level + 1));
     }
 
-    /** *  Create a new {@link XmlBuilder} for a required name and add it to children with many attributes.
-     * @param elementName  A name of the new XmlElement is required.
-     * @param attributeName An attribute key
-     * @param attributeData An attribute value
-     * @param attributes Pairs of attribute - value. An attribute with no value is ignored silently.
-     * @return The new XmlElement!
-     */
-    @Nonnull
-    public final <T extends XmlBuilder> T addElement
-        ( @Nonnull final String elementName
-        , @Nonnull final String attributeName
-        , @Nullable final Object attributeData
-        , @Nonnull final Object... attributes) throws IOException
-        {
-        final T result = addElement(elementName);
-        result.setAttrib(attributeName, attributeData);
-        for (int i = 1, max = attributes.length; i < max; i += 2) {
-             result.setAttrib((String) attributes[i-1], attributes[i]);
-        }
-        return result;
-    }
 
     /**
      * Add an attribute
      * @param name Required element name
      * @param data The {@code null} value is ignored. Formatting is performed by the
-     *   {@link XmlPriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
+     *   {@link XmlPrinter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
@@ -197,7 +171,7 @@ public class XmlBuilder implements Closeable {
     /**
      * Add a text and escape special character
      * @param data The {@code null} value is allowed. Formatting is performed by the
-     *   {@link XmlPriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
+     *   {@link XmlPrinter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Nonnull
@@ -230,58 +204,26 @@ public class XmlBuilder implements Closeable {
         return (T) this;
     }
 
-//    /**
-//     * Add a <strong>comment text</strong>.
-//     * The CDATA structure isn't really for HTML at all.
-//     * @param comment A comment text must not contain a string {@code -->} .
-//     * @return This instance
-//     */
-//    @Nonnull
-//    public final <T extends XmlNode> T addComment(@Nullable final CharSequence comment) {
-//        if (Check.hasLength(comment)) {
-//            Assert.isTrue(!comment.toString().contains(COMMENT_END), "The text contains a forbidden string: " + COMMENT_END);
-//            StringBuilder msg = new StringBuilder
-//                     ( COMMENT_BEG.length()
-//                     + COMMENT_END.length()
-//                     + comment.length() + 2);
-//            addRawText(msg.append(COMMENT_BEG)
-//                    .append(CHAR_SPACE)
-//                    .append(comment)
-//                    .append(CHAR_SPACE)
-//                    .append(COMMENT_END));
-//        }
-//        return (T) this;
-//    }
+    /**
+     * Add a <strong>comment text</strong>.
+     * The CDATA structure isn't really for HTML at all.
+     * @param comment A comment text must not contain a string {@code -->} .
+     * @return This instance
+     */
+    @Nonnull @Deprecated
+    public final <T extends XmlBuilder> T addComment(@Nullable final CharSequence comment) {
+        throw new UnsupportedOperationException();
+    }
 
-//    /**
-//     * Add a <strong>character data</strong> in {@code CDATA} format to XML only.
-//     * The CDATA structure isn't really for HTML at all.
-//     * @param charData A text including the final DATA sequence. An empty argument is ignored.
-//     * @return This instance
-//     */
-//    @Nonnull
-//    public final <T extends XmlNode> T addCDATA(@Nullable final CharSequence charData) {
-//        if (Check.hasLength(charData)) {
-//            addRawText(CDATA_BEG);
-//            final String text = charData.toString();
-//            int i = 0, j;
-//            while ((j = text.indexOf(CDATA_END, i)) >= 0) {
-//                j += CDATA_END.length();
-//                addRawText(text.subSequence(i, j));
-//                i = j;
-//                addText(CDATA_END);
-//                addRawText(CDATA_BEG);
-//            }
-//            addRawText(i == 0 ? text : text.substring(i));
-//            addRawText(CDATA_END);
-//        }
-//        return (T) this;
-//    }
-
-    /** Get an Node name */
-    @Nonnull
-    public String getName() {
-        return name.toString();
+    /**
+     * Add a <strong>character data</strong> in {@code CDATA} format to XML only.
+     * The CDATA structure isn't really for HTML at all.
+     * @param charData A text including the final DATA sequence. An empty argument is ignored.
+     * @return This instance
+     */
+    @Nonnull @Deprecated
+    public final <T extends XmlBuilder> T addCDATA(@Nullable final CharSequence charData) {
+        throw new UnsupportedOperationException();
     }
 
     /** Close the Node */
@@ -315,7 +257,7 @@ public class XmlBuilder implements Closeable {
     }
 
     /** Writer */
-    public XmlPriter getWriter() {
+    public XmlPrinter getWriter() {
         return writer;
     }
 

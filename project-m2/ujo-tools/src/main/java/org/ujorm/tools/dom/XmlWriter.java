@@ -24,6 +24,8 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.dom.AbstractElement.WriterTool;
+import static org.ujorm.tools.dom.AbstractElement.WriterTool.*;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -32,31 +34,6 @@ import org.ujorm.tools.Check;
  * @author Pavel Ponec
  */
 public class XmlWriter {
-
-    /** A special XML character */
-    public static final char XML_GT = '>';
-    /** A special XML character */
-    public static final char XML_LT = '<';
-    /** A special XML character */
-    public static final char XML_AMP = '&';
-    /** A special XML character */
-    public static final char XML_QUOT = '\'';
-    /** A special XML character */
-    public static final char XML_2QUOT = '"';
-    /** A special XML character */
-    public static final char CHAR_SPACE = ' ';
-    /** A new line character */
-    public static final char CHAR_NEW_LINE = '\n';
-    /** A forward slash character */
-    public static final char FORWARD_SLASH = '/';
-    /** A CDATA beg markup sequence */
-    public static final String CDATA_BEG = "<![CDATA[";
-    /** A CDATA end markup sequence */
-    public static final String CDATA_END = "]]>";
-    /** A comment beg sequence */
-    public static final String COMMENT_BEG = "<!--";
-    /** A comment end sequence */
-    public static final String COMMENT_END = "-->";
 
     /** Writer */
     @Nonnull
@@ -92,7 +69,7 @@ public class XmlWriter {
 
     /** Render the XML code without header */
     @Nonnull
-    public XmlWriter write(final int level, @Nonnull final XmlElement element) throws IOException {
+    public final XmlWriter write(final int level, @Nonnull final XmlElement element) throws IOException {
         return write(level, element.name, element.attributes, element.children, element);
     }
 
@@ -171,35 +148,7 @@ public class XmlWriter {
      */
     protected void writeValue(@Nullable final Object value, @Nonnull final XmlElement element, final @Nullable String attribute) throws IOException {
         final CharSequence text = value instanceof CharSequence ? (CharSequence) value : String.valueOf(value);
-        for (int i = 0, max = text.length(); i < max; i++) {
-            final char c = text.charAt(i);
-            switch (c) {
-                case XML_LT:
-                    out.append(XML_AMP).append("lt;");
-                    break;
-                case XML_GT:
-                    out.append(XML_AMP).append("gt;");
-                    break;
-                case XML_AMP:
-                    out.append(XML_AMP).append("#38;");
-                    break;
-                case XML_QUOT:
-                    out.append(XML_AMP).append("#39;");
-                    break;
-                case XML_2QUOT:
-                    out.append(XML_AMP).append("#34;");
-                    break;
-                default: {
-                    if (c > 32 || c == CHAR_SPACE) {
-                        out.append(c);
-                    } else {
-                        out.append(XML_AMP).append("#");
-                        out.append(Integer.toString(c));
-                        out.append(";");
-                    }
-                }
-            }
-        }
+        WriterTool.write(text, out);
     }
 
     /**
@@ -219,3 +168,4 @@ public class XmlWriter {
              : String.valueOf(result);
     }
 }
+

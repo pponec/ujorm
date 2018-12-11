@@ -19,7 +19,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.ujorm.tools.xml.Html;
 import org.ujorm.tools.xml.XmlBuilder;
-import org.ujorm.tools.xml.XmlPriter;
+import org.ujorm.tools.xml.XmlPrinter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.*;
 
@@ -33,7 +33,7 @@ public class XmlBuilderTest {
     public void testXmlBuilding() throws IOException {
         System.out.println("XmlBuilding");
 
-        final XmlPriter writer = XmlPriter.forXml();
+        final XmlPrinter writer = XmlPrinter.forXml();
         try (XmlBuilder root = new XmlBuilder("root", writer)) {
             root.addElement("childA")
                     .setAttrib("x", 1)
@@ -62,7 +62,7 @@ public class XmlBuilderTest {
     public void testToResponse() throws IOException {
         System.out.println("HttpServletResponse");
 
-        XmlPriter writer = XmlPriter.forHtml();
+        XmlPrinter writer = XmlPrinter.forHtml();
         try (XmlBuilder html = new XmlBuilder(Html.HTML, writer)) {
              try (XmlBuilder head = html.addElement(Html.HEAD)) {
                    head.addElement(Html.META, Html.A_CHARSET, UTF_8);

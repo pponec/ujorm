@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.dom.HtmlElement;
 import org.ujorm.tools.xml.Html;
 import org.ujorm.tools.xml.XmlBuilder;
-import org.ujorm.tools.xml.XmlPriter;
+import org.ujorm.tools.xml.XmlPrinter;
 import org.ujorm.ujoservlet.tools.ApplService;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -52,7 +52,7 @@ public class HelloBuildServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
 
-        final XmlPriter writer = XmlPriter.forHtml(output);
+        final XmlPrinter writer = XmlPrinter.forHtml(output);
         try (XmlBuilder html = new XmlBuilder(Html.HTML, writer)) {
 
             try (XmlBuilder head = html.addElement(Html.HEAD)) {

@@ -20,6 +20,7 @@ package org.ujorm.tools.dom;
 import java.io.CharArrayWriter;
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -30,7 +31,7 @@ import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.dom.XmlElement.RawEnvelope;
-import static org.ujorm.tools.dom.XmlWriter.*;
+import static org.ujorm.tools.dom.AbstractElement.WriterTool.*;
 
 /**
  * XML element model to rendering a XML file.
@@ -62,17 +63,10 @@ import static org.ujorm.tools.dom.XmlWriter.*;
  * @since 1.86
  * @author Pavel Ponec
  */
-public class XmlElement implements Closeable {
+public class XmlElement extends AbstractElement<XmlElement> implements Serializable {
 
     /** XML header */
     public static final String HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
-
-    /** Assertion message template */
-    protected static final String REQUIRED_MSG = "The argument {} is required";
-
-    /** Element name */
-    @Nonnull
-    protected final String name;
 
     /** Attributes */
     @Nullable
@@ -86,8 +80,7 @@ public class XmlElement implements Closeable {
      * @param name The element name must not be empty or contain any special HTML characters.
      */
     public XmlElement(@Nonnull final String name) {
-        Assert.notNull(name, REQUIRED_MSG, "name");
-        this.name = name;
+        super(name);
     }
 
     /** New element with a parent */
@@ -132,28 +125,6 @@ public class XmlElement implements Closeable {
     @Nonnull
     public final <T extends XmlElement> T addElement(@Nonnull final String name) {
         return (T) new XmlElement(name, this);
-    }
-
-    /** Create a new {@link XmlElement} for a required name and add it to children with many attributes.
-     * @param elementName  A name of the new XmlElement is required.
-     * @param attributeName An attribute key
-     * @param attributeData An attribute value
-     * @param attributes Pairs of attribute - value. An attribute with no value is ignored silently.
-     * @return The new XmlElement!
-     */
-    @Nonnull
-    public final <T extends XmlElement> T addElement
-        ( @Nonnull final String elementName
-        , @Nonnull final String attributeName
-        , @Nullable final Object attributeData
-        , @Nonnull final Object... attributes)
-        {
-        final T result = addElement(elementName);
-        result.setAttrib(attributeName, attributeData);
-        for (int i = 1, max = attributes.length; i < max; i += 2) {
-             result.setAttrib((String) attributes[i-1], attributes[i]);
-        }
-        return result;
     }
 
     /**
@@ -269,12 +240,6 @@ public class XmlElement implements Closeable {
         return (T) this;
     }
 
-    /** Get an element name */
-    @Nonnull
-    public String getName() {
-        return name.toString();
-    }
-
     /** Get an unmodifiable map of attributes */
     @Nonnull
     public Map<String, Object> getAttributes() {
@@ -309,12 +274,6 @@ public class XmlElement implements Closeable {
     public XmlWriter toWriter(final int level, @Nonnull final XmlWriter out) throws IOException {
         return out.write(level, this);
     }
-
-    /** An empty method */
-    @Override
-    public final void close() throws IOException {
-    }
-
 
     // -------- Inner class --------
 

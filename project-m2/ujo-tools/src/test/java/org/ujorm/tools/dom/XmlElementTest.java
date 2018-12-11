@@ -19,6 +19,7 @@ package org.ujorm.tools.dom;
 import org.junit.Test;
 import org.ujorm.tools.msg.MsgFormatter;
 import static org.junit.Assert.*;
+import static org.ujorm.tools.dom.AbstractElement.WriterTool.*;
 
 /**
  * @author Pavel Ponec
@@ -56,17 +57,17 @@ public class XmlElementTest {
         System.out.println("AddCDATA");
 
         XmlElement root = new XmlElement("root");
-        root.addCDATA(MsgFormatter.format("A{}B{}C", XmlWriter.CDATA_BEG, XmlWriter.CDATA_END));
+        root.addCDATA(MsgFormatter.format("A{}B{}C", CDATA_BEG, CDATA_END));
         String expected =XmlElement.HEADER + "\n<root><![CDATA[A<![CDATA[B]]>]]&gt;<![CDATA[C]]></root>";
         assertEquals(expected, root.toString());
 
         root = new XmlElement("root");
-        root.addCDATA(MsgFormatter.format("{}ABC{}", XmlWriter.CDATA_BEG, XmlWriter.CDATA_END));
+        root.addCDATA(MsgFormatter.format("{}ABC{}", CDATA_BEG, CDATA_END));
         expected =XmlElement.HEADER + "\n<root><![CDATA[<![CDATA[ABC]]>]]&gt;<![CDATA[]]></root>";
         assertEquals(expected, root.toString());
 
         root = new XmlElement("root");
-        root.addCDATA(MsgFormatter.format("A{}{}C", XmlWriter.CDATA_BEG, XmlWriter.CDATA_END));
+        root.addCDATA(MsgFormatter.format("A{}{}C", CDATA_BEG, CDATA_END));
         expected =XmlElement.HEADER + "\n<root><![CDATA[A<![CDATA[]]>]]&gt;<![CDATA[C]]></root>";
         assertEquals(expected, root.toString());
 

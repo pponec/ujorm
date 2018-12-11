@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.ujorm.tools.dom.XmlWriter.CHAR_NEW_LINE;
+import static org.ujorm.tools.dom.AbstractElement.WriterTool.CHAR_NEW_LINE;
 
 /**
  * XML element model to rendering a HTML file
@@ -163,7 +163,7 @@ public class HtmlElement extends XmlElement {
             }
 
             final Writer writer = (Writer) getWriter.invoke(httpServletResponse);
-            toWriter(new XmlWriter(writer.append(HtmlElement.HEADER).append(XmlWriter.CHAR_NEW_LINE)));
+            toWriter(new XmlWriter(writer.append(HtmlElement.HEADER).append(CHAR_NEW_LINE)));
             writer.flush();
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
