@@ -17,6 +17,7 @@
 
 package org.ujorm.tools.dom;
 
+import org.ujorm.tools.xml.AbstractElement;
 import java.io.CharArrayWriter;
 import java.io.Closeable;
 import java.io.IOException;
@@ -31,7 +32,7 @@ import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.dom.XmlElement.RawEnvelope;
-import static org.ujorm.tools.dom.AbstractElement.WriterTool.*;
+import static org.ujorm.tools.xml.CommonXmlWriter.*;
 
 /**
  * XML element model to rendering a XML file.

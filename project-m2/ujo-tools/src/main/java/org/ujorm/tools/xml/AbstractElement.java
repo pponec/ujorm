@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools.dom;
+package org.ujorm.tools.xml;
 
 import java.io.Closeable;
 import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.Assert;
 
 /**
@@ -142,72 +143,5 @@ public abstract class AbstractElement<E extends AbstractElement> implements Clos
      */
     @Nonnull
     public abstract <T extends E> T addCDATA(@Nullable final CharSequence charData) throws IOException;
-
-    // ----- UTILS -----
-
-    /** Writer XML content by constants */
-    public static final class WriterTool {
-
-        /** A special XML character */
-        public static final char XML_GT = '>';
-        /** A special XML character */
-        public static final char XML_LT = '<';
-        /** A special XML character */
-        public static final char XML_AMP = '&';
-        /** A special XML character */
-        public static final char XML_QUOT = '\'';
-        /** A special XML character */
-        public static final char XML_2QUOT = '"';
-        /** A special XML character */
-        public static final char CHAR_SPACE = ' ';
-        /** A new line character */
-        public static final char CHAR_NEW_LINE = '\n';
-        /** A forward slash character */
-        public static final char FORWARD_SLASH = '/';
-        /** A CDATA beg markup sequence */
-        public static final String CDATA_BEG = "<![CDATA[";
-        /** A CDATA end markup sequence */
-        public static final String CDATA_END = "]]>";
-        /** A comment beg sequence */
-        public static final String COMMENT_BEG = "<!--";
-        /** A comment end sequence */
-        public static final String COMMENT_END = "-->";
-
-        /** Write escaped value to the output
-         * @param text A value to write
-         * @param out An output
-         */
-        public static void write(@Nonnull final CharSequence text, @Nonnull Appendable out) throws IOException {
-            for (int i = 0, max = text.length(); i < max; i++) {
-                final char c = text.charAt(i);
-                switch (c) {
-                    case XML_LT:
-                        out.append(XML_AMP).append("lt;");
-                        break;
-                    case XML_GT:
-                        out.append(XML_AMP).append("gt;");
-                        break;
-                    case XML_AMP:
-                        out.append(XML_AMP).append("#38;");
-                        break;
-                    case XML_QUOT:
-                        out.append(XML_AMP).append("#39;");
-                        break;
-                    case XML_2QUOT:
-                        out.append(XML_AMP).append("#34;");
-                        break;
-                    default: {
-                        if (c > 32 || c == CHAR_SPACE) {
-                            out.append(c);
-                        } else {
-                            out.append(XML_AMP).append("#");
-                            out.append(Integer.toString(c));
-                            out.append(";");
-                        }
-                    }
-                }
-            }
-        }
-    }
 
 }

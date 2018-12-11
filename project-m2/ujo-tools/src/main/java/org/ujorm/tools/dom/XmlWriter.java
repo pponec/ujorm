@@ -24,8 +24,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.dom.AbstractElement.WriterTool;
-import static org.ujorm.tools.dom.AbstractElement.WriterTool.*;
+import org.ujorm.tools.xml.CommonXmlWriter;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -33,18 +32,7 @@ import static org.ujorm.tools.dom.AbstractElement.WriterTool.*;
  * @since 1.88
  * @author Pavel Ponec
  */
-public class XmlWriter {
-
-    /** Writer */
-    @Nonnull
-    protected final Appendable out;
-
-    /** An element offset is enabled */
-    protected final boolean offsetEnabled;
-
-    /** An offset space */
-    @Nullable
-    protected final String offsetSpace;
+public class XmlWriter extends CommonXmlWriter {
 
     /** Default constructor a zero offset */
     public XmlWriter() {
@@ -62,15 +50,13 @@ public class XmlWriter {
      * @param offsetSpace String for a one level offset.
      */
     public XmlWriter(@Nonnull final Appendable out, @Nullable final String offsetSpace) {
-        this.out = out;
-        this.offsetEnabled = Check.hasLength(offsetSpace);
-        this.offsetSpace = offsetSpace;
+        super(out, offsetSpace);
     }
 
     /** Render the XML code without header */
     @Nonnull
     public final XmlWriter write(final int level, @Nonnull final XmlElement element) throws IOException {
-        return write(level, element.name, element.attributes, element.children, element);
+        return write(level, element.getName(), element.attributes, element.children, element);
     }
 
     /** Render the XML code without header
@@ -129,43 +115,6 @@ public class XmlWriter {
         }
         out.append(XML_GT);
         return this;
-    }
-
-    /** Write a new line with an offset by the current level */
-    protected void writeNewLine(final int level) throws IOException {
-        out.append(CHAR_NEW_LINE);
-        if (offsetEnabled) {
-            for (int i = level - 1; i >= 0; i--) {
-                out.append(offsetSpace);
-            }
-        }
-    }
-
-    /** Write escaped value to the output
-     * @param value A value to write
-     * @param element The element
-     * @param attribute A name of the XML attribute of {@code null} value for a XML text.
-     */
-    protected void writeValue(@Nullable final Object value, @Nonnull final XmlElement element, final @Nullable String attribute) throws IOException {
-        final CharSequence text = value instanceof CharSequence ? (CharSequence) value : String.valueOf(value);
-        WriterTool.write(text, out);
-    }
-
-    /**
-     * Write the content of an envelope
-     * @param rawValue A raw value to print
-     * @param element An original element
-     */
-    protected void writeRawValue(@Nonnull final Object rawValue, @Nonnull final XmlElement element) throws IOException {
-        out.append(rawValue.toString());
-    }
-
-    @Override @Nonnull
-    public String toString() {
-        final String result = out.toString();
-        return result != null
-             ? result
-             : String.valueOf(result);
     }
 }
 

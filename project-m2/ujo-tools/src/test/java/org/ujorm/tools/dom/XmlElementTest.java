@@ -19,7 +19,7 @@ package org.ujorm.tools.dom;
 import org.junit.Test;
 import org.ujorm.tools.msg.MsgFormatter;
 import static org.junit.Assert.*;
-import static org.ujorm.tools.dom.AbstractElement.WriterTool.*;
+import static org.ujorm.tools.xml.CommonXmlWriter.*;
 
 /**
  * @author Pavel Ponec

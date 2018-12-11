@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.ujorm.tools.dom.AbstractElement.WriterTool.CHAR_NEW_LINE;
+import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_NEW_LINE;
 
 /**
  * XML element model to rendering a HTML file
