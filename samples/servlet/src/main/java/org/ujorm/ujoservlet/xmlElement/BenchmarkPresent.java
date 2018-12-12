@@ -27,10 +27,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.ujorm.tools.dom.HtmlElement;
-import org.ujorm.tools.dom.XmlElement;
-import org.ujorm.tools.dom.XmlWriter;
-import org.ujorm.tools.xml.Html;
+import org.ujorm.tools.xml.dom.HtmlElement;
+import org.ujorm.tools.xml.dom.XmlElement;
+import org.ujorm.tools.xml.dom.XmlWriter;
+import org.ujorm.tools.web.Html;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -99,7 +99,7 @@ public class BenchmarkPresent extends HttpServlet {
         }
 
         output.setCharacterEncoding(UTF_8.toString());
-        html.toWriter(new XmlWriter(output.getWriter().append(HtmlElement.HEADER).append("\n"), "\t"));
+        html.toWriter(new XmlWriter(output.getWriter().append(HtmlElement.HTML_DOCTYPE).append("\n"), "\t"));
     }
 
     private static class Presentation {

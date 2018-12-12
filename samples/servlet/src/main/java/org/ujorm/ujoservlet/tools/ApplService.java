@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServlet;
 import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.xml.AbstractElement;
-import org.ujorm.tools.xml.Html;
+import org.ujorm.tools.web.Html;
 
 /**
  * Common services with static methdos

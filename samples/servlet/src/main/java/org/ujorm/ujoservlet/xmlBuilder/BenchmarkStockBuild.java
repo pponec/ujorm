@@ -24,9 +24,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.ujorm.tools.xml.Html;
-import org.ujorm.tools.xml.XmlBuilder;
-import org.ujorm.tools.xml.XmlPrinter;
+import org.ujorm.tools.web.Html;
+import org.ujorm.tools.xml.builder.XmlBuilder;
+import org.ujorm.tools.xml.builder.XmlPrinter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**

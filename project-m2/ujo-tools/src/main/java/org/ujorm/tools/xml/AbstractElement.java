@@ -33,7 +33,7 @@ import org.ujorm.tools.Assert;
 public abstract class AbstractElement<E extends AbstractElement> implements Closeable {
 
     /** XML header */
-    public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
+    public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
     /** HTML doctype */
     public static final String HTML_DOCTYPE = "<!DOCTYPE html>";

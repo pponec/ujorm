@@ -31,7 +31,7 @@ import org.dom4j.Element;
 import org.dom4j.io.HTMLWriter;
 import org.dom4j.io.OutputFormat;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.xml.Html;
+import org.ujorm.tools.web.Html;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.

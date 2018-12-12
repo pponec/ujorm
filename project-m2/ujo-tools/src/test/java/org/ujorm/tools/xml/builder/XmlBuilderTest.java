@@ -45,7 +45,7 @@ public class XmlBuilderTest {
         }
 
         String result = writer.toString();
-        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "\n<root>"
                 + "\n<childA x=\"1\" y=\"2\"/>"
                 + "\n<childB x=\"3\" y=\"4\">A text message &lt;&#38;&#34;&gt;</childB>"
