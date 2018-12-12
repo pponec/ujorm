@@ -34,6 +34,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.UjoTextable;
+import org.ujorm.tools.xml.AbstractElement;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ujorm.core.UjoTools.SPACE;
 
@@ -56,7 +57,7 @@ import static org.ujorm.core.UjoTools.SPACE;
 public class UjoManagerXML extends UjoService<UjoTextable> {
 
     /** A default XML header: &lt;?xml version="1.0" encoding="UTF-8"?&gt; */
-    public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+    public static final String XML_HEADER = AbstractElement.XML_HEADER;
 
     /** A name of Java Class of XML attribute. */
     public static final String ATTR_CLASS = "javaClass";
