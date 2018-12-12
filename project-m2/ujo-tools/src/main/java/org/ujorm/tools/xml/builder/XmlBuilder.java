@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools.xml;
+package org.ujorm.tools.xml.builder;
 
 import java.io.Closeable;
 import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.dom.*;
-import static org.ujorm.tools.xml.XmlPrinter.CHAR_SPACE;
+import org.ujorm.tools.xml.AbstractElement;
+import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_SPACE;
 
 /**
  * A XML builder.
@@ -84,9 +84,9 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
     private boolean attributeMode = true;
 
     /** The new element constructor
-     * @param name The element name must not be empty or contain any special HTML characters.
+     * @param name The element name must not be empty nor special HTML characters.
      */
-    public XmlBuilder(@Nonnull final String name, @Nonnull final XmlPrinter writer, final int level) throws IOException {
+    public XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer, final int level) throws IOException {
         super(name);
         Assert.notNull(name, REQUIRED_MSG, "name");
         Assert.notNull(writer, REQUIRED_MSG, "writer");

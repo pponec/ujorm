@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools.dom;
+package org.ujorm.tools.xml.dom;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.xml.CommonXmlWriter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_NEW_LINE;
 
@@ -39,9 +39,6 @@ import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_NEW_LINE;
  * @author Pavel Ponec
  */
 public class HtmlElement extends XmlElement {
-
-    /** XML header */
-    public static final String HEADER = "<!DOCTYPE html>";
 
     /** Head element */
     @Nonnull
@@ -133,7 +130,7 @@ public class HtmlElement extends XmlElement {
     public String toString() throws IllegalStateException {
         try {
             return toWriter(0, new XmlWriter(new StringBuilder(512)
-                    .append(HEADER)
+                    .append(HTML_DOCTYPE)
                     .append(CHAR_NEW_LINE)))
                     .toString();
         } catch (IOException e) {
@@ -150,20 +147,8 @@ public class HtmlElement extends XmlElement {
      */
     public void toResponse(@Nonnull final Object httpServletResponse, final boolean noCache) throws IOException, IllegalArgumentException {
         try {
-            final Method setEncoding = httpServletResponse.getClass().getMethod("setCharacterEncoding", String.class);
-            final Method setHeader = httpServletResponse.getClass().getMethod("setHeader", String.class, String.class);
-            final Method getWriter = httpServletResponse.getClass().getMethod("getWriter");
-
-            setEncoding.invoke(httpServletResponse, charset.toString());
-            setHeader.invoke(httpServletResponse, "Content-Type", "text/html; charset=" + charset);
-            if (noCache) {
-                setHeader.invoke(httpServletResponse, "Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
-                setHeader.invoke(httpServletResponse, "Pragma", "no-cache"); // HTTP 1.0
-                setHeader.invoke(httpServletResponse, "Expires", "0"); // Proxies
-            }
-
-            final Writer writer = (Writer) getWriter.invoke(httpServletResponse);
-            toWriter(new XmlWriter(writer.append(HtmlElement.HEADER).append(CHAR_NEW_LINE)));
+            final Writer writer = CommonXmlWriter.createWriter(httpServletResponse, charset, noCache);
+            toWriter(new XmlWriter(writer.append(HtmlElement.HTML_DOCTYPE).append(CHAR_NEW_LINE)));
             writer.flush();
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
@@ -177,8 +162,7 @@ public class HtmlElement extends XmlElement {
      * @throws IllegalArgumentException Wrong argument type
      */
     public XmlWriter toWriter(@Nonnull final XmlWriter xmlWriter) throws IOException, IllegalArgumentException {
-            toWriter(0, xmlWriter);
-            return xmlWriter;
+            return toWriter(0, xmlWriter);
     }
 
     /** Some HTML constants */

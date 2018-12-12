@@ -15,20 +15,31 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools.dom;
+package org.ujorm.tools.xml;
 
-/** Some HTML constants,
-* but this is certainly not a whole list of HTML elements,
+/** Some HTML constants, but this not a whole list of HTML elements,
 * attributes and allowed values. */
 public interface Html {
 
     // --- Element names ---
 
     /** Body element */
-    String BODY = "body";
+    String HTML = "html";
+    /** Head element */
+    String HEAD = "head";
     /** Meta element */
     String META = "meta";
+    /** Body element */
+    String BODY = "body";
+    /** Title element */
+    String TITLE = "title";
+    /** Link element */
+    String LINK = "link";
+    /** Style element */
+    String STYLE = "style";
     /** Divission element */
+    /** Script element */
+    String SCRIPT = "script";
     String DIV = "div";
     /** Span element */
     String SPAN = "span";
@@ -38,8 +49,16 @@ public interface Html {
     String FORM = "form";
     /** Header element level 1 */
     String H1 = "h1";
+    /** Header element level 2 */
+    String H2 = "h2";
+    /** Header element level 3 */
+    String H3 = "h3";
     /** Table element */
     String TABLE = "table";
+    /** Table header line */
+    String THEAD = "thead";
+    /** Table header cell */
+    String TH = "th";
     /** Table row element */
     String TR = "tr";
     /** Table detail element */
@@ -64,6 +83,9 @@ public interface Html {
     // --- Attribute names ---
 
     String A_ACTION = "action";
+    String A_CELLPADDING = "cellpadding";
+    String A_CELLSPACING = "cellspacing";
+    String A_CHARSET = "charset";
     String A_CHECKED = "checked";
     String A_CLASS = "class";
     String A_CONTENT = "content";
@@ -72,10 +94,13 @@ public interface Html {
     String A_ID = "id";
     String A_LANG = "lang";
     String A_MAXLENGTH = "maxlength";
+    String A_MEDIA = "media";
     String A_METHOD = "method";
     String A_NAME = "name";
     String A_READONLY = "readonly";
+    String A_REL = "rel";
     String A_SELECTED = "selected";
+    String A_SRC = "src";
     String A_TARGET = "target";
     String A_TYPE = "type";
     String A_VALUE = "value";
@@ -87,6 +112,9 @@ public interface Html {
     String V_GET = "get";
     String V_HIDDEN = "hidden";
     String V_POST = "post";
+    String V_RESET = "reset";
     String V_SUBMIT = "submit";
+    String V_STYLESHEET = "stylesheet";
     String V_TEXT = "text";
+    String V_TEXT_CSS = "text/css";
 }

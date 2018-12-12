@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools.dom;
+package org.ujorm.tools.xml.dom;
 
+import org.ujorm.tools.xml.Html;
+import org.ujorm.tools.xml.dom.XmlElement;
+import org.ujorm.tools.xml.dom.HtmlElement;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

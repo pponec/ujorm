@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools.dom;
+package org.ujorm.tools.xml.dom;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;

@@ -15,14 +15,20 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools.xml;
+package org.ujorm.tools.xml.builder;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletResponse;
+import org.ujorm.tools.xml.CommonXmlWriter;
+import org.ujorm.tools.xml.dom.HtmlElement;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.ujorm.tools.xml.AbstractElement.HTML_DOCTYPE;
+import static org.ujorm.tools.xml.AbstractElement.XML_HEADER;
+import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_NEW_LINE;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -127,25 +133,34 @@ public class XmlPrinter extends CommonXmlWriter {
      * The result provides a method {@link #toString() }
      */
     public static XmlPrinter forXml() {
-        return new XmlPrinter(new StringBuilder(512), false, Html.XML_HEADER);
+        return new XmlPrinter(new StringBuilder(512), false, XML_HEADER);
     }
 
     /** Crete a new instance including a DOCTYPE.
      * The result provides a method {@link #toString() }
      */
     public static XmlPrinter forHtml() {
-        return new XmlPrinter(new StringBuilder(512), false, Html.DOCTYPE);
+        return new XmlPrinter(new StringBuilder(512), false, HTML_DOCTYPE);
     }
 
     /** Crete a new instance including a DOCTYPE */
     public static XmlPrinter forHtml(final Appendable out) {
-        return new XmlPrinter(out, false, Html.DOCTYPE);
+        return new XmlPrinter(out, false, HTML_DOCTYPE);
+    }
+
+
+    /** Create XmlPrinter for UTF-8 */
+    public static XmlPrinter forHtml(@Nonnull final Object httpServletResponse) throws IOException {
+        return forHtml(httpServletResponse, UTF_8, true);
     }
 
     /** Create XmlPrinter for UTF-8 */
-    public static XmlPrinter forHtml(HttpServletResponse output) throws IOException {
-        output.setCharacterEncoding(UTF_8.toString());
-        return new XmlPrinter(output.getWriter(), false, Html.DOCTYPE);
-
+    public static XmlPrinter forHtml(@Nonnull final Object httpServletResponse, @Nonnull final Charset charset, final boolean noCache) throws IOException {
+        try {
+            final Writer writer = createWriter(httpServletResponse, charset, noCache);
+            return new XmlPrinter(writer.append(HtmlElement.HTML_DOCTYPE).append(CHAR_NEW_LINE));
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
+        }
     }
 }

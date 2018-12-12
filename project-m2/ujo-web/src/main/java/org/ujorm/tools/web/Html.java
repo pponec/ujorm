@@ -15,20 +15,11 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools.xml;
-
-import org.ujorm.tools.dom.HtmlElement;
-import org.ujorm.tools.dom.XmlElement;
+package org.ujorm.tools.web;
 
 /** Some HTML constants, but this not a whole list of HTML elements,
 * attributes and allowed values. */
 public interface Html {
-
-
-    /** HTML doctype */
-    public static final String DOCTYPE = HtmlElement.HEADER;
-    /** XML header */
-    public static final String XML_HEADER = XmlElement.HEADER;
 
     // --- Element names ---
 

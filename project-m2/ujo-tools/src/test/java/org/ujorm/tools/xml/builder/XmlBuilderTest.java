@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 pavel.
+ * Copyright 2018 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools.web;
+package org.ujorm.tools.xml.builder;
 
 import java.io.IOException;
 import org.junit.Test;
 import org.ujorm.tools.xml.Html;
-import org.ujorm.tools.xml.XmlBuilder;
-import org.ujorm.tools.xml.XmlPrinter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.*;
 

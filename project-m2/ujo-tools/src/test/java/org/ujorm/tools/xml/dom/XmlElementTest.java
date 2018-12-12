@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools.dom;
+package org.ujorm.tools.xml.dom;
 
+import org.ujorm.tools.xml.Html;
+import org.ujorm.tools.xml.dom.XmlElement;
 import org.junit.Test;
 import org.ujorm.tools.msg.MsgFormatter;
 import static org.junit.Assert.*;
@@ -58,22 +60,22 @@ public class XmlElementTest {
 
         XmlElement root = new XmlElement("root");
         root.addCDATA(MsgFormatter.format("A{}B{}C", CDATA_BEG, CDATA_END));
-        String expected =XmlElement.HEADER + "\n<root><![CDATA[A<![CDATA[B]]>]]&gt;<![CDATA[C]]></root>";
+        String expected =XmlElement.XML_HEADER + "\n<root><![CDATA[A<![CDATA[B]]>]]&gt;<![CDATA[C]]></root>";
         assertEquals(expected, root.toString());
 
         root = new XmlElement("root");
         root.addCDATA(MsgFormatter.format("{}ABC{}", CDATA_BEG, CDATA_END));
-        expected =XmlElement.HEADER + "\n<root><![CDATA[<![CDATA[ABC]]>]]&gt;<![CDATA[]]></root>";
+        expected =XmlElement.XML_HEADER + "\n<root><![CDATA[<![CDATA[ABC]]>]]&gt;<![CDATA[]]></root>";
         assertEquals(expected, root.toString());
 
         root = new XmlElement("root");
         root.addCDATA(MsgFormatter.format("A{}{}C", CDATA_BEG, CDATA_END));
-        expected =XmlElement.HEADER + "\n<root><![CDATA[A<![CDATA[]]>]]&gt;<![CDATA[C]]></root>";
+        expected =XmlElement.XML_HEADER + "\n<root><![CDATA[A<![CDATA[]]>]]&gt;<![CDATA[C]]></root>";
         assertEquals(expected, root.toString());
 
         root = new XmlElement("root");
         root.addCDATA("");
-        expected =XmlElement.HEADER + "\n<root/>";
+        expected =XmlElement.XML_HEADER + "\n<root/>";
         assertEquals(expected, root.toString());
     }
 
@@ -81,11 +83,11 @@ public class XmlElementTest {
     public void testAddAttrib() {
         System.out.println("testaddAttrib");
 
-        String expected1 = XmlElement.HEADER + "\n<input readonly=\"\"/>";
+        String expected1 = XmlElement.XML_HEADER + "\n<input readonly=\"\"/>";
         String result1 = new XmlElement(Html.INPUT).setAttrib(Html.A_READONLY, "").toString();
         assertEquals(expected1, result1);
 
-        String expected2 = XmlElement.HEADER + "\n<input/>";
+        String expected2 = XmlElement.XML_HEADER + "\n<input/>";
         String result2 = new XmlElement(Html.INPUT).setAttrib(Html.A_READONLY, null).toString();
         assertEquals(expected2, result2);
     }
@@ -97,7 +99,7 @@ public class XmlElementTest {
         XmlElement root = new XmlElement("root");
         root.addComment("Sample text <&\">");
 
-        String expected = XmlElement.HEADER
+        String expected = XmlElement.XML_HEADER
                 + "\n<root><!-- Sample text <&\"> --></root>";
         assertEquals(expected, root.toString());
     }

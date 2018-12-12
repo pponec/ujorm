@@ -15,9 +15,8 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools.dom;
+package org.ujorm.tools.xml.dom;
 
-import org.ujorm.tools.xml.AbstractElement;
 import java.io.CharArrayWriter;
 import java.io.Closeable;
 import java.io.IOException;
@@ -31,7 +30,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.dom.XmlElement.RawEnvelope;
+import org.ujorm.tools.xml.AbstractElement;
+import org.ujorm.tools.xml.dom.XmlElement.RawEnvelope;
 import static org.ujorm.tools.xml.CommonXmlWriter.*;
 
 /**
@@ -66,9 +66,6 @@ import static org.ujorm.tools.xml.CommonXmlWriter.*;
  */
 public class XmlElement extends AbstractElement<XmlElement> implements Serializable {
 
-    /** XML header */
-    public static final String HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
-
     /** Attributes */
     @Nullable
     protected Map<String, Object> attributes;
@@ -78,9 +75,9 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
     protected List<Object> children;
 
     /** The new element constructor
-     * @param name The element name must not be empty or contain any special HTML characters.
+     * @param name The element name must not be empty nor special HTML characters.
      */
-    public XmlElement(@Nonnull final String name) {
+    public XmlElement(@Nonnull final CharSequence name) {
         super(name);
     }
 
@@ -262,7 +259,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
     public String toString() {
         try {
             return toWriter(0, new XmlWriter(new CharArrayWriter(512)
-                    .append(HEADER)
+                    .append(XML_HEADER)
                     .append(CHAR_NEW_LINE))
             ).toString();
         } catch (IOException e) {

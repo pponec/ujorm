@@ -17,9 +17,11 @@
 package org.ujorm.tools.xml;
 
 import java.io.IOException;
+import java.io.Writer;
+import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.ujorm.tools.Check;
 import org.ujorm.tools.Check;
 
 /**
@@ -143,6 +145,25 @@ public class CommonXmlWriter {
     @Override
     public String toString() {
         return out.toString();
+    }
+
+    // ---- STATIC METHOD(s) ---
+
+    /** Get writer from HttpServletResponse */
+    public static Writer createWriter(@Nonnull final Object httpServletResponse, @Nonnull final Charset charset, final boolean noCache)
+            throws ReflectiveOperationException {
+        final Method setEncoding = httpServletResponse.getClass().getMethod("setCharacterEncoding", String.class);
+        final Method setHeader = httpServletResponse.getClass().getMethod("setHeader", String.class, String.class);
+        final Method getWriter = httpServletResponse.getClass().getMethod("getWriter");
+        setEncoding.invoke(httpServletResponse, charset.toString());
+        setHeader.invoke(httpServletResponse, "Content-Type", "text/html; charset=" + charset);
+        if (noCache) {
+            setHeader.invoke(httpServletResponse, "Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+            setHeader.invoke(httpServletResponse, "Pragma", "no-cache"); // HTTP 1.0
+            setHeader.invoke(httpServletResponse, "Expires", "0"); // Proxies
+        }
+        final Writer writer = (Writer) getWriter.invoke(httpServletResponse);
+        return writer;
     }
 
 }

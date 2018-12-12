@@ -22,7 +22,6 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.Assert;
 
 /**
  * Abstrac element model.
@@ -33,6 +32,12 @@ import org.ujorm.tools.Assert;
  */
 public abstract class AbstractElement<E extends AbstractElement> implements Closeable {
 
+    /** XML header */
+    public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
+
+    /** HTML doctype */
+    public static final String HTML_DOCTYPE = "<!DOCTYPE html>";
+
     /** Assertion message template */
     protected static final String REQUIRED_MSG = "The argument {} is required";
 
@@ -41,9 +46,9 @@ public abstract class AbstractElement<E extends AbstractElement> implements Clos
     protected final String name;
 
     /** Constructor */
-    public AbstractElement(String name) {
+    public AbstractElement(@Nonnull final CharSequence name) {
         Assert.notNull(name, REQUIRED_MSG, "name");
-        this.name = name;
+        this.name = name.toString();
     }
 
     /** Get an element name */
