@@ -61,7 +61,7 @@ public class FormServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         input.setCharacterEncoding(charset.toString());
 
-        HtmlElement html = createHtmlElement("Simple user form", "userForm.css");
+        HtmlElement html = createHtmlElement("Simple user form", "css/userForm.css");
         XmlElement form = html.addElementToBody(Html.FORM)
                 .setAttrib(Html.A_METHOD, Html.V_POST)
                 .setAttrib(Html.A_ACTION, postMethod ? null : input.getRequestURI());

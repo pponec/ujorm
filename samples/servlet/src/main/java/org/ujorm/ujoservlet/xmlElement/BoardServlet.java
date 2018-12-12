@@ -69,7 +69,7 @@ public class BoardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         BoardModel boardModel = createBoardModel(input);
 
-        HtmlElement html = buildHtmlElement("Drawing board", "board.css"); // A root of DOM model
+        HtmlElement html = buildHtmlElement("Drawing board", "css/board.css"); // A root of DOM model
         XmlElement form = buildFormElement(html.getBody(), boardModel);
         boardModel.getErrorMessage().ifPresent(msg -> form.addElement(Html.SPAN).addText(msg)); // Print an error message
         buildTheBoard(form, boardModel);

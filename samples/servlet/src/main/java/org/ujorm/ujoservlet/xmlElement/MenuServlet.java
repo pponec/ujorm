@@ -27,6 +27,7 @@ import org.ujorm.tools.dom.HtmlElement;
 import org.ujorm.tools.dom.XmlElement;
 import org.ujorm.tools.xml.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
+import org.ujorm.ujoservlet.xmlBuilder.MenuBuildServlet;
 
 /**
  * A live example of the HtmlElement inside a servlet.
@@ -52,11 +53,11 @@ public class MenuServlet extends HttpServlet {
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         final String title = "List of samples (dom)";
         final HtmlElement html = new HtmlElement(title, StandardCharsets.UTF_8);
-        html.addCssLink("userForm.css");
+        html.addCssLink("css/userForm.css");
         html.addElementToBody(Html.H1)
                 .addText(title);
         XmlElement list = html.addElementToBody(Html.OL);
-        for (Item item : getItems(title)) {
+        for (Item item : getItems()) {
             list.addElement(Html.LI)
                     .addElement(Html.A)
                     .setAttrib(Html.A_HREF, item.getLink())
@@ -68,13 +69,14 @@ public class MenuServlet extends HttpServlet {
     }
 
     /** Form field description data */
-    private Item[] getItems(String title) {
+    private Item[] getItems() {
         Item[] result = { new Item(HelloServlet.URL_PATTERN, "Hello, World!")
                         , new Item(TableServlet.URL_PATTERN, "Show table")
                         , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
                         , new Item(BoardServlet.URL_PATTERN + "?board=eJxjYHDgYvBgYNC8qRS6comW6OQlTIwAKGwE0g&c80", "Painting border")
                         , new Item(BenchmarkStock.URL_PATTERN, "Report for a stock benchmark")
                         , new Item(BenchmarkPresent.URL_PATTERN, "Report for a presentation benchmark")
+                        , new Item(MenuBuildServlet.URL_PATTER, "List of samples (builder)")
                         };
         return result;
     }

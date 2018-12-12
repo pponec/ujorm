@@ -56,7 +56,7 @@ public class HelloBuildServlet extends HttpServlet {
         try (XmlBuilder html = new XmlBuilder(Html.HTML, writer)) {
 
             try (XmlBuilder head = html.addElement(Html.HEAD)) {
-                writeHeader(head, "Demo", "userForm.css");
+                writeHeader(head, "Demo", "css/userForm.css");
             }
             try (XmlBuilder body = html.addElement(Html.BODY)) {
                 body.addElement(Html.H1).addText("Hello, World!");

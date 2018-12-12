@@ -69,7 +69,7 @@ public class Dom4jServlet extends HttpServlet {
         head.addElement(Html.TITLE)
                 .addText(title);
         head.addElement(Html.LINK)
-                .addAttribute(Html.A_HREF, "welcomeForm.css")
+                .addAttribute(Html.A_HREF, "css/welcomeForm.css")
                 .addAttribute(Html.A_REL, "stylesheet")
                 .addAttribute(Html.A_TYPE, "text/css");
         final Element body = html.addElement(Html.BODY);

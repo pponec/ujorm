@@ -50,7 +50,7 @@ public class HelloServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         final HtmlElement html = new HtmlElement("Demo", StandardCharsets.UTF_8);
-        html.addCssLink("userForm.css");
+        html.addCssLink("css/userForm.css");
         html.addElementToBody(Html.H1)
                 .addText("Hello, World!");
 

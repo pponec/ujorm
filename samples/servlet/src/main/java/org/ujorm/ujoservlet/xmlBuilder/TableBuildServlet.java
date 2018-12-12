@@ -52,7 +52,7 @@ public class TableBuildServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         final HtmlElement html = new HtmlElement(getClass().getSimpleName(), StandardCharsets.UTF_8);
-        html.addCssLink("tableForm.css");
+        html.addCssLink("css/tableForm.css");
         html.addElementToBody(Html.H1)
                 .addText("Show table");
         final XmlElement table = html.addElementToBody(Html.TABLE)
