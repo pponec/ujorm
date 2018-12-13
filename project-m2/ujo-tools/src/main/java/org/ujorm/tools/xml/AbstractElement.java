@@ -57,18 +57,6 @@ public abstract class AbstractElement<E extends AbstractElement> implements Clos
         return name;
     }
 
-    /** An empty method */
-    @Override
-    public void close() throws IOException {
-    }
-
-    /**
-     * Add a child element
-     * @param element Add a child element is required. An undefined argument is ignored.
-     * @return The argument type of XmlElement! */
-    @Nonnull
-    public abstract <T extends E> T addElement(@Nonnull final T element) throws IOException;
-
     /** Create a new {@link XmlElement} for a required name and add it to children.
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!

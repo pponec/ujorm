@@ -120,7 +120,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
      */
-    @Nonnull
+    @Override @Nonnull
     public final <T extends XmlElement> T addElement(@Nonnull final String name) {
         return (T) new XmlElement(name, this);
     }
@@ -143,7 +143,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
-    @Nonnull
+    @Override @Nonnull
     public final <T extends XmlElement> T setAttrib(@Nonnull final String name, @Nullable final Object data) {
         Assert.hasLength(name, REQUIRED_MSG, "name");
         if (data != null) {
@@ -161,7 +161,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
-    @Nonnull
+    @Override @Nonnull
     public final <T extends XmlElement> T addText(@Nullable final Object data) {
         addChild(data);
         return (T) this;
@@ -171,7 +171,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * Add a text including a space (before and after the text)
      * @param data Anu data
      * @return This instance */
-    @Nonnull
+    @Override @Nonnull
     public final <T extends XmlElement> T addTextWithSpace(@Nullable final Object data) {
         addChild(CHAR_SPACE);
         addChild(data);
@@ -182,7 +182,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param data The {@code null} value is ignored.
      * @return This instance */
-    @Nonnull
+    @Override @Nonnull
     public final <T extends XmlElement> T addRawText(@Nullable final Object data) {
         if (data != null) {
             addChild(new RawEnvelope(data));
@@ -196,7 +196,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @param comment A comment text must not contain a string {@code -->} .
      * @return This instance
      */
-    @Nonnull
+    @Override @Nonnull
     public final <T extends XmlElement> T addComment(@Nullable final CharSequence comment) {
         if (Check.hasLength(comment)) {
             Assert.isTrue(!comment.toString().contains(COMMENT_END), "The text contains a forbidden string: " + COMMENT_END);
@@ -219,7 +219,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @param charData A text including the final DATA sequence. An empty argument is ignored.
      * @return This instance
      */
-    @Nonnull
+    @Override @Nonnull
     public final <T extends XmlElement> T addCDATA(@Nullable final CharSequence charData) {
         if (Check.hasLength(charData)) {
             addRawText(CDATA_BEG);
@@ -252,6 +252,11 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
         return children != null
             ? Collections.unmodifiableList(children)
             : Collections.emptyList();
+    }
+
+    /** An empty method */
+    @Override
+    public final void close() throws IOException {
     }
 
     /** Render the XML code including header */

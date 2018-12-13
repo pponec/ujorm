@@ -143,7 +143,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
      */
-    @Nonnull
+    @Override @Nonnull
     public final <T extends XmlBuilder> T addElement(@Nonnull final String name) throws IOException {
         return (T) nextChild(new XmlBuilder(name, writer, level + 1));
     }
@@ -157,7 +157,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
-    @Nonnull
+    @Override @Nonnull
     public final <T extends XmlBuilder> T setAttrib(@Nonnull final String name, @Nullable final Object data) throws IOException {
         Assert.hasLength(name, REQUIRED_MSG, "name");
         Assert.isFalse(closed, "The node {} was closed", this.name);
@@ -174,7 +174,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
      *   {@link XmlPrinter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
-    @Nonnull
+    @Override @Nonnull
     public final <T extends XmlBuilder> T addText(@Nullable final Object data) throws IOException {
         nextChild(null);
         writer.writeValue(data, this, null);
@@ -185,7 +185,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
      * Add a text including a space (before and after the text)
      * @param data Anu data
      * @return This instance */
-    @Nonnull
+    @Override @Nonnull
     public final <T extends XmlBuilder> T addTextWithSpace(@Nullable final Object data) throws IOException {
         nextChild(null);
         writer.writeRawText(CHAR_SPACE);
@@ -197,7 +197,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param data The {@code null} value is ignored.
      * @return This instance */
-    @Nonnull
+    @Override @Nonnull
     public final <T extends XmlBuilder> T addRawText(@Nullable final Object data) throws IOException {
         nextChild(null);
         writer.writeRawValue(data, this);
@@ -210,7 +210,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
      * @param comment A comment text must not contain a string {@code -->} .
      * @return This instance
      */
-    @Nonnull @Deprecated
+    @Override @Nonnull @Deprecated
     public final <T extends XmlBuilder> T addComment(@Nullable final CharSequence comment) {
         throw new UnsupportedOperationException();
     }
@@ -221,7 +221,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
      * @param charData A text including the final DATA sequence. An empty argument is ignored.
      * @return This instance
      */
-    @Nonnull @Deprecated
+    @Override @Nonnull @Deprecated
     public final <T extends XmlBuilder> T addCDATA(@Nullable final CharSequence charData) {
         throw new UnsupportedOperationException();
     }
