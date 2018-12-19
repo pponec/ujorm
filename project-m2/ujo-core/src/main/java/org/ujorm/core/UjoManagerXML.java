@@ -35,8 +35,9 @@ import org.ujorm.UjoAction;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.UjoTextable;
 import org.ujorm.tools.xml.AbstractElement;
+import org.ujorm.tools.xml.dom.XmlElement;
+import org.ujorm.tools.xml.dom.XmlWriter;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.ujorm.core.UjoTools.SPACE;
 
 /**
  * Ujo Manager for instances type of UjoTextAccess.
@@ -148,15 +149,17 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         this.actionExport  = new UjoActionImpl(UjoAction.ACTION_XML_EXPORT , context);
         writer.write(xmlHeader.getHeader());
         if (xmlHeader.getComment() != null) {
-            writeNewLine(writer);
-            writer.write("<!-- ");
+            writer.write("\n<!-- ");
             writer.write(xmlHeader.getComment());
-            writer.write(" -->");
+            writer.write(" -->\n");
         }
 
         @SuppressWarnings("unchecked")
-        Key key = Property.of(xmlHeader.getRootElement(), ujo.getClass());
-        printProperty(null, key, null, ujo, writer, false, xmlHeader.getAttributes());
+        final Key key = Property.of(xmlHeader.getRootElement(), ujo.getClass());
+        final XmlElement fakeElement = new XmlElement("_");
+        printProperty(null, key, null, ujo, fakeElement, false, null);
+        fakeElement.close();
+        ((XmlElement)fakeElement.getChildren().get(0)).toWriter(0, new XmlWriter(writer));
     }
 
     /** Close an {@link Closeable} object */
@@ -179,12 +182,12 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     @SuppressWarnings("unchecked")
     protected void printAttributes
     ( final UjoTextable ujo
-    , final Writer writer
+    , final AbstractElement writer
     ) throws IOException {
 
         // Write attributes:
         for (Key key : ujo.readKeys()) {
-            Object value = key.of(ujo);
+            final Object value = key.of(ujo);
 
             if (value!=null
             && !key.isTypeOf(Ujo.class)
@@ -193,23 +196,19 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             && !getUjoManager().isTransient(key)
             ){
                 final String valueStr = ujo.readValueString(key, actionExport);
-                writer.write(SPACE);
-                writer.write(key.getName());
-                writer.write("=\"");
-                printText2Xml(writer, valueStr);
-                writer.write('"');
+                writer.setAttrib(key.getName(), valueStr);
             }
         }
     }
 
     /** Write required keys to XML writer. */
-    public void printProperties(Writer writer, UjoTextable ujo) throws IOException {
+    public void printProperties(AbstractElement writer, UjoTextable ujo) throws IOException {
         printProperties(writer, ujo, ujo.readKeys());
     }
 
     /** Write required keys to a XML writer. */
     @SuppressWarnings("unchecked")
-    public void printProperties(final Writer writer, UjoTextable ujo, final KeyList<?> keys) throws IOException {
+    public void printProperties(final AbstractElement writer, UjoTextable ujo, final KeyList<?> keys) throws IOException {
         Key bodyProperty = getUjoManager().getXmlElementBody(ujo.getClass());
 
         for (Key key : keys) {
@@ -240,7 +239,6 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
 
             } else if (bodyProperty==key) {
-                writeNewLine(writer);
                 printValue2XML(writer, Object.class, value, ujo, key, true);
             } else {
                 final Class baseType = value.getClass()!=key.getType() ? value.getClass() : null ;
@@ -268,31 +266,23 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     , final Key key
     , final Class valueType
     , final Object value
-    , final Writer writer
+    , final AbstractElement parent
     , final boolean simpleProperty
     , final Map<String, String> extendedAttributes
     ) throws IOException {
 
-        // --------------
-
-        if (value==null
-        ||  ujo!=null // NOT Root
+        if (value == null
+        ||  ujo != null // NOT Root
         && !ujo.readAuthorization(actionExport, key, value)) {
             return; // listType;
         }
 
-        writeNewLine(writer);
-        writer.write('<');
-        writer.write(key.getName());
+        final AbstractElement writer = parent.addElement(key.getName());
 
         // Print extended attributes:
         if (extendedAttributes != null) {
             for (String keyName : extendedAttributes.keySet()) {
-                writer.write(SPACE);
-                writer.write(keyName);
-                writer.write("=\"");
-                printText2Xml(writer, extendedAttributes.get(keyName));
-                writer.write('"');
+                writer.setAttrib(keyName, extendedAttributes.get(keyName));
             }
         }
 
@@ -301,99 +291,41 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         }
 
         // Attributes: Class of a Value
-        if (valueType!=null) {
-            writer.write(SPACE);
-            writer.write(ATTR_CLASS);
-            writer.write("=\"");
-            writer.write(valueType.getName());
-            writer.write('"');
+        if (valueType != null) {
+            writer.setAttrib(ATTR_CLASS, valueType.getName());
         }
 
-        writer.write('>');
         if (simpleProperty && key instanceof ListKey) {
-            List valueList = (List) value;
+            final List valueList = (List) value;
             for (int i = 0, max = valueList.size(); i < max; i++) {
-                if (i>0) {
-                    writer.write("</");
-                    writer.write(key.getName());
-                    writer.write('>');
-                    writeNewLine(writer);
-                    writer.write('<');
-                    writer.write(key.getName());
-                    writer.write('>');
-                }
-                printText2Xml(writer, getUjoManager().encodeValue(valueList.get(i), false));
+                final AbstractElement nextChild = i == 0
+                        ? writer
+                        : parent.addElement(key.getName());
+                nextChild.addText(getUjoManager().encodeValue(valueList.get(i), false));
             }
         } else {
            printValue2XML(writer, Object.class, value, ujo, key, simpleProperty);
         }
-        writer.write("</");
-        writer.write(key.getName());
-        writer.write('>');
-
-        //return listType;
     }
 
     /** Print "value" to XML. */
     public void printItem
-    ( final Writer writer
+    ( final AbstractElement parent
     , final Class defaultType
     , final Object value
     , final UjoTextable ujo
     , final Key prop
     ) throws IOException {
 
-        writeNewLine(writer);
-        writer.write('<');
-        writer.write(ATTR_ITEM);
+        final AbstractElement writer = parent.addElement(ATTR_ITEM);
+
         if (value!=null
         && (defaultType ==null
         || !defaultType.equals(value.getClass()))
         ){
-            writer.write(SPACE);
-            writer.write(ATTR_CLASS);
-            writer.write("=\"");
-            writer.write(value.getClass().getName());
-            writer.write("\"");
+            writer.setAttrib(ATTR_CLASS, value.getClass().getName());
         }
-        writer.write('>');
         printValue2XML(writer, defaultType, value, ujo, prop, false);
-        writer.write("</");
-        writer.write(ATTR_ITEM);
-        writer.write('>');
-    }
-
-
-    /** Print escaped text to XML */
-    public void printText2Xml(final Appendable out, final String text) throws IOException {
-        int length = text.length();
-        for (int i=0; i<length; i++) {
-            final char c = text.charAt(i);
-            switch(c) {
-                case '<' : out.append("&lt;"  ); break;
-                case '>' : out.append("&gt;"  ); break;
-                case '&' : out.append("&amp;" ); break;
-                case '"' : out.append("&quot;"); break;
-                case '\'': out.append("&apos;"); break;
-                default  : {
-                    if (c<32) { // Condition including space: (c<=32)
-                        out.append("&#");
-                        out.append(Integer.toString(c));
-                        out.append(';');
-                    } else {
-                        out.append(c);
-                    }
-                }
-            }
-        }
-    }
-
-
-    /** Conditionaly write new line. */
-    public final void writeNewLine(final Appendable out) throws IOException {
-        if (breakLineEnabled) {
-            out.append('\n');
-        }
     }
 
     // =========== VALUE CONVERSIONS ==========================
@@ -401,7 +333,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     /** Print "value" to XML. */
     @SuppressWarnings("unchecked")
     public void printValue2XML
-    ( final Writer writer
+    ( final AbstractElement writer
     , final Class itemType
     , final Object value
     , final UjoTextable ujo
@@ -412,7 +344,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         if (value == null) {
             // NOTHING;
         } else if (value instanceof UjoTextable) {
-            printProperties(writer, (UjoTextable)value);
+            printProperties(writer, (UjoTextable) value);
         } else if (!simpleProperty && value instanceof List) {
             for (Object item : (List<Object>) value) {
                 printItem(writer, itemType, item, ujo, prop);
@@ -431,7 +363,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             ? ujo.readValueString(prop, actionExport)
             : getUjoManager().encodeValue(value, false)
             ;
-            printText2Xml(writer, str);
+            writer.addText(str);
         }
     }
 
