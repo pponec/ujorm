@@ -27,9 +27,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.dom.HtmlElement;
 import org.ujorm.tools.xml.dom.XmlElement;
-import org.ujorm.tools.web.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
 
 /**
@@ -83,7 +83,7 @@ public class FormBuildServlet extends HttpServlet {
 
     /** Create an input field including label and validation message */
     private XmlElement createInputField(Field field, XmlElement form, HttpServletRequest input) {
-        XmlElement result = new XmlElement(Html.DIV) // An envelope
+        XmlElement result =form.addElement(Html.DIV) // An envelope
                 .setAttrib(Html.A_CLASS, field.isSubmit() ? "submit" : null);
         result.addElement(Html.LABEL)
                 .setAttrib(Html.A_FOR, field.getName())
