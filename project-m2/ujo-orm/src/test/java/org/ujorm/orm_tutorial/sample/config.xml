@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.84-SNAPSHOT was created 2018-05-12 10:13 -->
-<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.71.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!-- The Ujorm configuration file release 1.89-SNAPSHOT was created 2018-12-20 22:18 -->
+<body>
     <database id="Database">
         <schema>db1</schema>
         <readOnly>false</readOnly>
@@ -16,7 +16,7 @@
             <alias>ord_order_alias</alias>
             <schema>db1</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
-            <comment>Order table for registering the &apos;order items&apos;</comment>
+            <comment>Order table for registering the 'order items'</comment>
             <column id="ID">
                 <name>ID</name>
                 <primaryKey>true</primaryKey>
@@ -238,6 +238,7 @@
         <tableAliasSuffix>_alias</tableAliasSuffix>
         <typeService>org.ujorm.orm.TypeServiceForOlderJdbc</typeService>
         <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
-        <moreParams></moreParams>
+        <moreParams/>
+        <fixingTableSequences>org.ujorm.orm.FixingTableSequencesDisabled</fixingTableSequences>
     </parameters>
 </body>
