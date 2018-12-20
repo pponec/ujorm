@@ -35,9 +35,9 @@ public class CommonXmlWriter {
     /** A special XML character */
     public static final char XML_LT = '<';
     /** A special XML character */
-    public static final char XML_AMP = '&';
+    public static final char XML_AMPERSAND = '&';
     /** A special XML character */
-    public static final char XML_QUOT = '\'';
+    public static final char XML_APOSTROPHE = '\'';
     /** A special XML character */
     public static final char XML_2QUOT = '"';
     /** A special XML character */
@@ -79,32 +79,40 @@ public class CommonXmlWriter {
 
     /** Write escaped value to the output
      * @param text A value to write
-     * @param out An output
+     * @param attribute Write an attribute value
      */
-    public void write(@Nonnull final CharSequence text) throws IOException {
+    public void write(@Nonnull final CharSequence text, final boolean attribute) throws IOException {
         for (int i = 0, max = text.length(); i < max; i++) {
             final char c = text.charAt(i);
             switch (c) {
                 case XML_LT:
-                    out.append(XML_AMP).append("lt;");
+                    out.append(XML_AMPERSAND).append("lt;");
                     break;
                 case XML_GT:
-                    out.append(XML_AMP).append("gt;");
+                    out.append(XML_AMPERSAND).append("gt;");
                     break;
-                case XML_AMP:
-                    out.append(XML_AMP).append("#38;");
-                    break;
-                case XML_QUOT:
-                    out.append(XML_AMP).append("#39;");
+                case XML_AMPERSAND:
+                    out.append(XML_AMPERSAND).append("amp;");
                     break;
                 case XML_2QUOT:
-                    out.append(XML_AMP).append("#34;");
+                    if (attribute) {
+                        out.append(XML_AMPERSAND).append("quot;");
+                    } else {
+                        out.append(c);
+                    }
+                    break;
+                case XML_APOSTROPHE:
+                    if (true) {
+                       out.append(c);
+                    } else {
+                       out.append(XML_AMPERSAND).append("apos;");
+                    }
                     break;
                 default: {
                     if (c > 32 || c == CHAR_SPACE) {
                         out.append(c);
                     } else {
-                        out.append(XML_AMP).append("#");
+                        out.append(XML_AMPERSAND).append("#");
                         out.append(Integer.toString(c));
                         out.append(";");
                     }
@@ -120,7 +128,7 @@ public class CommonXmlWriter {
      */
     public void writeValue(@Nullable final Object value, @Nonnull final AbstractElement element, final @Nullable String attribute) throws IOException {
         final CharSequence text = value instanceof CharSequence ? (CharSequence) value : String.valueOf(value);
-        write(text);
+        write(text, attribute != null);
     }
 
     /**

@@ -39,19 +39,20 @@ public class XmlBuilderTest {
             root.addElement("childB")
                     .setAttrib("x", 3)
                     .setAttrib("y", 4)
-                    .addText("A text message <&\">");
-            root.addRawText("\n<rawXml/>");
-          //root.addCDATA("A character data <&\">");
+                    .setAttrib("z", "<'&\">")
+                    .addText("A text message <'&\">");
+            root.addRawText("\n<rawXml/>\n");
+         // root.addCDATA("A character data <'&\">");
         }
 
         String result = writer.toString();
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "\n<root>"
                 + "\n<childA x=\"1\" y=\"2\"/>"
-                + "\n<childB x=\"3\" y=\"4\">A text message &lt;&#38;&#34;&gt;</childB>"
+                + "\n<childB x=\"3\" y=\"4\" z=\"&lt;'&amp;&quot;&gt;\">A text message &lt;'&amp;\"&gt;</childB>"
                 + "\n<rawXml/>"
-              //+ "\n<![CDATA[A character data <&\">]]>"
-                + "</root>";
+           //   + "\n<![CDATA[A character data <'&\">]]>"
+                + "\n</root>";
         assertEquals(expected, result);
     }
 

@@ -16,14 +16,12 @@
 
 package org.ujorm.tools.xml.dom;
 
-import org.ujorm.tools.xml.Html;
-import org.ujorm.tools.xml.dom.XmlElement;
-import org.ujorm.tools.xml.dom.HtmlElement;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.ujorm.tools.xml.Html;
 import static org.junit.Assert.assertEquals;
 
 /**
