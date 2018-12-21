@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import javax.annotation.Nonnull;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -225,7 +226,8 @@ public class JdbcBuilderTest {
     public void testShowUsage() throws ClassNotFoundException, SQLException {
         try (Connection dbConnection = createTable(createDbConnection()))  {
             showInsert(dbConnection);
-            showSelect(dbConnection);
+            showSelect_1(dbConnection);
+            showSelect_2(dbConnection);
             showSelectForSingleValue(dbConnection);
             showUpdate(dbConnection);
         }
@@ -249,8 +251,8 @@ public class JdbcBuilderTest {
         assertEquals(1, count);
     }
 
-    /** How to SELECT single value */
-    public void showSelect(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
+    /** How to SELECT a list */
+    public void showSelect_1(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         JdbcBuilder sql = new JdbcBuilder()
             .write(Sql.SELECT)
@@ -273,6 +275,25 @@ public class JdbcBuilderTest {
         }
         assertNotNull(tempRs);
         assertTrue(tempRs.isClosed());
+    }
+    
+   /** How to SELECT a list using a lambda expression */
+    public void showSelect_2(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
+        System.out.println("Show SELECT");
+        JdbcBuilder sql = new JdbcBuilder()
+            .write(Sql.SELECT)
+            .column("t.id")
+            .column("t.name") // unused column
+            .write(Sql.FROM)
+            .write("testTable t")
+            .write(Sql.WHERE)
+            .andCondition("t.name", Sql.EQ, "A name")
+            .andCondition("t.created", Sql.LE, someDate)
+            ;
+        List<Integer> ids = sql.executeSelect(dbConnection, (rs) -> rs.getInt(1));
+
+        assertNotNull(ids);
+        assertTrue(!ids.isEmpty());
     }
 
     /** How to SELECT single value */

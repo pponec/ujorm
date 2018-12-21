@@ -357,9 +357,23 @@ public final class JdbcBuilder implements Serializable {
     /** Create an iterator ready to a <strong>loop</strong> statement {@code for ( ; ; )}
      * Supported SQL statements are: INSERT, UPDATE, DELETE .
      */
+    @Nonnull
     public LoopingIterator<ResultSet> executeSelect(@Nonnull final Connection connection) throws IllegalStateException, SQLException {
         return new RowIterator(prepareStatement(connection));
     }
+
+    /** Create a new result list */
+    @Nonnull
+    public <T> List<T> executeSelect(@Nonnull final Connection connection, JdbcFunction<T> function) throws SQLException {
+        final ArrayList<T> result = new ArrayList<>(128);
+        try (PreparedStatement ps = prepareStatement(connection); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                result.add(function.apply(rs));
+            }
+        }
+        return result;
+    }
+
     /** Create statement and call {@link PreparedStatement.executeUpdate() }.
      * Supported SQL statements are: INSERT, UPDATE, DELETE .
      */
@@ -372,6 +386,7 @@ public final class JdbcBuilder implements Serializable {
     }
 
     /** Return the first column value of a unique resultset, else returns {@code null} value */
+    @Nullable
     public <T> T uniqueValue(@Nonnull Class<T> resultType, @Nonnull final Connection connection) {
         try (PreparedStatement ps = prepareStatement(connection); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
