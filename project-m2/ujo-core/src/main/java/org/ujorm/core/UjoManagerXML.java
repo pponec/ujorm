@@ -156,10 +156,10 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
         @SuppressWarnings("unchecked")
         final Key key = Property.of(xmlHeader.getRootElement(), ujo.getClass());
-        final XmlElement fakeElement = new XmlElement("_");
-        printProperty(null, key, null, ujo, fakeElement, false, null);
-        fakeElement.close();
-        ((XmlElement)fakeElement.getChildren().get(0)).toWriter(0, new XmlWriter(writer));
+        final XmlElement rootElement = new XmlElement(key.getName());
+        printProperty(null, key, null, ujo, rootElement, false, null);
+        rootElement.close();
+        rootElement.toWriter(0, new XmlWriter(writer));
     }
 
     /** Close an {@link Closeable} object */
@@ -230,7 +230,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
                 && ((ListKey)key).isItemTypeOf(Ujo.class)) {
                     for (Object item : (List) value) {
                         Class itemClass = itemType!=item.getClass() ? item.getClass() : null ;
-                        printProperty( ujo, key, itemClass, item, writer, false, null);
+                        printProperty(ujo, key, itemClass, item, writer, false, null);
                     }
                 } else {
                     final Class baseType2 = null; //value.getClass()!=key.getType() ? value.getClass() : null ;
@@ -277,7 +277,9 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             return; // listType;
         }
 
-        final AbstractElement writer = parent.addElement(key.getName());
+        final AbstractElement writer = ujo == null
+                ? parent // root
+                : parent.addElement(key.getName());
 
         // Print extended attributes:
         if (extendedAttributes != null) {
