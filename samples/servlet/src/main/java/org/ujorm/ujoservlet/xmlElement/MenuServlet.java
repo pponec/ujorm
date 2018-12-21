@@ -23,9 +23,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.dom.HtmlElement;
 import org.ujorm.tools.xml.dom.XmlElement;
-import org.ujorm.tools.web.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
 import org.ujorm.ujoservlet.xmlBuilder.MenuBuildServlet;
 
@@ -75,7 +75,7 @@ public class MenuServlet extends HttpServlet {
                         , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
                         , new Item(BoardServlet.URL_PATTERN + "?board=eJxjYHDgYvBgYNC8qRS6comW6OQlTIwAKGwE0g&c80", "Painting border")
                         , new Item(BenchmarkStock.URL_PATTERN, "Report for a stock benchmark")
-                        , new Item(BenchmarkPresent.URL_PATTERN, "Report for a presentation benchmark")
+                     // , new Item(BenchmarkPresent.URL_PATTERN, "Report for a presentation benchmark")
                         , new Item(MenuBuildServlet.URL_PATTER, "List of samples (builder)")
                         };
         return result;

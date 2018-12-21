@@ -28,9 +28,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.dom.HtmlElement;
 import org.ujorm.tools.xml.dom.XmlElement;
-import org.ujorm.tools.web.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
 import org.ujorm.ujoservlet.tools.BoardModel;
 
@@ -144,7 +144,7 @@ public class BoardServlet extends HttpServlet {
                 final String param = params.nextElement();
                 if (param.startsWith(CELL_PREFIX_PARAM)) {
                     int pointer = Integer.parseInt(param.substring(1));
-                    result.setStone(pointer);
+                    result.flipStone(pointer);
                     break;
                 }
             }

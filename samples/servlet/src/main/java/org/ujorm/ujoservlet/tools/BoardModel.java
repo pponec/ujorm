@@ -43,6 +43,11 @@ public class BoardModel {
         fields.set(i);
     }
 
+    /** Flip the stone */
+    public void flipStone(int i) {
+        fields.flip(i);
+    }
+
     public void setStone(int x, int y) {
         fields.set(y * width + x);
     }
