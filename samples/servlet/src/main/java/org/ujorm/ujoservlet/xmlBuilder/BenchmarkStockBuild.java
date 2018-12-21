@@ -72,7 +72,7 @@ public class BenchmarkStockBuild extends HttpServlet {
     public void stock(HttpServletResponse output) throws IOException, IllegalArgumentException {
 
         final XmlPrinter writer = XmlPrinter.forHtml(output);
-        try (XmlBuilder html = new XmlBuilder(Html.HTML, writer)) {
+        try (XmlBuilder html = writer.createHtmlElement()) {
             try (XmlBuilder head = html.addElement(Html.HEAD)) {
                 head.addElement(Html.TITLE)
                         .addText("Stock Prices");

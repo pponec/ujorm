@@ -32,7 +32,7 @@ public class XmlBuilderTest {
         System.out.println("XmlBuilding");
 
         final XmlPrinter writer = XmlPrinter.forXml();
-        try (XmlBuilder root = new XmlBuilder("root", writer)) {
+        try (XmlBuilder root = writer.createElement("root")) {
             root.addElement("childA")
                     .setAttrib("x", 1)
                     .setAttrib("y", 2);
@@ -62,7 +62,7 @@ public class XmlBuilderTest {
         System.out.println("HttpServletResponse");
 
         XmlPrinter writer = XmlPrinter.forHtml();
-        try (XmlBuilder html = new XmlBuilder(Html.HTML, writer)) {
+        try (XmlBuilder html = writer.createHtmlElement()) {
              try (XmlBuilder head = html.addElement(Html.HEAD)) {
                    head.addElement(Html.META, Html.A_CHARSET, UTF_8);
                    head.addElement(Html.TITLE).addText("Test");

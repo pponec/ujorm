@@ -127,6 +127,18 @@ public class XmlPrinter extends CommonXmlWriter {
              : String.valueOf(result);
     }
 
+    // ------- FACTORY METHODS -------
+
+    /** Create new {@code html} element */
+    public XmlBuilder createHtmlElement() throws IOException {
+        return createElement(HtmlElement.Html.HTML);
+    }
+
+    /** Create any element */
+    public XmlBuilder createElement(@Nonnull final String elementName) throws IOException {
+        return new XmlBuilder(elementName, this);
+    }
+
     // ------- STATIC METHODS -------
 
     /** Crete a new instance including a XML_HEADER.

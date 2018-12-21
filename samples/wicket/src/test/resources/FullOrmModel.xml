@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.89-SNAPSHOT was created 2018-12-19 21:36 -->
-<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.84.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!-- The Ujorm configuration file release 1.89-SNAPSHOT was created 2018-12-19 21:57 -->
+<body>
     <database id="DatabaseMapping">
         <schema>demoHotels</schema>
         <readOnly>false</readOnly>
@@ -447,6 +447,6 @@
     <parameters>
         <initializationBatch>org.ujorm.hotels.config.demoData.DataLoader</initializationBatch>
         <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
-        <moreParams></moreParams>
+        <moreParams/>
     </parameters>
 </body>

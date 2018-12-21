@@ -22,10 +22,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.ujorm.tools.xml.dom.HtmlElement;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
+import org.ujorm.tools.xml.dom.HtmlElement;
 import org.ujorm.ujoservlet.tools.ApplService;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -53,7 +53,7 @@ public class HelloBuildServlet extends HttpServlet {
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
 
         final XmlPrinter writer = XmlPrinter.forHtml(output);
-        try (XmlBuilder html = new XmlBuilder(Html.HTML, writer)) {
+        try (XmlBuilder html = writer.createHtmlElement()) {
 
             try (XmlBuilder head = html.addElement(Html.HEAD)) {
                 writeHeader(head, "Demo", "css/userForm.css");

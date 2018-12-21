@@ -98,7 +98,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
     }
 
     /** New element with a parent */
-    public XmlBuilder(@Nonnull final String name, @Nonnull final XmlPrinter writer) throws IOException {
+    public XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer) throws IOException {
         this(name, writer, 0);
     }
 

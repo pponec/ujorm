@@ -56,7 +56,7 @@ public class BenchmarkPresentBuild extends HttpServlet {
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
 
         final XmlPrinter writer = XmlPrinter.forHtml(output);
-        try (XmlBuilder html = new XmlBuilder(Html.HTML, writer)) {
+        try (XmlBuilder html = writer.createHtmlElement()) {
             try (XmlBuilder head = html.addElement(Html.HEAD)) {
                 head.addElement(Html.META, Html.A_CHARSET, "utf-8");
                 head.addElement(Html.META,
