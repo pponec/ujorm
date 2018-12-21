@@ -152,7 +152,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         if (xmlHeader.getComment() != null) {
             writer.write("\n<!-- ");
             writer.write(xmlHeader.getComment());
-            writer.write(" -->\n");
+            writer.write(" -->");
         }
 
         @SuppressWarnings("unchecked")
