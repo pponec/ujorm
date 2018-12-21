@@ -43,7 +43,7 @@ public class BoardModel {
         fields.set(i);
     }
 
-    /** Flip the stone */
+    /** Set or remove stone */
     public void flipStone(int i) {
         fields.flip(i);
     }
