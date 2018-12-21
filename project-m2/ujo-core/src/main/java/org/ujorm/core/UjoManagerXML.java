@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -35,8 +36,8 @@ import org.ujorm.UjoAction;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.UjoTextable;
 import org.ujorm.tools.xml.AbstractElement;
-import org.ujorm.tools.xml.dom.XmlElement;
-import org.ujorm.tools.xml.dom.XmlWriter;
+import org.ujorm.tools.xml.builder.XmlBuilder;
+import org.ujorm.tools.xml.builder.XmlPrinter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -156,10 +157,10 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
         @SuppressWarnings("unchecked")
         final Key key = Property.of(xmlHeader.getRootElement(), ujo.getClass());
-        final XmlElement rootElement = new XmlElement(key.getName());
-        printProperty(null, key, null, ujo, rootElement, false, null);
-        rootElement.close();
-        rootElement.toWriter(0, new XmlWriter(writer));
+        final XmlPrinter printer = new XmlPrinter(writer);
+        try (XmlBuilder rootElement = printer.createElement(key.getName())) {
+            printProperty(null, key, null, ujo, rootElement, false, null);;
+        }
     }
 
     /** Close an {@link Closeable} object */
@@ -262,13 +263,13 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
      * @throws java.io.IOException
      */
     private void printProperty
-    ( final UjoTextable ujo
-    , final Key key
-    , final Class valueType
-    , final Object value
-    , final AbstractElement parent
+    ( @Nullable final UjoTextable ujo
+    , @Nonnull final Key key
+    , @Nullable final Class valueType
+    , @Nullable final Object value
+    , @Nullable final AbstractElement parent
     , final boolean simpleProperty
-    , final Map<String, String> extendedAttributes
+    , @Nullable final Map<String, String> extendedAttributes
     ) throws IOException {
 
         if (value == null
