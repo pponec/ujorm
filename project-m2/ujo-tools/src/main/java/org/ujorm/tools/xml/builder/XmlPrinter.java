@@ -148,11 +148,13 @@ public class XmlPrinter extends CommonXmlWriter {
         return new XmlPrinter(new StringBuilder(512), false, XML_HEADER);
     }
 
-    /** Crete a new instance including a XML_HEADER.
+    /** Crete a new instance with no header.
      * The result provides a method {@link #toString() }
+     * @param indentation An intendation by four spaces.
+     * @return New instance of the XmlPrinter
      */
     public static XmlPrinter forXml(boolean indentation ) {
-        return new XmlPrinter(new StringBuilder(512), indentation, XML_HEADER);
+        return new XmlPrinter(new StringBuilder(512), indentation);
     }
 
     /** Crete a new instance including a DOCTYPE.
