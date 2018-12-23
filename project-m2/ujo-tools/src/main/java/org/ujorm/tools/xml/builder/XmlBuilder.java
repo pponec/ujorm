@@ -69,6 +69,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
     private int level;
 
     /** Last child node */
+    @Nullable
     private XmlBuilder lastChild;
 
     /** The last child was a text */
@@ -87,13 +88,25 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
      * @param name The element name must not be empty nor special HTML characters.
      */
     public XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer, final int level) throws IOException {
+        this(name, writer, level, true);
+    }
+
+
+    /** The new element constructor
+     * @param name The element name must not be empty nor special HTML characters.
+     * @param writer A XmlPrinter
+     * @param level Level of the Element
+     * @param printName Print the element name immediately.
+     * @throws IOException
+     */
+    protected XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) throws IOException {
         super(name);
         Assert.notNull(name, REQUIRED_MSG, "name");
         Assert.notNull(writer, REQUIRED_MSG, "writer");
         this.writer = writer;
 
-        if (level == 0) {
-            writer.writeBeg(this);
+        if (printName) {
+            writer.writeBeg(this, lastText);
         }
     }
 
@@ -117,7 +130,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
             lastChild.close();
         }
         if (element != null) {
-            writer.writeBeg(element);
+            writer.writeBeg(element, lastText);
         }
 
         filled = true;
@@ -128,26 +141,14 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
         return element;
     }
 
-    /**
-     * Add a child element
-     * @param element Add a child element is required. An undefined argument is ignored.
-     * @return The argument type of XmlElement! */
-    @Nonnull @Deprecated
-    public <T extends XmlBuilder> T addElement(@Nonnull final T element) throws IOException {
-        Assert.notNull(element, REQUIRED_MSG, "element");
-        nextChild(element);
-        return element;
-    }
-
     /** *  Create a new {@link XmlBuilder} for a required name and add it to children.
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
      */
     @Override @Nonnull
     public final <T extends XmlBuilder> T addElement(@Nonnull final String name) throws IOException {
-        return (T) nextChild(new XmlBuilder(name, writer, level + 1));
+        return (T) nextChild(new XmlBuilder(name, writer, level + 1, false));
     }
-
 
     /**
      * Add an attribute

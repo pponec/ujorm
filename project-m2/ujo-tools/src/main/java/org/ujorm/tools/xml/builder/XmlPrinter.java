@@ -50,7 +50,7 @@ public class XmlPrinter extends CommonXmlWriter {
 
     /** Writer constructor with a zero offset */
     public XmlPrinter(@Nonnull final Appendable out, @Nullable final boolean offset, Object... initTexts) {
-        super(out, offset ? "\t" : null);
+        super(out, offset ? "    " : null);
         try {
             for (Object text : initTexts) {
                 out.append(String.valueOf(text));
@@ -93,8 +93,8 @@ public class XmlPrinter extends CommonXmlWriter {
     }
 
     /** Open the Node */
-    void writeBeg(XmlBuilder element) throws IOException {
-        if (!element.isLastText()) {
+    void writeBeg(XmlBuilder element, final boolean lastText) throws IOException {
+        if (!lastText) {
             writeNewLine(element.getLevel());
         }
         out.append(XML_LT);
