@@ -56,6 +56,36 @@ public class XmlBuilderTest {
         assertEquals(expected, result);
     }
 
+    @Test
+    public void testXmlBuildingIntended() throws IOException {
+        System.out.println("XmlBuildingIntended");
+
+        boolean intendation = true;
+        final XmlPrinter writer = XmlPrinter.forXml(intendation);
+        try (XmlBuilder root = writer.createElement("root")) {
+            root.addElement("childA")
+                    .setAttrib("x", 1)
+                    .setAttrib("y", 2);
+            root.addElement("childB")
+                    .setAttrib("x", 3)
+                    .setAttrib("y", 4)
+                    .setAttrib("z", "<'&\">")
+                    .addText("A text message <'&\">");
+            root.addRawText("\n    <rawXml/>\n");
+         // root.addCDATA("A character data <'&\">");
+        }
+
+        String result = writer.toString();
+        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "\n<root>"
+                + "\n    <childA x=\"1\" y=\"2\"/>"
+                + "\n    <childB x=\"3\" y=\"4\" z=\"&lt;'&amp;&quot;&gt;\">A text message &lt;'&amp;\"&gt;</childB>"
+                + "\n    <rawXml/>"
+           //   + "\n<![CDATA[A character data <'&\">]]>"
+                + "\n</root>";
+        assertEquals(expected, result);
+    }
+
     /** Test rendering to the HttpServletResponse */
     @Test
     public void testToResponse() throws IOException {

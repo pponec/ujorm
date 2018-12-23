@@ -66,7 +66,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
     private final XmlPrinter writer;
 
     /** Element level */
-    private int level;
+    private final int level;
 
     /** Last child node */
     @Nullable
@@ -104,6 +104,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
         Assert.notNull(name, REQUIRED_MSG, "name");
         Assert.notNull(writer, REQUIRED_MSG, "writer");
         this.writer = writer;
+        this.level = level;
 
         if (printName) {
             writer.writeBeg(this, lastText);

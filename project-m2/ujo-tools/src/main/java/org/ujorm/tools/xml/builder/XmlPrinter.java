@@ -49,8 +49,8 @@ public class XmlPrinter extends CommonXmlWriter {
     }
 
     /** Writer constructor with a zero offset */
-    public XmlPrinter(@Nonnull final Appendable out, @Nullable final boolean offset, Object... initTexts) {
-        super(out, offset ? "    " : null);
+    public XmlPrinter(@Nonnull final Appendable out, @Nullable final boolean indentation, Object... initTexts) {
+        super(out, indentation ? "    " : null);
         try {
             for (Object text : initTexts) {
                 out.append(String.valueOf(text));
@@ -146,6 +146,13 @@ public class XmlPrinter extends CommonXmlWriter {
      */
     public static XmlPrinter forXml() {
         return new XmlPrinter(new StringBuilder(512), false, XML_HEADER);
+    }
+
+    /** Crete a new instance including a XML_HEADER.
+     * The result provides a method {@link #toString() }
+     */
+    public static XmlPrinter forXml(boolean indentation ) {
+        return new XmlPrinter(new StringBuilder(512), indentation, XML_HEADER);
     }
 
     /** Crete a new instance including a DOCTYPE.

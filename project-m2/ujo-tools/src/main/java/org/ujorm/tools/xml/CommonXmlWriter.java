@@ -59,22 +59,22 @@ public class CommonXmlWriter {
     @Nonnull
     protected final Appendable out;
 
-    /** An offset space */
+    /** An intendation space */
     @Nullable
-    protected final String offsetSpace;
+    protected final String intendationSpace;
 
-    /** Is offset enabled */
-    private final boolean offsetEnabled;
+    /** An intendation request */
+    private final boolean intendationEnabled;
 
     /**
      * A writer constructor
      * @param out A writer
-     * @param offsetSpace String for a one level offset.
+     * @param intendationSpace String for a one level offset.
      */
-    public CommonXmlWriter(@Nonnull final Appendable out, @Nullable final String offsetSpace) {
+    public CommonXmlWriter(@Nonnull final Appendable out, @Nullable final String intendationSpace) {
         this.out = out;
-        this.offsetSpace = offsetSpace;
-        this.offsetEnabled = Check.hasLength(offsetSpace);
+        this.intendationSpace = intendationSpace;
+        this.intendationEnabled = Check.hasLength(intendationSpace);
     }
 
     /** Write escaped value to the output
@@ -143,9 +143,9 @@ public class CommonXmlWriter {
     /** Write a new line with an offset by the current level */
     public void writeNewLine(final int level) throws IOException {
         out.append(CHAR_NEW_LINE);
-        if (offsetEnabled) {
+        if (intendationEnabled) {
             for (int i = level - 1; i >= 0; i--) {
-                out.append(offsetSpace);
+                out.append(intendationSpace);
             }
         }
     }
