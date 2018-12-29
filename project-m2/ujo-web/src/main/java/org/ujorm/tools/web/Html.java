@@ -40,7 +40,10 @@ public interface Html {
     /** Divission element */
     /** Script element */
     String SCRIPT = "script";
+    /** Division in an HTML document. */
     String DIV = "div";
+    /** Preformatted text. */
+    String PRE = "pre";
     /** Span element */
     String SPAN = "span";
     /** Paragraph element */
