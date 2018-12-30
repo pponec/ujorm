@@ -22,7 +22,6 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.CommonXmlWriter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_NEW_LINE;
@@ -146,10 +145,21 @@ public class HtmlElement extends XmlElement {
      * @throws IOException An writting error.
      * @throws IllegalArgumentException Wrong argument type
      */
-    public void toResponse(@Nonnull final Object httpServletResponse, final boolean noCache, @Nonnull String... offsetSpace) throws IOException, IllegalArgumentException {
+    public final void toResponse(@Nonnull final Object httpServletResponse, final boolean noCache) throws IOException, IllegalArgumentException {
+        toResponse(httpServletResponse, noCache, false);
+    }
+
+    /**
+     * @param httpServletResponse
+     * @param noCache
+     * @param indentation
+     * @throws IOException
+     * @throws IllegalArgumentException
+     */
+    public void toResponse(@Nonnull final Object httpServletResponse, final boolean indentation, final boolean noCache) throws IOException, IllegalArgumentException {
         try {
             final Writer writer = CommonXmlWriter.createWriter(httpServletResponse, charset, noCache);
-            final String offset = Check.hasLength((Object[]) offsetSpace) ? offsetSpace[0] : "";
+            final String offset = indentation ? "    " : "";
             toWriter(new XmlWriter(writer.append(HtmlElement.HTML_DOCTYPE).append(CHAR_NEW_LINE), offset));
             writer.flush();
         } catch (ReflectiveOperationException e) {
