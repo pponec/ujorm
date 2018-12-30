@@ -40,7 +40,7 @@ public interface Html {
     /** Link element */
     String LINK = "link";
     /** Script element */
-    String SCRIPT = "script";
+    String SCRIPT =  HtmlElement.Html.SCRIPT;
     /** Divission element */
     String DIV = "div";
     /** Span element */
@@ -102,7 +102,7 @@ public interface Html {
     String A_READONLY = "readonly";
     String A_REL = HtmlElement.Html.A_REL;
     String A_SELECTED = "selected";
-    String A_SRC = "src";
+    String A_SRC = HtmlElement.Html.A_SRC;
     String A_TARGET = "target";
     String A_TYPE = HtmlElement.Html.A_TYPE;
     String A_VALUE = "value";

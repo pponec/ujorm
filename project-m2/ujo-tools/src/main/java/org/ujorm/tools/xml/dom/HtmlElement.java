@@ -102,12 +102,24 @@ public class HtmlElement extends XmlElement {
         return body.addElement(name);
     }
 
+    /** Create a new Javascript element and return it
+     * @param javascriptLink Add a javascriptLink link
+     * @return New CSS element
+     */
+    public <T extends XmlElement> T addJavascriptLink(@Nonnull final CharSequence javascriptLink) {
+        Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
+        return head.addElement(Html.SCRIPT)
+                .setAttrib(Html.A_SRC, javascriptLink)
+                .setAttrib(Html.A_TYPE, "text/javascript")
+                .addText("");
+    }
+
     /** Create a new CSS element and return it
      * @param css Add a CSS link
      * @return New CSS element
      */
     public <T extends XmlElement> T addCssLink(@Nonnull final CharSequence css) {
-        Assert.notNull(name, REQUIRED_MSG, "css");
+        Assert.notNull(css, REQUIRED_MSG, "css");
         return head.addElement(Html.LINK)
                 .setAttrib(Html.A_HREF, css)
                 .setAttrib(Html.A_REL, "stylesheet")
@@ -119,7 +131,7 @@ public class HtmlElement extends XmlElement {
      * @return New CSS element
      */
     public <T extends XmlElement> T addCssBody(@Nonnull final CharSequence css) {
-        Assert.notNull(name, REQUIRED_MSG, "css");
+        Assert.notNull(css, REQUIRED_MSG, "css");
         return head.addElement(Html.STYLE)
                 .setAttrib(Html.A_TYPE, "text/css")
                 .addRawText(css);
@@ -196,6 +208,8 @@ public class HtmlElement extends XmlElement {
         String LINK = "link";
         /** Style element */
         String STYLE = "style";
+        /** Javascript element */
+        String SCRIPT = "script";
 
         // --- Attribute names ---
 
@@ -203,5 +217,6 @@ public class HtmlElement extends XmlElement {
         String A_HREF = "href";
         String A_REL = "rel";
         String A_TYPE = "type";
+        String A_SRC = "src";
     }
 }
