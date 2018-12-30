@@ -61,20 +61,20 @@ public class CommonXmlWriter {
 
     /** An intendation space */
     @Nullable
-    protected final String intendationSpace;
+    protected final String indentationSpace;
 
-    /** An intendation request */
-    private final boolean intendationEnabled;
+    /** An indentation request */
+    private final boolean indentationEnabled;
 
     /**
      * A writer constructor
      * @param out A writer
-     * @param intendationSpace String for a one level offset.
+     * @param indentationSpace String for a one level indentation.
      */
-    public CommonXmlWriter(@Nonnull final Appendable out, @Nullable final String intendationSpace) {
+    public CommonXmlWriter(@Nonnull final Appendable out, @Nullable final String indentationSpace) {
         this.out = out;
-        this.intendationSpace = intendationSpace;
-        this.intendationEnabled = Check.hasLength(intendationSpace);
+        this.indentationSpace = indentationSpace;
+        this.indentationEnabled = Check.hasLength(indentationSpace);
     }
 
     /** Write escaped value to the output
@@ -143,9 +143,9 @@ public class CommonXmlWriter {
     /** Write a new line with an offset by the current level */
     public void writeNewLine(final int level) throws IOException {
         out.append(CHAR_NEW_LINE);
-        if (intendationEnabled) {
+        if (indentationEnabled) {
             for (int i = level - 1; i >= 0; i--) {
-                out.append(intendationSpace);
+                out.append(indentationSpace);
             }
         }
     }

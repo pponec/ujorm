@@ -22,6 +22,7 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.CommonXmlWriter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_NEW_LINE;
@@ -145,10 +146,10 @@ public class HtmlElement extends XmlElement {
      * @throws IOException An writting error.
      * @throws IllegalArgumentException Wrong argument type
      */
-    public void toResponse(@Nonnull final Object httpServletResponse, final boolean noCache) throws IOException, IllegalArgumentException {
+    public void toResponse(@Nonnull final Object httpServletResponse, final boolean noCache, @Nonnull String... offsetSpace) throws IOException, IllegalArgumentException {
         try {
             final Writer writer = CommonXmlWriter.createWriter(httpServletResponse, charset, noCache);
-            toWriter(new XmlWriter(writer.append(HtmlElement.HTML_DOCTYPE).append(CHAR_NEW_LINE)));
+            toWriter(new XmlWriter(writer.append(HtmlElement.HTML_DOCTYPE).append(CHAR_NEW_LINE), Check.hasLength(offsetSpace) ? offsetSpace[0] : null));
             writer.flush();
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);

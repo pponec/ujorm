@@ -47,10 +47,10 @@ public class XmlWriter extends CommonXmlWriter {
     /**
      * A writer constructor
      * @param out A writer
-     * @param offsetSpace String for a one level offset.
+     * @param indentationSpace String for a one level offset.
      */
-    public XmlWriter(@Nonnull final Appendable out, @Nullable final String offsetSpace) {
-        super(out, offsetSpace);
+    public XmlWriter(@Nonnull final Appendable out, @Nullable final String indentationSpace) {
+        super(out, indentationSpace);
     }
 
     /** Render the XML code without header */
