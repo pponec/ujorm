@@ -149,7 +149,8 @@ public class HtmlElement extends XmlElement {
     public void toResponse(@Nonnull final Object httpServletResponse, final boolean noCache, @Nonnull String... offsetSpace) throws IOException, IllegalArgumentException {
         try {
             final Writer writer = CommonXmlWriter.createWriter(httpServletResponse, charset, noCache);
-            toWriter(new XmlWriter(writer.append(HtmlElement.HTML_DOCTYPE).append(CHAR_NEW_LINE), Check.hasLength(offsetSpace) ? offsetSpace[0] : null));
+            final String offset = Check.hasLength((Object[]) offsetSpace) ? offsetSpace[0] : "";
+            toWriter(new XmlWriter(writer.append(HtmlElement.HTML_DOCTYPE).append(CHAR_NEW_LINE), offset));
             writer.flush();
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);

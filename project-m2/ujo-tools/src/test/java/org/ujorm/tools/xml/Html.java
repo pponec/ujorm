@@ -17,6 +17,8 @@
 
 package org.ujorm.tools.xml;
 
+import org.ujorm.tools.xml.dom.HtmlElement;
+
 /** Some HTML constants, but this not a whole list of HTML elements,
 * attributes and allowed values. */
 public interface Html {
@@ -24,22 +26,22 @@ public interface Html {
     // --- Element names ---
 
     /** Body element */
-    String HTML = "html";
+    String HTML = HtmlElement.Html.HTML;
     /** Head element */
-    String HEAD = "head";
+    String HEAD = HtmlElement.Html.HEAD;
     /** Meta element */
-    String META = "meta";
+    String META = HtmlElement.Html.META;
     /** Body element */
-    String BODY = "body";
+    String BODY = HtmlElement.Html.BODY;
     /** Title element */
-    String TITLE = "title";
+    String TITLE = HtmlElement.Html.TITLE;
+    /** Style element */
+    String STYLE = HtmlElement.Html.STYLE;
     /** Link element */
     String LINK = "link";
-    /** Style element */
-    String STYLE = "style";
-    /** Divission element */
     /** Script element */
     String SCRIPT = "script";
+    /** Divission element */
     String DIV = "div";
     /** Span element */
     String SPAN = "span";
@@ -85,12 +87,12 @@ public interface Html {
     String A_ACTION = "action";
     String A_CELLPADDING = "cellpadding";
     String A_CELLSPACING = "cellspacing";
-    String A_CHARSET = "charset";
+    String A_CHARSET = HtmlElement.Html.A_CHARSET;
     String A_CHECKED = "checked";
     String A_CLASS = "class";
     String A_CONTENT = "content";
     String A_FOR = "for";
-    String A_HREF = "href";
+    String A_HREF = HtmlElement.Html.A_HREF;
     String A_ID = "id";
     String A_LANG = "lang";
     String A_MAXLENGTH = "maxlength";
@@ -98,11 +100,11 @@ public interface Html {
     String A_METHOD = "method";
     String A_NAME = "name";
     String A_READONLY = "readonly";
-    String A_REL = "rel";
+    String A_REL = HtmlElement.Html.A_REL;
     String A_SELECTED = "selected";
     String A_SRC = "src";
     String A_TARGET = "target";
-    String A_TYPE = "type";
+    String A_TYPE = HtmlElement.Html.A_TYPE;
     String A_VALUE = "value";
 
     // --- Some attribute values ---

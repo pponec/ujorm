@@ -153,8 +153,8 @@ public class XmlPrinter extends CommonXmlWriter {
      * @param indentation An intendation by four spaces.
      * @return New instance of the XmlPrinter
      */
-    public static XmlPrinter forXml(boolean indentation ) {
-        return new XmlPrinter(new StringBuilder(512), indentation);
+    public static XmlPrinter forXml(boolean indentation) {
+        return new XmlPrinter(new StringBuilder(512), indentation, XML_HEADER);
     }
 
     /** Crete a new instance including a DOCTYPE.
