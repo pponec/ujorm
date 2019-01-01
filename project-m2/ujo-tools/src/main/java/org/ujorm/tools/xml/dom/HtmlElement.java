@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.CommonXmlWriter;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -67,11 +68,21 @@ public class HtmlElement extends XmlElement {
         this(title, UTF_8);
     }
 
-    /** Generic constructor buliding default html headers */
-    public HtmlElement(@Nonnull final Object title, @Nonnull Charset charset) {
+    /** Generic constructor buliding default html headers
+     * @param title Htmlpage title
+     * @param charset A charset
+     * @param cssLinks Nullable CSS link array
+     */
+    public HtmlElement(@Nonnull final Object title, @Nonnull final Charset charset, @Nullable final CharSequence... cssLinks) {
         this(charset);
         head.addElement(Html.META).setAttrib(Html.A_CHARSET, charset);
         head.addElement(Html.TITLE).addText(title);
+
+        if (cssLinks != null) {
+            for (CharSequence cssLink : cssLinks) {
+                addCssLink(cssLink);
+            }
+        }
     }
 
     /** Returns header element */
