@@ -52,8 +52,7 @@ public class MenuServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         final String title = "List of samples (dom)";
-        final HtmlElement html = new HtmlElement(title, StandardCharsets.UTF_8);
-        html.addCssLink("css/userForm.css");
+        final HtmlElement html = new HtmlElement(title, StandardCharsets.UTF_8, "css/userForm.css");
         html.addElementToBody(Html.H1)
                 .addText(title);
         XmlElement list = html.addElementToBody(Html.OL);

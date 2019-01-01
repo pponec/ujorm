@@ -75,8 +75,7 @@ public class FormServlet extends HttpServlet {
 
     /** Create new HtmlElement incliding title and CSS style */
     private HtmlElement createHtmlElement(String title, String css) {
-        final HtmlElement result = new HtmlElement(title, charset);
-        result.addCssLink(css);
+        final HtmlElement result = new HtmlElement(title, charset, css);
         result.addElementToBody(Html.H1).addText(title);
         return result;
     }

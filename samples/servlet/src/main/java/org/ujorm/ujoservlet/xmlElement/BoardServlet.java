@@ -81,8 +81,7 @@ public class BoardServlet extends HttpServlet {
 
     /** Create new HTML element with a title and CSS style */
     private HtmlElement buildHtmlElement(String title, String css) {
-        HtmlElement result = new HtmlElement(title, charset);
-        result.addCssLink(css);
+        HtmlElement result = new HtmlElement(title, charset, css);
         result.addElementToBody(Html.H1).addText(title);
         return result;
     }

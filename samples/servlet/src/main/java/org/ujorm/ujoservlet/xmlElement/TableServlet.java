@@ -24,9 +24,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.dom.HtmlElement;
 import org.ujorm.tools.xml.dom.XmlElement;
-import org.ujorm.tools.web.Html;
 import org.ujorm.ujoservlet.tools.ApplService;
 
 /**
@@ -51,8 +51,7 @@ public class TableServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        final HtmlElement html = new HtmlElement(getClass().getSimpleName(), StandardCharsets.UTF_8);
-        html.addCssLink("css/tableForm.css");
+        final HtmlElement html = new HtmlElement(getClass().getSimpleName(), StandardCharsets.UTF_8, "css/tableForm.css");
         html.addElementToBody(Html.H1)
                 .addText("Show table");
         final XmlElement table = html.addElementToBody(Html.TABLE)
