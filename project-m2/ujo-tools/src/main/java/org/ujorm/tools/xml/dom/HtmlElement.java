@@ -103,15 +103,29 @@ public class HtmlElement extends XmlElement {
     }
 
     /** Create a new Javascript element and return it
-     * @param javascriptLink Add a javascriptLink link
-     * @return New CSS element
+     * @param javascriptLink URL to Javascript
+     * @param defer A script that will not run until after the page has loaded
+     * @return
      */
-    public <T extends XmlElement> T addJavascriptLink(@Nonnull final CharSequence javascriptLink) {
+    public <T extends XmlElement> T addJavascriptLink(@Nonnull final CharSequence javascriptLink, final boolean defer) {
         Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
         return head.addElement(Html.SCRIPT)
                 .setAttrib(Html.A_SRC, javascriptLink)
                 .setAttrib(Html.A_TYPE, "text/javascript")
+                .setAttrib("defer", defer ? "defer" : null)
                 .addText("");
+    }
+
+    /** Create a new Javascript element and return it
+     * @param javascript Add a javascriptLink link
+     * @return New CSS element
+     */
+    public <T extends XmlElement> T addJavascriptContent(@Nonnull final CharSequence javascript) {
+        Assert.notNull(javascript, REQUIRED_MSG, "javascript");
+        return head.addElement(Html.SCRIPT)
+                .setAttrib(Html.A_LANGUAGE, "javascript")
+                .setAttrib(Html.A_TYPE, "text/javascript")
+                .addText(javascript);
     }
 
     /** Create a new CSS element and return it
@@ -218,5 +232,6 @@ public class HtmlElement extends XmlElement {
         String A_REL = "rel";
         String A_TYPE = "type";
         String A_SRC = "src";
+        String A_LANGUAGE = "language";
     }
 }

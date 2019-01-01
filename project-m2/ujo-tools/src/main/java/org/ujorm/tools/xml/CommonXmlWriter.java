@@ -64,7 +64,7 @@ public class CommonXmlWriter {
     protected final String indentationSpace;
 
     /** An indentation request */
-    private final boolean indentationEnabled;
+    protected final boolean indentationEnabled;
 
     /**
      * A writer constructor
