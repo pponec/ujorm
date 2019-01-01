@@ -186,7 +186,13 @@ public class HtmlElement extends XmlElement {
         toResponse(httpServletResponse, noCache, false);
     }
 
+    /** Render the result with an indentation */
+    public final void toNiceResponse(@Nonnull final Object httpServletResponse) throws IOException, IllegalArgumentException {
+        toResponse(httpServletResponse, true, true);
+    }
+
     /**
+     * Render the result
      * @param httpServletResponse
      * @param noCache
      * @param indentation
