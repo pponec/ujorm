@@ -64,8 +64,8 @@ public class HtmlElement extends XmlElement {
     }
 
     /** Constructor buliding default html headers with codepage UTF-8 */
-    public HtmlElement(@Nonnull final Object title) {
-        this(title, UTF_8);
+    public HtmlElement(@Nonnull final Object title, @Nullable final CharSequence... cssLinks) {
+        this(title, UTF_8, cssLinks);
     }
 
     /** Generic constructor buliding default html headers
