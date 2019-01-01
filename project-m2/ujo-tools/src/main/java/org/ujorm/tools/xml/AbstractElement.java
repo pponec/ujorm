@@ -90,7 +90,7 @@ public abstract class AbstractElement<E extends AbstractElement> implements Clos
     /**
      * Set one attribute
      * @param name Required element name
-     * @param data The {@code null} value is ignored. Formatting is performed by the
+     * @param data The {@code null} value is silently ignored. Formatting is performed by the
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
