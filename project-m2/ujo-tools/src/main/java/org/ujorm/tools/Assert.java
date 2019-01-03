@@ -24,7 +24,7 @@ import static org.ujorm.tools.msg.MsgFormatter.format;
 
 /**
  * Assertion utils, where all method can throw the {@code IllegalArgumentException} exception only.
- * For a message format see the {@link MsgFormatter#format(java.lang.Object...)} method description.
+ * For a message format see the {@link MsgFormatter#format(T)} method description.
  * <h3>See the next correct asserts</h3>
  * <pre class="pre">
  *  Assert.isTrue(true, "TEST:{}{}", "A", "B");
@@ -60,7 +60,7 @@ public abstract class Assert {
 
     /** If the value Checks if the argument is {@code true}.
      * @throws IllegalStateException When the condtion is false */
-    public static final void validState(final boolean condition, @Nullable final Object... message)
+    public static final  <T> void validState(final boolean condition, @Nullable final T... message)
             throws IllegalStateException {
         if (!condition) {
             throw new IllegalStateException(format(message), new NullPointerException());
@@ -73,7 +73,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is {@code true}. */
-    public static final void isTrue(final boolean condition, @Nullable final Object... message)
+    public static final  <T> void isTrue(final boolean condition, @Nullable final T... message)
             throws IllegalArgumentException {
         if (!condition) {
             throw new IllegalArgumentException(format(message), new NullPointerException());
@@ -82,10 +82,10 @@ public abstract class Assert {
 
     /** Checks if the value is not {@code null} and result of the the method
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}. */
-    public static <T> void isTrue
+    public static <T,M> void isTrue
         ( @Nullable final T condition
         , @Nonnull final Predicate<T> predicate
-        , @Nullable final Object... message)
+        , @Nullable final M... message)
     {
         if (condition == null || !predicate.test(condition)) {
             throw new IllegalArgumentException(format(message));
@@ -95,10 +95,10 @@ public abstract class Assert {
     /** Checks if the value is result of the the method
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}.
      * An argument of the {@code Predicable#test()} method can be {@code null}. */
-    public static <T> void isTrueNullable
+    public static <T,M> void isTrueNullable
         ( @Nullable final T value
         , @Nonnull  final Predicate<T> predicate
-        , @Nullable final Object... message)
+        , @Nullable final M... message)
     {
         if (!predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
@@ -112,7 +112,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not {@code null}. */
-    public static void notNull(@Nullable final Object value, @Nullable final Object... message)
+    public static <T> void notNull(@Nullable final Object value, @Nullable final T... message)
             throws IllegalArgumentException {
         if (value == null) {
             throw new IllegalArgumentException(format(message), new NullPointerException());
@@ -120,7 +120,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final byte[] array, @Nullable final Object... message)
+    public static <T> void hasLength(@Nullable final byte[] array, @Nullable final T... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(array)) {
             throw new IllegalArgumentException(format(message));
@@ -128,7 +128,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final char[] array, @Nullable final Object... message)
+    public static <T> void hasLength(@Nullable final char[] array, @Nullable final T... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(array)) {
             throw new IllegalArgumentException(format(message));
@@ -136,7 +136,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final Object[] values, @Nullable final Object... message)
+    public static <T> void hasLength(@Nullable final Object[] values, @Nullable final T... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));
@@ -144,7 +144,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final Collection<?> values, @Nullable final Object... message)
+    public static <T> void hasLength(@Nullable final Collection<?> values, @Nullable final T... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));
@@ -152,7 +152,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final Map<?,?> values, @Nullable final Object... message)
+    public static <T> void hasLength(@Nullable final Map<?,?> values, @Nullable final T... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));
@@ -160,7 +160,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void hasLength(@Nullable final CharSequence value, @Nullable final Object... message)
+    public static <T> void hasLength(@Nullable final CharSequence value, @Nullable final T... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(value)) {
             throw new IllegalArgumentException(format(message));
@@ -184,10 +184,10 @@ public abstract class Assert {
 
     /** Checks if the argument is not {@code null} and result of the the method
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}. */
-    public static <T> void isFalse
+    public static <T,M> void isFalse
         ( @Nullable final T value
         , @Nonnull  final Predicate<T> predicate
-        , @Nullable final Object... message)
+        , @Nullable final M... message)
     {
         if (value == null || predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
@@ -198,10 +198,10 @@ public abstract class Assert {
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}.
      * An argument of the {@code Predicable#test()} method can be {@code null}.
      */
-    public static <T> void isFalseNullable
+    public static <T,M> void isFalseNullable
         ( @Nullable final T value
         , @Nonnull  final Predicate<T> predicate
-        , @Nullable final Object... message)
+        , @Nullable final M... message)
     {
         if (predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
@@ -214,7 +214,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is {@code null}. */
-    public static void isNull(@Nullable final Object value, @Nullable final Object... message)
+    public static <T> void isNull(@Nullable final Object value, @Nullable final T... message)
             throws IllegalArgumentException {
         if (value != null) {
             throw new IllegalArgumentException(format(message));
@@ -222,7 +222,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(final byte[] array, @Nullable final Object... message)
+    public static <T> void isEmpty(final byte[] array, @Nullable final T... message)
             throws IllegalArgumentException {
         if (Check.hasLength(array)) {
             throw new IllegalArgumentException(format(message));
@@ -230,7 +230,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final char[] array, @Nullable final Object... message)
+    public static <T> void isEmpty(@Nullable final char[] array, @Nullable final T... message)
             throws IllegalArgumentException {
         if (Check.hasLength(array)) {
             throw new IllegalArgumentException(format(message));
@@ -238,7 +238,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final Object[] values, @Nullable final Object... message)
+    public static <T> void isEmpty(@Nullable final Object[] values, @Nullable final T... message)
             throws IllegalArgumentException {
         if (Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));
@@ -246,7 +246,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final Collection<?> values, @Nullable final Object... message)
+    public static <T> void isEmpty(@Nullable final Collection<?> values, @Nullable final T... message)
             throws IllegalArgumentException {
         if (Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));
@@ -254,7 +254,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final Map<?,?> values, @Nullable final Object... message)
+    public static <T> void isEmpty(@Nullable final Map<?,?> values, @Nullable final T... message)
             throws IllegalArgumentException {
         if (Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));
@@ -262,7 +262,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static void isEmpty(@Nullable final CharSequence value, @Nullable final Object... message)
+    public static <T> void isEmpty(@Nullable final CharSequence value, @Nullable final T... message)
             throws IllegalArgumentException {
         if (Check.hasLength(value)) {
             throw new IllegalArgumentException(format(message));

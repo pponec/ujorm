@@ -72,11 +72,11 @@ public abstract class AbstractElement<E extends AbstractElement> implements Clos
      * @return The new XmlElement!
      */
     @Nonnull
-    public final <T extends E> T addElement
+    public final <T extends E, A> T addElement
         ( @Nonnull final String elementName
         , @Nonnull final String attributeName
         , @Nullable final Object attributeData
-        , @Nonnull final Object... attributes
+        , @Nonnull final A... attributes
         ) throws IOException
         {
         final T result = addElement(elementName);

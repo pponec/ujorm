@@ -49,7 +49,7 @@ public class XmlPrinter extends CommonXmlWriter {
     }
 
     /** Writer constructor with a zero offset */
-    public XmlPrinter(@Nonnull final Appendable out, @Nullable final boolean indentation, Object... initTexts) {
+    public <T> XmlPrinter(@Nonnull final Appendable out, @Nullable final boolean indentation, T... initTexts) {
         super(out, indentation ? "    " : null);
         try {
             for (Object text : initTexts) {

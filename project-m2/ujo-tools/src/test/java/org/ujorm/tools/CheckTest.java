@@ -90,6 +90,10 @@ public class CheckTest {
         assertFalse(Check.hasLength(new Object[0]));
         assertTrue(Check.hasLength(new Object[1]));
 
+        String[] emptyArray = {};
+        assertFalse(Check.hasLength(emptyArray));
+        String[] filledArray = {"A", "B"};
+        assertTrue(Check.hasLength(filledArray));
     }
 
     /**

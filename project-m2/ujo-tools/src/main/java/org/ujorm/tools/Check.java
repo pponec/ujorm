@@ -53,7 +53,7 @@ import javax.annotation.Nullable;
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static boolean hasLength(@Nullable final Object... array) {
+    public static <T> boolean hasLength(@Nullable final T... array) {
         return array != null && array.length > 0;
     }
 
@@ -83,7 +83,7 @@ import javax.annotation.Nullable;
     }
 
     /** Checks if the argument is empty or {@code null}. */
-    public static boolean isEmpty(@Nullable final Object... array) {
+    public static <T> boolean isEmpty(@Nullable final T... array) {
         return !hasLength(array);
     }
 
@@ -103,7 +103,7 @@ import javax.annotation.Nullable;
     }
 
     /** Method returns {@code true} if the first item equals the {@code value} */
-    public static <T> boolean firstItem(@Nullable final T value, @Nullable final T ... array) {
+    public static <T> boolean firstItem(@Nullable final T value, @Nullable final T... array) {
         return hasLength(array) && Objects.equals(array[0], value);
     }
 

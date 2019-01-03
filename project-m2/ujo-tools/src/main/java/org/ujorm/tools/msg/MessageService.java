@@ -70,7 +70,7 @@ public class MessageService {
     /** Create a map from man pairs key-value
      * @param args Key-value pairs
      */
-    public Map<String, Object> map(@Nonnull final Object... args) {
+    public <T> Map<String, Object> map(@Nonnull final T... args) {
         final int max = args.length;
         final Map<String, Object> result = new HashMap(max >> 1);
         for (int i = 1; i < max; i += 2) {
@@ -82,7 +82,7 @@ public class MessageService {
     /** Create a message template from argument pairs key-value
      * @param args Sequence of the Objects and Arguments
      */
-    public String template(@Nonnull final Object... args) {
+    public <T> String template(@Nonnull final T... args) {
         final StringBuilder result = new StringBuilder(256);
         for (Object arg : args) {
             result.append(arg);

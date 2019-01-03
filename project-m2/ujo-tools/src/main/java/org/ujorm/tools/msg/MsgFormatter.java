@@ -68,9 +68,9 @@ public class MsgFormatter {
      * @return A result text
      */
     @Nonnull
-    public String formatMsg
+    public <T> String formatMsg
         ( @Nullable final CharSequence messageTemplate
-        , @Nullable final Object... argumentValues)
+        , @Nullable final T... argumentValues)
         {
         final String template = String.valueOf(messageTemplate);
         if (!Check.hasLength(argumentValues)) {
@@ -112,7 +112,7 @@ public class MsgFormatter {
      * @return In case the argument have no length, the result message is {@code null}.
      */
     @Nullable
-    public String formatMsg(@Nullable final Object... templateAndArguments) {
+    public <T> String formatMsg(@Nullable final T... templateAndArguments) {
         if (Check.hasLength(templateAndArguments)) {
             final String template = String.valueOf(templateAndArguments[0]);
             final Object[] params = new Object[templateAndArguments.length - 1];
@@ -159,9 +159,9 @@ public class MsgFormatter {
      * @return
      */
     @Nonnull
-    public static String format
+    public static <T> String format
     ( @Nullable final String messageTemplate
-    , @Nullable final Object... arguments) {
+    , @Nullable final T... arguments) {
         return new MsgFormatter().formatMsg(messageTemplate, arguments);
     }
 
@@ -173,7 +173,7 @@ public class MsgFormatter {
      * @return In case the argument have no length, the result message is {@code null}.
      */
     @Nullable
-    public static String format(@Nullable final Object... templateAndArguments) {
+    public static <T> String format(@Nullable final T... templateAndArguments) {
         return new MsgFormatter().formatMsg(templateAndArguments);
     }
 

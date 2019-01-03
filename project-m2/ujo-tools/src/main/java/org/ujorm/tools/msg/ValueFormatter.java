@@ -166,9 +166,9 @@ public class ValueFormatter extends MsgFormatter {
      * @return
      */
     @Nonnull
-    public static String format
+    public static <T> String format
     ( @Nullable final String messageTemplate
-    , @Nullable final Object... arguments) {
+    , @Nullable final T... arguments) {
         return new ValueFormatter().formatMsg(messageTemplate, arguments);
     }
 
@@ -184,9 +184,9 @@ public class ValueFormatter extends MsgFormatter {
      * @return
      */
     @Nonnull
-    public static String formatSql
+    public static <T> String formatSql
     ( @Nullable final String sqlTemplate
-    , @Nullable final Object... arguments) {
+    , @Nullable final T... arguments) {
         return new ValueFormatter("?", "\'").formatMsg(sqlTemplate, arguments);
     }
 
