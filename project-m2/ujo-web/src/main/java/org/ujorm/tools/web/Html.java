@@ -70,17 +70,19 @@ public interface Html {
     String LABEL = "label";
     /** Input element */
     String INPUT = "input";
+    /** Input element */
+    String TEXT_AREA = "textarea";
     /** Select element */
     String SELECT = "select";
     /** Option element */
     String OPTION = "option";
     /** Anchor element */
     String A = "a";
-    /** Unordered list element */
+    /** Unordered list elements (root) */
     String UL = "ul";
-    /** Ordered list element */
+    /** Ordered list elements (root) */
     String OL = "ol";
-    /** List item element */
+    /** Some item element*/
     String LI = "li";
 
     // --- Attribute names ---
@@ -107,6 +109,8 @@ public interface Html {
     String A_TARGET = "target";
     String A_TYPE = "type";
     String A_VALUE = "value";
+    String A_ROWS = "rows";
+    String A_COLS = "cols";
 
     // --- Some attribute values ---
 
