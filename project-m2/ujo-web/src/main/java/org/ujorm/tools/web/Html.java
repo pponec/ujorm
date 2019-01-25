@@ -111,6 +111,8 @@ public interface Html {
     String A_VALUE = "value";
     String A_ROWS = "rows";
     String A_COLS = "cols";
+    String A_ROWSPAN = "cols";
+    String A_COLSPAN = "colspan";
 
     // --- Some attribute values ---
 
