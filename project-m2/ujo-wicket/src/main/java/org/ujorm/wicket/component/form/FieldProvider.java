@@ -46,6 +46,7 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidatorUtils;
+import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.dialog.domestic.OfferModel;
 import org.ujorm.wicket.component.form.fields.BooleanField;
@@ -398,7 +399,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Refresh component */
     public void onChange(Key<? super U, ?> source) {
-        onChange(source, "");
+        onChange(source, CommonActions.CHANGED);
     }
 
     /** Refresh component */

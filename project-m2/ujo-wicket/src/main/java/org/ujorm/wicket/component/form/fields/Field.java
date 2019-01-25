@@ -333,7 +333,7 @@ public class Field<T> extends GenericPanel<T> {
         , @Nonnull final String jsEvent) {
         return new AjaxFormComponentUpdatingBehavior(jsEvent) {
             @Override protected void onUpdate(final AjaxRequestTarget target) {
-                send(Field.this, Broadcast.BUBBLE, new FieldEvent(action, key, target));
+                        send(Field.this, Broadcast.BUBBLE, new FieldEvent(action, key, target));
             }
 
             @Override protected void updateAjaxAttributes
