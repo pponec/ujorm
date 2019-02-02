@@ -17,8 +17,7 @@
 
 package org.ujorm.tools.web;
 
-/** Some HTML constants, but this not a whole list of HTML elements,
-* attributes and allowed values. */
+/** A proxy for a HTML element */
 public interface Html {
 
     // --- Element names ---
@@ -37,7 +36,6 @@ public interface Html {
     String LINK = "link";
     /** Style element */
     String STYLE = "style";
-    /** Divission element */
     /** Script element */
     String SCRIPT = "script";
     /** Division in an HTML document. */
@@ -50,12 +48,14 @@ public interface Html {
     String P = "p";
     /** Form element */
     String FORM = "form";
-    /** Header element level 1 */
-    String H1 = "h1";
-    /** Header element level 2 */
-    String H2 = "h2";
-    /** Header element level 3 */
-    String H3 = "h3";
+    /** Heading prefix */
+    String HEADING_PREFIX = "h";
+    /** Heading element level 1 */
+    String H1 = HEADING_PREFIX + 1;
+    /** Heading element level 2 */
+    String H2 = HEADING_PREFIX + 2;
+    /** Heading element level 3 */
+    String H3 = HEADING_PREFIX + 3;
     /** Table element */
     String TABLE = "table";
     /** Table header line */
@@ -76,6 +76,8 @@ public interface Html {
     String SELECT = "select";
     /** Option element */
     String OPTION = "option";
+    /** Button */
+    String BUTTON = "button";
     /** Anchor element */
     String A = "a";
     /** Unordered list elements (root) */
@@ -97,7 +99,10 @@ public interface Html {
     String A_FOR = "for";
     String A_HREF = "href";
     String A_ID = "id";
+    /** Language attribute of the HTML pagee (e.g. "en")  */
     String A_LANG = "lang";
+    /** Reference of the programing language (e.g. "javascript") */
+    String A_LANGUAGE = "language";
     String A_MAXLENGTH = "maxlength";
     String A_MEDIA = "media";
     String A_METHOD = "method";
@@ -126,4 +131,5 @@ public interface Html {
     String V_STYLESHEET = "stylesheet";
     String V_TEXT = "text";
     String V_TEXT_CSS = "text/css";
+
 }
