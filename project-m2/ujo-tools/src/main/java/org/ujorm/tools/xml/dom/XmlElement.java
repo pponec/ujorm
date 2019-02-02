@@ -82,7 +82,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
     }
 
     /** New element with a parent */
-    public XmlElement(@Nonnull final String name, @Nonnull final XmlElement parent) {
+    public XmlElement(@Nonnull final CharSequence name, @Nonnull final XmlElement parent) {
         this(name);
         parent.addChild(this);
     }
@@ -121,7 +121,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @return The new XmlElement!
      */
     @Override @Nonnull
-    public final <T extends XmlElement> T addElement(@Nonnull final String name) {
+    public <T extends XmlElement> T addElement(@Nonnull final String name) {
         return (T) new XmlElement(name, this);
     }
 

@@ -85,8 +85,9 @@ public class HtmlElement extends XmlElement {
         }
     }
 
-    /** Returns header element */
-    @Nonnull
+    /** Returns body element
+     * @deprecated Use the method {@link #addElementToHead(java.lang.String) } rather. */
+    @Nonnull @Deprecated
     public <T extends XmlElement> T getHead() {
         return (T) head;
     }
