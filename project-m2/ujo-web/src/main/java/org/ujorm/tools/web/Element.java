@@ -38,7 +38,7 @@ public class Element extends AbstractElement<Element> implements Html {
     }
 
     @Override
-    public final <T extends Element> T addElement(String name) {
+    public final <T extends Element> T addElement(@Nonnull final String name) {
         try {
             return (T) new Element(origElement.addElement(name));
         } catch (IOException e) {
@@ -47,7 +47,7 @@ public class Element extends AbstractElement<Element> implements Html {
     }
 
     @Override
-    public final <T extends Element> T setAttrib(String name, Object data) {
+    public final <T extends Element> T setAttrib(@Nonnull final String name, @Nullable final Object data) {
         try {
             origElement.setAttrib(name, data);
             return (T) this;
@@ -57,7 +57,7 @@ public class Element extends AbstractElement<Element> implements Html {
     }
 
     @Override
-    public <T extends Element> T addText(Object data) throws IllegalStateException {
+    public <T extends Element> T addText(final Object data) throws IllegalStateException {
         try {
             origElement.addText(data);
             return (T) this;
@@ -132,6 +132,23 @@ public class Element extends AbstractElement<Element> implements Html {
                 .setAttrib(Element.A_CELLSPACING, 0);
     }
 
+    /** Create a HTML table according to data */
+    public <T extends Element> T addTable(final Object[][] data, final CharSequence... cssClass) {
+        final T result = addTable(cssClass);
+
+        if (Check.hasLength(cssClass)) {
+            result.setAttrib(Html.A_CLASS, String.join(" ", cssClass));
+        }
+
+        for (Object[] rowValue : data) {
+            final Element rowElement = result.addElement(Html.TR);
+            for (Object value : rowValue) {
+                rowElement.addElement(Html.TD).addText(value);
+            }
+        }
+        return result;
+    }
+
     /** Add new body element */
     public <T extends Element> T addBody(@Nonnull final CharSequence... cssClasses) {
         return addElement(BODY, cssClasses);
@@ -182,9 +199,14 @@ public class Element extends AbstractElement<Element> implements Html {
         return addElement(FORM, cssClasses);
     }
 
-    /** Add new heading with the required level */
-    public <T extends Element> T addHeading(int level, @Nonnull String title, @Nonnull final CharSequence... cssClasses) {
-        return addElement(HEADING_PREFIX + level, cssClasses).addText(title);
+    /** Add new heading level one  */
+    public <T extends Element> T addHeading(@Nonnull CharSequence title, @Nonnull final CharSequence... cssClasses) {
+        return addHeading(1, title, cssClasses);
+    }
+
+    /** Add new heading with the required level where the first level is zero. */
+    public <T extends Element> T addHeading(int level, @Nonnull CharSequence title, @Nonnull final CharSequence... cssClasses) {
+        return addElement(HEADING_PREFIX + Math.max(1, level), cssClasses).addText(title);
     }
 
     /** Add new body element */
@@ -260,6 +282,18 @@ public class Element extends AbstractElement<Element> implements Html {
         return (T) this;
     }
 
+    /** Set a CSS class attribute */
+    public <T extends Element> T setCellPadding(final int value) {
+        setAttrib(A_CELLPADDING, value);
+        return (T) this;
+    }
+
+    /** Set a CSS class attribute */
+    public <T extends Element> T setCellSpacing(final int value) {
+        setAttrib(A_CELLSPACING, value);
+        return (T) this;
+    }
+
     // ---- Static methods ----
 
     /** Crate a root element
@@ -290,5 +324,77 @@ public class Element extends AbstractElement<Element> implements Html {
         }
 
         return new Element(result);
+    }
+
+    /** Set an identifier of the element */
+    public <T extends Element> T setId(@Nullable final CharSequence value) {
+        setAttrib(A_ID, value);
+        return (T) this;
+    }
+
+    /** Set a method of form */
+    public <T extends Element> T setMethod(@Nullable final Object value) {
+        setAttrib(A_METHOD, value);
+        return (T) this;
+    }
+
+    /** Set an action type of from */
+    public <T extends Element> T setAction(@Nullable final Object value) {
+        setAttrib(A_ACTION, value);
+        return (T) this;
+    }
+
+    /** Set a type of input element */
+    public <T extends Element> T setType(@Nullable final Object value) {
+        setAttrib(A_TYPE, value);
+        return (T) this;
+    }
+
+    /** Set an name of input element */
+    public <T extends Element> T setName(@Nullable final CharSequence value) {
+        setAttrib(A_NAME, value);
+        return (T) this;
+    }
+
+    /** Set an value of input element */
+    public <T extends Element> T setValue(@Nullable final Object value) {
+        setAttrib(A_VALUE, value);
+        return (T) this;
+    }
+
+    /** Set an value of input element */
+    public <T extends Element> T setFor(@Nullable final CharSequence value) {
+        setAttrib(A_VALUE, value);
+        return (T) this;
+    }
+
+    /** Row count of a text area */
+    public <T extends Element> T setRows(@Nullable final int value) {
+        setAttrib(A_ROWS, value);
+        return (T) this;
+    }
+
+    /** Column count of a text area */
+    public <T extends Element> T setCols(@Nullable final Object value) {
+        setAttrib(A_COLS, value);
+        return (T) this;
+    }
+
+    /** Column span inside the table */
+    public <T extends Element> T setColSpan(@Nullable final int value) {
+        setAttrib(A_COLSPAN, value);
+        return (T) this;
+    }
+
+    /** Row span inside the table */
+    public <T extends Element> T setRowSpan(@Nullable final int value) {
+        setAttrib(A_ROWSPAN, value);
+        return (T) this;
+    }
+
+    /** Set hyperlink reference */
+    public <T extends Element> T setHref(@Nullable final CharSequence value) {
+        setAttrib(A_HREF, value);
+        return (T) this;
     }
 }

@@ -172,20 +172,31 @@ public class HtmlPage extends Element {
         }
     }
 
+    /** Get config */
+    @Nonnull
+    public HtmlConfig getConfig() {
+        return config;
+    }
+
+    /** Get title of configuration */
+    public CharSequence getTitle() {
+        return getConfig().getTitle();
+    }
+
     // ------- Static methods ----------
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions */
     @Nonnull
-    public static HtmlPage of(@Nonnull final HttpServletResponse response) {
-        return of(response, new HtmlConfig());
+    public static HtmlPage of(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
+        return of(response, new DefaultConfig());
     }
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions */
     @Nonnull
-    public static HtmlPage of(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence title, @Nonnull final CharSequence... cssLinks) {
-        final HtmlConfig config = new HtmlConfig();
+    public static HtmlPage of(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
+        final DefaultConfig config = new DefaultConfig();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
         return of(response, config);
@@ -194,11 +205,21 @@ public class HtmlPage extends Element {
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions */
     @Nonnull
-    public static HtmlPage niceOf(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence title, @Nonnull final CharSequence... cssLinks) {
-        final HtmlConfig config = new HtmlConfig();
+    public static HtmlPage niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
+        final DefaultConfig config = new DefaultConfig();
+        config.setNiceFormat(true);
         config.setTitle(title);
         config.setCssLinks(cssLinks);
+        return of(response, config);
+    }
+
+    /** Create new instance with empty html headers
+     * @throws IllegalStateException IO exceptions */
+    @Nonnull
+    public static HtmlPage niceOf(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
+        final DefaultConfig config = new DefaultConfig();
         config.setNiceFormat(true);
+        config.setCssLinks(cssLinks);
         return of(response, config);
     }
 
@@ -215,7 +236,7 @@ public class HtmlPage extends Element {
             final HtmlPage result = new HtmlPage(config, response.getWriter());
             config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
             result.addElementToHead(Html.META).setAttrib(HtmlElement.Html.A_CHARSET, config.getCharset());
-            config.getTitle().ifPresent(title -> result.addElementToHead(Html.TITLE).addText(title));
+            result.addElementToHead(Html.TITLE).addText(config.getTitle());
             result.addCssLinks(config.getCssLinks());
 
             return result;
@@ -223,6 +244,4 @@ public class HtmlPage extends Element {
             throw new IllegalStateException(e);
         }
     }
-
-
 }

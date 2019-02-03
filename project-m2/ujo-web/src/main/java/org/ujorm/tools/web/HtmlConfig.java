@@ -19,159 +19,63 @@ package org.ujorm.tools.web;
 import java.nio.charset.Charset;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.ujorm.tools.Assert;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Configuraion of HtmlPage
  * @author Pavel Ponec
  */
-public class HtmlConfig {
+public interface HtmlConfig {
 
-    /** Charset */
-    @Nonnull
-    private Charset charset =  UTF_8;
-
-    /** Title */
-    private CharSequence title = "demo";
-
-    /** Nice format or the HTML result */
-    private boolean niceFormat = false;
-
-    /** Level of th root */
-    private int firstLevel = 0;
-
-    /** An indentation space for elements of the next level */
-    private String indentationSpace = "    ";
-
-    /** Use a DOM model */
-    private boolean dom = true;
-
-    /** Css ling witn required order */
-    @Nonnull
-    private CharSequence[] cssLinks = new CharSequence[0];
-
-    /** Language of the HTML page */
-    private CharSequence language = "en";
 
     /** Html title */
-    public Optional<CharSequence> getTitle() {
-        return Optional.ofNullable(title);
-    }
-
-    /** Html title */
-    public void setTitle(CharSequence title) {
-        this.title = title;
-    }
+    @Nonnull
+    public CharSequence getTitle();
 
     /** Get language of the HTML page */
-    public Optional<CharSequence> getLanguage() {
-        return Optional.ofNullable(language);
-    }
-
-    /** Set language of the HTML page */
-    public void setLanguage(String language) {
-        this.language = language;
-    }
+    public Optional<CharSequence> getLanguage();
 
     /**
      * Charset
      * @return the charset
      */
     @Nonnull
-    public Charset getCharset() {
-        return charset;
-    }
-
-    /**
-     * Charset
-     * @param charset the charset to set
-     */
-    public void setCharset(@Nonnull Charset charset) {
-        Assert.notNull(charset);
-        this.charset = charset;
-    }
+    public Charset getCharset();
 
     /**
      * Nice format or the HTML result
      * @return the niceFormat
      */
-    public boolean isNiceFormat() {
-        return niceFormat;
-    }
-
-    /**
-     * Nice format or the HTML result
-     * @param niceFormat the niceFormat to set
-     */
-    public void setNiceFormat(boolean niceFormat) {
-        this.niceFormat = niceFormat;
-    }
+    public boolean isNiceFormat();
 
     /**
      * Level of th root
      * @return the firstLevel
      */
-    public int getFirstLevel() {
-        return firstLevel;
-    }
-
-    /**
-     * Level of th root
-     * @param firstLevel the firstLevel to set
-     */
-    public void setFirstLevel(int firstLevel) {
-        this.firstLevel = firstLevel;
-    }
+    public int getFirstLevel();
 
     /**
      * New line
      * @return the newLine
      */
-    public String getIndentationSpace() {
-        return indentationSpace;
-    }
+    public String getIndentationSpace();
 
     /**
      * New line
      * @param indentationSpace the newLine to set
      */
-    public void setIndentationSpace(String indentationSpace) {
-        this.indentationSpace = indentationSpace;
-    }
+    public void setIndentationSpace(String indentationSpace);
 
     /**
      * Use a DOM model
      * @return the dom
      */
-    public boolean isDom() {
-        return dom;
-    }
+    public boolean isDom();
 
     /**
-     * Use a DOM model
-     * @param dom the dom to set
-     */
-    public void setDom(boolean dom) {
-        this.dom = dom;
-    }
-
-    /**
-     * Css ling witn required order
+     * Css ling with required order
      * @return the cssLinks
      */
     @Nonnull
-    public CharSequence[] getCssLinks() {
-        return cssLinks;
-    }
-
-    /**
-     * Css ling witn required order
-     * @param cssLinks The cssLinks to set
-     */
-    public void setCssLinks(@Nonnull final CharSequence... cssLinks) {
-        Assert.notNull("cssLinks", cssLinks);
-        this.cssLinks = cssLinks;
-    }
+    public CharSequence[] getCssLinks();
 
 }
