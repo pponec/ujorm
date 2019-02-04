@@ -203,7 +203,7 @@ public class HtmlElement extends XmlElement {
     public void toResponse(@Nonnull final Object httpServletResponse, final boolean noCache, final boolean indentation) throws IOException, IllegalArgumentException {
         try {
             final Writer writer = CommonXmlWriter.createWriter(httpServletResponse, charset, noCache);
-            final String offset = indentation ? "    " : "";
+            final String offset = indentation ? DEFAULT_INTENDATION : null;
             toWriter(new XmlWriter(writer.append(HtmlElement.HTML_DOCTYPE).append(CHAR_NEW_LINE), offset));
             writer.flush();
         } catch (ReflectiveOperationException e) {

@@ -38,6 +38,9 @@ public abstract class AbstractElement<E extends AbstractElement> implements Clos
     /** HTML doctype */
     public static final String HTML_DOCTYPE = "<!DOCTYPE html>";
 
+    /** Default intendation have got 4 spaces per level */
+    public static final String DEFAULT_INTENDATION = "    ";
+
     /** Assertion message template */
     protected static final String REQUIRED_MSG = "The argument {} is required";
 

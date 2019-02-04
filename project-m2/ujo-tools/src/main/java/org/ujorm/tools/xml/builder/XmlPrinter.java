@@ -26,9 +26,9 @@ import javax.annotation.Nullable;
 import org.ujorm.tools.xml.CommonXmlWriter;
 import org.ujorm.tools.xml.dom.HtmlElement;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.ujorm.tools.xml.AbstractElement.DEFAULT_INTENDATION;
 import static org.ujorm.tools.xml.AbstractElement.HTML_DOCTYPE;
 import static org.ujorm.tools.xml.AbstractElement.XML_HEADER;
-import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_NEW_LINE;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -48,27 +48,21 @@ public class XmlPrinter extends CommonXmlWriter {
         this(out, "");
     }
 
-    /** Writer constructor with a zero offset */
-    public <T> XmlPrinter(@Nonnull final Appendable out, @Nullable final boolean indentation, T... initTexts) {
-        super(out, indentation ? "    " : null);
+    /**
+     * A writer constructor
+     * @param out A writer
+     * @param indentationSpace String for a one level offset.
+     */
+    public <T> XmlPrinter(@Nonnull final Appendable out, @Nullable final String indentationSpace, @Nonnull final T... prefix) {
+        super(out, indentationSpace);
         try {
-            for (Object text : initTexts) {
+            for (Object text : prefix) {
                 out.append(String.valueOf(text));
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
-
-    /**
-     * A writer constructor
-     * @param out A writer
-     * @param indentationSpace String for a one level offset.
-     */
-    public XmlPrinter(@Nonnull final Appendable out, @Nullable final String indentationSpace) {
-        super(out, indentationSpace);
-    }
-
 
     /**
      * Write the content of an envelope
@@ -145,7 +139,7 @@ public class XmlPrinter extends CommonXmlWriter {
      * The result provides a method {@link #toString() }
      */
     public static XmlPrinter forXml() {
-        return new XmlPrinter(new StringBuilder(512), false, XML_HEADER);
+        return new XmlPrinter(new StringBuilder(512), null, XML_HEADER);
     }
 
     /** Crete a new instance with no header.
@@ -154,32 +148,41 @@ public class XmlPrinter extends CommonXmlWriter {
      * @return New instance of the XmlPrinter
      */
     public static XmlPrinter forXml(boolean indentation) {
-        return new XmlPrinter(new StringBuilder(512), indentation, XML_HEADER);
+        return new XmlPrinter(new StringBuilder(512), indentation ? DEFAULT_INTENDATION : null, XML_HEADER);
     }
 
     /** Crete a new instance including a DOCTYPE.
      * The result provides a method {@link #toString() }
      */
     public static XmlPrinter forHtml() {
-        return new XmlPrinter(new StringBuilder(512), false, HTML_DOCTYPE);
+        return new XmlPrinter(new StringBuilder(512), null, HTML_DOCTYPE);
     }
 
     /** Crete a new instance including a DOCTYPE */
     public static XmlPrinter forHtml(final Appendable out) {
-        return new XmlPrinter(out, false, HTML_DOCTYPE);
+        return new XmlPrinter(out, null, HTML_DOCTYPE);
     }
 
+    /** Crete a new instance including a DOCTYPE */
+    public static XmlPrinter forNiceHtml(final Appendable out) {
+        return new XmlPrinter(out, DEFAULT_INTENDATION, HTML_DOCTYPE);
+    }
 
     /** Create XmlPrinter for UTF-8 */
     public static XmlPrinter forHtml(@Nonnull final Object httpServletResponse) throws IOException {
-        return forHtml(httpServletResponse, UTF_8, true);
+        return forHtml(httpServletResponse, UTF_8, null, false);
     }
 
     /** Create XmlPrinter for UTF-8 */
-    public static XmlPrinter forHtml(@Nonnull final Object httpServletResponse, @Nonnull final Charset charset, final boolean noCache) throws IOException {
+    public static XmlPrinter forNiceHtml(@Nonnull final Object httpServletResponse) throws IOException {
+        return forHtml(httpServletResponse, UTF_8, DEFAULT_INTENDATION, false);
+    }
+
+    /** Create XmlPrinter for UTF-8 */
+    public static XmlPrinter forHtml(@Nonnull final Object httpServletResponse, @Nonnull final Charset charset, final String indentationSpace, final boolean noCache) throws IOException {
         try {
             final Writer writer = createWriter(httpServletResponse, charset, noCache);
-            return new XmlPrinter(writer.append(HtmlElement.HTML_DOCTYPE).append(CHAR_NEW_LINE));
+            return new XmlPrinter(writer, indentationSpace, HtmlElement.HTML_DOCTYPE);
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
         }
