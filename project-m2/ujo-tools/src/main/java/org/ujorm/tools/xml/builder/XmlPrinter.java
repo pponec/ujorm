@@ -103,6 +103,9 @@ public class XmlPrinter extends CommonXmlWriter {
     /** Close the Node */
     void writeEnd(XmlBuilder element) throws IOException {
         if (element.isFilled()) {
+            if (indentationEnabled && !element.isLastText()) {
+                writeNewLine(element.getLevel());
+            }
             out.append(XML_LT);
             out.append(FORWARD_SLASH);
             out.append(element.getName());

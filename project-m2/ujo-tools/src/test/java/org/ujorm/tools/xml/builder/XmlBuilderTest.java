@@ -16,6 +16,7 @@
 package org.ujorm.tools.xml.builder;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 import org.ujorm.tools.xml.Html;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -57,8 +58,8 @@ public class XmlBuilderTest {
     }
 
     @Test
-    public void testXmlBuildingIntended() throws IOException {
-        System.out.println("XmlBuildingIntended");
+    public void testXmlBuildingNice() throws IOException {
+        System.out.println("XmlBuildingNice");
 
         boolean intendation = true;
         final XmlPrinter writer = XmlPrinter.forXml(intendation);
@@ -83,6 +84,70 @@ public class XmlBuilderTest {
                 + "\n    <rawXml/>"
            //   + "\n<![CDATA[A character data <'&\">]]>"
                 + "\n</root>";
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testHtmlBuildingNice1() throws IOException {
+        System.out.println("testHtmlBuildingNice1");
+
+        final XmlPrinter writer = XmlPrinter.forNiceHtml((Appendable) new StringBuilder());
+        try (XmlBuilder html = writer.createHtmlElement()) {
+            html.setAttrib("lang", "en");
+            try(XmlBuilder head = html.addElement("head")) {
+               head.addElement("meta").setAttrib("charset", StandardCharsets.UTF_8);
+               head.addElement("title").addText("Demo");
+               head.addElement("link").setAttrib("href", "word.css").setAttrib("rel", "stylesheet");
+            }
+            try(XmlBuilder body = html.addElement("body")) {
+               body.addElement("h1").addText("Hello, World!");
+            }
+        }
+
+        String result = writer.toString();
+        String expected = "<!DOCTYPE html>"
+                + "\n<html lang=\"en\">"
+                + "\n    <head>"
+                + "\n        <meta charset=\"UTF-8\"/>"
+                + "\n        <title>Demo</title>"
+                + "\n        <link href=\"word.css\" rel=\"stylesheet\"/>"
+                + "\n    </head>"
+                + "\n    <body>"
+                + "\n        <h1>Hello, World!</h1>"
+                + "\n    </body>"
+                + "\n</html>";
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testHtmlBuildingNice2() throws IOException {
+        System.out.println("testHtmlBuildingNice2");
+
+        final XmlPrinter writer = XmlPrinter.forNiceHtml((Appendable) new StringBuilder());
+        try (XmlBuilder html = writer.createHtmlElement()) {
+            html.setAttrib("lang", "en");
+            XmlBuilder head = html.addElement("head");
+            head.addElement("meta").setAttrib("charset", StandardCharsets.UTF_8);
+            head.addElement("title").addText("Demo");
+            head.addElement("link").setAttrib("href", "word.css").setAttrib("rel", "stylesheet");
+
+            XmlBuilder body = html.addElement("body");
+            body.addElement("h1").addText("Hello, World!");
+
+        }
+
+        String result = writer.toString();
+        String expected = "<!DOCTYPE html>"
+                + "\n<html lang=\"en\">"
+                + "\n    <head>"
+                + "\n        <meta charset=\"UTF-8\"/>"
+                + "\n        <title>Demo</title>"
+                + "\n        <link href=\"word.css\" rel=\"stylesheet\"/>"
+                + "\n    </head>"
+                + "\n    <body>"
+                + "\n        <h1>Hello, World!</h1>"
+                + "\n    </body>"
+                + "\n</html>";
         assertEquals(expected, result);
     }
 
