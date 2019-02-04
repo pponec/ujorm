@@ -67,35 +67,35 @@ public abstract class AbstractElement<E extends AbstractElement> implements Clos
     /**
      * Set one attribute
      * @param name Required element name
-     * @param data The {@code null} value is silently ignored. Formatting is performed by the
+     * @param value The {@code null} value is silently ignored. Formatting is performed by the
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
     @Nonnull
-    public abstract <T extends E> T setAttrib(@Nonnull final String name, @Nullable final Object data) throws IOException;
+    public abstract <T extends E> T setAttrib(@Nonnull final String name, @Nullable final Object value) throws IOException;
 
     /**
      * Add a text and escape special character
-     * @param data The {@code null} value is allowed. Formatting is performed by the
+     * @param value The {@code null} value is allowed. Formatting is performed by the
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Nonnull
-    public abstract <T extends E> T addText(@Nullable final Object data) throws IOException;
+    public abstract <T extends E> T addText(@Nullable final Object value) throws IOException;
 
     /**
      * Add a text including a space (before and after the text)
-     * @param data Anu data
+     * @param value Anu data
      * @return This instance */
     @Nonnull
-    public abstract <T extends E> T addTextWithSpace(@Nullable final Object data) throws IOException;
+    public abstract <T extends E> T addTextWithSpace(@Nullable final Object value) throws IOException;
 
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
-     * @param data The {@code null} value is ignored.
+     * @param value The {@code null} value is ignored.
      * @return This instance */
     @Nonnull
-    public abstract <T extends E> T addRawText(@Nullable final Object data) throws IOException;
+    public abstract <T extends E> T addRawText(@Nullable final Object value) throws IOException;
     /**
      * Add a <strong>comment text</strong>.
      * The CDATA structure isn't really for HTML at all.

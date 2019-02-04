@@ -154,55 +154,55 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
     /**
      * Add an attribute
      * @param name Required element name
-     * @param data The {@code null} value is ignored. Formatting is performed by the
+     * @param value The {@code null} value is ignored. Formatting is performed by the
      *   {@link XmlPrinter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
     @Override @Nonnull
-    public final <T extends XmlBuilder> T setAttrib(@Nonnull final String name, @Nullable final Object data) throws IOException {
+    public final <T extends XmlBuilder> T setAttrib(@Nonnull final String name, @Nullable final Object value) throws IOException {
         Assert.hasLength(name, REQUIRED_MSG, "name");
         Assert.isFalse(closed, "The node {} was closed", this.name);
         Assert.isTrue(attributeMode, "Writing attributes to the {} node was closed", this.name);
-        if (data != null) {
-            writer.writeAttrib(name, data, this);
+        if (value != null) {
+            writer.writeAttrib(name, value, this);
         }
         return (T) this;
     }
 
     /**
      * Add a text and escape special character
-     * @param data The {@code null} value is allowed. Formatting is performed by the
+     * @param value The {@code null} value is allowed. Formatting is performed by the
      *   {@link XmlPrinter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Override @Nonnull
-    public final <T extends XmlBuilder> T addText(@Nullable final Object data) throws IOException {
+    public final <T extends XmlBuilder> T addText(@Nullable final Object value) throws IOException {
         nextChild(null);
-        writer.writeValue(data, this, null);
+        writer.writeValue(value, this, null);
         return (T) this;
     }
 
     /**
      * Add a text including a space (before and after the text)
-     * @param data Anu data
+     * @param value Anu data
      * @return This instance */
     @Override @Nonnull
-    public final <T extends XmlBuilder> T addTextWithSpace(@Nullable final Object data) throws IOException {
+    public final <T extends XmlBuilder> T addTextWithSpace(@Nullable final Object value) throws IOException {
         nextChild(null);
         writer.writeRawText(CHAR_SPACE);
-        writer.writeValue(data, this, null);
+        writer.writeValue(value, this, null);
         writer.writeRawText(CHAR_SPACE);
         return (T) this;
     }
 
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
-     * @param data The {@code null} value is ignored.
+     * @param value The {@code null} value is ignored.
      * @return This instance */
     @Override @Nonnull
-    public final <T extends XmlBuilder> T addRawText(@Nullable final Object data) throws IOException {
+    public final <T extends XmlBuilder> T addRawText(@Nullable final Object value) throws IOException {
         nextChild(null);
-        writer.writeRawValue(data, this);
+        writer.writeRawValue(value, this);
         return (T) this;
     }
 

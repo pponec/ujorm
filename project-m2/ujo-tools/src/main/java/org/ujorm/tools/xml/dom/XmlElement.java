@@ -131,61 +131,61 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @return The original element
      */
     @Nonnull @Deprecated
-    public final <T extends XmlElement> T addAttrib(@Nonnull final String name, @Nullable final Object data) {
-        return setAttrib(name, data);
+    public final <T extends XmlElement> T addAttrib(@Nonnull final String name, @Nullable final Object value) {
+        return setAttrib(name, value);
     }
 
     /**
      * Set one attribute
      * @param name Required element name
-     * @param data The {@code null} value is ignored. Formatting is performed by the
+     * @param value The {@code null} value is ignored. Formatting is performed by the
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
     @Override @Nonnull
-    public final <T extends XmlElement> T setAttrib(@Nonnull final String name, @Nullable final Object data) {
+    public final <T extends XmlElement> T setAttrib(@Nonnull final String name, @Nullable final Object value) {
         Assert.hasLength(name, REQUIRED_MSG, "name");
-        if (data != null) {
+        if (value != null) {
             if (attributes == null) {
                 attributes = new LinkedHashMap<>();
             }
-            attributes.put(name, data);
+            attributes.put(name, value);
         }
         return (T) this;
     }
 
     /**
      * Add a text and escape special character
-     * @param data The {@code null} value is allowed. Formatting is performed by the
+     * @param value The {@code null} value is allowed. Formatting is performed by the
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Override @Nonnull
-    public final <T extends XmlElement> T addText(@Nullable final Object data) {
-        addChild(data);
+    public final <T extends XmlElement> T addText(@Nullable final Object value) {
+        addChild(value);
         return (T) this;
     }
 
     /**
      * Add a text including a space (before and after the text)
-     * @param data Anu data
+     * @param value Anu data
      * @return This instance */
     @Override @Nonnull
-    public final <T extends XmlElement> T addTextWithSpace(@Nullable final Object data) {
+    public final <T extends XmlElement> T addTextWithSpace(@Nullable final Object value) {
         addChild(CHAR_SPACE);
-        addChild(data);
+        addChild(value);
         addChild(CHAR_SPACE);
         return (T) this;
     }
 
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
-     * @param data The {@code null} value is ignored.
+     * @param value The {@code null} value is ignored.
      * @return This instance */
     @Override @Nonnull
-    public final <T extends XmlElement> T addRawText(@Nullable final Object data) {
-        if (data != null) {
-            addChild(new RawEnvelope(data));
+    public final <T extends XmlElement> T addRawText(@Nullable final Object value) {
+        if (value != null) {
+            addChild(new RawEnvelope(value));
         }
         return (T) this;
     }
