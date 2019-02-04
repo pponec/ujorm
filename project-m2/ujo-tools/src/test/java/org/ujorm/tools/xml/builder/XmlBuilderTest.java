@@ -94,7 +94,7 @@ public class XmlBuilderTest {
         XmlPrinter writer = XmlPrinter.forHtml();
         try (XmlBuilder html = writer.createHtmlElement()) {
              try (XmlBuilder head = html.addElement(Html.HEAD)) {
-                   head.addElement(Html.META, Html.A_CHARSET, UTF_8);
+                   head.addElement(Html.META).setAttrib(Html.A_CHARSET, UTF_8);
                    head.addElement(Html.TITLE).addText("Test");
              }
              try (XmlBuilder body = html.addElement(Html.BODY)) {

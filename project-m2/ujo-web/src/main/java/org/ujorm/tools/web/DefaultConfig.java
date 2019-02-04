@@ -34,7 +34,7 @@ public class DefaultConfig implements HtmlConfig {
 
     /** Title */
     @Nonnull
-    private CharSequence title = "demo";
+    private CharSequence title = "Demo";
 
     /** Nice format or the HTML result */
     private boolean niceFormat = false;

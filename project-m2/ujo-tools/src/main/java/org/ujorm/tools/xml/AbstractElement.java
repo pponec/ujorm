@@ -64,29 +64,6 @@ public abstract class AbstractElement<E extends AbstractElement> implements Clos
     @Nonnull
     public abstract <T extends E> T addElement(@Nonnull final String name) throws IOException;
 
-    /** Create a new {@link XmlElement} for a required name and add it to children with many attributes.
-     * @param elementName  A name of the new XmlElement is required.
-     * @param attributeName An attribute key
-     * @param attributeData An attribute value
-     * @param attributes Pairs of attribute - value. An attribute with no value is ignored silently.
-     * @return The new XmlElement!
-     */
-    @Nonnull
-    public final <T extends E, A> T addElement
-        ( @Nonnull final String elementName
-        , @Nonnull final String attributeName
-        , @Nullable final Object attributeData
-        , @Nonnull final A... attributes
-        ) throws IOException
-        {
-        final T result = addElement(elementName);
-        result.setAttrib(attributeName, attributeData);
-        for (int i = 1, max = attributes.length; i < max; i += 2) {
-             result.setAttrib((String) attributes[i-1], attributes[i]);
-        }
-        return result;
-    }
-
     /**
      * Set one attribute
      * @param name Required element name

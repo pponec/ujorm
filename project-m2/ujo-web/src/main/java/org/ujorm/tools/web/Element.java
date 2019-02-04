@@ -37,8 +37,14 @@ public class Element extends AbstractElement<Element> implements Html {
         this.origElement = original;
     }
 
-    @Override
-    public final <T extends Element> T addElement(@Nonnull final String name) {
+    /**
+     * Create new Element
+     * @param name The element name
+     * @return New instance of the Element
+     * @throws IllegalStateException An envelope for IO exceptions
+     */
+    @Override @Nonnull
+    public final <T extends Element> T addElement(@Nonnull final String name) throws IllegalStateException {
         try {
             return (T) new Element(origElement.addElement(name));
         } catch (IOException e) {
@@ -117,9 +123,15 @@ public class Element extends AbstractElement<Element> implements Html {
 
     // -------------- Add TAG -----
 
+    /**
+     * Add a new Element with optional CSS classes
+     * @param name A required name of the element
+     * @param cssClasses Optional CSS classes. The classes are ignored, if the first element is {@code null}.
+     * @return New instance of the Element
+     */
     public <T extends Element> T addElement(@Nonnull final String name, @Nonnull final CharSequence... cssClasses) {
         final T result = addElement(name);
-        if (Check.hasLength(cssClasses)) {
+        if (Check.hasLength(cssClasses) && cssClasses[0] != null) {
             result.setAttrib(A_CLASS, String.join(" ", cssClasses));
         }
         return result;
@@ -318,8 +330,7 @@ public class Element extends AbstractElement<Element> implements Html {
             for (CharSequence cssLink : cssLinks) {
                 head.addElement(LINK)
                         .setAttrib(A_HREF, cssLink)
-                        .setAttrib(A_REL, "stylesheet")
-                        .setAttrib(A_TYPE, "text/css");
+                        .setAttrib(A_REL, "stylesheet");
             }
         }
 

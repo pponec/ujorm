@@ -58,41 +58,41 @@ public class BenchmarkPresentBuild extends HttpServlet {
         final XmlPrinter writer = XmlPrinter.forHtml(output);
         try (XmlBuilder html = writer.createHtmlElement()) {
             try (XmlBuilder head = html.addElement(Html.HEAD)) {
-                head.addElement(Html.META, Html.A_CHARSET, "utf-8");
-                head.addElement(Html.META,
-                        Html.A_NAME, "viewport",
-                        Html.A_CONTENT, "width=device-width, initial-scale=1.0");
-                head.addElement(Html.META,
-                        "http-equiv", "content-language",
-                        Html.A_CONTENT, "IE=Edge");
+                head.addElement(Html.META).setAttrib(Html.A_CHARSET, "utf-8");
+                head.addElement(Html.META)
+                        .setAttrib(Html.A_NAME, "viewport")
+                        .setAttrib(Html.A_CONTENT, "width=device-width, initial-scale=1.0");
+                head.addElement(Html.META)
+                        .setAttrib("http-equiv", "content-language")
+                        .setAttrib(Html.A_CONTENT, "IE=Edge");
                 head.addElement(Html.TITLE)
                         .addText("JFall 2013 Presentations - htmlApi");
-                head.addElement(Html.LINK,
-                         Html.A_REL, "Stylesheet",
-                         Html.A_HREF, "/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css",
-                         Html.A_MEDIA, "screen");
+                head.addElement(Html.LINK)
+                         .setAttrib(Html.A_REL, "Stylesheet")
+                         .setAttrib(Html.A_HREF, "/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css")
+                         .setAttrib(Html.A_MEDIA, "screen");
             }
 
-            try (XmlBuilder container = html.addElement(Html.BODY, Html.A_CLASS, "container")) {
-                try (XmlBuilder pageHeader = container.addElement(Html.DIV, Html.A_CLASS, "page-header")) {
+            try (XmlBuilder container = html.addElement(Html.BODY).setAttrib(Html.A_CLASS, "container")) {
+                try (XmlBuilder pageHeader = container.addElement(Html.DIV).setAttrib(Html.A_CLASS, "page-header")) {
                     pageHeader.addElement(Html.H1).addText("JFall 2013 Presentations - htmlApi");
 
                     Collection<Presentation> presentations = dummyItems();
                     for (Presentation presentation : presentations) {
-                        XmlBuilder panelDefault = container.addElement(Html.DIV, Html.A_CLASS, "panel panel-default");
-                        try (XmlBuilder panelHeading = panelDefault.addElement(Html.DIV, Html.A_CLASS, "panel-heading")) {
-                            panelHeading.addElement(Html.H3, Html.A_CLASS, "panel-title")
+                        XmlBuilder panelDefault = container.addElement(Html.DIV).setAttrib(Html.A_CLASS, "panel panel-default");
+                        try (XmlBuilder panelHeading = panelDefault.addElement(Html.DIV).setAttrib(Html.A_CLASS, "panel-heading")) {
+                            panelHeading.addElement(Html.H3).setAttrib(Html.A_CLASS, "panel-title")
                                     .addText(presentation.getTitle())
                                     .addText(" - ")
                                     .addText(presentation.getSpeakerName());
-                            container.addElement(Html.DIV, Html.A_CLASS, "panel-body")
+                            container.addElement(Html.DIV).setAttrib(Html.A_CLASS, "panel-body")
                                     .addRawText(presentation.getSummary());
                         }
                     }
                 }
 
-                container.addElement(Html.SCRIPT, Html.A_SRC, "/webjars/jquery/3.1.1/jquery.min.js").addText("");
-                container.addElement(Html.SCRIPT, Html.A_SRC, "/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js").addText("");
+                container.addElement(Html.SCRIPT).setAttrib(Html.A_SRC, "/webjars/jquery/3.1.1/jquery.min.js").addText("");
+                container.addElement(Html.SCRIPT).setAttrib(Html.A_SRC, "/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js").addText("");
             }
         }
     }

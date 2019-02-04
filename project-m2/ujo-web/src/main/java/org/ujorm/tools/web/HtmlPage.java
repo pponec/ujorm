@@ -102,7 +102,6 @@ public class HtmlPage extends Element {
         Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
         return head.addElement(Html.SCRIPT)
                 .setAttrib(Html.A_SRC, javascriptLink)
-                .setAttrib(Html.A_TYPE, "text/javascript")
                 .setAttrib("defer", defer ? "defer" : null)
                 .addText("");
     }
@@ -136,8 +135,7 @@ public class HtmlPage extends Element {
         Assert.notNull(css, REQUIRED_MSG, "css");
         return head.addElement(Html.LINK)
                 .setAttrib(Html.A_HREF, css)
-                .setAttrib(Html.A_REL, "stylesheet")
-                .setAttrib(Html.A_TYPE, "text/css");
+                .setAttrib(Html.A_REL, "stylesheet");
     }
 
     /** Create a new CSS element and return it
@@ -147,7 +145,6 @@ public class HtmlPage extends Element {
     public <T extends Element> T addCssBody(@Nonnull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
         return head.addElement(Html.STYLE)
-                .setAttrib(Html.A_TYPE, "text/css")
                 .addRawText(css);
     }
 

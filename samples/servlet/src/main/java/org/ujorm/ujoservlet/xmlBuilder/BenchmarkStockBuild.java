@@ -76,28 +76,28 @@ public class BenchmarkStockBuild extends HttpServlet {
             try (XmlBuilder head = html.addElement(Html.HEAD)) {
                 head.addElement(Html.TITLE)
                         .addText("Stock Prices");
-                head.addElement(Html.META,
-                         "http-equiv", "Content-Type",
-                         Html.A_CONTENT, "text/html; charset=UTF-8");
-                head.addElement(Html.META,
-                         "http-equiv", "Content-Style-Type",
-                         Html.A_CONTENT, "text/css");
-                head.addElement(Html.META,
-                         "Content-Script-Type", "text/javascript",
-                         Html.A_CONTENT, "text/javascript");
-                head.addElement(Html.LINK,
-                         Html.A_REL, "shortcut icon",
-                         Html.A_CONTENT, "/images/favicon.ico");
-                head.addElement(Html.LINK,
-                         Html.A_REL, "stylesheet",
-                         Html.A_HREF, "benchmark.css",
-                         Html.A_MEDIA, "all");
-                head.addElement(Html.SCRIPT,
-                         Html.A_TYPE, "text/javascript",
-                         Html.A_SRC, "/js/util.js")
+                head.addElement(Html.META)
+                         .setAttrib("http-equiv", "Content-Type")
+                         .setAttrib(Html.A_CONTENT, "text/html; charset=UTF-8");
+                head.addElement(Html.META)
+                        .setAttrib("http-equiv", "Content-Style-Type")
+                        .setAttrib(Html.A_CONTENT, "text/css");
+                head.addElement(Html.META)
+                        .setAttrib("Content-Script-Type", "text/javascript")
+                        .setAttrib(Html.A_CONTENT, "text/javascript");
+                head.addElement(Html.LINK)
+                        .setAttrib(Html.A_REL, "shortcut icon")
+                        .setAttrib(Html.A_CONTENT, "/images/favicon.ico");
+                head.addElement(Html.LINK)
+                        .setAttrib(Html.A_REL, "stylesheet")
+                        .setAttrib(Html.A_HREF, "benchmark.css")
+                        .setAttrib(Html.A_MEDIA, "all");
+                head.addElement(Html.SCRIPT)
+                        .setAttrib(Html.A_TYPE, "text/javascript")
+                        .setAttrib(Html.A_SRC, "/js/util.js")
                         .addText("");
-                head.addElement(Html.STYLE,
-                         Html.A_TYPE, "text/css")
+                head.addElement(Html.STYLE)
+                        .setAttrib(Html.A_TYPE, "text/css")
                         .addRawText(STOCKS_CSS);
             }
 
@@ -116,16 +116,16 @@ public class BenchmarkStockBuild extends HttpServlet {
                     List<Stock> stocks = dummyItems();
                     for (int itemIndex = 0, max = stocks.size(); itemIndex < max; itemIndex++) {
                         Stock stock = stocks.get(itemIndex);
-                        try (XmlBuilder row = table.addElement(Html.TR, Html.A_CLASS, itemIndex % 2 == 0 ? "odd" : "even")) {
+                        try (XmlBuilder row = table.addElement(Html.TR).setAttrib(Html.A_CLASS, itemIndex % 2 == 0 ? "odd" : "even")) {
                             row.addElement(Html.TD).addText(itemIndex + 1);
-                            row.addElement(Html.TD).addElement(Html.A, Html.A_HREF, "/stocks/" + stock.getSymbol())
+                            row.addElement(Html.TD).addElement(Html.A).setAttrib(Html.A_HREF, "/stocks/" + stock.getSymbol())
                                     .addText(stock.getSymbol());
-                            row.addElement(Html.TD).addElement(Html.A, Html.A_HREF, stock.getUrl())
+                            row.addElement(Html.TD).addElement(Html.A).setAttrib(Html.A_HREF, stock.getUrl())
                                     .addText(stock.getName());
                             row.addElement(Html.TD).addElement("strong").addText(stock.getPrice());
-                            row.addElement(Html.TD, Html.A_CLASS, stock.getChange() < 0 ? "minus" : null)
+                            row.addElement(Html.TD).setAttrib(Html.A_CLASS, stock.getChange() < 0 ? "minus" : null)
                                     .addText(stock.getChange());
-                            row.addElement(Html.TD, Html.A_CLASS, stock.getRatio() < 0 ? "minus" : null)
+                            row.addElement(Html.TD).setAttrib(Html.A_CLASS, stock.getRatio() < 0 ? "minus" : null)
                                     .addText(stock.getRatio());
                         }
                     }

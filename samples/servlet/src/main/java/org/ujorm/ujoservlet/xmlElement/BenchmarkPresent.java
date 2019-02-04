@@ -27,10 +27,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.dom.HtmlElement;
 import org.ujorm.tools.xml.dom.XmlElement;
 import org.ujorm.tools.xml.dom.XmlWriter;
-import org.ujorm.tools.web.Html;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -60,42 +60,42 @@ public class BenchmarkPresent extends HttpServlet {
 
         // The heder section:
         try (XmlElement head = html.getHead()) {
-            head.addElement(Html.META, Html.A_CHARSET, "utf-8");
-            head.addElement(Html.META,
-                    Html.A_NAME, "viewport",
-                    Html.A_CONTENT, "width=device-width, initial-scale=1.0");
-            head.addElement(Html.META,
-                    "http-equiv", "content-language",
-                    Html.A_CONTENT, "IE=Edge");
+            head.addElement(Html.META).setAttrib(Html.A_CHARSET, "utf-8");
+            head.addElement(Html.META)
+                    .setAttrib(Html.A_NAME, "viewport")
+                    .setAttrib(Html.A_CONTENT, "width=device-width, initial-scale=1.0");
+            head.addElement(Html.META)
+                    .setAttrib("http-equiv", "content-language")
+                    .setAttrib(Html.A_CONTENT, "IE=Edge");
             head.addElement(Html.TITLE)
                     .addText("JFall 2013 Presentations - htmlApi");
-            head.addElement(Html.LINK,
-                     Html.A_REL, "Stylesheet",
-                     Html.A_HREF, "/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css",
-                     Html.A_MEDIA, "screen");
+            head.addElement(Html.LINK)
+                    .setAttrib(Html.A_REL, "Stylesheet")
+                    .setAttrib(Html.A_HREF, "/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css")
+                    .setAttrib(Html.A_MEDIA, "screen");
         }
 
         // The body section:
         try (XmlElement container = html.getBody().setAttrib(Html.A_CLASS, "container")) {
-            try (XmlElement pageHeader = container.addElement(Html.DIV, Html.A_CLASS, "page-header")) {
+            try (XmlElement pageHeader = container.addElement(Html.DIV).setAttrib(Html.A_CLASS, "page-header")) {
                 pageHeader.addElement(Html.H1).addText("JFall 2013 Presentations - htmlApi");
 
                 Collection<Presentation> presentations = dummyItems();
                 for (Presentation presentation : presentations) {
-                    XmlElement panelDefault = container.addElement(Html.DIV, Html.A_CLASS, "panel panel-default");
-                    try (XmlElement panelHeading = panelDefault.addElement(Html.DIV, Html.A_CLASS, "panel-heading")) {
-                        panelHeading.addElement(Html.H3, Html.A_CLASS, "panel-title")
+                    XmlElement panelDefault = container.addElement(Html.DIV).setAttrib(Html.A_CLASS, "panel panel-default");
+                    try (XmlElement panelHeading = panelDefault.addElement(Html.DIV).setAttrib(Html.A_CLASS, "panel-heading")) {
+                        panelHeading.addElement(Html.H3).setAttrib(Html.A_CLASS, "panel-title")
                                 .addText(presentation.getTitle())
                                 .addText(" - ")
                                 .addText(presentation.getSpeakerName());
-                        container.addElement(Html.DIV, Html.A_CLASS, "panel-body")
+                        container.addElement(Html.DIV).setAttrib(Html.A_CLASS, "panel-body")
                                 .addRawText(presentation.getSummary());
                     }
                 }
             }
 
-            container.addElement(Html.SCRIPT, Html.A_SRC, "/webjars/jquery/3.1.1/jquery.min.js").addText("");
-            container.addElement(Html.SCRIPT, Html.A_SRC, "/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js").addText("");
+            container.addElement(Html.SCRIPT).setAttrib(Html.A_SRC, "/webjars/jquery/3.1.1/jquery.min.js").addText("");
+            container.addElement(Html.SCRIPT).setAttrib(Html.A_SRC, "/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js").addText("");
         }
 
         output.setCharacterEncoding(UTF_8.toString());
