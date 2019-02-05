@@ -837,11 +837,12 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
         return result;
     }
 
-    /** Returns information about current library. */
+    /** Returns version of the current library or the {@code "UNDEFINED"} text */
+    @Nonnull
     public static String version() {
-        final Package packge = Ujo.class.getPackage();
-        final String result = packge!=null ? packge.getSpecificationVersion() : null;
-        return result!=null ? result : "UNDEFINED" ;
+        final Package libPackage = Ujo.class.getPackage();
+        final String result = libPackage != null ? libPackage.getSpecificationVersion() : null;
+        return result != null ? result : "UNDEFINED" ;
     }
 
     /** Returns information about current library.
