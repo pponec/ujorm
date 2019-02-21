@@ -19,6 +19,7 @@ package org.ujorm.tools.web;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.StringJoiner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Check;
@@ -126,15 +127,11 @@ public class Element extends AbstractElement<Element> implements Html {
     /**
      * Add a new Element with optional CSS classes
      * @param name A required name of the element
-     * @param cssClasses Optional CSS classes. The classes are ignored, if the first element is {@code null}.
+     * @param cssClasses Optional CSS classes.
      * @return New instance of the Element
      */
     public <T extends Element> T addElement(@Nonnull final String name, @Nonnull final CharSequence... cssClasses) {
-        final T result = addElement(name);
-        if (Check.hasLength(cssClasses) && cssClasses[0] != null) {
-            result.setAttrib(A_CLASS, String.join(" ", cssClasses));
-        }
-        return result;
+        return addElement(name).setClass(cssClasses);
     }
 
     /** Add new Table with cellpadding a cellspacing values to zero. */
@@ -281,18 +278,36 @@ public class Element extends AbstractElement<Element> implements Html {
         return addElement(OL, cssClasses);
     }
 
-    /** Add new body element */
     public <T extends Element> T addListItem(@Nonnull final CharSequence... cssClasses) {
         return addElement(LI, cssClasses);
     }
 
-    /** Set a CSS class attribute */
+    /** Set a CSS class attribute optionally, the empty attribute is ignored.
+     * @param cssClasses Optional CSS classes. The css item is ignored when the value is empty or {@code null}.
+     * @return The current instanlce
+     */
     public <T extends Element> T setClass(@Nonnull final CharSequence... cssClasses) {
         if (Check.hasLength(cssClasses)) {
-            setAttrib(A_CLASS, String.join(" ", cssClasses));
+            final StringJoiner builder = new StringJoiner(" ");
+            for (CharSequence cssClass : cssClasses) {
+                if (Check.hasLength(cssClass)) {
+                    builder.add(cssClass);
+                }
+            }
+            final String result = builder.toString();
+            if (Check.hasLength(result)) {
+                setAttrib(A_CLASS, result);
+            }
         }
         return (T) this;
     }
+
+    /** Add a line break */
+    public <T extends Element> T addBreak(@Nonnull final CharSequence... cssClasses) {
+        return addElement(BR, cssClasses);
+    }
+
+    // ----- An attributes ----------
 
     /** Set a CSS class attribute */
     public <T extends Element> T setCellPadding(final int value) {

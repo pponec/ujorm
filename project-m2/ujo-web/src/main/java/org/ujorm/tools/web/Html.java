@@ -86,6 +86,8 @@ public interface Html {
     String OL = "ol";
     /** Some item element*/
     String LI = "li";
+    /** A line break */
+    String BR = "br";
 
     // --- Attribute names ---
 
