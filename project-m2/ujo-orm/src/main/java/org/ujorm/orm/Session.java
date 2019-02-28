@@ -36,6 +36,7 @@ import javax.annotation.Nullable;
 import javax.transaction.Status;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoIterator;
@@ -500,7 +501,7 @@ public class Session implements Closeable {
             // 3. Session must be assigned after assignPrimaryKey()
             bo.writeSession(this);
             // 4. Clean all flags of modified attributes
-            bo.readChangedProperties(true);
+            bo.clearModificationFlags();
         }
 
         // --------------- PERFORMANCE -------------------------------------
@@ -587,7 +588,7 @@ public class Session implements Closeable {
             // 4. Execute:
             statement.executeUpdate(); // execute insert statement
             // 5. Clean all flags of modified attributes
-            bo.readChangedProperties(true);
+            bo.clearModificationFlags();
         } catch (RuntimeException | SQLException | IOException | OutOfMemoryError e) {
             rollbackOnly = true;
             throw new IllegalUjormException(SQL_ILLEGAL + sql, e);
@@ -625,8 +626,11 @@ public class Session implements Closeable {
         Criterion<U> crn = createPkCriterion(bo);
         if (original != null) {
             original.writeSession(this);
-            for (final Key<U,Object> key : bo.readChangedProperties(false)) {
-                crn = crn.and(key.whereEq(key.of(original)));
+            for (Key aKey : bo.readKeys()) {
+                if (bo.checkModificationFlag(aKey)) {
+                    final Key<U,Object> key = (Key<U,Object>) aKey;
+                    crn = crn.and(key.whereEq(key.of(original)));
+                }
             }
         }
         final int result = update(bo, crn);
@@ -661,7 +665,7 @@ public class Session implements Closeable {
         {
         int result = 0;
         final U original = (U) bo.cloneUjo();
-        bo.readChangedProperties(true); // Clear all changes
+        bo.clearModificationFlags(); // Clear all changes
         bo.writeSession(this);  // Enable a change manager
         batch.accept(bo); // Update required columns
         final LoadingPolicy originalPolicy = getLoadingPolicy();
@@ -702,8 +706,9 @@ public class Session implements Closeable {
                 : handler.findTableModel((Class) bo.getClass())
                 ;
             table.assertChangeAllowed();
-            MetaDatabase db = table.getDatabase();
-            List<MetaColumn> changedColumns = getOrmColumns(bo.readChangedProperties(true));
+            final MetaDatabase db = table.getDatabase();
+            final List<MetaColumn> changedColumns = getChangedOrmColumns(bo);
+            bo.clearModificationFlags();
             if (changedColumns.isEmpty()) {
                 LOGGER.log(UjoLogger.WARN, "No changed column to update {}", bo);
                 return -1;
@@ -884,14 +889,17 @@ public class Session implements Closeable {
         }
     }
 
-    /** Convert a key array to a column list. */
-    protected List<MetaColumn> getOrmColumns(final Key... keys) {
-        final List<MetaColumn> result = new ArrayList<>(keys.length);
+    /** Get a list of modified columns */
+    protected List<MetaColumn> getChangedOrmColumns(@Nonnull final OrmUjo bo) {
+        final KeyList<Ujo> keys = bo.readKeys();
+        final List<MetaColumn> result = new ArrayList<>(keys.size());
 
-        for (Key key : keys) {
-            MetaRelation2Many column = handler.findColumnModel(key);
-            if (column instanceof MetaColumn) {
-                result.add((MetaColumn) column);
+        for (final Key key : keys) {
+            if (bo.checkModificationFlag(key)) {
+                final MetaRelation2Many column = handler.findColumnModel(key);
+                if (column instanceof MetaColumn) {
+                    result.add((MetaColumn) column);
+                }
             }
         }
         return result;
@@ -1171,7 +1179,7 @@ public class Session implements Closeable {
             }
         }
         ujo.writeSession(this);
-        ujo.readChangedProperties(true); // Clear changed keys
+        ujo.clearModificationFlags(); // Clear changed keys
 
         return true;
     }

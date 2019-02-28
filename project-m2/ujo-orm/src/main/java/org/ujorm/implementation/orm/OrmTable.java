@@ -16,16 +16,17 @@
 
 package org.ujorm.implementation.orm;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
-import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.extensions.Property;
 import org.ujorm.implementation.quick.QuickUjo;
 import org.ujorm.orm.ExtendedOrmUjo;
@@ -67,15 +68,12 @@ import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
  */
 public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements ExtendedOrmUjo<U> {
 
-    /** An empty array of the UJO keys */
-    @PackagePrivate
-    static final Key[] EMPTY = new Key[0];
     /** ORM session */
     @Nullable
     transient private Session session;
     /** Set of changes */
     @Nullable
-    transient private Set<Key> changes = null;
+    transient private BitSet changes = null;
 
     public OrmTable() {
     }
@@ -95,11 +93,11 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
     /** A method for an internal use only. */
     @Override
     public void writeValue(@Nonnull final Key<?,?> key, final Object value) {
-        if (session!=null) {
-            if (changes==null) {
-                changes = new HashSet<>(8);
+        if (session != null) {
+            if (changes == null) {
+                changes = new BitSet();
             }
-            changes.add(key);
+            changes.flip(key.getIndex());
         }
         super.writeValue(key, value);
     }
@@ -112,17 +110,37 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
      * @param clear True value clears all the key changes.
      * @return Key array of the modified values.
      */
-    @Override
+    @Override @Deprecated
     public Key[] readChangedProperties(final boolean clear) {
-        final Key[] result
-            = (changes==null || changes.isEmpty())
-            ? EMPTY
-            : changes.toArray(new Key[changes.size()])
-            ;
-        if (clear) {
-            changes = null;
+        final KeyList<U> keys = readKeys();
+        final ArrayList<Key> result = new ArrayList<>(keys.size());
+        for (Key<U, ?> key : keys) {
+            if (checkModificationFlag(key)) {
+                result.add(key);
+            }
         }
-        return result;
+        if (clear) {
+            clearModificationFlags();
+        }
+        return result.toArray(new Key[result.size()]);
+    }
+
+    /** Check the attribute modification flag */
+    @Override
+    public boolean checkModificationFlag(@Nonnull final Key key) {
+        return changes != null && changes.get(key.getIndex());
+    }
+
+    /** Type safe checking the modification flag */
+    public final <UJO extends U, VALUE> boolean checkModificationFlagSafe(final @Nonnull Key<UJO, VALUE> key) {
+        return checkModificationFlag(key);
+    }
+
+    @Override
+    public void clearModificationFlags() {
+        if (changes != null) {
+            changes.clear();
+        }
     }
 
     /** Getter based on Key implemented by a pattern UjoExt */
