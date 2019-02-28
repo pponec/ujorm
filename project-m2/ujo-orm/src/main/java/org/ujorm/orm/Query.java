@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -385,6 +386,16 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             }
             return result;
         }
+    }
+
+    /** Returns a unique result or {@code null} if no result item (database row) was found.
+     * @throws NoSuchElementException Result is not unique.
+     * @see #iterator()
+     * @see #exists()
+     */
+    @Nonnull
+    public Optional<UJO> uniqueResultOptional() throws NoSuchElementException {
+        return Optional.ofNullable(uniqueResult());
     }
 
     /** The method performs a new database request and returns result of the function <code>UjoIterator.hasNext()</code>.

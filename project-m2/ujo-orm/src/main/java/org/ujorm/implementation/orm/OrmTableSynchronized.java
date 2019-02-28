@@ -16,10 +16,12 @@
 
 package org.ujorm.implementation.orm;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
@@ -49,19 +51,19 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     /** ORM session */
     transient private ThreadLocal<Session> session;
     /** Set of changes */
-    transient private Set<Key> changes = null;
+    transient private BitSet changes = null;
 
     /** Read a session */
     @Override
     public Session readSession() {
-        return session!=null ? session.get() : null ;
+        return session != null ? session.get() : null ;
     }
 
     /** Write a session */
     @Override
     public void writeSession(Session session) {
-        if (this.session==null) {
-            if (session==null) {
+        if (this.session == null) {
+            if (session == null) {
                 return;
             }
             this.session = new ThreadLocal<>();
@@ -72,11 +74,11 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     /** A method for an internal use only. */
     @Override
     synchronized public void writeValue(Key key, Object value) {
-        if (readSession()!=null) {
-            if (changes==null) {
-                changes = new HashSet<>(8);
+        if (readSession() != null) {
+            if (changes == null) {
+                changes = new BitSet();
             }
-            changes.add(key);
+            changes.flip(key.getIndex());
         }
         super.writeValue(key, value);
     }
@@ -96,16 +98,36 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
      * @return Key array of the modified values.
      */
     @Override
-    synchronized public Key[] readChangedProperties(boolean clear) {
-        final Key[] result
-            = changes==null || changes.isEmpty()
-            ? OrmTable.EMPTY
-            : changes.toArray(new Key[changes.size()])
-            ;
-        if (clear) {
-            changes = null;
+    public synchronized Key[] readChangedProperties(boolean clear) {
+        final KeyList<U> keys = readKeys();
+        final ArrayList<Key> result = new ArrayList<>(keys.size());
+        for (Key<U, ?> key : keys) {
+            if (checkModificationFlag(key)) {
+                result.add(key);
+            }
         }
-        return result;
+        if (clear) {
+            clearModificationFlags();
+        }
+        return result.toArray(new Key[result.size()]);
+    }
+
+    /** Check the attribute modification flag */
+    @Override
+    public synchronized boolean checkModificationFlag(@Nonnull final Key key) {
+        return changes != null && changes.get(key.getIndex());
+    }
+
+    /** Type safe checking the modification flag */
+    public synchronized final <UJO extends U, VALUE> boolean checkModificationFlagSafe(final @Nonnull Key<UJO, VALUE> key) {
+        return checkModificationFlag(key);
+    }
+
+    @Override
+    public synchronized void clearModificationFlags() {
+        if (changes != null) {
+            changes.clear();
+        }
     }
 
     /** Getter based on Key implemented by a pattern UjoExt */

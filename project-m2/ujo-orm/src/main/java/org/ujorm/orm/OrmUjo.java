@@ -57,8 +57,16 @@ public interface OrmUjo extends Ujo {
      * and in the method writeValue assign the current Key always.
      * @param clear True value clears all the key changes.
      * @return Key array of the modified values.
+     * @see Use the {@link #checkModificatinFlag(org.ujorm.Key) } rather
      */
+    @Deprecated
     public Key[] readChangedProperties(boolean clear);
+
+    /** Check the attribute modification flag */
+    public <UJO, VALUE> boolean checkModificationFlag(@Nonnull Key key);
+
+    /** Clear all modification flags */
+    public void clearModificationFlags();
 
     /** Clone the first level of properties */
     @Nonnull

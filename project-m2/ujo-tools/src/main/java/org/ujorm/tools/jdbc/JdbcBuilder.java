@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
@@ -400,6 +401,12 @@ public final class JdbcBuilder implements Serializable {
         } catch (SQLException | NoSuchElementException e) {
             throw new IllegalStateException(getSql(), e);
         }
+    }
+
+    /** Return the first column value of a unique resultset */
+    @Nonnull
+    public <T> Optional<T> uniqueValueOptional(@Nonnull Class<T> resultType, @Nonnull final Connection connection) {
+        return Optional.ofNullable(uniqueValue(resultType, connection));
     }
 
     /** Returns a SQL text */
