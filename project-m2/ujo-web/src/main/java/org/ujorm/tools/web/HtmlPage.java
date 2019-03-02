@@ -18,6 +18,7 @@ package org.ujorm.tools.web;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
@@ -202,10 +203,32 @@ public class HtmlPage extends Element {
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions */
     @Nonnull
+    public static HtmlPage of(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
+        final DefaultConfig config = new DefaultConfig();
+        config.setTitle(title);
+        config.setCssLinks(cssLinks);
+        return of(response, config);
+    }
+
+    /** Create new instance with empty html headers
+     * @throws IllegalStateException IO exceptions */
+    @Nonnull
     public static HtmlPage niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
         final DefaultConfig config = new DefaultConfig();
         config.setNiceFormat(true);
         config.setTitle(title);
+        config.setCssLinks(cssLinks);
+        return of(response, config);
+    }
+
+    /** Create new instance with empty html headers
+     * @throws IllegalStateException IO exceptions */
+    @Nonnull
+    public static HtmlPage niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
+        final DefaultConfig config = new DefaultConfig();
+        config.setNiceFormat(true);
+        config.setTitle(title);
+        config.setCharset(charset);
         config.setCssLinks(cssLinks);
         return of(response, config);
     }

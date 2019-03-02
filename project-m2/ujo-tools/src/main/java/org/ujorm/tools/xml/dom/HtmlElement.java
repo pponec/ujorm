@@ -119,7 +119,7 @@ public class HtmlElement extends XmlElement {
      * @param defer A script that will not run until after the page has loaded
      * @return
      */
-    public <T extends XmlElement> T addJavascriptLink(@Nonnull final CharSequence javascriptLink, final boolean defer) {
+    public <T extends XmlElement> T addJavascriptLink(final boolean defer, @Nonnull final CharSequence ... javascriptLink) {
         Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
         return head.addElement(Html.SCRIPT)
                 .setAttrib(Html.A_SRC, javascriptLink)
