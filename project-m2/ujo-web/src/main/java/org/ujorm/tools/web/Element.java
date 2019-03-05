@@ -282,7 +282,7 @@ public class Element extends AbstractElement<Element> implements Html {
     }
 
     /** Add an anchor element with texts */
-    public <T extends Element> T addAnchorText(@Nonnull final String url, @Nonnull final Object... text) {
+    public <T extends Element> T addAnchoredText(@Nonnull final String url, @Nonnull final Object... text) {
         final T result = addElement(A)
                .setHref(url)
                .addText(text);
