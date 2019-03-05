@@ -63,7 +63,11 @@ public class Element extends AbstractElement<Element> implements Html {
         }
     }
 
-    /** Add simple text */
+    /** Add simple text
+     * @param data Text item
+     * @return A parent element.
+     * @see #addAnchoredText(java.lang.String, java.lang.Object...)
+     */
     @Override
     public <T extends Element> T addText(final Object data) throws IllegalStateException {
         try {
@@ -74,7 +78,12 @@ public class Element extends AbstractElement<Element> implements Html {
         }
     }
 
-    /** Add many texts with no separator */
+    /**
+     * Add many texts with no separator
+     * @param data Text items
+     * @return A parent element.
+     * @see #addAnchoredText(java.lang.String, java.lang.Object...)
+     */
     public <T extends Element> T addText(@Nonnull final Object... data) throws IllegalStateException {
         return addTextSeparted("", data);
     }
