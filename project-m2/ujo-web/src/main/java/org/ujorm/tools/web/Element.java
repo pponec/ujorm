@@ -63,6 +63,7 @@ public class Element extends AbstractElement<Element> implements Html {
         }
     }
 
+    /** Add simple text */
     @Override
     public <T extends Element> T addText(final Object data) throws IllegalStateException {
         try {
@@ -73,14 +74,24 @@ public class Element extends AbstractElement<Element> implements Html {
         }
     }
 
-    @Override
-    public <T extends Element> T addTextWithSpace(Object data) throws IllegalStateException {
+    /** Add many texts with no separator */
+    public <T extends Element> T addText(@Nonnull final Object... data) throws IllegalStateException {
+        return addTextSeparted("", data);
+    }
+
+    /** Add many words separated by the separator */
+    public <T extends Element> T addTextSeparted(@Nonnull final Object separator, @Nonnull final Object... data) throws IllegalStateException {
         try {
-            origElement.addTextWithSpace(data);
-            return (T) this;
+            for (int i = 0, max = data.length; i < max; i++) {
+                if (i > 0) {
+                    origElement.addText(separator);
+                }
+                origElement.addText(data[i]);
+            }
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+        return (T) this;
     }
 
     @Override
@@ -263,9 +274,19 @@ public class Element extends AbstractElement<Element> implements Html {
         return addElement(BUTTON, cssClasses);
     }
 
-    /** Add new body element */
-    public <T extends Element> T addAnchor(@Nonnull final CharSequence... cssClasses) {
-        return addElement(A, cssClasses);
+    /** Add an anchor element with URL and CSS classes */
+    public <T extends Element> T addAnchor(@Nonnull final String url, @Nonnull final CharSequence... cssClasses) {
+        final T result = addElement(A, cssClasses);
+        result.setHref(url);
+        return result;
+    }
+
+    /** Add an anchor element with texts */
+    public <T extends Element> T addAnchorText(@Nonnull final String url, @Nonnull final Object... text) {
+        final T result = addElement(A)
+               .setHref(url)
+               .addText(text);
+        return result;
     }
 
     /** Add new body element */

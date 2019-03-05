@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.AbstractElement;
-import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_SPACE;
 
 /**
  * A XML builder.
@@ -180,19 +179,6 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
     public final <T extends XmlBuilder> T addText(@Nullable final Object value) throws IOException {
         nextChild(null);
         writer.writeValue(value, this, null);
-        return (T) this;
-    }
-
-    /**
-     * Add a text including a space (before and after the text)
-     * @param value Anu data
-     * @return This instance */
-    @Override @Nonnull
-    public final <T extends XmlBuilder> T addTextWithSpace(@Nullable final Object value) throws IOException {
-        nextChild(null);
-        writer.writeRawText(CHAR_SPACE);
-        writer.writeValue(value, this, null);
-        writer.writeRawText(CHAR_SPACE);
         return (T) this;
     }
 

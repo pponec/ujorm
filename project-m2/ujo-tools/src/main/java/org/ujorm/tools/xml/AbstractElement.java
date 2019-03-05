@@ -87,13 +87,6 @@ public abstract class AbstractElement<E extends AbstractElement> implements Clos
     @Nonnull
     public abstract <T extends E> T addText(@Nullable final Object value) throws IOException;
 
-    /**
-     * Add a text including a space (before and after the text)
-     * @param value Anu data
-     * @return This instance */
-    @Nonnull
-    public abstract <T extends E> T addTextWithSpace(@Nullable final Object value) throws IOException;
-
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */

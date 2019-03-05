@@ -20,8 +20,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServlet;
 import org.ujorm.tools.msg.MsgFormatter;
-import org.ujorm.tools.xml.AbstractElement;
 import org.ujorm.tools.web.Html;
+import org.ujorm.tools.xml.AbstractElement;
 
 /**
  * Common services with static methdos
@@ -49,11 +49,11 @@ public abstract class ApplService {
     public static void addFooter(final AbstractElement parent, HttpServlet servlet, short showLine) throws IOException {
         AbstractElement footer = parent.addElement(Html.DIV)
                 .setAttrib(Html.A_CLASS, "footer");
-        footer.addTextWithSpace("See a")
+        footer.addText("See a ")
                 .addElement(Html.A)
                 .setAttrib(Html.A_HREF, getSourceLink(servlet.getClass(), showLine))
                 .setAttrib(Html.A_TARGET, Html.V_BLANK)
                 .addText(servlet.getClass().getSimpleName());
-        footer.addTextWithSpace("source class of the Ujorm framework.");
+        footer.addText(" source class of the Ujorm framework.");
     }
 }

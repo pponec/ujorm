@@ -167,18 +167,6 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
         return (T) this;
     }
 
-    /**
-     * Add a text including a space (before and after the text)
-     * @param value Anu data
-     * @return This instance */
-    @Override @Nonnull
-    public final <T extends XmlElement> T addTextWithSpace(@Nullable final Object value) {
-        addChild(CHAR_SPACE);
-        addChild(value);
-        addChild(CHAR_SPACE);
-        return (T) this;
-    }
-
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */
