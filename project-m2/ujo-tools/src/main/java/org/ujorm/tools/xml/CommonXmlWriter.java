@@ -157,7 +157,7 @@ public class CommonXmlWriter {
 
     // ---- STATIC METHOD(s) ---
 
-    /** Get writer from HttpServletResponse */
+    /** Assign a no-cache and an Edge compatibility mode and returns a writer from HttpServletResponse */
     public static Writer createWriter(@Nonnull final Object httpServletResponse, @Nonnull final Charset charset, final boolean noCache)
             throws ReflectiveOperationException {
         final Method setEncoding = httpServletResponse.getClass().getMethod("setCharacterEncoding", String.class);
@@ -169,6 +169,7 @@ public class CommonXmlWriter {
             setHeader.invoke(httpServletResponse, "Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
             setHeader.invoke(httpServletResponse, "Pragma", "no-cache"); // HTTP 1.0
             setHeader.invoke(httpServletResponse, "Expires", "0"); // Proxies
+            setHeader.invoke(httpServletResponse, "X-UA-Compatible", "IE=edge"); // Proxies
         }
         final Writer writer = (Writer) getWriter.invoke(httpServletResponse);
         return writer;
