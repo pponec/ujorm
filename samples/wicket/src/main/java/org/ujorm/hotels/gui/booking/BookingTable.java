@@ -27,6 +27,7 @@ import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.gui.booking.action.BookActionPanel;
 import org.ujorm.hotels.service.DbService;
 import org.ujorm.hotels.service.param.ApplicationParams;
+import org.ujorm.hotels.sources.SrcLinkPanel;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.OrmDataProvider;
@@ -67,6 +68,7 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
         add(columns.createDataTable(params.getRowsPerPage()));
 
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
+        add(new SrcLinkPanel("sourceLink", getClass()));
     }
 
     /** Create a new criterion model from the {@code dbService} */

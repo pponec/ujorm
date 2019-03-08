@@ -35,6 +35,15 @@ div.tabpanel .tab-row li a.about {
     background-image: url("../images/icons/help.png");
 }
 
+span.srcLink {
+    background-image: url("../images/icons/table.png") ;
+    background-repeat: no-repeat;
+    background-position: left;
+    display: inline-block;
+    padding-left: 20px;
+    margin-top: 20px;
+}
+
 /* A fix width of hotel table */
 div.hotel table.border {
     width: 800px;

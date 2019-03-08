@@ -38,6 +38,8 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     @Comment("Count of rows per a page in the table for a user")
     @PersonalParam
     public static final Key<ApplicationParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
+    @Comment("Enable a link to java sources")
+    public static final Key<ApplicationParams, Boolean> ENABLE_LINK_TO_SOURCES = f.newKey("EnableLinkToSources", true);
     @Comment("Optimized table data loading")
     @PersonalParam
     public static final Key<ApplicationParams, Boolean> OPTIMIZED_TABLES = f.newKey("OptimizedTables", true);
@@ -66,6 +68,11 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     /** Optimized table data loading */
     public Boolean getOptimizedTables() {
         return OPTIMIZED_TABLES.of(this);
+    }
+
+    /** Enable a link to java sources */
+    public Boolean getEnableLinkToSources() {
+        return ENABLE_LINK_TO_SOURCES.of(this);
     }
 
     /** Optimized table data loading */

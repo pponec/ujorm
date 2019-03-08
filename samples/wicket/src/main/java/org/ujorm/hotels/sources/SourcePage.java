@@ -44,8 +44,8 @@ public class SourcePage extends WebPage {
 
     /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(SourcePage.class);
-    /** Logout */
-    public static final String CLASS_PARAM = "src";
+    /** Parameter for the source */
+    public static final String SOURCE_PARAM = "src";
     @SpringBean
     private ApplicationParams applParams;
     /** Sources */
@@ -60,7 +60,7 @@ public class SourcePage extends WebPage {
            tabs.add(new UjoTab(className.getSimpleName() + ".java", "booking", SrcTabPanel.class).setTabModel(Model.of(className)));
         }
 
-        add(new UjoTabbedPanel("tabs", tabs) {
+        add(new UjoTabbedPanel("srcTabs", tabs) {
             @Override
             protected void onAjaxUpdate(AjaxRequestTarget target) {
                 super.onAjaxUpdate(target);
@@ -82,7 +82,7 @@ public class SourcePage extends WebPage {
     /** Returns an argument class */
     private Class<? extends Panel> getClass(PageParameters parameters) {
         Class<? extends Panel> defaultResult = HotelTable.class;
-        StringValue srcValue = parameters.get(CLASS_PARAM);
+        StringValue srcValue = parameters.get(SOURCE_PARAM);
         if (!srcValue.isEmpty()) {
             try {
                 final String srcClass = srcValue.toString(defaultResult.getClass().getName());

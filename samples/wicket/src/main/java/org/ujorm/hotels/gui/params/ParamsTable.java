@@ -28,6 +28,7 @@ import org.ujorm.hotels.gui.params.action.ParamFinder;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.ParamService;
 import org.ujorm.hotels.service.param.ApplicationRoles;
+import org.ujorm.hotels.sources.SrcLinkPanel;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.grid.CommonAction;
@@ -68,6 +69,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         // Dialogs:
         add((editDialog = ParamsEditor.create("editDialog", 700, 390)).getModalWindow());
         add(toolbar);
+        add(new SrcLinkPanel("sourceLink", getClass()));
     }
 
     /** Create a criterion for the table */

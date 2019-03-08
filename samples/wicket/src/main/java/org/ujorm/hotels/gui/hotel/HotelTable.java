@@ -31,6 +31,7 @@ import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.DbService;
 import org.ujorm.hotels.service.param.ApplicationParams;
+import org.ujorm.hotels.sources.SrcLinkPanel;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.KeyColumn;
@@ -89,6 +90,7 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
         } );
         columns.setCssClass(Hotel.NAME, "hotelName");
         columns.setCssClass(Hotel.STREET, "streetName");
+        add(new SrcLinkPanel("sourceLink", getClass()));
     }
 
     /** Manage events */
