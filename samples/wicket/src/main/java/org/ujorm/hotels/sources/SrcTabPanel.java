@@ -15,35 +15,56 @@
  */
 package org.ujorm.hotels.sources;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.springframework.core.SpringVersion;
-import org.ujorm.core.UjoManager;
+import org.apache.wicket.markup.html.panel.GenericPanel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.ujorm.tools.msg.MsgFormatter;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * AboutPanel
  * @author Pavel Ponec
  */
-public class SrcTabPanel extends Panel {
+public class SrcTabPanel extends GenericPanel<Class> {
 
-    public SrcTabPanel(String id) {
-        super(id);
+    /** Logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger(SrcTabPanel.class);
+
+    public SrcTabPanel(String id, IModel<Class> model) {
+        super(id, model);
 
        add(new Label("javaVersion", System.getProperty("java.version")));
-       add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
-       add(new Label("ujormVersion", UjoManager.version()));
-       add(new Label("springVersion", SpringVersion.getVersion()));
-       add(new AjaxLink("waiting") {
-           @Override
-           public void onClick(AjaxRequestTarget target) {
-               try {
-                   Thread.sleep(4000);
-               } catch (InterruptedException e) {
-                   Thread.currentThread().interrupt();
-               }
-           }
-       });
+       add(new Label("source", getResourceAsString(getModelObject())));
+
+       add(new AttributeAppender("onclick", new Model("prettyPrint();"), ";"));
+    }
+
+    /**
+     * Reads given resource file as a string.
+     *
+     * @param javaClass the path to the resource file
+     * @return the file's contents or null if the file could not be opened
+     */
+    public static String getResourceAsString(@Nonnull Class javaClass) {
+        try {
+            final String javaSource = MsgFormatter.format("/{}.java", javaClass.getName().replace('.', '/'));
+            final InputStream is = javaClass.getClassLoader().getResourceAsStream(javaSource);
+            if (is != null) {
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(is, UTF_8));
+                return reader.lines().collect(Collectors.joining("\n"));
+            }
+        } catch (Exception e) {
+            LOGGER.warn("Wrong resource " + javaClass, e);
+        }
+        return String.valueOf(javaClass);
     }
 }

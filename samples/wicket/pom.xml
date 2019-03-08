@@ -344,8 +344,17 @@
                             <Build-Time>${maven.build.timestamp}</Build-Time>
                         </manifestEntries>
                     </archive>
+                    
+                    <!-- Include java sources -->
+                    <webResources>
+                        <resource>
+                            <directory>${build.sourceDirectory}</directory>
+                            <targetPath>WEB-INF/classes</targetPath>
+                        </resource>
+                    </webResources>  
                 </configuration>
             </plugin>
+            
             <plugin>
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -364,6 +373,16 @@
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
+                <configuration>
+                    <httpConnector>
+                        <port>8080</port>
+                    </httpConnector>                    
+                    <webApp>
+                        <contextPath>/</contextPath>
+                        <extraClasspath>${basedir}/src/main/java</extraClasspath>
+                    </webApp>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                </configuration>
             </plugin>
 
             <plugin>

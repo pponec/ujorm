@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.sources;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,7 +39,7 @@ import org.ujorm.hotels.gui.params.ParamsTable;
 
 
 /** Mapping the sources */
-public class SourceMap {
+public class SourceMap implements Serializable {
 
     /** Servlet mapping */
     final Map<Class,Class[]> classMap = new HashMap<>();

@@ -1,7 +1,5 @@
 /** The CSS for the resources  */
 
-@import url("basic.css");
-
 pre.prettyprint {
     font-family: Courier, Monaco, monospace;;
     background-color: white;
@@ -35,4 +33,8 @@ li.L1, li.L3, li.L5, li.L7, li.L9 {
     font-style: italic;
     color: gray;
     font-size: 12px;
+}
+
+ul, ol {
+    margin: 0 0 10px 35px;
 }

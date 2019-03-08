@@ -22,13 +22,13 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.ujorm.hotels.config.DatabaseConfig;
 import org.ujorm.hotels.gui.*;
 import org.ujorm.hotels.gui.about.AboutPanel;
 import org.ujorm.hotels.gui.about.BuildInfo;
@@ -43,7 +43,7 @@ public class SourcePage extends WebPage {
     private static final long serialVersionUID = 1L;
 
     /** Logger */
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SourcePage.class);
     /** Logout */
     public static final String CLASS_PARAM = "src";
     @SpringBean
@@ -57,9 +57,16 @@ public class SourcePage extends WebPage {
         // Create a list of ITab objects used to feed the tabbed panel
         final List<UjoTab> tabs = new ArrayList<UjoTab>();
         for (Class className : sourceMap.getClasses(getClass(parameters))) {
-           tabs.add(new UjoTab(className.getSimpleName() + ".java", "booking", SrcTabPanel.class));
+           tabs.add(new UjoTab(className.getSimpleName() + ".java", "booking", SrcTabPanel.class).setTabModel(Model.of(className)));
         }
-        add(new UjoTabbedPanel("tabs", tabs));
+
+        add(new UjoTabbedPanel("tabs", tabs) {
+            @Override
+            protected void onAjaxUpdate(AjaxRequestTarget target) {
+                super.onAjaxUpdate(target);
+                target.appendJavaScript("prettyPrint();");
+            }
+        });
 
         Label label;
         add(new BuildInfo("buildInfo"));
