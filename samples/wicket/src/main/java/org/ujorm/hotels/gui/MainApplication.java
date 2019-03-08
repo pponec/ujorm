@@ -22,6 +22,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.stereotype.Component;
 import org.ujorm.hotels.config.SpringContext;
+import org.ujorm.hotels.sources.SourcePage;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 
@@ -45,9 +46,10 @@ public class MainApplication extends WebApplication implements OrmHandlerProvide
     protected void init() {
         super.init();
         // getMarkupSettings().setStripWicketTags(true); // jQuery UI recommendation
-        getResourceSettings().setThrowExceptionOnMissingResource(false); 
+        getResourceSettings().setThrowExceptionOnMissingResource(false);
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));
         mountPage("/home", HomePage.class);
+        mountPage("/source", SourcePage.class);
     }
 
     /** {@inheritDoc { */

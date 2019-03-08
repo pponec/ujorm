@@ -1,0 +1,38 @@
+/** The CSS for the resources  */
+
+@import url("basic.css");
+
+pre.prettyprint {
+    font-family: Courier, Monaco, monospace;;
+    background-color: white;
+    margin: 0;
+    padding: 15px;
+    font-size: 19px;
+    border: 2px solid #428bca;
+    border-radius: 6px;
+}
+
+.com {
+    color: #788390;
+}
+
+.kwd {
+    font-weight: bold;
+    color: #2d5995;
+}
+
+li.L1, li.L3, li.L5, li.L7, li.L9 {
+    background: #fafafa;
+}
+
+.linenums li {
+    list-style-type: decimal;
+}
+
+.footer {
+    margin-top: 25px;
+    margin-left: 7px;
+    font-style: italic;
+    color: gray;
+    font-size: 12px;
+}
