@@ -39,7 +39,7 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     @PersonalParam
     public static final Key<ApplicationParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
     @Comment("Enable a link to java sources")
-    public static final Key<ApplicationParams, Boolean> ENABLE_LINK_TO_SOURCES = f.newKey("EnableLinkToSources", true);
+    public static final Key<ApplicationParams, Boolean> LINK_TO_SOURCES = f.newKey("EnableLinkToSources", true);
     @Comment("Optimized table data loading")
     @PersonalParam
     public static final Key<ApplicationParams, Boolean> OPTIMIZED_TABLES = f.newKey("OptimizedTables", true);
@@ -70,15 +70,15 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
         return OPTIMIZED_TABLES.of(this);
     }
 
-    /** Enable a link to java sources */
-    public Boolean getEnableLinkToSources() {
-        return ENABLE_LINK_TO_SOURCES.of(this);
-    }
-
     /** Optimized table data loading */
     public boolean isOptimizedTables() {
         final Boolean result = getOptimizedTables();
         return result != null && result;
+    }
+
+    /** Enable a link to java sources */
+    public Boolean getLinkToSources() {
+        return LINK_TO_SOURCES.of(this);
     }
 
     /** The production application is running */

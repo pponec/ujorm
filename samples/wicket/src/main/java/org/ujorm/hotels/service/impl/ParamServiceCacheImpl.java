@@ -31,6 +31,7 @@ import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.ModuleEnum;
 import org.ujorm.hotels.service.ModuleParams;
 import org.ujorm.hotels.service.ParamService;
+import org.ujorm.hotels.service.param.annot.PersonalParam;
 /**
  * Common Parameter service service provider including a cache
  * @author Pavel Ponec
@@ -53,8 +54,10 @@ public class ParamServiceCacheImpl extends ParamServiceImpl {
 
     /** Cache the value */
     @Override
-    public <U extends ModuleParams, T> T getValue(final Key<? super U, T> key, final ModuleEnum module, final Customer customer) {
+    public <U extends ModuleParams, T> T getValue(final Key<? super U, T> key, final ModuleEnum module, final Customer aCustomer) {
         final T result;
+        final boolean personalParam = key.getClass().isAnnotationPresent(PersonalParam.class);
+        final Customer customer = personalParam ? aCustomer : null;
         final Cache cache = getObjectCache();
         final CacheKey cacheKey = new CacheKey(key.getName(), module, customer);
         final ValueWrapper wrapper = cache.get(cacheKey);

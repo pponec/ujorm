@@ -4,7 +4,7 @@ pre.prettyprint {
     font-family: Courier, Monaco, monospace;;
     background-color: white;
     margin: 0;
-    padding: 15px;
+    padding: 20px;
     font-size: 19px;
     border: 2px solid #428bca;
     border-radius: 6px;
@@ -33,6 +33,19 @@ li.L1, li.L3, li.L5, li.L7, li.L9 {
     font-style: italic;
     color: gray;
     font-size: 12px;
+}
+
+.footer.src {
+    margin-top: 30px;
+}
+
+.footer.src a {
+    background-image: url("/images/icons/house.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    display: inline-block;
+    padding-left: 20px;
+    margin-top: 20px;
 }
 
 ul, ol {

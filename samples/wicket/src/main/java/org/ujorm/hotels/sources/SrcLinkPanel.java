@@ -45,10 +45,8 @@ public class SrcLinkPanel extends GenericPanel<Class> {
             }
         };
         msgLink.add(new CssAppender("srcLink"));
-        msgLink.setVisible(params.getEnableLinkToSources());
+        msgLink.setVisibilityAllowed(params.getLinkToSources());
 
         add(msgLink);
     }
-
-
 }
