@@ -16,7 +16,7 @@
 package org.ujorm.hotels.sources;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.panel.GenericPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -28,19 +28,19 @@ import org.ujorm.wicket.component.link.MessageLink;
  * Source Link
  * @author Pavel Ponec
  */
-public class SrcLinkPanel extends GenericPanel<Class> {
+public class SrcLinkPanel extends Panel {
 
     @SpringBean
     private ApplicationParams params;
 
-    public SrcLinkPanel(String id, Class sourceClass) {
-        super(id, Model.of(sourceClass));
+    public SrcLinkPanel(final String id, final Panel sourceComponent) {
+        super(id);
 
         MessageLink msgLink = new MessageLink("srcLink", Model.of("Show a source code")) {
             @Override
             protected void onClick(AjaxRequestTarget target) {
                 PageParameters params = new PageParameters();
-                params.add(SourcePage.SOURCE_PARAM, sourceClass.getName());
+                params.add(SourcePage.SOURCE_PARAM, sourceComponent.getClass().getName());
                 setResponsePage(SourcePage.class, params);
             }
         };

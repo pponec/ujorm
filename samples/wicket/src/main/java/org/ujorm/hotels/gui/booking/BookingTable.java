@@ -68,7 +68,7 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
         add(columns.createDataTable(params.getRowsPerPage()));
 
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
-        add(new SrcLinkPanel("sourceLink", getClass()));
+        add(new SrcLinkPanel("sourceLink", this));
     }
 
     /** Create a new criterion model from the {@code dbService} */

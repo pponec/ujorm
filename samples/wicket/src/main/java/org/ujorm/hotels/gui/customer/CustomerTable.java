@@ -66,7 +66,7 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
         add((editDialog = CustomerEditor.create("editDialog", 700, 390)).getModalWindow());
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
         add((loginDialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
-        add(new SrcLinkPanel("sourceLink", getClass()));
+        add(new SrcLinkPanel("sourceLink", this));
     }
 
     /** Create actions */

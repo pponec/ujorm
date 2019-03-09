@@ -68,7 +68,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         // Dialogs:
         add((editDialog = ParamsEditor.create("editDialog", 700, 390)).getModalWindow());
         add(toolbar);
-        add(new SrcLinkPanel("sourceLink", getClass()));
+        add(new SrcLinkPanel("sourceLink", this));
     }
 
     /** Create a criterion for the table */

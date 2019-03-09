@@ -89,7 +89,7 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
         } );
         columns.setCssClass(Hotel.NAME, "hotelName");
         columns.setCssClass(Hotel.STREET, "streetName");
-        add(new SrcLinkPanel("sourceLink", getClass()));
+        add(new SrcLinkPanel("sourceLink", this));
     }
 
     /** Manage events */
