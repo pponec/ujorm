@@ -4,10 +4,10 @@ pre.prettyprint {
     font-family: Courier, Monaco, monospace;;
     background-color: white;
     margin: 0;
-    padding: 20px;
+    padding: 0px;
     font-size: 19px;
-    border: 2px solid #428bca;
-    border-radius: 6px;
+    border: none;
+    margin-left: 7px;
 }
 
 .com {
@@ -35,17 +35,17 @@ li.L1, li.L3, li.L5, li.L7, li.L9 {
     font-size: 12px;
 }
 
-.footer.src {
-    margin-top: 30px;
+.applicationLink {
+    margin-top: 10px;
 }
 
-.footer.src a {
+.applicationLink a {
     background-image: url("/images/icons/house.png");
     background-repeat: no-repeat;
-    background-position: left;
+    background-position: 10px 20px;
     display: inline-block;
-    padding-left: 20px;
-    margin-top: 20px;
+    padding-left: 40px;
+    padding-top: 20px;
 }
 
 ul, ol {

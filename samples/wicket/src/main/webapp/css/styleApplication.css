@@ -1,18 +1,6 @@
 body {
     font-family: "Titillium Web","Helvetica Neue",Helvetica,Arial,sans-serif !important;
-}
-
-/* Tabs component */
-div.tab-panel {
-    margin: 40px 5px 5px;
-    padding: 5px;
-}
-
-div.tabpanel .tab-row li a {
-    background-position: 7px 1px;
-    background-repeat: no-repeat;
-    padding-left: 30px;
-    padding-right: 9px;
+    background-color: #f7f9fa;
 }
 
 div.tabpanel .tab-row li a.hotel {
@@ -66,6 +54,7 @@ table.border td div.actions {
 div.prologue {
     color: silver;
     font-style: italic;
+    padding-left: 33px;
 }
 
 /* Prologue */
@@ -196,4 +185,11 @@ div.date input {
     background: url(../images/icons/date_light.png) no-repeat scroll 97% center white;
 }
 
+.tabpanel .tab-panel {
+    background-color: white;
+    margin: 0;
+    padding: 25px;
+    border: 2px solid #c0d8ec;
+    border-radius: 6px;
+}
 

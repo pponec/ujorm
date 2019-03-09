@@ -72,34 +72,13 @@ form div.buttons {
 
 /* Wicket TABS */
 div.tabpanel .tab-row {
-    background-color: #eeeeee;
-    margin-top: 20px;
+    padding-left: 5px;
 }
 
 div.tabpanel .tab-row ul {
     list-style: none outside none;
     margin: 0;
     padding: 5px 0px 0;
-}
-
-div.tabpanel .tab-row li {
-    float: left;
-    margin: 0px;
-    padding: 0px 10px 0px 10px;
-}
-
-div.tabpanel .tab-row li.selected {
-    background-color: #eeeeee;
-}
-
-div.tabpanel div.tab-panel {
-    clear: both;
-}
-
-div.tabpanel .tab-row a {
-    display: block;
-    text-decoration: none;
-    white-space: nowrap;
 }
 
 div.tabpanel .tab-row li.disabled a {
@@ -111,6 +90,10 @@ div.tabpanel .tab-row li.disabled a {
     filter: gray;
     -Xms-filter: grayscale(100%);
     -webkit-filter: grayscale(1);
+}
+
+.tabpanel {
+    padding: 20px;
 }
 
 /* Table Navigator */
