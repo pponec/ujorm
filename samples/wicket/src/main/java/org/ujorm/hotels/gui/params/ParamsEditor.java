@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015, Pavel Ponec
+ * Copyright 2013-2019, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,7 @@ import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
 import org.ujorm.wicket.component.form.fields.Field;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
-/**
- * Customer Editor
+/** Customer Editor
  * @author Pavel Ponec
  */
 public class ParamsEditor<U extends ParamValue> extends EntityDialogPane<U> {

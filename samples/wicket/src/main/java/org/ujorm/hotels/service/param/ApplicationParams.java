@@ -1,5 +1,5 @@
 /*
- * Copyright 2014, Pavel Ponec
+ * Copyright 2014-2019, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,18 @@ import org.ujorm.hotels.entity.enums.ModuleEnum;
 import org.ujorm.hotels.service.impl.AbstractModuleParams;
 import org.ujorm.hotels.service.param.annot.PersonalParam;
 import org.ujorm.orm.annot.Comment;
-/**
- * Common database service implementations
- * @author Ponec
+
+/** Common database service implementations of an application parameters.<br>
+ * Usage:
+ * <pre>
+ *  @SpringBean
+ *  private ApplicationParams params;
+ *  private void doSomething() {
+ *    int rowsPerPage = params.getRowsPerPage();
+ *    ...
+ *  }
+ * </pre>
+ * @author Pavel Ponec
  */
 @Service("applParams")
 public class ApplicationParams<U extends ApplicationParams> extends AbstractModuleParams {

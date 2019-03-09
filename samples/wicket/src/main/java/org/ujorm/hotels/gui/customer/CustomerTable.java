@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014, Pavel Ponec
+ * Copyright 2013-2019, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +35,7 @@ import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 
-/**
- * Customer Panel
+/** Customer Panel
  * @author Pavel Ponec
  */
 public class CustomerTable<U extends Customer> extends GenericPanel<U> {

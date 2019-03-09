@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, Pavel Ponec
+ * Copyright 2013-2019, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,8 +43,7 @@ import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import static org.ujorm.wicket.component.grid.KeyColumn.*;
 
-/**
- * Hotel Table
+/** Hotel Table
  * @author Pavel Ponec
  */
 public class HotelTable<U extends Hotel> extends GenericPanel<U> {

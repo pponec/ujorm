@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014, Pavel Ponec
+ * Copyright 2013-2019, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ import org.ujorm.hotels.service.AuthService;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
-/**
- * Customer Editor
+/** Customer Editor
  * @author Pavel Ponec
  */
 public class CustomerEditor<U extends Customer> extends EntityDialogPane<U> {

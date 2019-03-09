@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014, Pavel Ponec
+ * Copyright 2013-2019, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,12 +39,12 @@ import org.ujorm.hotels.gui.params.ParamsTable;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.param.ApplicationParams;
 import org.ujorm.validator.ValidationException;
-import static org.ujorm.wicket.CommonActions.*;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.tabs.UjoTab;
 import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
 import org.ujorm.wicket.component.waiting.WaitingIcon;
+import static org.ujorm.wicket.CommonActions.*;
 
 public class HomePage extends WebPage implements IAjaxIndicatorAware {
     private static final long serialVersionUID = 1L;
@@ -84,7 +84,7 @@ public class HomePage extends WebPage implements IAjaxIndicatorAware {
         add(new BuildInfo("buildInfo"));
         add(new Label("applicationTitle", MainApplication.APPLICATION_NAME));
         add(label = new Label("applicationHeader", MainApplication.APPLICATION_NAME));
-        
+
         if (applParams.isDebugMode()) {
             label.add(new CssAppender("test"));
         }

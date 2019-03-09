@@ -36,6 +36,7 @@ import org.ujorm.hotels.gui.hotel.HotelEditor;
 import org.ujorm.hotels.gui.hotel.HotelTable;
 import org.ujorm.hotels.gui.params.ParamsEditor;
 import org.ujorm.hotels.gui.params.ParamsTable;
+import org.ujorm.hotels.service.param.ApplicationParams;
 
 
 /** Mapping the sources */
@@ -46,9 +47,9 @@ public class SourceMap implements Serializable {
 
     /** Map servlet to dependecies */
     SourceMap() {
-        classMap.put(HotelTable.class, array(HotelEditor.class, Hotel.class));
-        classMap.put(BookingTable.class, array(BookingEditor.class, Booking.class));
-        classMap.put(CustomerTable.class, array(CustomerEditor.class, Customer.class));
+        classMap.put(HotelTable.class, array(HotelEditor.class, Hotel.class, ApplicationParams.class));
+        classMap.put(BookingTable.class, array(BookingEditor.class, Booking.class, ApplicationParams.class));
+        classMap.put(CustomerTable.class, array(CustomerEditor.class, Customer.class, ApplicationParams.class));
         classMap.put(ParamsTable.class, array(ParamsEditor.class, ParamValue.class, ParamKey.class));
     }
 
