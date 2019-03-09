@@ -57,7 +57,7 @@ public class SourcePage extends WebPage {
         // Create a list of ITab objects used to feed the tabbed panel
         final List<UjoTab> tabs = new ArrayList<UjoTab>();
         for (Class className : sourceMap.getClasses(getClass(parameters))) {
-           tabs.add(new UjoTab(className.getSimpleName() + ".java", "booking", SrcTabPanel.class).setTabModel(Model.of(className)));
+           tabs.add(new UjoTab(className.getSimpleName() + ".java", "source", SrcTabPanel.class).setTabModel(Model.of(className)));
         }
 
         add(new UjoTabbedPanel("srcTabs", tabs) {

@@ -23,6 +23,10 @@ div.tabpanel .tab-row li a.about {
     background-image: url("../images/icons/help.png");
 }
 
+div.tabpanel .tab-row li a.source {
+    background-image: url("../images/icons/table.png");
+}
+
 span.srcLink {
     background-image: url("../images/icons/table.png") ;
     background-repeat: no-repeat;
