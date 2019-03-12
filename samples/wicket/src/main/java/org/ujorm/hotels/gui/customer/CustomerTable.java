@@ -24,7 +24,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.service.AuthService;
-import org.ujorm.hotels.service.DbService;
 import org.ujorm.hotels.sources.SrcLinkPanel;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
@@ -34,13 +33,14 @@ import org.ujorm.wicket.component.grid.OrmDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
+import org.ujorm.hotels.service.CommonService;
 
 /** Customer Panel
  * @author Pavel Ponec
  */
 public class CustomerTable<U extends Customer> extends GenericPanel<U> {
 
-    @SpringBean private DbService dbService;
+    @SpringBean private CommonService dbService;
     @SpringBean private AuthService authService;
 
     private CustomerEditor editDialog;

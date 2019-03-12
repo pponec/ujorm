@@ -31,23 +31,23 @@ import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.service.AuthService;
-import org.ujorm.hotels.service.DbService;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.spring.CommonDao;
 import org.ujorm.tools.Assert;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
-import static org.ujorm.hotels.service.DbService.ONE_DAY;
+import static org.ujorm.hotels.service.CommonService.ONE_DAY;
 import static org.ujorm.hotels.tools.EncTool.getHash;
 import static org.ujorm.tools.Check.hasLength;
+import org.ujorm.hotels.service.CommonService;
 /**
  * Common database service implementations
  * @author ponec
  */
 @Transactional(SpringContext.TRANSACTION_MANAGER)
-public class DbServiceImpl implements DbService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DbServiceImpl.class);
+public class CommonServiceImpl implements CommonService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommonServiceImpl.class);
 
     @Inject private AuthService authService;
 

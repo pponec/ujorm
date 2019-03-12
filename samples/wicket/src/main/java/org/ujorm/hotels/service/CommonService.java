@@ -24,10 +24,10 @@ import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.UjoEvent;
 
 /**
- * Common database service
+ * Common service interfaces
  * @author ponec
  */
-public interface DbService {
+public interface CommonService {
     /** System account is {@code null} always */
     public static final Customer SYSTEM_ACCOUNT = null;
 

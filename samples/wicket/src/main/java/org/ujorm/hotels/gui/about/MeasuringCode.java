@@ -17,7 +17,7 @@ package org.ujorm.hotels.gui.about;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.ujorm.hotels.service.DbService;
+import org.ujorm.hotels.service.CommonService;
 
 /**
  * MeasuringCode
@@ -25,7 +25,7 @@ import org.ujorm.hotels.service.DbService;
  */
 public class MeasuringCode extends Panel {
 
-    @SpringBean private DbService service;
+    @SpringBean private CommonService service;
 
     public MeasuringCode(String id) {
         super(id);

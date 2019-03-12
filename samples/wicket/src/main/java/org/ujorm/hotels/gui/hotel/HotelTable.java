@@ -29,7 +29,6 @@ import org.ujorm.hotels.gui.booking.BookingEditor;
 import org.ujorm.hotels.gui.hotel.action.ActionPanel;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.service.AuthService;
-import org.ujorm.hotels.service.DbService;
 import org.ujorm.hotels.service.param.ApplicationParams;
 import org.ujorm.hotels.sources.SrcLinkPanel;
 import org.ujorm.wicket.UjoEvent;
@@ -42,13 +41,14 @@ import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import static org.ujorm.wicket.component.grid.KeyColumn.*;
+import org.ujorm.hotels.service.CommonService;
 
 /** Hotel Table
  * @author Pavel Ponec
  */
 public class HotelTable<U extends Hotel> extends GenericPanel<U> {
 
-    @SpringBean DbService dbService;
+    @SpringBean CommonService dbService;
     @SpringBean AuthService authService;
     @Named("applParams")
     @SpringBean ApplicationParams<ApplicationParams> params;

@@ -26,9 +26,9 @@ import org.springframework.stereotype.Service;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.MainApplication;
 import org.ujorm.hotels.service.AuthService;
-import org.ujorm.hotels.service.DbService;
 import org.ujorm.hotels.service.SessionService;
 import org.ujorm.logger.UjoLoggerFactory;
+import org.ujorm.hotels.service.CommonService;
 
 /**
  * Common database service implementations
@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
 
     /** Common DB service */
     @Inject
-    private DbService dbService;
+    private CommonService dbService;
 
     /** Spring application context */
     @Inject

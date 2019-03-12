@@ -25,7 +25,6 @@ import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.gui.booking.action.BookActionPanel;
-import org.ujorm.hotels.service.DbService;
 import org.ujorm.hotels.service.param.ApplicationParams;
 import org.ujorm.hotels.sources.SrcLinkPanel;
 import org.ujorm.wicket.UjoEvent;
@@ -34,6 +33,7 @@ import org.ujorm.wicket.component.grid.OrmDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
+import org.ujorm.hotels.service.CommonService;
 
 /**
  * BookingTable
@@ -45,7 +45,7 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
     private ApplicationParams params;
 
     @SpringBean
-    private DbService dbService;
+    private CommonService dbService;
 
     private MessageDialogPane removeDialog;
 

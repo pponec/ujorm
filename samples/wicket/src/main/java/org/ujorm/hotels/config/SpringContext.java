@@ -24,7 +24,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.ujorm.hotels.gui.MainApplication;
 import org.ujorm.hotels.service.ParamService;
-import org.ujorm.hotels.service.impl.DbServiceImpl;
+import org.ujorm.hotels.service.impl.CommonServiceImpl;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.spring.CommonDao;
 import org.ujorm.spring.UjormTransactionManager;
@@ -67,8 +67,8 @@ public class SpringContext {
 
     /** Configuration of the DemoHotels application */
     @Bean
-    public DbServiceImpl dbServiceImpl() {
-        final DbServiceImpl result = new DbServiceImpl();
+    public CommonServiceImpl dbServiceImpl() {
+        final CommonServiceImpl result = new CommonServiceImpl();
         result.setReadOnly(false);
         result.setMeasuringCode(false);
         return result;
