@@ -61,7 +61,7 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
     public HotelTable(String id) {
         super(id);
 
-        final OrmDataProvider<U> columns = params.isOptimizedTables()
+        final OrmDataProvider<U> columns = params.isTableCacheEnabled()
                 ? OrmDataProviderCached.of(toolbar.getCriterion())
                 : OrmDataProvider.of(toolbar.getCriterion());
 

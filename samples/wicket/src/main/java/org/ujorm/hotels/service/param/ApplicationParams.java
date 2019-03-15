@@ -49,9 +49,9 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     public static final Key<ApplicationParams, Integer> ROWS_PER_PAGE = f.newKey("RowsPerPage", 10);
     @Comment("Enable a link to java sources")
     public static final Key<ApplicationParams, Boolean> LINK_TO_SOURCES = f.newKey("EnableLinkToSources", true);
-    @Comment("Optimized table data loading")
+    @Comment("Rows of table are cached for better performace")
     @PersonalParam
-    public static final Key<ApplicationParams, Boolean> OPTIMIZED_TABLES = f.newKey("OptimizedTables", true);
+    public static final Key<ApplicationParams, Boolean> TABLE_CACHE_ENABLED = f.newKey("TableCacheEnabled", true);
     @Comment("The production application is running")
     public static final Key<ApplicationParams, Boolean> DEBUG_MODE = f.newKey("DebugMode", false);
     @Comment("Parameter Test1 for the system")
@@ -75,13 +75,13 @@ public class ApplicationParams<U extends ApplicationParams> extends AbstractModu
     }
 
     /** Optimized table data loading */
-    public Boolean getOptimizedTables() {
-        return OPTIMIZED_TABLES.of(this);
+    public Boolean getTableCacheEnabled() {
+        return TABLE_CACHE_ENABLED.of(this);
     }
 
     /** Optimized table data loading */
-    public boolean isOptimizedTables() {
-        final Boolean result = getOptimizedTables();
+    public boolean isTableCacheEnabled() {
+        final Boolean result = getTableCacheEnabled();
         return result != null && result;
     }
 
