@@ -1,4 +1,5 @@
-package org.ujorm.hotels.gui.hotel.action;
+package org.ujorm.hotels.gui.customer.action;
+
 /*
  * Copyright 2013, Pavel Ponec
  *
@@ -16,10 +17,11 @@ package org.ujorm.hotels.gui.hotel.action;
  */
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
-import org.ujorm.hotels.entity.City;
-import org.ujorm.hotels.entity.Hotel;
+import org.ujorm.hotels.entity.Customer;
+import org.ujorm.hotels.service.AuthService;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.component.toolbar.AbstractToolbar;
 import static org.ujorm.tools.Check.hasLength;
@@ -28,24 +30,24 @@ import static org.ujorm.tools.Check.hasLength;
  * The common action panel
  * @author Pavel Ponec
  */
-public final class Toolbar<U extends Hotel> extends AbstractToolbar<U> {
+public final class Toolbar<U extends Customer> extends AbstractToolbar<U> {
     /** Event action */
     public static final String FILTER_ACTION = CommonActions.FILTER;
 
     /** Default criterion */
-    public static final Criterion<Hotel> DEFAULT_CRITERION = Hotel.ACTIVE.whereEq(true);
-    /** Searching Hotel Field */
-    private TextField searchHotel;
-    /** Searching City Field */
-    private TextField searchCity;
+    public static final Criterion<Customer> DEFAULT_CRITERION = Customer.ID.forAll();
+
+    @SpringBean private AuthService authService;
+
+    /** search login */
+    private TextField searchLogin;
 
     public Toolbar(String id) {
         super(id);
 
         final Form form = new Form("form");
         this.add(form);
-        form.add(searchHotel = createSearchFiled("searchHotel"));
-        form.add(searchCity = createSearchFiled("searchCity"));
+        form.add(searchLogin = createSearchFiled("searchLogin"));
 
         buildCriterion();
     }
@@ -55,16 +57,14 @@ public final class Toolbar<U extends Hotel> extends AbstractToolbar<U> {
      */
     @Override
     protected void buildCriterion() {
-        Criterion<Hotel> result = DEFAULT_CRITERION;
 
-        String value = searchHotel.getValue();
-        if (hasLength(value)) {
-            result = result.and(Hotel.NAME.where(Operator.STARTS_CASE_INSENSITIVE, value));
-        }
+        Criterion<Customer> result = (authService.isAdmin()
+            ? DEFAULT_CRITERION
+            : Customer.ACTIVE.whereEq(true)).cast();
 
-        value = searchCity.getValue();
+        String value = searchLogin.getValue();
         if (hasLength(value)) {
-            result = result.and(Hotel.CITY.add(City.NAME).where(Operator.STARTS_CASE_INSENSITIVE, value));
+            result = result.and(Customer.LOGIN.where(Operator.STARTS, value));
         }
 
         getCriterion().setObject(result.cast());

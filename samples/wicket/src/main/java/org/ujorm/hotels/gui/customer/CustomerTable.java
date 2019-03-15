@@ -15,42 +15,50 @@
  */
 package org.ujorm.hotels.gui.customer;
 
+import javax.inject.Named;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
+import org.ujorm.hotels.gui.customer.action.Toolbar;
 import org.ujorm.hotels.service.AuthService;
+import org.ujorm.hotels.service.CommonService;
+import org.ujorm.hotels.service.param.ApplicationParams;
 import org.ujorm.hotels.sources.SrcLinkPanel;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.CommonAction;
 import org.ujorm.wicket.component.grid.OrmDataProvider;
+import org.ujorm.wicket.component.grid.OrmDataProviderCached;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
-import org.ujorm.hotels.service.CommonService;
 
-/** Customer Panel
+/** Customer Table
  * @author Pavel Ponec
  */
 public class CustomerTable<U extends Customer> extends GenericPanel<U> {
 
     @SpringBean private CommonService dbService;
     @SpringBean private AuthService authService;
+    @Named("applParams")
+    @SpringBean ApplicationParams<ApplicationParams> params;
 
     private CustomerEditor editDialog;
     private MessageDialogPane removeDialog;
     private LoginDialog loginDialog;
+    private Toolbar<U> toolbar = new Toolbar("toolbar");
 
     public CustomerTable(String id) {
         super(id);
 
-        OrmDataProvider<U> columns = OrmDataProvider.of(getCriterion());
+        final OrmDataProvider<U> columns = params.isTableCacheEnabled()
+                ? OrmDataProviderCached.of(toolbar.getCriterion())
+                : OrmDataProvider.of(toolbar.getCriterion());
+
         columns.add(Customer.LOGIN);
         columns.add(Customer.TITLE);
         columns.add(Customer.FIRSTNAME);
@@ -63,6 +71,7 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
         add(columns.createDataTable(10, true));
 
         // Dialogs:
+        add(toolbar);
         add((editDialog = CustomerEditor.create("editDialog", 700, 390)).getModalWindow());
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
         add((loginDialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
@@ -96,15 +105,6 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
                 return UPDATE.equals(action) == updatable;
             }
         };
-    }
-
-    /** Create a criterion for the table */
-    private IModel<Criterion<U>> getCriterion() {
-        final Criterion<U> crn
-            = (authService.isAdmin()
-            ? Customer.ACTIVE.forAll()
-            : Customer.ACTIVE.whereEq(true)).cast();
-        return Model.of(crn);
     }
 
     /** Manage events */
@@ -142,6 +142,9 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
                     send(getPage(), Broadcast.DEPTH, new UjoEvent(LOGIN_CHANGED, null, event.getTarget()));
                 }
                 argEvent.stop();
+                break;
+            case org.ujorm.hotels.gui.hotel.action.Toolbar.FILTER_ACTION:
+                reloadTable(event);
                 break;
         }
     }
