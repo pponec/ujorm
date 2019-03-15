@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.gui.hotel;
 
+import java.util.List;
 import javax.inject.Named;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
@@ -29,19 +30,18 @@ import org.ujorm.hotels.gui.booking.BookingEditor;
 import org.ujorm.hotels.gui.hotel.action.ActionPanel;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.service.AuthService;
+import org.ujorm.hotels.service.CommonService;
 import org.ujorm.hotels.service.param.ApplicationParams;
 import org.ujorm.hotels.sources.SrcLinkPanel;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.KeyColumn;
-import org.ujorm.wicket.component.grid.OrmDataProvider;
-import org.ujorm.wicket.component.grid.OrmDataProviderCached;
+import org.ujorm.wicket.component.grid.ListDataProvider;
 import org.ujorm.wicket.component.toolbar.InsertToolbar;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import static org.ujorm.wicket.component.grid.KeyColumn.*;
-import org.ujorm.hotels.service.CommonService;
 
 /** Hotel Table
  * @author Pavel Ponec
@@ -52,29 +52,29 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
     @SpringBean AuthService authService;
     @Named("applParams")
     @SpringBean ApplicationParams<ApplicationParams> params;
+    @SpringBean CommonService commonService;
 
     private Toolbar<U> toolbar = new Toolbar("toolbar");
     private HotelEditor editDialog;
     private BookingEditor bookingDialog;
     private MessageDialogPane removeDialog;
+    private ListDataProvider<U> columnBuilder;
 
     public HotelTable(String id) {
         super(id);
 
-        final OrmDataProvider<U> columns = params.isTableCacheEnabled()
-                ? OrmDataProviderCached.of(toolbar.getCriterion())
-                : OrmDataProvider.of(toolbar.getCriterion());
-
-        columns.add(Hotel.NAME);
-        columns.add(Hotel.CITY.add(City.NAME)); // An example of relations
-        columns.add(Hotel.STREET);
-        columns.add(Hotel.PRICE);
-        columns.add(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
-        columns.add(Hotel.STARS);
-        columns.add(Hotel.PHONE);
-        columns.add(Hotel.ID, ActionPanel.class);
-        columns.setSort(Hotel.NAME);
-        add(columns.createDataTable(DEFAULT_DATATABLE_ID, params.getRowsPerPage()));
+        columnBuilder = ListDataProvider.of(toolbar.getCriterion(), Hotel.NAME);
+        columnBuilder.add(Hotel.NAME);
+        columnBuilder.add(Hotel.CITY.add(City.NAME)); // An example of relations
+        columnBuilder.add(Hotel.STREET);
+        columnBuilder.add(Hotel.PRICE);
+        columnBuilder.add(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
+        columnBuilder.add(Hotel.STARS);
+        columnBuilder.add(Hotel.PHONE);
+        columnBuilder.add(Hotel.ID, ActionPanel.class);
+        columnBuilder.setSort(Hotel.NAME);
+        columnBuilder.setRows(getDbRows()); // Assign required rows
+        add(columnBuilder.createDataTable(DEFAULT_DATATABLE_ID, params.getRowsPerPage()));
 
         add(toolbar);
         add((editDialog = HotelEditor.create("editDialog", 700, 410)).getModalWindow());
@@ -87,8 +87,8 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
                 return authService.isAdmin();
             }
         } );
-        columns.setCssClass(Hotel.NAME, "hotelName");
-        columns.setCssClass(Hotel.STREET, "streetName");
+        columnBuilder.setCssClass(Hotel.NAME, "hotelName");
+        columnBuilder.setCssClass(Hotel.STREET, "streetName");
         add(new SrcLinkPanel("sourceLink", this));
     }
 
@@ -105,7 +105,7 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
                     editDialog.show(event, new LocalizedModel(key));
                 } else {
                     dbService.saveOrUpdateHotel(event.getDomain());
-                    reloadTable(event);
+                    reloadTable(event, true);
                 }
                 break;
             case DELETE:
@@ -116,7 +116,7 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
                             , "delete");
                 } else {
                     dbService.deleteHotel(event.getDomain());
-                    reloadTable(event);
+                    reloadTable(event, true);
                 }
                 break;
             case BookingEditor.BOOKING_ACTION:
@@ -131,13 +131,21 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
                 }
                 break;
             case Toolbar.FILTER_ACTION:
-                reloadTable(event);
+                reloadTable(event, true);
                 break;
         }
     }
 
+    /** Get user parameters include system params */
+    private List<? super U> getDbRows() {
+        return commonService.findHotels(toolbar.getCriterion().getObject());
+    }
+
     /** Reload the data table */
-    private void reloadTable(UjoEvent event) {
+    private void reloadTable(UjoEvent event, boolean dbRequest) {
+        if (dbRequest) {
+            columnBuilder.setRows(getDbRows());
+        }
         event.addTarget(get(DEFAULT_DATATABLE_ID));
     }
 

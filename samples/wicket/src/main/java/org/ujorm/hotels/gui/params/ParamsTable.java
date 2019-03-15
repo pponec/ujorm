@@ -18,10 +18,8 @@ package org.ujorm.hotels.gui.params;
 import java.util.List;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.gui.params.action.ParamFinder;
@@ -43,7 +41,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
     @SpringBean private AuthService authService;
     @SpringBean(name=ParamService.CACHED)
     private ParamService paramService;
-    private ListDataProvider<U> columns;
+    private ListDataProvider<U> columnBuilder;
     private ParamFinder<U> toolbar = new ParamFinder("paramFinder");
     private ParamsEditor editDialog;
 
@@ -54,29 +52,21 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
     public ParamsTable(String id) {
         super(id);
 
-        columns = ListDataProvider.of(getCriterion(), ParamValue.KEY_MODULE$);
-        columns.add(ParamValue.KEY_MODULE$);
-        columns.add(ParamValue.KEY_NAME$);
-        columns.add(ParamValue.KEY_SYSTEM$);
-        columns.add(ParamValue.PARAM_KEY.add(ParamKey.CLASS_NAME));
-        columns.add(ParamValue.TEXT_VALUE);
-        columns.add(ParamValue.PARAM_KEY.add(ParamKey.LAST_UPDATE));
-        columns.add(ParamValue.ID, getActionUpdate(CommonActions.UPDATE));
-        add(columns.createDataTable(20));
-        columns.setRows(getDbRows());
+        columnBuilder = ListDataProvider.of(toolbar.getCriterion(), ParamValue.KEY_MODULE$);
+        columnBuilder.add(ParamValue.KEY_MODULE$);
+        columnBuilder.add(ParamValue.KEY_NAME$);
+        columnBuilder.add(ParamValue.KEY_SYSTEM$);
+        columnBuilder.add(ParamValue.PARAM_KEY.add(ParamKey.CLASS_NAME));
+        columnBuilder.add(ParamValue.TEXT_VALUE);
+        columnBuilder.add(ParamValue.PARAM_KEY.add(ParamKey.LAST_UPDATE));
+        columnBuilder.add(ParamValue.ID, getActionUpdate(CommonActions.UPDATE));
+        columnBuilder.setRows(getDbRows());
+        add(columnBuilder.createDataTable(20));
 
         // Dialogs:
         add((editDialog = ParamsEditor.create("editDialog", 700, 390)).getModalWindow());
         add(toolbar);
         add(new SrcLinkPanel("sourceLink", this));
-    }
-
-    /** Create a criterion for the table */
-    @SuppressWarnings("unchecked")
-    private IModel<Criterion<U>> getCriterion() {
-        return authService.isLogged()
-            ? toolbar.getCriterion()
-            : toolbar.getCriterion();
     }
 
     /** Manage events */
@@ -109,7 +99,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
     /** Reload the data table */
     private void reloadTable(UjoEvent event, boolean dbRequest) {
         if (dbRequest) {
-            columns.setRows(getDbRows());
+            columnBuilder.setRows(getDbRows());
         }
         event.addTarget(get(DEFAULT_DATATABLE_ID));
     }

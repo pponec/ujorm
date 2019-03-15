@@ -68,8 +68,8 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
      * @param componentId Component ID
      * @return TextField for searching
      */
-    protected TextField createSearchFiled(String componentId) {
-        return createSearchFiled(componentId, String.class,  componentId);
+    protected TextField createSearchField(String componentId) {
+        return AbstractToolbar.this.createSearchField(componentId, String.class,  componentId);
     }
 
     /**
@@ -78,8 +78,8 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
      * @param type Type of the field
      * @return TextField for searching
      */
-    protected TextField createSearchFiled(String componentId, Class<?> type) {
-        return createSearchFiled(componentId, type,  componentId);
+    protected TextField createSearchField(String componentId, Class<?> type) {
+        return AbstractToolbar.this.createSearchField(componentId, type,  componentId);
     }
 
     /**
@@ -89,8 +89,8 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
      * @param placeholderKey Localization key for a Placeholder
      * @return TextField for searching
      */
-    protected final TextField createSearchFiled(String componentId, Class<?> type, String placeholderKey) {
-        return createSearchFiled(componentId, type, new ResourceModel(placeholderKey, placeholderKey));
+    protected final TextField createSearchField(String componentId, Class<?> type, String placeholderKey) {
+        return createSearchField(componentId, type, new ResourceModel(placeholderKey, placeholderKey));
     }
 
     /**
@@ -100,7 +100,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
      * @param placeholder Localization for a Placeholder
      * @return TextField for searching
      */
-    protected TextField createSearchFiled(String componentId, Class<?> type, IModel<String> placeholder) {
+    protected TextField createSearchField(String componentId, Class<?> type, IModel<String> placeholder) {
         final TextField result = new TextField(componentId, new Model(), type);
         result.add(new AttributeModifier("placeholder", placeholder));
         result.setOutputMarkupId(true);

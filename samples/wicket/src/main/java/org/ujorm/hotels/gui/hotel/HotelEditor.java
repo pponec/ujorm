@@ -34,17 +34,17 @@ public class HotelEditor<U extends Hotel> extends EntityDialogPane<U> {
         super(modalWindow, model);
 
         // Create form fields:
-        FieldProvider<U> fields = getFields(); // optional statement
-        fields.add(Hotel.NAME);
-        fields.add(Hotel.CITY); //fields.add(Hotel.CITY,City.NAME,City.ID.forAll()); //Original solution
-        fields.add(Hotel.STREET);
-        fields.add(Hotel.PHONE);
-        fields.add(Hotel.STARS);
-        fields.add(Hotel.PRICE);
-        fields.add(Hotel.CURRENCY);
-        fields.add(Hotel.HOME_PAGE);
-        fields.add(Hotel.NOTE);
-        fields.add(Hotel.ACTIVE);
+        FieldProvider<U> fieldBuilder = getFieldBuilder();
+        fieldBuilder.add(Hotel.NAME);
+        fieldBuilder.add(Hotel.CITY);
+        fieldBuilder.add(Hotel.STREET);
+        fieldBuilder.add(Hotel.PHONE);
+        fieldBuilder.add(Hotel.STARS);
+        fieldBuilder.add(Hotel.PRICE);
+        fieldBuilder.add(Hotel.CURRENCY);
+        fieldBuilder.add(Hotel.HOME_PAGE);
+        fieldBuilder.add(Hotel.NOTE);
+        fieldBuilder.add(Hotel.ACTIVE);
     }
 
     /** Create the editor dialog */

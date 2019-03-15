@@ -22,6 +22,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
+import org.ujorm.wicket.component.form.FieldProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
 /** Customer Editor
@@ -31,28 +32,30 @@ public class CustomerEditor<U extends Customer> extends EntityDialogPane<U> {
     private static final long serialVersionUID = 0L;
 
     @SpringBean private AuthService authService;
+    final private FieldProvider<U> fieldBuilder;
 
     public CustomerEditor(ModalWindow modalWindow, IModel<U> model) {
         super(modalWindow, model);
 
         // Editable fields:
-        fields.add(Customer.LOGIN);
-        fields.add(Customer.PASSWORD);
-        fields.add(Customer.TITLE);
-        fields.add(Customer.FIRSTNAME);
-        fields.add(Customer.SURNAME);
-        fields.add(Customer.EMAIL);
-        fields.add(Customer.ADMIN);
-        fields.add(Customer.ACTIVE);
+        fieldBuilder = getFieldBuilder();
+        fieldBuilder.add(Customer.LOGIN);
+        fieldBuilder.add(Customer.PASSWORD);
+        fieldBuilder.add(Customer.TITLE);
+        fieldBuilder.add(Customer.FIRSTNAME);
+        fieldBuilder.add(Customer.SURNAME);
+        fieldBuilder.add(Customer.EMAIL);
+        fieldBuilder.add(Customer.ADMIN);
+        fieldBuilder.add(Customer.ACTIVE);
     }
 
     /** Modify attribute(s): */
     @Override
     protected void onBeforeRender() {
         final boolean newMode = isNew();
-        fields.setEnabled(Customer.LOGIN, newMode);
-        fields.setVisible(Customer.ACTIVE, !newMode);
-        fields.setVisible(Customer.ADMIN, authService.isAdmin());
+        fieldBuilder.setEnabled(Customer.LOGIN, newMode);
+        fieldBuilder.setVisible(Customer.ACTIVE, !newMode);
+        fieldBuilder.setVisible(Customer.ADMIN, authService.isAdmin());
         super.onBeforeRender();
     }
 

@@ -47,7 +47,7 @@ public final class Toolbar<U extends Customer> extends AbstractToolbar<U> {
 
         final Form form = new Form("form");
         this.add(form);
-        form.add(searchLogin = createSearchFiled("searchLogin"));
+        form.add(searchLogin = createSearchField("searchLogin"));
 
         buildCriterion();
     }

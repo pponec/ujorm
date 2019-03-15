@@ -54,7 +54,7 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
         final String keyName = LocalizedModel.getSimpleKeyName(fields.getFirstKey());
         final String placeholderKey = "label." + keyName;
         final IModel<String> placeholder = new ResourceModel(placeholderKey, keyName);
-        add(searching = createSearchFiled("searching", fields.getFirstKey().getType(), placeholder));
+        add(searching = createSearchField("searching", fields.getFirstKey().getType(), placeholder));
         buildCriterion();
     }
 

@@ -26,6 +26,7 @@ import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
+import org.ujorm.wicket.component.form.FieldProvider;
 import org.ujorm.wicket.component.form.fields.Field;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
@@ -41,19 +42,20 @@ public class ParamsEditor<U extends ParamValue> extends EntityDialogPane<U> {
         super(modalWindow, model);
 
         // Editable fields:
-        fields.add(ParamValue.PARAM_KEY.add(ParamKey.MODULE));
-        fields.add(ParamValue.PARAM_KEY.add(ParamKey.NAME));
-        fields.add(ParamValue.PARAM_KEY.add(ParamKey.CLASS_NAME));
-        fields.add(ParamValue.TEXT_VALUE);
-        fields.add(ParamValue.PARAM_KEY.add(ParamKey.TEXT_DEFAULT_VALUE));
-        fields.add(ParamValue.PARAM_KEY.add(ParamKey.LAST_UPDATE));
-        fields.add(ParamValue.PARAM_KEY.add(ParamKey.NOTE));
+        FieldProvider<U> fieldBuilder = getFieldBuilder();
+        fieldBuilder.add(ParamValue.PARAM_KEY.add(ParamKey.MODULE));
+        fieldBuilder.add(ParamValue.PARAM_KEY.add(ParamKey.NAME));
+        fieldBuilder.add(ParamValue.PARAM_KEY.add(ParamKey.CLASS_NAME));
+        fieldBuilder.add(ParamValue.TEXT_VALUE);
+        fieldBuilder.add(ParamValue.PARAM_KEY.add(ParamKey.TEXT_DEFAULT_VALUE));
+        fieldBuilder.add(ParamValue.PARAM_KEY.add(ParamKey.LAST_UPDATE));
+        fieldBuilder.add(ParamValue.PARAM_KEY.add(ParamKey.NOTE));
 
-        for (Field field : fields.getFields()) {
+        for (Field field : fieldBuilder.getFields()) {
             field.setEnabled(false);
         }
-        fields.setEnabled(ParamValue.TEXT_VALUE, true);
-        fields.addValidator(ParamValue.TEXT_VALUE, new IValidator<String>(){
+        fieldBuilder.setEnabled(ParamValue.TEXT_VALUE, true);
+        fieldBuilder.addValidator(ParamValue.TEXT_VALUE, new IValidator<String>(){
             /** The validator implementation: */
             @Override @SuppressWarnings("unchecked")
             public void validate(IValidatable<String> validatable) {

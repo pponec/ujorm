@@ -16,6 +16,7 @@
 package org.ujorm.hotels.service;
 
 import java.time.Period;
+import java.util.List;
 import org.apache.wicket.model.IModel;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Booking;
@@ -67,4 +68,6 @@ public interface CommonService {
     /** Is the measuring code enabled? */
     public boolean isMeasuringCode();
 
+    /** Find hotels according to condition. Max row count is 1000. */
+    public List<Hotel> findHotels(Criterion<? extends Hotel> condition);
 }

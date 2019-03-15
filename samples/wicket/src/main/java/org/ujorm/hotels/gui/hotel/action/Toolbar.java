@@ -44,8 +44,8 @@ public final class Toolbar<U extends Hotel> extends AbstractToolbar<U> {
 
         final Form form = new Form("form");
         this.add(form);
-        form.add(searchHotel = createSearchFiled("searchHotel"));
-        form.add(searchCity = createSearchFiled("searchCity"));
+        form.add(searchHotel = createSearchField("searchHotel"));
+        form.add(searchCity = createSearchField("searchCity"));
 
         buildCriterion();
     }

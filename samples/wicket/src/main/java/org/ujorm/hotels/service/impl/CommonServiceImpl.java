@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Arrays;
+import java.util.List;
 import javax.inject.Inject;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -31,6 +32,7 @@ import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.service.AuthService;
+import org.ujorm.hotels.service.CommonService;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.spring.CommonDao;
@@ -40,7 +42,6 @@ import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.hotels.service.CommonService.ONE_DAY;
 import static org.ujorm.hotels.tools.EncTool.getHash;
 import static org.ujorm.tools.Check.hasLength;
-import org.ujorm.hotels.service.CommonService;
 /**
  * Common database service implementations
  * @author ponec
@@ -249,4 +250,12 @@ public class CommonServiceImpl implements CommonService {
         return booking.getHotel().getPrice().multiply(new BigDecimal(booking.getNights() * booking.getPersons()));
     }
 
+    @Override
+    public List<Hotel> findHotels(Criterion<? extends Hotel> condition) {
+        final Criterion<Hotel> crn = (Criterion<Hotel>) condition;
+        final Query<Hotel> query = dao.createQuery(crn)
+                .addColumn(Hotel.CITY)
+                .setLimit(1000);
+        return query.list();
+    }
 }

@@ -47,7 +47,7 @@ public final class ParamFinder<U extends ParamValue> extends AbstractToolbar<U> 
         final Form form = new Form("form");
         this.add(form);
         form.add(searchModule = createSearchChoice("searchModule", ModuleEnum.APPLICATION, false));
-        form.add(searchParam = createSearchFiled("searchParam"));
+        form.add(searchParam = createSearchField("searchParam"));
 
         buildCriterion();
     }

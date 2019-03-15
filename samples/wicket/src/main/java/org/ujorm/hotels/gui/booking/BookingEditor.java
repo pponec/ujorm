@@ -29,6 +29,7 @@ import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
 import org.ujorm.wicket.component.form.FieldEvent;
+import org.ujorm.wicket.component.form.FieldProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.validator.impl.ValidatorFactory.futureLocalDate;
 /**
@@ -42,40 +43,42 @@ public class BookingEditor<U extends Booking> extends EntityDialogPane<U> {
     public static final String BOOKING_ACTION = "BOOKING";
 
     @SpringBean AuthService authService;
+    final FieldProvider<U> fieldBuilder;
 
     public BookingEditor(ModalWindow modalWindow, IModel<U> model) {
         super(modalWindow, model);
 
         // Editable fields:
-        fields.add(Booking.CUSTOMER.add(Customer.LOGIN));
-        fields.add(Booking.CUSTOMER.add(Customer.PASSWORD));
-        fields.add(Booking.HOTEL.add(Hotel.NAME));
-        fields.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
-        fields.add(Booking.PERSONS);
-        fields.add(Booking.DATE_FROM).addCssStyle("date");
-        fields.getField(Booking.DATE_FROM).addValidator(Validator.Build.futureLocalDate());
-        fields.add(Booking.NIGHTS);
-        fields.add(Booking.PRICE);
-        fields.add(Booking.CURRENCY);
+        fieldBuilder = getFieldBuilder();
+        fieldBuilder.add(Booking.CUSTOMER.add(Customer.LOGIN));
+        fieldBuilder.add(Booking.CUSTOMER.add(Customer.PASSWORD));
+        fieldBuilder.add(Booking.HOTEL.add(Hotel.NAME));
+        fieldBuilder.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
+        fieldBuilder.add(Booking.PERSONS);
+        fieldBuilder.add(Booking.DATE_FROM).addCssStyle("date");
+        fieldBuilder.getField(Booking.DATE_FROM).addValidator(Validator.Build.futureLocalDate());
+        fieldBuilder.add(Booking.NIGHTS);
+        fieldBuilder.add(Booking.PRICE);
+        fieldBuilder.add(Booking.CURRENCY);
 
         // Modify attribute(s):
-        fields.setEnabled(Booking.HOTEL.add(Hotel.NAME), false);
-        fields.setEnabled(Booking.HOTEL.add(Hotel.CITY).add(City.NAME), false);
-        fields.setEnabled(Booking.PRICE, false);
-        fields.setEnabled(Booking.CURRENCY, false);
-        fields.addValidatorUnchecked(Booking.DATE_FROM, futureLocalDate());
+        fieldBuilder.setEnabled(Booking.HOTEL.add(Hotel.NAME), false);
+        fieldBuilder.setEnabled(Booking.HOTEL.add(Hotel.CITY).add(City.NAME), false);
+        fieldBuilder.setEnabled(Booking.PRICE, false);
+        fieldBuilder.setEnabled(Booking.CURRENCY, false);
+        fieldBuilder.addValidatorUnchecked(Booking.DATE_FROM, futureLocalDate());
 
         // Ajax Events.
-        fields.onChange(Booking.NIGHTS);
-        fields.onChange(Booking.PERSONS);
+        fieldBuilder.onChange(Booking.NIGHTS);
+        fieldBuilder.onChange(Booking.PERSONS);
     }
 
     /** Enable/Disable login fields */
     @Override
     protected void onBeforeRender() {
         final boolean enabled = !authService.isLogged();
-        fields.setEnabled(Booking.CUSTOMER.add(Customer.LOGIN), enabled);
-        fields.setVisible(Booking.CUSTOMER.add(Customer.PASSWORD), enabled);
+        fieldBuilder.setEnabled(Booking.CUSTOMER.add(Customer.LOGIN), enabled);
+        fieldBuilder.setVisible(Booking.CUSTOMER.add(Customer.PASSWORD), enabled);
         super.onBeforeRender();
     }
 
@@ -85,15 +88,15 @@ public class BookingEditor<U extends Booking> extends EntityDialogPane<U> {
         final FieldEvent event = FieldEvent.get(iEvent);
         if (event.hasAction()) {
             try {
-                short nights = fields.getValue(Booking.NIGHTS);
-                short persons = fields.getValue(Booking.PERSONS);
-                BigDecimal price = fields.getInputDomain().getHotel().getPrice()
+                short nights = fieldBuilder.getValue(Booking.NIGHTS);
+                short persons = fieldBuilder.getValue(Booking.PERSONS);
+                BigDecimal price = fieldBuilder.getInputDomain().getHotel().getPrice()
                         .multiply(new BigDecimal((int) nights * persons));
-                fields.setValue(Booking.PRICE, price, event.getRequestTarget());
+                fieldBuilder.setValue(Booking.PRICE, price, event.getRequestTarget());
                 iEvent.stop();
             } catch (Exception e) {
                 e.printStackTrace();
-                fields.setValue(Booking.PRICE, BigDecimal.ZERO, event.getRequestTarget());
+                fieldBuilder.setValue(Booking.PRICE, BigDecimal.ZERO, event.getRequestTarget());
             }
         }
     }

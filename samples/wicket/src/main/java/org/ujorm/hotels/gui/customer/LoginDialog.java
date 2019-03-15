@@ -33,8 +33,8 @@ public class LoginDialog<U extends Customer> extends EntityDialogPane<U> {
         super(modalWindow, model);
 
         // Editable fields:
-        fields.add(Customer.LOGIN).addCssStyle("loginField");
-        fields.add(Customer.PASSWORD).addCssStyle("passwordField");
+        getFieldBuilder().add(Customer.LOGIN).addCssStyle("loginField");
+        getFieldBuilder().add(Customer.PASSWORD).addCssStyle("passwordField");
     }
 
     /** Create the editor dialog */

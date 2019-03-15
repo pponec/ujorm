@@ -25,6 +25,7 @@ import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.gui.booking.action.BookActionPanel;
+import org.ujorm.hotels.service.CommonService;
 import org.ujorm.hotels.service.param.ApplicationParams;
 import org.ujorm.hotels.sources.SrcLinkPanel;
 import org.ujorm.wicket.UjoEvent;
@@ -33,7 +34,6 @@ import org.ujorm.wicket.component.grid.OrmDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
-import org.ujorm.hotels.service.CommonService;
 
 /**
  * BookingTable
@@ -52,20 +52,19 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
     public BookingTable(String id) {
         super(id);
 
-        final OrmDataProvider<U> columns = OrmDataProvider.of(getCriterionModel());
-
-        columns.add(Booking.DATE_FROM);
-        columns.add(Booking.HOTEL.add(Hotel.NAME));
-        columns.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
-        columns.add(Booking.PERSONS);
-        columns.add(Booking.NIGHTS);
-        columns.add(Booking.PRICE);
-        columns.add(Booking.CURRENCY);
-        columns.add(Booking.CUSTOMER.add(Customer.LOGIN));
-        columns.add(Booking.CREATION_DATE);
-        columns.add(Booking.ID, BookActionPanel.class);
-        columns.setSort(Booking.DATE_FROM);
-        add(columns.createDataTable(params.getRowsPerPage()));
+        final OrmDataProvider<U> columnBuilder = OrmDataProvider.of(getCriterionModel());
+        columnBuilder.add(Booking.DATE_FROM);
+        columnBuilder.add(Booking.HOTEL.add(Hotel.NAME));
+        columnBuilder.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
+        columnBuilder.add(Booking.PERSONS);
+        columnBuilder.add(Booking.NIGHTS);
+        columnBuilder.add(Booking.PRICE);
+        columnBuilder.add(Booking.CURRENCY);
+        columnBuilder.add(Booking.CUSTOMER.add(Customer.LOGIN));
+        columnBuilder.add(Booking.CREATION_DATE);
+        columnBuilder.add(Booking.ID, BookActionPanel.class);
+        columnBuilder.setSort(Booking.DATE_FROM);
+        add(columnBuilder.createDataTable(params.getRowsPerPage()));
 
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
         add(new SrcLinkPanel("sourceLink", this));

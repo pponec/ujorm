@@ -30,8 +30,11 @@ import org.ujorm.wicket.component.form.fields.FeedbackField;
 public class EntityDialogPane<U extends Ujo> extends AbstractDialogPane<U> {
     private static final long serialVersionUID = 20130621L;
 
-    /** Input fields provider */
-    protected final FieldProvider<U> fields;
+    /**
+     * Input fields provider
+     * @see Use the method {@link #getFieldBuilder()}
+     */
+    private final FieldProvider<U> fields;
     /** Feedback Field */
     private FeedbackField feedbackField;
 
@@ -58,8 +61,17 @@ public class EntityDialogPane<U extends Ujo> extends AbstractDialogPane<U> {
 
     /** Input fields provider
      * @see #fields
+     * @deprecated Use the {@link #getFieldPBuilder() } rather
      */
-    public FieldProvider<U> getFields() {
+    @Deprecated
+    public final FieldProvider<U> getFields() {
+        return getFieldBuilder();
+    }
+
+    /** Input fields provider
+     * @see #fields
+     */
+    public FieldProvider<U> getFieldBuilder() {
         return fields;
     }
 

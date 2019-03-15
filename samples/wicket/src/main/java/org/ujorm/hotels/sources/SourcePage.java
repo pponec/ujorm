@@ -46,6 +46,8 @@ public class SourcePage extends WebPage {
     private static final Logger LOGGER = LoggerFactory.getLogger(SourcePage.class);
     /** Parameter for the source */
     public static final String SOURCE_PARAM = "src";
+    /** Parameter for the source index */
+    public static final String INDEX_PARAM = "idx";
     @SpringBean
     private ApplicationParams applParams;
     /** Sources */
@@ -56,17 +58,22 @@ public class SourcePage extends WebPage {
 
         // Create a list of ITab objects used to feed the tabbed panel
         final List<UjoTab> tabs = new ArrayList<UjoTab>();
-        for (Class className : sourceMap.getClasses(getClass(parameters))) {
+        final List<Class> sources = sourceMap.getClasses(getClass(parameters));
+        final int index = getIndex(INDEX_PARAM, sources, parameters);
+
+        for (Class className : sources) {
            tabs.add(new UjoTab(className.getSimpleName() + ".java", "source", SrcTabPanel.class).setTabModel(Model.of(className)));
         }
 
-        add(new UjoTabbedPanel("srcTabs", tabs) {
+        final UjoTabbedPanel tabsPanel = new UjoTabbedPanel("srcTabs", tabs) {
             @Override
             protected void onAjaxUpdate(AjaxRequestTarget target) {
                 super.onAjaxUpdate(target);
                 target.appendJavaScript("prettyPrint();");
             }
-        });
+        };
+        tabsPanel.setSelectedTab(index);
+        add(tabsPanel);
 
         Label label;
         add(new BuildInfo("buildInfo"));
@@ -107,6 +114,23 @@ public class SourcePage extends WebPage {
         super.setHeaders(response);
         response.setHeader("X-UA-Compatible", "IE=edge");
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    }
+
+    /** Get index  */
+    private int getIndex(String key, List<Class> sources, PageParameters parameters) {
+        final int defaultResult = 0;
+        final StringValue strValue = parameters.get(key);
+        try {
+            if (!strValue.isEmpty()) {
+                int i = strValue.toInt(0);
+                return sources.get(i) != null ? i : defaultResult;
+            } else {
+                return defaultResult;
+            }
+        } catch (Exception e) {
+            LOGGER.info("Illegal argument value {}={}", key, strValue);
+            return defaultResult;
+        }
     }
 
 }

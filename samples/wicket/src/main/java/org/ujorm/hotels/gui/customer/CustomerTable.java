@@ -55,20 +55,20 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
     public CustomerTable(String id) {
         super(id);
 
-        final OrmDataProvider<U> columns = params.isTableCacheEnabled()
+        final OrmDataProvider<U> columnBuider = params.isTableCacheEnabled()
                 ? OrmDataProviderCached.of(toolbar.getCriterion())
                 : OrmDataProvider.of(toolbar.getCriterion());
 
-        columns.add(Customer.LOGIN);
-        columns.add(Customer.TITLE);
-        columns.add(Customer.FIRSTNAME);
-        columns.add(Customer.SURNAME);
-        columns.add(Customer.EMAIL);
-        columns.add(Customer.ADMIN);
-        columns.add(Customer.ACTIVE);
-        columns.add(Customer.ID, createActions());
-        columns.setSort(Customer.LOGIN);
-        add(columns.createDataTable(10, true));
+        columnBuider.add(Customer.LOGIN);
+        columnBuider.add(Customer.TITLE);
+        columnBuider.add(Customer.FIRSTNAME);
+        columnBuider.add(Customer.SURNAME);
+        columnBuider.add(Customer.EMAIL);
+        columnBuider.add(Customer.ADMIN);
+        columnBuider.add(Customer.ACTIVE);
+        columnBuider.add(Customer.ID, createActions());
+        columnBuider.setSort(Customer.LOGIN);
+        add(columnBuider.createDataTable(10, true));
 
         // Dialogs:
         add(toolbar);
