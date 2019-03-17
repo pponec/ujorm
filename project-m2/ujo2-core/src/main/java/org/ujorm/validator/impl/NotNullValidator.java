@@ -34,7 +34,7 @@ public class NotNullValidator<VALUE extends Object> extends AbstractValidator<VA
 
     /** {@inheritDoc} */
     @Override
-    public <UJO> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
+    public <D> ValidationError validate(VALUE input, Key<D, VALUE> key, D bo) {
             final boolean failed = input==null;
             return failed ? createError
                     ( input

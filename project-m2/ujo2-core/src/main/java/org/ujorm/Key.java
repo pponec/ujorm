@@ -38,7 +38,7 @@ import org.ujorm.validator.ValidationException;
  */
 @Immutable
 @SuppressWarnings("deprecation")
-public interface Key <UJO,VALUE> extends CharSequence, Comparable<Key>, CriterionProvider<UJO,VALUE> {
+public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvider<D,V> {
 
     /** Returns a name of the Key. */
     @Nonnull
@@ -51,11 +51,11 @@ public interface Key <UJO,VALUE> extends CharSequence, Comparable<Key>, Criterio
 
     /** Returns a class of the current key. */
     @Nonnull
-    public Class<VALUE> getType();
+    public Class<V> getType();
 
     /** Returns a class of the domain Ujo object. */
     @Nonnull
-    public Class<UJO> getDomainType();
+    public Class<D> getDomainClass();
 
     /** Returns a container of the Key field. */
     // public Class<?> getContainerType(); // TODO (?)
@@ -70,7 +70,7 @@ public interface Key <UJO,VALUE> extends CharSequence, Comparable<Key>, Criterio
      * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
-    public void set(@Nonnull UJO ujo, @Nullable VALUE value) throws ValidationException;
+    public void set(@Nonnull D ujo, @Nullable V value) throws ValidationException;
 
     /**
      * TODO: Is it really the good idea to extend the interface with this method ?
@@ -90,7 +90,7 @@ public interface Key <UJO,VALUE> extends CharSequence, Comparable<Key>, Criterio
      * A shortcut for the method {@link #of(org.ujorm.Ujo)}.
      * @see #of(Ujo)
      */
-    public VALUE get(@Nonnull UJO ujo);
+    public V get(@Nonnull D ujo);
 
     /**
      * It is a basic method for getting an appropriate type safe value from an Ujo object.
@@ -103,7 +103,7 @@ public interface Key <UJO,VALUE> extends CharSequence, Comparable<Key>, Criterio
      * @see Ujo#readValue(Key)
      * @see #getValue(org.ujorm.Ujo)
      */
-    public VALUE of(@Nonnull UJO ujo);
+    public V of(@Nonnull D ujo);
 
 
 //    /**
@@ -127,11 +127,11 @@ public interface Key <UJO,VALUE> extends CharSequence, Comparable<Key>, Criterio
      * @see Ujo#readValue(Key)
      */
     @Nullable
-    public VALUE getDefault();
+    public V getDefault();
 
 
     /** Indicates whether a parameter value of the ujo "equal to" this key default value. */
-    public boolean isDefault(@Nonnull UJO ujo);
+    public boolean isDefault(@Nonnull D ujo);
 
     /**
      * Returns the {@code true}:
@@ -152,7 +152,7 @@ public interface Key <UJO,VALUE> extends CharSequence, Comparable<Key>, Criterio
      * @param value Null value is supported.
      * @return Accordance
      */
-    public boolean equals(@Nonnull UJO ujo, @Nullable VALUE value);
+    public boolean equals(@Nonnull D ujo, @Nullable V value);
 
     /**
      * Returns true, if the key name equals to the parameter value.
@@ -203,7 +203,7 @@ public interface Key <UJO,VALUE> extends CharSequence, Comparable<Key>, Criterio
      * @see #isAscending()
      * @see org.ujorm.core.UjoComparator
      */
-    public Key<UJO,VALUE> descending();
+    public Key<D,V> descending();
 
     /** Create new instance of an <strong>indirect</strong> Key with the descending direction of sorting.
      * @return returns a new instance of the indirect Key
@@ -211,15 +211,15 @@ public interface Key <UJO,VALUE> extends CharSequence, Comparable<Key>, Criterio
      * @see #isAscending()
      * @see org.ujorm.core.UjoComparator
      */
-    public Key<UJO,VALUE> descending(boolean descending);
+    public Key<D,V> descending(boolean descending);
 
     /** Get the ujorm key validator or return the {@code null} value if no validator was assigned */
-    public Validator<VALUE> getValidator();
+    public Validator<V> getValidator();
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 0.92
      */
-    public <T> CompositeKey<UJO, T> add(@Nonnull Key<? super VALUE, T> key);
+    public <T> CompositeKey<D, T> add(@Nonnull Key<? super V, T> key);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @param key The relation key
@@ -231,12 +231,12 @@ public interface Key <UJO,VALUE> extends CharSequence, Comparable<Key>, Criterio
      * @since 1.43
      * @see CompositeKey#getSpaceName(int)
      */
-    public <T> CompositeKey<UJO, T> add(@Nonnull Key<? super VALUE, T> key, String alias);
+    public <T> CompositeKey<D, T> add(@Nonnull Key<? super V, T> key, String alias);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 1.36
      */
-    public <T> ListKey<UJO, T> add(@Nonnull ListKey<? super VALUE, T> key);
+    public <T> ListKey<D, T> add(@Nonnull ListKey<? super V, T> key);
 
     /** Create new composite (indirect) instance with a required alias name
      * @param alias This attribute is used to distinguish the same entities
@@ -248,10 +248,10 @@ public interface Key <UJO,VALUE> extends CharSequence, Comparable<Key>, Criterio
      * @see CompositeKey#getSpaceName(int)
      * @see KeyFactory#newKeyAlias(java.lang.String)
      */
-    public CompositeKey<UJO, VALUE> alias(@Nonnull String alias);
+    public CompositeKey<D, V> alias(@Nonnull String alias);
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
-    public void copy(@Nonnull UJO from, @Nonnull UJO to);
+    public void copy(@Nonnull D from, @Nonnull D to);
 
     /** Compare to another Key object by the index and name of the Key.
      * @since 1.20

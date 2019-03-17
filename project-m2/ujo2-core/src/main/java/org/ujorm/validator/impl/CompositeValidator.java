@@ -62,7 +62,7 @@ final public class CompositeValidator<VALUE> extends AbstractValidator<VALUE> {
     /** {
      * @Inherited} */
     @Override
-    public <UJO> ValidationError validate(final VALUE input, final Key<UJO, VALUE> key, final UJO bo) {
+    public <D> ValidationError validate(final VALUE input, final Key<D, VALUE> key, final D bo) {
         final ValidationError leftErr = leftValidator.validate(input, key, bo);
         if (operator == BinaryOperator.AND) {
             return leftErr != null

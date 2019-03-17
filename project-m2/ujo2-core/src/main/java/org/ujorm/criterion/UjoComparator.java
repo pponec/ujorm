@@ -31,7 +31,7 @@ import org.ujorm.Key;
  * @see Key#isAscending()
  * @see Key#descending()
  */
-final public class UjoComparator <UJO> implements Comparator<UJO> {
+final public class UjoComparator <D> implements Comparator<D> {
 
     @Nonnull
     final Key[] keys;
@@ -104,7 +104,7 @@ final public class UjoComparator <UJO> implements Comparator<UJO> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public int compare(@Nullable final UJO u1, @Nullable final UJO u2) {
+    public int compare(@Nullable final D u1, @Nullable final D u2) {
         if (u1==u2  ) { return  0; }
         if (u1==null) { return +1; }
         if (u2==null) { return -1; }
@@ -138,13 +138,13 @@ final public class UjoComparator <UJO> implements Comparator<UJO> {
     }
 
     /** Sort a list by this Comparator. */
-    public List<UJO> sort(@Nonnull final List<UJO> list) {
+    public List<D> sort(@Nonnull final List<D> list) {
         Collections.sort(list, this);
         return list;
     }
 
     /** Sort a list by this Comparator. */
-    public UJO[] sort(@Nonnull final UJO[] array) {
+    public D[] sort(@Nonnull final D[] array) {
         Arrays.sort(array, this);
         return array;
     }
@@ -166,7 +166,7 @@ final public class UjoComparator <UJO> implements Comparator<UJO> {
     }
 
     /** An equals test */
-    public final boolean equals(@Nullable final UJO u1, @Nullable final UJO u2) {
+    public final boolean equals(@Nullable final D u1, @Nullable final D u2) {
         return compare(u1, u2) == 0;
     }
 
@@ -214,10 +214,10 @@ final public class UjoComparator <UJO> implements Comparator<UJO> {
      * @see Key#isAscending()
      * @see Key#descending()
      */
-    public static <UJO> UjoComparator<UJO> of
+    public static <D> UjoComparator<D> of
         ( @Nonnull final Locale locale
         , final int collatorStrength
-        , @Nonnull final  Key<UJO,?> ... keys) {
+        , @Nonnull final  Key<D,?> ... keys) {
         return new UjoComparator<>(keys);
     }
 
@@ -233,28 +233,28 @@ final public class UjoComparator <UJO> implements Comparator<UJO> {
      * @see Key#descending()
      * @deprecated Use the {@code of(..)} method instead of
      */
-    public static <UJO> UjoComparator<UJO> newInstance(Key<UJO,?> ... keys) {
+    public static <D> UjoComparator<D> newInstance(Key<D,?> ... keys) {
         return new UjoComparator<>(keys);
     }
 
-    /** @see #newInstance(org.ujorm.Key<UJO,?>[])
+    /** @see #newInstance(org.ujorm.Key<D,?>[])
      * @deprecated Use the {@code of(..)} method instead of
      */
-    public static <UJO> UjoComparator<UJO> newInstance(Key<UJO,?> p1) {
+    public static <D> UjoComparator<D> newInstance(Key<D,?> p1) {
         return new UjoComparator<>(p1);
     }
 
-    /** @see #newInstance(org.ujorm.Key<UJO,?>[])
+    /** @see #newInstance(org.ujorm.Key<D,?>[])
      * @deprecated Use the {@code of(..)} method instead of
      */
-    public static <UJO> UjoComparator<UJO> newInstance(Key<UJO,?> p1, Key<UJO,?> p2) {
+    public static <D> UjoComparator<D> newInstance(Key<D,?> p1, Key<D,?> p2) {
         return new UjoComparator<>(p1, p2);
     }
 
-    /** @see #newInstance(org.ujorm.Key<UJO,?>[])
+    /** @see #newInstance(org.ujorm.Key<D,?>[])
      * @deprecated Use the {@code of(..)} method instead of
      */
-    public static <UJO> UjoComparator<UJO> newInstance(Key<UJO,?> p1, Key<UJO,?> p2, Key<UJO,?> p3) {
+    public static <D> UjoComparator<D> newInstance(Key<D,?> p1, Key<D,?> p2, Key<D,?> p3) {
         return new UjoComparator<>(p1, p2, p3);
     }
 
@@ -267,7 +267,7 @@ final public class UjoComparator <UJO> implements Comparator<UJO> {
      * @see Key#descending()
      * @deprecated Use the {@code of(..)} method instead of
      */
-    public static <UJO> UjoComparator<UJO> newInstance(Locale locale, int collatorStrength, final Key<UJO,?> ... keys) {
+    public static <D> UjoComparator<D> newInstance(Locale locale, int collatorStrength, final Key<D,?> ... keys) {
         return new UjoComparator<>(keys);
     }
 

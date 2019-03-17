@@ -30,7 +30,7 @@ public class NotEmptyCollectionValidator<VALUE extends Collection> extends Abstr
     protected NotEmptyCollectionValidator() {
     }
     /** {@inheritDoc} */
-    public <UJO> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
+    public <D> ValidationError validate(VALUE input, Key<D, VALUE> key, D bo) {
             final boolean failed = input==null || input.size()==0;
             return failed ? createError
                     ( input

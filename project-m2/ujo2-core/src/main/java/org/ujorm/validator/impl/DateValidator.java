@@ -17,8 +17,8 @@ package org.ujorm.validator.impl;
 
 import java.util.Date;
 import org.ujorm.Key;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 
@@ -48,7 +48,7 @@ public class DateValidator<VALUE extends Date> extends AbstractValidator<VALUE> 
 
     /** {@inheritDoc} */
     @Override
-    public <UJO> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
+    public <D> ValidationError validate(VALUE input, Key<D, VALUE> key, D bo) {
 
             final Long now = System.currentTimeMillis();
             final boolean ok = input==null

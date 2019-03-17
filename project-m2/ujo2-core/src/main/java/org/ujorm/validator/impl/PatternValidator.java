@@ -17,8 +17,8 @@ package org.ujorm.validator.impl;
 
 import java.util.regex.Pattern;
 import org.ujorm.Key;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 
@@ -48,7 +48,7 @@ public class PatternValidator<VALUE extends String> extends AbstractValidator<VA
     }
 
     /** {@inheritDoc} */
-    public <UJO> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
+    public <D> ValidationError validate(VALUE input, Key<D, VALUE> key, D bo) {
             final boolean ok = input==null
                     || pattern.matcher(input).matches();
             return !ok ? createError

@@ -46,7 +46,7 @@ public enum BinaryOperator implements AbstractOperator {
     ;
 
     /** Join two criterions. */
-    public <UJO> Criterion<UJO> join(final Criterion<UJO> a, final Criterion<UJO> b) {
+    public <D> Criterion<D> join(final Criterion<D> a, final Criterion<D> b) {
         return a.join(this, b);
     }
 

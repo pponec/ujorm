@@ -180,7 +180,7 @@ public abstract class UjoTools implements Comparator<Key> {
             key = ((CompositeKey) key).getKey(0);
         }
         try {
-            for (Field field : key.getDomainType().getFields()) {
+            for (Field field : key.getDomainClass().getFields()) {
                 if (field.getModifiers()==UjoTools.PROPERTY_MODIFIER
                 &&  field.get(null) == key) {
                     return (T) field.getAnnotation(annotation);
@@ -240,11 +240,11 @@ public abstract class UjoTools implements Comparator<Key> {
 
     /** An assignable test. */
     public static boolean assertUjoType(final Key key, final Object ujo) throws IllegalArgumentException {
-        final Class type = key.getDomainType();
+        final Class type = key.getDomainClass();
         final boolean result = type==null || type.isInstance(ujo);
         Assert.isTrue(result, "The ujo '{}' must by type of '{}'."
             , ujo.getClass().getName()
-            , key.getDomainType());
+            , key.getDomainClass());
         return result;
     }
 

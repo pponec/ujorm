@@ -23,23 +23,23 @@ import javax.annotation.Nonnull;
  * @since 0.90
  * @author Pavel Ponec
  */
-public class BinaryCriterion<UJO> extends Criterion<UJO> {
-    
+public class BinaryCriterion<D> extends Criterion<D> {
+
     private static final char SPACE = ' ';
 
     /** Left Criterion */
-    final private Criterion<UJO> crn1;
+    final private Criterion<D> crn1;
     /** Right Criterion */
-    final private Criterion<UJO> crn2;
+    final private Criterion<D> crn2;
     /** Operator */
     final private BinaryOperator operator;
     /** A domain class of sub Criterions like a backup */
     private Class<?> domain;
 
     protected BinaryCriterion
-        ( final Criterion<UJO> criterion1
+        ( final Criterion<D> criterion1
         , final BinaryOperator operator
-        , final Criterion<UJO> criterion2
+        , final Criterion<D> criterion2
         ) {
         this.crn1 = criterion1;
         this.crn2 = criterion2;
@@ -48,13 +48,13 @@ public class BinaryCriterion<UJO> extends Criterion<UJO> {
 
     /** Returns the left node of the parent */
     @Override
-    public final Criterion<UJO> getLeftNode() {
+    public final Criterion<D> getLeftNode() {
         return crn1;
     }
 
     /** Returns the right node of the parent */
     @Override
-    public final Criterion<UJO> getRightNode() {
+    public final Criterion<D> getRightNode() {
         return crn2;
     }
 
@@ -65,7 +65,7 @@ public class BinaryCriterion<UJO> extends Criterion<UJO> {
     }
 
     @Override
-    public boolean evaluate(UJO ujo) {
+    public boolean evaluate(D ujo) {
         boolean e1 = crn1.evaluate(ujo);
         switch (operator) {
             case AND    : return   e1 &&  crn2.evaluate(ujo);
@@ -91,7 +91,7 @@ public class BinaryCriterion<UJO> extends Criterion<UJO> {
     public String toString() {
         return toPrinter(new SimpleValuePrinter(256)).toString();
     }
-   
+
     /** Print the condition in a human reading format. */
     @Override
     public SimpleValuePrinter toPrinter(@Nonnull SimpleValuePrinter out) {

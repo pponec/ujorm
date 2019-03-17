@@ -144,14 +144,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- HIBERNATE -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>3.3.1.GA</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!--
         <dependency>
             <groupId>com.h2database</groupId>

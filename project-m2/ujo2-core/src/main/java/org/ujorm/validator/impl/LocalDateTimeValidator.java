@@ -19,8 +19,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import org.ujorm.Key;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 
@@ -47,7 +47,7 @@ public class LocalDateTimeValidator<VALUE extends LocalDateTime> extends Abstrac
     public LocalDateTimeValidator(boolean past) {
         this(past, ZoneId.systemDefault());
     }
-    
+
     /**
      * Between validator
      * @param past Serializable maximum valuem (inclusive)
@@ -60,7 +60,7 @@ public class LocalDateTimeValidator<VALUE extends LocalDateTime> extends Abstrac
 
     /** {@inheritDoc} */
     @Override
-    public <UJO> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
+    public <D> ValidationError validate(VALUE input, Key<D, VALUE> key, D bo) {
 
             final LocalDateTime now = LocalDateTime.now(zoneId);
             final boolean ok = input==null

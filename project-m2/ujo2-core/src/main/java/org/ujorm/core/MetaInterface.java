@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.metamodel;
+package org.ujorm.core;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
-public class AbstractMeta<U> {
-    
+public interface MetaInterface<U> {
+
+    /** Create new instance of the domain object */
+    public U newDomain();
+
 }

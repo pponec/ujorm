@@ -17,8 +17,8 @@ package org.ujorm.validator.impl;
 
 import org.ujorm.Key;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 
@@ -39,7 +39,7 @@ public class CriterionValidator<VALUE> extends AbstractValidator<VALUE> {
     }
     /** {@inheritDoc} */
     @Override
-    public <UJO> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
+    public <D> ValidationError validate(VALUE input, Key<D, VALUE> key, D bo) {
             final boolean ok = input==null
                     || crn.evaluate(input);
             return !ok ? createError

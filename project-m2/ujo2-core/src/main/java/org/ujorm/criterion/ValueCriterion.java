@@ -245,7 +245,7 @@ public class ValueCriterion<U> extends Criterion<U> implements Serializable {
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
     @Override
-    public final List<U> evaluate(final Iterable<U> ujoList) {
+    public final List<U> select(final Iterable<U> ujoList) {
         switch (operator) {
             case XFIXED:
                 return Boolean.FALSE.equals(getRightNode())
@@ -254,9 +254,9 @@ public class ValueCriterion<U> extends Criterion<U> implements Serializable {
                      ? (List) ujoList
                      : ujoList instanceof Collection
                      ? new ArrayList<>((Collection) ujoList)
-                     : super.evaluate(ujoList);
+                     : super.select(ujoList);
             default:
-                return super.evaluate(ujoList);
+                return super.select(ujoList);
         }
     }
 
@@ -264,14 +264,14 @@ public class ValueCriterion<U> extends Criterion<U> implements Serializable {
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
     @Override
-    public final List<U> evaluate(final U ... ujoList) {
+    public final List<U> select(final U ... ujoList) {
         switch (operator) {
             case XFIXED:
                 return Boolean.FALSE.equals(value)
                      ? Collections.<U>emptyList()
                      : Arrays.asList(ujoList);
             default:
-                return super.evaluate(ujoList);
+                return super.select(ujoList);
         }
     }
 
@@ -332,11 +332,11 @@ public class ValueCriterion<U> extends Criterion<U> implements Serializable {
     public String toString() {
         return toPrinter(new SimpleValuePrinter(128)).toString();
     }
-    
+
     @Override
     public SimpleValuePrinter toPrinter(@Nonnull final SimpleValuePrinter out) {
         out.append('(');
-        if (operator == Operator.XSQL) {  
+        if (operator == Operator.XSQL) {
             out.appendValue(getRightNode());
             return out.append(')');
         }
@@ -351,13 +351,13 @@ public class ValueCriterion<U> extends Criterion<U> implements Serializable {
         return out.append(')');
     }
 
-    /** Find a domain class type of {@code Class<UJO>} from its keys.
+    /** Find a domain class type of {@code Class<D>} from its keys.
      * @return returns Method returns the {@code Ujo.class} instance if no domain was found.
      */
     @Override
     public Class<?> getDomain() {
         final Key key = getLeftNode();
-        final Class<?> result = key != null ? key.getDomainType() : null;
+        final Class<?> result = key != null ? key.getDomainClass() : null;
         return result != null ? result : Object.class;
     }
 
@@ -371,9 +371,9 @@ public class ValueCriterion<U> extends Criterion<U> implements Serializable {
         out.writeBoolean(valueIsKey);
 
         if (valueIsKey) {
-            out.writeObject(KeyRing.of(key.getDomainType(), key, (Key) value));
+            out.writeObject(KeyRing.of(key.getDomainClass(), key, (Key) value));
         } else {
-            out.writeObject(KeyRing.of(key.getDomainType(), key));
+            out.writeObject(KeyRing.of(key.getDomainClass(), key));
             out.writeObject(value);
         }
     }

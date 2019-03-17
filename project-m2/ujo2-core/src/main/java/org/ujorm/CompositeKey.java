@@ -32,7 +32,7 @@ import org.ujorm.validator.ValidationException;
  * @since 0.81
  */
 @SuppressWarnings("deprecation")
-public interface CompositeKey<UJO, VALUE> extends Key<UJO, VALUE>, Iterable<Key<?,?>> {
+public interface CompositeKey<D, V> extends Key<D, V>, Iterable<Key<?,?>> {
     /** Default name space have got the {@code null} value */
     public static final String DEFAULT_ALIAS = null;
 
@@ -40,10 +40,10 @@ public interface CompositeKey<UJO, VALUE> extends Key<UJO, VALUE>, Iterable<Key<
     public int getKeyCount();
 
     /** Get required key */
-    public <U> Key<U, VALUE> getKey(int i);
+    public <U> Key<U, V> getKey(int i);
 
     /** Get the first key of the current object. The result is direct key always. */
-    public <U> Key<U, VALUE> getLastKey();
+    public <U> Key<U, V> getLastKey();
 
     /** Export all <strong>direct</strong> keys to the list from parameter. */
     public void exportKeys(Collection<Key<?,?>> result);
@@ -64,7 +64,7 @@ public interface CompositeKey<UJO, VALUE> extends Key<UJO, VALUE>, Iterable<Key<
      * @see _Object#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
-    public void set(final UJO ujo, final VALUE value) throws ValidationException;
+    public void set(final D ujo, final V value) throws ValidationException;
 
     /**
      * It is a basic method for setting an appropriate type safe value to an Ujo object.
@@ -77,7 +77,7 @@ public interface CompositeKey<UJO, VALUE> extends Key<UJO, VALUE>, Iterable<Key<
      * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
      * @see _Object#writeValue(org.ujorm.Key, java.lang.Object)
      */
-    public void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException;
+    public void setValue(final D ujo, final V value, boolean createRelations) throws ValidationException;
 
     /** Get a penultimate value of this composite key.
      * If any value is {@code null}, then the result is {@code null}.
@@ -86,7 +86,7 @@ public interface CompositeKey<UJO, VALUE> extends Key<UJO, VALUE>, Iterable<Key<
      * @param create create new instance of a related UJO object for an undefined ({@code null} case.
      * During the assigning the new relations are <strong>disabled</strong> all validators.
      */
-    public Object getSemiValue(UJO ujo, boolean create);
+    public Object getSemiValue(D ujo, boolean create);
 
 
     /** Returns a {@code spaceName} for the required level.
@@ -104,7 +104,7 @@ public interface CompositeKey<UJO, VALUE> extends Key<UJO, VALUE>, Iterable<Key<
     /**
      * Returns the {@code true}, if the values
      * {@link CompositeKey#getName() } and
-     * {@link CompositeKey#getDomainType()}
+     * {@link CompositeKey#getDomainClass()}
      * of an another {@link CompositeKey} implementation are equals to the current object.
      * Note: Any Alias names are ignored, there is necessary to use another comparator for it.
      * @param key A checked {@link CompositeKey} implementation

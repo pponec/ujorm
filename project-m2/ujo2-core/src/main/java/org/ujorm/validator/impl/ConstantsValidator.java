@@ -57,7 +57,7 @@ public class ConstantsValidator<VALUE> extends AbstractValidator<VALUE> {
 
     /** {@inheritDoc} */
     @Override
-    public <UJO> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
+    public <D> ValidationError validate(VALUE input, Key<D, VALUE> key, D bo) {
             final boolean ok = input==null
                     || ( forbidden
                     ?  ! set.contains(input)

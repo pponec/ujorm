@@ -16,8 +16,8 @@
 package org.ujorm.validator.impl;
 
 import org.ujorm.Key;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 
@@ -50,9 +50,9 @@ public class BetweenValidator<VALUE extends Comparable> extends AbstractValidato
 
     /** {@inheritDoc} */
     @Override
-    public <UJO> ValidationError validate(VALUE input
-            , Key<UJO, VALUE> key
-            , UJO bo
+    public <D> ValidationError validate(VALUE input
+            , Key<D, VALUE> key
+            , D bo
             ) {
             final boolean ok = input==null
                     || input.compareTo(min) >= 0

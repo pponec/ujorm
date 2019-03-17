@@ -45,24 +45,24 @@ public abstract class AbstractValidator<VALUE> implements Validator<VALUE>, Seri
 
     /** {@inheritDoc} */
     @Override
-    public final <UJO> ValidationError validate(Key<UJO, VALUE> key, UJO bo) {
+    public final <D> ValidationError validate(Key<D, VALUE> key, D bo) {
         return validate(key.of(bo), key, bo);
     }
 
     /** {@inheritDoc} */
     @Override
-    public final <UJO> void checkValue(final Key<UJO, VALUE> key, final UJO bo) throws ValidationException {
+    public final <D> void checkValue(final Key<D, VALUE> key, final D bo) throws ValidationException {
         checkValue(key.of(bo), key, bo);
     }
 
     /** Check the value without context */
-    public final <UJO> void checkValue(VALUE input) throws ValidationException {
+    public final <D> void checkValue(VALUE input) throws ValidationException {
         checkValue(input, null, null);
     }
 
     /** Check the value with a context */
     @Override
-    public <UJO> void checkValue(VALUE input, Key<UJO, VALUE> key, UJO bo) throws ValidationException {
+    public <D> void checkValue(VALUE input, Key<D, VALUE> key, D bo) throws ValidationException {
         final ValidationError result = validate(input, key, bo);
         if (result!=null) {
             throw new ValidationException(result, null);
@@ -71,21 +71,21 @@ public abstract class AbstractValidator<VALUE> implements Validator<VALUE>, Seri
 
     /**
      * Create an error object.
-     * @param <UJO> Domain object type
+     * @param <D> Domain object type
      * @param input Input value (required)
      * @param key Ujo Key (required)
      * @param bo Domain objet (required)
      * @param params A map of arguments (required)
      * @return An instance of the class {@link ValidationError}.
      */
-    protected <UJO> ValidationError createError
+    protected <D> ValidationError createError
             ( final VALUE input
-            , final Key<UJO, VALUE> key
-            , final UJO bo
+            , final Key<D, VALUE> key
+            , final D bo
             , final Map<String, Object> params) {
-                
+
                 throw new UnsupportedOperationException("TODO");
-          
+
 //        return new ValidationError
 //        ( input
 //        , key

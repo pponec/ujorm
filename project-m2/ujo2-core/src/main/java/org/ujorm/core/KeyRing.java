@@ -286,7 +286,7 @@ public class KeyRing<U> implements KeyList<U>, Serializable {
         }
     }
 
-    /** Returns a class name of the related UJO */
+    /** Returns a class name of the related D */
     @Override
     public String getTypeName() {
         return type.getName();
@@ -419,9 +419,9 @@ public class KeyRing<U> implements KeyList<U>, Serializable {
      * @return If the keys are {@code null}, than the result is the {@code null} too.
      */
     @SuppressWarnings("unchecked")
-    public static <UJO> KeyRing<UJO> of(@Nonnull final Key<? super UJO, ?> key) {
+    public static <D> KeyRing<D> of(@Nonnull final Key<? super D, ?> key) {
         return key != null
-             ? new KeyRing<>((Class<UJO>) key.getDomainType(), new Key[] {key})
+             ? new KeyRing<>((Class<D>) key.getDomainClass(), new Key[] {key})
              : null;
     }
 
@@ -431,7 +431,7 @@ public class KeyRing<U> implements KeyList<U>, Serializable {
      * @return If the keys are {@code null}, than the result is the {@code null} too.
      */
     @SuppressWarnings("unchecked")
-    public static <UJO> KeyRing<UJO> of(@Nonnull final Class<UJO> domainClass, @Nonnull Key<? super UJO, ?>... keys) {
+    public static <D> KeyRing<D> of(@Nonnull final Class<D> domainClass, @Nonnull Key<? super D, ?>... keys) {
         if (keys == null) {
             return null;
         }
@@ -443,8 +443,8 @@ public class KeyRing<U> implements KeyList<U>, Serializable {
     /** Returns all domain keys excluding the argument keys.
      * @param excludedKeys Array of the <strong>direct</strong> excluded keys.
      */
-    public static <UJO> KeyRing<UJO> ofExcluding(@Nonnull final Key<?, ?>... excludedKeys) {
-        return ofExcluding(getBaseType((Key<UJO, ?>[]) excludedKeys), excludedKeys);
+    public static <D> KeyRing<D> ofExcluding(@Nonnull final Key<?, ?>... excludedKeys) {
+        return ofExcluding(getBaseType((Key<D, ?>[]) excludedKeys), excludedKeys);
     }
 
 
@@ -452,10 +452,10 @@ public class KeyRing<U> implements KeyList<U>, Serializable {
      * @param domainClass The domain class where a not null value is recommended for better performance.
      * @param excludedKeys Array of the <strong>direct</strong> excluded keys.
      */
-    public static <UJO> KeyRing<UJO> ofExcluding(@Nonnull final Class<UJO> domainClass, Key<?, ?>... excludedKeys) {
-        final List<Key<? super UJO, ?>> keys = new ArrayList<>();
+    public static <D> KeyRing<D> ofExcluding(@Nonnull final Class<D> domainClass, Key<?, ?>... excludedKeys) {
+        final List<Key<? super D, ?>> keys = new ArrayList<>();
         main:
-        for (Key<UJO,?> key : of(domainClass)) {
+        for (Key<D,?> key : of(domainClass)) {
             for (Key<?, ?> ex : excludedKeys) {
                 if (key == ex) {
                     continue main;
@@ -470,7 +470,7 @@ public class KeyRing<U> implements KeyList<U>, Serializable {
      * @param domainClass Mandatory domain class
      */
     @SuppressWarnings("unchecked")
-    public static <UJO> KeyRing<UJO> of(@Nonnull final Class<UJO> domainClass) {
+    public static <D> KeyRing<D> of(@Nonnull final Class<D> domainClass) {
                 throw new UnsupportedOperationException("TODO");
     }
 
@@ -481,36 +481,36 @@ public class KeyRing<U> implements KeyList<U>, Serializable {
      */
     @SuppressWarnings("unchecked")
     @Nullable
-    public static <UJO> KeyRing<UJO> of(@Nonnull final Class<UJO> domainClass, @Nonnull final Collection<Key<? super UJO, ?>> keys) {
+    public static <D> KeyRing<D> of(@Nonnull final Class<D> domainClass, @Nonnull final Collection<Key<? super D, ?>> keys) {
         if (Check.isEmpty(keys)) {
             return null;
         }
         final Key[] ps = new Key[keys.size()];
         int i = 0;
-        for (Key<? super UJO, ?> p : keys) {
-            ps[i++] = (Key<UJO, ?>) p;
+        for (Key<? super D, ?> p : keys) {
+            ps[i++] = (Key<D, ?>) p;
         }
         return new KeyRing<>(domainClass, ps);
     }
 
     /** Create a new instance, the parameters is cloned. */
-    public static <UJO> KeyRing<UJO> of(@Nonnull final Key<? super UJO, ?>... keys) {
+    public static <D> KeyRing<D> of(@Nonnull final Key<? super D, ?>... keys) {
         return of(null, (Key<Object,Object>[]) keys);
     }
 
     /** Create a new instance */
-    public static <UJO> KeyRing<UJO> of(@Nonnull final Collection<Key<? super UJO, ?>> keys) {
+    public static <D> KeyRing<D> of(@Nonnull final Collection<Key<? super D, ?>> keys) {
         return of(null, keys);
     }
 
     /** Returns the Common Base Type or value {code null}, of keys are empty.
      * @return If any key is from a child domain class, than the farthest child is returned.
      */
-    @PackagePrivate static <UJO> Class<UJO> getBaseType(@Nonnull final Key<UJO, ?>... keys) {
-        Class<UJO> result = null;
-        for (Key<UJO, ?> key : keys) {
-            if (result==null || result.isAssignableFrom(getDomainType(key))) {
-                result = key.getDomainType();
+    @PackagePrivate static <D> Class<D> getBaseType(@Nonnull final Key<D, ?>... keys) {
+        Class<D> result = null;
+        for (Key<D, ?> key : keys) {
+            if (result==null || result.isAssignableFrom(getDomainClass(key))) {
+                result = key.getDomainClass();
             }
         }
         return result;
@@ -519,8 +519,8 @@ public class KeyRing<U> implements KeyList<U>, Serializable {
     /** Returns a domain type,
      * The result is not null always where an undefine value have got result the {@link Ujo}
      */
-    private static Class<?> getDomainType(@Nonnull final Key<?,?> key) {
-        Class<?> result = key.getDomainType();
+    private static Class<?> getDomainClass(@Nonnull final Key<?,?> key) {
+        Class<?> result = key.getDomainClass();
         return result!=null ? result : Object.class;
     }
 

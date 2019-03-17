@@ -88,7 +88,7 @@ public abstract class Criterion<U> implements Serializable {
 
     /** Returns a first evaluated item from an iterable collection. */
     @Nullable
-    public U findFirst(@Nonnull final Iterable<U> ujoList) {
+    public U selectFirst(@Nonnull final Iterable<U> ujoList) {
         for (final U ujo : ujoList) {
             if (evaluate(ujo)) {
                 return ujo;
@@ -101,7 +101,7 @@ public abstract class Criterion<U> implements Serializable {
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
     @Nonnull
-    public List<U> findAll(@Nonnull final Iterable<U> ujoList) {
+    public List<U> select(@Nonnull final Iterable<U> ujoList) {
         final List<U> result = new ArrayList<>();
         for (final U ujo : ujoList) {
             if (evaluate(ujo)) {
@@ -115,7 +115,7 @@ public abstract class Criterion<U> implements Serializable {
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
     @Nonnull
-    public List<U> findAll(@Nonnull final U ... ujoList) {
+    public List<U> select(@Nonnull final U ... ujoList) {
         final List<U> result = new ArrayList<>();
         for (final U ujo : ujoList) {
             if (evaluate(ujo)) {
@@ -123,24 +123,6 @@ public abstract class Criterion<U> implements Serializable {
             }
         }
         return result;
-    }
-
-    /** Returns a list of items which satisfies the condition in this Criterion.
-     * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
-     * @deprecated Use the method {@link #findAll(java.lang.Iterable)} rather.
-     */
-    @Nonnull @Deprecated
-    public List<U> evaluate(@Nonnull final Iterable<U> ujoList) {
-        return findAll(ujoList);
-    }
-
-    /** Returns a list of items which satisfies the condition in this Criterion.
-     * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
-     * @deprecated Use the method {@link #findAll(org.ujorm.Ujo...)} rather.
-     */
-    @Nonnull @Deprecated
-    public List<U> evaluate(@Nonnull final U ... ujoList) {
-        return findAll(ujoList);
     }
 
     /**
@@ -289,13 +271,13 @@ public abstract class Criterion<U> implements Serializable {
      * @return A new criterion
      */
     @Nonnull
-    public static <U, TYPE> Criterion<U> forCrn
+    public static <U, TYPE> Criterion<U> forCriton
         ( @Nonnull final Key<U,TYPE> key
         , @Nonnull final Operator operator
         , @Nullable final TYPE value
         ) {
         //return new ValueCriterion<>(key, operator, value);
-        
+
                     throw new UnsupportedOperationException("TODO");
 
     }
@@ -309,13 +291,13 @@ public abstract class Criterion<U> implements Serializable {
      * @see ProxyValue A proxy for the value
      */
     @Nonnull
-    public static <U, TYPE> Criterion<U> forCrn
+    public static <U, TYPE> Criterion<U> forCriton
         ( @Nonnull final Key<U,TYPE> key
         , @Nonnull final Operator operator
         , @Nonnull final ProxyValue<TYPE> proxyValue
         ) {
         //return new FunctionCriterion<>(key, operator, proxyValue);
-        
+
                     throw new UnsupportedOperationException("TODO");
 
     }
@@ -332,7 +314,7 @@ public abstract class Criterion<U> implements Serializable {
      * @return A new criterion
      */
     @Nonnull
-    public static <U, TYPE> Criterion<U> forCrn
+    public static <U, TYPE> Criterion<U> forCriton
         ( @Nonnull final Key<U,TYPE> key
         , @Nonnull final Operator operator
         , @Nullable final Key<?,TYPE> value
@@ -353,7 +335,7 @@ public abstract class Criterion<U> implements Serializable {
      * @return The new immutable Criterion
      */
     @Nonnull
-    public static <U, TYPE> Criterion<U> forCrn
+    public static <U, TYPE> Criterion<U> forCriton
         ( @Nonnull final Key<U,TYPE> key
         , @Nullable final TYPE value
         ) {
@@ -517,8 +499,8 @@ public abstract class Criterion<U> implements Serializable {
         , @Nullable final Key<U,TYPE> value
         ) {
         //return new ValueCriterion<>(key, null, value);
-        
-        
+
+
             throw new UnsupportedOperationException("TODO");
 
     }
@@ -536,7 +518,7 @@ public abstract class Criterion<U> implements Serializable {
     @Nonnull
     public static <U, TYPE> Criterion<U> forNull(@Nonnull final Key<U,TYPE> key) {
         // return new ValueCriterion<>(key, Operator.EQ, (TYPE)null);
-        
+
             throw new UnsupportedOperationException("TODO");
 
     }
@@ -554,7 +536,7 @@ public abstract class Criterion<U> implements Serializable {
     @Nonnull
     public static <U, TYPE> Criterion<U> forNotNull(@Nonnull final Key<U,TYPE> key) {
         //return new ValueCriterion<>(key, Operator.NOT_EQ, (TYPE)null);
-        
+
             throw new UnsupportedOperationException("TODO");
 
     }

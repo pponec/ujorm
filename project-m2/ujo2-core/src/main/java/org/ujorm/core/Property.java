@@ -80,7 +80,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     private static int _sequencer = Integer.MIN_VALUE;
 
     /** Returns a next key index by a synchronized method.
-     * The UJO key indexed by this method may not be in continuous series
+     * The D key indexed by this method may not be in continuous series
      * however numbers have the <strong>upward direction</strong> always.
      */
     protected static synchronized int _nextRawSequence() {
@@ -93,7 +93,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
                 ? index
                 : _nextRawSequence();
     }
-    
+
     /** Lock the Property */
     protected void lock() {
         this.lock = true;
@@ -166,7 +166,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
 
     /** Type of Property */
     @Override
-    public final Class<U> getDomainType() {
+    public final Class<U> getDomainClass() {
         return domainType;
     }
 
@@ -193,7 +193,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      *     {@link AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object) }
      * @param ujo Related Ujo object
      * @param value A value to assign.
-     * @param createRelations create related UJO objects in case of the composite key
+     * @param createRelations create related D objects in case of the composite key
      * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
@@ -485,7 +485,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
             + ", default=" + key.getDefault()
             + ", validator=" + (key.getValidator()!=null ? key.getValidator().getClass().getSimpleName() : null)
             + ", type=" + key.getType()
-            + ", domainType=" + key.getDomainType()
+            + ", domainType=" + key.getDomainClass()
             + ", class=" + key.getClass().getName()
             + "}" ;
     }
@@ -493,25 +493,25 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     /** {@inheritDoc} */
     @Override
     public Criterion<U> forCrn(@Nonnull final Operator operator, @Nullable final VALUE value) {
-        return Criterion.forCrn(this, operator, value);
+        return Criterion.forCriton(this, operator, value);
     }
 
     /** {@inheritDoc} */
     @Override
     public Criterion<U> forCrn(@Nonnull final Operator operator, @Nullable final ProxyValue<VALUE> proxyValue) {
-        return Criterion.forCrn(this, operator, proxyValue);
+        return Criterion.forCriton(this, operator, proxyValue);
     }
 
     /** {@inheritDoc} */
     @Override
     public Criterion<U> forCrn(@Nonnull final Operator operator, Key<?, VALUE> value) {
-        return Criterion.forCrn(this, operator, value);
+        return Criterion.forCriton(this, operator, value);
     }
 
     /** {@inheritDoc} */
     @Override
     public Criterion<U> forEq(@Nullable final VALUE value) {
-        return Criterion.forCrn(this, value);
+        return Criterion.forCriton(this, value);
     }
 
     /** {@inheritDoc} */
@@ -523,7 +523,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     /** {@inheritDoc} */
     @Override
     public Criterion<U> forEq(@Nonnull final ProxyValue<VALUE> proxyValue) {
-        return Criterion.forCrn(this, Operator.EQ, proxyValue);
+        return Criterion.forCriton(this, Operator.EQ, proxyValue);
     }
 
     /** {@inheritDoc} */
@@ -567,7 +567,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     @Override
     public Criterion<U> forLength() {
         final Criterion<U> result = forNotNull()
-            .and(Criterion.forCrn(this, Operator.NOT_EQ, (VALUE) getEmptyValue()))
+            .and(Criterion.forCriton(this, Operator.NOT_EQ, (VALUE) getEmptyValue()))
                 ;
         return result;
     }
@@ -577,7 +577,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     @Override
     public Criterion<U> forEmpty() {
         final Criterion<U> result = forNull()
-                .or(ValueCriterion.forCrn(this, Operator.EQ, (VALUE) getEmptyValue()));
+                .or(ValueCriterion.forCriton(this, Operator.EQ, (VALUE) getEmptyValue()));
         return result;
     }
 
@@ -599,31 +599,31 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     /** {@inheritDoc} */
     @Override
     public Criterion<U> forNeq(@Nullable final VALUE value) {
-        return Criterion.forCrn(this, Operator.NOT_EQ, value);
+        return Criterion.forCriton(this, Operator.NOT_EQ, value);
     }
 
     /** {@inheritDoc} */
     @Override
     public Criterion<U> forGt(@Nullable final VALUE value) {
-        return Criterion.forCrn(this, Operator.GT, value);
+        return Criterion.forCriton(this, Operator.GT, value);
     }
 
     /** {@inheritDoc} */
     @Override
     public Criterion<U> forGe(@Nullable final VALUE value) {
-        return Criterion.forCrn(this, Operator.GE, value);
+        return Criterion.forCriton(this, Operator.GE, value);
     }
 
     /** {@inheritDoc} */
     @Override
     public Criterion<U> forLt(@Nullable final VALUE value) {
-        return Criterion.forCrn(this, Operator.LT, value);
+        return Criterion.forCriton(this, Operator.LT, value);
     }
 
     /** {@inheritDoc} */
     @Override
     public Criterion<U> forLe(@Nullable final VALUE value) {
-        return Criterion.forCrn(this, Operator.LE, value);
+        return Criterion.forCriton(this, Operator.LE, value);
     }
 
     /** {@inheritDoc} */
@@ -674,7 +674,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * The method assigns a next key index.
      * @hidden
      */
-    public static <UJO,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
+    public static <D,VALUE> Property<D,VALUE> of(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
         return of(name, type, value, index, (Validator) null, lock);
     }
 
@@ -682,7 +682,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * The method assigns a next key index.
      * @hidden
      */
-    public static <UJO,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, VALUE value, Integer index, Validator validator, boolean lock) {
+    public static <D,VALUE> Property<D,VALUE> of(String name, Class<VALUE> type, VALUE value, Integer index, Validator validator, boolean lock) {
             throw new UnsupportedOperationException("TODO");
 
     }
@@ -692,17 +692,17 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * The method assigns a next key index.
      * @hidden
      */
-    public static <UJO,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, Class<UJO> domainType, int index) {                
+    public static <D,VALUE> Property<D,VALUE> of(String name, Class<VALUE> type, Class<D> domainType, int index) {
         throw new UnsupportedOperationException("TODO");
-    
+
     }
 
     /** Returns a new instance of key where the default value is null.
      * The method assigns a next key index.
      * @hidden
      */
-    public static <UJO,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type) {
-        final Class<UJO> domainType = null;
+    public static <D,VALUE> Property<D,VALUE> of(String name, Class<VALUE> type) {
+        final Class<D> domainType = null;
         return of(name, type, domainType, Property.UNDEFINED_INDEX);
     }
 
@@ -710,7 +710,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * The method assigns a next key index.
      * @hidden
      */
-    public static <UJO,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, Class<UJO> domainType) {
+    public static <D,VALUE> Property<D,VALUE> of(String name, Class<VALUE> type, Class<D> domainType) {
         return of(name, type, domainType, Property.UNDEFINED_INDEX);
     }
 
@@ -718,7 +718,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * Method assigns a next key index.
      * @hidden
      */
-    public static <UJO, VALUE> Property<UJO, VALUE> of(String name, VALUE value, int index) {
+    public static <D, VALUE> Property<D, VALUE> of(String name, VALUE value, int index) {
             throw new UnsupportedOperationException("TODO");
 
     }
@@ -727,7 +727,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * Method assigns a next key index.
      * @hidden
      */
-    public static <UJO, VALUE> Property<UJO, VALUE> of(String name, VALUE value) {
+    public static <D, VALUE> Property<D, VALUE> of(String name, VALUE value) {
          return of(name, value, UNDEFINED_INDEX);
     }
 
@@ -737,7 +737,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO, VALUE> Property<UJO, VALUE> of(final Key<UJO,VALUE> p, int index) {
+    public static <D, VALUE> Property<D, VALUE> of(final Key<D,VALUE> p, int index) {
          return of(p.getName(), p.getType(), p.getDefault(), index, true);
     }
 
@@ -747,7 +747,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO, VALUE> Key<UJO, VALUE> of(final Key<UJO,VALUE> p) {
+    public static <D, VALUE> Key<D, VALUE> of(final Key<D,VALUE> p) {
          return of(p.getName(), p.getType(), (VALUE) p.getDefault(), UNDEFINED_INDEX, false);
     }
 

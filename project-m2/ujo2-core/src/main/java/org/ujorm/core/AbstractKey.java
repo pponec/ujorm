@@ -1,21 +1,7 @@
-/*
- * Copyright 2019 pavel.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.ujorm.core;
 
 import java.util.Collection;
+import javax.annotation.Nonnull;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
@@ -27,9 +13,33 @@ import org.ujorm.validator.ValidationException;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
-public class AbstractKey<UJO,VALUE> implements Key<UJO,VALUE>{
+public class AbstractKey<D,V> implements Key<D,V> {
+
+    /** Context of the Ujorm */
+    @Nonnull
+    private final UjoContext context;
+
+    /** Domain class */
+    @Nonnull
+    private final Class<D> domainClass;
+
+    public AbstractKey(Class<D> domainClass, UjoContext context) {
+        this.context = context != context ? context : UjoContext.of();
+        this.domainClass = domainClass;
+    }
+
+    /** Context of the Ujorm */
+    protected final UjoContext getContext() {
+        return context;
+    }
+
+    /** Domain class */
+    @Override
+    public final Class<D> getDomainClass() {
+        return domainClass;
+    }
 
     @Override
     public String getName() {
@@ -42,27 +52,22 @@ public class AbstractKey<UJO,VALUE> implements Key<UJO,VALUE>{
     }
 
     @Override
-    public Class<VALUE> getType() {
+    public Class<V> getType() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Class<UJO> getDomainType() {
+    public void set(D ujo, V value) throws ValidationException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void set(UJO ujo, VALUE value) throws ValidationException {
+    public V get(D ujo) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public VALUE get(UJO ujo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public VALUE of(UJO ujo) {
+    public V of(D ujo) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -72,17 +77,17 @@ public class AbstractKey<UJO,VALUE> implements Key<UJO,VALUE>{
     }
 
     @Override
-    public VALUE getDefault() {
+    public V getDefault() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean isDefault(UJO ujo) {
+    public boolean isDefault(D ujo) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean equals(UJO ujo, VALUE value) {
+    public boolean equals(D ujo, V value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -117,42 +122,42 @@ public class AbstractKey<UJO,VALUE> implements Key<UJO,VALUE>{
     }
 
     @Override
-    public Key<UJO, VALUE> descending() {
+    public Key<D, V> descending() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Key<UJO, VALUE> descending(boolean descending) {
+    public Key<D, V> descending(boolean descending) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Validator<VALUE> getValidator() {
+    public Validator<V> getValidator() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <T> CompositeKey<UJO, T> add(Key<? super VALUE, T> key) {
+    public <T> CompositeKey<D, T> add(Key<? super V, T> key) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <T> CompositeKey<UJO, T> add(Key<? super VALUE, T> key, String alias) {
+    public <T> CompositeKey<D, T> add(Key<? super V, T> key, String alias) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> key) {
+    public <T> ListKey<D, T> add(ListKey<? super V, T> key) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public CompositeKey<UJO, VALUE> alias(String alias) {
+    public CompositeKey<D, V> alias(String alias) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void copy(UJO from, UJO to) {
+    public void copy(D from, D to) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -187,133 +192,133 @@ public class AbstractKey<UJO,VALUE> implements Key<UJO,VALUE>{
     }
 
     @Override
-    public Criterion<UJO> forCrn(Operator operator, VALUE value) {
+    public Criterion<D> forCrn(Operator operator, V value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forCrn(Operator operator, ProxyValue<VALUE> proxyValue) {
+    public Criterion<D> forCrn(Operator operator, ProxyValue<V> proxyValue) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forCrn(Operator operator, Key<?, VALUE> value) {
+    public Criterion<D> forCrn(Operator operator, Key<?, V> value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forEq(VALUE value) {
+    public Criterion<D> forEq(V value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forEq(ProxyValue<VALUE> proxyValue) {
+    public Criterion<D> forEq(ProxyValue<V> proxyValue) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forEq(Key<UJO, VALUE> key) {
+    public Criterion<D> forEq(Key<D, V> key) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forIn(Collection<VALUE> list) {
+    public Criterion<D> forIn(Collection<V> list) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forNotIn(Collection<VALUE> list) {
+    public Criterion<D> forNotIn(Collection<V> list) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forIn(VALUE... list) {
+    public Criterion<D> forIn(V... list) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forNotIn(VALUE... list) {
+    public Criterion<D> forNotIn(V... list) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forNeq(VALUE value) {
+    public Criterion<D> forNeq(V value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forGt(VALUE value) {
+    public Criterion<D> forGt(V value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forGe(VALUE value) {
+    public Criterion<D> forGe(V value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forLt(VALUE value) {
+    public Criterion<D> forLt(V value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forLe(VALUE value) {
+    public Criterion<D> forLe(V value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forNull() {
+    public Criterion<D> forNull() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forNotNull() {
+    public Criterion<D> forNotNull() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forLength() {
+    public Criterion<D> forLength() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forEmpty() {
+    public Criterion<D> forEmpty() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forSql(String sqlCondition) {
+    public Criterion<D> forSql(String sqlCondition) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forSql(String sqlTemplate, VALUE value) {
+    public Criterion<D> forSql(String sqlTemplate, V value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forSqlUnchecked(String sqlTemplate, Object value) {
+    public Criterion<D> forSqlUnchecked(String sqlTemplate, Object value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forAll() {
+    public Criterion<D> forAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> forNone() {
+    public Criterion<D> forNone() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> whereAll() {
+    public Criterion<D> whereAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<UJO> whereNone() {
+    public Criterion<D> whereNone() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

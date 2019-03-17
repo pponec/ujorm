@@ -43,12 +43,12 @@ import javax.annotation.Nullable;
  * @author Pavel Ponec
  * @since 0.90
  */
-public class CriteriaTool<UJO> {
+public class CriteriaTool<D> {
 
     /** Find the first UJO by an criterion or return NULL if any object was not found. */
     @Nullable
-    public UJO findFirst(List<UJO> list, Criterion<UJO> criterion) {
-        for (UJO ujo : list) {
+    public D findFirst(List<D> list, Criterion<D> criterion) {
+        for (D ujo : list) {
             if (criterion.evaluate(ujo)) {
                 return ujo;
             }
@@ -57,22 +57,22 @@ public class CriteriaTool<UJO> {
     }
 
     /** Create a copy of the list and sort it. */
-    public List<UJO> select(List<UJO> list, UjoComparator<UJO> comparator) {
+    public List<D> select(List<D> list, UjoComparator<D> comparator) {
         return comparator.sort(new ArrayList<>(list));
     }
 
     /** Filter the list from parameter by a Criterion.
-     * @see Criterion#findAll(java.lang.Iterable)
+     * @see Criterion#select(java.lang.Iterable)
      */
-    public List<UJO> select(List<UJO> list, Criterion<UJO> criterion) {
-        return criterion.findAll(list);
+    public List<D> select(List<D> list, Criterion<D> criterion) {
+        return criterion.select(list);
     }
 
     /** Filter the list from parameter by a Criterion and sort the result.
-     * @see Criterion#findAll(java.lang.Iterable)
+     * @see Criterion#select(java.lang.Iterable)
      */
-    public List<UJO> select(List<UJO> list, Criterion<UJO> criterion, UjoComparator<UJO> comparator) {
-        final List<UJO> result = criterion.findAll(list);
+    public List<D> select(List<D> list, Criterion<D> criterion, UjoComparator<D> comparator) {
+        final List<D> result = criterion.select(list);
         if (comparator != null) {
             Collections.sort(result, comparator);
         }

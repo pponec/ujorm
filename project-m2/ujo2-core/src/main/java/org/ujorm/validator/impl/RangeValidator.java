@@ -37,7 +37,7 @@ public class RangeValidator<VALUE extends Comparable> extends BetweenValidator<V
 
     /** {@inheritDoc} */
     @Override
-    public <UJO> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
+    public <D> ValidationError validate(VALUE input, Key<D, VALUE> key, D bo) {
             final boolean ok = input==null
                     || input.compareTo(min) >= 0
                     && input.compareTo(max) <= 0;

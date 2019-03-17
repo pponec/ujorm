@@ -8,17 +8,17 @@ import java.time.LocalDateTime;
  * @author Pavel Ponec
  */
 public class Order {
-    
+
     /** Store the value like VARCHAR. */
     public enum State  {
         ACTIVE,
         DELETED;
     }
-    
+
     private Integer id;
     private State state;
     private BigDecimal totalPrice;
-    private Integer user;
+    private User user;
     private String note;
     private LocalDateTime created;
 
@@ -46,11 +46,11 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public Integer getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Integer user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -69,8 +69,8 @@ public class Order {
     public void setCreated(LocalDateTime created) {
         this.created = created;
     }
-    
-    
 
-    
+
+
+
 }
