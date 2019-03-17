@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.ujorm</groupId>
+    <artifactId>ujo2-core</artifactId>
+    <packaging>jar</packaging>
+    <version>1.89-SNAPSHOT</version>
+    <url>http://ujorm.org</url>
+    <name>ujo2-core</name>
+    <description>Ujorm-core is an open source Java small library which providing non-traditional objects
+        based on the key-value architecture to open up new exciting opportunities for writing efficient code.
+    </description>
+    <contributors>
+        <contributor>
+            <name>Pavel Ponec</name>
+            <url>http://ponec.net/</url>
+            <timezone>+1</timezone>
+        </contributor>
+    </contributors>
+
+    <properties>
+        <yworks.uml.path>${basedir}/../scripts/javadoc/doclets/yworks-uml-doclet-3.0_02-jdk1.5</yworks.uml.path>
+    </properties>
+
+    <scm>
+        <url>http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/project-m2/ujo-core/</url>
+        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-core</connection>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <build>
+        <resources>
+            <resource>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                </includes>
+                <directory>src/main/java</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <configuration>
+                    <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile>
+                    <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
+                    <docfilessubdirs>true</docfilessubdirs>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <failOnError>false</failOnError>
+                    <encoding>UTF-8</encoding>
+                    <author>Pavel Ponec</author>
+                    <bottom><![CDATA[Copyright 2015, <a target="_blank" href="http://ujorm.org/">Pavel Ponec<a>]]></bottom>
+                    <doctitle>Ujorm ${project.version} (${project.name})</doctitle>
+                    <windowtitle>Ujorm ${project.version} - ${project.name}</windowtitle>
+                    <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="http://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
+
+                    <!-- Doclet (yWorks UML Doclet)
+                    <doclet>ydoc.doclets.YStandard</doclet>
+                    <docletPath>${yworks.uml.path}/lib/ydoc.jar:${yworks.uml.path}/lib/class2svg.jar:${yworks.uml.path}/resources</docletPath>
+                    <additionalparam>-link http://docs.oracle.com/javase/6/docs/api/ -umlautogen</additionalparam>
+                    -->
+
+                    <!-- Doclet (sudo apt-get install graphviz) -.->
+                    <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                    <docletArtifact>
+                        <groupId>org.umlgraph</groupId>
+                        <artifactId>umlgraph</artifactId>
+                        <version>5.6</version>
+                    </docletArtifact>
+                    <additionalparam>
+                        -inferrel -quiet -hide java.*
+                        -collpackages java.util.* -qualify
+                        -postfixpackage -nodefontsize 9
+                        -nodefontpackagesize 7
+                    </additionalparam>
+                    -->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <filters></filters>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.ujorm.core.UjoManager</mainClass>
+                            <packageName>org.ujorm.core</packageName>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <!-- <addClasspath>true</addClasspath> -->
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+    <dependencies>
+
+        <!-- Tools of Ujorm -->
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-tools</artifactId>
+            <version>1.89-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Static analyzer support -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- HIBERNATE -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>3.3.1.GA</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.196</version>
+            <scope>test</scope>
+        </dependency>
+        -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>12.0</version>
+            <scope>test</scope>
+        </dependency>
+        -->
+    </dependencies>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>9</version>
+    </parent>
+
+    <!-- PROFILE(S) -->
+
+    <profiles>
+        <profile>
+            <id>production</id>
+            <build>
+                <plugins>
+                    <!-- code optimization: -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <debug>true</debug>
+                            <optimize>true</optimize>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>sign</id>
+            <build>
+                <plugins>
+                    <!-- Needs the GnuPg: -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+     </profiles>
+
+</project>
+
