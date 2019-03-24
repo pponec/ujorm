@@ -2,10 +2,24 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.89-SNAPSHOT
-+ ...
+release 1.90 (2019-03-24)
++ ORM: Some OrmUjo improvement is done for better performance and less memory footprint
++ TOOLS: New method: JdbcBuilder.uniqueValueOptional()
++ TOOLS: Cleaning of an Element API
++ TOOLS: XmlBulder cleaning
++ TOOLS: The XMlBuilder is moved to a TOOLS module
++ TOOLS: New method JdbcBuilder.executeSelect() using a lambda expression
++ TOOLS: API of the XmlWriter is fixed
++ TOOLS: MsgFormatter: the output is type of StrringBuilder class instead of the CharArrayWriter class.
++ WICKET: A list of hotels is provided by a service, a correction of typo in method name: AbstractToolbar.createSearchField() is done
++ WICKET Hotels: Applicastion parameters are fixed
++ WICKET Hotels: Java sources can be visibled from the application
++ WICKET Hotels: Preselect an index of the tab by an URL parametr
++ WICKET Hotels: searching customers by its login is done
++ WICKET Hotels: CSS cleaning
++ ALL: Obsolete JavaDoc is removed
 
-release 1.88-SNAPSHOT
+release 1.88 (2018-11-17)
 + TOOLS: An API of the XmlElement class is extended
 + TOOLS: An API of the JdbcBuilder class is extended
 
