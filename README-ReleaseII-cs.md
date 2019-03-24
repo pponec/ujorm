@@ -24,6 +24,8 @@ některých služeb, jako je třeba správa parametrů v projektu
 
 ## Class model
 
+Zjednodušené schema:
+
 ![Class model](docs/images/ApiUjorm2.svg "Class model")
 
 
@@ -90,7 +92,7 @@ Přesto, že tento návrh může vypadat zajímavé, v jeho implementaci součas
 
 --
 
-Zpraoval Pavel Ponec, 
+Zpracoval Pavel Ponec, 
 
 autor frameworku Ujorm,
 
