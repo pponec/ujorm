@@ -160,7 +160,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
 
     /** Type of Property */
     @Override
-    public final Class<VALUE> getType() {
+    public final Class<VALUE> getValueClass() {
         return type;
     }
 
@@ -183,7 +183,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
-    public void set(@Nonnull final U ujo, final VALUE value) throws ValidationException{
+    public void setValue(@Nonnull final U ujo, final VALUE value) throws ValidationException{
                 throw new UnsupportedOperationException("TODO");
     }
 
@@ -198,7 +198,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     public final void set(@Nonnull final U ujo, final VALUE value, boolean createRelations) throws ValidationException {
-        set(ujo, value);
+        setValue(ujo, value);
     }
 
     /**
@@ -207,7 +207,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public final VALUE get(@Nonnull final U ujo) {
+    public final VALUE getValue(@Nonnull final U ujo) {
         return of(ujo);
     }
 
@@ -230,7 +230,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * If the default value is not modified, returns the {@code null}.
      */
     @Override
-    public VALUE getDefault() {
+    public VALUE getDefaultValue() {
         return defaultValue;
     }
 
@@ -246,7 +246,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
 
     /** Assign a value from the default value. */
     public void setFromDefault(U ujo) {
-        set(ujo, defaultValue);
+        setValue(ujo, defaultValue);
     }
 
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
@@ -322,7 +322,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<U, T> add(@Nonnull final Key<? super VALUE, T> key) {
+    public <T> CompositeKey<U, T> join(@Nonnull final Key<? super VALUE, T> key) {
             throw new UnsupportedOperationException("TODO");
 
     }
@@ -331,25 +331,15 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @since 0.92
      */
     @Override
-    public <T> ListKey<U, T> add(@Nonnull final ListKey<? super VALUE, T> key) {
+    public <T> ListKey<U, T> join(@Nonnull final ListKey<? super VALUE, T> key) {
             throw new UnsupportedOperationException("TODO");
 
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<U, T> add(@Nonnull final Key<? super VALUE, T> key, final String alias) {
+    public <T> CompositeKey<U, T> join(@Nonnull final Key<? super VALUE, T> key, final String alias) {
             throw new UnsupportedOperationException("TODO");
-
-    }
-
-    /** Create new composite (indirect) instance with a required alias name
-     * @since 1.43
-     */
-    @Override
-    public CompositeKey<U, VALUE> alias(final String alias) {
-            throw new UnsupportedOperationException("TODO");
-
     }
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
@@ -482,9 +472,9 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
         return " {index=" + key.getIndex()
             + ", ascending=" + key.isAscending()
             + ", composite=" + key.isComposite()
-            + ", default=" + key.getDefault()
+            + ", default=" + key.getDefaultValue()
             + ", validator=" + (key.getValidator()!=null ? key.getValidator().getClass().getSimpleName() : null)
-            + ", type=" + key.getType()
+            + ", type=" + key.getValueClass()
             + ", domainType=" + key.getDomainClass()
             + ", class=" + key.getClass().getName()
             + "}" ;
@@ -492,19 +482,19 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forCrn(@Nonnull final Operator operator, @Nullable final VALUE value) {
+    public Criterion<U> forCriterion(@Nonnull final Operator operator, @Nullable final VALUE value) {
         return Criterion.forCriton(this, operator, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forCrn(@Nonnull final Operator operator, @Nullable final ProxyValue<VALUE> proxyValue) {
+    public Criterion<U> forCriterion(@Nonnull final Operator operator, @Nullable final ProxyValue<VALUE> proxyValue) {
         return Criterion.forCriton(this, operator, proxyValue);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forCrn(@Nonnull final Operator operator, Key<?, VALUE> value) {
+    public Criterion<U> forCriterion(@Nonnull final Operator operator, Key<?, VALUE> value) {
         return Criterion.forCriton(this, operator, value);
     }
 
@@ -652,20 +642,8 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
 
     /** {@inheritDoc} */
     @Override
-    public final Criterion<U> whereAll() {
-        return forAll();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public Criterion<U> forNone() {
         return Criterion.forNone(this);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final Criterion<U> whereNone() {
-        return forNone();
     }
 
     // --------- STATIC METHODS -------------------
@@ -738,7 +716,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      */
     @SuppressWarnings("unchecked")
     public static <D, VALUE> Property<D, VALUE> of(final Key<D,VALUE> p, int index) {
-         return of(p.getName(), p.getType(), p.getDefault(), index, true);
+         return of(p.getName(), p.getValueClass(), p.getDefaultValue(), index, true);
     }
 
 
@@ -748,7 +726,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      */
     @SuppressWarnings("unchecked")
     public static <D, VALUE> Key<D, VALUE> of(final Key<D,VALUE> p) {
-         return of(p.getName(), p.getType(), (VALUE) p.getDefault(), UNDEFINED_INDEX, false);
+         return of(p.getName(), p.getValueClass(), (VALUE) p.getDefaultValue(), UNDEFINED_INDEX, false);
     }
 
 

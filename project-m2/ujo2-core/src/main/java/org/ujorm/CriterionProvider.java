@@ -24,6 +24,22 @@ import org.ujorm.criterion.*;
 public interface CriterionProvider<U, VALUE> {
 
     /**
+     * Create a new Criterion for this key where all results will be true (the
+     * result is independed on the value). The method evaluate(ujo) returns TRUE
+     * always.
+     */
+    @Nonnull
+    public Criterion<U> forAll();
+
+    /** Create a new Criterion for this key where all results will be false (the result is independed on the value).
+     *  The  method evaluate(method) returns FALSE always.
+     */
+    @Nonnull
+    public Criterion<U> forNone();
+
+
+
+    /**
      * Create a new Criterion where this key value is related to a parameter value along the {@link Operator}.
      * @param operator Operator
      * <ul>
@@ -33,7 +49,7 @@ public interface CriterionProvider<U, VALUE> {
      * </ul>
      * @return A new criterion
      */
-    public Criterion<U> forCrn
+    public Criterion<U> forCriterion
         ( @Nonnull Operator operator
         , @Nullable VALUE value
         );
@@ -50,7 +66,7 @@ public interface CriterionProvider<U, VALUE> {
      * @see proxyValue
      */
     @Nonnull
-    public Criterion<U> forCrn
+    public Criterion<U> forCriterion
         ( @Nonnull Operator operator
         , @Nonnull ProxyValue<VALUE> proxyValue
         );
@@ -66,7 +82,7 @@ public interface CriterionProvider<U, VALUE> {
      * @return A new criterion
      */
     @Nonnull
-    public Criterion<U> forCrn
+    public Criterion<U> forCriterion
         ( @Nonnull Operator operator
         , @Nonnull Key<?,VALUE> value
         );
@@ -254,24 +270,6 @@ public interface CriterionProvider<U, VALUE> {
         ( @Nonnull String sqlTemplate
         , @Nonnull Object value);
 
-    /** Create a new Criterion for this key where all results will be true (the result is independed on the value).
-     *  The method evaluate(ujo) returns TRUE always.
-     */
-    @Nonnull
-    public Criterion<U> forAll();
 
-    /** Create a new Criterion for this key where all results will be false (the result is independed on the value).
-     *  The  method evaluate(method) returns FALSE always.
-     */
-    @Nonnull
-    public Criterion<U> forNone();
-
-    /** An alias for the method: {@link #forAll() } */
-    @Nonnull
-    public Criterion<U> whereAll();
-
-    /** An alias for the method: {@link #forNone() } */
-    @Nonnull
-    public Criterion<U> whereNone();
 
 }

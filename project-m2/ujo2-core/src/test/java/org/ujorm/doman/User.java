@@ -13,7 +13,7 @@ public class User {
     private Short pin;
     private String firstName;
     private String sureName;
-    private LocalDateTime crated;
+    private LocalDateTime created;
     private User parent;
 
     public Integer getId() {
@@ -48,12 +48,12 @@ public class User {
         this.sureName = sureName;
     }
 
-    public LocalDateTime getCrated() {
-        return crated;
+    public LocalDateTime getCreated() {
+        return created;
     }
 
-    public void setCrated(LocalDateTime crated) {
-        this.crated = crated;
+    public void setCreated(LocalDateTime crated) {
+        this.created = crated;
     }
 
     public User getParent() {

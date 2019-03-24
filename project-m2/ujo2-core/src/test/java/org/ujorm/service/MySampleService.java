@@ -24,10 +24,10 @@ public class MySampleService {
         Key<Order, String> keyUserName = metaOrder.keyUser().keyFirstName();
 
         Order order = metaOrder.newDomain();
-        keyOrderId.set(order, 1);
-        keyUserName.set(order, "Pavel");
-        Integer id = keyOrderId.get(order);
-        String name = keyUserName.get(order);
+        keyOrderId.setValue(order, 1);
+        keyUserName.setValue(order, "Pavel");
+        Integer id = keyOrderId.getValue(order);
+        String name = keyUserName.getValue(order);
     }
 
     /** Reading / writing */
@@ -39,12 +39,12 @@ public class MySampleService {
         Key<Item, Short> keyPin = metaItem.keyOrder().keyUser().keyPin();
 
         Item item = metaItem.newDomain();
-        keyItemId.set(item, 1);
-        Integer orderId1 = keyItemId.get(item);
-        keyUser.set(item, new User());
-        User user = keyUser.get(item);
-        keyPin.set(item, (short) 125);
-        Short userPin = keyPin.get(item);
+        keyItemId.setValue(item, 1);
+        Integer orderId1 = keyItemId.getValue(item);
+        keyUser.setValue(item, new User());
+        User user = keyUser.getValue(item);
+        keyPin.setValue(item, (short) 125);
+        Short userPin = keyPin.getValue(item);
     }
 
     /** Criterions */

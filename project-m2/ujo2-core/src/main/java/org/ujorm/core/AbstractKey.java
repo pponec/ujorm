@@ -52,17 +52,17 @@ public class AbstractKey<D,V> implements Key<D,V> {
     }
 
     @Override
-    public Class<V> getType() {
+    public Class<V> getValueClass() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void set(D ujo, V value) throws ValidationException {
+    public void setValue(D ujo, V value) throws ValidationException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public V get(D ujo) {
+    public V getValue(D ujo) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -77,7 +77,7 @@ public class AbstractKey<D,V> implements Key<D,V> {
     }
 
     @Override
-    public V getDefault() {
+    public V getDefaultValue() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -137,22 +137,17 @@ public class AbstractKey<D,V> implements Key<D,V> {
     }
 
     @Override
-    public <T> CompositeKey<D, T> add(Key<? super V, T> key) {
+    public <T> CompositeKey<D, T> join(Key<? super V, T> key) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <T> CompositeKey<D, T> add(Key<? super V, T> key, String alias) {
+    public <T> CompositeKey<D, T> join(Key<? super V, T> key, String alias) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <T> ListKey<D, T> add(ListKey<? super V, T> key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public CompositeKey<D, V> alias(String alias) {
+    public <T> ListKey<D, T> join(ListKey<? super V, T> key) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -192,17 +187,17 @@ public class AbstractKey<D,V> implements Key<D,V> {
     }
 
     @Override
-    public Criterion<D> forCrn(Operator operator, V value) {
+    public Criterion<D> forCriterion(Operator operator, V value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<D> forCrn(Operator operator, ProxyValue<V> proxyValue) {
+    public Criterion<D> forCriterion(Operator operator, ProxyValue<V> proxyValue) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Criterion<D> forCrn(Operator operator, Key<?, V> value) {
+    public Criterion<D> forCriterion(Operator operator, Key<?, V> value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -308,16 +303,6 @@ public class AbstractKey<D,V> implements Key<D,V> {
 
     @Override
     public Criterion<D> forNone() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Criterion<D> whereAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Criterion<D> whereNone() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

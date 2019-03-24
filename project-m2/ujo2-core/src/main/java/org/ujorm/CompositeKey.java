@@ -64,7 +64,7 @@ public interface CompositeKey<D, V> extends Key<D, V>, Iterable<Key<?,?>> {
      * @see _Object#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
-    public void set(final D ujo, final V value) throws ValidationException;
+    public void setValue(final D ujo, final V value) throws ValidationException;
 
     /**
      * It is a basic method for setting an appropriate type safe value to an Ujo object.

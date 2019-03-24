@@ -227,7 +227,7 @@ public abstract class UjoTools implements Comparator<Key> {
     public static boolean assertDirect(final Key key, final Object value) throws IllegalArgumentException {
         Assert.isFalse(key.isComposite(), "The key '{}' type of '{}' is not a direct type."
             , key
-            , key.getType().getName())
+            , key.getValueClass().getName())
             ;
         return true;
     }

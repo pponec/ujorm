@@ -1,11 +1,11 @@
-# Popis architektury key-value s podporou POJO
+# Popis architektury key-value s podporou POJO inspirovaný frameworkem Ujorm
 
 ## Úvod
 
 Tento dokument popisuje návrh API architektury  typu `key-value`, které bude fungovat s běžnými objekty typu POJO.
 Řešení předpokládá v projektu existenci generových tříd meta-modelu generovavných podle podle předlohy POJO.- například pluginem Mavenu.
 V návrhu je interface [Ujo](http://ujorm.org/javadoc/org/ujorm/Ujo.html) nadbytečný a proto API nemůže být
-zpětně kompaitibilní se současným frameworkem [Ujorm](https://ujorm.org/). 
+zpětně kompatibilní se současným frameworkem [Ujorm](https://ujorm.org/). 
 Odstraněním interface `Ujo` se však zkomplikuje implementace 
 některých služeb, jako je třeba správa parametrů v projektu 
 [DemoHotels](https://hotels.ujorm.org/source?src=org.ujorm.hotels.gui.hotel.HotelTable).
@@ -17,13 +17,17 @@ některých služeb, jako je třeba správa parametrů v projektu
  (původní implementaci vyžadovala obalení klíčů před serializací do objektu KeyRing). V důsledku této vlastnosti 
   však už nelze garantovat unikátní instanci dvou stejných přímých klíčů..
 * Vznikne nový kontext meta-modelu `UjoContext` pro poskytování instancí meta-objektů s cílem zajisit (pokud možno) unikátní instance meta-modelu.
-  Díky podpoře (de)serializace však jedinečnost instancí garantovat nelze.
   Vývojář může poskytnout explicitně jiný kontext a tak jejich počet může být násobný.
 * Každý meta-model bude obsahovat referenci na třídu POJO a opačně.
 * Po získání meta-modelu se tvorba složených klíčů výrzně zjednoduší, protože se použijí pouze metody bez statických konstant.
 * POJO objekty v ORM mohou používat standardní JPA anotace (zřejmě v omezené míře).
 
-## Ukázky kódu použití Ujorm II
+## Class model
+
+![Class model](docs/images/ApiUjorm2.svg "Class model")
+
+
+## Ukázky použití
 
 ```java
     /** Reading from / writing to an Order */
@@ -81,7 +85,7 @@ Návrh API (compile-ready draft) je uložen ve větvi
 
 ## Implementace návrhu
 
-Přesto, že tento návrh může vypadat zajímavé, v jeho implementaci současné době neplánuji,
+Přesto, že tento návrh může vypadat zajímavé, v jeho implementaci současné době neplánuji.
 .
 
 --

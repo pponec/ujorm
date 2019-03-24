@@ -49,13 +49,13 @@ public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvi
     @Nonnull
     public String getFullName();
 
-    /** Returns a class of the current key. */
-    @Nonnull
-    public Class<V> getType();
-
     /** Returns a class of the domain Ujo object. */
     @Nonnull
     public Class<D> getDomainClass();
+
+    /** Returns a class of the current key. */
+    @Nonnull
+    public Class<V> getValueClass();
 
     /** Returns a container of the Key field. */
     // public Class<?> getContainerType(); // TODO (?)
@@ -65,12 +65,12 @@ public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvi
      * <br>The method calls a method
      * {@link Ujo#writeValue(org.ujorm.Key, java.lang.Object)}
      * always.
-     * @param ujo Related Ujo object
+     * @param domain Related domain object
      * @param value A value to assign.
      * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
-    public void set(@Nonnull D ujo, @Nullable V value) throws ValidationException;
+    public void setValue(@Nonnull D domain, @Nullable V value) throws ValidationException;
 
     /**
      * TODO: Is it really the good idea to extend the interface with this method ?
@@ -78,7 +78,7 @@ public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvi
      * <br>The method calls a method
      * {@link Ujo#writeValue(org.ujorm.Key, java.lang.Object)}
      * always.
-     * @param ujo Related Ujo object
+     * @param ujo Related domain object
      * @param value A value to assign.
      * @param createRelations create related UJO objects in case of the composite key
      * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
@@ -90,7 +90,7 @@ public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvi
      * A shortcut for the method {@link #of(org.ujorm.Ujo)}.
      * @see #of(Ujo)
      */
-    public V get(@Nonnull D ujo);
+    public V getValue(@Nonnull D domain);
 
     /**
      * It is a basic method for getting an appropriate type safe value from an Ujo object.
@@ -127,7 +127,7 @@ public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvi
      * @see Ujo#readValue(Key)
      */
     @Nullable
-    public V getDefault();
+    public V getDefaultValue();
 
 
     /** Indicates whether a parameter value of the ujo "equal to" this key default value. */
@@ -219,7 +219,7 @@ public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvi
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 0.92
      */
-    public <T> CompositeKey<D, T> add(@Nonnull Key<? super V, T> key);
+    public <T> CompositeKey<D, T> join(@Nonnull Key<? super V, T> key);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @param key The relation key
@@ -231,24 +231,12 @@ public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvi
      * @since 1.43
      * @see CompositeKey#getSpaceName(int)
      */
-    public <T> CompositeKey<D, T> add(@Nonnull Key<? super V, T> key, String alias);
+    public <T> CompositeKey<D, T> join(@Nonnull Key<? super V, T> key, String alias);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 1.36
      */
-    public <T> ListKey<D, T> add(@Nonnull ListKey<? super V, T> key);
-
-    /** Create new composite (indirect) instance with a required alias name
-     * @param alias This attribute is used to distinguish the same entities
-     * in different spaces. Examples of use are different alias for a table in SQL queries.
-     * <br>The attribute is not serializable in the current release.
-     *
-     * @return An instance of the CompositeKey interface
-     * @since 1.43
-     * @see CompositeKey#getSpaceName(int)
-     * @see KeyFactory#newKeyAlias(java.lang.String)
-     */
-    public CompositeKey<D, V> alias(@Nonnull String alias);
+    public <T> ListKey<D, T> join(@Nonnull ListKey<? super V, T> key);
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     public void copy(@Nonnull D from, @Nonnull D to);

@@ -159,7 +159,7 @@ public class KeyRing<U> implements KeyList<U>, Serializable {
                     return null;
                 }
                 props.add(p);
-                ujoType = p.getType();
+                ujoType = p.getValueClass();
                 i = j + 1;
             }
         } catch (Exception e) {
