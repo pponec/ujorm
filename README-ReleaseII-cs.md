@@ -20,7 +20,7 @@ některých služeb, jako je třeba správa parametrů v projektu
   minimalizovat počet jejich počet instancí.
   Vývojář může poskytnout jiný kontext a tak počet instancí meta-objektů může být několikanásobný.
 * Každý meta-model bude obsahovat referenci na třídu POJO a opačně.
-* Po získání meta-modelu se tvorba složených klíčů výrzně zjednoduší, protože se použijí pouze metody bez statických konstant.
+* Po získání meta-modelu se tvorba složených klíčů zjednoduší, protože se použijí pouze metody bez statických konstant.
 * POJO objekty v ORM budou moci používat standardní JPA anotace, podporovaná však bude zřejmě jen podmnožina.
 
 ## Class model
