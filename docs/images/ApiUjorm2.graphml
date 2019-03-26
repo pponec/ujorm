@@ -347,7 +347,7 @@ keyCreated: Key&lt;User,LocalDateTime&gt;
         <y:PolyLineEdge>
           <y:Path sx="50.30592031036815" sy="5.399931048844392" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="dashed" width="1.0"/>
-          <y:Arrows source="none" target="white_delta"/>
+          <y:Arrows source="none" target="plain"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

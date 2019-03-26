@@ -355,9 +355,9 @@
     </g>
     <g id="y.edge.13">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" stroke-dasharray="6,2" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,558,327)" stroke-linecap="butt">
-        <path fill="none" d="M599.6163 91.4604 L599.6163 67.2865"/>
-        <path fill="white" d="M599.6163 52.2865 L593.6163 68.2865 L605.6163 68.2865 Z" stroke="none"/>
-        <path stroke-dasharray="none" fill="none" d="M599.6163 52.2865 L593.6163 68.2865 L605.6163 68.2865 Z"/>
+        <path fill="none" d="M599.6163 91.4604 L599.6163 57.2865"/>
+        <path d="M599.6163 53.2865 L593.6163 65.2865 L599.6163 53.2865 L605.6163 65.2865 Z" stroke="none"/>
+        <path fill="none" stroke-miterlimit="10" stroke-dasharray="none" d="M599.6163 53.2865 L593.6163 65.2865 L599.6163 53.2865 L605.6163 65.2865 Z" stroke-linecap="square"/>
       </g>
     </g>
     <g id="y.edge.6">
