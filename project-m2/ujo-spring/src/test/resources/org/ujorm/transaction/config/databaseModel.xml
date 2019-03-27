@@ -94,6 +94,7 @@
         </table>
     </database>
     <parameters>
+        <autoClosingDefaultSession>false</autoClosingDefaultSession>
         <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
         <moreParams></moreParams>
     </parameters>

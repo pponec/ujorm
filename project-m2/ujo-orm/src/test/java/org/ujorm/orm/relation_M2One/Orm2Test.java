@@ -106,6 +106,7 @@ public class Orm2Test extends TestCase {
         boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
+            params.set(MetaParams.AUTO_CLOSING_DEFAULT_SESSION, false); // For in-memory database only
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, Orm2Test.SEQUENCE_SCHEMA_SYMBOL);
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
             params.set(MetaParams.SEQUENCE_CACHE, 1);

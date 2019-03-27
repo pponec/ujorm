@@ -18,8 +18,9 @@ package org.ujorm.orm.transaction;
 import junit.framework.TestCase;
 import org.ujorm.orm.*;
 import org.ujorm.orm.inheritance.sample.Database;
-import org.ujorm.orm.inheritance.sample.bo.User;
 import org.ujorm.orm.inheritance.sample.bo.Customer;
+import org.ujorm.orm.inheritance.sample.bo.User;
+import org.ujorm.orm.metaModel.MetaParams;
 
 /**
  * The tests of the SQL LIMIT & OFFSET.
@@ -48,125 +49,138 @@ public class TransactionTest extends TestCase {
     // ---------- TESTS -----------------------
 
     public void testRollbackTranaction() {
-        final Session session = new OrmHandler(Database.class).createSession();
-        session.delete(Customer.user.forAll()); // TODO ?
-        session.delete(User.id.forAll());
-        session.commit();
-        //
-        session.insert(new User());
-        assertEquals(1L, session.createQuery(User.class).getCount());
-        assertEquals(null, session.getTransaction());
-        { // 1st Level
-            session.beginTransaction();
+        try (Session session = getHandler().createSession()) {
+            session.delete(Customer.USER.forAll()); // TODO ?
+            session.delete(User.id.forAll());
+            session.commit();
+            //
             session.insert(new User());
-            assertEquals(2L, session.createQuery(User.class).getCount());
-            assertEquals(true, session.getTransaction().isRoot());
-            { // 2md Level
+            assertEquals(1L, session.createQuery(User.class).getCount());
+            assertEquals(null, session.getTransaction());
+            { // 1st Level
                 session.beginTransaction();
                 session.insert(new User());
-                assertEquals(3L, session.createQuery(User.class).getCount());
-                { // 3rd Level
+                assertEquals(2L, session.createQuery(User.class).getCount());
+                assertEquals(true, session.getTransaction().isRoot());
+                { // 2md Level
                     session.beginTransaction();
                     session.insert(new User());
-                    assertEquals(4L, session.createQuery(User.class).getCount());
+                    assertEquals(3L, session.createQuery(User.class).getCount());
+                    { // 3rd Level
+                        session.beginTransaction();
+                        session.insert(new User());
+                        assertEquals(4L, session.createQuery(User.class).getCount());
+                        session.rollbackTransaction();
+                    }
+                    assertEquals(3L, session.createQuery(User.class).getCount());
+                    assertEquals(false, session.getTransaction().isRoot());
                     session.rollbackTransaction();
                 }
-                assertEquals(3L, session.createQuery(User.class).getCount());
-                assertEquals(false, session.getTransaction().isRoot());
+                assertEquals(2L, session.createQuery(User.class).getCount());
+                assertEquals(true, session.getTransaction().isRoot());
                 session.rollbackTransaction();
             }
-            assertEquals(2L, session.createQuery(User.class).getCount());
-            assertEquals(true, session.getTransaction().isRoot());
-            session.rollbackTransaction();
+            assertEquals(1L, session.createQuery(User.class).getCount());
+            assertEquals(null, session.getTransaction());
+            session.rollback();
+            assertEquals(0L, session.createQuery(User.class).getCount());
+            assertEquals(null, session.getTransaction());
         }
-        assertEquals(1L, session.createQuery(User.class).getCount());
-        assertEquals(null, session.getTransaction());
-        session.rollback();
-        assertEquals(0L, session.createQuery(User.class).getCount());
-        assertEquals(null, session.getTransaction());
     }
 
     // ---------- TESTS -----------------------
 
     public void testCommitTranaction() {
-        final Session session = new OrmHandler(Database.class).createSession();
-        session.delete(Customer.user.forAll()); // TODO ?
-        session.delete(User.id.forAll());
-        session.commit();
-        //
-        session.insert(new User());
-        assertEquals(1L, session.createQuery(User.class).getCount());
-        assertEquals(null, session.getTransaction());
-        { // 1st Level
-            session.beginTransaction();
+        try (Session session = getHandler().createSession()) {
+            session.delete(Customer.USER.forAll()); // TODO ?
+            session.delete(User.id.forAll());
+            session.commit();
+            //
             session.insert(new User());
-            assertEquals(2L, session.createQuery(User.class).getCount());
-            assertEquals(true, session.getTransaction().isRoot());
-            { // 2md Level
+            assertEquals(1L, session.createQuery(User.class).getCount());
+            assertEquals(null, session.getTransaction());
+            { // 1st Level
                 session.beginTransaction();
                 session.insert(new User());
-                assertEquals(3L, session.createQuery(User.class).getCount());
-                { // 3rd Level
+                assertEquals(2L, session.createQuery(User.class).getCount());
+                assertEquals(true, session.getTransaction().isRoot());
+                { // 2md Level
                     session.beginTransaction();
                     session.insert(new User());
+                    assertEquals(3L, session.createQuery(User.class).getCount());
+                    { // 3rd Level
+                        session.beginTransaction();
+                        session.insert(new User());
+                        assertEquals(4L, session.createQuery(User.class).getCount());
+                        session.commitTransaction();
+                    }
                     assertEquals(4L, session.createQuery(User.class).getCount());
+                    assertEquals(false, session.getTransaction().isRoot());
                     session.commitTransaction();
                 }
                 assertEquals(4L, session.createQuery(User.class).getCount());
-                assertEquals(false, session.getTransaction().isRoot());
+                assertEquals(true, session.getTransaction().isRoot());
                 session.commitTransaction();
             }
             assertEquals(4L, session.createQuery(User.class).getCount());
-            assertEquals(true, session.getTransaction().isRoot());
-            session.commitTransaction();
+            assertEquals(null, session.getTransaction());
+            session.commit();
+            assertEquals(4L, session.createQuery(User.class).getCount());
         }
-        assertEquals(4L, session.createQuery(User.class).getCount());
-        assertEquals(null, session.getTransaction());
-        session.commit();
-        assertEquals(4L, session.createQuery(User.class).getCount());
     }
 
     // ---------- TESTS -----------------------
 
     public void testIComplexTranaction() {
-        final Session session = new OrmHandler(Database.class).createSession();
-        session.delete(Customer.user.forAll()); // TODO ?
-        session.delete(User.id.forAll());
-        session.commit();
-        //
-        session.insert(new User());
-        assertEquals(1L, session.createQuery(User.class).getCount());
-        assertEquals(null, session.getTransaction());
-        { // 1st Level
-            session.beginTransaction();
+        try (Session session = getHandler().createSession()) {
+            session.delete(Customer.USER.forAll()); // TODO ?
+            session.delete(User.id.forAll());
+            session.commit();
+            //
             session.insert(new User());
-            assertEquals(2L, session.createQuery(User.class).getCount());
-            assertEquals(true, session.getTransaction().isRoot());
-            { // 2md Level
+            assertEquals(1L, session.createQuery(User.class).getCount());
+            assertEquals(null, session.getTransaction());
+            { // 1st Level
                 session.beginTransaction();
                 session.insert(new User());
-                assertEquals(3L, session.createQuery(User.class).getCount());
-                { // 3rd Level
+                assertEquals(2L, session.createQuery(User.class).getCount());
+                assertEquals(true, session.getTransaction().isRoot());
+                { // 2md Level
                     session.beginTransaction();
                     session.insert(new User());
+                    assertEquals(3L, session.createQuery(User.class).getCount());
+                    { // 3rd Level
+                        session.beginTransaction();
+                        session.insert(new User());
+                        assertEquals(4L, session.createQuery(User.class).getCount());
+                        session.commitTransaction();
+                    }
                     assertEquals(4L, session.createQuery(User.class).getCount());
+                    assertEquals(false, session.getTransaction().isRoot());
                     session.commitTransaction();
                 }
                 assertEquals(4L, session.createQuery(User.class).getCount());
-                assertEquals(false, session.getTransaction().isRoot());
-                session.commitTransaction();
+                assertEquals(true, session.getTransaction().isRoot());
+                session.rollbackTransaction();
             }
-            assertEquals(4L, session.createQuery(User.class).getCount());
-            assertEquals(true, session.getTransaction().isRoot());
-            session.rollbackTransaction();
+            assertEquals(1L, session.createQuery(User.class).getCount());
+            session.rollback();
+            assertEquals(0L, session.createQuery(User.class).getCount());
+            assertEquals(null, session.getTransaction());
         }
-        assertEquals(1L, session.createQuery(User.class).getCount());
-        session.rollback();
-        assertEquals(0L, session.createQuery(User.class).getCount());
-        assertEquals(null, session.getTransaction());
     }
 
     // -----------------------------------------------------
+
+    /** Create new Handler */
+    private OrmHandler getHandler() {
+        OrmHandler result = new OrmHandler();
+        MetaParams params = new MetaParams();
+        params.set(MetaParams.AUTO_CLOSING_DEFAULT_SESSION, false); // For in-memory database only
+        result.config(params);
+        result.loadDatabase(Database.class);
+        return result;
+    }
 
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());

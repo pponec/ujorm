@@ -122,6 +122,7 @@ public class UjoSequencerTest extends TestCase {
         boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
+            params.set(MetaParams.AUTO_CLOSING_DEFAULT_SESSION, false); // For in-memory database only
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.SEQUENCE_CACHE, sequenceCache);
             params.set(MetaParams.LOG_METAMODEL_INFO, false);

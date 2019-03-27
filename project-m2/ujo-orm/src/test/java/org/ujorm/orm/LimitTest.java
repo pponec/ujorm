@@ -20,6 +20,7 @@ import java.util.Date;
 import junit.framework.TestCase;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.bo.*;
+import org.ujorm.orm.metaModel.MetaParams;
 import static org.ujorm.criterion.Operator.*;
 
 /**
@@ -161,6 +162,9 @@ public class LimitTest extends TestCase {
     static protected OrmHandler getHandler() {
         if (handler == null) {
             handler = new OrmHandler();
+            MetaParams params = new MetaParams();
+            params.set(MetaParams.AUTO_CLOSING_DEFAULT_SESSION, false); // For in-memory database only
+            handler.config(params);
             handler.loadDatabase(XDatabase.class);
         }
         return handler;

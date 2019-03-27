@@ -22,6 +22,7 @@ import org.ujorm.Key;
 import org.ujorm.criterion.*;
 import org.ujorm.extensions.types.UnsignedShort;
 import org.ujorm.orm.bo.*;
+import org.ujorm.orm.metaModel.MetaParams;
 import static org.ujorm.criterion.Operator.*;
 
 /**
@@ -259,7 +260,11 @@ public class FetchTest extends TestCase {
 
     protected OrmHandler getHandler() {
         if (handler == null) {
+            MetaParams params = new MetaParams();
+            params.set(MetaParams.AUTO_CLOSING_DEFAULT_SESSION, false); // For in-memory database only
             handler = new OrmHandler();
+            handler.config(params);
+            
             handler.loadDatabase(XDatabase.class);
         }
         return handler;

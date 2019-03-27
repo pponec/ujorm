@@ -31,6 +31,7 @@ import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.ao.LoadingPolicy;
 import org.ujorm.orm.dialect.DerbyDialect;
 import org.ujorm.orm.dialect.FirebirdDialect;
@@ -41,7 +42,6 @@ import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.criterion.Operator.*;
-import org.ujorm.orm.ao.CheckReport;
 import static org.ujorm.orm.template.AliasTable.Build.*;
 
 /**
@@ -145,6 +145,7 @@ public class SampleORM {
         boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
+            params.set(MetaParams.AUTO_CLOSING_DEFAULT_SESSION, false); // For in-memory database only
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.TYPE_SERVICE, TypeServiceForOlderJdbc.class); // If the JDBC is older than 4.2
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
@@ -937,7 +938,7 @@ public class SampleORM {
     public void useUpdateSafely() {
         Order order = session.load(Order.class, anyOrderId);
         Order original = order.cloneUjo();
-        
+
         order.setCreated(LocalDateTime.now());
         int count = session.updateSafely(order, original);
         session.commit();
@@ -947,7 +948,7 @@ public class SampleORM {
         count = session.updateSafely(order, original);
         session.commit();
         Assert.isTrue(count == 0);
-        
+
         count = session.updateSafely(order, original);
         session.commit();
         Assert.isTrue(count == -1); // No column changed
