@@ -244,13 +244,13 @@
       </g>
       <g text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,558,327)">
         <line y2="-57" fill="none" x1="439" clip-path="url(#clipPath8)" x2="759" y1="-57"/>
-        <text stroke-linecap="butt" x="443.3445" y="-41.5832" clip-path="url(#clipPath8)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">getLeftItem()</text>
-        <text stroke-linecap="butt" x="443.3445" y="-27.6144" clip-path="url(#clipPath8)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">getOperatir()</text>
-        <text stroke-linecap="butt" x="443.3445" y="-13.6457" clip-path="url(#clipPath8)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">getRightItem()</text>
-        <text stroke-linecap="butt" x="443.3445" y="0.3231" clip-path="url(#clipPath8)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">and(Criterion&lt;Domain&gt;) : Criterion&lt;Domain&gt;</text>
-        <text stroke-linecap="butt" x="443.3445" y="14.2918" clip-path="url(#clipPath8)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">or(Criterion&lt;Domain&gt;) : Criterion&lt;Domain&gt;</text>
-        <text stroke-linecap="butt" x="443.3445" y="28.2606" clip-path="url(#clipPath8)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">select(List&lt;Domain&gt;) : List&lt;Domain&gt; </text>
-        <line y2="36" fill="none" x1="439" clip-path="url(#clipPath8)" x2="759" y1="36"/>
+        <line y2="-47" fill="none" x1="439" clip-path="url(#clipPath8)" x2="759" y1="-47"/>
+        <text stroke-linecap="butt" x="443.3445" y="-31.5832" clip-path="url(#clipPath8)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">getLeftItem()</text>
+        <text stroke-linecap="butt" x="443.3445" y="-17.6144" clip-path="url(#clipPath8)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">getOperatir()</text>
+        <text stroke-linecap="butt" x="443.3445" y="-3.6457" clip-path="url(#clipPath8)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">getRightItem()</text>
+        <text stroke-linecap="butt" x="443.3445" y="10.3231" clip-path="url(#clipPath8)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">and(Criterion&lt;Domain&gt;) : Criterion&lt;Domain&gt;</text>
+        <text stroke-linecap="butt" x="443.3445" y="24.2918" clip-path="url(#clipPath8)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">or(Criterion&lt;Domain&gt;) : Criterion&lt;Domain&gt;</text>
+        <text stroke-linecap="butt" x="443.3445" y="38.2606" clip-path="url(#clipPath8)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">select(List&lt;Domain&gt;) : List&lt;Domain&gt; </text>
       </g>
     </g>
     <g onmouseout="HideTooltip(evt)" id="y.node.6" onmousemove="ShowTooltip(evt)">
@@ -338,7 +338,7 @@
       </g>
       <g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,558,327)" stroke-linecap="butt">
-          <text x="-406.5128" xml:space="preserve" y="104.8273" stroke="none">1</text>
+          <text x="-406.3174" xml:space="preserve" y="83.6543" stroke="none">1</text>
         </g>
       </g>
     </g>
@@ -349,7 +349,7 @@
       </g>
       <g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,558,327)" stroke-linecap="butt">
-          <text x="-406.5128" xml:space="preserve" y="-98.9738" stroke="none">1</text>
+          <text x="-408.3174" xml:space="preserve" y="-117.3457" stroke="none">1</text>
         </g>
       </g>
     </g>
@@ -388,7 +388,7 @@
       </g>
       <g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,558,327)" stroke-linecap="butt">
-          <text x="10.5375" xml:space="preserve" y="104.8273" stroke="none">1</text>
+          <text x="10.5375" xml:space="preserve" y="95.921" stroke="none">1</text>
         </g>
       </g>
     </g>
@@ -420,7 +420,7 @@
       </g>
       <g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,558,327)" stroke-linecap="butt">
-          <text x="10.5375" xml:space="preserve" y="-98.9738" stroke="none">1</text>
+          <text x="9.6826" xml:space="preserve" y="-118.3457" stroke="none">1</text>
         </g>
       </g>
     </g>
