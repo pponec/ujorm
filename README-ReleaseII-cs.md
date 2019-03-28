@@ -75,10 +75,10 @@ Zjednodušené schema:
         Criterion<Item> itemCrn1 = mItem.forAll();
         List<Item> items = itemCrn1.select(findItemsService());
 
-        Criterion<Item> criton1 = mItem.keyOrder().keyId().forEq(10);
-        Criterion<Item> criton2 = mItem.keyOrder().keyCreated().forLe(LocalDateTime.now());
-        Criterion<Item> criton3 = criton1.and(criton2);
-        List<Item> result = criton3.select(findItemsService());
+        Criterion<Item> crn1 = mItem.keyOrder().keyId().forEq(10);
+        Criterion<Item> crn2 = mItem.keyOrder().keyCreated().forLe(LocalDateTime.now());
+        Criterion<Item> crn3 = crn1.and(crn2);
+        List<Item> result = crn3.select(findItemsService());
     }
 ```
 
