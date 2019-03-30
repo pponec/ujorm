@@ -173,6 +173,11 @@ public final class MetaParams extends AbstractMetaModel {
     /** If the parameter is true, then the OrmHandler closes a {@code default session} after creating database structures.
      * Note, a closing the session of in-memory databases can remove all data structure.
      * The default value is {@code true}.
+     *
+     * @see See the note of the H2 Database documentation: By default, closing the last connection to a database closes the database.
+     * For an in-memory database, this means the content is lost. To keep the database open,
+     * add {@code ;DB_CLOSE_DELAY=-1} to the database URL. To keep the content of an in-memory database as long
+     * as the virtual machine is alive, use jdbc:h2:mem:test;DB_CLOSE_DELAY=-1.
      */
     public static final Key<MetaParams,Boolean> AUTO_CLOSING_DEFAULT_SESSION = f.newKey("autoClosingDefaultSession", true);
 
