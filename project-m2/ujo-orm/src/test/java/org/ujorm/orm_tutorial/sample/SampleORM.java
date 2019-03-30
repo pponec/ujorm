@@ -145,7 +145,6 @@ public class SampleORM {
         boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
-            params.set(MetaParams.AUTO_CLOSING_DEFAULT_SESSION, false); // For in-memory database only
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.TYPE_SERVICE, TypeServiceForOlderJdbc.class); // If the JDBC is older than 4.2
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");

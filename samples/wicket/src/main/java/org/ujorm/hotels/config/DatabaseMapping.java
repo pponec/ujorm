@@ -31,7 +31,7 @@ import org.ujorm.orm.dialect.*;
  * A class mapping to a database (sample of usage)
  * @hidden
  */
-@Db(schema="demoHotels", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
+@Db(schema="demoHotels", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1")
 //@Db(schema="demoHotels", dialect=H2Dialect.class, jndi = "java:comp/env/jdbc/demohotels") // JNDI support
 //@Db(schema="demoHotels", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:~/ujorm/db1")
 //@Db(schema="demoHotels", dialect=PostgreSqlDialect.class, jndi = "java:comp/env/jdbc/dbtest")

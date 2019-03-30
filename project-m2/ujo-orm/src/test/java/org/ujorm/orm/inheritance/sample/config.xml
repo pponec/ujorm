@@ -60,7 +60,7 @@
                 <name>customers</name>
             </relation2m>
         </table>
-        <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
+        <jdbcUrl>jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1</jdbcUrl>
         <jdbcDriver>org.h2.Driver</jdbcDriver>
         <user>sa</user>
     </database>

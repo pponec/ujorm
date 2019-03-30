@@ -36,7 +36,6 @@ public final class OrmHandlerProviderImpl implements OrmHandlerProvider{
             final MetaParams params = new MetaParams();
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.LOG_METAMODEL_INFO, true);
-            params.set(MetaParams.AUTO_CLOSING_DEFAULT_SESSION, false);
             result.config(params);
         }
         // External Configuration:

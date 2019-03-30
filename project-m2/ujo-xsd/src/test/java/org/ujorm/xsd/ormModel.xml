@@ -6,7 +6,7 @@
         <schema>db1</schema>
         <readOnly>false</readOnly>
         <dialect>org.ujorm.orm.dialect.H2Dialect</dialect>
-        <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
+        <jdbcUrl>jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1</jdbcUrl>
         <jdbcDriver>org.h2.Driver</jdbcDriver>
         <user>sa</user>
         <sequencer>org.ujorm.orm.UjoSequencer</sequencer>

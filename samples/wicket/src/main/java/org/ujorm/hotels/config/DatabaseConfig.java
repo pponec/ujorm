@@ -50,7 +50,6 @@ public final class DatabaseConfig implements OrmHandlerProvider {
         final boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
             final MetaParams params = new MetaParams();
-            params.set(MetaParams.AUTO_CLOSING_DEFAULT_SESSION, false); // For in-memory database only
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.LOG_METAMODEL_INFO, true);
             params.set(MetaParams.LOG_SQL_MULTI_INSERT, false);

@@ -276,7 +276,7 @@ public class JdbcBuilderTest {
         assertNotNull(tempRs);
         assertTrue(tempRs.isClosed());
     }
-    
+
    /** How to SELECT a list using a lambda expression */
     public void showSelect_2(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
@@ -347,7 +347,7 @@ public class JdbcBuilderTest {
     /** Crete a new DB connection */
     private Connection createDbConnection() throws ClassNotFoundException, SQLException {
         Class.forName(org.h2.Driver.class.getName());
-        Connection result = DriverManager.getConnection("jdbc:h2:mem:test", "", "");
+        Connection result = DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "", "");
         result.setAutoCommit(false);
         return result;
     }
