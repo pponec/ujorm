@@ -1,6 +1,6 @@
 # The Story of Ujorm Framework
 
-*How much time can Ujorm Framewrok save and why was it created in the first place? The following article addresses more than these questions.*
+*How much time can Ujorm Framework save and why was it created in the first place? The following article addresses more than these questions.*
 
 Somewhere back in 2008, I had an opportunity to participate in development of an interesting transport reservations system written in Java. The frontend was built on [RichFaces](https://en.wikipedia.org/wiki/RichFaces), a former component framework for Sun Microsystems' [JavaServer Faces](https://en.wikipedia.org/wiki/JavaServer_Faces), a **business logic** was placed into service classes managed by [Spring](https://en.wikipedia.org/wiki/Spring_Framework) framework, persistent layer was built on [Hibernate](https://cs.wikipedia.org/wiki/Hibernate) ORM framework.
 
@@ -16,7 +16,7 @@ After publishing this application, I got an apportuninty to rewrite the project 
 
 ## Conclusion
 
-It seems that the approach of static constants use with generic types and methods for reading and writing values into a domain object was unique in its time. However, it's true that Ujorm can hardly compete with its competitors when it comes to range of services or documentation. This year will mark ten years of the first Ujorm Framework's ORM module release, since then it's been deployed on various production servers without major operational issues as far as I know. Mass deployment hasn't happened though.
+It seems that the approach of static constants use with generic types and methods for reading and writing values into a domain object was unique in its time. However, it's true that Ujorm can hardly compete with its competitors when it comes to range of services or documentation. This year will mark ten years of the first Ujorm Framework's ORM module release, since then it's been deployed on various production servers without major operational issues as far as I know. Mass expansion hasn't happened though.
 
 ## Web Links
 
