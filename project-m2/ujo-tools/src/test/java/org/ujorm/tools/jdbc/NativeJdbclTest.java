@@ -17,7 +17,6 @@
 package org.ujorm.tools.jdbc;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +28,7 @@ import static org.junit.Assert.*;
  * Compare using in the {@link JdbcBuilderTest} with native JDBC implementations here.
  * @author Pavel Ponec
  */
-public class NativeJdbclTest {
+public class NativeJdbclTest extends AbstractJdbcConnector {
 
     /** Some testing date */
     private final LocalDate someDate = LocalDate.parse("2018-09-12");
@@ -147,13 +146,5 @@ public class NativeJdbclTest {
             dbConnection.commit();
         }
         return dbConnection;
-    }
-
-    /** Crete a new DB connection */
-    private Connection createDbConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(org.h2.Driver.class.getName());
-        Connection result = DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "", "");
-        result.setAutoCommit(false);
-        return result;
     }
 }

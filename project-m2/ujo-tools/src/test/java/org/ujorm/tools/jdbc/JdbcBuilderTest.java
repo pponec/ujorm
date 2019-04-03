@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
  * Testing the JdbcBuillder class
  * @author Pavel Ponec
  */
-public class JdbcBuilderTest {
+public class JdbcBuilderTest extends AbstractJdbcConnector {
 
     /** Some testing date */
     private final LocalDate someDate = LocalDate.parse("2018-09-12");
@@ -342,13 +342,5 @@ public class JdbcBuilderTest {
             dbConnection.commit();
         }
         return dbConnection;
-    }
-
-    /** Crete a new DB connection */
-    private Connection createDbConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(org.h2.Driver.class.getName());
-        Connection result = DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "", "");
-        result.setAutoCommit(false);
-        return result;
     }
 }
