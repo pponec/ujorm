@@ -19,6 +19,8 @@ package org.ujorm.tools.web;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 import java.util.StringJoiner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -163,6 +165,11 @@ public class Element extends AbstractElement<Element> implements Html {
 
     /** Create a HTML table according to data */
     public <T extends Element> T addTable(final Object[][] data, final CharSequence... cssClass) {
+        return addTable(Arrays.asList(data), cssClass);
+    }
+    
+    /** Create a HTML table according to data */
+    public <T extends Element> T addTable(final List<Object[]> data, final CharSequence... cssClass) {
         final T result = addTable(cssClass);
 
         if (Check.hasLength(cssClass)) {
@@ -228,7 +235,7 @@ public class Element extends AbstractElement<Element> implements Html {
         return addElement(FORM, cssClasses);
     }
 
-    /** Add new heading level one  */
+    /** Add a top heading (level one)  */
     public <T extends Element> T addHeading(@Nonnull CharSequence title, @Nonnull final CharSequence... cssClasses) {
         return addHeading(1, title, cssClasses);
     }

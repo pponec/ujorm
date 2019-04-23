@@ -49,11 +49,11 @@ public interface Html {
     String P = "p";
     /** Form element */
     String FORM = "form";
-    /** Header element level 1 */
+    /** Heading element level 1 */
     String H1 = "h1";
-    /** Header element level 2 */
+    /** Heading element level 2 */
     String H2 = "h2";
-    /** Header element level 3 */
+    /** Heading element level 3 */
     String H3 = "h3";
     /** Table element */
     String TABLE = "table";
