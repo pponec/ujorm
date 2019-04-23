@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.StringJoiner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractElement;
 import org.ujorm.tools.xml.dom.XmlElement;
@@ -240,9 +241,10 @@ public class Element extends AbstractElement<Element> implements Html {
         return addHeading(1, title, cssClasses);
     }
 
-    /** Add new heading with the required level where the first level is zero. */
+    /** Add new heading with the required level where the first level is the one,  */
     public <T extends Element> T addHeading(int level, @Nonnull CharSequence title, @Nonnull final CharSequence... cssClasses) {
-        return addElement(HEADING_PREFIX + Math.max(1, level), cssClasses).addText(title);
+        Assert.isTrue(level > 0, "Unsupported level {}", level);
+        return addElement(HEADING_PREFIX + level, cssClasses).addText(title);
     }
 
     /** Add new body element */
