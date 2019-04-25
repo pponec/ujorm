@@ -54,8 +54,16 @@ public class HtmlPage extends Element {
         this.config = config;
         this.writer = writer;
     }
+    
+    /** Returns a head element */
+    public <T extends Element> T getHead() {
+        if (head == null) {
+            head = addElement(Html.HEAD);
+        }
+        return  (T) head;
+    }
 
-    /** Returns body element */
+    /** Returns a body element */
     @Nonnull
     public <T extends Element> T getBody() {
         if (body == null) {
@@ -64,29 +72,9 @@ public class HtmlPage extends Element {
         return (T) body;
     }
 
-    /** A shortcut for {@code HtmlList.getHead().addElement(CharSequence) }
-     * @param name A name of the new Html is requred.
-     * @return The new Html!
-     */
-    public <T extends Element> T addElementToHead(@Nonnull final String name) {
-        if (head == null) {
-            head = addElement(Html.HEAD);
-        }
-        return head.addElement(name);
-    }
-
-    /** A shortcut for {@code HtmlList.getBody().addElement(CharSequence) }
-     * @param name A name of the new Html is requred.
-     * @return The new Html!
-     */
-    public <T extends Element> T addElementToBody(@Nonnull final String name) {
-        return getBody().addElement(name);
-    }
-
     /** Create a new Javascript element and return it
      * @param javascriptLinks URL list to Javascript
      * @param defer A script that will not run until after the page has loaded
-     * @return
      */
     public void addJavascriptLinks(final boolean defer, @Nonnull final CharSequence ... javascriptLinks) {
         for (CharSequence js : javascriptLinks) {
@@ -101,7 +89,7 @@ public class HtmlPage extends Element {
      */
     public <T extends Element> T addJavascriptLink(final boolean defer, @Nonnull final CharSequence javascriptLink) {
         Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
-        return head.addElement(Html.SCRIPT)
+        return getHead().addElement(Html.SCRIPT)
                 .setAttrib(Html.A_SRC, javascriptLink)
                 .setAttrib("defer", defer ? "defer" : null)
                 .addText("");
@@ -113,7 +101,7 @@ public class HtmlPage extends Element {
      */
     public <T extends Element> T addJavascriptContents(@Nonnull final CharSequence javascript) {
         Assert.notNull(javascript, REQUIRED_MSG, "javascript");
-        return head.addElement(Html.SCRIPT)
+        return getHead().addElement(Html.SCRIPT)
                 .setAttrib(Html.A_LANGUAGE, "javascript")
                 .setAttrib(Html.A_TYPE, "text/javascript")
                 .addText(javascript);
@@ -134,7 +122,7 @@ public class HtmlPage extends Element {
      */
     public <T extends Element> T addCssLink(@Nonnull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
-        return head.addElement(Html.LINK)
+        return getHead().addElement(Html.LINK)
                 .setAttrib(Html.A_HREF, css)
                 .setAttrib(Html.A_REL, "stylesheet");
     }
@@ -145,7 +133,7 @@ public class HtmlPage extends Element {
      */
     public <T extends Element> T addCssBody(@Nonnull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
-        return head.addElement(Html.STYLE)
+        return getHead().addElement(Html.STYLE)
                 .addRawText(css);
     }
 
@@ -255,8 +243,8 @@ public class HtmlPage extends Element {
         try {
             final HtmlPage result = new HtmlPage(config, response.getWriter());
             config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
-            result.addElementToHead(Html.META).setAttrib(HtmlElement.Html.A_CHARSET, config.getCharset());
-            result.addElementToHead(Html.TITLE).addText(config.getTitle());
+            result.getHead().addElement(Html.META).setAttrib(HtmlElement.Html.A_CHARSET, config.getCharset());
+            result.getHead().addElement(Html.TITLE).addText(config.getTitle());
             result.addCssLinks(config.getCssLinks());
 
             return result;
