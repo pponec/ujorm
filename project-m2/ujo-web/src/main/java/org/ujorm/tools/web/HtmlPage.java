@@ -50,7 +50,6 @@ public class HtmlPage extends Element {
     /** Create new instance with empty html headers */
     public HtmlPage(@Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
         super(new XmlElement(Html.HTML));
-
         this.config = config;
         this.writer = writer;
     }
