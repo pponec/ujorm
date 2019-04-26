@@ -267,9 +267,16 @@ public class Element extends AbstractElement<Element> implements Html {
         return addElement(LABEL, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new input element */
     public <T extends Element> T addInput(@Nonnull final CharSequence... cssClasses) {
         return addElement(INPUT, cssClasses);
+    }
+
+    /** Add new input element type of text */
+    public <T extends Element> T addTextInput(@Nonnull final CharSequence... cssClasses) {
+        final T result = addInput(cssClasses);
+        result.setType(V_TEXT);
+        return result;
     }
 
     /** Add new body element */
