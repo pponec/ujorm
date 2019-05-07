@@ -2,6 +2,10 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 1.91-SNAPSHOT (2019-10-01)
++ ORM: A default session is closed now, see the issue for detail: https://github.com/pponec/ujorm/issues/1
++ ...
+
 release 1.90 (2019-03-24)
 + ORM: Some OrmUjo improvement is done for better performance and less memory footprint
 + TOOLS: New method: JdbcBuilder.uniqueValueOptional()
