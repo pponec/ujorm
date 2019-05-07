@@ -7,7 +7,7 @@
     <version>1.91-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-web</name>
-    <description>Ujorm-web module for common use</description>
+    <description>Ujorm-web module for a common use</description>
     <contributors>
         <contributor>
             <name>Pavel Ponec</name>
@@ -94,7 +94,7 @@
                     <source>1.8</source>
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
-                    <debug>false</debug>
+                    <debug>true</debug>
                 </configuration>
             </plugin>
 
@@ -238,7 +238,7 @@
                 </plugins>
             </build>
         </profile>
-     </profiles>
+    </profiles>
 
 </project>
 
