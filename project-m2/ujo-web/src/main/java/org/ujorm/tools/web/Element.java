@@ -168,7 +168,7 @@ public class Element extends AbstractElement<Element> implements Html {
     public <T extends Element> T addTable(final Object[][] data, final CharSequence... cssClass) {
         return addTable(Arrays.asList(data), cssClass);
     }
-    
+
     /** Create a HTML table according to data */
     public <T extends Element> T addTable(final List<Object[]> data, final CharSequence... cssClass) {
         final T result = addTable(cssClass);
@@ -297,6 +297,13 @@ public class Element extends AbstractElement<Element> implements Html {
     /** Add new body element */
     public <T extends Element> T addButton(@Nonnull final CharSequence... cssClasses) {
         return addElement(BUTTON, cssClasses);
+    }
+
+    /** Add a submit button */
+    public <T extends Element> T addSubmitButton(@Nonnull final CharSequence... cssClasses) {
+        final T result = addButton(cssClasses);
+        result.setType(V_SUBMIT);
+        return result;
     }
 
     /** Add an anchor element with URL and CSS classes */
