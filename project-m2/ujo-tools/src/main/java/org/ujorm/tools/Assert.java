@@ -82,7 +82,8 @@ public abstract class Assert {
     }
 
     /** Checks if the value is not {@code null} and result of the the method
-     * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}. */
+     * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}.
+     * @return The original value */
     public static <V,M> void isTrue
         ( @Nullable final V condition
         , @Nonnull final Predicate<V> predicate
@@ -106,21 +107,24 @@ public abstract class Assert {
         }
     }
 
-    /** Return a result with <strong>presented value</strong> or throw an exception. */
+    /** Return a result with <strong>presented value</strong> or throw an exception.
+     * @return An {@code Optional} object with the original value */
     @Nonnull
     public static <V,M> Optional<V> getPresented(@Nullable final V value, @Nullable final M... message)
             throws IllegalArgumentException {
         return Optional.of(notNull(value, message));
     }
 
-    /** Checks if the argument is not {@code null}. */
+    /** Checks if the argument is not {@code null}.
+     * @return The original value */
     @Nonnull
     public static final <V> V notNull(@Nullable final V value)
             throws IllegalArgumentException {
         return notNull(value, NO_MESSAGE);
     }
 
-    /** Checks if the argument is not {@code null}. */
+    /** Checks if the argument is not {@code null}.
+     * @return The original value */
     @Nonnull
     public static <V,M> V notNull(@Nullable final V value, @Nullable final M... message)
             throws IllegalArgumentException {
@@ -130,7 +134,8 @@ public abstract class Assert {
         return value;
     }
 
-    /** Checks if the argument is not empty, nor {@code null}. */
+    /** Checks if the argument is not empty, nor {@code null}.
+     * @return The original value */
     @Nonnull
     public static <M> byte[] hasLength(@Nullable final byte[] array, @Nullable final M... message)
             throws IllegalArgumentException {
@@ -141,7 +146,8 @@ public abstract class Assert {
         return array;
     }
 
-    /** Checks if the argument is not empty, nor {@code null}. */
+    /** Checks if the argument is not empty, nor {@code null}.
+     * @return The original value */
     @Nonnull
     public static <M> char[] hasLength(@Nullable final char[] array, @Nullable final M... message)
             throws IllegalArgumentException {
@@ -152,7 +158,8 @@ public abstract class Assert {
         return array;
     }
 
-    /** Checks if the argument is not empty, nor {@code null}. */
+    /** Checks if the argument is not empty, nor {@code null}.
+     * @return The original value */
     @Nonnull
     public static <M> Object[] hasLength(@Nullable final Object[] array, @Nullable final M... message)
             throws IllegalArgumentException {
@@ -163,7 +170,8 @@ public abstract class Assert {
         return array;
     }
 
-    /** Checks if the argument is not empty, nor {@code null}. */
+    /** Checks if the argument is not empty, nor {@code null}.
+     * @return The original value */
     @Nonnull
     public static <V,M> Collection<V> hasLength(@Nullable final Collection<V> value, @Nullable final M... message)
             throws IllegalArgumentException {
@@ -174,7 +182,8 @@ public abstract class Assert {
         return value;
     }
 
-    /** Checks if the argument is not empty, nor {@code null}. */
+    /** Checks if the argument is not empty, nor {@code null}.
+     * @return The original value */
     @Nonnull
     public static <K,V,M>  Map<K,V> hasLength(@Nullable final Map<K,V> value, @Nullable final M... message)
             throws IllegalArgumentException {
@@ -185,7 +194,8 @@ public abstract class Assert {
         return value;
     }
 
-    /** Checks if the argument is not empty, nor {@code null}. */
+    /** Checks if the argument is not empty, nor {@code null}.
+     * @return The original value */
     @Nonnull
     public static <M> CharSequence hasLength(@Nullable final CharSequence value, @Nullable final M... message)
             throws IllegalArgumentException {
