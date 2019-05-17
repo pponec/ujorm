@@ -17,6 +17,7 @@ package org.ujorm.tools;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -105,66 +106,94 @@ public abstract class Assert {
         }
     }
 
-    /** Checks if the argument is not {@code null}. */
-    public static final void notNull(@Nullable final Object value)
+    /** Return a result with <strong>presented value</strong> or throw an exception. */
+    @Nonnull
+    public static <V,M> Optional<V> getPresented(@Nullable final V value, @Nullable final M... message)
             throws IllegalArgumentException {
-        notNull(value, NO_MESSAGE);
+        return Optional.of(notNull(value, message));
     }
 
     /** Checks if the argument is not {@code null}. */
-    public static <M> void notNull(@Nullable final Object value, @Nullable final M... message)
+    @Nonnull
+    public static final <V> V notNull(@Nullable final V value)
+            throws IllegalArgumentException {
+        return notNull(value, NO_MESSAGE);
+    }
+
+    /** Checks if the argument is not {@code null}. */
+    @Nonnull
+    public static <V,M> V notNull(@Nullable final V value, @Nullable final M... message)
             throws IllegalArgumentException {
         if (value == null) {
             throw new IllegalArgumentException(format(message), new NullPointerException());
         }
+        return value;
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static <M> void hasLength(@Nullable final byte[] array, @Nullable final M... message)
+    @Nonnull
+    public static <M> byte[] hasLength(@Nullable final byte[] array, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(array)) {
             throw new IllegalArgumentException(format(message));
         }
+        assert array != null; // A code for static analyzer only
+        return array;
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static <M> void hasLength(@Nullable final char[] array, @Nullable final M... message)
+    @Nonnull
+    public static <M> char[] hasLength(@Nullable final char[] array, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(array)) {
             throw new IllegalArgumentException(format(message));
         }
+        assert array != null; // A code for static analyzer only
+        return array;
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static <M> void hasLength(@Nullable final Object[] values, @Nullable final M... message)
+    @Nonnull
+    public static <M> Object[] hasLength(@Nullable final Object[] array, @Nullable final M... message)
             throws IllegalArgumentException {
-        if (!Check.hasLength(values)) {
+        if (!Check.hasLength(array)) {
             throw new IllegalArgumentException(format(message));
         }
+        assert array != null; // A code for static analyzer only
+        return array;
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static <M> void hasLength(@Nullable final Collection<?> values, @Nullable final M... message)
-            throws IllegalArgumentException {
-        if (!Check.hasLength(values)) {
-            throw new IllegalArgumentException(format(message));
-        }
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
-    public static <M> void hasLength(@Nullable final Map<?,?> values, @Nullable final M... message)
-            throws IllegalArgumentException {
-        if (!Check.hasLength(values)) {
-            throw new IllegalArgumentException(format(message));
-        }
-    }
-
-    /** Checks if the argument is not empty, nor {@code null}. */
-    public static <M> void hasLength(@Nullable final CharSequence value, @Nullable final M... message)
+    @Nonnull
+    public static <V,M> Collection<V> hasLength(@Nullable final Collection<V> value, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(value)) {
             throw new IllegalArgumentException(format(message));
         }
+        assert value != null; // A code for static analyzer only
+        return value;
+    }
+
+    /** Checks if the argument is not empty, nor {@code null}. */
+    @Nonnull
+    public static <K,V,M>  Map<K,V> hasLength(@Nullable final Map<K,V> value, @Nullable final M... message)
+            throws IllegalArgumentException {
+        if (!Check.hasLength(value)) {
+            throw new IllegalArgumentException(format(message));
+        }
+        assert value != null; // A code for static analyzer only
+        return value;
+    }
+
+    /** Checks if the argument is not empty, nor {@code null}. */
+    @Nonnull
+    public static <M> CharSequence hasLength(@Nullable final CharSequence value, @Nullable final M... message)
+            throws IllegalArgumentException {
+        if (!Check.hasLength(value)) {
+            throw new IllegalArgumentException(format(message));
+        }
+        assert value != null; // A code for static analyzer only
+        return value;
     }
 
     // ---- NEGATIONS ----
