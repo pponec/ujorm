@@ -75,8 +75,7 @@ public class UjoEvent<U> {
      * @param target Target
      */
     public UjoEvent(@Nonnull final String action, boolean dialogRequest, @Nullable U ujo, @Nonnull AjaxRequestTarget target) {
-        Assert.notNull(action, "action");
-        this.action = action;
+        this.action = Assert.notNull(action, "action");
         this.domain = ujo;
         this.showDialog = dialogRequest;
         this.target = target;
@@ -168,8 +167,7 @@ public class UjoEvent<U> {
     /** Get Payload type UjoEvent from the argument or return the {@link EMPTY_EVENT}*/
     @Nonnull
     public static <T> UjoEvent<T> get(@Nonnull IEvent<?> argEvent) {
-        Assert.notNull(argEvent, "argEvent");
-        final Object payLoad = argEvent.getPayload();
+        final Object payLoad = Assert.notNull(argEvent, "argEvent").getPayload();
         return payLoad instanceof UjoEvent
                 ? (UjoEvent<T>) payLoad
                 : EMPTY_EVENT;

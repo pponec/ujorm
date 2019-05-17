@@ -132,8 +132,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
      * @return New GUI component
      */
     protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final IModel<E> offerItem, final boolean required) {
-        final E defaultValue = offerItem.getObject();
-        Assert.notNull(defaultValue, "defaultValue");
+        final E defaultValue = Assert.notNull(offerItem.getObject(), "defaultValue");
         final DropDownChoice<E> result = new DropDownChoice<E>
            ( id
            , Arrays.asList(defaultValue.getDeclaringClass().getEnumConstants())

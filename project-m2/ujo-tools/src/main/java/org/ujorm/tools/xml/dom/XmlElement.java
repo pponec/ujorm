@@ -111,8 +111,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @return The argument type of XmlElement! */
     @Nonnull
     public final <T extends XmlElement> T addElement(@Nonnull final T element) {
-        Assert.notNull(element, REQUIRED_MSG, "element");
-        addChild(element);
+        addChild(Assert.notNull(element, REQUIRED_MSG, "element"));
         return element;
     }
 

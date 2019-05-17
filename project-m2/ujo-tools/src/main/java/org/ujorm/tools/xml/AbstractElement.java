@@ -50,8 +50,7 @@ public abstract class AbstractElement<E extends AbstractElement> implements Clos
 
     /** Constructor */
     public AbstractElement(@Nonnull final CharSequence name) {
-        Assert.notNull(name, REQUIRED_MSG, "name");
-        this.name = name.toString();
+        this.name = Assert.notNull(name, REQUIRED_MSG, "name").toString();
     }
 
     /** Get an element name */

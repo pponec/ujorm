@@ -36,8 +36,7 @@ public abstract class AbstractValueWrapper<DbValue, AppValue> implements ValueWr
 
     /** Constructor */
     public AbstractValueWrapper(@Nonnull AppValue appValue) {
-        Assert.notNull(appValue);
-        this.applValue = appValue;
+        this.applValue = Assert.notNull(appValue);
     }
 
     /** Get the application value */

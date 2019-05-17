@@ -57,8 +57,7 @@ public class HtmlElement extends XmlElement {
     public HtmlElement(@Nonnull final Charset charset) {
         super(Html.HTML);
 
-        Assert.notNull(charset, REQUIRED_MSG, "charset");
-        this.charset = charset;
+        this.charset = Assert.notNull(charset, REQUIRED_MSG, "charset");
         this.head = addElement(Html.HEAD);
         this.body = addElement(Html.BODY);
     }

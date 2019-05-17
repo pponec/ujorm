@@ -35,8 +35,7 @@ public final class UjoModel<V extends Serializable> implements IModel<V>, UjoSup
     private final UjoSupplier<V> proxyValue;
 
     public UjoModel(@Nonnull final UjoSupplier<V> proxyValue) {
-        Assert.notNull(proxyValue, "proxyValue");
-        this.proxyValue = proxyValue;
+        this.proxyValue = Assert.notNull(proxyValue, "proxyValue");
     }
 
     @Override @Nullable

@@ -94,8 +94,7 @@ public class DefaultConfig implements HtmlConfig {
      * @param charset the charset to set
      */
     public void setCharset(@Nonnull Charset charset) {
-        Assert.notNull(charset);
-        this.charset = charset;
+        this.charset = Assert.notNull(charset, "charset");
     }
 
     /**
@@ -181,8 +180,7 @@ public class DefaultConfig implements HtmlConfig {
      * @param cssLinks The cssLinks to set
      */
     public void setCssLinks(@Nonnull final CharSequence... cssLinks) {
-        Assert.notNull("cssLinks", cssLinks);
-        this.cssLinks = cssLinks;
+        this.cssLinks = Assert.notNull(cssLinks, "cssLinks");
     }
 
 }

@@ -99,10 +99,8 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
      * @throws IOException
      */
     protected XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) throws IOException {
-        super(name);
-        Assert.notNull(name, REQUIRED_MSG, "name");
-        Assert.notNull(writer, REQUIRED_MSG, "writer");
-        this.writer = writer;
+        super(Assert.notNull(name, REQUIRED_MSG, "name"));
+        this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
         this.level = level;
 
         if (printName) {

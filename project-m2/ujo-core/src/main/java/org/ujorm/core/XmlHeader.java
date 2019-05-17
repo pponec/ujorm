@@ -39,8 +39,7 @@ public class XmlHeader {
     }
 
     public XmlHeader(String rootElement) {
-        Assert.notNull(rootElement, "Attribute is required");
-        this.rootElement = rootElement;
+        this.rootElement = Assert.notNull(rootElement, "rootElement is required");
     }
 
     /**

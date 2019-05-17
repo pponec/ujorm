@@ -44,9 +44,8 @@ public class UjoDropDown<U extends Ujo> extends DropDownChoice<U> {
      * @param display Required display Key
      */
     public UjoDropDown(final String id, final List<? extends U> choices, Key<U, ?> index, Key<U, ?> display) {
-        this(id, choices, KeyRing.<U>of(index, display));
-        Assert.notNull(display, "display");
-        Assert.notNull(index, "index");
+        this(id, choices, KeyRing.<U>of( Assert.notNull(index, "index")
+                                       , Assert.notNull(display, "display")));
     }
 
         /** Constructor

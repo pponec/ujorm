@@ -485,12 +485,13 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
             InitialContext initContext = dialect.createJndiInitialContext(this);
             final int lastItem = jndi.size()-1;
-            for (int i=0; i<lastItem; i++) {
-                initContext = (InitialContext) initContext.lookup(jndi.get(i));
-                Assert.notNull(initContext, "JNDI problem: InitialContext was not found for the: {}", jndi.get(i));
+            for (int i = 0; i < lastItem; i++) {
+                final String jndiItem = jndi.get(i);
+                initContext = (InitialContext) Assert.notNull(initContext.lookup(jndiItem)
+                        , "JNDI failed due initialContext is empty for: {}", jndiItem);
             }
-            final DataSource dataSource = (DataSource) initContext.lookup(jndi.get(lastItem));
-            Assert.notNull(dataSource, "JNDI problem: database connection was not found for the: {}", jndi);
+            final DataSource dataSource = (DataSource) Assert.notNull(initContext.lookup(jndi.get(lastItem))
+                    , "JNDI failed: database connection was not found for the: {}", jndi);
 
             result = dataSource.getConnection();
         } else {

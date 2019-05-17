@@ -642,7 +642,7 @@ public class SampleORM {
                 .orderBy(parentName)
                 .uniqueResult();
 
-        Assert.notNull(customer != null, "The result have got the one customers");
+        Assert.notNull(customer, "The result have got the one customers");
         Assert.isTrue(Customer.PARENT instanceof CompositeKey, "The key is type of CompositeKey {}", Customer.PARENT);
         Assert.isTrue(parentName.getFullName().equals("Customer.parent[customerAlias].surname"),
                 "The wrong implementation CompositeKey.toString()");

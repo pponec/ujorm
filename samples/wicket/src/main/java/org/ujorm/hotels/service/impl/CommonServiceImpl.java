@@ -200,8 +200,7 @@ public class CommonServiceImpl implements CommonService {
     /** Insert new booking */
     @Override
     public void saveBooking(Booking booking) {
-        Customer cust = booking.getCustomer();
-        Assert.notNull(booking.getCustomer(), Booking.CUSTOMER.getFullName());
+        Customer cust = Assert.notNull(booking.getCustomer(), Booking.CUSTOMER.getFullName());
         if (cust.getId()==null) {
             if (!authService.authenticate(cust)) {
                 throw new ValidationException("login.failed", "Login failed");

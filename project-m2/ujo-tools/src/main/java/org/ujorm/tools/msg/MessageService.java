@@ -63,8 +63,7 @@ public class MessageService {
     }
 
     public MessageService(@Nonnull final Locale defaultLocale) {
-        Assert.notNull(defaultLocale);
-        this.defaultLocale = defaultLocale;
+        this.defaultLocale = Assert.notNull(defaultLocale, "defaultLocale");
     }
 
     /** Create a map from man pairs key-value
