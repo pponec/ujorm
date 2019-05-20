@@ -64,7 +64,7 @@ public abstract class Assert {
     public static final  <M> void validState(final boolean condition, @Nullable final M... message)
             throws IllegalStateException {
         if (!condition) {
-            throw new IllegalStateException(format(message), new NullPointerException());
+            throw new IllegalStateException(format(message));
         }
     }
 
