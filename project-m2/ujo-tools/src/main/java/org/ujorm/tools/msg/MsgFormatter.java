@@ -40,8 +40,8 @@ public class MsgFormatter {
 
     /** Parameter mark */
     protected static final String DEFAULT_MARK = "{}";
-    /** Separator */
-    protected static final String SEPARATOR = ", ";
+    /** Separator of unmarked arguments '{}' was changed to a single space from release 1.91 */
+    protected static final char SEPARATOR = ' ';
 
     /** The parameter mark in the template. */
     private final String mark;
@@ -151,7 +151,7 @@ public class MsgFormatter {
      * Format the message, see the next correct asserts:
      * <pre class="pre">
      *  assertEquals("TEST"    , MsgFormatter.format("TE{}T", "S"));
-     *  assertEquals("TE, S, T", MsgFormatter.format("TE", "S", "T"));
+     *  assertEquals("TE S T", MsgFormatter.format("TE", "S", "T"));
      *  assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
      * </pre>
      * @param messageTemplate Template where argument position is marked by the {@code {}} characters.

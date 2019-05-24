@@ -15,7 +15,6 @@
  */
 package org.ujorm.tools.msg;
 
-import org.ujorm.tools.msg.MsgFormatter;
 import java.util.function.Supplier;
 import org.junit.Test;
 import static junit.framework.TestCase.assertSame;
@@ -34,7 +33,7 @@ public class MsgFormatterTest {
     @Test
     public void testDemo() {
         assertEquals("TEST"    , MsgFormatter.format("TE{}T", "S"));
-        assertEquals("TE, S, T", MsgFormatter.format("TE", "S", "T"));
+        assertEquals("TE S T", MsgFormatter.format("TE", "S", "T"));
         assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
     }
 
