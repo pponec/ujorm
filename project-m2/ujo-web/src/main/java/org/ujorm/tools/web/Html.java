@@ -132,6 +132,7 @@ public interface Html {
     String V_SUBMIT = "submit";
     String V_STYLESHEET = "stylesheet";
     String V_TEXT = "text";
+    String V_PASSWORD = "password";
     String V_TEXT_CSS = "text/css";
 
 }

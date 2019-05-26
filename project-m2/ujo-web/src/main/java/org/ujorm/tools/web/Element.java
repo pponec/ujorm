@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.StringJoiner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +30,7 @@ import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractElement;
 import org.ujorm.tools.xml.dom.XmlElement;
+import org.ujorm.tools.xml.dom.XmlWriter;
 
 /** A proxy for a HTML element */
 public class Element extends AbstractElement<Element> implements Html {
@@ -56,10 +59,18 @@ public class Element extends AbstractElement<Element> implements Html {
         }
     }
 
+    /**
+     * Set an attribute
+     * @param name Required element name
+     * @param value The {@code null} value is silently ignored. Formatting is performed by the
+     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
+     *   method, where the default implementation calls a {@code toString()} only.
+     * @return The original element
+     */
     @Override
-    public final <T extends Element> T setAttrib(@Nonnull final String name, @Nullable final Object data) {
+    public final <T extends Element> T setAttrib(@Nonnull final String name, @Nullable final Object value) {
         try {
-            origElement.setAttrib(name, data);
+            origElement.setAttrib(name, value);
             return (T) this;
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -274,9 +285,12 @@ public class Element extends AbstractElement<Element> implements Html {
 
     /** Add new input element type of text */
     public <T extends Element> T addTextInput(@Nonnull final CharSequence... cssClasses) {
-        final T result = addInput(cssClasses);
-        result.setType(V_TEXT);
-        return result;
+        return addInput(cssClasses).setType(V_TEXT);
+    }
+
+    /** Add new input element type of password */
+    public <T extends Element> T addPasswordInput(@Nonnull final CharSequence... cssClasses) {
+        return addInput(cssClasses).setType(V_PASSWORD);
     }
 
     /** Add new body element */
@@ -284,9 +298,25 @@ public class Element extends AbstractElement<Element> implements Html {
         return addElement(TEXT_AREA, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new select element */
     public <T extends Element> T addSelect(@Nonnull final CharSequence... cssClasses) {
         return addElement(SELECT, cssClasses);
+    }
+
+    /** Add options from map to current select element
+     * @param value Value of a select element
+     * @param options Consider an instance of the {@link LinkedHashMap} class predictable iteration order of options.
+     * @param cssClasses
+     * @return Return {@code this}
+     */
+    public <T extends Element> T addSelectOptions(@Nonnull Object value, @Nonnull final Map<?,?> options, @Nonnull final CharSequence... cssClasses) {
+        for (Object key : options.keySet()) {
+            this.addElement(Html.OPTION)
+                    .setAttrib(Html.A_VALUE, key)
+                    .setAttrib(Html.A_SELECTED, Objects.equals(value, key) ? Html.A_SELECTED : null)
+                    .addText(options.get(key));
+        }
+        return (T) this;
     }
 
     /** Add new body element */
@@ -302,23 +332,20 @@ public class Element extends AbstractElement<Element> implements Html {
     /** Add a submit button */
     public <T extends Element> T addSubmitButton(@Nonnull final CharSequence... cssClasses) {
         final T result = addButton(cssClasses);
-        result.setType(V_SUBMIT);
-        return result;
+        return result.setType(V_SUBMIT);
     }
 
     /** Add an anchor element with URL and CSS classes */
     public <T extends Element> T addAnchor(@Nonnull final String url, @Nonnull final CharSequence... cssClasses) {
         final T result = addElement(A, cssClasses);
-        result.setHref(url);
-        return result;
+        return result.setHref(url);
     }
 
     /** Add an anchor element with texts */
     public <T extends Element> T addAnchoredText(@Nonnull final String url, @Nonnull final Object... text) {
-        final T result = addElement(A)
+        return addElement(A)
                .setHref(url)
                .addText(text);
-        return result;
     }
 
     /** Add new body element */
@@ -475,5 +502,11 @@ public class Element extends AbstractElement<Element> implements Html {
     public <T extends Element> T setHref(@Nullable final CharSequence value) {
         setAttrib(A_HREF, value);
         return (T) this;
+    }
+
+    /** String value */
+    @Override
+    public String toString() {
+        return origElement.toString();
     }
 }

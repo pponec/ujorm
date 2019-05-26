@@ -16,10 +16,12 @@
 
 package org.ujorm.tools.web;
 
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.dom.HtmlElement;
@@ -53,7 +55,7 @@ public class HtmlPage extends Element {
         this.config = config;
         this.writer = writer;
     }
-    
+
     /** Returns a head element */
     public <T extends Element> T getHead() {
         if (head == null) {
@@ -136,10 +138,10 @@ public class HtmlPage extends Element {
                 .addRawText(css);
     }
 
-    /** Render the HTML code including header */
+    /** Returns an Render the HTML code including header. Call the close() method before view */
     @Override @Nonnull
     public String toString() throws IllegalStateException {
-        return super.toString();
+        return writer.toString();
     }
 
     @Override
@@ -250,5 +252,23 @@ public class HtmlPage extends Element {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    /** Create new instance with empty html headers for
+     * @param config Html configuration
+     * @return An instance of the HtmlPage
+     * @throws IllegalStateException IO exceptions
+     */
+    @Nonnull
+    public static HtmlPage of(@Nullable HtmlConfig config) throws IllegalStateException {
+        if (config == null) {
+            config = new DefaultConfig();
+        }
+        final HtmlPage result = new HtmlPage(config, new CharArrayWriter(256));
+        config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
+        result.getHead().addElement(Html.META).setAttrib(HtmlElement.Html.A_CHARSET, config.getCharset());
+        result.getHead().addElement(Html.TITLE).addText(config.getTitle());
+        result.addCssLinks(config.getCssLinks());
+        return result;
     }
 }

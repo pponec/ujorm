@@ -67,7 +67,7 @@ public abstract class AbstractElement<E extends AbstractElement> implements Clos
     public abstract <T extends E> T addElement(@Nonnull final String name) throws IOException;
 
     /**
-     * Set one attribute
+     * Set an attribute
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
