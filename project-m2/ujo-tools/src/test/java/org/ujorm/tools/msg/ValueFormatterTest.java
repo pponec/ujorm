@@ -15,7 +15,6 @@
  */
 package org.ujorm.tools.msg;
 
-import org.ujorm.tools.msg.ValueFormatter;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,15 +29,15 @@ import static org.junit.Assert.assertEquals;
  * @author Pavel Ponec
  */
 public class ValueFormatterTest {
-    
+
     /**
      * Test of format method, of class MsgFormatter.
      */
     @Test
     public void testDemo() {
-        assertEquals("TE'S'T"      , ValueFormatter.formatSql("TE?T", "S"));
-        assertEquals("TE, 'S', 'T'", ValueFormatter.formatSql("TE", "S", "T"));
-        assertEquals("TE'S'?"      , ValueFormatter.formatSql("TE??", "S"));
+        assertEquals("TE'S'T"    , ValueFormatter.formatSql("TE?T", "S"));
+        assertEquals("TE 'S' 'T'", ValueFormatter.formatSql("TE", "S", "T"));
+        assertEquals("TE'S'?"    , ValueFormatter.formatSql("TE??", "S"));
     }
 
     /**
@@ -72,7 +71,7 @@ public class ValueFormatterTest {
     public void testFormat2() {
         String template = "abc";
         Object[] arguments = {"d","e","f"};
-        String expResult = "abc, 'd', 'e', 'f'";
+        String expResult = "abc 'd' 'e' 'f'";
         String result = ValueFormatter.formatSql(template, arguments);
         assertEquals(expResult, result);
     }
@@ -84,7 +83,7 @@ public class ValueFormatterTest {
     public void testFormat3() {
         String template = "abc-?-?";
         Object[] arguments = {"d","e","f"};
-        String expResult = "abc-'d'-'e', 'f'";
+        String expResult = "abc-'d'-'e' 'f'";
         String result = ValueFormatter.formatSql(template, arguments);
         assertEquals(expResult, result);
     }
@@ -120,7 +119,7 @@ public class ValueFormatterTest {
     public void testFormat6() {
         String template = "";
         Object[] arguments = {"a","b","c"};
-        String expResult = ", 'a', 'b', 'c'";
+        String expResult = " 'a' 'b' 'c'";
         String result = ValueFormatter.formatSql(template, arguments);
         assertEquals(expResult, result);
     }
@@ -132,7 +131,7 @@ public class ValueFormatterTest {
     public void testFormat7() {
         String template = "?";
         Object[] arguments = {null, null, null};
-        String expResult = "null, null, null";
+        String expResult = "null null null";
         String result = ValueFormatter.formatSql(template, arguments);
         assertEquals(expResult, result);
     }
@@ -156,7 +155,7 @@ public class ValueFormatterTest {
     public void testFormat9() {
         String template = null;
         Object[] arguments = {"a","b","c"};
-        String expResult = "null, 'a', 'b', 'c'";
+        String expResult = "null 'a' 'b' 'c'";
         String result = ValueFormatter.formatSql(template, arguments);
         assertEquals(expResult, result);
     }
@@ -172,7 +171,7 @@ public class ValueFormatterTest {
         String result = ValueFormatter.formatSql(template, arguments);
         assertEquals(expResult, result);
     }
-    
+
     /**
      * Test of format method, of class MsgFormatter.
      */
@@ -209,7 +208,7 @@ public class ValueFormatterTest {
         String result = ValueFormatter.formatSql(template, arguments);
         assertEquals(expResult, result);
     }
-    
+
     /**
      * Test of format method, of class MsgFormatter.
      */
@@ -237,7 +236,7 @@ public class ValueFormatterTest {
         assertEquals(expResult, result);
         assertEquals("'" + DatatypeConverter.printHexBinary(value) + "'", result);
     }
-    
+
 
     /**
      * Test of format method, of class MsgFormatter.

@@ -71,7 +71,7 @@ public class AssertTest {
             Assert.isTrue(value, (x) -> x < 10, "Wrong", value); // "Wrong, 20"
             assertTrue(false);
         } catch (IllegalArgumentException e) {
-            assertEquals("Wrong, 20", e.getMessage());
+            assertEquals("Wrong 20", e.getMessage());
         }
 
         try {

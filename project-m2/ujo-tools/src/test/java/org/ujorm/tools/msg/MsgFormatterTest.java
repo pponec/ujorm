@@ -68,7 +68,7 @@ public class MsgFormatterTest {
     public void testFormat2() {
         String template = "abc";
         Object[] arguments = {"d","e","f"};
-        String expResult = "abc, d, e, f";
+        String expResult = "abc d e f";
         String result = MsgFormatter.format(template, arguments);
         assertEquals(expResult, result);
     }
@@ -80,7 +80,7 @@ public class MsgFormatterTest {
     public void testFormat3() {
         String template = "abc-{}-{}";
         Object[] arguments = {"d","e","f"};
-        String expResult = "abc-d-e, f";
+        String expResult = "abc-d-e f";
         String result = MsgFormatter.format(template, arguments);
         assertEquals(expResult, result);
     }
@@ -116,7 +116,7 @@ public class MsgFormatterTest {
     public void testFormat6() {
         String template = "";
         Object[] arguments = {"a","b","c"};
-        String expResult = ", a, b, c";
+        String expResult = " a b c";
         String result = MsgFormatter.format(template, arguments);
         assertEquals(expResult, result);
     }
@@ -128,7 +128,7 @@ public class MsgFormatterTest {
     public void testFormat7() {
         String template = "{}";
         Object[] arguments = {null, null, null};
-        String expResult = "null, null, null";
+        String expResult = "null null null";
         String result = MsgFormatter.format(template, arguments);
         assertEquals(expResult, result);
     }
@@ -152,7 +152,7 @@ public class MsgFormatterTest {
     public void testFormat9() {
         String template = null;
         Object[] arguments = {"a","b","c"};
-        String expResult = "null, a, b, c";
+        String expResult = "null a b c";
         String result = MsgFormatter.format(template, arguments);
         assertEquals(expResult, result);
     }
