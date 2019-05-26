@@ -17,7 +17,8 @@
 
 package org.ujorm.tools.web;
 
-/** A proxy for a HTML element */
+/** A proxy for a HTML element
+ * <nr>NOTE: All fields in interface are public static final, i.e. they are constants. */
 public interface Html {
 
     // --- Element names ---
@@ -88,6 +89,10 @@ public interface Html {
     String LI = "li";
     /** A line break */
     String BR = "br";
+    /** Field set */
+    String FIELDSET  = "fieldset";
+    /** Legend */
+    String LEGEND  = "legend";
 
     // --- Attribute names ---
 
@@ -121,7 +126,7 @@ public interface Html {
     String A_ROWSPAN = "cols";
     String A_COLSPAN = "colspan";
 
-    // --- Some attribute values ---
+    // --- Attribute values ---
 
     String V_BLANK = "_blank";
     String V_CHECKBOX = "checkbox";

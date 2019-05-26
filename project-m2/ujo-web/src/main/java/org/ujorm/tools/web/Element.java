@@ -227,6 +227,20 @@ public class Element extends AbstractElement<Element> implements Html {
         return addElement(DIV, cssClasses);
     }
 
+    /** Add new fieldset element including a title
+     * @param title An optional title
+     * @param cssClasses CSS classes
+     * @return An instance of FieldSet
+     * @see LEGEND
+     */
+    public <T extends Element> T addFieldset(@Nullable final String title, @Nonnull final CharSequence... cssClasses) {
+        final T result = addElement(FIELDSET, cssClasses);
+        if (Check.hasLength(title)) {
+            result.addElement(LEGEND).addText(title);
+        }
+        return result;
+    }
+
     /** Add new body element */
     public <T extends Element> T addPreformatted(@Nonnull final CharSequence... cssClasses) {
         return addElement(PRE, cssClasses);
@@ -299,7 +313,7 @@ public class Element extends AbstractElement<Element> implements Html {
     }
 
     /** Add new select element
-     * @see #addSelectOptions(java.lang.Object, java.util.Map, java.lang.CharSequence...) 
+     * @see #addSelectOptions(java.lang.Object, java.util.Map, java.lang.CharSequence...)
      */
 
     public <T extends Element> T addSelect(@Nonnull final CharSequence... cssClasses) {

@@ -63,5 +63,34 @@ public class ElementTest {
         assertEquals(expectedResult, result);
     }
 
+    /**
+     * Test of addSelect method, of class Element.
+     */
+    @Test
+    public void testAddFieldset() {
+        System.out.println("addFieldset");
+        CharSequence[] cssClasses = null;
+        HtmlPage resInstance = HtmlPage.of(null);
+        try (HtmlPage instance = resInstance) {
+            Element body = instance.getBody();
+            body.addFieldset("MyTitle", "myCssClass").addText("Lorem ipsum ...");
+        }
+
+        String result = resInstance.toString();
+        String expectedResult = "<!DOCTYPE html>\n"
+                + "<html lang=\"en\">\n"
+                + "<head>\n"
+                + "<meta charset=\"UTF-8\"/>\n"
+                + "<title>Demo</title></head>\n"
+                + "<body>\n"
+                + "<fieldset class=\"myCssClass\">\n"
+                + "<legend>MyTitle</legend>"
+                + "Lorem ipsum ..."
+                + "</fieldset>"
+                + "</body>"
+                + "</html>";
+        assertEquals(expectedResult, result);
+    }
+
 
 }
