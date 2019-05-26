@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2019 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,12 +58,6 @@ public interface HtmlConfig {
      * @return the newLine
      */
     public String getIndentationSpace();
-
-    /**
-     * New line
-     * @param indentationSpace the newLine to set
-     */
-    public void setIndentationSpace(String indentationSpace);
 
     /**
      * Use a DOM model

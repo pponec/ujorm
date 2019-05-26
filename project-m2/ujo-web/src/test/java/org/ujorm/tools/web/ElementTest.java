@@ -32,19 +32,8 @@ public class ElementTest {
     @Test
     public void testAddSelect_3args() {
         System.out.println("addSelect");
-        CharSequence[] cssClasses = null;
-        HtmlPage resInstance = HtmlPage.of(null);
-        try (HtmlPage instance = resInstance) {
-            Element body = instance.getBody();
-
-            Object value = 2;
-            LinkedHashMap options = new LinkedHashMap<>();
-            options.put(1, "one");
-            options.put(value, "two");
-            options.put(3, "three");
-            body.addSelect().setName("selectName")
-                    .addSelectOptions(value, options, "mySelect");
-        }
+        DefaultConfig config = new DefaultConfig();
+        HtmlPage resInstance = createHtmlPage(config);
 
         String result = resInstance.toString();
         String expectedResult = "<!DOCTYPE html>\n"
@@ -61,6 +50,30 @@ public class ElementTest {
                 + "</body>"
                 + "</html>";
         assertEquals(expectedResult, result);
+
+        // --- DOM model ---
+
+        config.setDom(true);
+        HtmlPage domInstance = createHtmlPage(config);
+        result = domInstance.toString();
+        assertEquals(expectedResult, result);
+    }
+
+    /** Create HTML page */
+    private HtmlPage createHtmlPage(HtmlConfig config) throws IllegalStateException {
+        HtmlPage result = HtmlPage.of(config);
+        try (HtmlPage instance = result) {
+            Element body = instance.getBody();
+
+            Object value = 2;
+            LinkedHashMap options = new LinkedHashMap<>();
+            options.put(1, "one");
+            options.put(value, "two");
+            options.put(3, "three");
+            body.addSelect().setName("selectName")
+                    .addSelectOptions(value, options, "mySelect");
+        }
+        return result;
     }
 
     /**
@@ -91,6 +104,4 @@ public class ElementTest {
                 + "</html>";
         assertEquals(expectedResult, result);
     }
-
-
 }
