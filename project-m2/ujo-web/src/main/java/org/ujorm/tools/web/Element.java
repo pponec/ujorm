@@ -298,7 +298,10 @@ public class Element extends AbstractElement<Element> implements Html {
         return addElement(TEXT_AREA, cssClasses);
     }
 
-    /** Add new select element */
+    /** Add new select element
+     * @see #addSelectOptions(java.lang.Object, java.util.Map, java.lang.CharSequence...) 
+     */
+
     public <T extends Element> T addSelect(@Nonnull final CharSequence... cssClasses) {
         return addElement(SELECT, cssClasses);
     }
@@ -308,6 +311,7 @@ public class Element extends AbstractElement<Element> implements Html {
      * @param options Consider an instance of the {@link LinkedHashMap} class predictable iteration order of options.
      * @param cssClasses
      * @return Return {@code this}
+     * @see #addSelect(java.lang.CharSequence...)
      */
     public <T extends Element> T addSelectOptions(@Nonnull Object value, @Nonnull final Map<?,?> options, @Nonnull final CharSequence... cssClasses) {
         for (Object key : options.keySet()) {
