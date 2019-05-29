@@ -38,7 +38,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class BenchmarkStockBuild extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTERN = "/StockBuildServler";
+    public static final String URL_PATTERN = "/StockBuildServlet";
 
     /** Show the first line of soufce code */
     public static final short SHOW_LINE = 53;

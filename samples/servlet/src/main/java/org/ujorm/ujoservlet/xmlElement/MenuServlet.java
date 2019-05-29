@@ -71,9 +71,6 @@ public class MenuServlet extends HttpServlet {
         Item[] result = { new Item(HelloServlet.URL_PATTERN, "Hello, World!")
                         , new Item(TableServlet.URL_PATTERN, "Show table")
                         , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
-                        , new Item(BenchmarkStock.URL_PATTERN, "Report for a stock benchmark")
-                     // , new Item(BenchmarkPresent.URL_PATTERN, "Report for a presentation benchmark")
-                        , new Item(MenuBuildServlet.URL_PATTER, "List of samples (builder)")
                         };
         return result;
     }
