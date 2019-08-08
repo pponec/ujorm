@@ -132,6 +132,14 @@
             <artifactId>ujo-tools</artifactId>
             <version>1.92-SNAPSHOT</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-tools</artifactId>
+            <version>1.92-SNAPSHOT</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Static analyzer support -->
         <dependency>

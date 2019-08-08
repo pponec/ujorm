@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2018 Pavel Ponec
+ *  Copyright 2019-2019 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujorm.tools.jdbc;
+package org.ujorm.tools.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,28 +24,28 @@ import java.time.LocalDate;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.ujorm.tools.jdbc.AbstractJdbcConnector;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
- * Testing the JdbcBuillder class
+ * Testing the SqlBuillder class
  * @author Pavel Ponec
  */
-public class JdbcBuilderTest extends AbstractJdbcConnector {
+public class SqlBuilderTest extends AbstractJdbcConnector {
 
-    /** Some testing date */
+     /** Some testing date */
     private final LocalDate someDate = LocalDate.parse("2018-09-12");
 
     /** Test SQL SELECT of class JdbcBuillder. */
     @Test
     public void testSelect() {
         System.out.println("SELECT");
-        JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.SELECT)
-            .column("t.id")
-            .column("t.name")
-            .write(Sql.FROM)
-            .write("testTable t")
-            .write(Sql.WHERE)
+        SqlBuilder sql = new SqlBuilder()
+            .select("t.id", "t.name")
+            .from("testTable t")
+            .where()
             .andCondition("t.name", Sql.EQ, "Test")
             .andCondition("t.created", Sql.GE, someDate)
             ;
@@ -62,9 +62,8 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     @Test
     public void testInsert() {
         System.out.println("INSERT");
-        JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.INSERT_INTO)
-            .write("testTable")
+        SqlBuilder sql = new SqlBuilder()
+            .insert("testTable")
             .write("(")
             .columnInsert("id", 10)
             .columnInsert("name", "A name")
@@ -84,19 +83,14 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     @Test
     public void testInsertBySelect() {
         System.out.println("INSERT by SELECT");
-        JdbcBuilder select = new JdbcBuilder()
-            .write(Sql.SELECT)
-            .column("t.id + 100")
-            .column("t.name")
-            .column("t.created")
-            .write(Sql.FROM)
-            .write("testTable t")
-            .write(Sql.WHERE)
+        SqlBuilder select = new SqlBuilder()
+            .select("t.id + 100", "t.name", "t.created")
+            .from("testTable t")
+            .where()
             .andCondition("t.id", Sql.LT, 100)
             ;
-        JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.INSERT_INTO)
-            .write("testTable")
+        SqlBuilder sql = new SqlBuilder()
+            .insert("testTable")
             .write("(")
             .column("id")
             .column("name")
@@ -116,9 +110,8 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     @Test @Deprecated
     public void testInsertRaw() {
         System.out.println("INSERT");
-        JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.INSERT_INTO)
-            .write("testTable")
+        SqlBuilder sql = new SqlBuilder()
+            .insert("testTable")
             .write("(")
             .column("id")
             .column("name")
@@ -144,13 +137,11 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     @Test
     public void testUpdate() {
         System.out.println("UPDATE");
-        JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.UPDATE)
-            .write("testTable")
-            .write(Sql.SET)
+        SqlBuilder sql = new SqlBuilder()
+            .update("testTable")
             .columnUpdate("name", "Test")
             .columnUpdate("created", someDate)
-            .write(Sql.WHERE)
+            .where()
             .andCondition("id", Sql.IN, 10, 20, 30)
             .andCondition("created BETWEEN ? AND ?", Sql.UNDEFINED, someDate, someDate.plusMonths(1))
             .andCondition("name", Sql.IS_NOT_NULL)
@@ -182,21 +173,17 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     public void testUpdateBySelect() {
         System.out.println("UPDATE by SELECT");
 
-        JdbcBuilder select = new JdbcBuilder()
-            .write(Sql.SELECT)
-            .column("t.id")
-            .write(Sql.FROM)
-            .write("testTable t")
-            .write(Sql.WHERE)
+        SqlBuilder select = new SqlBuilder()
+            .select("t.id")
+            .from("testTable t")
+            .where()
             .andCondition("t.created", Sql.GE, someDate)
             ;
-        JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.UPDATE)
-            .write("testTable")
-            .write(Sql.SET)
+        SqlBuilder sql = new SqlBuilder()
+            .update("testTable")
             .columnUpdate("name", "Test")
             .columnUpdate("created", someDate.plusDays(11))
-            .write(Sql.WHERE)
+            .where()
             .writeMany("id", Sql.IN, "(")
             .write(select)
             .write(")")
@@ -235,9 +222,8 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     /** How to INSERT (no commit) */
     public void showInsert(@Nonnull Connection dbConnection) throws SQLException {
         System.out.println("Show INSERT");
-        JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.INSERT_INTO)
-            .write("testTable")
+        SqlBuilder sql = new SqlBuilder()
+            .insert("testTable")
             .write("(")
             .columnInsert("id", 10)
             .columnInsert("name", "A name")
@@ -253,13 +239,10 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     /** How to SELECT a list */
     public void showSelect_1(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
-        JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.SELECT)
-            .column("t.id")
-            .column("t.name")
-            .write(Sql.FROM)
-            .write("testTable t")
-            .write(Sql.WHERE)
+        SqlBuilder sql = new SqlBuilder()
+            .select("t.id", "t.name")
+            .from("testTable t")
+            .where()
             .andCondition("t.name", Sql.EQ, "A name")
             .andCondition("t.created", Sql.LE, someDate)
             ;
@@ -279,13 +262,10 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
    /** How to SELECT a list using a lambda expression */
     public void showSelect_2(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
-        JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.SELECT)
-            .column("t.id")
-            .column("t.name") // unused column
-            .write(Sql.FROM)
-            .write("testTable t")
-            .write(Sql.WHERE)
+        SqlBuilder sql = new SqlBuilder()
+            .select("t.id", "t.name")
+            .from("testTable t")
+            .where()
             .andCondition("t.name", Sql.EQ, "A name")
             .andCondition("t.created", Sql.LE, someDate)
             ;
@@ -298,12 +278,10 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     /** How to SELECT single value */
     public void showSelectForSingleValue(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
-        JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.SELECT)
-            .column("t.name")
-            .write(Sql.FROM)
-            .write("testTable t")
-            .write(Sql.WHERE)
+        SqlBuilder sql = new SqlBuilder()
+            .select("t.name")
+            .from("testTable t")
+            .where()
             .andCondition("t.id", Sql.EQ, 10)
             ;
         String name = sql.uniqueValue(String.class, dbConnection);
@@ -313,12 +291,10 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     /** How to UPDATE single value (no commit) */
     public void showUpdate(@Nonnull Connection dbConnection) {
         System.out.println("Show UPDATE");
-        JdbcBuilder sql = new JdbcBuilder()
-            .write(Sql.UPDATE)
-            .write("testTable")
-            .write(Sql.SET)
+        SqlBuilder sql = new SqlBuilder()
+            .update("testTable")
             .columnUpdate("created", someDate.plusDays(1))
-            .write(Sql.WHERE)
+            .where()
             .andCondition("id", Sql.IN, 10, 20, 30)
             .andCondition("created" + Sql.BETWEEN_X_AND_Y, null, someDate, someDate.plusMonths(1))
             .andCondition("name", Sql.IS_NOT_NULL)

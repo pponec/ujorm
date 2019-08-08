@@ -78,7 +78,7 @@ import org.ujorm.tools.set.LoopingIterator;
  * href="https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/test/java/org/ujorm/tools/jdbc/JdbcBuilderTest.java#L33">jUnit</a> test.
  * @author Pavel Ponec
  */
-public final class JdbcBuilder implements Serializable {
+public class JdbcBuilder implements Serializable {
 
     /** Separator of database columns */
     public static final SqlEnvelope ITEM_SEPARATOR = new SqlEnvelope(",");
