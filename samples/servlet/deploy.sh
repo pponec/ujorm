@@ -8,7 +8,7 @@ msg="ERROR"
 
 cd $pdir \
 && /opt/maven/default/bin/mvn clean install \
-&& scp target/*.war ponec@ujorm.org:$web/ROOT.war \
+&& rsync -v target/*.war ponec@ujorm.org:$web/ROOT.war \
 && msg=OK
 
 echo Result: $msg
