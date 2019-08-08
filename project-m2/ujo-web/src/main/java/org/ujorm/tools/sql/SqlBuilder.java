@@ -79,7 +79,7 @@ public class SqlBuilder extends JdbcBuilder {
     public SqlBuilder select(@Nonnull final CharSequence ... columns) {
         super.write(Sql.SELECT);
         for (CharSequence column : columns) {
-            super.write(column);
+            super.column(column);
         }
         return this;
     }
@@ -179,7 +179,7 @@ public class SqlBuilder extends JdbcBuilder {
     }
 
     @Override
-    public SqlBuilder column(CharSequence column) {
+    public final SqlBuilder column(CharSequence column) {
         return (SqlBuilder) super.column(column);
     }
 
