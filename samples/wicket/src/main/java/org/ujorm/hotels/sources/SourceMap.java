@@ -35,6 +35,7 @@ import org.ujorm.hotels.gui.customer.CustomerTable;
 import org.ujorm.hotels.gui.hotel.HotelEditor;
 import org.ujorm.hotels.gui.hotel.HotelTable;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
+import org.ujorm.hotels.gui.params.ParamsEditor;
 import org.ujorm.hotels.gui.params.ParamsTable;
 import org.ujorm.hotels.service.impl.CommonServiceImpl;
 import org.ujorm.hotels.service.impl.ParamServiceImpl;
@@ -52,7 +53,7 @@ public class SourceMap implements Serializable {
         classMap.put(HotelTable.class, array(HotelEditor.class, Toolbar.class, CommonServiceImpl.class, Hotel.class, ApplicationParams.class));
         classMap.put(BookingTable.class, array(BookingEditor.class, Booking.class, ApplicationParams.class));
         classMap.put(CustomerTable.class, array(CustomerEditor.class, Customer.class, ApplicationParams.class));
-        classMap.put(ParamsTable.class, array(ApplicationParams.class, ParamServiceImpl.class, ParamValue.class, ParamKey.class));
+        classMap.put(ParamsTable.class, array(ApplicationParams.class, ParamServiceImpl.class, ParamValue.class, ParamKey.class, ParamsEditor.class));
     }
 
     /** Build an array */
