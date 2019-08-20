@@ -42,7 +42,8 @@ import org.ujorm.tools.jdbc.JdbcBuilder;
  * <h3>How to use a INSERT</h3>
  * <pre class="pre">
  * SqlBuilder sql = <strong>new</strong> SqlBuilder()
- *     .super.write("INSERT INTO testTable (")
+ *     .insert("testTable")
+ *     .write("(")
  *     .columnInsert("id", 10)
  *     .columnInsert("name", "Test")
  *     .columnInsert("date", someDate)
@@ -53,10 +54,10 @@ import org.ujorm.tools.jdbc.JdbcBuilder;
  * <h3>How to use a UPDATE</h3>
  * <pre class="pre">
  * SqlBuilder sql = <strong>new</strong> SqlBuilder()
- *     .super.write("UPDATE testTable SET")
+ *     .update("testTable")
  *     .columnUpdate("name", "Test")
  *     .columnUpdate("date", SOME_DATE)
- *     .super.write("WHERE")
+ *     .where()
  *     .andCondition("id", "IN", 10, 20, 30)
  *     .andCondition("created BETWEEN ? AND ?", <strong>null</strong>, someDate, someDate.plusMonths(1))
  *     .andCondition("name", "IS NOT NULL")
