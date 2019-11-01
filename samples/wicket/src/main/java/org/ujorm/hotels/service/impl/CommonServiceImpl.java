@@ -50,10 +50,15 @@ import static org.ujorm.tools.Check.hasLength;
 public class CommonServiceImpl implements CommonService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonServiceImpl.class);
 
-    @Inject private AuthService authService;
+    /** Common DAO layer */
+    private final CommonDao<OrmUjo> dao;
 
-    /** DAO layer */
-    @Inject private CommonDao<OrmUjo> dao;
+    @Inject
+    private AuthService authService;
+
+    public CommonServiceImpl(CommonDao<OrmUjo> dao) {
+        this.dao = dao;
+    }
 
     /** Read only sign */
     private boolean readOnly;

@@ -26,6 +26,7 @@ import org.ujorm.hotels.gui.MainApplication;
 import org.ujorm.hotels.service.ParamService;
 import org.ujorm.hotels.service.impl.CommonServiceImpl;
 import org.ujorm.orm.OrmHandlerProvider;
+import org.ujorm.orm.OrmUjo;
 import org.ujorm.spring.CommonDao;
 import org.ujorm.spring.UjormTransactionManager;
 
@@ -47,13 +48,13 @@ public class SpringContext {
 
     /** A configuration provider */
     @Bean(name = SpringContext.ORM_HANDLER, initMethod = "init")
-    public OrmHandlerProvider ormHandlerProvider() {
+    OrmHandlerProvider ormHandlerProvider() {
         return new DatabaseConfig();
     }
 
     /** Transaction Manager */
     @Bean(name = SpringContext.TRANSACTION_MANAGER)
-    public UjormTransactionManager txManager() {
+    UjormTransactionManager txManager() {
         final UjormTransactionManager result = new UjormTransactionManager();
         result.setOrmHandlerProvider(ormHandlerProvider());
         return result;
@@ -61,26 +62,26 @@ public class SpringContext {
 
     /** Common DAO object */
     @Bean
-    public CommonDao commonDao() {
-        return new CommonDao(txManager());
+    CommonDao commonDao(UjormTransactionManager tm) {
+        return new CommonDao(tm);
     }
 
     /** Configuration of the DemoHotels application */
     @Bean
-    public CommonServiceImpl dbServiceImpl() {
-        final CommonServiceImpl result = new CommonServiceImpl();
+    CommonServiceImpl dbServiceImpl(CommonDao<OrmUjo> dao) {
+        final CommonServiceImpl result = new CommonServiceImpl(dao);
         result.setReadOnly(false);
         result.setMeasuringCode(false);
         return result;
     }
 
     @Bean("cacheManager")
-    public EhCacheCacheManager ehCacheCacheManager() {
+    EhCacheCacheManager ehCacheCacheManager() {
         return new EhCacheCacheManager(ehCacheManagerFactoryBean().getObject());
     }
 
     @Bean
-    public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
+    EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
         EhCacheManagerFactoryBean result = new EhCacheManagerFactoryBean();
         result.setConfigLocation(new ClassPathResource("/ehcache.xml"));
         result.setShared(true);
