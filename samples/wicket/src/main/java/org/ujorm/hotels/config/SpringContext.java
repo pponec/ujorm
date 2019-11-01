@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017-2017 Pavel Ponec
+ *  Copyright 2017-2019 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 package org.ujorm.hotels.config;
 
+import javax.inject.Named;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -47,22 +49,22 @@ public class SpringContext {
     public static final String ORM_HANDLER = "ormHandler";
 
     /** A configuration provider */
-    @Bean(name = SpringContext.ORM_HANDLER, initMethod = "init")
-    OrmHandlerProvider ormHandlerProvider() {
-        return new DatabaseConfig();
+    @Bean(name=SpringContext.ORM_HANDLER, initMethod = "init")
+    OrmHandlerProvider ormHandlerProvider(ApplicationContext ctx) {
+        return new DatabaseConfig(ctx);
     }
 
     /** Transaction Manager */
     @Bean(name = SpringContext.TRANSACTION_MANAGER)
-    UjormTransactionManager txManager() {
+    UjormTransactionManager txManager(@Named(SpringContext.ORM_HANDLER) OrmHandlerProvider ormHandler) {
         final UjormTransactionManager result = new UjormTransactionManager();
-        result.setOrmHandlerProvider(ormHandlerProvider());
+        result.setOrmHandlerProvider(ormHandler);
         return result;
     }
 
     /** Common DAO object */
     @Bean
-    CommonDao commonDao(UjormTransactionManager tm) {
+    CommonDao commonDao(@Named(SpringContext.TRANSACTION_MANAGER) UjormTransactionManager tm) {
         return new CommonDao(tm);
     }
 

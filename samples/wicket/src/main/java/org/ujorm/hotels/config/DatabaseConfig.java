@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013-2014 Pavel Ponec
+ *  Copyright 2013-2019 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,11 +15,9 @@
  */
 package org.ujorm.hotels.config;
 
-import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
 import org.ujorm.hotels.config.demoData.DataLoader;
 import org.ujorm.hotels.gui.MainApplication;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -30,7 +28,6 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.support.PackageDbConfig;
 
 /** Build and configure database meta-model */
-@Service
 public final class DatabaseConfig implements OrmHandlerProvider {
     /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseConfig.class);
@@ -38,8 +35,12 @@ public final class DatabaseConfig implements OrmHandlerProvider {
     /** Database meta-model */
     final OrmHandler handler = new OrmHandler();
 
-    @Inject
-    private ApplicationContext applicationContext;
+    /** Spring context */
+    private final ApplicationContext applicationContext;
+
+    public DatabaseConfig(ApplicationContext ctx) {
+        this.applicationContext = ctx;
+    }
 
     /** Initializa handler */
     public void init() {
