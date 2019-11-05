@@ -88,7 +88,7 @@ public abstract class Assert {
     public static final  <M> void isTrue(final boolean condition, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!condition) {
-            throw new IllegalArgumentException(format(message), new NullPointerException());
+            throw new IllegalArgumentException(format(message));
         }
     }
 
@@ -227,7 +227,7 @@ public abstract class Assert {
     public static final void isFalse(final boolean condition, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (condition) {
-            throw new IllegalArgumentException(format(message), new NullPointerException());
+            throw new IllegalArgumentException(format(message));
         }
     }
 
