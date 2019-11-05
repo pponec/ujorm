@@ -18,6 +18,9 @@ package org.ujorm.tools.set;
 
 import java.io.Closeable;
 import java.util.Iterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * An exteded {@link Iterator} is suitable for use in the  {@code for ( ; ; )} statement.
@@ -28,4 +31,8 @@ import java.util.Iterator;
 
 public interface LoopingIterator<T> extends Iterator<T>, Iterable<T>, Closeable {
 
+    /** Convert to a Stream */
+    default Stream<T> toStream() {
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(this, 0), false);
+    }
 }
