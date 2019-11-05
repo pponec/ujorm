@@ -356,6 +356,12 @@ public final class MetaParams extends AbstractMetaModel {
         }
     }
 
+    /** Get an application context,  */
+    @Nullable
+    public <T> T getApplicationContext() {
+        return (T) APPL_CONTEXT.of(this);
+    }
+
     /** Throws an unchecked exception due an InstantiationException */
     private <T> T throwInstantiationException(final Class<?> type, final Exception e) throws IllegalUjormException {
         throw new IllegalUjormException(INSTANCE_FAILED_MSG + type, e);
