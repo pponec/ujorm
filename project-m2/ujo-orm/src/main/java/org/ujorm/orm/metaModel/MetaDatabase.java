@@ -118,6 +118,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public static final Key<MetaDatabase,Class<? extends UjoSequencer>> SEQUENCER = fa.newClassKey("sequencer", UjoSequencer.class);
     /** A policy to defining the database structure by a DDL.
      * @see Orm2ddlPolicy Parameter values
+     * @see #READ_ONLY
      */
     public static final Key<MetaDatabase,Orm2ddlPolicy> ORM2DLL_POLICY = fa.newKey("orm2ddlPolicy", Orm2ddlPolicy.INHERITED);
     /** List of tables */
