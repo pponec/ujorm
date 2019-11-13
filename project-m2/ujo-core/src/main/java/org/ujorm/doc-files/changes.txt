@@ -2,8 +2,16 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.92-SNAPSHOT (2019-10-01)
+release 1.93-SNAPSHOT (yyyy-mm-dd)
 + ...
+
+release 1.92 (2019-11-13)
++ ORM: An read-only database support is fixed.
++ ORM: new method MetaParams.getApplicationContext() is available.
++ TOOLS: Two methods are improved: Assert.isTrue() & Assert.isFalse()
++ TOOLS: UjoTools: New method LoopingIterator.toStream() is available.
++ HOTELS: Spring config cleaning
++ JavaDoc is extended
 
 release 1.91 (2019-05-26)
 + ORM: A default session is closed now, see the issue for detail: https://github.com/pponec/ujorm/issues/1
