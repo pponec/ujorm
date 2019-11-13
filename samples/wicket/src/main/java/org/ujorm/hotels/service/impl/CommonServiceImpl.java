@@ -1,5 +1,5 @@
 /*
- * Copyright 2014, Pavel Ponec
+ * Copyright 2014-2019, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,14 +51,10 @@ public class CommonServiceImpl implements CommonService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonServiceImpl.class);
 
     /** Common DAO layer */
-    private final CommonDao<OrmUjo> dao;
+    @Inject private CommonDao<OrmUjo> dao;
 
-    @Inject
-    private AuthService authService;
-
-    public CommonServiceImpl(CommonDao<OrmUjo> dao) {
-        this.dao = dao;
-    }
+    /** Authentication service */
+    @Inject private AuthService authService;
 
     /** Read only sign */
     private boolean readOnly;

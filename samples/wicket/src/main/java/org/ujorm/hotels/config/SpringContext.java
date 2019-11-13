@@ -28,7 +28,6 @@ import org.ujorm.hotels.gui.MainApplication;
 import org.ujorm.hotels.service.ParamService;
 import org.ujorm.hotels.service.impl.CommonServiceImpl;
 import org.ujorm.orm.OrmHandlerProvider;
-import org.ujorm.orm.OrmUjo;
 import org.ujorm.spring.CommonDao;
 import org.ujorm.spring.UjormTransactionManager;
 
@@ -70,8 +69,8 @@ public class SpringContext {
 
     /** Configuration of the DemoHotels application */
     @Bean
-    CommonServiceImpl dbServiceImpl(CommonDao<OrmUjo> dao) {
-        final CommonServiceImpl result = new CommonServiceImpl(dao);
+    CommonServiceImpl dbServiceImpl() {
+        final CommonServiceImpl result = new CommonServiceImpl();
         result.setReadOnly(false);
         result.setMeasuringCode(false);
         return result;
