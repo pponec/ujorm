@@ -583,6 +583,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public boolean isSequenceTableRequired() {
         for (MetaTable table : TABLES.getList(this)) {
             if (table.isTable()
+            && !table.isReadOnly()
             &&  table.getSequencer().isSequenceTableRequired()) {
                 return true;
             }
