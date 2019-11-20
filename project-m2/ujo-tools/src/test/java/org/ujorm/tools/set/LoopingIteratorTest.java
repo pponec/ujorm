@@ -72,8 +72,8 @@ public class LoopingIteratorTest {
 
     public class LoopingIteratorImpl implements LoopingIterator<Integer> {
 
+        final int max = 3;
         int value = 0;
-        int max = 3;
         boolean closed = false;
 
         @Override
