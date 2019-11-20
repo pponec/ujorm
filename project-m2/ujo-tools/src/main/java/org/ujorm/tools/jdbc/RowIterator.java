@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Pavel Ponec
+ * Copyright 2008 - 2018 Pavel Ponec
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/jdbc/RowIterator.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,16 @@ import javax.annotation.Nullable;
 import org.ujorm.tools.set.LoopingIterator;
 
 /**
- * ResultSetIterator
+ * An Iterator for the ResultSet items.
+ *
+ * <h3>Usage</h3>
+ * <pre class="pre">
+ *     new RowIterator(ps).toStream().forEach((RsConsumer)(resultSet) -> {
+ *         int value = resultSet.getInt(1);
+ *         System.out.println(" value: " + value);
+ *     });
+ * </pre>
+ *
  * @see JdbcBuilder
  * @author Pavel Ponec
  * @since 1.86
