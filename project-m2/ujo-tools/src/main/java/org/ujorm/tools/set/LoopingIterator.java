@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2018 Pavel Ponec
+ *  Copyright 2009-2019 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,10 +17,13 @@
 package org.ujorm.tools.set;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import javax.annotation.Nonnull;
+import org.ujorm.tools.jdbc.RowIterator;
 
 /**
  * An exteded {@link Iterator} is suitable for use in the  {@code for ( ; ; )} statement.
@@ -31,8 +34,18 @@ import java.util.stream.StreamSupport;
 
 public interface LoopingIterator<T> extends Iterator<T>, Iterable<T>, Closeable {
 
-    /** Convert to a Stream */
+    /** Convert to a closeable Stream */
+    @Nonnull
     default Stream<T> toStream() {
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(this, 0), false);
+        final Stream<T> result = StreamSupport
+                .stream(Spliterators.spliteratorUnknownSize(this, 0), false);
+        result.onClose(() -> {
+            try {
+                close();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+        });
+        return result;
     }
 }
