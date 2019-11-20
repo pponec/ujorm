@@ -34,7 +34,10 @@ import org.ujorm.tools.jdbc.RowIterator;
 
 public interface LoopingIterator<T> extends Iterator<T>, Iterable<T>, Closeable {
 
-    /** Convert to a closeable Stream */
+    /** Convert to a closeable Stream
+     *
+     * @see RowIterator class implementation for example how to use
+     */
     @Nonnull
     default Stream<T> toStream() {
         final Stream<T> result = StreamSupport
