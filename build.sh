@@ -31,6 +31,6 @@ do
     )
 done
 
-echo "Finished"
+echo "Release $RELEASE is done"
 
 
