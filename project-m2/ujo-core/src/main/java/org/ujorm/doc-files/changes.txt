@@ -2,8 +2,11 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.93-SNAPSHOT (yyyy-mm-dd)
+release 1.94-SNAPSHOT (yyyy-mm-dd)
 + ...
+
+release 1.93-SNAPSHOT (2019-11-20)
++ ORM: new method LoopingIterator.toStream() is ready to a common use
 
 release 1.92 (2019-11-13)
 + ORM: An read-only database support is fixed.
