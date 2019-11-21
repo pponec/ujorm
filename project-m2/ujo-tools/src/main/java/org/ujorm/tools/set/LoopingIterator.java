@@ -19,7 +19,6 @@ package org.ujorm.tools.set;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
@@ -34,21 +33,29 @@ import org.ujorm.tools.jdbc.RowIterator;
 
 public interface LoopingIterator<T> extends Iterator<T>, Iterable<T>, Closeable {
 
+    /**
+     * Returns the same object to iterate over elements of type {@code T}.
+     *
+     * @return an Iterator.
+     */
+    @Nonnull
+    @Override
+    default Iterator<T> iterator() {
+        return this;
+    }
+
     /** Convert to a closeable Stream
      *
      * @see RowIterator class implementation for example how to use
      */
     @Nonnull
     default Stream<T> toStream() {
-        final Stream<T> result = StreamSupport
-                .stream(Spliterators.spliteratorUnknownSize(this, 0), false);
-        result.onClose(() -> {
+        return StreamSupport.stream(spliterator(), false).onClose(() -> {
             try {
                 close();
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
         });
-        return result;
     }
 }

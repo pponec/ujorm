@@ -16,7 +16,6 @@
 package org.ujorm.tools.set;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.stream.Stream;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -84,11 +83,6 @@ public class LoopingIteratorTest {
         @Override
         public Integer next() {
             return value++;
-        }
-
-        @Override
-        public Iterator iterator() {
-            return this;
         }
 
         @Override

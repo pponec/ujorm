@@ -57,12 +57,6 @@ public class RowIterator implements LoopingIterator<ResultSet> {
         this.ps = ps;
     }
 
-    /** Method returns the same instance only */
-    @Override
-    public RowIterator iterator() {
-        return this;
-    }
-
     /** The last checking closes all resources. */
     @Override
     public boolean hasNext() throws IllegalStateException {
