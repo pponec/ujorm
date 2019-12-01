@@ -17,6 +17,8 @@
 package org.ujorm.tools.thread;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -24,6 +26,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -69,7 +72,7 @@ public class MultiRun<P> {
     /**
      * @param timeout The maximum time to wait
      */
-    protected <R> Function<CompletableFuture<R>, R> createGrabber(@Nonnull final Duration timeout)
+    protected <R> Function<CompletableFuture<R>, R> createGrabber(@Nonnull final Duration timeout) {
         return new Function<CompletableFuture<R>, R>() {
 
             @Override
@@ -89,7 +92,6 @@ public class MultiRun<P> {
     }
 
     // --- Static methods ---
-
 
     public static <P> MultiRun<P> params(@Nonnull final Stream<P> params) {
         return new MultiRun<P>(params);
