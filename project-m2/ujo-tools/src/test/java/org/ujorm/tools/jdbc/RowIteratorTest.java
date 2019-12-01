@@ -45,6 +45,24 @@ public class RowIteratorTest extends AbstractJdbcConnector {
         assertEquals(1, counter[0]);
     }
 
+    /**
+     * Test of iterator method, of class RowIterator.
+     */
+    @Test
+    public void testNoStreamIteration() throws ClassNotFoundException, SQLException {
+        final int[] counter = {0};
+        try (Connection dbConnection = createTestConnection()) {
+            try (PreparedStatement ps = dbConnection.prepareStatement("SELECT * FROM testTable")) {
+                new RowIterator(ps).forEach((RsConsumer)(resultSet) -> {
+                    int value = resultSet.getInt(1);
+                    System.out.println(" value: " + value);
+                    counter[0]++;
+                });
+            }
+        }
+        assertEquals(1, counter[0]);
+    }
+
     /** Crete new DB connection */
     private Connection createTestConnection() throws ClassNotFoundException, SQLException {
         Connection result = super.createDbConnection();
