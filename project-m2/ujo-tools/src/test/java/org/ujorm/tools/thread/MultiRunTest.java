@@ -18,7 +18,6 @@
 package org.ujorm.tools.thread;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
@@ -43,13 +42,12 @@ public class MultiRunTest {
      */
     @Test
     public void testGetStream() {
-        System.out.println("getStream");
-        Duration duration = Duration.ofSeconds(3);
+        System.out.println("run");
+        Duration timeout = Duration.ofSeconds(3);
 
-        MultiRun<Integer> instance = MultiRun.params(1, 2, 3);
-        Stream<Long> stream = instance.getSingle(duration, p -> p * 10L);
+        Stream<Long> result = MultiRun.params(1, 2, 3).run(p -> p * 10L, timeout);
 
-        List<Long> sortedList = stream.sorted().collect(Collectors.toList());
+        List<Long> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());
         assertEquals(10L, sortedList.get(0).longValue());
     }
@@ -58,52 +56,46 @@ public class MultiRunTest {
      * Test of getSingle method, of class MultiRun.
      */
     @Test
-    public void testGetSingle() {
-        System.out.println("getSingle");
-        Duration duration = Duration.ofSeconds(3);
+    public void testRunToStream() {
+        System.out.println("runToStream");
+        Duration timeout = Duration.ofSeconds(3);
 
-        MultiRun<Integer> instance = MultiRun.params(1, 2, 3);
-        Stream<Long> stream = instance.getStream(duration, (Integer p) -> Arrays.asList(p * 10L, p * 100L).stream());
+        Stream<Long> result = MultiRun.params(1, 2, 3).runToStream(p -> Stream.of(p * 10L, p * 100L), timeout);
 
-        List<Long> sortedList = stream.sorted().collect(Collectors.toList());
+        List<Long> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(6, sortedList.size());
         assertEquals(10L, sortedList.get(0).longValue());
     }
 
-        /**
+    /**
      * Test of getSingle method, of class MultiRun.
      */
     @Test
     public void testGetTimeout() {
         System.out.println("getSingle");
-        Duration duration = Duration.ofMillis(100);
-        Exception result;
-        List<Long> sortedList = null;
+        Duration timeout = Duration.ofMillis(100);
+        MultiRunException result = null;
+        Stream<Long> stream = null;
 
         try {
-           MultiRun<Integer> instance = MultiRun.params(100, 200, 400);
-           Stream<Long> stream = instance.getSingle(duration, (Integer p) -> sleep(p));
-           sortedList = stream.sorted().collect(Collectors.toList());
-           result = null;
-        } catch (Exception e) {
+            stream = MultiRun.params(100, 200, 400).run(p -> sleep(p), timeout);
+        } catch (MultiRunException e) {
             result = e;
         }
 
+        assertTrue(stream == null);
         assertTrue(result != null);
-        assertTrue(result.getClass().equals(MultiRunException.class));
-        assertTrue(result.getCause().getClass().equals(TimeoutException.class));
-        assertTrue(sortedList == null);
+        assertTrue(result.getCause() instanceof TimeoutException);
     }
 
-    private Long sleep(Integer millis) {
+    private long sleep(int millis) {
         try {
             Thread.sleep(millis);
-            return (long) millis;
+            return millis;
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, "An interrupting of the test", e);
             return -1L;
         }
     }
-
 
 }

@@ -33,40 +33,61 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 /**
  * A multi task runner
  * @author Pavel Ponec
+ *
+ * @see https://stackoverflow.com/questions/53435098/completablefuture-supplyasync-with-stream-map
+ * @see https://www.baeldung.com/java-completablefuture
  */
 public class MultiRun<P> {
 
     /** Job arguments */
     private final Stream<P> params;
 
-    public MultiRun(@Nonnull final Stream<P> params) {
+    protected MultiRun(@Nonnull final Stream<P> params) {
         this.params = params;
     }
 
-    /** Get result as a Stream
-     * @param timeout The maximum time to wait
-     * @param job Job with a stream result
+    /** Get of single values where a nulls are excluded. A default timeout one hour.
+     * @param job Job with a simple value result
      * @return The result stream
-     * */
-    public <R> Stream<R> getStream(@Nonnull final Duration timeout, @Nonnull final Function<P, Stream<R>> job)
+     */
+    final public <R> Stream<R> get(@Nonnull final Function<P, R> job)
             throws MultiRunException {
-        return params.map(params -> CompletableFuture.supplyAsync(() -> job.apply(params)))
-                .collect(Collectors.toList()).stream() // For a parallel processing!
-                .map(createGrabber(timeout))
-                .flatMap(Function.identity()); // Join all streams
+        return run(job, defaultDuration());
     }
 
-    /** Get a single value result where a null values are excluded
+    /** Get of single values where a nulls are excluded
      * @param timeout The maximum time to wait
      * @param job Job with a simple value result
      * @return The result stream
      */
-    public <R> Stream<R> getSingle(@Nonnull final Duration timeout, @Nonnull final Function<P, R> job)
+    public <R> Stream<R> run(@Nonnull final Function<P, R> job, @Nonnull final Duration timeout)
             throws MultiRunException {
         return params.map(params -> CompletableFuture.supplyAsync(() -> job.apply(params)))
                 .collect(Collectors.toList()).stream() // For a parallel processing!
                 .map(createGrabber(timeout))
                 .filter(Objects::nonNull);
+    }
+
+    /** Get result of a Stream. A default timeout one hour.
+     * @param job Job with a stream result
+     * @return The result stream
+     * */
+    final public <R> Stream<R> getOfStream(@Nonnull final Function<P, Stream<R>> job)
+            throws MultiRunException {
+        return runToStream(job, defaultDuration());
+    }
+
+    /** Get result of a Stream
+     * @param timeout The maximum time to wait
+     * @param job Job with a stream result
+     * @return The result stream
+     * */
+    public <R> Stream<R> runToStream(@Nonnull final Function<P, Stream<R>> job, @Nonnull final Duration timeout)
+            throws MultiRunException {
+        return params.map(params -> CompletableFuture.supplyAsync(() -> job.apply(params)))
+                .collect(Collectors.toList()).stream() // For a parallel processing!
+                .map(createGrabber(timeout))
+                .flatMap(Function.identity()); // Join all streams
     }
 
     /**
@@ -91,6 +112,11 @@ public class MultiRun<P> {
         };
     }
 
+    /** A default duration is the one hour */
+    protected Duration defaultDuration() {
+        return Duration.ofHours(1);
+    }
+
     // --- Static methods ---
 
     public static <P> MultiRun<P> params(@Nonnull final Stream<P> params) {
@@ -102,7 +128,7 @@ public class MultiRun<P> {
     }
 
     public static <P> MultiRun<P> params(@Nonnull final P... params) {
-        return params(Arrays.asList(params));
+        return new MultiRun<P>(Arrays.stream(params));
     }
 
     public static <P> MultiRun<P> params(@Nonnull final Iterable<P> params) {
@@ -117,7 +143,6 @@ public class MultiRun<P> {
         public MultiRunException(@Nonnull final Throwable cause) {
             super(cause);
         }
-
     }
 
 }
