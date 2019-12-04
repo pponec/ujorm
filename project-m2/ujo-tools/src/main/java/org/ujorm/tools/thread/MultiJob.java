@@ -31,18 +31,18 @@ import javax.annotation.Nonnull;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
- * A multi task runner
+ * A multithreading task runner
  * @author Pavel Ponec
  *
  * @see https://stackoverflow.com/questions/53435098/completablefuture-supplyasync-with-stream-map
  * @see https://www.baeldung.com/java-completablefuture
  */
-public class MultiRun<P> {
+public class MultiJob<P> {
 
     /** Job arguments */
     private final Stream<P> params;
 
-    protected MultiRun(@Nonnull final Stream<P> params) {
+    protected MultiJob(@Nonnull final Stream<P> params) {
         this.params = params;
     }
 
@@ -50,7 +50,7 @@ public class MultiRun<P> {
      * @param job Job with a simple value result
      * @return The result stream
      */
-    final public <R> Stream<R> get(@Nonnull final Function<P, R> job)
+    final public <R> Stream<R> run(@Nonnull final Function<P, R> job)
             throws MultiRunException {
         return run(job, defaultDuration());
     }
@@ -72,7 +72,7 @@ public class MultiRun<P> {
      * @param job Job with a stream result
      * @return The result stream
      * */
-    final public <R> Stream<R> getOfStream(@Nonnull final Function<P, Stream<R>> job)
+    final public <R> Stream<R> runToStream(@Nonnull final Function<P, Stream<R>> job)
             throws MultiRunException {
         return runToStream(job, defaultDuration());
     }
@@ -119,20 +119,20 @@ public class MultiRun<P> {
 
     // --- Static methods ---
 
-    public static <P> MultiRun<P> params(@Nonnull final Stream<P> params) {
-        return new MultiRun<P>(params);
+    public static <P> MultiJob<P> forParams(@Nonnull final Stream<P> params) {
+        return new MultiJob<P>(params);
     }
 
-    public static <P> MultiRun<P> params(@Nonnull final List<P> params) {
-        return params(params.stream());
+    public static <P> MultiJob<P> forParams(@Nonnull final List<P> params) {
+        return forParams(params.stream());
     }
 
-    public static <P> MultiRun<P> params(@Nonnull final P... params) {
-        return new MultiRun<P>(Arrays.stream(params));
+    public static <P> MultiJob<P> forParams(@Nonnull final P... params) {
+        return new MultiJob<P>(Arrays.stream(params));
     }
 
-    public static <P> MultiRun<P> params(@Nonnull final Iterable<P> params) {
-        return params(StreamSupport.stream(params.spliterator(), false));
+    public static <P> MultiJob<P> forParams(@Nonnull final Iterable<P> params) {
+        return forParams(StreamSupport.stream(params.spliterator(), false));
     }
 
     // --- Class or Interfaces ---

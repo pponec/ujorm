@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.Test;
-import org.ujorm.tools.thread.MultiRun.MultiRunException;
+import org.ujorm.tools.thread.MultiJob.MultiRunException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -45,7 +45,7 @@ public class MultiRunTest {
         System.out.println("run");
         Duration timeout = Duration.ofSeconds(3);
 
-        Stream<Long> result = MultiRun.params(1, 2, 3).run(p -> p * 10L, timeout);
+        Stream<Long> result = MultiJob.forParams(1, 2, 3).run(p -> p * 10L, timeout);
 
         List<Long> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());
@@ -60,7 +60,7 @@ public class MultiRunTest {
         System.out.println("runToStream");
         Duration timeout = Duration.ofSeconds(3);
 
-        Stream<Long> result = MultiRun.params(1, 2, 3).runToStream(p -> Stream.of(p * 10L, p * 100L), timeout);
+        Stream<Long> result = MultiJob.forParams(1, 2, 3).runToStream(p -> Stream.of(p * 10L, p * 100L), timeout);
 
         List<Long> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(6, sortedList.size());
@@ -78,7 +78,7 @@ public class MultiRunTest {
         Stream<Long> stream = null;
 
         try {
-            stream = MultiRun.params(100, 200, 400).run(p -> sleep(p), timeout);
+            stream = MultiJob.forParams(100, 200, 400).run(p -> sleep(p), timeout);
         } catch (MultiRunException e) {
             result = e;
         }
