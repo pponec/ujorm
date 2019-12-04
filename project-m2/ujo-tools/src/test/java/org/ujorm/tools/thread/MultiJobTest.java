@@ -110,7 +110,7 @@ public class MultiJobTest {
         assertTrue(duration.getSeconds() < (jobCount / 4));
         assertEquals(jobCount * 1_000, (long) sum);
 
-        logger.log(Level.INFO, String.format("My work took %s seconds.", duration.getSeconds()));
+        logger.log(Level.INFO, "My work took {0} seconds.", duration.getSeconds());
     }
 
     /**
@@ -136,13 +136,14 @@ public class MultiJobTest {
         assertTrue(duration.getSeconds() < (jobCount / 4));
         assertEquals(jobCount * 1_000, (long) sum);
 
-        logger.log(Level.INFO, String.format("My work took %s seconds.", duration.getSeconds()));
+        logger.log(Level.INFO, "My work took {0} seconds.", duration.getSeconds());
     }
 
     private long sleep(int millis) {
         try {
             Thread.sleep(millis);
-            logger.log(Level.INFO, "Waiting {} millis", millis);
+            logger.log(Level.INFO, "Sleeping {0} millis on {1}",
+                     new Object[]{ millis, LocalDateTime.now()} );
             return millis;
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, "An interrupting of the test", e);
