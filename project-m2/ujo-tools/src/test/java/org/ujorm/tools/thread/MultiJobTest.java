@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-
 package org.ujorm.tools.thread;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
@@ -66,17 +67,19 @@ public class MultiJobTest {
     }
 
     /**
-     * Test of getSingle method, of class MultiRun.
+     * Check a timeout
      */
     @Test
-    public void testGetTimeout() {
-        System.out.println("getSingle");
+    public void testCheckTimeout() {
+        System.out.println("getTimeout");
         Duration timeout = Duration.ofMillis(100);
         MultiJobException result = null;
         Stream<Long> stream = null;
 
         try {
-            stream = MultiJob.forParams(100, 200, 400).run(p -> sleep(p), timeout);
+            MultiJob.forParams(100, 200, 500).run(p -> sleep(p), timeout)
+                .mapToLong(Long::longValue)
+                .sum();
         } catch (MultiJobException e) {
             result = e;
         }
@@ -84,6 +87,56 @@ public class MultiJobTest {
         assertTrue(stream == null);
         assertTrue(result != null);
         assertTrue(result.getCause() instanceof TimeoutException);
+    }
+
+    /**
+     * Check Time of work..
+     */
+    @Test
+    public void testTimeOfWork() {
+        System.out.println("timeOfWork");
+
+        int jobCount = 100;
+        Integer[] params = new Integer[jobCount];
+        Arrays.fill(params, 1);
+
+        LocalDateTime start = LocalDateTime.now();
+        long sum = MultiJob.forParams(params).run(p -> sleep(p * 1_000))
+                .mapToLong(Long::longValue)
+                .sum();
+        LocalDateTime stop = LocalDateTime.now();
+
+        Duration duration = Duration.between(start, stop);
+        assertTrue(duration.getSeconds() < (jobCount / 4));
+        assertEquals(jobCount * 1_000, (long) sum);
+
+        logger.log(Level.INFO, String.format("My work took %s seconds.", duration.getSeconds()));
+    }
+
+    /**
+     * Check Time of ParallelStream.
+     */
+    @Test
+    public void testTimeOfParallelStream() {
+        System.out.println("timeOfParallelStream");
+
+        int jobCount = 100;
+        Integer[] params = new Integer[jobCount];
+        Arrays.fill(params, 1);
+
+        LocalDateTime start = LocalDateTime.now();
+        long sum = Arrays.stream(params)
+                .parallel()
+                .map(p -> sleep(p * 1_000))
+                .mapToLong(Long::longValue)
+                .sum();
+        LocalDateTime stop = LocalDateTime.now();
+
+        Duration duration = Duration.between(start, stop);
+        assertTrue(duration.getSeconds() < (jobCount / 4));
+        assertEquals(jobCount * 1_000, (long) sum);
+
+        logger.log(Level.INFO, String.format("My work took %s seconds.", duration.getSeconds()));
     }
 
     private long sleep(int millis) {
