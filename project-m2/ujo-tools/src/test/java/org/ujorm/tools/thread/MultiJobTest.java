@@ -59,10 +59,10 @@ public class MultiJobTest {
     public void testRunToStream() {
         System.out.println("runToStream");
 
-        Stream<Long> result = MultiJob.forParams(1, 2, 3).runToStream(p -> Stream.of(p * 10L, p * 100L));
+        Stream<Long> result = MultiJob.forParams(1, 2, 3).runToStream(p -> Stream.of(p * 10L));
 
         List<Long> sortedList = result.sorted().collect(Collectors.toList());
-        assertEquals(6, sortedList.size());
+        assertEquals(3, sortedList.size());
         assertEquals(10L, sortedList.get(0).longValue());
     }
 
@@ -78,8 +78,7 @@ public class MultiJobTest {
 
         try {
             MultiJob.forParams(100, 200, 500).run(p -> sleep(p), timeout)
-                .mapToLong(Long::longValue)
-                .sum();
+                .collect(Collectors.toList());
         } catch (MultiJobException e) {
             result = e;
         }
@@ -96,21 +95,21 @@ public class MultiJobTest {
     public void testTimeOfWork() {
         System.out.println("timeOfWork");
 
-        int jobCount = 100;
+        int jobCount = 50;
         Integer[] params = new Integer[jobCount];
         Arrays.fill(params, 1);
 
         LocalDateTime start = LocalDateTime.now();
-        long sum = MultiJob.forParams(params).run(p -> sleep(p * 1_000))
-                .mapToLong(Long::longValue)
-                .sum();
+        List<Long> list = MultiJob.forParams(params).run(p -> sleep(p * 1_000)) // 1 sec
+                   .collect(Collectors.toList());
         LocalDateTime stop = LocalDateTime.now();
 
         Duration duration = Duration.between(start, stop);
-        assertTrue(duration.getSeconds() < (jobCount / 4));
-        assertEquals(jobCount * 1_000, (long) sum);
-
-        logger.log(Level.INFO, "My work took {0} seconds.", duration.getSeconds());
+        assertTrue(String.format("Real working time was %s sec",
+                duration.getSeconds()),
+                duration.getSeconds() < (jobCount / 5));
+        assertEquals(jobCount, list.size());
+        logger.log(Level.INFO, "Real working time was {0} seconds.", duration.getSeconds());
     }
 
     /**
@@ -120,23 +119,23 @@ public class MultiJobTest {
     public void testTimeOfParallelStream() {
         System.out.println("timeOfParallelStream");
 
-        int jobCount = 100;
+        int jobCount = 50;
         Integer[] params = new Integer[jobCount];
         Arrays.fill(params, 1);
 
         LocalDateTime start = LocalDateTime.now();
-        long sum = Arrays.stream(params)
+        List<Long> list = Arrays.stream(params)
                 .parallel()
-                .map(p -> sleep(p * 1_000))
-                .mapToLong(Long::longValue)
-                .sum();
+                .map(p -> sleep(p * 1_000)) // 1 sec
+                .collect(Collectors.toList());
         LocalDateTime stop = LocalDateTime.now();
 
         Duration duration = Duration.between(start, stop);
-        assertTrue(duration.getSeconds() < (jobCount / 4));
-        assertEquals(jobCount * 1_000, (long) sum);
-
-        logger.log(Level.INFO, "My work took {0} seconds.", duration.getSeconds());
+        assertTrue(String.format("Real working time  was %s sec",
+                duration.getSeconds()),
+                duration.getSeconds() < (jobCount / 5));
+        assertEquals(jobCount, list.size());
+        logger.log(Level.INFO, "Real working time was {0} seconds.", duration.getSeconds());
     }
 
     private long sleep(int millis) {
