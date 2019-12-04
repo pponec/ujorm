@@ -51,7 +51,7 @@ public class MultiJob<P> {
      * @return The result stream
      */
     final public <R> Stream<R> run(@Nonnull final Function<P, R> job)
-            throws MultiRunException {
+            throws MultiJobException {
         return run(job, defaultDuration());
     }
 
@@ -61,7 +61,7 @@ public class MultiJob<P> {
      * @return The result stream
      */
     public <R> Stream<R> run(@Nonnull final Function<P, R> job, @Nonnull final Duration timeout)
-            throws MultiRunException {
+            throws MultiJobException {
         return params.map(params -> CompletableFuture.supplyAsync(() -> job.apply(params)))
                 .collect(Collectors.toList()).stream() // For a parallel processing!
                 .map(createGrabber(timeout))
@@ -73,7 +73,7 @@ public class MultiJob<P> {
      * @return The result stream
      * */
     final public <R> Stream<R> runToStream(@Nonnull final Function<P, Stream<R>> job)
-            throws MultiRunException {
+            throws MultiJobException {
         return runToStream(job, defaultDuration());
     }
 
@@ -83,7 +83,7 @@ public class MultiJob<P> {
      * @return The result stream
      * */
     public <R> Stream<R> runToStream(@Nonnull final Function<P, Stream<R>> job, @Nonnull final Duration timeout)
-            throws MultiRunException {
+            throws MultiJobException {
         return params.map(params -> CompletableFuture.supplyAsync(() -> job.apply(params)))
                 .collect(Collectors.toList()).stream() // For a parallel processing!
                 .map(createGrabber(timeout))
@@ -101,7 +101,7 @@ public class MultiJob<P> {
                 try {
                     return convert(t);
                 } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    throw new MultiRunException(e);
+                    throw new MultiJobException(e);
                 }
             }
 
@@ -138,9 +138,9 @@ public class MultiJob<P> {
     // --- Class or Interfaces ---
 
     /** Internal exception */
-    public static class MultiRunException extends IllegalStateException {
+    public static class MultiJobException extends IllegalStateException {
 
-        public MultiRunException(@Nonnull final Throwable cause) {
+        public MultiJobException(@Nonnull final Throwable cause) {
             super(cause);
         }
     }
