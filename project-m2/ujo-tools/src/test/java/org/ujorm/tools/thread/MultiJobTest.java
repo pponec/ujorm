@@ -38,6 +38,9 @@ public class MultiJobTest {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
 
+    /** There is 1000 milliseconds in one second.  */
+    private final int MILLIS_IN_SEC = 1_000;
+
     /**
      * Test of getStream method, of class MultiRun.
      */
@@ -95,19 +98,21 @@ public class MultiJobTest {
     public void testTimeOfWork() {
         System.out.println("timeOfWork");
 
-        int jobCount = 50;
+        int jobCount = 100;
         Integer[] params = new Integer[jobCount];
         Arrays.fill(params, 1);
 
         LocalDateTime start = LocalDateTime.now();
-        List<Long> list = MultiJob.forParams(params).run(p -> sleep(p * 1_000)) // 1 sec
+        List<Long> list = MultiJob.forParams(params)
+                .setNewFixedThreadPool(jobCount)
+                .run(p -> sleep(p * MILLIS_IN_SEC)) // 1 sec
                    .collect(Collectors.toList());
         LocalDateTime stop = LocalDateTime.now();
 
         Duration duration = Duration.between(start, stop);
-        assertTrue(String.format("Real working time was %s sec",
-                duration.getSeconds()),
-                duration.getSeconds() < (jobCount / 5));
+        assertTrue(String.format("Real working time was %s millis",
+                duration.toMillis()),
+                duration.toMillis() <= 1.15 * MILLIS_IN_SEC);
         assertEquals(jobCount, list.size());
         logger.log(Level.INFO, "Real working time was {0} seconds.", duration.getSeconds());
     }
@@ -119,21 +124,21 @@ public class MultiJobTest {
     public void testTimeOfParallelStream() {
         System.out.println("timeOfParallelStream");
 
-        int jobCount = 50;
+        int jobCount = 100;
         Integer[] params = new Integer[jobCount];
         Arrays.fill(params, 1);
 
         LocalDateTime start = LocalDateTime.now();
         List<Long> list = Arrays.stream(params)
                 .parallel()
-                .map(p -> sleep(p * 1_000)) // 1 sec
+                .map(p -> sleep(p * MILLIS_IN_SEC)) // 1 sec
                 .collect(Collectors.toList());
         LocalDateTime stop = LocalDateTime.now();
 
         Duration duration = Duration.between(start, stop);
-        assertTrue(String.format("Real working time  was %s sec",
-                duration.getSeconds()),
-                duration.getSeconds() < (jobCount / 5));
+        assertTrue(String.format("Real working time was %s millis",
+                duration.toMillis()),
+                duration.toMillis() <= 14.5 * MILLIS_IN_SEC);
         assertEquals(jobCount, list.size());
         logger.log(Level.INFO, "Real working time was {0} seconds.", duration.getSeconds());
     }
