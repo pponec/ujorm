@@ -5,10 +5,10 @@ The Ujorm release notes
 release 1.95-SNAPSHOT (yyyy-mm-dd)
 + ...
 
-release 1.94-SNAPSHOT (2019-12-04)
+release 1.94 (2019-12-05)
 + TOOLS: A new MultiJob class is ready for mulithreading tasks
 
-release 1.93-SNAPSHOT (2019-11-20)
+release 1.93 (2019-11-20)
 + ORM: new method LoopingIterator.toStream() is ready to a common use
 
 release 1.92 (2019-11-13)
