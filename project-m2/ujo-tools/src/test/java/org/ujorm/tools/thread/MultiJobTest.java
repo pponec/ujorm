@@ -77,7 +77,7 @@ public class MultiJobTest {
         Stream<Long> stream = null;
 
         try {
-            MultiJob.forParams(100, 200, 500).run(p -> sleep(p), timeout)
+            MultiJob.forParams(100, 200, 500).setTimeout(timeout).run(p -> sleep(p))
                 .collect(Collectors.toList());
         } catch (MultiJobException e) {
             result = e;

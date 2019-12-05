@@ -28,63 +28,59 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
+import org.ujorm.tools.Assert;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * A multithreading task runner
  * @author Pavel Ponec
  *
- * @see https://stackoverflow.com/questions/53435098/completablefuture-supplyasync-with-stream-map
+ * @see https://dzone.com/articles/think-twice-using-java-8
  * @see https://www.baeldung.com/java-completablefuture
  */
 public class MultiJob<P> {
 
     /** Job arguments */
-    private final Stream<P> params;
+    final protected Stream<P> params;
+
+    /** A timeout where a default duration is the one hour */
+    @Nonnull
+    protected Duration timeout = Duration.ofHours(1);
 
     protected MultiJob(@Nonnull final Stream<P> params) {
         this.params = params;
     }
 
-    /** Get of single values where a nulls are excluded. A default timeout one hour.
-     * @param job Job with a simple value result
-     * @return The result stream
+    /**
+     * Set a timeout where a default duration is the one hour
+     * @param timeout The maximum time to wait.
+     * @return The same object
      */
-    final public <R> Stream<R> run(@Nonnull final Function<P, R> job)
-            throws MultiJobException {
-        return run(job, defaultDuration());
+    public MultiJob<P> setTimeout(@Nonnull final Duration timeout) {
+        this.timeout = Assert.notNull(timeout, "The {} is required", "timeout");
+        return this;
     }
 
     /** Get of single values where a nulls are excluded
-     * @param timeout The maximum time to wait
+
      * @param job Job with a simple value result
      * @return The result stream
      */
-    public <R> Stream<R> run(@Nonnull final Function<P, R> job, @Nonnull final Duration timeout)
+    public <R> Stream<R> run(@Nonnull final Function<P, R> job)
             throws MultiJobException {
-        return params.map(params -> CompletableFuture.supplyAsync(() -> job.apply(params)))
+        return params.map(p -> CompletableFuture.supplyAsync(() -> job.apply(p)))
                 .collect(Collectors.toList()).stream() // For a parallel processing!
                 .map(createGrabber(timeout))
                 .filter(Objects::nonNull);
     }
 
-    /** Get result of a Stream. A default timeout one hour.
-     * @param job Job with a stream result
-     * @return The result stream
-     * */
-    final public <R> Stream<R> runToStream(@Nonnull final Function<P, Stream<R>> job)
-            throws MultiJobException {
-        return runToStream(job, defaultDuration());
-    }
-
     /** Get result of a Stream
-     * @param timeout The maximum time to wait
      * @param job Job with a stream result
      * @return The result stream
      * */
-    public <R> Stream<R> runToStream(@Nonnull final Function<P, Stream<R>> job, @Nonnull final Duration timeout)
+    public <R> Stream<R> runToStream(@Nonnull final Function<P, Stream<R>> job)
             throws MultiJobException {
-        return params.map(params -> CompletableFuture.supplyAsync(() -> job.apply(params)))
+        return params.map(p -> CompletableFuture.supplyAsync(() -> job.apply(p)))
                 .collect(Collectors.toList()).stream() // For a parallel processing!
                 .map(createGrabber(timeout))
                 .flatMap(Function.identity()); // Join all streams
@@ -110,11 +106,6 @@ public class MultiJob<P> {
                 return t.get(timeout.toMillis(), MILLISECONDS);
             }
         };
-    }
-
-    /** A default duration is the one hour */
-    protected Duration defaultDuration() {
-        return Duration.ofHours(1);
     }
 
     // --- Static methods ---
@@ -144,5 +135,4 @@ public class MultiJob<P> {
             super(cause);
         }
     }
-
 }
