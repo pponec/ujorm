@@ -24,6 +24,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -44,6 +47,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 public class MultiJob<P> {
 
     /** Job arguments */
+    @Nonnull
     final protected Stream<P> params;
 
     /** A timeout where a default duration is the one hour */
@@ -51,10 +55,11 @@ public class MultiJob<P> {
     protected Duration timeout = Duration.ofHours(1);
 
     /** Executor contains a thread pool */
+    @Nullable
     protected Executor executor;
 
     protected MultiJob(@Nonnull final Stream<P> params) {
-        this.params = params;
+        this.params = Assert.notNull(params, "The {} is required", "params");
     }
 
     /**
@@ -84,6 +89,21 @@ public class MultiJob<P> {
         return setExecutor(Executors.newFixedThreadPool(nThreads));
     }
 
+    /**
+     * Assign a new Fixed Thread Pool
+     * @param nThreads
+     * @param keepAliveTime when the number of threads is greater than
+     *        the core, this is the maximum time that excess idle threads
+     *        will wait for new tasks before terminating.
+     * @return The same object
+     */
+    public MultiJob<P> setNewFixedThreadPool(final int nThreads,
+            @Nonnull final Duration keepAliveTime) {
+        return setExecutor(new ThreadPoolExecutor(nThreads, nThreads,
+                keepAliveTime.toMillis(), TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>()));
+    }
+
     /** Get of single values where a nulls are excluded
 
      * @param job Job with a simple value result
@@ -91,10 +111,7 @@ public class MultiJob<P> {
      */
     public <R> Stream<R> run(@Nonnull final Function<P, R> job)
             throws MultiJobException {
-        final Function<P, CompletableFuture<R>> async = executor != null
-                ? p -> CompletableFuture.supplyAsync(() -> job.apply(p), executor)
-                : p -> CompletableFuture.supplyAsync(() -> job.apply(p));
-        return params.map(async)
+        return params.map(getAsync(job))
                 .collect(Collectors.toList()).stream() // join all threads
                 .map(createGrabber(timeout))
                 .filter(Objects::nonNull);
@@ -106,10 +123,17 @@ public class MultiJob<P> {
      * */
     public <R> Stream<R> runToStream(@Nonnull final Function<P, Stream<R>> job)
             throws MultiJobException {
-        return params.map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), executor))
+        return params.map(getAsync(job))
                 .collect(Collectors.toList()).stream() // join all threads
                 .map(createGrabber(timeout))
                 .flatMap(Function.identity()); // Join all streams
+    }
+
+    /** Create an async function */
+    protected <R> Function<P, CompletableFuture<R>> getAsync(@Nonnull final Function<P, R> job) {
+        return executor != null
+                ? p -> CompletableFuture.supplyAsync(() -> job.apply(p), executor)
+                : p -> CompletableFuture.supplyAsync(() -> job.apply(p));
     }
 
     /**
