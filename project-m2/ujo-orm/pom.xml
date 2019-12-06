@@ -5,7 +5,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-orm</artifactId>
     <packaging>jar</packaging>
-    <version>1.94-SNAPSHOT</version>
+    <version>1.95-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-orm</name>
     <description>The Ujorm is designed for rapid Java development with great performance
@@ -143,7 +143,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>1.94-SNAPSHOT</version>
+            <version>1.95-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 

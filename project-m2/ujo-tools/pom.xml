@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-tools</artifactId>
     <packaging>jar</packaging>
-    <version>1.94-SNAPSHOT</version>
+    <version>1.95-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-tools</name>
     <description>Ujorm-tools module is a basic library tools for common use</description>
