@@ -62,7 +62,7 @@ public class MultiJobTest {
     public void testRunToStream() {
         System.out.println("runToStream");
 
-        Stream<Long> result = MultiJob.forParams(1, 2, 3).runToStream(p -> Stream.of(p * 10L));
+        Stream<Long> result = MultiJob.forParams(1, 2, 3).runOfStream(p -> Stream.of(p * 10L));
 
         List<Long> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());

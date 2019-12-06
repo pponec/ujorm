@@ -104,7 +104,7 @@ public class MultiJob<P> {
                 new LinkedBlockingQueue<>()));
     }
 
-    /** Get of single values where a nulls are excluded
+    /** Get of single values where all nulls are excluded
 
      * @param job Job with a simple value result
      * @return The result stream
@@ -117,16 +117,28 @@ public class MultiJob<P> {
                 .filter(Objects::nonNull);
     }
 
-    /** Get result of a Stream
+    /** Get result of a Streams
      * @param job Job with a stream result
      * @return The result stream
      * */
-    public <R> Stream<R> runToStream(@Nonnull final Function<P, Stream<R>> job)
+    public <R> Stream<R> runOfStream(@Nonnull final Function<P, Stream<R>> job)
             throws MultiJobException {
         return params.map(getAsync(job))
                 .collect(Collectors.toList()).stream() // join all threads
                 .map(createGrabber(timeout))
                 .flatMap(Function.identity()); // Join all streams
+    }
+
+    /** Get a sum of job results type of {@code long}
+     *
+     * @param job Job with a simple value result
+     * @return The sum of job results
+     */
+    public <R> long runOfSum(@Nonnull final Function<P, Long> job)
+            throws MultiJobException {
+        return run(job)
+                .mapToLong(Function.identity())
+                .sum();
     }
 
     /** Create an async function */
