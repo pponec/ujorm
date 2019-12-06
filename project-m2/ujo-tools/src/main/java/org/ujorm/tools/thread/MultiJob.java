@@ -137,7 +137,7 @@ public class MultiJob<P> {
     public <R> long runOfSum(@Nonnull final Function<P, Long> job)
             throws MultiJobException {
         return run(job)
-                .mapToLong(Function.identity())
+                .mapToLong(n -> n)
                 .sum();
     }
 
