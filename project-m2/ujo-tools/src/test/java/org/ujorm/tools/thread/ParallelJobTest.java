@@ -123,7 +123,6 @@ public class ParallelJobTest {
         logger.log(Level.INFO, "Real working time was {0} seconds.", duration.getSeconds());
     }
 
-
     /**
      * Check Time of paralel work..
      */
