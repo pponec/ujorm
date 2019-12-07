@@ -24,9 +24,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -46,6 +43,9 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  */
 public class MultiJob<P> {
 
+    /** Template message for an invalid input */
+    protected static final String REQUIRED_INPUT_TEMPLATE_MSG = "The {} is required";
+
     /** Job arguments */
     @Nonnull
     final protected Stream<P> params;
@@ -59,7 +59,7 @@ public class MultiJob<P> {
     protected Executor executor;
 
     protected MultiJob(@Nonnull final Stream<P> params) {
-        this.params = Assert.notNull(params, "The {} is required", "params");
+        this.params = Assert.notNull(params, REQUIRED_INPUT_TEMPLATE_MSG, "params");
     }
 
     /**
@@ -68,7 +68,7 @@ public class MultiJob<P> {
      * @return The same object
      */
     public MultiJob<P> setTimeout(@Nonnull final Duration timeout) {
-        this.timeout = Assert.notNull(timeout, "The {} is required", "timeout");
+        this.timeout = Assert.notNull(timeout, REQUIRED_INPUT_TEMPLATE_MSG, "timeout");
         return this;
     }
 
@@ -89,27 +89,12 @@ public class MultiJob<P> {
         return setExecutor(Executors.newFixedThreadPool(nThreads));
     }
 
-    /**
-     * Assign a new Fixed Thread Pool
-     * @param nThreads
-     * @param keepAliveTime when the number of threads is greater than
-     *        the core, this is the maximum time that excess idle threads
-     *        will wait for new tasks before terminating.
-     * @return The same object
-     */
-    public MultiJob<P> setNewFixedThreadPool(final int nThreads,
-            @Nonnull final Duration keepAliveTime) {
-        return setExecutor(new ThreadPoolExecutor(nThreads, nThreads,
-                keepAliveTime.toMillis(), TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<>()));
-    }
-
     /** Get of single values where all nulls are excluded
 
      * @param job Job with a simple value result
      * @return The result stream
      */
-    public <R> Stream<R> run(@Nonnull final Function<P, R> job)
+    public <R> Stream<R> run(@Nonnull final MyFunction<P, R> job)
             throws MultiJobException {
         return params.map(getAsync(job))
                 .collect(Collectors.toList()).stream() // join all threads
@@ -121,7 +106,7 @@ public class MultiJob<P> {
      * @param job Job with a stream result
      * @return The result stream
      * */
-    public <R> Stream<R> runOfStream(@Nonnull final Function<P, Stream<R>> job)
+    public <R> Stream<R> runOfStream(@Nonnull final MyFunction<P, Stream<R>> job)
             throws MultiJobException {
         return params.map(getAsync(job))
                 .collect(Collectors.toList()).stream() // join all threads
@@ -134,7 +119,7 @@ public class MultiJob<P> {
      * @param job Job with a simple value result
      * @return The sum of job results
      */
-    public <R> long runOfSum(@Nonnull final Function<P, Long> job)
+    public <R> long runOfSum(@Nonnull final MyFunction<P, Long> job)
             throws MultiJobException {
         return run(job)
                 .mapToLong(n -> n)
@@ -142,7 +127,7 @@ public class MultiJob<P> {
     }
 
     /** Create an async function */
-    protected <R> Function<P, CompletableFuture<R>> getAsync(@Nonnull final Function<P, R> job) {
+    protected <R> Function<P, CompletableFuture<R>> getAsync(@Nonnull final MyFunction<P, R> job) {
         return executor != null
                 ? p -> CompletableFuture.supplyAsync(() -> job.apply(p), executor)
                 : p -> CompletableFuture.supplyAsync(() -> job.apply(p));
@@ -190,11 +175,37 @@ public class MultiJob<P> {
 
     // --- Class or Interfaces ---
 
-    /** Internal exception */
-    public static class MultiJobException extends IllegalStateException {
+    /** An envelope for checked exceptions */
+    public static final class MultiJobException extends IllegalStateException {
 
         public MultiJobException(@Nonnull final Throwable cause) {
-            super(cause);
+            super(Assert.notNull(cause, REQUIRED_INPUT_TEMPLATE_MSG, "cause"));
         }
+
+        @Nonnull @Override
+        public Throwable getCause() {
+            return super.getCause(); //To change body of generated methods, choose Tools | Templates.
+        }
+    }
+
+    public interface MyFunction<T, R> extends Function<T, R> {
+
+        @Override
+        default public R apply(final T t) {
+            try {
+                return function(t);
+            } catch (Exception e) {
+                if (e instanceof RuntimeException) {
+                    throw (RuntimeException) e;
+                } else {
+                    throw new MultiJobException(e);
+                }
+            }
+        }
+
+        /** Applies this function to the given argument */
+        R function(T t) throws Exception;
+
+
     }
 }
