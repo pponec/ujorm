@@ -170,7 +170,7 @@ public class ParallelJobTest {
         Duration duration = Duration.between(start, stop);
         assertTrue(String.format("Real working time was %s millis",
                 duration.toMillis()),
-                duration.toMillis() <= 14.5 * MILLIS_IN_SEC);
+                duration.toMillis() <= 15.5 * MILLIS_IN_SEC);
         assertEquals(jobCount, list.size());
         logger.log(Level.INFO, "Real working time was {0} seconds.", duration.getSeconds());
     }
