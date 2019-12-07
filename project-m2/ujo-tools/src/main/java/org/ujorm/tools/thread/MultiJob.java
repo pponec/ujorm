@@ -1,5 +1,6 @@
 /*
  * Copyright 2019-2019 Pavel Ponec
+ * Original source of Ujorm framework: https://bit.ly/340mx4T
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
