@@ -17,8 +17,7 @@
 package org.ujorm.tools.thread;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -161,16 +160,41 @@ public class MultiJob<P> {
         return new MultiJob<P>(params);
     }
 
-    public static <P> MultiJob<P> forParams(@Nonnull final List<P> params) {
+    public static <P> MultiJob<P> forParams(@Nonnull final Collection<P> params) {
         return forParams(params.stream());
     }
 
     public static <P> MultiJob<P> forParams(@Nonnull final P... params) {
-        return new MultiJob<P>(Arrays.stream(params));
+        return new MultiJob<P>(Stream.of(params));
     }
 
     public static <P> MultiJob<P> forParams(@Nonnull final Iterable<P> params) {
         return forParams(StreamSupport.stream(params.spliterator(), false));
+    }
+
+    /**
+     * @param params All aguments
+     * @param multiThread Multithreading can be disabled
+     * @return
+     */
+    public static <P> MultiJob<P> forParams(@Nonnull final Stream<P> params, final boolean multiThread) {
+        if (multiThread) {
+            return forParams(params, false);
+        } else {
+            return new MultiJob<P>(params) {
+                @Override
+                public <R> Stream<R> run(@Nonnull final MyFunction<P, R> job)
+                        throws MultiJobException {
+                    return params.map(job).filter(Objects::nonNull);
+                }
+
+                @Override
+                public <R> Stream<R> runOfStream(@Nonnull final MyFunction<P, Stream<R>> job)
+                        throws MultiJobException {
+                    return params.map(job).flatMap(Function.identity());
+                }
+            };
+        }
     }
 
     // --- Class or Interfaces ---

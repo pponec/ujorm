@@ -94,11 +94,11 @@ public class MultiJobTest {
     }
 
     /**
-     * Check Time of work..
+     * Check Time of parallel work.
      */
     @Test
-    public void testTimeOfWork() {
-        System.out.println("timeOfWork");
+    public void testTimeOfParalellWork() {
+        System.out.println("timeOfParalellWork");
 
         int jobCount = 100;
         Integer[] params = new Integer[jobCount];
@@ -115,6 +115,36 @@ public class MultiJobTest {
         assertTrue(String.format("Real working time was %s millis",
                 duration.toMillis()),
                 duration.toMillis() <= 1.15 * MILLIS_IN_SEC);
+        assertTrue(String.format("Real working time was %s millis",
+                duration.toMillis()),
+                duration.toMillis() > 1.00 * MILLIS_IN_SEC);
+        assertEquals(jobCount, list.size());
+        logger.log(Level.INFO, "Real working time was {0} seconds.", duration.getSeconds());
+    }
+
+
+    /**
+     * Check Time of paralel work..
+     */
+    @Test
+    public void testTimeOfSequentialWork() {
+        System.out.println("timeOfSequentialWork");
+
+        int jobCount = 10;
+        Integer[] params = new Integer[jobCount];
+        Arrays.fill(params, 1);
+
+        LocalDateTime start = LocalDateTime.now();
+        List<Long> list = MultiJob.forParams(Stream.of(params), false)
+                .setNewFixedThreadPool(jobCount)
+                .run(p -> sleep(p * MILLIS_IN_SEC)) // 1 sec
+                   .collect(Collectors.toList());
+        LocalDateTime stop = LocalDateTime.now();
+
+        Duration duration = Duration.between(start, stop);
+        assertTrue(String.format("Real working time was %s millis",
+                duration.toMillis()),
+                duration.toMillis() > jobCount * MILLIS_IN_SEC);
         assertEquals(jobCount, list.size());
         logger.log(Level.INFO, "Real working time was {0} seconds.", duration.getSeconds());
     }
