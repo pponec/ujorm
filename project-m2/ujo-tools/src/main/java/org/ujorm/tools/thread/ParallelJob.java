@@ -17,13 +17,14 @@
 
 package org.ujorm.tools.thread;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -32,17 +33,16 @@ import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * A multithreading task runner
  * @author Pavel Ponec
  *
- * @see https://dzone.com/articles/think-twice-using-java-8
- * @see https://www.baeldung.com/java-completablefuture
- * @since 1.94
+ * @see https://www.baeldung.com/java-fork-join
+ * @see https://stackoverflow.com/questions/21163108/custom-thread-pool-in-java-8-parallel-stream
+ * @since 1.95
  */
-public class MultiJob<P> {
+public class ParallelJob<P> {
 
     /** Template message for an invalid input */
     protected static final String REQUIRED_INPUT_TEMPLATE_MSG = "The {} is required";
@@ -57,9 +57,9 @@ public class MultiJob<P> {
 
     /** Executor contains a thread pool */
     @Nullable
-    protected Executor executor;
+    protected ForkJoinPool executor;
 
-    protected MultiJob(@Nonnull final Stream<P> params) {
+    protected ParallelJob(@Nonnull final Stream<P> params) {
         this.params = Assert.notNull(params, REQUIRED_INPUT_TEMPLATE_MSG, "params");
     }
 
@@ -68,17 +68,22 @@ public class MultiJob<P> {
      * @param timeout The maximum time to wait.
      * @return The same object
      */
-    public MultiJob<P> setTimeout(@Nonnull final Duration timeout) {
+    public ParallelJob<P> setTimeout(@Nonnull final Duration timeout) {
         this.timeout = Assert.notNull(timeout, REQUIRED_INPUT_TEMPLATE_MSG, "timeout");
         return this;
     }
 
     /** Assign an excecutor where the {@code null} value activates a default executor.
-     * @param executor For examle: {@code Executors.newFixedThreadPool(10)}
+     * @param pool For examle: {@code Executors.newFixedThreadPool(10)}
      */
-    public MultiJob<P> setExecutor(@Nullable final Executor executor) {
-        this.executor = executor;
+    public ParallelJob<P> setExecutor(@Nullable final ForkJoinPool pool) {
+        this.executor = pool;
         return this;
+    }
+
+    @Nonnull
+    public ForkJoinPool getExcecutor() {
+        return executor != null ? executor : ForkJoinPool.commonPool();
     }
 
     /**
@@ -86,8 +91,8 @@ public class MultiJob<P> {
      * @param nThreads the number of threads in the pool
      * @return The same object
      */
-    public MultiJob<P> setNewFixedThreadPool(final int nThreads) {
-        return setExecutor(Executors.newFixedThreadPool(nThreads));
+    public ParallelJob<P> setNewFixedThreadPool(final int nThreads) {
+        return setExecutor(new ForkJoinPool(nThreads));
     }
 
     /** Get of single values where all nulls are excluded
@@ -96,11 +101,19 @@ public class MultiJob<P> {
      * @return The result stream
      */
     public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
-            throws MultiJobException {
-        return params.map(getAsync(job))
-                .collect(Collectors.toList()).stream() // join all threads
-                .map(createGrabber(timeout))
-                .filter(Objects::nonNull);
+            throws ParallelJobException {
+
+        final ForkJoinPool forkJoinPool = getExcecutor();
+        forkJoinPool.getPoolSize();
+        try (Closeable c = () -> forkJoinPool.shutdown()) {
+            return forkJoinPool.submit(() -> params.parallel().map(job)
+                    .collect(Collectors.toList()))
+                    .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
+                    .stream()
+                    .filter(Objects::nonNull);
+        } catch (InterruptedException | ExecutionException | TimeoutException | IOException e) {
+            throw new ParallelJobException(e);
+        }
     }
 
     /** Get result of a Streams
@@ -108,11 +121,18 @@ public class MultiJob<P> {
      * @return The result stream
      * */
     public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
-            throws MultiJobException {
-        return params.map(getAsync(job))
-                .collect(Collectors.toList()).stream() // join all threads
-                .map(createGrabber(timeout))
-                .flatMap(Function.identity()); // Join all streams
+            throws ParallelJobException {
+
+        final ForkJoinPool forkJoinPool = getExcecutor();
+        try (Closeable c = () -> forkJoinPool.shutdown()) {
+            return forkJoinPool.submit(() -> params.parallel().map(job)
+                    .collect(Collectors.toList()))
+                    .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
+                    .stream()
+                    .flatMap(Function.identity()); // Join all streams
+        } catch (InterruptedException | ExecutionException | TimeoutException | IOException e) {
+            throw new ParallelJobException(e);
+        }
     }
 
     /** Get a sum of job results type of {@code long}
@@ -121,56 +141,27 @@ public class MultiJob<P> {
      * @return The sum of job results
      */
     public <R> long runOfSum(@Nonnull final UserFunction<P, Long> job)
-            throws MultiJobException {
+            throws ParallelJobException {
         return run(job)
                 .mapToLong(n -> n)
                 .sum();
     }
 
-    /** Create an async function */
-    protected <R> Function<P, CompletableFuture<R>> getAsync(@Nonnull final UserFunction<P, R> job) {
-        return executor != null
-                ? p -> CompletableFuture.supplyAsync(() -> job.apply(p), executor)
-                : p -> CompletableFuture.supplyAsync(() -> job.apply(p));
-    }
-
-    /**
-     * @param timeout The maximum time to wait
-     */
-    protected <R> Function<CompletableFuture<R>, R> createGrabber(@Nonnull final Duration timeout) {
-        return new Function<CompletableFuture<R>, R>() {
-
-            @Override
-            public R apply(@Nonnull final CompletableFuture<R> t) {
-                try {
-                    return convert(t);
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    throw new MultiJobException(e);
-                }
-            }
-
-            protected R convert(@Nonnull final CompletableFuture<R> t)
-                    throws InterruptedException, ExecutionException, TimeoutException {
-                return t.get(timeout.toMillis(), MILLISECONDS);
-            }
-        };
-    }
-
     // --- Static methods ---
 
-    public static <P> MultiJob<P> forParams(@Nonnull final Stream<P> params) {
-        return new MultiJob<>(params);
+    public static <P> ParallelJob<P> forParams(@Nonnull final Stream<P> params) {
+        return new ParallelJob<>(params);
     }
 
-    public static <P> MultiJob<P> forParams(@Nonnull final Collection<P> params) {
+    public static <P> ParallelJob<P> forParams(@Nonnull final Collection<P> params) {
         return forParams(params.stream());
     }
 
-    public static <P> MultiJob<P> forParams(@Nonnull final P... params) {
-        return new MultiJob<>(Stream.of(params));
+    public static <P> ParallelJob<P> forParams(@Nonnull final P... params) {
+        return new ParallelJob<>(Stream.of(params));
     }
 
-    public static <P> MultiJob<P> forParams(@Nonnull final Iterable<P> params) {
+    public static <P> ParallelJob<P> forParams(@Nonnull final Iterable<P> params) {
         return forParams(StreamSupport.stream(params.spliterator(), false));
     }
 
@@ -179,20 +170,20 @@ public class MultiJob<P> {
      * @param multiThread Multithreading can be disabled
      * @return
      */
-    public static <P> MultiJob<P> forParams(@Nonnull final Stream<P> params, final boolean multiThread) {
+    public static <P> ParallelJob<P> forParams(@Nonnull final Stream<P> params, final boolean multiThread) {
         if (multiThread) {
             return forParams(params, false);
         } else {
-            return new MultiJob<P>(params) {
+            return new ParallelJob<P>(params) {
                 @Override
                 public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
-                        throws MultiJobException {
+                        throws ParallelJobException {
                     return params.map(job).filter(Objects::nonNull);
                 }
 
                 @Override
                 public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
-                        throws MultiJobException {
+                        throws ParallelJobException {
                     return params.map(job).flatMap(Function.identity());
                 }
             };
@@ -202,9 +193,9 @@ public class MultiJob<P> {
     // --- Class or Interfaces ---
 
     /** An envelope for checked exceptions */
-    public static final class MultiJobException extends IllegalStateException {
+    public static final class ParallelJobException extends IllegalStateException {
 
-        public MultiJobException(@Nonnull final Throwable cause) {
+        public ParallelJobException(@Nonnull final Throwable cause) {
             super(Assert.notNull(cause, REQUIRED_INPUT_TEMPLATE_MSG, "cause"));
         }
 
@@ -224,14 +215,12 @@ public class MultiJob<P> {
                 if (e instanceof RuntimeException) {
                     throw (RuntimeException) e;
                 } else {
-                    throw new MultiJobException(e);
+                    throw new ParallelJobException(e);
                 }
             }
         }
 
         /** Applies this function to the given argument */
         R function(T t) throws Exception;
-
-
     }
 }
