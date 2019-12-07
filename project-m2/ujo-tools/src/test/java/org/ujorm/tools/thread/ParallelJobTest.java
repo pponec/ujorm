@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,7 +107,7 @@ public class ParallelJobTest {
 
         LocalDateTime start = LocalDateTime.now();
         List<Long> list = ParallelJob.forParams(params)
-                .setNewFixedThreadPool(jobCount)
+                .setExecutor(new ForkJoinPool(jobCount))
                 .run(p -> sleep(p * MILLIS_IN_SEC)) // 1 sec
                    .collect(Collectors.toList());
         LocalDateTime stop = LocalDateTime.now();
