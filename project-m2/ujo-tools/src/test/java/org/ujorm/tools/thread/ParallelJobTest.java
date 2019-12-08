@@ -49,11 +49,11 @@ public class ParallelJobTest {
     public void testGetStream() {
         System.out.println("run");
 
-        Stream<Long> result = ParallelJob.forParams(1, 2, 3).run(p -> p * 10L);
+        Stream<Integer> result = ParallelJob.forEach(1, 2, 3).run(p -> p * 10);
 
-        List<Long> sortedList = result.sorted().collect(Collectors.toList());
+        List<Integer> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());
-        assertEquals(10L, sortedList.get(0).longValue());
+        assertEquals(10, sortedList.get(0).intValue());
     }
 
     /**
@@ -63,11 +63,11 @@ public class ParallelJobTest {
     public void testRunToStream() {
         System.out.println("runToStream");
 
-        Stream<Long> result = ParallelJob.forParams(1, 2, 3).runOfStream(p -> Stream.of(p * 10L));
+        Stream<Integer> result = ParallelJob.forEach(1, 2, 3).runOfStream(p -> Stream.of(p * 10));
 
-        List<Long> sortedList = result.sorted().collect(Collectors.toList());
+        List<Integer> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());
-        assertEquals(10L, sortedList.get(0).longValue());
+        assertEquals(10L, sortedList.get(0).intValue());
     }
 
     /**
@@ -81,7 +81,7 @@ public class ParallelJobTest {
         Stream<Long> stream = null;
 
         try {
-            ParallelJob.forParams(100, 200, 500)
+            ParallelJob.forEach(100, 200, 500)
                     .setTimeout(timeout)
                     .run(p -> sleep(p))
                     .collect(Collectors.toList());
@@ -106,7 +106,7 @@ public class ParallelJobTest {
         Arrays.fill(params, 1);
 
         LocalDateTime start = LocalDateTime.now();
-        List<Long> list = ParallelJob.forParams(params)
+        List<Long> list = ParallelJob.forEach(params)
                 .setExecutor(new ForkJoinPool(jobCount))
                 .run(p -> sleep(p * MILLIS_IN_SEC)) // 1 sec
                    .collect(Collectors.toList());
@@ -135,7 +135,7 @@ public class ParallelJobTest {
         Arrays.fill(params, 1);
 
         LocalDateTime start = LocalDateTime.now();
-        List<Long> list = ParallelJob.forParams(Stream.of(params), false)
+        List<Long> list = ParallelJob.forEach(Stream.of(params), false)
                 .setNewFixedThreadPool(jobCount)
                 .run(p -> sleep(p * MILLIS_IN_SEC)) // 1 sec
                    .collect(Collectors.toList());

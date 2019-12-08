@@ -120,7 +120,7 @@ public class MultiJob<P> {
      * @param job Job with a simple value result
      * @return The sum of job results
      */
-    public <R> long runOfSum(@Nonnull final UserFunction<P, Long> job)
+    public <R> long runOfSum(@Nonnull final UserFunction<P, Integer> job)
             throws MultiJobException {
         return run(job)
                 .mapToLong(n -> n)
@@ -158,20 +158,20 @@ public class MultiJob<P> {
 
     // --- Static methods ---
 
-    public static <P> MultiJob<P> forParams(@Nonnull final Stream<P> params) {
+    public static <P> MultiJob<P> forEach(@Nonnull final Stream<P> params) {
         return new MultiJob<>(params);
     }
 
-    public static <P> MultiJob<P> forParams(@Nonnull final Collection<P> params) {
-        return forParams(params.stream());
+    public static <P> MultiJob<P> forEach(@Nonnull final Collection<P> params) {
+        return forEach(params.stream());
     }
 
-    public static <P> MultiJob<P> forParams(@Nonnull final P... params) {
+    public static <P> MultiJob<P> forEach(@Nonnull final P... params) {
         return new MultiJob<>(Stream.of(params));
     }
 
-    public static <P> MultiJob<P> forParams(@Nonnull final Iterable<P> params) {
-        return forParams(StreamSupport.stream(params.spliterator(), false));
+    public static <P> MultiJob<P> forEach(@Nonnull final Iterable<P> params) {
+        return forEach(StreamSupport.stream(params.spliterator(), false));
     }
 
     /**
@@ -179,9 +179,18 @@ public class MultiJob<P> {
      * @param multiThread Multithreading can be disabled
      * @return
      */
-    public static <P> MultiJob<P> forParams(@Nonnull final Stream<P> params, final boolean multiThread) {
+    public static <P> MultiJob<P> forEach(@Nonnull final Collection<P> params, final boolean multiThread) {
+        return forEach(params.stream(), multiThread);
+    }
+
+    /**
+     * @param params All aguments
+     * @param multiThread Multithreading can be disabled
+     * @return
+     */
+    public static <P> MultiJob<P> forEach(@Nonnull final Stream<P> params, final boolean multiThread) {
         if (multiThread) {
-            return forParams(params, false);
+            return forEach(params, false);
         } else {
             return new MultiJob<P>(params) {
                 @Override
@@ -219,7 +228,7 @@ public class MultiJob<P> {
         @Override
         default public R apply(final T t) {
             try {
-                return function(t);
+                return run(t);
             } catch (Exception e) {
                 if (e instanceof RuntimeException) {
                     throw (RuntimeException) e;
@@ -230,7 +239,7 @@ public class MultiJob<P> {
         }
 
         /** Applies this function to the given argument */
-        R function(T t) throws Exception;
+        R run(T t) throws Exception;
 
 
     }

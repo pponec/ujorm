@@ -48,9 +48,9 @@ public class MultiJobTest {
     public void testGetStream() {
         System.out.println("run");
 
-        Stream<Long> result = MultiJob.forParams(1, 2, 3).run(p -> p * 10L);
+        Stream<Integer> result = MultiJob.forEach(1, 2, 3).run(p -> p * 10);
 
-        List<Long> sortedList = result.sorted().collect(Collectors.toList());
+        List<Integer> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());
         assertEquals(10L, sortedList.get(0).longValue());
     }
@@ -62,7 +62,7 @@ public class MultiJobTest {
     public void testRunToStream() {
         System.out.println("runToStream");
 
-        Stream<Long> result = MultiJob.forParams(1, 2, 3).runOfStream(p -> Stream.of(p * 10L));
+        Stream<Long> result = MultiJob.forEach(1, 2, 3).runOfStream(p -> Stream.of(p * 10L));
 
         List<Long> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());
@@ -80,7 +80,7 @@ public class MultiJobTest {
         Stream<Long> stream = null;
 
         try {
-            MultiJob.forParams(100, 200, 500)
+            MultiJob.forEach(100, 200, 500)
                     .setTimeout(timeout)
                     .run(p -> sleep(p))
                     .collect(Collectors.toList());
@@ -105,7 +105,7 @@ public class MultiJobTest {
         Arrays.fill(params, 1);
 
         LocalDateTime start = LocalDateTime.now();
-        List<Long> list = MultiJob.forParams(params)
+        List<Integer> list = MultiJob.forEach(params)
                 .setNewFixedThreadPool(jobCount)
                 .run(p -> sleep(p * MILLIS_IN_SEC)) // 1 sec
                    .collect(Collectors.toList());
@@ -135,7 +135,7 @@ public class MultiJobTest {
         Arrays.fill(params, 1);
 
         LocalDateTime start = LocalDateTime.now();
-        List<Long> list = MultiJob.forParams(Stream.of(params), false)
+        List<Integer> list = MultiJob.forEach(Stream.of(params), false)
                 .setNewFixedThreadPool(jobCount)
                 .run(p -> sleep(p * MILLIS_IN_SEC)) // 1 sec
                    .collect(Collectors.toList());
@@ -161,7 +161,7 @@ public class MultiJobTest {
         Arrays.fill(params, 1);
 
         LocalDateTime start = LocalDateTime.now();
-        List<Long> list = Arrays.stream(params)
+        List<Integer> list = Arrays.stream(params)
                 .parallel()
                 .map(p -> sleep(p * MILLIS_IN_SEC)) // 1 sec
                 .collect(Collectors.toList());
@@ -175,7 +175,7 @@ public class MultiJobTest {
         logger.log(Level.INFO, "Real working time was {0} seconds.", duration.getSeconds());
     }
 
-    private long sleep(int millis) {
+    private int sleep(int millis) {
         try {
             Thread.sleep(millis);
             logger.log(Level.INFO, "Sleeping {0} millis on {1}",
@@ -183,7 +183,7 @@ public class MultiJobTest {
             return millis;
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, "An interrupting of the test", e);
-            return -1L;
+            return -1;
         }
     }
 }
