@@ -96,7 +96,9 @@ public class ParallelJobTest {
 
     /**
      * Check Time of parallel work.
+     * @deprecated The test fails
      */
+    //@Ignore
     @Test
     public void testTimeOfParalellWork() {
         System.out.println("timeOfParalellWork");

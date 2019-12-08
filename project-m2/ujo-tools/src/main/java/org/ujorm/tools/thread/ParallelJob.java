@@ -41,7 +41,9 @@ import org.ujorm.tools.Assert;
  * @see https://www.baeldung.com/java-fork-join
  * @see https://stackoverflow.com/questions/21163108/custom-thread-pool-in-java-8-parallel-stream
  * @since 1.95
+ * @deprecated The class is deprecated due a failed test: {@code ParallelJob#testTimeOfParalellWork()}
  */
+@Deprecated
 public class ParallelJob<P> {
 
     /** Template message for an invalid input */
