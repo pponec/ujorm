@@ -52,7 +52,7 @@ public class MultiJobTest {
 
         List<Integer> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());
-        assertEquals(10L, sortedList.get(0).longValue());
+        assertEquals(10, sortedList.get(0).intValue());
     }
 
     /**
@@ -62,11 +62,11 @@ public class MultiJobTest {
     public void testRunToStream() {
         System.out.println("runToStream");
 
-        Stream<Long> result = MultiJob.forEach(1, 2, 3).runOfStream(p -> Stream.of(p * 10L));
+        Stream<Integer> result = MultiJob.forEach(1, 2, 3).runOfStream(p -> Stream.of(p * 10));
 
-        List<Long> sortedList = result.sorted().collect(Collectors.toList());
+        List<Integer> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());
-        assertEquals(10L, sortedList.get(0).longValue());
+        assertEquals(10, sortedList.get(0).intValue());
     }
 
     /**
@@ -122,7 +122,6 @@ public class MultiJobTest {
         logger.log(Level.INFO, "Real working time was {0} seconds.", duration.getSeconds());
     }
 
-
     /**
      * Check Time of paralel work..
      */
@@ -163,7 +162,7 @@ public class MultiJobTest {
         LocalDateTime start = LocalDateTime.now();
         List<Integer> list = Arrays.stream(params)
                 .parallel()
-                .map(dupration -> sleep(dupration)) // 1 sec
+                .map(duration -> sleep(duration)) // 1 sec
                 .collect(Collectors.toList());
         LocalDateTime stop = LocalDateTime.now();
 

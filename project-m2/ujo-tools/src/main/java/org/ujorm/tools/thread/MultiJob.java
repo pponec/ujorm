@@ -18,7 +18,6 @@
 package org.ujorm.tools.thread;
 
 import java.time.Duration;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -158,39 +157,34 @@ public class MultiJob<P> {
 
     // --- Static methods ---
 
-    public static <P> MultiJob<P> forEach(@Nonnull final Stream<P> params) {
-        return new MultiJob<>(params);
-    }
-
-    public static <P> MultiJob<P> forEach(@Nonnull final Collection<P> params) {
-        return forEach(params.stream());
-    }
-
-    public static <P> MultiJob<P> forEach(@Nonnull final P... params) {
-        return new MultiJob<>(Stream.of(params));
-    }
-
-    public static <P> MultiJob<P> forEach(@Nonnull final Iterable<P> params) {
-        return forEach(StreamSupport.stream(params.spliterator(), false));
-    }
-
     /**
+     * A factory method for a multithreading instance
      * @param params All aguments
-     * @param multiThread Multithreading can be disabled
-     * @return
+     * @return An instance of MultiJob
      */
-    public static <P> MultiJob<P> forEach(@Nonnull final Collection<P> params, final boolean multiThread) {
-        return forEach(params.stream(), multiThread);
+    public static <P> MultiJob<P> forEach(@Nonnull final P... params) {
+        return forEach(Stream.of(params), true);
     }
 
     /**
+     * A factory method
      * @param params All aguments
-     * @param multiThread Multithreading can be disabled
-     * @return
+     * @param multiThread Multithreading can be enabled
+     * @return An instance of multiJob
+     */
+    public static <P> MultiJob<P> forEach(@Nonnull final Iterable<P> params, final boolean multiThread) {
+        return forEach(StreamSupport.stream(params.spliterator(), false), multiThread);
+    }
+
+    /**
+     * A factory method
+     * @param params All aguments
+     * @param multiThread Multithreading can be enabled
+     * @return An instance of multiJob
      */
     public static <P> MultiJob<P> forEach(@Nonnull final Stream<P> params, final boolean multiThread) {
         if (multiThread) {
-            return forEach(params, false);
+            return new MultiJob<>(params);
         } else {
             return new MultiJob<P>(params) {
                 @Override
@@ -240,7 +234,6 @@ public class MultiJob<P> {
 
         /** Applies this function to the given argument */
         R run(T t) throws Exception;
-
 
     }
 }
