@@ -19,6 +19,7 @@ package org.ujorm.tools.thread;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeoutException;
@@ -105,11 +106,10 @@ public class ParallelJobTest {
         System.out.println("timeOfParalellWork");
 
         int jobCount = 100;
-        Duration[] params = new Duration[jobCount];
-        Arrays.fill(params, TASK_TIME);
+        List<Duration> params = Collections.nCopies(jobCount, TASK_TIME);
 
         LocalDateTime start = LocalDateTime.now();
-        List<Integer> list = ParallelJob.forEach(params)
+        List<Integer> list = ParallelJob.forEach(params, true)
                 .setExecutor(new ForkJoinPool(jobCount))
                 .run(duration -> sleep(duration)) // 1 sec
                    .collect(Collectors.toList());

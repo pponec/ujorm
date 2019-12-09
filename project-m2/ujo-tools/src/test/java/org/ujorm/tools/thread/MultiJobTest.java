@@ -19,6 +19,7 @@ package org.ujorm.tools.thread;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
@@ -101,11 +102,10 @@ public class MultiJobTest {
         System.out.println("timeOfParalellWork");
 
         int jobCount = 100;
-        Duration[] params = new Duration[jobCount];
-        Arrays.fill(params, TASK_TIME);
+        List<Duration> params = Collections.nCopies(jobCount, TASK_TIME);
 
         LocalDateTime start = LocalDateTime.now();
-        List<Integer> list = MultiJob.forEach(params)
+        List<Integer> list = MultiJob.forEach(params, true)
                 .setNewFixedThreadPool(jobCount)
                 .run(duration -> sleep(duration)) // 1 sec
                    .collect(Collectors.toList());
