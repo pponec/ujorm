@@ -61,11 +61,21 @@ public abstract class Assert {
 
     /** If the value Checks if the argument is {@code true}.
      * @throws IllegalStateException When the condtion is false */
-    public static final  <M> void validState(final boolean condition, @Nullable final M... message)
+    public static final  <M> void state(final boolean condition, @Nullable final M... message)
             throws IllegalStateException {
         if (!condition) {
             throw new IllegalStateException(format(message));
         }
+    }
+
+    /** If the value Checks if the argument is {@code true}.
+     * @throws IllegalStateException When the condtion is false
+     * @deprecated Use the method {@link #state(boolean, java.lang.Object...) rather}
+     */
+    @Deprecated
+    public static final  <M> void validState(final boolean condition, @Nullable final M... message)
+            throws IllegalStateException {
+        state(condition, message);
     }
 
     /** Checks if the argument is not {@code null}.

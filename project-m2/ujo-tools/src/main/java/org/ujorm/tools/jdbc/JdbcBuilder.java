@@ -176,7 +176,7 @@ public class JdbcBuilder implements Serializable {
     /** Set new value to column by template {@code name = ? */
     @Nonnull
     public JdbcBuilder columnUpdate(@Nonnull final CharSequence column, @Nonnull final Object value) {
-        Assert.validState(!insertMode, "An insertion mode has been started.");
+        Assert.state(!insertMode, "An insertion mode has been started.");
         sql.add(new SqlEnvelope(column, columnCounter++));
         sql.add("=");
         addValue(value);
