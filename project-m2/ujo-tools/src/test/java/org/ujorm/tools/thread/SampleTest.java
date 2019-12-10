@@ -20,6 +20,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Test;
@@ -28,6 +30,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  *
+ * @see https://www.baeldung.com/java-8-parallel-streams-custom-threadpool
  * @author Pavel Ponec
  */
 public class SampleTest {
@@ -35,17 +38,36 @@ public class SampleTest {
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     @Test
-
     public void test_01() {
 
-        List<Duration> resources = Collections.nCopies(100, Duration.ofSeconds(1));
+        int threadCount = 120;
+        List<Duration> resources = Collections.nCopies(threadCount, Duration.ofSeconds(1));
         LocalDateTime start = LocalDateTime.now();
         int timeMs = resources.stream().parallel().map(d -> sleep(d)).mapToInt(i -> i).sum();
         LocalDateTime end = LocalDateTime.now();
         Duration duration = Duration.between(start, end);
 
-        assertEquals(Duration.ofSeconds(100), Duration.ofMillis(timeMs));
-        assertTrue(duration.getSeconds() > 10);
+        assertEquals(Duration.ofSeconds(threadCount), Duration.ofMillis(timeMs));
+        assertTrue(duration.getSeconds() > 15);
+    }
+
+    @Test
+    public void test_02() throws InterruptedException, ExecutionException {
+
+        int threadCount = 120;
+        List<Duration> resources = Collections.nCopies(threadCount, Duration.ofSeconds(1));
+        LocalDateTime start = LocalDateTime.now();
+
+        ForkJoinPool customThreadPool = new ForkJoinPool(threadCount);
+        int timeMs = customThreadPool.submit(() -> {
+            return resources.stream().parallel().map(d -> sleep(d)).mapToInt(i -> i).sum();
+        }).get();
+
+        LocalDateTime end = LocalDateTime.now();
+        Duration duration = Duration.between(start, end);
+
+        assertEquals(Duration.ofSeconds(threadCount), Duration.ofMillis(timeMs));
+        assertTrue(duration.getSeconds() > 3);
     }
 
     private Integer sleep(Duration duration) {
