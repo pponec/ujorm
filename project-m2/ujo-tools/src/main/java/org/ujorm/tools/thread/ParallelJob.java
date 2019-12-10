@@ -20,6 +20,7 @@ package org.ujorm.tools.thread;
 import java.io.Closeable;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
@@ -32,6 +33,7 @@ import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.set.LoopingIterator;
 
 /**
  * A multithreading task runner
@@ -53,6 +55,9 @@ public class ParallelJob<P> {
     /** Job arguments */
     @Nonnull
     final protected Stream<P> params;
+
+    /** Count of parameters where a {@link Integer#MAX_VALUE} marks an undefined value */
+    protected int paramCount = Integer.MAX_VALUE;
 
     /** A timeout where a default duration is the one hour */
     @Nonnull
@@ -95,7 +100,7 @@ public class ParallelJob<P> {
      * @return The same object
      */
     public ParallelJob<P> setNewFixedThreadPool(final int nThreads) {
-        return setExecutor(new ForkJoinPool(nThreads));
+        return setExecutor(paramCount > 0 ? new ForkJoinPool(Math.min(nThreads, paramCount)) : null);
     }
 
     /** Get of single values where all nulls are excluded
@@ -150,6 +155,12 @@ public class ParallelJob<P> {
                 .sum();
     }
 
+    /** Assign a count of input parameters */
+    public void setParamCount(final int paramCount) {
+        Assert.isTrue(paramCount >= 0, "paramCount");
+        this.paramCount = paramCount;
+    }
+
     // --- Static methods ---
 
     /**
@@ -158,7 +169,9 @@ public class ParallelJob<P> {
      * @return An instance of ParallelJob
      */
     public static <P> ParallelJob<P> forEach(@Nonnull final P... params) {
-        return forEach(Stream.of(params), true);
+        final ParallelJob<P> result = forEach(Stream.of(params), true);
+        result.setParamCount(params.length);
+        return result;
     }
 
     /**
@@ -168,7 +181,21 @@ public class ParallelJob<P> {
      * @return An instance of ParallelJob
      */
     public static <P> ParallelJob<P> forEach(@Nonnull final Iterable<P> params, final boolean multiThread) {
-        return forEach(StreamSupport.stream(params.spliterator(), false), multiThread);
+        final ParallelJob<P> result = forEach(StreamSupport.stream(params.spliterator(), false), multiThread);
+        if (params instanceof Collection) {
+             result.setParamCount(((Collection) params).size());
+        }
+        return result;
+    }
+
+    /**
+     * A factory method
+     * @param params All aguments
+     * @param multiThread Multithreading can be enabled
+     * @return An instance of multiJob
+     */
+    public static <P> ParallelJob<P> forEach(@Nonnull final LoopingIterator<P> params, final boolean multiThread) {
+        return forEach(params.toStream(), multiThread);
     }
 
     /**

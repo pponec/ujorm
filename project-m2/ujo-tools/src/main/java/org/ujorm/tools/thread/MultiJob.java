@@ -18,6 +18,7 @@
 package org.ujorm.tools.thread;
 
 import java.time.Duration;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -31,6 +32,7 @@ import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.set.LoopingIterator;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
@@ -50,7 +52,10 @@ public class MultiJob<P> {
     @Nonnull
     final protected Stream<P> params;
 
-    /** A timeout where a default duration is the one hour */
+    /** Count of parameters where a {@link Integer#MAX_VALUE} marks an undefined value */
+    protected int paramCount = Integer.MAX_VALUE;
+
+    /** A timeout of a job where a default duration is the one hour */
     @Nonnull
     protected Duration timeout = Duration.ofHours(1);
 
@@ -81,12 +86,14 @@ public class MultiJob<P> {
     }
 
     /**
-     * Assign a new Fixed Thread Pool
+     * Assign a new Fixed Thread Pool for a maximal thread count.
      * @param nThreads the number of threads in the pool
      * @return The same object
      */
     public MultiJob<P> setNewFixedThreadPool(final int nThreads) {
-        return setExecutor(Executors.newFixedThreadPool(nThreads));
+        return setExecutor(paramCount > 0
+                ? Executors.newFixedThreadPool(Math.min(nThreads, paramCount))
+                : null);
     }
 
     /** Get of single values where all nulls are excluded
@@ -155,6 +162,12 @@ public class MultiJob<P> {
         };
     }
 
+    /** Assign a count of input parameters */
+    public void setParamCount(final int paramCount) {
+        Assert.isTrue(paramCount >= 0, "paramCount");
+        this.paramCount = paramCount;
+    }
+
     // --- Static methods ---
 
     /**
@@ -163,7 +176,9 @@ public class MultiJob<P> {
      * @return An instance of MultiJob
      */
     public static <P> MultiJob<P> forEach(@Nonnull final P... params) {
-        return forEach(Stream.of(params), true);
+        final MultiJob<P> result = forEach(Stream.of(params), true);
+        result.setParamCount(params.length);
+        return result;
     }
 
     /**
@@ -173,7 +188,21 @@ public class MultiJob<P> {
      * @return An instance of multiJob
      */
     public static <P> MultiJob<P> forEach(@Nonnull final Iterable<P> params, final boolean multiThread) {
-        return forEach(StreamSupport.stream(params.spliterator(), false), multiThread);
+        final MultiJob<P> result = forEach(StreamSupport.stream(params.spliterator(), false), multiThread);
+        if (params instanceof Collection) {
+             result.setParamCount(((Collection) params).size());
+        }
+        return result;
+    }
+
+    /**
+     * A factory method
+     * @param params All aguments
+     * @param multiThread Multithreading can be enabled
+     * @return An instance of multiJob
+     */
+    public static <P> MultiJob<P> forEach(@Nonnull final LoopingIterator<P> params, final boolean multiThread) {
+        return forEach(params.toStream(), multiThread);
     }
 
     /**
