@@ -112,12 +112,13 @@ public class ParallelJob<P> {
             throws ParallelJobException {
 
         final ForkJoinPool forkJoinPool = getExcecutor();
-        forkJoinPool.getPoolSize();
         try (Closeable c = () -> forkJoinPool.shutdown()) {
-            return forkJoinPool.submit(() -> params.parallel().map(job)
-                    .collect(Collectors.toList()))
+            return forkJoinPool.submit(() -> params
+                    .parallel()
+                    .map(job)
+                    .collect(Collectors.toList())
+                    .stream())
                     .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
-                    .stream()
                     .filter(Objects::nonNull);
         } catch (InterruptedException | ExecutionException | TimeoutException | IOException e) {
             throw new ParallelJobException(e);
@@ -133,10 +134,12 @@ public class ParallelJob<P> {
 
         final ForkJoinPool forkJoinPool = getExcecutor();
         try (Closeable c = () -> forkJoinPool.shutdown()) {
-            return forkJoinPool.submit(() -> params.parallel().map(job)
-                    .collect(Collectors.toList()))
+            return forkJoinPool.submit(() -> params
+                    .parallel()
+                    .map(job)
+                    .collect(Collectors.toList())
+                    .stream())
                     .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
-                    .stream()
                     .flatMap(Function.identity()); // Join all streams
         } catch (InterruptedException | ExecutionException | TimeoutException | IOException e) {
             throw new ParallelJobException(e);
@@ -156,7 +159,7 @@ public class ParallelJob<P> {
     }
 
     /** Assign a count of input parameters */
-    public void setParamCount(final int paramCount) {
+    protected void setParamCount(final int paramCount) {
         Assert.isTrue(paramCount >= 0, "paramCount");
         this.paramCount = paramCount;
     }

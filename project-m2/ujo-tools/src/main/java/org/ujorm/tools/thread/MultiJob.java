@@ -163,7 +163,7 @@ public class MultiJob<P> {
     }
 
     /** Assign a count of input parameters */
-    public void setParamCount(final int paramCount) {
+    protected void setParamCount(final int paramCount) {
         Assert.isTrue(paramCount >= 0, "paramCount");
         this.paramCount = paramCount;
     }
