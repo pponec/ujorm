@@ -183,8 +183,8 @@ public class MultiJob<P> {
 
     /**
      * A factory method for a multithreading instance
-     * @param maxThreadCount A count of threads where a zero value uses a default ThreadPool and a negative value invoke run on the current thread.
      * @param params All aguments
+     * @param maxThreadCount A count of threads where a zero value uses a default ThreadPool and a negative value invoke run on the current thread.
      * @return An instance of MultiJob
      */
     public static <P> MultiJob<P> forEach(@Nonnull final P[] params, final int maxThreadCount) {
