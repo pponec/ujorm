@@ -44,8 +44,9 @@ public class MultiJobTest {
     @Test
     public void testGetStream() {
         System.out.println("run");
+        int maxThreadCount = 10;
 
-        Stream<Integer> result = MultiJob.forEach(1, 2, 3).run(p -> p * 10);
+        Stream<Integer> result = MultiJob.forEach(maxThreadCount, 1, 2, 3).run(p -> p * 10);
 
         List<Integer> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());
@@ -58,8 +59,9 @@ public class MultiJobTest {
     @Test
     public void testRunToStream() {
         System.out.println("runToStream");
+        int maxThreadCount = 10;
 
-        Stream<Integer> result = MultiJob.forEach(1, 2, 3).runOfStream(p -> Stream.of(p * 10));
+        Stream<Integer> result = MultiJob.forEach(maxThreadCount, 1, 2, 3).runOfStream(p -> Stream.of(p * 10));
 
         List<Integer> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());
@@ -72,12 +74,13 @@ public class MultiJobTest {
     @Test
     public void testCheckTimeout() {
         System.out.println("getTimeout");
+        int maxThreadCount = 10;
         Duration timeout = Duration.ofMillis(100);
         MultiJobException result = null;
         Stream<Long> stream = null;
 
         try {
-            MultiJob.forEach(100, 200, 500)
+            MultiJob.forEach(maxThreadCount, 100, 200, 500)
                     .setTimeout(timeout)
                     .run(p -> sleep(Duration.ofMillis(p)))
                     .collect(Collectors.toList());
@@ -102,10 +105,9 @@ public class MultiJobTest {
         List<Duration> params = Collections.nCopies(jobCount, jobDuration);
         LocalDateTime start = LocalDateTime.now();
 
-        List<Integer> list = MultiJob.forEach(params, true)
-                .setNewFixedThreadPool(jobCount)
+        List<Integer> list = MultiJob.forEach(params, jobCount)
                 .run(duration -> sleep(duration)) // 1 sec
-                   .collect(Collectors.toList());
+                .collect(Collectors.toList());
 
         Duration duration = Duration.between(start, LocalDateTime.now());
         assertTrue("Real time took millis: " + duration.toMillis(), duration.toMillis() > jobDuration.toMillis());
@@ -125,10 +127,9 @@ public class MultiJobTest {
         List<Duration> params = Collections.nCopies(jobCount, jobDuration);
 
         LocalDateTime start = LocalDateTime.now();
-        List<Integer> list = MultiJob.forEach(params, false)
-                .setNewFixedThreadPool(jobCount)
+        List<Integer> list = MultiJob.forEach(params, -1)
                 .run(duration -> sleep(duration)) // 1 sec
-                   .collect(Collectors.toList());
+                .collect(Collectors.toList());
         LocalDateTime stop = LocalDateTime.now();
 
         Duration duration = Duration.between(start, LocalDateTime.now());

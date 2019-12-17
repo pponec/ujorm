@@ -18,6 +18,7 @@
 package org.ujorm.tools.thread;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -90,7 +91,7 @@ public class MultiJob<P> {
      * @param nThreads the number of threads in the pool
      * @return The same object
      */
-    public MultiJob<P> setNewFixedThreadPool(final int nThreads) {
+    protected MultiJob<P> setNewFixedThreadPool(final int nThreads) {
         return setExecutor(paramCount > 0
                 ? Executors.newFixedThreadPool(Math.min(nThreads, paramCount))
                 : null);
@@ -172,23 +173,22 @@ public class MultiJob<P> {
 
     /**
      * A factory method for a multithreading instance
+     * @param maxThreadCount A count of threads where a zero value uses a default ThreadPool and a negative value invoke run on the current thread.
      * @param params All aguments
      * @return An instance of MultiJob
      */
-    public static <P> MultiJob<P> forEach(@Nonnull final P... params) {
-        final MultiJob<P> result = forEach(Stream.of(params), true);
-        result.setParamCount(params.length);
-        return result;
+    public static <P> MultiJob<P> forEach(final int maxThreadCount, @Nonnull final P... params) {
+        return forEach(Arrays.asList(params), maxThreadCount);
     }
 
     /**
      * A factory method
      * @param params All aguments
-     * @param multiThread Multithreading can be enabled
+     * @param maxThreadCount A count of threads where a zero value uses a default ThreadPool and a negative value invoke run on the current thread.
      * @return An instance of multiJob
      */
-    public static <P> MultiJob<P> forEach(@Nonnull final Iterable<P> params, final boolean multiThread) {
-        final MultiJob<P> result = forEach(StreamSupport.stream(params.spliterator(), false), multiThread);
+    public static <P> MultiJob<P> forEach(@Nonnull final Iterable<P> params, final int maxThreadCount) {
+        final MultiJob<P> result = forEach(StreamSupport.stream(params.spliterator(), false), maxThreadCount);
         if (params instanceof Collection) {
              result.setParamCount(((Collection) params).size());
         }
@@ -198,22 +198,24 @@ public class MultiJob<P> {
     /**
      * A factory method
      * @param params All aguments
-     * @param multiThread Multithreading can be enabled
+     * @param maxThreadCount A count of threads where a zero value uses a default ThreadPool and a negative value invoke run on the current thread.
      * @return An instance of multiJob
      */
-    public static <P> MultiJob<P> forEach(@Nonnull final LoopingIterator<P> params, final boolean multiThread) {
-        return forEach(params.toStream(), multiThread);
+    public static <P> MultiJob<P> forEach(@Nonnull final LoopingIterator<P> params, final int maxThreadCount) {
+        return forEach(params.toStream(), maxThreadCount);
     }
 
     /**
      * A factory method
      * @param params All aguments
-     * @param multiThread Multithreading can be enabled
+     * @param maxThreadCount A count of threads where a zero value uses a default ThreadPool and a negative value invoke run on the current thread.
      * @return An instance of multiJob
      */
-    public static <P> MultiJob<P> forEach(@Nonnull final Stream<P> params, final boolean multiThread) {
-        if (multiThread) {
-            return new MultiJob<>(params);
+    public static <P> MultiJob<P> forEach(@Nonnull final Stream<P> params, final int maxThreadCount) {
+        if (maxThreadCount >= 0) {
+            final MultiJob<P> result = new MultiJob<>(params);
+            result.setNewFixedThreadPool(maxThreadCount);
+            return result;
         } else {
             return new MultiJob<P>(params) {
                 @Override
@@ -248,6 +250,7 @@ public class MultiJob<P> {
 
     public interface UserFunction<T, R> extends Function<T, R> {
 
+        @Nullable
         @Override
         default public R apply(final T t) {
             try {
@@ -262,6 +265,7 @@ public class MultiJob<P> {
         }
 
         /** Applies this function to the given argument */
+        @Nullable
         R run(T t) throws Exception;
 
     }
