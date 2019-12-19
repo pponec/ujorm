@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ujorm.tools.thread;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.junit.Before;
 import org.junit.Test;
 import org.ujorm.tools.thread.MultiJob.MultiJobException;
 import static org.junit.Assert.assertEquals;
@@ -38,17 +41,26 @@ public class MultiJobTest {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
 
+    @Before
+    public void tearUp() {
+        final String msg = String.format(">>> Free memory: %.1f/%.1f MB.",
+                Runtime.getRuntime().freeMemory() / 1_000_000f,
+                Runtime.getRuntime().maxMemory() / 1_000_000f);
+        System.out.println(msg);
+    }
+
     /**
      * Test of getStream method, of class MultiRun.
      */
     @Test
-    public void testGetStream() {
+    public void testGetStream() throws IOException {
         System.out.println("run");
         int maxThreadCount = 10;
+        ExecutorService threadPool = Executors.newFixedThreadPool(maxThreadCount);
 
-        Stream<Integer> result = MultiJob.forEach(maxThreadCount, 1, 2, 3).run(p -> p * 10);
-
+        Stream<Integer> result = MultiJob.forEach(new Integer[]{1, 2, 3}, threadPool).run(p -> p * 10);
         List<Integer> sortedList = result.sorted().collect(Collectors.toList());
+        threadPool.shutdown();
         assertEquals(3, sortedList.size());
         assertEquals(10, sortedList.get(0).intValue());
     }
@@ -60,8 +72,10 @@ public class MultiJobTest {
     public void testRunToStream() {
         System.out.println("runToStream");
         int maxThreadCount = 10;
+        ExecutorService threadPool = Executors.newFixedThreadPool(maxThreadCount);
 
-        Stream<Integer> result = MultiJob.forEach(maxThreadCount, 1, 2, 3).runOfStream(p -> Stream.of(p * 10));
+        Stream<Integer> result = MultiJob.forEach(new Integer[]{1, 2, 3}, threadPool)
+                .runOfStream(p -> Stream.of(p * 10));
 
         List<Integer> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());
@@ -75,12 +89,13 @@ public class MultiJobTest {
     public void testCheckTimeout() {
         System.out.println("getTimeout");
         int maxThreadCount = 10;
+        ExecutorService threadPool = Executors.newFixedThreadPool(maxThreadCount);
         Duration timeout = Duration.ofMillis(100);
         MultiJobException result = null;
         Stream<Long> stream = null;
 
         try {
-            MultiJob.forEach(maxThreadCount, 100, 200, 500)
+            MultiJob.forEach(new Integer[]{100, 200, 500}, threadPool)
                     .setTimeout(timeout)
                     .run(p -> sleep(Duration.ofMillis(p)))
                     .collect(Collectors.toList());
@@ -104,8 +119,9 @@ public class MultiJobTest {
         int jobCount = 120;
         List<Duration> params = Collections.nCopies(jobCount, jobDuration);
         LocalDateTime start = LocalDateTime.now();
+        ExecutorService threadPool = Executors.newFixedThreadPool(jobCount);
 
-        List<Integer> list = MultiJob.forEach(params, jobCount)
+        List<Integer> list = MultiJob.forEach(params, threadPool)
                 .run(duration -> sleep(duration)) // 1 sec
                 .collect(Collectors.toList());
 
@@ -127,7 +143,7 @@ public class MultiJobTest {
         List<Duration> params = Collections.nCopies(jobCount, jobDuration);
 
         LocalDateTime start = LocalDateTime.now();
-        List<Integer> list = MultiJob.forEach(params, -1)
+        List<Integer> list = MultiJob.forEach(params, null)
                 .run(duration -> sleep(duration)) // 1 sec
                 .collect(Collectors.toList());
         LocalDateTime stop = LocalDateTime.now();

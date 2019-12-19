@@ -18,13 +18,11 @@
 package org.ujorm.tools.thread;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -51,21 +49,18 @@ public class MultiJob<P> {
 
     /** Job arguments */
     @Nonnull
-    final protected Stream<P> params;
+    protected final Stream<P> params;
 
-    /** Count of parameters where a {@link Integer#MAX_VALUE} marks an undefined value */
-    protected int paramCount = Integer.MAX_VALUE;
+    @Nonnull
+    protected final Executor threadPool;
 
     /** A timeout of a job where a default duration is the one hour */
     @Nonnull
     protected Duration timeout = Duration.ofHours(1);
 
-    /** Executor contains a thread pool */
-    @Nullable
-    protected Executor executor;
-
-    protected MultiJob(@Nonnull final Stream<P> params) {
+    protected MultiJob(@Nonnull final Stream<P> params, @Nonnull final Executor threadPool) {
         this.params = Assert.notNull(params, REQUIRED_INPUT_TEMPLATE_MSG, "params");
+        this.threadPool = Assert.notNull(threadPool, REQUIRED_INPUT_TEMPLATE_MSG, "threadPool");
     }
 
     /**
@@ -78,25 +73,6 @@ public class MultiJob<P> {
         return this;
     }
 
-    /** Assign an excecutor where the {@code null} value activates a default executor.
-     * @param executor For examle: {@code Executors.newFixedThreadPool(10)}
-     */
-    public MultiJob<P> setExecutor(@Nullable final Executor executor) {
-        this.executor = executor;
-        return this;
-    }
-
-    /**
-     * Assign a new Fixed Thread Pool for a maximal thread count.
-     * @param nThreads the number of threads in the pool
-     * @return The same object
-     */
-    protected MultiJob<P> setNewFixedThreadPool(final int nThreads) {
-        return setExecutor(paramCount > 0
-                ? Executors.newFixedThreadPool(Math.min(nThreads, paramCount))
-                : null);
-    }
-
     /** Get of single values where all nulls are excluded
 
      * @param job Job with a simple value result
@@ -104,7 +80,7 @@ public class MultiJob<P> {
      */
     public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
             throws MultiJobException {
-        return params.map(getAsync(job))
+        return params.map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
                 .collect(Collectors.toList()).stream() // join all threads
                 .map(createGrabber(timeout))
                 .filter(Objects::nonNull);
@@ -116,7 +92,7 @@ public class MultiJob<P> {
      * */
     public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
             throws MultiJobException {
-        return params.map(getAsync(job))
+        return params.map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
                 .collect(Collectors.toList()).stream() // join all threads
                 .map(createGrabber(timeout))
                 .flatMap(Function.identity()); // Join all streams
@@ -132,13 +108,6 @@ public class MultiJob<P> {
         return run(job)
                 .mapToLong(n -> n)
                 .sum();
-    }
-
-    /** Create an async function */
-    protected <R> Function<P, CompletableFuture<R>> getAsync(@Nonnull final UserFunction<P, R> job) {
-        return executor != null
-                ? p -> CompletableFuture.supplyAsync(() -> job.apply(p), executor)
-                : p -> CompletableFuture.supplyAsync(() -> job.apply(p));
     }
 
     /**
@@ -163,71 +132,52 @@ public class MultiJob<P> {
         };
     }
 
-    /** Assign a count of input parameters */
-    protected void setParamCount(final int paramCount) {
-        Assert.isTrue(paramCount >= 0, "paramCount");
-        this.paramCount = paramCount;
-    }
-
     // --- Static methods ---
 
     /**
      * A factory method for a multithreading instance
-     * @param maxThreadCount A count of threads where a zero value uses a default ThreadPool and a negative value invoke run on the current thread.
      * @param params All aguments
+     * @param threadPool A target {@code threadPoll} or {@code null} to run the job on the current single thread.
+     *    For example: {@code Executors.newFixedThreadPool(maxThreadCount)}.
      * @return An instance of MultiJob
      */
-    public static <P> MultiJob<P> forEach(final int maxThreadCount, @Nonnull final P... params) {
-        return forEach(params, maxThreadCount);
-    }
-
-    /**
-     * A factory method for a multithreading instance
-     * @param params All aguments
-     * @param maxThreadCount A count of threads where a zero value uses a default ThreadPool and a negative value invoke run on the current thread.
-     * @return An instance of MultiJob
-     */
-    public static <P> MultiJob<P> forEach(@Nonnull final P[] params, final int maxThreadCount) {
-        return forEach(Arrays.asList(params), maxThreadCount);
+    public static <P> MultiJob<P> forEach(@Nonnull final P[] params, @Nullable final Executor threadPool) {
+        return forEach(Stream.of(params), threadPool);
     }
 
     /**
      * A factory method
      * @param params All aguments
-     * @param maxThreadCount A count of threads where a zero value uses a default ThreadPool and a negative value invoke run on the current thread.
+     * @param threadPool A target {@code threadPoll} or {@code null} to run the job on the current single thread.
+     *    For example: {@code Executors.newFixedThreadPool(maxThreadCount)}.
      * @return An instance of multiJob
      */
-    public static <P> MultiJob<P> forEach(@Nonnull final Iterable<P> params, final int maxThreadCount) {
-        final MultiJob<P> result = forEach(StreamSupport.stream(params.spliterator(), false), maxThreadCount);
-        if (params instanceof Collection) {
-             result.setParamCount(((Collection) params).size());
-        }
-        return result;
+    public static <P> MultiJob<P> forEach(@Nonnull final Iterable<P> params, @Nullable final Executor threadPool) {
+        return forEach(StreamSupport.stream(params.spliterator(), false), threadPool);
     }
 
     /**
      * A factory method
      * @param params All aguments
-     * @param maxThreadCount A count of threads where a zero value uses a default ThreadPool and a negative value invoke run on the current thread.
+     * @param threadPool A target {@code threadPoll} or {@code null} to run the job on the current single thread.
+     *    For example: {@code Executors.newFixedThreadPool(maxThreadCount)}.
      * @return An instance of multiJob
      */
-    public static <P> MultiJob<P> forEach(@Nonnull final LoopingIterator<P> params, final int maxThreadCount) {
-        return forEach(params.toStream(), maxThreadCount);
+    public static <P> MultiJob<P> forEach(@Nonnull final LoopingIterator<P> params, @Nullable final Executor threadPool) {
+        return forEach(params.toStream(), threadPool);
     }
 
     /**
      * A factory method
      * @param params All aguments
-     * @param maxThreadCount A count of threads where a zero value uses a default ThreadPool and a negative value invoke run on the current thread.
+     * @param threadPool A target {@code threadPoll} or {@code null} to run the job on the current single thread.
+     *    For example: {@code Executors.newFixedThreadPool(maxThreadCount)}.
      * @return An instance of multiJob
      */
-    public static <P> MultiJob<P> forEach(@Nonnull final Stream<P> params, final int maxThreadCount) {
-        if (maxThreadCount >= 0) {
-            final MultiJob<P> result = new MultiJob<>(params);
-            result.setNewFixedThreadPool(maxThreadCount);
-            return result;
-        } else {
-            return new MultiJob<P>(params) {
+    public static <P> MultiJob<P> forEach(@Nonnull final Stream<P> params, @Nullable final Executor threadPool) {
+        return threadPool != null
+             ? new MultiJob<>(params, threadPool)
+             : new MultiJob<P>(params, ForkJoinPool.commonPool()) {
                 @Override
                 public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
                         throws MultiJobException {
@@ -240,7 +190,6 @@ public class MultiJob<P> {
                     return params.map(job).flatMap(Function.identity());
                 }
             };
-        }
     }
 
     // --- Class or Interfaces ---
@@ -277,6 +226,5 @@ public class MultiJob<P> {
         /** Applies this function to the given argument */
         @Nullable
         R run(T t) throws Exception;
-
     }
 }
