@@ -1,168 +1,105 @@
-/*
- * Copyright 2019-2019 Pavel Ponec
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.ujorm.tools.thread;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-/**
- * All tested pass on JRE 8 (build 1.8.0_191-b12).
- * First three tests failed on JRE 11 ((build 11.0.4+11-post-Ubuntu-1ubuntu218.04.3).
- * @see https://www.baeldung.com/java-8-parallel-streams-custom-threadpool
- * @author Pavel Ponec
- */
+/** Tested on JRE 1.8.0_231 */
 public class SampleTest {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
 
-    /** A time limit of the one task */
-    private final Duration TASK_LIMIT = Duration.ofSeconds(2);
+    @Before
+    public void tearUp() {
+        String msg;
+        msg = String.format(">>> Free memory: %.1f/%.1f MB.",
+                Runtime.getRuntime().freeMemory() / 1_000_000f,
+                Runtime.getRuntime().maxMemory() / 1_000_000f);
+        System.out.println(msg);
+    }
 
+    /** 1_000 jobs take 32 seconds on ForkJoinPool with 1_000 parallelism.
+     * 10_000 jobs take 313 seconds on ForkJoinPool with 10_000 parallelism,
+     * 32_767 jobs take 313 seconds on ForkJoinPool with 32_767 parallelism,
+     */
     @Test
-    public void test_01() {
+    public void parallelStreamTest() throws InterruptedException, ExecutionException {
+        System.out.println("parallelStreamTest");
 
+        final int parallelism = 10_000; // 32_767;
         final Duration jobDuration = Duration.ofSeconds(1);
-        final int threadCount = 120;
-        final List<Duration> resources = Collections.nCopies(threadCount, jobDuration);
-        final LocalDateTime start = LocalDateTime.now();
-        final int timeMs = resources.stream()
-                .parallel()
-                .map(d -> sleep(d))
+        final ForkJoinPool threadPool = new ForkJoinPool(parallelism);
+        final int sum = threadPool.submit(()
+                -> // Parallel task here, for example
+                Collections.nCopies(parallelism, 1)
+                        .parallelStream()
+                        .map(t -> job(t, jobDuration))
+                        .mapToInt(i -> i)
+                        .sum()
+        ).get();
+
+        threadPool.shutdown();
+        System.out.println(sum);
+    }
+
+    /** 1_000 jobs take 1.2 seconds by 1_000 threads,
+     * 10_000 jobs take 9.2 seconds by 10_000 threads,
+     * 32_767 threads throws java.lang.OutOfMemoryError.
+     */
+    @Test
+    public void CompletableFutureTest() {
+
+
+        final int parallelism = 10_000; // Short.MAX_VALUE; //10_000;
+        final Duration jobDuration = Duration.ofSeconds(1);
+        final ExecutorService threadPool = Executors.newFixedThreadPool(parallelism);
+        final int sum = Collections.nCopies(parallelism, 1)
+                .stream()
+                .map(t -> CompletableFuture.supplyAsync(() -> job(t, jobDuration), threadPool))
+                .collect(Collectors.toList()).stream() // For parallel processing!
+                .map(CompletableFuture::join)
                 .mapToInt(i -> i)
                 .sum();
-        final Duration duration = Duration.between(start, LocalDateTime.now());
-
-        assertEquals(Duration.ofSeconds(threadCount), Duration.ofMillis(timeMs));
-        assertTrue("Real time took sec: " + duration.getSeconds(), duration.getSeconds() > 14);
-        assertTrue("Real time took sec: " + duration.getSeconds(), duration.getSeconds() < 20);
+        threadPool.shutdown();
+        System.out.println(sum);
     }
 
+    /** 1_000 jobs take 127 seconds on DEFAULT ForkJoinPool. */
+    @Ignore
     @Test
-    public void test_02a() {
+    public void defaultThreadPoolTest() {
 
+        final int parallelism = 1_000;
+        final Meter meter = Meter.start("defaultThreadPoolTest", parallelism);
         final Duration jobDuration = Duration.ofSeconds(1);
-        final int threadCount = 120;
-        final List<Duration> resources = Collections.nCopies(threadCount, jobDuration);
-        final ForkJoinPool customThreadPool = new ForkJoinPool(threadCount);
-        final Stream <Integer> result;
-        final LocalDateTime start = LocalDateTime.now();
+        final int sum = Collections.nCopies(parallelism, 1)
+                .parallelStream()
+                .map(t -> job(t, jobDuration))
+                .mapToInt(i -> i)
+                .sum();
 
-        try (Closeable c = () -> customThreadPool.shutdown()) {
-            result = customThreadPool.submit(() -> {
-                return resources
-                        .parallelStream()
-                        .map(p -> sleep(p));
-            }).get(TASK_LIMIT.toMillis(), TimeUnit.MILLISECONDS);
-        } catch (InterruptedException | ExecutionException | IOException | TimeoutException e) {
-            throw new IllegalStateException(e);
-        }
-
-        final int timeMs = result.mapToInt(i -> i).sum();
-        final Duration duration = Duration.between(start, LocalDateTime.now());
-
-        assertEquals(Duration.ofSeconds(threadCount), Duration.ofMillis(timeMs));
-        assertTrue("Real time took sec: " + duration.getSeconds(), duration.getSeconds() > 14);
-        assertTrue("Real time took sec: " + duration.getSeconds(), duration.getSeconds() < 20);
+        meter.stop().print();
+        System.out.println(sum);
     }
 
-    @Test
-    public void test_02b() throws InterruptedException, ExecutionException {
-
-        final Duration jobDuration = Duration.ofSeconds(1);
-        final int threadCount = 120;
-        final List<Duration> resources = Collections.nCopies(threadCount, jobDuration);
-        final LocalDateTime start = LocalDateTime.now();
-
-        final Stream<Integer> result;
-        final ForkJoinPool customThreadPool = new ForkJoinPool(threadCount);
-
-        try (Closeable c = () -> customThreadPool.shutdown()) {
-            result = customThreadPool.submit(() -> {
-                return resources
-                        .parallelStream()
-                        .map(p -> Stream.of(sleep(p)));
-            }).get(TASK_LIMIT.toMillis(), TimeUnit.MILLISECONDS)
-                    .flatMap(s -> s);
-        } catch (InterruptedException | ExecutionException | IOException | TimeoutException e) {
-            throw new IllegalStateException(e);
-        }
-
-        final int timeMs = result.mapToInt(i -> i).sum();
-        final Duration duration = Duration.between(start, LocalDateTime.now());
-
-        assertEquals(Duration.ofSeconds(threadCount), Duration.ofMillis(timeMs));
-        assertTrue("Real time took sec: " + duration.getSeconds(), duration.getSeconds() > 14);
-        assertTrue("Real time took sec: " + duration.getSeconds(), duration.getSeconds() < 20);
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void test_03_timeout() {
-
-        final int timeLimitSec = 1;
-        final int threadCount = 2;
-        final List<Duration> resources = Collections.nCopies(threadCount, Duration.ofSeconds(timeLimitSec + 2));
-        final ForkJoinPool customThreadPool = new ForkJoinPool(threadCount);
-        final Stream <Integer> result;
-        final LocalDateTime start = LocalDateTime.now();
-
-        try (Closeable c = () -> customThreadPool.shutdown()) {
-            result = customThreadPool.submit(() -> {
-                return resources
-                        .parallelStream()
-                        .map(p -> sleep(p))
-                        .collect(Collectors.toList()) // Required to check a job timeout
-                        .stream();
-            }).get(timeLimitSec, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException | IOException | TimeoutException e) {
-            throw new IllegalStateException(e);
-        }
-
-        final int timeMs = result.mapToInt(i -> i).sum();
-        final Duration duration = Duration.between(start, LocalDateTime.now());
-
-        assertTrue("Real time took sec: " + duration.getSeconds(), duration.getSeconds() > 14);
-        assertTrue("Real time took sec: " + duration.getSeconds(), duration.getSeconds() < 20);
-        assertTrue("Incorrect statement", timeMs < 0);
-    }
-
-    private Integer sleep(Duration duration) {
+    private int job(int value, Duration duration) {
         try {
+            logger.log(Level.FINEST, "Sleeping {0} sec", duration.getSeconds());
             Thread.sleep(duration.toMillis());
-            logger.log(Level.INFO, "Sleeping {0} millis on {1}",
-                     new Object[]{ duration.toMillis(), LocalDateTime.now()} );
-            return (int) duration.toMillis();
+            return value;
         } catch (InterruptedException e) {
-            logger.log(Level.SEVERE, "An interrupting of the test", e);
-            return null;
+            throw new IllegalStateException("An interruption of the test", e);
         }
     }
+
 }

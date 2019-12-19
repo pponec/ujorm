@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ujorm.tools.thread;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.ujorm.tools.thread.ParallelJob.ParallelJobException;
@@ -39,16 +41,26 @@ public class ParallelJobTest {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
 
+    @Before
+    public void tearUp() {
+        final String msg = String.format(">>> Free memory: %.1f/%.1f MB.",
+                Runtime.getRuntime().freeMemory() / 1_000_000f,
+                Runtime.getRuntime().maxMemory() / 1_000_000f);
+        System.out.println(msg);
+    }
+
     /**
      * Test of getStream method, of class MultiRun.
      */
     @Test
-    public void testGetStream() {
+    public void testGetStream() throws IOException {
         System.out.println("run");
+        int maxThreadCount = 10;
+        ForkJoinPool threadPool = new ForkJoinPool(maxThreadCount);
 
-        Stream<Integer> result = ParallelJob.forEach(1, 2, 3).run(p -> p * 10);
-
+        Stream<Integer> result = ParallelJob.forEach(new Integer[]{1, 2, 3}, threadPool).run(p -> p * 10);
         List<Integer> sortedList = result.sorted().collect(Collectors.toList());
+        threadPool.shutdown();
         assertEquals(3, sortedList.size());
         assertEquals(10, sortedList.get(0).intValue());
     }
@@ -59,8 +71,11 @@ public class ParallelJobTest {
     @Test
     public void testRunToStream() {
         System.out.println("runToStream");
+        int maxThreadCount = 10;
+        ForkJoinPool threadPool =new ForkJoinPool(maxThreadCount);
 
-        Stream<Integer> result = ParallelJob.forEach(1, 2, 3).runOfStream(p -> Stream.of(p * 10));
+        Stream<Integer> result = ParallelJob.forEach(new Integer[]{1, 2, 3}, threadPool)
+                .runOfStream(p -> Stream.of(p * 10));
 
         List<Integer> sortedList = result.sorted().collect(Collectors.toList());
         assertEquals(3, sortedList.size());
@@ -73,12 +88,14 @@ public class ParallelJobTest {
     @Test
     public void testCheckTimeout() {
         System.out.println("getTimeout");
+        int maxThreadCount = 10;
+        ForkJoinPool threadPool = new ForkJoinPool(maxThreadCount);
         Duration timeout = Duration.ofMillis(100);
         ParallelJobException result = null;
         Stream<Long> stream = null;
 
         try {
-            ParallelJob.forEach(100, 200, 500)
+            ParallelJob.forEach(new Integer[]{100, 200, 500}, threadPool)
                     .setTimeout(timeout)
                     .run(p -> sleep(Duration.ofMillis(p)))
                     .collect(Collectors.toList());
@@ -93,22 +110,21 @@ public class ParallelJobTest {
 
     /**
      * Check Time of parallel work.
-     * @deprecated The test fails
      */
-    @Ignore
+    @Ignore // TODO: FixIT
     @Test
     public void testTimeOfParalellWork() {
         System.out.println("timeOfParalellWork");
 
         Duration jobDuration = Duration.ofSeconds(1);
-        int jobCount = 120;
+        int jobCount = 10;
         List<Duration> params = Collections.nCopies(jobCount, jobDuration);
         LocalDateTime start = LocalDateTime.now();
+        ForkJoinPool threadPool = new ForkJoinPool(jobCount);
 
-        List<Integer> list = ParallelJob.forEach(params, true)
-                .setNewFixedThreadPool(jobCount)
+        List<Integer> list = ParallelJob.forEach(params, threadPool)
                 .run(duration -> sleep(duration)) // 1 sec
-                   .collect(Collectors.toList());
+                .collect(Collectors.toList());
 
         Duration duration = Duration.between(start, LocalDateTime.now());
         assertTrue("Real time took millis: " + duration.toMillis(), duration.toMillis() > jobDuration.toMillis());
@@ -128,10 +144,9 @@ public class ParallelJobTest {
         List<Duration> params = Collections.nCopies(jobCount, jobDuration);
 
         LocalDateTime start = LocalDateTime.now();
-        List<Integer> list = ParallelJob.forEach(params, false)
-                .setNewFixedThreadPool(jobCount)
+        List<Integer> list = ParallelJob.forEach(params, null)
                 .run(duration -> sleep(duration)) // 1 sec
-                   .collect(Collectors.toList());
+                .collect(Collectors.toList());
         LocalDateTime stop = LocalDateTime.now();
 
         Duration duration = Duration.between(start, LocalDateTime.now());

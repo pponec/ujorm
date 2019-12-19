@@ -17,10 +17,7 @@
 
 package org.ujorm.tools.thread;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.time.Duration;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
@@ -54,21 +51,19 @@ public class ParallelJob<P> {
 
     /** Job arguments */
     @Nonnull
-    final protected Stream<P> params;
+    protected final Stream<P> params;
 
-    /** Count of parameters where a {@link Integer#MAX_VALUE} marks an undefined value */
-    protected int paramCount = Integer.MAX_VALUE;
+    /** Thread pool */
+    @Nonnull
+    protected final ForkJoinPool threadPool;
 
     /** A timeout where a default duration is the one hour */
     @Nonnull
     protected Duration timeout = Duration.ofHours(1);
 
-    /** Executor contains a thread pool */
-    @Nullable
-    protected ForkJoinPool executor;
-
-    protected ParallelJob(@Nonnull final Stream<P> params) {
+    protected ParallelJob(@Nonnull final Stream<P> params, @Nonnull final ForkJoinPool threadPool) {
         this.params = Assert.notNull(params, REQUIRED_INPUT_TEMPLATE_MSG, "params");
+        this.threadPool = Assert.notNull(threadPool, REQUIRED_INPUT_TEMPLATE_MSG, "threadPool");
     }
 
     /**
@@ -81,28 +76,6 @@ public class ParallelJob<P> {
         return this;
     }
 
-    /** Assign an excecutor where the {@code null} value activates a default executor.
-     * @param pool For examle: {@code Executors.newFixedThreadPool(10)}
-     */
-    public ParallelJob<P> setExecutor(@Nullable final ForkJoinPool pool) {
-        this.executor = pool;
-        return this;
-    }
-
-    @Nonnull
-    public ForkJoinPool getExcecutor() {
-        return executor != null ? executor : ForkJoinPool.commonPool();
-    }
-
-    /**
-     * Assign a new Fixed Thread Pool
-     * @param nThreads the number of threads in the pool
-     * @return The same object
-     */
-    public ParallelJob<P> setNewFixedThreadPool(final int nThreads) {
-        return setExecutor(paramCount > 0 ? new ForkJoinPool(Math.min(nThreads, paramCount)) : null);
-    }
-
     /** Get of single values where all nulls are excluded
 
      * @param job Job with a simple value result
@@ -111,16 +84,14 @@ public class ParallelJob<P> {
     public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
             throws ParallelJobException {
 
-        final ForkJoinPool forkJoinPool = getExcecutor();
-        try (Closeable c = () -> forkJoinPool.shutdown()) {
-            return forkJoinPool.submit(() -> params
+        try  {
+            return threadPool.submit(() -> params
                     .parallel()
                     .map(job)
-                    .collect(Collectors.toList())
-                    .stream())
-                    .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
+                    .collect(Collectors.toList()).stream()
+            ).get(timeout.toMillis(), TimeUnit.MILLISECONDS)
                     .filter(Objects::nonNull);
-        } catch (InterruptedException | ExecutionException | TimeoutException | IOException e) {
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new ParallelJobException(e);
         }
     }
@@ -132,16 +103,14 @@ public class ParallelJob<P> {
     public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
             throws ParallelJobException {
 
-        final ForkJoinPool forkJoinPool = getExcecutor();
-        try (Closeable c = () -> forkJoinPool.shutdown()) {
-            return forkJoinPool.submit(() -> params
+        try {
+            return threadPool.submit(() -> params
                     .parallel()
                     .map(job)
-                    .collect(Collectors.toList())
-                    .stream())
-                    .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
+                    .collect(Collectors.toList()).stream()
+            ).get(timeout.toMillis(), TimeUnit.MILLISECONDS)
                     .flatMap(Function.identity()); // Join all streams
-        } catch (InterruptedException | ExecutionException | TimeoutException | IOException e) {
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new ParallelJobException(e);
         }
     }
@@ -158,60 +127,52 @@ public class ParallelJob<P> {
                 .sum();
     }
 
-    /** Assign a count of input parameters */
-    protected void setParamCount(final int paramCount) {
-        Assert.isTrue(paramCount >= 0, "paramCount");
-        this.paramCount = paramCount;
-    }
-
     // --- Static methods ---
 
     /**
-     * A factory method
+     * A factory method for a multithreading instance
      * @param params All aguments
-     * @return An instance of ParallelJob
+     * @param threadPool A target {@code threadPoll} or {@code null} to run the job on the current single thread.
+     *    For example: {@code new ForkJoinPool(maxThreadCount)}.
+     * @return An instance of MultiJob
      */
-    public static <P> ParallelJob<P> forEach(@Nonnull final P... params) {
-        final ParallelJob<P> result = forEach(Stream.of(params), true);
-        result.setParamCount(params.length);
-        return result;
+    public static <P> ParallelJob<P> forEach(@Nonnull final P[] params, @Nullable final ForkJoinPool threadPool) {
+        return forEach(Stream.of(params), threadPool);
     }
 
     /**
      * A factory method
      * @param params All aguments
-     * @param multiThread Multithreading can be enabled
-     * @return An instance of ParallelJob
-     */
-    public static <P> ParallelJob<P> forEach(@Nonnull final Iterable<P> params, final boolean multiThread) {
-        final ParallelJob<P> result = forEach(StreamSupport.stream(params.spliterator(), false), multiThread);
-        if (params instanceof Collection) {
-             result.setParamCount(((Collection) params).size());
-        }
-        return result;
-    }
-
-    /**
-     * A factory method
-     * @param params All aguments
-     * @param multiThread Multithreading can be enabled
+     * @param threadPool A target {@code threadPoll} or {@code null} to run the job on the current single thread.
+     *    For example: {@code new ForkJoinPool(maxThreadCount)}.
      * @return An instance of multiJob
      */
-    public static <P> ParallelJob<P> forEach(@Nonnull final LoopingIterator<P> params, final boolean multiThread) {
-        return forEach(params.toStream(), multiThread);
+    public static <P> ParallelJob<P> forEach(@Nonnull final Iterable<P> params, @Nullable final ForkJoinPool threadPool) {
+        return forEach(StreamSupport.stream(params.spliterator(), false), threadPool);
     }
 
     /**
      * A factory method
      * @param params All aguments
-     * @param multiThread Multithreading can be enabled
-     * @return An instance of ParallelJob
+     * @param threadPool A target {@code threadPoll} or {@code null} to run the job on the current single thread.
+     *    For example: {@code new ForkJoinPool(maxThreadCount)}.
+     * @return An instance of multiJob
      */
-    public static <P> ParallelJob<P> forEach(@Nonnull final Stream<P> params, final boolean multiThread) {
-        if (multiThread) {
-            return new ParallelJob<>(params);
-        } else {
-            return new ParallelJob<P>(params) {
+    public static <P> ParallelJob<P> forEach(@Nonnull final LoopingIterator<P> params, @Nullable final ForkJoinPool threadPool) {
+        return forEach(params.toStream(), threadPool);
+    }
+
+    /**
+     * A factory method
+     * @param params All aguments
+     * @param threadPool A target {@code threadPoll} or {@code null} to run the job on the current single thread.
+     *    For example: {@code new ForkJoinPool(maxThreadCount)}.
+     * @return An instance of multiJob
+     */
+    public static <P> ParallelJob<P> forEach(@Nonnull final Stream<P> params, @Nullable final ForkJoinPool threadPool) {
+        return threadPool != null
+             ? new ParallelJob<>(params, threadPool)
+             : new ParallelJob<P>(params, ForkJoinPool.commonPool()) {
                 @Override
                 public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
                         throws ParallelJobException {
@@ -224,7 +185,6 @@ public class ParallelJob<P> {
                     return params.map(job).flatMap(Function.identity());
                 }
             };
-        }
     }
 
     // --- Class or Interfaces ---
