@@ -20,16 +20,14 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.ujorm.tools.thread.ParallelJob.ParallelJobException;
+import org.ujorm.tools.thread.Jobs.JobException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -56,11 +54,11 @@ public class ParallelJobTest {
     public void testGetStream() throws IOException {
         System.out.println("run");
         int maxThreadCount = 10;
-        ForkJoinPool threadPool = new ForkJoinPool(maxThreadCount);
+        JobContext jobContext = JobContext.forParallelJob(maxThreadCount);
 
-        Stream<Integer> result = ParallelJob.forEach(new Integer[]{1, 2, 3}, threadPool).run(p -> p * 10);
+        Stream<Integer> result = jobContext.forEach(1, 2, 3).run(p -> p * 10);
         List<Integer> sortedList = result.sorted().collect(Collectors.toList());
-        threadPool.shutdown();
+        jobContext.shutdown();
         assertEquals(3, sortedList.size());
         assertEquals(10, sortedList.get(0).intValue());
     }
@@ -72,9 +70,9 @@ public class ParallelJobTest {
     public void testRunToStream() {
         System.out.println("runToStream");
         int maxThreadCount = 10;
-        ForkJoinPool threadPool =new ForkJoinPool(maxThreadCount);
+        JobContext jobContext = JobContext.forParallelJob(maxThreadCount);
 
-        Stream<Integer> result = ParallelJob.forEach(new Integer[]{1, 2, 3}, threadPool)
+        Stream<Integer> result = jobContext.forEach(1, 2, 3)
                 .runOfStream(p -> Stream.of(p * 10));
 
         List<Integer> sortedList = result.sorted().collect(Collectors.toList());
@@ -82,36 +80,59 @@ public class ParallelJobTest {
         assertEquals(10, sortedList.get(0).intValue());
     }
 
-    /**
+     /**
      * Check a timeout
      */
     @Test
     public void testCheckTimeout() {
-        System.out.println("getTimeout");
+        System.out.println("checkTimeout");
         int maxThreadCount = 10;
-        ForkJoinPool threadPool = new ForkJoinPool(maxThreadCount);
         Duration timeout = Duration.ofMillis(100);
-        ParallelJobException result = null;
-        Stream<Long> stream = null;
+        JobContext jobContext = JobContext.forParallelJob(maxThreadCount, timeout);
+        int result = 0;
+        JobException exeption = null;
 
         try {
-            ParallelJob.forEach(new Integer[]{100, 200, 500}, threadPool)
-                    .setTimeout(timeout)
+            result = jobContext.forEach(100, 200, 500)
                     .run(p -> sleep(Duration.ofMillis(p)))
-                    .collect(Collectors.toList());
-        } catch (ParallelJobException e) {
-            result = e;
+                    .mapToInt(i -> i.intValue()).sum();
+        } catch (JobException e) {
+            exeption = e;
         }
 
-        assertTrue(stream == null);
-        assertTrue(result != null);
-        assertTrue(result.getCause() instanceof TimeoutException);
+        assertEquals(0, result);
+        assertTrue(exeption != null);
+        assertTrue(exeption.getCause() instanceof TimeoutException);
+    }
+
+    /**
+     * Check a timeout
+     */
+    @Test
+    public void testCheckTimeoutOfStream() {
+        System.out.println("checkTimeoutOfStream");
+        int maxThreadCount = 10;
+        Duration timeout = Duration.ofMillis(100);
+        JobContext jobContext = JobContext.forParallelJob(maxThreadCount, timeout);
+        JobException exeption = null;
+        int result = 0;
+
+        try {
+            result = jobContext.forEach(100, 200, 500)
+                    .runOfStream(p -> Stream.of(0L, sleep(Duration.ofMillis(p))))
+                    .mapToInt(i -> i.intValue()).sum();
+        } catch (JobException e) {
+            exeption = e;
+        }
+
+        assertEquals(0, result);
+        assertTrue(exeption != null);
+        assertTrue(exeption.getCause() instanceof TimeoutException);
     }
 
     /**
      * Check Time of parallel work.
      */
-    @Ignore // TODO: FixIT
     @Test
     public void testTimeOfParalellWork() {
         System.out.println("timeOfParalellWork");
@@ -120,9 +141,9 @@ public class ParallelJobTest {
         int jobCount = 10;
         List<Duration> params = Collections.nCopies(jobCount, jobDuration);
         LocalDateTime start = LocalDateTime.now();
-        ForkJoinPool threadPool = new ForkJoinPool(jobCount);
+        JobContext jobContext = JobContext.forParallelJob(jobCount);
 
-        List<Integer> list = ParallelJob.forEach(params, threadPool)
+        List<Long> list = jobContext.forEach(params)
                 .run(duration -> sleep(duration)) // 1 sec
                 .collect(Collectors.toList());
 
@@ -142,12 +163,12 @@ public class ParallelJobTest {
         Duration jobDuration = Duration.ofSeconds(1);
         int jobCount = 10;
         List<Duration> params = Collections.nCopies(jobCount, jobDuration);
+        JobContext jobContext = JobContext.forSingleThread();
 
         LocalDateTime start = LocalDateTime.now();
-        List<Integer> list = ParallelJob.forEach(params, null)
+        List<Long> list = jobContext.forEach(params)
                 .run(duration -> sleep(duration)) // 1 sec
                 .collect(Collectors.toList());
-        LocalDateTime stop = LocalDateTime.now();
 
         Duration duration = Duration.between(start, LocalDateTime.now());
         assertTrue("Real time took sec: " + duration.getSeconds(), duration.getSeconds() >= jobCount);
@@ -155,10 +176,10 @@ public class ParallelJobTest {
         assertEquals(jobCount, list.size());
     }
 
-    private Integer sleep(Duration duration) {
+    private Long sleep(Duration duration) {
         try {
             Thread.sleep(duration.toMillis());
-            return (int) duration.toMillis();
+            return duration.toMillis();
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, "An interrupting of the test", e);
             return null;

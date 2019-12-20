@@ -20,8 +20,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
-import org.ujorm.tools.thread.MultiJob.MultiJobException;
+import org.ujorm.tools.thread.Jobs.JobException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -56,11 +54,11 @@ public class MultiJobTest {
     public void testGetStream() throws IOException {
         System.out.println("run");
         int maxThreadCount = 10;
-        ExecutorService threadPool = Executors.newFixedThreadPool(maxThreadCount);
+        JobContext jobContext = JobContext.forMultiJob(maxThreadCount);
 
-        Stream<Integer> result = MultiJob.forEach(new Integer[]{1, 2, 3}, threadPool).run(p -> p * 10);
+        Stream<Integer> result = jobContext.forEach(1, 2, 3).run(p -> p * 10);
         List<Integer> sortedList = result.sorted().collect(Collectors.toList());
-        threadPool.shutdown();
+        jobContext.shutdown();
         assertEquals(3, sortedList.size());
         assertEquals(10, sortedList.get(0).intValue());
     }
@@ -72,9 +70,9 @@ public class MultiJobTest {
     public void testRunToStream() {
         System.out.println("runToStream");
         int maxThreadCount = 10;
-        ExecutorService threadPool = Executors.newFixedThreadPool(maxThreadCount);
+        JobContext jobContext = JobContext.forMultiJob(maxThreadCount);
 
-        Stream<Integer> result = MultiJob.forEach(new Integer[]{1, 2, 3}, threadPool)
+        Stream<Integer> result = jobContext.forEach(1, 2, 3)
                 .runOfStream(p -> Stream.of(p * 10));
 
         List<Integer> sortedList = result.sorted().collect(Collectors.toList());
@@ -87,25 +85,49 @@ public class MultiJobTest {
      */
     @Test
     public void testCheckTimeout() {
-        System.out.println("getTimeout");
+        System.out.println("checkTimeout");
         int maxThreadCount = 10;
-        ExecutorService threadPool = Executors.newFixedThreadPool(maxThreadCount);
         Duration timeout = Duration.ofMillis(100);
-        MultiJobException result = null;
-        Stream<Long> stream = null;
+        JobContext jobContext = JobContext.forMultiJob(maxThreadCount, timeout);
+        int result = 0;
+        JobException exeption = null;
 
         try {
-            MultiJob.forEach(new Integer[]{100, 200, 500}, threadPool)
-                    .setTimeout(timeout)
+            result = jobContext.forEach(100, 200, 500)
                     .run(p -> sleep(Duration.ofMillis(p)))
-                    .collect(Collectors.toList());
-        } catch (MultiJobException e) {
-            result = e;
+                    .mapToInt(i -> i.intValue()).sum();
+        } catch (JobException e) {
+            exeption = e;
         }
 
-        assertTrue(stream == null);
-        assertTrue(result != null);
-        assertTrue(result.getCause() instanceof TimeoutException);
+        assertEquals(0, result);
+        assertTrue(exeption != null);
+        assertTrue(exeption.getCause() instanceof TimeoutException);
+    }
+
+    /**
+     * Check a timeout
+     */
+    @Test
+    public void testCheckTimeoutOfStream() {
+        System.out.println("checkTimeoutOfStream");
+        int maxThreadCount = 10;
+        Duration timeout = Duration.ofMillis(100);
+        JobContext jobContext = JobContext.forMultiJob(maxThreadCount, timeout);
+        JobException exeption = null;
+        int result = 0;
+
+        try {
+            result = jobContext.forEach(100, 200, 500)
+                    .runOfStream(p -> Stream.of(0L, sleep(Duration.ofMillis(p))))
+                    .mapToInt(i -> i.intValue()).sum();
+        } catch (JobException e) {
+            exeption = e;
+        }
+
+        assertEquals(0, result);
+        assertTrue(exeption != null);
+        assertTrue(exeption.getCause() instanceof TimeoutException);
     }
 
     /**
@@ -119,9 +141,9 @@ public class MultiJobTest {
         int jobCount = 120;
         List<Duration> params = Collections.nCopies(jobCount, jobDuration);
         LocalDateTime start = LocalDateTime.now();
-        ExecutorService threadPool = Executors.newFixedThreadPool(jobCount);
+        JobContext jobContext = JobContext.forMultiJob(jobCount);
 
-        List<Integer> list = MultiJob.forEach(params, threadPool)
+        List<Long> list = jobContext.forEach(params)
                 .run(duration -> sleep(duration)) // 1 sec
                 .collect(Collectors.toList());
 
@@ -141,12 +163,12 @@ public class MultiJobTest {
         Duration jobDuration = Duration.ofSeconds(1);
         int jobCount = 10;
         List<Duration> params = Collections.nCopies(jobCount, jobDuration);
+        JobContext jobContext = JobContext.forSingleThread();
 
         LocalDateTime start = LocalDateTime.now();
-        List<Integer> list = MultiJob.forEach(params, null)
+        List<Long> list = jobContext.forEach(params)
                 .run(duration -> sleep(duration)) // 1 sec
                 .collect(Collectors.toList());
-        LocalDateTime stop = LocalDateTime.now();
 
         Duration duration = Duration.between(start, LocalDateTime.now());
         assertTrue("Real time took sec: " + duration.getSeconds(), duration.getSeconds() >= jobCount);
@@ -154,10 +176,10 @@ public class MultiJobTest {
         assertEquals(jobCount, list.size());
     }
 
-    private Integer sleep(Duration duration) {
+    private Long sleep(Duration duration) {
         try {
             Thread.sleep(duration.toMillis());
-            return (int) duration.toMillis();
+            return duration.toMillis();
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, "An interrupting of the test", e);
             return null;

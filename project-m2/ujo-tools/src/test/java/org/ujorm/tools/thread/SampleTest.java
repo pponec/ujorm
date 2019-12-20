@@ -39,9 +39,7 @@ public class SampleTest {
         final int parallelism = 100; // 32_767;
         final Duration jobDuration = Duration.ofSeconds(1);
         final ForkJoinPool threadPool = new ForkJoinPool(parallelism);
-        final int sum = threadPool.submit(()
-                -> // Parallel task here, for example
-                Collections.nCopies(parallelism, 1)
+        final int sum = threadPool.submit(() -> Collections.nCopies(parallelism, 1)
                         .parallelStream()
                         .map(t -> job(t, jobDuration))
                         .mapToInt(i -> i)
