@@ -36,7 +36,7 @@ public class SampleTest {
     public void parallelStreamTest() throws InterruptedException, ExecutionException {
         System.out.println("parallelStreamTest");
 
-        final int parallelism = 10_000; // 32_767;
+        final int parallelism = 100; // 32_767;
         final Duration jobDuration = Duration.ofSeconds(1);
         final ForkJoinPool threadPool = new ForkJoinPool(parallelism);
         final int sum = threadPool.submit(()
@@ -59,8 +59,7 @@ public class SampleTest {
     @Test
     public void CompletableFutureTest() {
 
-
-        final int parallelism = 10_000; // Short.MAX_VALUE; //10_000;
+        final int parallelism = 1_000; // Short.MAX_VALUE; // 10_000;
         final Duration jobDuration = Duration.ofSeconds(1);
         final ExecutorService threadPool = Executors.newFixedThreadPool(parallelism);
         final int sum = Collections.nCopies(parallelism, 1)
@@ -80,7 +79,6 @@ public class SampleTest {
     public void defaultThreadPoolTest() {
 
         final int parallelism = 1_000;
-        final Meter meter = Meter.start("defaultThreadPoolTest", parallelism);
         final Duration jobDuration = Duration.ofSeconds(1);
         final int sum = Collections.nCopies(parallelism, 1)
                 .parallelStream()
@@ -88,7 +86,6 @@ public class SampleTest {
                 .mapToInt(i -> i)
                 .sum();
 
-        meter.stop().print();
         System.out.println(sum);
     }
 

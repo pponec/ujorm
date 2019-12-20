@@ -18,6 +18,7 @@
 package org.ujorm.tools.thread;
 
 import java.time.Duration;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -27,11 +28,9 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.set.LoopingIterator;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
@@ -149,22 +148,11 @@ public class MultiJob<P> {
      * A factory method
      * @param params All aguments
      * @param threadPool A target {@code threadPoll} or {@code null} to run the job on the current single thread.
-     *    For example: {@code Executors.newFixedThreadPool(maxThreadCount)}.
+     *    For example: {@code new ForkJoinPool(maxThreadCount)}.
      * @return An instance of multiJob
      */
-    public static <P> MultiJob<P> forEach(@Nonnull final Iterable<P> params, @Nullable final Executor threadPool) {
-        return forEach(StreamSupport.stream(params.spliterator(), false), threadPool);
-    }
-
-    /**
-     * A factory method
-     * @param params All aguments
-     * @param threadPool A target {@code threadPoll} or {@code null} to run the job on the current single thread.
-     *    For example: {@code Executors.newFixedThreadPool(maxThreadCount)}.
-     * @return An instance of multiJob
-     */
-    public static <P> MultiJob<P> forEach(@Nonnull final LoopingIterator<P> params, @Nullable final Executor threadPool) {
-        return forEach(params.toStream(), threadPool);
+    public static <P> MultiJob<P> forEach(@Nonnull final Collection<P> params, @Nullable final Executor threadPool) {
+        return forEach(params.stream(), threadPool);
     }
 
     /**
