@@ -86,8 +86,8 @@ public class ParallelJob<P> extends Jobs<P> {
         try {
             return threadPool.submit(() -> getParallel()
                     .map(job)
-                    .flatMap(Function.identity()) // Join all streams
                     .collect(Collectors.toList()).stream() // Join all threads
+                    .flatMap(Function.identity()) // Join all streams
             ).get(timeout.toMillis(), TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new JobException(e);
