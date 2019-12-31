@@ -3,12 +3,10 @@
 package org.version2.bo.generated;
 
 import java.util.Date;
-import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
-import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
@@ -54,22 +52,6 @@ public class $User extends User implements UjoMiddle<$User> {
     @Nonnull
     public User original() {
         return data != null ? data : this;
-    }
-
-    @Override
-    public <VALUE> VALUE get(Key<? super $User, VALUE> key) {
-        return key.of(this);
-    }
-
-    @Override
-    public <VALUE> Ujo set(Key<? super $User, VALUE> key, VALUE value) {
-        key.setValue(this, value);
-        return this;
-    }
-
-    @Override
-    public <VALUE> List<VALUE> getList(ListKey<? super $User, VALUE> key) {
-        return key.getList(this);
     }
 
     @Override

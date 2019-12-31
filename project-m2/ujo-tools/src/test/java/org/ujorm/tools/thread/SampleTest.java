@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -55,7 +56,7 @@ public class SampleTest {
      * 32_767 threads throws java.lang.OutOfMemoryError.
      */
     @Test
-    public void CompletableFutureTest() {
+    public void completableFutureTest() {
 
         final int parallelism = 1_000; // Short.MAX_VALUE; // 10_000;
         final Duration jobDuration = Duration.ofSeconds(1);
@@ -68,6 +69,29 @@ public class SampleTest {
                 .mapToInt(i -> i)
                 .sum();
         threadPool.shutdown();
+        System.out.println(sum);
+    }
+    /** 1_000 jobs take 1.2 seconds by 1_000 threads,
+     * 10_000 jobs take 9.2 seconds by 10_000 threads,
+     * 32_767 threads throws java.lang.OutOfMemoryError.
+     */
+    @Test
+    public void runnableTest() {
+
+        final int parallelism = 10_000; // Short.MAX_VALUE; // 10_000;
+        final Duration jobDuration = Duration.ofSeconds(1);
+        final AtomicInteger sum = new AtomicInteger();
+        final ThreadGroup tg = new ThreadGroup ("myThreadGroup");
+
+        Collections.nCopies(parallelism, 1)
+                .stream()
+                .forEach(i -> new Thread(tg, () -> sum.addAndGet(job(i, jobDuration)))
+                .start());
+
+        while (tg.activeCount() > 0) {
+            job(1, Duration.ofMillis(100));
+        }
+
         System.out.println(sum);
     }
 
