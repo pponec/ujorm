@@ -33,6 +33,7 @@ import org.ujorm.extensions.StringWrapper;
 import org.ujorm.extensions.ValueWrapper;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.msg.MsgFormatter;
 
 /**
@@ -303,7 +304,7 @@ public class TypeService implements ITypeService<Object,Object> {
     private Object findEnum
         ( @Nullable final String key
         , @Nonnull final MetaColumn mColumn) throws IllegalUjormException {
-        if (key==null || key.isEmpty()) {
+        if (Check.isEmpty(key)) {
             return null;
         }
         for (Object o : mColumn.getType().getEnumConstants()) {
@@ -322,7 +323,7 @@ public class TypeService implements ITypeService<Object,Object> {
     /** Create the new StringWrapper by the KEY. */
     @SuppressWarnings("unchecked")
     private Object createStringWrapper(@Nullable final String key, @Nonnull final MetaColumn mColumn) throws IllegalUjormException {
-        if (key==null || key.isEmpty()) {
+        if (Check.isEmpty(key)) {
             return null;
         }
         try {

@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
@@ -174,21 +175,26 @@ public class UjoCoder {
      * <br>If value can't be decoded, an IllegalArgumentException is throwed.
      */
     @SuppressWarnings("unchecked")
-    public <T> T decodeValue(final Key<?,T> key, final String aValue, final Class type) throws IllegalArgumentException {
+    public <T> T decodeValue(
+            @Nonnull final Key<?,T> key,
+            @Nullable final String value,
+            @Nullable final Class type) throws IllegalArgumentException {
         if (key instanceof ListKey) {
-            if (aValue==null || aValue.isEmpty()) { return null; }
+            if (Check.isEmpty(value)) {
+                return null;
+            }
             List result = new ArrayList();
             ListKey propertyList = (ListKey) key;
             String separator = String.valueOf(getSeparator());
-            StringTokenizer st = new StringTokenizer(aValue, separator);
+            StringTokenizer st = new StringTokenizer(value, separator);
             while (st.hasMoreTokens()) {
                 final String text = st.nextToken();
-                final Object val  = decodeValue(propertyList.getItemType(), text);
+                final Object val = decodeValue(propertyList.getItemType(), text);
                 result.add(val);
             }
             return (T) result;
         } else {
-            final Object result = decodeValue(type!=null ? type : key.getType(), aValue);
+            final Object result = decodeValue(type != null ? type : key.getType(), value);
             return (T) result;
         }
     }

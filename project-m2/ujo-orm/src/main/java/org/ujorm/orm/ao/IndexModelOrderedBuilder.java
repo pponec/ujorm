@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.orm.metaModel.*;
+import org.ujorm.tools.Check;
 
 /** Database meta index model builder with a user ordered columns support.
  * Two columns of a database composite index can be ordered according a number
@@ -82,7 +83,7 @@ public class IndexModelOrderedBuilder extends IndexModelBuilder {
         , final MetaColumn column
         , final boolean unique) {
 
-        if (indexName == null || indexName.isEmpty()) {
+        if (Check.isEmpty(indexName)) {
             return;
         }
         if (MetaColumn.AUTO_INDEX_NAME.equals(indexName)) {

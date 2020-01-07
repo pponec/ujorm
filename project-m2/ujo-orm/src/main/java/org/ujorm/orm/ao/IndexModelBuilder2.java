@@ -22,6 +22,7 @@ import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.SqlNameProvider;
 import org.ujorm.orm.metaModel.*;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
 import static org.ujorm.orm.metaModel.MetaTable.COLUMNS;
 
 /** The database index model builder. The builder sorts columns of the composite index
@@ -68,7 +69,7 @@ public class IndexModelBuilder2  {
         ( String indexName
         , final MetaColumn column
         , final boolean unique) {
-        if (indexName == null || indexName.isEmpty()) {
+        if (Check.isEmpty(indexName)) {
             return;
         }
         if (MetaColumn.AUTO_INDEX_NAME.equals(indexName)) {

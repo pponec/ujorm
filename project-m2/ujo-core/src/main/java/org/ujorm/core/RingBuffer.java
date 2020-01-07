@@ -25,7 +25,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -246,9 +248,9 @@ final public class RingBuffer implements CharSequence {
      * @return Return a result between beg and end tags (texts). The result is newer NULL.
      * @throws IOException
      */
-    public static String findWordNoTrim(final Reader reader, String beg, String end) throws IOException {
-        boolean begEmpty = beg == null || beg.isEmpty();
-        boolean endEmpty = end == null || end.isEmpty();
+    public static String findWordNoTrim(final Reader reader, @Nullable String beg, @Nullable String end) throws IOException {
+        final boolean begEmpty = Check.isEmpty(beg);
+        final boolean endEmpty = Check.isEmpty(end);
 
         if (begEmpty && endEmpty) {
             return "";
