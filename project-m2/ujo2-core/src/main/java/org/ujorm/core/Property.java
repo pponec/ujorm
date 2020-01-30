@@ -20,6 +20,8 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -47,7 +49,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     /** Property Separator character */
     public static final char PROPERTY_SEPARATOR = '.';
     /** Undefined index value */
-    public static final int UNDEFINED_INDEX = -1;
+    public static final Integer UNDEFINED_INDEX = null;
 
     /** Property name */
     private String name;
@@ -87,8 +89,20 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
         return _sequencer++;
     }
 
+    /** POJO writer */
+    private final BiConsumer<U,VALUE> writer;
+
+    /** POJO reader */
+    private final Function<U,VALUE> reader;
+
     /** Protected constructor */
-    protected Property(final int index) {
+    protected Property(
+            @Nonnull final Function<U,VALUE> reader,
+            @Nonnull final BiConsumer<U,VALUE> writer,
+            @Nullable final Integer index
+    ) {
+        this.reader = reader;
+        this.writer = writer;
         this.index = index != UNDEFINED_INDEX
                 ? index
                 : _nextRawSequence();
@@ -183,22 +197,8 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
-    public void setValue(final VALUE value, @Nonnull final U ujo) throws ValidationException{
-                throw new UnsupportedOperationException("TODO");
-    }
-
-    /**
-     * It is a basic method for setting an appropriate type safe value to an MapUjo object.
-     * <br>For the setting value is used internally a method
-     *     {@link AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object) }
-     * @param ujo Related Ujo object
-     * @param value A value to assign.
-     * @param createRelations create related D objects in case of the composite key
-     * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
-     * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
-     */
-    public final void set(@Nonnull final U ujo, final VALUE value, boolean createRelations) throws ValidationException {
-        setValue(value, ujo);
+    public void setValue(final VALUE value, @Nonnull final U ujo) throws ValidationException {
+        writer.accept(ujo, value);
     }
 
     /**
@@ -208,7 +208,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     @SuppressWarnings("unchecked")
     @Override
     public final VALUE getValue(@Nonnull final U ujo) {
-        return of(ujo);
+        return reader.apply(ujo);
     }
 
     /**
