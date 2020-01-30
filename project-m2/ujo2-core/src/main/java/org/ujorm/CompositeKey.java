@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2017 Pavel Ponec, https://github.com/pponec
+ * Copyright 2007-2020 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ public interface CompositeKey<D, V> extends Key<D, V>, Iterable<Key<?,?>> {
      * @see _Object#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
-    public void setValue(final D ujo, final V value) throws ValidationException;
+    public void setValue(final V value, final D ujo) throws ValidationException;
 
     /**
      * It is a basic method for setting an appropriate type safe value to an Ujo object.

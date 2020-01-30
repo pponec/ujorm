@@ -57,7 +57,7 @@ public class AbstractKey<D,V> implements Key<D,V> {
     }
 
     @Override
-    public void setValue(D ujo, V value) throws ValidationException {
+    public void setValue(V value, D ujo) throws ValidationException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -118,11 +118,6 @@ public class AbstractKey<D,V> implements Key<D,V> {
 
     @Override
     public boolean isAscending() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Key<D, V> descending() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

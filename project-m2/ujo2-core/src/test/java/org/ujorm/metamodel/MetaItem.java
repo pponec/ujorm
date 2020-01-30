@@ -18,19 +18,19 @@ public class MetaItem<T> extends AbstractKey<T, Item> implements MetaInterface<T
         super(domainClass, context);
     }
 
-    public Key<T, Integer> keyId() {
+    public Key<T, Integer> id() {
         return null;
     }
 
-    public Key<T, String> keyNote() {
+    public Key<T, String> note() {
         return null;
     }
 
-    public Key<T, BigDecimal> keyPrice() {
+    public Key<T, BigDecimal> price() {
         return null;
     }
 
-    public MetaOrder<T> keyOrder() {
+    public MetaOrder<T> order() {
         return null;
     }
 

@@ -20,31 +20,31 @@ public class MySampleService {
     public void doOrderAccess() {
         MetaOrder<Order> metaOrder = MetaOrder.of();
 
-        Key<Order, Integer> keyOrderId = metaOrder.keyId();
-        Key<Order, String> keyUserName = metaOrder.keyUser().keyFirstName();
+        Key<Order, Integer> orderIdKey = metaOrder.id();
+        Key<Order, String> userNameKey = metaOrder.user().firstName();
 
         Order order = metaOrder.newDomain();
-        keyOrderId.setValue(order, 1);
-        keyUserName.setValue(order, "Pavel");
-        Integer id = keyOrderId.getValue(order);
-        String name = keyUserName.getValue(order);
+        orderIdKey.setValue(1, order);
+        userNameKey.setValue("Pavel", order);
+        Integer id = orderIdKey.getValue(order);
+        String name = userNameKey.getValue(order);
     }
 
     /** Reading / writing */
     public void doItemAccess() {
         MetaItem<Item> metaItem = MetaItem.of();
 
-        Key<Item, Integer> keyItemId = metaItem.keyId();
-        Key<Item, User> keyUser = metaItem.keyOrder().keyUser();
-        Key<Item, Short> keyPin = metaItem.keyOrder().keyUser().keyPin();
+        Key<Item, Integer> itemIdKey = metaItem.id();
+        Key<Item, User> userKey = metaItem.order().user();
+        Key<Item, Short> pinKey = metaItem.order().user().pin();
 
         Item item = metaItem.newDomain();
-        keyItemId.setValue(item, 1);
-        Integer orderId1 = keyItemId.getValue(item);
-        keyUser.setValue(item, new User());
-        User user = keyUser.getValue(item);
-        keyPin.setValue(item, (short) 125);
-        Short userPin = keyPin.getValue(item);
+        itemIdKey.setValue(1, item);
+        Integer orderId1 = itemIdKey.getValue(item);
+        userKey.setValue(new User(), item);
+        User user = userKey.getValue(item);
+        pinKey.setValue((short) 125, item);
+        Short userPin = pinKey.getValue(item);
     }
 
     /** Criterions */
@@ -54,8 +54,8 @@ public class MySampleService {
         Criterion<Item> itemCrn1 = mItem.forAll();
         List<Item> items = itemCrn1.select(findItemsService());
 
-        Criterion<Item> crn1 = mItem.keyOrder().keyId().forEq(10);
-        Criterion<Item> crn2 = mItem.keyOrder().keyCreated().forLe(LocalDateTime.now());
+        Criterion<Item> crn1 = mItem.order().id().forEq(10);
+        Criterion<Item> crn2 = mItem.order().created().forLe(LocalDateTime.now());
         Criterion<Item> crn3 = crn1.and(crn2);
         List<Item> result = crn3.select(findItemsService());
     }

@@ -22,23 +22,23 @@ public class MetaUser<T> extends AbstractKey<T, User> implements MetaInterface<T
         return null;
     }
 
-    public Key<T, Short> keyPin() {
+    public Key<T, Short> pin() {
         return null;
     }
 
-    public Key<T, String> keyFirstName() {
+    public Key<T, String> firstName() {
         return null;
     }
 
-    public Key<T, String> keySureName() {
+    public Key<T, String> sureName() {
         return null;
     }
 
-    public Key<T, LocalDateTime> keyCreated() {
+    public Key<T, LocalDateTime> created() {
         return null;
     }
 
-    public Key<T, MetaUser> keyParent() {
+    public Key<T, MetaUser> parent() {
         return null;
     }
 

@@ -43,27 +43,27 @@ public class MetaOrder<T> extends AbstractKey<T, Order> implements MetaInterface
         created = context.createKey(domainClass, LocalDateTime.class, null, null);
     }
 
-    public Key<T, Integer> keyId() {
+    public Key<T, Integer> id() {
         return id;
     }
 
-    public Key<T ,State> keyState() {
+    public Key<T ,State> state() {
         return state;
     }
 
-    public  Key<T, BigDecimal> keyTotalPrice() {
+    public  Key<T, BigDecimal> totalPrice() {
         return totalPrice;
     }
 
-    public MetaUser<T> keyUser() {
+    public MetaUser<T> user() {
         return user;
     }
 
-    public Key<T, String> keyNote() {
+    public Key<T, String> note() {
         return note;
     }
 
-    public Key<T, LocalDateTime> keyCreated() {
+    public Key<T, LocalDateTime> created() {
         return created;
     }
 

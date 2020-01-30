@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2014 Pavel Ponec
+ *  Copyright 2007-2020 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -183,7 +183,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
-    public void setValue(@Nonnull final U ujo, final VALUE value) throws ValidationException{
+    public void setValue(final VALUE value, @Nonnull final U ujo) throws ValidationException{
                 throw new UnsupportedOperationException("TODO");
     }
 
@@ -198,7 +198,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     public final void set(@Nonnull final U ujo, final VALUE value, boolean createRelations) throws ValidationException {
-        setValue(ujo, value);
+        setValue(value, ujo);
     }
 
     /**
@@ -244,11 +244,6 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
         return (PROPERTY) this;
     }
 
-    /** Assign a value from the default value. */
-    public void setFromDefault(U ujo) {
-        setValue(ujo, defaultValue);
-    }
-
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
     @Override
     public boolean isDefault(@Nonnull final U ujo) {
@@ -289,16 +284,6 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     @Override
     public boolean isAscending() {
         return true;
-    }
-
-    /** Create a new instance of the <strong>indirect</strong> key with a descending direction of order.
-     * @since 0.85
-     * @see #isAscending()
-     * @see org.ujorm.core.UjoComparator
-     */
-    @Override
-    public Key<U, VALUE> descending() {
-        return descending(true);
     }
 
     /** Create a new instance of the <strong>indirect</strong> key with a descending direction of order.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2017 Pavel Ponec, https://github.com/pponec
+ * Copyright 2007-2020 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvi
      * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
-    public void setValue(@Nonnull D domain, @Nullable V value) throws ValidationException;
+    public void setValue(@Nullable V value, @Nonnull D domain) throws ValidationException;
 
     /**
      * TODO: Is it really the good idea to extend the interface with this method ?
@@ -196,14 +196,6 @@ public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvi
      * @see org.ujorm.core.UjoComparator
      */
     public boolean isAscending();
-
-    /** Create new instance of an <strong>indirect</strong> Key with the descending direction of sorting.
-     * @return returns a new instance of the indirect Key
-     * @since 0.85
-     * @see #isAscending()
-     * @see org.ujorm.core.UjoComparator
-     */
-    public Key<D,V> descending();
 
     /** Create new instance of an <strong>indirect</strong> Key with the descending direction of sorting.
      * @return returns a new instance of the indirect Key
