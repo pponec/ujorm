@@ -34,6 +34,14 @@ public class MetaItem<T> extends AbstractKey<T, Item> implements MetaInterface<T
         return null;
     }
 
+    public Key<T, Boolean> descending$() {
+        return null;
+    }
+
+    public Key<T, Integer> codePoints$() {
+        return null;
+    }
+
     // ---- Helper method
 
     @Override

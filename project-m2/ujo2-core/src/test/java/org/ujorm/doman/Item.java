@@ -7,12 +7,14 @@ import java.math.BigDecimal;
  * @author Pavel Ponec
  */
 public class Item {
-    
+
     /** Unique key */
     private Integer id;
     private String note;
     private BigDecimal price;
     private Order order;
+    private Boolean descending;
+    private Integer codePoints;
 
     public Integer getId() {
         return id;
@@ -45,7 +47,21 @@ public class Item {
     public void setOrder(Order order) {
         this.order = order;
     }
-    
 
-    
+    public Boolean getDescending() {
+        return descending;
+    }
+
+    public void setDescending(Boolean descending) {
+        this.descending = descending;
+    }
+
+    public Integer getCodePoints() {
+        return codePoints;
+    }
+
+    public void setCodePoints(Integer codePoints) {
+        this.codePoints = codePoints;
+    }
+
 }
