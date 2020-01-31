@@ -29,12 +29,12 @@ import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Validator;
-import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ProxyValue;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.validator.ValidationException;
 
 /**
@@ -63,76 +63,36 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      *     : the continuous and ascending series of numbers usable as a pointer to an array. This is a final state</li>
      * </ul>
      */
+    /** POJO writer */
+    private BiConsumer<U,VALUE> writer;
+    /** POJO reader */
+    private Function<U,VALUE> reader;
+    /** Property index */
     private int index;
     /** Property type (class) */
-    private Class<VALUE> type;
+    private Class<VALUE> valueClass;
     /** Domain type type (class) */
-    private Class<U> domainType;
+    private Class<U> domainClass;
     /** Property default value */
     private VALUE defaultValue;
     /** Input Validator */
     private Validator<VALUE> validator;
-    /** Lock all properties after initialization */
-    private boolean lock;
-
-
-    /** A key sequencer for an index attribute
-     * @see #_nextSequence()
-     */
-    private static int _sequencer = Integer.MIN_VALUE;
-
-    /** Returns a next key index by a synchronized method.
-     * The D key indexed by this method may not be in continuous series
-     * however numbers have the <strong>upward direction</strong> always.
-     */
-    protected static synchronized int _nextRawSequence() {
-        return _sequencer++;
-    }
-
-    /** POJO writer */
-    private final BiConsumer<U,VALUE> writer;
-
-    /** POJO reader */
-    private final Function<U,VALUE> reader;
-
-    /** Protected constructor */
-    protected Property(
-            @Nonnull final Function<U,VALUE> reader,
-            @Nonnull final BiConsumer<U,VALUE> writer,
-            @Nullable final Integer index
-    ) {
-        this.reader = reader;
-        this.writer = writer;
-        this.index = index != UNDEFINED_INDEX
-                ? index
-                : _nextRawSequence();
-    }
+    /** Attribute writer */
+    private Writer attribWriter = new Writer();
 
     /** Lock the Property */
-    protected void lock() {
-        this.lock = true;
+    protected final void lock() {
+        attribWriter = null;
     }
+
     /** Check an internal log and throw an {@code IllegalStateException} if the object is locked. */
-    protected final void checkLock() throws IllegalStateException {
-        if (this.lock) {
-            throw new IllegalStateException("The key is already initialized: " + this);
+    @Nonnull
+    public final Writer getAttribWriter() throws IllegalStateException {
+        if (attribWriter == null) {
+            throw new IllegalStateException("The key is already locked: "
+                    + toStringDetailed());
         }
-    }
-
-    /** The Name must not contain any dot character */
-    private void setName(@Nonnull final String name) throws IllegalArgumentException{
-        if (name==null) {
-            return;
-        }
-        Assert.hasLength(name, "Key name of the '{}' must not be empty", domainType);
-
-        Assert.isFalse(isPropertySeparatorDisabled()
-                && name.indexOf(PROPERTY_SEPARATOR) > 0
-            , "Key name '{}' must not contain a dot character '{}'."
-            , name
-            , PROPERTY_SEPARATOR);
-
-        this.name = name;
+        return attribWriter;
     }
 
     /** Method returns the {@code true} in case the {@link #PROPERTY_SEPARATOR}
@@ -144,18 +104,11 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
         return true;
     }
 
-    /** Is the key Locked? */
-    @PackagePrivate final boolean isLock() {
-        return lock;
-    }
-
     /** Check validity of keys */
     protected void checkValidity() throws IllegalArgumentException {
-        Assert.notNull(name, "Name must not be null for key index: #{}", index);
-        Assert.notNull(type, "Type must not be null in the {}", this);
-        Assert.notNull(domainType, "domainType", name);
-        Assert.isTrue(defaultValue == null || type.isInstance(defaultValue)
-                , "Default value have not properly type in the ", this);
+        Assert.hasLength(name, "name");
+        Assert.notNull(valueClass, "type");
+        Assert.notNull(domainClass, "domainType");
     }
 
     /** Name of Property */
@@ -167,21 +120,21 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     /** {@inheritDoc} */
     @Override
     public final String getFullName() {
-        return domainType != null
-             ? domainType.getSimpleName() + '.' + name
+        return domainClass != null
+             ? domainClass.getSimpleName() + '.' + name
              : name ;
     }
 
     /** Type of Property */
     @Override
     public final Class<VALUE> getValueClass() {
-        return type;
+        return valueClass;
     }
 
     /** Type of Property */
     @Override
     public final Class<U> getDomainClass() {
-        return domainType;
+        return domainClass;
     }
 
     /** Index of Property */
@@ -234,16 +187,6 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
         return defaultValue;
     }
 
-    /** Assign a Default value. The default value may be modified after locking - at your own risk.
-     * <br>WARNING: the change of the default value modifies all values in all instances with the null value of the current key!
-     */
-    @SuppressWarnings("unchecked")
-    public <PROPERTY extends Property> PROPERTY writeDefault(final VALUE value) {
-        defaultValue = value;
-        if (lock) checkValidity();
-        return (PROPERTY) this;
-    }
-
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
     @Override
     public boolean isDefault(@Nonnull final U ujo) {
@@ -253,22 +196,6 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
         || (defaultValue!=null && defaultValue.equals(value))
         ;
         return result;
-    }
-
-    /**
-     * If the key is the direct key of the related UJO class then method returns the TRUE value.
-     * The return value false means, that key is type of {@link CompositeKey}.
-     * <br>
-     * Note: The composite keys are excluded from from function Ujo.readProperties() by default
-     * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
-     * @see CompositeKey
-     * @since 0.81
-     * @deprecated use rather a negation of the method {@link #isComposite() }
-     */
-    @Deprecated
-    @Override
-    public final boolean isDirect() {
-        return ! isComposite();
     }
 
     /** {@inheritDoc} */
@@ -284,6 +211,16 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     @Override
     public boolean isAscending() {
         return true;
+    }
+
+    /** Create a new instance of the <strong>indirect</strong> key with a descending direction of order.
+     * @since 0.85
+     * @see #isAscending()
+     * @see org.ujorm.core.UjoComparator
+     */
+    @Override
+    public Key<U, VALUE> descending() {
+        return descending(true);
     }
 
     /** Create a new instance of the <strong>indirect</strong> key with a descending direction of order.
@@ -338,14 +275,14 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean isTypeOf(@Nonnull final Class type) {
-        return type.isAssignableFrom(this.type);
+        return type.isAssignableFrom(this.valueClass);
     }
 
     /** Returns true if the domain type is a type or subtype of the parameter class. */
     @SuppressWarnings("unchecked")
     @Override
     public boolean isDomainOf(@Nonnull final Class type) {
-        return type.isAssignableFrom(this.domainType);
+        return type.isAssignableFrom(this.domainClass);
     }
 
     /**
@@ -369,13 +306,17 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     }
 
     /**
-     * Returns {@code true}, if the key is the same like the checked argument.
+     * Returns {@code true}, if the domain class and property name are the same.
      * The key value can be {@code null}.
      * @param key An another key.
      */
     @Override
     public boolean equals(@Nullable final Object key) {
-        return this == key;
+        if (key instanceof Property) {
+            final Property arg = (Property) key;
+            return this.domainClass == arg.domainClass && this.name == arg.name;
+        }
+        return false;
     }
 
     /**
@@ -429,40 +370,24 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
         return name;
     }
 
-    /** Returns the full name of the Key including a simple domain class.
-     * <br>Example: Person.id
-     * @deprecated Use the method {@link #getFullName()} rather.
-     */
-    @Deprecated
-    @Override
-    public final String toStringFull() {
-        return getFullName();
-    }
-
-    /**
-     * Returns the full name of the Key including all attributes.
-     * <br>Example: Person.id {index=0, ascending=false, ...}
-     * @param extended arguments false calls the method {@link #getFullName()} only.
-     * @return the full name of the Key including all attributes.
-     */
-    @Override
-    public String toStringFull(boolean extended) {
-        return  extended
-                ? getFullName() + Property.printAttributes(this)
-                : getFullName() ;
-    }
-
-    /** Print  */
-    @PackagePrivate static String printAttributes(@Nonnull final Key key) {
-        return " {index=" + key.getIndex()
-            + ", ascending=" + key.isAscending()
-            + ", composite=" + key.isComposite()
-            + ", default=" + key.getDefaultValue()
-            + ", validator=" + (key.getValidator()!=null ? key.getValidator().getClass().getSimpleName() : null)
-            + ", type=" + key.getValueClass()
-            + ", domainType=" + key.getDomainClass()
-            + ", class=" + key.getClass().getName()
-            + "}" ;
+     /** Print  */
+    public String toStringDetailed() {
+        return MsgFormatter.format
+                ( "fullName={}, "
+                + "valueClass={}, "
+                + "ascending={}, "
+                + "composite={}, "
+                + "defaultValue={}, "
+                + "validator={}, "
+                + "index={}"
+                , getFullName()
+                , getValueClass().getSimpleName()
+                , isAscending()
+                , isComposite()
+                , getDefaultValue()
+                , getValidator() != null ? getValidator().getClass().getSimpleName() : null
+                , getIndex()
+                );
     }
 
     /** {@inheritDoc} */
@@ -559,13 +484,13 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     /** Returns an empty value */
     @Nullable
     private Object getEmptyValue() {
-        if (CharSequence.class.isAssignableFrom(type)) {
+        if (CharSequence.class.isAssignableFrom(valueClass)) {
             return "";
         }
-        if (type.isArray()) {
-            return Array.newInstance(type, 0);
+        if (valueClass.isArray()) {
+            return Array.newInstance(valueClass, 0);
         }
-        if (List.class.isAssignableFrom(type)) {
+        if (List.class.isAssignableFrom(valueClass)) {
             return Collections.EMPTY_LIST;
         }
         return null;
@@ -631,88 +556,47 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
         return Criterion.forNone(this);
     }
 
-    // --------- STATIC METHODS -------------------
+    // ---- INNER CLASSES ---
 
-    /** Returns a new instance of key where the default value is null.
-     * The method assigns a next key index.
-     * @hidden
-     */
-    public static <D,VALUE> Property<D,VALUE> of(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
-        return of(name, type, value, index, (Validator) null, lock);
+    /** An attribute writer */
+    public final class Writer {
+
+        /** The Name must not contain any dot character */
+        public void setName(@Nonnull final String name) throws IllegalArgumentException {
+            Assert.hasLength(name, "name");
+            Assert.isFalse(isPropertySeparatorDisabled() && name.indexOf(PROPERTY_SEPARATOR) > 0,
+                     "Key name '{}' must not contain a dot character '{}'.",
+                     name,
+                     PROPERTY_SEPARATOR);
+
+            Property.this.name = name.intern();
+        }
+
+        public void setWriter(@Nonnull final BiConsumer<U, VALUE> writer) {
+            Property.this.writer = Assert.notNull(writer, "writer");
+        }
+
+        public void setReader(@Nonnull final Function<U, VALUE> reader) {
+            Property.this.reader = Assert.notNull(reader, "reader");
+        }
+
+        public void setType(@Nonnull final Class<VALUE> type) {
+            Property.this.valueClass = Assert.notNull(type, "type");
+        }
+
+        public void setDomainType(@Nonnull final Class<U> domainType) {
+            Property.this.domainClass = Assert.notNull(domainType, "domainType");
+        }
+
+        public void setDefaultValue(@Nullable final VALUE defaultValue) {
+            Assert.validState(valueClass != null, "type is required");
+            Assert.isTrue(defaultValue == null || valueClass.isInstance(defaultValue), "defaultValue");
+            Property.this.defaultValue = defaultValue;
+        }
+
+        public void setValidator(@Nullable final Validator<VALUE> validator) {
+            Property.this.validator = validator;
+        }
     }
-
-    /** Returns a new instance of key where the default value is null.
-     * The method assigns a next key index.
-     * @hidden
-     */
-    public static <D,VALUE> Property<D,VALUE> of(String name, Class<VALUE> type, VALUE value, Integer index, Validator validator, boolean lock) {
-            throw new UnsupportedOperationException("TODO");
-
-    }
-
-
-    /** Returns a new instance of key where the default value is null.
-     * The method assigns a next key index.
-     * @hidden
-     */
-    public static <D,VALUE> Property<D,VALUE> of(String name, Class<VALUE> type, Class<D> domainType, int index) {
-        throw new UnsupportedOperationException("TODO");
-
-    }
-
-    /** Returns a new instance of key where the default value is null.
-     * The method assigns a next key index.
-     * @hidden
-     */
-    public static <D,VALUE> Property<D,VALUE> of(String name, Class<VALUE> type) {
-        final Class<D> domainType = null;
-        return of(name, type, domainType, Property.UNDEFINED_INDEX);
-    }
-
-    /** Returns a new instance of key where the default value is null.
-     * The method assigns a next key index.
-     * @hidden
-     */
-    public static <D,VALUE> Property<D,VALUE> of(String name, Class<VALUE> type, Class<D> domainType) {
-        return of(name, type, domainType, Property.UNDEFINED_INDEX);
-    }
-
-    /** A Property Factory where a key type is related from from default value.
-     * Method assigns a next key index.
-     * @hidden
-     */
-    public static <D, VALUE> Property<D, VALUE> of(String name, VALUE value, int index) {
-            throw new UnsupportedOperationException("TODO");
-
-    }
-
-    /** A Property Factory where a key type is related from from default value.
-     * Method assigns a next key index.
-     * @hidden
-     */
-    public static <D, VALUE> Property<D, VALUE> of(String name, VALUE value) {
-         return of(name, value, UNDEFINED_INDEX);
-    }
-
-
-    /** A Property Factory where a key type is related from from default value.
-     * Method assigns a next key index.
-     * @hidden
-     */
-    @SuppressWarnings("unchecked")
-    public static <D, VALUE> Property<D, VALUE> of(final Key<D,VALUE> p, int index) {
-         return of(p.getName(), p.getValueClass(), p.getDefaultValue(), index, true);
-    }
-
-
-    /** A Property Factory where a key type is related from from default value.
-     * <br>Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
-     * @hidden
-     */
-    @SuppressWarnings("unchecked")
-    public static <D, VALUE> Key<D, VALUE> of(final Key<D,VALUE> p) {
-         return of(p.getName(), p.getValueClass(), (VALUE) p.getDefaultValue(), UNDEFINED_INDEX, false);
-    }
-
 
 }

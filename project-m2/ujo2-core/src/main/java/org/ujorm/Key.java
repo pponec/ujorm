@@ -161,19 +161,6 @@ public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvi
     public boolean equalsName(@Nullable CharSequence name);
 
     /**
-     * If the key is the direct key of the related UJO class then method returns the TRUE value.
-     * The return value false means, that key is type of {@link CompositeKey}.
-     * <br>
-     * Note: The composite keys are excluded from from function Ujo.readProperties() by default
-     * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
-     * @see CompositeKey
-     * @since 0.81
-     * @deprecated use rather a negation of the method {@link #isComposite() }
-     */
-    @Deprecated
-    public boolean isDirect();
-
-    /**
      * The composite key is an instance of CompositeKey.
      * It this key is the a direct key of a related UJO class then this method returns the TRUE value.
      * All composite keys are excluded from from list {@link Ujo#readKeys()} by default
@@ -196,6 +183,14 @@ public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvi
      * @see org.ujorm.core.UjoComparator
      */
     public boolean isAscending();
+
+    /** Create new instance of an <strong>indirect</strong> Key with the descending direction of sorting.
+     * @return returns a new instance of the indirect Key
+     * @since 0.85
+     * @see #isAscending()
+     * @see org.ujorm.core.UjoComparator
+     */
+    public Key<D,V> descending();
 
     /** Create new instance of an <strong>indirect</strong> Key with the descending direction of sorting.
      * @return returns a new instance of the indirect Key
@@ -245,17 +240,17 @@ public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvi
     @Override
     public String toString();
 
-    /** Returns the full name of the Key including a simple domain class and aliases.
-     * <br>Example: Person.ID */
-    @Nonnull
-    public String toStringFull();
+    /**
+     * Returns the name of full name of the Key including all attributes.
+     * @return the full name of the Key including all attributes.
+     */
+    @Override
+    public String toString();
 
     /**
      * Returns the full name of the Key including all attributes.
-     * <br>Example: Person.id {index=0, ascending=false, ...}
-     * @param extended arguments false calls the method {@link #getFullName()} only.
      * @return the full name of the Key including all attributes.
      */
-    public String toStringFull(boolean extended);
+    public String toStringDetailed();
 
 }
