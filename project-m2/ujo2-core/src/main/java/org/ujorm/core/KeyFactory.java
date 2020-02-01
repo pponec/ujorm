@@ -39,7 +39,7 @@ public class KeyFactory<D> implements Serializable {
     }
 
     /** Create new Key */
-    public <VALUE> Key<D, VALUE> newKey(String name, Class<VALUE> itemClass, BiConsumer<D, VALUE> writer, Function<D, VALUE> reader) {
+    public <VALUE> Key<D, VALUE> newKey(String name, BiConsumer<D, VALUE> writer, Function<D, VALUE> reader) {
         return null;
     }
 

@@ -38,7 +38,7 @@ import org.ujorm.validator.ValidationException;
  */
 @Immutable
 @SuppressWarnings("deprecation")
-public interface Key <D,V> extends CharSequence, Comparable<Key>, CriterionProvider<D,V> {
+public interface Key<D, V> extends CharSequence, Comparable<Key>, CriterionProvider<D, V> {
 
     /** Returns a name of the Key. */
     @Nonnull

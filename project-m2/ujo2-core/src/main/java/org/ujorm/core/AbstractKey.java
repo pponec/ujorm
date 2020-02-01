@@ -15,7 +15,7 @@ import org.ujorm.validator.ValidationException;
  *
  * @author Pavel Ponec
  */
-public class AbstractKey<D,V> implements Key<D,V> {
+public class AbstractKey<D, V> implements Key<D, V> {
 
     /** Context of the Ujorm */
     @Nonnull
