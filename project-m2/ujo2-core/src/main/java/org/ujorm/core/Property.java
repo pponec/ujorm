@@ -44,7 +44,7 @@ import org.ujorm.validator.ValidationException;
  * @author Pavel Ponec
  */
 @Immutable
-public class Property<U,VALUE> implements Key<U,VALUE> {
+public class Property<D,V> implements Key<D,V> {
 
     /** Property Separator character */
     public static final char PROPERTY_SEPARATOR = '.';
@@ -64,19 +64,19 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * </ul>
      */
     /** POJO writer */
-    private BiConsumer<U,VALUE> writer;
+    private BiConsumer<D, V> writer;
     /** POJO reader */
-    private Function<U,VALUE> reader;
+    private Function<D, V> reader;
     /** Property index */
     private int index;
     /** Property type (class) */
-    private Class<VALUE> valueClass;
+    private Class<V> valueClass;
     /** Domain type type (class) */
-    private Class<U> domainClass;
+    private Class<D> domainClass;
     /** Property default value */
-    private VALUE defaultValue;
+    private V defaultValue;
     /** Input Validator */
-    private Validator<VALUE> validator;
+    private Validator<V> validator;
     /** Attribute writer */
     private Writer attribWriter = new Writer();
 
@@ -127,13 +127,13 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
 
     /** Type of Property */
     @Override
-    public final Class<VALUE> getValueClass() {
+    public final Class<V> getValueClass() {
         return valueClass;
     }
 
     /** Type of Property */
     @Override
-    public final Class<U> getDomainClass() {
+    public final Class<D> getDomainClass() {
         return domainClass;
     }
 
@@ -150,7 +150,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
-    public void setValue(final VALUE value, @Nonnull final U ujo) throws ValidationException {
+    public void setValue(final V value, @Nonnull final D ujo) throws ValidationException {
         writer.accept(ujo, value);
     }
 
@@ -160,7 +160,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public final VALUE getValue(@Nonnull final U ujo) {
+    public final V getValue(@Nonnull final D ujo) {
         return reader.apply(ujo);
     }
 
@@ -175,7 +175,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public VALUE of(@Nonnull final U ujo) {
+    public V of(@Nonnull final D ujo) {
                 throw new UnsupportedOperationException("TODO");
     }
 
@@ -183,14 +183,14 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * If the default value is not modified, returns the {@code null}.
      */
     @Override
-    public VALUE getDefaultValue() {
+    public V getDefaultValue() {
         return defaultValue;
     }
 
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
     @Override
-    public boolean isDefault(@Nonnull final U ujo) {
-        VALUE value = of(ujo);
+    public boolean isDefault(@Nonnull final D ujo) {
+        V value = of(ujo);
         final boolean result
         =  value==defaultValue
         || (defaultValue!=null && defaultValue.equals(value))
@@ -219,7 +219,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @see org.ujorm.core.UjoComparator
      */
     @Override
-    public Key<U, VALUE> descending() {
+    public Key<D, V> descending() {
         return descending(true);
     }
 
@@ -229,13 +229,13 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @see org.ujorm.core.UjoComparator
      */
     @Override
-    public Key<U, VALUE> descending(final boolean descending) {
+    public Key<D, V> descending(final boolean descending) {
             throw new UnsupportedOperationException("TODO");
     }
 
     /** Get the ujorm key validator or return the {@code null} value if no validator was assigned */
     @Override
-    public Validator<VALUE> getValidator() {
+    public Validator<V> getValidator() {
         return validator;
     }
 
@@ -244,7 +244,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<U, T> join(@Nonnull final Key<? super VALUE, T> key) {
+    public <T> CompositeKey<D, T> join(@Nonnull final Key<? super V, T> key) {
             throw new UnsupportedOperationException("TODO");
 
     }
@@ -253,20 +253,20 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @since 0.92
      */
     @Override
-    public <T> ListKey<U, T> join(@Nonnull final ListKey<? super VALUE, T> key) {
+    public <T> ListKey<D, T> join(@Nonnull final ListKey<? super V, T> key) {
             throw new UnsupportedOperationException("TODO");
 
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<U, T> join(@Nonnull final Key<? super VALUE, T> key, final String alias) {
+    public <T> CompositeKey<D, T> join(@Nonnull final Key<? super V, T> key, final String alias) {
             throw new UnsupportedOperationException("TODO");
     }
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     @Override
-    public void copy(@Nonnull final  U from, @Nonnull final U to) {
+    public void copy(@Nonnull final  D from, @Nonnull final D to) {
             throw new UnsupportedOperationException("TODO");
 
     }
@@ -293,7 +293,7 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
      * @return Accordance
      */
     @Override
-    public boolean equals(@Nonnull final U ujo, @Nullable final VALUE value) {
+    public boolean equals(@Nonnull final D ujo, @Nullable final V value) {
         final Object myValue = of(ujo);
         if (myValue==value) { return true; }
 
@@ -392,82 +392,82 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forCriterion(@Nonnull final Operator operator, @Nullable final VALUE value) {
+    public Criterion<D> forCriterion(@Nonnull final Operator operator, @Nullable final V value) {
         return Criterion.forCriton(this, operator, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forCriterion(@Nonnull final Operator operator, @Nullable final ProxyValue<VALUE> proxyValue) {
+    public Criterion<D> forCriterion(@Nonnull final Operator operator, @Nullable final ProxyValue<V> proxyValue) {
         return Criterion.forCriton(this, operator, proxyValue);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forCriterion(@Nonnull final Operator operator, Key<?, VALUE> value) {
+    public Criterion<D> forCriterion(@Nonnull final Operator operator, Key<?, V> value) {
         return Criterion.forCriton(this, operator, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forEq(@Nullable final VALUE value) {
+    public Criterion<D> forEq(@Nullable final V value) {
         return Criterion.forCriton(this, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forEq(@Nonnull final Key<U, VALUE> value) {
+    public Criterion<D> forEq(@Nonnull final Key<D, V> value) {
         return Criterion.forCrn(this, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forEq(@Nonnull final ProxyValue<VALUE> proxyValue) {
+    public Criterion<D> forEq(@Nonnull final ProxyValue<V> proxyValue) {
         return Criterion.forCriton(this, Operator.EQ, proxyValue);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forIn(@Nonnull final Collection<VALUE> list) {
+    public Criterion<D> forIn(@Nonnull final Collection<V> list) {
         return Criterion.forIn(this, list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forNotIn(@Nonnull final Collection<VALUE> list) {
+    public Criterion<D> forNotIn(@Nonnull final Collection<V> list) {
         return Criterion.forNotIn(this, list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forIn(@Nonnull final VALUE... list) {
+    public Criterion<D> forIn(@Nonnull final V... list) {
         return Criterion.forIn(this, list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forNotIn(@Nonnull final VALUE... list) {
+    public Criterion<D> forNotIn(@Nonnull final V... list) {
         return Criterion.forNotIn(this, list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forNull() {
+    public Criterion<D> forNull() {
         return Criterion.forNull(this);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forNotNull() {
+    public Criterion<D> forNotNull() {
         return Criterion.forNotNull(this);
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
-    public Criterion<U> forLength() {
-        final Criterion<U> result = forNotNull()
-            .and(Criterion.forCriton(this, Operator.NOT_EQ, (VALUE) getEmptyValue()))
+    public Criterion<D> forLength() {
+        final Criterion<D> result = forNotNull()
+            .and(Criterion.forCriton(this, Operator.NOT_EQ, (V) getEmptyValue()))
                 ;
         return result;
     }
@@ -475,9 +475,9 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
-    public Criterion<U> forEmpty() {
-        final Criterion<U> result = forNull()
-                .or(ValueCriterion.forCriton(this, Operator.EQ, (VALUE) getEmptyValue()));
+    public Criterion<D> forEmpty() {
+        final Criterion<D> result = forNull()
+                .or(ValueCriterion.forCriton(this, Operator.EQ, (V) getEmptyValue()));
         return result;
     }
 
@@ -498,61 +498,61 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forNeq(@Nullable final VALUE value) {
+    public Criterion<D> forNeq(@Nullable final V value) {
         return Criterion.forCriton(this, Operator.NOT_EQ, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forGt(@Nullable final VALUE value) {
+    public Criterion<D> forGt(@Nullable final V value) {
         return Criterion.forCriton(this, Operator.GT, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forGe(@Nullable final VALUE value) {
+    public Criterion<D> forGe(@Nullable final V value) {
         return Criterion.forCriton(this, Operator.GE, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forLt(@Nullable final VALUE value) {
+    public Criterion<D> forLt(@Nullable final V value) {
         return Criterion.forCriton(this, Operator.LT, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forLe(@Nullable final VALUE value) {
+    public Criterion<D> forLe(@Nullable final V value) {
         return Criterion.forCriton(this, Operator.LE, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forSql(String sqlCondition) {
+    public Criterion<D> forSql(String sqlCondition) {
         return Criterion.forSql(this, sqlCondition);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forSql(String sqlCondition, VALUE value) {
+    public Criterion<D> forSql(String sqlCondition, V value) {
         return Criterion.forSql(this, sqlCondition, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forSqlUnchecked(@Nonnull final String sqlCondition, @Nullable final Object value) {
+    public Criterion<D> forSqlUnchecked(@Nonnull final String sqlCondition, @Nullable final Object value) {
         return Criterion.forSqlUnchecked(this, sqlCondition, value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forAll() {
+    public Criterion<D> forAll() {
         return Criterion.forAll(this);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<U> forNone() {
+    public Criterion<D> forNone() {
         return Criterion.forNone(this);
     }
 
@@ -572,29 +572,29 @@ public class Property<U,VALUE> implements Key<U,VALUE> {
             Property.this.name = name.intern();
         }
 
-        public void setWriter(@Nonnull final BiConsumer<U, VALUE> writer) {
+        public void setWriter(@Nonnull final BiConsumer<D, V> writer) {
             Property.this.writer = Assert.notNull(writer, "writer");
         }
 
-        public void setReader(@Nonnull final Function<U, VALUE> reader) {
+        public void setReader(@Nonnull final Function<D, V> reader) {
             Property.this.reader = Assert.notNull(reader, "reader");
         }
 
-        public void setType(@Nonnull final Class<VALUE> type) {
+        public void setType(@Nonnull final Class<V> type) {
             Property.this.valueClass = Assert.notNull(type, "type");
         }
 
-        public void setDomainType(@Nonnull final Class<U> domainType) {
+        public void setDomainType(@Nonnull final Class<D> domainType) {
             Property.this.domainClass = Assert.notNull(domainType, "domainType");
         }
 
-        public void setDefaultValue(@Nullable final VALUE defaultValue) {
+        public void setDefaultValue(@Nullable final V defaultValue) {
             Assert.validState(valueClass != null, "type is required");
             Assert.isTrue(defaultValue == null || valueClass.isInstance(defaultValue), "defaultValue");
             Property.this.defaultValue = defaultValue;
         }
 
-        public void setValidator(@Nullable final Validator<VALUE> validator) {
+        public void setValidator(@Nullable final Validator<V> validator) {
             Property.this.validator = validator;
         }
     }
