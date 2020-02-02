@@ -25,6 +25,8 @@ import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
+import org.ujorm.tools.Assert;
+import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm2.CompositeKey;
 import org.ujorm2.Key;
 import org.ujorm2.ListKey;
@@ -33,8 +35,6 @@ import org.ujorm2.criterion.Criterion;
 import org.ujorm2.criterion.Operator;
 import org.ujorm2.criterion.ProxyValue;
 import org.ujorm2.criterion.ValueCriterion;
-import org.ujorm.tools.Assert;
-import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm2.validator.ValidationException;
 
 /**
@@ -44,13 +44,15 @@ import org.ujorm2.validator.ValidationException;
  * @author Pavel Ponec
  */
 @Immutable
-public class AbstractKeyOriginal<D,V> implements Key<D,V> {
+public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
 
     /** Property Separator character */
     public static final char PROPERTY_SEPARATOR = '.';
     /** Undefined index value */
     public static final Integer UNDEFINED_INDEX = null;
 
+    /** Domain type type (class) */
+    private final Class<D> domainClass;
     /** Property name */
     private String name;
     /** Property index, there are exist three index ranges:
@@ -71,28 +73,23 @@ public class AbstractKeyOriginal<D,V> implements Key<D,V> {
     private int index;
     /** Property type (class) */
     private Class<V> valueClass;
-    /** Domain type type (class) */
-    private Class<D> domainClass;
     /** Property default value */
     private V defaultValue;
     /** Input Validator */
     private Validator<V> validator;
-    /** Attribute writer */
-    private Writer attribWriter = new Writer();
 
-    /** Lock the Property */
-    protected final void lock() {
-        attribWriter = null;
+    /** Context of the Ujorm */
+    @Nonnull
+    private final UjoContext context;
+
+    public KeyImpl(Class<D> domainClass, UjoContext context) {
+        this.domainClass = Assert.notNull(domainClass, "domainClass");
+        this.context = context != context ? context : UjoContext.of();
     }
 
-    /** Check an internal log and throw an {@code IllegalStateException} if the object is locked. */
-    @Nonnull
-    public final Writer getAttribWriter() throws IllegalStateException {
-        if (attribWriter == null) {
-            throw new IllegalStateException("The key is already locked: "
-                    + toStringDetailed());
-        }
-        return attribWriter;
+    /** Context of the Ujorm */
+    protected final UjoContext getContext() {
+        return context;
     }
 
     /** Method returns the {@code true} in case the {@link #PROPERTY_SEPARATOR}
@@ -312,8 +309,8 @@ public class AbstractKeyOriginal<D,V> implements Key<D,V> {
      */
     @Override
     public boolean equals(@Nullable final Object key) {
-        if (key instanceof AbstractKeyOriginal) {
-            final AbstractKeyOriginal arg = (AbstractKeyOriginal) key;
+        if (key instanceof KeyImpl) {
+            final KeyImpl arg = (KeyImpl) key;
             return this.domainClass == arg.domainClass && this.name == arg.name;
         }
         return false;
@@ -556,10 +553,42 @@ public class AbstractKeyOriginal<D,V> implements Key<D,V> {
         return Criterion.forNone(this);
     }
 
+    @Override
+    public D createDomain() {
+        try {
+            return getDomainClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /** Create a new Key builder */
+    public KeyImpl.Builder buider() {
+        Assert.isEmpty(name, "The key is locked");
+        return new Builder();
+    }
+
     // ---- INNER CLASSES ---
 
     /** An attribute writer */
-    public final class Writer {
+    public final class Builder {
+
+        private KeyImpl key = KeyImpl.this;
+
+        /** Privare constructor */
+        private Builder() {
+        }
+
+        private KeyImpl key() {
+            Assert.validState(key != null, "The key is closed");
+            return key;
+        }
+
+        public <K extends Key> K build() {
+            final KeyImpl result = key;
+            key = null;
+            return (K) result;
+        }
 
         /** The Name must not contain any dot character */
         public void setName(@Nonnull final String name) throws IllegalArgumentException {
@@ -569,33 +598,29 @@ public class AbstractKeyOriginal<D,V> implements Key<D,V> {
                      name,
                      PROPERTY_SEPARATOR);
 
-            AbstractKeyOriginal.this.name = name.intern();
+            key().name = name.intern();
         }
 
         public void setWriter(@Nonnull final BiConsumer<D, V> writer) {
-            AbstractKeyOriginal.this.writer = Assert.notNull(writer, "writer");
+            key().writer = Assert.notNull(writer, "writer");
         }
 
         public void setReader(@Nonnull final Function<D, V> reader) {
-            AbstractKeyOriginal.this.reader = Assert.notNull(reader, "reader");
+            key().reader = Assert.notNull(reader, "reader");
         }
 
         public void setType(@Nonnull final Class<V> type) {
-            AbstractKeyOriginal.this.valueClass = Assert.notNull(type, "type");
-        }
-
-        public void setDomainType(@Nonnull final Class<D> domainType) {
-            AbstractKeyOriginal.this.domainClass = Assert.notNull(domainType, "domainType");
+            key().valueClass = Assert.notNull(type, "type");
         }
 
         public void setDefaultValue(@Nullable final V defaultValue) {
             Assert.validState(valueClass != null, "type is required");
             Assert.isTrue(defaultValue == null || valueClass.isInstance(defaultValue), "defaultValue");
-            AbstractKeyOriginal.this.defaultValue = defaultValue;
+            key().defaultValue = defaultValue;
         }
 
         public void setValidator(@Nullable final Validator<V> validator) {
-            AbstractKeyOriginal.this.validator = validator;
+            key().validator = validator;
         }
     }
 
