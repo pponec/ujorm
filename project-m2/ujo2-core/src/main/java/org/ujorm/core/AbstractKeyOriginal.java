@@ -44,7 +44,7 @@ import org.ujorm.validator.ValidationException;
  * @author Pavel Ponec
  */
 @Immutable
-public class Property<D,V> implements Key<D,V> {
+public class AbstractKeyOriginal<D,V> implements Key<D,V> {
 
     /** Property Separator character */
     public static final char PROPERTY_SEPARATOR = '.';
@@ -312,8 +312,8 @@ public class Property<D,V> implements Key<D,V> {
      */
     @Override
     public boolean equals(@Nullable final Object key) {
-        if (key instanceof Property) {
-            final Property arg = (Property) key;
+        if (key instanceof AbstractKeyOriginal) {
+            final AbstractKeyOriginal arg = (AbstractKeyOriginal) key;
             return this.domainClass == arg.domainClass && this.name == arg.name;
         }
         return false;
@@ -569,33 +569,33 @@ public class Property<D,V> implements Key<D,V> {
                      name,
                      PROPERTY_SEPARATOR);
 
-            Property.this.name = name.intern();
+            AbstractKeyOriginal.this.name = name.intern();
         }
 
         public void setWriter(@Nonnull final BiConsumer<D, V> writer) {
-            Property.this.writer = Assert.notNull(writer, "writer");
+            AbstractKeyOriginal.this.writer = Assert.notNull(writer, "writer");
         }
 
         public void setReader(@Nonnull final Function<D, V> reader) {
-            Property.this.reader = Assert.notNull(reader, "reader");
+            AbstractKeyOriginal.this.reader = Assert.notNull(reader, "reader");
         }
 
         public void setType(@Nonnull final Class<V> type) {
-            Property.this.valueClass = Assert.notNull(type, "type");
+            AbstractKeyOriginal.this.valueClass = Assert.notNull(type, "type");
         }
 
         public void setDomainType(@Nonnull final Class<D> domainType) {
-            Property.this.domainClass = Assert.notNull(domainType, "domainType");
+            AbstractKeyOriginal.this.domainClass = Assert.notNull(domainType, "domainType");
         }
 
         public void setDefaultValue(@Nullable final V defaultValue) {
             Assert.validState(valueClass != null, "type is required");
             Assert.isTrue(defaultValue == null || valueClass.isInstance(defaultValue), "defaultValue");
-            Property.this.defaultValue = defaultValue;
+            AbstractKeyOriginal.this.defaultValue = defaultValue;
         }
 
         public void setValidator(@Nullable final Validator<V> validator) {
-            Property.this.validator = validator;
+            AbstractKeyOriginal.this.validator = validator;
         }
     }
 
