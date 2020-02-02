@@ -564,7 +564,6 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
 
     /** Create a new Key builder */
     public KeyImpl.Builder buider() {
-        Assert.isEmpty(name, "The key is locked");
         return new Builder();
     }
 
@@ -577,6 +576,8 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
 
         /** Privare constructor */
         private Builder() {
+            Assert.validState(getName() == null, "Only one buider is allowed");
+            key.name = "";
         }
 
         private KeyImpl key() {
@@ -585,6 +586,10 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
         }
 
         public <K extends Key> K build() {
+            Assert.hasLength(getName(), "name");
+            Assert.notNull(getDomainClass(), "domainClass");
+            Assert.notNull(getValueClass(), "valueClass");
+
             final KeyImpl result = key;
             key = null;
             return (K) result;
