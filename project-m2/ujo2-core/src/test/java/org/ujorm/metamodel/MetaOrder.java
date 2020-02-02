@@ -68,7 +68,7 @@ public class MetaOrder<D> extends AbstractKey<D, Order> implements MetaInterface
     }
 
     @Override
-    public D newDomain() {
+    public D createDomain() {
         return (D) new Order();
     }
 

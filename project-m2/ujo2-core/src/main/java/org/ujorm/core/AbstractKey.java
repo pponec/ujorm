@@ -15,7 +15,7 @@ import org.ujorm.validator.ValidationException;
  *
  * @author Pavel Ponec
  */
-public class AbstractKey<D, V> implements Key<D, V> {
+public class AbstractKey<D, V> implements Key<D, V>, MetaInterface<D> {
 
     /** Context of the Ujorm */
     @Nonnull
@@ -39,6 +39,15 @@ public class AbstractKey<D, V> implements Key<D, V> {
     @Override
     public final Class<D> getDomainClass() {
         return domainClass;
+    }
+
+    @Override
+    public D createDomain() throws IllegalStateException {
+        try {
+            return getDomainClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @Override

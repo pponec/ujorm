@@ -43,7 +43,7 @@ public class MetaUser<D> extends AbstractKey<D, User> implements MetaInterface<D
     }
 
     @Override
-    public D newDomain() {
+    public D createDomain() {
         return (D) new User();
     }
 

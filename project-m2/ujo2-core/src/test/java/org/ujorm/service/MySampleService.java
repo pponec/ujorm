@@ -23,7 +23,7 @@ public class MySampleService {
         Key<Order, Integer> orderIdKey = metaOrder.id();
         Key<Order, String> userNameKey = metaOrder.user().firstName();
 
-        Order order = metaOrder.newDomain();
+        Order order = metaOrder.createDomain();
         orderIdKey.setValue(1, order);
         userNameKey.setValue("Pavel", order);
         Integer id = orderIdKey.getValue(order);
@@ -38,7 +38,7 @@ public class MySampleService {
         Key<Item, User> userKey = metaItem.order().user();
         Key<Item, Short> pinKey = metaItem.order().user().pin();
 
-        Item item = metaItem.newDomain();
+        Item item = metaItem.createDomain();
         itemIdKey.setValue(1, item);
         Integer orderId1 = itemIdKey.getValue(item);
         userKey.setValue(new User(), item);

@@ -22,6 +22,6 @@ package org.ujorm.core;
 public interface MetaInterface<U> {
 
     /** Create new instance of the domain object */
-    public U newDomain();
+    public U createDomain();
 
 }
