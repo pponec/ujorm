@@ -77,9 +77,9 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
     private V defaultValue;
     /** Input Validator */
     private Validator<V> validator;
-    /** Attribute writer */
+    /** An attribute writer */
     @Nullable
-    private ConfigWriter configWriter;
+    private KeyWriter keyWriter;
 
     /** Context of the Ujorm */
     @Nonnull
@@ -571,26 +571,26 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
      * @throws IllegalStateException Exception when the Key is locked
      */
     @Nonnull
-    public synchronized ConfigWriter configWriter() throws IllegalStateException {
-        if (configWriter == null) {
-            configWriter = new ConfigWriter();
+    public synchronized KeyWriter keyWriter() throws IllegalStateException {
+        if (keyWriter == null) {
+            keyWriter = new KeyWriter();
         }
-        return configWriter;
+        return keyWriter;
     }
 
     // ---- INNER CLASSES ---
 
     /** An config attribute writer */
-    public final class ConfigWriter {
+    public final class KeyWriter {
 
         /** Privare constructor */
-        private ConfigWriter() {
+        private KeyWriter() {
             Assert.validState(name == null, "Invalid state of the {}", getClass());
         }
 
         @Nonnull
-        private KeyImpl key() {
-            Assert.validState(configWriter != null, "The key is closed");
+        public KeyImpl key() {
+            Assert.validState(keyWriter != null, "The key is closed");
             return KeyImpl.this;
         }
 
@@ -599,7 +599,7 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
             Assert.hasLength(getName(), "name");
             Assert.notNull(getDomainClass(), "domainClass");
             Assert.notNull(getValueClass(), "valueClass");
-            configWriter = null;
+            keyWriter = null;
         }
 
         /** The Name must not contain any dot character */
@@ -621,7 +621,7 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
             key().reader = Assert.notNull(reader, "reader");
         }
 
-        public void setType(@Nonnull final Class<V> type) {
+        public void setValueClass(@Nonnull final Class<V> type) {
             key().valueClass = Assert.notNull(type, "type");
         }
 
@@ -629,6 +629,10 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
             Assert.validState(valueClass != null, "type is required");
             Assert.isTrue(defaultValue == null || valueClass.isInstance(defaultValue), "defaultValue");
             key().defaultValue = defaultValue;
+        }
+
+        public void setIndex(final int index) {
+            key().index = index;
         }
 
         public void setValidator(@Nullable final Validator<V> validator) {

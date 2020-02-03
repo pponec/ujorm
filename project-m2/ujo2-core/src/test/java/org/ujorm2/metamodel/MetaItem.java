@@ -45,6 +45,12 @@ public class MetaItem<D> extends KeyImpl<D, Item> implements MetaInterface<D> {
         final Key<Item, Integer> codePoints = keyFactory.newKey("codePoints",
                 (d) -> d.getCodePoints(),
                 (d, v) -> d.setCodePoints(v));
+
+        public DirectKey() {
+            keyFactory.close();
+        }
+
+
     };
 
     /** All direct keys */
