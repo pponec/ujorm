@@ -3,8 +3,8 @@ package org.ujorm2.metamodel;
 import java.math.BigDecimal;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
-import org.ujorm2.core.KeyImpl;
 import org.ujorm2.core.KeyFactory;
+import org.ujorm2.core.KeyImpl;
 import org.ujorm2.core.MetaInterface;
 import org.ujorm2.core.UjoContext;
 import org.ujorm2.doman.Item;
@@ -15,31 +15,37 @@ import org.ujorm2.doman.Item;
  */
 public class MetaItem<D> extends KeyImpl<D, Item> implements MetaInterface<D> {
 
-    private final KeyFactory<Item> keyFactory = new KeyFactory(Item.class);
+    /** All direct keys */
+    private static final class DirectKey<D> {
 
-    private final Key<Item, Integer> id = keyFactory.newKey("id",
-            (d) -> d.getId(),
-            (d, v) -> d.setId(v));
+        final KeyFactory<Item> keyFactory = new KeyFactory(Item.class);
 
-    private final Key<Item, String> note = keyFactory.newKey("note",
-            (d) -> d.getNote(),
-            (d, v) -> d.setNote(v));
+        final Key<Item, Integer> id = keyFactory.newKey("id",
+                (d) -> d.getId(),
+                (d, v) -> d.setId(v));
 
-    private final Key<Item, BigDecimal> price = keyFactory.newKey("price",
-            (d) -> d.getPrice(),
-            (d, v) -> d.setPrice(v));
+        final Key<Item, String> note = keyFactory.newKey("note",
+                (d) -> d.getNote(),
+                (d, v) -> d.setNote(v));
 
-    private final MetaOrder<Item> order = keyFactory.newRelation("order",
-            (d) -> d.getOrder(),
-            (d, v) -> d.setOrder(v));
+        final Key<Item, BigDecimal> price = keyFactory.newKey("price",
+                (d) -> d.getPrice(),
+                (d, v) -> d.setPrice(v));
 
-    private final Key<Item, Boolean> descending = keyFactory.newKey("descending",
-            (d) -> d.getDescending(),
-            (d, v) -> d.setDescending(v));
+        final MetaOrder<Item> order = keyFactory.newRelation("order",
+                (d) -> d.getOrder(),
+                (d, v) -> d.setOrder(v));
 
-    private final Key<Item, Integer> codePoints = keyFactory.newKey("codePoints",
-            (d) -> d.getCodePoints(),
-            (d, v) -> d.setCodePoints(v));
+        final Key<Item, Boolean> descending = keyFactory.newKey("descending",
+                (d) -> d.getDescending(),
+                (d, v) -> d.setDescending(v));
+
+        final Key<Item, Integer> codePoints = keyFactory.newKey("codePoints",
+                (d) -> d.getCodePoints(),
+                (d, v) -> d.setCodePoints(v));
+    };
+
+    private final DirectKey key = new DirectKey();
 
     public MetaItem(Class<D> domainClass, UjoContext context) {
         super(domainClass, context);
@@ -48,48 +54,48 @@ public class MetaItem<D> extends KeyImpl<D, Item> implements MetaInterface<D> {
     // --- KEY PROVIDERS ---
 
     public Key<D, Integer> id() {
-        if (getDomainClass().isAssignableFrom(keyFactory.getDomainClass())) {
-            return (Key) id;
+        if (getDomainClass().isAssignableFrom(key.keyFactory.getDomainClass())) {
+            return (Key) key.id;
         } else {
             throw new IllegalStateException();
         }
     }
 
     public Key<D, String> note() {
-        if (getDomainClass().isAssignableFrom(keyFactory.getDomainClass())) {
-            return (Key) note;
+        if (getDomainClass().isAssignableFrom(key.keyFactory.getDomainClass())) {
+            return (Key) key.note;
         } else {
             throw new IllegalStateException();
         }
     }
 
     public Key<D, BigDecimal> price() {
-        if (getDomainClass().isAssignableFrom(keyFactory.getDomainClass())) {
-            return (Key) price;
+        if (getDomainClass().isAssignableFrom(key.keyFactory.getDomainClass())) {
+            return (Key) key.price;
         } else {
             throw new IllegalStateException();
         }
     }
 
     public MetaOrder<D> order() {
-        if (getDomainClass().isAssignableFrom(keyFactory.getDomainClass())) {
-            return (MetaOrder) order;
+        if (getDomainClass().isAssignableFrom(key.keyFactory.getDomainClass())) {
+            return (MetaOrder) key.order;
         } else {
             throw new IllegalStateException();
         }
     }
 
     public Key<D, Boolean> descending$() {
-        if (getDomainClass().isAssignableFrom(keyFactory.getDomainClass())) {
-            return (Key) descending;
+        if (getDomainClass().isAssignableFrom(key.keyFactory.getDomainClass())) {
+            return (Key) key.descending;
         } else {
             throw new IllegalStateException();
         }
     }
 
     public Key<D, Integer> codePoints$() {
-        if (getDomainClass().isAssignableFrom(keyFactory.getDomainClass())) {
-            return (Key) codePoints;
+        if (getDomainClass().isAssignableFrom(key.keyFactory.getDomainClass())) {
+            return (Key) key.codePoints;
         } else {
             throw new IllegalStateException();
         }
