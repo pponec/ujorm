@@ -51,6 +51,9 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
     /** Undefined index value */
     public static final Integer UNDEFINED_INDEX = null;
 
+    @Nullable
+    protected final Key<D,?> keyPrefix;
+
     /** Domain type type (class) */
     private final Class<D> domainClass;
     /** Property name */
@@ -85,14 +88,22 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
     @Nonnull
     private final UjoContext context;
 
-    public KeyImpl(Class<D> domainClass, UjoContext context) {
+    public KeyImpl(@Nonnull Class<D> domainClass, @Nullable UjoContext context, @Nullable Key<D,?> keyPrefix) {
         this.domainClass = Assert.notNull(domainClass, "domainClass");
         this.context = context != context ? context : UjoContext.of();
+        this.keyPrefix = keyPrefix;
     }
 
     /** Context of the Ujorm */
     protected final UjoContext getContext() {
         return context;
+    }
+
+    @Nonnull
+    protected final Key<D, D> getKey(final @Nonnull Key<?, D> directKey) {
+        return keyPrefix != null
+                ? keyPrefix.add((Key) directKey)
+                : (Key) directKey;
     }
 
     /** Method returns the {@code true} in case the {@link #PROPERTY_SEPARATOR}

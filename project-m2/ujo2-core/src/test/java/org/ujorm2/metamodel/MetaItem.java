@@ -1,7 +1,6 @@
 package org.ujorm2.metamodel;
 
 import java.math.BigDecimal;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
 import org.ujorm2.core.KeyFactory;
@@ -22,58 +21,49 @@ public class MetaItem<D> extends KeyImpl<D, Item> implements MetaInterface<D> {
 
         final KeyFactory<Item> keyFactory = new KeyFactory(Item.class);
 
-        final Key<Item, Integer> id = keyFactory.newKey("id",
+        final Key<Item, Integer> id = keyFactory.newKey(
                 (d) -> d.getId(),
                 (d, v) -> d.setId(v));
 
-        final Key<Item, String> note = keyFactory.newKey("note",
+        final Key<Item, String> note = keyFactory.newKey(
                 (d) -> d.getNote(),
                 (d, v) -> d.setNote(v));
 
-        final Key<Item, BigDecimal> price = keyFactory.newKey("price",
+        final Key<Item, BigDecimal> price = keyFactory.newKey(
                 (d) -> d.getPrice(),
                 (d, v) -> d.setPrice(v));
 
-        final MetaOrder<Item> order = keyFactory.newRelation("order",
+        final MetaOrder<Item> order = keyFactory.newRelation(
                 (d) -> d.getOrder(),
                 (d, v) -> d.setOrder(v));
 
-        final Key<Item, Boolean> descending = keyFactory.newKey("descending",
+        final Key<Item, Boolean> descending = keyFactory.newKey(
                 (d) -> d.getDescending(),
                 (d, v) -> d.setDescending(v));
 
-        final Key<Item, Integer> codePoints = keyFactory.newKey("codePoints",
+        final Key<Item, Integer> codePoints = keyFactory.newKey(
                 (d) -> d.getCodePoints(),
                 (d, v) -> d.setCodePoints(v));
 
         public DirectKey() {
             keyFactory.close();
         }
-
-
     };
 
     /** All direct keys */
     private final DirectKey key = new DirectKey();
 
-    @Nullable
-    private final Key<D,?> keyPrefix;
-
     public MetaItem(Class<D> domainClass, UjoContext context) {
-        super(domainClass, context);
-        this.keyPrefix = null;
+        super(domainClass, context, null);
     }
 
     public MetaItem(@Nullable Key<D,?> keyPrefix, UjoContext context) {
-        super(keyPrefix.getDomainClass(), context);
-        this.keyPrefix = keyPrefix;
+        super(keyPrefix.getDomainClass(), context, keyPrefix);
     }
 
-    @Nonnull
-    protected final Key<D, D> getKey(final @Nonnull Key<?, D> directKey) {
-        return keyPrefix != null
-                ? keyPrefix.add((Key) directKey)
-                : (Key) directKey;
+    @Override
+    public D createDomain() {
+        return (D) new Item();
     }
 
     // --- KEY PROVIDERS ---
@@ -103,11 +93,6 @@ public class MetaItem<D> extends KeyImpl<D, Item> implements MetaInterface<D> {
     }
 
     // ---- Helper method
-
-    @Override
-    public D createDomain() {
-        return (D) new Item();
-    }
 
     public static final MetaItem<Item> of(@Nullable UjoContext context) {
         return context.getMetaModel(Item.class, MetaItem.class);

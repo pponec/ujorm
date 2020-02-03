@@ -45,8 +45,8 @@ public class KeyFactory<D> implements Serializable /*, Closeable*/ {
     }
 
     /** Create new Key */
-    public <VALUE> Key<D, VALUE> newKey(String name, Function<D, VALUE> reader, BiConsumer<D, VALUE> writer) {
-        final KeyImpl<D, VALUE> result = new KeyImpl(domainClass, UjoContext.of());
+    public <VALUE> Key<D, VALUE> newKey(Function<D, VALUE> reader, BiConsumer<D, VALUE> writer) {
+        final KeyImpl<D, VALUE> result = new KeyImpl(domainClass, UjoContext.of(), null);
         final KeyImpl.KeyWriter keyWriter = result.keyWriter();
         keyWriter.setWriter(writer);
         keyWriter.setReader(reader);
@@ -56,8 +56,8 @@ public class KeyFactory<D> implements Serializable /*, Closeable*/ {
     }
 
     /** Create new Key */
-    public <KEY extends Key, VALUE> KEY newRelation(String name, Function<D, VALUE> reader, BiConsumer<D, VALUE> writer) {
-        final Key<D, VALUE> result = new KeyImpl(domainClass, UjoContext.of());
+    public <KEY extends Key, VALUE> KEY newRelation(Function<D, VALUE> reader, BiConsumer<D, VALUE> writer) {
+        final Key<D, VALUE> result = new KeyImpl(domainClass, UjoContext.of(), null);
         keys.add(result);
         return (KEY) result;
     }
