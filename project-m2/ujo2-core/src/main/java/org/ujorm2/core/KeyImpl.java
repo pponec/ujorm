@@ -77,6 +77,9 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
     private V defaultValue;
     /** Input Validator */
     private Validator<V> validator;
+    /** Attribute writer */
+    @Nullable
+    private ConfigWriter configWriter;
 
     /** Context of the Ujorm */
     @Nonnull
@@ -241,7 +244,7 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<D, T> join(@Nonnull final Key<? super V, T> key) {
+    public <T> CompositeKey<D, T> add(@Nonnull final Key<? super V, T> key) {
             throw new UnsupportedOperationException("TODO");
 
     }
@@ -250,14 +253,14 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
      * @since 0.92
      */
     @Override
-    public <T> ListKey<D, T> join(@Nonnull final ListKey<? super V, T> key) {
+    public <T> ListKey<D, T> add(@Nonnull final ListKey<? super V, T> key) {
             throw new UnsupportedOperationException("TODO");
 
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<D, T> join(@Nonnull final Key<? super V, T> key, final String alias) {
+    public <T> CompositeKey<D, T> add(@Nonnull final Key<? super V, T> key, final String alias) {
             throw new UnsupportedOperationException("TODO");
     }
 
@@ -562,37 +565,41 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
         }
     }
 
-    /** Create a new Key builder */
-    public KeyImpl.Builder buider() {
-        return new Builder();
+    /**
+     * Create a new Key builder
+     * @return Create a new Key builder
+     * @throws IllegalStateException Exception when the Key is locked
+     */
+    @Nonnull
+    public synchronized ConfigWriter configWriter() throws IllegalStateException {
+        if (configWriter == null) {
+            configWriter = new ConfigWriter();
+        }
+        return configWriter;
     }
 
     // ---- INNER CLASSES ---
 
-    /** An attribute writer */
-    public final class Builder {
-
-        private KeyImpl key = KeyImpl.this;
+    /** An config attribute writer */
+    public final class ConfigWriter {
 
         /** Privare constructor */
-        private Builder() {
-            Assert.validState(getName() == null, "Only one buider is allowed");
-            key.name = "";
+        private ConfigWriter() {
+            Assert.validState(name == null, "Invalid state of the {}", getClass());
         }
 
+        @Nonnull
         private KeyImpl key() {
-            Assert.validState(key != null, "The key is closed");
-            return key;
+            Assert.validState(configWriter != null, "The key is closed");
+            return KeyImpl.this;
         }
 
-        public <K extends Key> K build() {
+        /** Close the writer */
+        public void close() {
             Assert.hasLength(getName(), "name");
             Assert.notNull(getDomainClass(), "domainClass");
             Assert.notNull(getValueClass(), "valueClass");
-
-            final KeyImpl result = key;
-            key = null;
-            return (K) result;
+            configWriter = null;
         }
 
         /** The Name must not contain any dot character */
@@ -628,5 +635,4 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
             key().validator = validator;
         }
     }
-
 }

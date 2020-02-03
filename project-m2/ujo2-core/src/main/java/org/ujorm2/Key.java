@@ -206,7 +206,7 @@ public interface Key<D, V> extends CharSequence, Comparable<Key>, CriterionProvi
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 0.92
      */
-    public <T> CompositeKey<D, T> join(@Nonnull Key<? super V, T> key);
+    public <T> CompositeKey<D, T> add(@Nonnull Key<? super V, T> key);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @param key The relation key
@@ -218,12 +218,12 @@ public interface Key<D, V> extends CharSequence, Comparable<Key>, CriterionProvi
      * @since 1.43
      * @see CompositeKey#getSpaceName(int)
      */
-    public <T> CompositeKey<D, T> join(@Nonnull Key<? super V, T> key, String alias);
+    public <T> CompositeKey<D, T> add(@Nonnull Key<? super V, T> key, String alias);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 1.36
      */
-    public <T> ListKey<D, T> join(@Nonnull ListKey<? super V, T> key);
+    public <T> ListKey<D, T> add(@Nonnull ListKey<? super V, T> key);
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     public void copy(@Nonnull D from, @Nonnull D to);
