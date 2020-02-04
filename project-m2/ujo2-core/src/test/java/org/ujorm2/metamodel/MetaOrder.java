@@ -54,8 +54,8 @@ public class MetaOrder<D> extends KeyImpl<D, Order> implements MetaInterface<D> 
     /** All direct keys */
     private final DirectKey key = new DirectKey();
 
-    public MetaOrder(Class<D> domainClass, UjoContext context) {
-        super(domainClass, context, null);
+    public MetaOrder(UjoContext context) {
+        super(Order.class, context, null);
     }
 
     public MetaOrder(@Nullable Key<D,?> keyPrefix, UjoContext context) {

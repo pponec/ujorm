@@ -1,6 +1,7 @@
 package org.ujorm2.metamodel;
 
 import java.math.BigDecimal;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
 import org.ujorm2.core.KeyFactory;
@@ -53,11 +54,11 @@ public class MetaItem<D> extends KeyImpl<D, Item> implements MetaInterface<D> {
     /** All direct keys */
     private final DirectKey key = new DirectKey();
 
-    public MetaItem(Class<D> domainClass, UjoContext context) {
-        super(domainClass, context, null);
+    public MetaItem(UjoContext context) {
+        super(Item.class, context, null);
     }
 
-    public MetaItem(@Nullable Key<D,?> keyPrefix, UjoContext context) {
+    public MetaItem(@Nonnull Key<D,?> keyPrefix, @Nonnull UjoContext context) {
         super(keyPrefix.getDomainClass(), context, keyPrefix);
     }
 

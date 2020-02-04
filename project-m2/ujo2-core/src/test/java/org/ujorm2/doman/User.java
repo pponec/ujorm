@@ -13,7 +13,7 @@ public class User /* TODO: extends Anonymous */ {
     private Short pin;
     private String firstName;
     private String sureName;
-    private LocalDateTime created;
+    private LocalDateTime born;
     private User parent;
 
     public Integer getId() {
@@ -48,12 +48,12 @@ public class User /* TODO: extends Anonymous */ {
         this.sureName = sureName;
     }
 
-    public LocalDateTime getCreated() {
-        return created;
+    public LocalDateTime getBorn() {
+        return born;
     }
 
-    public void setCreated(LocalDateTime crated) {
-        this.created = crated;
+    public void setBorn(LocalDateTime born) {
+        this.born = born;
     }
 
     public User getParent() {

@@ -9,6 +9,7 @@ import org.ujorm2.doman.Order;
 import org.ujorm2.doman.User;
 import org.ujorm2.metamodel.MetaItem;
 import org.ujorm2.metamodel.MetaOrder;
+import org.ujorm2.metamodel.ModelProvider;
 
 /**
  *
@@ -16,9 +17,12 @@ import org.ujorm2.metamodel.MetaOrder;
  */
 public class MySampleService {
 
+    private final ModelProvider modelProvider = new ModelProvider();
+    private final HelpService helpService = new HelpService();
+
     /** Reading / writing */
     public void doOrderAccess() {
-        MetaOrder<Order> metaOrder = MetaOrder.of();
+        MetaOrder<Order> metaOrder = modelProvider.order();
 
         Key<Order, Integer> orderIdKey = metaOrder.id();
         Key<Order, String> userNameKey = metaOrder.user().firstName();
@@ -32,7 +36,7 @@ public class MySampleService {
 
     /** Reading / writing */
     public void doItemAccess() {
-        MetaItem<Item> metaItem = MetaItem.of();
+        MetaItem<Item> metaItem = modelProvider.item();
 
         Key<Item, Integer> itemIdKey = metaItem.id();
         Key<Item, User> userKey = metaItem.order().user();
@@ -49,19 +53,15 @@ public class MySampleService {
 
     /** Criterions */
     public void doItemCondition() {
-        MetaItem<Item> mItem = MetaItem.of();
+        MetaItem<Item> mItem = modelProvider.item();
 
         Criterion<Item> itemCrn1 = mItem.forAll();
-        List<Item> items = itemCrn1.select(findItemsService());
+        List<Item> items = itemCrn1.select(helpService.findItemsService());
 
         Criterion<Item> crn1 = mItem.order().id().forEq(10);
         Criterion<Item> crn2 = mItem.order().created().forLe(LocalDateTime.now());
         Criterion<Item> crn3 = crn1.and(crn2);
-        List<Item> result = crn3.select(findItemsService());
-    }
-
-    private Iterable<Item> findItemsService() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Item> result = crn3.select(helpService.findItemsService());
     }
 
 }

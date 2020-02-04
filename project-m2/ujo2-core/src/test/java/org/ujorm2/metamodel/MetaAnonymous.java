@@ -45,8 +45,8 @@ public class MetaAnonymous<D> extends KeyImpl<D, Anonymous> implements MetaInter
     /** All direct keys */
     private final DirectKey key = new DirectKey();
 
-    public MetaAnonymous(Class<D> domainClass, UjoContext context) {
-        super(domainClass, context, null);
+    public MetaAnonymous(UjoContext context) {
+        super(Anonymous.class, context, null);
     }
 
     public MetaAnonymous(@Nullable Key<D,?> keyPrefix, UjoContext context) {

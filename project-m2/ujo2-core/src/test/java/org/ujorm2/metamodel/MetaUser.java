@@ -37,9 +37,9 @@ public class MetaUser<D> extends KeyImpl<D, User> implements MetaInterface<D> {
                 (d) -> d.getSureName(),
                 (d, v) -> d.setSureName(v));
 
-        final Key<User, LocalDateTime> created = keyFactory.newKey(
-                (d) -> d.getCreated(),
-                (d, v) -> d.setCreated(v));
+        final Key<User, LocalDateTime> born = keyFactory.newKey(
+                (d) -> d.getBorn(),
+                (d, v) -> d.setBorn(v));
 
         final MetaUser<User> parent = keyFactory.newRelation(
                 (d) -> d.getParent(),
@@ -53,8 +53,8 @@ public class MetaUser<D> extends KeyImpl<D, User> implements MetaInterface<D> {
     /** All direct keys */
     private final DirectKey key = new DirectKey();
 
-    public MetaUser(Class<D> domainClass, UjoContext context) {
-        super(domainClass, context, null);
+    public MetaUser(UjoContext context) {
+        super(User.class, context, null);
     }
 
     public MetaUser(@Nullable Key<D,?> keyPrefix, UjoContext context) {
@@ -84,8 +84,8 @@ public class MetaUser<D> extends KeyImpl<D, User> implements MetaInterface<D> {
         return getKey(key.sureName);
     }
 
-    public Key<D, LocalDateTime> created() {
-        return getKey(key.created);
+    public Key<D, LocalDateTime> born() {
+        return getKey(key.born);
     }
 
     public MetaUser<D> parent() {

@@ -88,7 +88,7 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
     @Nonnull
     private final UjoContext context;
 
-    public KeyImpl(@Nonnull Class<D> domainClass, @Nullable UjoContext context, @Nullable Key<D,?> keyPrefix) {
+    public KeyImpl(@Nonnull Class domainClass, @Nullable UjoContext context, @Nullable Key<D,?> keyPrefix) {
         this.domainClass = Assert.notNull(domainClass, "domainClass");
         this.context = context != context ? context : UjoContext.of();
         this.keyPrefix = keyPrefix;
