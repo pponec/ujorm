@@ -18,6 +18,10 @@ package org.ujorm2.service;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.ujorm2.Key;
+import org.ujorm2.doman.Item;
+import org.ujorm2.metamodel.MetaItem;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -31,6 +35,20 @@ public class MySampleServiceTest {
 
     @After
     public void tearDown() {
+    }
+
+    /**
+     * Test of doOrderAccess method, of class MySampleService.
+     */
+    @Test
+    public void testMetaItem() {
+        System.out.println("testMetaItem");
+
+        MetaItem<Item> item = MetaItem.of();
+
+        Key<Item, Integer> id = item.id();
+
+        assertEquals("id", id.getName());
     }
 
     /**

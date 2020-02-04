@@ -2,6 +2,7 @@ package org.ujorm2.metamodel;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
 import org.ujorm2.core.KeyFactory;
@@ -58,7 +59,7 @@ public class MetaOrder<D> extends KeyImpl<D, Order> implements MetaInterface<D> 
         super(Order.class, context, null);
     }
 
-    public MetaOrder(@Nullable Key<D,?> keyPrefix, UjoContext context) {
+    public MetaOrder(@Nonnull Key<D,?> keyPrefix, UjoContext context) {
         super(keyPrefix.getDomainClass(), context, keyPrefix);
     }
 
@@ -94,7 +95,7 @@ public class MetaOrder<D> extends KeyImpl<D, Order> implements MetaInterface<D> 
     }
 
     public static final MetaOrder<Order> of(@Nullable UjoContext context) {
-        return context.getMetaModel(Order.class, MetaOrder.class);
+        return new MetaOrder<>(context);
     }
 
     public static final MetaOrder<Order> of() {

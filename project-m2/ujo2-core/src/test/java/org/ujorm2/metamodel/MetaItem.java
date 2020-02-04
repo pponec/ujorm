@@ -96,7 +96,7 @@ public class MetaItem<D> extends KeyImpl<D, Item> implements MetaInterface<D> {
     // ---- Helper method
 
     public static final MetaItem<Item> of(@Nullable UjoContext context) {
-        return context.getMetaModel(Item.class, MetaItem.class);
+        return new MetaItem<>(context);
     }
 
     public static final MetaItem<Item> of() {

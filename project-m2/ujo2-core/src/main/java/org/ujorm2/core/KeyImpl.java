@@ -72,8 +72,8 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
     private BiConsumer<D, V> writer;
     /** POJO reader */
     private Function<D, V> reader;
-    /** Property index */
-    private int index;
+    /** Key index */
+    private int index = Integer.MIN_VALUE;
     /** Property type (class) */
     private Class<V> valueClass;
     /** Property default value */
@@ -152,6 +152,14 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
     @Override
     public final int getIndex() {
         return index;
+    }
+
+    protected BiConsumer<D, V> getWriter() {
+        return writer;
+    }
+
+    protected Function<D, V> getReader() {
+        return reader;
     }
 
     /**

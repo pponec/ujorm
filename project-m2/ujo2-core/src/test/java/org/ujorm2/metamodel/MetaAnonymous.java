@@ -1,6 +1,7 @@
 package org.ujorm2.metamodel;
 
 import java.time.LocalDateTime;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
 import org.ujorm2.core.KeyFactory;
@@ -49,7 +50,7 @@ public class MetaAnonymous<D> extends KeyImpl<D, Anonymous> implements MetaInter
         super(Anonymous.class, context, null);
     }
 
-    public MetaAnonymous(@Nullable Key<D,?> keyPrefix, UjoContext context) {
+    public MetaAnonymous(@Nonnull Key<D,?> keyPrefix, UjoContext context) {
         super(keyPrefix.getDomainClass(), context, keyPrefix);
     }
 
@@ -77,7 +78,7 @@ public class MetaAnonymous<D> extends KeyImpl<D, Anonymous> implements MetaInter
     }
 
     public static final MetaAnonymous<Anonymous> of(@Nullable UjoContext context) {
-        return context.getMetaModel(Anonymous.class, MetaAnonymous.class);
+        return new MetaAnonymous<>(context);
     }
 
     public static final MetaAnonymous<Anonymous> of() {

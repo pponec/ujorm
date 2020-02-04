@@ -1,6 +1,7 @@
 package org.ujorm2.metamodel;
 
 import java.time.LocalDateTime;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
 import org.ujorm2.core.KeyFactory;
@@ -57,7 +58,7 @@ public class MetaUser<D> extends KeyImpl<D, User> implements MetaInterface<D> {
         super(User.class, context, null);
     }
 
-    public MetaUser(@Nullable Key<D,?> keyPrefix, UjoContext context) {
+    public MetaUser(@Nonnull Key<D,?> keyPrefix, UjoContext context) {
         super(keyPrefix.getDomainClass(), context, keyPrefix);
     }
 
@@ -93,7 +94,7 @@ public class MetaUser<D> extends KeyImpl<D, User> implements MetaInterface<D> {
     }
 
     public static final MetaUser<User> of(@Nullable UjoContext context) {
-        return context.getMetaModel(User.class, MetaUser.class);
+        return new MetaUser<>(context);
     }
 
     public static final MetaUser<User> of() {

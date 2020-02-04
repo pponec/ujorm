@@ -27,6 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm2.Key;
 
@@ -75,12 +76,25 @@ public class KeyFactory<D> implements Serializable /*, Closeable*/ {
         final List<Field> fields = getFields();
         try {
             for (int i = 0, max = keys.size(); i < max; i++) {
-                final KeyImpl.KeyWriter writer = ((KeyImpl) keys.get(i)).keyWriter();
+                final KeyImpl key = (KeyImpl) keys.get(i);
+                final KeyImpl.KeyWriter writer = key.keyWriter();
                 final Field field = findField(writer.key(), fields);
 
-                writer.setIndex(i);
-                writer.setName(field.getName());
-                writer.setValueClass(getValueClass(field));
+                if (key.getIndex() < 0) {
+                   writer.setIndex(i);
+                }
+                if (Check.isEmpty(key.getName())) {
+                    writer.setName(field.getName());
+                }
+                if (key.getValueClass() == null) {
+                    writer.setValueClass(getValueClass(field));
+                }
+                if (key.getReader() == null) {
+                    writer.setReader(null); // TODO: use a Java reflection by the: field.getName()
+                }
+                if (key.getWriter() == null) {
+                    writer.setWriter(null); // TODO: use a Java reflection by the: field.getName()
+                }
                 writer.close();
             }
         } catch (IllegalAccessException e) {
