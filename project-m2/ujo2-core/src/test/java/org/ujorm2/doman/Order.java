@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- *
+ * Domain object type of POJO
  * @author Pavel Ponec
  */
 public class Order {

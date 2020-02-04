@@ -3,7 +3,8 @@ package org.ujorm2.doman;
 import java.math.BigDecimal;
 
 /**
- *
+ * Order Item.
+ * Domain object type of POJO
  * @author Pavel Ponec
  */
 public class Item {

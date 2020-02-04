@@ -3,18 +3,17 @@ package org.ujorm2.doman;
 import java.time.LocalDateTime;
 
 /**
+ * Anonumous user.
  * Domain object type of POJO
  * @author Pavel Ponec
  */
-public class User /* TODO: extends Anonymous */ {
+public class Anonymous {
 
     /** Unique key */
     private Integer id;
     private Short pin;
-    private String firstName;
-    private String sureName;
     private LocalDateTime created;
-    private User parent;
+    private Anonymous parent;
 
     public Integer getId() {
         return id;
@@ -32,22 +31,6 @@ public class User /* TODO: extends Anonymous */ {
         this.pin = pin;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getSureName() {
-        return sureName;
-    }
-
-    public void setSureName(String sureName) {
-        this.sureName = sureName;
-    }
-
     public LocalDateTime getCreated() {
         return created;
     }
@@ -56,11 +39,11 @@ public class User /* TODO: extends Anonymous */ {
         this.created = crated;
     }
 
-    public User getParent() {
+    public Anonymous getParent() {
         return parent;
     }
 
-    public void setParent(User parent) {
+    public void setParent(Anonymous parent) {
         this.parent = parent;
     }
 
