@@ -18,34 +18,34 @@ import org.ujorm2.doman.Item;
 public class MetaAnonymous<D> extends AbstractDomainModel<D, Anonymous> {
 
     /** All direct keys */
-    protected static final class DirectKeys<D> implements KeyFactoryProvider {
+    static final class DirectKeys<T extends Anonymous> implements KeyFactoryProvider<T> {
 
-        final KeyFactory<Anonymous> keyFactory = new KeyFactory(Anonymous.class);
+        final KeyFactory<T> keyFactory = new KeyFactory(Anonymous.class);
 
-        final Key<Anonymous, Integer> id = keyFactory.newKey(
+        final Key<T, Integer> id = keyFactory.newKey(
                 (d) -> d.getId(),
                 (d, v) -> d.setId(v));
 
-        final Key<Anonymous, Short> pin = keyFactory.newKey(
+        final Key<T, Short> pin = keyFactory.newKey(
                 (d) -> d.getPin(),
                 (d, v) -> d.setPin(v));
 
-        final Key<Anonymous, LocalDateTime> created = keyFactory.newKey(
+        final Key<T, LocalDateTime> created = keyFactory.newKey(
                 (d) -> d.getCreated(),
                 (d, v) -> d.setCreated(v));
 
-        final MetaAnonymous<Anonymous> parent = keyFactory.newRelation(
+        final MetaAnonymous<T> parent = keyFactory.newRelation(
                 (d) -> d.getParent(),
                 (d, v) -> d.setParent(v));
 
         @Override
-        public KeyFactory getKeyFactory() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        public KeyFactory<T> getKeyFactory() {
+            return keyFactory;
         }
     };
 
     public MetaAnonymous() {
-        super(new DirectKeys<D>());
+        super(new DirectKeys());
     }
 
     public MetaAnonymous(@Nonnull Key<D,?> keyPrefix) {

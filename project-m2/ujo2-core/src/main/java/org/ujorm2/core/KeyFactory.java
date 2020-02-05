@@ -36,13 +36,13 @@ import org.ujorm2.Key;
  */
 public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
-    private final Class<D> domainClass;
+    private final Class<? extends D> domainClass;
 
     private UjoContext context = null; // TODO: Create a writer
 
     private final ArrayList<Key<D,?>> keys = new ArrayList<>();
 
-    public KeyFactory(@Nonnull final Class<D> domainClass) {
+    public KeyFactory(@Nonnull final Class<? extends D> domainClass) {
         this.domainClass = Assert.notNull(domainClass, "domainClass");
     }
 
@@ -64,7 +64,7 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
         return (KEY) result;
     }
 
-    public Class<D> getDomainClass() {
+    public Class<? extends D> getDomainClass() {
         return domainClass;
     }
 

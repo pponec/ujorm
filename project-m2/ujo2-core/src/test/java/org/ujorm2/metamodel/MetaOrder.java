@@ -18,42 +18,42 @@ import org.ujorm2.doman.Order.State;
 public class MetaOrder<D> extends AbstractDomainModel<D, Order> {
 
     /** All direct keys */
-    protected static final class DirectKeys implements KeyFactoryProvider<Order> {
+    static final class DirectKeys<T extends Order> implements KeyFactoryProvider<T> {
 
-        final KeyFactory<Order> keyFactory = new KeyFactory(Order.class);
+        final KeyFactory<T> keyFactory = new KeyFactory(Order.class);
 
-        final Key<Order, Integer> id = keyFactory.newKey(
+        final Key<T, Integer> id = keyFactory.newKey(
                 (d) -> d.getId(),
                 (d, v) -> d.setId(v));
 
-        final Key<Order, State> state = keyFactory.newKey(
+        final Key<T, State> state = keyFactory.newKey(
                 (d) -> d.getState(),
                 (d, v) -> d.setState(v));
 
-        final Key<Order, BigDecimal> totalPrice = keyFactory.newKey(
+        final Key<T, BigDecimal> totalPrice = keyFactory.newKey(
                 (d) -> d.getTotalPrice(),
                 (d, v) -> d.setTotalPrice(v));
 
-        final MetaUser<Order> user = keyFactory.newRelation(
+        final MetaUser<T> user = keyFactory.newRelation(
                 (d) -> d.getUser(),
                 (d, v) -> d.setUser(v));
 
-        final Key<Order, String> note = keyFactory.newKey(
+        final Key<T, String> note = keyFactory.newKey(
                 (d) -> d.getNote(),
                 (d, v) -> d.setNote(v));
 
-        final Key<Order, LocalDateTime> created = keyFactory.newKey(
+        final Key<T, LocalDateTime> created = keyFactory.newKey(
                 (d) -> d.getCreated(),
                 (d, v) -> d.setCreated(v));
 
         @Override
-        public KeyFactory<Order> getKeyFactory() {
+        public KeyFactory<T> getKeyFactory() {
             return keyFactory;
         }
     };
 
     public MetaOrder() {
-        super(new DirectKeys<D>());
+        super(new DirectKeys());
     }
 
     public MetaOrder(@Nonnull Key<D,?> keyPrefix) {

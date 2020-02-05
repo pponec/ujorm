@@ -17,42 +17,42 @@ import org.ujorm2.doman.Item;
     public class MetaItem<D> extends AbstractDomainModel<D, Item> {
 
     /** All direct keys */
-    protected static final class DirectKeys<D> implements KeyFactoryProvider {
+    static final class DirectKeys<T extends Item> implements KeyFactoryProvider<T> {
 
-        final KeyFactory<Item> keyFactory = new KeyFactory(Item.class);
+        final KeyFactory<T> keyFactory = new KeyFactory(Item.class);
 
-        final Key<Item, Integer> id = keyFactory.newKey(
+        final Key<T, Integer> id = keyFactory.newKey(
                 (d) -> d.getId(),
                 (d, v) -> d.setId(v));
 
-        final Key<Item, String> note = keyFactory.newKey(
+        final Key<T, String> note = keyFactory.newKey(
                 (d) -> d.getNote(),
                 (d, v) -> d.setNote(v));
 
-        final Key<Item, BigDecimal> price = keyFactory.newKey(
+        final Key<T, BigDecimal> price = keyFactory.newKey(
                 (d) -> d.getPrice(),
                 (d, v) -> d.setPrice(v));
 
-        final MetaOrder<Item> order = keyFactory.newRelation(
+        final MetaOrder<T> order = keyFactory.newRelation(
                 (d) -> d.getOrder(),
                 (d, v) -> d.setOrder(v));
 
-        final Key<Item, Boolean> descending = keyFactory.newKey(
+        final Key<T, Boolean> descending = keyFactory.newKey(
                 (d) -> d.getDescending(),
                 (d, v) -> d.setDescending(v));
 
-        final Key<Item, Integer> codePoints = keyFactory.newKey(
+        final Key<T, Integer> codePoints = keyFactory.newKey(
                 (d) -> d.getCodePoints(),
                 (d, v) -> d.setCodePoints(v));
 
         @Override
-        public KeyFactory getKeyFactory() {
+        public KeyFactory<T> getKeyFactory() {
             return keyFactory;
         }
     };
 
     public MetaItem() {
-        super(new DirectKeys<D>());
+        super(new DirectKeys());
     }
 
     public MetaItem(@Nonnull Key<D,?> keyPrefix) {

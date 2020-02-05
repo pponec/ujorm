@@ -21,6 +21,6 @@ package org.ujorm2.core;
  */
 public interface KeyFactoryProvider<D> {
 
-    KeyFactory<D> getKeyFactory();
+    KeyFactory<? super D> getKeyFactory();
 
 }

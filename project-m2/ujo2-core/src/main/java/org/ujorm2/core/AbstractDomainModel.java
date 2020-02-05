@@ -23,7 +23,7 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
         this.keyPrefix = prefix;
     }
 
-    public AbstractDomainModel(@Nonnull final KeyFactoryProvider<D> keyFactory) {
+    public AbstractDomainModel(@Nonnull final KeyFactoryProvider<?> keyFactory) {
         this(keyFactory.getKeyFactory().getDomainClass(), keyFactory, null);
 
     }
