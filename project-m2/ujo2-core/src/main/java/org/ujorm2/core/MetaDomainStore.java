@@ -25,7 +25,7 @@ import org.ujorm2.Key;
  *
  * @author Pavel Ponec
  */
-public class MetaStore {
+public class MetaDomainStore {
 
     private final HashMap<Class, Key> map = new HashMap<>();
 

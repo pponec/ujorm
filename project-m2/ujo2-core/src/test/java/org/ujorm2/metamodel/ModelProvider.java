@@ -1,7 +1,7 @@
 package org.ujorm2.metamodel;
 
 import javax.annotation.Nonnull;
-import org.ujorm2.core.MetaStore;
+import org.ujorm2.core.MetaDomainStore;
 import org.ujorm2.core.UjoContext;
 import org.ujorm2.doman.Anonymous;
 import org.ujorm2.doman.Item;
@@ -14,7 +14,7 @@ import org.ujorm2.doman.User;
  */
 public class ModelProvider implements UjoContext {
 
-    private final MetaStore store = new MetaStore();
+    private final MetaDomainStore store = new MetaDomainStore();
 
     private final MetaItem item = store.addModel(new MetaItem());
     private final MetaOrder order = store.addModel(new MetaOrder());
@@ -27,7 +27,7 @@ public class ModelProvider implements UjoContext {
 
     /** provide  */
     @Nonnull
-    public MetaStore getModels$() {
+    public MetaDomainStore getModels$() {
         return store;
     }
 
