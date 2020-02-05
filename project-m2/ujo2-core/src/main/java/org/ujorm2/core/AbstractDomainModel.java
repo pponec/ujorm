@@ -29,12 +29,17 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
 
     public AbstractDomainModel(@Nonnull final KeyFactoryProvider<?> keyFactory) {
         this(keyFactory.getKeyFactory().getDomainClass(), keyFactory, null);
-
     }
 
-    public AbstractDomainModel(Key<D, ?> keyPrefix) {
+    public AbstractDomainModel(@Nonnull final KeyFactoryProvider<?> keyFactory, Key<D, ?> keyPrefix) {
         this(keyPrefix.getDomainClass(), null, keyPrefix);
     }
+
+    public abstract <A> AbstractDomainModel<A, V> prefix(@Nonnull final Key<A, D> key);
+
+
+    /** Provider of an instance of DirectKeys */
+    protected abstract KeyFactoryProvider keys();
 
     public UjoContext getContext$() {
         return context;
@@ -55,9 +60,15 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
 
     @Nonnull
     protected final <V> Key<D, V> getKey(final @Nonnull Key<?, V> directKey) {
-        return keyPrefix != null
-                ? keyPrefix.add((Key) directKey)
-                : (Key) directKey;
+        if (keyPrefix != null) {
+            final AbstractDomainModel domainModel = context.getStore$().getDomainModel(directKey.getValueClass());
+            Assert.validState(domainModel != null, "No model found for the key: {}.{}",
+                    directKey.getDomainClass().getSimpleName(),
+                    directKey);
+            return domainModel.prefix(directKey);
+        } else {
+            return (Key) directKey;
+        }
     }
 
     protected KeyFactoryProvider getDirecKey() {

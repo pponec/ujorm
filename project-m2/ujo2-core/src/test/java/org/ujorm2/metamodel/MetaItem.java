@@ -1,7 +1,6 @@
 package org.ujorm2.metamodel;
 
 import java.math.BigDecimal;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
@@ -14,7 +13,7 @@ import org.ujorm2.doman.Item;
  * @author Pavel Ponec
  * @param <D> Domain
  */
-    public class MetaItem<D> extends AbstractDomainModel<D, Item> {
+public class MetaItem<D> extends AbstractDomainModel<D, Item> {
 
     /** All direct keys */
     static final class DirectKeys<T extends Item> implements KeyFactoryProvider<T> {
@@ -55,8 +54,13 @@ import org.ujorm2.doman.Item;
         super(new DirectKeys());
     }
 
-    public MetaItem(@Nonnull Key<D,?> keyPrefix) {
-        super(keyPrefix);
+    public MetaItem(KeyFactoryProvider keyFactoryProvider, Key<D, ?> keyPrefix) {
+        super(keyFactoryProvider, keyPrefix);
+    }
+
+    @Override
+    public <A> AbstractDomainModel<A, Item> prefix(Key<A, D> key) {
+        return new MetaItem(keys(), key);
     }
 
     @Override
@@ -65,34 +69,35 @@ import org.ujorm2.doman.Item;
     }
 
     /** Provider of an instance of DirectKeys */
-    private DirectKeys key() {
+    @Override
+    protected final DirectKeys keys() {
         return (DirectKeys) directKeys;
     }
 
     // --- KEY PROVIDERS ---
 
     public Key<D, Integer> id() {
-        return getKey(key().id);
+        return getKey(keys().id);
     }
 
     public Key<D, String> note() {
-        return getKey(key().note);
+        return getKey(keys().note);
     }
 
     public Key<D, BigDecimal> price() {
-        return getKey(key().price);
+        return getKey(keys().price);
     }
 
     public MetaOrder<D> order() {
-        return (MetaOrder) getKey(key().order);
+        return (MetaOrder) getKey(keys().order);
     }
 
     public Key<D, Boolean> descending$() {
-        return getKey(key().descending);
+        return getKey(keys().descending);
     }
 
     public Key<D, Integer> codePoints$() {
-        return getKey(key().codePoints);
+        return getKey(keys().codePoints);
     }
 
     // ---- Helper method

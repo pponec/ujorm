@@ -1,7 +1,6 @@
 package org.ujorm2.metamodel;
 
 import java.time.LocalDateTime;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
@@ -56,8 +55,13 @@ public class MetaUser<D> extends AbstractDomainModel<D, User> {
         super(new DirectKeys());
     }
 
-    public MetaUser(@Nonnull Key<D,?> keyPrefix) {
-        super(keyPrefix);
+    public MetaUser(KeyFactoryProvider keyFactoryProvider, Key<D, ?> keyPrefix) {
+        super(keyFactoryProvider, keyPrefix);
+    }
+
+    @Override
+    public <A> AbstractDomainModel<A, User> prefix(Key<A, D> key) {
+        return new MetaUser(keys(), key);
     }
 
     @Override
@@ -65,35 +69,35 @@ public class MetaUser<D> extends AbstractDomainModel<D, User> {
         return (D) new Item();
     }
 
-    /** Provider of an instance of DirectKeys */
-    private DirectKeys key() {
-        return (DirectKeys) directKeys;
+    @Override
+    protected final DirectKeys keys() {
+       return (DirectKeys) directKeys;
     }
 
     // --- KEY PROVIDERS ---
 
     public Key<D, Integer> id() {
-        return getKey(key().id);
+        return getKey(keys().id);
     }
 
     public Key<D, Short> pin() {
-        return getKey(key().pin);
+        return getKey(keys().pin);
     }
 
     public Key<D, String> firstName() {
-        return getKey(key().firstName);
+        return getKey(keys().firstName);
     }
 
     public Key<D, String> sureName() {
-        return getKey(key().sureName);
+        return getKey(keys().sureName);
     }
 
     public Key<D, LocalDateTime> born() {
-        return getKey(key().born);
+        return getKey(keys().born);
     }
 
     public MetaUser<D> parent() {
-        return (MetaUser) getKey(key().parent);
+        return (MetaUser) getKey(keys().parent);
     }
 
     public static final MetaUser<User> of(@Nullable UjoContext context) {

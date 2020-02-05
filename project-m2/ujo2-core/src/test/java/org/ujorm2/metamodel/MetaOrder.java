@@ -56,8 +56,13 @@ public class MetaOrder<D> extends AbstractDomainModel<D, Order> {
         super(new DirectKeys());
     }
 
-    public MetaOrder(@Nonnull Key<D,?> keyPrefix) {
-        super(keyPrefix);
+    public MetaOrder(KeyFactoryProvider keyFactoryProvider, Key<D, ?> keyPrefix) {
+        super(keyFactoryProvider, keyPrefix);
+    }
+
+    @Override
+    public <A> AbstractDomainModel<A, Order> prefix(Key<A, D> key) {
+        return new MetaOrder(keys(), key);
     }
 
     @Override
@@ -65,35 +70,35 @@ public class MetaOrder<D> extends AbstractDomainModel<D, Order> {
         return (D) new Order();
     }
 
-    /** Provider of an instance of DirectKeys */
-    private DirectKeys key() {
+    @Override
+    protected final DirectKeys keys() {
         return (DirectKeys) directKeys;
     }
 
     // --- KEY PROVIDERS ---
 
     public Key<D, Integer> id() {
-        return getKey(key().id);
+        return getKey(keys().id);
     }
 
     public Key<D, State> state() {
-        return getKey(key().state);
+        return getKey(keys().state);
     }
 
     public  Key<D, BigDecimal> totalPrice() {
-        return getKey(key().totalPrice);
+        return getKey(keys().totalPrice);
     }
 
     public MetaUser<D> user() {
-        return (MetaUser) getKey(key().user);
+        return (MetaUser) getKey(keys().user);
     }
 
     public Key<D, String> note() {
-        return getKey(key().note);
+        return getKey(keys().note);
     }
 
     public Key<D, LocalDateTime> created() {
-        return getKey(key().created);
+        return getKey(keys().created);
     }
 
     public static final MetaOrder<Order> of(@Nonnull UjoContext context) {

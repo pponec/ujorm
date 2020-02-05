@@ -1,7 +1,6 @@
 package org.ujorm2.metamodel;
 
 import java.time.LocalDateTime;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
@@ -48,8 +47,13 @@ public class MetaAnonymous<D> extends AbstractDomainModel<D, Anonymous> {
         super(new DirectKeys());
     }
 
-    public MetaAnonymous(@Nonnull Key<D,?> keyPrefix) {
-        super(keyPrefix);
+    public MetaAnonymous(KeyFactoryProvider keyFactoryProvider, Key<D, ?> keyPrefix) {
+        super(keyFactoryProvider, keyPrefix);
+    }
+
+    @Override
+    public <A> AbstractDomainModel<A, Anonymous> prefix(Key<A, D> key) {
+        return new MetaAnonymous(keys(), key);
     }
 
     @Override
@@ -58,26 +62,27 @@ public class MetaAnonymous<D> extends AbstractDomainModel<D, Anonymous> {
     }
 
     /** Provider of an instance of DirectKeys */
-    private DirectKeys key() {
+    @Override
+    protected final DirectKeys keys() {
         return (DirectKeys) directKeys;
     }
 
     // --- KEY PROVIDERS ---
 
     public Key<D, Integer> id() {
-        return getKey(key().id);
+        return getKey(keys().id);
     }
 
     public Key<D, Short> pin() {
-        return getKey(key().pin);
+        return getKey(keys().pin);
     }
 
     public Key<D, LocalDateTime> created() {
-        return getKey(key().created);
+        return getKey(keys().created);
     }
 
     public MetaAnonymous<D> parent() {
-        return (MetaAnonymous) getKey(key().parent);
+        return (MetaAnonymous) getKey(keys().parent);
     }
 
     public static final MetaAnonymous<Anonymous> of(@Nullable UjoContext context) {
