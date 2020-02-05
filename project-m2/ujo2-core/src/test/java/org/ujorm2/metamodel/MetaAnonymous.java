@@ -45,7 +45,7 @@ public class MetaAnonymous<D> extends AbstractDomainModel<D, Anonymous> {
     };
 
     public MetaAnonymous() {
-        super(new DirectKeys());
+        super(new DirectKeys<D>());
     }
 
     public MetaAnonymous(@Nonnull Key<D,?> keyPrefix) {

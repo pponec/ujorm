@@ -53,7 +53,7 @@ public class MetaUser<D> extends AbstractDomainModel<D, User> {
     };
 
     public MetaUser() {
-        super(new DirectKeys());
+        super(new DirectKeys<D>());
     }
 
     public MetaUser(@Nonnull Key<D,?> keyPrefix) {

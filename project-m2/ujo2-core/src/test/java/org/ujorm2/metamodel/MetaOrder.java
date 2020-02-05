@@ -53,7 +53,7 @@ public class MetaOrder<D> extends AbstractDomainModel<D, Order> {
     };
 
     public MetaOrder() {
-        super(new DirectKeys());
+        super(new DirectKeys<D>());
     }
 
     public MetaOrder(@Nonnull Key<D,?> keyPrefix) {

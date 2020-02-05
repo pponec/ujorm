@@ -52,7 +52,7 @@ import org.ujorm2.doman.Item;
     };
 
     public MetaItem() {
-        super(new DirectKeys());
+        super(new DirectKeys<D>());
     }
 
     public MetaItem(@Nonnull Key<D,?> keyPrefix) {
