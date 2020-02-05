@@ -18,36 +18,36 @@ import org.ujorm2.doman.User;
 public class MetaUser<D> extends AbstractDomainModel<D, User> {
 
     /** All direct keys */
-    static final class DirectKeys<D> implements KeyFactoryProvider {
+    static final class DirectKeys<T extends User> implements KeyFactoryProvider<T> {
 
-        final KeyFactory<User> keyFactory = new KeyFactory(User.class);
+        final KeyFactory<T> keyFactory = new KeyFactory(User.class);
 
-        final Key<User, Integer> id = keyFactory.newKey(
+        final Key<T, Integer> id = keyFactory.newKey(
                 (d) -> d.getId(),
                 (d, v) -> d.setId(v));
 
-        final Key<User, Short> pin = keyFactory.newKey(
+        final Key<T, Short> pin = keyFactory.newKey(
                 (d) -> d.getPin(),
                 (d, v) -> d.setPin(v));
 
-        final Key<User, String> firstName = keyFactory.newKey(
+        final Key<T, String> firstName = keyFactory.newKey(
                 (d) -> d.getFirstName(),
                 (d, v) -> d.setFirstName(v));
 
-        final MetaOrder<User> sureName = keyFactory.newRelation(
+        final MetaOrder<T> sureName = keyFactory.newRelation(
                 (d) -> d.getSureName(),
                 (d, v) -> d.setSureName(v));
 
-        final Key<User, LocalDateTime> born = keyFactory.newKey(
+        final Key<T, LocalDateTime> born = keyFactory.newKey(
                 (d) -> d.getBorn(),
                 (d, v) -> d.setBorn(v));
 
-        final MetaUser<User> parent = keyFactory.newRelation(
+        final MetaUser<T> parent = keyFactory.newRelation(
                 (d) -> d.getParent(),
                 (d, v) -> d.setParent(v));
 
         @Override
-        public KeyFactory getKeyFactory() {
+        public KeyFactory<T> getKeyFactory() {
             return keyFactory;
         }
     };
