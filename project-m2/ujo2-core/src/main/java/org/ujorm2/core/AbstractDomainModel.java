@@ -2,6 +2,7 @@ package org.ujorm2.core;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.tools.Assert;
 import org.ujorm2.Key;
 
 /**
@@ -17,6 +18,9 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
     @Nullable
     protected final Key<D, ?> keyPrefix;
 
+    @Nullable
+    protected UjoContext context;
+
     private AbstractDomainModel(@Nonnull Class domainClass, @Nonnull final KeyFactoryProvider keyFactory, @Nullable Key<D, ?> prefix) {
         super(domainClass);
         this.directKeys = keyFactory;
@@ -30,6 +34,15 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
 
     public AbstractDomainModel(Key<D, ?> keyPrefix) {
         this(keyPrefix.getDomainClass(), null, keyPrefix);
+    }
+
+    public UjoContext getContext$() {
+        return context;
+    }
+
+    public void setContext$(@Nonnull final UjoContext context) {
+        Assert.validState(this.context == null, "Context is clocked");
+        this.context = context;
     }
 
     public D createDomain() {

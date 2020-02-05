@@ -14,7 +14,7 @@ import org.ujorm2.doman.User;
  */
 public class ModelProvider implements UjoContext {
 
-    private final MetaDomainStore store = new MetaDomainStore();
+    private final MetaDomainStore store = new MetaDomainStore(this);
 
     private final MetaItem item = store.addModel(new MetaItem());
     private final MetaOrder order = store.addModel(new MetaOrder());

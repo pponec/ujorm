@@ -6,6 +6,4 @@ package org.ujorm2.core;
  */
 public interface UjoContext {
 
-
-
 }
