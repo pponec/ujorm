@@ -4,10 +4,9 @@ import java.math.BigDecimal;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
+import org.ujorm2.core.AbstractDomainModel;
 import org.ujorm2.core.KeyFactory;
-import org.ujorm2.core.KeyImpl;
-import org.ujorm2.core.MetaInterface;
-import org.ujorm2.core.UjoContext;
+import org.ujorm2.core.KeyFactoryProvider;
 import org.ujorm2.doman.Item;
 
 /**
@@ -15,10 +14,10 @@ import org.ujorm2.doman.Item;
  * @author Pavel Ponec
  * @param <D> Domain
  */
-public class MetaItem<D> extends KeyImpl<D, Item> implements MetaInterface<D> {
+    public class MetaItem<D> extends AbstractDomainModel<D, Item> {
 
     /** All direct keys */
-    protected static final class DirectKey<D> {
+    protected static final class DirectKey<D> implements KeyFactoryProvider {
 
         final KeyFactory<Item> keyFactory = new KeyFactory(Item.class);
 
@@ -46,20 +45,18 @@ public class MetaItem<D> extends KeyImpl<D, Item> implements MetaInterface<D> {
                 (d) -> d.getCodePoints(),
                 (d, v) -> d.setCodePoints(v));
 
-        public DirectKey() {
-            keyFactory.close();
+        @Override
+        public KeyFactory getKeyFactory() {
+            return keyFactory;
         }
     };
 
-    /** All direct keys */
-    private final DirectKey key = new DirectKey();
-
-    public MetaItem(UjoContext context) {
-        super(Item.class, context, null);
+    public MetaItem() {
+        super(new DirectKey());
     }
 
-    public MetaItem(@Nonnull Key<D,?> keyPrefix, @Nonnull UjoContext context) {
-        super(keyPrefix.getDomainClass(), context, keyPrefix);
+    public MetaItem(@Nonnull Key<D,?> keyPrefix) {
+        super(keyPrefix);
     }
 
     @Override
@@ -67,40 +64,41 @@ public class MetaItem<D> extends KeyImpl<D, Item> implements MetaInterface<D> {
         return (D) new Item();
     }
 
+    /** Provider of an instance of DirectKeys */
+    private DirectKey key() {
+        return (DirectKey) directKeys;
+    }
+
     // --- KEY PROVIDERS ---
 
     public Key<D, Integer> id() {
-        return getKey(key.id);
+        return getKey(key().id);
     }
 
     public Key<D, String> note() {
-        return getKey(key.note);
+        return getKey(key().note);
     }
 
     public Key<D, BigDecimal> price() {
-        return getKey(key.price);
+        return getKey(key().price);
     }
 
     public MetaOrder<D> order() {
-        return (MetaOrder) getKey(key.order);
+        return (MetaOrder) getKey(key().order);
     }
 
     public Key<D, Boolean> descending$() {
-        return getKey(key.descending);
+        return getKey(key().descending);
     }
 
     public Key<D, Integer> codePoints$() {
-        return getKey(key.codePoints);
+        return getKey(key().codePoints);
     }
 
     // ---- Helper method
 
-    public static final MetaItem<Item> of(@Nullable UjoContext context) {
-        return new MetaItem<>(context);
-    }
-
-    public static final MetaItem<Item> of() {
-        return of(UjoContext.of());
+    public static final MetaItem<Item> of(@Nullable KeyFactory context) {
+        return new MetaItem<>();
     }
 
 }

@@ -44,18 +44,17 @@ import org.ujorm2.validator.ValidationException;
  * @author Pavel Ponec
  */
 @Immutable
-public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
+public class KeyImpl<D, V> implements Key<D, V> {
 
     /** Property Separator character */
     public static final char PROPERTY_SEPARATOR = '.';
     /** Undefined index value */
     public static final Integer UNDEFINED_INDEX = null;
 
-    @Nullable
-    protected final Key<D,?> keyPrefix;
-
     /** Domain type type (class) */
     private final Class<D> domainClass;
+    /** Property type (class) */
+    private Class<V> valueClass;
     /** Property name */
     private String name;
     /** Property index, there are exist three index ranges:
@@ -74,36 +73,31 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
     private Function<D, V> reader;
     /** Key index */
     private int index = Integer.MIN_VALUE;
-    /** Property type (class) */
-    private Class<V> valueClass;
     /** Property default value */
     private V defaultValue;
     /** Input Validator */
     private Validator<V> validator;
     /** An attribute writer */
     @Nullable
-    private KeyWriter keyWriter;
+    private PropertyWriter propertyWriter = new PropertyWriter();
 
-    /** Context of the Ujorm */
-    @Nonnull
-    private final UjoContext context;
-
-    public KeyImpl(@Nonnull Class domainClass, @Nullable UjoContext context, @Nullable Key<D,?> keyPrefix) {
+    public KeyImpl(@Nonnull final Class domainClass) {
         this.domainClass = Assert.notNull(domainClass, "domainClass");
-        this.context = context != context ? context : UjoContext.of();
-        this.keyPrefix = keyPrefix;
     }
 
-    /** Context of the Ujorm */
-    protected final UjoContext getContext() {
-        return context;
-    }
-
+    /**
+     * Create a new property writer
+     * @return Create a new Key builder
+     * @throws IllegalStateException Exception when the Key is locked
+     */
     @Nonnull
-    protected final Key<D, D> getKey(final @Nonnull Key<?, D> directKey) {
-        return keyPrefix != null
-                ? keyPrefix.add((Key) directKey)
-                : (Key) directKey;
+    public PropertyWriter getPropertyWriter() throws IllegalStateException {
+        return propertyWriter;
+    }
+
+    /** Closed to disable attribute modification */
+    protected boolean isClosed() {
+        return propertyWriter == null;
     }
 
     /** Method returns the {@code true} in case the {@link #PROPERTY_SEPARATOR}
@@ -575,41 +569,19 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
         return Criterion.forNone(this);
     }
 
-    @Override
-    public D createDomain() {
-        try {
-            return getDomainClass().newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    /**
-     * Create a new Key builder
-     * @return Create a new Key builder
-     * @throws IllegalStateException Exception when the Key is locked
-     */
-    @Nonnull
-    public synchronized KeyWriter keyWriter() throws IllegalStateException {
-        if (keyWriter == null) {
-            keyWriter = new KeyWriter();
-        }
-        return keyWriter;
-    }
-
     // ---- INNER CLASSES ---
 
-    /** An config attribute writer */
-    public final class KeyWriter {
+    /** A property writer for the Key */
+    public final class PropertyWriter {
 
         /** Privare constructor */
-        private KeyWriter() {
+        private PropertyWriter() {
             Assert.validState(name == null, "Invalid state of the {}", getClass());
         }
 
         @Nonnull
         public KeyImpl key() {
-            Assert.validState(keyWriter != null, "The key is closed");
+            Assert.validState(propertyWriter != null, "The key is closed");
             return KeyImpl.this;
         }
 
@@ -618,7 +590,9 @@ public class KeyImpl<D, V> implements Key<D, V>, MetaInterface<D> {
             Assert.hasLength(getName(), "name");
             Assert.notNull(getDomainClass(), "domainClass");
             Assert.notNull(getValueClass(), "valueClass");
-            keyWriter = null;
+            Assert.notNull(getReader(), "reader");
+            Assert.notNull(getWriter(), "writer");
+            propertyWriter = null; // Close the Key
         }
 
         /** The Name must not contain any dot character */

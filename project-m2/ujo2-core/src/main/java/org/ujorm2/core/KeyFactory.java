@@ -15,7 +15,6 @@
  */
 package org.ujorm2.core;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -35,11 +34,13 @@ import org.ujorm2.Key;
  *
  * @author Pavel Ponec
  */
-public class KeyFactory<D> implements Serializable /*, Closeable*/ {
+public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     private final Class<D> domainClass;
 
-    private ArrayList<Key<D,?>> keys = new ArrayList<>();
+    private UjoContext context = null; // TODO: Create a writer
+
+    private final ArrayList<Key<D,?>> keys = new ArrayList<>();
 
     public KeyFactory(@Nonnull final Class<D> domainClass) {
         this.domainClass = Assert.notNull(domainClass, "domainClass");
@@ -47,8 +48,8 @@ public class KeyFactory<D> implements Serializable /*, Closeable*/ {
 
     /** Create new Key */
     public <VALUE> Key<D, VALUE> newKey(Function<D, VALUE> reader, BiConsumer<D, VALUE> writer) {
-        final KeyImpl<D, VALUE> result = new KeyImpl(domainClass, UjoContext.of(), null);
-        final KeyImpl.KeyWriter keyWriter = result.keyWriter();
+        final KeyImpl<D, VALUE> result = new KeyImpl(domainClass);
+        final KeyImpl.PropertyWriter keyWriter = result.getPropertyWriter();
         keyWriter.setWriter(writer);
         keyWriter.setReader(reader);
 
@@ -58,7 +59,7 @@ public class KeyFactory<D> implements Serializable /*, Closeable*/ {
 
     /** Create new Key */
     public <KEY extends Key, VALUE> KEY newRelation(Function<D, VALUE> reader, BiConsumer<D, VALUE> writer) {
-        final Key<D, VALUE> result = new KeyImpl(domainClass, UjoContext.of(), null);
+        final Key<D, VALUE> result = new KeyImpl(domainClass);
         keys.add(result);
         return (KEY) result;
     }
@@ -77,7 +78,7 @@ public class KeyFactory<D> implements Serializable /*, Closeable*/ {
         try {
             for (int i = 0, max = keys.size(); i < max; i++) {
                 final KeyImpl key = (KeyImpl) keys.get(i);
-                final KeyImpl.KeyWriter writer = key.keyWriter();
+                final KeyImpl.PropertyWriter writer = key.getPropertyWriter();
                 final Field field = findField(writer.key(), fields);
 
                 if (key.getIndex() < 0) {
