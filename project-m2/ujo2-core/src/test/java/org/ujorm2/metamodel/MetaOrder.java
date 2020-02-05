@@ -18,7 +18,7 @@ import org.ujorm2.doman.Order.State;
 public class MetaOrder<D> extends AbstractDomainModel<D, Order> {
 
     /** All direct keys */
-    protected static final class DirectKey implements KeyFactoryProvider<Order> {
+    protected static final class DirectKeys implements KeyFactoryProvider<Order> {
 
         final KeyFactory<Order> keyFactory = new KeyFactory(Order.class);
 
@@ -53,7 +53,7 @@ public class MetaOrder<D> extends AbstractDomainModel<D, Order> {
     };
 
     public MetaOrder() {
-        super(new DirectKey());
+        super(new DirectKeys());
     }
 
     public MetaOrder(@Nonnull Key<D,?> keyPrefix) {
@@ -66,8 +66,8 @@ public class MetaOrder<D> extends AbstractDomainModel<D, Order> {
     }
 
     /** Provider of an instance of DirectKeys */
-    private DirectKey key() {
-        return (DirectKey) directKeys;
+    private DirectKeys key() {
+        return (DirectKeys) directKeys;
     }
 
     // --- KEY PROVIDERS ---

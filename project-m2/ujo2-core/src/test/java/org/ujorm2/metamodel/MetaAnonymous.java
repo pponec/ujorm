@@ -18,7 +18,7 @@ import org.ujorm2.doman.Item;
 public class MetaAnonymous<D> extends AbstractDomainModel<D, Anonymous> {
 
     /** All direct keys */
-    protected static final class DirectKey<D> implements KeyFactoryProvider {
+    protected static final class DirectKeys<D> implements KeyFactoryProvider {
 
         final KeyFactory<Anonymous> keyFactory = new KeyFactory(Anonymous.class);
 
@@ -45,7 +45,7 @@ public class MetaAnonymous<D> extends AbstractDomainModel<D, Anonymous> {
     };
 
     public MetaAnonymous() {
-        super(new DirectKey());
+        super(new DirectKeys());
     }
 
     public MetaAnonymous(@Nonnull Key<D,?> keyPrefix) {
@@ -58,8 +58,8 @@ public class MetaAnonymous<D> extends AbstractDomainModel<D, Anonymous> {
     }
 
     /** Provider of an instance of DirectKeys */
-    private DirectKey key() {
-        return (DirectKey) directKeys;
+    private DirectKeys key() {
+        return (DirectKeys) directKeys;
     }
 
     // --- KEY PROVIDERS ---

@@ -18,7 +18,7 @@ import org.ujorm2.doman.User;
 public class MetaUser<D> extends AbstractDomainModel<D, User> {
 
     /** All direct keys */
-    protected static final class DirectKey<D> implements KeyFactoryProvider {
+    protected static final class DirectKeys<D> implements KeyFactoryProvider {
 
         final KeyFactory<User> keyFactory = new KeyFactory(User.class);
 
@@ -53,7 +53,7 @@ public class MetaUser<D> extends AbstractDomainModel<D, User> {
     };
 
     public MetaUser() {
-        super(new DirectKey());
+        super(new DirectKeys());
     }
 
     public MetaUser(@Nonnull Key<D,?> keyPrefix) {
@@ -66,8 +66,8 @@ public class MetaUser<D> extends AbstractDomainModel<D, User> {
     }
 
     /** Provider of an instance of DirectKeys */
-    private DirectKey key() {
-        return (DirectKey) directKeys;
+    private DirectKeys key() {
+        return (DirectKeys) directKeys;
     }
 
     // --- KEY PROVIDERS ---

@@ -17,7 +17,7 @@ import org.ujorm2.doman.Item;
     public class MetaItem<D> extends AbstractDomainModel<D, Item> {
 
     /** All direct keys */
-    protected static final class DirectKey<D> implements KeyFactoryProvider {
+    protected static final class DirectKeys<D> implements KeyFactoryProvider {
 
         final KeyFactory<Item> keyFactory = new KeyFactory(Item.class);
 
@@ -52,7 +52,7 @@ import org.ujorm2.doman.Item;
     };
 
     public MetaItem() {
-        super(new DirectKey());
+        super(new DirectKeys());
     }
 
     public MetaItem(@Nonnull Key<D,?> keyPrefix) {
@@ -65,8 +65,8 @@ import org.ujorm2.doman.Item;
     }
 
     /** Provider of an instance of DirectKeys */
-    private DirectKey key() {
-        return (DirectKey) directKeys;
+    private DirectKeys key() {
+        return (DirectKeys) directKeys;
     }
 
     // --- KEY PROVIDERS ---
