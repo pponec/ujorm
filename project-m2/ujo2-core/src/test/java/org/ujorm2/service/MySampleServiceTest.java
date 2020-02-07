@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.ujorm2.Key;
 import org.ujorm2.doman.Item;
 import org.ujorm2.metamodel.MetaItem;
-import org.ujorm2.metamodel.ModelProvider;
+import org.ujorm2.metamodel.ModelContext;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -45,7 +45,7 @@ public class MySampleServiceTest {
     public void testMetaItem() {
         System.out.println("testMetaItem");
 
-        ModelProvider modelProvider = new ModelProvider();
+        ModelContext modelProvider = new ModelContext();
 
         MetaItem<Item> item = modelProvider.item();
 

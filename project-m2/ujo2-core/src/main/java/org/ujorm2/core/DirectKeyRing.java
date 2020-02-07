@@ -24,16 +24,16 @@ import org.ujorm.tools.Assert;
  */
 public abstract class DirectKeyRing<D> {
 
-    private MetaDomainStore ujoContext;
+    private ModelProvider ujoContext;
 
     @Nonnull
     public abstract KeyFactory<? super D> getKeyFactory();
 
-    public MetaDomainStore getContext() {
+    public ModelProvider getContext() {
         return ujoContext;
     }
 
-    public void setContext(@Nonnull MetaDomainStore ujoContext) {
+    public void setContext(@Nonnull ModelProvider ujoContext) {
         Assert.validState(this.ujoContext == null, "Context was assigned");
         this.ujoContext = Assert.notNull(ujoContext);
     }

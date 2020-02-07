@@ -9,7 +9,7 @@ import org.ujorm2.doman.Order;
 import org.ujorm2.doman.User;
 import org.ujorm2.metamodel.MetaItem;
 import org.ujorm2.metamodel.MetaOrder;
-import org.ujorm2.metamodel.ModelProvider;
+import org.ujorm2.metamodel.ModelContext;
 
 /**
  *
@@ -17,7 +17,7 @@ import org.ujorm2.metamodel.ModelProvider;
  */
 public class MySampleService {
 
-    private final ModelProvider modelProvider = new ModelProvider();
+    private final ModelContext modelProvider = new ModelContext();
     private final HelpService helpService = new HelpService();
 
     /** Reading / writing */
