@@ -11,43 +11,43 @@ import org.ujorm2.Key;
  */
 public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
 
-    /** All direct keys */
-    @Nonnull
-    protected final KeyFactoryProvider directKeys;
-
     @Nullable
     protected final Key<D, ?> keyPrefix;
 
-    @Nullable
-    protected UjoContext context;
+    /** All direct keys */
+    @Nonnull
+    protected final DirectKeyRing directKeyRing;
 
-    private AbstractDomainModel(@Nonnull Class domainClass, @Nonnull final KeyFactoryProvider keyFactory, @Nullable Key<D, ?> prefix) {
-        super(domainClass);
-        this.directKeys = keyFactory;
-        this.keyPrefix = prefix;
+    /** All direct keys */
+    protected final boolean descending;
+
+    protected AbstractDomainModel(@Nullable Key<D, ?> keyPrefix, @Nonnull DirectKeyRing directKeyRing, boolean descending) {
+        super(keyPrefix != null ? keyPrefix.getDomainClass() : directKeyRing.getKeyFactory().getDomainClass());
+        this.keyPrefix = keyPrefix;
+        this.directKeyRing = directKeyRing;
+        this.descending = descending;
     }
 
-    public AbstractDomainModel(@Nonnull final KeyFactoryProvider<?> keyFactory) {
-        this(keyFactory.getKeyFactory().getDomainClass(), keyFactory, null);
-    }
-
-    public AbstractDomainModel(@Nonnull final KeyFactoryProvider<?> keyFactory, Key<D, ?> keyPrefix) {
-        this(keyPrefix.getDomainClass(), null, keyPrefix);
+    public AbstractDomainModel(@Nonnull DirectKeyRing keyRing) {
+        this(null, keyRing, false);
     }
 
     public abstract <A> AbstractDomainModel<A, V> prefix(@Nonnull final Key<A, D> key);
 
 
     /** Provider of an instance of DirectKeys */
-    protected abstract KeyFactoryProvider keys();
+    protected abstract DirectKeyRing keys();
 
-    public UjoContext getContext$() {
-        return context;
+    @Deprecated
+    protected UjoContext getContext$() {
+        return directKeyRing.getContext();
     }
 
+    @Deprecated
     public void setContext$(@Nonnull final UjoContext context) {
-        Assert.validState(this.context == null, "Context is clocked");
-        this.context = context;
+        throw new UnsupportedOperationException("Move the method to: DirectKeyRing");
+//        Assert.validState(this.context == null, "Context is clocked");
+//        this.context = context;
     }
 
     public D createDomain() {
@@ -61,7 +61,7 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
     @Nonnull
     protected final <V> Key<D, V> getKey(final @Nonnull Key<?, V> directKey) {
         if (keyPrefix != null) {
-            final AbstractDomainModel domainModel = context.getStore$().getDomainModel(directKey.getValueClass());
+            final AbstractDomainModel domainModel = directKeyRing.getContext().getStore$().getDomainModel(directKey.getValueClass());
             Assert.validState(domainModel != null, "No model found for the key: {}.{}",
                     directKey.getDomainClass().getSimpleName(),
                     directKey);
@@ -71,7 +71,7 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
         }
     }
 
-    protected KeyFactoryProvider getDirecKey() {
-        return directKeys;
+    protected DirectKeyRing getDirecKey() {
+        return directKeyRing;
     }
 }

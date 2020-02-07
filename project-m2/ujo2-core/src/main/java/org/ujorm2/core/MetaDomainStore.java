@@ -28,17 +28,17 @@ import org.ujorm2.Key;
  */
 public class MetaDomainStore {
 
-    private final UjoContext context;
+    private final Class<UjoContext> context;
 
     private final HashMap<Class, AbstractDomainModel> map = new HashMap<>();
 
     private boolean closed;
 
-    public MetaDomainStore(@Nonnull final UjoContext context) {
+    public MetaDomainStore(@Nonnull final Class context) {
         this.context = Assert.notNull(context, "context");
     }
 
-    public <T extends AbstractDomainModel> T addModel(@Nonnull final T key) {
+    public <T extends AbstractDomainModel> T newModel(@Nonnull final T key) {
         Assert.validState(!closed, "Factory is locked");
         Assert.notNull(key, "key");
 
@@ -50,7 +50,7 @@ public class MetaDomainStore {
     public void close() {
         for (Key key : getDomainModels()) {
             if (key instanceof AbstractDomainModel) {
-                ((AbstractDomainModel) key).setContext$(context);
+                ((AbstractDomainModel) key).setContext$(null/*context*/);
             }
 
             if (key instanceof KeyImpl) {

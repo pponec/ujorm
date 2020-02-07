@@ -14,21 +14,20 @@ import org.ujorm2.doman.User;
  */
 public class ModelProvider extends UjoContext {
 
-    private final MetaDomainStore store = new MetaDomainStore(this);
-
-    private final MetaItem item = store.addModel(new MetaItem());
-    private final MetaOrder order = store.addModel(new MetaOrder());
-    private final MetaUser user = store.addModel(new MetaUser());
-    private final MetaAnonymous anonumous = store.addModel(new MetaAnonymous());
+    final MetaDomainStore factory = new MetaDomainStore(ModelProvider.class);
+    final MetaItem item = factory.newModel(new MetaItem());
+    final MetaOrder order = factory.newModel(new MetaOrder());
+    final MetaUser user = factory.newModel(new MetaUser());
+    final MetaAnonymous anonumous = factory.newModel(new MetaAnonymous());
 
     public ModelProvider() {
-        super(store); // TODO
+        save(factory); // !
     }
 
     /** provide  */
     @Nonnull
     public MetaDomainStore getModels$() {
-        return store;
+        return factory;
     }
 
     public MetaItem<Item> item() {

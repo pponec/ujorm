@@ -3,10 +3,11 @@ package org.ujorm2.metamodel;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
+import org.ujorm2.core.DirectKeyRing;
 import org.ujorm2.core.KeyFactory;
-import org.ujorm2.core.KeyFactoryProvider;
 import org.ujorm2.core.UjoContext;
 import org.ujorm2.doman.Order;
 import org.ujorm2.doman.Order.State;
@@ -18,7 +19,7 @@ import org.ujorm2.doman.Order.State;
 public class MetaOrder<D> extends AbstractDomainModel<D, Order> {
 
     /** All direct keys */
-    static final class DirectKeys<T extends Order> implements KeyFactoryProvider<T> {
+    static final class DirectKeys<T extends Order> extends DirectKeyRing<T> {
 
         final KeyFactory<T> keyFactory = new KeyFactory(Order.class);
 
@@ -56,13 +57,13 @@ public class MetaOrder<D> extends AbstractDomainModel<D, Order> {
         super(new DirectKeys());
     }
 
-    public MetaOrder(KeyFactoryProvider keyFactoryProvider, Key<D, ?> keyPrefix) {
-        super(keyFactoryProvider, keyPrefix);
+    public MetaOrder(@Nullable final Key<D, ?> keyPrefix, @Nonnull final DirectKeyRing directKeyRing, final boolean descending) {
+        super(keyPrefix, directKeyRing, descending);
     }
 
     @Override
     public <A> AbstractDomainModel<A, Order> prefix(Key<A, D> key) {
-        return new MetaOrder(keys(), key);
+        return new MetaOrder(key, keys(), false);
     }
 
     @Override
@@ -72,7 +73,7 @@ public class MetaOrder<D> extends AbstractDomainModel<D, Order> {
 
     @Override
     protected final DirectKeys keys() {
-        return (DirectKeys) directKeys;
+        return (DirectKeys) directKeyRing;
     }
 
     // --- KEY PROVIDERS ---

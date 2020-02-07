@@ -1,11 +1,12 @@
 package org.ujorm2.metamodel;
 
 import java.time.LocalDateTime;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
+import org.ujorm2.core.DirectKeyRing;
 import org.ujorm2.core.KeyFactory;
-import org.ujorm2.core.KeyFactoryProvider;
 import org.ujorm2.core.UjoContext;
 import org.ujorm2.doman.Item;
 import org.ujorm2.doman.User;
@@ -17,7 +18,7 @@ import org.ujorm2.doman.User;
 public class MetaUser<D> extends AbstractDomainModel<D, User> {
 
     /** All direct keys */
-    static final class DirectKeys<T extends User> implements KeyFactoryProvider<T> {
+    static final class DirectKeys<T extends User> extends DirectKeyRing<T> {
 
         final KeyFactory<T> keyFactory = new KeyFactory(User.class);
 
@@ -55,13 +56,13 @@ public class MetaUser<D> extends AbstractDomainModel<D, User> {
         super(new DirectKeys());
     }
 
-    public MetaUser(KeyFactoryProvider keyFactoryProvider, Key<D, ?> keyPrefix) {
-        super(keyFactoryProvider, keyPrefix);
+    public MetaUser(@Nullable final Key<D, ?> keyPrefix, @Nonnull final DirectKeyRing directKeyRing, final boolean descending) {
+        super(keyPrefix, directKeyRing, descending);
     }
 
     @Override
     public <A> AbstractDomainModel<A, User> prefix(Key<A, D> key) {
-        return new MetaUser(keys(), key);
+        return new MetaUser(key, keys(), true);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class MetaUser<D> extends AbstractDomainModel<D, User> {
 
     @Override
     protected final DirectKeys keys() {
-       return (DirectKeys) directKeys;
+       return (DirectKeys) directKeyRing;
     }
 
     // --- KEY PROVIDERS ---

@@ -1,11 +1,12 @@
 package org.ujorm2.metamodel;
 
 import java.time.LocalDateTime;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
+import org.ujorm2.core.DirectKeyRing;
 import org.ujorm2.core.KeyFactory;
-import org.ujorm2.core.KeyFactoryProvider;
 import org.ujorm2.core.UjoContext;
 import org.ujorm2.doman.Anonymous;
 import org.ujorm2.doman.Item;
@@ -17,7 +18,7 @@ import org.ujorm2.doman.Item;
 public class MetaAnonymous<D> extends AbstractDomainModel<D, Anonymous> {
 
     /** All direct keys */
-    static final class DirectKeys<T extends Anonymous> implements KeyFactoryProvider<T> {
+    static final class DirectKeys<T extends Anonymous> extends DirectKeyRing<T> {
 
         final KeyFactory<T> keyFactory = new KeyFactory(Anonymous.class);
 
@@ -47,13 +48,13 @@ public class MetaAnonymous<D> extends AbstractDomainModel<D, Anonymous> {
         super(new DirectKeys());
     }
 
-    public MetaAnonymous(KeyFactoryProvider keyFactoryProvider, Key<D, ?> keyPrefix) {
-        super(keyFactoryProvider, keyPrefix);
+    public MetaAnonymous(@Nullable final Key<D, ?> keyPrefix, @Nonnull final DirectKeyRing directKeyRing, final boolean descending) {
+        super(keyPrefix, directKeyRing, descending);
     }
 
     @Override
     public <A> AbstractDomainModel<A, Anonymous> prefix(Key<A, D> key) {
-        return new MetaAnonymous(keys(), key);
+        return new MetaAnonymous(key, keys(), false);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class MetaAnonymous<D> extends AbstractDomainModel<D, Anonymous> {
     /** Provider of an instance of DirectKeys */
     @Override
     protected final DirectKeys keys() {
-        return (DirectKeys) directKeys;
+        return (DirectKeys) directKeyRing;
     }
 
     // --- KEY PROVIDERS ---

@@ -1,11 +1,12 @@
 package org.ujorm2.metamodel;
 
 import java.math.BigDecimal;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
+import org.ujorm2.core.DirectKeyRing;
 import org.ujorm2.core.KeyFactory;
-import org.ujorm2.core.KeyFactoryProvider;
 import org.ujorm2.doman.Item;
 
 /**
@@ -16,7 +17,7 @@ import org.ujorm2.doman.Item;
 public class MetaItem<D> extends AbstractDomainModel<D, Item> {
 
     /** All direct keys */
-    static final class DirectKeys<T extends Item> implements KeyFactoryProvider<T> {
+    static final class DirectKeys<T extends Item> extends DirectKeyRing<T> {
 
         final KeyFactory<T> keyFactory = new KeyFactory(Item.class);
 
@@ -54,13 +55,13 @@ public class MetaItem<D> extends AbstractDomainModel<D, Item> {
         super(new DirectKeys());
     }
 
-    public MetaItem(KeyFactoryProvider keyFactoryProvider, Key<D, ?> keyPrefix) {
-        super(keyFactoryProvider, keyPrefix);
+    public MetaItem(@Nullable final Key<D, ?> keyPrefix, @Nonnull final DirectKeyRing directKeyRing, final boolean descending) {
+        super(keyPrefix, directKeyRing, descending);
     }
 
     @Override
     public <A> AbstractDomainModel<A, Item> prefix(Key<A, D> key) {
-        return new MetaItem(keys(), key);
+        return new MetaItem(key, keys(), false);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class MetaItem<D> extends AbstractDomainModel<D, Item> {
     /** Provider of an instance of DirectKeys */
     @Override
     protected final DirectKeys keys() {
-        return (DirectKeys) directKeys;
+        return (DirectKeys) directKeyRing;
     }
 
     // --- KEY PROVIDERS ---

@@ -15,12 +15,27 @@
  */
 package org.ujorm2.core;
 
+import javax.annotation.Nonnull;
+import org.ujorm.tools.Assert;
+
 /**
  *
  * @author Pavel Ponec
  */
-public interface KeyFactoryProvider<D> {
+public abstract class DirectKeyRing<D> {
 
-    KeyFactory<? super D> getKeyFactory();
+    private UjoContext ujoContext;
+
+    @Nonnull
+    public abstract KeyFactory<? super D> getKeyFactory();
+
+    public UjoContext getContext() {
+        return ujoContext;
+    }
+
+    public void setContext(@Nonnull UjoContext ujoContext) {
+        Assert.validState(this.ujoContext == null, "Context was assigned");
+        this.ujoContext = Assert.notNull(ujoContext);
+    }
 
 }

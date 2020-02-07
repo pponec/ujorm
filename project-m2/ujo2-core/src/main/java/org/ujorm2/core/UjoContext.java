@@ -6,14 +6,18 @@ package org.ujorm2.core;
  */
 public abstract class UjoContext {
 
-    private final MetaDomainStore store;
+    private MetaDomainStore store;
 
-    public UjoContext(MetaDomainStore store) {
+    public void save(MetaDomainStore store) {
         this.store = store;
         store.close();
     }
 
     public MetaDomainStore getStore$() {
         return store;
+    }
+
+    public void close() {
+
     }
 }
