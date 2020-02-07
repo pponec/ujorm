@@ -74,83 +74,70 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     /** Close the factory */
     public void close() {
-        final List<Field> fields = getFields();
-        try {
-            for (int i = 0, max = keys.size(); i < max; i++) {
-                final KeyImpl key = (KeyImpl) keys.get(i);
-                final KeyImpl.PropertyWriter writer = key.getPropertyWriter();
-                final Field field = findField(writer.key(), fields);
+        final List<Field> fields = getFields(domainClass, keys);
+        for (int i = 0, max = keys.size(); i < max; i++) {
+            final KeyImpl key = (KeyImpl) keys.get(i);
+            final KeyImpl.PropertyWriter writer = key.getPropertyWriter();
+            final Field field = fields.get(i);
 
-                if (key.getIndex() < 0) {
-                   writer.setIndex(i);
-                }
-                if (Check.isEmpty(key.getName())) {
-                    writer.setName(field.getName());
-                }
-                if (key.getValueClass() == null) {
-                    writer.setValueClass(getValueClass(field));
-                }
-                if (key.getReader() == null) {
-                    writer.setReader(null); // TODO: use a Java reflection by the: field.getName()
-                }
-                if (key.getWriter() == null) {
-                    writer.setWriter(null); // TODO: use a Java reflection by the: field.getName()
-                }
-                writer.close();
+            if (key.getIndex() < 0) {
+                writer.setIndex(i);
             }
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
+            if (Check.isEmpty(key.getName())) {
+                writer.setName(field.getName());
+            }
+            if (key.getValueClass() == null) {
+                writer.setValueClass(getClassFromGenerics(field, true));
+            }
+            if (key.getReader() == null) {
+                writer.setReader(null); // TODO: use a Java reflection by the: field.getName()
+            }
+            if (key.getWriter() == null) {
+                writer.setWriter(null); // TODO: use a Java reflection by the: field.getName()
+            }
+            writer.close();
         }
+
         keys.trimToSize();
     }
 
-        // --- UTILS ---
+    // --- STATIC UTILS ---
 
-    /** Get all UjoPorperty fields */
-    public List<Field> getFields() {
-        final int modiferPackage = 0;
-        final int propertyModifier = Modifier.STATIC | modiferPackage | Modifier.FINAL;
-        final Field[] fields = domainClass.getFields();
-        final List<Field> result = new ArrayList<>(fields.length);
-        for (int j = 0; j < fields.length; j++) {
-            final Field field = fields[j];
-            if (field.getModifiers() == propertyModifier
-                    && Key.class.isAssignableFrom(field.getType())) {
-                result.add(field);
+    /** Get all fileds from items on the same order */
+    static List<Field> getFields(@Nonnull final Class domainClass, @Nonnull final List<?> items) {
+        final List<Field> result = new ArrayList<>(items.size());
+        try {
+            fields:
+            for (Field field : domainClass.getFields()) {
+                if (Modifier.isFinal(field.getModifiers())) {
+                    final Object value = field.get(null);
+                    for (int i = 0, max = items.size(); i < max; i++) {
+                        if (value == items.get(i)) {
+                            result.add(i, field);
+                            continue fields;
+                        }
+                    }
+                    throw new IllegalStateException("No item was found for the field: " + field.getName());
+                }
             }
+        } catch (SecurityException | ReflectiveOperationException e) {
+            throw new IllegalStateException(e);
         }
         return result;
     }
 
-    /** Find field */
-    private Field findField(final Key key, final List<Field> fields)
-            throws IllegalAccessException {
-        for (Field field : fields) {
-            if (field.get(null) == key) {
-                return field;
-            }
-        }
-
-        final String msg = MsgFormatter.format("Can't get a field for the key index #{} - {}.{}"
-                , key.getIndex()
-                , domainClass.getSimpleName()
-                , key.getName());
-        throw new IllegalStateException(msg);
-    }
-
-    /** Returns array of generic parameters
+    /** Returns a class of generic parameters
      * @param field Base field
-     * @param valueType Argument {@code true} requires a VALUE class, other it is required DOMAIN class.
+     * @param lastPosition Argument {@code true} takes a last generic position or the value {@code false} takes the first one
      * @return type
      * @throws IllegalArgumentException
      */
-    private Class getValueClass(final Field field) throws IllegalArgumentException {
-        final boolean valueType = true;
+    static Class getClassFromGenerics(@Nonnull final Field field, final boolean lastPosition) throws IllegalArgumentException {
         try {
             final ParameterizedType type = (ParameterizedType) field.getGenericType();
             final Type[] types = type.getActualTypeArguments();
-            final Type rawType = types[valueType ? types.length - 1 : 0];
-            final Type result = valueType && rawType instanceof ParameterizedType
+            final Type rawType = types[lastPosition ? types.length - 1 : 0];
+            final Type result = lastPosition && rawType instanceof ParameterizedType
                     ? ((ParameterizedType) rawType).getRawType()
                     : rawType;
             return (result instanceof Class)
