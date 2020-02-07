@@ -38,8 +38,6 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     private final Class<? extends D> domainClass;
 
-    private UjoContext context = null; // TODO: Create a writer
-
     private final ArrayList<Key<D,?>> keys = new ArrayList<>();
 
     public KeyFactory(@Nonnull final Class<? extends D> domainClass) {
@@ -87,7 +85,7 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
                 writer.setName(field.getName());
             }
             if (key.getValueClass() == null) {
-                writer.setValueClass(getClassFromGenerics(field, true));
+                writer.setValueClass(getClassFromGenerics(field, false));
             }
             if (key.getReader() == null) {
                 writer.setReader(null); // TODO: use a Java reflection by the: field.getName()
@@ -104,13 +102,13 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
     // --- STATIC UTILS ---
 
     /** Get all fileds from items on the same order */
-    static List<Field> getFields(@Nonnull final Class domainClass, @Nonnull final List<?> items) {
+    static List<Field> getFields(@Nonnull final Object domainObject, @Nonnull final List<?> items) {
         final List<Field> result = new ArrayList<>(items.size());
         try {
             fields:
-            for (Field field : domainClass.getFields()) {
+            for (Field field : domainObject.getClass().getFields()) {
                 if (Modifier.isFinal(field.getModifiers())) {
-                    final Object value = field.get(null);
+                    final Object value = field.get(domainObject);
                     for (int i = 0, max = items.size(); i < max; i++) {
                         if (value == items.get(i)) {
                             result.add(i, field);
@@ -128,16 +126,16 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     /** Returns a class of generic parameters
      * @param field Base field
-     * @param lastPosition Argument {@code true} takes a last generic position or the value {@code false} takes the first one
+     * @param firstPosition Argument {@code true} takes the first generic position or the value {@code false} takes the last one
      * @return type
      * @throws IllegalArgumentException
      */
-    static Class getClassFromGenerics(@Nonnull final Field field, final boolean lastPosition) throws IllegalArgumentException {
+    static Class getClassFromGenerics(@Nonnull final Field field, final boolean firstPosition) throws IllegalArgumentException {
         try {
             final ParameterizedType type = (ParameterizedType) field.getGenericType();
             final Type[] types = type.getActualTypeArguments();
-            final Type rawType = types[lastPosition ? types.length - 1 : 0];
-            final Type result = lastPosition && rawType instanceof ParameterizedType
+            final Type rawType = types[firstPosition ? 0 : types.length - 1];
+            final Type result = !firstPosition && rawType instanceof ParameterizedType
                     ? ((ParameterizedType) rawType).getRawType()
                     : rawType;
             return (result instanceof Class)

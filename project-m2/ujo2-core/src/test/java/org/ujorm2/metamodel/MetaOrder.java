@@ -8,7 +8,6 @@ import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
 import org.ujorm2.core.DirectKeyRing;
 import org.ujorm2.core.KeyFactory;
-import org.ujorm2.core.UjoContext;
 import org.ujorm2.doman.Order;
 import org.ujorm2.doman.Order.State;
 
@@ -100,10 +99,6 @@ public class MetaOrder<D> extends AbstractDomainModel<D, Order> {
 
     public Key<D, LocalDateTime> created() {
         return getKey(keys().created);
-    }
-
-    public static final MetaOrder<Order> of(@Nonnull UjoContext context) {
-        return new MetaOrder<>();
     }
 
 }

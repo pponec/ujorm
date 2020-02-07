@@ -7,7 +7,6 @@ import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
 import org.ujorm2.core.DirectKeyRing;
 import org.ujorm2.core.KeyFactory;
-import org.ujorm2.core.UjoContext;
 import org.ujorm2.doman.Anonymous;
 import org.ujorm2.doman.Item;
 
@@ -84,10 +83,6 @@ public class MetaAnonymous<D> extends AbstractDomainModel<D, Anonymous> {
 
     public MetaAnonymous<D> parent() {
         return (MetaAnonymous) getKey(keys().parent);
-    }
-
-    public static final MetaAnonymous<Anonymous> of(@Nullable UjoContext context) {
-        return new MetaAnonymous<>();
     }
 
 }

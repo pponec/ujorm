@@ -16,55 +16,53 @@
  */
 package org.ujorm2.core;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import org.ujorm.tools.Assert;
 
 /**
- *
+ * A store of domain object models
  * @author Pavel Ponec
  */
 public class MetaDomainStore {
 
-    private final Class<UjoContext> context;
+    /** Domain - Model Map */
+    private final HashMap<Class, PDomain> map = new HashMap<>(8);
 
-    private final HashMap<Class, DomainItem> map = new HashMap<>();
+    /** A Temporary proxyDomainModels  */
+    private List<PDomain> proxyDomainsModels = new ArrayList<>();
 
-    private final List<DomainItem> list = new ArrayList<>();
-
-    private boolean closed;
-
-    public MetaDomainStore(@Nonnull final Class context) {
-        this.context = Assert.notNull(context, "context");
-    }
-
-    public <R> DomainItem newModel() {
-        final DomainItem result = new DomainItem();
-        list.add(result);
+    public <R> PDomain newModel() {
+        final PDomain result = new PDomain();
+        proxyDomainsModels.add(result);
         return result;
     }
 
+    private boolean isClosed() {
+        return proxyDomainsModels == null;
+    }
+
     /** Close the domain store - including assigned models */
-    public void close() {
-        if (closed) {
-            return;
+    public void close(@Nonnull final Object motherObject) {
+        if (!isClosed()) {
+            try {
+                final List<Field> fields = KeyFactory.getFields(motherObject, proxyDomainsModels);
+                for (int i = 0, max = proxyDomainsModels.size(); i < max; i++) {
+                    final PDomain proxyDomain = proxyDomainsModels.get(i);
+                    final Field field = fields.get(i);
+                    final Class modelClass = KeyFactory.getClassFromGenerics(field, true);
+                    proxyDomain.close((AbstractDomainModel) modelClass.newInstance());
+                    map.put(modelClass, proxyDomain);
+                }
+            } catch (SecurityException | ReflectiveOperationException e) {
+                throw new IllegalStateException(e);
+            }
         }
-
-        getDomainModels().forEach(key -> {
-            if (key instanceof AbstractDomainModel) {
-                ((AbstractDomainModel) key).setContext$(null/*context*/);
-            }
-
-            if (key instanceof KeyImpl) {
-                // set a key context
-                ((KeyImpl) key).getPropertyWriter().close();
-            }
-        });
-
-        closed = true;
+        // Close the object:
+        proxyDomainsModels = null;
     }
 
     public AbstractDomainModel getDomainModel(@Nonnull final Class domainClass) {

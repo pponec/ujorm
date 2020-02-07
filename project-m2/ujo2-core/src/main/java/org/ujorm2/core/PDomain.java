@@ -16,14 +16,22 @@
  */
 package org.ujorm2.core;
 
+import org.ujorm.tools.Assert;
+
 /**
- *
+ * Proxy Domain
  * @author Pavel Ponec
  */
-public class DomainItem<D> {
+public class PDomain<D> {
+
+    private AbstractDomainModel model;
 
     public <T extends AbstractDomainModel> T model() {
         throw new UnsupportedOperationException("TODO");
     }
 
+    void close(AbstractDomainModel model) {
+        Assert.validState(this.model == null, "Object is closed");
+        this.model = Assert.notNull(model, "model");
+    }
 }

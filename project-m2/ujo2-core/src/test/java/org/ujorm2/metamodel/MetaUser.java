@@ -7,7 +7,6 @@ import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
 import org.ujorm2.core.DirectKeyRing;
 import org.ujorm2.core.KeyFactory;
-import org.ujorm2.core.UjoContext;
 import org.ujorm2.doman.Item;
 import org.ujorm2.doman.User;
 
@@ -99,9 +98,5 @@ public class MetaUser<D> extends AbstractDomainModel<D, User> {
 
     public MetaUser<D> parent() {
         return (MetaUser) getKey(keys().parent);
-    }
-
-    public static final MetaUser<User> of(@Nullable UjoContext context) {
-        return new MetaUser<>();
     }
 }
