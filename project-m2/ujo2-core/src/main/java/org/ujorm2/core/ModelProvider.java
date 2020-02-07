@@ -41,28 +41,25 @@ public class ModelProvider {
         return result;
     }
 
-    private boolean isClosed() {
-        return proxyDomainsModels == null;
-    }
-
     /** Close the domain store - including assigned models */
     public void close(@Nonnull final Object motherObject) {
-        if (!isClosed()) {
+        if (proxyDomainsModels == null) {
             try {
                 final List<Field> fields = KeyFactory.getFields(motherObject, proxyDomainsModels);
                 for (int i = 0, max = proxyDomainsModels.size(); i < max; i++) {
                     final MDomain proxyDomain = proxyDomainsModels.get(i);
                     final Field field = fields.get(i);
                     final Class modelClass = KeyFactory.getClassFromGenerics(field, true);
-                    proxyDomain.close((AbstractDomainModel) modelClass.newInstance());
                     map.put(modelClass, proxyDomain);
+                    proxyDomain.close((AbstractDomainModel) modelClass.newInstance());
                 }
             } catch (SecurityException | ReflectiveOperationException e) {
                 throw new IllegalStateException(e);
+            } finally {
+                // Close the object:
+                proxyDomainsModels = null;
             }
         }
-        // Close the object:
-        proxyDomainsModels = null;
     }
 
     public AbstractDomainModel getDomainModel(@Nonnull final Class domainClass) {
@@ -72,6 +69,5 @@ public class ModelProvider {
     public Stream<AbstractDomainModel> getDomainModels() {
         return map.values().stream().map(m -> m.get());
     }
-
 
 }
