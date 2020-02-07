@@ -47,18 +47,18 @@ public final class ModelContext {
     }
 
     public MetaItem<Item> item() {
-        return item.model();
+        return item.get();
     }
 
     public MetaOrder<Order> order() {
-        return order.model();
+        return order.get();
     }
 
     public MetaUser<User> user() {
-        return user.model();
+        return user.get();
     }
 
     public MetaAnonymous<Anonymous> anonumous() {
-        return anonumous.model();
+        return anonumous.get();
     }
 }

@@ -26,7 +26,7 @@ public class PDomain<D> {
 
     private AbstractDomainModel model;
 
-    public <T extends AbstractDomainModel> T model() {
+    public <T extends AbstractDomainModel> T get() {
         throw new UnsupportedOperationException("TODO");
     }
 

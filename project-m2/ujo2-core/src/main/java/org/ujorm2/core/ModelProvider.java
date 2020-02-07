@@ -66,11 +66,11 @@ public class ModelProvider {
     }
 
     public AbstractDomainModel getDomainModel(@Nonnull final Class domainClass) {
-        return map.get(domainClass).model();
+        return map.get(domainClass).get();
     }
 
     public Stream<AbstractDomainModel> getDomainModels() {
-        return map.values().stream().map(m -> m.model());
+        return map.values().stream().map(m -> m.get());
     }
 
 
