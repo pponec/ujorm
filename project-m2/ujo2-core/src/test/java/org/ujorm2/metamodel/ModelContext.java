@@ -18,7 +18,7 @@ package org.ujorm2.metamodel;
 
 import javax.annotation.Nonnull;
 import org.ujorm2.core.ModelProvider;
-import org.ujorm2.core.PDomain;
+import org.ujorm2.core.MDomain;
 import org.ujorm2.doman.Anonymous;
 import org.ujorm2.doman.Item;
 import org.ujorm2.doman.Order;
@@ -31,10 +31,10 @@ import org.ujorm2.doman.User;
 public final class ModelContext {
 
     final ModelProvider provider = new ModelProvider();
-    final PDomain<MetaItem> item = provider.newModel();
-    final PDomain<MetaOrder> order = provider.newModel();
-    final PDomain<MetaUser> user = provider.newModel();
-    final PDomain<MetaAnonymous> anonumous = provider.newModel();
+    final MDomain<MetaItem> item = provider.newModel();
+    final MDomain<MetaOrder> order = provider.newModel();
+    final MDomain<MetaUser> user = provider.newModel();
+    final MDomain<MetaAnonymous> anonumous = provider.newModel();
 
     public ModelContext() {
         provider.close(this);

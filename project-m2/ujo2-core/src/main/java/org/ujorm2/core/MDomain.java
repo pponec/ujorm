@@ -22,7 +22,7 @@ import org.ujorm.tools.Assert;
  * Proxy Domain
  * @author Pavel Ponec
  */
-public class PDomain<D> {
+public class MDomain<D> {
 
     private AbstractDomainModel model;
 

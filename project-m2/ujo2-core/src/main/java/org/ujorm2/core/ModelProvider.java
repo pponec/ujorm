@@ -30,13 +30,13 @@ import javax.annotation.Nonnull;
 public class ModelProvider {
 
     /** Domain - Model Map */
-    private final HashMap<Class, PDomain> map = new HashMap<>(8);
+    private final HashMap<Class, MDomain> map = new HashMap<>(8);
 
     /** A Temporary proxyDomainModels  */
-    private List<PDomain> proxyDomainsModels = new ArrayList<>();
+    private List<MDomain> proxyDomainsModels = new ArrayList<>();
 
-    public <R> PDomain newModel() {
-        final PDomain result = new PDomain();
+    public <R> MDomain newModel() {
+        final MDomain result = new MDomain();
         proxyDomainsModels.add(result);
         return result;
     }
@@ -51,7 +51,7 @@ public class ModelProvider {
             try {
                 final List<Field> fields = KeyFactory.getFields(motherObject, proxyDomainsModels);
                 for (int i = 0, max = proxyDomainsModels.size(); i < max; i++) {
-                    final PDomain proxyDomain = proxyDomainsModels.get(i);
+                    final MDomain proxyDomain = proxyDomainsModels.get(i);
                     final Field field = fields.get(i);
                     final Class modelClass = KeyFactory.getClassFromGenerics(field, true);
                     proxyDomain.close((AbstractDomainModel) modelClass.newInstance());
