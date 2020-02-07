@@ -35,7 +35,7 @@ public class ModelProvider {
     /** A Temporary proxyDomainModels  */
     private List<MDomain> proxyDomainsModels = new ArrayList<>();
 
-    public <R> MDomain newModel() {
+    public MDomain newModel() {
         final MDomain result = new MDomain();
         proxyDomainsModels.add(result);
         return result;
@@ -50,8 +50,10 @@ public class ModelProvider {
                     final MDomain proxyDomain = proxyDomainsModels.get(i);
                     final Field field = fields.get(i);
                     final Class modelClass = KeyFactory.getClassFromGenerics(field, true);
+                    final AbstractDomainModel abstractDomainModel = (AbstractDomainModel) modelClass.newInstance();
+                    abstractDomainModel.getDirecKey().setContext(this);
                     map.put(modelClass, proxyDomain);
-                    proxyDomain.close((AbstractDomainModel) modelClass.newInstance());
+                    proxyDomain.close(abstractDomainModel);
                 }
             } catch (SecurityException | ReflectiveOperationException e) {
                 throw new IllegalStateException(e);

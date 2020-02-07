@@ -101,15 +101,15 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     // --- STATIC UTILS ---
 
-    /** Get all fileds from items on the same order */
-    static List<Field> getFields(@Nonnull final Object domainObject, @Nonnull final List<?> items) {
+    /** Get all final fileds from items on the same order */
+    static List<Field> getFields(@Nonnull final Object container, @Nonnull final List<?> items) {
         final List<Field> result = new ArrayList<>(items.size());
         try {
             fields:
-            for (Field field : domainObject.getClass().getFields()) {
+            for (Field field : container.getClass().getFields()) {
                 if (Modifier.isFinal(field.getModifiers())) {
-                    final Object value = field.get(domainObject);
-                    for (int i = 0, max = items.size(); i < max; i++) {
+                    final Object value = field.get(container);
+                    for (int i = items.size() - 1; i >= 0; i--) {
                         if (value == items.get(i)) {
                             result.add(i, field);
                             continue fields;
