@@ -1,5 +1,5 @@
 /*
- *  Copyright 2011-2014 Pavel Ponec
+ *  Copyright 2020-2020 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
  */
 package org.ujorm2.core;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
-import org.ujorm2.Key;
 
 /**
  *
@@ -30,7 +31,9 @@ public class MetaDomainStore {
 
     private final Class<UjoContext> context;
 
-    private final HashMap<Class, AbstractDomainModel> map = new HashMap<>();
+    private final HashMap<Class, DomainItem> map = new HashMap<>();
+
+    private final List<DomainItem> list = new ArrayList<>();
 
     private boolean closed;
 
@@ -38,17 +41,19 @@ public class MetaDomainStore {
         this.context = Assert.notNull(context, "context");
     }
 
-    public <T extends AbstractDomainModel> T newModel(@Nonnull final T key) {
-        Assert.validState(!closed, "Factory is locked");
-        Assert.notNull(key, "key");
-
-        map.put(key.getDomainClass(), key);
-        return key;
+    public <R> DomainItem newModel() {
+        final DomainItem result = new DomainItem();
+        list.add(result);
+        return result;
     }
 
     /** Close the domain store - including assigned models */
     public void close() {
-        for (Key key : getDomainModels()) {
+        if (closed) {
+            return;
+        }
+
+        getDomainModels().forEach(key -> {
             if (key instanceof AbstractDomainModel) {
                 ((AbstractDomainModel) key).setContext$(null/*context*/);
             }
@@ -57,15 +62,18 @@ public class MetaDomainStore {
                 // set a key context
                 ((KeyImpl) key).getPropertyWriter().close();
             }
-        }
+        });
+
         closed = true;
     }
 
     public AbstractDomainModel getDomainModel(@Nonnull final Class domainClass) {
-        return map.get(domainClass);
+        return map.get(domainClass).model();
     }
 
-    public Collection<AbstractDomainModel> getDomainModels() {
-        return map.values();
+    public Stream<AbstractDomainModel> getDomainModels() {
+        return map.values().stream().map(m -> m.model());
     }
+
+
 }
