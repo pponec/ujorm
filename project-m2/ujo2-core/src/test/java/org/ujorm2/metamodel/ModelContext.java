@@ -40,7 +40,7 @@ public final class ModelContext {
     }
 
     /** Provides an extended API */
-    public ModelProvider.Tools getTool$() {
+    public ModelProvider.Tools getTools() {
         return provider.getTools();
     }
 
