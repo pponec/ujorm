@@ -16,9 +16,8 @@
  */
 package org.ujorm2.metamodel;
 
-import javax.annotation.Nonnull;
-import org.ujorm2.core.ModelProvider;
 import org.ujorm2.core.MDomain;
+import org.ujorm2.core.ModelProvider;
 import org.ujorm2.doman.Anonymous;
 import org.ujorm2.doman.Item;
 import org.ujorm2.doman.Order;
@@ -40,10 +39,9 @@ public final class ModelContext {
         provider.close(this);
     }
 
-    /** Provide  */
-    @Nonnull
-    public ModelProvider getProvider$() {
-        return provider;
+    /** Provides an extended API */
+    public ModelProvider.Tools getTool$() {
+        return provider.getTools();
     }
 
     public MetaItem<Item> item() {

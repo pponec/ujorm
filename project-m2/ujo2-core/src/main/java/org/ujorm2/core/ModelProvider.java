@@ -35,6 +35,9 @@ public class ModelProvider {
     /** A Temporary proxyDomainModels  */
     private List<MDomain> proxyDomainsModels = new ArrayList<>();
 
+    /** An provider of public API */
+    private final Tools tools = new Tools();
+
     public MDomain newModel() {
         final MDomain result = new MDomain();
         proxyDomainsModels.add(result);
@@ -70,6 +73,20 @@ public class ModelProvider {
 
     public Stream<AbstractDomainModel> getDomainModels() {
         return map.values().stream().map(m -> m.get());
+    }
+
+    /** Provides an extended API */
+    public final Tools getTools() {
+        return tools;
+    }
+
+    // --- Inner class()  ---
+
+    public final class Tools {
+
+        private Tools() {
+        }
+
     }
 
 }

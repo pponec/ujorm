@@ -319,15 +319,22 @@ public class KeyImpl<D, V> implements Key<D, V> {
     }
 
     /**
-     * Returns {@code true}, if the domain class and property name are the same.
+     * Returns {@code true}, if the {@code domain class} and {@code key name} are equals.
      * The key value can be {@code null}.
      * @param key An another key.
      */
     @Override
     public boolean equals(@Nullable final Object key) {
-        if (key instanceof KeyImpl) {
+        if (this == key) {
+            return true;
+        }
+        else if (key instanceof KeyImpl) {
             final KeyImpl arg = (KeyImpl) key;
-            return this.domainClass == arg.domainClass && this.name == arg.name;
+            if (domainClass == arg.domainClass) {
+                return this.name == arg.name
+                    || this.name.hashCode() == arg.name.hashCode()
+                    && this.name.equals(arg.name);
+            }
         }
         return false;
     }
