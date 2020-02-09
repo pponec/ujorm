@@ -44,6 +44,8 @@ public final class ModelContext {
         return provider.getTools();
     }
 
+    // --- Methods to provide domain models ---
+
     public MetaItem<Item> item() {
         return item.get();
     }
