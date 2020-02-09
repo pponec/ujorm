@@ -25,6 +25,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.mockito.Mockito;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.msg.MsgFormatter;
@@ -40,13 +42,16 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     private final ArrayList<Key<D,?>> keys = new ArrayList<>();
 
+    @Nullable
+    private ModelProvider modelProvider;
+
     public KeyFactory(@Nonnull final Class<? extends D> domainClass) {
         this.domainClass = Assert.notNull(domainClass, "domainClass");
     }
 
     /** Create new Key */
-    public <VALUE> Key<D, VALUE> newKey(Function<D, VALUE> reader, BiConsumer<D, VALUE> writer) {
-        final KeyImpl<D, VALUE> result = new KeyImpl(domainClass);
+    public <K> Key<D, K> newKey(Function<D, K> reader, BiConsumer<D, K> writer) {
+        final KeyImpl<D, K> result = new KeyImpl(domainClass);
         final KeyImpl.PropertyWriter keyWriter = result.getPropertyWriter();
         keyWriter.setWriter(writer);
         keyWriter.setReader(reader);
@@ -56,10 +61,10 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
     }
 
     /** Create new Key */
-    public <KEY extends Key, VALUE> KEY newRelation(Function<D, VALUE> reader, BiConsumer<D, VALUE> writer) {
-        final Key<D, VALUE> result = new KeyImpl(domainClass);
-        keys.add(result);
-        return (KEY) result;
+    public <K extends AbstractDomainModel, VALUE> K newRelation(Function<D, VALUE> reader, BiConsumer<D, VALUE> writer) {
+         final Object result = modelProvider.getDomainModel(domainClass);
+         // TODO.pop ...
+         return (K) Mockito.mock(AbstractDomainModel.class);
     }
 
     public Class<? extends D> getDomainClass() {
@@ -71,7 +76,8 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
     }
 
     /** Close the factory */
-    public void close() {
+    public void close(@Nonnull final ModelProvider modelProvider) {
+        this.modelProvider = Assert.notNull(modelProvider, "modelProvider");
         final List<Field> fields = getFields(domainClass, keys);
         for (int i = 0, max = keys.size(); i < max; i++) {
             final KeyImpl key = (KeyImpl) keys.get(i);
@@ -104,22 +110,27 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
     /** Get all final fileds from items on the same order */
     static List<Field> getFields(@Nonnull final Object container, @Nonnull final List<?> items) {
         final List<Field> result = new ArrayList<>(items.size());
+        int counter = 0;
         try {
             fields:
-            for (Field field : container.getClass().getFields()) {
+            for (Field field : container.getClass().getDeclaredFields()) {
                 if (Modifier.isFinal(field.getModifiers())) {
+                    field.setAccessible(true);
                     final Object value = field.get(container);
                     for (int i = items.size() - 1; i >= 0; i--) {
                         if (value == items.get(i)) {
+                            counter++;
                             result.add(i, field);
                             continue fields;
                         }
                     }
-                    throw new IllegalStateException("No item was found for the field: " + field.getName());
                 }
             }
         } catch (SecurityException | ReflectiveOperationException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Incorrect inicialization from the " + container.getClass(), e);
+        }
+        if (counter != items.size()) {
+            throw new IllegalStateException("Incorrect inicialization from the " + container.getClass());
         }
         return result;
     }

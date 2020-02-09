@@ -27,7 +27,7 @@ public class MDomain<D> {
     private AbstractDomainModel model;
 
     public <T extends AbstractDomainModel> T get() {
-        throw new UnsupportedOperationException("TODO");
+        return (T) model;
     }
 
     void close(AbstractDomainModel model) {

@@ -46,12 +46,13 @@ public class ModelProvider {
 
     /** Close the domain store - including assigned models */
     public void close(@Nonnull final Object motherObject) {
-        if (proxyDomainsModels == null) {
+        if (proxyDomainsModels != null) {
             try {
                 final List<Field> fields = KeyFactory.getFields(motherObject, proxyDomainsModels);
                 for (int i = 0, max = proxyDomainsModels.size(); i < max; i++) {
                     final MDomain proxyDomain = proxyDomainsModels.get(i);
                     final Field field = fields.get(i);
+                    field.setAccessible(true);
                     final Class modelClass = KeyFactory.getClassFromGenerics(field, true);
                     final AbstractDomainModel abstractDomainModel = (AbstractDomainModel) modelClass.newInstance();
                     abstractDomainModel.getDirecKey().setContext(this);

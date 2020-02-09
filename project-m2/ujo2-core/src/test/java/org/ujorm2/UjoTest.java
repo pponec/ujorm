@@ -15,35 +15,35 @@
  */
 package org.ujorm2;
 
-import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.ujorm2.metamodel.ModelContext;
 
 /**
  *
  * @author pavel
  */
 public class UjoTest {
-    
+
     public UjoTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -52,9 +52,18 @@ public class UjoTest {
      * Test of readValue method, of class Ujo.
      */
     @Test
-    public void testReadValue() {
-        System.out.println("readValue");
+    public void testModelContext() {
+        System.out.println("ModelContext");
+
+        final ModelContext modelContext = new ModelContext();
+
+        Assert.assertNotNull(modelContext.item());
+        Assert.assertNotNull(modelContext.item().id());
+        Assert.assertTrue(modelContext.item().id().isDomainOf(Integer.class));
+
+
+
         // TODO
     }
-    
+
 }
