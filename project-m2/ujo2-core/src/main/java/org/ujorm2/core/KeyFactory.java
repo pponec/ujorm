@@ -40,10 +40,10 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     private final Class<? extends D> domainClass;
 
-    private final ArrayList<Key<D,?>> keys = new ArrayList<>();
+    private final ArrayList<Key<D, ?>> keys = new ArrayList<>();
 
     @Nullable
-    private ModelProvider modelProvider;
+    private ModelContext modelProvider;
 
     public KeyFactory(@Nonnull final Class<? extends D> domainClass) {
         this.domainClass = Assert.notNull(domainClass, "domainClass");
@@ -62,9 +62,11 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     /** Create new Key */
     public <K extends AbstractDomainModel, VALUE> K newRelation(Function<D, VALUE> reader, BiConsumer<D, VALUE> writer) {
-         final Object result = modelProvider.getDomainModel(domainClass);
-         // TODO.pop ...
-         return (K) Mockito.mock(AbstractDomainModel.class);
+        // TODO:
+        final Object result = modelProvider.getDomainModel(domainClass);
+
+
+        return (K) Mockito.mock(AbstractDomainModel.class);
     }
 
     public Class<? extends D> getDomainClass() {
@@ -76,8 +78,8 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
     }
 
     /** Close the factory */
-    public void close(@Nonnull final ModelProvider modelProvider) {
-        this.modelProvider = Assert.notNull(modelProvider, "modelProvider");
+    public void close(@Nonnull final ModelContext context) {
+        this.modelProvider = Assert.notNull(context, "modelProvider");
         final List<Field> fields = getFields(domainClass, keys);
         for (int i = 0, max = keys.size(); i < max; i++) {
             final KeyImpl key = (KeyImpl) keys.get(i);

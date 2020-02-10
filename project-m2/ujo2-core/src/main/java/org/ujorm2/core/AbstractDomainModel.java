@@ -39,12 +39,12 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
     protected abstract DirectKeyRing keys();
 
     @Deprecated
-    protected ModelProvider getContext$() {
+    protected ModelContext getContext$() {
         return directKeyRing.getContext();
     }
 
     @Deprecated
-    public void setContext$(@Nonnull final ModelProvider context) {
+    public void setContext$(@Nonnull final ModelContext context) {
         throw new UnsupportedOperationException("Move the method to: DirectKeyRing");
 //        Assert.validState(this.context == null, "Context is clocked");
 //        this.context = context;

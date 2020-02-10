@@ -21,11 +21,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ujorm2.metamodel.ModelContext;
+import org.ujorm2.metamodel.DomainModelProvider;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class UjoTest {
 
@@ -55,11 +55,11 @@ public class UjoTest {
     public void testModelContext() {
         System.out.println("ModelContext");
 
-        final ModelContext modelContext = new ModelContext();
+        final DomainModelProvider context = new DomainModelProvider();
 
-        Assert.assertNotNull(modelContext.item());
-        Assert.assertNotNull(modelContext.item().id());
-        Assert.assertTrue(modelContext.item().id().isDomainOf(Integer.class));
+        Assert.assertNotNull(context.item());
+        Assert.assertNotNull(context.item().id());
+        Assert.assertTrue(context.item().id().isDomainOf(Integer.class));
 
 
 

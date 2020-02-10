@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * A store of domain object models
  * @author Pavel Ponec
  */
-public class ModelProvider {
+public class ModelContext {
 
     /** Domain - Model Map */
     private final HashMap<Class, MDomain> map = new HashMap<>(8);
