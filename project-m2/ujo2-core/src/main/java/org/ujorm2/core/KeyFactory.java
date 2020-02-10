@@ -16,9 +16,6 @@
 package org.ujorm2.core;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -29,7 +26,6 @@ import javax.annotation.Nullable;
 import org.mockito.Mockito;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm2.Key;
 
 /**
@@ -80,7 +76,7 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
     /** Close the factory */
     public void close(@Nonnull final ModelContext context) {
         this.modelProvider = Assert.notNull(context, "modelProvider");
-        final List<Field> fields = getFields(domainClass, keys);
+        final List<Field> fields = context.getFields(domainClass, keys);
         for (int i = 0, max = keys.size(); i < max; i++) {
             final KeyImpl key = (KeyImpl) keys.get(i);
             final KeyImpl.PropertyWriter writer = key.getPropertyWriter();
@@ -93,7 +89,7 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
                 writer.setName(field.getName());
             }
             if (key.getValueClass() == null) {
-                writer.setValueClass(getClassFromGenerics(field, false));
+                writer.setValueClass(context.getClassFromGenerics(field, false));
             }
             if (key.getReader() == null) {
                 writer.setReader(null); // TODO: use a Java reflection by the: field.getName()
@@ -107,56 +103,4 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
         keys.trimToSize();
     }
 
-    // --- STATIC UTILS ---
-
-    /** Get all final fileds from items on the same order */
-    static List<Field> getFields(@Nonnull final Object container, @Nonnull final List<?> items) {
-        final List<Field> result = new ArrayList<>(items.size());
-        int counter = 0;
-        try {
-            fields:
-            for (Field field : container.getClass().getDeclaredFields()) {
-                if (Modifier.isFinal(field.getModifiers())) {
-                    field.setAccessible(true);
-                    final Object value = field.get(container);
-                    for (int i = items.size() - 1; i >= 0; i--) {
-                        if (value == items.get(i)) {
-                            counter++;
-                            result.add(i, field);
-                            continue fields;
-                        }
-                    }
-                }
-            }
-        } catch (SecurityException | ReflectiveOperationException e) {
-            throw new IllegalStateException("Incorrect inicialization from the " + container.getClass(), e);
-        }
-        if (counter != items.size()) {
-            throw new IllegalStateException("Incorrect inicialization from the " + container.getClass());
-        }
-        return result;
-    }
-
-    /** Returns a class of generic parameters
-     * @param field Base field
-     * @param firstPosition Argument {@code true} takes the first generic position or the value {@code false} takes the last one
-     * @return type
-     * @throws IllegalArgumentException
-     */
-    static Class getClassFromGenerics(@Nonnull final Field field, final boolean firstPosition) throws IllegalArgumentException {
-        try {
-            final ParameterizedType type = (ParameterizedType) field.getGenericType();
-            final Type[] types = type.getActualTypeArguments();
-            final Type rawType = types[firstPosition ? 0 : types.length - 1];
-            final Type result = !firstPosition && rawType instanceof ParameterizedType
-                    ? ((ParameterizedType) rawType).getRawType()
-                    : rawType;
-            return (result instanceof Class)
-                    ? (Class) result
-                    : Class.class;
-        } catch (Exception e) {
-            String msg = MsgFormatter.format("The generic scan failed on the field '{}'", field.getName());
-            throw new IllegalStateException(msg, e);
-        }
-    }
 }
