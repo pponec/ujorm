@@ -34,7 +34,7 @@ import org.ujorm.tools.msg.MsgFormatter;
 public class ModelContext {
 
     /** Domain - Model Map */
-    private final HashMap<Class, MDomain> map = new HashMap<>(8);
+    private final HashMap<Class, AbstractDomainModel> map = new HashMap<>(8);
 
     /** A Temporary proxyDomainModels  */
     private List<MDomain> proxyDomainsModels = new ArrayList<>();
@@ -60,7 +60,7 @@ public class ModelContext {
                     final Class modelClass = getClassFromGenerics(field, true);
                     final AbstractDomainModel abstractDomainModel = (AbstractDomainModel) modelClass.newInstance();
                     abstractDomainModel.getDirecKey().setContext(this);
-                    map.put(modelClass, proxyDomain);
+                    map.put(modelClass, proxyDomain.get());
                     proxyDomain.close(abstractDomainModel);
                 }
             } catch (SecurityException | ReflectiveOperationException e) {
@@ -72,12 +72,23 @@ public class ModelContext {
         }
     }
 
-    public AbstractDomainModel getDomainModel(@Nonnull final Class domainClass) {
-        return map.get(domainClass).get();
+    /** Get a (unique) direct domain model */
+    public AbstractDomainModel getDomainModel(@Nonnull final Class<AbstractDomainModel> domainClass) {
+        AbstractDomainModel result = map.get(domainClass);
+        if (result == null) {
+            try {
+                result = domainClass.newInstance();
+            } catch (InstantiationException | IllegalAccessException  e) {
+                throw new IllegalStateException("Can't reate an instance of the " + domainClass);
+            }
+            map.put(domainClass, result);
+        }
+
+        return result;
     }
 
     public Stream<AbstractDomainModel> getDomainModels() {
-        return map.values().stream().map(m -> m.get());
+        return map.values().stream();
     }
 
     /** Provides an extended API */

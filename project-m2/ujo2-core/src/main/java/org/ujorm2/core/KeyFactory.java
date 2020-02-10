@@ -36,30 +36,37 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     private final Class<? extends D> domainClass;
 
-    private final ArrayList<Key<D, ?>> keys = new ArrayList<>();
+    private final ArrayList<MKey> keys = new ArrayList<>();
 
     @Nullable
-    private ModelContext modelProvider;
+    private ModelContext context;
 
     public KeyFactory(@Nonnull final Class<? extends D> domainClass) {
         this.domainClass = Assert.notNull(domainClass, "domainClass");
     }
 
     /** Create new Key */
-    public <K> Key<D, K> newKey(Function<D, K> reader, BiConsumer<D, K> writer) {
-        final KeyImpl<D, K> result = new KeyImpl(domainClass);
-        final KeyImpl.PropertyWriter keyWriter = result.getPropertyWriter();
-        keyWriter.setWriter(writer);
-        keyWriter.setReader(reader);
-
+    public <K> MKey<K> newKey(Function<D, K> reader, BiConsumer<D, K> writer) {
+        MKey result = new MKey();
         keys.add(result);
+        return result;
+    }
+
+    /** Create new Key */
+    public <K> Key<D, K> newKeyOld(Function<D, K> reader, BiConsumer<D, K> writer) {
+        final KeyImpl<D, K> result = new KeyImpl(domainClass);
+//        final KeyImpl.PropertyWriter keyWriter = result.getPropertyWriter();
+//        keyWriter.setWriter(writer);
+//        keyWriter.setReader(reader);
+//
+//        keys.add(result);
         return result;
     }
 
     /** Create new Key */
     public <K extends AbstractDomainModel, VALUE> K newRelation(Function<D, VALUE> reader, BiConsumer<D, VALUE> writer) {
         // TODO:
-        final Object result = modelProvider.getDomainModel(domainClass);
+        //final Object result = context.getDomainModel(domainClass);
 
 
         return (K) Mockito.mock(AbstractDomainModel.class);
@@ -70,15 +77,15 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
     }
 
     public Stream<Key<D, ?>> getKeys() {
-        return keys.stream();
+        return keys.stream().map(t -> t.get());
     }
 
     /** Close the factory */
     public void close(@Nonnull final ModelContext context) {
-        this.modelProvider = Assert.notNull(context, "modelProvider");
+        this.context = Assert.notNull(context, "modelProvider");
         final List<Field> fields = context.getFields(domainClass, keys);
         for (int i = 0, max = keys.size(); i < max; i++) {
-            final KeyImpl key = (KeyImpl) keys.get(i);
+            final KeyImpl key = (KeyImpl) keys.get(i).get();
             final KeyImpl.PropertyWriter writer = key.getPropertyWriter();
             final Field field = fields.get(i);
 
