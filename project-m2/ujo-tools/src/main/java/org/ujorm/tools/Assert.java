@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.tools.msg.MsgFormatter.format;
 
 /**
@@ -52,9 +53,6 @@ import static org.ujorm.tools.msg.MsgFormatter.format;
  */
 public abstract class Assert {
 
-    /** No messge constant */
-    public static final Object[] NO_MESSAGE = null;
-
     /** Static methods are available only */
     private Assert() {
     }
@@ -65,6 +63,15 @@ public abstract class Assert {
             throws IllegalStateException {
         if (!condition) {
             throw new IllegalStateException(format(message));
+        }
+    }
+
+    /** If the value Checks if the argument is {@code true}.
+     * @throws IllegalStateException When the condtion is false */
+    public static final  <M> void state(final boolean condition, @Nonnull final MessageMaker messageMaker)
+            throws IllegalStateException {
+        if (!condition) {
+            throw new IllegalStateException(MessageBuilder.get(messageMaker));
         }
     }
 
@@ -90,15 +97,18 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is {@code true}. */
-    public static final void isTrue(final boolean condition) throws IllegalArgumentException {
-        Assert.isTrue(condition, NO_MESSAGE);
-    }
-
-    /** Checks if the argument is {@code true}. */
     public static final  <M> void isTrue(final boolean condition, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!condition) {
             throw new IllegalArgumentException(format(message));
+        }
+    }
+
+    /** Checks if the argument is {@code true}. */
+    public static final  <M> void isTrue(final boolean condition, @Nonnull final MessageMaker messageMaker)
+            throws IllegalArgumentException {
+        if (!condition) {
+            throw new IllegalArgumentException(MessageBuilder.get(messageMaker));
         }
     }
 
@@ -133,14 +143,6 @@ public abstract class Assert {
     public static <V,M> Optional<V> isPresented(@Nullable final V value, @Nullable final M... message)
             throws IllegalArgumentException {
         return Optional.of(notNull(value, message));
-    }
-
-    /** Checks if the argument is not {@code null}.
-     * @return The original value */
-    @Nonnull
-    public static final <V> V notNull(@Nullable final V value)
-            throws IllegalArgumentException {
-        return notNull(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is not {@code null}.
@@ -205,7 +207,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
     @Nonnull
-    public static <K,V,M>  Map<K,V> hasLength(@Nullable final Map<K,V> value, @Nullable final M... message)
+    public static <V,K,M>  Map<K,V> hasLength(@Nullable final Map<K,V> value, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(value)) {
             throw new IllegalArgumentException(format(message));
@@ -217,27 +219,30 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
     @Nonnull
-    public static <M> CharSequence hasLength(@Nullable final CharSequence value, @Nullable final M... message)
+    public static <V extends CharSequence, M> V hasLength(@Nullable final V value, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(value)) {
             throw new IllegalArgumentException(format(message));
         }
-        assert value != null; // A code for static analyzer only
+        assert value != null; // A code for a static analyzer only
         return value;
     }
 
     // ---- NEGATIONS ----
-    /** Checks if the argument is {@code false}. */
-    public static final void isFalse(final boolean condition)
-            throws IllegalArgumentException {
-        isFalse(condition, NO_MESSAGE);
-    }
 
     /** Checks if the argument is {@code false}. */
     public static final void isFalse(final boolean condition, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (condition) {
             throw new IllegalArgumentException(format(message));
+        }
+    }
+
+        /** Checks if the argument is {@code false}. */
+    public static final void isFalse(final boolean condition, @Nonnull final MessageMaker messageMaker)
+            throws IllegalArgumentException {
+        if (condition) {
+            throw new IllegalArgumentException(MessageBuilder.get(messageMaker));
         }
     }
 
@@ -265,11 +270,6 @@ public abstract class Assert {
         if (predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
         }
-    }
-
-    /** Checks if the argument is {@code null}. */
-    public static final void isNull(@Nullable final Object value) throws IllegalArgumentException {
-        isNull(value, NO_MESSAGE);
     }
 
     /** Checks if the argument is {@code null}. */
@@ -328,4 +328,26 @@ public abstract class Assert {
         }
     }
 
+    /** Message maker */
+    public interface MessageMaker {
+
+        void write(MessageBuilder message);
+    }
+
+    /** Message maker */
+    public static final class MessageBuilder {
+
+        private String msg;
+
+        public <T> void format(@Nullable final Object messageTemplate, @Nullable final T... arguments) {
+            msg = MsgFormatter.format(String.valueOf(messageTemplate), arguments);
+        }
+
+        public static String get(@Nonnull final MessageMaker messageMaker) {
+            final MessageBuilder content = new MessageBuilder();
+            messageMaker.write(content);
+            return content.msg;
+
+        }
+    }
 }

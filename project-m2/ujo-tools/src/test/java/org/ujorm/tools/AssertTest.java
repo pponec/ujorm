@@ -723,4 +723,29 @@ public class AssertTest {
         Assert.isEmpty(value, TEST_MESSAGE);
     }
 
+    /**
+     * Test of state method, of class Assert.
+     */
+    @Test
+    public void testState_boolean_Supplier_ok() {
+        System.out.println("state ok");
+        boolean condition = true;
+        Assert.state(condition, m -> m.format("{}", "OK test"));
+    }
+
+    /**
+     * Test of state method, of class Assert.
+     */
+    @Test
+    public void testState_boolean_Supplier_nok() {
+        System.out.println("state nok");
+        boolean condition = false;
+        try {
+            Assert.state(condition, m -> m.format("{}", "NOK test"));
+            assertTrue("An exception is expected", false);
+        } catch (IllegalStateException e) {
+            assertEquals("NOK test", e.getMessage());
+        }
+    }
+
 }
