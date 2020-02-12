@@ -32,6 +32,8 @@ public class AssertTest {
     /** Demo message {@code MESSAGE:ABC} */
     private static final Object[] TEST_MESSAGE = {"MESSAGE:{}{}{}", "A", "B", "C"};
 
+    private static final Object[] NO_MESSAGE = {};
+
     /**
      * Demo test of the Assert class. All the claims are true.
      */
@@ -153,7 +155,7 @@ public class AssertTest {
     public void testHasLength_byteArr_ok() {
         System.out.println("hasLength");
         byte[] array = new byte[1];
-        Assert.hasLength(array, Assert.NO_MESSAGE);
+        Assert.hasLength(array, NO_MESSAGE);
     }
 
     /**
@@ -173,7 +175,7 @@ public class AssertTest {
     public void testHasLength_charArr_ok() {
         System.out.println("hasLength");
         char[] array = new char[1];
-        Assert.hasLength(array, Assert.NO_MESSAGE);
+        Assert.hasLength(array, NO_MESSAGE);
     }
 
     /**
@@ -193,7 +195,7 @@ public class AssertTest {
     public void testHasLength_ObjectArr_ok() {
         System.out.println("hasLength");
         Object[] values = new Object[1];
-        Assert.hasLength(values, Assert.NO_MESSAGE);
+        Assert.hasLength(values, NO_MESSAGE);
     }
 
     /**
@@ -213,7 +215,7 @@ public class AssertTest {
     public void testHasLength_Collection_ok() {
         System.out.println("hasLength");
         Collection values = Arrays.asList("A", "B", "C");
-        Assert.hasLength(values, Assert.NO_MESSAGE);
+        Assert.hasLength(values, NO_MESSAGE);
     }
 
     /**
@@ -233,7 +235,7 @@ public class AssertTest {
     public void testHasLength_CharSequence_ok() {
         System.out.println("hasLength");
         CharSequence value = "ABC";
-        Assert.hasLength(value, Assert.NO_MESSAGE);
+        Assert.hasLength(value, NO_MESSAGE);
     }
 
     /**
@@ -293,7 +295,7 @@ public class AssertTest {
     public void testIsEmpty_byteArr_ok() {
         System.out.println("isEmpty");
         byte[] array = new byte[0];
-        Assert.isEmpty(array, Assert.NO_MESSAGE);
+        Assert.isEmpty(array, NO_MESSAGE);
     }
 
     /**
@@ -313,7 +315,7 @@ public class AssertTest {
     public void testIsEmpty_charArr_ok() {
         System.out.println("isEmpty");
         char[] array = null;
-        Assert.isEmpty(array, Assert.NO_MESSAGE);
+        Assert.isEmpty(array, NO_MESSAGE);
     }
 
     /**
@@ -333,7 +335,7 @@ public class AssertTest {
     public void testIsEmpty_ObjectArr_ok() {
         System.out.println("isEmpty");
         Object[] values = null;
-        Assert.isEmpty(values, Assert.NO_MESSAGE);
+        Assert.isEmpty(values, NO_MESSAGE);
     }
 
     /**
@@ -353,7 +355,7 @@ public class AssertTest {
     public void testIsEmpty_Collection_ok() {
         System.out.println("isEmpty");
         Collection values = null;
-        Assert.isEmpty(values, Assert.NO_MESSAGE);
+        Assert.isEmpty(values, NO_MESSAGE);
     }
 
     /**
@@ -373,7 +375,7 @@ public class AssertTest {
     public void testIsEmpty_CharSequence_ok() {
         System.out.println("isEmpty");
         CharSequence value = null;
-        Assert.isEmpty(value, Assert.NO_MESSAGE);
+        Assert.isEmpty(value, NO_MESSAGE);
     }
 
     /**
@@ -424,7 +426,7 @@ public class AssertTest {
         CharSequence value = null;
         String expResult = null;
         try {
-            Assert.notNull(value, Assert.NO_MESSAGE);
+            Assert.notNull(value, NO_MESSAGE);
             assertTrue(false);
         } catch (IllegalArgumentException e) {
             assertEquals(expResult, e.getMessage());
