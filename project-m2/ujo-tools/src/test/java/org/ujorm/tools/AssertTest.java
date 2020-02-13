@@ -739,7 +739,7 @@ public class AssertTest {
      * Test of state method, of class Assert.
      */
     @Test
-    public void testState_boolean_Supplier_nok() {
+    public void testState_boolean_Supplier_nok1() {
         System.out.println("state nok");
         boolean condition = false;
         try {
@@ -749,5 +749,21 @@ public class AssertTest {
             assertEquals("NOK test", e.getMessage());
         }
     }
+
+    /**
+     * Test of state method, of class Assert.
+     */
+    @Test
+    public void testState_boolean_Supplier_nok2() {
+        System.out.println("state nok2");
+        boolean condition = false;
+        try {
+            Assert.state(condition, m -> m.sformat("%s", "NOK test"));
+            assertTrue("An exception is expected", false);
+        } catch (IllegalStateException e) {
+            assertEquals("NOK test", e.getMessage());
+        }
+    }
+
 
 }
