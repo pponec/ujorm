@@ -461,7 +461,7 @@ public class AssertTest {
     @Test(expected = IllegalArgumentException.class)
     public void testIsTrue_Predicate_nok() {
         System.out.println("isTrue");
-        Assert.isTrue(30, (x) -> x < 20, TEST_MESSAGE);
+        Assert.isTrueRequired(30, (x) -> x < 20, TEST_MESSAGE);
     }
 
     /**

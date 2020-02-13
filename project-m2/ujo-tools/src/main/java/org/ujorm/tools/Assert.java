@@ -113,9 +113,9 @@ public abstract class Assert {
         }
     }
 
-    /** Checks if the value is not {@code null} and result of the the method
+    /** Checks if the value is not {@code null} and the predicate is valid
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}. */
-    public static <V,M> void isTrue
+    public static <V,M> void isTrueRequired
         ( @Nullable final V condition
         , @Nonnull final Predicate<V> predicate
         , @Nullable final M... message)
@@ -125,22 +125,22 @@ public abstract class Assert {
         }
     }
 
-    /** Checks if the value is not {@code null} and result of the the method
+    /** Checks if the predicate is valid
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}. */
     public static <V,M> void isTrue
         ( @Nullable final V condition
         , @Nonnull final Predicate<V> predicate
         , @Nonnull final MessageMaker messageMaker)
     {
-        if (condition == null || !predicate.test(condition)) {
+        if (!predicate.test(condition)) {
             throw new IllegalArgumentException(MessageBuilder.get(messageMaker));
         }
     }
 
-    /** Checks if the value is result of the the method
+    /** Checks if the predicate is valid
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}.
      * An argument of the {@code Predicable#test()} method can be {@code null}. */
-    public static <V,M> void isTrueNullable
+    public static <V,M> void isTrue
         ( @Nullable final V value
         , @Nonnull  final Predicate<V> predicate
         , @Nullable final M... message)
@@ -259,9 +259,9 @@ public abstract class Assert {
         }
     }
 
-    /** Checks if the argument is not {@code null} and result of the the method
+    /** Checks if the argument is not {@code null} and the predicate is invalid
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}. */
-    public static <V,M> void isFalse
+    public static <V,M> void isFalseRequired
         ( @Nullable final V value
         , @Nonnull  final Predicate<V> predicate
         , @Nullable final M... message)
@@ -271,23 +271,23 @@ public abstract class Assert {
         }
     }
 
-    /** Checks if the argument is not {@code null} and result of the the method
+    /** Checks if the argument is not {@code null} and the predicate is invalid
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}. */
     public static <V,M> void isFalse
         ( @Nullable final V value
         , @Nonnull  final Predicate<V> predicate
         , @Nonnull final MessageMaker messageMaker)
     {
-        if (value == null || predicate.test(value)) {
+        if (predicate.test(value)) {
             throw new IllegalArgumentException(MessageBuilder.get(messageMaker));
         }
     }
 
-    /** Checks if the argument of the the method
+    /** Checks if the predicate is invalid
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}.
      * An argument of the {@code Predicable#test()} method can be {@code null}.
      */
-    public static <V,M> void isFalseNullable
+    public static <V,M> void isFalse
         ( @Nullable final V value
         , @Nonnull  final Predicate<V> predicate
         , @Nullable final M... message)
