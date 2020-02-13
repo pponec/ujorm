@@ -92,7 +92,7 @@ public class AssertTest {
 
         value = null;
         try {
-            Assert.isTrue(value, (x) -> x < 10, "Wrong number {}", value); // "Wrong number null"
+            Assert.isTrueRequired(value, (x) -> x < 10, "Wrong number {}", value); // "Wrong number null"
             assertTrue(false);
         } catch (IllegalArgumentException e) {
             assertEquals("Wrong number null", e.getMessage());
@@ -408,7 +408,7 @@ public class AssertTest {
         }
 
         try {
-            Assert.isTrue(value, (x) -> x.length() < 20, TEST_MESSAGE);
+            Assert.isTrueRequired(value, (x) -> x.length() < 20, TEST_MESSAGE);
             assertTrue(false);
         } catch (IllegalArgumentException e) {
             assertEquals(expResult, e.getMessage());
