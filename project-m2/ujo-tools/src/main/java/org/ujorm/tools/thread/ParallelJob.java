@@ -18,13 +18,11 @@
 package org.ujorm.tools.thread;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
@@ -66,15 +64,15 @@ public class ParallelJob<P> extends Jobs<P> {
     public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
             throws JobException {
 
+        final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
         try  {
-            return threadPool.submit(() -> getParallel()
-                    .map(job)
-                    .collect(Collectors.toList()).stream()
-            ).get(timeout.toMillis(), TimeUnit.MILLISECONDS)
-                    .filter(Objects::nonNull);
+            threadPool.submit(() -> getParallel().map(job))
+                    .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
+                    .forEach(t -> result.addValue(t));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new JobException(e);
         }
+        return result.stream();
     }
 
     /** Get result of a Streams
@@ -84,14 +82,15 @@ public class ParallelJob<P> extends Jobs<P> {
     @Override
     public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
             throws JobException {
+        final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
         try {
-            return threadPool.submit(() -> getParallel()
-                    .map(job)
-                    .collect(Collectors.toList()).stream() // Join all threads
-                    .flatMap(Function.identity()) // Join all streams
-            ).get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+            threadPool.submit(() -> getParallel().map(job))
+                    .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
+                    .flatMap(Function.identity())
+                    .forEach(t -> result.addValue(t));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new JobException(e);
         }
+        return result.stream();
     }
 }

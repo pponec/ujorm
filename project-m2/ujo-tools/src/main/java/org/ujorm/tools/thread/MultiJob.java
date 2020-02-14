@@ -57,7 +57,7 @@ public class MultiJob<P> extends Jobs<P> {
     @Override
     public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
             throws JobException {
-        AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(this.params.size(), timeout);
+        AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
         getParallel().map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
                 .map(createGrabber())
                 .forEach(t ->  result.addValue(t));
@@ -72,10 +72,10 @@ public class MultiJob<P> extends Jobs<P> {
     @Override
     public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
             throws JobException {
-        AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(this.params.size(), timeout);
+        AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
         getParallel().map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
                 .map(createGrabber())
-                .flatMap(t -> t)
+                .flatMap(Function.identity())
                 .forEach(t -> result.addValue(t));
         return result.stream();
     }
