@@ -18,9 +18,9 @@
 package org.ujorm.tools.thread;
 
 import java.time.Duration;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,14 +51,14 @@ public class Jobs<P> {
 
     /** Job arguments */
     @Nonnull
-    private final Stream<P> params;
+    protected final Collection<P> params;
 
     /** A timeout of a job where a default duration is the one hour */
     @Nonnull
     protected Duration timeout;
 
     protected Jobs(
-            @Nonnull final Stream<P> params,
+            @Nonnull final Collection<P> params,
             @Nonnull final Duration timeout
     ) {
         Assert.notNull(params, REQUIRED_INPUT_TEMPLATE_MSG, "params");
@@ -71,10 +71,7 @@ public class Jobs<P> {
     /** Get a parameter Stream like a parallel type */
     @Nonnull
     protected final Stream<P> getParallel() {
-        final Stream<P> result = params.parallel();
-        return result.isParallel()
-                ? result
-                : params.collect(Collectors.toList()).parallelStream();
+        return params.parallelStream();
     }
 
     /**
@@ -92,7 +89,7 @@ public class Jobs<P> {
      * @return The result stream
      */
     public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job) {
-        return params.map(job).filter(Objects::nonNull);
+        return params.stream().map(job).filter(Objects::nonNull);
     }
 
     /** Get result of a Streams
@@ -100,7 +97,7 @@ public class Jobs<P> {
      * @return The result stream
      * */
     public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job) {
-         return params.map(job).flatMap(Function.identity());
+         return params.stream().map(job).flatMap(Function.identity());
     }
 
     /** Get a sum of job results type of {@code long}

@@ -17,6 +17,7 @@
 
 package org.ujorm.tools.thread;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
@@ -49,7 +50,7 @@ public class ParallelJob<P> extends Jobs<P> {
     protected final ForkJoinPool threadPool;
 
     protected ParallelJob(
-            @Nonnull final Stream<P> params,
+            @Nonnull final Collection<P> params,
             @Nonnull final JobContext jobContext
     ) {
         super(params, jobContext.getTimeout());

@@ -17,6 +17,7 @@
 
 package org.ujorm.tools.thread;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -43,7 +44,7 @@ public class MultiJob<P> extends Jobs<P> {
     protected final Executor threadPool;
 
     protected MultiJob(
-            @Nonnull final Stream<P> params,
+            @Nonnull final Collection<P> params,
             @Nonnull final JobContext jobContext
     ) {
         super(params, jobContext.getTimeout());

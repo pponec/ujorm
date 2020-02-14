@@ -17,11 +17,11 @@
 package org.ujorm.tools.thread;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
@@ -102,7 +102,7 @@ public class JobContext {
      * @return An instance of MultiJob
      */
     public <P> Jobs<P> forEach(@Nonnull final P... params) {
-        return forEach(Stream.of(params));
+        return forEach(Arrays.asList(params));
     }
 
     /**
@@ -111,15 +111,6 @@ public class JobContext {
      * @return An instance of multiJob
      */
     public <P> Jobs<P> forEach(@Nonnull final Collection<P> params) {
-        return forEach(params.stream());
-    }
-
-    /**
-     * A factory method
-     * @param params All aguments
-     * @return An instance of multiJob
-     */
-    public <P> Jobs<P> forEach(@Nonnull final Stream<P> params) {
         return noThreadPool()
                 ? new Jobs(params, getTimeout()) // A single thread solution
                 : hasForkJoinPool()
