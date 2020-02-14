@@ -18,13 +18,11 @@
 package org.ujorm.tools.thread;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
@@ -59,10 +57,11 @@ public class MultiJob<P> extends Jobs<P> {
     @Override
     public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
             throws JobException {
-        return getParallel().map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
-                .collect(Collectors.toList()).stream() // join all threads
+        AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(this.params.size(), timeout);
+        getParallel().map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
                 .map(createGrabber())
-                .filter(Objects::nonNull);
+                .forEach(t ->  result.addValue(t));
+        return result.stream();
     }
 
     /** Get result of a Streams
@@ -73,10 +72,12 @@ public class MultiJob<P> extends Jobs<P> {
     @Override
     public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
             throws JobException {
-        return getParallel().map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
-                .collect(Collectors.toList()).stream() // Join all threads
+        AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(this.params.size(), timeout);
+        getParallel().map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
                 .map(createGrabber())
-                .flatMap(Function.identity()); // Join all streams
+                .flatMap(t -> t)
+                .forEach(t -> result.addValue(t));
+        return result.stream();
     }
 
     protected <R> Function<CompletableFuture<R>, R> createGrabber() {

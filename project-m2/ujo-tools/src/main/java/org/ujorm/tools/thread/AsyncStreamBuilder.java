@@ -87,15 +87,15 @@ public class AsyncStreamBuilder<T> {
         return stream;
     }
 
-    /** Thread save method */
-    public void addParams(@Nonnull final T... values) {
+    /** Thread save method to add new items to the result Stream */
+    public void addValues(@Nonnull final T... values) {
         for (T value : values) {
-            addParam(value);
+            addValue(value);
         }
     }
 
-    /** Thread save method */
-    public void addParam(@Nullable final T value) {
+    /** Thread save method to add new item to the result Stream */
+    public void addValue(@Nullable final T value) {
         if (countDown.decrementAndGet() >= 0) {
             queue.add(value != null ? value : (T) UNDEFINED);
         } else {
