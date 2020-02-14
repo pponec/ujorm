@@ -135,8 +135,9 @@ public class AsyncStreamBuilderTest {
     public void testAddParams_5() {
         System.out.println("addParams");
 
-        int limit = 5;
+        int limit = 3;
         AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit, Duration.ofSeconds(1));
+        // No parameter is incomming ....
 
         instance.stream().forEach(i -> {
             System.out.println("i :" + i);
