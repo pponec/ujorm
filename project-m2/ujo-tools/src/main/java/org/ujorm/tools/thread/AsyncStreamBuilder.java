@@ -16,6 +16,7 @@
  */
 package org.ujorm.tools.thread;
 
+import java.time.Clock;
 import java.time.Duration;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +40,8 @@ public class AsyncStreamBuilder<T> {
     private final Duration timeout;
     private final LinkedBlockingQueue<T> queue;
     private final Stream<T> stream;
+    private final Clock clock;
+    private long startMilis = Long.MIN_VALUE;
 
     /** Builder for default timeout 1 minute */
     public AsyncStreamBuilder(final long count) {
@@ -54,6 +57,7 @@ public class AsyncStreamBuilder<T> {
         this.countDown = new AtomicLong(count);
         this.timeout = Assert.notNull(timeout, "timeout");
         this.queue = new LinkedBlockingQueue<>();
+        this.clock = Clock.systemUTC();
         this.stream = Stream.generate(() -> getValue())
                 .limit(count)
                 .filter(v -> v != UNDEFINED);
@@ -62,7 +66,8 @@ public class AsyncStreamBuilder<T> {
     @Nonnull
     private T getValue() {
         try {
-            final T result = queue.poll(timeout.toMillis(), TimeUnit.MILLISECONDS);
+            final long restMillis = Math.max(timeout.toMillis() - clock.millis() + startMilis, 3L);
+            final T result = queue.poll(restMillis, TimeUnit.MILLISECONDS);
             if (result == null) {
                 throw new TimeoutException("Time is over: " + timeout);
             }
@@ -73,8 +78,12 @@ public class AsyncStreamBuilder<T> {
         }
     }
 
+    /** Start time countdown */
     @Nonnull
     public Stream<T> stream() {
+        if (startMilis == Long.MIN_VALUE) {
+            startMilis = clock.millis();
+        }
         return stream;
     }
 
