@@ -32,6 +32,9 @@ import org.ujorm.tools.Assert;
  */
 public class AsyncStreamBuilder<T> {
 
+    /** A placeholder for an undefined object */
+    private static final Object UNDEFINED = new Object();
+
     private final AtomicInteger countDown;
     private final Duration timeout;
     private final LinkedBlockingQueue<T> queue;
@@ -51,10 +54,13 @@ public class AsyncStreamBuilder<T> {
         this.countDown = new AtomicInteger(count);
         this.timeout = Assert.notNull(timeout, "timeout");
         this.queue = new LinkedBlockingQueue<>();
-        this.stream = Stream.generate(() -> getValue()).limit(count);
+        this.stream = Stream.generate(() -> getValue())
+                .limit(count)
+                .filter(v -> v != UNDEFINED);
     }
 
-    protected T getValue() {
+    @Nonnull
+    private T getValue() {
         try {
             final T result = queue.poll(timeout.toMillis(), TimeUnit.MILLISECONDS);
             if (result == null) {
@@ -82,9 +88,7 @@ public class AsyncStreamBuilder<T> {
     /** Thread save method */
     public void addParam(@Nullable final T value) {
         if (countDown.decrementAndGet() >= 0) {
-            if (value != null) {
-                queue.add(value);
-            }
+            queue.add(value != null ? value : (T) UNDEFINED);
         } else {
             Assert.state(false, "The parameter is over limit: " + value);
         }

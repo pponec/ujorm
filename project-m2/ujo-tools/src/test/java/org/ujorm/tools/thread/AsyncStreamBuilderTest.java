@@ -66,7 +66,7 @@ public class AsyncStreamBuilderTest {
         int firstNumber = 10;
         List<Integer> result = new ArrayList<>();
 
-        AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit, Duration.ofSeconds(1));
+        AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit);
 
         instance.addParam(firstNumber);
         instance.stream().forEach(i -> {
@@ -92,7 +92,7 @@ public class AsyncStreamBuilderTest {
         int firstNumber = 10;
         List<Integer> result = new ArrayList<>();
 
-        AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit, Duration.ofSeconds(1));
+        AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit);
 
         instance.addParam(firstNumber);
         instance.stream().forEach(i -> {
@@ -111,17 +111,28 @@ public class AsyncStreamBuilderTest {
 
         int limit = 1;
         AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit);
-
-        instance.addParam(10);
-        instance.addParam(11);
+        instance.addParams(10, 11);
     }
 
+    /**
+     * Test of addParams method, of class AsyncStreamBuilder.
+     */
+    @Test
+    public void testAddParams_4() {
+        System.out.println("addParams");
+
+        int limit = 3;
+        AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit);
+        instance.addParams(10, null, null);
+
+        assertEquals(1, instance.stream().count());
+    }
 
     /**
      * Test of addParams method, of class AsyncStreamBuilder.
      */
     @Test(expected = TimeoutException.class)
-    public void testAddParams_4() {
+    public void testAddParams_5() {
         System.out.println("addParams");
 
         int limit = 5;
