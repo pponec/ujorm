@@ -19,7 +19,7 @@ package org.ujorm.tools.thread;
 import java.time.Duration;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,14 +35,14 @@ public class AsyncStreamBuilder<T> {
     /** A placeholder for an undefined object */
     private static final Object UNDEFINED = new Object();
 
-    private final AtomicInteger countDown;
+    private final AtomicLong countDown;
     private final Duration timeout;
     private final LinkedBlockingQueue<T> queue;
     private final Stream<T> stream;
 
     /** Builder for default timeout 1 minute */
-    public AsyncStreamBuilder(final int limit) {
-        this(limit, Duration.ofMinutes(1));
+    public AsyncStreamBuilder(final long count) {
+        this(count, Duration.ofMinutes(1));
     }
 
     /**
@@ -50,8 +50,8 @@ public class AsyncStreamBuilder<T> {
      * @param count Count of stream parameters.
      * @param timeout The minimal resolution is milliseconds
      */
-    public AsyncStreamBuilder(final int count, @Nonnull final Duration timeout) {
-        this.countDown = new AtomicInteger(count);
+    public AsyncStreamBuilder(final long count, @Nonnull final Duration timeout) {
+        this.countDown = new AtomicLong(count);
         this.timeout = Assert.notNull(timeout, "timeout");
         this.queue = new LinkedBlockingQueue<>();
         this.stream = Stream.generate(() -> getValue())
