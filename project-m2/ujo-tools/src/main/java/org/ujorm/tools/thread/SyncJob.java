@@ -56,7 +56,7 @@ public class SyncJob<P> extends Jobs<P> {
      * @return The result stream
      */
     @Override
-    public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job) {
+    public <R> Stream<R> run(@Nonnull final JobFunction<P, R> job) {
         return params.stream().map(job).filter(Objects::nonNull);
     }
 
@@ -65,12 +65,12 @@ public class SyncJob<P> extends Jobs<P> {
      * @return The result stream
      * */
     @Override
-    public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job) {
+    public <R> Stream<R> runOfStream(@Nonnull final JobFunction<P, Stream<R>> job) {
          return params.stream().map(job).flatMap(Function.identity());
     }
 
     @Override
-    protected Stream createStream(UserFunction job) {
+    protected Stream createStream(JobFunction job, @Nonnull final AsyncStreamBuilder builder) {
         throw new UnsupportedOperationException("Unsupported method");
     }
 }

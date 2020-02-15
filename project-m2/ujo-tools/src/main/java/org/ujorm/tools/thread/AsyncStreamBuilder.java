@@ -43,6 +43,7 @@ public class AsyncStreamBuilder<T> {
     private final Clock clock;
     private long startMilis = Long.MIN_VALUE;
     private volatile boolean closed;
+    private volatile Throwable interrupt;
 
     /** Builder for default timeout 1 minute */
     public AsyncStreamBuilder(final long count) {
@@ -59,13 +60,17 @@ public class AsyncStreamBuilder<T> {
         this.timeout = Assert.notNull(timeout, "timeout");
         this.queue = new LinkedBlockingQueue<>();
         this.clock = Clock.systemUTC();
-        this.stream = Stream.generate(() -> getValue())
+        this.stream = Stream.generate(() -> get())
                 .limit(count)
                 .filter(v -> v != UNDEFINED);
     }
 
+    /** Get a next value */
     @Nonnull
-    private T getValue() {
+    private T get() {
+        if (interrupt != null) {
+            throw new JobException(interrupt);
+        }
         try {
             final long restMillis = !closed ? timeout.toMillis() - clock.millis() + startMilis : 0;
             final T result = restMillis > 0
@@ -77,8 +82,12 @@ public class AsyncStreamBuilder<T> {
             }
             return result;
         } catch (InterruptedException e) {
+            if (interrupt == null) {
+                interrupt = e;
+            }
+            closed = true;
             Thread.currentThread().interrupt();
-            throw new IllegalStateException(e);
+            throw new JobException(interrupt);
         }
     }
 
@@ -98,13 +107,28 @@ public class AsyncStreamBuilder<T> {
         }
     }
 
-    /** Thread save method to add new item to the result Stream */
+    /** Thread save method to add new item to the result Stream.
+     *
+     * The method accepts delayed results too if the client do not manage the queue due slow data processing.
+     */
     public void add(@Nullable final T value) {
-        Assert.state(!closed, "The buider is closed");
+        if (closed) {
+            throw new JobException("The builder is closed");
+        }
         if (countDown.decrementAndGet() >= 0) {
             queue.add(value != null ? value : (T) UNDEFINED);
         } else {
-            Assert.state(false, "The parameter is over limit: " + value);
+            throw new JobException("The parameter is over limit: " + value);
         }
     }
+
+    /** Interrupt the next processing and close input */
+    public void interrupt(@Nonnull final Throwable causedBy) {
+        if (interrupt == null) {
+            interrupt = Assert.notNull(causedBy, "causedBy");
+            closed = true;
+            Thread.currentThread().interrupt();
+        }
+    }
+
 }

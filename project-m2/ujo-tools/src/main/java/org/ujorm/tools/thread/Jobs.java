@@ -84,11 +84,12 @@ public abstract class Jobs<P> {
      * @param job Job with a simple value result
      * @return The result stream
      */
-    public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
+    public <R> Stream<R> run(@Nonnull final JobFunction<P, R> job)
             throws JobException {
 
         final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
-        createStream(job).forEach(t ->  result.add(t));
+        createStream(job, result)
+                .forEach(t ->  result.add(t));
         return result.stream();
     }
 
@@ -97,21 +98,23 @@ public abstract class Jobs<P> {
      * @param job Job with a stream result
      * @return The result stream
      */
-    public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
+    public <R> Stream<R> runOfStream(@Nonnull final JobFunction<P, Stream<R>> job)
             throws JobException {
         final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
-        createStream(job)
+        createStream(job, result)
                 .flatMap(Function.identity())
                 .forEach(t -> result.add(t));
         return result.stream();
     }
 
     /** Create a stream with a job processing */
-    protected abstract <R> Stream<R> createStream(final UserFunction<P, R> job);
+    protected abstract <R> Stream<R> createStream(
+            @Nonnull final JobFunction<P, R> job,
+            @Nonnull final AsyncStreamBuilder builder);
 
     // --- Class or Interfaces ---
 
-    public interface UserFunction<T, R> extends Function<T, R> {
+    public interface JobFunction<T, R> extends Function<T, R> {
 
         @Nullable
         @Override
@@ -122,9 +125,9 @@ public abstract class Jobs<P> {
                 if (e instanceof RuntimeException) {
                     throw (RuntimeException) e;
                 } else {
-                    throw new JobException(e);
-                }
+                throw new JobException(e);
             }
+        }
         }
 
         /** Applies this function to the given argument */

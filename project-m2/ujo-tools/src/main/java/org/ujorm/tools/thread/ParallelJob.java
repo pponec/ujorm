@@ -53,7 +53,7 @@ public class ParallelJob<P>extends Jobs<P> {
 
     /** Create new stream for the required job */
     @Override
-    protected <R> Stream<R> createStream(final UserFunction<P, R> job) {
+    protected <R> Stream<R> createStream(final JobFunction<P, R> job, @Nonnull final AsyncStreamBuilder builder) {
         try {
             return threadPool.submit(() -> getParallel().map(job))
                     .get(timeout.toMillis(), TimeUnit.MILLISECONDS);
