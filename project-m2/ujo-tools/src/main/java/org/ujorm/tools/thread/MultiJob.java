@@ -50,7 +50,7 @@ public class MultiJob<P> extends Jobs<P> {
     }
 
     @Override
-    protected <R> Stream<R> createStream(final JobFunction<P, R> job, @Nonnull final AsyncStreamBuilder builder) {
+    protected <R> Stream<R> createStream(final Function<P, R> job) {
         return getParallel()
                 .map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
                 .map(createGrabber());

@@ -88,7 +88,7 @@ public abstract class Jobs<P> {
             throws JobException {
 
         final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
-        createStream(job, result)
+        createStream(innerJob(job, result))
                 .forEach(t ->  result.add(t));
         return result.stream();
     }
@@ -101,33 +101,43 @@ public abstract class Jobs<P> {
     public <R> Stream<R> runOfStream(@Nonnull final JobFunction<P, Stream<R>> job)
             throws JobException {
         final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
-        createStream(job, result)
+        createStream(innerJob(job, result))
                 .flatMap(Function.identity())
                 .forEach(t -> result.add(t));
         return result.stream();
     }
 
+    /** An envelope of working job */
+    protected <P2, R2> Function<P2, R2> innerJob(
+            @Nonnull final JobFunction<P2, R2> job,
+            @Nullable final AsyncStreamBuilder result
+    ) {
+        return (final P2 p) -> {
+            try {
+                return job.run(p);
+            } catch (Exception e) {
+                if (result != null) {
+                    result.interrupt(e.getCause());
+                }
+                throw new JobException(e);
+            }
+        };
+    }
+
     /** Create a stream with a job processing */
     protected abstract <R> Stream<R> createStream(
-            @Nonnull final JobFunction<P, R> job,
-            @Nonnull final AsyncStreamBuilder builder);
+            @Nonnull final Function<P, R> job);
 
     // --- Class or Interfaces ---
 
     public interface JobFunction<T, R> extends Function<T, R> {
 
-        @Nullable
-        @Override
-        default public R apply(final T t) {
+        default R apply(final T t) {
             try {
                 return run(t);
             } catch (Exception e) {
-                if (e instanceof RuntimeException) {
-                    throw (RuntimeException) e;
-                } else {
                 throw new JobException(e);
             }
-        }
         }
 
         /** Applies this function to the given argument */

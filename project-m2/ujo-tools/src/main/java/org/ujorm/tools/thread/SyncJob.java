@@ -70,7 +70,7 @@ public class SyncJob<P> extends Jobs<P> {
     }
 
     @Override
-    protected Stream createStream(JobFunction job, @Nonnull final AsyncStreamBuilder builder) {
+    protected Stream createStream(Function job) {
         throw new UnsupportedOperationException("Unsupported method");
     }
 }

@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
@@ -53,7 +54,7 @@ public class ParallelJob<P>extends Jobs<P> {
 
     /** Create new stream for the required job */
     @Override
-    protected <R> Stream<R> createStream(final JobFunction<P, R> job, @Nonnull final AsyncStreamBuilder builder) {
+    protected <R> Stream<R> createStream(final Function<P, R> job) {
         try {
             return threadPool.submit(() -> getParallel().map(job))
                     .get(timeout.toMillis(), TimeUnit.MILLISECONDS);
