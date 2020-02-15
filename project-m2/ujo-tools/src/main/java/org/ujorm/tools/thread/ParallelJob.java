@@ -22,7 +22,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
@@ -38,10 +37,7 @@ import org.ujorm.tools.Assert;
  * @since 1.95
  * @author Pavel Ponec
  */
-public class ParallelJob<P> extends Jobs<P> {
-
-    /** Template message for an invalid input */
-    protected static final String REQUIRED_INPUT_TEMPLATE_MSG = "The {} is required";
+public class ParallelJob<P>extends Jobs<P> {
 
     /** Thread pool */
     @Nonnull
@@ -55,42 +51,14 @@ public class ParallelJob<P> extends Jobs<P> {
         this.threadPool = Assert.notNull(jobContext.getThreadPool(), REQUIRED_INPUT_TEMPLATE_MSG, "threadPool");
     }
 
-    /** Get of single values where all nulls are excluded
-
-     * @param job Job with a simple value result
-     * @return The result stream
-     */
+    /** Create new stream for the required job */
     @Override
-    public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
-            throws JobException {
-
-        final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
-        try  {
-            threadPool.submit(() -> getParallel().map(job))
-                    .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
-                    .forEach(t -> result.add(t));
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new JobException(e);
-        }
-        return result.stream();
-    }
-
-    /** Get result of a Streams
-     * @param job Job with a stream result
-     * @return The result stream
-     * */
-    @Override
-    public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
-            throws JobException {
-        final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
+    protected <R> Stream<R> createStream(final UserFunction<P, R> job) {
         try {
-            threadPool.submit(() -> getParallel().map(job))
-                    .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
-                    .flatMap(Function.identity())
-                    .forEach(t -> result.add(t));
+            return threadPool.submit(() -> getParallel().map(job))
+                    .get(timeout.toMillis(), TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new JobException(e);
         }
-        return result.stream();
     }
 }

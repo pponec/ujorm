@@ -19,7 +19,6 @@ package org.ujorm.tools.thread;
 
 import java.time.Duration;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
@@ -39,12 +38,8 @@ import org.ujorm.tools.Assert;
  * For more samples see a {@code MultiJobTest} class.
  *
  * @author Pavel Ponec
- *
- * @see https://dzone.com/articles/think-twice-using-java-8
- * @see https://www.baeldung.com/java-completablefuture
- * @since 1.94
  */
-public class Jobs<P> {
+public abstract class Jobs<P> {
 
     /** Template message for an invalid input */
     protected static final String REQUIRED_INPUT_TEMPLATE_MSG = "The {} is required";
@@ -85,32 +80,34 @@ public class Jobs<P> {
     }
 
     /** Get of single values where all nulls are excluded
+     *
      * @param job Job with a simple value result
      * @return The result stream
      */
-    public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job) {
-        return params.stream().map(job).filter(Objects::nonNull);
+    public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
+            throws SyncJob.JobException {
+
+        final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
+        createStream(job).forEach(t ->  result.add(t));
+        return result.stream();
     }
 
     /** Get result of a Streams
+     *
      * @param job Job with a stream result
      * @return The result stream
-     * */
-    public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job) {
-         return params.stream().map(job).flatMap(Function.identity());
+     */
+    public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
+            throws SyncJob.JobException {
+        final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
+        createStream(job)
+                .flatMap(Function.identity())
+                .forEach(t -> result.add(t));
+        return result.stream();
     }
 
-    /** Get a sum of job results type of {@code long}
-     *
-     * @param job Job with a simple value result
-     * @return The sum of job results
-     */
-    public <R> long runOfSum(@Nonnull final UserFunction<P, Integer> job)
-            throws JobException {
-        return run(job)
-                .mapToLong(n -> n)
-                .sum();
-    }
+    /** Create a stream with a job processing */
+    protected abstract <R> Stream<R> createStream(final UserFunction<P, R> job);
 
     // --- Class or Interfaces ---
 

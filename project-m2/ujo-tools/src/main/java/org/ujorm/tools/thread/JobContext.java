@@ -112,7 +112,7 @@ public class JobContext {
      */
     public <P> Jobs<P> forEach(@Nonnull final Collection<P> params) {
         return noThreadPool()
-                ? new Jobs(params, getTimeout()) // A single thread solution
+                ? new SyncJob(params, getTimeout()) // A single thread solution
                 : hasForkJoinPool()
                 ? new ParallelJob<>(params, this) // ThreadPool based on ForkJoinPool
                 : new MultiJob<>(params, this); // ThreadPool based on ExecutorService

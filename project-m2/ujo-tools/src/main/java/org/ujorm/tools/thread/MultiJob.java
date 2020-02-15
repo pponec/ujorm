@@ -49,35 +49,11 @@ public class MultiJob<P> extends Jobs<P> {
         this.threadPool = Assert.notNull(jobContext.getThreadPool(), REQUIRED_INPUT_TEMPLATE_MSG, "threadPool");
     }
 
-    /** Get of single values where all nulls are excluded
-     *
-     * @param job Job with a simple value result
-     * @return The result stream
-     */
     @Override
-    public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
-            throws JobException {
-        AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
-        getParallel().map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
-                .map(createGrabber())
-                .forEach(t ->  result.add(t));
-        return result.stream();
-    }
-
-    /** Get result of a Streams
-     *
-     * @param job Job with a stream result
-     * @return The result stream
-     * */
-    @Override
-    public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
-            throws JobException {
-        AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
-        getParallel().map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
-                .map(createGrabber())
-                .flatMap(Function.identity())
-                .forEach(t -> result.add(t));
-        return result.stream();
+    protected <R> Stream<R> createStream(final UserFunction<P, R> job) {
+        return getParallel()
+                .map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
+                .map(createGrabber());
     }
 
     protected <R> Function<CompletableFuture<R>, R> createGrabber() {
