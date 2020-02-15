@@ -18,12 +18,12 @@ package org.ujorm.tools.thread;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,12 +54,15 @@ public class MultiJobTest {
         System.out.println("run");
         int maxThreadCount = 10;
         JobContext jobContext = JobContext.forMultiJob(maxThreadCount);
+        IntStream params = IntStream.of(1, 2, 3);
 
-        Stream<Integer> result = jobContext.forEach(1, 2, 3).run(p -> p * 10);
-        List<Integer> sortedList = result.sorted().collect(Collectors.toList());
-        jobContext.shutdown();
-        assertEquals(3, sortedList.size());
-        assertEquals(10, sortedList.get(0).intValue());
+        List<Integer> result = jobContext.forEach(params)
+                .run(p -> p * 10)
+                .sorted()
+                .collect(Collectors.toList());
+
+        assertEquals(3, result.size());
+        assertEquals(10, result.get(0).intValue());
     }
 
     /**
@@ -70,13 +73,15 @@ public class MultiJobTest {
         System.out.println("runToStream");
         int maxThreadCount = 10;
         JobContext jobContext = JobContext.forMultiJob(maxThreadCount);
+        IntStream params = IntStream.of(1, 2, 3);
 
-        Stream<Integer> result = jobContext.forEach(1, 2, 3)
-                .runOfStream(p -> Stream.of(p * 10));
+        List<Integer> result = jobContext.forEach(params)
+                .runOfStream(i -> Stream.of(i * 10))
+                .sorted()
+                .collect(Collectors.toList());
 
-        List<Integer> sortedList = result.sorted().collect(Collectors.toList());
-        assertEquals(3, sortedList.size());
-        assertEquals(10, sortedList.get(0).intValue());
+        assertEquals(3, result.size());
+        assertEquals(10, result.get(0).intValue());
     }
 
     /**
@@ -85,16 +90,19 @@ public class MultiJobTest {
     @Test
     public void testCheckTimeout() {
         System.out.println("checkTimeout");
-        int maxThreadCount = 10;
-        Duration timeout = Duration.ofMillis(100);
-        JobContext jobContext = JobContext.forMultiJob(maxThreadCount, timeout);
+
         int result = 0;
+        int jobCount = 10;
+        IntStream params = IntStream.of(100, 200, 300);
+        Duration duration = Duration.ofMillis(100);
+        JobContext jobContext = JobContext.forMultiJob(jobCount);
         JobException exeption = null;
 
         try {
-            result = jobContext.forEach(100, 200, 500)
-                    .run(p -> sleep(Duration.ofMillis(p)))
-                    .mapToInt(i -> i.intValue()).sum();
+            result = jobContext.forEach(params)
+                    .run(i -> sleep(i, duration))
+                    .mapToInt(i -> i)
+                    .sum();
         } catch (JobException e) {
             exeption = e;
         }
@@ -112,14 +120,16 @@ public class MultiJobTest {
         System.out.println("checkTimeoutOfStream");
         int maxThreadCount = 10;
         Duration timeout = Duration.ofMillis(100);
+        IntStream params = IntStream.of(100, 200, 500);
         JobContext jobContext = JobContext.forMultiJob(maxThreadCount, timeout);
         JobException exeption = null;
         int result = 0;
 
         try {
-            result = jobContext.forEach(100, 200, 500)
-                    .runOfStream(p -> Stream.of(0L, sleep(Duration.ofMillis(p))))
-                    .mapToInt(i -> i.intValue()).sum();
+            result = jobContext.forEach(params)
+                    .runOfStream(i -> Stream.of(sleep(i, Duration.ofMillis(i))))
+                    .mapToInt(i -> i)
+                    .sum();
         } catch (JobException e) {
             exeption = e;
         }
@@ -136,19 +146,19 @@ public class MultiJobTest {
     public void testTimeOfParalellWork() {
         System.out.println("timeOfParalellWork");
 
-        Duration jobDuration = Duration.ofSeconds(1);
+        Duration duration = Duration.ofSeconds(1);
         int jobCount = 120;
-        List<Duration> params = Collections.nCopies(jobCount, jobDuration);
-        LocalDateTime start = LocalDateTime.now();
+        IntStream params = IntStream.rangeClosed(1, jobCount);
         JobContext jobContext = JobContext.forMultiJob(jobCount);
+        LocalDateTime start = LocalDateTime.now();
 
-        List<Long> list = jobContext.forEach(params)
-                .run(duration -> sleep(duration)) // 1 sec
+        List<Integer> list = jobContext.forEach(params)
+                .run(i -> sleep(i, duration))
                 .collect(Collectors.toList());
 
-        Duration duration = Duration.between(start, LocalDateTime.now());
-        assertTrue("Real time took millis: " + duration.toMillis(), duration.toMillis() > jobDuration.toMillis());
-        assertTrue("Real time took millis: " + duration.toMillis(), duration.toMillis() < jobDuration.toMillis() + 200);
+        Duration total = Duration.between(start, LocalDateTime.now());
+        assertTrue("Real time took millis: " + total.toMillis(), total.toMillis() > duration.toMillis());
+        assertTrue("Real time took millis: " + total.toMillis(), total.toMillis() < duration.toMillis() + 200);
         assertEquals(jobCount, list.size());
     }
 
@@ -159,26 +169,28 @@ public class MultiJobTest {
     public void testTimeOfSequentialWork() {
         System.out.println("timeOfSequentialWork");
 
-        Duration jobDuration = Duration.ofSeconds(1);
+        Duration duration = Duration.ofSeconds(1);
         int jobCount = 10;
-        List<Duration> params = Collections.nCopies(jobCount, jobDuration);
-        JobContext jobContext = JobContext.forSingleThread();
-
+        IntStream params = IntStream.rangeClosed(1, jobCount);
+        JobContext jobContext = JobContext.forMultiJob(jobCount);
         LocalDateTime start = LocalDateTime.now();
-        List<Long> list = jobContext.forEach(params)
-                .run(duration -> sleep(duration)) // 1 sec
+
+        List<Integer> result = jobContext.forEach(params)
+                .run(id -> sleep(id, duration))
+                .sorted()
                 .collect(Collectors.toList());
 
-        Duration duration = Duration.between(start, LocalDateTime.now());
-        assertTrue("Real time took sec: " + duration.getSeconds(), duration.getSeconds() >= jobCount);
-        assertTrue("Real time took sec: " + duration.getSeconds(), duration.getSeconds() < jobCount + 1);
-        assertEquals(jobCount, list.size());
+        Duration total = Duration.between(start, LocalDateTime.now());
+        assertTrue("Real time took sec: " + total.getSeconds(), total.getSeconds() >= jobCount);
+        assertTrue("Real time took sec: " + total.getSeconds(), total.getSeconds() < jobCount + 1);
+        assertEquals(jobCount, result.size());
     }
 
-    private Long sleep(Duration duration) {
+    /** Wait a required duration and returns the same numerical value */
+    private Integer sleep(Integer i, Duration duration) {
         try {
             Thread.sleep(duration.toMillis());
-            return duration.toMillis();
+            return i;
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, "An interrupting of the test", e);
             return null;

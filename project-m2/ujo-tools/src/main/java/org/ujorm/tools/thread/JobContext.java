@@ -22,6 +22,9 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
@@ -95,6 +98,24 @@ public class JobContext {
     }
 
     // --- Runner methods ---
+
+    /**
+     * A factory method for a multithreading instance
+     * @param params All aguments
+     * @return An instance of MultiJob
+     */
+    public Jobs<Integer> forEach(@Nonnull final IntStream params) {
+        return forEach(params.boxed());
+    }
+
+    /**
+     * A factory method for a multithreading instance
+     * @param params All aguments
+     * @return An instance of MultiJob
+     */
+    public <P> Jobs<P> forEach(@Nonnull final Stream<P> params) {
+        return forEach(params.collect(Collectors.toList()));
+    }
 
     /**
      * A factory method for a multithreading instance
