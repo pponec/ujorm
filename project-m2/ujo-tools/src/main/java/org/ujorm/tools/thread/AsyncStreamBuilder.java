@@ -65,19 +65,20 @@ public class AsyncStreamBuilder<T> {
                 .filter(v -> v != UNDEFINED);
     }
 
-    /** Get a next value */
+    /**
+     * Get a next value
+     * @return A non-null value
+     * @throws JobException The method throws the exeption on a closed builder or an interrupted request
+     */
     @Nonnull
-    private T get() {
-        if (interrupt != null) {
-            throw new JobException(interrupt);
-        }
-        try {
-            final long restMillis = !closed ? timeout.toMillis() - clock.millis() + startMilis : 0;
+    protected T get() throws JobException {
+        if (interrupt == null) try {
+            final long restMillis = isOpen() ? timeout.toMillis() - clock.millis() + startMilis : 0;
             final T result = restMillis > 0
                     ? queue.poll(restMillis, TimeUnit.MILLISECONDS)
                     : queue.poll();
             if (result == null) {
-                closed = true;
+                close();
                 throw new JobException("Time is over: " + timeout);
             }
             return result;
@@ -85,10 +86,10 @@ public class AsyncStreamBuilder<T> {
             if (interrupt == null) {
                 interrupt = e;
             }
-            closed = true;
+            close();
             Thread.currentThread().interrupt();
-            throw new JobException(interrupt);
         }
+        throw new JobException(interrupt);
     }
 
     /** Start time countdown */
@@ -100,33 +101,53 @@ public class AsyncStreamBuilder<T> {
         return stream;
     }
 
-    /** Thread save method to add new items to the result Stream */
-    public void addAll(@Nonnull final T... values) {
-        for (T value : values) {
-            add(value);
+    /** Thread save method to add new item to the result Stream.<br>
+     *
+     * The method accepts delayed item too if the client do not manage the queue due slow data processing.<br>
+     *
+     * The method accepts new item in an interupted state.<br>
+     */
+    public void addAll(@Nonnull final T... items) {
+        for (T item : items) {
+            add(item);
         }
     }
 
-    /** Thread save method to add new item to the result Stream.
+    /** Thread save method to add new item to the result Stream.<br>
      *
-     * The method accepts delayed results too if the client do not manage the queue due slow data processing.
+     * The method accepts delayed item too if the client do not manage the queue due slow data processing.<br>
+     *
+     * The method accepts new item in an interupted state.<br>
      */
-    public void add(@Nullable final T value) {
-        if (closed) {
-            throw new JobException("The builder is closed");
-        }
+    public void add(@Nullable final T item) {
         if (countDown.decrementAndGet() >= 0) {
-            queue.add(value != null ? value : (T) UNDEFINED);
+            if (interrupt == null) {
+                if (isOpen()) {
+                    queue.add(item != null ? item : (T) UNDEFINED);
+                } else {
+                    throw new JobException("The builder is closed");
+                }
+            }
         } else {
-            throw new JobException("The parameter is over limit: " + value);
+            throw new JobException("The parameter is over limit: " + item);
         }
+    }
+
+    /** Close the builder */
+    final protected void close() {
+        closed = true;
+    }
+
+    /** Returns an open state of the builder */
+    final protected boolean isOpen() {
+        return !closed;
     }
 
     /** Interrupt the next processing and close input */
     public void interrupt(@Nonnull final Throwable causedBy) {
         if (interrupt == null) {
             interrupt = Assert.notNull(causedBy, "causedBy");
-            closed = true;
+            close();
             Thread.currentThread().interrupt();
         }
     }
