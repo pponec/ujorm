@@ -60,7 +60,7 @@ public class MultiJob<P> extends Jobs<P> {
         AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
         getParallel().map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
                 .map(createGrabber())
-                .forEach(t ->  result.addValue(t));
+                .forEach(t ->  result.add(t));
         return result.stream();
     }
 
@@ -76,7 +76,7 @@ public class MultiJob<P> extends Jobs<P> {
         getParallel().map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
                 .map(createGrabber())
                 .flatMap(Function.identity())
-                .forEach(t -> result.addValue(t));
+                .forEach(t -> result.add(t));
         return result.stream();
     }
 

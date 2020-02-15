@@ -42,6 +42,7 @@ public class AsyncStreamBuilder<T> {
     private final Stream<T> stream;
     private final Clock clock;
     private long startMilis = Long.MIN_VALUE;
+    private volatile boolean closed;
 
     /** Builder for default timeout 1 minute */
     public AsyncStreamBuilder(final long count) {
@@ -66,9 +67,12 @@ public class AsyncStreamBuilder<T> {
     @Nonnull
     private T getValue() {
         try {
-            final long restMillis = Math.max(timeout.toMillis() - clock.millis() + startMilis, 3L);
-            final T result = queue.poll(restMillis, TimeUnit.MILLISECONDS);
+            final long restMillis = timeout.toMillis() - clock.millis() + startMilis;
+            final T result = restMillis > 0
+                    ? queue.poll(restMillis, TimeUnit.MILLISECONDS)
+                    : queue.poll();
             if (result == null) {
+                closed = true;
                 throw new TimeoutException("Time is over: " + timeout);
             }
             return result;
@@ -88,14 +92,15 @@ public class AsyncStreamBuilder<T> {
     }
 
     /** Thread save method to add new items to the result Stream */
-    public void addValues(@Nonnull final T... values) {
+    public void addAll(@Nonnull final T... values) {
         for (T value : values) {
-            addValue(value);
+            add(value);
         }
     }
 
     /** Thread save method to add new item to the result Stream */
-    public void addValue(@Nullable final T value) {
+    public void add(@Nullable final T value) {
+        Assert.state(!closed, "The buider is closed");
         if (countDown.decrementAndGet() >= 0) {
             queue.add(value != null ? value : (T) UNDEFINED);
         } else {

@@ -68,7 +68,7 @@ public class ParallelJob<P> extends Jobs<P> {
         try  {
             threadPool.submit(() -> getParallel().map(job))
                     .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
-                    .forEach(t -> result.addValue(t));
+                    .forEach(t -> result.add(t));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new JobException(e);
         }
@@ -87,7 +87,7 @@ public class ParallelJob<P> extends Jobs<P> {
             threadPool.submit(() -> getParallel().map(job))
                     .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
                     .flatMap(Function.identity())
-                    .forEach(t -> result.addValue(t));
+                    .forEach(t -> result.add(t));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new JobException(e);
         }

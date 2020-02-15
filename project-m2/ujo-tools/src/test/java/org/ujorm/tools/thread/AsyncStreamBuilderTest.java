@@ -42,11 +42,11 @@ public class AsyncStreamBuilderTest {
 
         AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit);
 
-        instance.addValue(firstNumber);
+        instance.add(firstNumber);
         instance.stream().forEach(i -> {
             result.add(i);
             if (result.size() < limit) {
-                instance.addValue(i + 1);
+                instance.add(i + 1);
             }
         });
 
@@ -68,11 +68,11 @@ public class AsyncStreamBuilderTest {
 
         AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit);
 
-        instance.addValue(firstNumber);
+        instance.add(firstNumber);
         instance.stream().forEach(i -> {
             result.add(i);
             if (result.size() < limit) {
-                instance.addValue(i + 1);
+                instance.add(i + 1);
             }
         });
 
@@ -94,10 +94,10 @@ public class AsyncStreamBuilderTest {
 
         AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit);
 
-        instance.addValue(firstNumber);
+        instance.add(firstNumber);
         instance.stream().forEach(i -> {
             result.add(i);
-            instance.addValue(i + 1);
+            instance.add(i + 1);
         });
     }
 
@@ -111,7 +111,7 @@ public class AsyncStreamBuilderTest {
 
         int limit = 1;
         AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit);
-        instance.addValues(10, 11);
+        instance.addAll(10, 11);
     }
 
     /**
@@ -123,7 +123,7 @@ public class AsyncStreamBuilderTest {
 
         int limit = 3;
         AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit);
-        instance.addValues(10, null, null);
+        instance.addAll(10, null, null);
 
         assertEquals(1, instance.stream().count());
     }
