@@ -159,7 +159,7 @@ public class AsyncStreamBuilderTest {
         try {
             Integer value = instance.get();
             assertNotEquals(1, value.intValue());
-        } catch (Exception e) {
+        } catch (JobException e) {
             ex = e.getCause();
         }
         assertTrue(ex instanceof UnsupportedOperationException);
