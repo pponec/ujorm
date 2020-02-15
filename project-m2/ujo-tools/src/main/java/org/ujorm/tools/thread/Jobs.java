@@ -85,7 +85,7 @@ public abstract class Jobs<P> {
      * @return The result stream
      */
     public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
-            throws SyncJob.JobException {
+            throws JobException {
 
         final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
         createStream(job).forEach(t ->  result.add(t));
@@ -98,7 +98,7 @@ public abstract class Jobs<P> {
      * @return The result stream
      */
     public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
-            throws SyncJob.JobException {
+            throws JobException {
         final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
         createStream(job)
                 .flatMap(Function.identity())
@@ -110,19 +110,6 @@ public abstract class Jobs<P> {
     protected abstract <R> Stream<R> createStream(final UserFunction<P, R> job);
 
     // --- Class or Interfaces ---
-
-    /** An envelope for checked exceptions */
-    public static final class JobException extends IllegalStateException {
-
-        public JobException(@Nonnull final Throwable cause) {
-            super(Assert.notNull(cause, REQUIRED_INPUT_TEMPLATE_MSG, "cause"));
-        }
-
-        @Nonnull @Override
-        public Throwable getCause() {
-            return super.getCause(); //To change body of generated methods, choose Tools | Templates.
-        }
-    }
 
     public interface UserFunction<T, R> extends Function<T, R> {
 

@@ -24,12 +24,13 @@ import org.ujorm.tools.Assert;
  *
  * @author Pavel Ponec
  */
-public class TimeoutException extends IllegalStateException {
+public class JobException extends IllegalStateException {
 
-    public TimeoutException(@Nonnull String message) {
+    public JobException(@Nonnull String message) {
         super(Assert.hasLength(message, "message"));
     }
 
-
-
+    public JobException(Throwable cause) {
+        super(Assert.notNull(cause, Jobs.REQUIRED_INPUT_TEMPLATE_MSG, "cause"));
+    }
 }

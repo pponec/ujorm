@@ -73,7 +73,7 @@ public class AsyncStreamBuilder<T> {
                     : queue.poll();
             if (result == null) {
                 closed = true;
-                throw new TimeoutException("Time is over: " + timeout);
+                throw new JobException("Time is over: " + timeout);
             }
             return result;
         } catch (InterruptedException e) {

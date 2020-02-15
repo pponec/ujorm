@@ -131,7 +131,7 @@ public class AsyncStreamBuilderTest {
     /**
      * Test of addParams method, of class AsyncStreamBuilder.
      */
-    @Test(expected = TimeoutException.class)
+    @Test(expected = JobException.class)
     public void testAddParams_5() {
         System.out.println("addParams");
 
