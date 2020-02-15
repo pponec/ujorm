@@ -21,7 +21,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -144,5 +144,25 @@ public class AsyncStreamBuilderTest {
         });
     }
 
+    /**
+     * Test of addParams method, of class AsyncStreamBuilder.
+     */
+    public void testAddParams_6() {
+        System.out.println("addParams");
 
+        int limit = 3;
+        AsyncStreamBuilder<Integer> instance = new AsyncStreamBuilder<>(limit, Duration.ofSeconds(1));
+        instance.add(1);
+        instance.interrupt(new UnsupportedOperationException("TEST"));
+
+        Throwable ex = null;
+        try {
+            Integer value = instance.get();
+            assertNotEquals(1, value.intValue());
+        } catch (Exception e) {
+            ex = e.getCause();
+        }
+        assertTrue(ex instanceof UnsupportedOperationException);
+        assertEquals("TEST", ex.getMessage());
+    }
 }
