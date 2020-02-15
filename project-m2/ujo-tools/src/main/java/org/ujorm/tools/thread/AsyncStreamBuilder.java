@@ -67,7 +67,7 @@ public class AsyncStreamBuilder<T> {
     @Nonnull
     private T getValue() {
         try {
-            final long restMillis = timeout.toMillis() - clock.millis() + startMilis;
+            final long restMillis = !closed ? timeout.toMillis() - clock.millis() + startMilis : 0;
             final T result = restMillis > 0
                     ? queue.poll(restMillis, TimeUnit.MILLISECONDS)
                     : queue.poll();
