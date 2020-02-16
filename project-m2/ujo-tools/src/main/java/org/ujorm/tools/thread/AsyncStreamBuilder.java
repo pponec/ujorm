@@ -82,7 +82,7 @@ public class AsyncStreamBuilder<T> {
                     : queue.poll();
             if (result == null) {
                 close();
-                throw new JobException("Time is over: " + timeout);
+                throw JobException.of("Time is over: " + timeout);
             }
             return result;
         } catch (InterruptedException e) {
@@ -92,7 +92,7 @@ public class AsyncStreamBuilder<T> {
             close();
             Thread.currentThread().interrupt();
         }
-        throw new JobException(interrupt);
+        throw JobException.of(interrupt);
     }
 
     /** Start time countdown */
@@ -128,11 +128,11 @@ public class AsyncStreamBuilder<T> {
                 if (isOpen()) {
                     queue.add(item != null ? item : (T) UNDEFINED);
                 } else {
-                    throw new JobException("The builder is closed");
+                    throw JobException.of("The builder is closed");
                 }
             }
         } else {
-            throw new JobException("The parameter is over limit: " + item);
+            throw JobException.of("The parameter is over limit: " + item);
         }
     }
 

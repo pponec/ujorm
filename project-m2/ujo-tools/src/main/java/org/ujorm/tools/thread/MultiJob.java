@@ -61,7 +61,7 @@ public class MultiJob<P> extends Jobs<P> {
             try {
                 return t.get(timeout.toMillis(), MILLISECONDS);
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                throw new JobException(e);
+                throw JobException.of(e);
             }
         };
     }

@@ -24,13 +24,21 @@ import org.ujorm.tools.Assert;
  *
  * @author Pavel Ponec
  */
-public class JobException extends IllegalStateException {
+public final class JobException extends IllegalStateException {
 
-    public JobException(@Nonnull String message) {
-        super(Assert.hasLength(message, "message"));
+    private JobException(@Nonnull String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public JobException(Throwable cause) {
-        super(Assert.notNull(cause, Jobs.REQUIRED_INPUT_TEMPLATE_MSG, "cause"));
+    public static JobException of(@Nonnull String message) {
+        Assert.hasLength(message, "message");
+        return new JobException(message, null);
+    }
+
+    public static JobException of(Throwable cause) {
+        Assert.notNull(cause, Jobs.REQUIRED_INPUT_TEMPLATE_MSG, "cause");
+        return cause instanceof JobException
+                ? (JobException) cause
+                : new JobException(null, cause);
     }
 }

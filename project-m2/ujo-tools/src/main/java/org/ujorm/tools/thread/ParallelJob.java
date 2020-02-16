@@ -59,7 +59,7 @@ public class ParallelJob<P>extends Jobs<P> {
             return threadPool.submit(() -> getParallel().map(job))
                     .get(timeout.toMillis(), TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new JobException(e);
+            throw JobException.of(e);
         }
     }
 }

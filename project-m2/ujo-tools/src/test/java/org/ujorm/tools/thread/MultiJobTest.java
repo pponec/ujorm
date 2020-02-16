@@ -94,13 +94,13 @@ public class MultiJobTest {
         int result = 0;
         int jobCount = 10;
         IntStream params = IntStream.of(100, 200, 300);
-        Duration duration = Duration.ofMillis(100);
-        JobContext jobContext = JobContext.forMultiJob(jobCount);
+        Duration timeout = Duration.ofMillis(150);
+        JobContext jobContext = JobContext.forMultiJob(jobCount, timeout);
         JobException exeption = null;
 
         try {
             result = jobContext.forEach(params)
-                    .run(i -> sleep(i, duration))
+                    .run(i -> sleep(i, Duration.ofMillis(i)))
                     .mapToInt(i -> i)
                     .sum();
         } catch (JobException e) {
@@ -109,7 +109,7 @@ public class MultiJobTest {
 
         assertEquals(0, result);
         assertTrue(exeption != null);
-        assertTrue(exeption.getCause() instanceof TimeoutException);
+        assertEquals(exeption.getCause().getClass(), TimeoutException.class);
     }
 
     /**
@@ -119,8 +119,8 @@ public class MultiJobTest {
     public void testCheckTimeoutOfStream() {
         System.out.println("checkTimeoutOfStream");
         int maxThreadCount = 10;
-        Duration timeout = Duration.ofMillis(100);
-        IntStream params = IntStream.of(100, 200, 500);
+        Duration timeout = Duration.ofMillis(150);
+        IntStream params = IntStream.of(100, 200, 300);
         JobContext jobContext = JobContext.forMultiJob(maxThreadCount, timeout);
         JobException exeption = null;
         int result = 0;
@@ -136,7 +136,7 @@ public class MultiJobTest {
 
         assertEquals(0, result);
         assertTrue(exeption != null);
-        assertTrue(exeption.getCause() instanceof TimeoutException);
+        assertEquals(exeption.getCause().getClass(), TimeoutException.class);
     }
 
     /**

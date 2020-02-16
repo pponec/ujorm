@@ -119,7 +119,7 @@ public abstract class Jobs<P> {
                 if (result != null) {
                     result.interrupt(e.getCause());
                 }
-                throw new JobException(e);
+                throw JobException.of(e);
             }
         };
     }
@@ -136,7 +136,7 @@ public abstract class Jobs<P> {
             try {
                 return run(t);
             } catch (Exception e) {
-                throw new JobException(e);
+                throw JobException.of(e);
             }
         }
 
