@@ -56,8 +56,11 @@ public class AsyncStreamBuilder<T> {
      * @param timeout The minimal resolution is milliseconds
      */
     public AsyncStreamBuilder(final long count, @Nonnull final Duration timeout) {
+        Assert.isTrue(count >= 0, "count");
+        Assert.notNull(timeout, "timeout");
+
         this.countDown = new AtomicLong(count);
-        this.timeout = Assert.notNull(timeout, "timeout");
+        this.timeout = timeout;
         this.queue = new LinkedBlockingQueue<>();
         this.clock = Clock.systemUTC();
         this.stream = Stream.generate(() -> get())
