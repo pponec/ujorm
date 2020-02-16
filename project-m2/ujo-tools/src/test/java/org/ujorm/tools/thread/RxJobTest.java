@@ -42,6 +42,25 @@ public class RxJobTest {
      * Test of getSingle method, of class MultiRun.
      */
     @Test
+    public void testRun() {
+        System.out.println("run");
+        int maxThreadCount = 10;
+        JobContext jobContext = new RxContext(Schedulers.io(), maxThreadCount);
+        IntStream params = IntStream.rangeClosed(1, 10);
+
+        List<Integer> result = jobContext.forEach(params)
+                .run(i -> i * 10)
+                .sorted()
+                .collect(Collectors.toList());
+
+        assertEquals(maxThreadCount, result.size());
+        assertEquals(10, result.get(0).intValue());
+    }
+
+    /**
+     * Test of getSingle method, of class MultiRun.
+     */
+    @Test
     public void testRunToStream() {
         System.out.println("runToStream");
         int maxThreadCount = 10;
