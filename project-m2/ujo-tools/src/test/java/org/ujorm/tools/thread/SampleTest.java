@@ -131,7 +131,7 @@ public class SampleTest {
         List<Integer> nums = IntStream.rangeClosed(1, 10)
                 .boxed()
                 .collect(Collectors.toList());
-        AsyncStreamBuilder<String> builder = new AsyncStreamBuilder(nums.size());
+        AsyncStreamBuilder<String> builder = new AsyncStreamBuilder<>(nums.size());
 
         Flowable.fromIterable(nums)
                 .parallel()
