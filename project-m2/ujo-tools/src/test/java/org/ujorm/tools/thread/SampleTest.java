@@ -1,7 +1,10 @@
 package org.ujorm.tools.thread;
 
+import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
 import java.time.Duration;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -11,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -121,4 +125,25 @@ public class SampleTest {
         }
     }
 
+    /** ReactiveX / RxJava */
+    @Test
+    public void testRxJavaMethod() throws InterruptedException {
+        List<Integer> nums = IntStream.rangeClosed(1, 10)
+                .boxed()
+                .collect(Collectors.toList());
+        AsyncStreamBuilder<String> builder = new AsyncStreamBuilder(nums.size());
+
+        Flowable.fromIterable(nums)
+                .parallel()
+                .runOn(Schedulers.io(), nums.size())
+                .map(v -> {
+                    Thread.sleep(1_000);
+                    return "item-" + v;
+                })
+                .sequential()
+                .blockingSubscribe(t -> builder.add(t));
+
+        builder.stream()
+                .forEach(v -> System.out.println(">>> result: " +  v));
+    }
 }
