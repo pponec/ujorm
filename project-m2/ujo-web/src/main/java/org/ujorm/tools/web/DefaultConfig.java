@@ -36,8 +36,8 @@ public class DefaultConfig implements HtmlConfig {
     @Nonnull
     private CharSequence title = "Demo";
 
-    /** Level of the root element, the value may be negative */
-    private int firstLevel = Integer.MIN_VALUE + 1;
+    /** Level of the root element, the value may be negative number */
+    private int firstLevel;
 
     /** An indentation space for elements of the next level */
     private String indentationSpace = "    ";
@@ -51,6 +51,10 @@ public class DefaultConfig implements HtmlConfig {
 
     /** Language of the HTML page */
     private CharSequence language = "en";
+
+    public DefaultConfig() {
+        setNiceFormat(false);
+    }
 
     /** Html title */
     @Nonnull
@@ -98,8 +102,10 @@ public class DefaultConfig implements HtmlConfig {
      * Nice format or the HTML result
      * @param niceFormat the niceFormat to set
      */
-    public void setNiceFormat(boolean niceFormat) {
-        this.firstLevel = 0;
+    public final void setNiceFormat(boolean niceFormat) {
+        this.firstLevel = niceFormat 
+                ? 0
+                : (Integer.MIN_VALUE + 1);
     }
 
     /**
