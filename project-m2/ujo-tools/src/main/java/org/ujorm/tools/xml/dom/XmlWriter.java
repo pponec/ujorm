@@ -107,7 +107,7 @@ public class XmlWriter extends CommonXmlWriter {
                     writeNewLine = false;
                 }
             }
-            if (indentationEnabled && writeNewLine) {
+            if (indentationEnabled && writeNewLine && level >= 0) {
                 writeNewLine(level - 1);
             }
             out.append(XML_LT);

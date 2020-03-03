@@ -60,7 +60,7 @@ public class CommonXmlWriter {
     protected final Appendable out;
 
     /** An intendation space */
-    @Nullable
+    @Nonnull
     protected final String indentationSpace;
 
     /** An indentation request */
@@ -144,7 +144,7 @@ public class CommonXmlWriter {
     public void writeNewLine(final int level) throws IOException {
         out.append(CHAR_NEW_LINE);
         if (indentationEnabled) {
-            for (int i = level - 1; i >= 0; i--) {
+            for (int i = level; i > 0; i--) {
                 out.append(indentationSpace);
             }
         }
