@@ -42,13 +42,7 @@ public interface HtmlConfig {
     public Charset getCharset();
 
     /**
-     * Nice format or the HTML result
-     * @return the niceFormat
-     */
-    public boolean isNiceFormat();
-
-    /**
-     * Level of th root
+     * Level of the root element, the value may be negative.
      * @return the firstLevel
      */
     public int getFirstLevel();
@@ -71,5 +65,13 @@ public interface HtmlConfig {
      */
     @Nonnull
     public CharSequence[] getCssLinks();
+
+    /**
+     * Create a new default config
+     * @return
+     */
+    public static DefaultConfig ofDefault() {
+        return new DefaultConfig();
+    }
 
 }

@@ -149,10 +149,12 @@ public class HtmlPage extends Element {
         super.close();
         if (origElement instanceof XmlElement) {
             try {
-                final String intendationSpace = config.isNiceFormat() ? config.getIndentationSpace() : "";
-                final XmlWriter xmlWriter = new XmlWriter(writer.append(HTML_DOCTYPE).append(CHAR_NEW_LINE), intendationSpace);
+                final XmlWriter xmlWriter = new XmlWriter(writer
+                        .append(HTML_DOCTYPE)
+                        .append(CHAR_NEW_LINE)
+                        , config.getIndentationSpace());
                 final XmlElement xmlElement = (XmlElement) origElement;
-                xmlElement.toWriter(config.getFirstLevel(), xmlWriter);
+                xmlElement.toWriter(config.getFirstLevel() + 1, xmlWriter);
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
@@ -176,14 +178,14 @@ public class HtmlPage extends Element {
      * @throws IllegalStateException IO exceptions */
     @Nonnull
     public static HtmlPage of(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
-        return of(response, new DefaultConfig());
+        return of(response, HtmlConfig.ofDefault());
     }
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions */
     @Nonnull
     public static HtmlPage of(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
-        final DefaultConfig config = new DefaultConfig();
+        final DefaultConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
         return of(response, config);
@@ -193,7 +195,7 @@ public class HtmlPage extends Element {
      * @throws IllegalStateException IO exceptions */
     @Nonnull
     public static HtmlPage of(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
-        final DefaultConfig config = new DefaultConfig();
+        final DefaultConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
         return of(response, config);
@@ -203,7 +205,7 @@ public class HtmlPage extends Element {
      * @throws IllegalStateException IO exceptions */
     @Nonnull
     public static HtmlPage niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
-        final DefaultConfig config = new DefaultConfig();
+        final DefaultConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat(true);
         config.setTitle(title);
         config.setCssLinks(cssLinks);
@@ -214,7 +216,7 @@ public class HtmlPage extends Element {
      * @throws IllegalStateException IO exceptions */
     @Nonnull
     public static HtmlPage niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
-        final DefaultConfig config = new DefaultConfig();
+        final DefaultConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat(true);
         config.setTitle(title);
         config.setCharset(charset);
@@ -226,13 +228,13 @@ public class HtmlPage extends Element {
      * @throws IllegalStateException IO exceptions */
     @Nonnull
     public static HtmlPage niceOf(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
-        final DefaultConfig config = new DefaultConfig();
+        final DefaultConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat(true);
         config.setCssLinks(cssLinks);
         return of(response, config);
     }
 
-    /** Create new instance with empty html headers
+    /** A base method to create new instance with empty html headers
      * @param response HttpREsponse
      * @param config Html configuration
      * @return An instance of the HtmlPage

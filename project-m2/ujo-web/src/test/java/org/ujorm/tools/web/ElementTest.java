@@ -32,7 +32,7 @@ public class ElementTest {
     @Test
     public void testAddSelect_3args() {
         System.out.println("addSelect");
-        DefaultConfig config = new DefaultConfig();
+        DefaultConfig config = HtmlConfig.ofDefault();
         HtmlPage resInstance = createHtmlPage(config);
 
         String result = resInstance.toString();
