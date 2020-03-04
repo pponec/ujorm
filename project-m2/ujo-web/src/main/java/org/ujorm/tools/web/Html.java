@@ -97,7 +97,11 @@ public interface Html {
     // --- Attribute names ---
 
     String A_ACTION = "action";
+    /** @deprecated Attribute {@code cellpadding} is not supported in HTML 5. */
+    @Deprecated
     String A_CELLPADDING = "cellpadding";
+    /** @deprecated Attribute {@code cellspacing} is not supported in HTML 5. */
+    @Deprecated
     String A_CELLSPACING = "cellspacing";
     String A_CHARSET = "charset";
     String A_CHECKED = "checked";
@@ -105,6 +109,7 @@ public interface Html {
     String A_CONTENT = "content";
     String A_FOR = "for";
     String A_HREF = "href";
+    String A_HTTP_EQUIV = "http-equiv";
     String A_ID = "id";
     /** Language attribute of the HTML pagee (e.g. "en")  */
     String A_LANG = "lang";
