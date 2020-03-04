@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
@@ -53,7 +54,8 @@ public class MultiJob<P> extends Jobs<P> {
     protected <R> Stream<R> createStream(final Function<P, R> job) {
         return getParallel()
                 .map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
-                .map(createGrabber());
+                .collect(Collectors.toList()).stream() // For parallel processing!
+                .map(createGrabber()); // A solution of: map(CompletableFuture::join)
     }
 
     protected <R> Function<CompletableFuture<R>, R> createGrabber() {

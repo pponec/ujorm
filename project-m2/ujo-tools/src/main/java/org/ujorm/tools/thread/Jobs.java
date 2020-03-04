@@ -88,8 +88,12 @@ public abstract class Jobs<P> {
             throws JobException {
 
         final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
-        createStream(innerJob(job, result))
-                .forEach(t ->  result.add(t));
+        try {
+            createStream(innerJob(job, result))
+                    .forEach(t -> result.add(t));
+        } catch (Exception e) {
+            result.interrupt(e);
+        }
         return result.stream();
     }
 
@@ -101,9 +105,13 @@ public abstract class Jobs<P> {
     public <R> Stream<R> runOfStream(@Nonnull final JobFunction<P, Stream<R>> job)
             throws JobException {
         final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
-        createStream(innerJob(job, result))
-                .flatMap(Function.identity())
-                .forEach(t -> result.add(t));
+        try {
+            createStream(innerJob(job, result))
+                    .flatMap(Function.identity())
+                    .forEach(t -> result.add(t));
+        } catch (Exception e) {
+            result.interrupt(e);
+        }
         return result.stream();
     }
 
@@ -116,9 +124,9 @@ public abstract class Jobs<P> {
             try {
                 return job.run(p);
             } catch (Exception e) {
-                if (result != null) {
-                    result.interrupt(e.getCause());
-                }
+//                if (result != null) {
+//                    result.interrupt(e.getCause());
+//                }
                 throw JobException.of(e);
             }
         };

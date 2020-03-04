@@ -34,6 +34,7 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Pavel Ponec
  */
+//@Ignore // TODO:RemoveIt
 public class ParallelJobTest {
 
     private final Logger logger = Logger.getLogger(getClass().getName());

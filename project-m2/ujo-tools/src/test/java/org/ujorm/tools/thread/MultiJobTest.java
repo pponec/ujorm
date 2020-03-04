@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -49,7 +50,7 @@ public class MultiJobTest {
     /**
      * Test of getStream method, of class MultiRun.
      */
-    @Test
+    @Test(timeout = 100)
     public void testGetStream() throws IOException {
         System.out.println("run");
         int maxThreadCount = 10;
@@ -68,7 +69,7 @@ public class MultiJobTest {
     /**
      * Test of getSingle method, of class MultiRun.
      */
-    @Test
+    @Test(timeout = 100)
     public void testRunToStream() {
         System.out.println("runToStream");
         int maxThreadCount = 10;
@@ -87,19 +88,20 @@ public class MultiJobTest {
     /**
      * Check a timeout
      */
-    @Test
+    @Test(timeout = 2_500_000)
     public void testCheckTimeout() {
         System.out.println("checkTimeout");
 
-        int result = 0;
         int jobCount = 10;
         IntStream params = IntStream.of(100, 200, 300);
         Duration timeout = Duration.ofMillis(150);
         JobContext jobContext = JobContext.forMultiJob(jobCount, timeout);
         JobException exeption = null;
+        int result = 0;
 
         try {
             result = jobContext.forEach(params)
+                    .setTimeout(timeout)
                     .run(i -> sleep(i, Duration.ofMillis(i)))
                     .mapToInt(i -> i)
                     .sum();
@@ -115,7 +117,8 @@ public class MultiJobTest {
     /**
      * Check a timeout
      */
-    @Test
+    @Ignore
+    @Test(timeout = 2_500)
     public void testCheckTimeoutOfStream() {
         System.out.println("checkTimeoutOfStream");
         int maxThreadCount = 10;
@@ -142,12 +145,12 @@ public class MultiJobTest {
     /**
      * Check Time of parallel work.
      */
-    @Test
-    public void testTimeOfParalellWork() {
-        System.out.println("timeOfParalellWork");
+    @Test(timeout = 2_000)
+    public void testParalellWorkTime() {
+        System.out.println("paralellWorkTime");
 
-        Duration duration = Duration.ofSeconds(1);
         int jobCount = 120;
+        Duration duration = Duration.ofSeconds(1);
         IntStream params = IntStream.rangeClosed(1, jobCount);
         JobContext jobContext = JobContext.forMultiJob(jobCount);
         LocalDateTime start = LocalDateTime.now();
@@ -165,14 +168,14 @@ public class MultiJobTest {
     /**
      * Check Time of paralel work..
      */
-    @Test
+    @Test(timeout = 1_200)
     public void testTimeOfSequentialWork() {
         System.out.println("timeOfSequentialWork");
 
-        Duration duration = Duration.ofSeconds(1);
+        Duration duration = Duration.ofMillis(100);
         int jobCount = 10;
         IntStream params = IntStream.rangeClosed(1, jobCount);
-        JobContext jobContext = JobContext.forMultiJob(jobCount);
+        JobContext jobContext = JobContext.forSingleThread();
         LocalDateTime start = LocalDateTime.now();
 
         List<Integer> result = jobContext.forEach(params)
@@ -181,8 +184,8 @@ public class MultiJobTest {
                 .collect(Collectors.toList());
 
         Duration total = Duration.between(start, LocalDateTime.now());
-        assertTrue("Real time took sec: " + total.getSeconds(), total.getSeconds() >= jobCount);
-        assertTrue("Real time took sec: " + total.getSeconds(), total.getSeconds() < jobCount + 1);
+        assertTrue("Real time took millis: " + total.toMillis(), total.toMillis() >= jobCount * duration.toMillis());
+        assertTrue("Real time took millis: " + total.toMillis(), total.toMillis() < jobCount * duration.toMillis() + 100);
         assertEquals(jobCount, result.size());
     }
 
