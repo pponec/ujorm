@@ -26,6 +26,9 @@ import javax.annotation.Nonnull;
  */
 public interface HtmlConfig {
 
+    /** Doctype */
+    @Nonnull
+   public String getDoctype();
 
     /** Html title */
     @Nonnull

@@ -34,6 +34,10 @@ public class DefaultConfig implements HtmlConfig {
 
     /** Title */
     @Nonnull
+    private String doctype;
+
+    /** Title */
+    @Nonnull
     private CharSequence title = "Demo";
 
     /** Level of the root element, the value may be negative number */
@@ -54,6 +58,10 @@ public class DefaultConfig implements HtmlConfig {
 
     public DefaultConfig() {
         setNiceFormat(false);
+    }
+
+    public String getDoctype() {
+        return doctype;
     }
 
     /** Html title */
@@ -103,7 +111,7 @@ public class DefaultConfig implements HtmlConfig {
      * @param niceFormat the niceFormat to set
      */
     public final void setNiceFormat(boolean niceFormat) {
-        this.firstLevel = niceFormat 
+        this.firstLevel = niceFormat
                 ? 0
                 : (Integer.MIN_VALUE + 1);
     }
