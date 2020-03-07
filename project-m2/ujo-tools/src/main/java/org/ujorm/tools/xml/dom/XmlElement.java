@@ -31,9 +31,9 @@ import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractElement;
-import org.ujorm.tools.xml.CommonXmlWriter;
+import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.dom.XmlElement.RawEnvelope;
-import static org.ujorm.tools.xml.CommonXmlWriter.*;
+import static org.ujorm.tools.xml.AbstractWriter.*;
 import static org.ujorm.tools.xml.config.DefaultXmlConfig.REQUIRED_MSG;
 
 /**
@@ -253,7 +253,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
     public String toString() {
         try {
             return toWriter(0, new XmlWriter(new CharArrayWriter(512)
-                    .append(CommonXmlWriter.XML_HEADER)
+                    .append(AbstractWriter.XML_HEADER)
                     .append(CHAR_NEW_LINE))
             ).toString();
         } catch (IOException e) {

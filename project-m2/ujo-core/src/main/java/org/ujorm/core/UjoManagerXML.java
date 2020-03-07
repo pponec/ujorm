@@ -33,7 +33,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.UjoTextable;
 import org.ujorm.tools.xml.AbstractElement;
-import org.ujorm.tools.xml.CommonXmlWriter;
+import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -57,7 +57,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class UjoManagerXML extends UjoService<UjoTextable> {
 
     /** A default XML header: &lt;?xml version="1.0" encoding="UTF-8"?&gt; */
-    public static final String XML_HEADER = CommonXmlWriter.XML_HEADER;
+    public static final String XML_HEADER = AbstractWriter.XML_HEADER;
 
     /** A name of Java Class of XML attribute. */
     public static final String ATTR_CLASS = "javaClass";

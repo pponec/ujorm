@@ -24,7 +24,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.xml.CommonXmlWriter;
+import org.ujorm.tools.xml.AbstractWriter;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -32,7 +32,7 @@ import org.ujorm.tools.xml.CommonXmlWriter;
  * @since 1.88
  * @author Pavel Ponec
  */
-public class XmlWriter extends CommonXmlWriter {
+public class XmlWriter extends AbstractWriter {
 
     /** Default constructor a zero offset */
     public XmlWriter() {

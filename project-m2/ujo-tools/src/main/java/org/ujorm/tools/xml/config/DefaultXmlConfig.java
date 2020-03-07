@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.xml.CommonXmlWriter;
+import org.ujorm.tools.xml.AbstractWriter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import org.ujorm.tools.Check;
 
@@ -64,7 +64,7 @@ public class DefaultXmlConfig implements XmlConfig {
     @Override
     @Nonnull
     public String getDoctype() {
-        return nonnull(doctype, CommonXmlWriter.XML_HEADER);
+        return nonnull(doctype, AbstractWriter.XML_HEADER);
     }
 
     @Nonnull

@@ -29,7 +29,7 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.dom.HtmlElement;
 import org.ujorm.tools.xml.dom.XmlElement;
 import org.ujorm.tools.xml.dom.XmlWriter;
-import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_NEW_LINE;
+import static org.ujorm.tools.xml.AbstractWriter.CHAR_NEW_LINE;
 import static org.ujorm.tools.xml.config.DefaultXmlConfig.REQUIRED_MSG;
 
 /** The root of HTML elements */

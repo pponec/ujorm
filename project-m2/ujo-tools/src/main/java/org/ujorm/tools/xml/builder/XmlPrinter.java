@@ -23,7 +23,7 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.ujorm.tools.xml.CommonXmlWriter;
+import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.config.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.DefaultXmlConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
@@ -36,7 +36,7 @@ import org.ujorm.tools.xml.dom.HtmlElement;
  * @since 1.88
  * @author Pavel Ponec
  */
-public class XmlPrinter extends CommonXmlWriter {
+public class XmlPrinter extends AbstractWriter {
 
     /** Default constructor a zero offset */
     public XmlPrinter() {

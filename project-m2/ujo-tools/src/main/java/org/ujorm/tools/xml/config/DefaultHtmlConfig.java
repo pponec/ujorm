@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.xml.CommonXmlWriter;
+import org.ujorm.tools.xml.AbstractWriter;
 
 /**
  * Configuraion of HtmlPage
@@ -46,7 +46,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     @Override
     @Nonnull
     public String getDoctype() {
-        return nonnull(doctype, CommonXmlWriter.HTML_DOCTYPE);
+        return nonnull(doctype, AbstractWriter.HTML_DOCTYPE);
     }
 
     @Nonnull

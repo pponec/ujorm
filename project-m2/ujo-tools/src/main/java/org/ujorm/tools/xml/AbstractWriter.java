@@ -29,7 +29,7 @@ import org.ujorm.tools.Check;
  * A generic writer
  * @author Pavel Ponec
  */
-public abstract class CommonXmlWriter {
+public abstract class AbstractWriter {
 
     /** Default XML declaration */
     public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -78,7 +78,7 @@ public abstract class CommonXmlWriter {
      * @param out A writer
      * @param indentationSpace String for a one level indentation.
      */
-    public CommonXmlWriter(@Nonnull final Appendable out, @Nullable final String indentationSpace) {
+    public AbstractWriter(@Nonnull final Appendable out, @Nullable final String indentationSpace) {
         this.out = Assert.notNull(out, "out");
         this.indentationSpace = indentationSpace;
         this.indentationEnabled = Check.hasLength(indentationSpace);

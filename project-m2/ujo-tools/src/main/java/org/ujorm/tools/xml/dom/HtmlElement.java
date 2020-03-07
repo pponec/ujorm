@@ -23,12 +23,12 @@ import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.xml.CommonXmlWriter;
+import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.config.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.XmlConfig;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_NEW_LINE;
+import static org.ujorm.tools.xml.AbstractWriter.CHAR_NEW_LINE;
 import static org.ujorm.tools.xml.config.DefaultXmlConfig.REQUIRED_MSG;
 
 /**
@@ -180,7 +180,7 @@ public class HtmlElement extends XmlElement {
     public String toString() throws IllegalStateException {
         try {
             return toWriter(0, new XmlWriter(new StringBuilder(512)
-                    .append(CommonXmlWriter.HTML_DOCTYPE)
+                    .append(AbstractWriter.HTML_DOCTYPE)
                     .append(CHAR_NEW_LINE)))
                     .toString();
         } catch (IOException e) {
@@ -220,7 +220,7 @@ public class HtmlElement extends XmlElement {
      */
     public void toResponse(@Nonnull final Object httpServletResponse, final HtmlConfig config) throws IOException, IllegalArgumentException {
         try {
-            final Writer writer = CommonXmlWriter.createWriter(httpServletResponse, charset, !config.isCacheAllowed());
+            final Writer writer = AbstractWriter.createWriter(httpServletResponse, charset, !config.isCacheAllowed());
             toWriter(new XmlWriter(
                     writer.append(config.getDoctype()).append(CHAR_NEW_LINE),
                     config.getIndentation()));
