@@ -35,6 +35,7 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Pavel Ponec
  */
+@Ignore // TODO
 public class MultiJobTest {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
