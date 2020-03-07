@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools.web;
+package org.ujorm.tools.xml.config;
 
-import java.nio.charset.Charset;
+import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
@@ -24,57 +24,23 @@ import javax.annotation.Nonnull;
  * Configuraion of HtmlPage
  * @author Pavel Ponec
  */
-public interface HtmlConfig {
+public interface HtmlConfig extends XmlConfig {
 
-    /** Doctype */
-    @Nonnull
-   public String getDoctype();
-
-    /** Html title */
+    /** Title is a required element by HTML 5 */
     @Nonnull
     public CharSequence getTitle();
 
-    /** Get language of the HTML page */
+    public CharSequence[] getCssLinks();
+
     public Optional<CharSequence> getLanguage();
 
-    /**
-     * Charset
-     * @return the charset
-     */
-    @Nonnull
-    public Charset getCharset();
-
-    /**
-     * Level of the root element, the value may be negative.
-     * @return the firstLevel
-     */
-    public int getFirstLevel();
-
-    /**
-     * New line
-     * @return the newLine
-     */
-    public String getIndentationSpace();
-
-    /**
-     * Use a DOM model
-     * @return the dom
-     */
-    public boolean isDom();
-
-    /**
-     * Css ling with required order
-     * @return the cssLinks
-     */
-    @Nonnull
-    public CharSequence[] getCssLinks();
+    public Map<String, Map<String, Object>> getHeaders();
 
     /**
      * Create a new default config
      * @return
      */
-    public static DefaultConfig ofDefault() {
-        return new DefaultConfig();
+    public static DefaultHtmlConfig ofDefault() {
+        return new DefaultHtmlConfig();
     }
-
 }

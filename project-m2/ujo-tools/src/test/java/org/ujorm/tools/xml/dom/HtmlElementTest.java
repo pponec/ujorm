@@ -41,14 +41,17 @@ public class HtmlElementTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         html.toResponse(response, false);
 
-        String expected = "<!DOCTYPE html>"
-                + "\n<html>"
-                + "\n<head>"
-                + "\n<meta charset=\"UTF-8\"/>"
-                + "\n<title>Test</title></head>"
-                + "\n<body>"
-                + "\n<h1>Hello word!</h1>"
-                + "\n<div>null</div></body></html>";
+        String expected = String.join("\n"
+                , "<!DOCTYPE html>"
+                , "<html>"
+                , "<head>"
+                , "<meta charset=\"UTF-8\"/>"
+                , "<title>Test</title></head>"
+                , "<body>"
+                , "<h1>Hello word!</h1>"
+                , "<div>null</div>"
+                + "</body>"
+                + "</html>");
         assertEquals(expected, response.getContentAsString());
         assertEquals("UTF-8", response.getCharacterEncoding());
         assertEquals("text/html; charset=UTF-8", response.getContentType());

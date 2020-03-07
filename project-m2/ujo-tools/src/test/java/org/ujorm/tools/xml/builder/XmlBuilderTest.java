@@ -47,13 +47,14 @@ public class XmlBuilderTest {
         }
 
         String result = writer.toString();
-        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "\n<root>"
-                + "\n<childA x=\"1\" y=\"2\"/>"
-                + "\n<childB x=\"3\" y=\"4\" z=\"&lt;'&amp;&quot;&gt;\">A text message &lt;'&amp;\"&gt;</childB>"
-                + "\n<rawXml/>"
-           //   + "\n<![CDATA[A character data <'&\">]]>"
-                + "\n</root>";
+        String expected = String.join("\n"
+                , "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                , "<root>"
+                , "<childA x=\"1\" y=\"2\"/>"
+                , "<childB x=\"3\" y=\"4\" z=\"&lt;'&amp;&quot;&gt;\">A text message &lt;'&amp;\"&gt;</childB>"
+                , "<rawXml/>"
+           //   , "<![CDATA[A character data <'&\">]]>"
+                , "</root>");
         assertEquals(expected, result);
     }
 
@@ -61,8 +62,7 @@ public class XmlBuilderTest {
     public void testXmlBuildingNice() throws IOException {
         System.out.println("XmlBuildingNice");
 
-        boolean intendation = true;
-        final XmlPrinter writer = XmlPrinter.forXml(intendation);
+        final XmlPrinter writer = XmlPrinter.forNiceXml();
         try (XmlBuilder root = writer.createElement("root")) {
             root.addElement("childA")
                     .setAttrib("x", 1)
@@ -77,13 +77,14 @@ public class XmlBuilderTest {
         }
 
         String result = writer.toString();
-        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "\n<root>"
-                + "\n    <childA x=\"1\" y=\"2\"/>"
-                + "\n    <childB x=\"3\" y=\"4\" z=\"&lt;'&amp;&quot;&gt;\">A text message &lt;'&amp;\"&gt;</childB>"
-                + "\n    <rawXml/>"
-           //   + "\n<![CDATA[A character data <'&\">]]>"
-                + "\n</root>";
+        String expected = String.join("\n"
+                , "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                , "<root>"
+                , "    <childA x=\"1\" y=\"2\"/>"
+                , "    <childB x=\"3\" y=\"4\" z=\"&lt;'&amp;&quot;&gt;\">A text message &lt;'&amp;\"&gt;</childB>"
+                , "    <rawXml/>"
+           //   , "<![CDATA[A character data <'&\">]]>"
+                , "</root>");
         assertEquals(expected, result);
     }
 
@@ -105,17 +106,18 @@ public class XmlBuilderTest {
         }
 
         String result = writer.toString();
-        String expected = "<!DOCTYPE html>"
-                + "\n<html lang=\"en\">"
-                + "\n    <head>"
-                + "\n        <meta charset=\"UTF-8\"/>"
-                + "\n        <title>Demo</title>"
-                + "\n        <link href=\"word.css\" rel=\"stylesheet\"/>"
-                + "\n    </head>"
-                + "\n    <body>"
-                + "\n        <h1>Hello, World!</h1>"
-                + "\n    </body>"
-                + "\n</html>";
+        String expected = String.join("\n"
+                , "<!DOCTYPE html>"
+                , "<html lang=\"en\">"
+                , "    <head>"
+                , "        <meta charset=\"UTF-8\"/>"
+                , "        <title>Demo</title>"
+                , "        <link href=\"word.css\" rel=\"stylesheet\"/>"
+                , "    </head>"
+                , "    <body>"
+                , "        <h1>Hello, World!</h1>"
+                , "    </body>"
+                , "</html>");
         assertEquals(expected, result);
     }
 
@@ -137,17 +139,18 @@ public class XmlBuilderTest {
         }
 
         String result = writer.toString();
-        String expected = "<!DOCTYPE html>"
-                + "\n<html lang=\"en\">"
-                + "\n    <head>"
-                + "\n        <meta charset=\"UTF-8\"/>"
-                + "\n        <title>Demo</title>"
-                + "\n        <link href=\"word.css\" rel=\"stylesheet\"/>"
-                + "\n    </head>"
-                + "\n    <body>"
-                + "\n        <h1>Hello, World!</h1>"
-                + "\n    </body>"
-                + "\n</html>";
+        String expected = String.join("\n"
+                , "<!DOCTYPE html>"
+                , "<html lang=\"en\">"
+                , "    <head>"
+                , "        <meta charset=\"UTF-8\"/>"
+                , "        <title>Demo</title>"
+                , "        <link href=\"word.css\" rel=\"stylesheet\"/>"
+                , "    </head>"
+                , "    <body>"
+                , "        <h1>Hello, World!</h1>"
+                , "    </body>"
+                , "</html>");
         assertEquals(expected, result);
     }
 
@@ -169,14 +172,15 @@ public class XmlBuilderTest {
         };
 
         String result = writer.toString();
-        String expected = "<!DOCTYPE html>"
-                + "\n<html>"
-                + "\n<head>"
-                + "\n<meta charset=\"UTF-8\"/>"
-                + "\n<title>Test</title></head>"
-                + "\n<body>"
-                + "\n<h1>Hello word!</h1>"
-                + "\n<div>null</div></body></html>";
+        String expected = String.join("\n"
+                , "<!DOCTYPE html>"
+                , "<html>"
+                , "<head>"
+                , "<meta charset=\"UTF-8\"/>"
+                , "<title>Test</title></head>"
+                , "<body>"
+                , "<h1>Hello word!</h1>"
+                , "<div>null</div></body></html>");
         assertEquals(expected, result);
     }
 

@@ -24,11 +24,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.xml.config.DefaultHtmlConfig;
+import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.dom.HtmlElement;
 import org.ujorm.tools.xml.dom.XmlElement;
 import org.ujorm.tools.xml.dom.XmlWriter;
-import static org.ujorm.tools.xml.AbstractElement.HTML_DOCTYPE;
 import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_NEW_LINE;
+import static org.ujorm.tools.xml.config.DefaultXmlConfig.REQUIRED_MSG;
 
 /** The root of HTML elements */
 public class HtmlPage extends Element {
@@ -150,9 +152,9 @@ public class HtmlPage extends Element {
         if (origElement instanceof XmlElement) {
             try {
                 final XmlWriter xmlWriter = new XmlWriter(writer
-                        .append(HTML_DOCTYPE)
+                        .append(config.getDoctype())
                         .append(CHAR_NEW_LINE)
-                        , config.getIndentationSpace());
+                        , config.getIndentation());
                 final XmlElement xmlElement = (XmlElement) origElement;
                 xmlElement.toWriter(config.getFirstLevel() + 1, xmlWriter);
             } catch (IOException e) {
@@ -185,7 +187,7 @@ public class HtmlPage extends Element {
      * @throws IllegalStateException IO exceptions */
     @Nonnull
     public static HtmlPage of(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
-        final DefaultConfig config = HtmlConfig.ofDefault();
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
         return of(response, config);
@@ -195,7 +197,7 @@ public class HtmlPage extends Element {
      * @throws IllegalStateException IO exceptions */
     @Nonnull
     public static HtmlPage of(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
-        final DefaultConfig config = HtmlConfig.ofDefault();
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
         return of(response, config);
@@ -205,7 +207,7 @@ public class HtmlPage extends Element {
      * @throws IllegalStateException IO exceptions */
     @Nonnull
     public static HtmlPage niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
-        final DefaultConfig config = HtmlConfig.ofDefault();
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat(true);
         config.setTitle(title);
         config.setCssLinks(cssLinks);
@@ -216,7 +218,7 @@ public class HtmlPage extends Element {
      * @throws IllegalStateException IO exceptions */
     @Nonnull
     public static HtmlPage niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
-        final DefaultConfig config = HtmlConfig.ofDefault();
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat(true);
         config.setTitle(title);
         config.setCharset(charset);
@@ -228,7 +230,7 @@ public class HtmlPage extends Element {
      * @throws IllegalStateException IO exceptions */
     @Nonnull
     public static HtmlPage niceOf(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
-        final DefaultConfig config = HtmlConfig.ofDefault();
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat(true);
         config.setCssLinks(cssLinks);
         return of(response, config);
@@ -264,7 +266,7 @@ public class HtmlPage extends Element {
     @Nonnull
     public static HtmlPage of(@Nullable HtmlConfig config) throws IllegalStateException {
         if (config == null) {
-            config = new DefaultConfig();
+            config = new DefaultHtmlConfig();
         }
         final HtmlPage result = new HtmlPage(config, new CharArrayWriter(256));
         config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));

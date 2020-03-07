@@ -19,6 +19,8 @@ package org.ujorm.tools.web;
 
 import java.util.LinkedHashMap;
 import org.junit.*;
+import org.ujorm.tools.xml.config.DefaultHtmlConfig;
+import org.ujorm.tools.xml.config.HtmlConfig;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -32,7 +34,7 @@ public class ElementTest {
     @Test
     public void testAddSelect_3args() {
         System.out.println("addSelect");
-        DefaultConfig config = HtmlConfig.ofDefault();
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
         HtmlPage resInstance = createHtmlPage(config);
 
         String result = resInstance.toString();

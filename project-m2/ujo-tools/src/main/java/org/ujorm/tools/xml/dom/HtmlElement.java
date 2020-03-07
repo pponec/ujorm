@@ -24,8 +24,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.CommonXmlWriter;
+import org.ujorm.tools.xml.config.DefaultHtmlConfig;
+import org.ujorm.tools.xml.config.HtmlConfig;
+import org.ujorm.tools.xml.config.XmlConfig;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ujorm.tools.xml.CommonXmlWriter.CHAR_NEW_LINE;
+import static org.ujorm.tools.xml.config.DefaultXmlConfig.REQUIRED_MSG;
 
 /**
  * XML element model to rendering a HTML file
@@ -52,6 +56,15 @@ public class HtmlElement extends XmlElement {
     /** Charset */
     @Nonnull
     protected final Charset charset;
+
+    /** Create new instance with empty html headers */
+    public HtmlElement(@Nonnull final XmlConfig config) {
+        super(Html.HTML);
+
+        this.charset = config.getCharset();
+        this.head = addElement(Html.HEAD);
+        this.body = addElement(Html.BODY);
+    }
 
     /** Create new instance with empty html headers */
     public HtmlElement(@Nonnull final Charset charset) {
@@ -167,7 +180,7 @@ public class HtmlElement extends XmlElement {
     public String toString() throws IllegalStateException {
         try {
             return toWriter(0, new XmlWriter(new StringBuilder(512)
-                    .append(HTML_DOCTYPE)
+                    .append(CommonXmlWriter.HTML_DOCTYPE)
                     .append(CHAR_NEW_LINE)))
                     .toString();
         } catch (IOException e) {
@@ -182,28 +195,35 @@ public class HtmlElement extends XmlElement {
      * @throws IOException An writting error.
      * @throws IllegalArgumentException Wrong argument type
      */
-    public final void toResponse(@Nonnull final Object httpServletResponse, final boolean noCache) throws IOException, IllegalArgumentException {
-        toResponse(httpServletResponse, noCache, false);
+    public final void toResponse(
+            @Nonnull final Object httpServletResponse,
+            final boolean noCache)
+            throws IOException, IllegalArgumentException {
+        DefaultHtmlConfig config = new DefaultHtmlConfig();
+        config.setCacheAllowed(!noCache);
+        toResponse(httpServletResponse, config);
     }
 
     /** Render the result with an indentation */
-    public final void toNiceResponse(@Nonnull final Object httpServletResponse) throws IOException, IllegalArgumentException {
-        toResponse(httpServletResponse, true, true);
+    public final void toNiceResponse(@Nonnull final Object httpServletResponse)
+            throws IOException, IllegalArgumentException {
+        DefaultHtmlConfig config = new DefaultHtmlConfig();
+        config.setNiceFormat(true);
+        toResponse(httpServletResponse, config);
     }
 
     /**
      * Render the result
      * @param httpServletResponse
-     * @param noCache
-     * @param indentation
      * @throws IOException
      * @throws IllegalArgumentException
      */
-    public void toResponse(@Nonnull final Object httpServletResponse, final boolean noCache, final boolean indentation) throws IOException, IllegalArgumentException {
+    public void toResponse(@Nonnull final Object httpServletResponse, final HtmlConfig config) throws IOException, IllegalArgumentException {
         try {
-            final Writer writer = CommonXmlWriter.createWriter(httpServletResponse, charset, noCache);
-            final String offset = indentation ? DEFAULT_INTENDATION : null;
-            toWriter(new XmlWriter(writer.append(HtmlElement.HTML_DOCTYPE).append(CHAR_NEW_LINE), offset));
+            final Writer writer = CommonXmlWriter.createWriter(httpServletResponse, charset, !config.isCacheAllowed());
+            toWriter(new XmlWriter(
+                    writer.append(config.getDoctype()).append(CHAR_NEW_LINE),
+                    config.getIndentation()));
             writer.flush();
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);

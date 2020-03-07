@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec,
+ * Copyright 2018-2020 Pavel Ponec,
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/XmlElement.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
+import static org.ujorm.tools.xml.config.DefaultXmlConfig.REQUIRED_MSG;
 
 /**
  * Abstrac element model.
@@ -31,18 +32,6 @@ import org.ujorm.tools.Assert;
  * @author Pavel Ponec
  */
 public abstract class AbstractElement<E extends AbstractElement> implements Closeable {
-
-    /** XML header */
-    public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-
-    /** HTML doctype */
-    public static final String HTML_DOCTYPE = "<!DOCTYPE html>";
-
-    /** Default intendation have got 4 spaces per level */
-    public static final String DEFAULT_INTENDATION = "    ";
-
-    /** Assertion message template */
-    protected static final String REQUIRED_MSG = "The argument {} is required";
 
     /** Element name */
     @Nonnull

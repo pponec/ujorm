@@ -31,8 +31,10 @@ import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractElement;
+import org.ujorm.tools.xml.CommonXmlWriter;
 import org.ujorm.tools.xml.dom.XmlElement.RawEnvelope;
 import static org.ujorm.tools.xml.CommonXmlWriter.*;
+import static org.ujorm.tools.xml.config.DefaultXmlConfig.REQUIRED_MSG;
 
 /**
  * XML element model to rendering a XML file.
@@ -247,11 +249,11 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
     }
 
     /** Render the XML code including header */
-    @Override @Nonnull
+    @Nonnull
     public String toString() {
         try {
             return toWriter(0, new XmlWriter(new CharArrayWriter(512)
-                    .append(XML_HEADER)
+                    .append(CommonXmlWriter.XML_HEADER)
                     .append(CHAR_NEW_LINE))
             ).toString();
         } catch (IOException e) {

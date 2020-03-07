@@ -24,11 +24,11 @@ import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.xml.CommonXmlWriter;
+import org.ujorm.tools.xml.config.DefaultHtmlConfig;
+import org.ujorm.tools.xml.config.DefaultXmlConfig;
+import org.ujorm.tools.xml.config.HtmlConfig;
+import org.ujorm.tools.xml.config.XmlConfig;
 import org.ujorm.tools.xml.dom.HtmlElement;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.ujorm.tools.xml.AbstractElement.DEFAULT_INTENDATION;
-import static org.ujorm.tools.xml.AbstractElement.HTML_DOCTYPE;
-import static org.ujorm.tools.xml.AbstractElement.XML_HEADER;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -142,50 +142,108 @@ public class XmlPrinter extends CommonXmlWriter {
      * The result provides a method {@link #toString() }
      */
     public static XmlPrinter forXml() {
-        return new XmlPrinter(new StringBuilder(512), null, XML_HEADER);
+        return forXml(null, XmlConfig.ofDefault());
     }
 
-    /** Crete a new instance with no header.
+    /** Crete a new instance with a formatted output.
      * The result provides a method {@link #toString() }
-     * @param indentation An intendation by four spaces.
      * @return New instance of the XmlPrinter
      */
-    public static XmlPrinter forXml(boolean indentation) {
-        return new XmlPrinter(new StringBuilder(512), indentation ? DEFAULT_INTENDATION : null, XML_HEADER);
+    public static XmlPrinter forNiceXml() {
+        DefaultXmlConfig config = XmlConfig.ofDefault();
+        config.setNiceFormat(true);
+        return forXml(null, config);
     }
+
+    /** A basic XmlPrinter factory method.
+     * The result provides a method {@link #toString() }
+     * @return New instance of the XmlPrinter
+     */
+    public static XmlPrinter forXml(
+            @Nullable final Appendable out,
+            @Nonnull final XmlConfig config
+    ) {
+        return new XmlPrinter(out != null ? out : new StringBuilder(512),
+                config.getIndentation(),
+                config.getDoctype());
+    }
+
+    // --- HTML ---
 
     /** Crete a new instance including a DOCTYPE.
      * The result provides a method {@link #toString() }
      */
     public static XmlPrinter forHtml() {
-        return new XmlPrinter(new StringBuilder(512), null, HTML_DOCTYPE);
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.getDoctype();
+        return forXml(null, config);
     }
 
     /** Crete a new instance including a DOCTYPE */
     public static XmlPrinter forHtml(final Appendable out) {
-        return new XmlPrinter(out, null, HTML_DOCTYPE);
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        return forXml(out, config);
     }
 
     /** Crete a new instance including a DOCTYPE */
     public static XmlPrinter forNiceHtml(final Appendable out) {
-        return new XmlPrinter(out, DEFAULT_INTENDATION, HTML_DOCTYPE);
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setNiceFormat(true);
+        return forHtml(out, config);
     }
 
     /** Create XmlPrinter for UTF-8 */
     public static XmlPrinter forHtml(@Nonnull final Object httpServletResponse) throws IOException {
-        return forHtml(httpServletResponse, UTF_8, null, false);
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        return forHtml(httpServletResponse, config);
     }
 
     /** Create XmlPrinter for UTF-8 */
     public static XmlPrinter forNiceHtml(@Nonnull final Object httpServletResponse) throws IOException {
-        return forHtml(httpServletResponse, UTF_8, DEFAULT_INTENDATION, false);
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setNiceFormat(true);
+        return XmlPrinter.forHtml(null, config);
     }
 
     /** Create XmlPrinter for UTF-8 */
-    public static XmlPrinter forHtml(@Nonnull final Object httpServletResponse, @Nonnull final Charset charset, final String indentationSpace, final boolean noCache) throws IOException {
+    public static <T> XmlPrinter forHtml(
+            @Nullable final Appendable out,
+            @Nonnull final HtmlConfig config
+    ) {
+            return new XmlPrinter(out != null ? out : new StringBuilder(512),
+                    config.getIndentation(),
+                    config.getDoctype());
+    }
+
+    /** Create XmlPrinter for UTF-8 */
+    public static XmlPrinter forHtml(
+            @Nonnull final Object httpServletResponse,
+            @Nonnull final Charset charset,
+            @Nonnull final String indentationSpace,
+            final boolean noCache
+    ) throws IOException {
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setCharset(charset);
+        config.setIndentationSpace(indentationSpace);
+        config.setCacheAllowed(!noCache);
+        return forHtml(httpServletResponse, config);
+    }
+
+    /** Create XmlPrinter for UTF-8.
+     * The basic HTML factory.
+     */
+    public static XmlPrinter forHtml(
+            @Nonnull final Object httpServletResponse,
+            @Nonnull final HtmlConfig config
+    ) throws IOException {
         try {
-            final Writer writer = createWriter(httpServletResponse, charset, noCache);
-            return new XmlPrinter(writer, indentationSpace, HtmlElement.HTML_DOCTYPE);
+            final Writer writer = createWriter(
+                    httpServletResponse,
+                    config.getCharset(),
+                    config.isCacheAllowed());
+            return new XmlPrinter(writer,
+                    config.getIndentation(),
+                    config.getDoctype());
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
         }

@@ -22,13 +22,20 @@ import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 
 /**
  * A generic writer
  * @author Pavel Ponec
  */
-public class CommonXmlWriter {
+public abstract class CommonXmlWriter {
+
+    /** Default XML declaration */
+    public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+
+    /** Default DOCTYPE of HTML-5 */
+    public static final String HTML_DOCTYPE = "<!DOCTYPE html>";
 
     /** A special XML character */
     public static final char XML_GT = '>';
@@ -72,7 +79,7 @@ public class CommonXmlWriter {
      * @param indentationSpace String for a one level indentation.
      */
     public CommonXmlWriter(@Nonnull final Appendable out, @Nullable final String indentationSpace) {
-        this.out = out;
+        this.out = Assert.notNull(out, "out");
         this.indentationSpace = indentationSpace;
         this.indentationEnabled = Check.hasLength(indentationSpace);
     }
@@ -158,8 +165,11 @@ public class CommonXmlWriter {
     // ---- STATIC METHOD(s) ---
 
     /** Assign a no-cache and an Edge compatibility mode and returns a writer from HttpServletResponse */
-    public static Writer createWriter(@Nonnull final Object httpServletResponse, @Nonnull final Charset charset, final boolean noCache)
-            throws ReflectiveOperationException {
+    public static Writer createWriter(
+            @Nonnull final Object httpServletResponse,
+            @Nonnull final Charset charset,
+            final boolean noCache
+    ) throws ReflectiveOperationException {
         final Method setEncoding = httpServletResponse.getClass().getMethod("setCharacterEncoding", String.class);
         final Method setHeader = httpServletResponse.getClass().getMethod("setHeader", String.class, String.class);
         final Method getWriter = httpServletResponse.getClass().getMethod("getWriter");
