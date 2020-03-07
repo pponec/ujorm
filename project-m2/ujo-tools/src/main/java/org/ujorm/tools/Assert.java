@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2017 Pavel Ponec, https://github.com/pponec
+ * Copyright 2017-2020 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -199,7 +199,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
     @Nonnull
-    public static <M> Object[] hasLength(@Nullable final Object[] array, @Nullable final M... message)
+    public static <V, M> V[] hasLength(@Nullable final V[] array, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(array)) {
             throw new IllegalArgumentException(format(message));
@@ -211,7 +211,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
     @Nonnull
-    public static <V,M> Collection<V> hasLength(@Nullable final Collection<V> value, @Nullable final M... message)
+    public static <V, M> Collection<V> hasLength(@Nullable final Collection<V> value, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(value)) {
             throw new IllegalArgumentException(format(message));
@@ -223,7 +223,7 @@ public abstract class Assert {
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
     @Nonnull
-    public static <V,K,M>  Map<K,V> hasLength(@Nullable final Map<K,V> value, @Nullable final M... message)
+    public static <V, K, M>  Map<K, V> hasLength(@Nullable final Map<K, V> value, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(value)) {
             throw new IllegalArgumentException(format(message));
@@ -325,7 +325,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static <M> void isEmpty(@Nullable final Object[] values, @Nullable final M... message)
+    public static <V, M> void isEmpty(@Nullable final V[] values, @Nullable final M... message)
             throws IllegalArgumentException {
         if (Check.hasLength(values)) {
             throw new IllegalArgumentException(format(message));
