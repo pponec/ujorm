@@ -2,8 +2,14 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.95-SNAPSHOT (yyyy-mm-dd)
+release 2.1-SNAPSHOT (yyyy-mm-dd)
 + ...
+
+release 2.00 (2020-03-08)
++ TOOLS: Assert API is exended
++ TOOLS: An extended MultiJob class is ready for mulithreading tasks
++ TOOLS: New configuration interface XmlConfig is avalilable
++ TOOLS: New AsyncStreamBuilder class is avalilable for a common use
 
 release 1.94 (2019-12-05)
 + TOOLS: A new MultiJob class is ready for mulithreading tasks
