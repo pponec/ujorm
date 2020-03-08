@@ -17,7 +17,7 @@
 
 package org.ujorm.tools.thread;
 
-import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -43,19 +43,39 @@ public class MultiJob<P> extends Jobs<P> {
     protected final Executor threadPool;
 
     protected MultiJob(
-            @Nonnull final Collection<P> params,
+            @Nonnull final Stream<P> params,
             @Nonnull final JobContext jobContext
     ) {
         super(params, jobContext.getTimeout());
         this.threadPool = Assert.notNull(jobContext.getThreadPool(), REQUIRED_INPUT_TEMPLATE_MSG, "threadPool");
     }
 
+    /** Get of single values where all nulls are excluded
+     *
+     * @param job Job with a simple value result
+     * @return The result stream
+     */
     @Override
-    protected <R> Stream<R> createStream(final Function<P, R> job) {
-        return getParallel()
-                .map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
-                .collect(Collectors.toList()).stream() // For parallel processing!
-                .map(createGrabber()); // A solution of: map(CompletableFuture::join)
+    public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
+            throws JobException {
+        return getParallel().map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
+                .collect(Collectors.toList()).stream() // join all threads
+                .map(createGrabber())
+                .filter(Objects::nonNull);
+    }
+
+    /** Get result of a Streams
+     *
+     * @param job Job with a stream result
+     * @return The result stream
+     * */
+    @Override
+    public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
+            throws JobException {
+        return getParallel().map(p -> CompletableFuture.supplyAsync(() -> job.apply(p), threadPool))
+                .collect(Collectors.toList()).stream() // Join all threads
+                .map(createGrabber())
+                .flatMap(Function.identity()); // Join all streams
     }
 
     protected <R> Function<CompletableFuture<R>, R> createGrabber() {
@@ -63,7 +83,7 @@ public class MultiJob<P> extends Jobs<P> {
             try {
                 return t.get(timeout.toMillis(), MILLISECONDS);
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                throw JobException.of(e);
+                throw new JobException(e);
             }
         };
     }

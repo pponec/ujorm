@@ -26,8 +26,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.ujorm.tools.thread.Jobs.JobException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -35,7 +35,6 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Pavel Ponec
  */
-@Ignore // TODO
 public class ParallelJobTest {
 
     private final Logger logger = Logger.getLogger(getClass().getName());

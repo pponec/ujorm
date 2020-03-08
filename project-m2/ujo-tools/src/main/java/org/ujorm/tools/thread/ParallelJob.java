@@ -17,12 +17,13 @@
 
 package org.ujorm.tools.thread;
 
-import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
@@ -38,28 +39,58 @@ import org.ujorm.tools.Assert;
  * @since 1.95
  * @author Pavel Ponec
  */
-public class ParallelJob<P>extends Jobs<P> {
+public class ParallelJob<P> extends Jobs<P> {
+
+    /** Template message for an invalid input */
+    protected static final String REQUIRED_INPUT_TEMPLATE_MSG = "The {} is required";
 
     /** Thread pool */
     @Nonnull
     protected final ForkJoinPool threadPool;
 
     protected ParallelJob(
-            @Nonnull final Collection<P> params,
+            @Nonnull final Stream<P> params,
             @Nonnull final JobContext jobContext
     ) {
         super(params, jobContext.getTimeout());
         this.threadPool = Assert.notNull(jobContext.getThreadPool(), REQUIRED_INPUT_TEMPLATE_MSG, "threadPool");
     }
 
-    /** Create new stream for the required job */
+    /** Get of single values where all nulls are excluded
+
+     * @param job Job with a simple value result
+     * @return The result stream
+     */
     @Override
-    protected <R> Stream<R> createStream(final Function<P, R> job) {
-        try {
-            return threadPool.submit(() -> getParallel().map(job))
-                    .get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+    public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job)
+            throws JobException {
+
+        try  {
+            return threadPool.submit(() -> getParallel()
+                    .map(job)
+                    .collect(Collectors.toList()).stream()
+            ).get(timeout.toMillis(), TimeUnit.MILLISECONDS)
+                    .filter(Objects::nonNull);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw JobException.of(e);
+            throw new JobException(e);
+        }
+    }
+
+    /** Get result of a Streams
+     * @param job Job with a stream result
+     * @return The result stream
+     * */
+    @Override
+    public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job)
+            throws JobException {
+        try {
+            return threadPool.submit(() -> getParallel()
+                    .map(job)
+                    .collect(Collectors.toList()).stream() // Join all threads
+                    .flatMap(Function.identity()) // Join all streams
+            ).get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            throw new JobException(e);
         }
     }
 }

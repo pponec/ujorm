@@ -18,8 +18,9 @@
 package org.ujorm.tools.thread;
 
 import java.time.Duration;
-import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,22 +39,26 @@ import org.ujorm.tools.Assert;
  * For more samples see a {@code MultiJobTest} class.
  *
  * @author Pavel Ponec
+ *
+ * @see https://dzone.com/articles/think-twice-using-java-8
+ * @see https://www.baeldung.com/java-completablefuture
+ * @since 1.94
  */
-public abstract class Jobs<P> {
+public class Jobs<P> {
 
     /** Template message for an invalid input */
     protected static final String REQUIRED_INPUT_TEMPLATE_MSG = "The {} is required";
 
     /** Job arguments */
     @Nonnull
-    protected final Collection<P> params;
+    private final Stream<P> params;
 
     /** A timeout of a job where a default duration is the one hour */
     @Nonnull
     protected Duration timeout;
 
     protected Jobs(
-            @Nonnull final Collection<P> params,
+            @Nonnull final Stream<P> params,
             @Nonnull final Duration timeout
     ) {
         Assert.notNull(params, REQUIRED_INPUT_TEMPLATE_MSG, "params");
@@ -66,7 +71,10 @@ public abstract class Jobs<P> {
     /** Get a parameter Stream like a parallel type */
     @Nonnull
     protected final Stream<P> getParallel() {
-        return params.parallelStream();
+        final Stream<P> result = params.parallel();
+        return result.isParallel()
+                ? result
+                : params.collect(Collectors.toList()).parallelStream();
     }
 
     /**
@@ -80,71 +88,61 @@ public abstract class Jobs<P> {
     }
 
     /** Get of single values where all nulls are excluded
-     *
      * @param job Job with a simple value result
      * @return The result stream
      */
-    public <R> Stream<R> run(@Nonnull final JobFunction<P, R> job)
-            throws JobException {
-
-        final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
-        try {
-            createStream(innerJob(job, result))
-                    .forEach(t -> result.add(t));
-        } catch (Exception e) {
-            result.interrupt(e);
-        }
-        return result.stream();
+    public <R> Stream<R> run(@Nonnull final UserFunction<P, R> job) {
+        return params.map(job).filter(Objects::nonNull);
     }
 
     /** Get result of a Streams
-     *
      * @param job Job with a stream result
      * @return The result stream
+     * */
+    public <R> Stream<R> runOfStream(@Nonnull final UserFunction<P, Stream<R>> job) {
+         return params.map(job).flatMap(Function.identity());
+    }
+
+    /** Get a sum of job results type of {@code long}
+     *
+     * @param job Job with a simple value result
+     * @return The sum of job results
      */
-    public <R> Stream<R> runOfStream(@Nonnull final JobFunction<P, Stream<R>> job)
+    public <R> long runOfSum(@Nonnull final UserFunction<P, Integer> job)
             throws JobException {
-        final AsyncStreamBuilder<R> result = new AsyncStreamBuilder<>(params.size(), timeout);
-        try {
-            createStream(innerJob(job, result))
-                    .flatMap(Function.identity())
-                    .forEach(t -> result.add(t));
-        } catch (Exception e) {
-            result.interrupt(e);
-        }
-        return result.stream();
+        return run(job)
+                .mapToLong(n -> n)
+                .sum();
     }
-
-    /** An envelope of working job */
-    protected <P2, R2> Function<P2, R2> innerJob(
-            @Nonnull final JobFunction<P2, R2> job,
-            @Nullable final AsyncStreamBuilder result
-    ) {
-        return (final P2 p) -> {
-            try {
-                return job.run(p);
-            } catch (Exception e) {
-//                if (result != null) {
-//                    result.interrupt(e.getCause());
-//                }
-                throw JobException.of(e);
-            }
-        };
-    }
-
-    /** Create a stream with a job processing */
-    protected abstract <R> Stream<R> createStream(
-            @Nonnull final Function<P, R> job);
 
     // --- Class or Interfaces ---
 
-    public interface JobFunction<T, R> extends Function<T, R> {
+    /** An envelope for checked exceptions */
+    public static final class JobException extends IllegalStateException {
 
-        default R apply(final T t) {
+        public JobException(@Nonnull final Throwable cause) {
+            super(Assert.notNull(cause, REQUIRED_INPUT_TEMPLATE_MSG, "cause"));
+        }
+
+        @Nonnull @Override
+        public Throwable getCause() {
+            return super.getCause(); //To change body of generated methods, choose Tools | Templates.
+        }
+    }
+
+    public interface UserFunction<T, R> extends Function<T, R> {
+
+        @Nullable
+        @Override
+        default public R apply(final T t) {
             try {
                 return run(t);
             } catch (Exception e) {
-                throw JobException.of(e);
+                if (e instanceof RuntimeException) {
+                    throw (RuntimeException) e;
+                } else {
+                    throw new JobException(e);
+                }
             }
         }
 
