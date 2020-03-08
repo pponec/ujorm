@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools.xml.config;
+package org.ujorm.tools.xml.config.impl;
 
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
@@ -23,6 +23,7 @@ import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.AbstractWriter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.xml.config.XmlConfig;
 
 /**
  * Configuraion of HtmlPage

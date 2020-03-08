@@ -24,12 +24,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.AbstractWriter;
-import org.ujorm.tools.xml.config.DefaultHtmlConfig;
+import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.XmlConfig;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ujorm.tools.xml.AbstractWriter.CHAR_NEW_LINE;
-import static org.ujorm.tools.xml.config.DefaultXmlConfig.REQUIRED_MSG;
+import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /**
  * XML element model to rendering a HTML file

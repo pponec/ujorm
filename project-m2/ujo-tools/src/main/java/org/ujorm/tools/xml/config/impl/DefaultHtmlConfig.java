@@ -14,13 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools.xml.config;
+package org.ujorm.tools.xml.config.impl;
 
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
  * Configuraion of HtmlPage

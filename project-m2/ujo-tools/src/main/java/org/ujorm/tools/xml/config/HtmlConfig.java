@@ -16,6 +16,7 @@
  */
 package org.ujorm.tools.xml.config;
 
+import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;

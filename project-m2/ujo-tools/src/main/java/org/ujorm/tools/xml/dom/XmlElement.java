@@ -34,7 +34,7 @@ import org.ujorm.tools.xml.AbstractElement;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.dom.XmlElement.RawEnvelope;
 import static org.ujorm.tools.xml.AbstractWriter.*;
-import static org.ujorm.tools.xml.config.DefaultXmlConfig.REQUIRED_MSG;
+import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /**
  * XML element model to rendering a XML file.

@@ -16,6 +16,7 @@
  */
 package org.ujorm.tools.xml.config;
 
+import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 

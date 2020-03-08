@@ -22,7 +22,7 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
-import static org.ujorm.tools.xml.config.DefaultXmlConfig.REQUIRED_MSG;
+import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /**
  * Abstrac element model.

@@ -19,7 +19,7 @@ package org.ujorm.tools.web;
 
 import java.util.LinkedHashMap;
 import org.junit.*;
-import org.ujorm.tools.xml.config.DefaultHtmlConfig;
+import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import static org.junit.Assert.assertEquals;
 
