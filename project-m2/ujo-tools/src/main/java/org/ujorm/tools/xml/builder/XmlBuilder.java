@@ -57,6 +57,9 @@ import org.ujorm.tools.xml.AbstractElement;
  */
 public class XmlBuilder extends AbstractElement<XmlBuilder> {
 
+    /** The HTML tag name */
+    protected static final String HTML = "html";
+
     /** Assertion message template */
     protected static final String REQUIRED_MSG = "The argument {} is required";
 
@@ -252,4 +255,18 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
     public String toString() {
         return writer.toString();
     }
+
+    // --- Factory method ---
+
+    /** Create builder for HTML */
+    @Nonnull
+    public static XmlBuilder forHtml(@Nonnull Appendable response) throws IOException {
+        return new XmlBuilder(HTML, XmlPrinter.forHtml(response));
+    }
+
+    @Nonnull
+    public static XmlBuilder forNiceHtml(@Nonnull Appendable response) throws IOException {
+        return new XmlBuilder(HTML, XmlPrinter.forNiceHtml(response));
+    }
+
 }
