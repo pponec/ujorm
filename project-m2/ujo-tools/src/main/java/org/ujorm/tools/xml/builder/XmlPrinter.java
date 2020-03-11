@@ -28,7 +28,6 @@ import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.XmlConfig;
-import org.ujorm.tools.xml.dom.HtmlElement;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -125,11 +124,6 @@ public class XmlPrinter extends AbstractWriter {
     }
 
     // ------- FACTORY METHODS -------
-
-    /** Create new {@code html} element */
-    public XmlBuilder createHtmlElement() throws IOException {
-        return createElement(HtmlElement.Html.HTML);
-    }
 
     /** Create any element */
     public XmlBuilder createElement(@Nonnull final String elementName) throws IOException {

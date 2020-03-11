@@ -35,7 +35,7 @@ public class ElementTest {
     public void testAddSelect_3args() {
         System.out.println("addSelect");
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        HtmlPage resInstance = createHtmlPage(config);
+        HtmlElement resInstance = createHtmlPage(config);
 
         String result = resInstance.toString();
         String expectedResult = "<!DOCTYPE html>\n"
@@ -56,15 +56,15 @@ public class ElementTest {
         // --- DOM model ---
 
         config.setDom(true);
-        HtmlPage domInstance = createHtmlPage(config);
+        HtmlElement domInstance = createHtmlPage(config);
         result = domInstance.toString();
         assertEquals(expectedResult, result);
     }
 
     /** Create HTML page */
-    private HtmlPage createHtmlPage(HtmlConfig config) throws IllegalStateException {
-        HtmlPage result = HtmlPage.of(config);
-        try (HtmlPage instance = result) {
+    private HtmlElement createHtmlPage(HtmlConfig config) throws IllegalStateException {
+        HtmlElement result = HtmlElement.of(config);
+        try (HtmlElement instance = result) {
             Element body = instance.getBody();
 
             Object value = 2;
@@ -85,8 +85,8 @@ public class ElementTest {
     public void testAddFieldset() {
         System.out.println("addFieldset");
         CharSequence[] cssClasses = null;
-        HtmlPage resInstance = HtmlPage.of(null);
-        try (HtmlPage instance = resInstance) {
+        HtmlElement resInstance = HtmlElement.of(null);
+        try (HtmlElement instance = resInstance) {
             Element body = instance.getBody();
             body.addFieldset("MyTitle", "myCssClass").addText("Lorem ipsum ...");
         }

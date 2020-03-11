@@ -93,7 +93,7 @@ public class XmlBuilderTest {
         System.out.println("testHtmlBuildingNice1");
 
         final XmlPrinter writer = XmlPrinter.forNiceHtml((Appendable) new StringBuilder());
-        try (XmlBuilder html = writer.createHtmlElement()) {
+        try (XmlBuilder html = writer.createElement("html")) {
             html.setAttrib("lang", "en");
             try(XmlBuilder head = html.addElement("head")) {
                head.addElement("meta").setAttrib("charset", StandardCharsets.UTF_8);
@@ -126,7 +126,7 @@ public class XmlBuilderTest {
         System.out.println("testHtmlBuildingNice2");
 
         final XmlPrinter writer = XmlPrinter.forNiceHtml((Appendable) new StringBuilder());
-        try (XmlBuilder html = writer.createHtmlElement()) {
+        try (XmlBuilder html = writer.createElement("html")) {
             html.setAttrib("lang", "en");
             XmlBuilder head = html.addElement("head");
             head.addElement("meta").setAttrib("charset", StandardCharsets.UTF_8);
@@ -160,7 +160,7 @@ public class XmlBuilderTest {
         System.out.println("HttpServletResponse");
 
         XmlPrinter writer = XmlPrinter.forHtml();
-        try (XmlBuilder html = writer.createHtmlElement()) {
+        try (XmlBuilder html = writer.createElement(Html.HTML)) {
              try (XmlBuilder head = html.addElement(Html.HEAD)) {
                    head.addElement(Html.META).setAttrib(Html.A_CHARSET, UTF_8);
                    head.addElement(Html.TITLE).addText("Test");

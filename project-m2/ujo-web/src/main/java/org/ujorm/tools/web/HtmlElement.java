@@ -26,14 +26,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
-import org.ujorm.tools.xml.dom.HtmlElement;
 import org.ujorm.tools.xml.dom.XmlElement;
 import org.ujorm.tools.xml.dom.XmlWriter;
 import static org.ujorm.tools.xml.AbstractWriter.CHAR_NEW_LINE;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /** The root of HTML elements */
-public class HtmlPage extends Element {
+public class HtmlElement extends Element {
 
     /** Head element */
     @Nonnull
@@ -52,7 +51,7 @@ public class HtmlPage extends Element {
     private final Writer writer;
 
     /** Create new instance with empty html headers */
-    public HtmlPage(@Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
+    public HtmlElement(@Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
         super(new XmlElement(Html.HTML));
         this.config = config;
         this.writer = writer;
@@ -179,14 +178,14 @@ public class HtmlPage extends Element {
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions */
     @Nonnull
-    public static HtmlPage of(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
+    public static HtmlElement of(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
         return of(response, HtmlConfig.ofDefault());
     }
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions */
     @Nonnull
-    public static HtmlPage of(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
+    public static HtmlElement of(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
@@ -196,7 +195,7 @@ public class HtmlPage extends Element {
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions */
     @Nonnull
-    public static HtmlPage of(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
+    public static HtmlElement of(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
@@ -206,7 +205,7 @@ public class HtmlPage extends Element {
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions */
     @Nonnull
-    public static HtmlPage niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
+    public static HtmlElement niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat(true);
         config.setTitle(title);
@@ -217,7 +216,7 @@ public class HtmlPage extends Element {
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions */
     @Nonnull
-    public static HtmlPage niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
+    public static HtmlElement niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat(true);
         config.setTitle(title);
@@ -229,7 +228,7 @@ public class HtmlPage extends Element {
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions */
     @Nonnull
-    public static HtmlPage niceOf(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
+    public static HtmlElement niceOf(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat(true);
         config.setCssLinks(cssLinks);
@@ -243,12 +242,12 @@ public class HtmlPage extends Element {
      * @throws IllegalStateException IO exceptions
      */
     @Nonnull
-    public static HtmlPage of(@Nonnull final HttpServletResponse response, @Nonnull final HtmlConfig config) throws IllegalStateException {
+    public static HtmlElement of(@Nonnull final HttpServletResponse response, @Nonnull final HtmlConfig config) throws IllegalStateException {
         response.setCharacterEncoding(config.getCharset().toString());
         try {
-            final HtmlPage result = new HtmlPage(config, response.getWriter());
+            final HtmlElement result = new HtmlElement(config, response.getWriter());
             config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
-            result.getHead().addElement(Html.META).setAttrib(HtmlElement.Html.A_CHARSET, config.getCharset());
+            result.getHead().addElement(Html.META).setAttrib(A_CHARSET, config.getCharset());
             result.getHead().addElement(Html.TITLE).addText(config.getTitle());
             result.addCssLinks(config.getCssLinks());
 
@@ -264,13 +263,13 @@ public class HtmlPage extends Element {
      * @throws IllegalStateException IO exceptions
      */
     @Nonnull
-    public static HtmlPage of(@Nullable HtmlConfig config) throws IllegalStateException {
+    public static HtmlElement of(@Nullable HtmlConfig config) throws IllegalStateException {
         if (config == null) {
             config = new DefaultHtmlConfig();
         }
-        final HtmlPage result = new HtmlPage(config, new CharArrayWriter(256));
+        final HtmlElement result = new HtmlElement(config, new CharArrayWriter(256));
         config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
-        result.getHead().addElement(Html.META).setAttrib(HtmlElement.Html.A_CHARSET, config.getCharset());
+        result.getHead().addElement(Html.META).setAttrib(A_CHARSET, config.getCharset());
         result.getHead().addElement(Html.TITLE).addText(config.getTitle());
         result.addCssLinks(config.getCssLinks());
         return result;
