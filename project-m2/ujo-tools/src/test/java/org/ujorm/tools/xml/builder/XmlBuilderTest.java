@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.ujorm.tools.xml.Html;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.*;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * A test of the XmlNode class
@@ -182,6 +183,40 @@ public class XmlBuilderTest {
                 , "<h1>Hello word!</h1>"
                 , "<div>null</div></body></html>");
         assertEquals(expected, result);
+    }
+
+
+    /** Test rendering to the HttpServletResponse */
+    @Test
+    public void testHttpResponse() throws IOException {
+        System.out.println("HttpServletResponse");
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        try (XmlBuilder html = new XmlBuilder("html", XmlPrinter.forNiceHtml(response))) {
+            html.setAttrib("lang", "en");
+            try(XmlBuilder head = html.addElement("head")) {
+               head.addElement("meta").setAttrib("charset", StandardCharsets.UTF_8);
+               head.addElement("title").addText("Demo");
+               head.addElement("link").setAttrib("href", "css/basic.css").setAttrib("rel", "stylesheet");
+            }
+            try(XmlBuilder body = html.addElement("body")) {
+               body.addElement("h1").addText("Hello, World! (extended)");
+            }
+        }
+
+        String expected = String.join("\n"
+                , "<!DOCTYPE html>"
+                , "<html lang=\"en\">"
+                , "    <head>"
+                , "        <meta charset=\"UTF-8\"/>"
+                , "        <title>Demo</title>"
+                , "        <link href=\"css/basic.css\" rel=\"stylesheet\"/>"
+                , "    </head>"
+                , "    <body>"
+                , "        <h1>Hello, World! (extended)</h1>"
+                , "    </body>"
+                , "</html>");
+        assertEquals(expected, response.getContentAsString());
     }
 
 }

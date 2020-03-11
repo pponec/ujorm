@@ -196,7 +196,7 @@ public class XmlPrinter extends AbstractWriter {
     public static XmlPrinter forNiceHtml(@Nonnull final Object httpServletResponse) throws IOException {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat(true);
-        return XmlPrinter.forHtml(null, config);
+        return forHtml(httpServletResponse, config);
     }
 
     /** Create XmlPrinter for UTF-8 */
