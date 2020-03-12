@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Pavel Ponec
+ * Copyright 2018-2020 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.ujorm.tools.xml.builder;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 import org.ujorm.tools.xml.Html;
@@ -27,7 +28,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
  * A test of the XmlNode class
  * @author Pavel Ponec
  */
-public class XmlBuilderTest {
+public class XmlBuilderTest implements Html {
 
     @Test
     public void testXmlBuilding() throws IOException {
@@ -188,19 +189,53 @@ public class XmlBuilderTest {
 
     /** Test rendering to the HttpServletResponse */
     @Test
-    public void testHttpResponse() throws IOException {
-        System.out.println("HttpServletResponse");
+    public void testHtmlResponse() throws IOException {
+        System.out.println("HtmlResponse");
 
         MockHttpServletResponse response = new MockHttpServletResponse();
-        try (XmlBuilder html = new XmlBuilder("html", XmlPrinter.forNiceHtml(response))) {
+        try (XmlBuilder html = XmlBuilder.forNiceHtml(response.getWriter())) {
             html.setAttrib("lang", "en");
             try(XmlBuilder head = html.addElement("head")) {
-               head.addElement("meta").setAttrib("charset", StandardCharsets.UTF_8);
+               head.addElement("meta").setAttrib("charset", UTF_8);
                head.addElement("title").addText("Demo");
                head.addElement("link").setAttrib("href", "css/basic.css").setAttrib("rel", "stylesheet");
             }
             try(XmlBuilder body = html.addElement("body")) {
                body.addElement("h1").addText("Hello, World! (extended)");
+            }
+        }
+
+        String expected = String.join("\n"
+                , "<!DOCTYPE html>"
+                , "<html lang=\"en\">"
+                , "    <head>"
+                , "        <meta charset=\"UTF-8\"/>"
+                , "        <title>Demo</title>"
+                , "        <link href=\"css/basic.css\" rel=\"stylesheet\"/>"
+                , "    </head>"
+                , "    <body>"
+                , "        <h1>Hello, World! (extended)</h1>"
+                , "    </body>"
+                , "</html>");
+        assertEquals(expected, response.getContentAsString());
+    }
+
+    /** Test rendering to the HttpServletResponse */
+    @Test
+    public void testHtmlResponse4const() throws IOException {
+        System.out.println("HtmlResponse4const");
+        Charset lang = StandardCharsets.UTF_8;
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        try (XmlBuilder html = XmlBuilder.forNiceHtml(response.getWriter())) {
+            html.setAttrib(A_LANG, "en");
+            try(XmlBuilder head = html.addElement(HEAD)) {
+               head.addElement(META).setAttrib(A_CHARSET, lang);
+               head.addElement(TITLE).addText("Demo");
+               head.addElement(LINK).setAttrib(A_HREF, "css/basic.css").setAttrib(A_REL, V_STYLESHEET);
+            }
+            try(XmlBuilder body = html.addElement(BODY)) {
+               body.addElement(H1).addText("Hello, World! (extended)");
             }
         }
 
