@@ -182,7 +182,7 @@ public class XmlBuilderTest implements Html {
                 , "<title>Test</title></head>"
                 , "<body>"
                 , "<h1>Hello word!</h1>"
-                , "<div>null</div></body></html>");
+                , "<div></div></body></html>");
         assertEquals(expected, result);
     }
 
