@@ -62,6 +62,10 @@ public class DefaultXmlConfig implements XmlConfig {
     @Nonnull
     private String defaultValue = "";
 
+    /** A new line sequence */
+    @Nonnull
+    private String newLine = "\n";
+
     /** Is HTTP cache allowed */
     private boolean cacheAllowed;
 
@@ -179,4 +183,14 @@ public class DefaultXmlConfig implements XmlConfig {
         this.cacheAllowed = cacheAllowed;
     }
 
+    /** A new line sequence */
+    @Override
+    public String getNewLine() {
+        return newLine;
+    }
+
+    /** A new line sequence */
+    public void setNewLine(@Nonnull final String newLine) {
+        this.newLine = Assert.notNull(newLine, "newLine");
+    }
 }

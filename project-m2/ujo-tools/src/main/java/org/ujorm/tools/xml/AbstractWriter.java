@@ -50,8 +50,6 @@ public abstract class AbstractWriter {
     public static final char XML_2QUOT = '"';
     /** A special XML character */
     public static final char CHAR_SPACE = ' ';
-    /** A new line character */
-    public static final char CHAR_NEW_LINE = '\n';
     /** A forward slash character */
     public static final char FORWARD_SLASH = '/';
     /** A CDATA beg markup sequence */
@@ -155,7 +153,7 @@ public abstract class AbstractWriter {
 
     /** Write a new line with an offset by the current level */
     public void writeNewLine(final int level) throws IOException {
-        out.append(CHAR_NEW_LINE);
+        out.append(config.getNewLine());
         if (indentationEnabled) {
             for (int i = level; i > 0; i--) {
                 out.append(config.getIndentation());

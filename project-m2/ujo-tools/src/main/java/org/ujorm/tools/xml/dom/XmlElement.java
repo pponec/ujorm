@@ -34,6 +34,7 @@ import org.ujorm.tools.xml.AbstractElement;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.dom.XmlElement.RawEnvelope;
 import static org.ujorm.tools.xml.AbstractWriter.*;
+import org.ujorm.tools.xml.config.XmlConfig;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /**
@@ -252,10 +253,11 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
     @Nonnull
     public String toString() {
         try {
-            return toWriter(0, new XmlWriter(new CharArrayWriter(512)
+            final XmlConfig config = XmlConfig.ofDefault();
+            final XmlWriter writer = new XmlWriter(new CharArrayWriter(512)
                     .append(AbstractWriter.XML_HEADER)
-                    .append(CHAR_NEW_LINE))
-            ).toString();
+                    .append(config.getNewLine()));
+            return toWriter(0, writer).toString();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

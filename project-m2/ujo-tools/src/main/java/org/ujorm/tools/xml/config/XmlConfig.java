@@ -53,6 +53,10 @@ public interface XmlConfig {
     @Nonnull
     public String getDefaultValue();
 
+    /** A new line sequence */
+    @Nonnull
+    public String getNewLine();
+
     /**
      * Use a DOM model
      * @return the dom
