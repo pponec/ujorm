@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.xml.config.XmlConfig;
 
 /**
  * A generic writer
@@ -66,9 +67,9 @@ public abstract class AbstractWriter {
     @Nonnull
     protected final Appendable out;
 
-    /** An intendation space */
+    /** XML configuration */
     @Nonnull
-    protected final String indentationSpace;
+    protected final XmlConfig config;
 
     /** An indentation request */
     protected final boolean indentationEnabled;
@@ -76,12 +77,12 @@ public abstract class AbstractWriter {
     /**
      * A writer constructor
      * @param out A writer
-     * @param indentationSpace String for a one level indentation.
+     * @param config XML configuration
      */
-    public AbstractWriter(@Nonnull final Appendable out, @Nullable final String indentationSpace) {
+    public AbstractWriter(@Nonnull final Appendable out, @Nonnull final XmlConfig config) {
         this.out = Assert.notNull(out, "out");
-        this.indentationSpace = indentationSpace;
-        this.indentationEnabled = Check.hasLength(indentationSpace);
+        this.config = Assert.notNull(config, "config");
+        this.indentationEnabled = Check.hasLength(config.getIndentation());
     }
 
     /** Write escaped value to the output
@@ -157,7 +158,7 @@ public abstract class AbstractWriter {
         out.append(CHAR_NEW_LINE);
         if (indentationEnabled) {
             for (int i = level; i > 0; i--) {
-                out.append(indentationSpace);
+                out.append(config.getIndentation());
             }
         }
     }

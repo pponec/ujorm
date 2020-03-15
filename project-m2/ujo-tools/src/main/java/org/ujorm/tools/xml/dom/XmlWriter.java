@@ -25,6 +25,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.config.XmlConfig;
+import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -41,7 +43,7 @@ public class XmlWriter extends AbstractWriter {
 
     /** Writer constructor with a zero offset */
     public XmlWriter(@Nonnull final Appendable out) {
-        this(out, "");
+        super(out, XmlConfig.ofDefault());
     }
 
     /**
@@ -49,8 +51,15 @@ public class XmlWriter extends AbstractWriter {
      * @param out A writer
      * @param indentationSpace String for a one level offset.
      */
-    public XmlWriter(@Nonnull final Appendable out, @Nullable final String indentationSpace) {
-        super(out, indentationSpace);
+    public XmlWriter(@Nonnull final Appendable out, @Nonnull final String indentationSpace) {
+        super(out, createConfig(indentationSpace));
+    }
+
+    /** Create a config */
+    private static XmlConfig createConfig(@Nonnull final String indentationSpace) {
+        final DefaultXmlConfig config = XmlConfig.ofDefault();
+        config.setIndentationSpace(indentationSpace);
+        return config;
     }
 
     /** Render the XML code without header */

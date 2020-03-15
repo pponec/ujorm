@@ -44,20 +44,18 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Writer constructor with a zero offset */
     public XmlPrinter(@Nonnull final Appendable out) {
-        this(out, "");
+        this(out, XmlConfig.ofDefault());
     }
 
     /**
      * A writer constructor
      * @param out A writer
-     * @param indentationSpace String for a one level offset.
+     * @param config A configuration object
      */
-    public <T> XmlPrinter(@Nonnull final Appendable out, @Nullable final String indentationSpace, @Nonnull final T... prefixes) {
-        super(out, indentationSpace);
+    public <T> XmlPrinter(@Nonnull final Appendable out, @Nonnull final XmlConfig config) {
+        super(out, config);
         try {
-            for (Object prefix : prefixes) {
-                out.append(String.valueOf(prefix));
-            }
+            out.append(config.getDoctype());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -157,9 +155,7 @@ public class XmlPrinter extends AbstractWriter {
             @Nullable final Appendable out,
             @Nonnull final XmlConfig config
     ) {
-        return new XmlPrinter(out != null ? out : new StringBuilder(512),
-                config.getIndentation(),
-                config.getDoctype());
+        return new XmlPrinter(out != null ? out : new StringBuilder(512), config);
     }
 
     // --- HTML ---
@@ -168,9 +164,7 @@ public class XmlPrinter extends AbstractWriter {
      * The result provides a method {@link #toString() }
      */
     public static XmlPrinter forHtml() {
-        DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.getDoctype();
-        return forXml(null, config);
+        return forXml(null, HtmlConfig.ofDefault());
     }
 
     /** Crete a new instance including a DOCTYPE */
@@ -204,9 +198,7 @@ public class XmlPrinter extends AbstractWriter {
             @Nullable final Appendable out,
             @Nonnull final HtmlConfig config
     ) {
-            return new XmlPrinter(out != null ? out : new StringBuilder(512),
-                    config.getIndentation(),
-                    config.getDoctype());
+        return new XmlPrinter(out != null ? out : new StringBuilder(512), config);
     }
 
     /** Create XmlPrinter for UTF-8 */
@@ -235,9 +227,7 @@ public class XmlPrinter extends AbstractWriter {
                     httpServletResponse,
                     config.getCharset(),
                     config.isCacheAllowed());
-            return new XmlPrinter(writer,
-                    config.getIndentation(),
-                    config.getDoctype());
+            return new XmlPrinter(writer, config);
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
         }
