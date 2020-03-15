@@ -48,7 +48,7 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** Charset */
     @Nonnull
-    private Charset charset =  UTF_8;
+    private Charset charset = UTF_8;
 
     /** Level of the root element, the value may be negative number */
     private int firstLevel = DEFAULT_FIRST_LEVEL;
@@ -57,6 +57,10 @@ public class DefaultXmlConfig implements XmlConfig {
      * where default value is an empty `String` */
     @Nonnull
     private String indentation = "";
+
+    /** A replacement text instead of the {@code null} value */
+    @Nonnull
+    private String defaultValue = "";
 
     /** Is HTTP cache allowed */
     private boolean cacheAllowed;
@@ -136,6 +140,17 @@ public class DefaultXmlConfig implements XmlConfig {
      * where default value is an empty `String` */
     public void setIndentationSpace(@Nonnull String indentation) {
         this.indentation = Assert.notNull(indentation, REQUIRED_MSG, "indentation");
+    }
+
+    /** A replacement text instead of the {@code null} value */
+    @Override
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    /** A replacement text instead of the {@code null} value */
+    public void setDefaultValue(@Nonnull String defaultValue) {
+        this.defaultValue = Assert.notNull(defaultValue, "defaultValue");
     }
 
     /**

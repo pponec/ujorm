@@ -41,9 +41,6 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     @Nonnull
     private CharSequence language = "en";
 
-    @Nonnull
-    private Map<String, Map<String, Object>> headers;
-
     @Override
     @Nonnull
     public String getDoctype() {
@@ -62,13 +59,9 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     @Override
+    @Nonnull
     public Optional<CharSequence> getLanguage() {
         return Optional.ofNullable(language);
-    }
-
-    @Override
-    public Map<String, Map<String, Object>> getHeaders() {
-        return headers;
     }
 
     /** Title is a required element by HTML 5 */
@@ -82,10 +75,6 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     public void setLanguage(@Nonnull CharSequence language) {
         this.language = language;
-    }
-
-    public void setHeaders(Map<String, Map<String, Object>> headers) {
-        this.headers = headers;
     }
 
 }

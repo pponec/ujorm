@@ -52,11 +52,11 @@ public class XmlPrinter extends AbstractWriter {
      * @param out A writer
      * @param indentationSpace String for a one level offset.
      */
-    public <T> XmlPrinter(@Nonnull final Appendable out, @Nullable final String indentationSpace, @Nonnull final T... prefix) {
+    public <T> XmlPrinter(@Nonnull final Appendable out, @Nullable final String indentationSpace, @Nonnull final T... prefixes) {
         super(out, indentationSpace);
         try {
-            for (Object text : prefix) {
-                out.append(String.valueOf(text));
+            for (Object prefix : prefixes) {
+                out.append(String.valueOf(prefix));
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);

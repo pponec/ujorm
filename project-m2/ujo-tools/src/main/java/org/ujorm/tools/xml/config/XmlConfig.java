@@ -49,6 +49,10 @@ public interface XmlConfig {
      */
     public String getIndentation();
 
+    /** A replacement text instead of the {@code null} value */
+    @Nonnull
+    public String getDefaultValue();
+
     /**
      * Use a DOM model
      * @return the dom

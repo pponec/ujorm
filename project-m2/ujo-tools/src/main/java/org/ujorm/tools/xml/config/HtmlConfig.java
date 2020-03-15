@@ -17,7 +17,6 @@
 package org.ujorm.tools.xml.config;
 
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
-import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
@@ -31,16 +30,16 @@ public interface HtmlConfig extends XmlConfig {
     @Nonnull
     public CharSequence getTitle();
 
+    @Nonnull
     public CharSequence[] getCssLinks();
 
+    @Nonnull
     public Optional<CharSequence> getLanguage();
-
-    public Map<String, Map<String, Object>> getHeaders();
 
     /**
      * Create a new default config
-     * @return
      */
+    @Nonnull
     public static DefaultHtmlConfig ofDefault() {
         return new DefaultHtmlConfig();
     }
