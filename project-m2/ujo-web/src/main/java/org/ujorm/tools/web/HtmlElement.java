@@ -28,7 +28,6 @@ import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.dom.XmlElement;
 import org.ujorm.tools.xml.dom.XmlWriter;
-import static org.ujorm.tools.xml.AbstractWriter.CHAR_NEW_LINE;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /** The root of HTML elements */
@@ -152,7 +151,7 @@ public class HtmlElement extends Element {
             try {
                 final XmlWriter xmlWriter = new XmlWriter(writer
                         .append(config.getDoctype())
-                        .append(CHAR_NEW_LINE)
+                        .append(config.getNewLine())
                         , config.getIndentation());
                 final XmlElement xmlElement = (XmlElement) origElement;
                 xmlElement.toWriter(config.getFirstLevel() + 1, xmlWriter);
