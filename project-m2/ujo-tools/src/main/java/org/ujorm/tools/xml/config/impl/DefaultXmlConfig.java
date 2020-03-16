@@ -34,10 +34,13 @@ public class DefaultXmlConfig implements XmlConfig {
     /** Default intendation have got 4 spaces per level */
     public static final String DEFAULT_INTENDATION = "    ";
 
-    /** Assertion message template */
-    public static final String REQUIRED_MSG = "The argument {} is required";
+    /** Default string or the new line */
+    public static final String DEFAULT_NEW_LINE = "\n";
 
     public static final int DEFAULT_FIRST_LEVEL = Integer.MIN_VALUE + 1;
+
+    /** Assertion message template */
+    public static final String REQUIRED_MSG = "The argument {} is required";
 
     /** Use a DOM model */
     private boolean dom = false;
@@ -64,7 +67,7 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** A new line sequence */
     @Nonnull
-    private String newLine = "\n";
+    private String newLine = DEFAULT_NEW_LINE;
 
     /** Is HTTP cache allowed */
     private boolean cacheAllowed;
@@ -110,8 +113,13 @@ public class DefaultXmlConfig implements XmlConfig {
      */
     public final void setNiceFormat(boolean niceFormat) {
         this.firstLevel = niceFormat ? 0 : DEFAULT_FIRST_LEVEL;
-        if (niceFormat && Check.isEmpty(indentation)) {
-            indentation = DEFAULT_INTENDATION;
+        if (niceFormat) {
+            if (Check.isEmpty(indentation)) {
+                indentation = DEFAULT_INTENDATION;
+            }
+            if (Check.isEmpty(newLine)) {
+                newLine = DEFAULT_NEW_LINE;
+            }
         }
     }
 
