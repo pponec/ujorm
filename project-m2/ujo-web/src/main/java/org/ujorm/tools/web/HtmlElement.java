@@ -206,7 +206,7 @@ public class HtmlElement extends Element {
     @Nonnull
     public static HtmlElement niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setNiceFormat(true);
+        config.setNiceFormat();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
         return of(response, config);
@@ -217,7 +217,7 @@ public class HtmlElement extends Element {
     @Nonnull
     public static HtmlElement niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setNiceFormat(true);
+        config.setNiceFormat();
         config.setTitle(title);
         config.setCharset(charset);
         config.setCssLinks(cssLinks);
@@ -229,7 +229,7 @@ public class HtmlElement extends Element {
     @Nonnull
     public static HtmlElement niceOf(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setNiceFormat(true);
+        config.setNiceFormat();
         config.setCssLinks(cssLinks);
         return of(response, config);
     }
