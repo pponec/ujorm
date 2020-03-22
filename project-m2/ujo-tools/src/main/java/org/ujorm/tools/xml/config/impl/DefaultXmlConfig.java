@@ -108,20 +108,27 @@ public class DefaultXmlConfig implements XmlConfig {
     }
 
     /**
-     * Nice format or the HTML result
-     * @param niceFormat the niceFormat to set
+     * Assign parameters for a nice format of the HTML result
      */
-    public final void setNiceFormat(boolean niceFormat) {
-        this.firstLevel = niceFormat ? 0 : DEFAULT_FIRST_LEVEL;
-        if (niceFormat) {
-            if (Check.isEmpty(indentation)) {
-                indentation = DEFAULT_INTENDATION;
-            }
-            if (Check.isEmpty(newLine)) {
-                newLine = DEFAULT_NEW_LINE;
-            }
+    public final void setNiceFormat() {
+        this.firstLevel = 0;
+        if (Check.isEmpty(indentation)) {
+            this.indentation = DEFAULT_INTENDATION;
+        }
+        if (Check.isEmpty(newLine)) {
+            this.newLine = DEFAULT_NEW_LINE;
         }
     }
+
+    /**
+     * Assign parameters for a compressed format of the HTML result
+     */
+    public final void setCompressedFormat() {
+        this.firstLevel = DEFAULT_FIRST_LEVEL;
+        this.indentation = "";
+        this.newLine = "";
+    }
+
 
     /**
      * Level of the root element, the value may be negative.

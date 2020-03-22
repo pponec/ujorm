@@ -143,7 +143,7 @@ public class XmlPrinter extends AbstractWriter {
      */
     public static XmlPrinter forNiceXml() {
         DefaultXmlConfig config = XmlConfig.ofDefault();
-        config.setNiceFormat(true);
+        config.setNiceFormat();
         return forXml(null, config);
     }
 
@@ -176,7 +176,7 @@ public class XmlPrinter extends AbstractWriter {
     /** Crete a new instance including a DOCTYPE */
     public static XmlPrinter forNiceHtml(final Appendable out) {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setNiceFormat(true);
+        config.setNiceFormat();
         return forHtml(out, config);
     }
 
@@ -189,7 +189,7 @@ public class XmlPrinter extends AbstractWriter {
     /** Create XmlPrinter for UTF-8 */
     public static XmlPrinter forNiceHtml(@Nonnull final Object httpServletResponse) throws IOException {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setNiceFormat(true);
+        config.setNiceFormat();
         return forHtml(httpServletResponse, config);
     }
 
