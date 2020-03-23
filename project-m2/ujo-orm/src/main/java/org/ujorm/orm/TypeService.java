@@ -181,7 +181,11 @@ public class TypeService implements ITypeService<Object,Object> {
             case BYTES_WRAP : return createBytesWrapper(rs.getBytes(c), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(c), mColumn);
             case UUID:
-            default         : return rs.getObject(c, mColumn.getType());
+            default         :
+                final Class cType = mColumn.isForeignKey()
+                        ? mColumn.getForeignColumns().get(0).getType()
+                        : mColumn.getType();
+                return rs.getObject(c, cType);
         }
         return rs.wasNull() ? null : r;
     }
@@ -238,7 +242,12 @@ public class TypeService implements ITypeService<Object,Object> {
             case BYTES_WRAP : return createBytesWrapper(rs.getBytes(c), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(c), mColumn);
             case UUID:
-            default         : return rs.getObject(c, mColumn.getType());
+            default:
+                final Class cType = mColumn.isForeignKey()
+                        ? mColumn.getForeignColumns().get(0).getType()
+                        : mColumn.getType();
+                return rs.getObject(c, cType);
+
         }
         return rs.wasNull() ? null : r;
     }
