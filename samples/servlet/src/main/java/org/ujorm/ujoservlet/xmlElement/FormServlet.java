@@ -28,8 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Html;
-import org.ujorm.tools.xml.dom.HtmlElement;
 import org.ujorm.tools.xml.dom.XmlElement;
+import org.ujorm.ujoservlet.HtmlElement;
 import org.ujorm.ujoservlet.tools.ApplService;
 
 /**
