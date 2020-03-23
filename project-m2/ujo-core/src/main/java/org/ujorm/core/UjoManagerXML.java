@@ -36,6 +36,8 @@ import org.ujorm.tools.xml.AbstractElement;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
+import org.ujorm.tools.xml.config.XmlConfig;
+import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -153,7 +155,9 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             writer.write(" -->");
         }
 
-        final XmlPrinter printer = new XmlPrinter(writer);
+        final DefaultXmlConfig xmlConfig = XmlConfig.ofDefault();
+        xmlConfig.setDoctype("");
+        final XmlPrinter printer = new XmlPrinter(writer, xmlConfig);
         try (XmlBuilder rootElement = printer.createElement(xmlHeader.getRootElement())) {
             printProperty(null, null, null, ujo, rootElement, false);
         }
