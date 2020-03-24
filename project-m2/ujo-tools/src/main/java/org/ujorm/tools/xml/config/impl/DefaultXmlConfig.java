@@ -20,10 +20,10 @@ import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.xml.AbstractWriter;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.config.XmlConfig;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Configuraion of HtmlPage
@@ -111,13 +111,17 @@ public class DefaultXmlConfig implements XmlConfig {
      * Assign parameters for a nice format of the HTML result
      */
     public final void setNiceFormat() {
+        setNiceFormat(DEFAULT_INTENDATION);
+    }
+
+    /**
+     * Assign parameters for a nice format of the HTML result
+     * @param indentation An empty String is replaced by a default intendation.
+     */
+    public final void setNiceFormat(@Nullable final String indentation) {
         this.firstLevel = 0;
-        if (Check.isEmpty(indentation)) {
-            this.indentation = DEFAULT_INTENDATION;
-        }
-        if (Check.isEmpty(newLine)) {
-            this.newLine = DEFAULT_NEW_LINE;
-        }
+        this.indentation = Check.hasLength(indentation) ? indentation : DEFAULT_INTENDATION;
+        this.newLine = DEFAULT_NEW_LINE;
     }
 
     /**

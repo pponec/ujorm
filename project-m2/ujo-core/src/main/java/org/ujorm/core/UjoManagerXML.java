@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -32,6 +33,7 @@ import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.UjoTextable;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractElement;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.builder.XmlBuilder;
@@ -143,20 +145,25 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
     /** Write keys to XML including a XML header. */
     @SuppressWarnings("deprecation")
-    public void saveXML(Writer writer, XmlHeader xmlHeader, UjoTextable ujo, Object context) throws IOException {
+    public void saveXML(
+            @Nonnull Writer writer,
+            @Nullable XmlHeader xmlHeader,
+            @Nullable UjoTextable ujo,
+            Object context
+    ) throws IOException {
         if (xmlHeader == null ) {
             xmlHeader = new XmlHeader();
         }
-        this.actionExport  = new UjoActionImpl(UjoAction.ACTION_XML_EXPORT , context);
-        writer.write(xmlHeader.getHeader());
-        if (xmlHeader.getComment() != null) {
-            writer.write("\n<!-- ");
-            writer.write(xmlHeader.getComment());
-            writer.write(" -->");
-        }
-
+        this.actionExport  = new UjoActionImpl(UjoAction.ACTION_XML_EXPORT, context);
         final DefaultXmlConfig xmlConfig = XmlConfig.ofDefault();
-        xmlConfig.setDoctype("");
+        final String doctype = Check.isEmpty(xmlHeader.getComment())
+                ? xmlHeader.getHeader()
+                : String.join("",
+                    xmlHeader.getHeader(),
+                    xmlConfig.getNewLine(),
+                    "<!-- ", xmlHeader.getComment(), " -->");
+        xmlConfig.setDoctype(doctype);
+        xmlConfig.setNiceFormat("  ");
         final XmlPrinter printer = new XmlPrinter(writer, xmlConfig);
         try (XmlBuilder rootElement = printer.createElement(xmlHeader.getRootElement())) {
             printProperty(null, null, null, ujo, rootElement, false);
