@@ -31,7 +31,7 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  * @since 1.86
  * @author Pavel Ponec
  */
-public abstract class AbstractElement<E extends AbstractElement> implements Closeable {
+public abstract class AbstractElement<E extends AbstractElement<?>> implements Closeable {
 
     /** Element name */
     @Nonnull
