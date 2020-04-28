@@ -408,12 +408,14 @@ public class Element extends AbstractElement<Element> implements Html {
     // ----- An attributes ----------
 
     /** Set a CSS class attribute */
+    @Deprecated
     public <T extends Element> T setCellPadding(final int value) {
         setAttrib(A_CELLPADDING, value);
         return (T) this;
     }
 
     /** Set a CSS class attribute */
+    @Deprecated
     public <T extends Element> T setCellSpacing(final int value) {
         setAttrib(A_CELLSPACING, value);
         return (T) this;
