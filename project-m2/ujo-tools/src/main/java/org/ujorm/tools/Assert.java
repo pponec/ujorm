@@ -63,7 +63,7 @@ public abstract class Assert {
 
     /** If the value Checks if the argument is {@code true}.
      * @throws IllegalStateException When the condtion is false */
-    public static final  <M> void state(final boolean condition, @Nullable final M... message)
+    public static <M> void state(final boolean condition, @Nullable final M... message)
             throws IllegalStateException {
         if (!condition) {
             throw new IllegalStateException(format(message));
@@ -72,7 +72,7 @@ public abstract class Assert {
 
     /** If the value Checks if the argument is {@code true}.
      * @throws IllegalStateException When the condtion is false */
-    public static final  <M> void state(final boolean condition, @Nonnull final MessageMaker messageMaker)
+    public static <M> void state(final boolean condition, @Nonnull final MessageMaker messageMaker)
             throws IllegalStateException {
         if (!condition) {
             throw new IllegalStateException(MessageBuilder.get(messageMaker));
@@ -84,7 +84,7 @@ public abstract class Assert {
      * @deprecated Use the method {@link #state(boolean, java.lang.Object...) rather}
      */
     @Deprecated
-    public static final  <M> void validState(final boolean condition, @Nullable final M... message)
+    public static <M> void validState(final boolean condition, @Nullable final M... message)
             throws IllegalStateException {
         state(condition, message);
     }
@@ -101,7 +101,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is {@code true}. */
-    public static final  <M> void isTrue(final boolean condition, @Nullable final M... message)
+    public static <M> void isTrue(final boolean condition, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!condition) {
             throw new IllegalArgumentException(format(message));
@@ -109,7 +109,7 @@ public abstract class Assert {
     }
 
     /** Checks if the argument is {@code true}. */
-    public static final  <M> void isTrue(final boolean condition, @Nonnull final MessageMaker messageMaker)
+    public static <M> void isTrue(final boolean condition, @Nonnull final MessageMaker messageMaker)
             throws IllegalArgumentException {
         if (!condition) {
             throw new IllegalArgumentException(MessageBuilder.get(messageMaker));
@@ -247,7 +247,7 @@ public abstract class Assert {
     // ---- NEGATIONS ----
 
     /** Checks if the argument is {@code false}. */
-    public static final void isFalse(final boolean condition, @Nullable final Object... message)
+    public static void isFalse(final boolean condition, @Nullable final Object... message)
             throws IllegalArgumentException {
         if (condition) {
             throw new IllegalArgumentException(format(message));
@@ -255,7 +255,7 @@ public abstract class Assert {
     }
 
         /** Checks if the argument is {@code false}. */
-    public static final void isFalse(final boolean condition, @Nonnull final MessageMaker messageMaker)
+    public static void isFalse(final boolean condition, @Nonnull final MessageMaker messageMaker)
             throws IllegalArgumentException {
         if (condition) {
             throw new IllegalArgumentException(MessageBuilder.get(messageMaker));
