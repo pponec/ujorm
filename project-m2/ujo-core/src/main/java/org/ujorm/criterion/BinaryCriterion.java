@@ -91,7 +91,7 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
     public String toString() {
         return toPrinter(new SimpleValuePrinter(256)).toString();
     }
-   
+
     /** Print the condition in a human reading format. */
     @Override
     public SimpleValuePrinter toPrinter(@Nonnull SimpleValuePrinter out) {
