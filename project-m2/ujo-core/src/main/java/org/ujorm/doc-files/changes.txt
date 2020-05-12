@@ -2,8 +2,15 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 2.1-SNAPSHOT (yyyy-mm-dd)
+release 2.2-SNAPSHOT (yyyy-mm-dd)
 + ...
+
+release 2.1 (2020-05-12)
++ CORE: Criterion implements implements Predicate<U>
++ ORM: Elements of the XML log are intended
++ ORM: Foreign key type of UUID is fixed for reading
++ TOOLS: DefaultXmlXonfig have got extended API 
++ TOOLS: XmlPrinter API refactoring
 
 release 2.00 (2020-03-08)
 + TOOLS: Assert API is exended
