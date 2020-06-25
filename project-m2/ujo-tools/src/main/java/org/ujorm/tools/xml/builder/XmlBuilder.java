@@ -142,7 +142,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
         return element;
     }
 
-    /** *  Create a new {@link XmlBuilder} for a required name and add it to children.
+    /** Create a new {@link XmlBuilder} for a required name and add it to children.
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
      */
