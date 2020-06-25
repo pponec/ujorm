@@ -16,7 +16,6 @@
  */
 package org.ujorm.tools.xml.config.impl;
 
-import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
@@ -41,6 +40,9 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     @Nonnull
     private CharSequence language = "en";
 
+    /** Element type of Builder is required */
+    private boolean builderElement = true;
+
     @Override
     @Nonnull
     public String getDoctype() {
@@ -64,6 +66,12 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         return Optional.ofNullable(language);
     }
 
+    /** Element type of Builder is required */
+    @Override
+    public boolean isBuilderElement() {
+        return builderElement;
+    }
+
     /** Title is a required element by HTML 5 */
     public void setTitle(@Nonnull CharSequence title) {
         this.title = Assert.hasLength(title, "title");
@@ -77,4 +85,8 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         this.language = language;
     }
 
+    /** Element type of builder is required */
+    public void setBuildElement(boolean builderElement) {
+        this.builderElement = builderElement;
+    }
 }

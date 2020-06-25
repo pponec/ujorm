@@ -36,6 +36,9 @@ public interface HtmlConfig extends XmlConfig {
     @Nonnull
     public Optional<CharSequence> getLanguage();
 
+    /** Element type of builder is required */
+    public boolean isBuilderElement();
+
     /**
      * Create a new default config
      */

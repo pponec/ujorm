@@ -24,6 +24,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.xml.AbstractElement;
+import org.ujorm.tools.xml.builder.XmlBuilder;
+import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.dom.XmlElement;
@@ -51,7 +54,12 @@ public class HtmlElement extends Element {
 
     /** Create new instance with empty html headers */
     public HtmlElement(@Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
-        super(new XmlElement(Html.HTML));
+        this(new XmlElement(Html.HTML), config, writer);
+    }
+
+    /** Create new instance with empty html headers */
+    public HtmlElement(@Nonnull final AbstractElement root, @Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
+        super(root);
         this.config = config;
         this.writer = writer;
     }
@@ -244,7 +252,10 @@ public class HtmlElement extends Element {
     public static HtmlElement of(@Nonnull final HttpServletResponse response, @Nonnull final HtmlConfig config) throws IllegalStateException {
         response.setCharacterEncoding(config.getCharset().toString());
         try {
-            final HtmlElement result = new HtmlElement(config, response.getWriter());
+            final AbstractElement root = config.isBuilderElement()
+                    ? new XmlBuilder(Html.HTML, new XmlPrinter(response.getWriter(), config))
+                    : new XmlElement(Html.HTML);
+            final HtmlElement result = new HtmlElement(root, config, response.getWriter());
             config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
             result.getHead().addElement(Html.META).setAttrib(A_CHARSET, config.getCharset());
             result.getHead().addElement(Html.TITLE).addText(config.getTitle());
@@ -266,11 +277,19 @@ public class HtmlElement extends Element {
         if (config == null) {
             config = new DefaultHtmlConfig();
         }
-        final HtmlElement result = new HtmlElement(config, new CharArrayWriter(256));
-        config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
-        result.getHead().addElement(Html.META).setAttrib(A_CHARSET, config.getCharset());
-        result.getHead().addElement(Html.TITLE).addText(config.getTitle());
-        result.addCssLinks(config.getCssLinks());
-        return result;
+        try {
+            final CharArrayWriter writer = new CharArrayWriter(256);
+            final AbstractElement root = config.isBuilderElement()
+                    ? new XmlBuilder(Html.HTML, new XmlPrinter(writer, config))
+                    : new XmlElement(Html.HTML);
+            final HtmlElement result = new HtmlElement(root, config, writer);
+            config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
+            result.getHead().addElement(Html.META).setAttrib(A_CHARSET, config.getCharset());
+            result.getHead().addElement(Html.TITLE).addText(config.getTitle());
+            result.addCssLinks(config.getCssLinks());
+            return result;
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

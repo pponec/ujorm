@@ -48,6 +48,12 @@ public abstract class AbstractElement<E extends AbstractElement<?>> implements C
         return name;
     }
 
+    /** Get an element name */
+    @Override
+    public String toString() {
+        return getName();
+    }
+
     /** Create a new {@link XmlElement} for a required name and add it to children.
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
