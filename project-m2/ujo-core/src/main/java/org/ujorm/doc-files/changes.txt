@@ -2,10 +2,14 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 2.2-SNAPSHOT (yyyy-mm-dd)
+release 2.03-SNAPSHOT (yyyy-mm-dd)
 + ...
 
-release 2.1 (2020-05-12)
+release 2.02-SNAPSHOT (2020-06-26)
++ WEB: New class ProxyServletResponse for a common use is available.
++ WEB: New configuration method HtmlConfig.isBuilderElement() controls an Element implementation.
+
+release 2.01 (2020-05-12)
 + CORE: Criterion implements implements Predicate<U>
 + ORM: Elements of the XML log are intended
 + ORM: Foreign key type of UUID is fixed for reading
