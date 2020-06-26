@@ -47,7 +47,7 @@ public class ProxyServletResponse implements HttpServletResponse {
 
     public ProxyServletResponse(int size) {
         stream = new ByteArrayOutputStream(size);
-        writer = new PrintWriter(stream, true);
+        writer = new PrintWriter(stream);
     }
 
     @Deprecated
