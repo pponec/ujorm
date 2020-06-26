@@ -78,7 +78,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     public void setCssLinks(@Nonnull CharSequence... cssLinks) {
-        this.cssLinks = Assert.hasLength(cssLinks, REQUIRED_MSG, "cssLinks");
+        this.cssLinks = Assert.notNull(cssLinks, REQUIRED_MSG, "cssLinks");
     }
 
     public void setLanguage(@Nonnull CharSequence language) {
