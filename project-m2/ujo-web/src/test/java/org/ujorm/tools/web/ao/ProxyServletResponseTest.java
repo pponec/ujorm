@@ -1,6 +1,7 @@
 
 package org.ujorm.tools.web.ao;
 
+import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.ujorm.tools.web.HtmlElement;
@@ -15,12 +16,23 @@ public class ProxyServletResponseTest {
      * Test of getContent method, of class ProxyServletResponse.
      */
     @Test
-    public void testGetContent() {
+    public void testGetContent_1() throws IOException {
+        System.out.println("getContent");
+        ProxyServletResponse instance = new ProxyServletResponse();
+        instance.getWriter().write("ABC:ČÁŠ");
+        assertEquals("ABC:ČÁŠ", instance.toString());
+    }
+
+    /**
+     * Test of getContent method, of class ProxyServletResponse.
+     */
+    @Test
+    public void testGetContent_2() {
         System.out.println("getContent");
         ProxyServletResponse instance = new ProxyServletResponse();
 
         try (HtmlElement html = HtmlElement.niceOf(instance)) {
-            html.getBody().addHeading("HELLO", "cssType");
+            html.getBody().addHeading("ABC:ČÁŠ", "cssType");
         }
         String result = instance.toString();
         String expected = String.join("\n"
@@ -31,7 +43,7 @@ public class ProxyServletResponseTest {
                 , "        <title>Demo</title>"
                 , "    </head>" 
                 , "    <body>"
-                , "        <h1 class=\"cssType\">HELLO</h1>"
+                , "        <h1 class=\"cssType\">ABC:ČÁŠ</h1>"
                 , "    </body>"
                 , "</html>");
         assertEquals(expected, result);

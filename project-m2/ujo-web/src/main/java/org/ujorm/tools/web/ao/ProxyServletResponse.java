@@ -16,9 +16,10 @@
  */
 package org.ujorm.tools.web.ao;
 
-import java.io.CharArrayWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.Collection;
@@ -37,14 +38,16 @@ public class ProxyServletResponse implements HttpServletResponse {
 
     private final Charset charset = UTF_8;
 
-    private final CharArrayWriter writer;
+    private final ByteArrayOutputStream stream;
+    private final PrintWriter writer;
 
     public ProxyServletResponse() {
         this(512);
     }
 
     public ProxyServletResponse(int size) {
-        writer = new CharArrayWriter(size);
+        stream = new ByteArrayOutputStream(size);
+        writer = new PrintWriter(stream, true);
     }
 
     @Deprecated
@@ -187,14 +190,14 @@ public class ProxyServletResponse implements HttpServletResponse {
 
             @Override
             public void write(int b) throws IOException {
-                writer.write(b);
+                stream.write(b);
             }
         };
     }
 
     @Override
     public PrintWriter getWriter() throws IOException {
-        return new PrintWriter(writer);
+        return writer;
     }
 
     @Deprecated
@@ -229,6 +232,7 @@ public class ProxyServletResponse implements HttpServletResponse {
 
     @Override
     public void flushBuffer() throws IOException {
+        writer.flush();
     }
 
     @Override
@@ -257,12 +261,17 @@ public class ProxyServletResponse implements HttpServletResponse {
     /** Get a content of the writer */
     @Override
     public String toString() {
+        flushBuffer();
         return getContent();
     }
 
     /** Get a content of the writer */
     public String getContent() {
-        return writer.toString();
+        try {
+            return stream.toString(charset.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private UnsupportedOperationException getException() {
