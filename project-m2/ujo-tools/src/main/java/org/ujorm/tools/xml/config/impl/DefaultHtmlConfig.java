@@ -40,8 +40,8 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     @Nonnull
     private CharSequence language = "en";
 
-    /** Element type of Builder is required */
-    private boolean builderElement = true;
+    /** Build a real model or a plain writer */
+    private boolean buildDom = false;
 
     @Override
     @Nonnull
@@ -66,10 +66,10 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         return Optional.ofNullable(language);
     }
 
-    /** Element type of Builder is required */
+    /** Build a real model or a plain writer, the default value is {@code false} */
     @Override
-    public boolean isBuilderElement() {
-        return builderElement;
+    public boolean isDocumentObjectModel() {
+        return buildDom;
     }
 
     /** Title is a required element by HTML 5 */
@@ -85,8 +85,8 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         this.language = language;
     }
 
-    /** Element type of builder is required */
-    public void setBuildElement(boolean builderElement) {
-        this.builderElement = builderElement;
+    /** Build a real model or a plain writer, the default value is {@code false} */
+    public void setDocumentObjectModel(boolean buildDom) {
+        this.buildDom = buildDom;
     }
 }

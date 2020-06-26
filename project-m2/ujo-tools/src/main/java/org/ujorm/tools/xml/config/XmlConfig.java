@@ -58,12 +58,6 @@ public interface XmlConfig {
     public String getNewLine();
 
     /**
-     * Use a DOM model
-     * @return the dom
-     */
-    public boolean isDom();
-
-    /**
      * HTTP cache is allowed
      * @return
      */

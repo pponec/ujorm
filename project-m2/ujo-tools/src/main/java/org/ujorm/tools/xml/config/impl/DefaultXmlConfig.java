@@ -178,15 +178,6 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /**
      * Use a DOM model
-     * @return the dom
-     */
-    @Override
-    public boolean isDom() {
-        return dom;
-    }
-
-    /**
-     * Use a DOM model
      * @param dom the dom to set
      */
     public void setDom(boolean dom) {

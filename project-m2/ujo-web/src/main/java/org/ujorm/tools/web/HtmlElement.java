@@ -252,9 +252,9 @@ public class HtmlElement extends Element {
     public static HtmlElement of(@Nonnull final HttpServletResponse response, @Nonnull final HtmlConfig config) throws IllegalStateException {
         response.setCharacterEncoding(config.getCharset().toString());
         try {
-            final AbstractElement root = config.isBuilderElement()
-                    ? new XmlBuilder(Html.HTML, new XmlPrinter(response.getWriter(), config))
-                    : new XmlElement(Html.HTML);
+            final AbstractElement root = config.isDocumentObjectModel()
+                    ? new XmlElement(Html.HTML)
+                    : new XmlBuilder(Html.HTML, new XmlPrinter(response.getWriter(), config));
             final HtmlElement result = new HtmlElement(root, config, response.getWriter());
             config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
             result.getHead().addElement(Html.META).setAttrib(A_CHARSET, config.getCharset());
@@ -279,9 +279,9 @@ public class HtmlElement extends Element {
         }
         try {
             final CharArrayWriter writer = new CharArrayWriter(256);
-            final AbstractElement root = config.isBuilderElement()
-                    ? new XmlBuilder(Html.HTML, new XmlPrinter(writer, config))
-                    : new XmlElement(Html.HTML);
+            final AbstractElement root = config.isDocumentObjectModel()
+                    ? new XmlElement(Html.HTML)
+                    : new XmlBuilder(Html.HTML, new XmlPrinter(writer, config));
             final HtmlElement result = new HtmlElement(root, config, writer);
             config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
             result.getHead().addElement(Html.META).setAttrib(A_CHARSET, config.getCharset());
