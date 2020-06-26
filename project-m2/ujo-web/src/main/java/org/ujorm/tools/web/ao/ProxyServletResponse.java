@@ -231,7 +231,7 @@ public class ProxyServletResponse implements HttpServletResponse {
     }
 
     @Override
-    public void flushBuffer() throws IOException {
+    public void flushBuffer() {
         writer.flush();
     }
 
