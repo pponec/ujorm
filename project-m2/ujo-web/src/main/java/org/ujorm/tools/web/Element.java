@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -100,6 +101,17 @@ public class Element extends AbstractElement<Element> implements Html {
      */
     public <T extends Element> T addText(@Nonnull final Object... data) throws IllegalStateException {
         return addTextSeparted("", data);
+    }
+
+    /**
+     * Add a template based text with parameters
+     * @param template A message template with an ENGLISH locale. See {@link String#format(java.lang.String, java.lang.Object...) for more parameters.
+     * @param data A template parameters
+     * @return A parent element.
+     */
+    public <T extends Element> T addTemplate(@Nonnull final String template, @Nonnull final Object... data)
+            throws IllegalStateException {
+        return addText(String.format(Locale.ENGLISH, template, data));
     }
 
     /** Add many words separated by the separator */
