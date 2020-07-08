@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools.xml.dom;
+package org.ujorm.tools.xml.model;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
@@ -31,7 +31,7 @@ import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.AbstractWriter;
-import org.ujorm.tools.xml.dom.XmlElement.RawEnvelope;
+import org.ujorm.tools.xml.model.XmlModel.RawEnvelope;
 import static org.ujorm.tools.xml.AbstractWriter.*;
 import org.ujorm.tools.xml.config.XmlConfig;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
@@ -64,7 +64,7 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  * @since 1.86
  * @author Pavel Ponec
  */
-public class XmlElement implements ApiElement<XmlElement>, Serializable {
+public class XmlModel implements ApiElement<XmlModel>, Serializable {
 
     /** Element name */
     @Nonnull
@@ -81,12 +81,12 @@ public class XmlElement implements ApiElement<XmlElement>, Serializable {
     /** The new element constructor
      * @param name The element name must not be empty nor special HTML characters.
      */
-    public XmlElement(@Nonnull final CharSequence name) {
+    public XmlModel(@Nonnull final CharSequence name) {
         this.name = name.toString();
     }
 
     /** New element with a parent */
-    public XmlElement(@Nonnull final CharSequence name, @Nonnull final XmlElement parent) {
+    public XmlModel(@Nonnull final CharSequence name, @Nonnull final XmlModel parent) {
         this(name);
         parent.addChild(this);
     }
@@ -119,18 +119,18 @@ public class XmlElement implements ApiElement<XmlElement>, Serializable {
      * @param element Add a child element is required. An undefined argument is ignored.
      * @return The argument type of XmlElement! */
     @Nonnull
-    public final XmlElement addElement(@Nonnull final XmlElement element) {
+    public final XmlModel addElement(@Nonnull final XmlModel element) {
         addChild(Assert.notNull(element, REQUIRED_MSG, "element"));
         return element;
     }
 
-    /** Create a new {@link XmlElement} for a required name and add it to children.
+    /** Create a new {@link XmlModel} for a required name and add it to children.
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
      */
     @Override @Nonnull
-    public XmlElement addElement(@Nonnull final String name) {
-        return new XmlElement(name, this);
+    public XmlModel addElement(@Nonnull final String name) {
+        return new XmlModel(name, this);
     }
 
     /**
@@ -139,7 +139,7 @@ public class XmlElement implements ApiElement<XmlElement>, Serializable {
      * @return The original element
      */
     @Nonnull @Deprecated
-    public final XmlElement addAttrib(@Nonnull final String name, @Nullable final Object value) {
+    public final XmlModel addAttrib(@Nonnull final String name, @Nullable final Object value) {
         return setAttrib(name, value);
     }
 
@@ -152,7 +152,7 @@ public class XmlElement implements ApiElement<XmlElement>, Serializable {
      * @return The original element
      */
     @Override @Nonnull
-    public final XmlElement setAttrib(@Nonnull final String name, @Nullable final Object value) {
+    public final XmlModel setAttrib(@Nonnull final String name, @Nullable final Object value) {
         Assert.hasLength(name, REQUIRED_MSG, "name");
         if (value != null) {
             if (attributes == null) {
@@ -170,7 +170,7 @@ public class XmlElement implements ApiElement<XmlElement>, Serializable {
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Override @Nonnull
-    public final XmlElement addText(@Nullable final Object value) {
+    public final XmlModel addText(@Nullable final Object value) {
         addChild(value);
         return  this;
     }
@@ -179,7 +179,7 @@ public class XmlElement implements ApiElement<XmlElement>, Serializable {
      * @param value The {@code null} value is ignored.
      * @return This instance */
     @Override @Nonnull
-    public final XmlElement addRawText(@Nullable final Object value) {
+    public final XmlModel addRawText(@Nullable final Object value) {
         if (value != null) {
             addChild(new RawEnvelope(value));
         }
@@ -193,7 +193,7 @@ public class XmlElement implements ApiElement<XmlElement>, Serializable {
      * @return This instance
      */
     @Override @Nonnull
-    public final XmlElement addComment(@Nullable final CharSequence comment) {
+    public final XmlModel addComment(@Nullable final CharSequence comment) {
         if (Check.hasLength(comment)) {
             Assert.isTrue(!comment.toString().contains(COMMENT_END), "The text contains a forbidden string: " + COMMENT_END);
             StringBuilder msg = new StringBuilder
@@ -216,7 +216,7 @@ public class XmlElement implements ApiElement<XmlElement>, Serializable {
      * @return This instance
      */
     @Override @Nonnull
-    public final XmlElement addCDATA(@Nullable final CharSequence charData) {
+    public final XmlModel addCDATA(@Nullable final CharSequence charData) {
         if (Check.hasLength(charData)) {
             addRawText(CDATA_BEG);
             final String text = charData.toString();
@@ -252,7 +252,7 @@ public class XmlElement implements ApiElement<XmlElement>, Serializable {
 
     /** An empty method */
     @Override
-    public final void close() throws IOException {
+    public final void close() {
     }
 
     /** Render the XML code including header */

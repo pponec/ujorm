@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.tools.xml.dom;
+package org.ujorm.tools.xml.model;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 
 /**
  * If you need special formatting, overwrite responsible methods.
- * @see XmlElement
+ * @see XmlModel
  * @since 1.88
  * @author Pavel Ponec
  */
@@ -64,7 +64,7 @@ public class XmlWriter extends AbstractWriter {
 
     /** Render the XML code without header */
     @Nonnull
-    public final XmlWriter write(final int level, @Nonnull final XmlElement element) throws IOException {
+    public final XmlWriter write(final int level, @Nonnull final XmlModel element) throws IOException {
         return write(level, element.getName(), element.attributes, element.children, element);
     }
 
@@ -81,7 +81,7 @@ public class XmlWriter extends AbstractWriter {
             , @Nonnull final CharSequence name
             , @Nullable final Map<String, Object> attributes
             , @Nullable final List<Object> children
-            , @Nonnull final XmlElement element) throws IOException {
+            , @Nonnull final XmlModel element) throws IOException {
         out.append(XML_LT);
         out.append(name);
 
@@ -101,15 +101,15 @@ public class XmlWriter extends AbstractWriter {
             out.append(XML_GT);
             boolean writeNewLine = true;
             for (Object child : children) {
-                if (child instanceof XmlElement) {
+                if (child instanceof XmlModel) {
                     if (writeNewLine) {
                         writeNewLine(level);
                     } else {
                         writeNewLine = true;
                     }
-                    write(level + 1, (XmlElement) child);
-                } else if (child instanceof XmlElement.RawEnvelope) {
-                    writeRawValue(((XmlElement.RawEnvelope) child).get(), element);
+                    write(level + 1, (XmlModel) child);
+                } else if (child instanceof XmlModel.RawEnvelope) {
+                    writeRawValue(((XmlModel.RawEnvelope) child).get(), element);
                     writeNewLine = false;
                 } else {
                     writeValue(child, element, null);

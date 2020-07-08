@@ -20,6 +20,7 @@ package org.ujorm.tools.web;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -27,11 +28,12 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.sql.rowset.spi.XmlWriter;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import static org.ujorm.tools.web.Html.LEGEND;
 import org.ujorm.tools.xml.ApiElement;
-import org.ujorm.tools.xml.dom.XmlElement;
-import org.ujorm.tools.xml.dom.XmlWriter;
+import org.ujorm.tools.xml.model.XmlModel;
 
 /** 
  * /** A HTML Element implements some methods for frequently used elements and attributes 
@@ -67,7 +69,7 @@ public class Element implements ApiElement<Element>, Html {
      * Set an attribute
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
+     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.model.XmlModel, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
@@ -140,11 +142,7 @@ public class Element implements ApiElement<Element>, Html {
 
     @Override
     public void close() throws IllegalStateException {
-        try {
-            origElement.close();
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        origElement.close();
     }
 
     // -------------- Add TAG -----
@@ -427,8 +425,8 @@ public class Element implements ApiElement<Element>, Html {
      * @param cssLinks Nullable CSS link array
      */
     public static Element createHtmlRoot(@Nonnull final Object title, @Nullable final Charset charset, @Nullable final CharSequence... cssLinks) {
-        XmlElement result = new XmlElement(HTML);
-        XmlElement head = result.addElement(HEAD);
+        XmlModel result = new XmlModel(HTML);
+        XmlModel head = result.addElement(HEAD);
         head.addElement(META).setAttrib(A_CHARSET, charset);
         head.addElement(TITLE).addText(title);
 

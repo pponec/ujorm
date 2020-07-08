@@ -87,4 +87,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
     @Nonnull
     E addCDATA(@Nullable final CharSequence charData);
 
+    /** Close the element */
+    @Override
+    void close();
 }

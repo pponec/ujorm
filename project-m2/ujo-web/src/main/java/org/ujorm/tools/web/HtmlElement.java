@@ -29,8 +29,8 @@ import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
-import org.ujorm.tools.xml.dom.XmlElement;
-import org.ujorm.tools.xml.dom.XmlWriter;
+import org.ujorm.tools.xml.model.XmlModel;
+import org.ujorm.tools.xml.model.XmlWriter;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /** The root of HTML elements */
@@ -54,7 +54,7 @@ public class HtmlElement extends Element {
 
     /** Create new instance with empty html headers */
     public HtmlElement(@Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
-        this(new XmlElement(Html.HTML), config, writer);
+        this(new XmlModel(Html.HTML), config, writer);
     }
 
     /** Create new instance with empty html headers */
@@ -155,13 +155,13 @@ public class HtmlElement extends Element {
     @Override
     public void close() throws IllegalStateException {
         super.close();
-        if (origElement instanceof XmlElement) {
+        if (origElement instanceof XmlModel) {
             try {
                 final XmlWriter xmlWriter = new XmlWriter(writer
                         .append(config.getDoctype())
                         .append(config.getNewLine())
                         , config.getIndentation());
-                final XmlElement xmlElement = (XmlElement) origElement;
+                final XmlModel xmlElement = (XmlModel) origElement;
                 xmlElement.toWriter(config.getFirstLevel() + 1, xmlWriter);
             } catch (IOException e) {
                 throw new IllegalStateException(e);
@@ -253,7 +253,7 @@ public class HtmlElement extends Element {
         response.setCharacterEncoding(config.getCharset().toString());
         try {
             final ApiElement root = config.isDocumentObjectModel()
-                    ? new XmlElement(Html.HTML)
+                    ? new XmlModel(Html.HTML)
                     : new XmlBuilder(Html.HTML, new XmlPrinter(response.getWriter(), config));
             final HtmlElement result = new HtmlElement(root, config, response.getWriter());
             config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
@@ -279,7 +279,7 @@ public class HtmlElement extends Element {
         }
         final CharArrayWriter writer = new CharArrayWriter(256);
         final ApiElement root = config.isDocumentObjectModel()
-                ? new XmlElement(Html.HTML)
+                ? new XmlModel(Html.HTML)
                 : new XmlBuilder(Html.HTML, new XmlPrinter(writer, config));
         final HtmlElement result = new HtmlElement(root, config, writer);
         config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
