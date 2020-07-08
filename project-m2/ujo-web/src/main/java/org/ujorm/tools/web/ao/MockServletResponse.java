@@ -33,6 +33,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /**
  * Simple proxy servlet response for catching a writer content
  * @author Pavel Ponec
+ * @since 2.03
  */
 public class MockServletResponse implements HttpServletResponse {
 

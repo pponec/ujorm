@@ -19,6 +19,7 @@ package org.ujorm.tools.web.ao;
 /**
  * Simple proxy servlet response for catching a writer content
  * @author Pavel Ponec
+ * @since 2.02
  * @Deprecated Use the {@link MockServletResponse} rather
  */
 @Deprecated
