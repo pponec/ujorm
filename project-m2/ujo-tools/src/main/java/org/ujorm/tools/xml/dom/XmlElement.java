@@ -18,7 +18,6 @@
 package org.ujorm.tools.xml.dom;
 
 import java.io.CharArrayWriter;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.xml.AbstractElement;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.dom.XmlElement.RawEnvelope;
 import static org.ujorm.tools.xml.AbstractWriter.*;
@@ -61,13 +60,15 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  *  String result = root.toString();
  * </pre>
  *
- * The XmlElement class implements the {@link Closeable} implementation
- * for an optional highlighting the tree structure in the source code.
  * @see HtmlElement
  * @since 1.86
  * @author Pavel Ponec
  */
-public class XmlElement extends AbstractElement<XmlElement> implements Serializable {
+public class XmlElement implements ApiElement<XmlElement>, Serializable {
+
+    /** Element name */
+    @Nonnull
+    protected final String name;
 
     /** Attributes */
     @Nullable
@@ -81,13 +82,18 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @param name The element name must not be empty nor special HTML characters.
      */
     public XmlElement(@Nonnull final CharSequence name) {
-        super(name);
+        this.name = name.toString();
     }
 
     /** New element with a parent */
     public XmlElement(@Nonnull final CharSequence name, @Nonnull final XmlElement parent) {
         this(name);
         parent.addChild(this);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     /** Return attributes */
@@ -113,7 +119,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @param element Add a child element is required. An undefined argument is ignored.
      * @return The argument type of XmlElement! */
     @Nonnull
-    public final <T extends XmlElement> T addElement(@Nonnull final T element) {
+    public final XmlElement addElement(@Nonnull final XmlElement element) {
         addChild(Assert.notNull(element, REQUIRED_MSG, "element"));
         return element;
     }
@@ -123,8 +129,8 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @return The new XmlElement!
      */
     @Override @Nonnull
-    public <T extends XmlElement> T addElement(@Nonnull final String name) {
-        return (T) new XmlElement(name, this);
+    public XmlElement addElement(@Nonnull final String name) {
+        return new XmlElement(name, this);
     }
 
     /**
@@ -133,7 +139,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @return The original element
      */
     @Nonnull @Deprecated
-    public final <T extends XmlElement> T addAttrib(@Nonnull final String name, @Nullable final Object value) {
+    public final XmlElement addAttrib(@Nonnull final String name, @Nullable final Object value) {
         return setAttrib(name, value);
     }
 
@@ -146,7 +152,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @return The original element
      */
     @Override @Nonnull
-    public final <T extends XmlElement> T setAttrib(@Nonnull final String name, @Nullable final Object value) {
+    public final XmlElement setAttrib(@Nonnull final String name, @Nullable final Object value) {
         Assert.hasLength(name, REQUIRED_MSG, "name");
         if (value != null) {
             if (attributes == null) {
@@ -154,7 +160,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
             }
             attributes.put(name, value);
         }
-        return (T) this;
+        return  this;
     }
 
     /**
@@ -164,20 +170,20 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Override @Nonnull
-    public final <T extends XmlElement> T addText(@Nullable final Object value) {
+    public final XmlElement addText(@Nullable final Object value) {
         addChild(value);
-        return (T) this;
+        return  this;
     }
 
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */
     @Override @Nonnull
-    public final <T extends XmlElement> T addRawText(@Nullable final Object value) {
+    public final XmlElement addRawText(@Nullable final Object value) {
         if (value != null) {
             addChild(new RawEnvelope(value));
         }
-        return (T) this;
+        return  this;
     }
 
     /**
@@ -187,7 +193,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @return This instance
      */
     @Override @Nonnull
-    public final <T extends XmlElement> T addComment(@Nullable final CharSequence comment) {
+    public final XmlElement addComment(@Nullable final CharSequence comment) {
         if (Check.hasLength(comment)) {
             Assert.isTrue(!comment.toString().contains(COMMENT_END), "The text contains a forbidden string: " + COMMENT_END);
             StringBuilder msg = new StringBuilder
@@ -200,7 +206,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
                     .append(CHAR_SPACE)
                     .append(COMMENT_END));
         }
-        return (T) this;
+        return  this;
     }
 
     /**
@@ -210,7 +216,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
      * @return This instance
      */
     @Override @Nonnull
-    public final <T extends XmlElement> T addCDATA(@Nullable final CharSequence charData) {
+    public final XmlElement addCDATA(@Nullable final CharSequence charData) {
         if (Check.hasLength(charData)) {
             addRawText(CDATA_BEG);
             final String text = charData.toString();
@@ -225,7 +231,7 @@ public class XmlElement extends AbstractElement<XmlElement> implements Serializa
             addRawText(i == 0 ? text : text.substring(i));
             addRawText(CDATA_END);
         }
-        return (T) this;
+        return  this;
     }
 
     /** Get an unmodifiable map of attributes */

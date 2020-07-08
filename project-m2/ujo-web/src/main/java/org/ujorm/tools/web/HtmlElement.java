@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.xml.AbstractElement;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
@@ -58,27 +58,27 @@ public class HtmlElement extends Element {
     }
 
     /** Create new instance with empty html headers */
-    public HtmlElement(@Nonnull final AbstractElement root, @Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
+    public HtmlElement(@Nonnull final ApiElement root, @Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
         super(root);
         this.config = config;
         this.writer = writer;
     }
 
     /** Returns a head element */
-    public <T extends Element> T getHead() {
+    public Element getHead() {
         if (head == null) {
             head = addElement(Html.HEAD);
         }
-        return  (T) head;
+        return head;
     }
 
     /** Returns a body element */
     @Nonnull
-    public <T extends Element> T getBody() {
+    public Element getBody() {
         if (body == null) {
             body = addElement(Html.BODY);
         }
-        return (T) body;
+        return body;
     }
 
     /** Create a new Javascript element and return it
@@ -96,7 +96,7 @@ public class HtmlElement extends Element {
      * @param defer A script that will not run until after the page has loaded
      * @return
      */
-    public <T extends Element> T addJavascriptLink(final boolean defer, @Nonnull final CharSequence javascriptLink) {
+    public Element addJavascriptLink(final boolean defer, @Nonnull final CharSequence javascriptLink) {
         Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
         return getHead().addElement(Html.SCRIPT)
                 .setAttrib(Html.A_SRC, javascriptLink)
@@ -108,7 +108,7 @@ public class HtmlElement extends Element {
      * @param javascript Add a javascriptLink link
      * @return New CSS element
      */
-    public <T extends Element> T addJavascriptContents(@Nonnull final CharSequence javascript) {
+    public Element addJavascriptContents(@Nonnull final CharSequence javascript) {
         Assert.notNull(javascript, REQUIRED_MSG, "javascript");
         return getHead().addElement(Html.SCRIPT)
                 .setAttrib(Html.A_LANGUAGE, "javascript")
@@ -129,7 +129,7 @@ public class HtmlElement extends Element {
      * @param css Add a CSS link
      * @return New CSS element
      */
-    public <T extends Element> T addCssLink(@Nonnull final CharSequence css) {
+    public Element addCssLink(@Nonnull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
         return getHead().addElement(Html.LINK)
                 .setAttrib(Html.A_HREF, css)
@@ -140,7 +140,7 @@ public class HtmlElement extends Element {
      * @param css CSS content
      * @return New CSS element
      */
-    public <T extends Element> T addCssBody(@Nonnull final CharSequence css) {
+    public Element addCssBody(@Nonnull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
         return getHead().addElement(Html.STYLE)
                 .addRawText(css);
@@ -252,7 +252,7 @@ public class HtmlElement extends Element {
     public static HtmlElement of(@Nonnull final HttpServletResponse response, @Nonnull final HtmlConfig config) throws IllegalStateException {
         response.setCharacterEncoding(config.getCharset().toString());
         try {
-            final AbstractElement root = config.isDocumentObjectModel()
+            final ApiElement root = config.isDocumentObjectModel()
                     ? new XmlElement(Html.HTML)
                     : new XmlBuilder(Html.HTML, new XmlPrinter(response.getWriter(), config));
             final HtmlElement result = new HtmlElement(root, config, response.getWriter());
@@ -277,19 +277,15 @@ public class HtmlElement extends Element {
         if (config == null) {
             config = new DefaultHtmlConfig();
         }
-        try {
-            final CharArrayWriter writer = new CharArrayWriter(256);
-            final AbstractElement root = config.isDocumentObjectModel()
-                    ? new XmlElement(Html.HTML)
-                    : new XmlBuilder(Html.HTML, new XmlPrinter(writer, config));
-            final HtmlElement result = new HtmlElement(root, config, writer);
-            config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
-            result.getHead().addElement(Html.META).setAttrib(A_CHARSET, config.getCharset());
-            result.getHead().addElement(Html.TITLE).addText(config.getTitle());
-            result.addCssLinks(config.getCssLinks());
-            return result;
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        final CharArrayWriter writer = new CharArrayWriter(256);
+        final ApiElement root = config.isDocumentObjectModel()
+                ? new XmlElement(Html.HTML)
+                : new XmlBuilder(Html.HTML, new XmlPrinter(writer, config));
+        final HtmlElement result = new HtmlElement(root, config, writer);
+        config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
+        result.getHead().addElement(Html.META).setAttrib(A_CHARSET, config.getCharset());
+        result.getHead().addElement(Html.TITLE).addText(config.getTitle());
+        result.addCssLinks(config.getCssLinks());
+        return result;
     }
 }

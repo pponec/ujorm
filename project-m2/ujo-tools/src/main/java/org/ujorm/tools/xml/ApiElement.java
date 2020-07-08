@@ -18,48 +18,31 @@
 package org.ujorm.tools.xml;
 
 import java.io.Closeable;
-import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.ujorm.tools.Assert;
-import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /**
- * Abstract raw element model
- * The main benefits are:
+ * An element model API.
+ * 
+ * The XmlElement class implements the {@link Closeable} implementation
+ * for an optional highlighting the tree structure in the source code.
+*
  * @see HtmlElement
  * @since 1.86
  * @author Pavel Ponec
  */
-public abstract class AbstractElement<E extends AbstractElement<?>> implements Closeable {
-
-    /** Element name */
-    @Nonnull
-    protected final String name;
-
-    /** Constructor */
-    public AbstractElement(@Nonnull final CharSequence name) {
-        this.name = Assert.notNull(name, REQUIRED_MSG, "name").toString();
-    }
+public interface ApiElement<E extends ApiElement<?>> extends Closeable {
 
     /** Get an element name */
     @Nonnull
-    public final String getName() {
-        return name;
-    }
-
-    /** Get an element name */
-    @Override
-    public String toString() {
-        return getName();
-    }
+    String getName();
 
     /** Create a new {@link XmlElement} for a required name and add it to children.
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
      */
     @Nonnull
-    public abstract <T extends E> T addElement(@Nonnull final String name) throws IOException;
+    E addElement(@Nonnull final String name);
 
     /**
      * Set an attribute
@@ -70,7 +53,7 @@ public abstract class AbstractElement<E extends AbstractElement<?>> implements C
      * @return The original element
      */
     @Nonnull
-    public abstract <T extends E> T setAttrib(@Nonnull final String name, @Nullable final Object value) throws IOException;
+    E setAttrib(@Nonnull final String name, @Nullable final Object value);
 
     /**
      * Add a text and escape special character
@@ -79,13 +62,13 @@ public abstract class AbstractElement<E extends AbstractElement<?>> implements C
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Nonnull
-    public abstract <T extends E> T addText(@Nullable final Object value) throws IOException;
+    E addText(@Nullable final Object value);
 
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */
     @Nonnull
-    public abstract <T extends E> T addRawText(@Nullable final Object value) throws IOException;
+    E addRawText(@Nullable final Object value);
     /**
      * Add a <strong>comment text</strong>.
      * The CDATA structure isn't really for HTML at all.
@@ -93,7 +76,7 @@ public abstract class AbstractElement<E extends AbstractElement<?>> implements C
      * @return This instance
      */
     @Nonnull
-    public abstract <T extends E> T addComment(@Nullable final CharSequence comment) throws IOException;
+    E addComment(@Nullable final CharSequence comment);
 
     /**
      * Add a <strong>character data</strong> in {@code CDATA} format to XML only.
@@ -102,6 +85,6 @@ public abstract class AbstractElement<E extends AbstractElement<?>> implements C
      * @return This instance
      */
     @Nonnull
-    public abstract <T extends E> T addCDATA(@Nullable final CharSequence charData) throws IOException;
+    E addCDATA(@Nullable final CharSequence charData);
 
 }

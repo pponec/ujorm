@@ -134,7 +134,7 @@ public abstract class AbstractWriter {
      */
     public void writeValue(
             @Nullable final Object value,
-            @Nonnull final AbstractElement element,
+            @Nonnull final ApiElement element,
             @Nullable final String attribute
     ) throws IOException {
         if (value != null) {
@@ -147,7 +147,7 @@ public abstract class AbstractWriter {
      * @param rawValue A raw value to print
      * @param element An original element
      */
-    public void writeRawValue(@Nonnull final Object rawValue, @Nonnull final AbstractElement element) throws IOException {
+    public void writeRawValue(@Nonnull final Object rawValue, @Nonnull final ApiElement element) throws IOException {
         out.append(rawValue.toString());
     }
 
