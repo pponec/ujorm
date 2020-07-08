@@ -25,7 +25,7 @@ import org.ujorm.tools.Assert;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /**
- * Abstrac element model.
+ * Abstract raw element model
  * The main benefits are:
  * @see HtmlElement
  * @since 1.86
