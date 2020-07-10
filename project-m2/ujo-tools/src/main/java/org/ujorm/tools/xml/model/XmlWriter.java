@@ -109,7 +109,7 @@ public class XmlWriter extends AbstractWriter {
                     }
                     write(level + 1, (XmlModel) child);
                 } else if (child instanceof XmlModel.RawEnvelope) {
-                    writeRawValue(((XmlModel.RawEnvelope) child).get(), element);
+                    writeRawValue(((XmlModel.RawEnvelope) child).get().toString(), element);
                     writeNewLine = false;
                 } else {
                     writeValue(child, element, null);

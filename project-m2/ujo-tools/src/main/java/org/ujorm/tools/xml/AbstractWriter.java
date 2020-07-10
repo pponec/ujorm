@@ -16,6 +16,7 @@
  */
 package org.ujorm.tools.xml;
 
+import org.ujorm.tools.xml.config.Formatter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Method;
@@ -69,6 +70,10 @@ public abstract class AbstractWriter {
     @Nonnull
     protected final XmlConfig config;
 
+    /** Value formatter */
+    @Nonnull
+    private final Formatter formatter;
+
     /** An indentation request */
     protected final boolean indentationEnabled;
 
@@ -81,6 +86,7 @@ public abstract class AbstractWriter {
         this.out = Assert.notNull(out, "out");
         this.config = Assert.notNull(config, "config");
         this.indentationEnabled = Check.hasLength(config.getIndentation());
+        this.formatter = config.getFormatter();
     }
 
     /** Write escaped value to the output
@@ -138,7 +144,8 @@ public abstract class AbstractWriter {
             @Nullable final String attribute
     ) throws IOException {
         if (value != null) {
-            write(value.toString(), attribute != null);
+            final boolean isAttribute = attribute != null;
+            write(formatter.format(value, isAttribute, element), isAttribute);
         }
     }
 
@@ -147,8 +154,8 @@ public abstract class AbstractWriter {
      * @param rawValue A raw value to print
      * @param element An original element
      */
-    public void writeRawValue(@Nonnull final Object rawValue, @Nonnull final ApiElement element) throws IOException {
-        out.append(rawValue.toString());
+    public final void writeRawValue(@Nonnull final CharSequence rawValue, @Nonnull final ApiElement element) throws IOException {
+        out.append(rawValue);
     }
 
     /** Write a new line with an offset by the current level */

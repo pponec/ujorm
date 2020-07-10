@@ -24,6 +24,7 @@ import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.config.XmlConfig;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import org.ujorm.tools.xml.config.Formatter;
 
 /**
  * Configuraion of HtmlPage
@@ -71,6 +72,10 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** Is HTTP cache allowed */
     private boolean cacheAllowed;
+
+    /** A default value formatter is implemented by the method {@code String.valueOf(value)} */
+    @Nonnull
+    private Formatter formatter = (value, attribute, element) -> value.toString();
 
     /** A header declaration of the document or a doctype */
     @Override
@@ -133,7 +138,6 @@ public class DefaultXmlConfig implements XmlConfig {
         this.newLine = "";
     }
 
-
     /**
      * Level of the root element, the value may be negative.
      * @return the firstLevel
@@ -171,6 +175,16 @@ public class DefaultXmlConfig implements XmlConfig {
         return defaultValue;
     }
 
+
+    /** A default value formatter is implemented by the method {@code String.valueOf(value)} */
+    @Nonnull
+    @Override
+    public Formatter getFormatter() {
+        return formatter;
+    }
+
+    // --- SETTERS ---
+
     /** A replacement text instead of the {@code null} value */
     public void setDefaultValue(@Nonnull String defaultValue) {
         this.defaultValue = Assert.notNull(defaultValue, "defaultValue");
@@ -203,4 +217,10 @@ public class DefaultXmlConfig implements XmlConfig {
     public void setNewLine(@Nonnull final String newLine) {
         this.newLine = Assert.notNull(newLine, "newLine");
     }
+
+    /** A default value formatter is implemented by the method {@code String.valueOf(value)} */
+    public void setFormatter(@Nonnull Formatter formatter) {
+        this.formatter = Assert.notNull(formatter, "formatter");
+    }
+
 }

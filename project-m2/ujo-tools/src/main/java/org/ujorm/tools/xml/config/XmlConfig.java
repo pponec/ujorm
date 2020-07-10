@@ -28,40 +28,46 @@ public interface XmlConfig {
 
     /** Doctype */
     @Nonnull
-    public String getDoctype();
+    String getDoctype();
 
     /**
      * Charset
      * @return the charset
      */
     @Nonnull
-    public Charset getCharset();
+    Charset getCharset();
 
     /**
      * Level of the root element, the value may be negative.
      * @return the firstLevel
      */
-    public int getFirstLevel();
+    int getFirstLevel();
 
     /**
      * New line
      * @return the newLine
      */
-    public String getIndentation();
+    String getIndentation();
 
     /** A replacement text instead of the {@code null} value */
     @Nonnull
-    public String getDefaultValue();
+    String getDefaultValue();
 
     /** A new line sequence */
     @Nonnull
-    public String getNewLine();
+     String getNewLine();
 
     /**
      * HTTP cache is allowed
      * @return
      */
-    public boolean isCacheAllowed();
+    boolean isCacheAllowed();
+
+    /**
+     * Get a value formatter
+     */
+    @Nonnull
+    Formatter getFormatter();
 
     /**
      * Create a new default config

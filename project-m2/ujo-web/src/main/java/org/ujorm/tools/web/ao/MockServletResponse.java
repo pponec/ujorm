@@ -271,6 +271,7 @@ public class MockServletResponse implements HttpServletResponse {
         return writer.toString();
     }
 
+    /** Throw an unsupported exception */
     private UnsupportedOperationException getException() {
         return new UnsupportedOperationException("Not supported");
     }
