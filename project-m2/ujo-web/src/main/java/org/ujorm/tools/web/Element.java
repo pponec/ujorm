@@ -54,17 +54,6 @@ public class Element implements ApiElement<Element>, Html {
     }
 
     /**
-     * Create new Element
-     * @param name The element name
-     * @return New instance of the Element
-     * @throws IllegalStateException An envelope for IO exceptions
-     */
-    @Override @Nonnull
-    public final Element addElement(@Nonnull final String name) throws IllegalStateException {
-            return new Element(origElement.addElement(name));
-    }
-
-    /**
      * Set an attribute
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
@@ -72,6 +61,7 @@ public class Element implements ApiElement<Element>, Html {
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
+    @Nonnull
     @Override
     public final Element setAttribute(@Nonnull final String name, @Nullable final Object value) {
         origElement.setAttribute(name, value);
@@ -87,6 +77,7 @@ public class Element implements ApiElement<Element>, Html {
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
+    @Nonnull
     public final Element setAttrib(@Nonnull final String name, @Nullable final Object value) {
         return setAttribute(name, value);
     }
@@ -96,6 +87,7 @@ public class Element implements ApiElement<Element>, Html {
      * @return A parent element.
      * @see #addAnchoredText(java.lang.String, java.lang.Object...)
      */
+    @Nonnull
     @Override
     public Element addText(final Object data) throws IllegalStateException {
         origElement.addText(data);
@@ -108,6 +100,7 @@ public class Element implements ApiElement<Element>, Html {
      * @return A parent element.
      * @see #addAnchoredText(java.lang.String, java.lang.Object...)
      */
+    @Nonnull
     public Element addText(@Nonnull final Object... data) throws IllegalStateException {
         return addTextSeparted("", data);
     }
@@ -118,6 +111,7 @@ public class Element implements ApiElement<Element>, Html {
      * @param data A template parameters
      * @return A parent element.
      */
+    @Nonnull
     public Element addTemplate(@Nonnull final String template, @Nonnull final Object... data)
             throws IllegalStateException {
         return addText(String.format(Locale.ENGLISH, template, data));
@@ -134,30 +128,45 @@ public class Element implements ApiElement<Element>, Html {
         return this;
     }
 
+    @Nonnull
     @Override
     public Element addRawText(Object data) throws IllegalStateException {
         origElement.addRawText(data);
         return this;
     }
 
+    @Nonnull
     @Override
     public Element addComment(CharSequence comment) throws IllegalStateException {
         origElement.addComment(comment);
         return this;
     }
 
+    @Nonnull
     @Override
     public Element addCDATA(CharSequence charData) throws IllegalStateException {
         origElement.addCDATA(charData);
         return this;
     }
 
+    @Nonnull
     @Override
     public void close() throws IllegalStateException {
         origElement.close();
     }
 
-    // -------------- Add TAG -----
+    // -------------- Add ELEMENT -----
+
+    /**
+     * Create new Element
+     * @param name The element name
+     * @return New instance of the Element
+     * @throws IllegalStateException An envelope for IO exceptions
+     */
+    @Override @Nonnull
+    public Element addElement(@Nonnull final String name) throws IllegalStateException {
+            return new Element(origElement.addElement(name));
+    }
 
     /**
      * Add a new Element with optional CSS classes
@@ -165,11 +174,13 @@ public class Element implements ApiElement<Element>, Html {
      * @param cssClasses Optional CSS classes.
      * @return New instance of the Element
      */
-    public Element addElement(@Nonnull final String name, @Nonnull final CharSequence... cssClasses) {
+    @Nonnull
+    public final Element addElement(@Nonnull final String name, @Nonnull final CharSequence... cssClasses) {
         return addElement(name).setClass(cssClasses);
     }
 
     /** Add new Table with cellpadding a cellspacing values to zero. */
+    @Nonnull
     public Element addTable(@Nonnull final CharSequence... cssClasses) {
         return addElement(TABLE, cssClasses)
                 .setAttribute(Element.A_CELLPADDING, 0)
@@ -177,11 +188,13 @@ public class Element implements ApiElement<Element>, Html {
     }
 
     /** Create a HTML table according to data */
+    @Nonnull
     public Element addTable(final Object[][] data, final CharSequence... cssClass) {
         return addTable(Arrays.asList(data), cssClass);
     }
 
     /** Create a HTML table according to data */
+    @Nonnull
     public Element addTable(final List<Object[]> data, final CharSequence... cssClass) {
         final Element result = addTable(cssClass);
 
@@ -199,31 +212,37 @@ public class Element implements ApiElement<Element>, Html {
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addBody(@Nonnull final CharSequence... cssClasses) {
         return addElement(BODY, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addTitle(@Nonnull final CharSequence... cssClasses) {
         return addElement(TITLE, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addLink(@Nonnull final CharSequence... cssClasses) {
         return addElement(LINK, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addStyle(@Nonnull final CharSequence... cssClasses) {
         return addElement(STYLE, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addScript(@Nonnull final CharSequence... cssClasses) {
         return addElement(SCRIPT, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addDiv(@Nonnull final CharSequence... cssClasses) {
         return addElement(DIV, cssClasses);
     }
@@ -234,6 +253,7 @@ public class Element implements ApiElement<Element>, Html {
      * @return An instance of FieldSet
      * @see LEGEND
      */
+    @Nonnull
     public Element addFieldset(@Nullable final String title, @Nonnull final CharSequence... cssClasses) {
         final Element result = addElement(FIELDSET, cssClasses);
         if (Check.hasLength(title)) {
@@ -243,72 +263,86 @@ public class Element implements ApiElement<Element>, Html {
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addPreformatted(@Nonnull final CharSequence... cssClasses) {
         return addElement(PRE, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addSpan(@Nonnull final CharSequence... cssClasses) {
         return addElement(SPAN, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addParagraph(@Nonnull final CharSequence... cssClasses) {
         return addElement(P, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addForm(@Nonnull final CharSequence... cssClasses) {
         return addElement(FORM, cssClasses);
     }
 
     /** Add a top heading (level one)  */
+    @Nonnull
     public Element addHeading(@Nonnull CharSequence title, @Nonnull final CharSequence... cssClasses) {
         return addHeading(1, title, cssClasses);
     }
 
     /** Add new heading with the required level where the first level is the one,  */
+    @Nonnull
     public Element addHeading(int level, @Nonnull CharSequence title, @Nonnull final CharSequence... cssClasses) {
         Assert.isTrue(level > 0, "Unsupported level {}", level);
         return addElement(HEADING_PREFIX + level, cssClasses).addText(title);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addTableHead(@Nonnull final CharSequence... cssClasses) {
         return addElement(THEAD, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addTableRow(@Nonnull final CharSequence... cssClasses) {
         return addElement(TR, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addTableDetail(@Nonnull final CharSequence... cssClasses) {
         return addElement(TD, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addLabel(@Nonnull final CharSequence... cssClasses) {
         return addElement(LABEL, cssClasses);
     }
 
     /** Add new input element */
+    @Nonnull
     public Element addInput(@Nonnull final CharSequence... cssClasses) {
         return addElement(INPUT, cssClasses);
     }
 
     /** Add new input element type of text */
+    @Nonnull
     public Element addTextInput(@Nonnull final CharSequence... cssClasses) {
         return addInput(cssClasses).setType(V_TEXT);
     }
 
     /** Add new input element type of password */
+    @Nonnull
     public Element addPasswordInput(@Nonnull final CharSequence... cssClasses) {
         return addInput(cssClasses).setType(V_PASSWORD);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addTextArea(@Nonnull final CharSequence... cssClasses) {
         return addElement(TEXT_AREA, cssClasses);
     }
@@ -316,7 +350,7 @@ public class Element implements ApiElement<Element>, Html {
     /** Add new select element
      * @see #addSelectOptions(java.lang.Object, java.util.Map, java.lang.CharSequence...)
      */
-
+    @Nonnull
     public Element addSelect(@Nonnull final CharSequence... cssClasses) {
         return addElement(SELECT, cssClasses);
     }
@@ -328,7 +362,11 @@ public class Element implements ApiElement<Element>, Html {
      * @return Return {@code this}
      * @see #addSelect(java.lang.CharSequence...)
      */
-    public Element addSelectOptions(@Nonnull Object value, @Nonnull final Map<?,?> options, @Nonnull final CharSequence... cssClasses) {
+    @Nonnull
+    public Element addSelectOptions(
+            @Nonnull Object value,
+            @Nonnull final Map<?,?> options,
+            @Nonnull final CharSequence... cssClasses) {
         for (Object key : options.keySet()) {
             this.addElement(Html.OPTION)
                     .setAttribute(Html.A_VALUE, key)
@@ -339,28 +377,33 @@ public class Element implements ApiElement<Element>, Html {
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addOption(@Nonnull final CharSequence... cssClasses) {
         return addElement(OPTION, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addButton(@Nonnull final CharSequence... cssClasses) {
         return addElement(BUTTON, cssClasses);
     }
 
     /** Add a submit button */
+    @Nonnull
     public Element addSubmitButton(@Nonnull final CharSequence... cssClasses) {
         final Element result = addButton(cssClasses);
         return result.setType(V_SUBMIT);
     }
 
     /** Add an anchor element with URL and CSS classes */
+    @Nonnull
     public Element addAnchor(@Nonnull final String url, @Nonnull final CharSequence... cssClasses) {
         final Element result = addElement(A, cssClasses);
         return result.setHref(url);
     }
 
     /** Add an anchor element with texts */
+    @Nonnull
     public Element addAnchoredText(@Nonnull final String url, @Nonnull final Object... text) {
         return addElement(A)
                .setHref(url)
@@ -368,15 +411,18 @@ public class Element implements ApiElement<Element>, Html {
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addUnorderedlist(@Nonnull final CharSequence... cssClasses) {
         return addElement(UL, cssClasses);
     }
 
     /** Add new body element */
+    @Nonnull
     public Element addOrderedList(@Nonnull final CharSequence... cssClasses) {
         return addElement(OL, cssClasses);
     }
 
+    @Nonnull
     public Element addListItem(@Nonnull final CharSequence... cssClasses) {
         return addElement(LI, cssClasses);
     }
@@ -385,6 +431,7 @@ public class Element implements ApiElement<Element>, Html {
      * @param cssClasses Optional CSS classes. The css item is ignored when the value is empty or {@code null}.
      * @return The current instanlce
      */
+    @Nonnull
     public Element setClass(@Nonnull final CharSequence... cssClasses) {
         if (Check.hasLength(cssClasses)) {
             final StringJoiner builder = new StringJoiner(" ");
@@ -402,21 +449,24 @@ public class Element implements ApiElement<Element>, Html {
     }
 
     /** Add a line break */
+    @Nonnull
     public Element addBreak(@Nonnull final CharSequence... cssClasses) {
         return addElement(BR, cssClasses);
     }
 
     // ----- An attributes ----------
 
-    /** Set a CSS class attribute */
+    /** Set a CSS class attribute rather */
     @Deprecated
+    @Nonnull
     public Element setCellPadding(final int value) {
         setAttribute(A_CELLPADDING, value);
         return this;
     }
 
-    /** Set a CSS class attribute */
+    /** Set a CSS class attribute rather */
     @Deprecated
+    @Nonnull
     public Element setCellSpacing(final int value) {
         setAttribute(A_CELLSPACING, value);
         return this;
@@ -427,16 +477,22 @@ public class Element implements ApiElement<Element>, Html {
     /** Crate a root element
      * @param cssLinks Nullable CSS link array
      */
+    @Nonnull
     public static Element createHtmlRoot(@Nonnull final Object title, @Nullable final CharSequence... cssLinks) {
         return createHtmlRoot(title, null, cssLinks);
     }
 
 
     /** Crate a root element
+     * @param title A HTML title
      * @param charset A charset
      * @param cssLinks Nullable CSS link array
      */
-    public static Element createHtmlRoot(@Nonnull final Object title, @Nullable final Charset charset, @Nullable final CharSequence... cssLinks) {
+    @Nonnull
+    public static Element createHtmlRoot(
+            @Nonnull final Object title,
+            @Nullable final Charset charset,
+            @Nullable final CharSequence... cssLinks) {
         XmlModel result = new XmlModel(HTML);
         XmlModel head = result.addElement(HEAD);
         head.addElement(META).setAttribute(A_CHARSET, charset);
@@ -449,77 +505,88 @@ public class Element implements ApiElement<Element>, Html {
                         .setAttribute(A_REL, "stylesheet");
             }
         }
-
         return new Element(result);
     }
 
     /** Set an identifier of the element */
+    @Nonnull
     public Element setId(@Nullable final CharSequence value) {
         setAttribute(A_ID, value);
         return this;
     }
 
     /** Set a method of form */
+    @Nonnull
     public Element setMethod(@Nullable final Object value) {
         setAttribute(A_METHOD, value);
         return this;
     }
 
     /** Set an action type of from */
+    @Nonnull
     public Element setAction(@Nullable final Object value) {
         setAttribute(A_ACTION, value);
         return this;
     }
 
     /** Set a type of input element */
+    @Nonnull
     public Element setType(@Nullable final Object value) {
         setAttribute(A_TYPE, value);
         return this;
     }
 
     /** Set an name of input element */
+    @Nonnull
     public Element setName(@Nullable final CharSequence value) {
         setAttribute(A_NAME, value);
         return this;
     }
 
     /** Set an value of input element */
+    @Nonnull
     public Element setValue(@Nullable final Object value) {
         setAttribute(A_VALUE, value);
         return this;
     }
 
     /** Set an value of input element */
+    @Nonnull
     public Element setFor(@Nullable final CharSequence value) {
         setAttribute(A_VALUE, value);
         return this;
     }
 
     /** Row count of a text area */
+    @Nonnull
     public Element setRows(@Nullable final int value) {
         setAttribute(A_ROWS, value);
         return this;
     }
 
     /** Column count of a text area */
+    @Nonnull
     public Element setCols(@Nullable final Object value) {
         setAttribute(A_COLS, value);
         return this;
     }
 
     /** Column span inside the table */
+    @Nonnull
     public Element setColSpan(@Nullable final int value) {
         setAttribute(A_COLSPAN, value);
         return this;
     }
 
     /** Row span inside the table */
+    @Nonnull
     public Element setRowSpan(@Nullable final int value) {
         setAttribute(A_ROWSPAN, value);
         return this;
     }
 
     /** Set hyperlink reference */
+    @Nonnull
     public Element setHref(@Nullable final CharSequence value) {
         setAttribute(A_HREF, value);
         return this;
@@ -527,6 +594,7 @@ public class Element implements ApiElement<Element>, Html {
 
     /** String value */
     @Override
+    @Nonnull
     public String toString() {
         return origElement.toString();
     }

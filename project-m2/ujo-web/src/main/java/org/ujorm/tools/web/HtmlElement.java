@@ -27,8 +27,8 @@ import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
-import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
+import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.model.XmlModel;
 import org.ujorm.tools.xml.model.XmlWriter;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
@@ -64,10 +64,29 @@ public class HtmlElement extends Element {
         this.writer = writer;
     }
 
+    /**
+     * Create new Element
+     * @param name The element name
+     * @return New instance of the Element
+     * @throws IllegalStateException An envelope for IO exceptions
+     */
+    @Override @Nonnull
+    public final Element addElement(@Nonnull final String name)
+            throws IllegalStateException {
+        switch (name) {
+            case Html.HEAD:
+                return getHead();
+            case Html.BODY:
+                return getBody();
+            default:
+                return super.addElement(name);
+        }
+    }
+
     /** Returns a head element */
     public Element getHead() {
         if (head == null) {
-            head = addElement(Html.HEAD);
+            head = super.addElement(Html.HEAD);
         }
         return head;
     }
@@ -76,7 +95,7 @@ public class HtmlElement extends Element {
     @Nonnull
     public Element getBody() {
         if (body == null) {
-            body = addElement(Html.BODY);
+            body = super.addElement(Html.BODY);
         }
         return body;
     }
