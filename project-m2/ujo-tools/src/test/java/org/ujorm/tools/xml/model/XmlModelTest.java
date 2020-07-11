@@ -35,12 +35,12 @@ public class XmlModelTest {
 
         XmlModel root = new XmlModel("root");
         root.addElement("childA")
-                .setAttrib("x", 1)
-                .setAttrib("y", 2);
+                .setAttribute("x", 1)
+                .setAttribute("y", 2);
         root.addElement("childB")
-                .setAttrib("x", 3)
-                .setAttrib("y", 4)
-                .setAttrib("z", "<'&\">")
+                .setAttribute("x", 3)
+                .setAttribute("y", 4)
+                .setAttribute("z", "<'&\">")
                 .addText("A text message <'&\">");
         root.addRawText("\n<rawXml/>\n");
         root.addCDATA("A character data <'&\">");
@@ -83,15 +83,15 @@ public class XmlModelTest {
     }
 
     @Test
-    public void testAddAttrib() {
-        System.out.println("testaddAttrib");
+    public void testSetAttrib() {
+        System.out.println("testSetAttrib");
 
         String expected1 = AbstractWriter.XML_HEADER + "\n<input readonly=\"\"/>";
-        String result1 = new XmlModel(Html.INPUT).setAttrib(Html.A_READONLY, "").toString();
+        String result1 = new XmlModel(Html.INPUT).setAttribute(Html.A_READONLY, "").toString();
         assertEquals(expected1, result1);
 
         String expected2 = AbstractWriter.XML_HEADER + "\n<input/>";
-        String result2 = new XmlModel(Html.INPUT).setAttrib(Html.A_READONLY, null).toString();
+        String result2 = new XmlModel(Html.INPUT).setAttribute(Html.A_READONLY, null).toString();
         assertEquals(expected2, result2);
     }
 

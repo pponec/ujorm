@@ -17,7 +17,6 @@
 
 package org.ujorm.tools.web;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -31,12 +30,12 @@ import javax.annotation.Nullable;
 import javax.sql.rowset.spi.XmlWriter;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import static org.ujorm.tools.web.Html.LEGEND;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.model.XmlModel;
+import static org.ujorm.tools.web.Html.LEGEND;
 
-/** 
- * /** A HTML Element implements some methods for frequently used elements and attributes 
+/**
+ * /** A HTML Element implements some methods for frequently used elements and attributes
  * A proxy class in the current release */
 public class Element implements ApiElement<Element>, Html {
 
@@ -74,9 +73,22 @@ public class Element implements ApiElement<Element>, Html {
      * @return The original element
      */
     @Override
-    public final Element setAttrib(@Nonnull final String name, @Nullable final Object value) {
-        origElement.setAttrib(name, value);
+    public final Element setAttribute(@Nonnull final String name, @Nullable final Object value) {
+        origElement.setAttribute(name, value);
         return this;
+    }
+
+
+    /**
+     * A shortcut for the method {@link #setAttribute(java.lang.String, java.lang.Object) }.
+     * @param name Required element name
+     * @param value The {@code null} value is silently ignored. Formatting is performed by the
+     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.model.XmlModel, java.lang.String, java.io.Writer) }
+     *   method, where the default implementation calls a {@code toString()} only.
+     * @return The original element
+     */
+    public final Element setAttrib(@Nonnull final String name, @Nullable final Object value) {
+        return setAttribute(name, value);
     }
 
     /** Add simple text
@@ -160,8 +172,8 @@ public class Element implements ApiElement<Element>, Html {
     /** Add new Table with cellpadding a cellspacing values to zero. */
     public Element addTable(@Nonnull final CharSequence... cssClasses) {
         return addElement(TABLE, cssClasses)
-                .setAttrib(Element.A_CELLPADDING, 0)
-                .setAttrib(Element.A_CELLSPACING, 0);
+                .setAttribute(Element.A_CELLPADDING, 0)
+                .setAttribute(Element.A_CELLSPACING, 0);
     }
 
     /** Create a HTML table according to data */
@@ -174,7 +186,7 @@ public class Element implements ApiElement<Element>, Html {
         final Element result = addTable(cssClass);
 
         if (Check.hasLength(cssClass)) {
-            result.setAttrib(Html.A_CLASS, String.join(" ", cssClass));
+            result.setAttribute(Html.A_CLASS, String.join(" ", cssClass));
         }
 
         for (Object[] rowValue : data) {
@@ -319,8 +331,8 @@ public class Element implements ApiElement<Element>, Html {
     public Element addSelectOptions(@Nonnull Object value, @Nonnull final Map<?,?> options, @Nonnull final CharSequence... cssClasses) {
         for (Object key : options.keySet()) {
             this.addElement(Html.OPTION)
-                    .setAttrib(Html.A_VALUE, key)
-                    .setAttrib(Html.A_SELECTED, Objects.equals(value, key) ? Html.A_SELECTED : null)
+                    .setAttribute(Html.A_VALUE, key)
+                    .setAttribute(Html.A_SELECTED, Objects.equals(value, key) ? Html.A_SELECTED : null)
                     .addText(options.get(key));
         }
         return this;
@@ -383,7 +395,7 @@ public class Element implements ApiElement<Element>, Html {
             }
             final String result = builder.toString();
             if (Check.hasLength(result)) {
-                setAttrib(A_CLASS, result);
+                setAttribute(A_CLASS, result);
             }
         }
         return this;
@@ -399,14 +411,14 @@ public class Element implements ApiElement<Element>, Html {
     /** Set a CSS class attribute */
     @Deprecated
     public Element setCellPadding(final int value) {
-        setAttrib(A_CELLPADDING, value);
+        setAttribute(A_CELLPADDING, value);
         return this;
     }
 
     /** Set a CSS class attribute */
     @Deprecated
     public Element setCellSpacing(final int value) {
-        setAttrib(A_CELLSPACING, value);
+        setAttribute(A_CELLSPACING, value);
         return this;
     }
 
@@ -427,14 +439,14 @@ public class Element implements ApiElement<Element>, Html {
     public static Element createHtmlRoot(@Nonnull final Object title, @Nullable final Charset charset, @Nullable final CharSequence... cssLinks) {
         XmlModel result = new XmlModel(HTML);
         XmlModel head = result.addElement(HEAD);
-        head.addElement(META).setAttrib(A_CHARSET, charset);
+        head.addElement(META).setAttribute(A_CHARSET, charset);
         head.addElement(TITLE).addText(title);
 
         if (cssLinks != null) {
             for (CharSequence cssLink : cssLinks) {
                 head.addElement(LINK)
-                        .setAttrib(A_HREF, cssLink)
-                        .setAttrib(A_REL, "stylesheet");
+                        .setAttribute(A_HREF, cssLink)
+                        .setAttribute(A_REL, "stylesheet");
             }
         }
 
@@ -443,73 +455,73 @@ public class Element implements ApiElement<Element>, Html {
 
     /** Set an identifier of the element */
     public Element setId(@Nullable final CharSequence value) {
-        setAttrib(A_ID, value);
+        setAttribute(A_ID, value);
         return this;
     }
 
     /** Set a method of form */
     public Element setMethod(@Nullable final Object value) {
-        setAttrib(A_METHOD, value);
+        setAttribute(A_METHOD, value);
         return this;
     }
 
     /** Set an action type of from */
     public Element setAction(@Nullable final Object value) {
-        setAttrib(A_ACTION, value);
+        setAttribute(A_ACTION, value);
         return this;
     }
 
     /** Set a type of input element */
     public Element setType(@Nullable final Object value) {
-        setAttrib(A_TYPE, value);
+        setAttribute(A_TYPE, value);
         return this;
     }
 
     /** Set an name of input element */
     public Element setName(@Nullable final CharSequence value) {
-        setAttrib(A_NAME, value);
+        setAttribute(A_NAME, value);
         return this;
     }
 
     /** Set an value of input element */
     public Element setValue(@Nullable final Object value) {
-        setAttrib(A_VALUE, value);
+        setAttribute(A_VALUE, value);
         return this;
     }
 
     /** Set an value of input element */
     public Element setFor(@Nullable final CharSequence value) {
-        setAttrib(A_VALUE, value);
+        setAttribute(A_VALUE, value);
         return this;
     }
 
     /** Row count of a text area */
     public Element setRows(@Nullable final int value) {
-        setAttrib(A_ROWS, value);
+        setAttribute(A_ROWS, value);
         return this;
     }
 
     /** Column count of a text area */
     public Element setCols(@Nullable final Object value) {
-        setAttrib(A_COLS, value);
+        setAttribute(A_COLS, value);
         return this;
     }
 
     /** Column span inside the table */
     public Element setColSpan(@Nullable final int value) {
-        setAttrib(A_COLSPAN, value);
+        setAttribute(A_COLSPAN, value);
         return this;
     }
 
     /** Row span inside the table */
     public Element setRowSpan(@Nullable final int value) {
-        setAttrib(A_ROWSPAN, value);
+        setAttribute(A_ROWSPAN, value);
         return this;
     }
 
     /** Set hyperlink reference */
     public Element setHref(@Nullable final CharSequence value) {
-        setAttrib(A_HREF, value);
+        setAttribute(A_HREF, value);
         return this;
     }
 

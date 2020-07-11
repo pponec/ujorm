@@ -19,10 +19,10 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.ujorm.tools.xml.Html;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.*;
-import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * A test of the XmlNode class
@@ -37,12 +37,12 @@ public class XmlBuilderTest implements Html {
         final XmlPrinter writer = XmlPrinter.forXml();
         try (XmlBuilder root = writer.createElement("root")) {
             root.addElement("childA")
-                    .setAttrib("x", 1)
-                    .setAttrib("y", 2);
+                    .setAttribute("x", 1)
+                    .setAttribute("y", 2);
             root.addElement("childB")
-                    .setAttrib("x", 3)
-                    .setAttrib("y", 4)
-                    .setAttrib("z", "<'&\">")
+                    .setAttribute("x", 3)
+                    .setAttribute("y", 4)
+                    .setAttribute("z", "<'&\">")
                     .addText("A text message <'&\">");
             root.addRawText("\n<rawXml/>\n");
          // root.addCDATA("A character data <'&\">");
@@ -67,12 +67,12 @@ public class XmlBuilderTest implements Html {
         final XmlPrinter writer = XmlPrinter.forNiceXml();
         try (XmlBuilder root = writer.createElement("root")) {
             root.addElement("childA")
-                    .setAttrib("x", 1)
-                    .setAttrib("y", 2);
+                    .setAttribute("x", 1)
+                    .setAttribute("y", 2);
             root.addElement("childB")
-                    .setAttrib("x", 3)
-                    .setAttrib("y", 4)
-                    .setAttrib("z", "<'&\">")
+                    .setAttribute("x", 3)
+                    .setAttribute("y", 4)
+                    .setAttribute("z", "<'&\">")
                     .addText("A text message <'&\">");
             root.addRawText("\n    <rawXml/>\n");
          // root.addCDATA("A character data <'&\">");
@@ -96,11 +96,11 @@ public class XmlBuilderTest implements Html {
 
         final XmlPrinter writer = XmlPrinter.forNiceHtml((Appendable) new StringBuilder());
         try (XmlBuilder html = writer.createElement("html")) {
-            html.setAttrib("lang", "en");
+            html.setAttribute("lang", "en");
             try(XmlBuilder head = html.addElement("head")) {
-               head.addElement("meta").setAttrib("charset", StandardCharsets.UTF_8);
+               head.addElement("meta").setAttribute("charset", StandardCharsets.UTF_8);
                head.addElement("title").addText("Demo");
-               head.addElement("link").setAttrib("href", "word.css").setAttrib("rel", "stylesheet");
+               head.addElement("link").setAttribute("href", "word.css").setAttribute("rel", "stylesheet");
             }
             try(XmlBuilder body = html.addElement("body")) {
                body.addElement("h1").addText("Hello, World!");
@@ -129,11 +129,13 @@ public class XmlBuilderTest implements Html {
 
         final XmlPrinter writer = XmlPrinter.forNiceHtml((Appendable) new StringBuilder());
         try (XmlBuilder html = writer.createElement("html")) {
-            html.setAttrib("lang", "en");
+            html.setAttribute("lang", "en");
             XmlBuilder head = html.addElement("head");
-            head.addElement("meta").setAttrib("charset", StandardCharsets.UTF_8);
+            head.addElement("meta").setAttribute("charset", StandardCharsets.UTF_8);
             head.addElement("title").addText("Demo");
-            head.addElement("link").setAttrib("href", "word.css").setAttrib("rel", "stylesheet");
+            head.addElement("link")
+                    .setAttribute("href", "word.css")
+                    .setAttribute("rel", "stylesheet");
 
             XmlBuilder body = html.addElement("body");
             body.addElement("h1").addText("Hello, World!");
@@ -164,7 +166,7 @@ public class XmlBuilderTest implements Html {
         XmlPrinter writer = XmlPrinter.forHtml();
         try (XmlBuilder html = writer.createElement(Html.HTML)) {
              try (XmlBuilder head = html.addElement(Html.HEAD)) {
-                   head.addElement(Html.META).setAttrib(Html.A_CHARSET, UTF_8);
+                   head.addElement(Html.META).setAttribute(Html.A_CHARSET, UTF_8);
                    head.addElement(Html.TITLE).addText("Test");
              }
              try (XmlBuilder body = html.addElement(Html.BODY)) {
@@ -194,11 +196,11 @@ public class XmlBuilderTest implements Html {
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         try (XmlBuilder html = XmlBuilder.forNiceHtml(response.getWriter())) {
-            html.setAttrib("lang", "en");
+            html.setAttribute("lang", "en");
             try(XmlBuilder head = html.addElement("head")) {
-               head.addElement("meta").setAttrib("charset", UTF_8);
+               head.addElement("meta").setAttribute("charset", UTF_8);
                head.addElement("title").addText("Demo");
-               head.addElement("link").setAttrib("href", "css/basic.css").setAttrib("rel", "stylesheet");
+               head.addElement("link").setAttribute("href", "css/basic.css").setAttribute("rel", "stylesheet");
             }
             try(XmlBuilder body = html.addElement("body")) {
                body.addElement("h1").addText("Hello, World! (extended)");
@@ -228,11 +230,11 @@ public class XmlBuilderTest implements Html {
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         try (XmlBuilder html = XmlBuilder.forNiceHtml(response.getWriter())) {
-            html.setAttrib(A_LANG, "en");
+            html.setAttribute(A_LANG, "en");
             try(XmlBuilder head = html.addElement(HEAD)) {
-               head.addElement(META).setAttrib(A_CHARSET, lang);
+               head.addElement(META).setAttribute(A_CHARSET, lang);
                head.addElement(TITLE).addText("Demo");
-               head.addElement(LINK).setAttrib(A_HREF, "css/basic.css").setAttrib(A_REL, V_STYLESHEET);
+               head.addElement(LINK).setAttribute(A_HREF, "css/basic.css").setAttribute(A_REL, V_STYLESHEET);
             }
             try(XmlBuilder body = html.addElement(BODY)) {
                body.addElement(H1).addText("Hello, World! (extended)");

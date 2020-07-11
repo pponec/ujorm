@@ -135,16 +135,6 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
 
     /**
      * Set one attribute
-     * @deprecated Uset the method {@link #setAttrib(java.lang.String, java.lang.Object) } instead of
-     * @return The original element
-     */
-    @Nonnull @Deprecated
-    public final XmlModel addAttrib(@Nonnull final String name, @Nullable final Object value) {
-        return setAttrib(name, value);
-    }
-
-    /**
-     * Set one attribute
      * @param name Required element name
      * @param value The {@code null} value is ignored. Formatting is performed by the
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
@@ -152,7 +142,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      * @return The original element
      */
     @Override @Nonnull
-    public final XmlModel setAttrib(@Nonnull final String name, @Nullable final Object value) {
+    public final XmlModel setAttribute(@Nonnull final String name, @Nullable final Object value) {
         Assert.hasLength(name, REQUIRED_MSG, "name");
         if (value != null) {
             if (attributes == null) {

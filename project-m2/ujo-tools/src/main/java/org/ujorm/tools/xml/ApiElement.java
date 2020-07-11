@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 
 /**
  * An element model API.
- * 
+ *
  * The XmlElement class implements the {@link Closeable} implementation
  * for an optional highlighting the tree structure in the source code.
 *
@@ -42,7 +42,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      * @return The new XmlElement!
      */
     @Nonnull
-    E addElement(@Nonnull final String name);
+    E addElement(@Nonnull String name);
 
     /**
      * Set an attribute
@@ -53,7 +53,16 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      * @return The original element
      */
     @Nonnull
-    E setAttrib(@Nonnull final String name, @Nullable final Object value);
+    E setAttribute(@Nonnull String name, @Nullable Object value);
+
+    /**
+     * @deprecated Call a method {@link #setAttribute(java.lang.String, java.lang.Object) } rather.
+     */
+    @Deprecated
+    @Nonnull
+    default E setAttrib(@Nonnull String name, @Nullable Object value) {
+        return setAttribute(name, value);
+    }
 
     /**
      * Add a text and escape special character
@@ -62,13 +71,13 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Nonnull
-    E addText(@Nullable final Object value);
+    E addText(@Nullable Object value);
 
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */
     @Nonnull
-    E addRawText(@Nullable final Object value);
+    E addRawText(@Nullable Object value);
     /**
      * Add a <strong>comment text</strong>.
      * The CDATA structure isn't really for HTML at all.
@@ -76,7 +85,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      * @return This instance
      */
     @Nonnull
-    E addComment(@Nullable final CharSequence comment);
+    E addComment(@Nullable CharSequence comment);
 
     /**
      * Add a <strong>character data</strong> in {@code CDATA} format to XML only.
@@ -85,7 +94,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      * @return This instance
      */
     @Nonnull
-    E addCDATA(@Nullable final CharSequence charData);
+    E addCDATA(@Nullable CharSequence charData);
 
     /** Close the element */
     @Override

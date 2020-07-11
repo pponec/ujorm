@@ -99,8 +99,8 @@ public class HtmlElement extends Element {
     public Element addJavascriptLink(final boolean defer, @Nonnull final CharSequence javascriptLink) {
         Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
         return getHead().addElement(Html.SCRIPT)
-                .setAttrib(Html.A_SRC, javascriptLink)
-                .setAttrib("defer", defer ? "defer" : null)
+                .setAttribute(Html.A_SRC, javascriptLink)
+                .setAttribute("defer", defer ? "defer" : null)
                 .addText("");
     }
 
@@ -111,8 +111,8 @@ public class HtmlElement extends Element {
     public Element addJavascriptContents(@Nonnull final CharSequence javascript) {
         Assert.notNull(javascript, REQUIRED_MSG, "javascript");
         return getHead().addElement(Html.SCRIPT)
-                .setAttrib(Html.A_LANGUAGE, "javascript")
-                .setAttrib(Html.A_TYPE, "text/javascript")
+                .setAttribute(Html.A_LANGUAGE, "javascript")
+                .setAttribute(Html.A_TYPE, "text/javascript")
                 .addText(javascript);
     }
 
@@ -132,8 +132,8 @@ public class HtmlElement extends Element {
     public Element addCssLink(@Nonnull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
         return getHead().addElement(Html.LINK)
-                .setAttrib(Html.A_HREF, css)
-                .setAttrib(Html.A_REL, "stylesheet");
+                .setAttribute(Html.A_HREF, css)
+                .setAttribute(Html.A_REL, "stylesheet");
     }
 
     /** Create a new CSS element and return it
@@ -256,8 +256,8 @@ public class HtmlElement extends Element {
                     ? new XmlModel(Html.HTML)
                     : new XmlBuilder(Html.HTML, new XmlPrinter(response.getWriter(), config));
             final HtmlElement result = new HtmlElement(root, config, response.getWriter());
-            config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
-            result.getHead().addElement(Html.META).setAttrib(A_CHARSET, config.getCharset());
+            config.getLanguage().ifPresent(lang -> result.setAttribute(A_LANG, lang));
+            result.getHead().addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
             result.getHead().addElement(Html.TITLE).addText(config.getTitle());
             result.addCssLinks(config.getCssLinks());
 
@@ -282,8 +282,8 @@ public class HtmlElement extends Element {
                 ? new XmlModel(Html.HTML)
                 : new XmlBuilder(Html.HTML, new XmlPrinter(writer, config));
         final HtmlElement result = new HtmlElement(root, config, writer);
-        config.getLanguage().ifPresent(lang -> result.setAttrib(A_LANG, lang));
-        result.getHead().addElement(Html.META).setAttrib(A_CHARSET, config.getCharset());
+        config.getLanguage().ifPresent(lang -> result.setAttribute(A_LANG, lang));
+        result.getHead().addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
         result.getHead().addElement(Html.TITLE).addText(config.getTitle());
         result.addCssLinks(config.getCssLinks());
         return result;

@@ -130,7 +130,6 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     /**
      * Setup states
      * @param element A child Node or {@code null} value for a text data
-     * @throws IOException
      */
     @Nonnull
     protected XmlBuilder nextChild(@Nullable final XmlBuilder element) {
@@ -176,7 +175,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @return The original element
      */
     @Override @Nonnull
-    public final XmlBuilder setAttrib(@Nonnull final String name, @Nullable final Object value) {
+    public final XmlBuilder setAttribute(@Nonnull final String name, @Nullable final Object value) {
         Assert.hasLength(name, REQUIRED_MSG, "name");
         Assert.isFalse(closed, "The node {} was closed", this.name);
         Assert.isTrue(attributeMode, "Writing attributes to the {} node was closed", this.name);
