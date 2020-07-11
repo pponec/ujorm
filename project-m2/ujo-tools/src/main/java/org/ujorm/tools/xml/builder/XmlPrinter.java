@@ -31,7 +31,7 @@ import org.ujorm.tools.xml.config.XmlConfig;
 
 /**
  * If you need special formatting, overwrite responsible methods.
- * @see XmlBuilder
+ * @see AbstractXmlBuilder
  * @since 1.88
  * @author Pavel Ponec
  */
@@ -66,11 +66,11 @@ public class XmlPrinter extends AbstractWriter {
      * @param rawValue A raw value to print
      * @param element An original element
      */
-    protected void writeRawValue(@Nonnull final Object rawValue, @Nonnull final XmlBuilder element) throws IOException {
+    protected void writeRawValue(@Nonnull final Object rawValue, @Nonnull final AbstractXmlBuilder element) throws IOException {
         out.append(rawValue.toString());
     }
 
-    void writeAttrib(String name, Object data, XmlBuilder owner) throws IOException {
+    void writeAttrib(String name, Object data, AbstractXmlBuilder owner) throws IOException {
         out.append(CHAR_SPACE);
         out.append(name);
         out.append('=');
@@ -84,7 +84,7 @@ public class XmlPrinter extends AbstractWriter {
     }
 
     /** Open the Node */
-    void writeBeg(XmlBuilder element, final boolean lastText) throws IOException {
+    void writeBeg(AbstractXmlBuilder element, final boolean lastText) throws IOException {
         if (!lastText) {
             writeNewLine(element.getLevel());
         }
@@ -93,12 +93,12 @@ public class XmlPrinter extends AbstractWriter {
     }
 
     /** Middle closing the Node */
-    void writeMid(XmlBuilder element) throws IOException {
+    void writeMid(AbstractXmlBuilder element) throws IOException {
         out.append(XML_GT);
     }
 
     /** Close the Node */
-    void writeEnd(XmlBuilder element) throws IOException {
+    void writeEnd(AbstractXmlBuilder element) throws IOException {
         if (element.isFilled()) {
             if (indentationEnabled && !element.isLastText()) {
                 writeNewLine(element.getLevel());

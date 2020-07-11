@@ -29,7 +29,7 @@ import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 
 /**
  * If you need special formatting, overwrite responsible methods.
- * @see XmlModel
+ * @see AbstractXmlModel
  * @since 1.88
  * @author Pavel Ponec
  */
@@ -63,7 +63,7 @@ public class XmlWriter extends AbstractWriter {
 
     /** Render the XML code without header */
     @Nonnull
-    public final XmlWriter write(final int level, @Nonnull final XmlModel element) throws IOException {
+    public final XmlWriter write(final int level, @Nonnull final AbstractXmlModel element) throws IOException {
         return write(level, element.getName(), element.attributes, element.children, element);
     }
 
@@ -80,7 +80,7 @@ public class XmlWriter extends AbstractWriter {
             , @Nonnull final CharSequence name
             , @Nullable final Map<String, Object> attributes
             , @Nullable final List<Object> children
-            , @Nonnull final XmlModel element) throws IOException {
+            , @Nonnull final AbstractXmlModel element) throws IOException {
         out.append(XML_LT);
         out.append(name);
 
@@ -100,15 +100,15 @@ public class XmlWriter extends AbstractWriter {
             out.append(XML_GT);
             boolean writeNewLine = true;
             for (Object child : children) {
-                if (child instanceof XmlModel) {
+                if (child instanceof AbstractXmlModel) {
                     if (writeNewLine) {
                         writeNewLine(level);
                     } else {
                         writeNewLine = true;
                     }
-                    write(level + 1, (XmlModel) child);
-                } else if (child instanceof XmlModel.RawEnvelope) {
-                    writeRawValue(((XmlModel.RawEnvelope) child).get().toString(), element);
+                    write(level + 1, (AbstractXmlModel) child);
+                } else if (child instanceof AbstractXmlModel.RawEnvelope) {
+                    writeRawValue(((AbstractXmlModel.RawEnvelope) child).get().toString(), element);
                     writeNewLine = false;
                 } else {
                     writeValue(child, element, null);

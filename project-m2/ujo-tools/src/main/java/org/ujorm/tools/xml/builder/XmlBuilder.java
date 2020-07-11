@@ -55,105 +55,18 @@ import org.ujorm.tools.xml.ApiElement;
  * @since 1.86
  * @author Pavel Ponec
  */
-public class XmlBuilder implements ApiElement<XmlBuilder> {
+public class XmlBuilder extends AbstractXmlBuilder<XmlBuilder> {
 
-    /** The HTML tag name */
-    protected static final String HTML = "html";
-
-    /** Assertion message template */
-    protected static final String REQUIRED_MSG = "The argument {} is required";
-
-    /** Element name */
-    @Nonnull
-    protected final String name;
-
-    /** Node writer */
-    @Nonnull
-    private final XmlPrinter writer;
-
-    /** Element level */
-    private final int level;
-
-    /** Last child node */
-    @Nullable
-    private XmlBuilder lastChild;
-
-    /** The last child was a text */
-    private boolean lastText;
-
-    /** Is Node is filled or it is empty */
-    private boolean filled;
-
-    /** The node is closed to writing */
-    private boolean closed;
-
-    /** An attribsute mode */
-    private boolean attributeMode = true;
-
-    /** The new element constructor
-     * @param name The element name must not be empty nor special HTML characters.
-     */
-    public XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer, final int level) {
-        this(name, writer, level, true);
+    public XmlBuilder(CharSequence name, XmlPrinter writer, int level) {
+        super(name, writer, level);
     }
 
-
-    /** The new element constructor
-     * @param name The element name must not be empty nor special HTML characters.
-     * @param writer A XmlPrinter
-     * @param level Level of the Element
-     * @param printName Print the element name immediately.
-     * @throws IOException
-     */
-    protected XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
-        this.name = name.toString();
-        this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
-        this.level = level;
-
-        if (printName) try {
-            writer.writeBeg(this, lastText);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+    protected XmlBuilder(CharSequence name, XmlPrinter writer, int level, boolean printName) {
+        super(name, writer, level, printName);
     }
 
-    /** New element with a parent */
-    public XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer) {
-        this(name, writer, 0);
-    }
-
-    @Nonnull
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Setup states
-     * @param element A child Node or {@code null} value for a text data
-     */
-    @Nonnull
-    protected XmlBuilder nextChild(@Nullable final XmlBuilder element) {
-        Assert.isFalse(closed, "The node {} was closed", this.name);
-        if (!filled) try {
-            writer.writeMid(this);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-        if (lastChild != null) {
-            lastChild.close();
-        }
-        if (element != null) try {
-            writer.writeBeg(element, lastText);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-
-        filled = true;
-        attributeMode = false;
-        lastChild = element;
-        lastText = element == null;
-
-        return element;
+    public XmlBuilder(CharSequence name, XmlPrinter writer) {
+        super(name, writer);
     }
 
     /** Create a new {@link XmlBuilder} for a required name and add it to children.
@@ -164,123 +77,6 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     public final XmlBuilder addElement(@Nonnull final String name) {
         XmlBuilder xb = new XmlBuilder(name, writer, level + 1, false);
         return nextChild(xb);
-    }
-
-    /**
-     * Add an attribute
-     * @param name Required element name
-     * @param value The {@code null} value is ignored. Formatting is performed by the
-     *   {@link XmlPrinter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
-     *   method, where the default implementation calls a {@code toString()} only.
-     * @return The original element
-     */
-    @Override @Nonnull
-    public final XmlBuilder setAttribute(@Nonnull final String name, @Nullable final Object value) {
-        Assert.hasLength(name, REQUIRED_MSG, "name");
-        Assert.isFalse(closed, "The node {} was closed", this.name);
-        Assert.isTrue(attributeMode, "Writing attributes to the {} node was closed", this.name);
-        if (value != null) try {
-            writer.writeAttrib(name, value, this);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-        return this;
-    }
-
-    /**
-     * Add a text and escape special character
-     * @param value The {@code null} value is allowed. Formatting is performed by the
-     *   {@link XmlPrinter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
-     *   method, where the default implementation calls a {@code toString()} only.
-     * @return This instance */
-    @Override @Nonnull
-    public final XmlBuilder addText(@Nullable final Object value) {
-        try {
-            nextChild(null);
-            writer.writeValue(value, this, null);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-        return this;
-    }
-
-    /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
-     * @param value The {@code null} value is ignored.
-     * @return This instance */
-    @Override @Nonnull
-    public final XmlBuilder addRawText(@Nullable final Object value) {
-        try {
-            nextChild(null);
-            writer.writeRawValue(value, this);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-        return this;
-    }
-
-    /**
-     * Add a <strong>comment text</strong>.
-     * The CDATA structure isn't really for HTML at all.
-     * @param comment A comment text must not contain a string {@code -->} .
-     * @return This instance
-     */
-    @Override @Nonnull @Deprecated
-    public final XmlBuilder addComment(@Nullable final CharSequence comment) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Add a <strong>character data</strong> in {@code CDATA} format to XML only.
-     * The CDATA structure isn't really for HTML at all.
-     * @param charData A text including the final DATA sequence. An empty argument is ignored.
-     * @return This instance
-     */
-    @Override @Nonnull @Deprecated
-    public final XmlBuilder addCDATA(@Nullable final CharSequence charData) {
-        throw new UnsupportedOperationException();
-    }
-
-    /** Close the Node */
-    @Override
-    public final void close() {
-        if (!closed) try {
-            closed = true;
-            if (lastChild != null) {
-                lastChild.close();
-            }
-            writer.writeEnd(this);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    /** Is the node closed? */
-    public boolean isClosed() {
-        return closed;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public boolean isFilled() {
-        return filled;
-    }
-
-    /** The last child was a text */
-    public boolean isLastText() {
-        return lastText;
-    }
-
-    /** Writer */
-    public XmlPrinter getWriter() {
-        return writer;
-    }
-
-    /** Render the XML code including header */
-    @Override @Nonnull
-    public String toString() {
-        return writer.toString();
     }
 
     // --- Factory method ---
