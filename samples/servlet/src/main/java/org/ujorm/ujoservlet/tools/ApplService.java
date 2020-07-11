@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServlet;
 import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.web.Html;
-import org.ujorm.tools.xml.AbstractElement;
+import org.ujorm.tools.xml.ApiElement;
 
 /**
  * Common services with static methdos
@@ -46,8 +46,8 @@ public abstract class ApplService {
     }
 
     /** Add a common footer for DOM */
-    public static void addFooter(final AbstractElement parent, HttpServlet servlet, short showLine) throws IOException {
-        AbstractElement footer = parent.addElement(Html.DIV)
+    public static void addFooter(final ApiElement parent, HttpServlet servlet, short showLine) throws IOException {
+        ApiElement footer = parent.addElement(Html.DIV)
                 .setAttrib(Html.A_CLASS, "footer");
         footer.addText("See a ")
                 .addElement(Html.A)

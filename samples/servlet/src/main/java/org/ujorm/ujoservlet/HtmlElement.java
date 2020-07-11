@@ -27,8 +27,8 @@ import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.XmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
-import org.ujorm.tools.xml.dom.XmlElement;
-import org.ujorm.tools.xml.dom.XmlWriter;
+import org.ujorm.tools.xml.model.XmlModel;
+import org.ujorm.tools.xml.model.XmlWriter;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
@@ -44,17 +44,17 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  * @since 1.86
  * @author Pavel Ponec
  */
-public class HtmlElement extends XmlElement {
+public class HtmlElement extends XmlModel {
 
     protected static final char CHAR_NEW_LINE = '\n';
 
     /** Head element */
     @Nonnull
-    private final XmlElement head;
+    private final XmlModel head;
 
     /** Body element */
     @Nonnull
-    private final XmlElement body;
+    private final XmlModel body;
 
     /** Charset */
     @Nonnull
@@ -103,30 +103,30 @@ public class HtmlElement extends XmlElement {
     /** Returns body element
      * @deprecated Use the method {@link #addElementToHead(java.lang.String) } rather. */
     @Nonnull @Deprecated
-    public <T extends XmlElement> T getHead() {
+    public <T extends XmlModel> T getHead() {
         return (T) head;
     }
 
     /** Returns body element */
     @Nonnull
-    public <T extends XmlElement> T getBody() {
+    public <T extends XmlModel> T getBody() {
         return (T) body;
     }
 
     /** A shortcut for {@code HtmlList.getHead().addElement(CharSequence) }
-     * @param name A name of the new XmlElement is requred.
-     * @return The new XmlElement!
+     * @param name A name of the new XmlModel is requred.
+     * @return The new XmlModel!
      */
-    public <T extends XmlElement> T  addElementToHead(@Nonnull final String name) {
-        return head.addElement(name);
+    public <T extends XmlModel> T  addElementToHead(@Nonnull final String name) {
+        return (T) head.addElement(name);
     }
 
     /** A shortcut for {@code HtmlList.getBody().addElement(CharSequence) }
-     * @param name A name of the new XmlElement is requred.
-     * @return The new XmlElement!
+     * @param name A name of the new XmlModel is requred.
+     * @return The new XmlModel!
      */
-    public <T extends XmlElement> T  addElementToBody(@Nonnull final String name) {
-        return body.addElement(name);
+    public <T extends XmlModel> T  addElementToBody(@Nonnull final String name) {
+        return (T) body.addElement(name);
     }
 
     /** Create a new Javascript element and return it
@@ -134,9 +134,9 @@ public class HtmlElement extends XmlElement {
      * @param defer A script that will not run until after the page has loaded
      * @return
      */
-    public <T extends XmlElement> T addJavascriptLink(final boolean defer, @Nonnull final CharSequence ... javascriptLink) {
+    public <T extends XmlModel> T addJavascriptLink(final boolean defer, @Nonnull final CharSequence ... javascriptLink) {
         Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
-        return head.addElement(Html.SCRIPT)
+        return (T) head.addElement(Html.SCRIPT)
                 .setAttrib(Html.A_SRC, javascriptLink)
                 .setAttrib(Html.A_TYPE, "text/javascript")
                 .setAttrib("defer", defer ? "defer" : null)
@@ -147,9 +147,9 @@ public class HtmlElement extends XmlElement {
      * @param javascript Add a javascriptLink link
      * @return New CSS element
      */
-    public <T extends XmlElement> T addJavascriptContent(@Nonnull final CharSequence javascript) {
+    public <T extends XmlModel> T addJavascriptContent(@Nonnull final CharSequence javascript) {
         Assert.notNull(javascript, REQUIRED_MSG, "javascript");
-        return head.addElement(Html.SCRIPT)
+        return (T) head.addElement(Html.SCRIPT)
                 .setAttrib(Html.A_LANGUAGE, "javascript")
                 .setAttrib(Html.A_TYPE, "text/javascript")
                 .addText(javascript);
@@ -159,9 +159,9 @@ public class HtmlElement extends XmlElement {
      * @param css Add a CSS link
      * @return New CSS element
      */
-    public <T extends XmlElement> T addCssLink(@Nonnull final CharSequence css) {
+    public final <T extends XmlModel> T addCssLink(@Nonnull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
-        return head.addElement(Html.LINK)
+        return (T) head.addElement(Html.LINK)
                 .setAttrib(Html.A_HREF, css)
                 .setAttrib(Html.A_REL, "stylesheet")
                 .setAttrib(Html.A_TYPE, "text/css");
@@ -171,9 +171,9 @@ public class HtmlElement extends XmlElement {
      * @param css CSS content
      * @return New CSS element
      */
-    public <T extends XmlElement> T addCssBody(@Nonnull final CharSequence css) {
+    public <T extends XmlModel> T addCssBody(@Nonnull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
-        return head.addElement(Html.STYLE)
+        return (T) head.addElement(Html.STYLE)
                 .setAttrib(Html.A_TYPE, "text/css")
                 .addRawText(css);
     }

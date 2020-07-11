@@ -29,15 +29,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.ApiElement;
+import org.ujorm.tools.xml.config.XmlConfig;
 import org.ujorm.tools.xml.model.XmlModel.RawEnvelope;
 import static org.ujorm.tools.xml.AbstractWriter.*;
-import org.ujorm.tools.xml.config.XmlConfig;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /**
- * XML element model to rendering a XML file.
+ * XML element <strong>model</strong> to rendering a XML file.
  * The main benefits are:
  * <ul>
  *     <li>secure building well-formed XML documents  by the Java code</li>
@@ -61,7 +61,7 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  * </pre>
  *
  * @see HtmlElement
- * @since 1.86
+ * @since 2.03
  * @author Pavel Ponec
  */
 public class XmlModel implements ApiElement<XmlModel>, Serializable {

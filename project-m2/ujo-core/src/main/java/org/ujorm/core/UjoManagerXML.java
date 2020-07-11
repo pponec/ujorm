@@ -34,7 +34,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.UjoTextable;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.xml.AbstractElement;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
@@ -190,7 +190,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     @SuppressWarnings("unchecked")
     protected void printAttributes
     ( final UjoTextable ujo
-    , final AbstractElement writer
+    , final ApiElement writer
     ) throws IOException {
 
         // Write attributes:
@@ -210,13 +210,13 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
 
     /** Write required keys to XML writer. */
-    public void printProperties(AbstractElement writer, UjoTextable ujo) throws IOException {
+    public void printProperties(ApiElement writer, UjoTextable ujo) throws IOException {
         printProperties(writer, ujo, ujo.readKeys());
     }
 
     /** Write required keys to a XML writer. */
     @SuppressWarnings("unchecked")
-    public void printProperties(final AbstractElement writer, UjoTextable ujo, final KeyList<?> keys) throws IOException {
+    public void printProperties(final ApiElement writer, UjoTextable ujo, final KeyList<?> keys) throws IOException {
         Key bodyProperty = getUjoManager().getXmlElementBody(ujo.getClass());
 
         for (Key key : keys) {
@@ -274,7 +274,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     , @Nullable final Key key
     , @Nullable final Class valueType
     , @Nullable final Object value
-    , @Nullable final AbstractElement parent
+    , @Nullable final ApiElement parent
     , final boolean simpleProperty
     ) throws IOException {
 
@@ -284,7 +284,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             return; // listType;
         }
 
-        final AbstractElement writer = ujo == null
+        final ApiElement writer = ujo == null
                 ? parent // The root
                 : parent.addElement(key.getName());
 
@@ -300,7 +300,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         if (simpleProperty && key instanceof ListKey) {
             final List valueList = (List) value;
             for (int i = 0, max = valueList.size(); i < max; i++) {
-                final AbstractElement nextChild = i == 0
+                final ApiElement nextChild = i == 0
                         ? writer
                         : parent.addElement(key.getName());
                 nextChild.addText(getUjoManager().encodeValue(valueList.get(i), false));
@@ -312,14 +312,14 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
     /** Print "value" to XML. */
     public void printItem
-    ( final AbstractElement parent
+    ( final ApiElement parent
     , final Class defaultType
     , final Object value
     , final UjoTextable ujo
     , final Key prop
     ) throws IOException {
 
-        final AbstractElement writer = parent.addElement(ATTR_ITEM);
+        final ApiElement writer = parent.addElement(ATTR_ITEM);
 
         if (value!=null
         && (defaultType ==null
@@ -335,7 +335,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     /** Print "value" to XML. */
     @SuppressWarnings("unchecked")
     public void printValue2XML
-    ( final AbstractElement writer
+    ( final ApiElement writer
     , final Class itemType
     , final Object value
     , final UjoTextable ujo

@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Html;
-import org.ujorm.tools.xml.dom.XmlElement;
+import org.ujorm.tools.xml.model.XmlModel;
 import org.ujorm.ujoservlet.HtmlElement;
 import org.ujorm.ujoservlet.tools.ApplService;
 
@@ -54,7 +54,7 @@ public class MenuServlet extends HttpServlet {
         final HtmlElement html = new HtmlElement(title, StandardCharsets.UTF_8, "css/userForm.css");
         html.addElementToBody(Html.H1)
                 .addText(title);
-        XmlElement list = html.addElementToBody(Html.OL);
+        XmlModel list = html.addElementToBody(Html.OL);
         for (Item item : getItems()) {
             list.addElement(Html.LI)
                     .addElement(Html.A)
