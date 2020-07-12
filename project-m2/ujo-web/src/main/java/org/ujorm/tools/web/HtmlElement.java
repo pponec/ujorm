@@ -91,6 +91,11 @@ public class HtmlElement extends Element {
         return head;
     }
 
+    /** Returns a head element */
+    public Element addHead() {
+        return getHead();
+    }
+
     /** Returns a body element */
     @Nonnull
     public Element getBody() {
@@ -98,6 +103,12 @@ public class HtmlElement extends Element {
             body = super.addElement(Html.BODY);
         }
         return body;
+    }
+
+    /** Returns a body element */
+    @Nonnull
+    public Element addBody() {
+        return getBody();
     }
 
     /** Create a new Javascript element and return it
