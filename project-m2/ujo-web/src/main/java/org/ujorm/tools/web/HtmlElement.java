@@ -34,8 +34,12 @@ import org.ujorm.tools.xml.model.XmlWriter;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /** The root of HTML elements */
-public class HtmlElement extends Element {
+public class HtmlElement implements ApiElement<Element>, Html {
 
+    /** Head element */
+    @Nonnull
+    private Element root;    
+    
     /** Head element */
     @Nonnull
     private Element head;
@@ -51,18 +55,49 @@ public class HtmlElement extends Element {
     /** Config */
     @Nonnull
     private final Writer writer;
-
+    
     /** Create new instance with empty html headers */
     public HtmlElement(@Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
         this(new XmlModel(Html.HTML), config, writer);
-    }
+    }    
 
     /** Create new instance with empty html headers */
     public HtmlElement(@Nonnull final ApiElement root, @Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
-        super(root);
+        this.root = new Element(root);
         this.config = config;
         this.writer = writer;
     }
+    
+    @Override
+    public String getName() {
+        return root.getName();
+    }
+
+    @Override
+    public Element setAttribute(String name, Object value) {
+        return root.setAttribute(name, value);
+    }
+
+    @Override
+    public Element addText(Object value) {
+        return root.addText(value);
+    }
+
+    @Override
+    public Element addRawText(Object value) {
+        return root.addRawText(value);
+     }
+
+    @Override
+    public Element addComment(CharSequence comment) {
+        return root.addComment(comment);
+    }
+
+    @Deprecated
+    @Override
+    public Element addCDATA(CharSequence charData) {
+        return root.addCDATA(charData);
+    }    
 
     /**
      * Create new Element
@@ -79,14 +114,14 @@ public class HtmlElement extends Element {
             case Html.BODY:
                 return getBody();
             default:
-                return super.addElement(name);
+                return root.addElement(name);
         }
     }
 
     /** Returns a head element */
     public Element getHead() {
         if (head == null) {
-            head = super.addElement(Html.HEAD);
+            head = root.addElement(Html.HEAD);
         }
         return head;
     }
@@ -100,7 +135,7 @@ public class HtmlElement extends Element {
     @Nonnull
     public Element getBody() {
         if (body == null) {
-            body = super.addElement(Html.BODY);
+            body = root.addElement(Html.BODY);
         }
         return body;
     }
@@ -184,19 +219,19 @@ public class HtmlElement extends Element {
 
     @Override
     public void close() throws IllegalStateException {
-        super.close();
-        if (origElement instanceof XmlModel) {
+        root.close();
+        if (root.internalElement instanceof XmlModel) {
+            final XmlModel xmlElement = (XmlModel) root.internalElement;
             try {
                 final XmlWriter xmlWriter = new XmlWriter(writer
                         .append(config.getDoctype())
                         .append(config.getNewLine())
                         , config.getIndentation());
-                final XmlModel xmlElement = (XmlModel) origElement;
                 xmlElement.toWriter(config.getFirstLevel() + 1, xmlWriter);
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
-        }
+        }            
     }
 
     /** Get config */

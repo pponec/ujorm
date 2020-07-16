@@ -37,20 +37,20 @@ import static org.ujorm.tools.web.Html.LEGEND;
 /**
  * /** A HTML Element implements some methods for frequently used elements and attributes
  * A proxy class in the current release */
-public class Element implements ApiElement<Element>, Html {
+public final class Element implements ApiElement<Element>, Html {
 
     /** An original XML element */
-    protected final ApiElement origElement;
+    protected final ApiElement internalElement;
 
     /** New element with a parent */
     public Element(@Nonnull final ApiElement original) {
-        this.origElement = original;
+        this.internalElement = original;
     }
-
+    
     @Nonnull
     @Override
     public String getName() {
-        return origElement.getName();
+        return internalElement.getName();
     }
 
     /**
@@ -64,7 +64,7 @@ public class Element implements ApiElement<Element>, Html {
     @Nonnull
     @Override
     public final Element setAttribute(@Nonnull final String name, @Nullable final Object value) {
-        origElement.setAttribute(name, value);
+        internalElement.setAttribute(name, value);
         return this;
     }
 
@@ -90,7 +90,7 @@ public class Element implements ApiElement<Element>, Html {
     @Nonnull
     @Override
     public Element addText(final Object data) throws IllegalStateException {
-        origElement.addText(data);
+        internalElement.addText(data);
         return this;
     }
 
@@ -121,9 +121,9 @@ public class Element implements ApiElement<Element>, Html {
     public Element addTextSeparted(@Nonnull final Object separator, @Nonnull final Object... data) throws IllegalStateException {
         for (int i = 0, max = data.length; i < max; i++) {
             if (i > 0) {
-                origElement.addText(separator);
+                internalElement.addText(separator);
             }
-            origElement.addText(data[i]);
+            internalElement.addText(data[i]);
         }
         return this;
     }
@@ -131,28 +131,28 @@ public class Element implements ApiElement<Element>, Html {
     @Nonnull
     @Override
     public Element addRawText(Object data) throws IllegalStateException {
-        origElement.addRawText(data);
+        internalElement.addRawText(data);
         return this;
     }
 
     @Nonnull
     @Override
     public Element addComment(CharSequence comment) throws IllegalStateException {
-        origElement.addComment(comment);
+        internalElement.addComment(comment);
         return this;
     }
 
     @Nonnull
     @Override
     public Element addCDATA(CharSequence charData) throws IllegalStateException {
-        origElement.addCDATA(charData);
+        internalElement.addCDATA(charData);
         return this;
     }
 
     @Nonnull
     @Override
     public void close() throws IllegalStateException {
-        origElement.close();
+        internalElement.close();
     }
 
     // -------------- Add ELEMENT -----
@@ -165,7 +165,7 @@ public class Element implements ApiElement<Element>, Html {
      */
     @Override @Nonnull
     public Element addElement(@Nonnull final String name) throws IllegalStateException {
-            return new Element(origElement.addElement(name));
+            return new Element(internalElement.addElement(name));
     }
 
     /**
@@ -596,6 +596,6 @@ public class Element implements ApiElement<Element>, Html {
     @Override
     @Nonnull
     public String toString() {
-        return origElement.toString();
+        return internalElement.toString();
     }
 }
