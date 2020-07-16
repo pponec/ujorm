@@ -247,6 +247,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
 
     /** Render the XML code including header */
     @Nonnull
+    @Override
     public String toString() {
         try {
             final XmlConfig config = XmlConfig.ofDefault();
