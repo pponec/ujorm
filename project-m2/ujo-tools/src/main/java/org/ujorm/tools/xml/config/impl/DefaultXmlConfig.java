@@ -73,7 +73,12 @@ public class DefaultXmlConfig implements XmlConfig {
     /** Is HTTP cache allowed */
     private boolean cacheAllowed;
 
-    /** A default value formatter is implemented by the method {@code String.valueOf(value)} */
+    /** A default value formatter is implemented by the method {@code String.valueOf(value)}.
+     * Example:
+     * <code>
+     * Formatter formatter = (value, attribute, element) -> value.toString()
+     * </code>
+     */
     @Nonnull
     private Formatter formatter = (value, attribute, element) -> value.toString();
 
@@ -176,7 +181,7 @@ public class DefaultXmlConfig implements XmlConfig {
     }
 
 
-    /** A default value formatter is implemented by the method {@code String.valueOf(value)} */
+    /** A default implementation is: {@code String.valueOf(value)} */
     @Nonnull
     @Override
     public Formatter getFormatter() {

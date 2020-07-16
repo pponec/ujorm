@@ -103,7 +103,6 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param writer A XmlPrinter
      * @param level Level of the Element
      * @param printName Print the element name immediately.
-     * @throws IOException
      */
     protected XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
         this.name = name.toString();
@@ -123,6 +122,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     }
 
     @Nonnull
+    @Override
     public String getName() {
         return name;
     }
