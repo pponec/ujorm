@@ -136,17 +136,14 @@ public abstract class AbstractWriter {
     /** Write escaped value to the output
      * @param value A value to write, where the {@code null} value is ignored silently.
      * @param element The element
-     * @param attribute A name of the XML attribute of {@code null} value for a XML text.
+     * @param attributeName A name of the XML attribute of {@code null} value for a XML text.
      */
     public void writeValue(
             @Nullable final Object value,
             @Nonnull final ApiElement element,
-            @Nullable final String attribute
+            @Nullable final String attributeName
     ) throws IOException {
-        if (value != null) {
-            final boolean isAttribute = attribute != null;
-            write(formatter.format(value, isAttribute, element), isAttribute);
-        }
+        write(formatter.format(value, element, attributeName), attributeName != null);
     }
 
     /**

@@ -17,6 +17,7 @@
 package org.ujorm.tools.xml.config;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.tools.xml.ApiElement;
 
 /**
@@ -26,12 +27,13 @@ import org.ujorm.tools.xml.ApiElement;
 public interface Formatter {
 
     /**
-     * Format an objet value to XML or HTML page, special character will be escaped.
+     * Format an objet value to a string ouptut, special characters will be escaped later.
      * @param value A data value
-     * @param attribute The value of an element attribute is required.
      * @param element A related element
-     * @return A target sequence.
+     * @param attributeName A name of the attribute, if any.
+     * @return A target non-nnul sequence is required.
      */
-    CharSequence format(@Nonnull Object value, boolean attribute, @Nonnull ApiElement element);
+    @Nonnull
+    CharSequence format(@Nullable Object value, @Nonnull ApiElement element, @Nullable String attributeName);
 
 }
