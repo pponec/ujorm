@@ -133,10 +133,10 @@ public abstract class Assert {
         return value;
     }
 
-    /** Checks if the supplier value is not {@code null} and not throw an exception..
+    /** Checks if the value of a supplier is not {@code null} without exception..
      * @return The original value */
     @Nonnull
-    public static <V,M> V notNull(
+    public static <V,M> V notNullValue(
             @Nonnull final Supplier<V> supplier,
             @Nullable final M... message)
             throws IllegalArgumentException {
