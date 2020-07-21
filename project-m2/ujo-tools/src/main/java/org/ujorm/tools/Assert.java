@@ -358,13 +358,11 @@ public abstract class Assert {
 
     /** Message maker */
     public interface MessageMaker {
-
         void write(MessageBuilder message);
     }
 
     /** Message maker */
     public static final class MessageBuilder {
-
         private String msg;
 
         /**

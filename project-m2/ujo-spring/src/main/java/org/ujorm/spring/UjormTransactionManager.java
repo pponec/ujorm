@@ -118,7 +118,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     @Nonnull
     public Session getLocalSession() throws IllegalStateException {
         final Session result = session.get();
-        Assert.validState(result != null, "ORM session does not exists, check pointcut mapping");
+        Assert.state(result != null, "ORM session does not exists, check pointcut mapping");
         return result;
     }
 }
