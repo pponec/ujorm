@@ -16,10 +16,10 @@
 package org.ujorm.tools;
 
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.msg.MsgFormatter;
@@ -70,25 +70,6 @@ public abstract class Assert {
         }
     }
 
-    /** If the value Checks if the argument is {@code true}.
-     * @throws IllegalStateException When the condtion is false */
-    public static <M> void state(final boolean condition, @Nonnull final MessageMaker messageMaker)
-            throws IllegalStateException {
-        if (!condition) {
-            throw new IllegalStateException(MessageBuilder.get(messageMaker));
-        }
-    }
-
-    /** If the value Checks if the argument is {@code true}.
-     * @throws IllegalStateException When the condtion is false
-     * @deprecated Use the method {@link #state(boolean, java.lang.Object...) rather}
-     */
-    @Deprecated
-    public static <M> void validState(final boolean condition, @Nullable final M... message)
-            throws IllegalStateException {
-        state(condition, message);
-    }
-
     /** Checks if the argument is not {@code null}.
      * @return The original value */
     @Nonnull
@@ -108,14 +89,6 @@ public abstract class Assert {
         }
     }
 
-    /** Checks if the argument is {@code true}. */
-    public static <M> void isTrue(final boolean condition, @Nonnull final MessageMaker messageMaker)
-            throws IllegalArgumentException {
-        if (!condition) {
-            throw new IllegalArgumentException(MessageBuilder.get(messageMaker));
-        }
-    }
-
     /** Checks if the value is not {@code null} and the predicate is valid
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}. */
     public static <V,M> void isTrueRequired
@@ -125,18 +98,6 @@ public abstract class Assert {
     {
         if (condition == null || !predicate.test(condition)) {
             throw new IllegalArgumentException(format(message));
-        }
-    }
-
-    /** Checks if the predicate is valid
-     * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}. */
-    public static <V,M> void isTrue
-        ( @Nullable final V condition
-        , @Nonnull final Predicate<V> predicate
-        , @Nonnull final MessageMaker messageMaker)
-    {
-        if (!predicate.test(condition)) {
-            throw new IllegalArgumentException(MessageBuilder.get(messageMaker));
         }
     }
 
@@ -171,6 +132,23 @@ public abstract class Assert {
         }
         return value;
     }
+
+    /** Checks if the supplier value is not {@code null} and not throw an exception..
+     * @return The original value */
+    @Nonnull
+    public static <V,M> V notNull(
+            @Nonnull final Supplier<V> supplier,
+            @Nullable final M... message)
+            throws IllegalArgumentException {
+        final V result;
+        try {
+            result = supplier.get();
+        } catch (Exception e) {
+            throw new IllegalArgumentException(format(message), new NullPointerException());
+        }
+        return notNull(result, message);
+    }
+
 
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
@@ -254,14 +232,6 @@ public abstract class Assert {
         }
     }
 
-        /** Checks if the argument is {@code false}. */
-    public static void isFalse(final boolean condition, @Nonnull final MessageMaker messageMaker)
-            throws IllegalArgumentException {
-        if (condition) {
-            throw new IllegalArgumentException(MessageBuilder.get(messageMaker));
-        }
-    }
-
     /** Checks if the argument is not {@code null} and the predicate is invalid
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}. */
     public static <V,M> void isFalseRequired
@@ -271,18 +241,6 @@ public abstract class Assert {
     {
         if (value == null || predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
-        }
-    }
-
-    /** Checks if the argument is not {@code null} and the predicate is invalid
-     * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}. */
-    public static <V,M> void isFalse
-        ( @Nullable final V value
-        , @Nonnull  final Predicate<V> predicate
-        , @Nonnull final MessageMaker messageMaker)
-    {
-        if (predicate.test(value)) {
-            throw new IllegalArgumentException(MessageBuilder.get(messageMaker));
         }
     }
 
@@ -353,41 +311,6 @@ public abstract class Assert {
             throws IllegalArgumentException {
         if (Check.hasLength(value)) {
             throw new IllegalArgumentException(format(message));
-        }
-    }
-
-    /** Message maker */
-    public interface MessageMaker {
-        void write(MessageBuilder message);
-    }
-
-    /** Message maker */
-    public static final class MessageBuilder {
-        private String msg;
-
-        /**
-         * Use markers {@code {}} in the template according the method {@code MsgFormatter#format(...)}
-         * @see MsgFormatter#format(java.lang.CharSequence, java.lang.Object...)
-         */
-        public <T> void format(@Nullable final Object messageTemplate, @Nullable final T... arguments) {
-            msg = MsgFormatter.format(String.valueOf(messageTemplate), arguments);
-        }
-
-        /**
-         * Use markers {@code %s} in the template according the method {@code String.format(...)}
-         * @see String#format(java.lang.String, java.lang.Object...)
-         */
-        public <T> void sformat(@Nullable final Object messageTemplate, @Nullable final T... arguments) {
-            msg = Check.hasLength(arguments)
-                    ? String.format(Locale.ENGLISH, String.valueOf(messageTemplate), arguments)
-                    : String.valueOf(messageTemplate);
-        }
-
-        public static String get(@Nonnull final MessageMaker messageMaker) {
-            final MessageBuilder content = new MessageBuilder();
-            messageMaker.write(content);
-            return content.msg;
-
         }
     }
 }
