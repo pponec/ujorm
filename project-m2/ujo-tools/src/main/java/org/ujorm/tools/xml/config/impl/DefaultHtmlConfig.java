@@ -40,6 +40,10 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     @Nonnull
     private CharSequence language = "en";
 
+    /** Application content type */
+    @Nonnull
+    private String contentType = "text/html";
+
     /** Build a real model or a plain writer */
     private boolean buildDom = false;
 
@@ -66,6 +70,12 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         return Optional.ofNullable(language);
     }
 
+    @Override
+    @Nonnull
+    public String getContentType() {
+        return contentType;
+    }
+
     /** Build a real model or a plain writer, the default value is {@code false} */
     @Override
     public boolean isDocumentObjectModel() {
@@ -83,6 +93,10 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     public void setLanguage(@Nonnull CharSequence language) {
         this.language = language;
+    }
+
+    public void setContentType(@Nonnull String contentType) {
+        this.contentType = Assert.notNull(contentType, REQUIRED_MSG, "contentType");
     }
 
     /** Build a real model or a plain writer, the default value is {@code false} */

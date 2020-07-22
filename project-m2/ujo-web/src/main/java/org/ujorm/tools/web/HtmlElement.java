@@ -316,6 +316,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     @Nonnull
     public static HtmlElement of(@Nonnull final HttpServletResponse response, @Nonnull final HtmlConfig config) throws IllegalStateException {
         response.setCharacterEncoding(config.getCharset().toString());
+        response.setContentType(config.getContentType());
         try {
             final ApiElement root = config.isDocumentObjectModel()
                     ? new XmlModel(Html.HTML)

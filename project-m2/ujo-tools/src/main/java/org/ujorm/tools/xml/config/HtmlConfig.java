@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2012 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,17 +28,23 @@ public interface HtmlConfig extends XmlConfig {
 
     /** Title is a required element by HTML 5 */
     @Nonnull
-    public CharSequence getTitle();
+    CharSequence getTitle();
 
+    /** CSS links of a HTML page */
     @Nonnull
-    public CharSequence[] getCssLinks();
+    CharSequence[] getCssLinks();
 
+    /** Language of a HTML page */
     @Nonnull
-    public Optional<CharSequence> getLanguage();
+    Optional<CharSequence> getLanguage();
 
-    /** Build a real model or a plain writer, the default value is {@code false} */
-    public boolean isDocumentObjectModel();
+    /** Get a content type where a recommended value is {@code "text/html"} */
+    @Nonnull
+    String getContentType();
 
+    /** Build a real model or a plain writer with a recommended value {@code false} */
+    boolean isDocumentObjectModel();
+    
     /**
      * Create a new default config
      */
