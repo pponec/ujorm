@@ -179,10 +179,19 @@ public final class Element implements ApiElement<Element>, Html {
         return addElement(name).setClass(cssClasses);
     }
 
-    /** Add new Table with cellpadding a cellspacing values to zero. */
+    /** Add new Table */
     @Nonnull
     public Element addTable(@Nonnull final CharSequence... cssClasses) {
-        return addElement(TABLE, cssClasses)
+        return addElement(TABLE, cssClasses);
+    }
+
+    /** Add new Table with cellpadding a cellspacing values to zero. 
+     * @deprecated Use a CSS style rather.
+     */
+    @Deprecated
+    @Nonnull
+    public Element addTableNoSpaces(@Nonnull final CharSequence... cssClasses) {
+        return addTable(cssClasses)
                 .setAttribute(Element.A_CELLPADDING, 0)
                 .setAttribute(Element.A_CELLSPACING, 0);
     }
@@ -197,11 +206,6 @@ public final class Element implements ApiElement<Element>, Html {
     @Nonnull
     public Element addTable(final List<Object[]> data, final CharSequence... cssClass) {
         final Element result = addTable(cssClass);
-
-        if (Check.hasLength(cssClass)) {
-            result.setAttribute(Html.A_CLASS, String.join(" ", cssClass));
-        }
-
         for (Object[] rowValue : data) {
             final Element rowElement = result.addElement(Html.TR);
             for (Object value : rowValue) {
