@@ -2,8 +2,22 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 2.03-SNAPSHOT (yyyy-mm-dd)
+release 2.04-SNAPSHOT (yyyy-mm-dd)
 + ...
+
+release 2.03 (2020-07-23)
++ WEB: A ProxyServletRespnse class is renamed to a MockServletResponse.
++ WEB: New element constat is available: Html.HL.
++ WEB: New method is available for formatted texts: Element.addTemplate().
++ WEB: API cleaning, new interface ApiElement is available.
++ WEB: Method ApiElement.addAttrib() is renamed to ApiElement.addAttribute().
++ WEB: A HtmlElement class provides two method: addHead() and addBody().
++ TOOLS: XmlNew method is available for formatted texts: Element.addTemplate().
++ TOOLS: The interface MessageMaker was removed due a minority use.
++ TOOLS: The Thread package has been removed without replacement. Try project: https://projectreactor.io/docs/ .
++ TOOLS: API of an Assert can validate Supplier<V> supplier by a method: notNullValue().
++ TOOLS: Method Element.addTable() does not insert zero attributes CELLPADDING and CELLSPACING.
++ TOOLS: HtmlConfig class supports new config parameter for the 'Content type'.
 
 release 2.02-SNAPSHOT (2020-06-26)
 + WEB: New class ProxyServletResponse for a common use is available.
