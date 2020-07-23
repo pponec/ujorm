@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>sample-parameters</artifactId>
     <packaging>jar</packaging>
-    <version>2.03-SNAPSHOT</version>
+    <version>2.04-SNAPSHOT</version>
     <name>sample-parameters</name>
     <description>The project learns to you how to create a persistent parameter manager easy on the desktop .
 See the more info: http://ujorm.org/sample/parameters.htm .</description>
@@ -60,7 +60,7 @@ See the more info: http://ujorm.org/sample/parameters.htm .</description>
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>2.03-SNAPSHOT</version>
+            <version>2.04-SNAPSHOT</version>
         </dependency>
 
         <dependency>

@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>sample-generated</artifactId>
     <packaging>jar</packaging>
-    <version>2.03-SNAPSHOT</version>
+    <version>2.04-SNAPSHOT</version>
     <name>sample-generated</name>
     <url>http://ujorm.org</url>
     <build>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>2.03-SNAPSHOT</version>
+            <version>2.04-SNAPSHOT</version>
         </dependency>
 
         <dependency>
