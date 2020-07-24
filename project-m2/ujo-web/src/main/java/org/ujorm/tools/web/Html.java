@@ -69,6 +69,8 @@ public interface Html {
     String TR = "tr";
     /** Table detail element */
     String TD = "td";
+    /** Image element */
+    String IMAGE = "img";
     /** Label element */
     String LABEL = "label";
     /** Input element */
@@ -99,6 +101,8 @@ public interface Html {
     // --- Attribute names ---
 
     String A_ACTION = "action";
+    /** Alternate text */
+    String A_ALT = "alt";
     /** @deprecated Attribute {@code cellpadding} is not supported in HTML 5. */
     @Deprecated
     String A_CELLPADDING = "cellpadding";

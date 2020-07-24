@@ -17,8 +17,12 @@
 
 package org.ujorm.tools.web;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -46,7 +50,7 @@ public final class Element implements ApiElement<Element>, Html {
     public Element(@Nonnull final ApiElement original) {
         this.internalElement = original;
     }
-    
+
     @Nonnull
     @Override
     public String getName() {
@@ -117,11 +121,20 @@ public final class Element implements ApiElement<Element>, Html {
         return addText(String.format(Locale.ENGLISH, template, data));
     }
 
-    /** Add many words separated by the separator */
-    public Element addTextSeparted(@Nonnull final Object separator, @Nonnull final Object... data) throws IllegalStateException {
+    /**
+     * Add many words separated by the separator
+     * @param separator A raw text separator
+     * @param data Data to print
+     * @return The current element
+     * @throws IllegalStateException
+     */
+    public Element addTextSeparted(
+            @Nonnull final CharSequence separator,
+            @Nonnull final Object... data)
+            throws IllegalStateException {
         for (int i = 0, max = data.length; i < max; i++) {
             if (i > 0) {
-                internalElement.addText(separator);
+                internalElement.addRawText(separator);
             }
             internalElement.addText(data[i]);
         }
@@ -130,7 +143,7 @@ public final class Element implements ApiElement<Element>, Html {
 
     @Nonnull
     @Override
-    public Element addRawText(Object data) throws IllegalStateException {
+    public Element addRawText(@Nullable final Object data) throws IllegalStateException {
         internalElement.addRawText(data);
         return this;
     }
@@ -185,7 +198,7 @@ public final class Element implements ApiElement<Element>, Html {
         return addElement(TABLE, cssClasses);
     }
 
-    /** Add new Table with cellpadding a cellspacing values to zero. 
+    /** Add new Table with cellpadding a cellspacing values to zero.
      * @deprecated Use a CSS style rather.
      */
     @Deprecated
@@ -211,6 +224,68 @@ public final class Element implements ApiElement<Element>, Html {
             for (Object value : rowValue) {
                 rowElement.addElement(Html.TD).addText(value);
             }
+        }
+        return result;
+    }
+
+    /**
+     * Add a link to an image
+     * @param imageLink A link to image
+     * @param alt An alternate text
+     * @param cssClasses Optional CSS classes
+     * @return
+     * @throws IllegalStateException
+     */
+    @Nonnull
+    public Element addImage(
+            @Nonnull final CharSequence imageLink,
+            @Nonnull final CharSequence alt,
+            @Nonnull final CharSequence... cssClasses)
+            throws IllegalStateException {
+        return addElement(IMAGE, cssClasses)
+                .setAttribute(A_ALT, alt)
+                .setAttribute(A_SRC, imageLink);
+    }
+
+    /**
+     * Add an embeded image
+     * @param imageStream Stream provides a PNG image and it will be closed after reading.
+     * @param alt An alternate text
+     * @param cssClasses Optional CSS classes
+     * @return
+     * @throws IllegalStateException
+     */
+    @Nonnull
+    public Element addImage(
+            @Nonnull final InputStream imageStream,
+            @Nonnull final CharSequence alt,
+            @Nonnull final CharSequence... cssClasses)
+            throws IllegalStateException {
+        return addElement(IMAGE, cssClasses)
+                .setAttribute(A_ALT, alt)
+                .setAttribute(A_SRC, createEmbededImage(imageStream, new StringBuilder(1024)));
+    }
+
+    /** Create a content of an embeded image */
+    @Nonnull
+    protected CharSequence createEmbededImage(
+            @Nonnull final InputStream imageStream,
+            @Nonnull final StringBuilder result) {
+        final int bufferSize = 3 * 1024;
+        final Base64.Encoder encoder = Base64.getEncoder();
+        try (BufferedInputStream in = new BufferedInputStream(imageStream)) {
+            result.append("data:image/png;base64,");
+            byte[] chunk = new byte[bufferSize];
+            int len = 0;
+            while ((len = in.read(chunk)) == bufferSize) {
+                result.append(encoder.encodeToString(chunk));
+            }
+            if (len > 0) {
+                chunk = Arrays.copyOf(chunk, len);
+                result.append(encoder.encodeToString(chunk));
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
         }
         return result;
     }
