@@ -220,7 +220,7 @@ public class MessageService {
             @Nonnull final String key,
             @Nullable final Object value,
             @Nonnull final Object... keyValuePairs) {
-        return new MessageService().format(key, Locale.ENGLISH, key, value, keyValuePairs);
+        return new MessageService().format(template, Locale.ENGLISH, key, value, keyValuePairs);
     }
 
 }
