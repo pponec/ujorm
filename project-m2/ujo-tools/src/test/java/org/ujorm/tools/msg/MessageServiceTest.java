@@ -15,8 +15,6 @@
  */
 package org.ujorm.tools.msg;
 
-import org.ujorm.tools.msg.MessageArg;
-import org.ujorm.tools.msg.MessageService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -116,6 +114,16 @@ public class MessageServiceTest extends TestCase {
         String template = ("${TEXT} is 1");
         Map<String, Object> args = service.map(TEXT, "Number");
         String result = service.format(template, args, Locale.ENGLISH);
+        assertEquals(expResult, result);
+    }
+
+    /** Test of format method, of class MessageService. */
+    public void testFormat_1c() {
+        System.out.println("format");
+
+        String expResult = "Number is 1";
+        String template = ("Number is ${ID}");
+        String result = MessageService.formatMsg(template, ID.getName(), 1);
         assertEquals(expResult, result);
     }
 

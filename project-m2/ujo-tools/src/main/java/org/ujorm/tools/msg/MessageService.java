@@ -187,4 +187,26 @@ public class MessageService {
         return new MessageService().format(template, args);
     }
 
+    /** Format a target message by a template with arguments type of Map */
+    public static final String formatMsg(
+            @Nullable final String template,
+            @Nonnull final String key,
+            @Nullable final Object value,
+            @Nonnull final Object... keyValuePairs) {
+        return formatMsg(template, Locale.ENGLISH, key, value, keyValuePairs);
+    }
+
+    /** Format a target message by a template with arguments type of Map */
+    public static final String formatMsg(
+            @Nullable final String template,
+            @Nonnull final Locale locale,
+            @Nonnull final String key,
+            @Nullable final Object value,
+            @Nonnull final Object... keyValuePairs) {
+        final MessageService instance = new MessageService();
+        final Map<String, Object> map = instance.map(keyValuePairs);
+        map.put(key, value);
+        return instance.format(template, map, locale);
+    }
+
 }
