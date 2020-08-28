@@ -115,6 +115,33 @@ public class MessageService {
      * or
      * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"}</pre>
      * The format expression is separated by the character (,) a and it is not mandatory.
+     * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
+     * @param key The Key
+     * @param value The Value
+     * @param keyValuePairs Key-value pairs
+     * @see Formatter
+     */
+    public final String format(
+            @Nullable final String msg,
+            @Nonnull final Locale locale,
+            @Nonnull final Object key,
+            @Nullable final Object value,
+            @Nonnull final Object... keyValuePairs) {
+
+        final Map<String, Object> map = map(keyValuePairs);
+        map.put(convertKey(key), value);
+        return format(msg, map, locale);
+    }
+
+    /**
+     * Format a template message using named variables.
+     * Each variable must be surrounded by two marks "${" and "}".
+     * The first mark is forbidden in a common text and can be replaced by the variable #{MARK}.
+     * @param msg Template message, see the simple example:
+     * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%F}"}</pre>
+     * or
+     * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"}</pre>
+     * The format expression is separated by the character (,) a and it is not mandatory.
      * @param args Key-value map arguments where arguments type of {@link Supplier} ares supported.
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
      * @return Target result
@@ -193,20 +220,7 @@ public class MessageService {
             @Nonnull final String key,
             @Nullable final Object value,
             @Nonnull final Object... keyValuePairs) {
-        return formatMsg(template, Locale.ENGLISH, key, value, keyValuePairs);
-    }
-
-    /** Format a target message by a template with arguments type of Map */
-    public static final String formatMsg(
-            @Nullable final String template,
-            @Nonnull final Locale locale,
-            @Nonnull final String key,
-            @Nullable final Object value,
-            @Nonnull final Object... keyValuePairs) {
-        final MessageService instance = new MessageService();
-        final Map<String, Object> map = instance.map(keyValuePairs);
-        map.put(key, value);
-        return instance.format(template, map, locale);
+        return new MessageService().format(key, Locale.ENGLISH, key, value, keyValuePairs);
     }
 
 }
