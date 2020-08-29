@@ -2,8 +2,13 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 2.04-SNAPSHOT (yyyy-mm-dd)
+release 2.05-SNAPSHOT (yyyy-mm-dd)
 + ...
+
+release 2.04 (2020-08-29)
++ TOOLS: New method ObjectUtil.iof() for a processing a value in case the one is the instance of a required class.
++ TOOLS: New method MessageService.formatMsg() for a parsing values to a template.
++ WEB-TOOLS: New method Element.addImage() to add an image to HTML model.
 
 release 2.03 (2020-07-23)
 + WEB: A ProxyServletRespnse class is renamed to a MockServletResponse.
