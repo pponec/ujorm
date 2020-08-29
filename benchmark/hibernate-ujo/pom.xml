@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>benchmark.hibernate.ujo</artifactId>
     <packaging>jar</packaging>
-    <version>2.04-SNAPSHOT</version>
+    <version>2.05-SNAPSHOT</version>
     <name>xBenchmark-HibernateUjo</name>
     <url>http://ujorm.org</url>
     
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>2.04-SNAPSHOT</version>
+            <version>2.05-SNAPSHOT</version>
         </dependency>
 
         <!-- HIBERNATE -->
