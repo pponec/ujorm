@@ -17,8 +17,8 @@ package org.ujorm.validator.impl;
 
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 /**
@@ -27,9 +27,9 @@ import org.ujorm.validator.ValidationError;
  */
 public class ComparableValidator<VALUE extends Comparable> extends AbstractValidator<VALUE> {
 
-    public static final MessageArg<Comparable> LIMIT = new MessageArg<>("LIMIT");
+    public static final MessageArg<Comparable> LIMIT = MessageArg.of("LIMIT");
     /** Sing for MAX/MIN */
-    public static final MessageArg<Boolean> MAX = new MessageArg<>("MAX");
+    public static final MessageArg<Boolean> MAX = MessageArg.of("MAX");
 
     /** Serializable minimum (inclusive) */
     private final Comparable limit;

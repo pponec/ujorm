@@ -18,8 +18,8 @@ package org.ujorm.validator.impl;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 /**
@@ -29,7 +29,7 @@ import org.ujorm.validator.ValidationError;
  */
 public class CriterionValidator<VALUE extends Ujo> extends AbstractValidator<VALUE> {
 
-    public static final MessageArg<String> CRN = new MessageArg<>("CRN");
+    public static final MessageArg CRN = MessageArg.of("CRN");
 
     /** Criterion to validation */
     private final Criterion<VALUE> crn;

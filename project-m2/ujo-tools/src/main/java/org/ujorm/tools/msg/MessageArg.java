@@ -28,11 +28,12 @@ import static org.ujorm.tools.msg.MessageService.PARAM_END;
 
 /**
  * Message Argument
+ * @param <T> The parameter has only a descriptive meaning with no functionality.
  * @author Pavel Ponec
  * @see MessageService
  * @since 1.54
  */
-public final class MessageArg implements Serializable, CharSequence {
+public final class MessageArg<T> implements Serializable, CharSequence {
 
     /** Name of the argument */
     @Nonnull
@@ -140,12 +141,12 @@ public final class MessageArg implements Serializable, CharSequence {
 
     // --- STATIC METHOD ---
 
-    public static MessageArg of(@Nonnull String name) {
-        return new MessageArg(name);
+    public static <T> MessageArg<T> of(@Nonnull String name) {
+        return new MessageArg<>(name);
     }
 
-    public static MessageArg of(@Nonnull String name, @Nullable String format) {
-        return new MessageArg(name, format);
+    public static <T> MessageArg<T> of(@Nonnull String name, @Nullable String format) {
+        return new MessageArg<>(name, format);
     }
 
 }

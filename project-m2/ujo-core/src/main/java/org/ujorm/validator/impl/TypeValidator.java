@@ -17,8 +17,8 @@ package org.ujorm.validator.impl;
 
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 /**
@@ -28,7 +28,7 @@ import org.ujorm.validator.ValidationError;
 public class TypeValidator<VALUE extends Object> extends AbstractValidator<VALUE> {
 
     /** Class value */
-    public static final MessageArg<Object> TYPE = new MessageArg<>("TYPE");
+    public static final MessageArg TYPE = MessageArg.of("TYPE");
 
     /** Class value */
     private final Class<VALUE> type;
