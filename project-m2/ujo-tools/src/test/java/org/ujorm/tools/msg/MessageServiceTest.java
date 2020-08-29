@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import junit.framework.TestCase;
@@ -31,39 +32,41 @@ import junit.framework.TestCase;
 public class MessageServiceTest extends TestCase {
 
     /** Message Argument */
-    private static MessageArg<Integer> ID = new MessageArg<>("ID");
+    private static MessageArg ID = new MessageArg("ID");
     /** Message Argument */
-    private static MessageArg<Date> DATE = new MessageArg<>("DATE");
+    private static MessageArg DATE = new MessageArg("DATE");
     /** Message Argument */
-    private static MessageArg<String> TEXT = new MessageArg<>("TEXT");
+    private static MessageArg TEXT = new MessageArg("TEXT");
     /** Message Argument */
-    private static MessageArg<BigDecimal> NUMBER = new MessageArg<>("NUMBER");
+    private static MessageArg NUMBER = new MessageArg("NUMBER");
 
     /** Demo test 1. */
     public void testDemo1() {
-        final MessageService service = new MessageService();
-        final MessageArg TYPE = new MessageArg("TYPE");
-        final MessageArg NAME = new MessageArg("NAME");
-
-        String expResult = "The ORM framework Ujorm.";
-        String expTemplate = "The ${TYPE} framework ${NAME}.";
-        String template = service.template("The ", TYPE, " framework ", NAME, ".");
-        Map<String, Object> args = service.map
-               ( TYPE, "ORM"
-               , NAME, "Ujorm");
-        String result = service.format(template, args);
-        assertEquals(expTemplate, template);
-        assertEquals(expResult, result);
-    }
-
-    /** Demo test 1. */
-    public void testDemo2() {
         final MessageArg TYPE = MessageArg.of("TYPE");
         final MessageArg NAME = MessageArg.of("NAME");
 
         String expResult = "The ORM framework Ujorm.";
         String template = "The " + TYPE + " framework " + NAME + ".";
-        String result = MessageService.formatMsg(template, TYPE.getName(), "ORM", NAME.getName(), "Ujorm");
+        String result = MessageService.formatMsg(template, TYPE, "ORM", NAME, "Ujorm");
+        assertEquals(expResult, result);
+    }
+
+    /** Demo test 2. */
+    public void testDemo2() {
+        final MessageService service = new MessageService();
+        final MessageArg TYPE = MessageArg.of("TYPE");
+        final MessageArg NAME = MessageArg.of("NAME");
+
+        String expResult = "The ORM framework Ujorm.";
+        String expTemplate = "The ${TYPE} framework ${NAME}.";
+        String template = service.template("The ", TYPE, " framework ", NAME, ".");
+
+        Map<String, Object> args = new HashMap<>();
+        args.put(TYPE.name(), "ORM");
+        args.put(NAME.name(), "Ujorm");
+
+        String result = service.format(template, args);
+        assertEquals(expTemplate, template);
         assertEquals(expResult, result);
     }
 

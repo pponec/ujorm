@@ -28,31 +28,29 @@ import org.ujorm.tools.Assert;
 /**
  * Message Service. See the next example:
  * <pre class="pre">
- *  final MessageService service = new MessageService();
- *  final MessageArg&lt;String&gt; NAME = new MessageArg&lt;&gt;("NAME");
- *  final MessageArg&lt;String&gt; TYPE = new MessageArg&lt;&gt;("TYPE");
+ *  final MessageArg TYPE = MessageArg.of("TYPE");
+ *  final MessageArg NAME = MessageArg.of("NAME");
  *
  *  String expResult = "The ORM framework Ujorm.";
- *  String expTemplate = "The ${TYPE} framework ${NAME}.";
- *  String template = service.template("The ", TYPE, " framework ", NAME, ".");
- *  Map<String, Object> args = service.map
- *      ( TYPE, "ORM"
- *      , NAME, "Ujorm");
- *  String result = service.format(template, args);
- *  assertEquals(expTemplate, template);
+ *  String template = "The " + TYPE + " framework " + NAME + ".";
+ *  String result = MessageService.formatMsg(template, TYPE, "ORM", NAME, "Ujorm");
  *  assertEquals(expResult, result);
  * </pre>
- * or a simlified usage:
+ *
+ * or an similar usage:
+ *
  * <pre class="pre">
- *  final MessageArg&lt;String&gt; NAME = new MessageArg&lt;&gt;("NAME");
- *  final MessageArg&lt;String&gt; TYPE = new MessageArg&lt;&gt;("TYPE");
+ *  final MessageArg NAME = MessageArg.of("NAME");
+ *  final MessageArg TYPE = MessageArg.of("TYPE");
  *
  *  String expResult = "The ORM framework Ujorm.";
  *  String expTemplate = "The ${TYPE} framework ${NAME}.";
  *  String template = service.template("The ", TYPE, " framework ", NAME, ".");
- *  Map<String, Object> args = service.map
- *      ( TYPE, "ORM"
- *      , NAME, "Ujorm");
+ *
+ *  Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();
+ *  args.put(TYPE.name(), "ORM");
+ *  args.put(NAME.name(), "Ujorm");
+ *
  *  String result = service.format(template, args);
  *  assertEquals(expTemplate, template);
  *  assertEquals(expResult, result);
@@ -141,7 +139,7 @@ public class MessageService {
     public final String format(
             @Nullable final String msg,
             @Nullable final Locale locale,
-            @Nonnull final Object key,
+            @Nonnull final CharSequence key,
             @Nullable final Object value,
             @Nonnull final Object... keyValuePairs) {
 
@@ -234,7 +232,7 @@ public class MessageService {
     /** Format a target message by a template with arguments type of Map */
     public static final String formatMsg(
             @Nullable final String template,
-            @Nonnull final String key,
+            @Nonnull final CharSequence key,
             @Nullable final Object value,
             @Nonnull final Object... keyValuePairs) {
         return new MessageService().format(template, (Locale) null, key, value, keyValuePairs);

@@ -31,7 +31,7 @@ import static org.ujorm.tools.msg.MessageService.PARAM_END;
  * @see MessageService
  * @since 1.54
  */
-public final class MessageArg<T> implements Serializable {
+public final class MessageArg implements Serializable, CharSequence {
 
     /** Name of the argument */
     @Nonnull
@@ -46,7 +46,7 @@ public final class MessageArg<T> implements Serializable {
     private final String code;
 
     /** Name constructor */
-    public MessageArg(@Nonnull String name) {
+    public MessageArg(@Nonnull final String name) {
         this(name, null);
     }
 
@@ -55,7 +55,7 @@ public final class MessageArg<T> implements Serializable {
      * @param format Format syntax is described on
      * <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html">java.util.Formatter</a>
      */
-    public MessageArg(@Nonnull String name, @Nullable String format) {
+    public MessageArg(@Nonnull final String name, @Nullable final String format) {
         Assert.notNull(name, "Name is required", name);
         Assert.isTrue(name.indexOf(PARAM_END) < 0  , "Forbidden character {} in argument {}", PARAM_END, name);
         Assert.isTrue(format == null
@@ -68,6 +68,12 @@ public final class MessageArg<T> implements Serializable {
     /** Get Name of argument */
     @Nonnull
     public String getName() {
+        return name;
+    }
+
+    /** An alias for method {@code #getName()} */
+    @Nonnull
+    public final String name() {
         return name;
     }
 
@@ -97,14 +103,29 @@ public final class MessageArg<T> implements Serializable {
     }
 
     /** Get a value from a map */
-    public T getValue(final Map<String, Object> map) {
+    public <T extends Object> T getValue(final Map<String, Object> map) {
         return (T) map.get(name);
     }
 
     /** Returns a code name */
     @Override
-    public String toString() {
+    public final String toString() {
         return getCode();
+    }
+
+    @Override
+    public final int length() {
+        return getCode().length();
+    }
+
+    @Override
+    public final char charAt(final int index) {
+        return getCode().charAt(index);
+    }
+
+    @Override
+    public final CharSequence subSequence(final int start, final int end) {
+        return getCode().subSequence(start, end);
     }
 
     @Override
@@ -120,12 +141,12 @@ public final class MessageArg<T> implements Serializable {
 
     // --- STATIC METHOD ---
 
-    public static <T> MessageArg<T> of(@Nonnull String name) {
-        return new MessageArg<>(name);
+    public static MessageArg of(@Nonnull String name) {
+        return new MessageArg(name);
     }
 
-    public static <T> MessageArg<T> of(@Nonnull String name, @Nullable String format) {
-        return new MessageArg<>(name, format);
+    public static MessageArg of(@Nonnull String name, @Nullable String format) {
+        return new MessageArg(name, format);
     }
 
 }
