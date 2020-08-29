@@ -134,8 +134,8 @@ public class ValidationError implements Serializable {
      * The argument can contains an optional format expression by example: <strong>${argument,format}</strong>.
      * See the class {@link java.util.Formatter} for more information.
      * @param template A messate template. See a valid template and message with its parameters:
-     * <pre>{@code "The input value ${KEY} must be less than: ${NUMBER,%+9.2f} EUR."}</pre>
-     * <pre>{@code "The input value Cache must be less than: +12345.00 EUR."}</pre>
+     * <pre class="pre">"The input value ${KEY} must be less than: ${NUMBER,%+9.2f} EUR."</pre>
+     * <pre class="pre">"The input value Cache must be less than: +12345.00 EUR."</pre>
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the ENGLISH locale.
      * @return The target message
      * @see java.util.Formatter
@@ -148,8 +148,8 @@ public class ValidationError implements Serializable {
      * The argument can contain an optional format expression by example: <strong>${argument,format}</strong>.
      * See the class {@link java.util.Formatter} for more information.
      * @param template A messate template. See a valid template and message with its parameters:
-     * <pre>{@code "The input value ${KEY} must be less than: ${NUMBER,%+9.2f} EUR."}</pre>
-     * <pre>{@code "The input value Cache must be less than: +12345.00 EUR."}</pre>
+     * <pre class="pre">"The input value ${KEY} must be less than: ${NUMBER,%+9.2f} EUR."</pre>
+     * <pre class="pre">"The input value Cache must be less than: +12345.00 EUR."</pre>
      * @return The target message, where arguments will be formatted by the ENGLISH locale.
      * @see java.util.Formatter
      */
@@ -161,8 +161,8 @@ public class ValidationError implements Serializable {
      * The argument can contains an optional format expression by example: <strong>${argument,format}</strong>.
      * See the class {@link java.util.Formatter} for more information.
      * @param template A messate template. See a valid template and message with its parameters:
-     * <pre>{@code "The input value ${KEY} must be less than: ${NUMBER,%+9.2f} EUR."}</pre>
-     * <pre>{@code "The input value Cache must be less than: +12345.00 EUR."}</pre>
+     * <pre class="pre">"The input value ${KEY} must be less than: ${NUMBER,%+9.2f} EUR."</pre>
+     * <pre class="pre">"The input value Cache must be less than: +12345.00 EUR."</pre>
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the ENGLISH Locale.
      * @return The target message
      * @see java.util.Formatter

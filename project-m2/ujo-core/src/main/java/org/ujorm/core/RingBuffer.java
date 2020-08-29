@@ -33,7 +33,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /**
  * A 'ring buffer' implementation whith a required length of the buffer.
  * See a sample use case of finding some substrings:
- * <pre>
+ * <pre class="pre">
  *    String text = "xxx ${abc} ${def} xyz";
  *    Reader reader = RingBuffer.createReader(text);
  *    String word_1 = RingBuffer.findWord(reader, "${", "}");
@@ -151,7 +151,7 @@ final public class RingBuffer implements CharSequence {
      * The method is designed for a very large data source (a character stream).
      * <br>
      * Sample:
-     * <pre>
+     * <pre class="pre">
      *    String text = "xxx ${abc} def";
      *    String word = RingBuffer.findWord(text, "${", "}");
      *    assert "abc".equals(word)
@@ -171,7 +171,7 @@ final public class RingBuffer implements CharSequence {
      * The method is designed for a very large data source (a character stream).
      * <br>
      * Sample:
-     * <pre>
+     * <pre class="pre">
      *    String text = "xxx ${abc} def";
      *    String word = RingBuffer.findWord(text, "${", "}");
      *    assert "abc".equals(word)
@@ -191,7 +191,7 @@ final public class RingBuffer implements CharSequence {
      * The method is designed for a very large data source (a character stream).
      * <br>
      * Sample:
-     * <pre>
+     * <pre class="pre">
      *    String text = "xxx ${abc} def";
      *    String word = RingBuffer.findWord(text, "${", "}");
      *    assert "abc".equals(word)
@@ -224,7 +224,7 @@ final public class RingBuffer implements CharSequence {
      * The method is designed for a very large data source (a character stream).
      * <br>
      * Sample:
-     * <pre>
+     * <pre class="pre">
      *    String text = "xxx ${abc} def";
      *    String word = RingBuffer.findWord(text, "${", "}");
      *    assert "abc".equals(word)

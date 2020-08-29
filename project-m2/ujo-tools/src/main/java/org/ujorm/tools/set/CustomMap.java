@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.tools.common.ObjectUtils;
 
 /**
  * Implementation of the Map interface where methods
@@ -151,8 +152,10 @@ public class CustomMap<K, V> implements Map<K, V>, Serializable {
 
         @Override
         public boolean equals(@Nullable final Object proxyValue) {
-            return proxyValue instanceof MapKeyProxy
-                && Objects.equals(originalKey,  ((MapKeyProxy)proxyValue).getOriginal());
+            return this == proxyValue
+                    || ObjectUtils.iof(proxyValue, DefaultMapKey.class, v
+                            -> Objects.equals(originalKey, v.getOriginal())
+                    ).orElse(false);
         }
 
         /** Get original key */

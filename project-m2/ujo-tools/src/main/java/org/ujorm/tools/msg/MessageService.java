@@ -109,9 +109,9 @@ public class MessageService {
      * Each variable must be surrounded by two marks "${" and "}".
      * The first mark is forbidden in a common text and can be replaced by the variable #{MARK}.
      * @param msg Template message, see the simple example:
-     * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%F}"}</pre>
+     * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%F}"</pre>
      * or
-     * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"}</pre>
+     * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"</pre>
      * The format expression is separated by the character (,) a and it is not mandatory.
      * @param args Key-value map arguments
      * @return Target result
@@ -126,9 +126,9 @@ public class MessageService {
      * Each variable must be surrounded by two marks "${" and "}".
      * The first mark is forbidden in a common text and can be replaced by the variable #{MARK}.
      * @param msg Template message, see the simple example:
-     * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%F}"}</pre>
+     * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%F}"</pre>
      * or
-     * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"}</pre>
+     * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"</pre>
      * The format expression is separated by the character (,) a and it is not mandatory.
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
      * @param key The Key (see a {@link MessageArg})
@@ -153,9 +153,9 @@ public class MessageService {
      * Each variable must be surrounded by two marks "${" and "}".
      * The first mark is forbidden in a common text and can be replaced by the variable #{MARK}.
      * @param msg Template message, see the simple example:
-     * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%F}"}</pre>
+     * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%F}"</pre>
      * or
-     * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"}</pre>
+     * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"</pre>
      * The format expression is separated by the character (,) a and it is not mandatory.
      * @param args Key-value map arguments where arguments type of {@link Supplier} ares supported.
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.

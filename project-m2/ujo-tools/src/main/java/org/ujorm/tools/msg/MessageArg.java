@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.common.ObjectUtils;
 import static org.ujorm.tools.msg.MessageService.PARAM_BEG;
 import static org.ujorm.tools.msg.MessageService.PARAM_END;
 
@@ -129,14 +130,12 @@ public final class MessageArg implements Serializable, CharSequence {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof MessageArg) {
-            final MessageArg par = (MessageArg) obj;
-            return this == par
-                || Objects.equals(this.name, par.name)
-                && Objects.equals(this.format, par.format) ;
-        }
-        return false;
+    public boolean equals(final Object obj) {
+        return this == obj
+                || ObjectUtils.iof(obj, MessageArg.class, v
+                        -> Objects.equals(name, v.name)
+                        && Objects.equals(format, v.format))
+                        .orElse(false);
     }
 
     // --- STATIC METHOD ---

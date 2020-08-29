@@ -22,7 +22,7 @@ import org.ujorm.validator.impl.ValidatorFactory;
 /**
  * Input Validator interface where the interface will be an immutable objects always.
  * See how to use the Validators:
- * <pre>{@code
+ * <pre class="pre">{@code
  * import org.ujorm.Validator.Build.*;
  *
  * public static final Key<Bo, Long> PID = f.newKey(notNull());
@@ -32,7 +32,7 @@ import org.ujorm.validator.impl.ValidatorFactory;
  * }</pre>
  *
  * and how to manage exception:
- * <pre>{@code
+ * <pre class="pre">{@code
  *  try {
  *      Bo ujo = new Eo();
  *      Bo.CODE.setValue(ujo, 10.1);
