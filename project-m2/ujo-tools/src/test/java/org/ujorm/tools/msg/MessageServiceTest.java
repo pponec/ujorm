@@ -39,8 +39,8 @@ public class MessageServiceTest extends TestCase {
     /** Message Argument */
     private static MessageArg<BigDecimal> NUMBER = new MessageArg<>("NUMBER");
 
-    /** Demo test. */
-    public void testDemo() {
+    /** Demo test 1. */
+    public void testDemo1() {
         final MessageService service = new MessageService();
         final MessageArg TYPE = new MessageArg("TYPE");
         final MessageArg NAME = new MessageArg("NAME");
@@ -53,6 +53,17 @@ public class MessageServiceTest extends TestCase {
                , NAME, "Ujorm");
         String result = service.format(template, args);
         assertEquals(expTemplate, template);
+        assertEquals(expResult, result);
+    }
+
+    /** Demo test 1. */
+    public void testDemo2() {
+        final MessageArg TYPE = MessageArg.of("TYPE");
+        final MessageArg NAME = MessageArg.of("NAME");
+
+        String expResult = "The ORM framework Ujorm.";
+        String template = "The " + TYPE + " framework " + NAME + ".";
+        String result = MessageService.formatMsg(template, TYPE.getName(), "ORM", NAME.getName(), "Ujorm");
         assertEquals(expResult, result);
     }
 
@@ -207,6 +218,13 @@ public class MessageServiceTest extends TestCase {
         String template2 = "Date is: ${DATE,%tF %tT}";
         String result2 = service.format(template2, args, Locale.ENGLISH);
         assertEquals(expResult, result2);
+    }
+
+    /** Test of format method, of class MessageService. */
+    public void testEquals() {
+        System.out.println("equals");
+        assertTrue(ID.equals(ID));
+        assertFalse(ID.equals(DATE));
     }
 
     /** Create a new Calendar for date: 2016-05-04T03:02:01  */

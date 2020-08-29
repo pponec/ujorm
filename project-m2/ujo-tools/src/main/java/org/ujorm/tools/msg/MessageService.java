@@ -26,7 +26,7 @@ import javax.annotation.concurrent.Immutable;
 import org.ujorm.tools.Assert;
 
 /**
- * Message Service. See the next example
+ * Message Service. See the next example:
  * <pre class="pre">
  *  final MessageService service = new MessageService();
  *  final MessageArg&lt;String&gt; NAME = new MessageArg&lt;&gt;("NAME");
@@ -42,8 +42,25 @@ import org.ujorm.tools.Assert;
  *  assertEquals(expTemplate, template);
  *  assertEquals(expResult, result);
  * </pre>
+ * or a simlified usage:
+ * <pre class="pre">
+ *  final MessageArg&lt;String&gt; NAME = new MessageArg&lt;&gt;("NAME");
+ *  final MessageArg&lt;String&gt; TYPE = new MessageArg&lt;&gt;("TYPE");
+ *
+ *  String expResult = "The ORM framework Ujorm.";
+ *  String expTemplate = "The ${TYPE} framework ${NAME}.";
+ *  String template = service.template("The ", TYPE, " framework ", NAME, ".");
+ *  Map<String, Object> args = service.map
+ *      ( TYPE, "ORM"
+ *      , NAME, "Ujorm");
+ *  String result = service.format(template, args);
+ *  assertEquals(expTemplate, template);
+ *  assertEquals(expResult, result);
+ * </pre>
+ *
  * @author Pavel Ponec
  * @since 1.53
+ * @see MessageArg
  */
 @Immutable
 public class MessageService {
@@ -116,14 +133,14 @@ public class MessageService {
      * <pre class="pre">{@code "The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"}</pre>
      * The format expression is separated by the character (,) a and it is not mandatory.
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
-     * @param key The Key
+     * @param key The Key (see a {@link MessageArg})
      * @param value The Value
      * @param keyValuePairs Key-value pairs
      * @see Formatter
      */
     public final String format(
             @Nullable final String msg,
-            @Nonnull final Locale locale,
+            @Nullable final Locale locale,
             @Nonnull final Object key,
             @Nullable final Object value,
             @Nonnull final Object... keyValuePairs) {
@@ -220,7 +237,7 @@ public class MessageService {
             @Nonnull final String key,
             @Nullable final Object value,
             @Nonnull final Object... keyValuePairs) {
-        return new MessageService().format(template, Locale.ENGLISH, key, value, keyValuePairs);
+        return new MessageService().format(template, (Locale) null, key, value, keyValuePairs);
     }
 
 }

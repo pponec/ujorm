@@ -17,6 +17,7 @@ package org.ujorm.tools.msg;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
@@ -40,6 +41,10 @@ public final class MessageArg<T> implements Serializable {
     @Nullable
     private final String format;
 
+    /** A code name for a template */
+    @Nonnull
+    private final String code;
+
     /** Name constructor */
     public MessageArg(@Nonnull String name) {
         this(name, null);
@@ -52,11 +57,12 @@ public final class MessageArg<T> implements Serializable {
      */
     public MessageArg(@Nonnull String name, @Nullable String format) {
         Assert.notNull(name, "Name is required", name);
-        Assert.isTrue(name.indexOf(PARAM_END)<0  , "Forbidden character {} in argument {}", PARAM_END, name);
+        Assert.isTrue(name.indexOf(PARAM_END) < 0  , "Forbidden character {} in argument {}", PARAM_END, name);
         Assert.isTrue(format == null
-                   || format.indexOf(PARAM_END)<0, "Forbidden character {} in argument {}", PARAM_END, format);
+                   || format.indexOf(PARAM_END) < 0, "Forbidden character {} in argument {}", PARAM_END, format);
         this.name = name;
         this.format = format;
+        this.code = toCode();
     }
 
     /** Get Name of argument */
@@ -71,10 +77,17 @@ public final class MessageArg<T> implements Serializable {
         return format;
     }
 
-    /** Returns the name */
-    @Override
-    public String toString() {
-        final StringBuilder result = new StringBuilder(32);
+    /** A code name for a template */
+    @Nonnull
+    public String getCode() {
+        return code;
+    }
+
+    /** Convert attributes to a code */
+    @Nonnull
+    protected final String toCode() {
+        final StringBuilder result = new StringBuilder(PARAM_BEG.length() + 1 + name.length()
+                + (format != null ? format.length() + 1 : 0));
         result.append(PARAM_BEG).append(name);
         if (Check.hasLength(format)) {
             result.append(',').append(format);
@@ -87,4 +100,32 @@ public final class MessageArg<T> implements Serializable {
     public T getValue(final Map<String, Object> map) {
         return (T) map.get(name);
     }
+
+    /** Returns a code name */
+    @Override
+    public String toString() {
+        return getCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof MessageArg) {
+            final MessageArg par = (MessageArg) obj;
+            return this == par
+                || Objects.equals(this.name, par.name)
+                && Objects.equals(this.format, par.format) ;
+        }
+        return false;
+    }
+
+    // --- STATIC METHOD ---
+
+    public static <T> MessageArg<T> of(@Nonnull String name) {
+        return new MessageArg<>(name);
+    }
+
+    public static <T> MessageArg<T> of(@Nonnull String name, @Nullable String format) {
+        return new MessageArg<>(name, format);
+    }
+
 }
