@@ -39,4 +39,17 @@ public class ObjectUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     * Test of equals method, of class ObjectUtils.
+     */
+    @Test
+    public void testCheck() {
+        System.out.println("check");
+        boolean expResult = true;
+        Object input = "ABC";
+        boolean result = ObjectUtils.check(input, String.class, v -> v.length() == 3);
+        assertEquals(expResult, result);
+
+    }
+
 }

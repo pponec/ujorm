@@ -18,6 +18,8 @@ package org.ujorm.tools.common;
 
 import java.util.Optional;
 import java.util.function.Function;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Static methods
@@ -37,10 +39,32 @@ public abstract class ObjectUtils {
      *   assertEquals(3, result);
      * </pre>
      */
-    public static final <V,R> Optional<R> iof(final Object value, final Class<V> requiredClass, final Function<V,R> function) {
+    public static final <V,R> Optional<R> iof(
+            @Nullable final Object value,
+            @Nonnull final Class<V> requiredClass,
+            @Nonnull final Function<V,R> function) {
         return requiredClass.isInstance(value)
                 ? Optional.ofNullable(function.apply((V) value))
                 : Optional.empty();
     }
+
+    /** Check the result of a function in case the value have got the same class as the required one.
+     *
+     * <br>Usage:
+     * <pre class="pre">
+     *   Object input = "ABC";
+     *   int result = ObjectUtils.check(input, String.class, v -> v.length()).orElse(0);
+     *   assertEquals(3, result);
+     * </pre>
+     */
+    public static final <V> boolean check(
+            @Nullable final Object value,
+            @Nonnull final Class<V> requiredClass,
+            @Nonnull final Function<V,Boolean> function) {
+        return value != null
+                && value.getClass() == requiredClass
+                && function.apply((V) value);
+    }
+
 
 }
