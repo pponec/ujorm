@@ -133,10 +133,9 @@ public final class MessageArg<T> implements Serializable, CharSequence {
     @Override
     public boolean equals(final Object obj) {
         return this == obj
-                || ObjectUtils.iof(obj, MessageArg.class, v
+                || ObjectUtils.check(obj, MessageArg.class, v
                         -> Objects.equals(name, v.name)
-                        && Objects.equals(format, v.format))
-                        .orElse(false);
+                        && Objects.equals(format, v.format));
     }
 
     // --- STATIC METHOD ---

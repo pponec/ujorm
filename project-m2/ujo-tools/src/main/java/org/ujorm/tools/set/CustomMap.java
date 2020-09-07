@@ -153,9 +153,8 @@ public class CustomMap<K, V> implements Map<K, V>, Serializable {
         @Override
         public boolean equals(@Nullable final Object proxyValue) {
             return this == proxyValue
-                    || ObjectUtils.iof(proxyValue, DefaultMapKey.class, v
-                            -> Objects.equals(originalKey, v.getOriginal())
-                    ).orElse(false);
+                    || ObjectUtils.check(proxyValue, DefaultMapKey.class, v
+                            -> Objects.equals(originalKey, v.getOriginal()));
         }
 
         /** Get original key */
