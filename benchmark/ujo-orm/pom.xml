@@ -34,6 +34,43 @@
         </repository>
     </repositories>    
     
+    <dependencies>
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-orm</artifactId>
+            <version>2.05-SNAPSHOT</version>
+        </dependency>
+
+        <!-- JTA (Java Transacton API) -->
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.1</version>
+        </dependency>
+
+        <!-- Postgresql -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>8.3-603.jdbc3</version>
+        </dependency>
+
+        <!-- H2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.196</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+    
     <build>
         <plugins>
             <plugin>
@@ -78,40 +115,4 @@
 
         </plugins>
     </build>
-    
-    <dependencies>
-        <dependency>
-            <groupId>org.ujorm</groupId>
-            <artifactId>ujo-orm</artifactId>
-            <version>2.05-SNAPSHOT</version>
-        </dependency>
-
-        <!-- JTA (Java Transacton API) -->
-        <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>jta</artifactId>
-            <version>1.1</version>
-        </dependency>
-
-        <!-- Postgresql -->
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>8.3-603.jdbc3</version>
-        </dependency>
-
-        <!-- H2 -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.196</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>

@@ -35,6 +35,21 @@
         </repository>
     </repositories>  
     
+    <dependencies>
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-core</artifactId>
+            <version>2.05-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
     <build>
         <resources>
             <resource>
@@ -65,20 +80,5 @@
             </plugin>
         </plugins>
     </build>
-    
-    <dependencies>
-        <dependency>
-            <groupId>org.ujorm</groupId>
-            <artifactId>ujo-core</artifactId>
-            <version>2.05-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>
 
