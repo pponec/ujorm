@@ -27,8 +27,8 @@ public interface Html {
     String HTML = "html";
     /** Head element */
     String HEAD = "head";
-    /** Horizontal line */
-    String HL = "hl";
+    /** Horizontal rule (line) */
+    String HR = "hr";
     /** Meta element */
     String META = "meta";
     /** Body element */
