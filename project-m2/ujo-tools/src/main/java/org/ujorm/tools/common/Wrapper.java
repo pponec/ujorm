@@ -29,9 +29,9 @@ import org.ujorm.tools.Assert;
  * <pre class="pre">
  *   Person p1 = new Person(1, "A");
  *   Person p2 = new Person(1, "B");
- *   Wrapper&lt;Person&lt; w1 = Wrapper.of(p1, Person::getId, Person::getName);
- *   Wrapper&lt;Person&lt; w2 = w1.wrap(p2);
- *   assertTrue(w1.compareTo(w2) < 0);
+ *   Wrapper&lt;Person&gt; w1 = Wrapper.of(p1, Person::getId, Person::getName);
+ *   Wrapper&lt;Person&gt; w2 = w1.wrap(p2);
+ *   assertTrue(w1.compareTo(w2) &lt; 0);
  * </pre>
  *
  * @author Pavel Ponec
