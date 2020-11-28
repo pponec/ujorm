@@ -1,6 +1,5 @@
 /*
- * Copyright 2020-2020 Pavel Ponec, https://github.com/pponec
- * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
+ * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools.web.ao;
+package org.ujorm.tools.web;
+
+import org.junit.Test;
+import org.ujorm.tools.web.ao.MockServletResponse;
+import static org.junit.Assert.assertTrue;
 
 /**
- * Simple proxy servlet response for getting a writer content
+ *
  * @author Pavel Ponec
- * @since 2.02
- * @Deprecated Use the {@link MockServletResponse} rather
  */
-@Deprecated
-public final class ProxyServletResponse extends MockServletResponse {
+public class HtmlElementTest {
 
-    public ProxyServletResponse() {
-        super();
+    /**
+     * Test of getName method, of class HtmlElement.
+     */
+    @Test
+    public void sample() {
+        MockServletResponse response = new MockServletResponse();
+        try (HtmlElement html = HtmlElement.of(response)) {
+            html.addBody().addHeading("Hello!");
+        }
+        assertTrue(response.toString().contains("<h1>Hello!</h1>"));
     }
-
-    public ProxyServletResponse(int size) {
-        super(size);
-    }
-
 }

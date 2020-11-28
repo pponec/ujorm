@@ -1,0 +1,14 @@
+org.ujorm.tools
+org.ujorm.tools.common
+org.ujorm.tools.jdbc
+org.ujorm.tools.msg
+org.ujorm.tools.set
+org.ujorm.tools.sql
+org.ujorm.tools.web
+org.ujorm.tools.web.ao
+org.ujorm.tools.xml
+org.ujorm.tools.xml.builder
+org.ujorm.tools.xml.config
+org.ujorm.tools.xml.config.impl
+org.ujorm.tools.xml.dom
+org.ujorm.tools.xml.model

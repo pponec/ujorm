@@ -39,8 +39,11 @@ import org.ujorm.tools.xml.model.XmlModel;
 import static org.ujorm.tools.web.Html.LEGEND;
 
 /**
- * /** A HTML Element implements some methods for frequently used elements and attributes
- * A proxy class in the current release */
+ * A HTML Element implements some methods for frequently used elements and attributes
+ * A proxy class in the current release
+ *
+ * @see HtmlElement#of(org.ujorm.tools.xml.config.HtmlConfig) 
+ */
 public final class Element implements ApiElement<Element>, Html {
 
     /** An original XML element */

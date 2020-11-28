@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * Simple proxy servlet response for catching a writer content
+ * Simple proxy servlet response for getting a writer content
  * @author Pavel Ponec
  * @since 2.03
  */

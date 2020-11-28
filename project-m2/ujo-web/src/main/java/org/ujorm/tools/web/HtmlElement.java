@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.web.ao.MockServletResponse;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
@@ -33,13 +34,27 @@ import org.ujorm.tools.xml.model.XmlModel;
 import org.ujorm.tools.xml.model.XmlWriter;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
-/** The root of HTML elements */
+/** The root of HTML elements
+ *
+ * <h3>Usage</h3>
+ *
+ * <pre class="pre">
+ *    MockServletResponse response = new MockServletResponse();
+ *    try (HtmlElement html = HtmlElement.of(response)) {
+ *        html.addBody().addHeading("Hello!");
+ *    }
+ *    assertTrue(response.toString().contains("&lt;h1&gt;Hello!&lt;/h1&gt;"));
+ * </pre>
+ *
+ * For more information see the
+ * <a target="_top" href="https://jbook-samples-free.ponec.net/sample?src=net.ponec.jbook.s01_hello.HelloWorldElement">next sample</a>.
+ */
 public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Head element */
     @Nonnull
-    private Element root;    
-    
+    private Element root;
+
     /** Head element */
     @Nonnull
     private Element head;
@@ -55,11 +70,11 @@ public class HtmlElement implements ApiElement<Element>, Html {
     /** Config */
     @Nonnull
     private final Writer writer;
-    
+
     /** Create new instance with empty html headers */
     public HtmlElement(@Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
         this(new XmlModel(Html.HTML), config, writer);
-    }    
+    }
 
     /** Create new instance with empty html headers */
     public HtmlElement(@Nonnull final ApiElement root, @Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
@@ -67,7 +82,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         this.config = config;
         this.writer = writer;
     }
-    
+
     @Override
     public String getName() {
         return root.getName();
@@ -97,7 +112,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     @Override
     public Element addCDATA(CharSequence charData) {
         return root.addCDATA(charData);
-    }    
+    }
 
     /**
      * Create new Element
@@ -231,7 +246,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
-        }            
+        }
     }
 
     /** Get config */
@@ -248,14 +263,18 @@ public class HtmlElement implements ApiElement<Element>, Html {
     // ------- Static methods ----------
 
     /** Create new instance with empty html headers
-     * @throws IllegalStateException IO exceptions */
+     * @throws IllegalStateException IO exceptions
+     * @see MockServletResponse
+     */
     @Nonnull
     public static HtmlElement of(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
         return of(response, HtmlConfig.ofDefault());
     }
 
     /** Create new instance with empty html headers
-     * @throws IllegalStateException IO exceptions */
+     * @throws IllegalStateException IO exceptions
+     * @see MockServletResponse
+     */
     @Nonnull
     public static HtmlElement of(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
@@ -265,7 +284,9 @@ public class HtmlElement implements ApiElement<Element>, Html {
     }
 
     /** Create new instance with empty html headers
-     * @throws IllegalStateException IO exceptions */
+     * @throws IllegalStateException IO exceptions
+     * @see MockServletResponse
+     */
     @Nonnull
     public static HtmlElement of(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
@@ -275,7 +296,9 @@ public class HtmlElement implements ApiElement<Element>, Html {
     }
 
     /** Create new instance with empty html headers
-     * @throws IllegalStateException IO exceptions */
+     * @throws IllegalStateException IO exceptions
+     * @see MockServletResponse
+     */
     @Nonnull
     public static HtmlElement niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
@@ -286,7 +309,9 @@ public class HtmlElement implements ApiElement<Element>, Html {
     }
 
     /** Create new instance with empty html headers
-     * @throws IllegalStateException IO exceptions */
+     * @throws IllegalStateException IO exceptions
+     * @see MockServletResponse
+     */
     @Nonnull
     public static HtmlElement niceOf(@Nonnull final CharSequence title, @Nonnull final HttpServletResponse response, @Nonnull final Charset charset, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
@@ -298,7 +323,9 @@ public class HtmlElement implements ApiElement<Element>, Html {
     }
 
     /** Create new instance with empty html headers
-     * @throws IllegalStateException IO exceptions */
+     * @throws IllegalStateException IO exceptions
+     * @see MockServletResponse
+     */
     @Nonnull
     public static HtmlElement niceOf(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
@@ -312,6 +339,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @param config Html configuration
      * @return An instance of the HtmlPage
      * @throws IllegalStateException IO exceptions
+     * @see MockServletResponse
      */
     @Nonnull
     public static HtmlElement of(@Nonnull final HttpServletResponse response, @Nonnull final HtmlConfig config) throws IllegalStateException {
@@ -333,7 +361,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         }
     }
 
-    /** Create new instance with empty html headers for
+    /** Create new instance with empty html headers
      * @param config Html configuration
      * @return An instance of the HtmlPage
      * @throws IllegalStateException IO exceptions
