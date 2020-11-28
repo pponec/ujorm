@@ -34,9 +34,9 @@ public class WrapperTest {
         Person p4 = new Person(2, "B");
 
         Wrapper<Person> w1 = Wrapper.of(p1, Person::getId, Person::getName);
-        Wrapper<Person> w2 = w1.ofValue(p2);
-        Wrapper<Person> w3 = w1.ofValue(p3);
-        Wrapper<Person> w4 = w1.ofValue(p4);
+        Wrapper<Person> w2 = w1.wrap(p2);
+        Wrapper<Person> w3 = w1.wrap(p3);
+        Wrapper<Person> w4 = w1.wrap(p4);
 
         assertFalse(w1.equals(w2));
         assertFalse(w1.equals(w3));
@@ -57,9 +57,9 @@ public class WrapperTest {
         Person p4 = new Person(2, "B");
 
         Wrapper<Person> w1 = Wrapper.of(p1, Person::getId, Person::getName);
-        Wrapper<Person> w2 = w1.ofValue(p2);
-        Wrapper<Person> w3 = w1.ofValue(p3);
-        Wrapper<Person> w4 = w1.ofValue(p4);
+        Wrapper<Person> w2 = w1.wrap(p2);
+        Wrapper<Person> w3 = w1.wrap(p3);
+        Wrapper<Person> w4 = w1.wrap(p4);
 
         Person[] result = Stream.of(w4, w3, w2, w1)
                 .distinct()
@@ -83,8 +83,8 @@ public class WrapperTest {
         Person p3 = new Person(null, "A");
 
         Wrapper<Person> w1 = Wrapper.of(p1, Person::getId, Person::getName);
-        Wrapper<Person> w2 = w1.ofValue(p2);
-        Wrapper<Person> w3 = w1.ofValue(p3);
+        Wrapper<Person> w2 = w1.wrap(p2);
+        Wrapper<Person> w3 = w1.wrap(p3);
 
         assertTrue(w1.compareTo(w2) < 0);
         assertTrue(w1.compareTo(w3) == 0);

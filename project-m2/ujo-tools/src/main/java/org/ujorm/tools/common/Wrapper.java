@@ -23,14 +23,14 @@ import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 
 /**
- * The wrapper implements a common hash(), equals() and compareTo() methods.
+ * The wrapper implements a common {@code hash()}, {@code equals()} and {@code compareTo()} methods
  *
- * Usage:
+ * <h3>Usage:</h3>
  * <pre class="pre">
  *   Person p1 = new Person(1, "A");
  *   Person p2 = new Person(1, "B");
  *   Wrapper&lt;Person&lt; w1 = Wrapper.of(p1, Person::getId, Person::getName);
- *   Wrapper&lt;Person&lt; w2 = w1.ofValue(p2);
+ *   Wrapper&lt;Person&lt; w2 = w1.wrap(p2);
  *   assertTrue(w1.compareTo(w2) < 0);
  * </pre>
  *
@@ -60,7 +60,7 @@ public final class Wrapper<V> implements Comparable<Wrapper<V>> {
     }
 
     /** Create a new wrapper for the value */
-    public Wrapper<V> ofValue(@Nonnull final V value) {
+    public Wrapper<V> wrap(@Nonnull final V value) {
         return new Wrapper(value, nullFirst, functions);
     }
 
