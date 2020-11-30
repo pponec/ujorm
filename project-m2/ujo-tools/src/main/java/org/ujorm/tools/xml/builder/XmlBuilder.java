@@ -58,7 +58,7 @@ import org.ujorm.tools.xml.ApiElement;
 public class XmlBuilder implements ApiElement<XmlBuilder> {
 
     /** The HTML tag name */
-    protected static final String HTML = "html";
+    public static final String HTML = "html";
 
     /** Assertion message template */
     protected static final String REQUIRED_MSG = "The argument {} is required";

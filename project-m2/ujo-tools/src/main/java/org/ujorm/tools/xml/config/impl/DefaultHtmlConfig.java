@@ -20,6 +20,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
@@ -46,6 +47,12 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** Build a real model or a plain writer */
     private boolean buildDom = false;
+
+    /** A request to generate a minimal HTML header */
+    private boolean htmlHeaderRequest = true;
+
+    /** A name of root element */
+    private String rootElementName = XmlBuilder.HTML;
 
     @Override
     @Nonnull
@@ -82,6 +89,20 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         return buildDom;
     }
 
+    /** A request to generate a minimal HTML header */
+    @Override
+    public boolean isHtmlHeaderRequest() {
+        return htmlHeaderRequest;
+    }
+
+    /** A name of root element */
+    @Override
+    public String getRootElementName() {
+        return rootElementName;
+    }
+
+    // --- SETTERS ---
+
     /** Title is a required element by HTML 5 */
     public void setTitle(@Nonnull CharSequence title) {
         this.title = Assert.hasLength(title, "title");
@@ -103,4 +124,15 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     public void setDocumentObjectModel(boolean buildDom) {
         this.buildDom = buildDom;
     }
+
+    /** A request to generate a minimal HTML header */
+    public void setHtmlHeaderRequest(boolean htmlHeaderRequest) {
+        this.htmlHeaderRequest = htmlHeaderRequest;
+    }
+
+    /** A name of root element */
+    public void setRootElementName(String rootElementName) {
+        this.rootElementName = rootElementName;
+    }
+
 }

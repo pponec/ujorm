@@ -348,7 +348,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         response.setCharacterEncoding(config.getCharset().toString());
         response.setContentType(config.getContentType());
         try {
-            return ofElementName(Html.HTML, config, response.getWriter());
+            return of(config, response.getWriter());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -361,18 +361,17 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @Nonnull
     public static HtmlElement of(@Nullable HtmlConfig config) throws IllegalStateException {
-        return ofElementName(Html.HTML, HtmlConfig.ofDefault(), new CharArrayWriter(256));
+        return of(HtmlConfig.ofDefault(), new CharArrayWriter(256));
     }
 
     /** Create root element for a required element name */
-    public static HtmlElement ofElementName(
-            @Nonnull final String elementName,
+    public static HtmlElement of(
             @Nonnull final HtmlConfig config,
             @Nonnull final Writer writer
     ) throws IllegalStateException {
         final ApiElement root = config.isDocumentObjectModel()
-                ? new XmlModel(elementName)
-                : new XmlBuilder(elementName, new XmlPrinter(writer, config));
+                ? new XmlModel(config.getRootElementName())
+                : new XmlBuilder(config.getRootElementName(), new XmlPrinter(writer, config));
         final HtmlElement result = new HtmlElement(root, config, writer);
         if (config.isHtmlHeaderRequest()) {
             config.getLanguage().ifPresent(lang -> result.setAttribute(A_LANG, lang));

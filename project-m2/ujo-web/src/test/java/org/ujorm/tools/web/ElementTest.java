@@ -124,9 +124,9 @@ public class ElementTest {
     @Test
     public void testRootElement() {
         CharArrayWriter writer = new CharArrayWriter(256);
-        DefaultHtmlConfig config = HtmlConfig.noHtmlHeader();
+        DefaultHtmlConfig config = HtmlConfig.ofElementName(Html.DIV);
 
-        try (HtmlElement html = HtmlElement.ofElementName(Html.DIV, config, writer)) {
+        try (HtmlElement html = HtmlElement.of(config, writer)) {
             html.addElement(Html.SPAN).addText("test");
         }
         String expected = "<div><span>test</span></div>";

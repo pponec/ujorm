@@ -16,9 +16,9 @@
  */
 package org.ujorm.tools.xml.config;
 
-import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 
 /**
  * Configuraion of HtmlPage
@@ -44,12 +44,31 @@ public interface HtmlConfig extends XmlConfig {
 
     /** Build a real model or a plain writer with a recommended value {@code false} */
     boolean isDocumentObjectModel();
-    
+
+    /** A request to generate a minimal HTML header */
+    boolean isHtmlHeaderRequest();
+
+    /** A name of root element */
+    String getRootElementName();
+
     /**
      * Create a new default config
      */
     @Nonnull
     public static DefaultHtmlConfig ofDefault() {
         return new DefaultHtmlConfig();
+    }
+
+    /**
+     * No HTML header is generated, no Doctype and no new lines
+     */
+    @Nonnull
+    public static DefaultHtmlConfig ofElementName(@Nonnull String rootElementName) {
+        final DefaultHtmlConfig result = ofDefault();
+        result.setRootElementName(rootElementName);
+        result.setHtmlHeaderRequest(false);
+        result.setDoctype("");
+        result.setNewLine("");
+        return result;
     }
 }
