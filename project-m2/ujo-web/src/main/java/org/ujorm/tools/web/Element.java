@@ -23,12 +23,14 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.sql.rowset.spi.XmlWriter;
@@ -42,7 +44,7 @@ import static org.ujorm.tools.web.Html.LEGEND;
  * A HTML Element implements some methods for frequently used elements and attributes
  * A proxy class in the current release
  *
- * @see HtmlElement#of(org.ujorm.tools.xml.config.HtmlConfig) 
+ * @see HtmlElement#of(org.ujorm.tools.xml.config.HtmlConfig)
  */
 public final class Element implements ApiElement<Element>, Html {
 
@@ -226,6 +228,39 @@ public final class Element implements ApiElement<Element>, Html {
             final Element rowElement = result.addElement(Html.TR);
             for (Object value : rowValue) {
                 rowElement.addElement(Html.TD).addText(value);
+            }
+        }
+        return result;
+    }
+
+    /** Create a HTML table according to data
+     *
+     * <h3>Usage</h3>
+     * <pre>
+     * element.addTable(getCars(), cssClasses, titles,
+     *         Car::getId,
+     *         Car::getName,
+     *         Car::getEnabled);
+     * </pre>
+     */
+    @Nonnull
+    public <D,V> Element addTable(
+            @Nonnull final Collection<D> domains,
+            @Nullable final CharSequence[] cssClass,
+            @Nullable final Object[] headers,
+            @Nonnull final Function<D,V>... attributes) {
+
+        final Element result = addTable(cssClass != null ? cssClass : new String[0]);
+        if (Check.hasLength(headers)) {
+            final Element rowElement = result.addElement(Html.TR);
+            for (Object value : headers) {
+                rowElement.addElement(Html.TH).addText(value);
+            }
+        }
+        for (D value : domains) {
+            final Element rowElement = result.addElement(Html.TR);
+            for (Function<D, V> attribute : attributes) {
+                rowElement.addElement(Html.TD).addText(attribute.apply(value));
             }
         }
         return result;

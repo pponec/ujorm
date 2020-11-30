@@ -17,16 +17,26 @@
 
 package org.ujorm.tools.web;
 
+import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import org.junit.*;
-import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
+import org.ujorm.tools.web.ao.MockServletResponse;
 import org.ujorm.tools.xml.config.HtmlConfig;
+import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Pavel Ponec
  */
 public class ElementTest {
+
+    /** Link to a bootstra URL */
+    private static final String BOOTSTRAP_CSS = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
+
+    /** Link to a bootstra URL */
+    private static final String SEMANTIC_CSS = "https://semantic-ui.com/dist/semantic.min.css";
 
     /**
      * Test of addSelect method, of class Element.
@@ -105,5 +115,61 @@ public class ElementTest {
                 + "</body>"
                 + "</html>";
         assertEquals(expectedResult, result);
+    }
+
+
+    /**
+     * Test of addSelect method, of class Element.
+     */
+    @Test
+    public void testAddTable() {
+        System.out.println("addTable");
+        CharSequence[] cssClasses = {};
+        Object[] titles = {"Id", "Name", "Enabled"};
+
+        MockServletResponse response = new MockServletResponse();
+        try (HtmlElement html = HtmlElement.of(response, BOOTSTRAP_CSS)) {
+            html.addBody().addHeading("Cars");
+            html.addBody().addTable(getCars(), cssClasses, titles,
+                    Car::getId,
+                    Car::getName,
+                    Car::getEnabled);
+        }
+        assertTrue(response.toString().contains("<td>Scala</td>"));
+    }
+
+    private Collection<Car> getCars() {
+        Collection result = new ArrayDeque<>();
+        result.add(new Car(1, "Scala", true));
+        result.add(new Car(2, "Auris", true));
+        result.add(new Car(3, "Ford Escort", true));
+        result.add(new Car(4, "Hyundai i10", true));
+
+        return result;
+    }
+
+    private class Car {
+
+        private final Integer id;
+        private final String name;
+        private final Boolean enabled;
+
+        public Car(Integer id, String name, Boolean enabled) {
+            this.id = id;
+            this.name = name;
+            this.enabled = enabled;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Boolean getEnabled() {
+            return enabled;
+        }
     }
 }
