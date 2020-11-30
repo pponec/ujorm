@@ -348,16 +348,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         response.setCharacterEncoding(config.getCharset().toString());
         response.setContentType(config.getContentType());
         try {
-            final ApiElement root = config.isDocumentObjectModel()
-                    ? new XmlModel(Html.HTML)
-                    : new XmlBuilder(Html.HTML, new XmlPrinter(response.getWriter(), config));
-            final HtmlElement result = new HtmlElement(root, config, response.getWriter());
-            config.getLanguage().ifPresent(lang -> result.setAttribute(A_LANG, lang));
-            result.getHead().addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
-            result.getHead().addElement(Html.TITLE).addText(config.getTitle());
-            result.addCssLinks(config.getCssLinks());
-
-            return result;
+            return of(config, response.getWriter());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -370,18 +361,18 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @Nonnull
     public static HtmlElement of(@Nullable HtmlConfig config) throws IllegalStateException {
-        if (config == null) {
-            config = new DefaultHtmlConfig();
-        }
-        final CharArrayWriter writer = new CharArrayWriter(256);
-        final ApiElement root = config.isDocumentObjectModel()
-                ? new XmlModel(Html.HTML)
-                : new XmlBuilder(Html.HTML, new XmlPrinter(writer, config));
-        final HtmlElement result = new HtmlElement(root, config, writer);
-        config.getLanguage().ifPresent(lang -> result.setAttribute(A_LANG, lang));
-        result.getHead().addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
-        result.getHead().addElement(Html.TITLE).addText(config.getTitle());
-        result.addCssLinks(config.getCssLinks());
-        return result;
+        return of(HtmlConfig.ofDefault(), new CharArrayWriter(256));
+    }
+
+    public static HtmlElement of(final HtmlConfig config, final Writer writer) throws IllegalStateException {
+            final ApiElement root = config.isDocumentObjectModel()
+                    ? new XmlModel(Html.HTML)
+                    : new XmlBuilder(Html.HTML, new XmlPrinter(writer, config));
+            final HtmlElement result = new HtmlElement(root, config, writer);
+            config.getLanguage().ifPresent(lang -> result.setAttribute(A_LANG, lang));
+            result.getHead().addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
+            result.getHead().addElement(Html.TITLE).addText(config.getTitle());
+            result.addCssLinks(config.getCssLinks());
+            return result;
     }
 }
