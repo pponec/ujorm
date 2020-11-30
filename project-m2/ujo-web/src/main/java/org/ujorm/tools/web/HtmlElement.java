@@ -268,7 +268,9 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @Nonnull
     public static HtmlElement of(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
-        return of(response, HtmlConfig.ofDefault());
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setCssLinks(cssLinks);
+        return of(response, config);
     }
 
     /** Create new instance with empty html headers
