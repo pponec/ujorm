@@ -17,6 +17,7 @@
 
 package org.ujorm.tools.web;
 
+import java.io.CharArrayWriter;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -117,6 +118,20 @@ public class ElementTest {
         assertEquals(expectedResult, result);
     }
 
+    /**
+     * Test of addSelect method, of class Element.
+     */
+    @Test
+    public void testRootElement() {
+        CharArrayWriter writer = new CharArrayWriter(256);
+        DefaultHtmlConfig config = HtmlConfig.noHtmlHeader();
+
+        try (HtmlElement html = HtmlElement.ofElementName(Html.DIV, config, writer)) {
+            html.addElement(Html.SPAN).addText("test");
+        }
+        String expected = "<div><span>test</span></div>";
+        assertEquals(expected, writer.toString());
+    }
 
     /**
      * Test of addSelect method, of class Element.

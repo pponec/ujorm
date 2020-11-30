@@ -348,7 +348,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         response.setCharacterEncoding(config.getCharset().toString());
         response.setContentType(config.getContentType());
         try {
-            return of(config, response.getWriter());
+            return ofElementName(Html.HTML, config, response.getWriter());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -361,18 +361,25 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @Nonnull
     public static HtmlElement of(@Nullable HtmlConfig config) throws IllegalStateException {
-        return of(HtmlConfig.ofDefault(), new CharArrayWriter(256));
+        return ofElementName(Html.HTML, HtmlConfig.ofDefault(), new CharArrayWriter(256));
     }
 
-    public static HtmlElement of(final HtmlConfig config, final Writer writer) throws IllegalStateException {
-            final ApiElement root = config.isDocumentObjectModel()
-                    ? new XmlModel(Html.HTML)
-                    : new XmlBuilder(Html.HTML, new XmlPrinter(writer, config));
-            final HtmlElement result = new HtmlElement(root, config, writer);
+    /** Create root element for a required element name */
+    public static HtmlElement ofElementName(
+            @Nonnull final String elementName,
+            @Nonnull final HtmlConfig config,
+            @Nonnull final Writer writer
+    ) throws IllegalStateException {
+        final ApiElement root = config.isDocumentObjectModel()
+                ? new XmlModel(elementName)
+                : new XmlBuilder(elementName, new XmlPrinter(writer, config));
+        final HtmlElement result = new HtmlElement(root, config, writer);
+        if (config.isHtmlHeaderRequest()) {
             config.getLanguage().ifPresent(lang -> result.setAttribute(A_LANG, lang));
             result.getHead().addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
             result.getHead().addElement(Html.TITLE).addText(config.getTitle());
             result.addCssLinks(config.getCssLinks());
-            return result;
+        }
+        return result;
     }
 }
