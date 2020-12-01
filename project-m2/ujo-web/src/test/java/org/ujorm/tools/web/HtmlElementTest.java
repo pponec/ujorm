@@ -48,7 +48,7 @@ public class HtmlElementTest {
     public void sample_() {
         CharArrayWriter writer = new CharArrayWriter();
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setRawHedaderCode("<meta name=\"description\" content=\"Powered by Ujorm\">");
+        config.setRawHedaderCode("<meta name='description' content='Powered by Ujorm'>");
 
         try (HtmlElement html = HtmlElement.of(config, writer)) {
             html.addBody().addHeading("Hello!");
@@ -59,7 +59,7 @@ public class HtmlElementTest {
                 "<head>",
                 "<meta charset=\"UTF-8\"/>",
                 "<title>Demo</title></head>",
-                "<meta name=\"description\" content=\"Powered by Ujorm\"><body>",
+                "<meta name='description' content='Powered by Ujorm'><body>",
                 "<h1>Hello!</h1></body></html>");
         assertEquals(result, writer.toString());
     }
