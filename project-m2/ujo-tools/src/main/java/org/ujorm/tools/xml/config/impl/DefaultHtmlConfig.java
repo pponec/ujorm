@@ -18,6 +18,7 @@ package org.ujorm.tools.xml.config.impl;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.builder.XmlBuilder;
@@ -50,6 +51,9 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** A request to generate a minimal HTML header */
     private boolean htmlHeaderRequest = true;
+
+    /** Raw text to insert to each HTML header */
+    private CharSequence rawHeaderText = null;
 
     /** A name of root element */
     private String rootElementName = XmlBuilder.HTML;
@@ -95,6 +99,12 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         return htmlHeaderRequest;
     }
 
+    /** A raw text for HTML header */
+    @Override
+    public CharSequence getRowHeaderText() {
+        return rawHeaderText;
+    }
+
     /** A name of root element */
     @Override
     public String getRootElementName() {
@@ -131,8 +141,11 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     /** A name of root element */
-    public void setRootElementName(String rootElementName) {
-        this.rootElementName = rootElementName;
+    public void setRootElementName(@Nonnull String rootElementName) {
+        this.rootElementName = Assert.notNull(rootElementName, REQUIRED_MSG, "rootElementName");
     }
 
+    public void setRawHedaderCode(@Nullable String rawHeaderText) {
+        this.rawHeaderText = Assert.notNull(rawHeaderText, REQUIRED_MSG, "rawHeaderText");
+    }
 }

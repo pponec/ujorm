@@ -15,8 +15,12 @@
  */
 package org.ujorm.tools.web;
 
+import java.io.CharArrayWriter;
 import org.junit.Test;
 import org.ujorm.tools.web.ao.MockServletResponse;
+import org.ujorm.tools.xml.config.HtmlConfig;
+import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -35,5 +39,28 @@ public class HtmlElementTest {
             html.addBody().addHeading("Hello!");
         }
         assertTrue(response.toString().contains("<h1>Hello!</h1>"));
+    }
+
+    /**
+     * Test of getName method, of class HtmlElement.
+     */
+    @Test
+    public void sample_() {
+        CharArrayWriter writer = new CharArrayWriter();
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setRawHedaderCode("<meta name=\"description\" content=\"Powered by Ujorm\">");
+
+        try (HtmlElement html = HtmlElement.of(config, writer)) {
+            html.addBody().addHeading("Hello!");
+        }
+        String result = String.join("\n",
+                "<!DOCTYPE html>",
+                "<html lang=\"en\">",
+                "<head>",
+                "<meta charset=\"UTF-8\"/>",
+                "<title>Demo</title></head>",
+                "<meta name=\"description\" content=\"Powered by Ujorm\"><body>",
+                "<h1>Hello!</h1></body></html>");
+        assertEquals(result, writer.toString());
     }
 }

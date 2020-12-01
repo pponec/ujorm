@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.web.ao.MockServletResponse;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.builder.XmlBuilder;
@@ -378,6 +379,11 @@ public class HtmlElement implements ApiElement<Element>, Html {
             result.getHead().addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
             result.getHead().addElement(Html.TITLE).addText(config.getTitle());
             result.addCssLinks(config.getCssLinks());
+            final CharSequence rawHeaderText = config.getRowHeaderText();
+            if (Check.hasLength(rawHeaderText)) {
+                result.addRawText(config.getNewLine());
+                result.addRawText(rawHeaderText);
+            }
         }
         return result;
     }

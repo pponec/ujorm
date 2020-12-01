@@ -125,6 +125,7 @@ public class ElementTest {
     public void testRootElement() {
         CharArrayWriter writer = new CharArrayWriter(256);
         DefaultHtmlConfig config = HtmlConfig.ofElementName(Html.DIV);
+        config.setNewLine("");
 
         try (HtmlElement html = HtmlElement.of(config, writer)) {
             html.addElement(Html.SPAN).addText("test");

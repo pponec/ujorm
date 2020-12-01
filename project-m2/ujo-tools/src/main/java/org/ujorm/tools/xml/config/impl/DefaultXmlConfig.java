@@ -22,9 +22,9 @@ import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.config.Formatter;
 import org.ujorm.tools.xml.config.XmlConfig;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import org.ujorm.tools.xml.config.Formatter;
 
 /**
  * Configuraion of HtmlPage
@@ -213,7 +213,7 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** A new line sequence */
     @Override
-    public String getNewLine() {
+    public CharSequence getNewLine() {
         return newLine;
     }
 

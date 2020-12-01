@@ -16,9 +16,9 @@
  */
 package org.ujorm.tools.xml.config;
 
-import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
+import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 
 /**
  * Configuraion of HtmlPage
@@ -51,11 +51,11 @@ public interface XmlConfig {
 
     /** A replacement text instead of the {@code null} value */
     @Nonnull
-    String getDefaultValue();
+    CharSequence getDefaultValue();
 
     /** A new line sequence */
     @Nonnull
-     String getNewLine();
+    CharSequence getNewLine();
 
     /**
      * HTTP cache is allowed

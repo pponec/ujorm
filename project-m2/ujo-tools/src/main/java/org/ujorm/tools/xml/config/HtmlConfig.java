@@ -18,6 +18,7 @@ package org.ujorm.tools.xml.config;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 
 /**
@@ -48,8 +49,12 @@ public interface HtmlConfig extends XmlConfig {
     /** A request to generate a minimal HTML header */
     boolean isHtmlHeaderRequest();
 
+    /** A raw text for HTML header */
+    @Nullable
+    CharSequence getRowHeaderText();
+
     /** A name of root element */
-    String getRootElementName();
+    CharSequence getRootElementName();
 
     /**
      * Create a new default config
@@ -68,7 +73,6 @@ public interface HtmlConfig extends XmlConfig {
         result.setRootElementName(rootElementName);
         result.setHtmlHeaderRequest(false);
         result.setDoctype("");
-        result.setNewLine("");
         return result;
     }
 }
