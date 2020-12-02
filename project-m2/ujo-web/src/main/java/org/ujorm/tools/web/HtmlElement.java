@@ -16,9 +16,7 @@
 
 package org.ujorm.tools.web;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -70,15 +68,15 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Config */
     @Nonnull
-    private final Writer writer;
+    private final Appendable writer;
 
     /** Create new instance with empty html headers */
-    public HtmlElement(@Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
+    public HtmlElement(@Nonnull final HtmlConfig config, @Nonnull final Appendable writer) {
         this(new XmlModel(Html.HTML), config, writer);
     }
 
     /** Create new instance with empty html headers */
-    public HtmlElement(@Nonnull final ApiElement root, @Nonnull final HtmlConfig config, @Nonnull final Writer writer) {
+    public HtmlElement(@Nonnull final ApiElement root, @Nonnull final HtmlConfig config, @Nonnull final Appendable writer) {
         this.root = new Element(root);
         this.config = config;
         this.writer = writer;
@@ -367,13 +365,13 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @Nonnull
     public static HtmlElement of(@Nullable HtmlConfig config) throws IllegalStateException {
-        return of(HtmlConfig.ofDefault(), new CharArrayWriter(256));
+        return of(HtmlConfig.ofDefault(), new StringBuilder(256));
     }
 
     /** Create root element for a required element name */
     public static HtmlElement of(
             @Nonnull final HtmlConfig config,
-            @Nonnull final Writer writer
+            @Nonnull final Appendable writer
     ) throws IllegalStateException {
         final ApiElement root = config.isDocumentObjectModel()
                 ? new XmlModel(config.getRootElementName())

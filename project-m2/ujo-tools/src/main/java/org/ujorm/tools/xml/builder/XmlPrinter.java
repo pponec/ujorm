@@ -17,7 +17,6 @@
 
 package org.ujorm.tools.xml.builder;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -45,7 +44,7 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Default constructor a zero offset */
     public XmlPrinter() {
-        this(new CharArrayWriter(512));
+        this(new StringBuilder(512));
     }
 
     /** Writer constructor with a zero offset */

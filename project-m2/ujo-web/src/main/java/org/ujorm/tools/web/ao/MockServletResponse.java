@@ -16,7 +16,6 @@
  */
 package org.ujorm.tools.web.ao;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
@@ -28,6 +27,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import org.ujorm.tools.common.ObjectUtils;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -38,7 +38,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class MockServletResponse implements HttpServletResponse {
 
     private final Charset charset = UTF_8;
-    private final CharArrayWriter writer;
+    private final Appendable writer;
     private final PrintWriter printWriter;
 
     public MockServletResponse() {
@@ -46,8 +46,8 @@ public class MockServletResponse implements HttpServletResponse {
     }
 
     public MockServletResponse(int size) {
-        writer = new CharArrayWriter(size);
-        printWriter = new PrintWriter(writer);
+        writer = new StringBuilder(size);
+        printWriter = ObjectUtils.toPrintWriter(writer);
     }
 
     @Deprecated
@@ -190,7 +190,7 @@ public class MockServletResponse implements HttpServletResponse {
 
             @Override
             public void write(int b) throws IOException {
-                writer.write(b);
+                writer.append((char) b);
             }
         };
     }

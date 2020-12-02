@@ -16,6 +16,9 @@
 
 package org.ujorm.tools.common;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.Optional;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
@@ -64,6 +67,24 @@ public abstract class ObjectUtils {
         return value != null
                 && value.getClass() == requiredClass
                 && function.apply((V) value);
+    }
+
+    /** Convert appendable to object type of PrintWriter */
+    @Nonnull
+    public static PrintWriter toPrintWriter(@Nonnull final Appendable appendable) {
+        final Writer myWriter = new Writer() {
+            @Override
+            public void flush() throws IOException {}
+            @Override
+            public void close() throws IOException {}
+            @Override
+            public void write(final char[] cbuf, final int off, final int len) throws IOException {
+                for (int i = 0, max = off + len; i < max; i++) {
+                    appendable.append(cbuf[i]);
+                }
+            }
+        };
+        return new PrintWriter(myWriter, false);
     }
 
 

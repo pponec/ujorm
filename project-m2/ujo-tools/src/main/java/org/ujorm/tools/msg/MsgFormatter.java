@@ -16,13 +16,12 @@
 package org.ujorm.tools.msg;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.common.ObjectUtils;
 
 /**
  * Formatter of log messages where argument is located by the {@code {} } characters.
@@ -143,7 +142,7 @@ public class MsgFormatter {
                     : String.valueOf(val));
         } else if (val instanceof Throwable) {
             out.append('\n');
-            ((Throwable)val).printStackTrace(getPrintWriter(out));
+            ((Throwable)val).printStackTrace(ObjectUtils.toPrintWriter(out));
         } else {
             out.append(SEPARATOR);
             out.append(String.valueOf(val));
@@ -189,23 +188,4 @@ public class MsgFormatter {
             throw new IllegalStateException(e);
         }
     }
-
-    /** Convert appendable to object type of PrintWriter */
-    @Nonnull
-    protected static PrintWriter getPrintWriter(@Nonnull final Appendable appendable) {
-        final Writer myWriter = new Writer() {
-            @Override
-            public void flush() throws IOException {}
-            @Override
-            public void close() throws IOException {}
-            @Override
-            public void write(final char[] cbuf, final int off, final int len) throws IOException {
-                for (int i = 0, max = off + len; i < max; i++) {
-                    appendable.append(cbuf[i]);
-                }
-            }
-        };
-        return new PrintWriter(myWriter, false);
-    }
-
 }

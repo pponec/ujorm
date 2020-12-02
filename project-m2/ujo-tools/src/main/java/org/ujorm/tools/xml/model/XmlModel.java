@@ -17,7 +17,6 @@
 
 package org.ujorm.tools.xml.model;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -270,7 +269,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     public String toString() {
         try {
             final XmlConfig config = XmlConfig.ofDefault();
-            final XmlWriter writer = new XmlWriter(new CharArrayWriter(512)
+            final XmlWriter writer = new XmlWriter(new StringBuilder(512)
                     .append(AbstractWriter.XML_HEADER)
                     .append(config.getNewLine()));
             return toWriter(0, writer).toString();

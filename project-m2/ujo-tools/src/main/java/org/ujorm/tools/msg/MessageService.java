@@ -15,9 +15,7 @@
  */
 package org.ujorm.tools.msg;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Formatter;
 import java.util.HashMap;
@@ -28,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.common.ObjectUtils;
 
 /**
  * Message Service. See the next example:
@@ -193,7 +192,7 @@ public class MessageService {
      * @see Formatter
      */
     public final String format(
-            @Nullable final Writer writer,
+            @Nullable final Appendable writer,
             @Nullable final String msg,
             @Nullable final Map<String, Object> args,
             @Nullable Locale locale) throws IOException  {
@@ -201,7 +200,7 @@ public class MessageService {
             return String.valueOf(msg);
         }
         final int max = msg.length();
-        final Writer result = writer != null ? writer : new CharArrayWriter(Math.max(32, max + (max >> 1)));
+        final Appendable result = writer != null ? writer : new StringBuilder(Math.max(32, max + (max >> 1)));
         int i, last = 0;
         while ((i = msg.indexOf(PARAM_BEG, last)) >= 0) {
             final int end = msg.indexOf(PARAM_END, i);
@@ -246,13 +245,11 @@ public class MessageService {
      */
     protected void writeValue
         ( @Nonnull final Object value
-        , @Nonnull final Writer writer
+        , @Nonnull final Appendable writer
         , @Nullable final Locale locale
         ) throws IOException {
         if (value instanceof Throwable) {
-            final PrintWriter pw = new PrintWriter(writer);
-            ((Throwable)value).printStackTrace(pw);
-            pw.flush();
+            ((Throwable)value).printStackTrace(ObjectUtils.toPrintWriter(writer));
         } else {
             writer.append(value.toString());
         }
