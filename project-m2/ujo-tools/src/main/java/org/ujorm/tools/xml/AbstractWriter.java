@@ -68,7 +68,7 @@ public abstract class AbstractWriter {
 
     /** Output */
     @Nonnull
-    protected final Writer out;
+    protected final Appendable out;
 
     /** XML configuration */
     @Nonnull
@@ -86,7 +86,7 @@ public abstract class AbstractWriter {
      * @param out A writer
      * @param config XML configuration
      */
-    public AbstractWriter(@Nonnull final Writer out, @Nonnull final XmlConfig config) {
+    public AbstractWriter(@Nonnull final Appendable out, @Nonnull final XmlConfig config) {
         this.out = Assert.notNull(out, "out");
         this.config = Assert.notNull(config, "config");
         this.indentationEnabled = Check.hasLength(config.getIndentation());
@@ -97,8 +97,16 @@ public abstract class AbstractWriter {
      * @param text A value to write
      * @param attribute Write an attribute value
      */
-    public void write(@Nonnull final CharSequence text, final boolean attribute) throws IOException {
-        for (int i = 0, max = text.length(); i < max; i++) {
+    public final void write(@Nonnull final CharSequence text, final boolean attribute) throws IOException {
+        write(text, 0, text.length(), attribute);
+    }
+
+    /** Write escaped value to the output
+     * @param text A value to write
+     * @param attribute Write an attribute value
+     */
+    void write(@Nonnull final CharSequence text, final int from, final int max, final boolean attribute) throws IOException {
+        for (int i = from; i < max; i++) {
             final char c = text.charAt(i);
             switch (c) {
                 case XML_LT:
@@ -176,27 +184,30 @@ public abstract class AbstractWriter {
 
     /** For internal usage only */
     @Nonnull
-    public Writer getWriter() {
+    public Appendable getWriter() {
         return out;
     }
 
     /** For internal usage only */
     @Nonnull
-    public Writer getWriterEscaped() {
-        return new Writer() {
+    public Appendable getWriterEscaped() {
+        return new Appendable() {
             @Override
-            public void write(char[] cbuf, int off, int len) throws IOException {
-                AbstractWriter.this.write(new String(cbuf, off, len), false);
+            public Appendable append(final CharSequence value) throws IOException {
+                AbstractWriter.this.write(value, false);
+                return this;
             }
 
             @Override
-            public void flush() throws IOException {
-                out.flush();
+            public Appendable append(final CharSequence value, int start, int end) throws IOException {
+                AbstractWriter.this.write(value, start, end, false);
+                return this;
             }
 
             @Override
-            public void close() throws IOException {
-                out.close();
+            public Appendable append(final char value) throws IOException {
+                AbstractWriter.this.write(String.valueOf(value), false);
+                return this;
             }
         };
     }

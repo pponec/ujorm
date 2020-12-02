@@ -16,7 +16,6 @@
 package org.ujorm.tools.msg;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -62,11 +61,11 @@ public class ValueFormatter extends MsgFormatter {
 
     /**
      * Print argument to the Writter with an optional format.
-     * @param out Writer
+     * @param out Appendable
      * @param value A one value where the {@code Supplier} interface is supported.
      */
     @Override
-    protected void writeValue(@Nullable final Object value, @Nonnull final Writer out, final boolean marked) throws IOException  {
+    protected void writeValue(@Nullable final Object value, @Nonnull final Appendable out, final boolean marked) throws IOException  {
         final Object val = value instanceof Supplier
                 ? ((Supplier)value).get()
                 : value;
@@ -109,7 +108,7 @@ public class ValueFormatter extends MsgFormatter {
     }
 
     /** Write bytes as hexa */
-    protected void writeByteArray(@Nonnull byte[] bytes, @Nonnull final Writer out) throws IOException {
+    protected void writeByteArray(@Nonnull byte[] bytes, @Nonnull final Appendable out) throws IOException {
         final int length = bytes != null ? bytes.length : -1; // Length of the bytes
         final int limit = getSizeLimit() >> 1;                // Limit for the bytes
         final int half = (limit - 4) >> 1;
@@ -134,7 +133,7 @@ public class ValueFormatter extends MsgFormatter {
     }
 
     /** You can call the method from a child class */
-    protected void writeLongValue(@Nonnull final CharSequence value, @Nonnull final Writer out) throws IOException {
+    protected void writeLongValue(@Nonnull final CharSequence value, @Nonnull final Appendable out) throws IOException {
         final int length = value != null ? value.length() : -1;
         final int limit = getSizeLimit();
         final int half = (limit - 4) >> 1;

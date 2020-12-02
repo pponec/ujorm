@@ -15,7 +15,6 @@
  */
 package org.ujorm.tools.msg;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -40,7 +39,7 @@ import org.ujorm.tools.Check;
 public class MsgFormatter {
 
     /** An undefined writter */
-    private static final Writer NO_WRITER = null;
+    private static final Appendable NO_WRITER = null;
 
     /** Parameter mark */
     protected static final String DEFAULT_MARK = "{}";
@@ -74,7 +73,7 @@ public class MsgFormatter {
      */
     @Nonnull
     public <T> String formatMsg
-        ( @Nullable final Writer writer
+        ( @Nullable final Appendable writer
         , @Nullable final CharSequence messageTemplate
         , @Nullable final T... argumentValues) throws IOException
         {
@@ -88,7 +87,7 @@ public class MsgFormatter {
             : argumentValues;
 
         final int max = template.length();
-        final Writer out = writer != null ? writer : new CharArrayWriter(Math.max(32, max + (max >> 1)));
+        final Appendable out = writer != null ? writer : new StringBuilder(Math.max(32, max + (max >> 1)));
         int last = 0;
 
         for (final Object arg : arguments) {
@@ -118,7 +117,7 @@ public class MsgFormatter {
      * @return In case the argument have no length, the result message is {@code null}.
      */
     @Nullable
-    protected <T> String formatMsg(@Nullable Writer writer, @Nullable final T... templateAndArguments) throws IOException {
+    protected <T> String formatMsg(@Nullable Appendable writer, @Nullable final T... templateAndArguments) throws IOException {
         if (Check.hasLength(templateAndArguments)) {
             final String template = String.valueOf(templateAndArguments[0]);
             final Object[] params = new Object[templateAndArguments.length - 1];
@@ -131,10 +130,10 @@ public class MsgFormatter {
 
     /**
      * Print argument to the Writter with an optional format.
-     * @param out Writer
+     * @param out Appendable
      * @param value Value where the {@code Supplier} interface is supported.
      */
-    protected void writeValue(@Nullable final Object value, @Nonnull final Writer out, final boolean marked) throws IOException {
+    protected void writeValue(@Nullable final Object value, @Nonnull final Appendable out, final boolean marked) throws IOException {
         final Object val = value instanceof Supplier
                 ? ((Supplier)value).get()
                 : value;
@@ -144,9 +143,7 @@ public class MsgFormatter {
                     : String.valueOf(val));
         } else if (val instanceof Throwable) {
             out.append('\n');
-            final PrintWriter pw = new PrintWriter(out);
-            ((Throwable)val).printStackTrace(pw);
-            pw.flush();
+            ((Throwable)val).printStackTrace(getPrintWriter(out));
         } else {
             out.append(SEPARATOR);
             out.append(String.valueOf(val));
@@ -192,4 +189,23 @@ public class MsgFormatter {
             throw new IllegalStateException(e);
         }
     }
+
+    /** Convert appendable to object type of PrintWriter */
+    @Nonnull
+    protected static PrintWriter getPrintWriter(@Nonnull final Appendable appendable) {
+        final Writer myWriter = new Writer() {
+            @Override
+            public void flush() throws IOException {}
+            @Override
+            public void close() throws IOException {}
+            @Override
+            public void write(final char[] cbuf, final int off, final int len) throws IOException {
+                for (int i = 0, max = off + len; i < max; i++) {
+                    appendable.append(cbuf[i]);
+                }
+            }
+        };
+        return new PrintWriter(myWriter, false);
+    }
+
 }

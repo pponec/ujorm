@@ -16,10 +16,8 @@
  */
 package org.ujorm.tools.jdbc;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -414,41 +412,41 @@ public class JdbcBuilder implements Serializable {
     /** Returns a SQL text */
     @Nonnull
     public String getSql(final boolean preview) {
-        final CharArrayWriter result = new CharArrayWriter(getBufferSizeEstimation(preview));
+        final StringBuilder result = new StringBuilder(getBufferSizeEstimation(preview));
         final ValuePrinter printer = preview ? createValuePrinter(result) : null;
         try {
-            for (int i = 0, max = sql.size(); i < max; i++) {
-                final CharSequence item = sql.get(i);
-                if (item instanceof SqlEnvelope) {
-                    final SqlEnvelope env = (SqlEnvelope) item;
-                    if (env.isColumn()) {
-                        if (env.getColumnOrder() > 0) {
-                            result.append(ITEM_SEPARATOR);
-                        }
-                        result.append(SPACE);
+        for (int i = 0, max = sql.size(); i < max; i++) {
+            final CharSequence item = sql.get(i);
+            if (item instanceof SqlEnvelope) {
+                final SqlEnvelope env = (SqlEnvelope) item;
+                if (env.isColumn()) {
+                    if (env.getColumnOrder() > 0) {
+                        result.append(ITEM_SEPARATOR);
                     }
-                } else if (i > 0) {
                     result.append(SPACE);
                 }
-                if (printer != null && item instanceof MarkerEnvelope) {
-                    printer.appendValue(((MarkerEnvelope) item).getValue());
-                } else {
-                    result.append(item);
-                }
+            } else if (i > 0) {
+                result.append(SPACE);
             }
+            if (printer != null && item instanceof MarkerEnvelope) {
+                printer.appendValue(((MarkerEnvelope) item).getValue());
+            } else {
+                result.append(item);
+            }
+        }
 
-            if (insertMode) {
-                result.append(" VALUES (");
-                for (int i = 0, max = arguments.size(); i < max; i++) {
-                    result.append(i > 0 ? ITEM_SEPARATOR : "").append(SPACE);
-                    if (printer != null) {
-                        printer.appendValue(arguments.get(i));
-                    } else {
-                        result.append(VALUE_MARKER);
-                    }
+        if (insertMode) {
+            result.append(" VALUES (");
+            for (int i = 0, max = arguments.size(); i < max; i++) {
+                result.append(i > 0 ? ITEM_SEPARATOR : "").append(SPACE);
+                if (printer != null) {
+                    printer.appendValue(arguments.get(i));
+                } else {
+                    result.append(VALUE_MARKER);
                 }
-                result.append(" )");
             }
+            result.append(" )");
+        }
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -457,7 +455,7 @@ public class JdbcBuilder implements Serializable {
 
     /** Create a value printer */
     @Nonnull
-    protected static ValuePrinter createValuePrinter(@Nonnull final Writer result) {
+    protected static ValuePrinter createValuePrinter(@Nonnull final Appendable result) {
         return new ValuePrinter(VALUE_MARKER, "'", result);
     }
 

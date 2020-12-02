@@ -28,6 +28,12 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.XmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
+import static org.ujorm.tools.xml.AbstractWriter.CHAR_SPACE;
+import static org.ujorm.tools.xml.AbstractWriter.FORWARD_SLASH;
+import static org.ujorm.tools.xml.AbstractWriter.XML_2QUOT;
+import static org.ujorm.tools.xml.AbstractWriter.XML_GT;
+import static org.ujorm.tools.xml.AbstractWriter.XML_LT;
+import static org.ujorm.tools.xml.AbstractWriter.createWriter;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -43,7 +49,7 @@ public class XmlPrinter extends AbstractWriter {
     }
 
     /** Writer constructor with a zero offset */
-    public XmlPrinter(@Nonnull final Writer out) {
+    public XmlPrinter(@Nonnull final Appendable out) {
         this(out, XmlConfig.ofDefault());
     }
 
@@ -52,7 +58,7 @@ public class XmlPrinter extends AbstractWriter {
      * @param out A writer
      * @param config A configuration object
      */
-    public <T> XmlPrinter(@Nonnull final Writer out, @Nonnull final XmlConfig config) {
+    public <T> XmlPrinter(@Nonnull final Appendable out, @Nonnull final XmlConfig config) {
         super(out, config);
         try {
             out.append(config.getDoctype());
@@ -152,10 +158,10 @@ public class XmlPrinter extends AbstractWriter {
      * @return New instance of the XmlPrinter
      */
     public static XmlPrinter forXml(
-            @Nullable final Writer out,
+            @Nullable final Appendable out,
             @Nonnull final XmlConfig config
     ) {
-        return new XmlPrinter(out != null ? out : new CharArrayWriter(512), config);
+        return new XmlPrinter(out != null ? out : new StringBuilder(512), config);
     }
 
     // --- HTML ---
@@ -168,13 +174,13 @@ public class XmlPrinter extends AbstractWriter {
     }
 
     /** Crete a new instance including a DOCTYPE */
-    public static XmlPrinter forHtml(final Writer out) {
+    public static XmlPrinter forHtml(final Appendable out) {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
         return forXml(out, config);
     }
 
     /** Crete a new instance including a DOCTYPE */
-    public static XmlPrinter forNiceHtml(final Writer out) {
+    public static XmlPrinter forNiceHtml(final Appendable out) {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         return forHtml(out, config);
@@ -195,10 +201,10 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Create XmlPrinter for UTF-8 */
     public static <T> XmlPrinter forHtml(
-            @Nullable final Writer out,
+            @Nullable final Appendable out,
             @Nonnull final HtmlConfig config
     ) {
-        return new XmlPrinter(out != null ? out : new CharArrayWriter(512), config);
+        return new XmlPrinter(out != null ? out : new StringBuilder(512), config);
     }
 
     /** Create XmlPrinter for UTF-8 */
