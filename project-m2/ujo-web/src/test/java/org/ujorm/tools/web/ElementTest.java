@@ -93,6 +93,29 @@ public class ElementTest {
      * Test of addSelect method, of class Element.
      */
     @Test
+    public void testAddTestTemplated() {
+        System.out.println("addTestTemplated");
+        CharSequence[] cssClasses = null;
+        HtmlElement resInstance = HtmlElement.of(null);
+        try (HtmlElement instance = resInstance) {
+            instance.getBody().addTextTemplated("Test <{}.{}{}", 1, 2, ">");
+        }
+
+        String result = resInstance.toString();
+        String expectedResult = String.join("\n",
+                "<!DOCTYPE html>",
+                "<html lang=\"en\">",
+                "<head>",
+                "<meta charset=\"UTF-8\"/>",
+                "<title>Demo</title></head>",
+                "<body>Test &lt;1.2&gt;</body></html>");
+        assertEquals(expectedResult, result);
+    }
+
+    /**
+     * Test of addSelect method, of class Element.
+     */
+    @Test
     public void testAddFieldset() {
         System.out.println("addFieldset");
         CharSequence[] cssClasses = null;
