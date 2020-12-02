@@ -100,6 +100,11 @@ public class HtmlElement implements ApiElement<Element>, Html {
     }
 
     @Override
+    public Element addTextTemplated(CharSequence template, Object... values) {
+        return root.addTextTemplated(template, values);
+    }
+
+    @Override
     public Element addRawText(Object value) {
         return root.addRawText(value);
      }

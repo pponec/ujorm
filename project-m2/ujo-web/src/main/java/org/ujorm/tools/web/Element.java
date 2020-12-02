@@ -115,15 +115,31 @@ public final class Element implements ApiElement<Element>, Html {
     }
 
     /**
-     * Add a template based text with parameters
+     * Use the method {@link  #addTextTemplated(java.lang.String, java.lang.Object...) } raher.
+     *
      * @param template A message template with an ENGLISH locale. See {@link String#format(java.lang.String, java.lang.Object...) for more parameters.
      * @param data A template parameters
      * @return A parent element.
      */
+    @Deprecated
     @Nonnull
     public Element addTemplate(@Nonnull final String template, @Nonnull final Object... data)
             throws IllegalStateException {
         return addText(String.format(Locale.ENGLISH, template, data));
+    }
+
+    /**
+     * Add a template based text with parameters with hight performance.
+     *
+     * @param template A message template with an ENGLISH locale. See {@link String#format(java.lang.String, java.lang.Object...) for more parameters.
+     * @param values A template parameters
+     * @return A parent element.
+     */
+    @Nonnull
+    @Override
+    public Element addTextTemplated(CharSequence template, Object... values) {
+        internalElement.addTextTemplated(template, values);
+        return this;
     }
 
     /**
@@ -519,9 +535,23 @@ public final class Element implements ApiElement<Element>, Html {
         return result.setHref(url);
     }
 
-    /** Add an anchor element with texts */
+    /** Use the method {@link #addLinkedText(java.lang.String, java.lang.Object...) rather. */
+    @Deprecated
     @Nonnull
     public Element addAnchoredText(@Nonnull final String url, @Nonnull final Object... text) {
+        return addElement(A)
+               .setHref(url)
+               .addText(text);
+    }
+
+    /**
+     * Add a
+     * @param url
+     * @param text
+     * @return
+     */
+    @Nonnull
+    public Element addLinkedText(@Nonnull final String url, @Nonnull final Object... text) {
         return addElement(A)
                .setHref(url)
                .addText(text);
