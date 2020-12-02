@@ -25,12 +25,12 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.function.Function;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.sql.rowset.spi.XmlWriter;
@@ -232,13 +232,17 @@ public final class Element implements ApiElement<Element>, Html {
 
     /** Create a HTML table according to data */
     @Nonnull
-    public Element addTable(final Object[][] data, final CharSequence... cssClass) {
+    public Element addTable(
+            @Nonnull final Object[][] data,
+            @Nonnull final CharSequence... cssClass) {
         return addTable(Arrays.asList(data), cssClass);
     }
 
     /** Create a HTML table according to data */
     @Nonnull
-    public Element addTable(final List<Object[]> data, final CharSequence... cssClass) {
+    public Element addTable(
+            @Nonnull final Collection<Object[]> data,
+            @Nonnull final CharSequence... cssClass) {
         final Element result = addTable(cssClass);
         for (Object[] rowValue : data) {
             final Element rowElement = result.addElement(Html.TR);
@@ -261,7 +265,7 @@ public final class Element implements ApiElement<Element>, Html {
      */
     @Nonnull
     public <D,V> Element addTable(
-            @Nonnull final Collection<D> domains,
+            @Nonnull final Stream<D> domains,
             @Nullable final CharSequence[] cssClass,
             @Nullable final Object[] headers,
             @Nonnull final Function<D,V>... attributes) {
@@ -273,12 +277,12 @@ public final class Element implements ApiElement<Element>, Html {
                 rowElement.addElement(Html.TH).addText(value);
             }
         }
-        for (D value : domains) {
+        domains.forEach(value -> {
             final Element rowElement = result.addElement(Html.TR);
             for (Function<D, V> attribute : attributes) {
                 rowElement.addElement(Html.TD).addText(attribute.apply(value));
             }
-        }
+        });
         return result;
     }
 

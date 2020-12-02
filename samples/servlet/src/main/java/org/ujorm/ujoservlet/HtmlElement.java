@@ -17,6 +17,7 @@
 
 package org.ujorm.ujoservlet;
 
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -182,7 +183,7 @@ public class HtmlElement extends XmlModel {
     @Override @Nonnull
     public String toString() throws IllegalStateException {
         try {
-            return toWriter(0, new XmlWriter(new StringBuilder(512)
+            return toWriter(0, new XmlWriter(new CharArrayWriter(512)
                     .append(AbstractWriter.HTML_DOCTYPE)
                     .append(CHAR_NEW_LINE)))
                     .toString();

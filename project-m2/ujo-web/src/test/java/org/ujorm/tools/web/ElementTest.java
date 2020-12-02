@@ -146,7 +146,7 @@ public class ElementTest {
         MockServletResponse response = new MockServletResponse();
         try (HtmlElement html = HtmlElement.of(response, BOOTSTRAP_CSS)) {
             html.addBody().addHeading("Cars");
-            html.addBody().addTable(getCars(), cssClasses, titles,
+            html.addBody().addTable(getCars().stream(), cssClasses, titles,
                     Car::getId,
                     Car::getName,
                     Car::getEnabled);
