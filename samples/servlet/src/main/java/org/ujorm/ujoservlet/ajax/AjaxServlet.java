@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.HtmlElement;
+import org.ujorm.tools.xml.config.HtmlConfig;
+import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
@@ -52,10 +54,14 @@ public class AjaxServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
 
-        try (HtmlElement html = HtmlElement.niceOf("Ajax Servlet", output, BOOTSTRAP_CSS)) {
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setDocumentObjectModel(false);
+        config.setTitle("Ajax Servlet");
+
+        try (HtmlElement html = HtmlElement.of(output, BOOTSTRAP_CSS)) {
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
-                body.addTextTemplated("Data: {}.{}.{} ", 1, 2, 3);
+                body.addTextTemplated("Data <{}.{}.{}>", 1, 2, 3);
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "Servlet failed", e);
             }
