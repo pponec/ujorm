@@ -165,6 +165,25 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
         return  this;
     }
 
+    /**
+     * Message template with hight performance.
+     *
+     * @param template Message template where parameters are marked by the {@code {}} symbol
+     * @param values argument values
+     * @return The original builder
+     */
+    @Override @Nonnull
+    public final XmlModel addTextTemplated(@Nullable final CharSequence template, @Nonnull final Object... values) {
+        try {
+            return addText(AbstractWriter.FORMATTER.formatMsg(null, template, values));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+
+
+
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */

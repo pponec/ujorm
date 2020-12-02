@@ -15,7 +15,9 @@
  */
 package org.ujorm.tools.xml.builder;
 
+import java.io.CharArrayWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import org.junit.Test;
@@ -94,7 +96,7 @@ public class XmlBuilderTest implements Html {
     public void testHtmlBuildingNice1() throws IOException {
         System.out.println("testHtmlBuildingNice1");
 
-        final XmlPrinter writer = XmlPrinter.forNiceHtml((Appendable) new StringBuilder());
+        final XmlPrinter writer = XmlPrinter.forNiceHtml((Writer) new CharArrayWriter());
         try (XmlBuilder html = writer.createElement("html")) {
             html.setAttribute("lang", "en");
             try(XmlBuilder head = html.addElement("head")) {
@@ -127,7 +129,7 @@ public class XmlBuilderTest implements Html {
     public void testHtmlBuildingNice2() throws IOException {
         System.out.println("testHtmlBuildingNice2");
 
-        final XmlPrinter writer = XmlPrinter.forNiceHtml((Appendable) new StringBuilder());
+        final XmlPrinter writer = XmlPrinter.forNiceHtml((Writer) new CharArrayWriter());
         try (XmlBuilder html = writer.createElement("html")) {
             html.setAttribute("lang", "en");
             XmlBuilder head = html.addElement("head");

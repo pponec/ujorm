@@ -14,10 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ujorm.tools.jdbc;
 
+import java.io.CharArrayWriter;
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -159,7 +161,7 @@ public class JdbcBuilder implements Serializable {
 
     /** Write many sql fragments with no space before */
     @Nonnull
-    public JdbcBuilder writeManyNoSpace(@Nonnull final CharSequence ... sqlFragments) {
+    public JdbcBuilder writeManyNoSpace(@Nonnull final CharSequence... sqlFragments) {
         for (CharSequence text : sqlFragments) {
             writeNoSpace(text);
         }
@@ -215,8 +217,8 @@ public class JdbcBuilder implements Serializable {
     public JdbcBuilder andCondition(@Nonnull final CharSequence sqlCondition, @Nonnull final String operator, @Nullable final Object... values) {
         writeOperator(true, conditionCounter++ > 0);
         return Check.hasLength(values)
-             ? condition(sqlCondition, operator, values)
-             : condition(sqlCondition, operator, null);
+                ? condition(sqlCondition, operator, values)
+                : condition(sqlCondition, operator, null);
     }
 
     /**
@@ -241,8 +243,8 @@ public class JdbcBuilder implements Serializable {
     public JdbcBuilder orCondition(@Nonnull final CharSequence sqlCondition, @Nonnull final String operator, @Nullable final Object... values) {
         writeOperator(false, conditionCounter++ > 0);
         return Check.hasLength(values)
-             ? condition(sqlCondition, operator, values)
-             : condition(sqlCondition, operator, null);
+                ? condition(sqlCondition, operator, values)
+                : condition(sqlCondition, operator, null);
     }
 
     /** Add a condition for an <strong>argument</strong> with length
@@ -254,7 +256,7 @@ public class JdbcBuilder implements Serializable {
     public JdbcBuilder condition(@Nullable final CharSequence sqlCondition, @Nullable final String operator, @Nonnull final Object value) {
         if (Check.hasLength(sqlCondition)) {
             final boolean multiValue = value instanceof Object[];
-            final Object[] values =  multiValue ? (Object[]) value : new Object[]{value};
+            final Object[] values = multiValue ? (Object[]) value : new Object[]{value};
             if (Check.hasLength(operator)) {
                 sql.add(sqlCondition);
                 sql.add(operator);
@@ -276,7 +278,7 @@ public class JdbcBuilder implements Serializable {
                 for (Object val : values) {
                     int i = cond.indexOf(VALUE_MARKER);
                     if (i >= 0) {
-                        int i2 = i - (i > 0 && cond.charAt(i - 1 ) == SPACE ? 1 : 0); // Remove last space, if any
+                        int i2 = i - (i > 0 && cond.charAt(i - 1) == SPACE ? 1 : 0); // Remove last space, if any
                         writeNoSpace(cond.subSequence(0, i2));
                         addValue(val);
                     } else {
@@ -291,7 +293,7 @@ public class JdbcBuilder implements Serializable {
     }
 
     /**
-     *  Write an opetaror AND / OR
+     * Write an opetaror AND / OR
      * @param andOperator
      * @param enabled
      */
@@ -307,7 +309,7 @@ public class JdbcBuilder implements Serializable {
     @Nonnull
     public JdbcBuilder value(@Nonnull final Object value) {
         if (value != null && !arguments.isEmpty()) {
-                sql.add(ITEM_SEPARATOR);
+            sql.add(ITEM_SEPARATOR);
         }
         return addValue(value);
     }
@@ -330,7 +332,7 @@ public class JdbcBuilder implements Serializable {
      * @see #writeNoSpace(java.lang.CharSequence)
      */
     @Nonnull
-    public JdbcBuilder addArguments(final @Nonnull Object ... values) {
+    public JdbcBuilder addArguments(final @Nonnull Object... values) {
         final Object[] vals = values.length == 1 && values[0] instanceof Object[] ? (Object[]) values[0] : values;
         for (int i = 0; i < vals.length; i++) {
             arguments.add(values[i]);
@@ -412,48 +414,51 @@ public class JdbcBuilder implements Serializable {
     /** Returns a SQL text */
     @Nonnull
     public String getSql(final boolean preview) {
-        final StringBuilder result = new StringBuilder(getBufferSizeEstimation(preview));
+        final CharArrayWriter result = new CharArrayWriter(getBufferSizeEstimation(preview));
         final ValuePrinter printer = preview ? createValuePrinter(result) : null;
-
-        for (int i = 0, max = sql.size(); i < max; i++) {
-            final CharSequence item = sql.get(i);
-            if (item instanceof SqlEnvelope) {
-                final SqlEnvelope env = (SqlEnvelope) item;
-                if (env.isColumn()) {
-                    if (env.getColumnOrder() > 0) {
-                        result.append(ITEM_SEPARATOR);
+        try {
+            for (int i = 0, max = sql.size(); i < max; i++) {
+                final CharSequence item = sql.get(i);
+                if (item instanceof SqlEnvelope) {
+                    final SqlEnvelope env = (SqlEnvelope) item;
+                    if (env.isColumn()) {
+                        if (env.getColumnOrder() > 0) {
+                            result.append(ITEM_SEPARATOR);
+                        }
+                        result.append(SPACE);
                     }
+                } else if (i > 0) {
                     result.append(SPACE);
                 }
-            } else if (i > 0) {
-                result.append(SPACE);
-            }
-            if (printer != null && item instanceof MarkerEnvelope) {
-                printer.appendValue(((MarkerEnvelope) item).getValue());
-            } else {
-                result.append(item);
-            }
-        }
-
-        if (insertMode) {
-            result.append(" VALUES (");
-            for (int i = 0, max = arguments.size(); i < max; i++) {
-                result.append(i > 0 ? ITEM_SEPARATOR : "").append(SPACE);
-                if (printer != null) {
-                    printer.appendValue(arguments.get(i));
+                if (printer != null && item instanceof MarkerEnvelope) {
+                    printer.appendValue(((MarkerEnvelope) item).getValue());
                 } else {
-                    result.append(VALUE_MARKER);
+                    result.append(item);
                 }
             }
-            result.append(" )");
+
+            if (insertMode) {
+                result.append(" VALUES (");
+                for (int i = 0, max = arguments.size(); i < max; i++) {
+                    result.append(i > 0 ? ITEM_SEPARATOR : "").append(SPACE);
+                    if (printer != null) {
+                        printer.appendValue(arguments.get(i));
+                    } else {
+                        result.append(VALUE_MARKER);
+                    }
+                }
+                result.append(" )");
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
         return result.toString();
     }
 
     /** Create a value printer */
     @Nonnull
-    protected static ValuePrinter createValuePrinter(@Nonnull final StringBuilder result) {
-        return new ValuePrinter(VALUE_MARKER,  "'",  result);
+    protected static ValuePrinter createValuePrinter(@Nonnull final Writer result) {
+        return new ValuePrinter(VALUE_MARKER, "'", result);
     }
 
     /** Estimate a buffer size in characters */

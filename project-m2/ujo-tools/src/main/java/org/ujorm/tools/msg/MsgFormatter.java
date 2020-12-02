@@ -15,6 +15,7 @@
  */
 package org.ujorm.tools.msg;
 
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -37,6 +38,9 @@ import org.ujorm.tools.Check;
  */
 @Immutable
 public class MsgFormatter {
+
+    /** An undefined writter */
+    private static final Writer NO_WRITER = null;
 
     /** Parameter mark */
     protected static final String DEFAULT_MARK = "{}";
@@ -63,14 +67,16 @@ public class MsgFormatter {
      *  assertEquals("TE, S, T", MsgFormatter.format("TE", "S", "T"));
      *  assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
      * </pre>
+     * @param writer An optional writer
      * @param messageTemplate Template where argument position is marked by the {@code {}} characters.
      * @param argumentValues Optional arguments, where the {@code Supplier} interface is supported.
-     * @return A result text
+     * @return A result text or an empty text, if the writer is available.
      */
     @Nonnull
     public <T> String formatMsg
-        ( @Nullable final CharSequence messageTemplate
-        , @Nullable final T... argumentValues)
+        ( @Nullable final Writer writer
+        , @Nullable final CharSequence messageTemplate
+        , @Nullable final T... argumentValues) throws IOException
         {
         final String template = String.valueOf(messageTemplate);
         if (!Check.hasLength(argumentValues)) {
@@ -82,7 +88,7 @@ public class MsgFormatter {
             : argumentValues;
 
         final int max = template.length();
-        final StringBuilder out = new StringBuilder(Math.max(32, max + (max >> 1)));
+        final Writer out = writer != null ? writer : new CharArrayWriter(Math.max(32, max + (max >> 1)));
         int last = 0;
 
         for (final Object arg : arguments) {
@@ -102,7 +108,7 @@ public class MsgFormatter {
         if (last < max) {
             out.append(template, last, max);
         }
-        return out.toString();
+        return writer != null ? "" : out.toString();
     }
 
     /**
@@ -112,12 +118,12 @@ public class MsgFormatter {
      * @return In case the argument have no length, the result message is {@code null}.
      */
     @Nullable
-    protected <T> String formatMsg(@Nullable final T... templateAndArguments) {
+    protected <T> String formatMsg(@Nullable Writer writer, @Nullable final T... templateAndArguments) throws IOException {
         if (Check.hasLength(templateAndArguments)) {
             final String template = String.valueOf(templateAndArguments[0]);
             final Object[] params = new Object[templateAndArguments.length - 1];
             System.arraycopy(templateAndArguments, 1, params, 0, params.length);
-            return format(template, params);
+            return formatMsg(writer, template, params);
         } else {
             return null;
         }
@@ -128,7 +134,7 @@ public class MsgFormatter {
      * @param out Writer
      * @param value Value where the {@code Supplier} interface is supported.
      */
-    protected void writeValue(@Nullable final Object value, @Nonnull final StringBuilder out, final boolean marked) {
+    protected void writeValue(@Nullable final Object value, @Nonnull final Writer out, final boolean marked) throws IOException {
         final Object val = value instanceof Supplier
                 ? ((Supplier)value).get()
                 : value;
@@ -138,7 +144,9 @@ public class MsgFormatter {
                     : String.valueOf(val));
         } else if (val instanceof Throwable) {
             out.append('\n');
-            ((Throwable)val).printStackTrace(getPrintWriter(out));
+            final PrintWriter pw = new PrintWriter(out);
+            ((Throwable)val).printStackTrace(pw);
+            pw.flush();
         } else {
             out.append(SEPARATOR);
             out.append(String.valueOf(val));
@@ -162,7 +170,11 @@ public class MsgFormatter {
     public static <T> String format
     ( @Nullable final CharSequence messageTemplate
     , @Nullable final T... arguments) {
-        return new MsgFormatter().formatMsg(messageTemplate, arguments);
+        try {
+            return new MsgFormatter().formatMsg(NO_WRITER, messageTemplate, arguments);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     /**
@@ -174,24 +186,10 @@ public class MsgFormatter {
      */
     @Nullable
     public static <T> String format(@Nullable final T... templateAndArguments) {
-        return new MsgFormatter().formatMsg(templateAndArguments);
-    }
-
-    /** Convert appendable to object type of PrintWriter */
-    @Nonnull
-    protected static PrintWriter getPrintWriter(@Nonnull final Appendable appendable) {
-        final Writer myWriter = new Writer() {
-            @Override
-            public void flush() throws IOException {}
-            @Override
-            public void close() throws IOException {}
-            @Override
-            public void write(final char[] cbuf, final int off, final int len) throws IOException {
-                for (int i = 0, max = off + len; i < max; i++) {
-                    appendable.append(cbuf[i]);
-                }
-            }
-        };
-        return new PrintWriter(myWriter, false);
+        try {
+            return new MsgFormatter().formatMsg(NO_WRITER, templateAndArguments);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

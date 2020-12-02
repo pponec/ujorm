@@ -15,6 +15,10 @@
  */
 package org.ujorm.tools.msg;
 
+import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
@@ -159,15 +163,45 @@ public class MessageService {
      * The format expression is separated by the character (,) a and it is not mandatory.
      * @param args Key-value map arguments where arguments type of {@link Supplier} ares supported.
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
-     * @return Target result
+     * @return The result message or an empty String if the writter is available.
      * @see Formatter
      */
-    public final String format(@Nullable final String msg, @Nullable final Map<String, Object> args, @Nullable Locale locale) {
+    public final String format(
+            @Nullable final String msg,
+            @Nullable final Map<String, Object> args,
+            @Nullable Locale locale) {
+        try {
+            return format((Writer) null, msg, args, locale);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * Format a template message using named variables.
+     * Each variable must be surrounded by two marks "${" and "}".
+     * The first mark is forbidden in a common text and can be replaced by the variable #{MARK}.
+     * @param writer An optional writer.
+     * @param msg Template message, see the simple example:
+     * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%F}"</pre>
+     * or
+     * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"</pre>
+     * The format expression is separated by the character (,) a and it is not mandatory.
+     * @param args Key-value map arguments where arguments type of {@link Supplier} ares supported.
+     * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
+     * @return The result message of an empty string of writter is available.
+     * @see Formatter
+     */
+    public final String format(
+            @Nullable final Writer writer,
+            @Nullable final String msg,
+            @Nullable final Map<String, Object> args,
+            @Nullable Locale locale) throws IOException  {
         if (msg == null || args == null) {
             return String.valueOf(msg);
         }
         final int max = msg.length();
-        final StringBuilder result = new StringBuilder(Math.max(32, max + (max >> 1)));
+        final Writer result = writer != null ? writer : new CharArrayWriter(Math.max(32, max + (max >> 1)));
         int i, last = 0;
         while ((i = msg.indexOf(PARAM_BEG, last)) >= 0) {
             final int end = msg.indexOf(PARAM_END, i);
@@ -193,7 +227,7 @@ public class MessageService {
             last = end + 1;
         }
         result.append(msg, last, max);
-        return result.toString();
+        return writer != null ? "" : result.toString();
     }
 
      /** Convert value.
@@ -212,11 +246,13 @@ public class MessageService {
      */
     protected void writeValue
         ( @Nonnull final Object value
-        , @Nonnull final StringBuilder writer
+        , @Nonnull final Writer writer
         , @Nullable final Locale locale
-        ) {
+        ) throws IOException {
         if (value instanceof Throwable) {
-           ((Throwable)value).printStackTrace(MsgFormatter.getPrintWriter(writer));
+            final PrintWriter pw = new PrintWriter(writer);
+            ((Throwable)value).printStackTrace(pw);
+            pw.flush();
         } else {
             writer.append(value.toString());
         }

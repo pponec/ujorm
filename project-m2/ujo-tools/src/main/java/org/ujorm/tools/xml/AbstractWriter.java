@@ -16,7 +16,6 @@
  */
 package org.ujorm.tools.xml;
 
-import org.ujorm.tools.xml.config.Formatter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Method;
@@ -25,6 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.msg.MsgFormatter;
+import org.ujorm.tools.xml.config.Formatter;
 import org.ujorm.tools.xml.config.XmlConfig;
 
 /**
@@ -62,9 +63,12 @@ public abstract class AbstractWriter {
     /** A comment end sequence */
     public static final String COMMENT_END = "-->";
 
+    /** Common formatter */
+    public static final MsgFormatter FORMATTER = new MsgFormatter(){};
+
     /** Output */
     @Nonnull
-    protected final Appendable out;
+    protected final Writer out;
 
     /** XML configuration */
     @Nonnull
@@ -82,7 +86,7 @@ public abstract class AbstractWriter {
      * @param out A writer
      * @param config XML configuration
      */
-    public AbstractWriter(@Nonnull final Appendable out, @Nonnull final XmlConfig config) {
+    public AbstractWriter(@Nonnull final Writer out, @Nonnull final XmlConfig config) {
         this.out = Assert.notNull(out, "out");
         this.config = Assert.notNull(config, "config");
         this.indentationEnabled = Check.hasLength(config.getIndentation());
@@ -168,6 +172,12 @@ public abstract class AbstractWriter {
     @Override
     public String toString() {
         return out.toString();
+    }
+
+    /** For internal usage only */
+    @Nonnull
+    public Writer getWriter() {
+        return out;
     }
 
     // ---- STATIC METHOD(s) ---

@@ -16,6 +16,9 @@
 
 package org.ujorm.tools.msg;
 
+import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.Writer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -26,27 +29,27 @@ import javax.annotation.Nullable;
 public class ValuePrinter extends ValueFormatter {
 
     /** Writer */
-    protected final StringBuilder out;
+    protected final Writer out;
 
     /** Constructor */
     public ValuePrinter(final int size) {
-        this(new StringBuilder(size));
+        this(new CharArrayWriter(size));
     }
 
     /** Constructor */
-    public ValuePrinter(@Nonnull final StringBuilder out) {
+    public ValuePrinter(@Nonnull final Writer out) {
         this("?", "\"", out);
     }
 
     /** Constructor */
-    public ValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final StringBuilder out) {
+    public ValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final Writer out) {
         super(mark, textBorder);
         this.out = out;
     }
 
     /** Append value */
     @Nonnull
-    public ValuePrinter appendValue(@Nullable final Object value) {
+    public ValuePrinter appendValue(@Nullable final Object value) throws IOException {
         if (value instanceof Object[]) {
             boolean first = true;
             for (Object object : (Object[]) value) {
@@ -64,7 +67,7 @@ public class ValuePrinter extends ValueFormatter {
     }
 
     /** Standarad writter */
-    public StringBuilder getWriter() {
+    public Writer getWriter() {
         return out;
     }
 

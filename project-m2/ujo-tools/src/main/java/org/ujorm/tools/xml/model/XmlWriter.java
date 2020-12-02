@@ -18,6 +18,7 @@ package org.ujorm.tools.xml.model;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
@@ -41,7 +42,7 @@ public class XmlWriter extends AbstractWriter {
     }
 
     /** Writer constructor with a zero offset */
-    public XmlWriter(@Nonnull final Appendable out) {
+    public XmlWriter(@Nonnull final Writer out) {
         super(out, XmlConfig.ofDefault());
     }
 
@@ -50,7 +51,7 @@ public class XmlWriter extends AbstractWriter {
      * @param out A writer
      * @param indentationSpace String for a one level offset.
      */
-    public XmlWriter(@Nonnull final Appendable out, @Nonnull final String indentationSpace) {
+    public XmlWriter(@Nonnull final Writer out, @Nonnull final String indentationSpace) {
         super(out, createConfig(indentationSpace));
     }
 

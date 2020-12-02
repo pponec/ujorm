@@ -19,9 +19,11 @@ package org.ujorm.tools.xml.builder;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.Writer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.ApiElement;
 
 /**
@@ -193,7 +195,8 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      *   {@link XmlPrinter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
-    @Override @Nonnull
+    @Override
+    @Nonnull
     public final XmlBuilder addText(@Nullable final Object value) {
         try {
             nextChild(null);
@@ -202,6 +205,24 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
             throw new IllegalStateException(e);
         }
         return this;
+    }
+
+    /**
+     * Message template with hight performance.
+     *
+     * @param template Message template where parameters are marked by the {@code {}} symbol
+     * @param values argument values
+     * @return The original builder
+     */
+    @Override
+    @Nonnull
+    public final XmlBuilder addTextTemplated(@Nullable final CharSequence template, @Nonnull final Object... values) {
+        try {
+            AbstractWriter.FORMATTER.formatMsg(writer.getWriter(), template, values);
+            return this;
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
@@ -287,12 +308,12 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
 
     /** Create builder for HTML */
     @Nonnull
-    public static XmlBuilder forHtml(@Nonnull Appendable response) {
-        return new XmlBuilder(HTML, XmlPrinter.forHtml(response));
+    public static XmlBuilder forHtml(@Nonnull Writer response) {
+         return new XmlBuilder(HTML, XmlPrinter.forHtml(response));
     }
 
     @Nonnull
-    public static XmlBuilder forNiceHtml(@Nonnull Appendable response) {
+    public static XmlBuilder forNiceHtml(@Nonnull Writer response) {
         return new XmlBuilder(HTML, XmlPrinter.forNiceHtml(response));
     }
 

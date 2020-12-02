@@ -73,6 +73,16 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
     @Nonnull
     E addText(@Nullable Object value);
 
+    /**
+     * Message template
+     *
+     * @param template Message template where parameters are marked by the {@code {}} symbol
+     * @param values argument values
+     * @return The original builder
+     */
+    @Nonnull
+    E addTextTemplated(@Nullable final CharSequence template, @Nonnull final Object... values);
+
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */
