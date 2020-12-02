@@ -180,6 +180,27 @@ public abstract class AbstractWriter {
         return out;
     }
 
+    /** For internal usage only */
+    @Nonnull
+    public Writer getWriterEscaped() {
+        return new Writer() {
+            @Override
+            public void write(char[] cbuf, int off, int len) throws IOException {
+                AbstractWriter.this.write(new String(cbuf, off, len), false);
+            }
+
+            @Override
+            public void flush() throws IOException {
+                out.flush();
+            }
+
+            @Override
+            public void close() throws IOException {
+                out.close();
+            }
+        };
+    }
+
     // ---- STATIC METHOD(s) ---
 
     /** Assign a no-cache and an Edge compatibility mode and returns a writer from HttpServletResponse */

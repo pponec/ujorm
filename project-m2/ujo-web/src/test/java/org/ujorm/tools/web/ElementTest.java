@@ -33,7 +33,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class ElementTest {
 
-    /** Link to a bootstra URL */
+    /** Link to a Bootstrap URL */
     private static final String BOOTSTRAP_CSS = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
 
     /** Link to a bootstra URL */

@@ -218,7 +218,8 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     @Nonnull
     public final XmlBuilder addTextTemplated(@Nullable final CharSequence template, @Nonnull final Object... values) {
         try {
-            AbstractWriter.FORMATTER.formatMsg(writer.getWriter(), template, values);
+            nextChild(null);
+            AbstractWriter.FORMATTER.formatMsg(writer.getWriterEscaped(), template, values);
             return this;
         } catch (IOException e) {
             throw new IllegalStateException(e);
