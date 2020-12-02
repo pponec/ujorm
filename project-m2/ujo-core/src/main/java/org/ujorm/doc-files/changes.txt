@@ -2,8 +2,15 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 2.05-SNAPSHOT (yyyy-mm-dd)
+release 2.06-SNAPSHOT (yyyy-mm-dd)
 + ...
+
+release 2.05 (2020-12-02)
++ WEB: New method Element.addTextTemplated() for a template based texts.
++ WEB: New method Element.addLinkedText() for anchors.
++ WEB: Element.addTable() by an array of functions to getting values.
+- WEB: Bugfixing of the method: HtmlElement of(response, cssLinks)
++ TOOLS: New method ApiElement.addTextTemplated() for a template based texts.
 
 release 2.04 (2020-08-29)
 + TOOLS: New method ObjectUtil.iof() for a processing a value in case the one is the instance of a required class.
