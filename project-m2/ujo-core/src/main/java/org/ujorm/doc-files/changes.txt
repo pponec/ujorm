@@ -2,15 +2,21 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+
+release 2.10-SNAPSHOT (yyyy-mm-dd)
+...
+
 release 2.06-SNAPSHOT (yyyy-mm-dd)
-+ ...
++ COMMON: More general API and better performance due removing unnecessary Writable class.
+- WEB: The Element.addTextTemplated() method was fixed.
 
 release 2.05 (2020-12-02)
-+ WEB: New method Element.addTextTemplated() for a template based texts.
-+ WEB: New method Element.addLinkedText() for anchors.
-+ WEB: Element.addTable() by an array of functions to getting values.
-- WEB: Bugfixing of the method: HtmlElement of(response, cssLinks)
-+ TOOLS: New method ApiElement.addTextTemplated() for a template based texts.
++ WEB: New Element.addTextTemplated() method for a template based texts.
++ WEB: New Element.addLinkedText() method for anchors.
++ WEB: Element.addTable() method by an array of functions to getting values.
+- WEB: Bugfixing of the method: HtmlElement of(response, cssLinks).
++ TOOLS: New Wrapper class for a generic implementation: equals(), hash() and comparable().
++ TOOLS: New ApiElement.addTextTemplated() method for a template based texts.
 
 release 2.04 (2020-08-29)
 + TOOLS: New method ObjectUtil.iof() for a processing a value in case the one is the instance of a required class.
