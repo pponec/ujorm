@@ -42,6 +42,9 @@ public class AjaxServlet extends HttpServlet {
     /** Link to a Bootstrap URL */
     private static final String BOOTSTRAP_CSS = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
 
+    /** Link to jQuery */
+    private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js";
+
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(AjaxServlet.class.toString());
 
@@ -59,7 +62,9 @@ public class AjaxServlet extends HttpServlet {
         config.setDocumentObjectModel(false);
         config.setTitle("Ajax Servlet");
 
-        try (HtmlElement html = HtmlElement.niceOf(output, BOOTSTRAP_CSS)) {
+        try (HtmlElement html = HtmlElement.niceOf(output)) {
+            html.addJavascriptLink(true, JQUERY_JS);
+            html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(getCss());
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
@@ -67,8 +72,6 @@ public class AjaxServlet extends HttpServlet {
                 body.addDiv("out").addText("");
                 body.addElement(Html.HR);
                 body.addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "Servlet failed", e);
             }
 
         } catch (Exception e) {
