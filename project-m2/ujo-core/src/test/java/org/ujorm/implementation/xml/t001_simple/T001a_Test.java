@@ -34,7 +34,7 @@ public class T001a_Test extends MyTestCase {
      */
     public void testPrintXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         try {
             UPerson person = createPerson();
             // Serialization:
@@ -51,7 +51,7 @@ public class T001a_Test extends MyTestCase {
      */
     public void testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         //
         UPerson person = createPerson();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
@@ -66,7 +66,7 @@ public class T001a_Test extends MyTestCase {
      */
     public void testEncodedXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         String ENCODE = "windows-1250";
         String personName = "ÁĚŠČŘŽÝÁÍÉ-áěščřžýáíé";
         //

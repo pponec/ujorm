@@ -36,7 +36,7 @@ public class T002a_Test extends MyTestCase {
      */
     public void testPrintXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         try {
             UTechnicalBean person = createPerson();
             UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
@@ -52,7 +52,7 @@ public class T002a_Test extends MyTestCase {
      */
     public void testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         //
         UTechnicalBean person = createPerson();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");

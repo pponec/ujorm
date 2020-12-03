@@ -34,7 +34,7 @@ public class XmlTest_1 extends TestCase {
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
      */
     public void testPrintXML() throws Exception {
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         MapUjo ujo = createUjo();
         UjoManagerXML.getInstance().saveXML(writer, ujo, null, "TEST");
         

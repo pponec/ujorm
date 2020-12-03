@@ -146,7 +146,7 @@ public class ElementTest {
      */
     @Test
     public void testRootElement() {
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         DefaultHtmlConfig config = HtmlConfig.ofElementName(Html.DIV);
         config.setNewLine("");
 

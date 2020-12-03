@@ -15,9 +15,7 @@
  */
 package org.ujorm.xsd;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -163,7 +161,7 @@ public class XsdBuilder {
 
     /** Print */
     public String print() {
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         try {
             final String xmlHeader = null;
             print(xmlHeader, writer);
@@ -175,7 +173,7 @@ public class XsdBuilder {
     }
 
     /** Print to writer */
-    public void print(String xmlHeader, Writer writer) throws IOException {
+    public void print(String xmlHeader, Appendable writer) throws IOException {
         final XmlHeader header = new XmlHeader(XSD + "schema");
         header.setHeader(xmlHeader);
         UjoManagerXML.getInstance().saveXML(writer, header, rootSchema, rootSchema);

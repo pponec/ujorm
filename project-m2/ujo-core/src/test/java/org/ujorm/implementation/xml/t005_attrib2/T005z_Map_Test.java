@@ -32,7 +32,7 @@ public class T005z_Map_Test extends MyTestCase {
      */
     public void testPrintXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         try {
             AtrPersonMap person = createPerson();
             // Serialization:
@@ -49,7 +49,7 @@ public class T005z_Map_Test extends MyTestCase {
      */
     public void testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         //
         AtrPersonMap person = createPerson();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");

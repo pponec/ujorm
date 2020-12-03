@@ -38,7 +38,7 @@ public class T001b_Test extends MyTestCase {
      */
     public void restoreXML(String name, boolean printText) throws Exception {
         System.out.println( "restoreXML \"" + name + "\": " + suite().toString() );
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         //
         UPerson person = createPerson();
         UPerson.NAME.setValue(person, name);

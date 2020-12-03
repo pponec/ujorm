@@ -34,7 +34,7 @@ public class T004a_Test extends MyTestCase {
      */
     public void testPrintXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         try {
             AtrPerson person = createPerson();
             // Serialization:
@@ -51,7 +51,7 @@ public class T004a_Test extends MyTestCase {
      */
     public void testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         //
         AtrPerson person = createPerson();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");

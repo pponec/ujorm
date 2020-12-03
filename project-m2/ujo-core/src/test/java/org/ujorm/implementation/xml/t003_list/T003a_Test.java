@@ -36,7 +36,7 @@ public class T003a_Test extends MyTestCase {
      */
     public void testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         //
         UMasterBean person = createMaster();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");

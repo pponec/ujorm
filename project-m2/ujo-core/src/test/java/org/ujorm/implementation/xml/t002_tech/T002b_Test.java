@@ -43,7 +43,7 @@ public class T002b_Test extends MyTestCase {
      */
     public void testRestoreXMLb() throws Exception {
         System.out.println("testPrintXMLb: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         //
         UTechnicalBean person = createPerson();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");

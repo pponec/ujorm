@@ -46,7 +46,7 @@ public class HtmlElementTest {
      */
     @Test
     public void sample_() {
-        CharArrayWriter writer = new CharArrayWriter();
+        StringBuilder writer = new StringBuilder();
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setRawHedaderCode("<meta name='description' content='Powered by Ujorm'>");
 
