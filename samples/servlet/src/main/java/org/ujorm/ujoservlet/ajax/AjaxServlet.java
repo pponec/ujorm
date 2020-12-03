@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Element;
+import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
@@ -58,10 +59,14 @@ public class AjaxServlet extends HttpServlet {
         config.setDocumentObjectModel(false);
         config.setTitle("Ajax Servlet");
 
-        try (HtmlElement html = HtmlElement.of(output, BOOTSTRAP_CSS)) {
+        try (HtmlElement html = HtmlElement.niceOf(output, BOOTSTRAP_CSS)) {
+            html.addCssBody(getCss());
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
-                body.addTextTemplated("Data <{}.{}.{}>", 1, 2, 3);
+                body.addTextArea("input").addText("");
+                body.addDiv("out").addText("");
+                body.addElement(Html.HR);
+                body.addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "Servlet failed", e);
             }
@@ -82,5 +87,15 @@ public class AjaxServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         doGet(input, output);
+    }
+
+    /** Create CSS */
+    private CharSequence getCss() {
+        return String.join("\n"
+                , "body   { margin-left:20px;}"
+                , "h1, h2 { color: SteelBlue}"
+                , ".input { width: 300px; height:100px;}"
+                , ".out   { width: 300px; height:100px; border:1px solid gray;}"
+        );
     }
 }
