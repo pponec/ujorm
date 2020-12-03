@@ -81,6 +81,29 @@ public abstract class AbstractWriter {
     /** An indentation request */
     protected final boolean indentationEnabled;
 
+    @Nonnull
+    private final Appendable writerEscaped = new Appendable() {
+            private final boolean attribute = false;
+
+            @Override
+            public Appendable append(final CharSequence value) throws IOException {
+                write(value, attribute);
+                return this;
+            }
+
+            @Override
+            public Appendable append(final CharSequence value, int start, int end) throws IOException {
+                write(value, start, end, attribute);
+                return this;
+            }
+
+            @Override
+            public Appendable append(final char value) throws IOException {
+                write(value, attribute);
+                return this;
+            }
+        };
+
     /**
      * A writer constructor
      * @param out A writer
@@ -107,39 +130,48 @@ public abstract class AbstractWriter {
      */
     void write(@Nonnull final CharSequence text, final int from, final int max, final boolean attribute) throws IOException {
         for (int i = from; i < max; i++) {
-            final char c = text.charAt(i);
-            switch (c) {
-                case XML_LT:
-                    out.append(XML_AMPERSAND).append("lt;");
-                    break;
-                case XML_GT:
-                    out.append(XML_AMPERSAND).append("gt;");
-                    break;
-                case XML_AMPERSAND:
-                    out.append(XML_AMPERSAND).append("amp;");
-                    break;
-                case XML_2QUOT:
-                    if (attribute) {
-                        out.append(XML_AMPERSAND).append("quot;");
-                    } else {
-                        out.append(c);
-                    }
-                    break;
-                case XML_APOSTROPHE:
-                    if (true) {
-                       out.append(c);
-                    } else {
-                       out.append(XML_AMPERSAND).append("apos;");
-                    }
-                    break;
-                default: {
-                    if (c > 32 || c == CHAR_SPACE) {
-                        out.append(c);
-                    } else {
-                        out.append(XML_AMPERSAND).append("#");
-                        out.append(Integer.toString(c));
-                        out.append(";");
-                    }
+            write(text.charAt(i), attribute);
+        }
+    }
+
+    /**
+     * Write single character to the output
+     * @param c Character
+     * @param attribute Is it a text to attribute?
+     * @throws IOException
+     */
+    private void write(final char c, final boolean attribute) throws IOException {
+        switch (c) {
+            case XML_LT:
+                out.append(XML_AMPERSAND).append("lt;");
+                break;
+            case XML_GT:
+                out.append(XML_AMPERSAND).append("gt;");
+                break;
+            case XML_AMPERSAND:
+                out.append(XML_AMPERSAND).append("amp;");
+                break;
+            case XML_2QUOT:
+                if (attribute) {
+                    out.append(XML_AMPERSAND).append("quot;");
+                } else {
+                    out.append(c);
+                }
+                break;
+            case XML_APOSTROPHE:
+                if (true) {
+                    out.append(c);
+                } else {
+                    out.append(XML_AMPERSAND).append("apos;");
+                }
+                break;
+            default: {
+                if (c > 32 || c == CHAR_SPACE) {
+                    out.append(c);
+                } else {
+                    out.append(XML_AMPERSAND).append("#");
+                    out.append(Integer.toString(c));
+                    out.append(";");
                 }
             }
         }
@@ -188,28 +220,10 @@ public abstract class AbstractWriter {
         return out;
     }
 
-    /** For internal usage only */
+    /** Get Writer to escape HTML characters. */
     @Nonnull
     public Appendable getWriterEscaped() {
-        return new Appendable() {
-            @Override
-            public Appendable append(final CharSequence value) throws IOException {
-                AbstractWriter.this.write(value, false);
-                return this;
-            }
-
-            @Override
-            public Appendable append(final CharSequence value, int start, int end) throws IOException {
-                AbstractWriter.this.write(value, start, end, false);
-                return this;
-            }
-
-            @Override
-            public Appendable append(final char value) throws IOException {
-                AbstractWriter.this.write(String.valueOf(value), false);
-                return this;
-            }
-        };
+        return writerEscaped;
     }
 
     // ---- STATIC METHOD(s) ---

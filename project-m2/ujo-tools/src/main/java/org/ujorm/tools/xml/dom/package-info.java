@@ -17,4 +17,5 @@
 /**
  * A deprecated package
  */
+@Deprecated
 package org.ujorm.tools.xml.dom;
