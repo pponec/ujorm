@@ -17,7 +17,6 @@
 package org.ujorm.tools.xml;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
@@ -229,7 +228,7 @@ public abstract class AbstractWriter {
     // ---- STATIC METHOD(s) ---
 
     /** Assign a no-cache and an Edge compatibility mode and returns a writer from HttpServletResponse */
-    public static Writer createWriter(
+    public static Appendable createWriter(
             @Nonnull final Object httpServletResponse,
             @Nonnull final Charset charset,
             final boolean noCache
@@ -245,7 +244,7 @@ public abstract class AbstractWriter {
             setHeader.invoke(httpServletResponse, "Expires", "0"); // Proxies
             setHeader.invoke(httpServletResponse, "X-UA-Compatible", "IE=edge"); // Proxies
         }
-        final Writer writer = (Writer) getWriter.invoke(httpServletResponse);
+        final Appendable writer = (Appendable) getWriter.invoke(httpServletResponse);
         return writer;
     }
 

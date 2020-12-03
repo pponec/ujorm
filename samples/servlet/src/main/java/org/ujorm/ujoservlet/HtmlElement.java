@@ -223,11 +223,13 @@ public class HtmlElement extends XmlModel {
      */
     public void toResponse(@Nonnull final Object httpServletResponse, final HtmlConfig config) throws IOException, IllegalArgumentException {
         try {
-            final Writer writer = AbstractWriter.createWriter(httpServletResponse, charset, !config.isCacheAllowed());
+            final Appendable writer = AbstractWriter.createWriter(httpServletResponse, charset, !config.isCacheAllowed());
             toWriter(new XmlWriter(
                     writer.append(config.getDoctype()).append(CHAR_NEW_LINE),
                     config.getIndentation()));
-            writer.flush();
+            if (writer instanceof Writer) {
+                ((Writer) writer).flush();
+            }
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
         }

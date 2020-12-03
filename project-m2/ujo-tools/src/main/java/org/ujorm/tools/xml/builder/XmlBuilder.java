@@ -19,7 +19,6 @@ package org.ujorm.tools.xml.builder;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.Writer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
@@ -309,12 +308,12 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
 
     /** Create builder for HTML */
     @Nonnull
-    public static XmlBuilder forHtml(@Nonnull Writer response) {
+    public static XmlBuilder forHtml(@Nonnull Appendable response) {
          return new XmlBuilder(HTML, XmlPrinter.forHtml(response));
     }
 
     @Nonnull
-    public static XmlBuilder forNiceHtml(@Nonnull Writer response) {
+    public static XmlBuilder forNiceHtml(@Nonnull Appendable response) {
         return new XmlBuilder(HTML, XmlPrinter.forNiceHtml(response));
     }
 

@@ -16,7 +16,6 @@
 package org.ujorm.tools.msg;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
@@ -170,7 +169,7 @@ public class MessageService {
             @Nullable final Map<String, Object> args,
             @Nullable Locale locale) {
         try {
-            return format((Writer) null, msg, args, locale);
+            return format((Appendable) null, msg, args, locale);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

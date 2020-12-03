@@ -18,7 +18,6 @@
 package org.ujorm.tools.xml.builder;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -228,7 +227,7 @@ public class XmlPrinter extends AbstractWriter {
             @Nonnull final HtmlConfig config
     ) throws IOException {
         try {
-            final Writer writer = createWriter(
+            final Appendable writer = createWriter(
                     httpServletResponse,
                     config.getCharset(),
                     config.isCacheAllowed());

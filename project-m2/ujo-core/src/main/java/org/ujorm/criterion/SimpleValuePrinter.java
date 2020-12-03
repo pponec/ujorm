@@ -17,7 +17,6 @@
 package org.ujorm.criterion;
 
 import java.io.IOException;
-import java.io.Writer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
@@ -36,12 +35,12 @@ public class SimpleValuePrinter extends ValuePrinter {
     }
 
     /** Constructor */
-    public SimpleValuePrinter(@Nonnull final Writer out) {
+    public SimpleValuePrinter(@Nonnull final Appendable out) {
         super(out);
     }
 
     /** Constructor */
-    public SimpleValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final Writer out) {
+    public SimpleValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final Appendable out) {
         super(mark, textBorder, out);
     }
 
