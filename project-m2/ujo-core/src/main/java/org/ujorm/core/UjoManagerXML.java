@@ -34,8 +34,8 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.UjoTextable;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.XmlConfig;
@@ -138,15 +138,17 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
 
     /** Write keys to XML including a XML header. A root tag is "body" by default. */
-    public void saveXML(Writer writer, UjoTextable ujo, XmlHeader xmlHeader, Object context) throws IOException {
+    public void saveXML(Appendable writer, UjoTextable ujo, XmlHeader xmlHeader, Object context) throws IOException {
         saveXML(writer, xmlHeader, ujo, context);
-        writer.flush();
+        if (writer instanceof Writer) {
+            ((Writer) writer).flush();
+        }
     }
 
     /** Write keys to XML including a XML header. */
     @SuppressWarnings("deprecation")
     public void saveXML(
-            @Nonnull Writer writer,
+            @Nonnull Appendable writer,
             @Nullable XmlHeader xmlHeader,
             @Nullable UjoTextable ujo,
             Object context

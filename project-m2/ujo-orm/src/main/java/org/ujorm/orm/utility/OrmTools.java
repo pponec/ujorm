@@ -17,7 +17,6 @@
 package org.ujorm.orm.utility;
 
 import java.io.ByteArrayOutputStream;
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -28,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
 import org.ujorm.CompositeKey;
@@ -154,14 +154,14 @@ final public class OrmTools {
      */
     public static SerialClob createClob(Reader reader) {
         try {
-            char[] buffer = new char[1024];
-            CharArrayWriter baos = new CharArrayWriter(buffer.length);
+            final char[] buffer = new char[1024];
+            final StringBuilder baos = new StringBuilder(buffer.length);
             int len;
 
             while ((len = reader.read(buffer)) >= 0) {
-                baos.write(buffer, 0, len);
+                baos.append(buffer, 0, len);
             }
-            return new SerialClob(baos.toCharArray());
+            return new SerialClob(toCharArray(baos));
         } catch (RuntimeException | IOException | SQLException e) {
             throw new IllegalUjormException("Reader error", e);
         } finally {
@@ -171,6 +171,13 @@ final public class OrmTools {
                 throw new IllegalUjormException("Reader error", e);
             }
         }
+    }
+
+    /** Convert StringBuilder to a character array */
+    public static char[] toCharArray(final @Nonnull StringBuilder baos) {
+        final char[] result = new char[baos.length()];
+        baos.getChars(0, result.length, result, 0);
+        return result;
     }
 
     /**

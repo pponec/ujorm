@@ -15,7 +15,6 @@
  */
 package org.ujorm.core;
 
-import java.io.CharArrayWriter;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -414,7 +413,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
     /** PrintHeaders text with separators */
     protected String getHeaders() {
         try {
-            final CharArrayWriter result = new CharArrayWriter(256);
+            final StringBuilder result = new StringBuilder(256);
             printHeaders(result);
             return result.toString();
         } catch (IOException e) {
@@ -423,7 +422,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
     }
 
     /** PrintHeaders text with separators */
-    protected void printHeaders(Writer out) throws IOException {
+    protected void printHeaders(Appendable out) throws IOException {
         for (int i = 0; i < headerContent.length; i++) {
             if (i > 0) {
                 out.append(this.separator);
@@ -445,7 +444,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
      */
     public String getHeaderContent() {
         try {
-            final CharArrayWriter out = new CharArrayWriter(256);
+            final StringBuilder out = new StringBuilder(256);
             printHeaders(out);
             return out.toString();
         } catch (IOException e) {

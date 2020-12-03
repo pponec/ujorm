@@ -6,7 +6,6 @@
  */
 package org.ujorm.implementation.xml.test2;
 
-import java.io.CharArrayWriter;
 import java.util.ArrayList;
 import junit.framework.*;
 import org.ujorm.core.UjoManagerXML;
@@ -33,20 +32,14 @@ public class TXmlTest_2 extends TestCase {
     public void testPrintXMLRoot() throws Exception {
         System.out.println("testPrintXMLRoot: " + suite().toString());
 
-        CharArrayWriter writer = null;
+        final StringBuilder writer = new StringBuilder(256);
         try {
-            writer = new CharArrayWriter(256);
-
             AbstractUjo ujo = createUjoRoot();
             UjoManagerXML.getInstance().saveXML(writer, ujo, null, "TEST");
 
             System.err.println("XML Root:" + writer.toString());
         } catch (RuntimeException ex) {
             ex.printStackTrace();
-
-            if (writer != null) {
-                System.err.println("XML ERROR:" + writer.toString());
-            }
         }
     }
 
