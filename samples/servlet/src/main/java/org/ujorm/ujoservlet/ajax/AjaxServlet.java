@@ -59,10 +59,11 @@ public class AjaxServlet extends HttpServlet {
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
 
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setNiceFormat();
         config.setDocumentObjectModel(false);
         config.setTitle("Ajax Servlet");
 
-        try (HtmlElement html = HtmlElement.niceOf(output)) {
+        try (HtmlElement html = HtmlElement.of(output, config)) {
             html.addJavascriptLink(true, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(getCss());
@@ -73,11 +74,9 @@ public class AjaxServlet extends HttpServlet {
                 body.addElement(Html.HR);
                 body.addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
             }
-
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Servlet failed", e);
         }
-
     }
 
     /**
