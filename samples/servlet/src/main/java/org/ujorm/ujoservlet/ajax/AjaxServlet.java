@@ -58,8 +58,10 @@ public class AjaxServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    private void doProcess(
+            final HttpServletRequest input,
+            final HttpServletResponse output,
+            final boolean isGet) throws ServletException, IOException {
 
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
@@ -72,7 +74,7 @@ public class AjaxServlet extends HttpServlet {
             html.addCssBody(getCss());
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
-                try (Element form = body.addForm()) {
+                try (Element form = body.addForm().setMethod(Html.V_POST)) {
                     form.addInput("regexp")
                             .setName(REGEXP)
                             .setValue(REGEXP.value(input))
@@ -82,7 +84,10 @@ public class AjaxServlet extends HttpServlet {
                             .setName(TEXT)
                             .addText(TEXT.value(input));
                     form.addDiv().addSubmitButton("btn", "btn-primary").addText("Submit");
-                    form.addDiv("out").addText("");
+                    form.addDiv("out").addTextTemplated("{}{}{}",
+                            REGEXP.value(input),
+                            isGet ? "" : ": " ,
+                            TEXT.value(input));
                 }
                 body.addElement(Html.HR);
                 body.addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
@@ -100,8 +105,24 @@ public class AjaxServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        doGet(input, output);
+    protected void doPost(
+            final HttpServletRequest input,
+            final HttpServletResponse output) throws ServletException, IOException {
+        doProcess(input, output, false);
+    }
+
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     * @param input servlet request
+     * @param output servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(
+            final HttpServletRequest input,
+            final HttpServletResponse output) throws ServletException, IOException {
+        doProcess(input, output, true);
     }
 
     /** Create CSS */
