@@ -30,6 +30,7 @@ import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.ujoservlet.ajax.ao.HttpParam;
+import static org.ujorm.ujoservlet.ajax.AjaxServlet.Attrib.*;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
@@ -73,14 +74,14 @@ public class AjaxServlet extends HttpServlet {
                 body.addHeading(html.getTitle());
                 try (Element form = body.addForm()) {
                     form.addInput("regexp")
-                            .setName(Attrib.REGEXP)
-                            .setAttribute(Html.A_PLACEHOLDER, "Regular expression")
-                            .setValue("");
-                    form.addBreak();
+                            .setName(REGEXP)
+                            .setValue(REGEXP.value(input))
+                            .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
                     form.addTextArea("text")
-                            .setName(Attrib.TEXT)
                             .setAttribute(Html.A_PLACEHOLDER, "Test String")
-                            .addText("");
+                            .setName(TEXT)
+                            .addText(TEXT.value(input));
+                    form.addDiv().addSubmitButton("btn", "btn-primary").addText("Submit");
                     form.addDiv("out").addText("");
                 }
                 body.addElement(Html.HR);
@@ -111,11 +112,11 @@ public class AjaxServlet extends HttpServlet {
                  "form   { width: 500px;}",
                  ".regexp{ width: 100%; margin-bottom: 2px;}",
                  ".text  { width: 100%; height: 100px;}",
-                 ".out   { width: 100%; min-height: 100px; border:1px solid gray;}"
+                 ".out   { width: 100%; min-height: 100px; border:1px solid gray; margin-top: 10px}"
         );
     }
 
-    private enum Attrib implements HttpParam {
+    enum Attrib implements HttpParam {
         REGEXP,
         TEXT;
 
