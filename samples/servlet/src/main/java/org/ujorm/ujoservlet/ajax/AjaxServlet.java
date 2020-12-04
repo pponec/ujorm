@@ -67,14 +67,14 @@ public class AjaxServlet extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output,
             final boolean isGet) throws ServletException, IOException {
-
+        LOGGER.log(Level.INFO, TEXT.value(input));
         try (HtmlElement html = HtmlElement.of(output, getConfig())) {
             html.addJavascriptLink(true, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(getCss());
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
-                try (Element form = body.addForm().setMethod(Html.V_POST)) {
+                try (Element form = body.addForm()/*.setMethod(Html.V_POST)*/) {
                     form.addInput("regexp")
                             .setName(REGEXP)
                             .setValue(REGEXP.value(input))
@@ -105,17 +105,17 @@ public class AjaxServlet extends HttpServlet {
             SecureRandom random = new SecureRandom();
             String begTag = "_" + random.nextLong() + "_";
             String endTag = "_" + random.nextLong() + "_";
-            Pattern pattern = Pattern.compile(MsgFormatter.format("(^.*)({})(.*$)", regexp));
+            Pattern pattern = Pattern.compile(MsgFormatter.format("({})", regexp));
             String rawText = pattern
                     .matcher(text)
-                    .replaceAll(MsgFormatter.format("$1{}$2{}$3", begTag, endTag));
+                    .replaceAll(MsgFormatter.format("{}$1{}", begTag, endTag));
 
             StringBuilder result = new StringBuilder(256);
             new XmlPrinter(result, XmlConfig.ofDefault().setDoctype(""))
                     .getWriterEscaped().append(rawText);
 
             return result.toString()
-                    .replaceAll(begTag, "<span class='light'>")
+                    .replaceAll(begTag, "<span>")
                     .replaceAll(endTag, "</span>");
         } catch (Exception e) {
             LOGGER.warning("Regexp error: " + e.getMessage());
@@ -164,13 +164,14 @@ public class AjaxServlet extends HttpServlet {
     /** Create CSS */
     private CharSequence getCss() {
         return String.join("\n",
-                "body   { margin-left:20px;}",
+                "body   { margin-left:20px; background-color: #f3f6f7;}",
                 "h1, h2 { color: SteelBlue;}",
                 "form   { width: 500px;}",
                 ".regexp{ width: 100%; margin-bottom: 2px;}",
                 ".text  { width: 100%; height: 100px;}",
-                ".out   { width: 100%; min-height: 100px; border:1px solid gray; margin-top: 10px}",
-                ".light { background-color: yellow;}"
+                ".out   { width: 100%; min-height: 100px; border:1px solid gray; "
+                        + "margin-top: 10px; background-color: white;}",
+                ".out span{ background-color: yellow;}"
         );
     }
 

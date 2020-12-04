@@ -72,7 +72,7 @@ public class MenuServlet extends HttpServlet {
         Item[] result = { new Item(HelloServlet.URL_PATTERN, "Hello, World!")
                         , new Item(TableServlet.URL_PATTERN, "Show table")
                         , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
-                        , new Item(AjaxServlet.URL_PATTERN, "Ajax servlet")
+                        , new Item(AjaxServlet.URL_PATTERN + "?regexp=b&text=abc", "Ajax servlet")
                         };
         return result;
     }
