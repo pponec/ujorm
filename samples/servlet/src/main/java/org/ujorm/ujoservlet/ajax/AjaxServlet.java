@@ -16,6 +16,7 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -28,6 +29,7 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
+import org.ujorm.ujoservlet.ajax.ao.HttpParam;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
@@ -69,8 +71,18 @@ public class AjaxServlet extends HttpServlet {
             html.addCssBody(getCss());
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
-                body.addTextArea("input").addText("");
-                body.addDiv("out").addText("");
+                try (Element form = body.addForm()) {
+                    form.addInput("regexp")
+                            .setName(Attrib.REGEXP)
+                            .setAttribute(Html.A_PLACEHOLDER, "Regular expression")
+                            .setValue("");
+                    form.addBreak();
+                    form.addTextArea("text")
+                            .setName(Attrib.TEXT)
+                            .setAttribute(Html.A_PLACEHOLDER, "Test String")
+                            .addText("");
+                    form.addDiv("out").addText("");
+                }
                 body.addElement(Html.HR);
                 body.addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
             }
@@ -93,11 +105,23 @@ public class AjaxServlet extends HttpServlet {
 
     /** Create CSS */
     private CharSequence getCss() {
-        return String.join("\n"
-                , "body   { margin-left:20px;}"
-                , "h1, h2 { color: SteelBlue}"
-                , ".input { width: 300px; height:100px;}"
-                , ".out   { width: 300px; height:100px; border:1px solid gray;}"
+        return String.join("\n",
+                 "body   { margin-left:20px;}",
+                 "h1, h2 { color: SteelBlue;}",
+                 "form   { width: 500px;}",
+                 ".regexp{ width: 100%; margin-bottom: 2px;}",
+                 ".text  { width: 100%; height: 100px;}",
+                 ".out   { width: 100%; min-height: 100px; border:1px solid gray;}"
         );
+    }
+
+    private enum Attrib implements HttpParam {
+        REGEXP,
+        TEXT;
+
+        @Override
+        public String toString() {
+            return name().toLowerCase(Locale.ENGLISH);
+        }
     }
 }
