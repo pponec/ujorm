@@ -16,18 +16,23 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
+import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.HtmlConfig;
+import org.ujorm.tools.xml.config.XmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.ujoservlet.ajax.ao.HttpParam;
 import static org.ujorm.ujoservlet.ajax.AjaxServlet.Attrib.*;
@@ -42,14 +47,14 @@ public class AjaxServlet extends HttpServlet {
     /** URL pattern */
     public static final String URL_PATTERN = "/AjaxServlet";
 
+    /** Logger */
+    private static final Logger LOGGER = Logger.getLogger(AjaxServlet.class.getName());
+
     /** Link to a Bootstrap URL */
     private static final String BOOTSTRAP_CSS = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
 
     /** Link to jQuery */
     private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js";
-
-    /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(AjaxServlet.class.toString());
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -63,12 +68,7 @@ public class AjaxServlet extends HttpServlet {
             final HttpServletResponse output,
             final boolean isGet) throws ServletException, IOException {
 
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setNiceFormat();
-        config.setDocumentObjectModel(false);
-        config.setTitle("Ajax Servlet");
-
-        try (HtmlElement html = HtmlElement.of(output, config)) {
+        try (HtmlElement html = HtmlElement.of(output, getConfig())) {
             html.addJavascriptLink(true, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(getCss());
@@ -84,10 +84,7 @@ public class AjaxServlet extends HttpServlet {
                             .setName(TEXT)
                             .addText(TEXT.value(input));
                     form.addDiv().addSubmitButton("btn", "btn-primary").addText("Submit");
-                    form.addDiv("out").addTextTemplated("{}{}{}",
-                            REGEXP.value(input),
-                            isGet ? "" : ": " ,
-                            TEXT.value(input));
+                    form.addDiv("out").addRawText(highlight(input));
                 }
                 body.addElement(Html.HR);
                 body.addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
@@ -95,6 +92,45 @@ public class AjaxServlet extends HttpServlet {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Servlet failed", e);
         }
+    }
+
+    /** Builde */
+    protected String highlight(HttpServletRequest input) {
+        return AjaxServlet.this.highlight(REGEXP.value(input), TEXT.value(input));
+    }
+
+    /** Build regexp result */
+    protected String highlight(String regexp, String text) {
+        try {
+            SecureRandom random = new SecureRandom();
+            String begTag = "_" + random.nextLong() + "_";
+            String endTag = "_" + random.nextLong() + "_";
+            Pattern pattern = Pattern.compile(MsgFormatter.format("(^.*)({})(.*$)", regexp));
+            String rawText = pattern
+                    .matcher(text)
+                    .replaceAll(MsgFormatter.format("$1{}$2{}$3", begTag, endTag));
+
+            StringBuilder result = new StringBuilder(256);
+            new XmlPrinter(result, XmlConfig.ofDefault().setDoctype(""))
+                    .getWriterEscaped().append(rawText);
+
+            return result.toString()
+                    .replaceAll(begTag, "<span class='light'>")
+                    .replaceAll(endTag, "</span>");
+        } catch (Exception e) {
+            LOGGER.warning("Regexp error: " + e.getMessage());
+            return "ERROR: " + e.getMessage();
+        }
+    }
+
+    /** Create a configuration of HTML model */
+    private DefaultHtmlConfig getConfig() {
+        DefaultHtmlConfig config;
+        config = HtmlConfig.ofDefault();
+        config.setNiceFormat();
+        config.setDocumentObjectModel(false);
+        config.setTitle("Ajax Servlet");
+        return config;
     }
 
     /**
@@ -128,12 +164,13 @@ public class AjaxServlet extends HttpServlet {
     /** Create CSS */
     private CharSequence getCss() {
         return String.join("\n",
-                 "body   { margin-left:20px;}",
-                 "h1, h2 { color: SteelBlue;}",
-                 "form   { width: 500px;}",
-                 ".regexp{ width: 100%; margin-bottom: 2px;}",
-                 ".text  { width: 100%; height: 100px;}",
-                 ".out   { width: 100%; min-height: 100px; border:1px solid gray; margin-top: 10px}"
+                "body   { margin-left:20px;}",
+                "h1, h2 { color: SteelBlue;}",
+                "form   { width: 500px;}",
+                ".regexp{ width: 100%; margin-bottom: 2px;}",
+                ".text  { width: 100%; height: 100px;}",
+                ".out   { width: 100%; min-height: 100px; border:1px solid gray; margin-top: 10px}",
+                ".light { background-color: yellow;}"
         );
     }
 
