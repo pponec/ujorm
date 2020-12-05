@@ -66,9 +66,9 @@ import org.ujorm.tools.common.ObjectUtils;
 public class MessageService {
 
     /** Two-character mark ("${") to introducing a template argument. */
-    public static final String PARAM_BEG = "${";
+    protected final String begTag ;
     /** The mark ("}") to finishing a template argument. */
-    public static final char PARAM_END = '}';
+    protected final char endTag;
 
     /** Default locale */
     @Nonnull
@@ -76,10 +76,15 @@ public class MessageService {
 
     /** Create new instance with the {@code Locale.ENGLISH} */
     public MessageService() {
-        this(Locale.ENGLISH);
+        this(MessageArg.PARAM_BEG, MessageArg.PARAM_END, Locale.ENGLISH);
     }
 
-    public MessageService(@Nonnull final Locale defaultLocale) {
+    public MessageService(
+            @Nonnull final String begTag,
+            @Nonnull final char endTag,
+            @Nonnull final Locale defaultLocale) {
+        this.begTag = Assert.hasLength(begTag, "begTag");
+        this.endTag = endTag;
         this.defaultLocale = Assert.notNull(defaultLocale, "defaultLocale");
     }
 
@@ -201,9 +206,9 @@ public class MessageService {
         final int max = msg.length();
         final Appendable result = writer != null ? writer : new StringBuilder(Math.max(32, max + (max >> 1)));
         int i, last = 0;
-        while ((i = msg.indexOf(PARAM_BEG, last)) >= 0) {
-            final int end = msg.indexOf(PARAM_END, i);
-            final String expr = msg.substring(i + PARAM_BEG.length(), end);
+        while ((i = msg.indexOf(begTag, last)) >= 0) {
+            final int end = msg.indexOf(endTag, i);
+            final String expr = msg.substring(i + begTag.length(), end);
             final int formatIndex = expr.indexOf(',');
             final String key = expr.substring(0, formatIndex >= 0 ? formatIndex : expr.length());
             final Object value = args.get(key);

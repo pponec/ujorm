@@ -94,8 +94,9 @@ public class DefaultXmlConfig implements XmlConfig {
     }
 
     /** A header declaration of the document or a doctype */
-    public void setDoctype(@Nullable String doctype) {
+    public DefaultXmlConfig setDoctype(@Nullable String doctype) {
         this.doctype = doctype;
+        return this;
     }
 
     /**
@@ -112,34 +113,38 @@ public class DefaultXmlConfig implements XmlConfig {
      * Charset
      * @param charset the charset to set
      */
-    public void setCharset(@Nonnull final Charset charset) {
+    public DefaultXmlConfig setCharset(@Nonnull final Charset charset) {
         this.charset = Assert.notNull(charset, REQUIRED_MSG, "charset");
+        return this;
     }
 
     /**
      * Assign parameters for a nice format of the HTML result
      */
-    public final void setNiceFormat() {
+    public final DefaultXmlConfig setNiceFormat() {
         setNiceFormat(DEFAULT_INTENDATION);
+        return this;
     }
 
     /**
      * Assign parameters for a nice format of the HTML result
      * @param indentation An empty String is replaced by a default intendation.
      */
-    public final void setNiceFormat(@Nullable final String indentation) {
+    public final DefaultXmlConfig setNiceFormat(@Nullable final String indentation) {
         this.firstLevel = 0;
         this.indentation = Check.hasLength(indentation) ? indentation : DEFAULT_INTENDATION;
         this.newLine = DEFAULT_NEW_LINE;
+        return this;
     }
 
     /**
      * Assign parameters for a compressed format of the HTML result
      */
-    public final void setCompressedFormat() {
+    public final DefaultXmlConfig setCompressedFormat() {
         this.firstLevel = DEFAULT_FIRST_LEVEL;
         this.indentation = "";
         this.newLine = "";
+        return this;
     }
 
     /**
@@ -155,8 +160,9 @@ public class DefaultXmlConfig implements XmlConfig {
      * Level of the root element, the value may be negative.
      * @param firstLevel the firstLevel to set
      */
-    public void setFirstLevel(int firstLevel) {
+    public DefaultXmlConfig setFirstLevel(int firstLevel) {
         this.firstLevel = firstLevel;
+        return this;
     }
 
     /** An indentation space for elements of the next level,
@@ -169,8 +175,9 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** An indentation space for elements of the next level,
      * where default value is an empty `String` */
-    public void setIndentationSpace(@Nonnull String indentation) {
+    public DefaultXmlConfig setIndentationSpace(@Nonnull String indentation) {
         this.indentation = Assert.notNull(indentation, REQUIRED_MSG, "indentation");
+        return this;
     }
 
     /** A replacement text instead of the {@code null} value */
@@ -190,16 +197,18 @@ public class DefaultXmlConfig implements XmlConfig {
     // --- SETTERS ---
 
     /** A replacement text instead of the {@code null} value */
-    public void setDefaultValue(@Nonnull String defaultValue) {
+    public DefaultXmlConfig setDefaultValue(@Nonnull String defaultValue) {
         this.defaultValue = Assert.notNull(defaultValue, "defaultValue");
+        return this;
     }
 
     /**
      * Use a DOM model
      * @param dom the dom to set
      */
-    public void setDom(boolean dom) {
+    public DefaultXmlConfig setDom(boolean dom) {
         this.dom = dom;
+        return this;
     }
 
     @Override
@@ -207,8 +216,9 @@ public class DefaultXmlConfig implements XmlConfig {
         return cacheAllowed;
     }
 
-    public void setCacheAllowed(boolean cacheAllowed) {
+    public DefaultXmlConfig setCacheAllowed(boolean cacheAllowed) {
         this.cacheAllowed = cacheAllowed;
+        return this;
     }
 
     /** A new line sequence */
@@ -218,13 +228,15 @@ public class DefaultXmlConfig implements XmlConfig {
     }
 
     /** A new line sequence */
-    public void setNewLine(@Nonnull final String newLine) {
+    public DefaultXmlConfig setNewLine(@Nonnull final String newLine) {
         this.newLine = Assert.notNull(newLine, "newLine");
+        return this;
     }
 
     /** A default value formatter is implemented by the method {@code String.valueOf(value)} */
-    public void setFormatter(@Nonnull Formatter formatter) {
+    public DefaultXmlConfig setFormatter(@Nonnull Formatter formatter) {
         this.formatter = Assert.notNull(formatter, "formatter");
+        return this;
     }
 
 }

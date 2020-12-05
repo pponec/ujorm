@@ -49,7 +49,5 @@ public class ObjectUtilsTest {
         Object input = "ABC";
         boolean result = ObjectUtils.check(input, String.class, v -> v.length() == 3);
         assertEquals(expResult, result);
-
     }
-
 }

@@ -23,6 +23,7 @@ import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.KeyRing;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.msg.MessageArg;
 import org.ujorm.tools.msg.MessageService;
 import static org.ujorm.validator.AbstractValidator.*;
 
@@ -83,7 +84,7 @@ public class ValidationError implements Serializable {
         // Additional message arguments:
         arguments.put(KEY.getName(), key!=null ? key.getFullName() : "''");
         arguments.put(INPUT.getName(), value);
-        arguments.put(MARK.getName(), MessageService.PARAM_BEG);
+        arguments.put(MARK.getName(), MessageArg.PARAM_BEG);
     }
 
     /** Check a not null argument */

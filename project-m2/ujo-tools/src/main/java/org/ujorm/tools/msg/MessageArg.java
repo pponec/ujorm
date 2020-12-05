@@ -23,8 +23,6 @@ import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.common.ObjectUtils;
-import static org.ujorm.tools.msg.MessageService.PARAM_BEG;
-import static org.ujorm.tools.msg.MessageService.PARAM_END;
 
 /**
  * Message Argument
@@ -34,6 +32,12 @@ import static org.ujorm.tools.msg.MessageService.PARAM_END;
  * @since 1.54
  */
 public final class MessageArg<T> implements Serializable, CharSequence {
+
+    /** Two-character mark ("${") to introducing a template argument. */
+    public static final String PARAM_BEG = "${";
+
+    /** The mark ("}") to finishing a template argument. */
+    public static final char PARAM_END = '}';
 
     /** Name of the argument */
     @Nonnull

@@ -125,6 +125,8 @@ public interface Html {
     String A_MEDIA = "media";
     String A_METHOD = "method";
     String A_NAME = "name";
+    /** A short hint to describe the expected value of an input field */
+    String A_PLACEHOLDER = "placeholder";
     String A_READONLY = "readonly";
     String A_REL = "rel";
     String A_SELECTED = "selected";

@@ -56,7 +56,7 @@ public class XmlPrinter extends AbstractWriter {
      * @param out A writer
      * @param config A configuration object
      */
-    public <T> XmlPrinter(@Nonnull final Appendable out, @Nonnull final XmlConfig config) {
+    public <T> XmlPrinter(@Nonnull final Appendable out, @Nullable final XmlConfig config) {
         super(out, config);
         try {
             out.append(config.getDoctype());

@@ -17,9 +17,11 @@
 package org.ujorm.tools.web;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
@@ -333,22 +335,57 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @see MockServletResponse
      */
     @Nonnull
-    public static HtmlElement niceOf(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
+    public static HtmlElement niceOf(
+            @Nonnull final HttpServletResponse response,
+            @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
         return of(response, config);
     }
 
-    /** A base method to create new instance with empty html headers
-     * @param response HttpREsponse
+    /** A base method to create new instance
+     * @param request The HttpRequest gets the code page from the context only.
+     * @param response HttpResponse to write a result
+     * @return An instance of the HtmlPage
+     * @throws IllegalStateException IO exceptions
+     * @see MockServletResponse
+     */
+    @Nonnull
+    public static HtmlElement of(
+            @Nonnull final HttpServletRequest request,
+            @Nonnull final HttpServletResponse response) throws IllegalStateException, UnsupportedEncodingException {
+        return of(request, response, HtmlConfig.ofDefault());
+    }
+
+    /** A base method to create new instance
+     * @param request The HttpRequest gets the code page from the context only.
+     * @param response HttpResponse to write a result
      * @param config Html configuration
      * @return An instance of the HtmlPage
      * @throws IllegalStateException IO exceptions
      * @see MockServletResponse
      */
     @Nonnull
-    public static HtmlElement of(@Nonnull final HttpServletResponse response, @Nonnull final HtmlConfig config) throws IllegalStateException {
+    public static HtmlElement of(
+            @Nonnull final HttpServletRequest request,
+            @Nonnull final HttpServletResponse response,
+            @Nonnull final HtmlConfig config) throws IllegalStateException, UnsupportedEncodingException {
+        request.setCharacterEncoding(config.getCharset().toString());
+        return of(response, config);
+    }
+
+    /** A base method to create new instance with empty html headers
+     * @param response HttpResponse to write a result
+     * @param config Html configuration
+     * @return An instance of the HtmlPage
+     * @throws IllegalStateException IO exceptions
+     * @see MockServletResponse
+     */
+    @Nonnull
+    public static HtmlElement of(
+            @Nonnull final HttpServletResponse response,
+            @Nonnull final HtmlConfig config) throws IllegalStateException {
         response.setCharacterEncoding(config.getCharset().toString());
         response.setContentType(config.getContentType());
         try {
