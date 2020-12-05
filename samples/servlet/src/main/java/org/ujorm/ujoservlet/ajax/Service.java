@@ -17,6 +17,7 @@ package org.ujorm.ujoservlet.ajax;
 
 import java.security.SecureRandom;
 import java.util.regex.Pattern;
+import javax.annotation.Nonnull;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.XmlConfig;
 
@@ -26,6 +27,33 @@ import org.ujorm.tools.xml.config.XmlConfig;
  */
 public class Service {
 
+
+    /** Create a CSS */
+    @Nonnull
+    public CharSequence getCss() {
+        return String.join("\n",
+                "body   { margin-left:20px; background-color: #f3f6f7;}",
+                "h1, h2 { color: SteelBlue;}",
+                "form   { width: 500px;}",
+                ".regexp{ width: 100%; margin-bottom: 2px;}",
+                ".text  { width: 100%; height: 100px;}",
+                ".out   { width: 100%; min-height: 100px; border:1px solid gray; "
+                        + "margin-top: 10px; background-color: white;}",
+                ".out span { background-color: yellow;}",
+                ".out.error{ color: red;}"
+        );
+    }
+
+
+    /**
+     * Highlights the original text according to the regular expression
+     * using HTML element {@code <span>}.
+     *
+     * @param regexp An regular expression
+     * @param text An original text
+     * @return Raw HTML text.
+     */
+    @Nonnull
     public Message highlight(String regexp, String text) {
         try {
             SecureRandom random = new SecureRandom();
@@ -48,21 +76,4 @@ public class Service {
             return Message.of(e);
         }
     }
-
-
-    /** Create CSS */
-    public CharSequence getCss() {
-        return String.join("\n",
-                "body   { margin-left:20px; background-color: #f3f6f7;}",
-                "h1, h2 { color: SteelBlue;}",
-                "form   { width: 500px;}",
-                ".regexp{ width: 100%; margin-bottom: 2px;}",
-                ".text  { width: 100%; height: 100px;}",
-                ".out   { width: 100%; min-height: 100px; border:1px solid gray; "
-                        + "margin-top: 10px; background-color: white;}",
-                ".out span { background-color: yellow;}",
-                ".out .error { color: red;}"
-        );
-    }
-
 }

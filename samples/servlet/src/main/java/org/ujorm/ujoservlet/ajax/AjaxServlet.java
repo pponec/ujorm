@@ -64,7 +64,7 @@ public class AjaxServlet extends HttpServlet {
     protected void doGet(
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
-        try (HtmlElement html = HtmlElement.of(input, output, getConfig())) {
+        try (HtmlElement html = HtmlElement.of(input, output, getConfig("Regular expression tester"))) {
             html.addJavascriptLink(true, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(service.getCss());
@@ -97,12 +97,12 @@ public class AjaxServlet extends HttpServlet {
     }
 
     /** Create a configuration of HTML model */
-    private DefaultHtmlConfig getConfig() {
+    private DefaultHtmlConfig getConfig(String title) {
         DefaultHtmlConfig config;
         config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setDocumentObjectModel(false);
-        config.setTitle("Ajax Servlet");
+        config.setTitle(title);
         return config;
     }
 
