@@ -16,12 +16,9 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,11 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
-import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.HtmlConfig;
-import org.ujorm.tools.xml.config.XmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
-import org.ujorm.ujoservlet.ajax.ao.HttpParam;
 import static org.ujorm.ujoservlet.ajax.AjaxServlet.Attrib.*;
 
 /**
@@ -56,6 +50,9 @@ public class AjaxServlet extends HttpServlet {
     /** Link to jQuery */
     private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js";
 
+    /** A common services */
+    private final Service service = new Service();
+
     /**
      * Handles the HTTP <code>GET</code> method.
      * @param input servlet request
@@ -63,15 +60,14 @@ public class AjaxServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private void doProcess(
+    @Override
+    protected void doGet(
             final HttpServletRequest input,
-            final HttpServletResponse output,
-            final boolean isGet) throws ServletException, IOException {
-        input.setCharacterEncoding(StandardCharsets.UTF_8.toString());
-        try (HtmlElement html = HtmlElement.of(output, getConfig())) {
+            final HttpServletResponse output) throws ServletException, IOException {
+        try (HtmlElement html = HtmlElement.of(input, output, getConfig())) {
             html.addJavascriptLink(true, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
-            html.addCssBody(getCss());
+            html.addCssBody(service.getCss());
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 try (Element form = body.addForm().setMethod(Html.V_POST).setAction("?")) {
@@ -84,7 +80,8 @@ public class AjaxServlet extends HttpServlet {
                             .setName(TEXT)
                             .addText(TEXT.value(input));
                     form.addDiv().addSubmitButton("btn", "btn-primary").addText("Submit");
-                    form.addDiv("out").addRawText(highlight(input));
+                    Message result = highlight(input);
+                    form.addDiv("out", result.isError() ? "error" : null).addRawText(highlight(input));
                 }
                 body.addElement(Html.HR);
                 body.addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
@@ -95,33 +92,8 @@ public class AjaxServlet extends HttpServlet {
     }
 
     /** Builde */
-    protected String highlight(HttpServletRequest input) {
-        return AjaxServlet.this.highlight(REGEXP.value(input), TEXT.value(input));
-    }
-
-    /** Build regexp result */
-    protected String highlight(String regexp, String text) {
-        try {
-            SecureRandom random = new SecureRandom();
-            String begTag = "_" + random.nextLong();
-            String endTag = "_" + random.nextLong();
-            Pattern pattern = Pattern.compile("(" + regexp + ")");
-            String rawText = pattern
-                    .matcher(text)
-                    .replaceAll(begTag + "$1" + endTag);
-
-            StringBuilder result = new StringBuilder(256);
-            new XmlPrinter(result, XmlConfig.ofDefault()
-                    .setDoctype(""))
-                    .getWriterEscaped().append(rawText);
-
-            return result.toString()
-                    .replaceAll(begTag, "<span>")
-                    .replaceAll(endTag, "</span>");
-        } catch (Exception e) {
-            LOGGER.warning("Regexp error: " + e.getMessage());
-            return "ERROR: " + e.getMessage();
-        }
+    protected Message highlight(HttpServletRequest input) {
+        return service.highlight(REGEXP.value(input), TEXT.value(input));
     }
 
     /** Create a configuration of HTML model */
@@ -145,35 +117,7 @@ public class AjaxServlet extends HttpServlet {
     protected void doPost(
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
-        doProcess(input, output, false);
-    }
-
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     * @param input servlet request
-     * @param output servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(
-            final HttpServletRequest input,
-            final HttpServletResponse output) throws ServletException, IOException {
-        doProcess(input, output, true);
-    }
-
-    /** Create CSS */
-    private CharSequence getCss() {
-        return String.join("\n",
-                "body   { margin-left:20px; background-color: #f3f6f7;}",
-                "h1, h2 { color: SteelBlue;}",
-                "form   { width: 500px;}",
-                ".regexp{ width: 100%; margin-bottom: 2px;}",
-                ".text  { width: 100%; height: 100px;}",
-                ".out   { width: 100%; min-height: 100px; border:1px solid gray; "
-                        + "margin-top: 10px; background-color: white;}",
-                ".out span { background-color: yellow;}"
-        );
+        doGet(input, output);
     }
 
     enum Attrib implements HttpParam {
