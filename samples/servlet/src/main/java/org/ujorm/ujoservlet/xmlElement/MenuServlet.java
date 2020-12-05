@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.model.XmlModel;
-import org.ujorm.ujoservlet.HtmlElement;
+import org.ujorm.ujoservlet.HtmlElementOrig;
 import org.ujorm.ujoservlet.ajax.AjaxServlet;
 import org.ujorm.ujoservlet.tools.ApplService;
 
@@ -52,7 +52,7 @@ public class MenuServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         final String title = "List of samples (dom)";
-        final HtmlElement html = new HtmlElement(title, StandardCharsets.UTF_8, "css/userForm.css");
+        final HtmlElementOrig html = new HtmlElementOrig(title, StandardCharsets.UTF_8, "css/userForm.css");
         html.addElementToBody(Html.H1)
                 .addText(title);
         XmlModel list = html.addElementToBody(Html.OL);
@@ -72,7 +72,7 @@ public class MenuServlet extends HttpServlet {
         Item[] result = { new Item(HelloServlet.URL_PATTERN, "Hello, World!")
                         , new Item(TableServlet.URL_PATTERN, "Show table")
                         , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
-                        , new Item(AjaxServlet.URL_PATTERN + "?regexp=b&text=abc", "Ajax servlet")
+                        , new Item(AjaxServlet.URL_PATTERN + "?regexp=[be]&text=abc+def", "Ajax servlet")
                         };
         return result;
     }

@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Html;
-import org.ujorm.ujoservlet.HtmlElement;
+import org.ujorm.ujoservlet.HtmlElementOrig;
 import org.ujorm.ujoservlet.tools.ApplService;
 
 /**
@@ -49,7 +49,7 @@ public class HelloServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        final HtmlElement html = new HtmlElement("Demo", StandardCharsets.UTF_8, "css/userForm.css");
+        final HtmlElementOrig html = new HtmlElementOrig("Demo", StandardCharsets.UTF_8, "css/userForm.css");
         html.addElementToBody(Html.H1)
                 .addText("Hello, World!");
 

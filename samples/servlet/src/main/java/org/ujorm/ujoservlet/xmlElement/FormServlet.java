@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.model.XmlModel;
-import org.ujorm.ujoservlet.HtmlElement;
+import org.ujorm.ujoservlet.HtmlElementOrig;
 import org.ujorm.ujoservlet.tools.ApplService;
 
 /**
@@ -61,7 +61,7 @@ public class FormServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         input.setCharacterEncoding(charset.toString());
 
-        HtmlElement html = createHtmlElement("Simple user form", "css/userForm.css");
+        HtmlElementOrig html = createHtmlElement("Simple user form", "css/userForm.css");
         XmlModel form = html.addElementToBody(Html.FORM)
                 .setAttrib(Html.A_METHOD, Html.V_POST)
                 .setAttrib(Html.A_ACTION, postMethod ? null : input.getRequestURI());
@@ -74,8 +74,8 @@ public class FormServlet extends HttpServlet {
     }
 
     /** Create new HtmlElement incliding title and CSS style */
-    private HtmlElement createHtmlElement(String title, String css) {
-        final HtmlElement result = new HtmlElement(title, charset, css);
+    private HtmlElementOrig createHtmlElement(String title, String css) {
+        final HtmlElementOrig result = new HtmlElementOrig(title, charset, css);
         result.addElementToBody(Html.H1).addText(title);
         return result;
     }

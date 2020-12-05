@@ -27,7 +27,6 @@ import org.ujorm.tools.xml.config.XmlConfig;
  */
 public class Service {
 
-
     /** Create a CSS */
     @Nonnull
     public CharSequence getCss() {

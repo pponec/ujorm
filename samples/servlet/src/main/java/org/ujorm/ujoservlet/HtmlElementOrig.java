@@ -44,7 +44,7 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  * @since 1.86
  * @author Pavel Ponec
  */
-public class HtmlElement extends XmlModel {
+public class HtmlElementOrig extends XmlModel {
 
     protected static final char CHAR_NEW_LINE = '\n';
 
@@ -61,7 +61,7 @@ public class HtmlElement extends XmlModel {
     protected final Charset charset;
 
     /** Create new instance with empty html headers */
-    public HtmlElement(@Nonnull final XmlConfig config) {
+    public HtmlElementOrig(@Nonnull final XmlConfig config) {
         super(Html.HTML);
 
         this.charset = config.getCharset();
@@ -70,7 +70,7 @@ public class HtmlElement extends XmlModel {
     }
 
     /** Create new instance with empty html headers */
-    public HtmlElement(@Nonnull final Charset charset) {
+    public HtmlElementOrig(@Nonnull final Charset charset) {
         super(Html.HTML);
 
         this.charset = Assert.notNull(charset, REQUIRED_MSG, "charset");
@@ -79,7 +79,7 @@ public class HtmlElement extends XmlModel {
     }
 
     /** Constructor buliding default html headers with codepage UTF-8 */
-    public HtmlElement(@Nonnull final Object title, @Nullable final CharSequence... cssLinks) {
+    public HtmlElementOrig(@Nonnull final Object title, @Nullable final CharSequence... cssLinks) {
         this(title, UTF_8, cssLinks);
     }
 
@@ -88,7 +88,7 @@ public class HtmlElement extends XmlModel {
      * @param charset A charset
      * @param cssLinks Nullable CSS link array
      */
-    public HtmlElement(@Nonnull final Object title, @Nonnull final Charset charset, @Nullable final CharSequence... cssLinks) {
+    public HtmlElementOrig(@Nonnull final Object title, @Nonnull final Charset charset, @Nullable final CharSequence... cssLinks) {
         this(charset);
         head.addElement(Html.META).setAttrib(Html.A_CHARSET, charset);
         head.addElement(Html.TITLE).addText(title);
