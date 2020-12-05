@@ -70,7 +70,9 @@ public class Service {
 
             return Message.of(result.toString()
                     .replaceAll(begTag, "<span>")
-                    .replaceAll(endTag, "</span>"));
+                    .replaceAll(endTag, "</span>")
+                    .replaceAll("&#13;&#10;", "<br/>")
+            );
         } catch (Exception e) {
             return Message.of(e);
         }
