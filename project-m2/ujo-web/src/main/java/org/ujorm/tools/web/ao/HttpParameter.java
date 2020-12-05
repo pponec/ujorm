@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.ujoservlet.ajax;
+package org.ujorm.tools.web.ao;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Pavel Ponec
  */
-public interface HttpParam extends CharSequence {
+public interface HttpParameter extends CharSequence {
 
     @Override
     default int length() {

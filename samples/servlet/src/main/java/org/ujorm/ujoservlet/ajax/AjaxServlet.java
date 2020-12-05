@@ -30,6 +30,7 @@ import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.ujorm.ujoservlet.ajax.AjaxServlet.Attrib.*;
+import org.ujorm.tools.web.ao.HttpParameter;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
@@ -120,7 +121,7 @@ public class AjaxServlet extends HttpServlet {
         doGet(input, output);
     }
 
-    enum Attrib implements HttpParam {
+    enum Attrib implements HttpParameter {
         REGEXP,
         TEXT;
 
