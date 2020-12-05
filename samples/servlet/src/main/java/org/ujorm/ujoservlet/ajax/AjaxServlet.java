@@ -76,7 +76,7 @@ public class AjaxServlet extends HttpServlet {
                             .setValue(REGEXP.value(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
                     form.addTextArea("text")
-                            .setAttribute(Html.A_PLACEHOLDER, "Test String")
+                            .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
                             .setName(TEXT)
                             .addText(TEXT.value(input));
                     form.addDiv().addSubmitButton("btn", "btn-primary").addText("Submit");
