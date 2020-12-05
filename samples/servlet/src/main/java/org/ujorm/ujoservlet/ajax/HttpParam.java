@@ -18,6 +18,26 @@ package org.ujorm.ujoservlet.ajax;
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 
+
+/**
+ * An interface for bulding HTML parameters by an Enumerator.
+ *
+ * <h3>Usage</h3>
+ * <pre class="pre">
+ * {
+ *    String value = Param.text(httpServletRequest, "my default value");
+ * }
+ * enum Param implements HttpParam {
+ *     REGEXP,
+ *     TEXT;
+ *     @Override public String toString() {
+ *         return name().toLowerCase();
+ *     }
+ * }
+ * </pre>
+ *
+ * @author Pavel Ponec
+ */
 public interface HttpParam extends CharSequence {
 
     @Override
