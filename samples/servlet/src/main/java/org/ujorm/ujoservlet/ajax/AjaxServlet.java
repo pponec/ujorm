@@ -93,7 +93,7 @@ public class AjaxServlet extends HttpServlet {
 
     /** Builde */
     protected Message highlight(HttpServletRequest input) {
-        return service.highlight(REGEXP.value(input), TEXT.value(input));
+        return service.highlight(REGEXP.value(input, ""), TEXT.value(input, ""));
     }
 
     /** Create a configuration of HTML model */
