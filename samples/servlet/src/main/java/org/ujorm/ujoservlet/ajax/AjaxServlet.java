@@ -16,6 +16,7 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -26,7 +27,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
@@ -67,14 +67,14 @@ public class AjaxServlet extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output,
             final boolean isGet) throws ServletException, IOException {
-        LOGGER.log(Level.INFO, TEXT.value(input));
+        input.setCharacterEncoding(StandardCharsets.UTF_8.toString());
         try (HtmlElement html = HtmlElement.of(output, getConfig())) {
             html.addJavascriptLink(true, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(getCss());
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
-                try (Element form = body.addForm()/*.setMethod(Html.V_POST)*/) {
+                try (Element form = body.addForm().setMethod(Html.V_POST).setAction("?")) {
                     form.addInput("regexp")
                             .setName(REGEXP)
                             .setValue(REGEXP.value(input))
@@ -103,15 +103,16 @@ public class AjaxServlet extends HttpServlet {
     protected String highlight(String regexp, String text) {
         try {
             SecureRandom random = new SecureRandom();
-            String begTag = "_" + random.nextLong() + "_";
-            String endTag = "_" + random.nextLong() + "_";
-            Pattern pattern = Pattern.compile(MsgFormatter.format("({})", regexp));
+            String begTag = "_" + random.nextLong();
+            String endTag = "_" + random.nextLong();
+            Pattern pattern = Pattern.compile("(" + regexp + ")");
             String rawText = pattern
                     .matcher(text)
-                    .replaceAll(MsgFormatter.format("{}$1{}", begTag, endTag));
+                    .replaceAll(begTag + "$1" + endTag);
 
             StringBuilder result = new StringBuilder(256);
-            new XmlPrinter(result, XmlConfig.ofDefault().setDoctype(""))
+            new XmlPrinter(result, XmlConfig.ofDefault()
+                    .setDoctype(""))
                     .getWriterEscaped().append(rawText);
 
             return result.toString()
@@ -171,7 +172,7 @@ public class AjaxServlet extends HttpServlet {
                 ".text  { width: 100%; height: 100px;}",
                 ".out   { width: 100%; min-height: 100px; border:1px solid gray; "
                         + "margin-top: 10px; background-color: white;}",
-                ".out span{ background-color: yellow;}"
+                ".out span { background-color: yellow;}"
         );
     }
 

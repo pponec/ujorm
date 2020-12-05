@@ -17,8 +17,8 @@ public class AjaxServletTest {
         System.out.println("getResult");
         AjaxServlet instance = new AjaxServlet();
 
-        assertEquals("A<span class='err'>B</span>C", instance.highlight("B", "ABC"));
-        assertEquals("&lt;<span class='err'>B</span>&gt;", instance.highlight("B", "<B>"));
-        assertEquals("&lt;<span class='err'>B</span>&gt;", instance.highlight("B", "<B>"));
+        assertEquals("A<span>B</span>C", instance.highlight("B", "ABC"));
+        assertEquals("&lt;<span>B</span>&gt;", instance.highlight("B", "<B>"));
+        assertEquals("&lt;<span>&amp;</span>&gt;", instance.highlight("&", "<&>"));
     }
 }
