@@ -16,10 +16,8 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.security.SecureRandom;
-import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.xml.builder.XmlPrinter;
-import org.ujorm.tools.xml.config.XmlConfig;
 
 /**
  *
@@ -43,7 +41,6 @@ public class Service {
         );
     }
 
-
     /**
      * Highlights the original text according to the regular expression
      * using HTML element {@code <span>}.
@@ -52,26 +49,21 @@ public class Service {
      * @param text An original text
      * @return Raw HTML text.
      */
-    @Nonnull
     public Message highlight(String regexp, String text) {
         try {
             SecureRandom random = new SecureRandom();
             String begTag = "_" + random.nextLong();
             String endTag = "_" + random.nextLong();
-            Pattern pattern = Pattern.compile("(" + regexp + ")");
-            String rawText = pattern
-                    .matcher(text)
-                    .replaceAll(begTag + "$1" + endTag);
-
-            StringBuilder result = new StringBuilder(256);
-            new XmlPrinter(result, XmlConfig.ofDefault()
-                    .setDoctype(""))
-                    .getWriterEscaped().append(rawText);
-
-            return Message.of(result.toString()
+            String rawText = text.replaceAll(
+                    "(" + regexp + ")",
+                    begTag + "$1" + endTag);
+            XmlPrinter printer = new XmlPrinter();
+            printer.write(rawText, false);
+            return Message.of(printer.toString()
                     .replaceAll(begTag, "<span>")
                     .replaceAll(endTag, "</span>")
                     .replaceAll("&#13;&#10;", "<br/>")
+                    .replaceAll("\\s", "&nbsp;")
             );
         } catch (Exception e) {
             return Message.of(e);

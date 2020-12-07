@@ -41,16 +41,12 @@ public class AjaxServlet extends HttpServlet {
 
     /** URL pattern */
     public static final String URL_PATTERN = "/AjaxServlet";
-
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(AjaxServlet.class.getName());
-
     /** Link to a Bootstrap URL */
     private static final String BOOTSTRAP_CSS = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
-
     /** Link to jQuery */
     private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js";
-
     /** A common services */
     private final Service service = new Service();
 
@@ -92,7 +88,7 @@ public class AjaxServlet extends HttpServlet {
         }
     }
 
-    /** Builde */
+    /** Build a HTML result */
     protected Message highlight(HttpServletRequest input) {
         return service.highlight(REGEXP.value(input, ""), TEXT.value(input, ""));
     }
@@ -102,7 +98,6 @@ public class AjaxServlet extends HttpServlet {
         DefaultHtmlConfig config;
         config = HtmlConfig.ofDefault();
         config.setNiceFormat();
-        config.setDocumentObjectModel(false);
         config.setTitle(title);
         return config;
     }
@@ -121,10 +116,10 @@ public class AjaxServlet extends HttpServlet {
         doGet(input, output);
     }
 
+    /** Servlet attributes */
     enum Attrib implements HttpParameter {
         REGEXP,
         TEXT;
-
         @Override
         public String toString() {
             return name().toLowerCase(Locale.ENGLISH);
