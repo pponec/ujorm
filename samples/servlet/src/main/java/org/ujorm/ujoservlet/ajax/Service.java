@@ -25,6 +25,9 @@ import org.ujorm.tools.xml.builder.XmlPrinter;
  */
 public class Service {
 
+    /** Max text length */
+    private static final int MAX_LENGTH = 11_000;
+
     /** Create a CSS */
     @Nonnull
     public CharSequence getCss() {
@@ -51,6 +54,11 @@ public class Service {
      */
     public Message highlight(String regexp, String text) {
         try {
+            if (text.length() > MAX_LENGTH) {
+                String msg = String.format("Shorten text to a maximum of %s characters.",
+                        MAX_LENGTH);
+                throw new IllegalArgumentException(msg);
+            }
             SecureRandom random = new SecureRandom();
             String begTag = "_" + random.nextLong();
             String endTag = "_" + random.nextLong();
@@ -65,7 +73,7 @@ public class Service {
                     .replaceAll("&#13;&#10;", "<br/>")
                     .replaceAll("\\s", "&nbsp;")
             );
-        } catch (Exception e) {
+        } catch (Exception | OutOfMemoryError e) {
             return Message.of(e);
         }
     }
