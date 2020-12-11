@@ -46,7 +46,7 @@ public class RegexpServlet extends HttpServlet {
     /** Link to a Bootstrap URL */
     private static final String BOOTSTRAP_CSS = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
     /** Link to jQuery */
-    private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js";
+    private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
     /** A common services */
     private final Service service = new Service();
 

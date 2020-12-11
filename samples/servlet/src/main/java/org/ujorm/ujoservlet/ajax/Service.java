@@ -18,6 +18,7 @@ package org.ujorm.ujoservlet.ajax;
 import java.security.SecureRandom;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.xml.builder.XmlPrinter;
+import org.ujorm.tools.xml.config.XmlConfig;
 
 /**
  *
@@ -31,17 +32,18 @@ public class Service {
     /** Create a CSS */
     @Nonnull
     public CharSequence getCss() {
-        return String.join("\n",
-                "body   { margin-left:20px; background-color: #f3f6f7;}",
-                "h1, h2 { color: SteelBlue;}",
-                "form   { width: 500px;}",
-                ".regexp{ width: 100%; margin-bottom: 2px;}",
-                ".text  { width: 100%; height: 100px;}",
-                ".out   { width: 100%; min-height: 100px; border:1px solid gray; "
-                        + "margin-top: 10px; background-color: white;}",
-                ".out span { background-color: yellow;}",
-                ".out.error{ color: red;}"
-        );
+        return String.join("\n"
+                , ""
+                , "body   { margin-left:20px; background-color: #f3f6f7;}"
+                , "h1, h2 { color: SteelBlue;}"
+                , "form   { width: 500px;}"
+                , ".regexp{ width: 100%; margin-bottom: 2px;}"
+                , ".text  { width: 100%; height: 100px;}"
+                , ".out   { width: 100%; min-height: 100px; border:1px solid gray; "
+                       + "margin-top: 10px; background-color: white;}"
+                , ".out span { background-color: yellow;}"
+                , ".out .error { background-color: white; color: red;}"
+                , "");
     }
 
     /**
@@ -65,7 +67,7 @@ public class Service {
             String rawText = text.replaceAll(
                     "(" + regexp + ")",
                     begTag + "$1" + endTag);
-            XmlPrinter printer = new XmlPrinter();
+            XmlPrinter printer = new XmlPrinter(new StringBuilder(), XmlConfig.ofDoctype(""));
             printer.write(rawText, false);
             return Message.of(printer.toString()
                     .replaceAll(begTag, "<span>")
