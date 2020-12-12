@@ -77,8 +77,14 @@ public class RegexpServlet extends HttpServlet {
                             .setName(TEXT)
                             .addText(TEXT.value(input));
                     form.addDiv().addSubmitButton("btn", "btn-primary").addText("Evaluate");
-                    Message result = highlight(input);
-                    form.addDiv("out", result.isError() ? "error" : null).addRawText(highlight(input));
+                    try (Element out = form.addDiv("out")) {
+                        Message result = highlight(input);
+                        if (result.isError()) {
+                            out.addSpan("error").addRawText(highlight(input));
+                        } else {
+                            out.addRawText(highlight(input));
+                        }
+                    }
                 }
                 body.addElement(Html.HR);
                 body.addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
