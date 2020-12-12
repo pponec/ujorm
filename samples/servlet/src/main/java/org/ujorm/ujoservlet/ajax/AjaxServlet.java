@@ -29,6 +29,7 @@ import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
+import org.ujorm.tools.web.ao.JsonWriter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.ujorm.ujoservlet.ajax.AjaxServlet.Attrib.*;
@@ -69,7 +70,7 @@ public class AjaxServlet extends HttpServlet {
             html.getHead().addRawText("\n"
                     + "<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>\n"
                     + "<script>\n"
-                    + getJavascript("#out")
+                    + getJavascript()
                     + "\n</script>\n");
 
             try (Element body = html.getBody()) {
@@ -101,7 +102,7 @@ public class AjaxServlet extends HttpServlet {
 
     /** Create a CSS */
     @Nonnull
-    public CharSequence getJavascript(String target) {
+    public CharSequence getJavascript() {
         return String.join("\n"
                 , ""
                 , "$(document).ready(function(){"
@@ -112,8 +113,10 @@ public class AjaxServlet extends HttpServlet {
                         + ", type: 'POST'"
                         + ", data: data"
                         + ", success: function(result){"
-              //, "      alert('data:' + result);"
-                , "      $('" + target + "').html(result);"
+                , "      var jsn = JSON.parse(result);"
+                , "      $.each(jsn, function(key, value){"
+                , "        $(key).html(value);"
+                , "      })"
                 , "    }});"
                 , "    event.preventDefault();"
                 , "  });"
@@ -164,19 +167,13 @@ public class AjaxServlet extends HttpServlet {
     protected void doAjax(
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
-        String regexp = REGEXP.value(input);
-        String text = TEXT.value(input);
-        boolean ajax = _AJAX.value(input, "").equals("y");
-
-        HtmlConfig config = HtmlConfig.ofDefault();
-        input.setCharacterEncoding(config.getCharset().toString());
-        output.setCharacterEncoding(config.getCharset().toString());
-
-        Message msg = highlight(input);
-        String out = msg.isError()
-                ? "<span class='error'>" + msg + "</span>"
-                : msg.getText();
-        output.getWriter().append(out);
+        try (JsonWriter writer = JsonWriter.of(input, output)) {
+            Message msg = highlight(input);
+            String out = msg.isError()
+                    ? "<span class='error'>" + msg + "</span>"
+                    : msg.getText();
+            writer.write("#out", out);
+        }
     }
 
     /** Servlet attributes */

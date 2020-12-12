@@ -18,6 +18,7 @@ package org.ujorm.tools.xml.config;
 
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 
 /**
@@ -77,4 +78,13 @@ public interface XmlConfig {
         return new DefaultXmlConfig();
     }
 
+    /**
+     * Create a new default config
+     * @return
+     */
+    public static DefaultXmlConfig ofDoctype(@Nullable final String doctype) {
+        final DefaultXmlConfig result = new DefaultXmlConfig();
+        result.setDoctype(doctype);
+        return result;
+    }
 }
