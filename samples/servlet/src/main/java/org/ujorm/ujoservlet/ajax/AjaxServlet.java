@@ -51,6 +51,8 @@ public class AjaxServlet extends HttpServlet {
     private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
     /** A common services */
     private final Service service = new Service();
+    /** Input idle delay in millisec */
+    private final int idleDelay = 300;
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -68,7 +70,7 @@ public class AjaxServlet extends HttpServlet {
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(service.getCss());
             html.getHead().addRawText("\n"
-                    + "<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>\n"
+                    + "<script src='" + JQUERY_JS + "'></script>\n"
                     + "<script>\n"
                     + getJavascript()
                     + "\n</script>\n");
@@ -104,12 +106,24 @@ public class AjaxServlet extends HttpServlet {
     @Nonnull
     public CharSequence getJavascript() {
         return String.join("\n"
+                , "$(document).ready(function(){"
+                , "  var globalTimeout = null;"
+                , "  $('.regexp, .text').keyup(function() {"
+                , "    if (globalTimeout != null) {"
+                , "      clearTimeout(globalTimeout);"
+                , "    }"
+                , "    globalTimeout = setTimeout(function() {"
+                , "      globalTimeout = null;"
+                , "      $('form:first').submit();"
+                , "    }, " + idleDelay + ");"
+                , "  });"
+                , "});"
                 , ""
                 , "$(document).ready(function(){"
                 , "  $('form').submit(function(event){"
                 , "    var data = $('#form').serialize();"
                 , "    $.ajax("
-                        + "{ url: '?_ajax=y'"
+                        + "{ url: '?" + _AJAX + "=true'"
                         + ", type: 'POST'"
                         + ", data: data"
                         + ", success: function(result){"
@@ -121,7 +135,7 @@ public class AjaxServlet extends HttpServlet {
                 , "    event.preventDefault();"
                 , "  });"
                 , "});"
-                , "");
+        );
     }
 
     /** Build a HTML result */
@@ -149,8 +163,7 @@ public class AjaxServlet extends HttpServlet {
     protected void doPost(
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
-        final boolean ajax = Attrib._AJAX.value(input, "").equals("y");
-        if (ajax) {
+        if (_AJAX.isTrue(input)) {
             doAjax(input, output);
         } else {
             doGet(input, output);
@@ -169,9 +182,11 @@ public class AjaxServlet extends HttpServlet {
             final HttpServletResponse output) throws ServletException, IOException {
         try (JsonWriter writer = JsonWriter.of(input, output)) {
             Message msg = highlight(input);
-            String out = msg.isError()
-                    ? "<span class='error'>" + msg + "</span>"
-                    : msg.getText();
+            CharSequence[] out = {
+                msg.isError() ? "<span class='error'>" : "",
+                msg.getText(),
+                msg.isError() ? "</span>" : "",
+            };
             writer.write("#out", out);
         }
     }

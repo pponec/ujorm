@@ -16,7 +16,7 @@
 package org.ujorm.tools.web.ao;
 
 import javax.annotation.Nonnull;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletRequest;
 
 
 /**
@@ -55,14 +55,21 @@ public interface HttpParameter extends CharSequence {
         return toString().subSequence(start, end);
     }
 
-
-    default String value(@Nonnull final HttpServletRequest request) {
+    default String value(@Nonnull final ServletRequest request) {
         return value(request, null);
     }
 
-    default String value(@Nonnull final HttpServletRequest request, @Nonnull final String defaultValue) {
+    default String value(@Nonnull final ServletRequest request, @Nonnull final String defaultValue) {
         final String result = request.getParameter(toString());
         return result != null ? result : defaultValue;
+    }
+
+    default boolean isTrue(@Nonnull final ServletRequest request) {
+        return "true".equals(request.getParameter(toString()));
+    }
+
+    default boolean isFalse(@Nonnull final ServletRequest request) {
+        return "false".equals(request.getParameter(toString()));
     }
 
 }

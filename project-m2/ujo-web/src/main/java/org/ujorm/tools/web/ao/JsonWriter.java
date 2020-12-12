@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
@@ -41,15 +42,28 @@ public class JsonWriter implements Closeable {
         this.writer = Assert.notNull(writer, "writer");
     }
 
-    /** Write a key-value */
-    public void write(@Nonnull final CharSequence key, @Nonnull final CharSequence value) throws IOException {
+    /** Write a key-value
+     *
+     * @param key A JSON key
+     * @param values The text array to join.
+     * @throws IOException
+     */
+    public void write(
+            @Nonnull final CharSequence key,
+            @Nullable final CharSequence... values) throws IOException {
         writer.append(paramCounter++ == 0 ? '{' : ',');
         writer.append(DOUBLE_QUOTE);
         write(key);
         writer.append(DOUBLE_QUOTE);
         writer.append(':');
-        writer.append(DOUBLE_QUOTE);
-        write(value);
+        if (values == null) {
+            writer.append("null");
+        } else {
+            writer.append(DOUBLE_QUOTE);
+            for (CharSequence value : values) {
+                write(value);
+            }
+        }
         writer.append(DOUBLE_QUOTE);
     }
 
@@ -61,9 +75,9 @@ public class JsonWriter implements Closeable {
                     writer.append(BACKSLASH);
                     writer.append(BACKSLASH);
                     break;
-                case '"':
+                case DOUBLE_QUOTE:
                     writer.append(BACKSLASH);
-                    writer.append('"');
+                    writer.append(DOUBLE_QUOTE);
                     break;
                 case '\b':
                     writer.append(BACKSLASH);
@@ -103,7 +117,6 @@ public class JsonWriter implements Closeable {
     public static final JsonWriter of(@Nonnull final Appendable writer) {
         return new JsonWriter(writer);
     }
-
 
     /** An object factory */
     public static final JsonWriter of(
