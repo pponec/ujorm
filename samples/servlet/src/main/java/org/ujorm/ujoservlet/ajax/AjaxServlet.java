@@ -81,7 +81,7 @@ public class AjaxServlet extends HttpServlet {
                     , JQUERY_JS
                     , "'></script>\n"
                     , "<script>\n"
-                    , AJAX_ENABLED ? service.getJavascript(_AJAX, idleDelay, true) : ""
+                    , AJAX_ENABLED ? service.getJavascript(_AJAX, idleDelay, true, REGEXP, TEXT) : ""
                     , "\n</script>\n");
 
             try (Element body = html.getBody()) {

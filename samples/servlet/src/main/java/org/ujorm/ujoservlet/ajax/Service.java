@@ -16,6 +16,8 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.security.SecureRandom;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.XmlConfig;
@@ -47,11 +49,18 @@ public class Service {
 
     /** Create an inline Javascript */
     @Nonnull
-    public CharSequence getJavascript(CharSequence ajaxParam, int idleDelay, boolean initSubmit) {
+    public CharSequence getJavascript(
+            final CharSequence ajaxParam,
+            final int idleDelay,
+            final boolean initSubmit,
+            final CharSequence... inputCssSelectors) {
+        final String inpSelectors = Stream.of(inputCssSelectors)
+                .map(t -> "." + t)
+                .collect(Collectors.joining(", "));
         final CharSequence[] result = { ""
                 , "$(document).ready(function(){"
                 , "  var globalTimeout = null;"
-                , "  $('.regexp, .text').keyup(function() {"
+                , "  $('" + inpSelectors + "').keyup(function() {"
                 , "    if (globalTimeout != null) {"
                 , "      clearTimeout(globalTimeout);"
                 , "    }"
