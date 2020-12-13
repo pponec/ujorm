@@ -36,6 +36,7 @@ public class Service {
                 , "body   { margin-left:20px; background-color: #f3f6f7;}"
                 , "h1, h2 { color: SteelBlue;}"
                 , "form   { width: 500px;}"
+                , ".subtitle{ font-size: 10px; color: silver;}"
                 , ".text  { height: 100px; margin: 3px 0;}"
                 , ".out   { min-height: 100px; margin-top: 10px;"
                 + " height: inherit; white-space: pre-wrap;}"
@@ -46,7 +47,7 @@ public class Service {
 
     /** Create an inline Javascript */
     @Nonnull
-    public CharSequence getJavascript(CharSequence ajaxParam, int idleDelay) {
+    public CharSequence getJavascript(CharSequence ajaxParam, int idleDelay, boolean initSubmit) {
         final CharSequence[] result = { ""
                 , "$(document).ready(function(){"
                 , "  var globalTimeout = null;"
@@ -76,6 +77,7 @@ public class Service {
                 , "    }});"
                 , "    event.preventDefault();"
                 , "  });"
+                , initSubmit ? "  $('form:first').submit();" : ""
                 , "});"
         };
         return String.join("\n", result);

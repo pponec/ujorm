@@ -54,6 +54,8 @@ public class AjaxServlet extends HttpServlet {
     private static final String CSS_CONTROL = "form-control";
     /** CSS class name for the output box */
     private static final String CSS_OUTPUT = "out";
+    /** CSS class name for the output box */
+    private static final String CSS_SUBTITLE = "subtitle";
     /** Input idle delay in millisec */
     private final int idleDelay = 300;
     /** A common service */
@@ -79,11 +81,12 @@ public class AjaxServlet extends HttpServlet {
                     , JQUERY_JS
                     , "'></script>\n"
                     , "<script>\n"
-                    , AJAX_ENABLED ? service.getJavascript(_AJAX, idleDelay) : ""
+                    , AJAX_ENABLED ? service.getJavascript(_AJAX, idleDelay, true) : ""
                     , "\n</script>\n");
 
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
+                body.addDiv(CSS_SUBTITLE).addText("");
                 try (Element form = body.addForm()
                         .setId("form")
                         .setMethod(Html.V_POST).setAction("?")) {
@@ -161,6 +164,7 @@ public class AjaxServlet extends HttpServlet {
             };
             // Write a selector with a value:
             writer.write("." + CSS_OUTPUT, result);
+            writer.write("." + CSS_SUBTITLE, "AJAX ready");
         }
     }
 
