@@ -77,7 +77,7 @@ public class AjaxServlet extends HttpServlet {
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(service.getCss());
             html.addJavascriptBody(service.getJavascript(
-                    AJAX_ENABLED, _AJAX, idleDelay, true, REGEXP, TEXT));
+                    AJAX_ENABLED, true, _AJAX, idleDelay, REGEXP, TEXT));
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 body.addDiv(CSS_SUBTITLE).addText("");

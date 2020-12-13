@@ -47,13 +47,21 @@ public class Service {
         };
     }
 
-    /** Create an inline Javascript */
+    /**
+     * Generate a Javascript
+     * @param enabled Include the Javascript
+     * @param initFormSubmit Call a submit on the first form on load
+     * @param ajaxParam Ajax parameter sign
+     * @param idleDelay Delay after last key in milliseconds
+     * @param inputCssSelectors Array of CSS selector for autosubmit.
+     * @return
+     */
     @Nonnull
     public CharSequence[] getJavascript(
             final boolean enabled,
+            final boolean initFormSubmit,
             final CharSequence ajaxParam,
             final int idleDelay,
-            final boolean initSubmit,
             final CharSequence... inputCssSelectors) {
         if (!enabled) {
             return new CharSequence[0];
@@ -90,7 +98,7 @@ public class Service {
                 , "    }});"
                 , "    event.preventDefault();"
                 , "  });"
-                , initSubmit ? "  $('form:first').submit();" : ""
+                , initFormSubmit ? "  $('form:first').submit();" : ""
                 , "});"
         };
         return result;
