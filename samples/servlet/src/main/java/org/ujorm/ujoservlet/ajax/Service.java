@@ -49,11 +49,15 @@ public class Service {
 
     /** Create an inline Javascript */
     @Nonnull
-    public CharSequence getJavascript(
+    public CharSequence[] getJavascript(
+            final boolean enabled,
             final CharSequence ajaxParam,
             final int idleDelay,
             final boolean initSubmit,
             final CharSequence... inputCssSelectors) {
+        if (!enabled) {
+            return new CharSequence[0];
+        }
         final String inpSelectors = Stream.of(inputCssSelectors)
                 .map(t -> "." + t)
                 .collect(Collectors.joining(", "));
@@ -89,7 +93,7 @@ public class Service {
                 , initSubmit ? "  $('form:first').submit();" : ""
                 , "});"
         };
-        return String.join("\n", result);
+        return result;
     }
 
     /**

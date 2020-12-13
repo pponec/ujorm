@@ -73,17 +73,11 @@ public class AjaxServlet extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
         try (HtmlElement html = HtmlElement.of(input, output, getConfig("Regular expression tester"))) {
-            //html.addJavascriptLink(true, JQUERY_JS);
+            html.addJavascriptLink(false, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(service.getCss());
-            html.getHead().addRawText("\n"
-                    , "<script src='"
-                    , JQUERY_JS
-                    , "'></script>\n"
-                    , "<script>\n"
-                    , AJAX_ENABLED ? service.getJavascript(_AJAX, idleDelay, true, REGEXP, TEXT) : ""
-                    , "\n</script>\n");
-
+            html.addJavascriptBody(service.getJavascript(
+                    AJAX_ENABLED, _AJAX, idleDelay, true, REGEXP, TEXT));
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 body.addDiv(CSS_SUBTITLE).addText("");

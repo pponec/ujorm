@@ -203,18 +203,20 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @param javascript Add a javascriptLink link
      * @return New CSS element
      */
-    public Element addJavascriptBody(@Nonnull final CharSequence... javascript) {
-        Assert.hasLength(javascript, REQUIRED_MSG, "javascript");
-        final Element result = getHead().addElement(Html.SCRIPT)
-                .setAttribute(Html.A_LANGUAGE, "javascript")
-                .setAttribute(Html.A_TYPE, "text/javascript");
-        for (int i = 0, max = javascript.length; i < max; i++) {
-            if (i > 0) {
-                result.addRawText("\n");
+    public Element addJavascriptBody(@Nullable final CharSequence... javascript) {
+        if (Check.hasLength(javascript)) {
+            final Element result = getHead().addElement(Html.SCRIPT)
+                    .setAttribute(Html.A_LANGUAGE, "javascript")
+                    .setAttribute(Html.A_TYPE, "text/javascript");
+            for (int i = 0, max = javascript.length; i < max; i++) {
+                if (i > 0) {
+                    result.addRawText("\n");
+                }
+                result.addRawText(javascript[i]);
             }
-            result.addRawText(javascript[i]);
+            return result;
         }
-        return result;
+        return head;
     }
 
     /** Create a new CSS element and return it
