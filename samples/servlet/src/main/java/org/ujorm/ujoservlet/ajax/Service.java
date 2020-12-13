@@ -31,19 +31,54 @@ public class Service {
 
     /** Create a CSS */
     @Nonnull
-    public CharSequence getCss() {
-        return String.join("\n"
-                , ""
+    public CharSequence[] getCss() {
+        return new CharSequence[] { ""
                 , "body   { margin-left:20px; background-color: #f3f6f7;}"
                 , "h1, h2 { color: SteelBlue;}"
                 , "form   { width: 500px;}"
-                , ".regexp{ width: 100%; margin-bottom: 2px;}"
-                , ".text  { width: 100%; height: 100px;}"
-                , ".out   { width: 100%; min-height: 100px; border:1px solid gray; "
-                       + "margin-top: 10px; background-color: white;}"
+                , ".text  { height: 100px; margin: 3px 0;}"
+                , ".out   { min-height: 100px; margin-top: 10px;"
+                + " height: inherit; white-space: pre-wrap;}"
                 , ".out span { background-color: yellow;}"
                 , ".out .error { background-color: white; color: red;}"
-                , "");
+        };
+    }
+
+    /** Create an inline Javascript */
+    @Nonnull
+    public CharSequence getJavascript(CharSequence ajaxParam, int idleDelay) {
+        final CharSequence[] result = { ""
+                , "$(document).ready(function(){"
+                , "  var globalTimeout = null;"
+                , "  $('.regexp, .text').keyup(function() {"
+                , "    if (globalTimeout != null) {"
+                , "      clearTimeout(globalTimeout);"
+                , "    }"
+                , "    globalTimeout = setTimeout(function() {"
+                , "      globalTimeout = null;"
+                , "      $('form:first').submit();"
+                , "    }, " + idleDelay + ");"
+                , "  });"
+                , "});"
+                , ""
+                , "$(document).ready(function(){"
+                , "  $('form').submit(function(event){"
+                , "    var data = $('#form').serialize();"
+                , "    $.ajax("
+                        + "{ url: '?" + ajaxParam + "=true'"
+                        + ", type: 'POST'"
+                        + ", data: data"
+                        + ", success: function(result){"
+                , "      var jsn = JSON.parse(result);"
+                , "      $.each(jsn, function(key, value){"
+                , "        $(key).html(value);"
+                , "      })"
+                , "    }});"
+                , "    event.preventDefault();"
+                , "  });"
+                , "});"
+        };
+        return String.join("\n", result);
     }
 
     /**
@@ -72,8 +107,6 @@ public class Service {
             return Message.of(printer.toString()
                     .replaceAll(begTag, "<span>")
                     .replaceAll(endTag, "</span>")
-                    .replaceAll("&#13;&#10;", "<br/>")
-                    .replaceAll("\\s", "&nbsp;")
             );
         } catch (Exception | OutOfMemoryError e) {
             return Message.of(e);

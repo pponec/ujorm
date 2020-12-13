@@ -100,14 +100,16 @@ public class HtmlElement implements ApiElement<Element>, Html {
     }
 
     @Override
-    public Element addTextTemplated(CharSequence template, Object... values) {
+    public Element addTextTemplated(
+            @Nonnull final CharSequence template,
+            @Nonnull final Object... values) {
         return root.addTextTemplated(template, values);
     }
 
     @Override
     public Element addRawText(Object value) {
-        return root.addRawText(value);
-     }
+           return root.addRawText(value);
+        }
 
     @Override
     public Element addComment(CharSequence comment) {
@@ -190,16 +192,29 @@ public class HtmlElement implements ApiElement<Element>, Html {
                 .addText("");
     }
 
-    /** Create a new Javascript element and return it
+    /** User the method {@link #addJavascriptBody(java.lang.CharSequence...) } rather */
+    @Deprecated
+    public Element addJavascriptContents(@Nonnull final CharSequence javascript) {
+        return addJavascriptBody(javascript);
+    }
+
+    /** Create a new Javascript element and return it.
+     * Each item is separated by a new line.
      * @param javascript Add a javascriptLink link
      * @return New CSS element
      */
-    public Element addJavascriptContents(@Nonnull final CharSequence javascript) {
-        Assert.notNull(javascript, REQUIRED_MSG, "javascript");
-        return getHead().addElement(Html.SCRIPT)
+    public Element addJavascriptBody(@Nonnull final CharSequence... javascript) {
+        Assert.hasLength(javascript, REQUIRED_MSG, "javascript");
+        final Element result = getHead().addElement(Html.SCRIPT)
                 .setAttribute(Html.A_LANGUAGE, "javascript")
-                .setAttribute(Html.A_TYPE, "text/javascript")
-                .addText(javascript);
+                .setAttribute(Html.A_TYPE, "text/javascript");
+        for (int i = 0, max = javascript.length; i < max; i++) {
+            if (i > 0) {
+                result.addRawText("\n");
+            }
+            result.addRawText(javascript[i]);
+        }
+        return result;
     }
 
     /** Create a new CSS element and return it
@@ -222,14 +237,22 @@ public class HtmlElement implements ApiElement<Element>, Html {
                 .setAttribute(Html.A_REL, "stylesheet");
     }
 
-    /** Create a new CSS element and return it
-     * @param css CSS content
+    /** Create a new CSS element and return it.
+     * Each item is separated by a new line.
+     * @param css CSS content row
      * @return New CSS element
      */
-    public Element addCssBody(@Nonnull final CharSequence css) {
-        Assert.notNull(css, REQUIRED_MSG, "css");
-        return getHead().addElement(Html.STYLE)
-                .addRawText(css);
+    public Element addCssBody(@Nonnull final CharSequence... css) {
+        Assert.hasLength(css, REQUIRED_MSG, "css");
+        final Element result = getHead().addElement(Html.STYLE);
+        for (int i = 0, max = css.length; i < max; i++) {
+            if (i > 0) {
+                result.addRawText("\n");
+            }
+            result.addRawText(css[i]);
+
+        }
+        return result;
     }
 
     /** Returns an Render the HTML code including header. Call the close() method before view */

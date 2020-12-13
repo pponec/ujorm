@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -43,16 +42,22 @@ public class AjaxServlet extends HttpServlet {
 
     /** URL pattern */
     public static final String URL_PATTERN = "/AjaxServlet";
+    /** Enable AJAX feature */
+    private static final boolean AJAX_ENABLED = true;
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(AjaxServlet.class.getName());
-    /** Link to a Bootstrap URL */
-    private static final String BOOTSTRAP_CSS = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
-    /** Link to jQuery */
+    /** Link to a Bootstrap URL of CDN */
+    private static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
+    /** Link to jQuery of CDN */
     private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
-    /** A common services */
-    private final Service service = new Service();
+    /** Bootstrap form control CSS class name */
+    private static final String CSS_CONTROL = "form-control";
+    /** CSS class name for the output box */
+    private static final String CSS_OUTPUT = "out";
     /** Input idle delay in millisec */
     private final int idleDelay = 300;
+    /** A common service */
+    private final Service service = new Service();
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -70,77 +75,44 @@ public class AjaxServlet extends HttpServlet {
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(service.getCss());
             html.getHead().addRawText("\n"
-                    + "<script src='" + JQUERY_JS + "'></script>\n"
-                    + "<script>\n"
-                    + getJavascript()
-                    + "\n</script>\n");
+                    , "<script src='"
+                    , JQUERY_JS
+                    , "'></script>\n"
+                    , "<script>\n"
+                    , AJAX_ENABLED ? service.getJavascript(_AJAX, idleDelay) : ""
+                    , "\n</script>\n");
 
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 try (Element form = body.addForm()
                         .setId("form")
                         .setMethod(Html.V_POST).setAction("?")) {
-                    form.addInput("regexp")
+                    form.addInput(CSS_CONTROL, "regexp")
                             .setName(REGEXP)
                             .setValue(REGEXP.value(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
-                    form.addTextArea("text")
+                    form.addTextArea(CSS_CONTROL, "text")
                             .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
                             .setName(TEXT)
                             .addText(TEXT.value(input));
                     form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
                     Message result = highlight(input);
-                    form.addDiv("out", result.isError() ? "error" : null)
-                            .setId("out")
+                    form.addDiv(CSS_CONTROL, CSS_OUTPUT)
                             .addRawText(highlight(input));
                 }
                 body.addElement(Html.HR);
                 body.addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
             }
-        } catch (Exception e) {
+        } catch (Exception | OutOfMemoryError e) {
             LOGGER.log(Level.SEVERE, "Servlet failed", e);
         }
     }
 
-    /** Create a CSS */
-    @Nonnull
-    public CharSequence getJavascript() {
-        return String.join("\n"
-                , "$(document).ready(function(){"
-                , "  var globalTimeout = null;"
-                , "  $('.regexp, .text').keyup(function() {"
-                , "    if (globalTimeout != null) {"
-                , "      clearTimeout(globalTimeout);"
-                , "    }"
-                , "    globalTimeout = setTimeout(function() {"
-                , "      globalTimeout = null;"
-                , "      $('form:first').submit();"
-                , "    }, " + idleDelay + ");"
-                , "  });"
-                , "});"
-                , ""
-                , "$(document).ready(function(){"
-                , "  $('form').submit(function(event){"
-                , "    var data = $('#form').serialize();"
-                , "    $.ajax("
-                        + "{ url: '?" + _AJAX + "=true'"
-                        + ", type: 'POST'"
-                        + ", data: data"
-                        + ", success: function(result){"
-                , "      var jsn = JSON.parse(result);"
-                , "      $.each(jsn, function(key, value){"
-                , "        $(key).html(value);"
-                , "      })"
-                , "    }});"
-                , "    event.preventDefault();"
-                , "  });"
-                , "});"
-        );
-    }
-
     /** Build a HTML result */
     protected Message highlight(HttpServletRequest input) {
-        return service.highlight(REGEXP.value(input, ""), TEXT.value(input, ""));
+        return service.highlight(
+                REGEXP.value(input, ""),
+                TEXT.value(input, ""));
     }
 
     /** Create a configuration of HTML model */
@@ -171,7 +143,7 @@ public class AjaxServlet extends HttpServlet {
     }
 
     /**
-     * Handles the HTTP <code>POST</code> method.
+     * Return lighlited text in HTML format according a regular expression
      * @param input servlet request
      * @param output servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -182,12 +154,13 @@ public class AjaxServlet extends HttpServlet {
             final HttpServletResponse output) throws ServletException, IOException {
         try (JsonWriter writer = JsonWriter.of(input, output)) {
             Message msg = highlight(input);
-            CharSequence[] out = {
+            CharSequence[] result = {
                 msg.isError() ? "<span class='error'>" : "",
                 msg.getText(),
                 msg.isError() ? "</span>" : "",
             };
-            writer.write("#out", out);
+            // Write a selector with a value:
+            writer.write("." + CSS_OUTPUT, result);
         }
     }
 

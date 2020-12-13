@@ -72,7 +72,7 @@ public class MenuServlet extends HttpServlet {
         Item[] result = { new Item(HelloServlet.URL_PATTERN, "Hello, World!")
                         , new Item(TableServlet.URL_PATTERN, "Show table")
                         , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
-                        , new Item(AjaxServlet.URL_PATTERN + "?regexp=[be]&text=abc+def", "Ajax servlet")
+                        , new Item(AjaxServlet.URL_PATTERN + "?regexp=%5Bbe%5D&text=abc+def", "Regular expression tester")
                         };
         return result;
     }

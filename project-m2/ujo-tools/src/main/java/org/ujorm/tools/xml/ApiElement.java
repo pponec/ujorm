@@ -88,6 +88,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      * @return This instance */
     @Nonnull
     E addRawText(@Nullable Object value);
+    
     /**
      * Add a <strong>comment text</strong>.
      * The CDATA structure isn't really for HTML at all.

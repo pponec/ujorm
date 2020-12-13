@@ -169,6 +169,16 @@ public final class Element implements ApiElement<Element>, Html {
         return this;
     }
 
+    /** Add many text items */
+    @Nonnull
+    public Element addRawText(@Nullable final Object data, @Nonnull final Object... items) throws IllegalStateException {
+        addRawText(data);
+        for (Object item : items) {
+            addRawText(item);
+        }
+        return this;
+    }
+
     @Nonnull
     @Override
     public Element addComment(CharSequence comment) throws IllegalStateException {
