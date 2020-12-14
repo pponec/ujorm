@@ -144,7 +144,7 @@ public final class Element implements ApiElement<Element>, Html {
 
     /**
      * Add many words separated by the separator
-     * @param separator A raw text separator
+     * @param separator The delimiter must contain no special HTML character.
      * @param data Data to print
      * @return The current element
      * @throws IllegalStateException
@@ -169,12 +169,22 @@ public final class Element implements ApiElement<Element>, Html {
         return this;
     }
 
-    /** Add many text items */
-    @Nonnull
-    public Element addRawText(@Nullable final Object data, @Nonnull final Object... items) throws IllegalStateException {
-        addRawText(data);
-        for (Object item : items) {
-            addRawText(item);
+    /**
+     * Add many words separated by the separator
+     * @param separator The delimiter must contain no special HTML character.
+     * @param data Data to print
+     * @return The current element
+     * @throws IllegalStateException
+     */
+    public Element addRawTexts(
+            @Nonnull final CharSequence separator,
+            @Nonnull final Object... data)
+            throws IllegalStateException {
+        for (int i = 0, max = data.length; i < max; i++) {
+            if (i > 0) {
+                internalElement.addRawText(separator);
+            }
+            internalElement.addRawText(data[i]);
         }
         return this;
     }

@@ -16,8 +16,6 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.security.SecureRandom;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.XmlConfig;
@@ -45,63 +43,6 @@ public class Service {
                 , ".out span { background-color: yellow;}"
                 , ".out .error { background-color: white; color: red;}"
         };
-    }
-
-    /**
-     * Generate a Javascript
-     * @param enabled Include the Javascript
-     * @param initFormSubmit Call a submit on the first form on load
-     * @param ajaxParam Ajax parameter sign
-     * @param idleDelay Delay after last key in milliseconds
-     * @param inputCssSelectors Array of CSS selector for autosubmit.
-     * @return
-     */
-    @Nonnull
-    public CharSequence[] getJavascript(
-            final boolean enabled,
-            final boolean initFormSubmit,
-            final CharSequence ajaxParam,
-            final int idleDelay,
-            final CharSequence... inputCssSelectors) {
-        if (!enabled) {
-            return new CharSequence[0];
-        }
-        final String inpSelectors = Stream.of(inputCssSelectors)
-                .map(t -> "." + t)
-                .collect(Collectors.joining(", "));
-        final CharSequence[] result = { ""
-                , "$(document).ready(function(){"
-                , "  var globalTimeout = null;"
-                , "  $('" + inpSelectors + "').keyup(function() {"
-                , "    if (globalTimeout != null) {"
-                , "      clearTimeout(globalTimeout);"
-                , "    }"
-                , "    globalTimeout = setTimeout(function() {"
-                , "      globalTimeout = null;"
-                , "      $('form:first').submit();"
-                , "    }, " + idleDelay + ");"
-                , "  });"
-                , "});"
-                , ""
-                , "$(document).ready(function(){"
-                , "  $('form').submit(function(event){"
-                , "    var data = $('#form').serialize();"
-                , "    $.ajax("
-                        + "{ url: '?" + ajaxParam + "=true'"
-                        + ", type: 'POST'"
-                        + ", data: data"
-                        + ", success: function(result){"
-                , "      var jsn = JSON.parse(result);"
-                , "      $.each(jsn, function(key, value){"
-                , "        $(key).html(value);"
-                , "      })"
-                , "    }});"
-                , "    event.preventDefault();"
-                , "  });"
-                , initFormSubmit ? "  $('form:first').submit();" : ""
-                , "});"
-        };
-        return result;
     }
 
     /**

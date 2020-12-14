@@ -17,37 +17,41 @@ package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
+import org.ujorm.tools.web.ao.JsonWriter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
-import static org.ujorm.ujoservlet.ajax.AjaxServlet.Attrib.*;
+import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
  * @author Pavel Ponec
  */
 @WebServlet(RegexpServlet.URL_PATTERN)
-public class RegexpServlet extends HttpServlet {
+public class RegexpServlet extends AbstractAjaxServlet {
 
     /** URL pattern */
     public static final String URL_PATTERN = "/RegexpServlet";
-    /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(AjaxServlet.class.getName());
-    /** Link to a Bootstrap URL */
-    private static final String BOOTSTRAP_CSS = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
-    /** Link to jQuery */
+    /** Enable AJAX feature */
+    private static final boolean AJAX_ENABLED = true;
+    /** Link to a Bootstrap URL of CDN */
+    private static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
+    /** Link to jQuery of CDN */
     private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
-    /** A common services */
+    /** Bootstrap form control CSS class name */
+    private static final String CSS_CONTROL = "form-control";
+    /** CSS class name for the output box */
+    private static final String CSS_OUTPUT = "out";
+    /** CSS class name for the output box */
+    private static final String CSS_SUBTITLE = "subtitle";
+    /** A common service */
     private final Service service = new Service();
 
     /**
@@ -58,45 +62,64 @@ public class RegexpServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(
+    protected void doProcess(
             final HttpServletRequest input,
-            final HttpServletResponse output) throws ServletException, IOException {
+            final HttpServletResponse output,
+            final boolean post) throws ServletException, IOException {
         try (HtmlElement html = HtmlElement.of(input, output, getConfig("Regular expression tester"))) {
-            html.addJavascriptLink(true, JQUERY_JS);
+            html.addJavascriptLink(false, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
-            html.addCssBody(service.getCss());
+            html.addCssBody(newLine, service.getCss());
+            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, _AJAX, REGEXP, TEXT);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
-                try (Element form = body.addForm().setMethod(Html.V_POST).setAction("?")) {
-                    form.addInput("regexp")
+                body.addDiv(CSS_SUBTITLE).addText("");
+                try (Element form = body.addForm()
+                        .setId("form")
+                        .setMethod(Html.V_POST).setAction("?")) {
+                    form.addInput(CSS_CONTROL, "regexp")
                             .setName(REGEXP)
                             .setValue(REGEXP.value(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
-                    form.addTextArea("text")
+                    form.addTextArea(CSS_CONTROL, "text")
                             .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
                             .setName(TEXT)
                             .addText(TEXT.value(input));
-                    form.addDiv().addSubmitButton("btn", "btn-primary").addText("Evaluate");
-                    try (Element out = form.addDiv("out")) {
-                        Message result = highlight(input);
-                        if (result.isError()) {
-                            out.addSpan("error").addRawText(highlight(input));
-                        } else {
-                            out.addRawText(highlight(input));
-                        }
-                    }
+                    form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
+                    Message result = highlight(input);
+                    form.addDiv(CSS_CONTROL, CSS_OUTPUT)
+                            .addRawText(highlight(input));
                 }
                 body.addElement(Html.HR);
                 body.addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
             }
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Servlet failed", e);
         }
+    }
+
+    /**
+     * Return lighlited text in HTML format according a regular expression
+     * @param input servlet request
+     * @param output A JSON writer
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void doAjax(HttpServletRequest input, JsonWriter output) throws ServletException, IOException {
+            Message msg = highlight(input);
+            CharSequence[] result = {
+                msg.isError() ? "<span class='error'>" : "",
+                msg.getText(),
+                msg.isError() ? "</span>" : "",
+            };
+            // Write a selector with a value:
+            output.write("." + CSS_OUTPUT, result);
+            output.write("." + CSS_SUBTITLE, "AJAX ready");
     }
 
     /** Build a HTML result */
     protected Message highlight(HttpServletRequest input) {
-        return service.highlight(REGEXP.value(input, ""), TEXT.value(input, ""));
+        return service.highlight(
+                REGEXP.value(input, ""),
+                TEXT.value(input, ""));
     }
 
     /** Create a configuration of HTML model */
@@ -108,22 +131,9 @@ public class RegexpServlet extends HttpServlet {
         return config;
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     * @param input servlet request
-     * @param output servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(
-            final HttpServletRequest input,
-            final HttpServletResponse output) throws ServletException, IOException {
-        doGet(input, output);
-    }
-
     /** Servlet attributes */
     enum Attrib implements HttpParameter {
+        _AJAX,
         REGEXP,
         TEXT;
         @Override

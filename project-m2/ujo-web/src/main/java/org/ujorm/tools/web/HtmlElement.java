@@ -244,12 +244,14 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @param css CSS content row
      * @return New CSS element
      */
-    public Element addCssBody(@Nonnull final CharSequence... css) {
+    public Element addCssBody(
+            @Nonnull final CharSequence lineSeparator,
+            @Nonnull final CharSequence... css) {
         Assert.hasLength(css, REQUIRED_MSG, "css");
         final Element result = getHead().addElement(Html.STYLE);
         for (int i = 0, max = css.length; i < max; i++) {
             if (i > 0) {
-                result.addRawText("\n");
+                result.addRawText(lineSeparator);
             }
             result.addRawText(css[i]);
 

@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.model.XmlModel;
 import org.ujorm.ujoservlet.HtmlElementOrig;
-import org.ujorm.ujoservlet.ajax.AjaxServlet;
+import org.ujorm.ujoservlet.ajax.RegexpServlet;
 import org.ujorm.ujoservlet.tools.ApplService;
 
 /**
@@ -72,7 +72,7 @@ public class MenuServlet extends HttpServlet {
         Item[] result = { new Item(HelloServlet.URL_PATTERN, "Hello, World!")
                         , new Item(TableServlet.URL_PATTERN, "Show table")
                         , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
-                        , new Item(AjaxServlet.URL_PATTERN + "?regexp=%5Bbe%5D&text=abc+def", "Regular expression tester")
+                        , new Item(RegexpServlet.URL_PATTERN + "?regexp=%5Bbe%5D&text=abc+def", "Regular expression tester")
                         };
         return result;
     }
