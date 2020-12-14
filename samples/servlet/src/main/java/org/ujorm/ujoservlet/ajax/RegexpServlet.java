@@ -45,6 +45,8 @@ public class RegexpServlet extends AbstractAjaxServlet {
     private static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
     /** Link to jQuery of CDN */
     private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
+    /** Form identifier */
+    private static final String FORM_ID = "form";
     /** Bootstrap form control CSS class name */
     private static final String CSS_CONTROL = "form-control";
     /** CSS class name for the output box */
@@ -70,12 +72,12 @@ public class RegexpServlet extends AbstractAjaxServlet {
             html.addJavascriptLink(false, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(newLine, service.getCss());
-            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, _AJAX, REGEXP, TEXT);
+            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, _AJAX, "#" + FORM_ID, REGEXP, TEXT);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 body.addDiv(CSS_SUBTITLE).addText("");
                 try (Element form = body.addForm()
-                        .setId("form")
+                        .setId(FORM_ID)
                         .setMethod(Html.V_POST).setAction("?")) {
                     form.addInput(CSS_CONTROL, "regexp")
                             .setName(REGEXP)
@@ -91,7 +93,7 @@ public class RegexpServlet extends AbstractAjaxServlet {
                             .addRawText(highlight(input));
                 }
                 body.addElement(Html.HR);
-                body.addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
+                body.addAnchor("https://bit.ly/2KmO78n").addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
             }
         }
     }

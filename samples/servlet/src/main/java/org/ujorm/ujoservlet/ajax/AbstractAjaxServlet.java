@@ -38,22 +38,19 @@ import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
 public abstract class AbstractAjaxServlet extends HttpServlet {
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(AbstractAjaxServlet.class.getName());
-    /** Bootstrap form control CSS class name */
-    protected final String cssControl;
     /** Javascript line separator */
     protected final String newLine;
     /** Input idle delay in millisec */
     protected final int idleDelay;
 
     /** Default constructor */
-    public AbstractAjaxServlet(@Nonnull final String cssControl, final int idleDelay, @Nonnull final String newLine) {
-        this.cssControl = cssControl;
+    public AbstractAjaxServlet(final int idleDelay, @Nonnull final String newLine) {
         this.idleDelay = idleDelay;
         this.newLine = newLine;
     }
 
     public AbstractAjaxServlet() {
-        this("form-control", 300, "\n");
+        this(300, "\n");
     }
 
     /**
@@ -129,6 +126,7 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
             @Nullable final Element element,
             final boolean initFormSubmit,
             @Nullable final CharSequence ajaxRequest,
+            @Nullable final CharSequence formSelector,
             @Nonnull final CharSequence... inputCssSelectors) {
         if (element == null) {
             return;
@@ -147,14 +145,14 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
                     , "  }"
                     , "  globalTimeout = setTimeout(function() {"
                     , "    globalTimeout = null;"
-                    , "    $('form:first').submit();"
+                    , "    $('" + formSelector + "').submit();"
                     , "  }, " + idleDelay + ");"
                     , "});"
             );
         }{
             element.addRawTexts(newLine, newLine
                     , "$('form').submit(function(event){"
-                    , "  var data = $('#form').serialize();"
+                    , "  var data = $('" + formSelector + "').serialize();"
                     , "  $.ajax("
                           + "{ url: '?" + ajaxRequest + "=true'"
                           + ", type: 'POST'"
@@ -167,7 +165,7 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
                     , "  }});"
                     , "  event.preventDefault();"
                     , "});"
-                    , initFormSubmit ? "  $('form:first').submit();" : ""
+                    , initFormSubmit ? "  $('" + formSelector + "').submit();" : ""
                     );
         }
         element.addRawTexts(newLine, newLine, "});", "</script>");
