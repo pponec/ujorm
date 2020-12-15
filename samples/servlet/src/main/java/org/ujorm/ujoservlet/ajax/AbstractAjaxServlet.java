@@ -120,13 +120,14 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
      * Implement an AJAX action
      * @param output Simple JSON writer in structure key-value.
      */
-    protected abstract void doAjax(HttpServletRequest input, JsonWriter output) throws ServletException, IOException;
+    protected abstract void doAjax(HttpServletRequest input, JsonWriter output)
+            throws ServletException, IOException;
 
     /**
      * Generate a Javascript
      * @param element Root element, where {@code null} value disable the javascript.
      * @param initFormSubmit Submit on the first form on load request
-     * @param ajaxRequest Ajax request attribute test
+     * @param formSelector A form selector for submit
      * @param inputCssSelectors Array of CSS selector for autosubmit.
      */
     @Nonnull
