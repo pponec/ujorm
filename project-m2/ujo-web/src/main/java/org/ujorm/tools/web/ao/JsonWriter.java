@@ -42,6 +42,31 @@ public class JsonWriter implements Closeable {
         this.writer = Assert.notNull(writer, "writer");
     }
 
+    /** Write the value for a CSS ID selector
+     *
+     * @param elementId ID selector
+     * @param values The text array to join.
+     * @throws IOException
+     */
+    public void writeIdSelector(
+            @Nonnull final CharSequence elementId,
+            @Nullable final CharSequence... values) throws IOException {
+        write(SelectorType.ID.prefix, elementId, values);
+    }
+
+
+    /** Write the value for a CSS CLASS selector
+     *
+     * @param elementId ID selector
+     * @param values The text array to join.
+     * @throws IOException
+     */
+    public void writeClassSelector(
+            @Nonnull final CharSequence elementId,
+            @Nullable final CharSequence... values) throws IOException {
+        write(SelectorType.CLASS.prefix, elementId, values);
+    }
+
     /** Write a key-value
      *
      * @param key A JSON key
@@ -51,8 +76,22 @@ public class JsonWriter implements Closeable {
     public void write(
             @Nonnull final CharSequence key,
             @Nullable final CharSequence... values) throws IOException {
+        write(SelectorType.INCLUDED.prefix, key, values);
+    }
+
+    /** Write a key-value
+     *
+     * @param key A JSON key
+     * @param values The text array to join.
+     * @throws IOException
+     */
+    public void write(
+            @Nonnull final String keyPrefix,
+            @Nonnull final CharSequence key,
+            @Nullable final CharSequence... values) throws IOException {
         writer.append(paramCounter++ == 0 ? '{' : ',');
         writer.append(DOUBLE_QUOTE);
+        write(keyPrefix);
         write(key);
         writer.append(DOUBLE_QUOTE);
         writer.append(':');
@@ -140,5 +179,26 @@ public class JsonWriter implements Closeable {
         request.setCharacterEncoding(charset.toString());
         response.setCharacterEncoding(charset.toString());
         return of(response.getWriter());
+    }
+
+    /** CSS selector types */
+    public enum SelectorType {
+        /** CSS selector by ID */
+        ID("#"),
+        /** CSS selector by CLASS */
+        CLASS("."),
+        /** CSS selector is included */
+        INCLUDED("");
+
+        final String prefix;
+
+        private SelectorType(@Nonnull String prefix) {
+            this.prefix = prefix;
+        }
+
+        @Nonnull
+        public String getPrefix() {
+            return prefix;
+        }
     }
 }

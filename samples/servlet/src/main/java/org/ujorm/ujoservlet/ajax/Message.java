@@ -42,7 +42,7 @@ public class Message {
     }
 
     public static Message of(@Nonnull final String text) {
-        return new Message(Assert.hasLength(text, "text"), false);
+        return new Message(Assert.notNull(text, "text"), false);
     }
 
     public static Message of(@Nonnull Throwable e) {
@@ -54,5 +54,5 @@ public class Message {
     public String toString() {
         return getText();
     }
-    
+
 }
