@@ -38,19 +38,27 @@ import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
 public abstract class AbstractAjaxServlet extends HttpServlet {
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(AbstractAjaxServlet.class.getName());
+    /** Default AJAX request parameter name */
+    public static final String DEFAULT_AJAX_REQUEST_PARAM = "_ajax";
+    /** Javascript ajax request parameter */
+    protected final CharSequence ajaxRequest;
     /** Javascript line separator */
     protected final String newLine;
     /** Input idle delay in millisec */
     protected final int idleDelay;
 
     /** Default constructor */
-    public AbstractAjaxServlet(final int idleDelay, @Nonnull final String newLine) {
+    public AbstractAjaxServlet(
+            @Nonnull final CharSequence ajaxRequest,
+            @Nonnull final String newLine,
+            final int idleDelay) {
+        this.ajaxRequest = ajaxRequest;
         this.idleDelay = idleDelay;
         this.newLine = newLine;
     }
 
     public AbstractAjaxServlet() {
-        this(300, "\n");
+        this(DEFAULT_AJAX_REQUEST_PARAM, "\n", 300);
     }
 
     /**
@@ -125,7 +133,6 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
     protected void writeJavascript(
             @Nullable final Element element,
             final boolean initFormSubmit,
-            @Nullable final CharSequence ajaxRequest,
             @Nullable final CharSequence formSelector,
             @Nonnull final CharSequence... inputCssSelectors) {
         if (element == null) {

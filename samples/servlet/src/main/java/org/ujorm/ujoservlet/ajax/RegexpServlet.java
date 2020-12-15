@@ -72,7 +72,7 @@ public class RegexpServlet extends AbstractAjaxServlet {
             html.addJavascriptLink(false, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(newLine, service.getCss());
-            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, _AJAX, "#" + FORM_ID, REGEXP, TEXT);
+            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, "#" + FORM_ID, REGEXP, TEXT);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 body.addDiv(CSS_SUBTITLE).addText("");
@@ -135,9 +135,11 @@ public class RegexpServlet extends AbstractAjaxServlet {
 
     /** Servlet attributes */
     enum Attrib implements HttpParameter {
-        _AJAX,
         REGEXP,
-        TEXT;
+        TEXT,
+        _AJAX {@Override public String toString() {
+            return AbstractAjaxServlet.DEFAULT_AJAX_REQUEST_PARAM;
+        }};
         @Override
         public String toString() {
             return name().toLowerCase(Locale.ENGLISH);

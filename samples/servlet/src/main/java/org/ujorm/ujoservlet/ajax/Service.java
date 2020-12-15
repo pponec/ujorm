@@ -27,7 +27,7 @@ import org.ujorm.tools.xml.config.XmlConfig;
 public class Service {
 
     /** Max text length */
-    private static final int MAX_LENGTH = 11_000;
+    private static final int MAX_LENGTH = 1_100;
 
     /** Create a CSS */
     @Nonnull
