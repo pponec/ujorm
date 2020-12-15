@@ -113,8 +113,8 @@ public class RegexpServlet extends AbstractAjaxServlet {
                 msg.isError() ? "</span>" : "",
             };
             // Write a selector with a value:
-            output.writeClassSelector(CSS_OUTPUT, result);
-            output.writeClassSelector(CSS_SUBTITLE, "AJAX ready");
+            output.writeClass(CSS_OUTPUT, result);
+            output.writeClass(CSS_SUBTITLE, "AJAX ready");
     }
 
     /** Build a HTML result */

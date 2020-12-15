@@ -48,7 +48,7 @@ public class JsonWriter implements Closeable {
      * @param values The text array to join.
      * @throws IOException
      */
-    public void writeIdSelector(
+    public void writeId(
             @Nonnull final CharSequence elementId,
             @Nullable final CharSequence... values) throws IOException {
         write(SelectorType.ID.prefix, elementId, values);
@@ -61,7 +61,7 @@ public class JsonWriter implements Closeable {
      * @param values The text array to join.
      * @throws IOException
      */
-    public void writeClassSelector(
+    public void writeClass(
             @Nonnull final CharSequence elementId,
             @Nullable final CharSequence... values) throws IOException {
         write(SelectorType.CLASS.prefix, elementId, values);
