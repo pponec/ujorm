@@ -27,6 +27,7 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.model.XmlModel;
 import org.ujorm.ujoservlet.HtmlElementOrig;
 import org.ujorm.ujoservlet.ajax.RegexpServlet;
+import org.ujorm.ujoservlet.ajax.HotelReportServlet;
 import org.ujorm.ujoservlet.tools.ApplService;
 
 /**
@@ -73,6 +74,7 @@ public class MenuServlet extends HttpServlet {
                         , new Item(TableServlet.URL_PATTERN, "Show table")
                         , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
                         , new Item(RegexpServlet.URL_PATTERN + "?regexp=%5Bbe%5D&text=abc+def", "Regular expression tester")
+                        , new Item(HotelReportServlet.URL_PATTERN, "Hotels report")
                         };
         return result;
     }

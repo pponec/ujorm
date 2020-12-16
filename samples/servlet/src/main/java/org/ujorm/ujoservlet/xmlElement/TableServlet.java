@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2020 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import org.ujorm.ujoservlet.tools.ApplService;
 public class TableServlet extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTERN = "/tableServlet";
+    public static final String URL_PATTERN = "/tableHotelServlet";
 
     /** Show the first line of soufce code */
     public static final short SHOW_LINE = 53;

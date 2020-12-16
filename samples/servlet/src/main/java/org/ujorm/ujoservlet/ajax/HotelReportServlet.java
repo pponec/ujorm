@@ -17,6 +17,7 @@ package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.stream.Stream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,27 +29,32 @@ import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.JsonWriter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
+import org.ujorm.ujoservlet.ajax.ao.Hotel;
+import org.ujorm.ujoservlet.ajax.ao.ResourceService;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
  * @author Pavel Ponec
  */
-@WebServlet(RegexpServlet.URL_PATTERN)
-public class RegexpServlet extends AbstractAjaxServlet {
+@WebServlet(HotelReportServlet.URL_PATTERN)
+public class HotelReportServlet extends AbstractAjaxServlet {
 
     /** URL pattern */
-    public static final String URL_PATTERN = "/RegexpServlet";
+    public static final String URL_PATTERN = "/TableHotelServlet";
     /** Enable AJAX feature */
-    private static final boolean AJAX_ENABLED = true;
+    private static final boolean AJAX_ENABLED = !true;
+    /** Data license */
+    private static final String HOTELBASE_URL = "http://hotelbase.org/";
+    /** Data license */
+    private static final String DATA_LICENSE_URL = "https://web.archive.org/web/20150407085757/http://api.hotelsbase.org/documentation.php";
     /** Link to a Bootstrap URL of CDN */
     private static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
     /** Link to jQuery of CDN */
     private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
     /** Source of the class */
     private static final String SOURCE_URL = "https://github.com/pponec/ujorm/"
-            + "blob/e1b4fde571761c4cdbfd8877a7fe4dd054256c03/samples"
-            + "/servlet/src/main/java/org/ujorm/ujoservlet/ajax/RegexpServlet.java";
+            + "blob/e1b4fde571761c4cdbfd8877a7fe4dd054256c03/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/RegexpServlet.java";
     /** Form identifier */
     private static final String FORM_ID = "form";
     /** Bootstrap form control CSS class name */
@@ -58,7 +64,7 @@ public class RegexpServlet extends AbstractAjaxServlet {
     /** CSS class name for the output box */
     private static final String CSS_SUBTITLE = "subtitle";
     /** A common service */
-    private final Service service = new Service();
+    private final ResourceService service = new ResourceService();
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -72,31 +78,37 @@ public class RegexpServlet extends AbstractAjaxServlet {
             final HttpServletRequest input,
             final HttpServletResponse output,
             final boolean post) throws ServletException, IOException {
-        try (HtmlElement html = HtmlElement.of(input, output, getConfig("Regular expression tester"))) {
+        try (HtmlElement html = HtmlElement.of(input, output, getConfig("Hotel report"))) {
             html.addJavascriptLink(false, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
-            html.addCssBody(newLine, service.getCss());
             writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, "#" + FORM_ID, REGEXP, TEXT);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 body.addDiv(CSS_SUBTITLE).addText("");
-                try (Element form = body.addForm()
-                        .setId(FORM_ID)
-                        .setMethod(Html.V_POST).setAction("?")) {
-                    form.addInput(CSS_CONTROL, "regexp")
-                            .setName(REGEXP)
-                            .setValue(REGEXP.value(input))
-                            .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
-                    form.addTextArea(CSS_CONTROL, "text")
-                            .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
-                            .setName(TEXT)
-                            .addText(TEXT.value(input));
-                    form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
-                    Message result = highlight(input);
-                    form.addDiv(CSS_CONTROL, CSS_OUTPUT)
-                            .addRawText(highlight(input));
+
+                CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
+                Object[] tableTitle = {"Name", "City ID", "Street", "Price", "Currency", "Stars", "Phone", "HomePage"};
+                try (Stream<Hotel> hotels = service.loadHotelStream()) {
+                    body.addTable(service.getHotels(), tableCss, tableTitle
+                            , Hotel::getName
+                            , Hotel::getCity
+                            , Hotel::getStreet
+                            , Hotel::getPrice
+                            , Hotel::getCurrency
+                            , Hotel::getStars
+                            , Hotel::getPhone
+                            , Hotel::getHomePage
+                    );
                 }
+
                 body.addElement(Html.HR);
+
+                // Data are from hotelsbase.org, see the original license.
+                body.addText("Data are from", " ")
+                    .addLinkedText(HOTELBASE_URL, "hotelsbase.org");
+                body.addText(", ", "see an original", " ")
+                    .addLinkedText(DATA_LICENSE_URL, "license");
+                body.addBreak();
                 body.addAnchor(SOURCE_URL).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
             }
         }
@@ -110,22 +122,15 @@ public class RegexpServlet extends AbstractAjaxServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void doAjax(HttpServletRequest input, JsonWriter output) throws ServletException, IOException {
-            Message msg = highlight(input);
-            CharSequence[] result = {
-                msg.isError() ? "<span class='error'>" : "",
-                msg.getText(),
-                msg.isError() ? "</span>" : "",
-            };
-            // Write a selector with a value:
-            output.writeClass(CSS_OUTPUT, result);
-            output.writeClass(CSS_SUBTITLE, "AJAX ready");
-    }
-
-    /** Build a HTML result */
-    protected Message highlight(HttpServletRequest input) {
-        return service.highlight(
-                REGEXP.value(input, ""),
-                TEXT.value(input, ""));
+//            Message msg = highlight(input);
+//            CharSequence[] result = {
+//                msg.isError() ? "<span class='error'>" : "",
+//                msg.getText(),
+//                msg.isError() ? "</span>" : "",
+//            };
+//            // Write a selector with a value:
+//            output.writeClass(CSS_OUTPUT, result);
+//            output.writeClass(CSS_SUBTITLE, "AJAX ready");
     }
 
     /** Create a configuration of HTML model */

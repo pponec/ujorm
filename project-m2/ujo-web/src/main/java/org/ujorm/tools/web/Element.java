@@ -104,14 +104,14 @@ public final class Element implements ApiElement<Element>, Html {
     }
 
     /**
-     * Add many texts with no separator
+     * Add many texts with <strong>no separator</strong>
      * @param data Text items
      * @return A parent element.
      * @see #addAnchoredText(java.lang.String, java.lang.Object...)
      */
     @Nonnull
     public Element addText(@Nonnull final Object... data) throws IllegalStateException {
-        return addTextSeparted("", data);
+        return addTexts("", data);
     }
 
     /**
@@ -143,13 +143,28 @@ public final class Element implements ApiElement<Element>, Html {
     }
 
     /**
-     * Add many words separated by the separator
+     * Use the the method {@link #addTexts(java.lang.CharSequence, java.lang.Object...) } rather;
      * @param separator The delimiter must contain no special HTML character.
      * @param data Data to print
      * @return The current element
      * @throws IllegalStateException
      */
+    @Deprecated
     public Element addTextSeparted(
+            @Nonnull final CharSequence separator,
+            @Nonnull final Object... data)
+            throws IllegalStateException {
+        return addTexts(separator, data);
+    }
+
+    /**
+     * Add many words separated by a delimeter
+     * @param separator The delimiter must contain no special HTML character.
+     * @param data Data to print
+     * @return The current element
+     * @throws IllegalStateException
+     */
+    public Element addTexts(
             @Nonnull final CharSequence separator,
             @Nonnull final Object... data)
             throws IllegalStateException {
@@ -170,7 +185,7 @@ public final class Element implements ApiElement<Element>, Html {
     }
 
     /**
-     * Add many words separated by the separator
+     * Add many words separated by a delimeter
      * @param separator The delimiter must contain no special HTML character.
      * @param data Data to print
      * @return The current element
@@ -563,22 +578,19 @@ public final class Element implements ApiElement<Element>, Html {
     @Deprecated
     @Nonnull
     public Element addAnchoredText(@Nonnull final String url, @Nonnull final Object... text) {
-        return addElement(A)
-               .setHref(url)
-               .addText(text);
+        return addLinkedText(url, text);
     }
 
     /**
      * Add a
      * @param url
      * @param text
-     * @return
+     * @return The original element!
      */
     @Nonnull
     public Element addLinkedText(@Nonnull final String url, @Nonnull final Object... text) {
-        return addElement(A)
-               .setHref(url)
-               .addText(text);
+        addElement(A).setHref(url).addTexts("", text);
+        return this;
     }
 
     /** Add new body element */
