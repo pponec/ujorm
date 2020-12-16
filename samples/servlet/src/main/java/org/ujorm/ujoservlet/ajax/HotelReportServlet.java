@@ -32,6 +32,7 @@ import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
 import org.ujorm.ujoservlet.ajax.ao.ResourceService;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
+import org.ujorm.tools.web.ao.Renderer;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
@@ -97,7 +98,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                             , Hotel::getCurrency
                             , Hotel::getStars
                             , Hotel::getPhone
-                            , Hotel::getHomePage
+                            , (Renderer<Hotel>)(e, v) -> e.addLinkedText(v.getHomePage(), "link")
                     );
                 }
 

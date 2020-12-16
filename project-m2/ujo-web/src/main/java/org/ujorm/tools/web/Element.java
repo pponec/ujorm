@@ -36,6 +36,7 @@ import javax.annotation.Nullable;
 import javax.sql.rowset.spi.XmlWriter;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.web.ao.Renderer;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.model.XmlModel;
 import static org.ujorm.tools.web.Html.LEGEND;
@@ -312,12 +313,30 @@ public final class Element implements ApiElement<Element>, Html {
                 rowElement.addElement(Html.TH).addText(value);
             }
         }
+        final boolean hasRenderer = hasType(Renderer.class, attributes);
         domains.forEach(value -> {
             final Element rowElement = result.addElement(Html.TR);
             for (Function<D, V> attribute : attributes) {
-                rowElement.addElement(Html.TD).addText(attribute.apply(value));
+                final Element td = rowElement.addElement(Html.TD);
+                if (hasRenderer && attribute instanceof Renderer) {
+                    ((Renderer)attribute).write(td, value);
+                } else {
+                    td.addText(attribute.apply(value));
+                }
             }
         });
+        return result;
+    }
+
+    /** Check if any attribute is typeof the Renderer */
+    private <D, V> boolean hasType(final Class type, final @Nonnull Function<D, V>... attributes) {
+        boolean result = false;
+        for (Function<D, V> attribute : attributes) {
+            if (type.isInstance(attribute)) {
+                result = true;
+                break;
+            }
+        }
         return result;
     }
 
