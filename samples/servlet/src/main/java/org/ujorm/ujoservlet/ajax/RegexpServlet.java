@@ -85,12 +85,12 @@ public class RegexpServlet extends AbstractAjaxServlet {
                         .setMethod(Html.V_POST).setAction("?")) {
                     form.addInput(CSS_CONTROL, "regexp")
                             .setName(REGEXP)
-                            .setValue(REGEXP.value(input))
+                            .setValue(REGEXP.of(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
                     form.addTextArea(CSS_CONTROL, "text")
                             .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
                             .setName(TEXT)
-                            .addText(TEXT.value(input));
+                            .addText(TEXT.of(input));
                     form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
                     Message result = highlight(input);
                     form.addDiv(CSS_CONTROL, CSS_OUTPUT)
@@ -124,8 +124,8 @@ public class RegexpServlet extends AbstractAjaxServlet {
     /** Build a HTML result */
     protected Message highlight(HttpServletRequest input) {
         return service.highlight(
-                REGEXP.value(input, ""),
-                TEXT.value(input, ""));
+                REGEXP.of(input, ""),
+                TEXT.of(input, ""));
     }
 
     /** Create a configuration of HTML model */

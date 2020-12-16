@@ -27,12 +27,12 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.JsonWriter;
+import org.ujorm.tools.web.ao.Renderer;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
 import org.ujorm.ujoservlet.ajax.ao.ResourceService;
-import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
-import org.ujorm.tools.web.ao.Renderer;
+import static org.ujorm.ujoservlet.ajax.HotelReportServlet.Attrib.*;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
@@ -44,7 +44,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     /** URL pattern */
     public static final String URL_PATTERN = "/TableHotelServlet";
     /** Enable AJAX feature */
-    private static final boolean AJAX_ENABLED = !true;
+    private static final boolean AJAX_ENABLED = true;
     /** Data license */
     private static final String HOTELBASE_URL = "http://hotelbase.org/";
     /** Data license */
@@ -82,15 +82,29 @@ public class HotelReportServlet extends AbstractAjaxServlet {
         try (HtmlElement html = HtmlElement.of(input, output, getConfig("Hotel report"))) {
             html.addJavascriptLink(false, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
-            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, "#" + FORM_ID, REGEXP, TEXT);
+            html.addCssBody("", getCss());
+            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, "#" + FORM_ID, NAME, STREET);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 body.addDiv(CSS_SUBTITLE).addText("");
+                try (Element form =  body.addForm()
+                        .setId(FORM_ID)
+                        .setMethod(Html.V_POST).setAction("?")) {
+                    form.addInput(CSS_CONTROL, NAME)
+                            .setName(NAME)
+                            .setValue(NAME.of(input))
+                            .setAttribute(Html.A_PLACEHOLDER, "Name of hotel");
+                    form.addInput(CSS_CONTROL, STREET)
+                            .setName(STREET)
+                            .setValue(STREET.of(input))
+                            .setAttribute(Html.A_PLACEHOLDER, "Street");
+                }
 
                 CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
                 Object[] tableTitle = {"Name", "City ID", "Street", "Price", "Currency", "Stars", "Phone", "HomePage"};
                 try (Stream<Hotel> hotels = service.loadHotelStream()) {
-                    body.addTable(service.getHotels(), tableCss, tableTitle
+                    body.addDiv(CSS_OUTPUT)
+                         .addTable(hotels, tableCss, tableTitle
                             , Hotel::getName
                             , Hotel::getCity
                             , Hotel::getStreet
@@ -123,15 +137,35 @@ public class HotelReportServlet extends AbstractAjaxServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void doAjax(HttpServletRequest input, JsonWriter output) throws ServletException, IOException {
-//            Message msg = highlight(input);
-//            CharSequence[] result = {
-//                msg.isError() ? "<span class='error'>" : "",
-//                msg.getText(),
-//                msg.isError() ? "</span>" : "",
-//            };
-//            // Write a selector with a value:
-//            output.writeClass(CSS_OUTPUT, result);
-//            output.writeClass(CSS_SUBTITLE, "AJAX ready");
+
+        String name = NAME.of(input, "").toUpperCase();
+        String street = STREET.of(input, "").toUpperCase();
+
+        try (Stream<Hotel> hotels = service.loadHotelStream()
+                                .filter(t -> t.getName().toUpperCase().startsWith(name))
+                                .filter(t -> t.getStreet().toUpperCase().startsWith(street))
+                                .limit(15)) {
+
+            StringBuilder out = new StringBuilder(256);
+            try (HtmlElement html = HtmlElement.of(HtmlConfig.ofElementName("div"), out)) {
+                    CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
+                    Object[] tableTitle = {"Name", "City ID", "Street", "Price", "Currency", "Stars", "Phone", "HomePage"};
+                    html.addElement(CSS_OUTPUT)
+                         .addTable(hotels, tableCss, tableTitle
+                            , Hotel::getName
+                            , Hotel::getCity
+                            , Hotel::getStreet
+                            , Hotel::getPrice
+                            , Hotel::getCurrency
+                            , Hotel::getStars
+                            , Hotel::getPhone
+                            , (Renderer<Hotel>)(e, v) -> e.addLinkedText(v.getHomePage(), "link")
+                    );
+            }
+            // Write a selector with a value:
+            output.writeClass(CSS_OUTPUT, out);
+            output.writeClass(CSS_SUBTITLE, "AJAX ready");
+        }
     }
 
     /** Create a configuration of HTML model */
@@ -143,10 +177,15 @@ public class HotelReportServlet extends AbstractAjaxServlet {
         return config;
     }
 
+    private String getCss() {
+        return "#form input { width: 200px;}";
+    }
+
     /** Servlet attributes */
     enum Attrib implements HttpParameter {
-        REGEXP,
-        TEXT,
+        NAME,
+        CITY,
+        STREET,
         _AJAX {@Override public String toString() {
             return AbstractAjaxServlet.DEFAULT_AJAX_REQUEST_PARAM;
         }};

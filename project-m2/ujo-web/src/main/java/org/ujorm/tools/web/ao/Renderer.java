@@ -22,7 +22,7 @@ import org.ujorm.tools.web.Element;
  *
  * @author Pavel Ponec
  */
-public interface Renderer<T> extends Function<T, Object>{
+public interface Renderer<T> extends Function<T, Object>, CharSequence {
 
     @Deprecated
     @Override
@@ -30,9 +30,23 @@ public interface Renderer<T> extends Function<T, Object>{
         return "?";
     }
 
+    @Override
+    public default int length() {
+        return 1;
+    }
+
+    @Override
+    public default char charAt(int index) {
+        return '?';
+    }
+
+    @Override
+    public default CharSequence subSequence(int start, int end) {
+        return "?".substring(start, end);
+    }
+
     /** Write a custom content of the table cell
      *
-     * @param <T>
      * @param parent An element of the table detail.
      * @param value Value to write.
      */

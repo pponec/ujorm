@@ -55,11 +55,11 @@ public interface HttpParameter extends CharSequence {
         return toString().subSequence(start, end);
     }
 
-    default String value(@Nonnull final ServletRequest request) {
-        return value(request, null);
+    default String of(@Nonnull final ServletRequest request) {
+        return of(request, null);
     }
 
-    default String value(@Nonnull final ServletRequest request, @Nonnull final String defaultValue) {
+    default String of(@Nonnull final ServletRequest request, @Nonnull final String defaultValue) {
         final String result = request.getParameter(toString());
         return result != null ? result : defaultValue;
     }
