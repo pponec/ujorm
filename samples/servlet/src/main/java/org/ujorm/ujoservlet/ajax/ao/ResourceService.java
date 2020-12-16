@@ -81,6 +81,7 @@ public class ResourceService {
                         hotel.setStars(Float.parseFloat(c[5]));
                         hotel.setHomePage(c[6]);
                         hotel.setPrice(new BigDecimal(c[7]));
+                        hotel.setCurrency("USD");
                         hotel.setActive(Boolean.parseBoolean(c[8]));
                     }
                     return hotel;
