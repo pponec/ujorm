@@ -25,9 +25,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
+import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.JsonWriter;
-import org.ujorm.tools.web.ao.Renderer;
+import org.ujorm.tools.web.ao.Title;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
@@ -90,18 +91,18 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                 try (Element form =  body.addForm()
                         .setId(FORM_ID)
                         .setMethod(Html.V_POST).setAction("?")) {
-                    form.addInput(CSS_CONTROL)
+                    form.addInput(CSS_CONTROL, NAME)
                             .setName(NAME)
                             .setValue(NAME.of(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Name of hotel");
-                    form.addInput(CSS_CONTROL)
+                    form.addInput(CSS_CONTROL, STREET)
                             .setName(STREET)
                             .setValue(STREET.of(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Street");
                 }
 
                 CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
-                Object[] tableTitle = {"Name", "City ID", "Street", "Price", "Currency", "Stars", "Phone", "HomePage"};
+                CharSequence[] tableTitle = {"Name", "City ID", "Street", "Price", "Currency", "Stars", "Phone", (Title) e -> e.addText("HomePage")};
                 try (Stream<Hotel> hotels = service.loadHotelStream()) {
                     body.addDiv(CSS_OUTPUT)
                          .addTable(hotels, tableCss, tableTitle
@@ -112,7 +113,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                             , Hotel::getCurrency
                             , Hotel::getStars
                             , Hotel::getPhone
-                            , (Renderer<Hotel>)(e, v) -> e.addLinkedText(v.getHomePage(), "link")
+                            , (Column<Hotel>)(e, v) -> e.addLinkedText(v.getHomePage(), "link")
                     );
                 }
 
@@ -149,7 +150,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
             StringBuilder out = new StringBuilder(256);
             try (HtmlElement html = HtmlElement.of(HtmlConfig.ofElementName("div"), out)) {
                     CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
-                    Object[] tableTitle = {"Name", "City ID", "Street", "Price", "Currency", "Stars", "Phone", "HomePage"};
+                    Object[] tableTitle = {"Name", "City ID", "Street", "Price", "Currency", "Stars", "Phone", (Title) e -> e.addText("HomePage")};
                     html.addElement(CSS_OUTPUT)
                          .addTable(hotels, tableCss, tableTitle
                             , Hotel::getName
@@ -159,7 +160,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                             , Hotel::getCurrency
                             , Hotel::getStars
                             , Hotel::getPhone
-                            , (Renderer<Hotel>)(e, v) -> e.addLinkedText(v.getHomePage(), "link")
+                            , (Column<Hotel>)(e, v) -> e.addLinkedText(v.getHomePage(), "link")
                     );
             }
             // Write a selector with a value:
