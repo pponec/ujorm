@@ -100,23 +100,8 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                             .setValue(STREET.of(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Street");
                 }
-
+                printTable(body.addDiv(CSS_OUTPUT), input);
                 CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
-                CharSequence[] tableTitle = {"Name", "City ID", "Street", "Price", "Currency", "Stars", "Phone", (Title) e -> e.addText("HomePage")};
-                try (Stream<Hotel> hotels = service.loadHotelStream()) {
-                    body.addDiv(CSS_OUTPUT)
-                         .addTable(hotels, tableCss, tableTitle
-                            , Hotel::getName
-                            , Hotel::getCity
-                            , Hotel::getStreet
-                            , Hotel::getPrice
-                            , Hotel::getCurrency
-                            , Hotel::getStars
-                            , Hotel::getPhone
-                            , (Column<Hotel>)(e, v) -> e.addLinkedText(v.getHomePage(), "link")
-                    );
-                }
-
                 body.addElement(Html.HR);
 
                 // Data are from hotelsbase.org, see the original license.
@@ -130,6 +115,39 @@ public class HotelReportServlet extends AbstractAjaxServlet {
         }
     }
 
+    /** Print table */
+    private void printTable(Element root, HttpServletRequest input)
+            throws IllegalStateException, IOException {
+        String name = NAME.of(input, "").toUpperCase();
+        String street = STREET.of(input, "").toUpperCase();
+        CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
+        Object[] tableTitle =
+                { "Name"
+                , "City ID"
+                , "Street"
+                , "Price"
+                , "Currency"
+                , "Stars"
+                , "Phone"
+                , (Title) e -> e.addText("HomePage")};
+
+        try (Stream<Hotel> hotels = service.loadHotelStream()
+                    .filter(t -> name.isEmpty() || t.getName().toUpperCase().contains(name))
+                    .filter(t -> street.isEmpty() || t.getStreet().toUpperCase().contains(street))
+                    .limit(10)) {
+            root.addTable(hotels, tableCss, tableTitle
+                    , Hotel::getName
+                    , Hotel::getCity
+                    , Hotel::getStreet
+                    , Hotel::getPrice
+                    , Hotel::getCurrency
+                    , Hotel::getStars
+                    , Hotel::getPhone
+                    , (Column<Hotel>)(e, v) -> e.addLinkedText(v.getHomePage(), "link")
+            );
+        }
+    }
+
     /**
      * Return lighlited text in HTML format according a regular expression
      * @param input servlet request
@@ -137,36 +155,17 @@ public class HotelReportServlet extends AbstractAjaxServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void doAjax(HttpServletRequest input, JsonWriter output) throws ServletException, IOException {
-
-        String name = NAME.of(input, "").toUpperCase();
-        String street = STREET.of(input, "").toUpperCase();
-
-        try (Stream<Hotel> hotels = service.loadHotelStream()
-                                .filter(t -> t.getName().toUpperCase().startsWith(name))
-                                .filter(t -> t.getStreet().toUpperCase().startsWith(street))
-                                .limit(10)) {
-
-            StringBuilder out = new StringBuilder(256);
-            try (HtmlElement html = HtmlElement.of(HtmlConfig.ofElementName("div"), out)) {
-                    CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
-                    Object[] tableTitle = {"Name", "City ID", "Street", "Price", "Currency", "Stars", "Phone", (Title) e -> e.addText("HomePage")};
-                    html.addElement(CSS_OUTPUT)
-                         .addTable(hotels, tableCss, tableTitle
-                            , Hotel::getName
-                            , Hotel::getCity
-                            , Hotel::getStreet
-                            , Hotel::getPrice
-                            , Hotel::getCurrency
-                            , Hotel::getStars
-                            , Hotel::getPhone
-                            , (Column<Hotel>)(e, v) -> e.addLinkedText(v.getHomePage(), "link")
-                    );
-            }
-            // Write a selector with a value:
-            output.writeClass(CSS_OUTPUT, out);
-            output.writeClass(CSS_SUBTITLE, "AJAX ready");
+    @Override
+    protected void doAjax(HttpServletRequest input, JsonWriter output)
+            throws ServletException, IOException {
+        final StringBuilder out = new StringBuilder(256);
+        try (HtmlElement html = HtmlElement.of(HtmlConfig.ofElementName("div"), out)) {
+            printTable(html.rootElement(), input);
         }
+
+        // Write a selector with a value:
+        output.writeClass(CSS_OUTPUT, out);
+        output.writeClass(CSS_SUBTITLE, "AJAX ready");
     }
 
     /** Create a configuration of HTML model */

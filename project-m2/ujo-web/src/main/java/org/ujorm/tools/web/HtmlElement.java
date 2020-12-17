@@ -259,6 +259,11 @@ public class HtmlElement implements ApiElement<Element>, Html {
         return result;
     }
 
+    /** Get an original root element */
+    public Element rootElement() {
+        return root;
+    }
+
     /** Returns an Render the HTML code including header. Call the close() method before view */
     @Override @Nonnull
     public String toString() throws IllegalStateException {

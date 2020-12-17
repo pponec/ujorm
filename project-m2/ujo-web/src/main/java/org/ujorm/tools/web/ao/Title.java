@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2020 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020 pavel.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,14 @@
  */
 package org.ujorm.tools.web.ao;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 import org.ujorm.tools.web.Element;
 
 /**
- *
+ * Table header renderer
  * @author Pavel Ponec
  */
-public interface Renderer<T> extends Function<T, Object>, CharSequence {
-
-    @Deprecated
-    @Override
-    public default Object apply(T t) {
-        return "?";
-    }
+public interface Title extends Consumer<Element>, CharSequence {
 
     @Override
     public default int length() {
@@ -42,14 +36,7 @@ public interface Renderer<T> extends Function<T, Object>, CharSequence {
 
     @Override
     public default CharSequence subSequence(int start, int end) {
-        return "?".substring(start, end);
+        return "?".subSequence(start, end);
     }
-
-    /** Write a custom content of the table cell
-     *
-     * @param parent An element of the table detail.
-     * @param value Value to write.
-     */
-    public void write(Element parent, T value);
 
 }

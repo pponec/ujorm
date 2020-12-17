@@ -36,7 +36,8 @@ import javax.annotation.Nullable;
 import javax.sql.rowset.spi.XmlWriter;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.web.ao.Renderer;
+import org.ujorm.tools.web.ao.Column;
+import org.ujorm.tools.web.ao.Title;
 import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.model.XmlModel;
@@ -311,16 +312,21 @@ public final class Element implements ApiElement<Element>, Html {
         if (Check.hasLength(headers)) {
             final Element rowElement = result.addElement(Html.TR);
             for (Object value : headers) {
-                rowElement.addElement(Html.TH).addText(value);
+                Element th = rowElement.addElement(Html.TH);
+                if (value instanceof Title) {
+                    ((Title)value).accept(th);
+                } else {
+                    th.addText(value);
+                }
             }
         }
-        final boolean hasRenderer = WebUtils.isType(Renderer.class, attributes);
+        final boolean hasRenderer = WebUtils.isType(Column.class, attributes);
         domains.forEach(value -> {
             final Element rowElement = result.addElement(Html.TR);
             for (Function<D, V> attribute : attributes) {
                 final Element td = rowElement.addElement(Html.TD);
-                if (hasRenderer && attribute instanceof Renderer) {
-                    ((Renderer)attribute).write(td, value);
+                if (hasRenderer && attribute instanceof Column) {
+                    ((Column)attribute).write(td, value);
                 } else {
                     td.addText(attribute.apply(value));
                 }
