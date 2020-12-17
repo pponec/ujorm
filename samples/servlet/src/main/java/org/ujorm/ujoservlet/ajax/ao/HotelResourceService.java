@@ -14,18 +14,20 @@ import org.ujorm.tools.web.ao.WebUtils;
  *
  * @author Pavel Ponec
  */
-public class ResourceService {
+public class HotelResourceService {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(ResourceService.class.toString());
+    private static final Logger LOGGER = Logger.getLogger(HotelResourceService.class.toString());
     private static final String HOTELS_CSV = "/csv/ResourceHotel.csv";
+
+    private final CityResourceService cityService = new CityResourceService();
 
     private List<Hotel> hotels = null;
 
     public Stream<Hotel> getHotels() throws IOException {
         if (hotels == null) {
             synchronized (this) {
-                try (Stream<Hotel> hotelSteam =  loadHotels(getClass().getResource(HOTELS_CSV))) {
+                try (Stream<Hotel> hotelSteam = loadHotelStream()) {
                     hotels = hotelSteam.collect(Collectors.toList());
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Hotel reading fails", e);
@@ -71,7 +73,7 @@ public class ResourceService {
                         hotel = new Hotel();
                         hotel.setName(c[0]);
                         hotel.setNote(c[1]);
-                        hotel.setCity(c[2]);
+                        hotel.setCity(cityService.getCity(c[2]).getName());
                         hotel.setStreet(c[3]);
                         hotel.setPhone(c[4]);
                         hotel.setStars(Float.parseFloat(c[5]));

@@ -16,6 +16,7 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.stream.Stream;
 import javax.servlet.ServletException;
@@ -32,7 +33,7 @@ import org.ujorm.tools.web.ao.Title;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
-import org.ujorm.ujoservlet.ajax.ao.ResourceService;
+import org.ujorm.ujoservlet.ajax.ao.HotelResourceService;
 import static org.ujorm.ujoservlet.ajax.HotelReportServlet.Attrib.*;
 
 /**
@@ -55,8 +56,8 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     /** Link to jQuery of CDN */
     private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
     /** Source of the class */
-    private static final String SOURCE_URL = "https://github.com/pponec/ujorm"
-            + "/blob/4c8a1789ea74220223a55f91269b802425df975d/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
+    private static final String SOURCE_URL = "https://github.com/pponec/ujorm/blob/"
+            + "ccaf9d0f9a17ff903798c8b7aed329bfd03a1326/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
     /** Form identifier */
     private static final String FORM_ID = "form";
     /** Bootstrap form control CSS class name */
@@ -65,8 +66,8 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     private static final String CSS_OUTPUT = "out";
     /** CSS class name for the output box */
     private static final String CSS_SUBTITLE = "subtitle";
-    /** A common service */
-    private final ResourceService service = new ResourceService();
+    /** A hotel service */
+    private final HotelResourceService service = new HotelResourceService();
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -123,7 +124,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
         CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
         Object[] tableTitle =
                 { "Name"
-                , "City ID"
+                , "City"
                 , "Street"
                 , "Price"
                 , "Currency"
@@ -134,6 +135,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
         try (Stream<Hotel> hotels = service.loadHotelStream()
                     .filter(t -> name.isEmpty() || t.getName().toUpperCase().contains(name))
                     .filter(t -> street.isEmpty() || t.getStreet().toUpperCase().contains(street))
+                    .sorted(Comparator.comparing(Hotel::getName))
                     .limit(10)) {
             root.addTable(hotels, tableCss, tableTitle
                     , Hotel::getName
@@ -178,7 +180,9 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     }
 
     private String getCss() {
-        return "#form input { width: 200px;}";
+        return "body { margin: 10px; }"
+                + "#form input { width: 200px;}"
+                + ".subtitle{ font-size: 10px; color: silver;}";
     }
 
     /** Servlet attributes */
