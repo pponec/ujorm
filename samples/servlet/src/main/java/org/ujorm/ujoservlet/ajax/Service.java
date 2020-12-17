@@ -37,7 +37,7 @@ public class Service {
                 , "h1, h2 { color: SteelBlue;}"
                 , "form   { width: 500px;}"
                 , ".subtitle{ font-size: 10px; color: silver;}"
-                , ".text  { height: 100px; margin: 3px 0;}"
+                , "textarea { height: 120px; margin: 3px 0;}"
                 , ".out   { min-height: 100px; margin-top: 10px;"
                 + " height: inherit; white-space: pre-wrap;}"
                 , ".out span { background-color: yellow;}"

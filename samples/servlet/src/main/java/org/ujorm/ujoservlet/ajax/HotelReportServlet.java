@@ -54,8 +54,8 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     /** Link to jQuery of CDN */
     private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
     /** Source of the class */
-    private static final String SOURCE_URL = "https://github.com/pponec/ujorm/"
-            + "blob/e1b4fde571761c4cdbfd8877a7fe4dd054256c03/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/RegexpServlet.java";
+    private static final String SOURCE_URL = "https://github.com/pponec/ujorm"
+            + "/blob/4c8a1789ea74220223a55f91269b802425df975d/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
     /** Form identifier */
     private static final String FORM_ID = "form";
     /** Bootstrap form control CSS class name */
@@ -90,11 +90,11 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                 try (Element form =  body.addForm()
                         .setId(FORM_ID)
                         .setMethod(Html.V_POST).setAction("?")) {
-                    form.addInput(CSS_CONTROL, NAME)
+                    form.addInput(CSS_CONTROL)
                             .setName(NAME)
                             .setValue(NAME.of(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Name of hotel");
-                    form.addInput(CSS_CONTROL, STREET)
+                    form.addInput(CSS_CONTROL)
                             .setName(STREET)
                             .setValue(STREET.of(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Street");
@@ -144,7 +144,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
         try (Stream<Hotel> hotels = service.loadHotelStream()
                                 .filter(t -> t.getName().toUpperCase().startsWith(name))
                                 .filter(t -> t.getStreet().toUpperCase().startsWith(street))
-                                .limit(15)) {
+                                .limit(10)) {
 
             StringBuilder out = new StringBuilder(256);
             try (HtmlElement html = HtmlElement.of(HtmlConfig.ofElementName("div"), out)) {

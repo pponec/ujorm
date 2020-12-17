@@ -83,11 +83,11 @@ public class RegexpServlet extends AbstractAjaxServlet {
                 try (Element form = body.addForm()
                         .setId(FORM_ID)
                         .setMethod(Html.V_POST).setAction("?")) {
-                    form.addInput(CSS_CONTROL, "regexp")
+                    form.addInput(CSS_CONTROL)
                             .setName(REGEXP)
                             .setValue(REGEXP.of(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
-                    form.addTextArea(CSS_CONTROL, "text")
+                    form.addTextArea(CSS_CONTROL)
                             .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
                             .setName(TEXT)
                             .addText(TEXT.of(input));
