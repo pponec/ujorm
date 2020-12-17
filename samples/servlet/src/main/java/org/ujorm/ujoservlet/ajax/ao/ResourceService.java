@@ -1,18 +1,14 @@
 package org.ujorm.ujoservlet.ajax.ao;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
+import org.ujorm.tools.web.ao.WebUtils;
 
 /**
  *
@@ -65,7 +61,7 @@ public class ResourceService {
     protected Stream<Hotel> loadHotels(URL url) throws IOException {
 
         //read file into stream, try-with-resources
-        return getUrlResourceLines(url)
+        return WebUtils.rowsOfUrl(url)
                 .filter(t -> !t.startsWith("* "))
                 .filter(t -> !t.startsWith("NAME;"))
                 .map(t -> {
@@ -87,11 +83,6 @@ public class ResourceService {
                     return hotel;
                 })
                 .filter(t -> t != null);
-    }
-
-    public Stream<String> getUrlResourceLines(@Nonnull final URL url) throws IOException {
-        final InputStream is = url.openConnection().getInputStream();
-        return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8)).lines();
     }
 
 }
