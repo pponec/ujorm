@@ -87,7 +87,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
             html.addJavascriptLink(false, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody("", getCss());
-            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, "#" + FORM_ID, NAME, STREET);
+            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, "#" + FORM_ID, NAME, CITY);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 body.addDiv(CSS_SUBTITLE).addText("");
@@ -98,10 +98,10 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                             .setName(NAME)
                             .setValue(NAME.of(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Name of hotel");
-                    form.addInput(CSS_CONTROL, STREET)
-                            .setName(STREET)
-                            .setValue(STREET.of(input))
-                            .setAttribute(Html.A_PLACEHOLDER, "Street");
+                    form.addInput(CSS_CONTROL, CITY)
+                            .setName(CITY)
+                            .setValue(CITY.of(input))
+                            .setAttribute(Html.A_PLACEHOLDER, "Name of city");
                 }
                 printTable(body.addDiv(CSS_OUTPUT), input);
                 CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
@@ -122,7 +122,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     private void printTable(Element root, HttpServletRequest input)
             throws IllegalStateException, IOException {
         String name = NAME.of(input, "").toUpperCase();
-        String street = STREET.of(input, "").toUpperCase();
+        String city = CITY.of(input, "").toUpperCase();
         CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
         Object[] tableTitle =
                 { "Name"
@@ -136,7 +136,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
 
         try (Stream<Hotel> hotels = service.loadHotelStream()
                     .filter(t -> name.isEmpty() || t.getName().toUpperCase().contains(name))
-                    .filter(t -> street.isEmpty() || t.getStreet().toUpperCase().contains(street))
+                    .filter(t -> city.isEmpty() || t.getCity().toUpperCase().contains(city))
                     .sorted(Comparator.comparing(Hotel::getName))
                     .limit(10)) {
             root.addTable(hotels, tableCss, tableTitle
@@ -191,7 +191,6 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     enum Attrib implements HttpParameter {
         NAME,
         CITY,
-        STREET,
         _AJAX {@Override public String toString() {
             return AbstractAjaxServlet.DEFAULT_AJAX_REQUEST_PARAM;
         }};
