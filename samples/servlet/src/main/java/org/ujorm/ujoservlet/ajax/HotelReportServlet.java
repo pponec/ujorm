@@ -58,6 +58,8 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     /** Source of the class */
     private static final String SOURCE_URL = "https://github.com/pponec/ujorm/blob/"
             + "ccaf9d0f9a17ff903798c8b7aed329bfd03a1326/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
+    /** Help image */
+    private static final String HELP_IMG = "images/help.png";
     /** Form identifier */
     private static final String FORM_ID = "form";
     /** Bootstrap form control CSS class name */
@@ -130,7 +132,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                 , "Currency"
                 , "Stars"
                 , "Phone"
-                , (Title) e -> e.addText("HomePage")};
+                , (Title) e -> e.addText("HomePage", " ").addImage(HELP_IMG, "Help")};
 
         try (Stream<Hotel> hotels = service.loadHotelStream()
                     .filter(t -> name.isEmpty() || t.getName().toUpperCase().contains(name))
