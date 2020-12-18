@@ -47,19 +47,6 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     public static final String URL_PATTERN = "/TableHotelServlet";
     /** Enable AJAX feature */
     private static final boolean AJAX_ENABLED = true;
-    /** Data license */
-    private static final String HOTELBASE_URL = "http://hotelbase.org/";
-    /** Data license */
-    private static final String DATA_LICENSE_URL = "https://web.archive.org/web/20150407085757/http://api.hotelsbase.org/documentation.php";
-    /** Link to a Bootstrap URL of CDN */
-    private static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
-    /** Link to jQuery of CDN */
-    private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
-    /** Source of the class */
-    private static final String SOURCE_URL = "https://github.com/pponec/ujorm/blob/"
-            + "ccaf9d0f9a17ff903798c8b7aed329bfd03a1326/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
-    /** Help image */
-    private static final String HELP_IMG = "images/help.png";
     /** Form identifier */
     private static final String FORM_ID = "form";
     /** Bootstrap form control CSS class name */
@@ -84,8 +71,8 @@ public class HotelReportServlet extends AbstractAjaxServlet {
             final HttpServletResponse output,
             final boolean post) throws ServletException, IOException {
         try (HtmlElement html = HtmlElement.of(input, output, getConfig("Hotel report"))) {
-            html.addJavascriptLink(false, JQUERY_JS);
-            html.addCssLink(BOOTSTRAP_CSS);
+            html.addJavascriptLink(false, Url.JQUERY_JS);
+            html.addCssLink(Url.BOOTSTRAP_CSS);
             html.addCssBody("", getCss());
             writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, "#" + FORM_ID, NAME, CITY);
             try (Element body = html.getBody()) {
@@ -109,11 +96,11 @@ public class HotelReportServlet extends AbstractAjaxServlet {
 
                 // Data are from hotelsbase.org, see the original license.
                 body.addText("Data are from", " ")
-                    .addLinkedText(HOTELBASE_URL, "hotelsbase.org");
+                    .addLinkedText(Url.HOTELBASE, "hotelsbase.org");
                 body.addText(", ", "see an original", " ")
-                    .addLinkedText(DATA_LICENSE_URL, "license");
+                    .addLinkedText(Url.DATA_LICENSE, "license");
                 body.addBreak();
-                body.addAnchor(SOURCE_URL).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
+                body.addAnchor(Url.SOURCE_REPO).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
             }
         }
     }
@@ -132,7 +119,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                 , "Currency"
                 , "Stars"
                 , "Phone"
-                , (Title) e -> e.addText("HomePage", " ").addImage(HELP_IMG, "Help")};
+                , (Title) e -> e.addText("HomePage", " ").addImage(Url.HELP_IMG, "Help")};
 
         try (Stream<Hotel> hotels = service.loadHotelStream()
                     .filter(t -> name.isEmpty() || t.getName().toUpperCase().contains(name))
@@ -187,7 +174,28 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                 + ".subtitle{ font-size: 10px; color: silver;}";
     }
 
-    /** Servlet attributes */
+    /** URL constants */
+    static class Url {
+
+        /** Data license */
+        static final String HOTELBASE = "http://hotelbase.org/";
+        /** Data license */
+        static final String DATA_LICENSE = "https://web.archive.org/web/20150407085757/"
+                + "http://api.hotelsbase.org/documentation.php";
+        /** Link to a Bootstrap URL of CDN */
+        static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
+        /** Link to jQuery of CDN */
+        static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
+        /** Help image */
+        static final String HELP_IMG = "images/help.png";
+        /** Source of the class */
+        static final String SOURCE_REPO = "https://github.com/pponec/ujorm/blob/"
+                + "ccaf9d0f9a17ff903798c8b7aed329bfd03a1326"
+                + "/samples/servlet/src/main/java"
+                + "/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
+    }
+
+    /** HTTP attributes */
     enum Attrib implements HttpParameter {
         NAME,
         CITY,
