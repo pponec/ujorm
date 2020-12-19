@@ -35,16 +35,27 @@ public class JsonBuilder implements Closeable {
 
     private static final char DOUBLE_QUOTE = JsonWriter.DOUBLE_QUOTE;
 
+    /** An original writer */
     @Nonnull
     private final Appendable writer;
+    /** JSON writer with character escaping */
     @Nonnull
     private final JsonWriter jsonWriter;
-
+    /** HTML config */
+    private final HtmlConfig config;
+    /** Parameter counter */
     private int paramCounter = 0;
 
+    /** Constructor with a default HTML config */
     protected JsonBuilder(@Nonnull final Appendable writer) {
+        this(writer, HtmlConfig.ofEmptyElement());
+    }
+
+    /** Common constructor */
+    protected JsonBuilder(@Nonnull final Appendable writer, HtmlConfig config) {
         this.writer = writer;
         this.jsonWriter = new JsonWriter(writer);
+        this.config = config;
     }
 
     /** Write the value for a CSS ID selector
@@ -122,7 +133,7 @@ public class JsonBuilder implements Closeable {
      */
     public void writeId(
             @Nonnull final CharSequence elementId,
-            @Nullable final ValueProvider valueProvider) throws IOException {
+            @Nonnull final ValueProvider valueProvider) throws IOException {
         write(SelectorType.ID.prefix, elementId, valueProvider);
     }
 
@@ -135,7 +146,7 @@ public class JsonBuilder implements Closeable {
      */
     public void writeClass(
             @Nonnull final CharSequence elementId,
-            @Nullable final ValueProvider valueProvider) throws IOException {
+            @Nonnull final ValueProvider valueProvider) throws IOException {
         write(SelectorType.CLASS.prefix, elementId, valueProvider);
     }
 
@@ -147,7 +158,7 @@ public class JsonBuilder implements Closeable {
      */
     public void write(
             @Nonnull final CharSequence key,
-            @Nullable final ValueProvider valueProvider) throws IOException {
+            @Nonnull final ValueProvider valueProvider) throws IOException {
         write(SelectorType.INCLUDED.prefix, key, valueProvider);
     }
 
@@ -161,7 +172,7 @@ public class JsonBuilder implements Closeable {
     public void write(
             @Nonnull final String keyPrefix,
             @Nonnull final CharSequence key,
-            @Nullable final ValueProvider valueProvider)
+            @Nonnull final ValueProvider valueProvider)
             throws IOException {
 
         writer.append(paramCounter++ == 0 ? '{' : ',');
@@ -171,7 +182,7 @@ public class JsonBuilder implements Closeable {
         writer.append(DOUBLE_QUOTE);
         writer.append(':');
         writer.append(DOUBLE_QUOTE);
-        try (HtmlElement root = HtmlElement.of(HtmlConfig.ofEmptyElement(), jsonWriter)) {
+        try (HtmlElement root = HtmlElement.of(config, jsonWriter)) {
             valueProvider.accept(root.original());
         }
         writer.append(DOUBLE_QUOTE);
@@ -186,11 +197,13 @@ public class JsonBuilder implements Closeable {
     }
 
     /** An object factory */
+    @Nonnull
     public static final JsonBuilder of(@Nonnull final Appendable writer) {
         return new JsonBuilder(writer);
     }
 
     /** An object factory */
+    @Nonnull
     public static final JsonBuilder of(
             @Nonnull final HttpServletRequest request,
             @Nonnull final HttpServletResponse response) throws IllegalStateException, IOException {
@@ -198,6 +211,7 @@ public class JsonBuilder implements Closeable {
     }
 
     /** An object factory */
+    @Nonnull
     public static final JsonBuilder of(
             @Nonnull final HttpServletRequest request,
             @Nonnull final HttpServletResponse response,
@@ -213,7 +227,6 @@ public class JsonBuilder implements Closeable {
         response.setCharacterEncoding(charset.toString());
         return of(response.getWriter());
     }
-
 
     /** CSS selector types */
     public enum SelectorType {
