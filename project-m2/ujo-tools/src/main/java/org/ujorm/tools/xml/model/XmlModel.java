@@ -66,7 +66,7 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 public class XmlModel implements ApiElement<XmlModel>, Serializable {
 
     /** Element name */
-    @Nonnull
+    @Nullable
     protected final CharSequence name;
 
     /** Attributes */
@@ -91,6 +91,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
         parent.addChild(this);
     }
 
+    @Nullable
     @Override
     public CharSequence getName() {
         return name;

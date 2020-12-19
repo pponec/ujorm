@@ -106,12 +106,13 @@ public class XmlWriter extends AbstractWriter {
             boolean writeNewLine = validName;
             for (Object child : children) {
                 if (child instanceof XmlModel) {
-                    if (writeNewLine) {
+                    final XmlModel xmlChild = (XmlModel) child;
+                    if (writeNewLine && xmlChild.name != null) {
                         writeNewLine(level);
                     } else {
                         writeNewLine = validName;
                     }
-                    write(level + 1, (XmlModel) child);
+                    write(level + 1, xmlChild);
                 } else if (child instanceof XmlModel.RawEnvelope) {
                     writeRawValue(((XmlModel.RawEnvelope) child).get().toString(), element);
                     writeNewLine = false;

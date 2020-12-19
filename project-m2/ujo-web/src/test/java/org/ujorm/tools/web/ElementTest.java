@@ -95,8 +95,37 @@ public class ElementTest {
     @Test
     public void testAddElementIf() {
         System.out.println("addElementIf");
-        CharSequence[] cssClasses = null;
-        HtmlElement resInstance = HtmlElement.of(null);
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setDocumentObjectModel(false);
+        config.setHtmlHeader(true);
+
+        HtmlElement resInstance = HtmlElement.of(config);
+        try (HtmlElement instance = resInstance) {
+            instance.getBody()
+                    .addElementIf(false, Html.DIV)
+                    .addText("text");
+        }
+        String result = resInstance.toString();
+        String expectedResult = String.join("\n",
+                "<!DOCTYPE html>",
+                "<html lang=\"en\">",
+                "<head>",
+                "<meta charset=\"UTF-8\"/>",
+                "<title>Demo</title></head>",
+                "<body>text</body></html>");
+        assertEquals(expectedResult, result);
+    }
+    /**
+     * Test of addSelect method, of class Element.
+     */
+    @Test
+    public void testAddElementIf_dom() {
+        System.out.println("addElementIf");
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setDocumentObjectModel(true);
+        config.setHtmlHeader(true);
+
+        HtmlElement resInstance = HtmlElement.of(config);
         try (HtmlElement instance = resInstance) {
             instance.getBody()
                     .addElementIf(false, Html.DIV)
