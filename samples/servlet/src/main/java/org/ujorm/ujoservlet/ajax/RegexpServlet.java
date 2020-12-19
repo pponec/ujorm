@@ -76,7 +76,10 @@ public class RegexpServlet extends AbstractAjaxServlet {
             html.addJavascriptLink(false, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBody(newLine, service.getCss());
-            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, "#" + FORM_ID, REGEXP, TEXT);
+            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true,
+                    "#" + FORM_ID,
+                    "#" + REGEXP,
+                    "#" + TEXT);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 body.addDiv(CSS_SUBTITLE).addText("");
@@ -84,12 +87,14 @@ public class RegexpServlet extends AbstractAjaxServlet {
                         .setId(FORM_ID)
                         .setMethod(Html.V_POST).setAction("?")) {
                     form.addInput(CSS_CONTROL)
+                            .setId(REGEXP)
                             .setName(REGEXP)
                             .setValue(REGEXP.of(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
                     form.addTextArea(CSS_CONTROL)
-                            .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
+                            .setId(TEXT)
                             .setName(TEXT)
+                            .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
                             .addText(TEXT.of(input));
                     form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
                     Message result = highlight(input);

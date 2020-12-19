@@ -142,7 +142,7 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
         element.addRawTexts(newLine, newLine, "<script>", "$(document).ready(function(){");
         if (Check.hasLength(inputCssSelectors)) {
                     final String inpSelectors = Stream.of(inputCssSelectors)
-                .map(t -> "." + t)
+              //.map(t -> "." + t)
                 .collect(Collectors.joining(", "));
 
             element.addRawTexts(newLine, newLine
