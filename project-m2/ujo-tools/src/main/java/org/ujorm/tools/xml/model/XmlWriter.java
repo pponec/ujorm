@@ -68,7 +68,7 @@ public class XmlWriter extends AbstractWriter {
 
     /** Render the XML code without header
      * @param level Element nesting level.
-     * @param name Name of element
+     * @param name Name of element where the {@code null} is allowed for an AJAX responses
      * @param attributes Attributes of the element
      * @param children Childern of the element including {@code null} items
      * @param element Original element
@@ -76,34 +76,40 @@ public class XmlWriter extends AbstractWriter {
      */
     @Nonnull
     protected XmlWriter write(final int level
-            , @Nonnull final CharSequence name
+            , @Nullable final CharSequence name
             , @Nullable final Map<String, Object> attributes
             , @Nullable final List<Object> children
             , @Nonnull final XmlModel element) throws IOException {
-        out.append(XML_LT);
-        out.append(name);
 
-        if (Check.hasLength(attributes)) {
-            assert attributes != null; // For static analyzer only
-            for (String key : attributes.keySet()) {
-                out.append(CHAR_SPACE);
-                out.append(key);
-                out.append('=');
-                out.append(XML_2QUOT);
-                writeValue(attributes.get(key), element, key);
-                out.append(XML_2QUOT);
+        final boolean validName = name != null;
+        if (validName) {
+            out.append(XML_LT);
+            out.append(name);
+
+            if (Check.hasLength(attributes)) {
+                assert attributes != null; // For static analyzer only
+                for (String key : attributes.keySet()) {
+                    out.append(CHAR_SPACE);
+                    out.append(key);
+                    out.append('=');
+                    out.append(XML_2QUOT);
+                    writeValue(attributes.get(key), element, key);
+                    out.append(XML_2QUOT);
+                }
             }
         }
         if (Check.hasLength(children)) {
             assert children != null; // For static analyzer only
-            out.append(XML_GT);
-            boolean writeNewLine = true;
+            if (validName) {
+                out.append(XML_GT);
+            }
+            boolean writeNewLine = validName;
             for (Object child : children) {
                 if (child instanceof XmlModel) {
                     if (writeNewLine) {
                         writeNewLine(level);
                     } else {
-                        writeNewLine = true;
+                        writeNewLine = validName;
                     }
                     write(level + 1, (XmlModel) child);
                 } else if (child instanceof XmlModel.RawEnvelope) {
@@ -117,13 +123,17 @@ public class XmlWriter extends AbstractWriter {
             if (indentationEnabled && writeNewLine && level >= 0) {
                 writeNewLine(level - 1);
             }
-            out.append(XML_LT);
-            out.append(FORWARD_SLASH);
-            out.append(name);
-        } else {
+            if (validName) {
+                out.append(XML_LT);
+                out.append(FORWARD_SLASH);
+                out.append(name);
+            }
+        } else if (validName) {
             out.append(FORWARD_SLASH);
         }
-        out.append(XML_GT);
+        if (validName) {
+            out.append(XML_GT);
+        }
         return this;
     }
 }

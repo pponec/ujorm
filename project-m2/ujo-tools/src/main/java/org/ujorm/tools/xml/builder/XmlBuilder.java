@@ -66,7 +66,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
 
     /** Element name */
     @Nullable
-    protected final CharSequence name;
+    protected final CharSequence elementName;
 
     /** Node writer */
     @Nonnull
@@ -101,14 +101,14 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
 
 
     /** The new element constructor
-     * @param name The element name must not be special HTML characters.
+     * @param elementName The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      * @param writer A XmlPrinter
      * @param level Level of the Element
      * @param printName Print the element name immediately.
      */
-    protected XmlBuilder(@Nullable final CharSequence name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
-        this.name = name;
+    protected XmlBuilder(@Nullable final CharSequence elementName, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
+        this.elementName = elementName;
         this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
         this.level = level;
 
@@ -127,7 +127,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     @Nullable
     @Override
     public CharSequence getName() {
-        return name;
+        return elementName;
     }
 
     /**
@@ -136,7 +136,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      */
     @Nonnull
     protected XmlBuilder nextChild(@Nullable final XmlBuilder element) {
-        Assert.isFalse(closed, "The node {} was closed", this.name);
+        Assert.isFalse(closed, "The node {} was closed", this.elementName);
         if (!filled) try {
             writer.writeMid(this);
         } catch (IOException e) {
@@ -179,13 +179,15 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      */
     @Override @Nonnull
     public final XmlBuilder setAttribute(@Nullable final String name, @Nullable final Object value) {
-        Assert.hasLength(name, REQUIRED_MSG, "name");
-        Assert.isFalse(closed, "The node {} was closed", this.name);
-        Assert.isTrue(attributeMode, "Writing attributes to the {} node was closed", this.name);
-        if (value != null) try {
-            writer.writeAttrib(name, value, this);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+        if (elementName != null) {
+            Assert.hasLength(name, REQUIRED_MSG, "name");
+            Assert.isFalse(closed, "The node {} was closed", elementName);
+            Assert.isTrue(attributeMode, "Writing attributes to the {} node was closed", elementName);
+            if (value != null) try {
+                writer.writeAttrib(name, value, this);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
         }
         return this;
     }

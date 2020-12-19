@@ -75,12 +75,14 @@ public class XmlPrinter extends AbstractWriter {
     }
 
     void writeAttrib(@Nonnull String name, Object data, XmlBuilder owner) throws IOException {
-        out.append(CHAR_SPACE);
-        out.append(name);
-        out.append('=');
-        out.append(XML_2QUOT);
-        writeValue(data, owner, name);
-        out.append(XML_2QUOT);
+        if (owner.getName() != null) {
+            out.append(CHAR_SPACE);
+            out.append(name);
+            out.append('=');
+            out.append(XML_2QUOT);
+            writeValue(data, owner, name);
+            out.append(XML_2QUOT);
+        }
     }
 
     void writeRawText(Object rawText) throws IOException {

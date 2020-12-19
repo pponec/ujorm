@@ -66,11 +66,26 @@ public interface HtmlConfig extends XmlConfig {
 
     /**
      * No HTML header is generated, no Doctype and no new lines
+     *
+     * @param rootElementName Element name cannot contain special HTML characters. An undefined value ignores the creation of the root element.
+     * @return
      */
     @Nonnull
-    public static DefaultHtmlConfig ofElementName(@Nonnull String rootElementName) {
+    public static DefaultHtmlConfig ofElementName(@Nullable String rootElementName) {
+        return ofElement(rootElementName, true);
+    }
+
+    /**
+     * No HTML header is generated, no Doctype and no new lines
+     *
+     * @param rootElementName Element name cannot contain special HTML characters.
+     * @param enabled Disabled root element ignores the creation of the root element.
+     * @return
+     */
+    @Nonnull
+    public static DefaultHtmlConfig ofElement(@Nullable String rootElementName, boolean enabled) {
         final DefaultHtmlConfig result = ofDefault();
-        result.setRootElementName(rootElementName);
+        result.setRootElementName(enabled ? rootElementName : null);
         result.setHtmlHeader(false);
         result.setDoctype("");
         return result;
