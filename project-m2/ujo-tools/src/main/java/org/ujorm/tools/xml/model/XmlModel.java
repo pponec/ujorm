@@ -67,7 +67,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
 
     /** Element name */
     @Nonnull
-    protected final String name;
+    protected final CharSequence name;
 
     /** Attributes */
     @Nullable
@@ -82,7 +82,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      * The {@code null} value is intended to build a root of AJAX queries.
      */
     public XmlModel(@Nonnull final CharSequence name) {
-        this.name = name != null ? name.toString() : null;
+        this.name = name;
     }
 
     /** New element with a parent */
@@ -92,7 +92,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     }
 
     @Override
-    public String getName() {
+    public CharSequence getName() {
         return name;
     }
 

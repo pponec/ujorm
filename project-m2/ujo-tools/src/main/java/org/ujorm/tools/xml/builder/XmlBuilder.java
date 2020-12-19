@@ -66,7 +66,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
 
     /** Element name */
     @Nullable
-    protected final String name;
+    protected final CharSequence name;
 
     /** Node writer */
     @Nonnull
@@ -108,7 +108,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param printName Print the element name immediately.
      */
     protected XmlBuilder(@Nullable final CharSequence name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
-        this.name = name != null ? name.toString() : null;
+        this.name = name;
         this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
         this.level = level;
 
@@ -126,7 +126,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
 
     @Nullable
     @Override
-    public String getName() {
+    public CharSequence getName() {
         return name;
     }
 

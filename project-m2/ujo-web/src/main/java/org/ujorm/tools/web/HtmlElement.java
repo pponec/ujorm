@@ -85,7 +85,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     }
 
     @Override
-    public String getName() {
+    public CharSequence getName() {
         return root.getName();
     }
 

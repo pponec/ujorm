@@ -35,7 +35,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
 
     /** Get an element name */
     @Nonnull
-    String getName();
+    CharSequence getName();
 
     /** Create a new {@link XmlElement} for a required name and add it to children.
      * @param name A name of the new XmlElement is required.
@@ -88,7 +88,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      * @return This instance */
     @Nonnull
     E addRawText(@Nullable Object value);
-    
+
     /**
      * Add a <strong>comment text</strong>.
      * The CDATA structure isn't really for HTML at all.

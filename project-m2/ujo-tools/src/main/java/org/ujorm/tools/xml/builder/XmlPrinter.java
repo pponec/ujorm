@@ -89,7 +89,7 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Open the Node */
     void writeBeg(XmlBuilder element, final boolean lastText) throws IOException {
-        final String elementName = element.getName();
+        final CharSequence elementName = element.getName();
         if (elementName != null) {
             if (!lastText) {
                 writeNewLine(element.getLevel());
@@ -108,7 +108,7 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Close the Node */
     void writeEnd(XmlBuilder element) throws IOException {
-        final String elementName = element.getName();
+        final CharSequence elementName = element.getName();
         if (elementName != null) {
             if (element.isFilled()) {
                 if (indentationEnabled && !element.isLastText()) {

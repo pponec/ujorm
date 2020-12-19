@@ -42,7 +42,7 @@ public abstract class AbstractElement<E extends AbstractElement<?>> implements A
     }
 
     @Override
-    public String getName() {
+    public CharSequence getName() {
         return name;
     }
 
