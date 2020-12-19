@@ -259,7 +259,9 @@ public final class Element implements ApiElement<Element>, Html {
      * @return New instance of the Element
      */
     @Nonnull
-    public final Element addElementIf(@Nonnull final String name, boolean enabled, @Nonnull final CharSequence... cssClasses) {
+    public final Element addElementIf(final boolean enabled,
+            @Nonnull final String name,
+            @Nonnull final CharSequence... cssClasses) {
         return addElement(enabled ? name : null).setClass(cssClasses);
     }
 
