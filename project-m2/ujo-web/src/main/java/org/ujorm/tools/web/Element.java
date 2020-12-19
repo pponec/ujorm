@@ -236,7 +236,7 @@ public final class Element implements ApiElement<Element>, Html {
      * @throws IllegalStateException An envelope for IO exceptions
      */
     @Override @Nonnull
-    public Element addElement(@Nonnull final String name) throws IllegalStateException {
+    public Element addElement(@Nullable final String name) throws IllegalStateException {
             return new Element(internalElement.addElement(name));
     }
 
@@ -249,6 +249,18 @@ public final class Element implements ApiElement<Element>, Html {
     @Nonnull
     public final Element addElement(@Nonnull final String name, @Nonnull final CharSequence... cssClasses) {
         return addElement(name).setClass(cssClasses);
+    }
+
+    /**
+     * Add an element according to a condition.
+     * @param enabled A condition for rendering the element.
+     * @param name An element name
+     * @param cssClasses CSS classes
+     * @return New instance of the Element
+     */
+    @Nonnull
+    public final Element addElementIf(@Nonnull final String name, boolean enabled, @Nonnull final CharSequence... cssClasses) {
+        return addElement(enabled ? name : null).setClass(cssClasses);
     }
 
     /** Add new Table */
