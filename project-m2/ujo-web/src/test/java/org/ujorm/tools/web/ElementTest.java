@@ -17,7 +17,6 @@
 
 package org.ujorm.tools.web;
 
-import java.io.CharArrayWriter;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -66,7 +65,7 @@ public class ElementTest {
 
         // --- DOM model ---
 
-        config.setDom(true);
+        config.setDocumentObjectModel(true);
         HtmlElement domInstance = createHtmlPage(config);
         result = domInstance.toString();
         assertEquals(expectedResult, result);

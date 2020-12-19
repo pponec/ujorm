@@ -99,7 +99,6 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
         this(name, writer, level, true);
     }
 
-
     /** The new element constructor
      * @param elementName The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
@@ -109,6 +108,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      */
     protected XmlBuilder(@Nullable final CharSequence elementName, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
         this.elementName = elementName;
+        this.lastText = elementName == null;
         this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
         this.level = level;
 
@@ -154,7 +154,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
         filled = true;
         attributeMode = false;
         lastChild = element;
-        lastText = element == null;
+        lastText = element == null || element.getName() == null;
 
         return element;
     }

@@ -110,12 +110,12 @@ public class RegexpServlet extends AbstractAjaxServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void doAjax(HttpServletRequest input, JsonWriter output) throws ServletException, IOException {
-            Message msg = highlight(input);
-            CharSequence[] result = {
-                msg.isError() ? "<span class='error'>" : "",
-                msg.getText(),
-                msg.isError() ? "</span>" : "",
-            };
+            final Message msg = highlight(input);
+            final StringBuilder result = new StringBuilder();
+            try (HtmlElement root = HtmlElement.of(HtmlConfig.ofElement(Html.SPAN, msg.isError()), result)) {
+                root.original().setClass("error");
+                root.original().addRawText(msg.getText());
+            }
             // Write a selector with a value:
             output.writeClass(CSS_OUTPUT, result);
             output.writeClass(CSS_SUBTITLE, "AJAX ready");

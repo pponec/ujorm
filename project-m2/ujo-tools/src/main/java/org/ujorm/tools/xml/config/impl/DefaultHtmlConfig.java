@@ -130,8 +130,16 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         this.contentType = Assert.notNull(contentType, REQUIRED_MSG, "contentType");
     }
 
+    /** Build a real model or a plain writer, the default value is {@code false}.
+     * @deprecated Use the method {@link #setDocumentObjectModel(boolean) }.
+     */
+    @Deprecated
+    public void setDom(final boolean buildDom) {
+        setDocumentObjectModel(buildDom);
+    }
+
     /** Build a real model or a plain writer, the default value is {@code false} */
-    public void setDocumentObjectModel(boolean buildDom) {
+    public void setDocumentObjectModel(final boolean buildDom) {
         this.buildDom = buildDom;
     }
 

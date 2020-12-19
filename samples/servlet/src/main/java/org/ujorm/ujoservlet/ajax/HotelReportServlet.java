@@ -92,7 +92,6 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                 }
                 printTable(body.addDiv(CSS_OUTPUT), input);
                 CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
-                body.addElement(Html.HR);
 
                 // Data are from hotelsbase.org, see the original license.
                 body.addText("Data are from", " ")
@@ -151,7 +150,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
             throws ServletException, IOException {
         final StringBuilder out = new StringBuilder(256);
         try (HtmlElement html = HtmlElement.of(HtmlConfig.ofElementName("div"), out)) {
-            printTable(html.rootElement(), input);
+            printTable(html.original(), input);
         }
 
         // Write a selector with a value:

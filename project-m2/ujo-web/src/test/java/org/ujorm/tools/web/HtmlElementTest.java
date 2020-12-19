@@ -72,26 +72,24 @@ public class HtmlElementTest {
         config.setRootElementName(null);
         config.setHtmlHeader(false);
         config.setDoctype("");
-        config.setNewLine("");
         config.setDocumentObjectModel(true);
 
         StringBuilder writer = new StringBuilder();
         try (HtmlElement html = HtmlElement.of(config, writer)) {
-            html.rootElement().addText("Hello!");
+            html.original().addText("Hello!");
         }
         assertEquals("Hello!", writer.toString());
 
         writer.setLength(0);
         try (HtmlElement html = HtmlElement.of(config, writer)) {
-            html.rootElement().addHeading("Hello!");
+            html.original().addHeading("Hello!");
         }
         assertEquals("<h1>Hello!</h1>", writer.toString());
 
-
         writer.setLength(0);
         try (HtmlElement html = HtmlElement.of(config, writer)) {
-            html.rootElement().setClass("error");
-            html.rootElement().addHeading("Hello!");
+            html.original().setClass("error");
+            html.original().addHeading("Hello!");
         }
         assertEquals("<h1>Hello!</h1>", writer.toString());
     }
@@ -104,25 +102,24 @@ public class HtmlElementTest {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setRootElementName(null);
         config.setHtmlHeader(false);
-        config.setNewLine("");
         config.setDoctype("");
 
         StringBuilder writer = new StringBuilder();
         try (HtmlElement html = HtmlElement.of(config, writer)) {
-            html.rootElement().addText("Hello!");
+            html.original().addText("Hello!");
         }
         assertEquals("Hello!", writer.toString());
 
         writer.setLength(0);
         try (HtmlElement html = HtmlElement.of(config, writer)) {
-            html.rootElement().addHeading("Hello!");
+            html.original().addHeading("Hello!");
         }
         assertEquals("<h1>Hello!</h1>", writer.toString());
 
         writer.setLength(0);
         try (HtmlElement html = HtmlElement.of(config, writer)) {
-            html.rootElement().setClass("error");
-            html.rootElement().addHeading("Hello!");
+            html.original().setClass("error");
+            html.original().addHeading("Hello!");
         }
         assertEquals("<h1>Hello!</h1>", writer.toString());
     }

@@ -38,13 +38,11 @@ public class DefaultXmlConfig implements XmlConfig {
     /** Default string or the new line */
     public static final String DEFAULT_NEW_LINE = "\n";
 
+    /** Default first level of intendation */
     public static final int DEFAULT_FIRST_LEVEL = Integer.MIN_VALUE + 1;
 
     /** Assertion message template */
     public static final String REQUIRED_MSG = "The argument {} is required";
-
-    /** Use a DOM model */
-    private boolean dom = false;
 
     /** A header declaration of the document or a doctype */
     @Nullable
@@ -199,15 +197,6 @@ public class DefaultXmlConfig implements XmlConfig {
     /** A replacement text instead of the {@code null} value */
     public DefaultXmlConfig setDefaultValue(@Nonnull String defaultValue) {
         this.defaultValue = Assert.notNull(defaultValue, "defaultValue");
-        return this;
-    }
-
-    /**
-     * Use a DOM model
-     * @param dom the dom to set
-     */
-    public DefaultXmlConfig setDom(boolean dom) {
-        this.dom = dom;
         return this;
     }
 

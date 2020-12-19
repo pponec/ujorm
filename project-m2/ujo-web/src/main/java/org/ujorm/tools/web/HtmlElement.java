@@ -260,7 +260,8 @@ public class HtmlElement implements ApiElement<Element>, Html {
     }
 
     /** Get an original root element */
-    public Element rootElement() {
+    @Nonnull
+    public Element original() {
         return root;
     }
 
@@ -276,9 +277,10 @@ public class HtmlElement implements ApiElement<Element>, Html {
         if (root.internalElement instanceof XmlModel) {
             final XmlModel xmlElement = (XmlModel) root.internalElement;
             try {
+                final String doctype = config.getDoctype();
                 final XmlWriter xmlWriter = new XmlWriter(writer
-                        .append(config.getDoctype())
-                        .append(config.getNewLine())
+                        .append(doctype)
+                        .append(doctype.isEmpty() ? "" : config.getNewLine())
                         , config.getIndentation());
                 xmlElement.toWriter(config.getFirstLevel() + 1, xmlWriter);
             } catch (IOException e) {
@@ -433,8 +435,8 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @throws IllegalStateException IO exceptions
      */
     @Nonnull
-    public static HtmlElement of(@Nullable HtmlConfig config) throws IllegalStateException {
-        return of(HtmlConfig.ofDefault(), new StringBuilder(256));
+    public static HtmlElement of(@Nullable final HtmlConfig config) throws IllegalStateException {
+        return of(config != null ? config : HtmlConfig.ofDefault(), new StringBuilder(256));
     }
 
     /** Create root element for a required element name */
@@ -444,7 +446,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     ) throws IllegalStateException {
         final ApiElement root = config.isDocumentObjectModel()
                 ? new XmlModel(config.getRootElementName())
-                : new XmlBuilder(config.getRootElementName(), new XmlPrinter(writer, config));
+                : new XmlBuilder(config.getRootElementName(), new XmlPrinter(writer, config), config.getFirstLevel());
         final HtmlElement result = new HtmlElement(root, config, writer);
         if (config.isHtmlHeaderRequest()) {
             config.getLanguage().ifPresent(lang -> result.setAttribute(A_LANG, lang));
