@@ -54,7 +54,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Head element */
     @Nonnull
-    private Element root;
+    private final Element root;
 
     /** Head element */
     @Nonnull
@@ -108,8 +108,8 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     @Override
     public Element addRawText(Object value) {
-           return root.addRawText(value);
-        }
+        return root.addRawText(value);
+    }
 
     @Override
     public Element addComment(CharSequence comment) {

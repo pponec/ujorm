@@ -65,7 +65,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     protected static final String REQUIRED_MSG = "The argument {} is required";
 
     /** Element name */
-    @Nonnull
+    @Nullable
     protected final String name;
 
     /** Node writer */
@@ -92,21 +92,23 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     private boolean attributeMode = true;
 
     /** The new element constructor
-     * @param name The element name must not be empty nor special HTML characters.
+     * @param name The element name must not be special HTML characters.
+     * The {@code null} value is intended to build a root of AJAX queries.
      */
-    public XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer, final int level) {
+    public XmlBuilder(@Nullable final CharSequence name, @Nonnull final XmlPrinter writer, final int level) {
         this(name, writer, level, true);
     }
 
 
     /** The new element constructor
-     * @param name The element name must not be empty nor special HTML characters.
+     * @param name The element name must not be special HTML characters.
+     * The {@code null} value is intended to build a root of AJAX queries.
      * @param writer A XmlPrinter
      * @param level Level of the Element
      * @param printName Print the element name immediately.
      */
-    protected XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
-        this.name = name.toString();
+    protected XmlBuilder(@Nullable final CharSequence name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
+        this.name = name != null ? name.toString() : null;
         this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
         this.level = level;
 
@@ -122,7 +124,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
         this(name, writer, 0);
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public String getName() {
         return name;
@@ -176,7 +178,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @return The original element
      */
     @Override @Nonnull
-    public final XmlBuilder setAttribute(@Nonnull final String name, @Nullable final Object value) {
+    public final XmlBuilder setAttribute(@Nullable final String name, @Nullable final Object value) {
         Assert.hasLength(name, REQUIRED_MSG, "name");
         Assert.isFalse(closed, "The node {} was closed", this.name);
         Assert.isTrue(attributeMode, "Writing attributes to the {} node was closed", this.name);

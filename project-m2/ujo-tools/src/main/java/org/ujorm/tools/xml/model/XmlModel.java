@@ -77,11 +77,12 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     @Nullable
     protected List<Object> children;
 
-    /** The new element constructor
-     * @param name The element name must not be empty nor special HTML characters.
+     /**
+     * @param name The element name must not be special HTML characters.
+     * The {@code null} value is intended to build a root of AJAX queries.
      */
     public XmlModel(@Nonnull final CharSequence name) {
-        this.name = name.toString();
+        this.name = name != null ? name.toString() : null;
     }
 
     /** New element with a parent */

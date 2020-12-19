@@ -136,13 +136,15 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     /** A request to generate a minimal HTML header */
-    public void setHtmlHeaderRequest(boolean htmlHeaderRequest) {
+    public void setHtmlHeader(boolean htmlHeaderRequest) {
         this.htmlHeaderRequest = htmlHeaderRequest;
     }
 
-    /** A name of root element */
-    public void setRootElementName(@Nonnull String rootElementName) {
-        this.rootElementName = Assert.notNull(rootElementName, REQUIRED_MSG, "rootElementName");
+    /**The element name must not be special HTML characters.
+     * The {@code null} value is intended to build a root of AJAX queries.
+     */
+    public void setRootElementName(@Nullable String rootElementName) {
+        this.rootElementName = rootElementName;
     }
 
     public void setRawHedaderCode(@Nullable String rawHeaderText) {

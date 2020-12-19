@@ -71,7 +71,7 @@ public interface HtmlConfig extends XmlConfig {
     public static DefaultHtmlConfig ofElementName(@Nonnull String rootElementName) {
         final DefaultHtmlConfig result = ofDefault();
         result.setRootElementName(rootElementName);
-        result.setHtmlHeaderRequest(false);
+        result.setHtmlHeader(false);
         result.setDoctype("");
         return result;
     }

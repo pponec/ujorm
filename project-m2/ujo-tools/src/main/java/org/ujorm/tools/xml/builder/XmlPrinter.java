@@ -74,7 +74,7 @@ public class XmlPrinter extends AbstractWriter {
         out.append(rawValue.toString());
     }
 
-    void writeAttrib(String name, Object data, XmlBuilder owner) throws IOException {
+    void writeAttrib(@Nonnull String name, Object data, XmlBuilder owner) throws IOException {
         out.append(CHAR_SPACE);
         out.append(name);
         out.append('=');
@@ -89,31 +89,39 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Open the Node */
     void writeBeg(XmlBuilder element, final boolean lastText) throws IOException {
-        if (!lastText) {
-            writeNewLine(element.getLevel());
+        final String elementName = element.getName();
+        if (elementName != null) {
+            if (!lastText) {
+                writeNewLine(element.getLevel());
+            }
+            out.append(XML_LT);
+            out.append(elementName);
         }
-        out.append(XML_LT);
-        out.append(element.getName());
     }
 
     /** Middle closing the Node */
     void writeMid(XmlBuilder element) throws IOException {
-        out.append(XML_GT);
+        if (element.getName() != null) {
+            out.append(XML_GT);
+        }
     }
 
     /** Close the Node */
     void writeEnd(XmlBuilder element) throws IOException {
-        if (element.isFilled()) {
-            if (indentationEnabled && !element.isLastText()) {
-                writeNewLine(element.getLevel());
+        final String elementName = element.getName();
+        if (elementName != null) {
+            if (element.isFilled()) {
+                if (indentationEnabled && !element.isLastText()) {
+                    writeNewLine(element.getLevel());
+                }
+                out.append(XML_LT);
+                out.append(FORWARD_SLASH);
+                out.append(elementName);
+                out.append(XML_GT);
+            } else {
+                out.append(FORWARD_SLASH);
+                out.append(XML_GT);
             }
-            out.append(XML_LT);
-            out.append(FORWARD_SLASH);
-            out.append(element.getName());
-            out.append(XML_GT);
-        } else {
-            out.append(FORWARD_SLASH);
-            out.append(XML_GT);
         }
     }
 

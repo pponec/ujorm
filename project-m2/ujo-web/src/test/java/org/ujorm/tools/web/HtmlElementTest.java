@@ -15,7 +15,6 @@
  */
 package org.ujorm.tools.web;
 
-import java.io.CharArrayWriter;
 import org.junit.Test;
 import org.ujorm.tools.web.ao.MockServletResponse;
 import org.ujorm.tools.xml.config.HtmlConfig;
@@ -45,7 +44,7 @@ public class HtmlElementTest {
      * Test of getName method, of class HtmlElement.
      */
     @Test
-    public void sample_() {
+    public void sample_1() {
         StringBuilder writer = new StringBuilder();
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setRawHedaderCode("<meta name='description' content='Powered by Ujorm'>");
@@ -62,5 +61,40 @@ public class HtmlElementTest {
                 "<meta name='description' content='Powered by Ujorm'><body>",
                 "<h1>Hello!</h1></body></html>");
         assertEquals(result, writer.toString());
+    }
+
+    /**
+     * Test of getName method, of class HtmlElement.
+     */
+    @Test
+    public void sample_2a() {
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setRootElementName(null);
+        config.setHtmlHeader(false);
+        config.setDoctype("");
+
+        Appendable writer = new StringBuilder();
+        HtmlElement html = HtmlElement.of(config, writer);
+        html.rootElement().addText("Hello!");
+        html.close();
+        assertTrue(writer.toString().contains("Hello!"));
+    }
+
+     /**
+     * Test of getName method, of class HtmlElement.
+     */
+    @Test
+    public void sample_2b() {
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setRootElementName(null);
+        config.setHtmlHeader(false);
+        config.setDoctype("");
+        config.setDocumentObjectModel(true);
+
+        Appendable writer = new StringBuilder();
+        HtmlElement html = HtmlElement.of(config, writer);
+        html.rootElement().addText("Hello!");
+        html.close();
+        assertTrue(writer.toString().contains("Hello!"));
     }
 }
