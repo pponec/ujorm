@@ -15,14 +15,8 @@
  */
 package org.ujorm.tools.web.ao;
 
-import java.io.Closeable;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
 
 /**
@@ -30,85 +24,36 @@ import org.ujorm.tools.Assert;
  *
  * @author Pavel Ponec
  */
-public class JsonWriter implements Closeable {
+public final class JsonWriter implements Appendable {
 
-    private static final char BACKSLASH = '\\';
-    private static final char DOUBLE_QUOTE = '"';
+    protected static final char BACKSLASH = '\\';
+    protected static final char DOUBLE_QUOTE = '"';
 
     private final Appendable writer;
-    private int paramCounter = 0;
 
     protected JsonWriter(@Nonnull final Appendable writer) {
         this.writer = Assert.notNull(writer, "writer");
     }
 
-    /** Write the value for a CSS ID selector
-     *
-     * @param elementId ID selector
-     * @param values The text array to join.
-     * @throws IOException
-     */
-    public void writeId(
-            @Nonnull final CharSequence elementId,
-            @Nullable final CharSequence... values) throws IOException {
-        write(SelectorType.ID.prefix, elementId, values);
+    @Override
+    public Appendable append(CharSequence csq) throws IOException {
+        return append(csq, 0, csq.length());
     }
 
-
-    /** Write the value for a CSS CLASS selector
-     *
-     * @param elementId ID selector
-     * @param values The text array to join.
-     * @throws IOException
-     */
-    public void writeClass(
-            @Nonnull final CharSequence elementId,
-            @Nullable final CharSequence... values) throws IOException {
-        write(SelectorType.CLASS.prefix, elementId, values);
-    }
-
-    /** Write a key-value
-     *
-     * @param key A JSON key
-     * @param values The text array to join.
-     * @throws IOException
-     */
-    public void write(
-            @Nonnull final CharSequence key,
-            @Nullable final CharSequence... values) throws IOException {
-        write(SelectorType.INCLUDED.prefix, key, values);
-    }
-
-    /** Write a key-value
-     *
-     * @param key A JSON key
-     * @param values The text array to join.
-     * @throws IOException
-     */
-    public void write(
-            @Nonnull final String keyPrefix,
-            @Nonnull final CharSequence key,
-            @Nullable final CharSequence... values) throws IOException {
-        writer.append(paramCounter++ == 0 ? '{' : ',');
-        writer.append(DOUBLE_QUOTE);
-        write(keyPrefix);
-        write(key);
-        writer.append(DOUBLE_QUOTE);
-        writer.append(':');
-        if (values == null) {
-            writer.append("null");
-        } else {
-            writer.append(DOUBLE_QUOTE);
-            for (CharSequence value : values) {
-                write(value);
-            }
+    @Override
+    public Appendable append(
+            @Nonnull final CharSequence csq,
+            final int start,
+            final int end)
+            throws IOException {
+        for (int i = start; i < end; i++) {
+            append(csq.charAt(i));
         }
-        writer.append(DOUBLE_QUOTE);
+        return this;
     }
 
-    protected void write(@Nonnull final CharSequence item) throws IOException {
-        for (int i = 0, max = item.length(); i < max; i++) {
-            final char c = item.charAt(i);
+    @Override
+    public Appendable append(final char c) throws IOException {
             switch (c) {
                 case BACKSLASH:
                     writer.append(BACKSLASH);
@@ -141,64 +86,11 @@ public class JsonWriter implements Closeable {
                 default:
                     writer.append(c);
             }
-        }
+        return this;
     }
 
-    @Override
-    public void close() throws IOException {
-        if (paramCounter == 0) {
-            writer.append('{');
-        }
-        writer.append('}');
-    }
-
-    /** An object factory */
-    public static final JsonWriter of(@Nonnull final Appendable writer) {
-        return new JsonWriter(writer);
-    }
-
-    /** An object factory */
-    public static final JsonWriter of(
-            @Nonnull final HttpServletRequest request,
-            @Nonnull final HttpServletResponse response) throws IllegalStateException, IOException {
-        return of(request, response, StandardCharsets.UTF_8, true);
-    }
-
-    /** An object factory */
-    public static final JsonWriter of(
-            @Nonnull final HttpServletRequest request,
-            @Nonnull final HttpServletResponse response,
-            @Nonnull final Charset charset,
-            final boolean setHeader) throws IllegalStateException, IOException {
-
-        if (setHeader) {
-            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
-            response.addHeader("Pragma", "no-cache"); // HTTP 1.0
-            response.addHeader("Expires", "0"); // Proxies
-        }
-        request.setCharacterEncoding(charset.toString());
-        response.setCharacterEncoding(charset.toString());
-        return of(response.getWriter());
-    }
-
-    /** CSS selector types */
-    public enum SelectorType {
-        /** CSS selector by ID */
-        ID("#"),
-        /** CSS selector by CLASS */
-        CLASS("."),
-        /** CSS selector is included */
-        INCLUDED("");
-
-        final String prefix;
-
-        private SelectorType(@Nonnull String prefix) {
-            this.prefix = prefix;
-        }
-
-        @Nonnull
-        public String getPrefix() {
-            return prefix;
-        }
+    @Nonnull
+    public Appendable original() {
+        return writer;
     }
 }

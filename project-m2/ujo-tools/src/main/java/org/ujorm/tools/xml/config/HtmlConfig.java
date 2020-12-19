@@ -90,4 +90,16 @@ public interface HtmlConfig extends XmlConfig {
         result.setDoctype("");
         return result;
     }
+
+    /**
+     * Create a configuration for an AJAX response.
+
+     */
+    @Nonnull
+    public static DefaultHtmlConfig ofEmptyElement() {
+        final DefaultHtmlConfig result = ofElement("", false);
+        result.setHtmlHeader(false);
+        result.setDoctype("");
+        return result;
+    }
 }

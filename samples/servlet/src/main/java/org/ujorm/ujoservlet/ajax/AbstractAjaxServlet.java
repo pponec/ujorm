@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
-import org.ujorm.tools.web.ao.JsonWriter;
+import org.ujorm.tools.web.ao.JsonBuilder;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
 
 /**
@@ -104,8 +104,8 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
             final HttpServletResponse output) throws ServletException, IOException {
         try {
             if (_AJAX.isTrue(input)) {
-                try (JsonWriter writer = JsonWriter.of(input, output)) {
-                    doAjax(input, writer);
+                try (JsonBuilder builder = JsonBuilder.of(input, output)) {
+                    doAjax(input, builder);
                 }
             } else {
                 doProcess(input, output, true);
@@ -120,7 +120,7 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
      * Implement an AJAX action
      * @param output Simple JSON writer in structure key-value.
      */
-    protected abstract void doAjax(HttpServletRequest input, JsonWriter output)
+    protected abstract void doAjax(HttpServletRequest input, JsonBuilder output)
             throws ServletException, IOException;
 
     /**

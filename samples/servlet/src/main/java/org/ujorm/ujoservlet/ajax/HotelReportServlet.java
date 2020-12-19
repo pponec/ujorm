@@ -28,7 +28,7 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
-import org.ujorm.tools.web.ao.JsonWriter;
+import org.ujorm.tools.web.ao.JsonBuilder;
 import org.ujorm.tools.web.ao.Title;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
@@ -146,15 +146,9 @@ public class HotelReportServlet extends AbstractAjaxServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doAjax(HttpServletRequest input, JsonWriter output)
+    protected void doAjax(HttpServletRequest input, JsonBuilder output)
             throws ServletException, IOException {
-        final StringBuilder out = new StringBuilder(256);
-        try (HtmlElement html = HtmlElement.of(HtmlConfig.ofElementName("div"), out)) {
-            printTable(html.original(), input);
-        }
-
-        // Write a selector with a value:
-        output.writeClass(CSS_OUTPUT, out);
+        output.writeClass(CSS_OUTPUT, e -> printTable(e, input));
         output.writeClass(CSS_SUBTITLE, "AJAX ready");
     }
 

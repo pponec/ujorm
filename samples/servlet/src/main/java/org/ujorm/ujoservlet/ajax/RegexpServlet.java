@@ -25,7 +25,7 @@ import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
-import org.ujorm.tools.web.ao.JsonWriter;
+import org.ujorm.tools.web.ao.JsonBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
@@ -114,7 +114,8 @@ public class RegexpServlet extends AbstractAjaxServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void doAjax(HttpServletRequest input, JsonWriter output) throws ServletException, IOException {
+    protected void doAjax(HttpServletRequest input, JsonBuilder output)
+            throws ServletException, IOException {
             final Message msg = highlight(input);
             final StringBuilder result = new StringBuilder();
             try (HtmlElement root = HtmlElement.of(HtmlConfig.ofElement(Html.SPAN, msg.isError()), result)) {

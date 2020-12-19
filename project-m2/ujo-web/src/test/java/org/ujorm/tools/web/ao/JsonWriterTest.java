@@ -34,35 +34,35 @@ public class JsonWriterTest {
         CharSequence value = "def";
 
         StringBuilder builder = new StringBuilder();
-        try (JsonWriter writer = JsonWriter.of(builder)) {
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
             writer.write(key, value);
         }
         assertEquals("{\"abc\":\"def\"}", builder.toString());
 
         value = "\b";
         builder.setLength(0);
-        try (JsonWriter writer = JsonWriter.of(builder)) {
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
             writer.write(key, value);
         }
         assertEquals("{\"abc\":\"\\b\"}", builder.toString());
 
         value = "\"";
         builder.setLength(0);
-        try (JsonWriter writer = JsonWriter.of(builder)) {
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
             writer.write(key, value);
         }
         assertEquals("{\"abc\":\"\\\"\"}", builder.toString());
 
         value = "'";
         builder.setLength(0);
-        try (JsonWriter writer = JsonWriter.of(builder)) {
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
             writer.write(key, value);
         }
         assertEquals("{\"abc\":\"'\"}", builder.toString());
 
         value = "\b\f\n\r\t\"\'\\$%^";
         builder.setLength(0);
-        try (JsonWriter writer = JsonWriter.of(builder)) {
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
             writer.write(key, value);
         }
         assertEquals("{\"abc\":\"\\b\\f\\n\\r\\t\\\"'\\\\$%^\"}", builder.toString());
@@ -70,7 +70,7 @@ public class JsonWriterTest {
         key = "\b";
         value = "\b";
         builder.setLength(0);
-        try (JsonWriter writer = JsonWriter.of(builder)) {
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
             writer.write(key, value);
         }
         assertEquals("{\"\\b\":\"\\b\"}", builder.toString());
