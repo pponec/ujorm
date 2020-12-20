@@ -16,6 +16,7 @@
 package org.ujorm.tools.web.ao;
 
 import org.junit.Test;
+import org.ujorm.tools.web.Html;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -74,5 +75,35 @@ public class JsonBuilderTest {
             writer.write(key, value);
         }
         assertEquals("{\"\\b\":\"\\b\"}", builder.toString());
+    }
+
+    /**
+     * Test of write method, of class JsonWriter.
+     */
+    @Test
+    public void testWriteByProvider() throws Exception {
+        System.out.println("writeByProvider");
+        CharSequence key = "abc";
+        CharSequence[] value = {"def"};
+
+        StringBuilder builder = new StringBuilder();
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
+            writer.write(key, e -> e.addText(value[0]));
+        }
+        assertEquals("{\"abc\":\"def\"}", builder.toString());
+
+        value[0] = "xyz";
+        builder.setLength(0);
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
+            writer.write(key, e -> e.addElementIf(false, Html.DIV).addText(value[0]));
+        }
+        assertEquals("{\"abc\":\"xyz\"}", builder.toString());
+
+        value[0] = "<text>";
+        builder.setLength(0);
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
+            writer.write(key, e -> e.addElementIf(true, Html.DIV).addText(value[0]));
+        }
+        assertEquals("{\"abc\":\"<div>&lt;text&gt;</div>\"}", builder.toString());
     }
 }
