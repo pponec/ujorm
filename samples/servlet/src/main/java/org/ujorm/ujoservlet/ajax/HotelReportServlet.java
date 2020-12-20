@@ -74,7 +74,10 @@ public class HotelReportServlet extends AbstractAjaxServlet {
             html.addJavascriptLink(false, Url.JQUERY_JS);
             html.addCssLink(Url.BOOTSTRAP_CSS);
             html.addCssBody("", getCss());
-            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true, "#" + FORM_ID, NAME, CITY);
+            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true,
+                    "#" + FORM_ID,
+                    "." + NAME,
+                    "." + CITY);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 body.addDiv(CSS_SUBTITLE).addText("");
