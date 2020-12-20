@@ -46,9 +46,9 @@ public class RegexpServlet extends AbstractAjaxServlet {
     /** Link to jQuery of CDN */
     private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
     /** Source of the class */
-    private static final String SOURCE_URL = "https://github.com/pponec/ujorm/"
-            + "blob/e1b4fde571761c4cdbfd8877a7fe4dd054256c03/samples"
-            + "/servlet/src/main/java/org/ujorm/ujoservlet/ajax/RegexpServlet.java";
+    private static final String SOURCE_URL = "https://github.com/pponec/ujorm/blob/"
+            + "6d6a8e1539f4c3724027687882f689e7ad45f9f5"
+            + "/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/RegexpServlet.java";
     /** Form identifier */
     private static final String FORM_ID = "form";
     /** Bootstrap form control CSS class name */

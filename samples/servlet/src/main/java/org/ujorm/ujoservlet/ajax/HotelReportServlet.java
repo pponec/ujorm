@@ -185,7 +185,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
         static final String HELP_IMG = "images/help.png";
         /** Source of the class */
         static final String SOURCE_REPO = "https://github.com/pponec/ujorm/blob/"
-                + "f27eaeb7ca7e675510d3122475f4f80abe4096ef"
+                + "6d6a8e1539f4c3724027687882f689e7ad45f9f5"
                 + "/samples/servlet/src/main/java"
                 + "/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
     }
