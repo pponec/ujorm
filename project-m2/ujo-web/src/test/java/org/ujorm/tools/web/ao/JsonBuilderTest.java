@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Pavel Ponec
  */
-public class JsonWriterTest {
+public class JsonBuilderTest {
 
     /**
      * Test of write method, of class JsonWriter.
