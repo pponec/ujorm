@@ -94,8 +94,6 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                             .setAttribute(Html.A_PLACEHOLDER, "Name of city");
                 }
                 printTable(body.addDiv(CSS_OUTPUT), input);
-                CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
-
                 // Data are from hotelsbase.org, see the original license.
                 body.addText("Data are from", " ")
                     .addLinkedText(Url.HOTELBASE, "hotelsbase.org");

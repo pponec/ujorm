@@ -117,13 +117,8 @@ public class RegexpServlet extends AbstractAjaxServlet {
     protected void doAjax(HttpServletRequest input, JsonBuilder output)
             throws ServletException, IOException {
             final Message msg = highlight(input);
-            final StringBuilder result = new StringBuilder();
-            try (HtmlElement root = HtmlElement.of(HtmlConfig.ofElement(Html.SPAN, msg.isError()), result)) {
-                root.original().setClass("error");
-                root.original().addRawText(msg.getText());
-            }
-            // Write a selector with a value:
-            output.writeClass(CSS_OUTPUT, result);
+            output.writeClass(CSS_OUTPUT, e -> e.addElementIf(msg.isError(), Html.SPAN, "error")
+                    .addText(msg.getText()));
             output.writeClass(CSS_SUBTITLE, "AJAX ready");
     }
 
