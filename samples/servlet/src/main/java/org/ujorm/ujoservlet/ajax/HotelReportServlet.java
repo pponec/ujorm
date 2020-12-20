@@ -114,15 +114,14 @@ public class HotelReportServlet extends AbstractAjaxServlet {
         String city = CITY.of(input, "").toUpperCase();
         CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
         Object[] tableTitle =
-                { "Name"
-                , "City"
-                , "Street"
-                , "Price"
-                , "Currency"
-                , "Stars"
-                , "Phone"
-                , (Title) e -> e.addText("HomePage", " ").addImage(Url.HELP_IMG, "Help")};
-
+                    { "Name"
+                    , "City"
+                    , "Street"
+                    , "Price"
+                    , "Currency"
+                    , "Stars"
+                    , "Phone"
+                    , (Title) e -> e.addText("HomePage", " ").addImage(Url.HELP_IMG, "Help")};
         try (Stream<Hotel> hotels = service.loadHotelStream()
                     .filter(t -> name.isEmpty() || t.getName().toUpperCase().contains(name))
                     .filter(t -> city.isEmpty() || t.getCity().toUpperCase().contains(city))
@@ -186,7 +185,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
         static final String HELP_IMG = "images/help.png";
         /** Source of the class */
         static final String SOURCE_REPO = "https://github.com/pponec/ujorm/blob/"
-                + "ccaf9d0f9a17ff903798c8b7aed329bfd03a1326"
+                + "f27eaeb7ca7e675510d3122475f4f80abe4096ef"
                 + "/samples/servlet/src/main/java"
                 + "/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
     }
