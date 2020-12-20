@@ -241,10 +241,11 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Create a new CSS element and return it.
      * Each item is separated by a new line.
-     * @param css CSS content row
+     * @param lineSeparator Row separator
+     * @param css CSS content rows
      * @return New CSS element
      */
-    public Element addCssBody(
+    public Element addCssBodies(
             @Nonnull final CharSequence lineSeparator,
             @Nonnull final CharSequence... css) {
         Assert.hasLength(css, REQUIRED_MSG, "css");

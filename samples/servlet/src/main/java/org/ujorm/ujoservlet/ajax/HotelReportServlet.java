@@ -72,7 +72,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
         try (HtmlElement html = HtmlElement.of(input, output, getConfig("Hotel report"))) {
             html.addJavascriptLink(false, Url.JQUERY_JS);
             html.addCssLink(Url.BOOTSTRAP_CSS);
-            html.addCssBody("", getCss());
+            html.addCssBodies("", getCss());
             writeJavascript((AJAX_ENABLED ? html.getHead() : null), true,
                     "#" + FORM_ID,
                     "." + NAME,
@@ -178,7 +178,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
         static final String HELP_IMG = "images/help.png";
         /** Source of the class */
         static final String SOURCE_REPO = "https://github.com/pponec/ujorm/blob/"
-                + "6d6a8e1539f4c3724027687882f689e7ad45f9f5"
+                + "58c0d8a170bfa25b8fdc4d5ebbdcd27dbd19c2dd"
                 + "/samples/servlet/src/main/java"
                 + "/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
     }

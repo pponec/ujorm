@@ -47,7 +47,7 @@ public class RegexpServlet extends AbstractAjaxServlet {
     private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
     /** Source of the class */
     private static final String SOURCE_URL = "https://github.com/pponec/ujorm/blob/"
-            + "6d6a8e1539f4c3724027687882f689e7ad45f9f5"
+            + "58c0d8a170bfa25b8fdc4d5ebbdcd27dbd19c2dd"
             + "/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/RegexpServlet.java";
     /** Form identifier */
     private static final String FORM_ID = "form";
@@ -75,7 +75,7 @@ public class RegexpServlet extends AbstractAjaxServlet {
         try (HtmlElement html = HtmlElement.of(input, output, getConfig("Regular expression tester"))) {
             html.addJavascriptLink(false, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
-            html.addCssBody(newLine, service.getCss());
+            html.addCssBodies(newLine, service.getCss());
             writeJavascript((AJAX_ENABLED ? html.getHead() : null), true,
                     "#" + FORM_ID,
                     "#" + REGEXP,
