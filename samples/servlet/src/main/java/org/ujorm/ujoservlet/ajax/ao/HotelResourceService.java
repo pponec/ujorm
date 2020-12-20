@@ -3,11 +3,14 @@ package org.ujorm.ujoservlet.ajax.ao;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.Nonnull;
 import org.ujorm.tools.web.ao.WebUtils;
 
 /**
@@ -46,6 +49,20 @@ public class HotelResourceService {
         return loadHotels(getClass().getResource(HOTELS_CSV));
     }
 
+    /**
+     * Direct stream of data source.
+     * @return
+     */
+    public Stream<Hotel> findHotels(int limit, @Nonnull String namePatterm, @Nonnull String cityPattern) throws IOException {
+        String nameUp = namePatterm.toUpperCase(Locale.ENGLISH);
+        String cityUp = cityPattern.toUpperCase(Locale.ENGLISH);
+        return loadHotelStream()
+                    .filter(t -> nameUp.isEmpty() || t.getName().toUpperCase().contains(nameUp))
+                    .filter(t -> cityUp.isEmpty() || t.getCity().toUpperCase().contains(cityUp))
+                    .sorted(Comparator.comparing(Hotel::getName))
+                    .limit(limit);
+    }
+    
     /**
      * Return a raw stream
      *

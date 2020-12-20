@@ -80,6 +80,7 @@ public class RegexpServlet extends AbstractAjaxServlet {
                     "#" + FORM_ID,
                     "#" + REGEXP,
                     "#" + TEXT);
+            Message msg = highlight(input);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 body.addDiv(CSS_SUBTITLE).addText("");
@@ -97,9 +98,7 @@ public class RegexpServlet extends AbstractAjaxServlet {
                             .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
                             .addText(TEXT.of(input));
                     form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
-                    Message result = highlight(input);
-                    form.addDiv(CSS_CONTROL, CSS_OUTPUT)
-                            .addRawText(highlight(input));
+                    form.addDiv(CSS_CONTROL, CSS_OUTPUT).addRawText(msg);
                 }
                 body.addElement(Html.HR);
                 body.addAnchor(SOURCE_URL).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
@@ -118,7 +117,7 @@ public class RegexpServlet extends AbstractAjaxServlet {
             throws ServletException, IOException {
             final Message msg = highlight(input);
             output.writeClass(CSS_OUTPUT, e -> e.addElementIf(msg.isError(), Html.SPAN, "error")
-                    .addText(msg.getText()));
+                    .addRawText(msg));
             output.writeClass(CSS_SUBTITLE, "AJAX ready");
     }
 

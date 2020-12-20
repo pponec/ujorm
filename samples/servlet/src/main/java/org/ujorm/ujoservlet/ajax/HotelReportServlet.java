@@ -16,7 +16,6 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.Locale;
 import java.util.stream.Stream;
 import javax.servlet.ServletException;
@@ -108,8 +107,6 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     /** Print table */
     private void printTable(Element root, HttpServletRequest input)
             throws IllegalStateException, IOException {
-        String name = NAME.of(input, "").toUpperCase();
-        String city = CITY.of(input, "").toUpperCase();
         CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
         Object[] tableTitle =
                     { "Name"
@@ -120,11 +117,9 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                     , "Stars"
                     , "Phone"
                     , (Title) e -> e.addText("HomePage", " ").addImage(Url.HELP_IMG, "Help")};
-        try (Stream<Hotel> hotels = service.loadHotelStream()
-                    .filter(t -> name.isEmpty() || t.getName().toUpperCase().contains(name))
-                    .filter(t -> city.isEmpty() || t.getCity().toUpperCase().contains(city))
-                    .sorted(Comparator.comparing(Hotel::getName))
-                    .limit(10)) {
+        try (Stream<Hotel> hotels = service.findHotels(15
+                    , NAME.of(input, "")
+                    , CITY.of(input, ""))) {
             root.addTable(hotels, tableCss, tableTitle
                     , Hotel::getName
                     , Hotel::getCity
