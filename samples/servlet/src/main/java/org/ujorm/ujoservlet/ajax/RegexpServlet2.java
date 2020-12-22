@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Locale;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Element;
@@ -27,18 +28,18 @@ import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.JsonBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
-import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
-import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
+import org.ujorm.tools.xml.config.impl.*;
+import static org.ujorm.ujoservlet.ajax.RegexpServlet2.Attrib.*;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
  * @author Pavel Ponec
  */
-@WebServlet(RegexpServlet.URL_PATTERN)
-public class RegexpServlet extends AbstractAjaxServlet {
+@WebServlet(RegexpServlet2.URL_PATTERN)
+public class RegexpServlet2 extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTERN = "/RegexpServlet";
+    public static final String URL_PATTERN = "/RegexpServlet2";
     /** Enable AJAX feature */
     private static final boolean AJAX_ENABLED = true;
     /** Link to a Bootstrap URL of CDN */
@@ -59,53 +60,75 @@ public class RegexpServlet extends AbstractAjaxServlet {
     private static final String CSS_SUBTITLE = "subtitle";
     /** A common service */
     private final Service service = new Service();
+    
+    /** Common processor */
+    protected void doProcess(HttpServletRequest input, HttpServletResponse output, boolean post) throws ServletException, IOException {
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setTitle( "Regular expression tester");
+        
+        new ReqestDispatcher(input, output, config)
+            .run(AJAX, bulider -> {
+                final Message msg = highlight(input);
+                bulider.writeClass(CSS_OUTPUT, e -> e.addElementIf(msg.isError(), Html.SPAN, "error").addRawText(msg));
+                bulider.writeClass(CSS_SUBTITLE, "AJAX ready");
+            })
+            .runDefault(html -> doProcess(input, html));
+    }
 
     /**
      * Handles the HTTP <code>GET</code> method.
      * @param input servlet request
-     * @param output servlet response
+     * @param html servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
     protected void doProcess(
             final HttpServletRequest input,
-            final HttpServletResponse output,
-            final boolean post) throws ServletException, IOException {
-        try (HtmlElement html = HtmlElement.of(input, output, getConfig("Regular expression tester"))) {
-            html.addJavascriptLink(false, JQUERY_JS);
-            html.addCssLink(BOOTSTRAP_CSS);
-            html.addCssBodies(newLine, service.getCss());
-            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true,
-                    "#" + FORM_ID,
-                    "#" + REGEXP,
-                    "#" + TEXT);
-            Message msg = highlight(input);
-            try (Element body = html.getBody()) {
-                body.addHeading(html.getTitle());
-                body.addDiv(CSS_SUBTITLE).addText("");
-                try (Element form = body.addForm()
-                        .setId(FORM_ID)
-                        .setMethod(Html.V_POST).setAction("?")) {
-                    form.addInput(CSS_CONTROL)
-                            .setId(REGEXP)
-                            .setName(REGEXP)
-                            .setValue(REGEXP.of(input))
-                            .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
-                    form.addTextArea(CSS_CONTROL)
-                            .setId(TEXT)
-                            .setName(TEXT)
-                            .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
-                            .addText(TEXT.of(input));
-                    form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
-                    form.addDiv(CSS_CONTROL, CSS_OUTPUT).addRawText(msg);
-                }
-                body.addElement(Html.HR);
-                body.addAnchor(SOURCE_URL).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
+            final HtmlElement html) throws ServletException, IOException {
+
+        html.addJavascriptLink(false, JQUERY_JS);
+        html.addCssLink(BOOTSTRAP_CSS);
+        html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
+        JavaScriptProvider jsProvider = new JavaScriptProvider(AJAX, html.getConfig().getNewLine(), 250);
+        jsProvider.writeJavascript((AJAX_ENABLED ? html.getHead() : null), true,
+                "#" + FORM_ID,
+                "#" + REGEXP,
+                "#" + TEXT);
+        Message msg = highlight(input);
+        try (Element body = html.getBody()) {
+            body.addHeading(html.getTitle());
+            body.addDiv(CSS_SUBTITLE).addText("");
+            try (Element form = body.addForm()
+                    .setId(FORM_ID)
+                    .setMethod(Html.V_POST).setAction("?")) {
+                form.addInput(CSS_CONTROL)
+                        .setId(REGEXP)
+                        .setName(REGEXP)
+                        .setValue(REGEXP.of(input))
+                        .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
+                form.addTextArea(CSS_CONTROL)
+                        .setId(TEXT)
+                        .setName(TEXT)
+                        .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
+                        .addText(TEXT.of(input));
+                form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
+                form.addDiv(CSS_CONTROL, CSS_OUTPUT).addRawText(msg);
             }
+            body.addElement(Html.HR);
+            body.addAnchor(SOURCE_URL).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
         }
     }
 
+    @Override
+    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {    
+        doProcess(input, output, true);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+        doProcess(input, output, false);
+    }
+    
     /**
      * Return lighlited text in HTML format according a regular expression
      * @param input servlet request
@@ -115,10 +138,6 @@ public class RegexpServlet extends AbstractAjaxServlet {
      */
     protected void doAjax(HttpServletRequest input, JsonBuilder output)
             throws ServletException, IOException {
-            final Message msg = highlight(input);
-            output.writeClass(CSS_OUTPUT, e -> e.addElementIf(msg.isError(), Html.SPAN, "error")
-                    .addRawText(msg));
-            output.writeClass(CSS_SUBTITLE, "AJAX ready");
     }
 
     /** Build a HTML result */

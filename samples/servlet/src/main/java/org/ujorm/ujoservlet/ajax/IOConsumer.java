@@ -17,15 +17,15 @@ package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import org.ujorm.tools.web.HtmlElement;
 
 /**
  *
- * @author Pavel Ponec
+ * @author Pavel ponec
  */
-@FunctionalInterface
-public interface IORunnable {
+public interface IOConsumer<T> {
 
-    void run(HtmlElement html) throws ServletException, IOException;
+    public void accept(T t) throws ServletException, IOException;
+    
+    
     
 }

@@ -25,6 +25,7 @@ import java.util.function.Consumer;
  * @see RowIterator
  * @author Pavel Ponec
  */
+@FunctionalInterface
 public interface RsConsumer extends Consumer<ResultSet> {
 
     @Override
