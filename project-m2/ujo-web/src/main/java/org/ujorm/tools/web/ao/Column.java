@@ -22,6 +22,7 @@ import org.ujorm.tools.web.Element;
  * Table column renderer
  * @author Pavel Ponec
  */
+@FunctionalInterface
 public interface Column<T> extends Function<T, Object>, CharSequence {
 
     @Deprecated

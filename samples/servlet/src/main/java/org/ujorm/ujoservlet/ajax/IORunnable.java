@@ -1,5 +1,5 @@
 /*
- * Copyright 2015
+ * Copyright 2020-2020 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.wicket.component.form;
+package org.ujorm.ujoservlet.ajax;
 
-import java.io.Serializable;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.ujorm.Ujo;
+import java.io.IOException;
+import javax.servlet.ServletException;
 
 /**
- * Closable interface
+ *
  * @author Pavel Ponec
  */
 @FunctionalInterface
-public interface Closeable<U extends Ujo & Serializable> extends Serializable {
+public interface IORunnable {
 
-    /** Close the dialog */
-    void closeDialog(AjaxRequestTarget target, U object);
-
+    void run() throws ServletException, IOException;
+    
 }

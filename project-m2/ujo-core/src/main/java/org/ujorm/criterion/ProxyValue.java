@@ -9,6 +9,7 @@ import java.util.function.Supplier;
  * @see Criterion#where(org.ujorm.Key, org.ujorm.criterion.Operator, java.util.function.Supplier)
  * @since 1.76
  */
+@FunctionalInterface
 public interface ProxyValue<T> extends Supplier<T>, Serializable {
 
 }

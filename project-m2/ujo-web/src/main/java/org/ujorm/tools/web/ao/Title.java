@@ -22,6 +22,7 @@ import org.ujorm.tools.web.Element;
  * Table header renderer
  * @author Pavel Ponec
  */
+@FunctionalInterface
 public interface Title extends Consumer<Element>, CharSequence {
 
     @Override

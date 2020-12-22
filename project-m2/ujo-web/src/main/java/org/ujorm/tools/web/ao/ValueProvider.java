@@ -24,6 +24,7 @@ import org.ujorm.tools.web.Element;
  *
  * @author Pavel Ponec
  */
+@FunctionalInterface
 public interface ValueProvider {
 
     /** Write a HTML code to the element */

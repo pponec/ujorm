@@ -22,6 +22,7 @@ import java.util.function.Supplier;
  * A serializable Supplier
  * @author Pavel Ponec
  */
+@FunctionalInterface
 public interface UjoSupplier<T extends Serializable> extends Supplier<T>, Serializable {
 
 }
