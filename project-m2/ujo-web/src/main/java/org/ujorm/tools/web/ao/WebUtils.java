@@ -56,9 +56,19 @@ public abstract class WebUtils {
         return result;
     }
 
-    /** Returns an URL of the servlet of the root where a default value is an empty string */
+    /**
+     * Find a first URL from {@link WebServlet} annotation.
+     * 
+     * Returns an URL of the servlet of the root
+     * @param servlet Servlet type of HttpServlet
+     * @param defaultUrl A default result
+     * @return A URL link.
+     */
     @Nonnull
-    public static String urlOfServlet(@Nonnull final Class<? extends HttpServlet> servlet) {
+    public static String urlOfServlet(
+            @Nonnull final Class<? extends HttpServlet> servlet,
+            @Nonnull final String defaultUrl
+    ) {
         final WebServlet[] webServlets = servlet.getAnnotationsByType(WebServlet.class);
         for (WebServlet webServlet : webServlets) {
             for (String link : webServlet.value()) {
@@ -67,13 +77,27 @@ public abstract class WebUtils {
                 }
             }
         }
-        return "";
+        return defaultUrl;
     }
 
-    /** Returns a stream of line rows of URL resource */
+    /** Returns a stream of lines form URL resource
+     * 
+     * @param url An URL link to a resource
+     * @return The customer is responsible for closing the stream. 
+     *         During closing, an IllegalStateException may occur due to an IOException.
+     * @throws IOException 
+     */
     public static Stream<String> rowsOfUrl(@Nonnull final URL url) throws IOException  {
         final InputStream is = url.openConnection().getInputStream();
-        return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8)).lines();
+        final Stream<String> result = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8)).lines();
+        result.onClose(() -> {
+            try {
+                is.close();
+            } catch (IOException e) {
+                throw new IllegalStateException("Can't close: " + url, e);
+            }
+        });
+        return result;
     }
 
 }
