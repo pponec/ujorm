@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 
 /**
@@ -78,26 +79,6 @@ public abstract class WebUtils {
             }
         }
         return defaultUrl;
-    }
-
-    /** Returns a stream of lines form URL resource
-     * 
-     * @param url An URL link to a resource
-     * @return The customer is responsible for closing the stream. 
-     *         During closing, an IllegalStateException may occur due to an IOException.
-     * @throws IOException 
-     */
-    public static Stream<String> rowsOfUrl(@Nonnull final URL url) throws IOException  {
-        final InputStream is = url.openConnection().getInputStream();
-        final Stream<String> result = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8)).lines();
-        result.onClose(() -> {
-            try {
-                is.close();
-            } catch (IOException e) {
-                throw new IllegalStateException("Can't close: " + url, e);
-            }
-        });
-        return result;
     }
 
 }

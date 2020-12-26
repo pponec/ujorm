@@ -24,8 +24,8 @@ import org.ujorm.tools.web.HtmlElement;
  * @author Pavel Ponec
  */
 @FunctionalInterface
-public interface IORunnable {
+public interface IOElement {
 
-    void run() throws ServletException, IOException;
+    void run(HtmlElement html) throws ServletException, IOException;
     
 }

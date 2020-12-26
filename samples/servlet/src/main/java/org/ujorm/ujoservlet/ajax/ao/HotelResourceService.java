@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import org.ujorm.tools.web.ao.WebUtils;
+import org.ujorm.tools.common.StreamUtils;
 
 /**
  *
@@ -80,7 +80,7 @@ public class HotelResourceService {
     protected Stream<Hotel> loadHotels(URL url) throws IOException {
 
         //read file into stream, try-with-resources
-        return WebUtils.rowsOfUrl(url)
+        return StreamUtils.rowsOfUrl(url)
                 .filter(t -> !t.startsWith("* "))
                 .filter(t -> !t.startsWith("NAME;"))
                 .map(t -> {

@@ -186,10 +186,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     /** HTTP attributes */
     enum Attrib implements HttpParameter {
         NAME,
-        CITY,
-        _AJAX {@Override public String toString() {
-            return AbstractAjaxServlet.DEFAULT_AJAX_REQUEST_PARAM;
-        }};
+        CITY;       
         @Override
         public String toString() {
             return name().toLowerCase(Locale.ENGLISH);

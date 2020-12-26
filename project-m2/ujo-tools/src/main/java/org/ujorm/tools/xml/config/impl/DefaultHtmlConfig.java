@@ -56,11 +56,26 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     private CharSequence rawHeaderText = null;
 
     /** A name of root element */
-    private String rootElementName = XmlBuilder.HTML;
+    private CharSequence rootElementName = XmlBuilder.HTML;
+
+    public DefaultHtmlConfig() {
+    }
+
+    public DefaultHtmlConfig(@Nonnull final HtmlConfig htmlConfig) {
+        super(htmlConfig);
+        this.title = htmlConfig.getTitle();
+        this.cssLinks = htmlConfig.getCssLinks();
+        this.language = htmlConfig.getLanguage().orElse(null);
+        this.contentType = htmlConfig.getContentType();
+        this.buildDom = htmlConfig.isDocumentObjectModel();
+        this.htmlHeaderRequest = htmlConfig.isDocumentObjectModel();
+        this.rawHeaderText = htmlConfig.getRawHeaderText();
+        this.rootElementName = htmlConfig.getRootElementName();
+    }
 
     @Override
     @Nonnull
-    public String getDoctype() {
+    public CharSequence getDoctype() {
         return nonnull(doctype, AbstractWriter.HTML_DOCTYPE);
     }
 
@@ -101,13 +116,13 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** A raw text for HTML header */
     @Override
-    public CharSequence getRowHeaderText() {
+    public CharSequence getRawHeaderText() {
         return rawHeaderText;
     }
 
     /** A name of root element */
     @Override
-    public String getRootElementName() {
+    public CharSequence getRootElementName() {
         return rootElementName;
     }
 

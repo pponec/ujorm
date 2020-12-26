@@ -64,10 +64,11 @@ public class JsonBuilder implements Closeable {
      * @param values The text array to join.
      * @throws IOException
      */
-    public void writeId(
+    public JsonBuilder writeId(
             @Nonnull final CharSequence elementId,
             @Nullable final CharSequence... values) throws IOException {
         write(SelectorType.ID.prefix, elementId, values);
+        return this;
     }
 
 
@@ -77,10 +78,11 @@ public class JsonBuilder implements Closeable {
      * @param values The text array to join.
      * @throws IOException
      */
-    public void writeClass(
+    public JsonBuilder writeClass(
             @Nonnull final CharSequence elementId,
             @Nullable final CharSequence... values) throws IOException {
         write(SelectorType.CLASS.prefix, elementId, values);
+        return this;
     }
 
     /** Write a key-value
@@ -89,10 +91,11 @@ public class JsonBuilder implements Closeable {
      * @param values The text array to join.
      * @throws IOException
      */
-    public void write(
+    public JsonBuilder write(
             @Nonnull final CharSequence key,
             @Nullable final CharSequence... values) throws IOException {
         write(SelectorType.INCLUDED.prefix, key, values);
+        return this;
     }
 
     /** Write a key-value
@@ -101,16 +104,11 @@ public class JsonBuilder implements Closeable {
      * @param values The text array to join.
      * @throws IOException
      */
-    public void write(
+    public JsonBuilder write(
             @Nonnull final String keyPrefix,
             @Nonnull final CharSequence key,
             @Nullable final CharSequence... values) throws IOException {
-        writer.append(paramCounter++ == 0 ? '{' : ',');
-        writer.append(DOUBLE_QUOTE);
-        jsonWriter.append(keyPrefix);
-        jsonWriter.append(key);
-        writer.append(DOUBLE_QUOTE);
-        writer.append(':');
+        writeKey(keyPrefix, key);
         if (values == null) {
             writer.append("null");
         } else {
@@ -120,6 +118,17 @@ public class JsonBuilder implements Closeable {
             }
         }
         writer.append(DOUBLE_QUOTE);
+        return this;
+    }
+    
+    /** Write a JSON property */
+    private void writeKey(final String keyPrefix, final CharSequence key) throws IOException {
+        writer.append(paramCounter++ == 0 ? '{' : ',');
+        writer.append(DOUBLE_QUOTE);
+        jsonWriter.append(keyPrefix);
+        jsonWriter.append(key);
+        writer.append(DOUBLE_QUOTE);
+        writer.append(':');
     }
 
     // --- VALUE PROVIDER ---
@@ -131,10 +140,10 @@ public class JsonBuilder implements Closeable {
      * @param valueProvider A value provider
      * @throws IOException
      */
-    public void writeId(
+    public JsonBuilder writeId(
             @Nonnull final CharSequence elementId,
             @Nonnull final ValueProvider valueProvider) throws IOException {
-        write(SelectorType.ID.prefix, elementId, valueProvider);
+        return write(SelectorType.ID.prefix, elementId, valueProvider);
     }
 
 
@@ -144,10 +153,10 @@ public class JsonBuilder implements Closeable {
      * @param valueProvider A value provider
      * @throws IOException
      */
-    public void writeClass(
+    public JsonBuilder writeClass(
             @Nonnull final CharSequence elementId,
             @Nonnull final ValueProvider valueProvider) throws IOException {
-        write(SelectorType.CLASS.prefix, elementId, valueProvider);
+        return write(SelectorType.CLASS.prefix, elementId, valueProvider);
     }
 
     /** Write a key-value
@@ -156,10 +165,10 @@ public class JsonBuilder implements Closeable {
      * @param valueProvider A value provider
      * @throws IOException
      */
-    public void write(
+    public JsonBuilder write(
             @Nonnull final CharSequence key,
             @Nonnull final ValueProvider valueProvider) throws IOException {
-        write(SelectorType.INCLUDED.prefix, key, valueProvider);
+        return write(SelectorType.INCLUDED.prefix, key, valueProvider);
     }
 
     /**
@@ -169,25 +178,21 @@ public class JsonBuilder implements Closeable {
      * @param valueProvider A value provider
      * @throws IOException
      */
-    public void write(
+    public JsonBuilder write(
             @Nonnull final String keyPrefix,
             @Nonnull final CharSequence key,
             @Nonnull final ValueProvider valueProvider)
             throws IOException {
 
-        writer.append(paramCounter++ == 0 ? '{' : ',');
-        writer.append(DOUBLE_QUOTE);
-        jsonWriter.append(keyPrefix);
-        jsonWriter.append(key);
-        writer.append(DOUBLE_QUOTE);
-        writer.append(':');
+        writeKey(keyPrefix, key);
         writer.append(DOUBLE_QUOTE);
         try (HtmlElement root = HtmlElement.of(config, jsonWriter)) {
             valueProvider.accept(root.original());
         }
         writer.append(DOUBLE_QUOTE);
+        return this;
     }
-
+    
     @Override
     public void close() throws IOException {
         if (paramCounter == 0) {
@@ -195,6 +200,67 @@ public class JsonBuilder implements Closeable {
         }
         writer.append('}');
     }
+    
+    // --- OBJECT PROVIER ---
+
+    /** An experimental feature: write the value for a CSS ID selector
+     *
+     * @param elementId ID selector
+     * @param objectProvider A value provider
+     * @throws IOException
+     */
+    public JsonBuilder writeIdObj(
+            @Nonnull final CharSequence elementId,
+            @Nonnull final ObjectProvider objectProvider) throws IOException {
+        return writeObj(SelectorType.ID.prefix, elementId, objectProvider);
+    }
+
+
+    /** An experimental feature: write the value for a CSS CLASS selector
+     *
+     * @param elementId ID selector
+     * @param objectProvider A value provider
+     * @throws IOException
+     */
+    public JsonBuilder writeClassObj(
+            @Nonnull final CharSequence elementId,
+            @Nonnull final ObjectProvider objectProvider) throws IOException {
+        return writeObj(SelectorType.CLASS.prefix, elementId, objectProvider);
+    }
+
+    /** An experimental feature: write a key-object value
+     *
+     * @param key A JSON key
+     * @param objectProvider A value provider
+     * @throws IOException
+     */
+    public JsonBuilder writeObj(
+            @Nonnull final CharSequence key,
+            @Nonnull final ObjectProvider objectProvider) throws IOException {
+        return writeObj(SelectorType.INCLUDED.prefix, key, objectProvider);
+    }
+
+    /**
+     * An experimental feature: write key-object value
+     * 
+     * @param keyPrefix Key Prefix
+     * @param key Main Key
+     * @param objectProvider A value provider
+     * @throws IOException
+     */
+    public JsonBuilder writeObj(
+            @Nonnull final String keyPrefix,
+            @Nonnull final CharSequence key,
+            @Nonnull final ObjectProvider objectProvider)
+            throws IOException {
+
+        writeKey(keyPrefix, key);
+        objectProvider.accept(this);
+        writer.append(DOUBLE_QUOTE);
+        return this;
+    }
+    
+    // --- UTILS ---
 
     /** An object factory */
     @Nonnull
@@ -207,7 +273,7 @@ public class JsonBuilder implements Closeable {
     public static final JsonBuilder of(
             @Nonnull final HttpServletRequest request,
             @Nonnull final HttpServletResponse response) throws IllegalStateException, IOException {
-        return of(request, response, StandardCharsets.UTF_8, true);
+        return of(request, response, HtmlConfig.ofDefault());
     }
 
     /** An object factory */
@@ -215,17 +281,19 @@ public class JsonBuilder implements Closeable {
     public static final JsonBuilder of(
             @Nonnull final HttpServletRequest request,
             @Nonnull final HttpServletResponse response,
-            @Nonnull final Charset charset,
-            final boolean setHeader) throws IllegalStateException, IOException {
-
-        if (setHeader) {
+            @Nonnull final HtmlConfig config) 
+            throws IllegalStateException, IOException {
+        if (config.isHtmlHeaderRequest()) {
             response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
             response.addHeader("Pragma", "no-cache"); // HTTP 1.0
             response.addHeader("Expires", "0"); // Proxies
         }
-        request.setCharacterEncoding(charset.toString());
-        response.setCharacterEncoding(charset.toString());
-        return of(response.getWriter());
+        {
+            final String charset = config.getCharset().toString();
+            request.setCharacterEncoding(charset);
+            response.setCharacterEncoding(charset);
+            return of(response.getWriter());
+        }
     }
 
     /** CSS selector types */

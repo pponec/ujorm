@@ -28,8 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
+import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.JsonBuilder;
-import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
@@ -60,7 +60,7 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
     public AbstractAjaxServlet() {
         this(DEFAULT_AJAX_REQUEST_PARAM, "\n", 300);
     }
-
+    
     /**
      * Handles the HTTP <code>GET</code> method.
      * @param input servlet request
@@ -69,26 +69,41 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected abstract void doProcess(final HttpServletRequest input, final HttpServletResponse output, final boolean post)
+    protected abstract void doProcess(final HttpServletRequest input, final HttpServletResponse output, final boolean post) 
             throws ServletException, IOException;
 
     /**
-     * Handles the HTTP <code>POST</code> method.
+     * Handles the HTTP method.
+     * @param input servlet request
+     * @param output servlet response
+     * @param post It is a POST request
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void doProcessInternal(final HttpServletRequest input, final HttpServletResponse output, boolean post)
+            throws ServletException, IOException {
+         try {
+             new ReqestDispatcher(input, output)
+                .onParam(getAjaxParam(), (jsonBuilder) -> doAjax(input, jsonBuilder))
+                .onDefault(() -> doProcess(input, output, post)); 
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "GET error", e);
+            output.setStatus(500);
+        }       
+    }
+
+    /**
+     * Handles the HTTP <code>GET</code> method.
      * @param input servlet request
      * @param output servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(
+    protected final void doGet(
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
-        try {
-            doProcess(input, output, false);
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "GET error", e);
-            output.setStatus(500);
-        }
+        doProcessInternal(input, output, false);
     }
 
     /**
@@ -99,21 +114,10 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(
+    protected final void doPost(
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
-        try {
-            if (AJAX.isTrue(input)) {
-                try (JsonBuilder builder = JsonBuilder.of(input, output)) {
-                    doAjax(input, builder);
-                }
-            } else {
-                doProcess(input, output, true);
-            }
-        } catch (Exception | OutOfMemoryError e) {
-            LOGGER.log(Level.WARNING, "Request error", e);
-            output.setStatus(500);
-        }
+        doProcessInternal(input, output, true);
     }
 
     /**
@@ -181,5 +185,14 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
                     );
         }
         element.addRawTexts(newLine, newLine, "});", "</script>");
+    }
+    
+    protected HttpParameter getAjaxParam() {
+        return new HttpParameter() {
+            @Override
+            public String toString() {
+                return AbstractAjaxServlet.DEFAULT_AJAX_REQUEST_PARAM;
+            }
+        };
     }
 }

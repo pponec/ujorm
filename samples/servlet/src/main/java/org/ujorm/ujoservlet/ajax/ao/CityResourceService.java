@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import org.ujorm.tools.web.ao.WebUtils;
+import org.ujorm.tools.common.StreamUtils;
 
 /**
  *
@@ -80,7 +80,7 @@ public class CityResourceService {
      */
     protected Stream<City> loadCitys(URL url) throws IOException {
 
-        return WebUtils.rowsOfUrl(url)
+        return StreamUtils.rowsOfUrl(url)
                 .filter(t -> !t.startsWith("* "))
                 .filter(t -> !t.startsWith("ID;"))
                 .map(t -> {

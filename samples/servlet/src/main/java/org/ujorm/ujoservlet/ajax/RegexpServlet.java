@@ -59,7 +59,7 @@ public class RegexpServlet extends AbstractAjaxServlet {
     private static final String CSS_SUBTITLE = "subtitle";
     /** A common service */
     private final Service service = new Service();
-
+    
     /**
      * Handles the HTTP <code>GET</code> method.
      * @param input servlet request
@@ -113,6 +113,7 @@ public class RegexpServlet extends AbstractAjaxServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    @Override
     protected void doAjax(HttpServletRequest input, JsonBuilder output)
             throws ServletException, IOException {
             final Message msg = highlight(input);
@@ -140,10 +141,8 @@ public class RegexpServlet extends AbstractAjaxServlet {
     /** Servlet attributes */
     enum Attrib implements HttpParameter {
         REGEXP,
-        TEXT,
-        AJAX {@Override public String toString() {
-            return AbstractAjaxServlet.DEFAULT_AJAX_REQUEST_PARAM;
-        }};
+        TEXT;
+        
         @Override
         public String toString() {
             return name().toLowerCase(Locale.ENGLISH);

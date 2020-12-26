@@ -278,10 +278,10 @@ public class HtmlElement implements ApiElement<Element>, Html {
         if (root.internalElement instanceof XmlModel) {
             final XmlModel xmlElement = (XmlModel) root.internalElement;
             try {
-                final String doctype = config.getDoctype();
+                final CharSequence doctype = config.getDoctype();
                 final XmlWriter xmlWriter = new XmlWriter(writer
                         .append(doctype)
-                        .append(doctype.isEmpty() ? "" : config.getNewLine())
+                        .append(doctype.length() == 0 ? "" : config.getNewLine())
                         , config.getIndentation());
                 xmlElement.toWriter(config.getFirstLevel() + 1, xmlWriter);
             } catch (IOException e) {
@@ -454,7 +454,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
             result.getHead().addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
             result.getHead().addElement(Html.TITLE).addText(config.getTitle());
             result.addCssLinks(config.getCssLinks());
-            final CharSequence rawHeaderText = config.getRowHeaderText();
+            final CharSequence rawHeaderText = config.getRawHeaderText();
             if (Check.hasLength(rawHeaderText)) {
                 result.addRawText(config.getNewLine());
                 result.addRawText(rawHeaderText);

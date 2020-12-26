@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -47,10 +48,7 @@ public class ReqestDispatcher {
     private final HttpServletResponse output;
 
     @Nonnull
-    private final HtmlConfig htmlConfig;
-
-    @Nonnull
-    private final HtmlConfig ajaxConfig;
+    private HtmlConfig htmlConfig;
 
     private boolean done = false;
 
@@ -70,19 +68,9 @@ public class ReqestDispatcher {
             @Nonnull HttpServletResponse output,
             @Nonnull HtmlConfig htmlConfig
     ) {
-        this(input, output, htmlConfig, htmlConfig.cloneForAjax());
-    }
-
-    public ReqestDispatcher(
-            @Nonnull HttpServletRequest input,
-            @Nonnull HttpServletResponse output,
-            @Nonnull HtmlConfig htmlConfig,
-            @Nonnull HtmlConfig ajaxConfig
-    ) {
         this.input = input;
         this.output = output;
-        this.htmlConfig = htmlConfig;
-        this.ajaxConfig = ajaxConfig;
+        this.htmlConfig = htmlConfig ;
 
         try {
             final String charset = htmlConfig.getCharset().toString();
@@ -99,17 +87,22 @@ public class ReqestDispatcher {
         }
     }
 
+    @Nonnull
+    public HtmlConfig getAjaxConfig() {
+        return htmlConfig.cloneForAjax();
+    }
+
     /**
      * Registre new processor.
      *
-     * @param key An enumarator type of HttpParameter
+     * @param key An key type of HttpParameter
      * @param processor processor
      * @return
      */
-    public ReqestDispatcher run(@Nonnull final HttpParameter key, @Nonnull final IOConsumer<JsonBuilder> processor) throws IOException, ServletException {
-        Assert.isTrue(key instanceof Enum, "Parameter {} is no type of Enum", key);
+    public ReqestDispatcher onParam(@Nonnull final HttpParameter key, @Nonnull final IOConsumer<JsonBuilder> processor) throws IOException, ServletException {
+        Assert.notNull(key, "Parameter {} is required", "key");
         if (!done && key.isTrue(input)) {
-            try (JsonBuilder builder = JsonBuilder.of(input, output)) {
+            try (JsonBuilder builder = JsonBuilder.of(input, output, getAjaxConfig())) {
                 done = true;
                 processor.accept(builder);
             }
@@ -120,11 +113,20 @@ public class ReqestDispatcher {
     /**
      * Process the request
      */
-    public void runDefault(@Nonnull final IORunnable defaultProcessor) throws ServletException, IOException {
+    public void onDefaultByElement(@Nonnull final IOElement defaultProcessor) throws ServletException, IOException {
         if (!done) {
             try (HtmlElement html = HtmlElement.of(htmlConfig)) {
                 defaultProcessor.run(html);
             }
+        }
+    }
+    
+    /**
+     * Process the request
+     */
+    public void onDefault(@Nonnull final IORunnable defaultProcessor) throws ServletException, IOException {
+        if (!done) {
+            defaultProcessor.run();
         }
     }
 }

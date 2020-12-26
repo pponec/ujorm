@@ -46,7 +46,7 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** A header declaration of the document or a doctype */
     @Nullable
-    protected String doctype;
+    protected CharSequence doctype;
 
     /** Charset */
     @Nonnull
@@ -58,15 +58,15 @@ public class DefaultXmlConfig implements XmlConfig {
     /** An indentation space for elements of the next level,
      * where default value is an empty `String` */
     @Nonnull
-    private String indentation = "";
+    private CharSequence indentation = "";
 
     /** A replacement text instead of the {@code null} value */
     @Nonnull
-    private String defaultValue = "";
+    private CharSequence defaultValue = "";
 
     /** A new line sequence */
     @Nonnull
-    private String newLine = DEFAULT_NEW_LINE;
+    private CharSequence newLine = DEFAULT_NEW_LINE;
 
     /** Is HTTP cache allowed */
     private boolean cacheAllowed;
@@ -79,10 +79,25 @@ public class DefaultXmlConfig implements XmlConfig {
     @Nonnull
     private Formatter formatter = (value, element, attribute) -> value != null ? value.toString() : "";
 
+    public DefaultXmlConfig() {
+    }
+
+    /** Copy attributes from other config */
+    public DefaultXmlConfig(@Nonnull final XmlConfig config) {
+        this.doctype = config.getDoctype();
+        this.charset = config.getCharset();
+        this.firstLevel = config.getFirstLevel();
+        this.indentation = config.getIndentation();
+        this.defaultValue = config.getDefaultValue();
+        this.newLine = config.getNewLine();
+        this.cacheAllowed = config.isCacheAllowed();
+        this.formatter = config.getFormatter();
+    }
+
     /** A header declaration of the document or a doctype */
     @Override
     @Nonnull
-    public String getDoctype() {
+    public CharSequence getDoctype() {
         return nonnull(doctype, AbstractWriter.XML_HEADER);
     }
 
@@ -92,7 +107,7 @@ public class DefaultXmlConfig implements XmlConfig {
     }
 
     /** A header declaration of the document or a doctype */
-    public DefaultXmlConfig setDoctype(@Nullable String doctype) {
+    public DefaultXmlConfig setDoctype(@Nullable CharSequence doctype) {
         this.doctype = doctype;
         return this;
     }
@@ -128,7 +143,7 @@ public class DefaultXmlConfig implements XmlConfig {
      * Assign parameters for a nice format of the HTML result
      * @param indentation An empty String is replaced by a default intendation.
      */
-    public final DefaultXmlConfig setNiceFormat(@Nullable final String indentation) {
+    public final DefaultXmlConfig setNiceFormat(@Nullable final CharSequence indentation) {
         this.firstLevel = 0;
         this.indentation = Check.hasLength(indentation) ? indentation : DEFAULT_INTENDATION;
         this.newLine = DEFAULT_NEW_LINE;
@@ -167,20 +182,20 @@ public class DefaultXmlConfig implements XmlConfig {
      * where default value is an empty `String` */
     @Nonnull
     @Override
-    public String getIndentation() {
+    public CharSequence getIndentation() {
         return nonnull(indentation, "");
     }
 
     /** An indentation space for elements of the next level,
      * where default value is an empty `String` */
-    public DefaultXmlConfig setIndentationSpace(@Nonnull String indentation) {
+    public DefaultXmlConfig setIndentationSpace(@Nonnull CharSequence indentation) {
         this.indentation = Assert.notNull(indentation, REQUIRED_MSG, "indentation");
         return this;
     }
 
     /** A replacement text instead of the {@code null} value */
     @Override
-    public String getDefaultValue() {
+    public CharSequence getDefaultValue() {
         return defaultValue;
     }
 
@@ -217,7 +232,7 @@ public class DefaultXmlConfig implements XmlConfig {
     }
 
     /** A new line sequence */
-    public DefaultXmlConfig setNewLine(@Nonnull final String newLine) {
+    public DefaultXmlConfig setNewLine(@Nonnull final CharSequence newLine) {
         this.newLine = Assert.notNull(newLine, "newLine");
         return this;
     }

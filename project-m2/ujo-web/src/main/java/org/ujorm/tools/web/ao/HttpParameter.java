@@ -39,6 +39,11 @@ import javax.servlet.ServletRequest;
  * @author Pavel Ponec
  */
 public interface HttpParameter extends CharSequence {
+    
+    /** Returns a parameter name */
+    @Nonnull
+    @Override
+    String toString();
 
     @Override
     default int length() {

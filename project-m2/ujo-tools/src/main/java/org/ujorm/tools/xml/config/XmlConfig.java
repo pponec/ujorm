@@ -29,7 +29,7 @@ public interface XmlConfig {
 
     /** Doctype */
     @Nonnull
-    String getDoctype();
+    CharSequence getDoctype();
 
     /**
      * Charset
@@ -48,7 +48,7 @@ public interface XmlConfig {
      * New line
      * @return the newLine
      */
-    String getIndentation();
+    CharSequence getIndentation();
 
     /** A replacement text instead of the {@code null} value */
     @Nonnull

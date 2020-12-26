@@ -49,12 +49,12 @@ public class XmlWriter extends AbstractWriter {
      * @param out A writer
      * @param indentationSpace String for a one level offset.
      */
-    public XmlWriter(@Nonnull final Appendable out, @Nonnull final String indentationSpace) {
+    public XmlWriter(@Nonnull final Appendable out, @Nonnull final CharSequence indentationSpace) {
         super(out, createConfig(indentationSpace));
     }
 
     /** Create a config */
-    private static XmlConfig createConfig(@Nonnull final String indentationSpace) {
+    private static XmlConfig createConfig(@Nonnull final CharSequence indentationSpace) {
         final DefaultXmlConfig config = XmlConfig.ofDefault();
         config.setIndentationSpace(indentationSpace);
         return config;

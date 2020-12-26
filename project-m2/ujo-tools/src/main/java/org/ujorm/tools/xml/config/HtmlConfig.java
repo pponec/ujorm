@@ -52,94 +52,21 @@ public interface HtmlConfig extends XmlConfig {
 
     /** A raw text for HTML header */
     @Nullable
-    CharSequence getRowHeaderText();
+    CharSequence getRawHeaderText();
 
     /** A name of root element */
     CharSequence getRootElementName();
     
-    /** Clone the HtmlConfig for an AJAX */
-    default HtmlConfig cloneForAjax() {
-        return new HtmlConfig() {
-            @Override
-            public CharSequence getTitle() {
-                return HtmlConfig.this.getTitle();
-            }
-
-            @Override
-            public CharSequence[] getCssLinks() {
-                return HtmlConfig.this.getCssLinks();
-            }
-
-            @Override
-            public Optional<CharSequence> getLanguage() {
-                return HtmlConfig.this.getLanguage();
-            }
-
-            @Override
-            public String getContentType() {
-                return HtmlConfig.this.getContentType();
-            }
-
-            @Override
-            public boolean isDocumentObjectModel() {
-                return HtmlConfig.this.isDocumentObjectModel();
-            }
-
-            @Override
-            public boolean isHtmlHeaderRequest() {
-                return false;
-            }
-
-            @Override
-            public CharSequence getRowHeaderText() {
-                return HtmlConfig.this.getRowHeaderText();
-            }
-
-            @Override
-            public CharSequence getRootElementName() {
-                return "";
-            }
-
-            @Override
-            public String getDoctype() {
-                return "";
-            }
-
-            @Override
-            public Charset getCharset() {
-                return HtmlConfig.this.getCharset();
-            }
-
-            @Override
-            public int getFirstLevel() {
-                return HtmlConfig.this.getFirstLevel();
-            }
-
-            @Override
-            public String getIndentation() {
-                return "";
-            }
-
-            @Override
-            public CharSequence getDefaultValue() {
-                return HtmlConfig.this.getDefaultValue();
-            }
-
-            @Override
-            public CharSequence getNewLine() {
-                return HtmlConfig.this.getNewLine();
-            }
-
-            @Override
-            public boolean isCacheAllowed() {
-                return HtmlConfig.this.isCacheAllowed();
-            }
-
-            @Override
-            public Formatter getFormatter() {
-                return HtmlConfig.this.getFormatter();
-            }
-        };
+        
+    /** Clone the config for an AJAX processing */
+    default DefaultHtmlConfig cloneForAjax() {
+        final DefaultHtmlConfig result = new DefaultHtmlConfig(this);
+        result.setNiceFormat();
+        result.setRootElementName("");
+        result.setDoctype("");
+        result.setHtmlHeader(false);
+        result.setCacheAllowed(false);
+        return result;
     }
 
     /**
@@ -186,5 +113,10 @@ public interface HtmlConfig extends XmlConfig {
         result.setHtmlHeader(false);
         result.setDoctype("");
         return result;
+    }
+    
+    /** Clone config form another */
+    public static DefaultHtmlConfig of(@Nonnull final HtmlConfig htmlConfig) {
+        return new DefaultHtmlConfig(htmlConfig);
     }
 }
