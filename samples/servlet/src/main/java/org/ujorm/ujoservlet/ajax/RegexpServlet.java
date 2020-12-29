@@ -29,6 +29,7 @@ import org.ujorm.tools.web.ao.JsonBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
+import static org.ujorm.ujoservlet.ajax.RegexpServlet.Url.*;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
@@ -41,14 +42,6 @@ public class RegexpServlet extends AbstractAjaxServlet {
     public static final String URL_PATTERN = "/RegexpServlet";
     /** Enable AJAX feature */
     private static final boolean AJAX_ENABLED = true;
-    /** Link to a Bootstrap URL of CDN */
-    private static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
-    /** Link to jQuery of CDN */
-    private static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
-    /** Source of the class */
-    private static final String SOURCE_URL = "https://github.com/pponec/ujorm/blob/"
-            + "58c0d8a170bfa25b8fdc4d5ebbdcd27dbd19c2dd"
-            + "/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/RegexpServlet.java";
     /** Form identifier */
     private static final String FORM_ID = "form";
     /** Bootstrap form control CSS class name */
@@ -136,6 +129,18 @@ public class RegexpServlet extends AbstractAjaxServlet {
         config.setNiceFormat();
         config.setTitle(title);
         return config;
+    }
+    
+    /** URL constants */
+    static class Url {
+        /** Link to a Bootstrap URL of CDN */
+        static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
+        /** Link to jQuery of CDN */
+        static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
+        /** Source of the class */
+        static final String SOURCE_URL = "https://github.com/pponec/ujorm/blob/"
+                + "58c0d8a170bfa25b8fdc4d5ebbdcd27dbd19c2dd"
+                + "/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/RegexpServlet.java";
     }
 
     /** Servlet attributes */
