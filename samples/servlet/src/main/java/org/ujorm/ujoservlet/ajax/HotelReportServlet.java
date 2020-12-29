@@ -110,7 +110,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                         .setName(CITY)
                         .setValue(CITY.of(input))
                         .setAttribute(Html.A_PLACEHOLDER, "Name of city");
-                form.addButton("btn", "btn-primary").addText("Find");
+                form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, true);                
             }
             printTable(body.addDiv(CSS_OUTPUT), input);
             // Data are from hotelsbase.org, see the original license.
