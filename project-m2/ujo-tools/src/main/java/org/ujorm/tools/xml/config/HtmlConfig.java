@@ -57,7 +57,6 @@ public interface HtmlConfig extends XmlConfig {
     /** A name of root element */
     CharSequence getRootElementName();
     
-        
     /** Clone the config for an AJAX processing */
     default DefaultHtmlConfig cloneForAjax() {
         final DefaultHtmlConfig result = new DefaultHtmlConfig(this);

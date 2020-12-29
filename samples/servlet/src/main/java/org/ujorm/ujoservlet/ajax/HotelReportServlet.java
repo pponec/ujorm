@@ -72,7 +72,6 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     @Override
     protected void doDispatch(final HttpServletRequest input, final HttpServletResponse output, boolean post)
             throws ServletException, IOException {
-        
         new ReqestDispatcher("Hotel report", input, output)
            .onParam(getAjaxParam(), jsonBuilder -> doAjax(input, jsonBuilder))
            .onDefaultByElement(element -> doProcess(input, element, post));     
@@ -90,7 +89,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
             final HtmlElement html,
             final boolean post) throws ServletException, IOException {
 
-        html.addJavascriptLink(false, Url.JQUERY_JS);
+            html.addJavascriptLink(false, Url.JQUERY_JS);
         html.addCssLink(Url.BOOTSTRAP_CSS);
         html.addCssBodies("", getCss());
         writeJavascript((AJAX_ENABLED ? html.getHead() : null), true,
@@ -111,6 +110,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                         .setName(CITY)
                         .setValue(CITY.of(input))
                         .setAttribute(Html.A_PLACEHOLDER, "Name of city");
+                form.addButton("btn", "btn-primary").addText("Find");
             }
             printTable(body.addDiv(CSS_OUTPUT), input);
             // Data are from hotelsbase.org, see the original license.
@@ -178,7 +178,10 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     private String getCss() {
         return "body { margin: 10px; }"
                 + "#form input { width: 200px;}"
-                + ".subtitle{ font-size: 10px; color: silver;}";
+                + ".subtitle{ font-size: 10px; color: silver;}"
+                + ".form-control { display: inline; }"
+                + ".btn { vertical-align: inherit; }"
+                + "form { margin-bottom: 2px; }";
     }
 
     /** URL constants */

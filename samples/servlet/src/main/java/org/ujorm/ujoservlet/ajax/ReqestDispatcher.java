@@ -61,7 +61,9 @@ public class ReqestDispatcher {
             @Nonnull CharSequence title,
             @Nonnull HttpServletRequest input,
             @Nonnull HttpServletResponse output) {
-        this(input, output, HtmlConfig.ofDefault().setTitle(title));
+        this(input, output, HtmlConfig.ofDefault()
+                .setTitle(title)
+                .setNiceFormat());
     }
 
     public ReqestDispatcher(
