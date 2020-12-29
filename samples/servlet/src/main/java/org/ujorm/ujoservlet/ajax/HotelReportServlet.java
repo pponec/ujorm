@@ -17,6 +17,7 @@ package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,6 +42,9 @@ import static org.ujorm.ujoservlet.ajax.HotelReportServlet.Attrib.*;
  */
 @WebServlet(HotelReportServlet.URL_PATTERN)
 public class HotelReportServlet extends AbstractAjaxServlet {
+    
+    /** Logger */
+    private static final Logger LOGGER = Logger.getLogger(HotelReportServlet.class.getName());
 
     /** URL pattern */
     public static final String URL_PATTERN = "/TableHotelServlet";
@@ -56,51 +60,66 @@ public class HotelReportServlet extends AbstractAjaxServlet {
     private static final String CSS_SUBTITLE = "subtitle";
     /** A hotel service */
     private final HotelResourceService service = new HotelResourceService();
-
+    
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Handles the HTTP method.
      * @param input servlet request
      * @param output servlet response
+     * @param post It is a POST request
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
+    protected void doDispatch(final HttpServletRequest input, final HttpServletResponse output, boolean post)
+            throws ServletException, IOException {
+        
+        new ReqestDispatcher("Hotel report", input, output)
+           .onParam(getAjaxParam(), jsonBuilder -> doAjax(input, jsonBuilder))
+           .onDefaultByElement(element -> doProcess(input, element, post));     
+    }
+
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     * @param input servlet request
+     * @param html servlet response inside a HtmlElement
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void doProcess(
             final HttpServletRequest input,
-            final HttpServletResponse output,
+            final HtmlElement html,
             final boolean post) throws ServletException, IOException {
-        try (HtmlElement html = HtmlElement.of(input, output, getConfig("Hotel report"))) {
-            html.addJavascriptLink(false, Url.JQUERY_JS);
-            html.addCssLink(Url.BOOTSTRAP_CSS);
-            html.addCssBodies("", getCss());
-            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true,
-                    "#" + FORM_ID,
-                    "." + NAME,
-                    "." + CITY);
-            try (Element body = html.getBody()) {
-                body.addHeading(html.getTitle());
-                body.addDiv(CSS_SUBTITLE).addText("");
-                try (Element form =  body.addForm()
-                        .setId(FORM_ID)
-                        .setMethod(Html.V_POST).setAction("?")) {
-                    form.addInput(CSS_CONTROL, NAME)
-                            .setName(NAME)
-                            .setValue(NAME.of(input))
-                            .setAttribute(Html.A_PLACEHOLDER, "Name of hotel");
-                    form.addInput(CSS_CONTROL, CITY)
-                            .setName(CITY)
-                            .setValue(CITY.of(input))
-                            .setAttribute(Html.A_PLACEHOLDER, "Name of city");
-                }
-                printTable(body.addDiv(CSS_OUTPUT), input);
-                // Data are from hotelsbase.org, see the original license.
-                body.addText("Data are from", " ")
-                    .addLinkedText(Url.HOTELBASE, "hotelsbase.org");
-                body.addText(", ", "see an original", " ")
-                    .addLinkedText(Url.DATA_LICENSE, "license");
-                body.addBreak();
-                body.addAnchor(Url.SOURCE_REPO).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
+
+        html.addJavascriptLink(false, Url.JQUERY_JS);
+        html.addCssLink(Url.BOOTSTRAP_CSS);
+        html.addCssBodies("", getCss());
+        writeJavascript((AJAX_ENABLED ? html.getHead() : null), true,
+                "#" + FORM_ID,
+                "." + NAME,
+                "." + CITY);
+        try (Element body = html.getBody()) {
+            body.addHeading(html.getTitle());
+            body.addDiv(CSS_SUBTITLE).addText("");
+            try (Element form =  body.addForm()
+                    .setId(FORM_ID)
+                    .setMethod(Html.V_POST).setAction("?")) {
+                form.addInput(CSS_CONTROL, NAME)
+                        .setName(NAME)
+                        .setValue(NAME.of(input))
+                        .setAttribute(Html.A_PLACEHOLDER, "Name of hotel");
+                form.addInput(CSS_CONTROL, CITY)
+                        .setName(CITY)
+                        .setValue(CITY.of(input))
+                        .setAttribute(Html.A_PLACEHOLDER, "Name of city");
             }
+            printTable(body.addDiv(CSS_OUTPUT), input);
+            // Data are from hotelsbase.org, see the original license.
+            body.addText("Data are from", " ")
+                .addLinkedText(Url.HOTELBASE, "hotelsbase.org");
+            body.addText(", ", "see an original", " ")
+                .addLinkedText(Url.DATA_LICENSE, "license");
+            body.addBreak();
+            body.addAnchor(Url.SOURCE_REPO).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
         }
     }
 

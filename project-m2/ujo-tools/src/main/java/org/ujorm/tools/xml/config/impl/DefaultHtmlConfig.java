@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2020 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -129,20 +129,24 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     // --- SETTERS ---
 
     /** Title is a required element by HTML 5 */
-    public void setTitle(@Nonnull CharSequence title) {
+    public DefaultHtmlConfig setTitle(@Nonnull CharSequence title) {
         this.title = Assert.hasLength(title, "title");
+        return this;
     }
 
-    public void setCssLinks(@Nonnull CharSequence... cssLinks) {
+    public DefaultHtmlConfig setCssLinks(@Nonnull CharSequence... cssLinks) {
         this.cssLinks = Assert.notNull(cssLinks, REQUIRED_MSG, "cssLinks");
+        return this;
     }
 
-    public void setLanguage(@Nonnull CharSequence language) {
+    public DefaultHtmlConfig setLanguage(@Nonnull CharSequence language) {
         this.language = language;
+        return this;
     }
 
-    public void setContentType(@Nonnull String contentType) {
+    public DefaultHtmlConfig setContentType(@Nonnull String contentType) {
         this.contentType = Assert.notNull(contentType, REQUIRED_MSG, "contentType");
+        return this;
     }
 
     /** Build a real model or a plain writer, the default value is {@code false}.
@@ -154,23 +158,27 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     /** Build a real model or a plain writer, the default value is {@code false} */
-    public void setDocumentObjectModel(final boolean buildDom) {
+    public DefaultHtmlConfig setDocumentObjectModel(final boolean buildDom) {
         this.buildDom = buildDom;
+        return this;
     }
 
     /** A request to generate a minimal HTML header */
-    public void setHtmlHeader(boolean htmlHeaderRequest) {
+    public DefaultHtmlConfig setHtmlHeader(boolean htmlHeaderRequest) {
         this.htmlHeaderRequest = htmlHeaderRequest;
+        return this;
     }
 
     /**The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      */
-    public void setRootElementName(@Nullable String rootElementName) {
+    public DefaultHtmlConfig setRootElementName(@Nullable String rootElementName) {
         this.rootElementName = rootElementName;
+        return this;
     }
 
-    public void setRawHedaderCode(@Nullable String rawHeaderText) {
+    public DefaultHtmlConfig setRawHedaderCode(@Nullable String rawHeaderText) {
         this.rawHeaderText = Assert.notNull(rawHeaderText, REQUIRED_MSG, "rawHeaderText");
+        return this;
     }
 }

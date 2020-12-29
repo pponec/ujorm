@@ -69,8 +69,10 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected abstract void doProcess(final HttpServletRequest input, final HttpServletResponse output, final boolean post) 
-            throws ServletException, IOException;
+    protected void doProcess(final HttpServletRequest input, final HttpServletResponse output, final boolean post) 
+            throws ServletException, IOException {
+        output.getWriter().append("Implement it!");
+    }
 
     /**
      * Handles the HTTP method.
@@ -80,11 +82,11 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void doProcessInternal(final HttpServletRequest input, final HttpServletResponse output, boolean post)
+    protected void doDispatch(final HttpServletRequest input, final HttpServletResponse output, boolean post)
             throws ServletException, IOException {
          try {
              new ReqestDispatcher(input, output)
-                .onParam(getAjaxParam(), (jsonBuilder) -> doAjax(input, jsonBuilder))
+                .onParam(getAjaxParam(), jsonBuilder -> doAjax(input, jsonBuilder))
                 .onDefault(() -> doProcess(input, output, post)); 
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "GET error", e);
@@ -103,7 +105,7 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
     protected final void doGet(
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
-        doProcessInternal(input, output, false);
+        doDispatch(input, output, false);
     }
 
     /**
@@ -117,7 +119,7 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
     protected final void doPost(
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
-        doProcessInternal(input, output, true);
+        doDispatch(input, output, true);
     }
 
     /**

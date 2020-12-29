@@ -56,11 +56,18 @@ public class ReqestDispatcher {
      * Disable client cache
      */
     private final boolean noCache = true;
+    
+    public ReqestDispatcher(
+            @Nonnull CharSequence title,
+            @Nonnull HttpServletRequest input,
+            @Nonnull HttpServletResponse output) {
+        this(input, output, HtmlConfig.ofDefault().setTitle(title));
+    }
 
     public ReqestDispatcher(
             @Nonnull HttpServletRequest input,
             @Nonnull HttpServletResponse output) {
-        this(input, output, HtmlConfig.ofDefault());
+        this(input, output, HtmlConfig.ofDefault().setTitle("Info"));
     }
 
     public ReqestDispatcher(
@@ -115,7 +122,7 @@ public class ReqestDispatcher {
      */
     public void onDefaultByElement(@Nonnull final IOElement defaultProcessor) throws ServletException, IOException {
         if (!done) {
-            try (HtmlElement html = HtmlElement.of(htmlConfig)) {
+            try (HtmlElement html = HtmlElement.of(htmlConfig, output.getWriter())) {
                 defaultProcessor.run(html);
             }
         }
