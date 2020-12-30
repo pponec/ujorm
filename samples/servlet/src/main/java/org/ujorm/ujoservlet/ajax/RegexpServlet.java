@@ -15,6 +15,9 @@
  */
 package org.ujorm.ujoservlet.ajax;
 
+import org.ujorm.ujoservlet.ajax.ao.Service;
+import org.ujorm.ujoservlet.ajax.ao.Message;
+import org.ujorm.ujoservlet.ajax.ujorm.AbstractAjaxServlet;
 import java.io.IOException;
 import java.util.Locale;
 import javax.servlet.ServletException;

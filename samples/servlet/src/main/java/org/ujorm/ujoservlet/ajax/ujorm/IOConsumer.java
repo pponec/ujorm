@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.ujoservlet.ajax;
+package org.ujorm.ujoservlet.ajax.ujorm;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

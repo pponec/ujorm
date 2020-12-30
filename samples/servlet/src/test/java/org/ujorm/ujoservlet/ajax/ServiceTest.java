@@ -1,5 +1,7 @@
 package org.ujorm.ujoservlet.ajax;
 
+import org.ujorm.ujoservlet.ajax.ao.Service;
+import org.ujorm.ujoservlet.ajax.ao.Message;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

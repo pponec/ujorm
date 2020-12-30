@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.ujoservlet.ajax;
+package org.ujorm.ujoservlet.ajax.ao;
 
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;

@@ -15,6 +15,8 @@
  */
 package org.ujorm.ujoservlet.ajax;
 
+import org.ujorm.ujoservlet.ajax.ujorm.ReqestDispatcher;
+import org.ujorm.ujoservlet.ajax.ujorm.AbstractAjaxServlet;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Logger;
