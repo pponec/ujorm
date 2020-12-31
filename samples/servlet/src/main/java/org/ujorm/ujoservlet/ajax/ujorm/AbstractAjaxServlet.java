@@ -39,7 +39,7 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(AbstractAjaxServlet.class.getName());
     /** Default AJAX request parameter name */
-    public static final String DEFAULT_AJAX_REQUEST_PARAM = "_ajax";
+    public static final String DEFAULT_AJAX_REQUEST_PARAM = TableBuilder.DEFAULT_AJAX_REQUEST_PARAM;
     /** Javascript ajax request parameter */
     protected final CharSequence ajaxRequest;
     /** Javascript line separator */
@@ -146,13 +146,13 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
         if (element == null) {
             return;
         }
-        element.addRawTexts(newLine, newLine, "<script>", "$(document).ready(function(){");
+        element.addRawTexts(newLine, "", "<script>", "$(document).ready(function(){");
         if (Check.hasLength(inputCssSelectors)) {
                     final String inpSelectors = Stream.of(inputCssSelectors)
               //.map(t -> "." + t)
                 .collect(Collectors.joining(", "));
 
-            element.addRawTexts(newLine, newLine
+            element.addRawTexts(newLine, ""
                     , "var globalTimeout = null;"
                     , "$('" + inpSelectors + "').keyup(function() {"
                     , "  if (globalTimeout != null) {"
@@ -165,7 +165,7 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
                     , "});"
             );
         }{
-            element.addRawTexts(newLine, newLine
+            element.addRawTexts(newLine, ""
                     , "$('form').submit(function(event){"
                     , "  var data = $('" + formSelector + "').serialize();"
                     , "  $.ajax("
@@ -187,7 +187,7 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
                     , initFormSubmit ? "  $('" + formSelector + "').submit();" : ""
                     );
         }
-        element.addRawTexts(newLine, newLine, "});", "</script>");
+        element.addRawTexts(newLine, "", "});", "</script>");
     }
     
     protected HttpParameter getAjaxParam() {

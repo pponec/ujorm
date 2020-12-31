@@ -16,6 +16,7 @@
 package org.ujorm.ujoservlet.ajax.ujorm;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -28,6 +29,7 @@ import javax.annotation.Nullable;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
@@ -56,6 +58,8 @@ public class TableBuilder<D> {
     private static final String OUTPUT_CSS = "out";
     /** CSS class name for the output box */
     private static final String SUBTITLE_CSS = "subtitle";
+    /** Default AJAX request parameter name */
+    public static final String DEFAULT_AJAX_REQUEST_PARAM = "_ajax";
     
     /** Columns */
     private final List<ColumnModel<D,?>> columns = new ArrayList<>();
@@ -66,7 +70,16 @@ public class TableBuilder<D> {
     /** Iddle delay in millis */
     private int idleDelay = 250;
     /** Ajax request param */
-    private String ajaxRequest = "_ajax";
+    private HttpParameter ajaxRequestParam = new HttpParameter() {
+            @Override
+            public String toString() {
+                return DEFAULT_AJAX_REQUEST_PARAM;
+            }
+        };
+    @Nonnull
+    private Title header = e -> e.addHeading(TableBuilder.this.config.getTitle());
+    @Nonnull
+    private Title footer = e -> e.addText("");
 
     private TableBuilder(@Nonnull Stream<D> resource, @Nonnull HtmlConfig config) {
         this.resource = resource;
@@ -118,10 +131,30 @@ public class TableBuilder<D> {
         return this;
     }
 
+    public TableBuilder<D> setIdleDelay(@Nonnull Duration idleDelay) {
+        this.idleDelay = (int) Assert.notNull(idleDelay, "idleDelay").toMillis();
+        return this;
+    }
+
+    public TableBuilder<D> setAjaxRequestParam(@Nonnull HttpParameter ajaxRequestParam) {
+        this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
+        return this;
+    }
+
+    public TableBuilder<D> setHeader(@Nonnull Title header) {
+        this.header = Assert.notNull(header, "header");
+        return this;
+    }
+
+    public TableBuilder<D> setFooter(@Nonnull Title footer) {
+        this.footer = Assert.notNull(footer, "footer");
+        return this;
+    }    
+
     public void build(HttpServletRequest input, HttpServletResponse output) {    
         try {
             new ReqestDispatcher(input, output, config)
-                    .onParam(getAjaxParam(), jsonBuilder -> doAjax(input, jsonBuilder))
+                    .onParam(ajaxRequestParam, jsonBuilder -> doAjax(input, jsonBuilder))
                     .onDefaultToElement(element -> printBody(input, element));
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Internal server error", e);
@@ -137,7 +170,7 @@ public class TableBuilder<D> {
                     "#" + FORM_ID,
                     "#" + FORM_ID + " input");
             try (Element body = html.getBody()) {
-                body.addHeading(html.getTitle());
+                header.accept(body);
                 body.addDiv(SUBTITLE_CSS).addText("");
                 try (Element form =  body.addForm()
                         .setId(FORM_ID)
@@ -155,7 +188,7 @@ public class TableBuilder<D> {
                     form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, true);                    
                 }
                 printTable(body.addDiv(OUTPUT_CSS), input);
-                printFooter(body);
+                footer.accept(body);
             }  
     }
     
@@ -198,19 +231,6 @@ public class TableBuilder<D> {
             throws ServletException, IOException {
         output.writeClass(OUTPUT_CSS, e -> printTable(e, input));
         output.writeClass(SUBTITLE_CSS, "AJAX ready");
-    }
-    
-    protected void printFooter(final Element body) throws IllegalStateException {
-    }
-    
-    /** Create an Ajax Param */
-    protected HttpParameter getAjaxParam() {
-        return new HttpParameter() {
-            @Override
-            public String toString() {
-                return AbstractAjaxServlet.DEFAULT_AJAX_REQUEST_PARAM;
-            }
-        };
     }
 
     /** Default header CSS style definitions */
@@ -271,13 +291,13 @@ public class TableBuilder<D> {
             return;
         }
         CharSequence newLine = config.getNewLine();
-        element.addRawTexts(newLine, newLine, "<script>", "$(document).ready(function(){");
+        element.addRawTexts(newLine, "", "<script>", "$(document).ready(function(){");
         if (Check.hasLength(inputCssSelectors)) {
                     final String inpSelectors = Stream.of(inputCssSelectors)
               //.map(t -> "." + t)
                 .collect(Collectors.joining(", "));
 
-            element.addRawTexts(newLine, newLine
+            element.addRawTexts(newLine, ""
                     , "var globalTimeout = null;"
                     , "$('" + inpSelectors + "').keyup(function() {"
                     , "  if (globalTimeout != null) {"
@@ -290,11 +310,11 @@ public class TableBuilder<D> {
                     , "});"
             );
         }{
-            element.addRawTexts(newLine, newLine
+            element.addRawTexts(newLine, ""
                     , "$('form').submit(function(event){"
                     , "  var data = $('" + formSelector + "').serialize();"
                     , "  $.ajax("
-                          + "{ url: '?" + ajaxRequest + "=true'"
+                          + "{ url: '?" + ajaxRequestParam + "=true'"
                           + ", type: 'POST'"
                           + ", data: data"
                           + ", timeout: 3000"
@@ -312,7 +332,7 @@ public class TableBuilder<D> {
                     , initFormSubmit ? "  $('" + formSelector + "').submit();" : ""
                     );
         }
-        element.addRawTexts(newLine, newLine, "});", "</script>");
+        element.addRawTexts(newLine, "", "});", "</script>");
     }
     
     /** URL constants */
