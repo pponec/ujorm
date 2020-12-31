@@ -51,101 +51,119 @@ public class TableBuilder<D> {
     private static final Logger LOGGER = Logger.getLogger(TableBuilder.class.getName());
     
     /** Form identifier */
-    private static final String FORM_ID = "form";
+    protected static final String FORM_ID = "form";
     /** Bootstrap form control CSS class name */
-    private static final String CONTROL_CSS = "form-control";
+    protected static final String CONTROL_CSS = "form-control";
     /** CSS class name for the output box */
-    private static final String OUTPUT_CSS = "out";
+    protected static final String OUTPUT_CSS = "out";
     /** CSS class name for the output box */
-    private static final String SUBTITLE_CSS = "subtitle";
+    protected static final String SUBTITLE_CSS = "subtitle";
     /** Default AJAX request parameter name */
-    public static final String DEFAULT_AJAX_REQUEST_PARAM = "_ajax";
+    protected static final String DEFAULT_AJAX_REQUEST_PARAM = "_ajax";
     
     /** Columns */
-    private final List<ColumnModel<D,?>> columns = new ArrayList<>();
-    
+    protected final List<ColumnModel<D,?>> columns = new ArrayList<>(); 
     /** Data resource */
-    private final Stream<D> resource;
-    private final HtmlConfig config;
+    protected final Stream<D> resource;
+    protected final HtmlConfig config;
     /** Iddle delay in millis */
-    private int idleDelay = 250;
+    protected int idleDelay = 250;
     /** Ajax request param */
-    private HttpParameter ajaxRequestParam = new HttpParameter() {
+    protected HttpParameter ajaxRequestParam = new HttpParameter() {
             @Override
             public String toString() {
                 return DEFAULT_AJAX_REQUEST_PARAM;
             }
         };
+    /** Useful URLs */
+    protected Url url = new Url();
+    /** Print a config title by default */
     @Nonnull
-    private Title header = e -> e.addHeading(TableBuilder.this.config.getTitle());
+    protected Title header = e -> e.addHeading(TableBuilder.this.config.getTitle());
+    /** Print an empty text by default */
     @Nonnull
-    private Title footer = e -> e.addText("");
+    protected Title footer = e -> e.addText("");
 
     private TableBuilder(@Nonnull Stream<D> resource, @Nonnull HtmlConfig config) {
         this.resource = resource;
         this.config = config;
     }
 
+    @Nonnull
     public static <D> TableBuilder<D> of(@Nonnull Stream<D> resource) {
         return of("Info", resource);
     }
 
+    @Nonnull
     public static <D> TableBuilder<D> of(@Nonnull String title, @Nonnull Stream<D> resource) {
         return of(resource, HtmlConfig.ofDefault().setTitle(title).setNiceFormat());
     }
     
+    @Nonnull
     public static <D> TableBuilder<D> of(@Nonnull Stream<D> resource, @Nonnull HtmlConfig config) {
         return new TableBuilder(resource, config);
     }
 
+    @Nonnull
     public <V> TableBuilder<D> add(Function<D,?> column) {
-        return addColumn(column, "Column-" + (columns.size() + 1), null);
+        return addInternal(column, "Column-" + (columns.size() + 1), null);
     }
 
+    @Nonnull
     public <V> TableBuilder<D> add(Function<D,?> column, CharSequence title) {
-        return addColumn(column, title, null);
+        return addInternal(column, title, null);
     }
     
+    @Nonnull
     public <V> TableBuilder<D> add(Function<D,?> column, Title title) {
-        return addColumn(column, title, null);
+        return addInternal(column, title, null);
     }
     
+    @Nonnull
     public <V> TableBuilder<D> add(Function<D,?> column, CharSequence title, @Nullable HttpParameter param) {
-        return addColumn(column, title, param);
+        return addInternal(column, title, param);
     }
     
+    @Nonnull
     public <V> TableBuilder<D> add(Function<D,?> column, Title title, @Nullable HttpParameter param) {
-        return addColumn(column, title, param);
+        return addInternal(column, title, param);
     }
     
+    @Nonnull
     public <V> TableBuilder<D> addToElement(Column<D> column, CharSequence title) {
-        return addColumn(column, title, null);
+        return addInternal(column, title, null);
     }
 
+    @Nonnull
     public <V> TableBuilder<D> addToElement(Column<D> column, Title title) {
-        return addColumn(column, title, null);
+        return addInternal(column, title, null);
     }
     
-    protected <V> TableBuilder<D> addColumn(Function<D,?> column, CharSequence title, @Nullable HttpParameter param) {
+    @Nonnull
+    protected <V> TableBuilder<D> addInternal(@Nonnull final Function<D,?> column, @Nonnull final CharSequence title, @Nullable final HttpParameter param) {
         columns.add(new ColumnModel(column, title, param));
         return this;
     }
 
+    @Nonnull
     public TableBuilder<D> setIdleDelay(@Nonnull Duration idleDelay) {
         this.idleDelay = (int) Assert.notNull(idleDelay, "idleDelay").toMillis();
         return this;
     }
 
+    @Nonnull
     public TableBuilder<D> setAjaxRequestParam(@Nonnull HttpParameter ajaxRequestParam) {
         this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
         return this;
     }
 
+    @Nonnull
     public TableBuilder<D> setHeader(@Nonnull Title header) {
         this.header = Assert.notNull(header, "header");
         return this;
     }
 
+    @Nonnull
     public TableBuilder<D> setFooter(@Nonnull Title footer) {
         this.footer = Assert.notNull(footer, "footer");
         return this;
@@ -163,8 +181,8 @@ public class TableBuilder<D> {
     }
     
     protected void printBody(HttpServletRequest input, HtmlElement html) {
-            html.addJavascriptLink(false, Url.JQUERY_JS);
-            html.addCssLink(Url.BOOTSTRAP_CSS);
+            html.addJavascriptLink(false, url.jQueryJs);
+            html.addCssLink(url.bootstrapCss);
             html.addCssBodies("\n", getHeaderCss());
             writeJavascript(html.getHead(), true,
                     "#" + FORM_ID,
@@ -259,11 +277,7 @@ public class TableBuilder<D> {
         @Nullable
         final HttpParameter param;
 
-        public ColumnModel(@Nonnull Function<D, V> column, @Nonnull CharSequence title) {
-            this(column, title, null);
-        }
-
-        public ColumnModel(@Nonnull Function<D, V> column, @Nonnull CharSequence title, @Nonnull HttpParameter param) {
+        public ColumnModel(@Nonnull final Function<D, V> column, @Nonnull final CharSequence title, @Nonnull final HttpParameter param) {
             this.column = column;
             this.title = title;
             this.param = param;
@@ -336,10 +350,22 @@ public class TableBuilder<D> {
     }
     
     /** URL constants */
-    static class Url {
+    public static class Url {        
         /** Link to a Bootstrap URL of CDN */
-        static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
+        protected static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
         /** Link to jQuery of CDN */
-        static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
+        protected static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
+        
+        final String bootstrapCss;
+        final String jQueryJs;
+
+        public Url() {
+            this(BOOTSTRAP_CSS, JQUERY_JS);
+        }
+        
+        public Url(@Nonnull final String bootstrapCss, @Nonnull final String jQueryJs) {
+            this.bootstrapCss = Assert.hasLength(bootstrapCss, "bootstrapCss");
+            this.jQueryJs = Assert.hasLength(jQueryJs, "jQueryJs");
+        }
     }
 }

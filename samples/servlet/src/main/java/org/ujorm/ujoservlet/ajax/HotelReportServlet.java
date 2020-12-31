@@ -15,177 +15,88 @@
  */
 package org.ujorm.ujoservlet.ajax;
 
-import org.ujorm.ujoservlet.ajax.ujorm.ReqestDispatcher;
-import org.ujorm.ujoservlet.ajax.ujorm.AbstractAjaxServlet;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.logging.Logger;
-import java.util.stream.Stream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Element;
-import org.ujorm.tools.web.Html;
-import org.ujorm.tools.web.HtmlElement;
-import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
-import org.ujorm.tools.web.ao.JsonBuilder;
-import org.ujorm.tools.web.ao.Title;
-import org.ujorm.tools.xml.config.HtmlConfig;
-import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
+
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
 import org.ujorm.ujoservlet.ajax.ao.HotelResourceService;
+import org.ujorm.ujoservlet.ajax.ujorm.TableBuilder;
 import static org.ujorm.ujoservlet.ajax.HotelReportServlet.Attrib.*;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
+ *
  * @author Pavel Ponec
  */
 @WebServlet(HotelReportServlet.URL_PATTERN)
-public class HotelReportServlet extends AbstractAjaxServlet {
-    
-    /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(HotelReportServlet.class.getName());
+public class HotelReportServlet extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTERN = "/TableHotelServlet";
-    /** Enable AJAX feature */
-    private static final boolean AJAX_ENABLED = true;
-    /** Form identifier */
-    private static final String FORM_ID = "form";
-    /** Bootstrap form control CSS class name */
-    private static final String CSS_CONTROL = "form-control";
-    /** CSS class name for the output box */
-    private static final String CSS_OUTPUT = "out";
-    /** CSS class name for the output box */
-    private static final String CSS_SUBTITLE = "subtitle";
+    public static final String URL_PATTERN = "/TableHotelServletExt";
     /** A hotel service */
     private final HotelResourceService service = new HotelResourceService();
-    
-    /**
-     * Handles the HTTP method.
-     * @param input servlet request
-     * @param output servlet response
-     * @param post It is a POST request
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doDispatch(final HttpServletRequest input, final HttpServletResponse output, boolean post)
-            throws ServletException, IOException {
-        new ReqestDispatcher("Hotel report", input, output)
-           .onParam(getAjaxParam(), jsonBuilder -> doAjax(input, jsonBuilder))
-           .onDefaultToElement(element -> doProcess(input, element, post));     
-    }
+    /** Row limit */
+    private final int ROW_LIMIT = 15;
 
     /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param input servlet request
-     * @param html servlet response inside a HtmlElement
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void doProcess(
-            final HttpServletRequest input,
-            final HtmlElement html,
-            final boolean post) throws ServletException, IOException {
-
-            html.addJavascriptLink(false, Url.JQUERY_JS);
-        html.addCssLink(Url.BOOTSTRAP_CSS);
-        html.addCssBodies("", getCss());
-        writeJavascript((AJAX_ENABLED ? html.getHead() : null), true,
-                "#" + FORM_ID,
-                "." + NAME,
-                "." + CITY);
-        try (Element body = html.getBody()) {
-            body.addHeading(html.getTitle());
-            body.addDiv(CSS_SUBTITLE).addText("");
-            try (Element form =  body.addForm()
-                    .setId(FORM_ID)
-                    .setMethod(Html.V_POST).setAction("?")) {
-                form.addInput(CSS_CONTROL, NAME)
-                        .setName(NAME)
-                        .setValue(NAME.of(input))
-                        .setAttribute(Html.A_PLACEHOLDER, "Name of hotel");
-                form.addInput(CSS_CONTROL, CITY)
-                        .setName(CITY)
-                        .setValue(CITY.of(input))
-                        .setAttribute(Html.A_PLACEHOLDER, "Name of city");
-                form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, true);                
-            }
-            printTable(body.addDiv(CSS_OUTPUT), input);
-            // Data are from hotelsbase.org, see the original license.
-            body.addText("Data are from", " ")
-                .addLinkedText(Url.HOTELBASE, "hotelsbase.org");
-            body.addText(", ", "see an original", " ")
-                .addLinkedText(Url.DATA_LICENSE, "license");
-            body.addBreak();
-            body.addAnchor(Url.SOURCE_REPO).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
-        }
-    }
-
-    /** Print table */
-    private void printTable(Element root, HttpServletRequest input)
-            throws IllegalStateException, IOException {
-        CharSequence[] tableCss = {"table", "table-striped", "table-bordered"};
-        Object[] tableTitle =
-                    { "Name"
-                    , "City"
-                    , "Street"
-                    , "Price"
-                    , "Currency"
-                    , "Stars"
-                    , "Phone"
-                    , (Title) e -> e.addText("HomePage", " ").addImage(Url.HELP_IMG, "Help")};
-        try (Stream<Hotel> hotels = service.findHotels(15
-                    , NAME.of(input, "")
-                    , CITY.of(input, ""))) {
-            root.addTable(hotels, tableCss, tableTitle
-                    , Hotel::getName
-                    , Hotel::getCity
-                    , Hotel::getStreet
-                    , Hotel::getPrice
-                    , Hotel::getCurrency
-                    , Hotel::getStars
-                    , Hotel::getPhone
-                    , (Column<Hotel>)(e, v) -> e.addLinkedText(v.getHomePage(), "link")
-            );
-        }
-    }
-
-    /**
-     * Return lighlited text in HTML format according a regular expression
-     * @param input servlet request
-     * @param output A JSON writer
+     * @param output servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doAjax(HttpServletRequest input, JsonBuilder output)
-            throws ServletException, IOException {
-        output.writeClass(CSS_OUTPUT, e -> printTable(e, input));
-        output.writeClass(CSS_SUBTITLE, "AJAX ready");
+    protected void doGet(
+            final HttpServletRequest input,
+            final HttpServletResponse output) throws ServletException, IOException {
+
+        TableBuilder.of("Hotel Report", service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input)))
+                .add(Hotel::getName, "Name", NAME)
+                .add(Hotel::getCity, "City", CITY)
+                .add(Hotel::getStreet, "Street")
+                .add(Hotel::getPrice, "Price")
+                .add(Hotel::getCurrency, "Currency")
+                .add(Hotel::getStars, "Stars")
+                .add(Hotel::getPhone, "Phone")
+                .addToElement(
+                        (e, v) -> e.addLinkedText(v.getHomePage(), "link"), 
+                        (e) -> e.addText("HomePage", " ").addImage(Url.HELP_IMG, "Help"))
+                .setFooter(e -> printFooter(e))
+                .build(input, output);
+    }
+    
+    /**  Data are from hotelsbase.org, see the original license */
+    protected void printFooter(final Element body) throws IllegalStateException {
+        //
+        body.addText("Data are from", " ")
+                .addLinkedText(Url.HOTELBASE, "hotelsbase.org");
+        body.addText(", ", "see an original", " ")
+                .addLinkedText(Url.DATA_LICENSE, "license");
+        body.addBreak();
+        body.addAnchor(Url.SOURCE_REPO).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
     }
 
-    /** Create a configuration of HTML model */
-    private DefaultHtmlConfig getConfig(String title) {
-        DefaultHtmlConfig config;
-        config = HtmlConfig.ofDefault();
-        config.setNiceFormat();
-        config.setTitle(title);
-        return config;
-    }
+    /**
+     * HTTP attributes
+     */
+    enum Attrib implements HttpParameter {
+        NAME,
+        CITY;
 
-    private String getCss() {
-        return "body { margin: 10px; }"
-                + "#form input { width: 200px;}"
-                + ".subtitle{ font-size: 10px; color: silver;}"
-                + ".form-control { display: inline; }"
-                + ".btn { vertical-align: inherit; }"
-                + "form { margin-bottom: 2px; }";
+        @Override
+        public String toString() {
+            return name().toLowerCase(Locale.ENGLISH);
+        }
     }
-
+    
     /** URL constants */
     static class Url {
 
@@ -194,10 +105,6 @@ public class HotelReportServlet extends AbstractAjaxServlet {
         /** Data license */
         static final String DATA_LICENSE = "https://web.archive.org/web/20150407085757/"
                 + "http://api.hotelsbase.org/documentation.php";
-        /** Link to a Bootstrap URL of CDN */
-        static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
-        /** Link to jQuery of CDN */
-        static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
         /** Help image */
         static final String HELP_IMG = "images/help.png";
         /** Source of the class */
@@ -206,14 +113,19 @@ public class HotelReportServlet extends AbstractAjaxServlet {
                 + "/samples/servlet/src/main/java"
                 + "/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
     }
-
-    /** HTTP attributes */
-    enum Attrib implements HttpParameter {
-        NAME,
-        CITY;       
-        @Override
-        public String toString() {
-            return name().toLowerCase(Locale.ENGLISH);
-        }
+    
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param input servlet request
+     * @param output servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(
+            final HttpServletRequest input,
+            final HttpServletResponse output) throws ServletException, IOException {
+        doGet(input, output);
     }
 }
