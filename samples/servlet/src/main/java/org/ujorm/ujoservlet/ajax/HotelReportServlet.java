@@ -67,8 +67,8 @@ public class HotelReportServlet extends HttpServlet {
                 .add(Hotel::getStars, "Stars")
                 .add(Hotel::getPhone, "Phone")
                 .addToElement(
-                        (e, v) -> e.addLinkedText(v.getHomePage(), "link"), 
-                        (e) -> e.addText("HomePage", " ").addImage(Url.HELP_IMG, "Help"))
+                        (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
+                        (e) -> e.addText("HomePage", " ").addImage(Url.HELP_IMG, "Help")) // Title
                 .setFooter(e -> printFooter(e))
                 .build(input, output);
     }
@@ -99,14 +99,13 @@ public class HotelReportServlet extends HttpServlet {
     
     /** URL constants */
     static class Url {
-
+        /** Help image */
+        static final String HELP_IMG = "images/help.png";
         /** Data license */
         static final String HOTELBASE = "http://hotelbase.org/";
         /** Data license */
         static final String DATA_LICENSE = "https://web.archive.org/web/20150407085757/"
                 + "http://api.hotelsbase.org/documentation.php";
-        /** Help image */
-        static final String HELP_IMG = "images/help.png";
         /** Source of the class */
         static final String SOURCE_REPO = "https://github.com/pponec/ujorm/blob/"
                 + "58c0d8a170bfa25b8fdc4d5ebbdcd27dbd19c2dd"
