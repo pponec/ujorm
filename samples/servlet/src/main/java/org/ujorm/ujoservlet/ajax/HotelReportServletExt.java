@@ -56,7 +56,7 @@ public class HotelReportServletExt extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
 
-        TableBuilder.of(service.findHotels(20, NAME.of(input), CITY.of(input)), "Report")
+        TableBuilder.of("Report", service.findHotels(20, NAME.of(input), CITY.of(input)))
                 .add(Hotel::getName, "Name", NAME)
                 .add(Hotel::getCity, "City", CITY)
                 .add(Hotel::getStreet, "Street")

@@ -76,7 +76,7 @@ public class HotelReportServlet extends AbstractAjaxServlet {
             throws ServletException, IOException {
         new ReqestDispatcher("Hotel report", input, output)
            .onParam(getAjaxParam(), jsonBuilder -> doAjax(input, jsonBuilder))
-           .onDefaultByElement(element -> doProcess(input, element, post));     
+           .onDefaultToElement(element -> doProcess(input, element, post));     
     }
 
     /**

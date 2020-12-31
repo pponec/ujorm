@@ -120,9 +120,9 @@ public class ReqestDispatcher {
     }
 
     /**
-     * Process the request
+     * The process writes to an element
      */
-    public void onDefaultByElement(@Nonnull final IOElement defaultProcessor) throws ServletException, IOException {
+    public void onDefaultToElement(@Nonnull final IOElement defaultProcessor) throws ServletException, IOException {
         if (!done) {
             try (HtmlElement html = HtmlElement.of(htmlConfig, output.getWriter())) {
                 defaultProcessor.run(html);

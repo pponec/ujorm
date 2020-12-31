@@ -84,14 +84,14 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
      */
     protected void doDispatch(final HttpServletRequest input, final HttpServletResponse output, boolean post)
             throws ServletException, IOException {
-         try {
-             new ReqestDispatcher(input, output)
-                .onParam(getAjaxParam(), jsonBuilder -> doAjax(input, jsonBuilder))
-                .onDefault(() -> doProcess(input, output, post)); 
+        try {
+            new ReqestDispatcher(input, output)
+                    .onParam(getAjaxParam(), jsonBuilder -> doAjax(input, jsonBuilder))
+                    .onDefault(() -> doProcess(input, output, post));
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "GET error", e);
             output.setStatus(500);
-        }       
+        }
     }
 
     /**

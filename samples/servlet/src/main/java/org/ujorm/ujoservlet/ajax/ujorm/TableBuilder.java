@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Check;
@@ -33,6 +34,7 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
+import org.ujorm.tools.web.ao.JsonBuilder;
 import org.ujorm.tools.web.ao.Title;
 import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.xml.config.HtmlConfig;
@@ -72,10 +74,10 @@ public class TableBuilder<D> {
     }
 
     public static <D> TableBuilder<D> of(@Nonnull Stream<D> resource) {
-        return of(resource, "Info");
+        return of("Info", resource);
     }
 
-    public static <D> TableBuilder<D> of(@Nonnull Stream<D> resource, @Nonnull String title) {
+    public static <D> TableBuilder<D> of(@Nonnull String title, @Nonnull Stream<D> resource) {
         return of(resource, HtmlConfig.ofDefault().setTitle(title).setNiceFormat());
     }
     
@@ -101,12 +103,21 @@ public class TableBuilder<D> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void build(HttpServletRequest input, HttpServletResponse output) {
-
-        try (HtmlElement html = HtmlElement.of(input, output, config)) {
+    public void build(HttpServletRequest input, HttpServletResponse output) {    
+        try {
+            new ReqestDispatcher(input, output, config)
+                    .onParam(getAjaxParam(), jsonBuilder -> doAjax(input, jsonBuilder))
+                    .onDefaultToElement(element -> printBody(input, element));
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Internal server error", e);
+            output.setStatus(500);
+        }
+    }
+    
+    protected void printBody(HttpServletRequest input, HtmlElement html) {
             html.addJavascriptLink(false, Url.JQUERY_JS);
             html.addCssLink(Url.BOOTSTRAP_CSS);
-            html.addCssBodies("\n", getCss());
+            html.addCssBodies("\n", getHeaderCss());
             writeJavascript(html.getHead(), true,
                     "#" + FORM_ID,
                     "#" + FORM_ID + " input");
@@ -130,15 +141,11 @@ public class TableBuilder<D> {
                 }
                 printTable(body.addDiv(OUTPUT_CSS), input);
                 printFooter(body);
-            }
-        } catch (IOException | RuntimeException e) {
-            LOGGER.log(Level.SEVERE, "Internal server error");
-            output.setStatus(500);
-        }
+            }  
     }
     
     protected void printTable(Element parent, HttpServletRequest input) {
-        final Element table = parent.addTable();
+        final Element table = parent.addTable(getTableCss());
         final Element headerElement = table.addElement(Html.TR);
         for (ColumnModel<D,?> col : columns) {
             final Object value = col.title;
@@ -165,17 +172,48 @@ public class TableBuilder<D> {
         });
     }
     
+    /**
+     * Return lighlited text in HTML format according a regular expression
+     * @param input servlet request
+     * @param output A JSON writer
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void doAjax(HttpServletRequest input, JsonBuilder output)
+            throws ServletException, IOException {
+        output.writeClass(OUTPUT_CSS, e -> printTable(e, input));
+        output.writeClass(SUBTITLE_CSS, "AJAX ready");
+    }
+    
     protected void printFooter(final Element body) throws IllegalStateException {
     }
+    
+    /** Create an Ajax Param */
+    protected HttpParameter getAjaxParam() {
+        return new HttpParameter() {
+            @Override
+            public String toString() {
+                return AbstractAjaxServlet.DEFAULT_AJAX_REQUEST_PARAM;
+            }
+        };
+    }
 
-    /** Default CSS styles */
+    /** Default header CSS style definitions */
     @Nonnull
-    protected CharSequence[] getCss() {
+    protected CharSequence[] getHeaderCss() {
         return new CharSequence[] { "body { margin: 10px;}"
                 , "." + SUBTITLE_CSS + " { font-size: 10px; color: silver;}"
                 , "#" + FORM_ID + " { margin-bottom: 2px;}"
                 , "#" + FORM_ID + " input { width: 200px;}"
                 , "." + CONTROL_CSS + " { display: inline;}"};
+    }
+    
+    /** Table CSS classes */
+    protected CharSequence[] getTableCss() {
+        return new CharSequence[] 
+              { "table" 
+              , "table-striped"
+              , "table-bordered"};
     }
 
     class ColumnModel<D,V> {
