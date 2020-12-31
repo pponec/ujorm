@@ -15,18 +15,11 @@
  */
 package org.ujorm.tools.web.ao;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import java.util.stream.Stream;
 
 /**
  * Static method for common use
@@ -35,7 +28,7 @@ import org.ujorm.tools.Check;
  */
 public abstract class WebUtils {
 
-        /** Check if any attribute is typeof the Renderer */
+    /** Check if any attribute is typeof the Renderer */
     public static final boolean isType(final Class type, final @Nonnull Object... items) {
         boolean result = false;
         for (Object item : items) {
@@ -45,6 +38,18 @@ public abstract class WebUtils {
             }
         }
         return result;
+    }
+     
+    /** Check if any attribute is typeof the Renderer */
+    public static final boolean isType(final Class type, final @Nonnull Stream<Object> items) {
+        final boolean[] result = {false};
+        items.filter(t -> !result[0])
+                .forEach(t -> {
+                    if (type.isInstance(t)) {
+                        result[0] = true;
+                    }
+                });
+        return result[0];
     }
 
    /** Returns an URL of the servlet of the root where a default value is an empty string */

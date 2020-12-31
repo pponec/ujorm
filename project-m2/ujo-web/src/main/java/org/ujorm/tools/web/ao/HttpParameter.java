@@ -16,6 +16,7 @@
 package org.ujorm.tools.web.ao;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.servlet.ServletRequest;
 
 
@@ -60,11 +61,14 @@ public interface HttpParameter extends CharSequence {
         return toString().subSequence(start, end);
     }
 
+    /** Default value is an empty String */
+    @Nonnull
     default String of(@Nonnull final ServletRequest request) {
-        return of(request, null);
+        return of(request, "");
     }
 
-    default String of(@Nonnull final ServletRequest request, @Nonnull final String defaultValue) {
+    /** Returns a parameter of the request of a default value */
+    default String of(@Nonnull final ServletRequest request, @Nullable final String defaultValue) {
         final String result = request.getParameter(toString());
         return result != null ? result : defaultValue;
     }

@@ -126,8 +126,9 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
      * Implement an AJAX action
      * @param output Simple JSON writer in structure key-value.
      */
-    protected abstract void doAjax(HttpServletRequest input, JsonBuilder output)
-            throws ServletException, IOException;
+    protected void doAjax(HttpServletRequest input, JsonBuilder output)
+            throws ServletException, IOException {
+    }
 
     /**
      * Generate a Javascript

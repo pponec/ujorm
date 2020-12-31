@@ -53,8 +53,8 @@ public class HotelResourceService {
      * Direct stream of data source.
      * @return
      */
-    public Stream<Hotel> findHotels(int limit, @Nonnull String namePatterm, @Nonnull String cityPattern) throws IOException {
-        String nameUp = namePatterm.toUpperCase(Locale.ENGLISH);
+    public Stream<Hotel> findHotels(int limit, @Nonnull String namePattern, @Nonnull String cityPattern) throws IOException {
+        String nameUp = namePattern.toUpperCase(Locale.ENGLISH);
         String cityUp = cityPattern.toUpperCase(Locale.ENGLISH);
         return loadHotelStream()
                     .filter(t -> nameUp.isEmpty() || t.getName().toUpperCase().contains(nameUp))
