@@ -86,26 +86,35 @@ public class TableBuilder<D> {
     }
 
     public <V> TableBuilder<D> add(Function<D,?> column) {
-        return add(column, "col-" + columns.size());
+        return addColumn(column, "Column-" + (columns.size() + 1), null);
     }
 
     public <V> TableBuilder<D> add(Function<D,?> column, CharSequence title) {
-        columns.add(new ColumnModel(column, title));
-        return this;
+        return addColumn(column, title, null);
+    }
+    
+    public <V> TableBuilder<D> add(Function<D,?> column, Title title) {
+        return addColumn(column, title, null);
     }
     
     public <V> TableBuilder<D> add(Function<D,?> column, CharSequence title, @Nullable HttpParameter param) {
-        columns.add(new ColumnModel(column, title, param));
-        return this;
+        return addColumn(column, title, param);
+    }
+    
+    public <V> TableBuilder<D> add(Function<D,?> column, Title title, @Nullable HttpParameter param) {
+        return addColumn(column, title, param);
     }
     
     public <V> TableBuilder<D> addToElement(Column<D> column, CharSequence title) {
-        columns.add(new ColumnModel(column, title));
-        return this;
+        return addColumn(column, title, null);
     }
 
     public <V> TableBuilder<D> addToElement(Column<D> column, Title title) {
-        columns.add(new ColumnModel(column, title));
+        return addColumn(column, title, null);
+    }
+    
+    protected <V> TableBuilder<D> addColumn(Function<D,?> column, CharSequence title, @Nullable HttpParameter param) {
+        columns.add(new ColumnModel(column, title, param));
         return this;
     }
 

@@ -66,7 +66,8 @@ public class HotelReportServletExt extends HttpServlet {
                 .add(Hotel::getCurrency, "Currency")
                 .add(Hotel::getStars, "Stars")
                 .add(Hotel::getPhone, "Phone")
-                .addToElement((e, v) -> e.addLinkedText(v.getHomePage(), "link"), 
+                .addToElement(
+                        (e, v) -> e.addLinkedText(v.getHomePage(), "link"), 
                         (e) -> e.addText("HomePage", " ").addImage(HELP_IMG, "Help"))
                 .build(input, output);
     }
