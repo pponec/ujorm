@@ -39,6 +39,8 @@ public class HotelReportServletExt extends HttpServlet {
 
     /** URL pattern */
     public static final String URL_PATTERN = "/TableHotelServletExt";
+    /** Help image */
+    static final String HELP_IMG = "images/help.png";
     /** A hotel service */
     private final HotelResourceService service = new HotelResourceService();
 
@@ -60,6 +62,12 @@ public class HotelReportServletExt extends HttpServlet {
                 .add(Hotel::getName, "Name", NAME)
                 .add(Hotel::getCity, "City", CITY)
                 .add(Hotel::getStreet, "Street")
+                .add(Hotel::getPrice, "Price")
+                .add(Hotel::getCurrency, "Currency")
+                .add(Hotel::getStars, "Stars")
+                .add(Hotel::getPhone, "Phone")
+                .addToElement((e, v) -> e.addLinkedText(v.getHomePage(), "link"), 
+                        (e) -> e.addText("HomePage", " ").addImage(HELP_IMG, "Help"))
                 .build(input, output);
     }
 

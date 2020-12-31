@@ -99,8 +99,14 @@ public class TableBuilder<D> {
         return this;
     }
     
-    public <V> TableBuilder<D> addColumn(Column<D> column, CharSequence name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public <V> TableBuilder<D> addToElement(Column<D> column, CharSequence title) {
+        columns.add(new ColumnModel(column, title));
+        return this;
+    }
+
+    public <V> TableBuilder<D> addToElement(Column<D> column, Title title) {
+        columns.add(new ColumnModel(column, title));
+        return this;
     }
 
     public void build(HttpServletRequest input, HttpServletResponse output) {    
