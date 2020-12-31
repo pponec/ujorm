@@ -39,10 +39,12 @@ public class HotelReportServletExt extends HttpServlet {
 
     /** URL pattern */
     public static final String URL_PATTERN = "/TableHotelServletExt";
-    /** Help image */
-    static final String HELP_IMG = "images/help.png";
     /** A hotel service */
     private final HotelResourceService service = new HotelResourceService();
+    /** Row limit */
+    private final int ROW_LIMIT = 15;
+    /** Help image */
+    static final String HELP_IMG = "images/help.png";
 
 
     /**
@@ -58,7 +60,7 @@ public class HotelReportServletExt extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
 
-        TableBuilder.of("Report", service.findHotels(20, NAME.of(input), CITY.of(input)))
+        TableBuilder.of("Report", service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input)))
                 .add(Hotel::getName, "Name", NAME)
                 .add(Hotel::getCity, "City", CITY)
                 .add(Hotel::getStreet, "Street")
