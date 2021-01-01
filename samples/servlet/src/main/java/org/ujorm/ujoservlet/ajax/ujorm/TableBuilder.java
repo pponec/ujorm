@@ -222,7 +222,7 @@ public class TableBuilder<D> {
 
                 }
                 form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, true);
-                formAdditions.accept(element -> element.addText(""));
+                formAdditions.accept(form);
             }
             printTableBody(body.addTable(getTableCss()), input);
             footer.accept(body);
