@@ -81,6 +81,9 @@ public class TableBuilder<D> {
     /** Print an empty text by default */
     @Nonnull
     protected Title footer = e -> e.addText("");
+    /** Form injector */
+    @Nonnull
+    protected Title formAdditions = footer;
     /** is An AJAX enabled? */
     protected boolean ajaxEnabled = true;
     /** Call an autosubmit on first load */
@@ -169,8 +172,14 @@ public class TableBuilder<D> {
     public TableBuilder<D> setFooter(@Nonnull Title footer) {
         this.footer = Assert.notNull(footer, "footer");
         return this;
-    }    
+    }
 
+    @Nonnull
+    public TableBuilder<D> setFormAdditions(@Nonnull Title formAdditions) {
+        this.formAdditions = Assert.notNull(formAdditions, "formAdditions");
+        return this;
+    }    
+    
     /** Enable of disable an AJAX feature, default value si {@code true} */
     public TableBuilder<D> setAjaxEnabled(boolean ajaxEnabled) {
         this.ajaxEnabled = ajaxEnabled;
@@ -212,7 +221,8 @@ public class TableBuilder<D> {
                     }
 
                 }
-                form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, true);                    
+                form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, true);
+                formAdditions.accept(element -> element.addText(""));
             }
             printTableBody(body.addTable(getTableCss()), input);
             footer.accept(body);

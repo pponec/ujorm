@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
