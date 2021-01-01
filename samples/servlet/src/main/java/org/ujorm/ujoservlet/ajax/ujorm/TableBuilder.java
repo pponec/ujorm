@@ -55,14 +55,7 @@ public class TableBuilder<D> {
     protected static final String CONTROL_CSS = "form-control";
     /** CSS class name for the output box */
     protected static final String SUBTITLE_CSS = "subtitle";
-    /** Default AJAX request parameter name */
-    protected static final HttpParameter DEFAULT_AJAX_REQUEST_PARAM = new HttpParameter() {
-            @Override
-            public String toString() {
-                return "_ajax";
-            }
-        };
-    
+
     /** Columns */
     protected final List<ColumnModel<D,?>> columns = new ArrayList<>(); 
     /** Data resource */
@@ -71,7 +64,7 @@ public class TableBuilder<D> {
     /** Iddle delay in millis */
     protected int idleDelay = 250;
     /** Ajax request param */
-    protected HttpParameter ajaxRequestParam = DEFAULT_AJAX_REQUEST_PARAM;
+    protected HttpParameter ajaxRequestParam = JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM;
     /** Useful URLs */
     protected Url url = new Url();
     /** Print a config title by default */

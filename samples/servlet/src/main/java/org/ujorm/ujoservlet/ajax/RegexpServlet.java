@@ -17,11 +17,14 @@ package org.ujorm.ujoservlet.ajax;
 
 import org.ujorm.ujoservlet.ajax.ao.Service;
 import org.ujorm.ujoservlet.ajax.ao.Message;
-import org.ujorm.ujoservlet.ajax.ujorm.AbstractAjaxServlet;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Element;
@@ -33,14 +36,17 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Url.*;
+import org.ujorm.ujoservlet.ajax.ujorm.JavaScriptWriter;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
  * @author Pavel Ponec
  */
 @WebServlet(RegexpServlet.URL_PATTERN)
-public class RegexpServlet extends AbstractAjaxServlet {
+public class RegexpServlet extends HttpServlet {
 
+    /** Logger */
+    private static final Logger LOGGER = Logger.getLogger(RegexpServlet.class.getName());
     /** URL pattern */
     public static final String URL_PATTERN = "/RegexpServlet";
     /** Enable AJAX feature */
@@ -53,6 +59,8 @@ public class RegexpServlet extends AbstractAjaxServlet {
     private static final String CSS_OUTPUT = "out";
     /** CSS class name for the output box */
     private static final String CSS_SUBTITLE = "subtitle";
+    /** AJAX param */
+    private static final HttpParameter AJAX = JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM;
     /** A common service */
     private final Service service = new Service();
     
@@ -64,18 +72,21 @@ public class RegexpServlet extends AbstractAjaxServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doProcess(
+    protected void doGet(
             final HttpServletRequest input,
-            final HttpServletResponse output,
-            final boolean post) throws ServletException, IOException {
+            final HttpServletResponse output) throws ServletException, IOException {
+        
         try (HtmlElement html = HtmlElement.of(input, output, getConfig("Regular expression tester"))) {
             html.addJavascriptLink(false, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
-            html.addCssBodies(newLine, service.getCss());
-            writeJavascript((AJAX_ENABLED ? html.getHead() : null), true,
-                    "#" + FORM_ID,
-                    "#" + REGEXP,
-                    "#" + TEXT);
+            html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
+            if (AJAX_ENABLED) {
+                new JavaScriptWriter( 
+                        "#" + REGEXP, 
+                        "#" + TEXT)
+                        .setFormSelector("#" + FORM_ID)
+                        .write(html.getHead());   
+            }
             Message msg = highlight(input);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
@@ -99,6 +110,18 @@ public class RegexpServlet extends AbstractAjaxServlet {
                 body.addElement(Html.HR);
                 body.addAnchor(SOURCE_URL).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
             }
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Internal server error", e);
+            output.setStatus(500);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+        if (AJAX.isTrue(input)) {
+            doAjax(input, JsonBuilder.of(input, output, getConfig("?"))).close();
+        } else {
+            doGet(input, output);
         }
     }
 
@@ -109,13 +132,14 @@ public class RegexpServlet extends AbstractAjaxServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doAjax(HttpServletRequest input, JsonBuilder output)
+    @Nonnull
+    protected JsonBuilder doAjax(HttpServletRequest input, JsonBuilder output)
             throws ServletException, IOException {
             final Message msg = highlight(input);
             output.writeClass(CSS_OUTPUT, e -> e.addElementIf(msg.isError(), Html.SPAN, "error")
                     .addRawText(msg));
             output.writeClass(CSS_SUBTITLE, "AJAX ready");
+            return output;
     }
 
     /** Build a HTML result */
@@ -126,7 +150,7 @@ public class RegexpServlet extends AbstractAjaxServlet {
     }
 
     /** Create a configuration of HTML model */
-    private DefaultHtmlConfig getConfig(String title) {
+    private DefaultHtmlConfig getConfig(@Nonnull String title) {
         DefaultHtmlConfig config;
         config = HtmlConfig.ofDefault();
         config.setNiceFormat();

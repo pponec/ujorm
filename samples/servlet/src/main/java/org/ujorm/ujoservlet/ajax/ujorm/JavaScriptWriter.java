@@ -33,13 +33,20 @@ import org.ujorm.tools.web.ao.Injector;
  */
 public class JavaScriptWriter implements Injector {
     
+    /** Default AJAX request parameter name */
+    public static final HttpParameter DEFAULT_AJAX_REQUEST_PARAM = new HttpParameter() {
+            @Override
+            public String toString() {
+                return "_ajax";
+            }
+        };
     /** Default duration */
     public static final Duration DEFAULT_DURATION = Duration.ofMillis(250);
 
     /** Javascript ajax request parameter */
     protected final HttpParameter ajaxRequestParam;   
      /** Input selectors */
-    protected final String[] inputCssSelectors;
+    protected final CharSequence[] inputCssSelectors;
     /** Input idle delay */
     protected Duration idleDelay = DEFAULT_DURATION;
     
@@ -54,19 +61,39 @@ public class JavaScriptWriter implements Injector {
         this("form input");
     }
 
-    public JavaScriptWriter(@Nonnull String... inputSelectors) {
-        this(DEFAULT_DURATION, TableBuilder.DEFAULT_AJAX_REQUEST_PARAM, inputSelectors);
+    public JavaScriptWriter(@Nonnull CharSequence... inputSelectors) {
+        this(DEFAULT_DURATION, JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM, inputSelectors);
     }
     
     public JavaScriptWriter(
             @Nonnull Duration idleDelay, 
             @Nonnull HttpParameter ajaxRequestParam,
-            @Nonnull String... inputSelectors) {
+            @Nonnull CharSequence... inputSelectors) {
         this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
         this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
         this.inputCssSelectors = Assert.hasLength(inputSelectors, "inputSelectors");
     }
 
+    public JavaScriptWriter setIdleDelay(Duration idleDelay) {
+        this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
+        return this;
+    }
+
+    public JavaScriptWriter setFormSelector(String formSelector) {
+        this.formSelector = Assert.notNull(formSelector, "formSelector");
+        return this;
+    }
+
+    public JavaScriptWriter setOnLoadSubmit(boolean onLoadSubmit) {
+        this.onLoadSubmit = Assert.notNull(onLoadSubmit, "onLoadSubmit");
+        return this;
+    }
+
+    public JavaScriptWriter setNewLine(CharSequence newLine) {
+        this.newLine = Assert.notNull(newLine, "newLine");
+        return this;
+    }
+    
     /**
      * Generate a Javascript
      */
