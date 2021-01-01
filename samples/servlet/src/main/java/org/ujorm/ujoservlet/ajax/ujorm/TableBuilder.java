@@ -273,7 +273,9 @@ public class TableBuilder<D> {
                 , "." + SUBTITLE_CSS + " { font-size: 10px; color: silver;}"
                 , "#" + FORM_ID + " { margin-bottom: 2px;}"
                 , "#" + FORM_ID + " input { width: 200px;}"
-                , "." + CONTROL_CSS + " { display: inline;}"};
+                , "." + CONTROL_CSS + " { display: inline;}"
+                , ".table th { background-color: #e8e8e8;}"
+        };
     }
     
     /** Table CSS classes */
