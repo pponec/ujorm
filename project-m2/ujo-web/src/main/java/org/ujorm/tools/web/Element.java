@@ -324,7 +324,7 @@ public final class Element implements ApiElement<Element>, Html {
 
         final Element result = addTable(cssClass != null ? cssClass : new String[0]);
         if (Check.hasLength(headers)) {
-            final Element rowElement = result.addElement(Html.TR);
+            final Element rowElement = result.addElement(Html.THEAD).addElement(Html.TR);
             for (Object value : headers) {
                 Element th = rowElement.addElement(Html.TH);
                 if (value instanceof Title) {
@@ -334,18 +334,20 @@ public final class Element implements ApiElement<Element>, Html {
                 }
             }
         }
-        final boolean hasRenderer = WebUtils.isType(Column.class, attributes);
-        domains.forEach(value -> {
-            final Element rowElement = result.addElement(Html.TR);
-            for (Function<D, V> attribute : attributes) {
-                final Element td = rowElement.addElement(Html.TD);
-                if (hasRenderer && attribute instanceof Column) {
-                    ((Column)attribute).write(td, value);
-                } else {
-                    td.addText(attribute.apply(value));
+        try (Element tBody = result.addElement(TBODY)) {
+            final boolean hasRenderer = WebUtils.isType(Column.class, attributes);
+            domains.forEach(value -> {
+                final Element rowElement = tBody.addElement(Html.TR);
+                for (Function<D, V> attribute : attributes) {
+                    final Element td = rowElement.addElement(Html.TD);
+                    if (hasRenderer && attribute instanceof Column) {
+                        ((Column)attribute).write(td, value);
+                    } else {
+                        td.addText(attribute.apply(value));
+                    }
                 }
-            }
-        });
+            });
+        }
         return result;
     }
 

@@ -16,11 +16,11 @@
  */
 package org.ujorm.tools.xml.config;
 
-import java.nio.charset.Charset;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
+import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.*;
 
 /**
  * Configuraion of HtmlPage
@@ -61,8 +61,8 @@ public interface HtmlConfig extends XmlConfig {
     default DefaultHtmlConfig cloneForAjax() {
         final DefaultHtmlConfig result = new DefaultHtmlConfig(this);
         result.setNiceFormat();
-        result.setRootElementName("");
-        result.setDoctype("");
+        result.setRootElementName(EMPTY);
+        result.setDoctype(EMPTY);
         result.setHtmlHeader(false);
         result.setCacheAllowed(false);
         return result;
@@ -99,7 +99,7 @@ public interface HtmlConfig extends XmlConfig {
         final DefaultHtmlConfig result = ofDefault();
         result.setRootElementName(enabled ? rootElementName : null);
         result.setHtmlHeader(false);
-        result.setDoctype("");
+        result.setDoctype(EMPTY);
         return result;
     }
 
@@ -108,9 +108,10 @@ public interface HtmlConfig extends XmlConfig {
      */
     @Nonnull
     public static DefaultHtmlConfig ofEmptyElement() {
-        final DefaultHtmlConfig result = ofElement("", false);
+        final DefaultHtmlConfig result = ofElement(EMPTY, false);
         result.setHtmlHeader(false);
-        result.setDoctype("");
+        result.setDoctype(EMPTY);
+        result.setNewLine(EMPTY);
         return result;
     }
     

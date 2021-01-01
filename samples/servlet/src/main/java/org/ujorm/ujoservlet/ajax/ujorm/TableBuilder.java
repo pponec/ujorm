@@ -55,8 +55,6 @@ public class TableBuilder<D> {
     /** Bootstrap form control CSS class name */
     protected static final String CONTROL_CSS = "form-control";
     /** CSS class name for the output box */
-    protected static final String OUTPUT_CSS = "out";
-    /** CSS class name for the output box */
     protected static final String SUBTITLE_CSS = "subtitle";
     /** Default AJAX request parameter name */
     protected static final String DEFAULT_AJAX_REQUEST_PARAM = "_ajax";
@@ -83,6 +81,10 @@ public class TableBuilder<D> {
     /** Print an empty text by default */
     @Nonnull
     protected Title footer = e -> e.addText("");
+    /** is An AJAX enabled? */
+    protected boolean ajaxEnabled = true;
+    /** Call an autosubmit on first load */
+    protected boolean autoSubmmitOnLoad = false;
 
     private TableBuilder(@Nonnull Stream<D> resource, @Nonnull HtmlConfig config) {
         this.resource = resource;
@@ -169,50 +171,56 @@ public class TableBuilder<D> {
         return this;
     }    
 
+    /** Enable of disable an AJAX feature, default value si {@code true} */
+    public TableBuilder<D> setAjaxEnabled(boolean ajaxEnabled) {
+        this.ajaxEnabled = ajaxEnabled;
+        return this;
+    }
+    
+    /** Build the HTML page including a table */
     public void build(HttpServletRequest input, HttpServletResponse output) {    
         try {
             new ReqestDispatcher(input, output, config)
                     .onParam(ajaxRequestParam, jsonBuilder -> doAjax(input, jsonBuilder))
-                    .onDefaultToElement(element -> printBody(input, element));
+                    .onDefaultToElement(element -> printHtmlBody(input, element));
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Internal server error", e);
             output.setStatus(500);
         }
     }
     
-    protected void printBody(HttpServletRequest input, HtmlElement html) {
-            html.addJavascriptLink(false, url.jQueryJs);
-            html.addCssLink(url.bootstrapCss);
-            html.addCssBodies("\n", getHeaderCss());
-            writeJavascript(html.getHead(), true,
-                    "#" + FORM_ID,
-                    "#" + FORM_ID + " input");
-            try (Element body = html.getBody()) {
-                header.accept(body);
-                body.addDiv(SUBTITLE_CSS).addText("");
-                try (Element form =  body.addForm()
-                        .setId(FORM_ID)
-                        .setMethod(Html.V_POST).setAction("?")) {
-                    
-                    for (ColumnModel<D, ?> column : columns) {
-                        if (column.isFiltered()) {
-                            form.addInput(CONTROL_CSS, column.param)
-                                    .setName(column.param)
-                                    .setValue(column.param.of(input, ""))
-                                    .setAttribute(Html.A_PLACEHOLDER, column.title);                            
-                        }
-                        
+    protected void printHtmlBody(HttpServletRequest input, HtmlElement html) {
+        html.addJavascriptLink(false, url.jQueryJs);
+        html.addCssLink(url.bootstrapCss);
+        html.addCssBodies("\n", getHeaderCss());
+        writeJavascript(html.getHead(), autoSubmmitOnLoad,
+                "#" + FORM_ID,
+                "#" + FORM_ID + " input");
+        try (Element body = html.getBody()) {
+            header.accept(body);
+            body.addDiv(SUBTITLE_CSS).addText("");
+            try (Element form =  body.addForm()
+                    .setId(FORM_ID)
+                    .setMethod(Html.V_POST).setAction("?")) {
+
+                for (ColumnModel<D, ?> column : columns) {
+                    if (column.isFiltered()) {
+                        form.addInput(CONTROL_CSS, column.param)
+                                .setName(column.param)
+                                .setValue(column.param.of(input, ""))
+                                .setAttribute(Html.A_PLACEHOLDER, column.title);                            
                     }
-                    form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, true);                    
+
                 }
-                printTable(body.addDiv(OUTPUT_CSS), input);
-                footer.accept(body);
-            }  
+                form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, true);                    
+            }
+            printTableBody(body.addTable(getTableCss()), input);
+            footer.accept(body);
+        }  
     }
     
-    protected void printTable(Element parent, HttpServletRequest input) {
-        final Element table = parent.addTable(getTableCss());
-        final Element headerElement = table.addElement(Html.TR);
+    protected void printTableBody(Element table, HttpServletRequest input) {
+        final Element headerElement = table.addElement(Html.THEAD).addElement(Html.TR);
         for (ColumnModel<D,?> col : columns) {
             final Object value = col.title;
             final Element th = headerElement.addElement(Html.TH);
@@ -222,20 +230,21 @@ public class TableBuilder<D> {
                 th.addText(value);
             }
         }
-
-        final boolean hasRenderer = WebUtils.isType(Column.class, columns.stream().map(t -> t.column));
-        resource.forEach(value -> {
-            final Element rowElement = table.addElement(Html.TR);
-            for (ColumnModel<D, ?> col : columns) {
-                final Function<D, ?> attribute = col.column;
-                final Element td = rowElement.addElement(Html.TD);
-                if (hasRenderer && attribute instanceof Column) {
-                    ((Column)attribute).write(td, value);
-                } else {
-                    td.addText(attribute.apply(value));
+        try (Element tBody = table.addElement(Html.TBODY)) {
+            final boolean hasRenderer = WebUtils.isType(Column.class, columns.stream().map(t -> t.column));
+            resource.forEach(value -> {
+                final Element rowElement = tBody.addElement(Html.TR);
+                for (ColumnModel<D, ?> col : columns) {
+                    final Function<D, ?> attribute = col.column;
+                    final Element td = rowElement.addElement(Html.TD);
+                    if (hasRenderer && attribute instanceof Column) {
+                        ((Column)attribute).write(td, value);
+                    } else {
+                        td.addText(attribute.apply(value));
+                    }
                 }
-            }
-        });
+            });
+        }
     }
     
     /**
@@ -247,8 +256,14 @@ public class TableBuilder<D> {
      */
     protected void doAjax(HttpServletRequest input, JsonBuilder output)
             throws ServletException, IOException {
-        output.writeClass(OUTPUT_CSS, e -> printTable(e, input));
+        output.writeClass(getTableClassSelector(), e -> printTableBody(e, input));
         output.writeClass(SUBTITLE_CSS, "AJAX ready");
+    }
+
+    /** Returns a fist class of table element by defult */
+    @Nonnull
+    protected CharSequence getTableClassSelector() {
+        return getTableCss()[0];
     }
 
     /** Default header CSS style definitions */
@@ -301,7 +316,7 @@ public class TableBuilder<D> {
             final boolean initFormSubmit,
             @Nullable final CharSequence formSelector,
             @Nonnull final CharSequence... inputCssSelectors) {
-        if (element == null) {
+        if (!ajaxEnabled || element == null ) {
             return;
         }
         CharSequence newLine = config.getNewLine();

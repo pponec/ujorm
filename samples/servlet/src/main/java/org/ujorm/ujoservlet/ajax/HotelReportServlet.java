@@ -39,7 +39,7 @@ import static org.ujorm.ujoservlet.ajax.HotelReportServlet.Attrib.*;
 public class HotelReportServlet extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTERN = "/TableHotelServletExt";
+    public static final String URL_PATTERN = "/TableHotelServlet";
     /** A hotel service */
     private final HotelResourceService service = new HotelResourceService();
     /** Row limit */
@@ -59,7 +59,7 @@ public class HotelReportServlet extends HttpServlet {
             final HttpServletResponse output) throws ServletException, IOException {
 
         TableBuilder.of("Hotel Report", service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input)))
-                .add(Hotel::getName, "Name", NAME)
+                .add(Hotel::getName, "Hotel", NAME)
                 .add(Hotel::getCity, "City", CITY)
                 .add(Hotel::getStreet, "Street")
                 .add(Hotel::getPrice, "Price")

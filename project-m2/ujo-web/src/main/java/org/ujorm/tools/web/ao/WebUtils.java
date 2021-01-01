@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 public abstract class WebUtils {
 
     /** Check if any attribute is typeof the Renderer */
-    public static final boolean isType(final Class type, final @Nonnull Object... items) {
+    public static final <V extends Object> boolean isType(@Nonnull final Class type, @Nonnull final V... items) {
         boolean result = false;
         for (Object item : items) {
             if (type.isInstance(item)) {

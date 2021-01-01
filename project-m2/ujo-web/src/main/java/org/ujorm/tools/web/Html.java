@@ -61,8 +61,10 @@ public interface Html {
     String H3 = HEADING_PREFIX + 3;
     /** Table element */
     String TABLE = "table";
-    /** Table header line */
+    /** Table header group */
     String THEAD = "thead";
+    /** Table body group */
+    String TBODY = "tbody";
     /** Table header cell */
     String TH = "th";
     /** Table row element */

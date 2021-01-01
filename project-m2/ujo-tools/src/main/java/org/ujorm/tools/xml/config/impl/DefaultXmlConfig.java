@@ -31,7 +31,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * @author Pavel Ponec
  */
 public class DefaultXmlConfig implements XmlConfig {
-
+    
     /** Default intendation have got 4 spaces per level */
     public static final String DEFAULT_INTENDATION = "    ";
 
@@ -43,6 +43,9 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** Assertion message template */
     public static final String REQUIRED_MSG = "The argument {} is required";
+
+    /** An empty String */
+    public static final String EMPTY = "";
 
     /** A header declaration of the document or a doctype */
     @Nullable
@@ -58,11 +61,11 @@ public class DefaultXmlConfig implements XmlConfig {
     /** An indentation space for elements of the next level,
      * where default value is an empty `String` */
     @Nonnull
-    private CharSequence indentation = "";
+    private CharSequence indentation = EMPTY;
 
     /** A replacement text instead of the {@code null} value */
     @Nonnull
-    private CharSequence defaultValue = "";
+    private CharSequence defaultValue = EMPTY;
 
     /** A new line sequence */
     @Nonnull
@@ -77,7 +80,7 @@ public class DefaultXmlConfig implements XmlConfig {
      * </code>
      */
     @Nonnull
-    private Formatter formatter = (value, element, attribute) -> value != null ? value.toString() : "";
+    private Formatter formatter = (value, element, attribute) -> value != null ? value.toString() : EMPTY;
 
     public DefaultXmlConfig() {
     }
@@ -155,8 +158,8 @@ public class DefaultXmlConfig implements XmlConfig {
      */
     public final DefaultXmlConfig setCompressedFormat() {
         this.firstLevel = DEFAULT_FIRST_LEVEL;
-        this.indentation = "";
-        this.newLine = "";
+        this.indentation = EMPTY;
+        this.newLine = EMPTY;
         return this;
     }
 
@@ -183,7 +186,7 @@ public class DefaultXmlConfig implements XmlConfig {
     @Nonnull
     @Override
     public CharSequence getIndentation() {
-        return nonnull(indentation, "");
+        return nonnull(indentation, EMPTY);
     }
 
     /** An indentation space for elements of the next level,
