@@ -20,9 +20,9 @@ import java.time.Duration;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +30,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
@@ -57,7 +56,12 @@ public class TableBuilder<D> {
     /** CSS class name for the output box */
     protected static final String SUBTITLE_CSS = "subtitle";
     /** Default AJAX request parameter name */
-    protected static final String DEFAULT_AJAX_REQUEST_PARAM = "_ajax";
+    protected static final HttpParameter DEFAULT_AJAX_REQUEST_PARAM = new HttpParameter() {
+            @Override
+            public String toString() {
+                return "_ajax";
+            }
+        };
     
     /** Columns */
     protected final List<ColumnModel<D,?>> columns = new ArrayList<>(); 
@@ -67,12 +71,7 @@ public class TableBuilder<D> {
     /** Iddle delay in millis */
     protected int idleDelay = 250;
     /** Ajax request param */
-    protected HttpParameter ajaxRequestParam = new HttpParameter() {
-            @Override
-            public String toString() {
-                return DEFAULT_AJAX_REQUEST_PARAM;
-            }
-        };
+    protected HttpParameter ajaxRequestParam = DEFAULT_AJAX_REQUEST_PARAM;
     /** Useful URLs */
     protected Url url = new Url();
     /** Print a config title by default */
@@ -84,6 +83,9 @@ public class TableBuilder<D> {
     /** Form injector */
     @Nonnull
     protected Injector formAdditions = footer;
+    /** Javascript writer */
+    @Nonnull
+    protected Supplier<Injector> javascritWriter = () -> new JavaScriptWriter();
     /** is An AJAX enabled? */
     protected boolean ajaxEnabled = true;
     /** Call an autosubmit on first load */
@@ -185,6 +187,11 @@ public class TableBuilder<D> {
         this.ajaxEnabled = ajaxEnabled;
         return this;
     }
+
+    public TableBuilder<D> setJavascritWriter(@Nonnull Supplier<Injector> javascritWriter) {
+        this.javascritWriter =  Assert.notNull(javascritWriter, "javascritWriter");;
+        return this;
+    }
     
     /** Build the HTML page including a table */
     public void build(HttpServletRequest input, HttpServletResponse output) {    
@@ -201,10 +208,13 @@ public class TableBuilder<D> {
     protected void printHtmlBody(HttpServletRequest input, HtmlElement html) {
         html.addJavascriptLink(false, url.jQueryJs);
         html.addCssLink(url.bootstrapCss);
-        html.addCssBodies("\n", getHeaderCss());
-        writeJavascript(html.getHead(), autoSubmmitOnLoad,
-                "#" + FORM_ID,
-                "#" + FORM_ID + " input");
+        html.addCssBodies(config.getNewLine(), getHeaderCss());
+        if (ajaxEnabled) {
+            javascritWriter.get().write(html.getHead());
+    //        writeJavascript(html.getHead(), autoSubmmitOnLoad,
+    //                "#" + FORM_ID,
+    //                "#" + FORM_ID + " input");            
+        }
         try (Element body = html.getBody()) {
             header.write(body);
             body.addDiv(SUBTITLE_CSS).addText("");
@@ -279,7 +289,8 @@ public class TableBuilder<D> {
     /** Default header CSS style definitions */
     @Nonnull
     protected CharSequence[] getHeaderCss() {
-        return new CharSequence[] { "body { margin: 10px;}"
+        return new CharSequence[] { ""
+                , "body { margin: 10px;}"
                 , "." + SUBTITLE_CSS + " { font-size: 10px; color: silver;}"
                 , "#" + FORM_ID + " { margin-bottom: 2px;}"
                 , "#" + FORM_ID + " input { width: 200px;}"
@@ -313,67 +324,6 @@ public class TableBuilder<D> {
         public boolean isFiltered() {
             return param != null;
         }
-    }
-    
-    /**
-     * Generate a Javascript
-     * @param js Root element, where {@code null} value disable the javascript.
-     * @param initFormSubmit Submit on the first form on load request
-     * @param formSelector A form selector for submit
-     * @param inputCssSelectors Array of CSS selector for autosubmit.
-     */
-    @Nonnull
-    protected void writeJavascript(
-            @Nullable final Element js,
-            final boolean initFormSubmit,
-            @Nullable final CharSequence formSelector,
-            @Nonnull final CharSequence... inputCssSelectors) {
-        if (!ajaxEnabled || js == null ) {
-            return;
-        }
-        CharSequence newLine = config.getNewLine();
-        js.addRawTexts(newLine, "", "<script>", "$(document).ready(function(){");
-        if (Check.hasLength(inputCssSelectors)) {
-                    final String inpSelectors = Stream.of(inputCssSelectors)
-              //.map(t -> "." + t)
-                .collect(Collectors.joining(", "));
-
-            js.addRawTexts(newLine, ""
-                    , "var globalTimeout = null;"
-                    , "$('" + inpSelectors + "').keyup(function() {"
-                    , "  if (globalTimeout != null) {"
-                    , "    clearTimeout(globalTimeout);"
-                    , "  }"
-                    , "  globalTimeout = setTimeout(function() {"
-                    , "    globalTimeout = null;"
-                    , "    $('" + formSelector + "').submit();"
-                    , "  }, " + idleDelay + ");"
-                    , "});"
-            );
-        }{
-            js.addRawTexts(newLine, ""
-                    , "$('form').submit(function(event){"
-                    , "  var data = $('" + formSelector + "').serialize();"
-                    , "  $.ajax("
-                          + "{ url: '?" + ajaxRequestParam + "=true'"
-                          + ", type: 'POST'"
-                          + ", data: data"
-                          + ", timeout: 3000"
-                          + ", error: function (xhr, ajaxOptions, thrownError) {"
-                          ,  "   $('.subtitle').html('AJAX fails due: ' + thrownError);"
-                          +  " }"
-                    ,       ", success: function(result){"
-                    , "    var jsn = JSON.parse(result);"
-                    , "    $.each(jsn, function(key, value){"
-                    , "      $(key).html(value);"
-                    , "    })"
-                    , "  }});"
-                    , "  event.preventDefault();"
-                    , "});"
-                    , initFormSubmit ? "  $('" + formSelector + "').submit();" : ""
-                    );
-        }
-        js.addRawTexts(newLine, "", "});", "</script>");
     }
     
     /** URL constants */

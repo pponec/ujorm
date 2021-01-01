@@ -19,86 +19,83 @@ import java.time.Duration;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ao.HttpParameter;
-import org.ujorm.tools.xml.config.XmlConfig;
+import org.ujorm.tools.web.ao.Injector;
 
 /**
  * A common Javascript Writer of the Ujorm framework
  * 
  * @author Pavel Ponec
  */
-public class JavaScriptWriter {
+public class JavaScriptWriter implements Injector {
+    
+    /** Default duration */
+    public static final Duration DEFAULT_DURATION = Duration.ofMillis(250);
 
-    /**
-     * Parent element
-     */
-    private final Element parent;
-    /**
-     * Parent element
-     */
-    private final CharSequence newLine;
-    /**
-     * Javascript ajax request parameter
-     */
-    protected final HttpParameter ajaxRequestParam;
-    /**
-     * Input idle delay
-     */
-    protected final Duration idleDelay;
+    /** Javascript ajax request parameter */
+    protected final HttpParameter ajaxRequestParam;   
+     /** Input selectors */
+    protected final String[] inputCssSelectors;
+    /** Input idle delay */
+    protected Duration idleDelay = DEFAULT_DURATION;
+    
+    /** Form selector */
+    protected String formSelector = "form";
+    /** On load submit request */
+    protected boolean onLoadSubmit = false;
+    /** New line characters */
+    protected CharSequence newLine = "\n";
+    
+    public JavaScriptWriter() {
+        this("form input");
+    }
 
-    public JavaScriptWriter(@Nonnull Element parent, @Nonnull XmlConfig config, @Nonnull Duration idleDelay, @Nonnull HttpParameter ajaxRequestParam) {
-        this(parent, config.getNewLine(), idleDelay, ajaxRequestParam);
+    public JavaScriptWriter(@Nonnull String... inputSelectors) {
+        this(DEFAULT_DURATION, TableBuilder.DEFAULT_AJAX_REQUEST_PARAM, inputSelectors);
     }
     
-    public JavaScriptWriter(@Nonnull Element parent, @Nonnull CharSequence newLine, @Nonnull Duration idleDelay, @Nonnull HttpParameter ajaxRequestParam) {
-        this.parent = Assert.notNull(parent, "parent");
-        this.newLine = Assert.notNull(newLine, "newLine");
+    public JavaScriptWriter(
+            @Nonnull Duration idleDelay, 
+            @Nonnull HttpParameter ajaxRequestParam,
+            @Nonnull String... inputSelectors) {
         this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
-        this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "idleDelay");
+        this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
+        this.inputCssSelectors = Assert.hasLength(inputSelectors, "inputSelectors");
     }
 
     /**
      * Generate a Javascript
-     *
-     * @param initFormSubmit Submit on the first form on load request
-     * @param formSelector A form selector for submit
-     * @param inputCssSelectors Array of CSS selector for autosubmit.
      */
-    @Nonnull
-    public void writeJavascript(
-            final boolean initFormSubmit,
-            @Nullable final CharSequence formSelector,
-            @Nonnull final CharSequence... inputCssSelectors) {
-        if (parent != null) try ( Element js = parent.addElement(Html.SCRIPT)) {
-
-            js.addRawTexts(newLine, "", "<script>", "$(document).ready(function(){");
+    @Override
+    public void write(@Nonnull final Element parent) {
+        try (Element js = parent.addElement(Html.SCRIPT)) {
+            js.addRawText(newLine);
+            js.addRawText("$(document).ready(function(){");
             if (Check.hasLength(inputCssSelectors)) {
                 final String inpSelectors = Stream.of(inputCssSelectors)
                         .collect(Collectors.joining(", "));
-
-            element.addRawTexts(newLine, newLine
-                    , "var globalTimeout = null;"
-                    , "$('" + inpSelectors + "').keyup(function() {"
-                    , "  if (globalTimeout != null) {"
-                    , "    clearTimeout(globalTimeout);"
-                    , "  }"
-                    , "  globalTimeout = setTimeout(function() {"
-                    , "    globalTimeout = null;"
-                    , "    $('" + formSelector + "').submit();"
-                    , "  }, " + idleDelay + ");"
-                    , "});"
-                );
-        }{
-            element.addRawTexts(newLine, newLine
+                js.addRawTexts(newLine, newLine
+                        , "var globalTimeout = null;"
+                        , "$('" + inpSelectors + "').keyup(function() {"
+                        , "  if (globalTimeout != null) {"
+                        , "    clearTimeout(globalTimeout);"
+                        , "  }"
+                        , "  globalTimeout = setTimeout(function() {"
+                        , "    globalTimeout = null;"
+                        , "    $('" + formSelector + "').submit();"
+                        , "  }, " + idleDelay.toMillis() + ");"
+                        , "});"
+                    );
+            } {
+            js.addRawTexts(newLine, newLine
                     , "$('form').submit(function(event){"
                     , "  var data = $('" + formSelector + "').serialize();"
                     , "  $.ajax("
-                          + "{ url: '?" + ajaxRequest + "=true'"
+                          + "{ url: '?" + ajaxRequestParam + "=true'"
                         + ", type: 'POST'"
                         + ", data: data"
                         + ", timeout: 3000"
@@ -113,7 +110,7 @@ public class JavaScriptWriter {
                     , "  }});"
                     , "  event.preventDefault();"
                     , "});"
-                    , initFormSubmit ? "  $('" + formSelector + "').submit();" : ""
+                    , onLoadSubmit ? "  $('" + formSelector + "').submit();" : ""
                 );
             }
             js.addRawTexts(newLine, "", "});");

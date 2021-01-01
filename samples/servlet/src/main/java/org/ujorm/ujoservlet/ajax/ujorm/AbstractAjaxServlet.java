@@ -39,9 +39,9 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(AbstractAjaxServlet.class.getName());
     /** Default AJAX request parameter name */
-    public static final String DEFAULT_AJAX_REQUEST_PARAM = TableBuilder.DEFAULT_AJAX_REQUEST_PARAM;
+    public static final HttpParameter DEFAULT_AJAX_REQUEST_PARAM = TableBuilder.DEFAULT_AJAX_REQUEST_PARAM;
     /** Javascript ajax request parameter */
-    protected final CharSequence ajaxRequest;
+    protected final HttpParameter ajaxRequestParam;
     /** Javascript line separator */
     protected final String newLine;
     /** Input idle delay in millisec */
@@ -49,10 +49,10 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
 
     /** Default constructor */
     public AbstractAjaxServlet(
-            @Nonnull final CharSequence ajaxRequest,
+            @Nonnull final HttpParameter ajaxRequestParam,
             @Nonnull final String newLine,
             final int idleDelay) {
-        this.ajaxRequest = ajaxRequest;
+        this.ajaxRequestParam = ajaxRequestParam;
         this.idleDelay = idleDelay;
         this.newLine = newLine;
     }
@@ -86,7 +86,7 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             new ReqestDispatcher(input, output)
-                    .onParam(getAjaxParam(), jsonBuilder -> doAjax(input, jsonBuilder))
+                    .onParam(ajaxRequestParam, jsonBuilder -> doAjax(input, jsonBuilder))
                     .onDefault(() -> doProcess(input, output, post));
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "GET error", e);
@@ -169,7 +169,7 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
                     , "$('form').submit(function(event){"
                     , "  var data = $('" + formSelector + "').serialize();"
                     , "  $.ajax("
-                          + "{ url: '?" + ajaxRequest + "=true'"
+                          + "{ url: '?" + ajaxRequestParam + "=true'"
                           + ", type: 'POST'"
                           + ", data: data"
                           + ", timeout: 3000"
@@ -188,14 +188,5 @@ public abstract class AbstractAjaxServlet extends HttpServlet {
                     );
         }
         element.addRawTexts(newLine, "", "});", "</script>");
-    }
-    
-    protected HttpParameter getAjaxParam() {
-        return new HttpParameter() {
-            @Override
-            public String toString() {
-                return AbstractAjaxServlet.DEFAULT_AJAX_REQUEST_PARAM;
-            }
-        };
     }
 }

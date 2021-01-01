@@ -187,6 +187,14 @@ public final class Element implements ApiElement<Element>, Html {
         return this;
     }
 
+    @Nonnull
+    public Element addRawText(@Nonnull final Object... data) throws IllegalStateException {
+        for (Object item : data) {
+            internalElement.addRawText(data);
+        }
+        return this;
+    }
+
     /**
      * Add many words separated by a delimeter
      * @param separator The delimiter must contain no special HTML character.
