@@ -37,11 +37,11 @@ import javax.sql.rowset.spi.XmlWriter;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.ao.Column;
-import org.ujorm.tools.web.ao.Title;
 import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.model.XmlModel;
 import static org.ujorm.tools.web.Html.LEGEND;
+import org.ujorm.tools.web.ao.Injector;
 
 /**
  * A HTML Element implements some methods for frequently used elements and attributes
@@ -327,8 +327,8 @@ public final class Element implements ApiElement<Element>, Html {
             final Element rowElement = result.addElement(Html.THEAD).addElement(Html.TR);
             for (Object value : headers) {
                 Element th = rowElement.addElement(Html.TH);
-                if (value instanceof Title) {
-                    ((Title)value).accept(th);
+                if (value instanceof Injector) {
+                    ((Injector)value).write(th);
                 } else {
                     th.addText(value);
                 }

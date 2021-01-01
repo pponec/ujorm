@@ -23,7 +23,7 @@ import org.ujorm.tools.web.Element;
  * @author Pavel Ponec
  */
 @FunctionalInterface
-public interface Title extends Consumer<Element>, CharSequence {
+public interface Injector extends CharSequence {
 
     @Override
     public default int length() {
@@ -40,4 +40,10 @@ public interface Title extends Consumer<Element>, CharSequence {
         return "?".subSequence(start, end);
     }
 
+    /**
+     * Performs this operation on the given argument.
+     *
+     * @param element An element to write
+     */
+    void write(Element element);
 }

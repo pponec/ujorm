@@ -37,9 +37,9 @@ import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.JsonBuilder;
-import org.ujorm.tools.web.ao.Title;
 import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.xml.config.HtmlConfig;
+import org.ujorm.tools.web.ao.Injector;
 
 /**
  *
@@ -77,13 +77,13 @@ public class TableBuilder<D> {
     protected Url url = new Url();
     /** Print a config title by default */
     @Nonnull
-    protected Title header = e -> e.addHeading(TableBuilder.this.config.getTitle());
+    protected Injector header = e -> e.addHeading(TableBuilder.this.config.getTitle());
     /** Print an empty text by default */
     @Nonnull
-    protected Title footer = e -> e.addText("");
+    protected Injector footer = e -> e.addText("");
     /** Form injector */
     @Nonnull
-    protected Title formAdditions = footer;
+    protected Injector formAdditions = footer;
     /** is An AJAX enabled? */
     protected boolean ajaxEnabled = true;
     /** Call an autosubmit on first load */
@@ -120,7 +120,7 @@ public class TableBuilder<D> {
     }
     
     @Nonnull
-    public <V> TableBuilder<D> add(Function<D,?> column, Title title) {
+    public <V> TableBuilder<D> add(Function<D,?> column, Injector title) {
         return addInternal(column, title, null);
     }
     
@@ -130,7 +130,7 @@ public class TableBuilder<D> {
     }
     
     @Nonnull
-    public <V> TableBuilder<D> add(Function<D,?> column, Title title, @Nullable HttpParameter param) {
+    public <V> TableBuilder<D> add(Function<D,?> column, Injector title, @Nullable HttpParameter param) {
         return addInternal(column, title, param);
     }
     
@@ -140,7 +140,7 @@ public class TableBuilder<D> {
     }
 
     @Nonnull
-    public <V> TableBuilder<D> addToElement(Column<D> column, Title title) {
+    public <V> TableBuilder<D> addToElement(Column<D> column, Injector title) {
         return addInternal(column, title, null);
     }
     
@@ -163,19 +163,19 @@ public class TableBuilder<D> {
     }
 
     @Nonnull
-    public TableBuilder<D> setHeader(@Nonnull Title header) {
+    public TableBuilder<D> setHeader(@Nonnull Injector header) {
         this.header = Assert.notNull(header, "header");
         return this;
     }
 
     @Nonnull
-    public TableBuilder<D> setFooter(@Nonnull Title footer) {
+    public TableBuilder<D> setFooter(@Nonnull Injector footer) {
         this.footer = Assert.notNull(footer, "footer");
         return this;
     }
 
     @Nonnull
-    public TableBuilder<D> setFormAdditions(@Nonnull Title formAdditions) {
+    public TableBuilder<D> setFormAdditions(@Nonnull Injector formAdditions) {
         this.formAdditions = Assert.notNull(formAdditions, "formAdditions");
         return this;
     }    
@@ -206,7 +206,7 @@ public class TableBuilder<D> {
                 "#" + FORM_ID,
                 "#" + FORM_ID + " input");
         try (Element body = html.getBody()) {
-            header.accept(body);
+            header.write(body);
             body.addDiv(SUBTITLE_CSS).addText("");
             try (Element form =  body.addForm()
                     .setId(FORM_ID)
@@ -221,11 +221,11 @@ public class TableBuilder<D> {
                     }
 
                 }
-                form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, true);
-                formAdditions.accept(form);
+                form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, true);    
+                formAdditions.write(form);
             }
             printTableBody(body.addTable(getTableCss()), input);
-            footer.accept(body);
+            footer.write(body);
         }  
     }
     
@@ -234,8 +234,8 @@ public class TableBuilder<D> {
         for (ColumnModel<D,?> col : columns) {
             final Object value = col.title;
             final Element th = headerElement.addElement(Html.TH);
-            if (value instanceof Title) {
-                ((Title)value).accept(th);
+            if (value instanceof Injector) {
+                ((Injector)value).write(th);
             } else {
                 th.addText(value);
             }
@@ -317,28 +317,28 @@ public class TableBuilder<D> {
     
     /**
      * Generate a Javascript
-     * @param element Root element, where {@code null} value disable the javascript.
+     * @param js Root element, where {@code null} value disable the javascript.
      * @param initFormSubmit Submit on the first form on load request
      * @param formSelector A form selector for submit
      * @param inputCssSelectors Array of CSS selector for autosubmit.
      */
     @Nonnull
     protected void writeJavascript(
-            @Nullable final Element element,
+            @Nullable final Element js,
             final boolean initFormSubmit,
             @Nullable final CharSequence formSelector,
             @Nonnull final CharSequence... inputCssSelectors) {
-        if (!ajaxEnabled || element == null ) {
+        if (!ajaxEnabled || js == null ) {
             return;
         }
         CharSequence newLine = config.getNewLine();
-        element.addRawTexts(newLine, "", "<script>", "$(document).ready(function(){");
+        js.addRawTexts(newLine, "", "<script>", "$(document).ready(function(){");
         if (Check.hasLength(inputCssSelectors)) {
                     final String inpSelectors = Stream.of(inputCssSelectors)
               //.map(t -> "." + t)
                 .collect(Collectors.joining(", "));
 
-            element.addRawTexts(newLine, ""
+            js.addRawTexts(newLine, ""
                     , "var globalTimeout = null;"
                     , "$('" + inpSelectors + "').keyup(function() {"
                     , "  if (globalTimeout != null) {"
@@ -351,7 +351,7 @@ public class TableBuilder<D> {
                     , "});"
             );
         }{
-            element.addRawTexts(newLine, ""
+            js.addRawTexts(newLine, ""
                     , "$('form').submit(function(event){"
                     , "  var data = $('" + formSelector + "').serialize();"
                     , "  $.ajax("
@@ -373,7 +373,7 @@ public class TableBuilder<D> {
                     , initFormSubmit ? "  $('" + formSelector + "').submit();" : ""
                     );
         }
-        element.addRawTexts(newLine, "", "});", "</script>");
+        js.addRawTexts(newLine, "", "});", "</script>");
     }
     
     /** URL constants */
