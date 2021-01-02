@@ -54,11 +54,11 @@ public class RegexpServlet extends HttpServlet {
     /** Form identifier */
     private static final String FORM_ID = "form";
     /** Bootstrap form control CSS class name */
-    private static final String CSS_CONTROL = "form-control";
+    private static final String CONTROL_CSS = "form-control";
     /** CSS class name for the output box */
-    private static final String CSS_OUTPUT = "out";
+    private static final String OUTPUT_CSS = "out";
     /** CSS class name for the output box */
-    private static final String CSS_SUBTITLE = "subtitle";
+    private static final String SUBTITLE_CSS = "subtitle";
     /** AJAX param */
     private static final HttpParameter AJAX = JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM;
     /** A common service */
@@ -90,22 +90,22 @@ public class RegexpServlet extends HttpServlet {
             Message msg = highlight(input);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
-                body.addDiv(CSS_SUBTITLE).addText("");
+                body.addDiv(SUBTITLE_CSS).addText("");
                 try (Element form = body.addForm()
                         .setId(FORM_ID)
                         .setMethod(Html.V_POST).setAction("?")) {
-                    form.addInput(CSS_CONTROL)
+                    form.addInput(CONTROL_CSS)
                             .setId(REGEXP)
                             .setName(REGEXP)
                             .setValue(REGEXP.of(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
-                    form.addTextArea(CSS_CONTROL)
+                    form.addTextArea(CONTROL_CSS)
                             .setId(TEXT)
                             .setName(TEXT)
                             .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
                             .addText(TEXT.of(input));
                     form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
-                    form.addDiv(CSS_CONTROL, CSS_OUTPUT).addRawText(msg);
+                    form.addDiv(CONTROL_CSS, OUTPUT_CSS).addRawText(msg);
                 }
                 body.addElement(Html.HR);
                 body.addAnchor(SOURCE_URL).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
@@ -136,9 +136,9 @@ public class RegexpServlet extends HttpServlet {
     protected JsonBuilder doAjax(HttpServletRequest input, JsonBuilder output)
             throws ServletException, IOException {
             final Message msg = highlight(input);
-            output.writeClass(CSS_OUTPUT, e -> e.addElementIf(msg.isError(), Html.SPAN, "error")
+            output.writeClass(OUTPUT_CSS, e -> e.addElementIf(msg.isError(), Html.SPAN, "error")
                     .addRawText(msg));
-            output.writeClass(CSS_SUBTITLE, "AJAX ready");
+            output.writeClass(SUBTITLE_CSS, "AJAX ready");
             return output;
     }
 
