@@ -41,7 +41,7 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.web.ao.Injector;
 
 /**
- * A builder a HTML page with a table based an AJAX.
+ * A HTML page builder for table based an AJAX.
  * 
  * <h3>Usage<h3>
  * 
