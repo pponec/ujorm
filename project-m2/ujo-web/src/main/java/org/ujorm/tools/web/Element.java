@@ -190,7 +190,7 @@ public final class Element implements ApiElement<Element>, Html {
     @Nonnull
     public Element addRawText(@Nonnull final Object... data) throws IllegalStateException {
         for (Object item : data) {
-            internalElement.addRawText(data);
+            internalElement.addRawText(item);
         }
         return this;
     }

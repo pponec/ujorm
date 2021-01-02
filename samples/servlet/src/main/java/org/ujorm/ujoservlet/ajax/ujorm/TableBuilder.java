@@ -16,7 +16,6 @@
 package org.ujorm.ujoservlet.ajax.ujorm;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -60,33 +59,26 @@ public class TableBuilder<D> {
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(TableBuilder.class.getName());
     
-    /** Form identifier */
-    protected static final String FORM_ID = "form";
-    /** Bootstrap form control CSS class name */
-    protected static final String CONTROL_CSS = "form-control";
-    /** CSS class name for the output box */
-    protected static final String SUBTITLE_CSS = "subtitle";
-
     /** Columns */
     protected final List<ColumnModel<D,?>> columns = new ArrayList<>(); 
     /** Data resource */
     protected final Stream<D> resource;
-    protected final HtmlConfig config;
-    /** Iddle delay in millis */
-    protected int idleDelay = 250;
-    /** Ajax request param */
+    /** Table builder config */
+    protected final TableBuilderConfig config;
+    /** AJAX request param */
     protected HttpParameter ajaxRequestParam = JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM;
-    /** Useful URLs */
-    protected Url url = new Url();
     /** Print a config title by default */
     @Nonnull
-    protected Injector header = e -> e.addHeading(TableBuilder.this.config.getTitle());
+    protected Injector header = e -> e.addHeading(TableBuilder.this.config.getConfig().getTitle());
     /** Print an empty text by default */
     @Nonnull
     protected Injector footer = e -> e.addText("");
     /** Form injector */
     @Nonnull
     protected Injector formAdditions = footer;
+    /** Inline CSS style injector */
+    @Nonnull
+    protected Injector inlineCss = inlineCssWriter();
     /** Javascript writer */
     @Nonnull
     protected Supplier<Injector> javascritWriter = () -> new JavaScriptWriter();
@@ -95,7 +87,7 @@ public class TableBuilder<D> {
     /** Call an autosubmit on first load */
     protected boolean autoSubmmitOnLoad = false;
 
-    private TableBuilder(@Nonnull Stream<D> resource, @Nonnull HtmlConfig config) {
+    private TableBuilder(@Nonnull Stream<D> resource, @Nonnull TableBuilderConfig config) {
         this.resource = resource;
         this.config = config;
     }
@@ -107,11 +99,16 @@ public class TableBuilder<D> {
 
     @Nonnull
     public static <D> TableBuilder<D> of(@Nonnull String title, @Nonnull Stream<D> resource) {
-        return of(resource, HtmlConfig.ofDefault().setTitle(title).setNiceFormat());
+        return of(resource, (HtmlConfig) HtmlConfig.ofDefault().setTitle(title).setNiceFormat());
     }
     
     @Nonnull
     public static <D> TableBuilder<D> of(@Nonnull Stream<D> resource, @Nonnull HtmlConfig config) {
+        return new TableBuilder(resource, new TableBuilderConfigImpl(config));
+    }
+    
+    @Nonnull
+    public static <D> TableBuilder<D> of(@Nonnull Stream<D> resource, @Nonnull TableBuilderConfig config) {
         return new TableBuilder(resource, config);
     }
 
@@ -157,12 +154,6 @@ public class TableBuilder<D> {
     }
 
     @Nonnull
-    public TableBuilder<D> setIdleDelay(@Nonnull Duration idleDelay) {
-        this.idleDelay = (int) Assert.notNull(idleDelay, "idleDelay").toMillis();
-        return this;
-    }
-
-    @Nonnull
     public TableBuilder<D> setAjaxRequestParam(@Nonnull HttpParameter ajaxRequestParam) {
         this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
         return this;
@@ -191,7 +182,7 @@ public class TableBuilder<D> {
         this.ajaxEnabled = ajaxEnabled;
         return this;
     }
-
+    
     public TableBuilder<D> setJavascritWriter(@Nonnull Supplier<Injector> javascritWriter) {
         this.javascritWriter =  Assert.notNull(javascritWriter, "javascritWriter");;
         return this;
@@ -200,8 +191,8 @@ public class TableBuilder<D> {
     /** Build the HTML page including a table */
     public void build(HttpServletRequest input, HttpServletResponse output) {    
         try {
-            new ReqestDispatcher(input, output, config)
-                    .onParam(ajaxRequestParam, jsonBuilder -> doAjax(input, jsonBuilder))
+            new ReqestDispatcher(input, output, config.getConfig())
+                    .onParam(config.getAjaxRequestParam(), jsonBuilder -> doAjax(input, jsonBuilder))
                     .onDefaultToElement(element -> printHtmlBody(input, element));
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Internal server error", e);
@@ -210,9 +201,9 @@ public class TableBuilder<D> {
     }
     
     protected void printHtmlBody(HttpServletRequest input, HtmlElement html) {
-        html.addJavascriptLink(false, url.jQueryJs);
-        html.addCssLink(url.bootstrapCss);
-        html.addCssBodies(config.getNewLine(), getHeaderCss());
+        html.addJavascriptLink(false, config.getJqueryLink());
+        html.addCssLink(config.getCssLink());
+        inlineCss.write(html.getHead());
         if (ajaxEnabled) {
             javascritWriter.get().write(html.getHead());
     //        writeJavascript(html.getHead(), autoSubmmitOnLoad,
@@ -221,14 +212,14 @@ public class TableBuilder<D> {
         }
         try (Element body = html.getBody()) {
             header.write(body);
-            body.addDiv(SUBTITLE_CSS).addText("");
+            body.addDiv(config.getSubtitleCss()).addText("");
             try (Element form =  body.addForm()
-                    .setId(FORM_ID)
+                    .setId(config.getFormId())
                     .setMethod(Html.V_POST).setAction("?")) {
 
                 for (ColumnModel<D, ?> column : columns) {
                     if (column.isFiltered()) {
-                        form.addInput(CONTROL_CSS, column.param)
+                        form.addInput(config.getControlCss(), column.param)
                                 .setName(column.param)
                                 .setValue(column.param.of(input, ""))
                                 .setAttribute(Html.A_PLACEHOLDER, column.title);                            
@@ -238,7 +229,8 @@ public class TableBuilder<D> {
                 form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, true);    
                 formAdditions.write(form);
             }
-            printTableBody(body.addTable(getTableCss()), input);
+            final List<CharSequence> tableCss = config.getTableCssClass();
+            printTableBody(body.addTable(tableCss.toArray(new CharSequence[tableCss.size()])), input);
             footer.write(body);
         }  
     }
@@ -280,35 +272,25 @@ public class TableBuilder<D> {
      */
     protected void doAjax(HttpServletRequest input, JsonBuilder output)
             throws ServletException, IOException {
-        output.writeClass(getTableClassSelector(), e -> printTableBody(e, input));
-        output.writeClass(SUBTITLE_CSS, "AJAX ready");
-    }
-
-    /** Returns a fist class of table element by defult */
-    @Nonnull
-    protected CharSequence getTableClassSelector() {
-        return getTableCss()[0];
-    }
-
-    /** Default header CSS style definitions */
-    @Nonnull
-    protected CharSequence[] getHeaderCss() {
-        return new CharSequence[] { ""
-                , "body { margin: 10px;}"
-                , "." + SUBTITLE_CSS + " { font-size: 10px; color: silver;}"
-                , "#" + FORM_ID + " { margin-bottom: 2px;}"
-                , "#" + FORM_ID + " input { width: 200px;}"
-                , "." + CONTROL_CSS + " { display: inline;}"
-                , ".table th { background-color: #e8e8e8;}"
-        };
+        output.writeClass(config.getTableSelector(), e -> printTableBody(e, input));
+        output.writeClass(config.getSubtitleCss(), config.getAjaxRedyMessage(), config.getAjaxRedyMessage());
     }
     
-    /** Table CSS classes */
-    protected CharSequence[] getTableCss() {
-        return new CharSequence[] 
-              { "table" 
-              , "table-striped"
-              , "table-bordered"};
+    /** Default header CSS style printer */
+    @Nonnull
+    protected Injector inlineCssWriter() {
+        return element -> {
+            final TableBuilderConfig conf = TableBuilder.this.config;
+            final CharSequence newLine = conf.getConfig().getNewLine();
+            try (Element css = element.addElement(Html.STYLE)) {
+                css.addRawText(newLine, "body { margin: 10px;}");
+                css.addRawText(newLine, ".", conf.getSubtitleCss(), " { font-size: 10px; color: silver;}");
+                css.addRawText(newLine, "#", conf.getFormId(), " { margin-bottom: 2px;}");
+                css.addRawText(newLine, "#", conf.getFormId(), " input { width: 200px;}");
+                css.addRawText(newLine, ".", conf.getControlCss(), " { display: inline;}");
+                css.addRawText(newLine, ".table th { background-color: #e8e8e8;}");
+            }
+        };
     }
 
     class ColumnModel<D,V> {

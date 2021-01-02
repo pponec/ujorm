@@ -62,7 +62,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     public static final String HTML = "html";
 
     /** Assertion message template */
-    protected static final String REQUIRED_MSG = "The argument {} is required";
+    protected static final String REQUIRED_MSG = "The argument '{}' is required";
 
     /** Element name */
     @Nullable
@@ -136,7 +136,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      */
     @Nonnull
     protected XmlBuilder nextChild(@Nullable final XmlBuilder element) {
-        Assert.isFalse(closed, "The node {} was closed", this.elementName);
+        Assert.isFalse(closed, "The node '{}' was closed", this.elementName);
         if (!filled) try {
             writer.writeMid(this);
         } catch (IOException e) {
@@ -181,8 +181,8 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     public final XmlBuilder setAttribute(@Nullable final String name, @Nullable final Object value) {
         if (elementName != null) {
             Assert.hasLength(name, REQUIRED_MSG, "name");
-            Assert.isFalse(closed, "The node {} was closed", elementName);
-            Assert.isTrue(attributeMode, "Writing attributes to the {} node was closed", elementName);
+            Assert.isFalse(closed, "The node '{}' was closed", elementName);
+            Assert.isTrue(attributeMode, "Writing attributes to the '{}' node was closed", elementName);
             if (value != null) try {
                 writer.writeAttrib(name, value, this);
             } catch (IOException e) {
