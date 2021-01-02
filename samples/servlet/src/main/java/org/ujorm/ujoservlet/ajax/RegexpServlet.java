@@ -166,7 +166,7 @@ public class RegexpServlet extends HttpServlet {
         static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
         /** Source of the class */
         static final String SOURCE_URL = "https://github.com/pponec/ujorm/blob/"
-                + "58c0d8a170bfa25b8fdc4d5ebbdcd27dbd19c2dd"
+                + "6b71c4611172f91adae17bcf030e982cb785358a"
                 + "/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/RegexpServlet.java";
     }
 

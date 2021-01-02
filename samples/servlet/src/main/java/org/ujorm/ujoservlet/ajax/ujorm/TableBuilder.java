@@ -41,7 +41,18 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.web.ao.Injector;
 
 /**
- *
+ * A builder a HTML page with a table based an AJAX.
+ * 
+ * <h3>Usage<h3>
+ * 
+ * <pre class="pre">
+ *  TableBuilder.of("Hotel Report", service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input)))
+ *          .add(Hotel::getName, "Hotel", NAME)
+ *          .add(Hotel::getCity, "City", CITY)
+ *          .add(Hotel::getStreet, "Street")
+ *          .build(httpServletRequest, HtpServletResponse);
+ * </pre>
+ * 
  * @author Pavel Ponec
  */
 public class TableBuilder<D> {
