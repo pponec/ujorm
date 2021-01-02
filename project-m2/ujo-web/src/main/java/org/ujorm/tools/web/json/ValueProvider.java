@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.ujoservlet.ajax.ujorm;
+package org.ujorm.tools.web.json;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
+import javax.annotation.Nonnull;
+import org.ujorm.tools.web.Element;
 
 /**
+ * Value provider
  *
- * @author Pavel ponec
+ * @author Pavel Ponec
  */
-public interface IOConsumer<T> {
+@FunctionalInterface
+public interface ValueProvider {
 
-    public void accept(T t) throws ServletException, IOException;
-    
-    
-    
+    /** Write a HTML code to the element */
+    void accept(@Nonnull Element element) throws IOException;
+
 }

@@ -16,18 +16,16 @@
 package org.ujorm.tools.web.ao;
 
 import java.io.IOException;
-import javax.annotation.Nonnull;
-import org.ujorm.tools.web.Element;
+import javax.servlet.ServletException;
 
 /**
- * Value provider
- *
+ * Input/Output Runnable Interface
+ * 
  * @author Pavel Ponec
  */
 @FunctionalInterface
-public interface ValueProvider {
+public interface IORunnable {
 
-    /** Write a HTML code to the element */
-    void accept(@Nonnull Element element) throws IOException;
-
+    void run() throws ServletException, IOException;
+    
 }

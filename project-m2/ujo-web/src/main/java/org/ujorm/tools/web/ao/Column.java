@@ -19,7 +19,7 @@ import java.util.function.Function;
 import org.ujorm.tools.web.Element;
 
 /**
- * Table column renderer
+ * Table column value writer
  * @author Pavel Ponec
  */
 @FunctionalInterface

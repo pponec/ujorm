@@ -31,12 +31,12 @@ import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
-import org.ujorm.tools.web.ao.JsonBuilder;
+import org.ujorm.tools.web.json.JsonBuilder;
+import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Url.*;
-import org.ujorm.ujoservlet.ajax.ujorm.JavaScriptWriter;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.

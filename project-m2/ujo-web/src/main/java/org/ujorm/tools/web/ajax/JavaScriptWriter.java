@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.ujoservlet.ajax.ujorm;
+package org.ujorm.tools.web.ajax;
 
 import java.time.Duration;
 import java.util.stream.Collectors;
@@ -105,7 +105,7 @@ public class JavaScriptWriter implements Injector {
             if (Check.hasLength(inputCssSelectors)) {
                 final String inpSelectors = Stream.of(inputCssSelectors)
                         .collect(Collectors.joining(", "));
-                js.addRawTexts(newLine, newLine
+                js.addRawTexts(newLine, ""
                         , "var globalTimeout = null;"
                         , "$('" + inpSelectors + "').keyup(function() {"
                         , "  if (globalTimeout != null) {"
@@ -118,7 +118,7 @@ public class JavaScriptWriter implements Injector {
                         , "});"
                     );
             } {
-            js.addRawTexts(newLine, newLine
+            js.addRawTexts(newLine, ""
                     , "$('form').submit(function(event){"
                     , "  var data = $('" + formSelector + "').serialize();"
                     , "  $.ajax("

@@ -10,26 +10,26 @@ import org.ujorm.tools.web.HtmlElement;
  *
  * @author Pavel Pone
  */
-public class ProxyServletResponseTest {
+public class MockServletResponseTest {
 
     /**
-     * Test of getContent method, of class ProxyServletResponse.
+     * Test of getContent method, of class MockServletResponse.
      */
     @Test
     public void testGetContent_1() throws IOException {
         System.out.println("getContent");
-        ProxyServletResponse instance = new ProxyServletResponse();
+        MockServletResponse instance = new MockServletResponse();
         instance.getWriter().write("ABC:ČÁŠ");
         assertEquals("ABC:ČÁŠ", instance.toString());
     }
 
     /**
-     * Test of getContent method, of class ProxyServletResponse.
+     * Test of getContent method, of class MockServletResponse.
      */
     @Test
     public void testGetContent_2() {
         System.out.println("getContent");
-        ProxyServletResponse instance = new ProxyServletResponse();
+        MockServletResponse instance = new MockServletResponse();
 
         try (HtmlElement html = HtmlElement.niceOf(instance)) {
             html.getBody().addHeading("ABC:ČÁŠ", "cssType");

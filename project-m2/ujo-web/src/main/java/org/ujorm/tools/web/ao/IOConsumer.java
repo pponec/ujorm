@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.ujoservlet.ajax.ujorm;
+package org.ujorm.tools.web.ao;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import org.ujorm.tools.web.HtmlElement;
 
 /**
  *
- * @author Pavel Ponec
+ * @author Pavel ponec
  */
-@FunctionalInterface
-public interface IOElement {
+public interface IOConsumer<T> {
 
-    void run(HtmlElement html) throws ServletException, IOException;
+    public void accept(T t) throws ServletException, IOException;
     
 }

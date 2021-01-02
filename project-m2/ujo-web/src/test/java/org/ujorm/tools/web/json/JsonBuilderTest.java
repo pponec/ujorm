@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools.web.ao;
+package org.ujorm.tools.web.json;
 
 import org.junit.Test;
 import org.ujorm.tools.web.Html;

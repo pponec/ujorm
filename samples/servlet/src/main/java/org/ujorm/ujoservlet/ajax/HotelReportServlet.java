@@ -24,10 +24,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.ao.HttpParameter;
+import org.ujorm.tools.web.table.TableBuilder;
 
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
 import org.ujorm.ujoservlet.ajax.ao.HotelResourceService;
-import org.ujorm.ujoservlet.ajax.ujorm.TableBuilder;
 import static org.ujorm.ujoservlet.ajax.HotelReportServlet.Attrib.*;
 
 /**

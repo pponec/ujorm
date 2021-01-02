@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.ujoservlet.ajax.ujorm;
+package org.ujorm.tools.web.table;
 
+import org.ujorm.tools.web.ajax.ReqestDispatcher;
+import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
-import org.ujorm.tools.web.ao.JsonBuilder;
+import org.ujorm.tools.web.json.JsonBuilder;
 import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.web.ao.Injector;

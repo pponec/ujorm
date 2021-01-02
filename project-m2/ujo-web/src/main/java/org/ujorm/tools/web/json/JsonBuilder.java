@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools.web.ao;
+package org.ujorm.tools.web.json;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.HtmlElement;
+import org.ujorm.tools.web.ao.ObjectProvider;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**

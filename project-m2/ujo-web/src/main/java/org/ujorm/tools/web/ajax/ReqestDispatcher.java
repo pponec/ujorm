@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.ujoservlet.ajax.ujorm;
+package org.ujorm.tools.web.ajax;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -26,11 +26,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
-import org.ujorm.tools.web.ao.JsonBuilder;
+import org.ujorm.tools.web.json.JsonBuilder;
+import org.ujorm.tools.web.ao.IOConsumer;
+import org.ujorm.tools.web.ao.IOElement;
+import org.ujorm.tools.web.ao.IORunnable;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- *
+ * A Reqest Dispatcher
  * @author Pavel Ponec
  */
 public class ReqestDispatcher {

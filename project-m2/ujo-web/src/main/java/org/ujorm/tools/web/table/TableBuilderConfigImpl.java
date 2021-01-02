@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.ujoservlet.ajax.ujorm;
+package org.ujorm.tools.web.table;
 
+import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import java.time.Duration;
 import java.util.List;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
-import static org.ujorm.ujoservlet.ajax.ujorm.TableBuilderConfigImpl.Constants.*;
+import static org.ujorm.tools.web.table.TableBuilderConfigImpl.Constants.*;
 
 /**
  * A HTML page builder for table based an AJAX.

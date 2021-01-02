@@ -15,11 +15,10 @@
  */
 package org.ujorm.tools.web.ao;
 
-import java.util.function.Consumer;
 import org.ujorm.tools.web.Element;
 
 /**
- * An element injector
+ * An common element writer
  * @author Pavel Ponec
  */
 @FunctionalInterface
