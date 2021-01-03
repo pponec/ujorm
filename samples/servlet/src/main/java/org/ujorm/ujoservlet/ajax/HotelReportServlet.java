@@ -108,7 +108,7 @@ public class HotelReportServlet extends HttpServlet {
                 + "http://api.hotelsbase.org/documentation.php";
         /** Source of the class */
         static final String SOURCE_REPO = "https://github.com/pponec/ujorm/blob/"
-                + "6b71c4611172f91adae17bcf030e982cb785358a"
+                + "1e1dd647726e80b4c78542b5dbaaf947c7c73c85"
                 + "/samples/servlet/src/main/java"
                 + "/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
     }
