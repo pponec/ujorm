@@ -83,7 +83,7 @@ public class TableBuilder<D> {
     protected Injector inlineCss = inlineCssWriter();
     /** Javascript writer */
     @Nonnull
-    protected Supplier<Injector> javascritWriter = () -> new JavaScriptWriter();
+    protected Supplier<Injector> javascritWriter = () -> new JavaScriptWriter().setSubtitleSelector("." + TableBuilder.this.config.getSubtitleCss());
     /** is An AJAX enabled? */
     protected boolean ajaxEnabled = true;
     /** Call an autosubmit on first load */
@@ -275,7 +275,7 @@ public class TableBuilder<D> {
     protected void doAjax(HttpServletRequest input, JsonBuilder output)
             throws ServletException, IOException {
         output.writeClass(config.getTableSelector(), e -> printTableBody(e, input));
-        output.writeClass(config.getSubtitleCss(), config.getAjaxRedyMessage(), config.getAjaxRedyMessage());
+        output.writeClass(config.getSubtitleCss(), config.getAjaxReadyMessage());
     }
     
     /** Default header CSS style printer */

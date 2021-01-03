@@ -17,12 +17,9 @@ package org.ujorm.tools.web.table;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
-import org.ujorm.tools.web.ao.Injector;
 
 /**
  * A HTML page builder for table based an AJAX.
@@ -57,7 +54,7 @@ public interface TableBuilderConfig<D> {
     public HttpParameter getAjaxRequestParam();
     
     @Nonnull
-    public CharSequence getAjaxRedyMessage();
+    public CharSequence getAjaxReadyMessage();
 
     @Nonnull
     public String getFormId();

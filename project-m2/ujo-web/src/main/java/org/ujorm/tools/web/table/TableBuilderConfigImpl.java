@@ -19,10 +19,10 @@ import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import java.time.Duration;
 import java.util.List;
 import java.util.Arrays;
-import java.util.function.Function;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import static org.ujorm.tools.web.table.TableBuilderConfigImpl.Constants.*;
@@ -120,7 +120,9 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     /** Returns a fist class of table element by defult */
     @Nonnull
     protected CharSequence getTableClassSelector() {
-        return tableCssClass.get(0);
+        return tableCssClass.isEmpty()
+                ? Html.TABLE
+                : String.join(" .", Html.TABLE, tableCssClass.get(0));
     }
   
     public TableBuilderConfigImpl<D> setCssLink(@Nonnull final String cssLink) {
@@ -143,7 +145,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
         return this;
     }
     
-    public TableBuilderConfigImpl<D> setAjaxRequestParam(@Nonnull final CharSequence ajaxReadyMessage) {
+    public TableBuilderConfigImpl<D> setAjaxReadyMessage(@Nonnull final CharSequence ajaxReadyMessage) {
         this.ajaxReadyMessage = Assert.hasLength(ajaxReadyMessage, "ajaxReadyMessage");
         return this;
     }
@@ -164,7 +166,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     }
 
     public TableBuilderConfigImpl<D> setTableSelector(@Nonnull final CharSequence tableSelector) {
-        this.tableSelector = Assert.hasLength(tableSelector, "tableSelector");
+        this.tableSelector = Assert.notNull(tableSelector, "tableSelector");
         return this;
     }
 
@@ -201,7 +203,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     }
     
     @Override
-    public CharSequence getAjaxRedyMessage() {
+    public CharSequence getAjaxReadyMessage() {
         return ajaxReadyMessage;
     }
 

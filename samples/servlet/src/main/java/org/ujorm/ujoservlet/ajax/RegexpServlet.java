@@ -84,6 +84,7 @@ public class RegexpServlet extends HttpServlet {
                 new JavaScriptWriter( 
                         "#" + REGEXP, 
                         "#" + TEXT)
+                        .setSubtitleSelector("." + SUBTITLE_CSS)
                         .setFormSelector("#" + FORM_ID)
                         .write(html.getHead());   
             }

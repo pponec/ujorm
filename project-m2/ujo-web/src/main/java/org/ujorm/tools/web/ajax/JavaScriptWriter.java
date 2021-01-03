@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
@@ -39,7 +40,7 @@ public class JavaScriptWriter implements Injector {
             public String toString() {
                 return "_ajax";
             }
-        };
+        };   
     /** Default duration */
     public static final Duration DEFAULT_DURATION = Duration.ofMillis(250);
 
@@ -48,14 +49,23 @@ public class JavaScriptWriter implements Injector {
      /** Input selectors */
     protected final CharSequence[] inputCssSelectors;
     /** Input idle delay */
+    @Nonnull
     protected Duration idleDelay = DEFAULT_DURATION;
-    
     /** Form selector */
     protected String formSelector = "form";
     /** On load submit request */
     protected boolean onLoadSubmit = false;
     /** New line characters */
     protected CharSequence newLine = "\n";
+    /** A subtitle selector */
+    @Nullable
+    protected CharSequence subtitleSelector;
+    /** A subtitle selector */
+    @Nonnull
+    protected CharSequence errorMessage = "AJAX fails due";
+    /** Ajax Timeout */
+    @Nonnull
+    protected Duration ajaxTimeout = Duration.ofMillis(30_000);
     
     public JavaScriptWriter() {
         this("form input");
@@ -74,23 +84,36 @@ public class JavaScriptWriter implements Injector {
         this.inputCssSelectors = Assert.hasLength(inputSelectors, "inputSelectors");
     }
 
-    public JavaScriptWriter setIdleDelay(Duration idleDelay) {
-        this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
-        return this;
-    }
-
     public JavaScriptWriter setFormSelector(String formSelector) {
         this.formSelector = Assert.notNull(formSelector, "formSelector");
         return this;
     }
 
     public JavaScriptWriter setOnLoadSubmit(boolean onLoadSubmit) {
-        this.onLoadSubmit = Assert.notNull(onLoadSubmit, "onLoadSubmit");
+        this.onLoadSubmit = onLoadSubmit;
         return this;
     }
 
-    public JavaScriptWriter setNewLine(CharSequence newLine) {
+    public JavaScriptWriter setNewLine(@Nonnull CharSequence newLine) {
         this.newLine = Assert.notNull(newLine, "newLine");
+        return this;
+    }
+    
+    /** Assign a subtitle CSS selector */
+    public JavaScriptWriter setSubtitleSelector(CharSequence subtitleSelector) {
+        this.subtitleSelector = subtitleSelector;
+        return this;
+    }
+    
+    /** Assign an AJAX error message */
+    public JavaScriptWriter setErrorMessage(@Nullable CharSequence errorMessage) {
+        this.errorMessage = Assert.hasLength(errorMessage, "errorMessage");
+        return this;
+    }
+    
+    /** Assign an AJAX timeout */
+    public JavaScriptWriter setAjaxTimeout(@Nonnull Duration ajaxTimeout) {
+        this.ajaxTimeout = Assert.notNull(ajaxTimeout, "ajaxTimeout");;
         return this;
     }
     
@@ -125,11 +148,11 @@ public class JavaScriptWriter implements Injector {
                           + "{ url: '?" + ajaxRequestParam + "=true'"
                         + ", type: 'POST'"
                         + ", data: data"
-                        + ", timeout: 3000"
-                          + ", error: function (xhr, ajaxOptions, thrownError) {"
-                          ,  "   $('.subtitle').html('AJAX fails due: ' + thrownError);"
-                          +  " }"
-                    ,       ", success: function(result){"
+                        + ", timeout: " + ajaxTimeout.toMillis()
+                        + ", error: function (xhr, ajaxOptions, thrownError) {", Check.hasLength(subtitleSelector) 
+                        ? "   $('" + subtitleSelector + "').html('" + errorMessage + ": ' + thrownError);" : ""
+                        , "  }"
+                        + ", success: function(result){"
                     , "    var jsn = JSON.parse(result);"
                     , "    $.each(jsn, function(key, value){"
                     , "      $(key).html(value);"
