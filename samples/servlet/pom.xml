@@ -5,7 +5,7 @@
     <name>sample-servlet</name>
     <groupId>org.ujorm</groupId>
     <artifactId>sample-servlet</artifactId>
-    <version>2.06-SNAPSHOT</version>
+    <version>2.11-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <properties>
@@ -50,13 +50,13 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
-            <version>2.06-SNAPSHOT</version>
+            <version>2.11-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-web</artifactId>
-            <version>2.06-SNAPSHOT</version>
+            <version>2.11-SNAPSHOT</version>
         </dependency>
         
         <!--  An optional dependency -->
