@@ -61,6 +61,8 @@ public class RegexpServlet extends HttpServlet {
     private static final String SUBTITLE_CSS = "subtitle";
     /** AJAX param */
     private static final HttpParameter AJAX = JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM;
+    /** AJAX ready message */
+    private static final String AJAX_READY_MSG = "AJAX ready"; 
     /** A common service */
     private final Service service = new Service();
     
@@ -91,7 +93,7 @@ public class RegexpServlet extends HttpServlet {
             Message msg = highlight(input);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
-                body.addDiv(SUBTITLE_CSS).addText("");
+                body.addDiv(SUBTITLE_CSS).addText(AJAX_ENABLED ? AJAX_READY_MSG : "");
                 try (Element form = body.addForm()
                         .setId(FORM_ID)
                         .setMethod(Html.V_POST).setAction("?")) {
@@ -139,7 +141,7 @@ public class RegexpServlet extends HttpServlet {
             final Message msg = highlight(input);
             output.writeClass(OUTPUT_CSS, e -> e.addElementIf(msg.isError(), Html.SPAN, "error")
                     .addRawText(msg));
-            output.writeClass(SUBTITLE_CSS, "AJAX ready");
+            output.writeClass(SUBTITLE_CSS, AJAX_READY_MSG);
             return output;
     }
 

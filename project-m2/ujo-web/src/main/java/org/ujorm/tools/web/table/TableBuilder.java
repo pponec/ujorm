@@ -44,6 +44,8 @@ import org.ujorm.tools.web.ao.Injector;
 /**
  * A HTML page builder for table based an AJAX.
  * 
+ * <br>Please note that this is an experimental implementation.
+ * 
  * <h3>Usage<h3>
  * 
  * <pre class="pre">
@@ -214,7 +216,7 @@ public class TableBuilder<D> {
         }
         try (Element body = html.getBody()) {
             header.write(body);
-            body.addDiv(config.getSubtitleCss()).addText("");
+            body.addDiv(config.getSubtitleCss()).addText(ajaxEnabled ? config.getAjaxReadyMessage() : "");
             try (Element form =  body.addForm()
                     .setId(config.getFormId())
                     .setMethod(Html.V_POST).setAction("?")) {
