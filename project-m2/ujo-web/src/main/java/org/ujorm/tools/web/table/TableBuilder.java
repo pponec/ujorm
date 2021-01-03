@@ -228,9 +228,8 @@ public class TableBuilder<D> {
                                 .setValue(column.param.of(input, ""))
                                 .setAttribute(Html.A_PLACEHOLDER, column.title);                            
                     }
-
                 }
-                form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, true);    
+                form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, "");    
                 formAdditions.write(form);
             }
             final List<CharSequence> tableCss = config.getTableCssClass();
