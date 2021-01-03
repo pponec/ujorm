@@ -21,11 +21,13 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import org.junit.*;
+import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.MockServletResponse;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.ujorm.tools.web.ao.Injector;
 
 /**
  * @author Pavel Ponec
@@ -216,10 +218,10 @@ public class ElementTest {
     @Test
     public void testAddTable() {
         System.out.println("addTable");
-        CharSequence[] cssClasses = {};
-        Object[] titles = {"Id", "Name", "Enabled"};
-
         MockServletResponse response = new MockServletResponse();
+
+        CharSequence[] cssClasses = {"table"};
+        CharSequence[] titles = {"Id", "Name", "Enabled"};
         try (HtmlElement html = HtmlElement.of(response, BOOTSTRAP_CSS)) {
             html.addBody().addHeading("Cars");
             html.addBody().addTable(getCars().stream(), cssClasses, titles,
@@ -228,6 +230,31 @@ public class ElementTest {
                     Car::getEnabled);
         }
         assertTrue(response.toString().contains("<td>Scala</td>"));
+    }
+
+    /**
+     * Test of addSelect method, of class Element.
+     */
+    @Test
+    public void testAddTableExtended() {
+        System.out.println("addTableExtended");
+        MockServletResponse response = new MockServletResponse();
+
+        CharSequence[] cssClasses = {"table"};
+        CharSequence[] titles = {"Id", "Name", "Enabled", 
+                    (Injector) td -> td.addSpan("red").addText("Home page")};
+        try (HtmlElement html = HtmlElement.of(response, BOOTSTRAP_CSS)) {
+            html.addBody().addHeading("Cars");
+            html.addBody().addTable(getCars().stream(), cssClasses, titles,
+                    Car::getId,
+                    Car::getName,
+                    Car::getEnabled,
+                    (Column<Car>) (td, car) -> td.addLinkedText(car.getHomePage(), "link")
+            );
+        }   
+        assertTrue(response.toString().contains("<td>Scala</td>"));
+        assertTrue(response.toString().contains("<th>\n<span class=\"red\">Home page</span></th>"));
+        assertTrue(response.toString().contains("<td>\n<a href=\"http://demo.car.org"));
     }
 
     private Collection<Car> getCars() {
@@ -245,11 +272,13 @@ public class ElementTest {
         private final Integer id;
         private final String name;
         private final Boolean enabled;
+        private final String homePage;
 
         public Car(Integer id, String name, Boolean enabled) {
             this.id = id;
             this.name = name;
             this.enabled = enabled;
+            this.homePage = "http://demo.car.org/" + name.replace(' ', '-');
         }
 
         public Integer getId() {
@@ -262,6 +291,10 @@ public class ElementTest {
 
         public Boolean getEnabled() {
             return enabled;
+        }
+
+        public String getHomePage() {
+            return homePage;
         }
     }
 }

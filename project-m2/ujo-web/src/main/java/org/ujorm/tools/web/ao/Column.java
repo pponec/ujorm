@@ -20,6 +20,7 @@ import org.ujorm.tools.web.Element;
 
 /**
  * Table column value writer
+ * @param <T> Domain Object
  * @author Pavel Ponec
  */
 @FunctionalInterface
