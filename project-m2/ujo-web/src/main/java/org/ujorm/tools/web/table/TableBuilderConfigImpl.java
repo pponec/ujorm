@@ -80,6 +80,18 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     /** Table CSS class */
     @Nonnull
     private List<CharSequence> tableCssClass;
+    /** Sortable column CSS style */
+    @Nonnull
+    private CharSequence sortableColumn; 
+    /** Sortable column ascending CSS style */
+    @Nonnull
+    private CharSequence sortableAsc;
+    /** Sortable column descending CSS style */
+    @Nonnull
+    private CharSequence sortableDesc;
+    /** Sortable column undefined CSS style */
+    @Nonnull
+    private CharSequence sortableBoth; 
 
     public TableBuilderConfigImpl(@Nonnull final HtmlConfig config) {
         this(
@@ -91,7 +103,11 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
            FORM_ID, // formId
            CONTROL_CSS, // controlCss
            SUBTITLE_CSS, // subtitleCss
-           TABLE_CSS_CLASS // tableCssClass
+           TABLE_CSS_CLASS, // tableCssClass
+           "sortable", // sortableColumn
+           "asc",  // sortableAsc
+           "desc", // sortableDesc
+           "both"  // sortableBoth
         );
     }
 
@@ -104,17 +120,25 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
             @Nonnull final String formId, 
             @Nonnull final String controlCss, 
             @Nonnull final String subtitleCss,
-            @Nonnull final List<CharSequence> tableCssClass
+            @Nonnull final List<CharSequence> tableCssClass,
+            @Nonnull final String sortableColumn,
+            @Nonnull final String sortableAsc,
+            @Nonnull final String sortableDesc,
+            @Nonnull final String sortableBoth
     ) {
         this.config = config;
         this.cssLink = cssLink;
         this.jqueryLink = jqueryLink;
         this.idleDelay = idleDelay;
+        this.ajaxRequestParam = ajaxRequestParam;
         this.formId = formId;
         this.controlCss = controlCss;
         this.subtitleCss = subtitleCss;
         this.tableCssClass = tableCssClass;
-        this.ajaxRequestParam = ajaxRequestParam;
+        this.sortableColumn = sortableColumn;
+        this.sortableAsc = sortableAsc;
+        this.sortableDesc = sortableDesc;
+        this.sortableBoth = sortableBoth;
     }
     
     /** Returns a fist class of table element by defult */
@@ -230,6 +254,30 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     @Override
     public List<CharSequence> getTableCssClass() {
         return tableCssClass;
+    }
+
+    /** Sortable CSS class */
+    @Override
+    public CharSequence getSortable() {
+        return sortableColumn;
+    }
+
+    /** Sortable ascending CSS class */
+    @Override
+    public CharSequence getSortableAsc() {
+        return sortableAsc;
+    }
+
+    /** Sortable descending CSS class */
+    @Override
+    public CharSequence getSortableDesc() {
+        return sortableDesc;
+    }
+
+    /** Sortable both CSS class */
+    @Override
+    public CharSequence getSortableBoth() {
+        return sortableBoth;
     }
     
     /** Config constants */

@@ -18,6 +18,7 @@ package org.ujorm.tools.web.table;
 import java.time.Duration;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
@@ -70,6 +71,27 @@ public interface TableBuilderConfig<D> {
 
     @Nonnull
     public List<CharSequence> getTableCssClass();
+
+    @Nonnull
+    public CharSequence getSortable();
+
+    @Nonnull
+    public CharSequence getSortableAsc();
+
+    @Nonnull
+    public CharSequence getSortableDesc();
+
+    @Nonnull
+    public CharSequence getSortableBoth();
+    
+    /** Get a CSS direction style */
+    default CharSequence getSortableDirection(@Nullable final Boolean ascending) {
+        if (ascending == null) {
+            return getSortableBoth();
+        } else {
+            return ascending ? getSortableAsc() : getSortableDesc();
+        }
+    } 
     
     /** Returns a default implementation */
     @Nonnull

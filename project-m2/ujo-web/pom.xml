@@ -134,19 +134,7 @@
         </dependency>
     </dependencies>
     
-   
     <build>
-        <resources>
-            <resource>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <directory>src/main/java</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -215,8 +203,6 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.ujorm.core.UjoManager</mainClass>
-                            <packageName>org.ujorm.core</packageName>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>

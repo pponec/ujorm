@@ -59,16 +59,16 @@ public class HotelReportServlet extends HttpServlet {
             final HttpServletResponse output) throws ServletException, IOException {
 
         TableBuilder.of("Hotel Report", service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input)))
-                .add(Hotel::getName, "Hotel", NAME)
-                .add(Hotel::getCity, "City", CITY)
-                .add(Hotel::getStreet, "Street")
+                .add(Hotel::getName, "Hotel", NAME).sortable(true)
+                .add(Hotel::getCity, "City", CITY).sortable(false)
+                .add(Hotel::getStreet, "Street").sortable(null)
                 .add(Hotel::getPrice, "Price")
                 .add(Hotel::getCurrency, "Currency")
                 .add(Hotel::getStars, "Stars")
                 .add(Hotel::getPhone, "Phone")
                 .addToElement(
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
-                        (e) -> e.addText("HomePage", " ").addImage(Url.HELP_IMG, "Help")) // Title
+                        (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
                 .setFooter(e -> printFooter(e))
                 .build(input, output);
     }

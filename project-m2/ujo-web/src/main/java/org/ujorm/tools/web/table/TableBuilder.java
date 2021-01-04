@@ -156,6 +156,20 @@ public class TableBuilder<D> {
         columns.add(new ColumnModel(column, title, param));
         return this;
     }
+    
+    /**
+     * Add a sortable indicator to the last column model
+     * @param ascending The {@code null} value shows an unused sorting action.
+     * @return 
+     */
+    @Nonnull
+    public <V> TableBuilder<D> sortable(@Nullable final Boolean ascending) {
+        Assert.hasLength(columns, "No column is available");
+        final ColumnModel lastColumn = columns.get(columns.size() - 1);
+        lastColumn.sortable = true;
+        lastColumn.ascending = ascending;
+        return this;
+    }
 
     @Nonnull
     public TableBuilder<D> setAjaxRequestParam(@Nonnull HttpParameter ajaxRequestParam) {
@@ -243,10 +257,17 @@ public class TableBuilder<D> {
         for (ColumnModel<D,?> col : columns) {
             final Object value = col.title;
             final Element th = headerElement.addElement(Html.TH);
+            final Element thLink =  col.sortable ? th.addAnchor("#") : th;
+            if (col.sortable) {
+                thLink.setClass(
+                        config.getSortable(), 
+                        config.getSortableDirection(col.ascending)
+                );
+            }
             if (value instanceof Injector) {
-                ((Injector)value).write(th);
+                ((Injector)value).write(thLink);
             } else {
-                th.addText(value);
+                thLink.addText(value);
             }
         }
         try (Element tBody = table.addElement(Html.TBODY)) {
@@ -292,8 +313,25 @@ public class TableBuilder<D> {
                 css.addRawText(newLine, "#", conf.getFormId(), " input { width: 200px;}");
                 css.addRawText(newLine, ".", conf.getControlCss(), " { display: inline;}");
                 css.addRawText(newLine, ".table th { background-color: #e8e8e8;}");
+                if (isSortable()) {    
+                    final String img = "/org/ujorm/images/v1/order/";
+                    css.addRawText(newLine, ".", conf.getSortable(), " {background-repeat: no-repeat; background-position: right; padding-right: 14px; color: #212529;}");
+                    css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableAsc(),  " {background-image: url('", img, "up"  , ".png')}");
+                    css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableDesc(), " {background-image: url('", img, "down", ".png')}");
+                    css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableBoth(), " {background-image: url('", img, "both", ".png')}");
+                }
             }
         };
+    }
+    
+    /** If the table is sortable */
+    protected boolean isSortable() {
+        for (ColumnModel<D, ?> column : columns) {
+            if (column.sortable) {
+                return true;
+            }
+        }
+        return false;
     }
 
     class ColumnModel<D,V> {
@@ -303,7 +341,10 @@ public class TableBuilder<D> {
         final CharSequence title;
         @Nullable
         final HttpParameter param;
-
+        boolean sortable = false;
+        @Nullable
+        Boolean ascending = false;
+        
         public ColumnModel(@Nonnull final Function<D, V> column, @Nonnull final CharSequence title, @Nonnull final HttpParameter param) {
             this.column = column;
             this.title = title;

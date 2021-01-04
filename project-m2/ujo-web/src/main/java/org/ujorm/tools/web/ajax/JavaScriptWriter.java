@@ -130,11 +130,11 @@ public class JavaScriptWriter implements Injector {
                         .collect(Collectors.joining(", "));
                 js.addRawTexts(newLine, ""
                         , "var globalTimeout = null;"
-                        , "$('" + inpSelectors + "').keyup(function() {"
-                        , "  if (globalTimeout != null) {"
+                        , "$('" + inpSelectors + "').keyup(function(){"
+                        , "  if (globalTimeout != null){"
                         , "    clearTimeout(globalTimeout);"
                         , "  }"
-                        , "  globalTimeout = setTimeout(function() {"
+                        , "  globalTimeout = setTimeout(function(){"
                         , "    globalTimeout = null;"
                         , "    $('" + formSelector + "').submit();"
                         , "  }, " + idleDelay.toMillis() + ");"
@@ -149,7 +149,7 @@ public class JavaScriptWriter implements Injector {
                         + ", type: 'POST'"
                         + ", data: data"
                         + ", timeout: " + ajaxTimeout.toMillis()
-                        + ", error: function (xhr, ajaxOptions, thrownError) {", Check.hasLength(subtitleSelector) 
+                        + ", error: function (xhr, ajaxOptions, thrownError){", Check.hasLength(subtitleSelector) 
                         ? "   $('" + subtitleSelector + "').html('" + errorMessage + ": ' + thrownError);" : ""
                         , "  }"
                         + ", success: function(result){"
