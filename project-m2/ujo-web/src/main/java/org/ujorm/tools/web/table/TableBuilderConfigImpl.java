@@ -19,9 +19,12 @@ import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import java.time.Duration;
 import java.util.List;
 import java.util.Arrays;
+import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
@@ -92,6 +95,9 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     /** Sortable column undefined CSS style */
     @Nonnull
     private CharSequence sortableBoth; 
+    /** Inline CSS writer */
+    @Nullable
+    private BiConsumer<Element,Boolean> cssWriter;
 
     public TableBuilderConfigImpl(@Nonnull final HtmlConfig config) {
         this(
@@ -107,7 +113,8 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
            "sortable", // sortableColumn
            "asc",  // sortableAsc
            "desc", // sortableDesc
-           "both"  // sortableBoth
+           "both",  // sortableBoth
+           null // cssWriter
         );
     }
 
@@ -124,7 +131,8 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
             @Nonnull final String sortableColumn,
             @Nonnull final String sortableAsc,
             @Nonnull final String sortableDesc,
-            @Nonnull final String sortableBoth
+            @Nonnull final String sortableBoth,
+            @Nonnull final BiConsumer<Element,Boolean> cssWriter
     ) {
         this.config = config;
         this.cssLink = cssLink;
@@ -139,6 +147,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
         this.sortableAsc = sortableAsc;
         this.sortableDesc = sortableDesc;
         this.sortableBoth = sortableBoth;
+        this.cssWriter = cssWriter;
     }
     
     /** Returns a fist class of table element by defult */
@@ -199,85 +208,137 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
         return this;
     }
     
+    /** Inline CSS writer */
+    public TableBuilderConfigImpl<D> setCssWriter(@Nullable final BiConsumer<Element,Boolean> cssWriter) {
+        this.cssWriter = cssWriter;
+        return this;
+    }
     // --- GETTERS ---
 
+    @Override
     @Nonnull
     public HtmlConfig getConfig() {
         return config;
     }
 
+    @Override
     @Nonnull
     public String getCssLink() {
         return cssLink;
     }
 
+    @Override
     @Nonnull
     public String getJqueryLink() {
         return jqueryLink;
     }
 
+    @Override
     @Nonnull
     public Duration getIdleDelay() {
         return idleDelay;
     }
 
+    @Override
     @Nonnull
     public HttpParameter getAjaxRequestParam() {
         return ajaxRequestParam;
     }
     
     @Override
+    @Nonnull
     public CharSequence getAjaxReadyMessage() {
         return ajaxReadyMessage;
     }
 
     @Override
+    @Nonnull
     public String getFormId() {
         return formId;
     }
 
     @Override
+    @Nonnull
     public String getControlCss() {
         return controlCss;
     }
 
     @Override
+    @Nonnull
     public String getSubtitleCss() {
         return subtitleCss;
     }
 
     @Override
+    @Nonnull
     public CharSequence getTableSelector() {
         return tableSelector != null ? tableSelector : getTableCssClass().get(0);
     }
 
     @Override
+    @Nonnull
     public List<CharSequence> getTableCssClass() {
         return tableCssClass;
     }
 
     /** Sortable CSS class */
     @Override
+    @Nonnull
     public CharSequence getSortable() {
         return sortableColumn;
     }
 
     /** Sortable ascending CSS class */
     @Override
+    @Nonnull
     public CharSequence getSortableAsc() {
         return sortableAsc;
     }
 
     /** Sortable descending CSS class */
     @Override
+    @Nonnull
     public CharSequence getSortableDesc() {
         return sortableDesc;
     }
 
     /** Sortable both CSS class */
     @Override
+    @Nonnull
     public CharSequence getSortableBoth() {
         return sortableBoth;
+    }
+
+    /** Inline CSS writer where a default value is generated from the {@link #inlineCssWriter() } method.
+     * } */
+    @Override
+    @Nonnull
+    public BiConsumer<Element, Boolean> getCssWriter() {
+        return cssWriter != null ? cssWriter : inlineCssWriter();
+    }
+
+    /** Default header CSS style printer */
+    @Nonnull
+    protected BiConsumer<Element,Boolean> inlineCssWriter() {
+        return (Element element, Boolean sortable) -> {
+            final TableBuilderConfig conf = this;
+            final CharSequence newLine = conf.getConfig().getNewLine();
+            try (Element css = element.addElement(Html.STYLE)) {
+                css.addRawText(newLine, "body { margin: 10px;}");
+                css.addRawText(newLine, ".", conf.getSubtitleCss(), " { font-size: 10px; color: silver;}");
+                css.addRawText(newLine, "#", conf.getFormId(), " { margin-bottom: 2px;}");
+                css.addRawText(newLine, "#", conf.getFormId(), " input { width: 200px;}");
+                css.addRawText(newLine, ".", conf.getControlCss(), " { display: inline;}");
+                css.addRawText(newLine, ".table th { background-color: #e8e8e8;}");
+                if (sortable) {    
+                    final String img = "/org/ujorm/images/v1/order/";
+                    css.addRawText(newLine, ".", conf.getSortable(), " {background-repeat: no-repeat; background-position: right; padding-right: 14px; color: #212529;}");
+                    css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableAsc(),  " {background-image: url('", img, "up"  , ".png')}");
+                    css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableDesc(), " {background-image: url('", img, "down", ".png')}");
+                    css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableBoth(), " {background-image: url('", img, "both", ".png')}");
+                }
+            }
+        };
     }
     
     /** Config constants */

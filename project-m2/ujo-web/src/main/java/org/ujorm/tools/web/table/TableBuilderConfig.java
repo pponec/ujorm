@@ -17,8 +17,10 @@ package org.ujorm.tools.web.table;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.function.BiConsumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
@@ -83,6 +85,9 @@ public interface TableBuilderConfig<D> {
 
     @Nonnull
     public CharSequence getSortableBoth();
+    
+    /** Inline CSS writer where the first method is an Element and the seconnd one is a sortable  */
+    public BiConsumer<Element, Boolean> getCssWriter();
     
     /** Get a CSS direction style */
     default CharSequence getSortableDirection(@Nullable final Boolean ascending) {
