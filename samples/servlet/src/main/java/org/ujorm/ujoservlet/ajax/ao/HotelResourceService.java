@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.common.StreamUtils;
+import org.ujorm.tools.web.table.TableBuilder;
 
 /**
  *
@@ -53,14 +54,19 @@ public class HotelResourceService {
      * Direct stream of data source.
      * @return
      */
-    public Stream<Hotel> findHotels(int limit, @Nonnull String namePattern, @Nonnull String cityPattern) throws IOException {
+    public Stream<Hotel> findHotels(int limit, @Nonnull String namePattern, @Nonnull String cityPattern, TableBuilder<Hotel> builder) {
         String nameUp = namePattern.toUpperCase(Locale.ENGLISH);
         String cityUp = cityPattern.toUpperCase(Locale.ENGLISH);
-        return loadHotelStream()
-                    .filter(t -> nameUp.isEmpty() || t.getName().toUpperCase().contains(nameUp))
-                    .filter(t -> cityUp.isEmpty() || t.getCity().toUpperCase().contains(cityUp))
-                    .sorted(Comparator.comparing(Hotel::getName))
-                    .limit(limit);
+        // TableBuilder.ColumnModel<Hotel,?> sort = builder.getSortedColumn(); // TODO
+        try {
+            return loadHotelStream()
+                        .filter(t -> nameUp.isEmpty() || t.getName().toUpperCase().contains(nameUp))
+                        .filter(t -> cityUp.isEmpty() || t.getCity().toUpperCase().contains(cityUp))
+                        .sorted(Comparator.comparing(Hotel::getName))
+                        .limit(limit);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
     
     /**

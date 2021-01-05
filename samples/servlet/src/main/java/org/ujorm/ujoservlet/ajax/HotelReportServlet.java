@@ -56,9 +56,9 @@ public class HotelReportServlet extends HttpServlet {
     @Override
     protected void doGet(
             final HttpServletRequest input,
-            final HttpServletResponse output) throws ServletException, IOException {
+            final HttpServletResponse output) throws ServletException, IOException {  
 
-        TableBuilder.of("Hotel Report", service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input)))
+        TableBuilder.of("Hotel Report", (TableBuilder<Hotel> builder) -> service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input), builder))
                 .add(Hotel::getName, "Hotel", NAME).sortable(true)
                 .add(Hotel::getCity, "City", CITY).sortable(false)
                 .add(Hotel::getStreet, "Street").sortable(null)

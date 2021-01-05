@@ -66,7 +66,7 @@ public class TableBuilder<D> {
     /** Columns */
     protected final List<ColumnModel<D,?>> columns = new ArrayList<>(); 
     /** Data resource */
-    protected final Stream<D> resource;
+    protected final Function<TableBuilder<D>, Stream<D>> resource;
     /** Table builder config */
     protected final TableBuilderConfig config;
     /** AJAX request param */
@@ -87,29 +87,41 @@ public class TableBuilder<D> {
     protected boolean ajaxEnabled = true;
     /** Call an autosubmit on first load */
     protected boolean autoSubmmitOnLoad = false;
-
+    /** Sorted column */
+    @Nullable
+    private SortedColumn sort;
+    
     private TableBuilder(@Nonnull Stream<D> resource, @Nonnull TableBuilderConfig config) {
+        this(t -> resource, config);
+    }
+
+    private TableBuilder(@Nonnull Function<TableBuilder<D>, Stream<D>> resource, @Nonnull TableBuilderConfig config) {
         this.resource = resource;
         this.config = config;
     }
 
     @Nonnull
-    public static <D> TableBuilder<D> of(@Nonnull Stream<D> resource) {
+    public static <D> TableBuilder<D> of(@Nonnull Function<TableBuilder<D>, Stream<D>> resource) {
         return of("Info", resource);
     }
 
     @Nonnull
-    public static <D> TableBuilder<D> of(@Nonnull String title, @Nonnull Stream<D> resource) {
+    public static <D> TableBuilder<D> of(@Nonnull String title, @Nonnull Function<TableBuilder<D>, Stream<D>> resource) {
         return of(resource, (HtmlConfig) HtmlConfig.ofDefault().setTitle(title).setNiceFormat());
     }
     
     @Nonnull
-    public static <D> TableBuilder<D> of(@Nonnull Stream<D> resource, @Nonnull HtmlConfig config) {
+    public static <D> TableBuilder<D> of(@Nonnull String title, @Nonnull Stream<D> resource) {
+        return of(t -> resource, (HtmlConfig) HtmlConfig.ofDefault().setTitle(title).setNiceFormat());
+    } 
+    
+    @Nonnull
+    public static <D> TableBuilder<D> of(@Nonnull Function<TableBuilder<D>, Stream<D>> resource, @Nonnull HtmlConfig config) {
         return new TableBuilder(resource, new TableBuilderConfigImpl(config));
     }
     
     @Nonnull
-    public static <D> TableBuilder<D> of(@Nonnull Stream<D> resource, @Nonnull TableBuilderConfig config) {
+    public static <D> TableBuilder<D> of(@Nonnull Function<TableBuilder<D>, Stream<D>> resource, @Nonnull TableBuilderConfig config) {
         return new TableBuilder(resource, config);
     }
 
@@ -177,6 +189,18 @@ public class TableBuilder<D> {
         lastColumn.ascending = ascending;
         return this;
     }
+    
+    /** Get sorted column */
+    @Nullable
+    public ColumnModel<D,?> getSortedColumn() {
+        if (sort != null) {
+            int i = sort.getIndex();
+            if (i >= 0 && i < getColumnSize() ) {
+                return getColumn(i);                        
+            }
+        }
+        return null;
+    }
 
     @Nonnull
     public TableBuilder<D> setAjaxRequestParam(@Nonnull HttpParameter ajaxRequestParam) {
@@ -228,6 +252,7 @@ public class TableBuilder<D> {
     
     /** Mark a column as sorted */
     protected void setSort(@Nullable final SortedColumn sort) {
+        this.sort = sort;
         if (sort != null) {
             for (int i = 0, max = columns.size(); i < max; i++) {
                 final ColumnModel cm = columns.get(i);
@@ -303,7 +328,7 @@ public class TableBuilder<D> {
         }
         try (Element tBody = table.addElement(Html.TBODY)) {
             final boolean hasRenderer = WebUtils.isType(Column.class, columns.stream().map(t -> t.column));
-            resource.forEach(value -> {
+            resource.apply(this).forEach(value -> {
                 final Element rowElement = tBody.addElement(Html.TR);
                 for (ColumnModel<D, ?> col : columns) {
                     final Function<D, ?> attribute = col.column;
@@ -341,7 +366,7 @@ public class TableBuilder<D> {
         return false;
     }
 
-    class ColumnModel<D,V> {
+    public static class ColumnModel<D,V> {
         @Nonnull
         final Function<D,V> column;
         @Nonnull
