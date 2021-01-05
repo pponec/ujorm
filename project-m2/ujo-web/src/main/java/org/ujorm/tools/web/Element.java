@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,6 +78,24 @@ public final class Element implements ApiElement<Element>, Html {
     @Override
     public final Element setAttribute(@Nonnull final String name, @Nullable final Object value) {
         internalElement.setAttribute(name, value);
+        return this;
+    }
+    
+    /**
+     * Set an attribute
+     * @param name Required element name
+     * @param value The {@code null} value is silently ignored. Formatting is performed by the
+     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.model.XmlModel, java.lang.String, java.io.Writer) }
+     *   method, where the default implementation calls a {@code toString()} only.
+     * @return The original element
+     */
+    @Nonnull
+    public final Element setAttributes(@Nonnull final String name, @Nonnull final CharSequence separator, @Nonnull final Object... value) {
+        final String val = Stream.of(value)
+                .filter(Objects::nonNull)
+                .map(v -> v.toString())
+                .collect(Collectors.joining(separator));     
+        internalElement.setAttribute(name, val);
         return this;
     }
 
@@ -821,7 +840,7 @@ public final class Element implements ApiElement<Element>, Html {
         setAttribute(A_HREF, value);
         return this;
     }
-
+    
     /** String value */
     @Override
     @Nonnull

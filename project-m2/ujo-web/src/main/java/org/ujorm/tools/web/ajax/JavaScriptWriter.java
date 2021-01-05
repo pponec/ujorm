@@ -120,7 +120,7 @@ public class JavaScriptWriter implements Injector {
     
     /** Assign an AJAX timeout */
     public JavaScriptWriter setAjaxTimeout(@Nonnull Duration ajaxTimeout) {
-        this.ajaxTimeout = Assert.notNull(ajaxTimeout, "ajaxTimeout");;
+        this.ajaxTimeout = Assert.notNull(ajaxTimeout, "ajaxTimeout");
         return this;
     }
     
@@ -170,7 +170,11 @@ public class JavaScriptWriter implements Injector {
                     , onLoadSubmit ? "  $('" + formSelector + "').submit();" : ""
                 );
             }
-            js.addRawTexts(newLine, "", "});");
+            js.addRawText(newLine, "", "});");
+            js.addRawText(newLine, "function sort(col){");
+            js.addRawText(newLine, " document.querySelector('", "input[name=\"_sort\"]').value=col;");
+            js.addRawText(newLine, " document.querySelector('", formSelector , "').submit();");
+            js.addRawText(newLine, "}");
         }
     }
 }

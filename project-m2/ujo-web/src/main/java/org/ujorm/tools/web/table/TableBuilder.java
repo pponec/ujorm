@@ -216,7 +216,7 @@ public class TableBuilder<D> {
     /** Build the HTML page including a table */
     public void build(HttpServletRequest input, HttpServletResponse output) {    
         try {
-            setSortedColumn(SortedColumn.of(config.getSortRequestParam().of(input)));
+            setSort(SortedColumn.of(config.getSortRequestParam().of(input)));
             new ReqestDispatcher(input, output, config.getConfig())
                     .onParam(config.getAjaxRequestParam(), jsonBuilder -> doAjax(input, jsonBuilder))
                     .onDefaultToElement(element -> printHtmlBody(input, element));
@@ -227,12 +227,16 @@ public class TableBuilder<D> {
     }
     
     /** Mark a column as sorted */
-    protected void setSortedColumn(@Nullable final SortedColumn sort) {
+    protected void setSort(@Nullable final SortedColumn sort) {
         if (sort != null) {
             for (int i = 0, max = columns.size(); i < max; i++) {
                 final ColumnModel cm = columns.get(i);
                 if (cm.sortable) {
-                    cm.ascending = sort.getIndex() == i ? sort.isAscending() : null;
+                    if (sort.getIndex() == i) {
+                        cm.switchOrder(sort.isAscending());
+                    } else {
+                        cm.ascending = null;
+                    }
                 }
             }
         }
@@ -280,10 +284,11 @@ public class TableBuilder<D> {
     
     protected void printTableBody(Element table, HttpServletRequest input) {
         final Element headerElement = table.addElement(Html.THEAD).addElement(Html.TR);
-        for (ColumnModel<D,?> col : columns) {
+        for (int i = 0, max = columns.size(); i < max; i++) {
+            final ColumnModel<D,?> col = columns.get(i);
             final Object value = col.title;
             final Element th = headerElement.addElement(Html.TH);
-            final Element thLink =  col.sortable ? th.addAnchor("#") : th;
+            final Element thLink =  col.sortable ? th.addAnchor("javascript:sort('" + col.code(i) + "')") : th;
             if (col.sortable) {
                 thLink.setClass(
                         config.getSortable(), 
@@ -355,6 +360,16 @@ public class TableBuilder<D> {
         
         public boolean isFiltered() {
             return param != null;
+        }
+        
+        /** Switch the order */
+        public void switchOrder(boolean ascending) {
+            this.ascending = !ascending;                     
+        }
+        
+        @Nonnull
+        public String code(int index) {
+            return new SortedColumn(ascending, index).toString();
         }
     }
     

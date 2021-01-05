@@ -31,8 +31,8 @@ public class SortedColumn {
     private final boolean ascending;
     private final int index;
 
-    public SortedColumn(boolean ascending, int orderColumn) {
-        this.ascending = ascending;
+    public SortedColumn(@Nullable Boolean ascending, int orderColumn) {
+        this.ascending = ascending != null && ascending;
         this.index = orderColumn;
     }
 
@@ -80,7 +80,6 @@ public class SortedColumn {
         }
         return true;
     }
-    
     
     @Nullable
     public static SortedColumn of(@Nonnull final String value) {
