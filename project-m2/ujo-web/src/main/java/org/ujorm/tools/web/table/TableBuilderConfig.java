@@ -57,6 +57,9 @@ public interface TableBuilderConfig<D> {
     public HttpParameter getAjaxRequestParam();
     
     @Nonnull
+    public HttpParameter getSortRequestParam();
+    
+    @Nonnull
     public CharSequence getAjaxReadyMessage();
 
     @Nonnull

@@ -40,6 +40,13 @@ public class JavaScriptWriter implements Injector {
             public String toString() {
                 return "_ajax";
             }
+        };      
+    /** Default AJAX request parameter name */
+    public static final HttpParameter DEFAULT_SORT_REQUEST_PARAM = new HttpParameter() {
+            @Override
+            public String toString() {
+                return "_sort";
+            }
         };   
     /** Default duration */
     public static final Duration DEFAULT_DURATION = Duration.ofMillis(250);

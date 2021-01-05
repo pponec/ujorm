@@ -80,7 +80,16 @@ public final class Element implements ApiElement<Element>, Html {
         return this;
     }
 
-
+    /**
+     * Set an attribute with no value
+     * @param name Required element name
+     * @return The original element
+     */
+    @Nonnull
+    public final Element setAttribute(@Nonnull final String name) {
+        return setAttribute(name, "");
+    }
+    
     /**
      * A shortcut for the method {@link #setAttribute(java.lang.String, java.lang.Object) }.
      * @param name Required element name

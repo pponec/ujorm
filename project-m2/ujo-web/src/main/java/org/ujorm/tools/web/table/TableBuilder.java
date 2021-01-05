@@ -154,6 +154,16 @@ public class TableBuilder<D> {
         return this;
     }
     
+    /** Get column model by index */
+    public ColumnModel<D,?> getColumn(int index) {
+        return columns.get(index);
+    }
+    
+    /** Returns a count of columns */
+    public int getColumnSize() {
+        return columns.size();
+    }
+    
     /**
      * Add a sortable indicator to the last column model
      * @param ascending The {@code null} value shows an unused sorting action.
@@ -206,12 +216,25 @@ public class TableBuilder<D> {
     /** Build the HTML page including a table */
     public void build(HttpServletRequest input, HttpServletResponse output) {    
         try {
+            setSortedColumn(SortedColumn.of(config.getSortRequestParam().of(input)));
             new ReqestDispatcher(input, output, config.getConfig())
                     .onParam(config.getAjaxRequestParam(), jsonBuilder -> doAjax(input, jsonBuilder))
                     .onDefaultToElement(element -> printHtmlBody(input, element));
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Internal server error", e);
             output.setStatus(500);
+        }
+    }
+    
+    /** Mark a column as sorted */
+    protected void setSortedColumn(@Nullable final SortedColumn sort) {
+        if (sort != null) {
+            for (int i = 0, max = columns.size(); i < max; i++) {
+                final ColumnModel cm = columns.get(i);
+                if (cm.sortable) {
+                    cm.ascending = sort.getIndex() == i ? sort.isAscending() : null;
+                }
+            }
         }
     }
     
@@ -240,7 +263,13 @@ public class TableBuilder<D> {
                                 .setAttribute(Html.A_PLACEHOLDER, column.title);                            
                     }
                 }
-                form.addInput().setType(Html.V_SUBMIT).setAttrib(Html.V_HIDDEN, "");    
+                if (isSortable()) {
+                        form.addInput()
+                                .setAttrib(Html.A_TYPE, Html.V_HIDDEN)
+                                .setName(config.getSortRequestParam())
+                                .setValue(config.getSortRequestParam().of(input));                                    
+                }
+                form.addInput().setType(Html.V_SUBMIT).setAttribute(Html.V_HIDDEN);    
                 formAdditions.write(form);
             }
             final List<CharSequence> tableCss = config.getTableCssClass();
@@ -317,7 +346,7 @@ public class TableBuilder<D> {
         boolean sortable = false;
         @Nullable
         Boolean ascending = false;
-        
+
         public ColumnModel(@Nonnull final Function<D, V> column, @Nonnull final CharSequence title, @Nonnull final HttpParameter param) {
             this.column = column;
             this.title = title;

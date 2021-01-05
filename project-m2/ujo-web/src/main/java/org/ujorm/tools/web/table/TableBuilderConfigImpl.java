@@ -65,6 +65,9 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     /** AJAX request param */
     @Nonnull
     private HttpParameter ajaxRequestParam;
+    /** AJAX request param */
+    @Nonnull
+    private HttpParameter sortRequestParam;
     /** AJA ready param */
     @Nonnull
     private CharSequence ajaxReadyMessage = "AJAX ready";
@@ -106,6 +109,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
            JQUERY_JS, // jqueryLink
            IDLE_DELAY, // idleDelay
            JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM, // ajaxRequestParam
+           JavaScriptWriter.DEFAULT_SORT_REQUEST_PARAM, // sortRequestParam
            FORM_ID, // formId
            CONTROL_CSS, // controlCss
            SUBTITLE_CSS, // subtitleCss
@@ -124,6 +128,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
             @Nonnull final String jqueryLink, 
             @Nonnull final Duration idleDelay, 
             @Nonnull final HttpParameter ajaxRequestParam,
+            @Nonnull final HttpParameter sortRequestParam,
             @Nonnull final String formId, 
             @Nonnull final String controlCss, 
             @Nonnull final String subtitleCss,
@@ -139,6 +144,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
         this.jqueryLink = jqueryLink;
         this.idleDelay = idleDelay;
         this.ajaxRequestParam = ajaxRequestParam;
+        this.sortRequestParam = sortRequestParam;
         this.formId = formId;
         this.controlCss = controlCss;
         this.subtitleCss = subtitleCss;
@@ -175,6 +181,11 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
 
     public TableBuilderConfigImpl<D> setAjaxRequestParam(@Nonnull final HttpParameter ajaxRequestParam) {
         this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
+        return this;
+    }
+    
+    public TableBuilderConfigImpl<D> setSortRequestParam(@Nonnull final HttpParameter sortRequestParam) {
+        this.sortRequestParam = Assert.notNull(sortRequestParam, "sortRequestParam");
         return this;
     }
     
@@ -243,6 +254,12 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     @Nonnull
     public HttpParameter getAjaxRequestParam() {
         return ajaxRequestParam;
+    }
+    
+    @Override
+    @Nonnull
+    public HttpParameter getSortRequestParam() {
+        return sortRequestParam;
     }
     
     @Override
