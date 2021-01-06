@@ -3,7 +3,6 @@ package org.ujorm.ujoservlet.ajax.ao;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -57,12 +56,11 @@ public class HotelResourceService {
     public Stream<Hotel> findHotels(int limit, @Nonnull String namePattern, @Nonnull String cityPattern, TableBuilder<Hotel> builder) {
         String nameUp = namePattern.toUpperCase(Locale.ENGLISH);
         String cityUp = cityPattern.toUpperCase(Locale.ENGLISH);
-        // TableBuilder.ColumnModel<Hotel,?> sort = builder.getSortedColumn(); // TODO
         try {
             return loadHotelStream()
                         .filter(t -> nameUp.isEmpty() || t.getName().toUpperCase().contains(nameUp))
                         .filter(t -> cityUp.isEmpty() || t.getCity().toUpperCase().contains(cityUp))
-                        .sorted(Comparator.comparing(Hotel::getName))
+                        .sorted(builder.getSortedColumn().getComparator(Hotel::getName))
                         .limit(limit);
         } catch (IOException e) {
             throw new IllegalStateException(e);

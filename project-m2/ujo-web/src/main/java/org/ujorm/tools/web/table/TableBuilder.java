@@ -183,13 +183,12 @@ public class TableBuilder<D> {
         return this;
     }
     
-    /** Get sorted column */
-    @Nullable
+    /** Get sorted column or a stub of the sorted column was not found */
+    @Nonnull
     public ColumnModel<D,?> getSortedColumn() {
-        if (sortedColumn >= 0 && sortedColumn < getColumnSize() ) {
-            return getColumn(sortedColumn);                        
-        }
-        return null;
+        return (sortedColumn >= 0 && sortedColumn < getColumnSize())
+                ? getColumn(sortedColumn)
+                : ColumnModel.ofStub();
     }
 
     @Nonnull

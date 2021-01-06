@@ -16,12 +16,14 @@
 package org.ujorm.tools.web.table;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.msg.MsgFormatter;
+import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 
 /**
@@ -55,7 +57,7 @@ public class ColumnModel<D, V> {
 
     public ColumnModel(final int index, @Nonnull final Function<D, V> column, @Nonnull final CharSequence title, @Nonnull final HttpParameter param) {
         this.index = index;
-        this.column = Assert.notNull(column, "column");;
+        this.column = Assert.notNull(column, "column");
         this.title = Assert.notNull(title, "title");
         this.param = param;
     }
@@ -120,6 +122,27 @@ public class ColumnModel<D, V> {
         writer.append(String.valueOf(index));
         return writer;
     }
+    
+    /** Get comparator of a sortable column */
+    @Nonnull
+    public Comparator<D> getComparator(@Nullable final Function<D,?> defaultFce) {
+        return getComparator(Comparator.comparing((Function)defaultFce));   
+    }
+    
+    /** Get comparator of a sortable column */
+    @Nonnull
+    public Comparator<D> getComparator(@Nonnull final Comparator<D> defaultCompar) {
+        if ((sortable && !(column instanceof Column))) {
+            final Comparator<D> compar = Comparator.comparing((Function) column);
+            switch (direction) {
+                case ASC:
+                    return compar;
+                case DESC:
+                    return compar.reversed();
+            }
+        }
+        return defaultCompar;
+    }
 
     @Override
     public String toString() {
@@ -135,6 +158,11 @@ public class ColumnModel<D, V> {
         } else {
             return new ColumnModel<>(Direction.NONE, -1);
         }
+    }
+    
+    /** Create a stub column */
+    public static <D, V> ColumnModel<D, V> ofStub() {
+        return new ColumnModel<D,V>(-1, x -> null, "", null);
     }
 
 }
