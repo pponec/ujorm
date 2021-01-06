@@ -50,7 +50,7 @@ public class ColumnModel<D, V> {
     
     public ColumnModel(@Nonnull Direction ascending, int index) {
         this(index, x -> null, "", null);
-        setAscending(ascending);
+        setSortable(ascending);
     }
 
     public ColumnModel(final int index, @Nonnull final Function<D, V> column, @Nonnull final CharSequence title, @Nonnull final HttpParameter param) {
@@ -92,13 +92,12 @@ public class ColumnModel<D, V> {
         return param != null;
     }
     
-    public void setSortable(@Nonnull Direction ascending) {
+    public final void setSortable(@Nonnull final Direction ascending) {
         this.sortable = true;
         setAscending(ascending);
     }
 
-    // TODO pop?
-    public final void setAscending(@Nonnull Direction ascending) {
+    public final void setAscending(@Nonnull final Direction ascending) {
         this.ascending = Assert.notNull(ascending, "ascending");
     }
 
