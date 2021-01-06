@@ -28,19 +28,19 @@ public class ColumnModelTest {
     public void testOf() {
         ColumnModel expected, result;
 
-        expected = new ColumnModel(Direction.DOWN, 2);
+        expected = new ColumnModel(Direction.ASC, 2);
         result = ColumnModel.ofCode(expected.toString());
         assertEquals(expected, result);        
         
-        expected = new ColumnModel(Direction.UP, 1);
+        expected = new ColumnModel(Direction.DESC, 1);
         result = ColumnModel.ofCode(expected.toString());
         assertEquals(expected, result);
         
-        expected = new ColumnModel(Direction.DOWN, 0);
+        expected = new ColumnModel(Direction.ASC, 0);
         result = ColumnModel.ofCode(expected.toString());
         assertEquals(expected, result);
          
-        expected = new ColumnModel(Direction.UP, 0);
+        expected = new ColumnModel(Direction.DESC, 0);
         result = ColumnModel.ofCode(expected.toString());
         assertEquals(expected, result);
     }

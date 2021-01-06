@@ -46,7 +46,7 @@ public class ColumnModel<D, V> {
     /** Is the column sortable? */
     private boolean sortable = false;
     @Nonnull
-    private Direction direction = Direction.BOTH;
+    private Direction direction = Direction.NONE;
     
     public ColumnModel(@Nonnull Direction direction, int index) {
         this(index, x -> null, "", null);
@@ -102,27 +102,21 @@ public class ColumnModel<D, V> {
     }
 
     /**
-     * Switch the order
-     */
-    public void switchOrder(Direction direction) {
-        this.direction = direction.switchIt();
-    }
-
-    /**
      * Write the content to an appendable text stream
      */
-    public String toCode() {
+    public String toCode(final boolean opposite) {
         try {
-            return toCode(new StringBuilder(4)).toString();
+            return toCode(opposite, new StringBuilder(4)).toString();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
+    
     /**
      * Write the content to an appendable text stream
      */
-    public Appendable toCode(@Nonnull final Appendable writer) throws IOException {
-        writer.append(direction.safeEquals(Direction.UP) ? "-" : "");
+    public Appendable toCode(final boolean opposite, @Nonnull final Appendable writer) throws IOException {
+        writer.append(direction.safeEquals(opposite ? Direction.ASC : Direction.DESC) ? "-" : "");
         writer.append(String.valueOf(index));
         return writer;
     }
@@ -139,7 +133,7 @@ public class ColumnModel<D, V> {
             final int index = Math.abs(Integer.parseInt(paramValue));
             return new ColumnModel<>(direction, index);
         } else {
-            return new ColumnModel<>(Direction.BOTH, -1);
+            return new ColumnModel<>(Direction.NONE, -1);
         }
     }
 

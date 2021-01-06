@@ -158,7 +158,7 @@ public class TableBuilder<D> {
      */
     @Nonnull
     public <V> TableBuilder<D> sortable() {
-        return sortableBy(Direction.BOTH);
+        return sortableBy(Direction.NONE);
     }    
     /**
      * Add a sortable indicator to the last column model
@@ -167,7 +167,7 @@ public class TableBuilder<D> {
      */
     @Nonnull
     public <V> TableBuilder<D> sortable(@Nullable final boolean ascending) {
-        return sortableBy(ascending ? Direction.DOWN : Direction.UP);
+        return sortableBy(ascending ? Direction.ASC : Direction.DESC);
     }
   
     /**
@@ -258,11 +258,7 @@ public class TableBuilder<D> {
             for (int i = 0, max = columns.size(); i < max; i++) {
                 final ColumnModel cm = columns.get(i);
                 if (cm.isSortable()) {
-                    if (sort.getIndex() == i) {
-                        cm.switchOrder(sort.getDirection());
-                    } else {
-                        cm.setDirection(Direction.BOTH);
-                    }
+                    cm.setDirection(sort.getIndex() == i ? sort.getDirection() : Direction.NONE);
                 }
             }
         }
@@ -325,7 +321,7 @@ public class TableBuilder<D> {
         for (ColumnModel<D,?> col : columns) {
             final Object value = col.getTitle();
             final Element th = headerElement.addElement(Html.TH);
-            final Element thLink =  col.isSortable() ? th.addAnchor("javascript:sort('" + col.toCode() + "')") : th;
+            final Element thLink =  col.isSortable() ? th.addAnchor("javascript:sort('" + col.toCode(true) + "')") : th;
             if (col.isSortable()) {
                 thLink.setClass(
                         config.getSortable(), 

@@ -24,34 +24,23 @@ import javax.annotation.Nullable;
  */
 public enum Direction {
     
-    DOWN,
-    UP,
-    BOTH;
+    /** Ascending sort */
+    ASC,
+    /** Desending sort */
+    DESC,
+    /** No sorting */
+    NONE;
 
     /** Safe equals */
     public boolean safeEquals(@Nullable final Direction direction) {
         return equals(direction);
     }
     
-    /** Turn the direction */
-    public Direction switchIt() {
-        switch (this) {
-            case UP:
-                return DOWN;
-            case DOWN:
-                return UP;
-            case BOTH:
-                return this;
-            default:
-                throw new IllegalStateException("Illegal direction: " + this);
-        }
-    } 
-    
     @Nonnull
     public static final Direction of(@Nullable Boolean ascending) {
         if (ascending == null) {
-            return BOTH;
+            return NONE;
         }
-        return ascending ? DOWN : UP;
+        return ascending ? ASC : DESC;
     }
 }

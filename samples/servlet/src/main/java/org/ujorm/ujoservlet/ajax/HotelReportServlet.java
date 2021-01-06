@@ -70,7 +70,8 @@ public class HotelReportServlet extends HttpServlet {
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
                 .setFooter(e -> printFooter(e))
-                .build(input, output, builder -> service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input), builder));
+                .build(input, output, 
+                        builder -> service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input), builder));
     }
     
     /**  Data are from hotelsbase.org, see the original license */

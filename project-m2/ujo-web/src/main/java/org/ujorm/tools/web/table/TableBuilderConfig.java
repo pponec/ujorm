@@ -19,7 +19,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.function.BiConsumer;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
@@ -95,11 +94,11 @@ public interface TableBuilderConfig<D> {
     /** Get a CSS direction style */
     default CharSequence getSortableDirection(@Nonnull final Direction direction) {
         switch (direction) {
-            case DOWN:
+            case ASC:
                 return getSortableAsc();
-            case UP:
+            case DESC:
                 return getSortableDesc();
-            case BOTH:
+            case NONE:
                 return getSortableBoth();
             default:
                 throw new IllegalArgumentException("Unsupported " + direction);
