@@ -74,7 +74,7 @@ public class MenuServlet extends HttpServlet {
                         , new Item(TableServlet.URL_PATTERN, "Show table")
                         , new Item(FormServlet.URL_PATTERN + "?firstname=It's+Me!", "Simple user form")
                         , new Item(RegexpServlet.URL_PATTERN + "?regexp=%5Bbe%5D&text=abc+def", "Regular expression tester")
-                        , new Item(HotelReportServlet.URL_PATTERN, "Hotels report")
+                        , new Item(HotelReportServlet.URL_PATTERN + "?name=Hotel", "Hotels report")
                         };
         return result;
     }

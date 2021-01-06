@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.table.TableBuilder;
+import org.ujorm.tools.xml.config.HtmlConfig;
 
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
 import org.ujorm.ujoservlet.ajax.ao.HotelResourceService;
@@ -109,7 +110,7 @@ public class HotelReportServlet extends HttpServlet {
                 + "http://api.hotelsbase.org/documentation.php";
         /** Source of the class */
         static final String SOURCE_REPO = "https://github.com/pponec/ujorm/blob/"
-                + "1e1dd647726e80b4c78542b5dbaaf947c7c73c85"
+                + "cff521bcb4f3044d8f06fe327878e34d9c48d6ea"
                 + "/samples/servlet/src/main/java"
                 + "/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
     }

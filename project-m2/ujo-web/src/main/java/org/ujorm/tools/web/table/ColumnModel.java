@@ -115,11 +115,11 @@ public class ColumnModel<D, V> {
     }
     
     /**
-     * Write the content to an appendable text stream
+     * Write the content to an appendable text stream where the default direction is an ASCENDING.
      */
     public Appendable toCode(final boolean opposite, @Nonnull final Appendable writer) throws IOException {
-        writer.append(direction.safeEquals(opposite ? Direction.ASC : Direction.DESC) ? "-" : "");
-        writer.append(String.valueOf(index));
+        final int coeff = (Direction.ASC.safeEquals(direction) == opposite) ? -1 : 1;
+        writer.append(String.valueOf(coeff * (index + 1)));
         return writer;
     }
     
@@ -132,7 +132,7 @@ public class ColumnModel<D, V> {
     /** Get comparator of a sortable column */
     @Nonnull
     public Comparator<D> getComparator(@Nonnull final Comparator<D> defaultCompar) {
-        if ((sortable && !(column instanceof Column))) {
+        if (sortable && isIncludeColumnType()) {
             final Comparator<D> compar = Comparator.comparing((Function) column);
             switch (direction) {
                 case ASC:
@@ -144,6 +144,15 @@ public class ColumnModel<D, V> {
         return defaultCompar;
     }
 
+    /** Including is more common choice */
+    protected boolean isIncludeColumnType() {
+        if (true) {
+            return true;
+        } else {
+            return !(column instanceof Column);
+        }
+    }
+
     @Override
     public String toString() {
         return MsgFormatter.format("[{}]:{}:{}", index, title, sortable ? direction.name() : "-");
@@ -152,9 +161,9 @@ public class ColumnModel<D, V> {
     @Nonnull
     protected static ColumnModel ofCode(@Nonnull final String paramValue) {
         if (NUMBER.matcher(paramValue).matches()) {
-            final Direction direction = Direction.of(paramValue.charAt(0) != '-');
-            final int index = Math.abs(Integer.parseInt(paramValue));
-            return new ColumnModel<>(direction, index);
+            final int intCode = Integer.parseInt(paramValue);
+            final Direction direction = Direction.of(intCode > 0);
+            return new ColumnModel<>(direction, Math.abs(intCode) - 1);
         } else {
             return new ColumnModel<>(Direction.NONE, -1);
         }

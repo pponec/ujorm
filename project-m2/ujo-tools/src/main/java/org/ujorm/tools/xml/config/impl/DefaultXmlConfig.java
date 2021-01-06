@@ -137,9 +137,9 @@ public class DefaultXmlConfig implements XmlConfig {
     /**
      * Assign parameters for a nice format of the HTML result
      */
-    public final <T extends DefaultXmlConfig> T setNiceFormat() {
+    public final DefaultXmlConfig setNiceFormat() {
         setNiceFormat(DEFAULT_INTENDATION);
-        return (T) this;
+        return this;
     }
 
     /**

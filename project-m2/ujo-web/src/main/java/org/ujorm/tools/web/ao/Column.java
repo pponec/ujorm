@@ -16,6 +16,7 @@
 package org.ujorm.tools.web.ao;
 
 import java.util.function.Function;
+import javax.annotation.Nonnull;
 import org.ujorm.tools.web.Element;
 
 /**
@@ -24,27 +25,16 @@ import org.ujorm.tools.web.Element;
  * @author Pavel Ponec
  */
 @FunctionalInterface
-public interface Column<T> extends Function<T, Object>, CharSequence {
+public interface Column<T> extends Function<T, Object> {
 
-    @Deprecated
+    /**
+     *  The method can be implemented for sortable columns 
+     * @param t A domaim objject
+     * @return Returns a constatn {@code "?"}, for a Sortable columns must return a serializable object.
+     */
     @Override
-    public default Object apply(T t) {
+    public default Object apply(@Nonnull T t) {
         return "?";
-    }
-
-    @Override
-    public default int length() {
-        return 1;
-    }
-
-    @Override
-    public default char charAt(int index) {
-        return '?';
-    }
-
-    @Override
-    public default CharSequence subSequence(int start, int end) {
-        return "?".substring(start, end);
     }
 
     /** Write a custom content of the table cell
@@ -52,6 +42,6 @@ public interface Column<T> extends Function<T, Object>, CharSequence {
      * @param parent An element of the table detail.
      * @param value Value to write.
      */
-    public void write(Element parent, T value);
+    public void write(@Nonnull Element parent, T value);
 
 }

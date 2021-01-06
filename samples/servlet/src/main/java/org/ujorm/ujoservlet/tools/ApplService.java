@@ -48,11 +48,11 @@ public abstract class ApplService {
     /** Add a common footer for DOM */
     public static void addFooter(final ApiElement parent, HttpServlet servlet, short showLine) throws IOException {
         ApiElement footer = parent.addElement(Html.DIV)
-                .setAttrib(Html.A_CLASS, "footer");
+                .setAttribute(Html.A_CLASS, "footer");
         footer.addText("See a ")
                 .addElement(Html.A)
-                .setAttrib(Html.A_HREF, getSourceLink(servlet.getClass(), showLine))
-                .setAttrib(Html.A_TARGET, Html.V_BLANK)
+                .setAttribute(Html.A_HREF, getSourceLink(servlet.getClass(), showLine))
+                .setAttribute(Html.A_TARGET, Html.V_BLANK)
                 .addText(servlet.getClass().getSimpleName());
         footer.addText(" source class of the Ujorm framework.");
     }

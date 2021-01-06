@@ -60,18 +60,18 @@ public class ReqestDispatcher {
     private final boolean noCache = true;
     
     public ReqestDispatcher(
+            @Nonnull HttpServletRequest input,
+            @Nonnull HttpServletResponse output) {
+        this("Info", input, output);
+    }
+    
+    public ReqestDispatcher(
             @Nonnull CharSequence title,
             @Nonnull HttpServletRequest input,
             @Nonnull HttpServletResponse output) {
-        this(input, output, HtmlConfig.ofDefault()
+        this(input, output, (HtmlConfig) HtmlConfig.ofDefault()
                 .setTitle(title)
                 .setNiceFormat());
-    }
-
-    public ReqestDispatcher(
-            @Nonnull HttpServletRequest input,
-            @Nonnull HttpServletResponse output) {
-        this(input, output, HtmlConfig.ofDefault().setTitle("Info"));
     }
 
     public ReqestDispatcher(

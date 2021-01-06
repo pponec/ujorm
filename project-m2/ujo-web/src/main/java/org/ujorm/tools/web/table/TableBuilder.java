@@ -90,7 +90,7 @@ public class TableBuilder<D> {
     private int sortedColumn = -1;
     
     public TableBuilder(@Nonnull CharSequence title) {
-        this(HtmlConfig.ofDefault().setTitle(title));
+        this((HtmlConfig) HtmlConfig.ofDefault().setTitle(title).setNiceFormat());
     }
 
     public TableBuilder(@Nonnull HtmlConfig config) {
@@ -158,7 +158,7 @@ public class TableBuilder<D> {
      */
     @Nonnull
     public <V> TableBuilder<D> sortable() {
-        return sortableBy(Direction.NONE);
+        return sortable(Direction.NONE);
     }    
     /**
      * Add a sortable indicator to the last column model
@@ -167,7 +167,7 @@ public class TableBuilder<D> {
      */
     @Nonnull
     public <V> TableBuilder<D> sortable(@Nullable final boolean ascending) {
-        return sortableBy(ascending ? Direction.ASC : Direction.DESC);
+        return sortable(ascending ? Direction.ASC : Direction.DESC);
     }
   
     /**
@@ -176,7 +176,7 @@ public class TableBuilder<D> {
      * @return 
      */
     @Nonnull
-    public <V> TableBuilder<D> sortableBy(@Nonnull final Direction direction) {
+    public <V> TableBuilder<D> sortable(@Nonnull final Direction direction) {
         Assert.notNull(direction, "direction");
         Assert.hasLength(columns, "No column is available");
         columns.get(columns.size() - 1).setSortable(direction);
@@ -320,7 +320,7 @@ public class TableBuilder<D> {
         for (ColumnModel<D,?> col : columns) {
             final Object value = col.getTitle();
             final Element th = headerElement.addElement(Html.TH);
-            final Element thLink =  col.isSortable() ? th.addAnchor("javascript:sort('" + col.toCode(true) + "')") : th;
+            final Element thLink =  col.isSortable() ? th.addAnchor("javascript:sort(" + col.toCode(true) + ")") : th;
             if (col.isSortable()) {
                 thLink.setClass(
                         config.getSortable(), 

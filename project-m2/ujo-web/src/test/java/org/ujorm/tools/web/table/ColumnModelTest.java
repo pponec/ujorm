@@ -1,5 +1,6 @@
 /*
- * Copyright 2021-2021 Pavel Ponec, https://github.com/pponec
+ * Copyright 2021-2021 Pavel Ponec,
+ * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/XmlModel.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,26 +24,24 @@ import static org.junit.Assert.*;
  * @author Pavel Ponec
  */
 public class ColumnModelTest {
+    
+    private static final boolean OPPSITE = true;
+    private static final boolean NATURAL = !OPPSITE;
 
     @Test
-    public void testOf() {
-        ColumnModel expected, result;
-
-        expected = new ColumnModel(Direction.ASC, 2);
-        result = ColumnModel.ofCode(expected.toString());
-        assertEquals(expected, result);        
+    public void testToCode_boolean_Appendable() throws Exception {
         
-        expected = new ColumnModel(Direction.DESC, 1);
-        result = ColumnModel.ofCode(expected.toString());
-        assertEquals(expected, result);
+        ColumnModel col = new ColumnModel(Direction.ASC, 0);
+        assertEquals("1", col.toCode(NATURAL));
+        assertEquals("-1", col.toCode(OPPSITE));
         
-        expected = new ColumnModel(Direction.ASC, 0);
-        result = ColumnModel.ofCode(expected.toString());
-        assertEquals(expected, result);
-         
-        expected = new ColumnModel(Direction.DESC, 0);
-        result = ColumnModel.ofCode(expected.toString());
-        assertEquals(expected, result);
+        col = new ColumnModel(Direction.DESC, 0);
+        assertEquals("-1", col.toCode(NATURAL));
+        assertEquals("1", col.toCode(OPPSITE));
+        
+        col = new ColumnModel(Direction.NONE, 0);
+        assertEquals("-1", col.toCode(NATURAL));
+        assertEquals("1", col.toCode(OPPSITE));
+        
     }
-    
 }

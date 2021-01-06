@@ -37,6 +37,7 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Url.*;
+import static org.ujorm.ujoservlet.ajax.RegexpServlet.Css.*;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
@@ -53,12 +54,6 @@ public class RegexpServlet extends HttpServlet {
     private static final boolean AJAX_ENABLED = true;
     /** Form identifier */
     private static final String FORM_ID = "form";
-    /** Bootstrap form control CSS class name */
-    private static final String CONTROL_CSS = "form-control";
-    /** CSS class name for the output box */
-    private static final String OUTPUT_CSS = "out";
-    /** CSS class name for the output box */
-    private static final String SUBTITLE_CSS = "subtitle";
     /** AJAX param */
     private static final HttpParameter AJAX = JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM;
     /** AJAX ready message */
@@ -169,8 +164,18 @@ public class RegexpServlet extends HttpServlet {
         static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
         /** Source of the class */
         static final String SOURCE_URL = "https://github.com/pponec/ujorm/blob/"
-                + "1e1dd647726e80b4c78542b5dbaaf947c7c73c85"
+                + "cff521bcb4f3044d8f06fe327878e34d9c48d6ea"
                 + "/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/RegexpServlet.java";
+    }
+    
+    /** CSS constants */
+    static class Css {
+        /** Bootstrap form control CSS class name */
+        static final String CONTROL_CSS = "form-control";
+        /** CSS class name for the output box */
+        static final String OUTPUT_CSS = "out";
+        /** CSS class name for the output box */
+        static final String SUBTITLE_CSS = "subtitle";    
     }
 
     /** Servlet attributes */
