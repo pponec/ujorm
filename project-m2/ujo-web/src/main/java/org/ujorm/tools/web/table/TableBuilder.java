@@ -85,9 +85,9 @@ public class TableBuilder<D> {
     protected boolean ajaxEnabled = true;
     /** Call an autosubmit on first load */
     protected boolean autoSubmmitOnLoad = false;
-    /** Sorted column */
+    /** Sorted column index */
     @Nullable
-    private SortedColumn sort;
+    private int sortedColumn = -1;
     
     public TableBuilder(@Nonnull CharSequence title) {
         this(HtmlConfig.ofDefault().setTitle(title));
@@ -138,7 +138,7 @@ public class TableBuilder<D> {
     
     @Nonnull
     protected <V> TableBuilder<D> addInternal(@Nonnull final Function<D,?> column, @Nonnull final CharSequence title, @Nullable final HttpParameter param) {
-        columns.add(new ColumnModel(column, title, param));
+        columns.add(new ColumnModel(columns.size(), column, title, param));
         return this;
     }
     
@@ -154,26 +154,40 @@ public class TableBuilder<D> {
     
     /**
      * Add a sortable indicator to the last column model
+     * @return 
+     */
+    @Nonnull
+    public <V> TableBuilder<D> sortable() {
+        return sortableBy(Direction.BOTH);
+    }    
+    /**
+     * Add a sortable indicator to the last column model
+     * @param ascending Ascending or descending
+     * @return 
+     */
+    @Nonnull
+    public <V> TableBuilder<D> sortable(@Nullable final boolean ascending) {
+        return sortableBy(ascending ? Direction.DOWN : Direction.UP);
+    }
+  
+    /**
+     * Add a sortable indicator to the last column model
      * @param ascending The {@code null} value shows an unused sorting action.
      * @return 
      */
     @Nonnull
-    public <V> TableBuilder<D> sortable(@Nullable final Boolean ascending) {
+    public <V> TableBuilder<D> sortableBy(@Nonnull final Direction ascending) {
+        Assert.notNull(ascending, "ascending");
         Assert.hasLength(columns, "No column is available");
-        final ColumnModel lastColumn = columns.get(columns.size() - 1);
-        lastColumn.sortable = true;
-        lastColumn.ascending = ascending;
+        columns.get(columns.size() - 1).setSortable(ascending);
         return this;
     }
     
     /** Get sorted column */
     @Nullable
     public ColumnModel<D,?> getSortedColumn() {
-        if (sort != null) {
-            int i = sort.getIndex();
-            if (i >= 0 && i < getColumnSize() ) {
-                return getColumn(i);                        
-            }
+        if (sortedColumn >= 0 && sortedColumn < getColumnSize() ) {
+            return getColumn(sortedColumn);                        
         }
         return null;
     }
@@ -227,7 +241,7 @@ public class TableBuilder<D> {
             @Nonnull final HttpServletResponse output, 
             @Nonnull final Function<TableBuilder<D>, Stream<D>> resource) {    
         try {
-            setSort(SortedColumn.of(config.getSortRequestParam().of(input)));
+            setSort(ColumnModel.ofCode(config.getSortRequestParam().of(input)));
             new ReqestDispatcher(input, output, config.getConfig())
                     .onParam(config.getAjaxRequestParam(), jsonBuilder -> doAjax(input, jsonBuilder, resource))
                     .onDefaultToElement(element -> printHtmlBody(input, element, resource));
@@ -238,16 +252,16 @@ public class TableBuilder<D> {
     }
     
     /** Mark a column as sorted */
-    protected void setSort(@Nullable final SortedColumn sort) {
-        this.sort = sort;
-        if (sort != null) {
+    protected void setSort(@Nonnull final ColumnModel sort) {
+        this.sortedColumn = sort.getIndex();
+        if (sortedColumn >= 0) {
             for (int i = 0, max = columns.size(); i < max; i++) {
                 final ColumnModel cm = columns.get(i);
-                if (cm.sortable) {
+                if (cm.isSortable()) {
                     if (sort.getIndex() == i) {
-                        cm.switchOrder(sort.isAscending());
+                        cm.switchOrder(sort.getAscending());
                     } else {
-                        cm.ascending = null;
+                        cm.setAscending(Direction.BOTH);
                     }
                 }
             }
@@ -281,10 +295,10 @@ public class TableBuilder<D> {
 
                 for (ColumnModel<D, ?> column : columns) {
                     if (column.isFiltered()) {
-                        form.addInput(config.getControlCss(), column.param)
-                                .setName(column.param)
-                                .setValue(column.param.of(input, ""))
-                                .setAttribute(Html.A_PLACEHOLDER, column.title);                            
+                        form.addInput(config.getControlCss(), column.getParam())
+                                .setName(column.getParam())
+                                .setValue(column.getParam().of(input, ""))
+                                .setAttribute(Html.A_PLACEHOLDER, column.getTitle());                            
                     }
                 }
                 if (isSortable()) {
@@ -308,15 +322,14 @@ public class TableBuilder<D> {
             @Nonnull final Function<TableBuilder<D>, Stream<D>> resource
     ) {       
         final Element headerElement = table.addElement(Html.THEAD).addElement(Html.TR);
-        for (int i = 0, max = columns.size(); i < max; i++) {
-            final ColumnModel<D,?> col = columns.get(i);
-            final Object value = col.title;
+        for (ColumnModel<D,?> col : columns) {
+            final Object value = col.getTitle();
             final Element th = headerElement.addElement(Html.TH);
-            final Element thLink =  col.sortable ? th.addAnchor("javascript:sort('" + col.code(i) + "')") : th;
-            if (col.sortable) {
+            final Element thLink =  col.isSortable() ? th.addAnchor("javascript:sort('" + col.toCode() + "')") : th;
+            if (col.isSortable()) {
                 thLink.setClass(
                         config.getSortable(), 
-                        config.getSortableDirection(col.ascending)
+                        config.getSortableDirection(col.getAscending())
                 );
             }
             if (value instanceof Injector) {
@@ -326,11 +339,11 @@ public class TableBuilder<D> {
             }
         }
         try (Element tBody = table.addElement(Html.TBODY)) {
-            final boolean hasRenderer = WebUtils.isType(Column.class, columns.stream().map(t -> t.column));
+            final boolean hasRenderer = WebUtils.isType(Column.class, columns.stream().map(t -> t.getColumn()));
             resource.apply(this).forEach(value -> {
                 final Element rowElement = tBody.addElement(Html.TR);
                 for (ColumnModel<D, ?> col : columns) {
-                    final Function<D, ?> attribute = col.column;
+                    final Function<D, ?> attribute = col.getColumn();
                     final Element td = rowElement.addElement(Html.TD);
                     if (hasRenderer && attribute instanceof Column) {
                         ((Column)attribute).write(td, value);
@@ -361,43 +374,11 @@ public class TableBuilder<D> {
     /** If the table is sortable */
     protected boolean isSortable() {
         for (ColumnModel<D, ?> column : columns) {
-            if (column.sortable) {
+            if (column.isSortable()) {
                 return true;
             }
         }
         return false;
-    }
-
-    public static class ColumnModel<D,V> {
-        @Nonnull
-        final Function<D,V> column;
-        @Nonnull
-        final CharSequence title;
-        @Nullable
-        final HttpParameter param;
-        boolean sortable = false;
-        @Nullable
-        Boolean ascending = false;
-
-        public ColumnModel(@Nonnull final Function<D, V> column, @Nonnull final CharSequence title, @Nonnull final HttpParameter param) {
-            this.column = column;
-            this.title = title;
-            this.param = param;
-        }
-        
-        public boolean isFiltered() {
-            return param != null;
-        }
-        
-        /** Switch the order */
-        public void switchOrder(boolean ascending) {
-            this.ascending = !ascending;                     
-        }
-        
-        @Nonnull
-        public String code(int index) {
-            return new SortedColumn(ascending, index).toString();
-        }
     }
     
     /** URL constants */

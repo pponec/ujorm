@@ -22,29 +22,27 @@ import static org.junit.Assert.*;
  *
  * @author Pavel Ponec
  */
-public class SortedColumnTest {
-   
+public class ColumnModelTest {
 
     @Test
     public void testOf() {
-        SortedColumn expected, result;
+        ColumnModel expected, result;
 
-        expected = new SortedColumn(true, 2);
-        result = SortedColumn.of(expected.toString());
+        expected = new ColumnModel(Direction.DOWN, 2);
+        result = ColumnModel.ofCode(expected.toString());
         assertEquals(expected, result);        
         
-        expected = new SortedColumn(false, 1);
-        result = SortedColumn.of(expected.toString());
+        expected = new ColumnModel(Direction.UP, 1);
+        result = ColumnModel.ofCode(expected.toString());
         assertEquals(expected, result);
         
-        expected = new SortedColumn(true, 0);
-        result = SortedColumn.of(expected.toString());
+        expected = new ColumnModel(Direction.DOWN, 0);
+        result = ColumnModel.ofCode(expected.toString());
         assertEquals(expected, result);
          
-        expected = new SortedColumn(false, 0);
-        result = SortedColumn.of(expected.toString());
+        expected = new ColumnModel(Direction.UP, 0);
+        result = ColumnModel.ofCode(expected.toString());
         assertEquals(expected, result);
-                
     }
     
 }
