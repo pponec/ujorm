@@ -46,11 +46,11 @@ public class ColumnModel<D, V> {
     /** Is the column sortable? */
     private boolean sortable = false;
     @Nonnull
-    private Direction ascending = Direction.BOTH;
+    private Direction direction = Direction.BOTH;
     
-    public ColumnModel(@Nonnull Direction ascending, int index) {
+    public ColumnModel(@Nonnull Direction direction, int index) {
         this(index, x -> null, "", null);
-        setSortable(ascending);
+        setSortable(direction);
     }
 
     public ColumnModel(final int index, @Nonnull final Function<D, V> column, @Nonnull final CharSequence title, @Nonnull final HttpParameter param) {
@@ -83,29 +83,29 @@ public class ColumnModel<D, V> {
         return sortable;
     }
 
-    @Nullable
-    public Direction getAscending() {
-        return ascending;
+    @Nonnull
+    public Direction getDirection() {
+        return direction;
     }
 
     public boolean isFiltered() {
         return param != null;
     }
     
-    public final void setSortable(@Nonnull final Direction ascending) {
+    public final void setSortable(@Nonnull final Direction direction) {
         this.sortable = true;
-        setAscending(ascending);
+        setDirection(direction);
     }
 
-    public final void setAscending(@Nonnull final Direction ascending) {
-        this.ascending = Assert.notNull(ascending, "ascending");
+    public final void setDirection(@Nonnull final Direction direction) {
+        this.direction = Assert.notNull(direction, "direction");
     }
 
     /**
      * Switch the order
      */
-    public void switchOrder(Direction ascending) {
-        this.ascending = ascending.switchIt();
+    public void switchOrder(Direction direction) {
+        this.direction = direction.switchIt();
     }
 
     /**
@@ -122,22 +122,22 @@ public class ColumnModel<D, V> {
      * Write the content to an appendable text stream
      */
     public Appendable toCode(@Nonnull final Appendable writer) throws IOException {
-        writer.append(ascending.safeEquals(Direction.UP) ? "-" : "");
+        writer.append(direction.safeEquals(Direction.UP) ? "-" : "");
         writer.append(String.valueOf(index));
         return writer;
     }
 
     @Override
     public String toString() {
-        return MsgFormatter.format("[{}]:{}:{}", index, title, sortable ? ascending.name() : "-");
+        return MsgFormatter.format("[{}]:{}:{}", index, title, sortable ? direction.name() : "-");
     }
 
     @Nonnull
     protected static ColumnModel ofCode(@Nonnull final String paramValue) {
         if (NUMBER.matcher(paramValue).matches()) {
-            final Direction ascending = Direction.of(paramValue.charAt(0) != '-');
+            final Direction direction = Direction.of(paramValue.charAt(0) != '-');
             final int index = Math.abs(Integer.parseInt(paramValue));
-            return new ColumnModel<>(ascending, index);
+            return new ColumnModel<>(direction, index);
         } else {
             return new ColumnModel<>(Direction.BOTH, -1);
         }

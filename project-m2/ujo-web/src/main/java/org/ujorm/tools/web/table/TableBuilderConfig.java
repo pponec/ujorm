@@ -93,8 +93,8 @@ public interface TableBuilderConfig<D> {
     public BiConsumer<Element, Boolean> getCssWriter();
     
     /** Get a CSS direction style */
-    default CharSequence getSortableDirection(@Nonnull final Direction ascending) {
-        switch (ascending) {
+    default CharSequence getSortableDirection(@Nonnull final Direction direction) {
+        switch (direction) {
             case DOWN:
                 return getSortableAsc();
             case UP:
@@ -102,7 +102,7 @@ public interface TableBuilderConfig<D> {
             case BOTH:
                 return getSortableBoth();
             default:
-                throw new IllegalArgumentException("Unsupported " + ascending);
+                throw new IllegalArgumentException("Unsupported " + direction);
         }
     }
     

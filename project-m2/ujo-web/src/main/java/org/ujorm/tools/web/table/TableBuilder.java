@@ -162,7 +162,7 @@ public class TableBuilder<D> {
     }    
     /**
      * Add a sortable indicator to the last column model
-     * @param ascending Ascending or descending
+     * @param ascending Ascending or descending direction of the sort
      * @return 
      */
     @Nonnull
@@ -172,14 +172,14 @@ public class TableBuilder<D> {
   
     /**
      * Add a sortable indicator to the last column model
-     * @param ascending The {@code null} value shows an unused sorting action.
+     * @param direction The {@code null} value shows an unused sorting action.
      * @return 
      */
     @Nonnull
-    public <V> TableBuilder<D> sortableBy(@Nonnull final Direction ascending) {
-        Assert.notNull(ascending, "ascending");
+    public <V> TableBuilder<D> sortableBy(@Nonnull final Direction direction) {
+        Assert.notNull(direction, "direction");
         Assert.hasLength(columns, "No column is available");
-        columns.get(columns.size() - 1).setSortable(ascending);
+        columns.get(columns.size() - 1).setSortable(direction);
         return this;
     }
     
@@ -259,9 +259,9 @@ public class TableBuilder<D> {
                 final ColumnModel cm = columns.get(i);
                 if (cm.isSortable()) {
                     if (sort.getIndex() == i) {
-                        cm.switchOrder(sort.getAscending());
+                        cm.switchOrder(sort.getDirection());
                     } else {
-                        cm.setAscending(Direction.BOTH);
+                        cm.setDirection(Direction.BOTH);
                     }
                 }
             }
@@ -329,7 +329,7 @@ public class TableBuilder<D> {
             if (col.isSortable()) {
                 thLink.setClass(
                         config.getSortable(), 
-                        config.getSortableDirection(col.getAscending())
+                        config.getSortableDirection(col.getDirection())
                 );
             }
             if (value instanceof Injector) {

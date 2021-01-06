@@ -15,6 +15,9 @@
  */
 package org.ujorm.tools.web.table;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Sort direction
  * @author Pavel Ponec
@@ -26,7 +29,7 @@ public enum Direction {
     BOTH;
 
     /** Safe equals */
-    public boolean safeEquals(Direction direction) {
+    public boolean safeEquals(@Nullable final Direction direction) {
         return equals(direction);
     }
     
@@ -44,7 +47,8 @@ public enum Direction {
         }
     } 
     
-    public static final Direction of(Boolean ascending) {
+    @Nonnull
+    public static final Direction of(@Nullable Boolean ascending) {
         if (ascending == null) {
             return BOTH;
         }
