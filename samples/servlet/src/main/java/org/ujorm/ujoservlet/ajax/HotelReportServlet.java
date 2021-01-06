@@ -58,7 +58,7 @@ public class HotelReportServlet extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {  
 
-        TableBuilder.of("Hotel Report", (TableBuilder<Hotel> builder) -> service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input), builder))
+        new TableBuilder<Hotel>("Hotel Report")
                 .add(Hotel::getName, "Hotel", NAME).sortable(true)
                 .add(Hotel::getCity, "City", CITY).sortable(false)
                 .add(Hotel::getStreet, "Street").sortable(null)
@@ -70,7 +70,7 @@ public class HotelReportServlet extends HttpServlet {
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
                 .setFooter(e -> printFooter(e))
-                .build(input, output);
+                .build(input, output, builder -> service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input), builder));
     }
     
     /**  Data are from hotelsbase.org, see the original license */

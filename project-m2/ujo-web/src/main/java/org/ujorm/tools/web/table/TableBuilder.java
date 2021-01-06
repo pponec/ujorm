@@ -65,8 +65,6 @@ public class TableBuilder<D> {
     
     /** Columns */
     protected final List<ColumnModel<D,?>> columns = new ArrayList<>(); 
-    /** Data resource */
-    protected final Function<TableBuilder<D>, Stream<D>> resource;
     /** Table builder config */
     protected final TableBuilderConfig config;
     /** AJAX request param */
@@ -91,38 +89,16 @@ public class TableBuilder<D> {
     @Nullable
     private SortedColumn sort;
     
-    private TableBuilder(@Nonnull Stream<D> resource, @Nonnull TableBuilderConfig config) {
-        this(t -> resource, config);
+    public TableBuilder(@Nonnull CharSequence title) {
+        this(HtmlConfig.ofDefault().setTitle(title));
     }
 
-    private TableBuilder(@Nonnull Function<TableBuilder<D>, Stream<D>> resource, @Nonnull TableBuilderConfig config) {
-        this.resource = resource;
+    public TableBuilder(@Nonnull HtmlConfig config) {
+        this(TableBuilderConfig.of(config));
+    }
+
+    public TableBuilder(@Nonnull TableBuilderConfig config) {
         this.config = config;
-    }
-
-    @Nonnull
-    public static <D> TableBuilder<D> of(@Nonnull Function<TableBuilder<D>, Stream<D>> resource) {
-        return of("Info", resource);
-    }
-
-    @Nonnull
-    public static <D> TableBuilder<D> of(@Nonnull String title, @Nonnull Function<TableBuilder<D>, Stream<D>> resource) {
-        return of(resource, (HtmlConfig) HtmlConfig.ofDefault().setTitle(title).setNiceFormat());
-    }
-    
-    @Nonnull
-    public static <D> TableBuilder<D> of(@Nonnull String title, @Nonnull Stream<D> resource) {
-        return of(t -> resource, (HtmlConfig) HtmlConfig.ofDefault().setTitle(title).setNiceFormat());
-    } 
-    
-    @Nonnull
-    public static <D> TableBuilder<D> of(@Nonnull Function<TableBuilder<D>, Stream<D>> resource, @Nonnull HtmlConfig config) {
-        return new TableBuilder(resource, new TableBuilderConfigImpl(config));
-    }
-    
-    @Nonnull
-    public static <D> TableBuilder<D> of(@Nonnull Function<TableBuilder<D>, Stream<D>> resource, @Nonnull TableBuilderConfig config) {
-        return new TableBuilder(resource, config);
     }
 
     @Nonnull
@@ -236,14 +212,25 @@ public class TableBuilder<D> {
         this.javascritWriter =  Assert.notNull(javascritWriter, "javascritWriter");;
         return this;
     }
+  
+    /** Build the HTML page including a table */
+    public void build(
+            @Nonnull final HttpServletRequest input, 
+            @Nonnull final HttpServletResponse output, 
+            @Nonnull final Stream<D> resource) {  
+        build(input, output, tableBuilder -> resource);
+    }
     
     /** Build the HTML page including a table */
-    public void build(HttpServletRequest input, HttpServletResponse output) {    
+    public void build(
+            @Nonnull final HttpServletRequest input, 
+            @Nonnull final HttpServletResponse output, 
+            @Nonnull final Function<TableBuilder<D>, Stream<D>> resource) {    
         try {
             setSort(SortedColumn.of(config.getSortRequestParam().of(input)));
             new ReqestDispatcher(input, output, config.getConfig())
-                    .onParam(config.getAjaxRequestParam(), jsonBuilder -> doAjax(input, jsonBuilder))
-                    .onDefaultToElement(element -> printHtmlBody(input, element));
+                    .onParam(config.getAjaxRequestParam(), jsonBuilder -> doAjax(input, jsonBuilder, resource))
+                    .onDefaultToElement(element -> printHtmlBody(input, element, resource));
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Internal server error", e);
             output.setStatus(500);
@@ -267,7 +254,15 @@ public class TableBuilder<D> {
         }
     }
     
-    protected void printHtmlBody(HttpServletRequest input, HtmlElement html) {
+    protected void printHtmlBody(
+            @Nonnull final HttpServletRequest input, 
+            @Nonnull final HtmlElement html, 
+            @Nonnull final Function<TableBuilder<D>, Stream<D>> resource
+    ) {
+        Assert.notNull(input, "input");
+        Assert.notNull(html, "html");
+        Assert.notNull(resource, "resource");
+        
         html.addJavascriptLink(false, config.getJqueryLink());
         html.addCssLink(config.getCssLink());
         config.getCssWriter().accept(html.getHead(), isSortable());
@@ -302,12 +297,16 @@ public class TableBuilder<D> {
                 formAdditions.write(form);
             }
             final List<CharSequence> tableCss = config.getTableCssClass();
-            printTableBody(body.addTable(tableCss.toArray(new CharSequence[tableCss.size()])), input);
+            printTableBody(body.addTable(tableCss.toArray(new CharSequence[tableCss.size()])), input, resource);
             footer.write(body);
         }  
     }
     
-    protected void printTableBody(Element table, HttpServletRequest input) {
+    protected void printTableBody(
+            @Nonnull final Element table, 
+            @Nonnull final HttpServletRequest input, 
+            @Nonnull final Function<TableBuilder<D>, Stream<D>> resource
+    ) {       
         final Element headerElement = table.addElement(Html.THEAD).addElement(Html.TR);
         for (int i = 0, max = columns.size(); i < max; i++) {
             final ColumnModel<D,?> col = columns.get(i);
@@ -350,9 +349,12 @@ public class TableBuilder<D> {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void doAjax(HttpServletRequest input, JsonBuilder output)
+    protected void doAjax(
+            @Nonnull final HttpServletRequest input, 
+            @Nonnull final JsonBuilder output, 
+            @Nonnull final Function<TableBuilder<D>, Stream<D>> resource)
             throws ServletException, IOException {
-        output.writeClass(config.getTableSelector(), e -> printTableBody(e, input));
+        output.writeClass(config.getTableSelector(), e -> printTableBody(e, input, resource));
         output.writeClass(config.getSubtitleCss(), config.getAjaxReadyMessage());
     }
     
