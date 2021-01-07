@@ -16,6 +16,7 @@
  */
 package org.ujorm.tools.common;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
@@ -37,7 +38,7 @@ import org.ujorm.tools.Assert;
  * @author Pavel Ponec
  * @param <V> Object value
  */
-public final class Wrapper<V> implements Comparable<Wrapper<V>> {
+public final class Wrapper<V> implements Comparable<Wrapper<V>>, Confessionable {
 
     /** The original value */
     @Nonnull
@@ -124,6 +125,12 @@ public final class Wrapper<V> implements Comparable<Wrapper<V>> {
     @Override
     public String toString() {
         return value.toString();
+    }
+    
+    @Override
+    public Appendable confessTo(Appendable writer) throws IOException {
+        writer.append(value.toString());
+        return writer;
     }
 
     /** Create a new wrapper */
