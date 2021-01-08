@@ -52,13 +52,11 @@ public class RegexpServlet extends HttpServlet {
     public static final String URL_PATTERN = "/RegexpServlet";
     /** Enable AJAX feature */
     private static final boolean AJAX_ENABLED = true;
-    /** Form identifier */
-    private static final String FORM_ID = "form";
     /** AJAX param */
     private static final HttpParameter AJAX = JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM;
     /** AJAX ready message */
     private static final String AJAX_READY_MSG = "AJAX ready"; 
-    /** A common service */
+    /** A service */
     private final Service service = new Service();
     
     /**
@@ -77,14 +75,7 @@ public class RegexpServlet extends HttpServlet {
             html.addJavascriptLink(false, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
-            if (AJAX_ENABLED) {
-                new JavaScriptWriter( 
-                        "#" + REGEXP, 
-                        "#" + TEXT)
-                        .setSubtitleSelector("." + SUBTITLE_CSS)
-                        .setFormSelector("#" + FORM_ID)
-                        .write(html.getHead());   
-            }
+            writeJavaScript(html, AJAX_ENABLED);
             Message msg = highlight(input);
             try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
@@ -146,6 +137,18 @@ public class RegexpServlet extends HttpServlet {
                 REGEXP.of(input, ""),
                 TEXT.of(input, ""));
     }
+    
+    /** Write a Javascript to a header */
+    protected void writeJavaScript(@Nonnull final HtmlElement html, final boolean enabled) {
+        if (enabled) {
+            new JavaScriptWriter(
+                    "#" + REGEXP,
+                    "#" + TEXT)
+                    .setSubtitleSelector("." + SUBTITLE_CSS)
+                    .setFormSelector("#" + FORM_ID)
+                    .write(html.getHead());
+        }
+    }
 
     /** Create a configuration of HTML model */
     private DefaultHtmlConfig getConfig(@Nonnull String title) {
@@ -164,18 +167,20 @@ public class RegexpServlet extends HttpServlet {
         static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
         /** Source of the class */
         static final String SOURCE_URL = "https://github.com/pponec/ujorm/blob/"
-                + "cff521bcb4f3044d8f06fe327878e34d9c48d6ea"
+                + "333922aea98231fb149481feaca6533fbbc34c18"
                 + "/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/RegexpServlet.java";
     }
     
-    /** CSS constants */
+    /** CSS constants and identifiers */
     static class Css {
         /** Bootstrap form control CSS class name */
         static final String CONTROL_CSS = "form-control";
         /** CSS class name for the output box */
         static final String OUTPUT_CSS = "out";
         /** CSS class name for the output box */
-        static final String SUBTITLE_CSS = "subtitle";    
+        static final String SUBTITLE_CSS = "subtitle";
+        /** Form identifier */
+        static final String FORM_ID = "form";
     }
 
     /** Servlet attributes */

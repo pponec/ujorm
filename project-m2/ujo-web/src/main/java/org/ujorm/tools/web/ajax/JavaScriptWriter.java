@@ -73,6 +73,10 @@ public class JavaScriptWriter implements Injector {
     /** Ajax Timeout */
     @Nonnull
     protected Duration ajaxTimeout = Duration.ofMillis(30_000);
+    /** JavaScript version */
+    private int version = 1;
+    /** Javascript ajax request parameter */
+    protected String ajaxRequestPath = "/ajax";
     
     public JavaScriptWriter() {
         this("form input");
@@ -124,6 +128,19 @@ public class JavaScriptWriter implements Injector {
         return this;
     }
     
+    /** Assign an AJAX timeout */
+    public JavaScriptWriter setAjaxRequestPath(@Nonnull String ajaxRequestPath) {
+        this.ajaxRequestPath = ajaxRequestPath;
+        setVersion(2);
+        return this;
+    }
+    
+    /** Assign an AJAX timeout */
+    public JavaScriptWriter setVersion(int version) {
+        this.version = version;
+        return this;
+    }
+    
     /**
      * Generate a Javascript
      */
@@ -152,7 +169,9 @@ public class JavaScriptWriter implements Injector {
                     , "$('form').submit(function(event){"
                     , "  var data = $('" + formSelector + "').serialize();"
                     , "  $.ajax("
-                          + "{ url: '?" + ajaxRequestParam + "=true'"
+                        + (version == 2
+                            ? ("{ url: '" + ajaxRequestPath + "'") 
+                            : ("{ url: '?" + ajaxRequestParam + "=true'"))
                         + ", type: 'POST'"
                         + ", data: data"
                         + ", timeout: " + ajaxTimeout.toMillis()

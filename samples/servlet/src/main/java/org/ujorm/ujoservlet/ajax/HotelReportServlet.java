@@ -65,7 +65,7 @@ public class HotelReportServlet extends HttpServlet {
                 .add(Hotel::getName, "Hotel", NAME).sortable(true)
                 .add(Hotel::getCity, "City", CITY).sortable(false)
                 .add(Hotel::getStreet, "Street").sortable()
-                .add(Hotel::getPrice, "Price")
+                .add(Hotel::getPrice, "Price").sortable()
                 .add(Hotel::getCurrency, "Currency")
                 .add(Hotel::getPhone, "Phone")
                 .add(starsColumn(), "Stars").sortable()
@@ -129,7 +129,7 @@ public class HotelReportServlet extends HttpServlet {
                 + "http://api.hotelsbase.org/documentation.php";
         /** Source of the class */
         static final String SOURCE_REPO = "https://github.com/pponec/ujorm/blob/"
-                + "cff521bcb4f3044d8f06fe327878e34d9c48d6ea"
+                + "333922aea98231fb149481feaca6533fbbc34c18"
                 + "/samples/servlet/src/main/java"
                 + "/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
     }
