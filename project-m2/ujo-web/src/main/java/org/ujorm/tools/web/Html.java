@@ -133,8 +133,12 @@ public interface Html {
     String A_REL = "rel";
     String A_SELECTED = "selected";
     String A_SRC = "src";
+    /** CSS style */
+    String A_STYLE = "style";
     String A_TARGET = "target";
     String A_TYPE = "type";
+    /** A tooltip of an element*/
+    String A_TITLE = "title";
     String A_VALUE = "value";
     String A_ROWS = "rows";
     String A_COLS = "cols";
@@ -154,5 +158,10 @@ public interface Html {
     String V_TEXT = "text";
     String V_PASSWORD = "password";
     String V_TEXT_CSS = "text/css";
+    
+    // --- Special characters ---
+    
+    /** The non-breaking space */
+    String NON_BREAKING_SPACE = "&nbsp;";
 
 }

@@ -16,6 +16,7 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Locale;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,9 +24,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Element;
+import org.ujorm.tools.web.Html;
+import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.table.TableBuilder;
-import org.ujorm.tools.xml.config.HtmlConfig;
 
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
 import org.ujorm.ujoservlet.ajax.ao.HotelResourceService;
@@ -65,14 +67,31 @@ public class HotelReportServlet extends HttpServlet {
                 .add(Hotel::getStreet, "Street").sortable()
                 .add(Hotel::getPrice, "Price")
                 .add(Hotel::getCurrency, "Currency")
-                .add(Hotel::getStars, "Stars")
                 .add(Hotel::getPhone, "Phone")
+                .add(starsColumn(), "Stars").sortable()
                 .addToElement(
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
                 .setFooter(e -> printFooter(e))
                 .build(input, output, 
                         builder -> service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input), builder));
+    }
+    
+    /** Create a stars Column */
+    protected Column<Hotel> starsColumn() {
+        return new Column<Hotel>() {
+            @Override
+            public void write(Element e, Hotel hotel) {
+                e.setAttribute(Html.A_TITLE, hotel.getStars())
+                        .setAttribute(Html.STYLE, "color: Gold")
+                        .addRawText(String.join(Html.NON_BREAKING_SPACE, Collections.nCopies(Math.round(hotel.getStars()), "🟊")));
+            }
+            /** Implement it for a sortable column only */
+            @Override
+            public Float apply(Hotel hotel) {
+                return hotel.getStars();
+            } 
+        };
     }
     
     /**  Data are from hotelsbase.org, see the original license */
