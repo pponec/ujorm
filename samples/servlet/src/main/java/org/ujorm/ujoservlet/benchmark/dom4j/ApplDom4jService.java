@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.ujoservlet.dom4j;
+package org.ujorm.ujoservlet.benchmark.dom4j;
 
 import javax.servlet.http.HttpServlet;
 import org.dom4j.Element;
