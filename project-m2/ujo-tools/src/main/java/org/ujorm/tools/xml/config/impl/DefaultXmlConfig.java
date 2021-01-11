@@ -32,8 +32,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class DefaultXmlConfig implements XmlConfig {
     
-    /** Default intendation have got 4 spaces per level */
-    public static final String DEFAULT_INTENDATION = "    ";
+    /** Default intendation is a tab character per level */
+    public static final String DEFAULT_INTENDATION = "\t";
 
     /** Default string or the new line */
     public static final String DEFAULT_NEW_LINE = "\n";
@@ -137,20 +137,20 @@ public class DefaultXmlConfig implements XmlConfig {
     /**
      * Assign parameters for a nice format of the HTML result
      */
-    public final DefaultXmlConfig setNiceFormat() {
+    public final <T extends DefaultXmlConfig> T setNiceFormat() {
         setNiceFormat(DEFAULT_INTENDATION);
-        return this;
+        return (T) this;
     }
 
     /**
      * Assign parameters for a nice format of the HTML result
      * @param indentation An empty String is replaced by a default intendation.
      */
-    public final DefaultXmlConfig setNiceFormat(@Nullable final CharSequence indentation) {
+    public final <T extends DefaultXmlConfig> T setNiceFormat(@Nullable final CharSequence indentation) {
         this.firstLevel = 0;
         this.indentation = Check.hasLength(indentation) ? indentation : DEFAULT_INTENDATION;
         this.newLine = DEFAULT_NEW_LINE;
-        return this;
+        return (T) this;
     }
 
     /**
