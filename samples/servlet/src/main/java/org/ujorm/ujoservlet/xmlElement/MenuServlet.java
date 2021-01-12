@@ -60,7 +60,7 @@ public class MenuServlet extends HttpServlet {
         for (Item item : getItems()) {
             list.addElement(Html.LI)
                     .addElement(Html.A)
-                    .setAttrib(Html.A_HREF, item.getLink())
+                    .setAttribute(Html.A_HREF, item.getLink())
                     .addText(item.label);
         }
 

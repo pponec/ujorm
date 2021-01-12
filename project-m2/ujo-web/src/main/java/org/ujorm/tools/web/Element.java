@@ -110,6 +110,21 @@ public final class Element implements ApiElement<Element>, Html {
     }
     
     /**
+     * An deprecated shortcut for the method {@link #setAttribute(java.lang.String, java.lang.Object) }.
+     * @param name Required element name
+     * @param value The {@code null} value is silently ignored. Formatting is performed by the
+     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.model.XmlModel, java.lang.String, java.io.Writer) }
+     *   method, where the default implementation calls a {@code toString()} only.
+     * @return The original element
+     */
+    @Deprecated
+    @Nonnull
+    @Override
+    public final Element setAttrib(@Nonnull final String name, @Nullable final Object value) {
+        return setAttribute(name, value);
+    }    
+    
+    /**
      * A shortcut for the method {@link #setAttribute(java.lang.String, java.lang.Object) }.
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
@@ -118,7 +133,7 @@ public final class Element implements ApiElement<Element>, Html {
      * @return The original element
      */
     @Nonnull
-    public final Element setAttrib(@Nonnull final String name, @Nullable final Object value) {
+    public final Element setAttr(@Nonnull final String name, @Nullable final Object value) {
         return setAttribute(name, value);
     }
 

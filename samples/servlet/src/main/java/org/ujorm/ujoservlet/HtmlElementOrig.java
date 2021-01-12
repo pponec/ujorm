@@ -90,7 +90,7 @@ public class HtmlElementOrig extends XmlModel {
      */
     public HtmlElementOrig(@Nonnull final Object title, @Nonnull final Charset charset, @Nullable final CharSequence... cssLinks) {
         this(charset);
-        head.addElement(Html.META).setAttrib(Html.A_CHARSET, charset);
+        head.addElement(Html.META).setAttribute(Html.A_CHARSET, charset);
         head.addElement(Html.TITLE).addText(title);
 
         if (cssLinks != null) {
@@ -137,9 +137,9 @@ public class HtmlElementOrig extends XmlModel {
     public <T extends XmlModel> T addJavascriptLink(final boolean defer, @Nonnull final CharSequence ... javascriptLink) {
         Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
         return (T) head.addElement(Html.SCRIPT)
-                .setAttrib(Html.A_SRC, javascriptLink)
-                .setAttrib(Html.A_TYPE, "text/javascript")
-                .setAttrib("defer", defer ? "defer" : null)
+                .setAttribute(Html.A_SRC, javascriptLink)
+                .setAttribute(Html.A_TYPE, "text/javascript")
+                .setAttribute("defer", defer ? "defer" : null)
                 .addText("");
     }
 
@@ -150,8 +150,8 @@ public class HtmlElementOrig extends XmlModel {
     public <T extends XmlModel> T addJavascriptContent(@Nonnull final CharSequence javascript) {
         Assert.notNull(javascript, REQUIRED_MSG, "javascript");
         return (T) head.addElement(Html.SCRIPT)
-                .setAttrib(Html.A_LANGUAGE, "javascript")
-                .setAttrib(Html.A_TYPE, "text/javascript")
+                .setAttribute(Html.A_LANGUAGE, "javascript")
+                .setAttribute(Html.A_TYPE, "text/javascript")
                 .addText(javascript);
     }
 
@@ -162,9 +162,9 @@ public class HtmlElementOrig extends XmlModel {
     public final <T extends XmlModel> T addCssLink(@Nonnull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
         return (T) head.addElement(Html.LINK)
-                .setAttrib(Html.A_HREF, css)
-                .setAttrib(Html.A_REL, "stylesheet")
-                .setAttrib(Html.A_TYPE, "text/css");
+                .setAttribute(Html.A_HREF, css)
+                .setAttribute(Html.A_REL, "stylesheet")
+                .setAttribute(Html.A_TYPE, "text/css");
     }
 
     /** Create a new CSS element and return it
@@ -174,7 +174,7 @@ public class HtmlElementOrig extends XmlModel {
     public <T extends XmlModel> T addCssBody(@Nonnull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
         return (T) head.addElement(Html.STYLE)
-                .setAttrib(Html.A_TYPE, "text/css")
+                .setAttribute(Html.A_TYPE, "text/css")
                 .addRawText(css);
     }
 

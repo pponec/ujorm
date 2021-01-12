@@ -298,7 +298,7 @@ public class TableBuilder<D> {
                 }
                 if (isSortable()) {
                         form.addInput()
-                                .setAttrib(Html.A_TYPE, Html.V_HIDDEN)
+                                .setAttribute(Html.A_TYPE, Html.V_HIDDEN)
                                 .setName(config.getSortRequestParam())
                                 .setValue(config.getSortRequestParam().of(input));                                    
                 }

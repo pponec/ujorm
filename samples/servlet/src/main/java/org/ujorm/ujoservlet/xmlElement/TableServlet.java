@@ -55,7 +55,7 @@ public class TableServlet extends HttpServlet {
         html.addElementToBody(Html.H1)
                 .addText("Show table");
         final XmlModel table = html.addElementToBody(Html.TABLE)
-                .setAttrib(Html.A_CLASS, "numbers");
+                .setAttribute(Html.A_CLASS, "numbers");
         for (Object[] rowValue : getTableData()) {
             final XmlModel rowElement = table.addElement(Html.TR);
             for (Object value : rowValue) {

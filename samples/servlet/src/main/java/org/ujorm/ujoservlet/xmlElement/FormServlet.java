@@ -63,8 +63,8 @@ public class FormServlet extends HttpServlet {
 
         HtmlElementOrig html = createHtmlElement("Simple user form", "css/userForm.css");
         XmlModel form = html.addElementToBody(Html.FORM)
-                .setAttrib(Html.A_METHOD, Html.V_POST)
-                .setAttrib(Html.A_ACTION, postMethod ? null : input.getRequestURI());
+                .setAttribute(Html.A_METHOD, Html.V_POST)
+                .setAttribute(Html.A_ACTION, postMethod ? null : input.getRequestURI());
         for (Field field : getFieldDescriptions()) {
             createInputField(field, form, input);
         }
@@ -83,16 +83,16 @@ public class FormServlet extends HttpServlet {
     /** Create an input field including label and validation message */
     private XmlModel createInputField(Field field, XmlModel form, HttpServletRequest input) {
         XmlModel result = form.addElement(Html.DIV) // An envelope
-                .setAttrib(Html.A_CLASS, field.isSubmit() ? "submit" : null);
+                .setAttribute(Html.A_CLASS, field.isSubmit() ? "submit" : null);
         result.addElement(Html.LABEL)
-                .setAttrib(Html.A_FOR, field.getName())
+                .setAttribute(Html.A_FOR, field.getName())
                 .addText(field.getLabel());
         XmlModel inputBox = result.addElement(Html.DIV);
         inputBox.addElement(Html.INPUT)
-                .setAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
-                .setAttrib(Html.A_ID, field.getName())
-                .setAttrib(Html.A_NAME, field.getName())
-                .setAttrib(Html.A_VALUE, field.getValue(input));
+                .setAttribute(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
+                .setAttribute(Html.A_ID, field.getName())
+                .setAttribute(Html.A_NAME, field.getName())
+                .setAttribute(Html.A_VALUE, field.getValue(input));
         field.getErrorMessage(input, postMethod).ifPresent(msg -> inputBox.addElement(Html.SPAN)
                 .addText(msg)); // Raw validation message
         return result;
