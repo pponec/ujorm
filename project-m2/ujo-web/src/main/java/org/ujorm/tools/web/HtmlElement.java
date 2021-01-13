@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2021 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -311,7 +311,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     public static HtmlElement of(@Nonnull final HttpServletResponse response, @Nonnull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setCssLinks(cssLinks);
-        return of(response, config);
+        return of(config, response);
     }
 
     /** Create new instance with empty html headers
@@ -323,7 +323,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(response, config);
+        return of(config, response);
     }
 
     /** Create new instance with empty html headers
@@ -335,7 +335,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(response, config);
+        return of(config, response);
     }
 
     /** Create new instance with empty html headers
@@ -348,7 +348,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         config.setNiceFormat();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(response, config);
+        return of(config, response);
     }
 
     /** Create new instance with empty html headers
@@ -362,7 +362,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         config.setTitle(title);
         config.setCharset(charset);
         config.setCssLinks(cssLinks);
-        return of(response, config);
+        return of(config, response);
     }
 
     /** Create new instance with empty html headers
@@ -376,7 +376,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
-        return of(response, config);
+        return of(config, response);
     }
 
     /** A base method to create new instance
@@ -407,7 +407,23 @@ public class HtmlElement implements ApiElement<Element>, Html {
             @Nonnull final HttpServletResponse response,
             @Nonnull final HtmlConfig config) throws IllegalStateException, UnsupportedEncodingException {
         request.setCharacterEncoding(config.getCharset().toString());
-        return of(response, config);
+        return of(config, response);
+    }
+    
+    /** A base method to create new instance with empty html headers
+     * @param response HttpResponse to write a result
+     * @param config Html configuration
+     * @return An instance of the HtmlPage
+     * @throws IllegalStateException IO exceptions
+     * @see MockServletResponse
+     * @deprecated Use the method {@link #of(org.ujorm.tools.xml.config.HtmlConfig, javax.servlet.http.HttpServletResponse) } rather.
+     */
+    @Deprecated
+    @Nonnull
+    public static HtmlElement of(
+            @Nonnull final HttpServletResponse response,
+            @Nonnull final HtmlConfig config) throws IllegalStateException {
+        return of(config, response);
     }
 
     /** A base method to create new instance with empty html headers
@@ -419,8 +435,9 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @Nonnull
     public static HtmlElement of(
-            @Nonnull final HttpServletResponse response,
-            @Nonnull final HtmlConfig config) throws IllegalStateException {
+            @Nonnull final HtmlConfig config,
+            @Nonnull final HttpServletResponse response
+            ) throws IllegalStateException {
         response.setCharacterEncoding(config.getCharset().toString());
         response.setContentType(config.getContentType());
         try {
