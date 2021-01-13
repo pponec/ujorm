@@ -248,4 +248,12 @@ public abstract class AbstractWriter {
         return writer;
     }
 
+//    IT IS A WRONG IDEA:
+//    /** Close the an internal writer, if the one is Closeable */
+//    @Override
+//    public void close() throws IOException {
+//        if (this.out instanceof Closeable) {
+//            ((Closeable) out).close();
+//        }
+//    }
 }
