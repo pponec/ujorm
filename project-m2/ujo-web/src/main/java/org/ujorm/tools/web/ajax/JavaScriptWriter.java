@@ -29,30 +29,30 @@ import org.ujorm.tools.web.ao.Injector;
 
 /**
  * A common Javascript Writer of the Ujorm framework
- * 
+ *
  * @author Pavel Ponec
  */
 public class JavaScriptWriter implements Injector {
-    
+
     /** Default AJAX request parameter name */
     public static final HttpParameter DEFAULT_AJAX_REQUEST_PARAM = new HttpParameter() {
             @Override
             public String toString() {
                 return "_ajax";
             }
-        };      
+        };
     /** Default AJAX request parameter name */
     public static final HttpParameter DEFAULT_SORT_REQUEST_PARAM = new HttpParameter() {
             @Override
             public String toString() {
                 return "_sort";
             }
-        };   
+        };
     /** Default duration */
     public static final Duration DEFAULT_DURATION = Duration.ofMillis(250);
 
     /** Javascript ajax request parameter */
-    protected final HttpParameter ajaxRequestParam;   
+    protected final HttpParameter ajaxRequestParam;
      /** Input selectors */
     protected final CharSequence[] inputCssSelectors;
     /** Input idle delay */
@@ -74,10 +74,12 @@ public class JavaScriptWriter implements Injector {
     @Nonnull
     protected Duration ajaxTimeout = Duration.ofMillis(30_000);
     /** JavaScript version */
-    private int version = 1;
+    protected int version = 1;
     /** Javascript ajax request parameter */
     protected String ajaxRequestPath = "/ajax";
-    
+    /** Is the table sortable */
+    protected boolean isSortable = true;
+
     public JavaScriptWriter() {
         this("form input");
     }
@@ -85,9 +87,9 @@ public class JavaScriptWriter implements Injector {
     public JavaScriptWriter(@Nonnull CharSequence... inputSelectors) {
         this(DEFAULT_DURATION, JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM, inputSelectors);
     }
-    
+
     public JavaScriptWriter(
-            @Nonnull Duration idleDelay, 
+            @Nonnull Duration idleDelay,
             @Nonnull HttpParameter ajaxRequestParam,
             @Nonnull CharSequence... inputSelectors) {
         this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
@@ -109,38 +111,44 @@ public class JavaScriptWriter implements Injector {
         this.newLine = Assert.notNull(newLine, "newLine");
         return this;
     }
-    
+
     /** Assign a subtitle CSS selector */
     public JavaScriptWriter setSubtitleSelector(CharSequence subtitleSelector) {
         this.subtitleSelector = subtitleSelector;
         return this;
     }
-    
+
     /** Assign an AJAX error message */
     public JavaScriptWriter setErrorMessage(@Nullable CharSequence errorMessage) {
         this.errorMessage = Assert.hasLength(errorMessage, "errorMessage");
         return this;
     }
-    
+
     /** Assign an AJAX timeout */
     public JavaScriptWriter setAjaxTimeout(@Nonnull Duration ajaxTimeout) {
         this.ajaxTimeout = Assert.notNull(ajaxTimeout, "ajaxTimeout");
         return this;
     }
-    
+
     /** Assign an AJAX timeout */
     public JavaScriptWriter setAjaxRequestPath(@Nonnull String ajaxRequestPath) {
         this.ajaxRequestPath = ajaxRequestPath;
         setVersion(2);
         return this;
     }
-    
+
     /** Assign an AJAX timeout */
     public JavaScriptWriter setVersion(int version) {
         this.version = version;
         return this;
     }
-    
+
+    /** Assign a Sortable table */
+    public JavaScriptWriter setSortable(boolean isSortable) {
+        this.isSortable = isSortable;
+        return this;
+    }
+
     /**
      * Generate a Javascript
      */
@@ -170,12 +178,12 @@ public class JavaScriptWriter implements Injector {
                     , "  var data = $('" + formSelector + "').serialize();"
                     , "  $.ajax("
                         + (version == 2
-                            ? ("{ url: '" + ajaxRequestPath + "'") 
+                            ? ("{ url: '" + ajaxRequestPath + "'")
                             : ("{ url: '?" + ajaxRequestParam + "=true'"))
                         + ", type: 'POST'"
                         + ", data: data"
                         + ", timeout: " + ajaxTimeout.toMillis()
-                        + ", error: function (xhr, ajaxOptions, thrownError){", Check.hasLength(subtitleSelector) 
+                        + ", error: function (xhr, ajaxOptions, thrownError){", Check.hasLength(subtitleSelector)
                         ? "   $('" + subtitleSelector + "').html('" + errorMessage + ": ' + thrownError);" : ""
                         , "  }"
                         + ", success: function(result){"
@@ -189,11 +197,13 @@ public class JavaScriptWriter implements Injector {
                     , onLoadSubmit ? "  $('" + formSelector + "').submit();" : ""
                 );
             }
-            js.addRawText(newLine, "", "});");
-            js.addRawText(newLine, "function sort(col){");
-            js.addRawText(newLine, " document.querySelector('", "input[name=\"_sort\"]').value=col;");
-            js.addRawText(newLine, " document.querySelector('", formSelector , "').submit();");
-            js.addRawText(newLine, "}");
+            if (isSortable) {
+                js.addRawText(newLine, "", "});");
+                js.addRawText(newLine, "function sort(col){");
+                js.addRawText(newLine, " document.querySelector('", "input[name=\"_sort\"]').value=col;");
+                js.addRawText(newLine, " document.querySelector('", formSelector , "').submit();");
+                js.addRawText(newLine, "}");
+            }
         }
     }
 }

@@ -15,8 +15,6 @@
  */
 package org.ujorm.ujoservlet.ajax;
 
-import org.ujorm.ujoservlet.ajax.ao.Service;
-import org.ujorm.ujoservlet.ajax.ao.Message;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -30,14 +28,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
+import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
-import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
+import org.ujorm.ujoservlet.ajax.ao.Message;
+import org.ujorm.ujoservlet.ajax.ao.Service;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
-import static org.ujorm.ujoservlet.ajax.RegexpServlet.Url.*;
 import static org.ujorm.ujoservlet.ajax.RegexpServlet.Css.*;
+import static org.ujorm.ujoservlet.ajax.RegexpServlet.Url.*;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
@@ -55,10 +55,10 @@ public class RegexpServlet extends HttpServlet {
     /** AJAX param */
     private static final HttpParameter AJAX = JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM;
     /** AJAX ready message */
-    private static final String AJAX_READY_MSG = "AJAX ready"; 
+    private static final String AJAX_READY_MSG = "AJAX ready";
     /** A service */
     private final Service service = new Service();
-    
+
     /**
      * Handles the HTTP <code>GET</code> method.
      * @param input servlet request
@@ -70,7 +70,7 @@ public class RegexpServlet extends HttpServlet {
     protected void doGet(
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
-        
+
         try (HtmlElement html = HtmlElement.of(input, output, getConfig("Regular expression tester"))) {
             html.addJavascriptLink(false, JQUERY_JS);
             html.addCssLink(BOOTSTRAP_CSS);
@@ -137,16 +137,25 @@ public class RegexpServlet extends HttpServlet {
                 REGEXP.of(input, ""),
                 TEXT.of(input, ""));
     }
-    
+
     /** Write a Javascript to a header */
     protected void writeJavaScript(@Nonnull final HtmlElement html, final boolean enabled) {
+        writeJavaScript(html, enabled, false);
+    }
+
+    /** Write a Javascript to a header */
+    protected void writeJavaScript(@Nonnull final HtmlElement html,
+            final boolean enabled,
+            final boolean isSortable) {
         if (enabled) {
             new JavaScriptWriter(
                     "#" + REGEXP,
                     "#" + TEXT)
                     .setSubtitleSelector("." + SUBTITLE_CSS)
                     .setFormSelector("#" + FORM_ID)
-                    .write(html.getHead());
+                    .setSortable(isSortable)
+                    .write(html.getHead()
+                    );
         }
     }
 
@@ -158,7 +167,7 @@ public class RegexpServlet extends HttpServlet {
         config.setTitle(title);
         return config;
     }
-    
+
     /** URL constants */
     static class Url {
         /** Link to a Bootstrap URL of CDN */
@@ -170,7 +179,7 @@ public class RegexpServlet extends HttpServlet {
                 + "333922aea98231fb149481feaca6533fbbc34c18"
                 + "/samples/servlet/src/main/java/org/ujorm/ujoservlet/ajax/RegexpServlet.java";
     }
-    
+
     /** CSS constants and identifiers */
     static class Css {
         /** Bootstrap form control CSS class name */
@@ -187,7 +196,7 @@ public class RegexpServlet extends HttpServlet {
     enum Attrib implements HttpParameter {
         REGEXP,
         TEXT;
-        
+
         @Override
         public String toString() {
             return name().toLowerCase(Locale.ENGLISH);

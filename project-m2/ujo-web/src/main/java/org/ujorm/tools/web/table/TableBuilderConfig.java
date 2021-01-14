@@ -15,19 +15,21 @@
  */
 package org.ujorm.tools.web.table;
 
+import java.io.InputStream;
 import java.time.Duration;
 import java.util.List;
 import java.util.function.BiConsumer;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
  * A HTML page builder for table based an AJAX.
- * 
+ *
  * <h3>Usage<h3>
- * 
+ *
  * <pre class="pre">
  *  TableBuilder.of("Hotel Report", service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input)))
  *          .add(Hotel::getName, "Hotel", NAME)
@@ -35,7 +37,7 @@ import org.ujorm.tools.xml.config.HtmlConfig;
  *          .add(Hotel::getStreet, "Street")
  *          .build(httpServletRequest, HtpServletResponse);
  * </pre>
- * 
+ *
  * @author Pavel Ponec
  */
 public interface TableBuilderConfig<D> {
@@ -54,10 +56,10 @@ public interface TableBuilderConfig<D> {
 
     @Nonnull
     public HttpParameter getAjaxRequestParam();
-    
+
     @Nonnull
     public HttpParameter getSortRequestParam();
-    
+
     @Nonnull
     public CharSequence getAjaxReadyMessage();
 
@@ -87,11 +89,15 @@ public interface TableBuilderConfig<D> {
 
     @Nonnull
     public CharSequence getSortableBoth();
-    
+
+    /** Use inner icons for sortable images */
+    public boolean isEmbeddedIcons();
+
     /** Inline CSS writer where the first method is an Element and the seconnd one is a sortable  */
     public BiConsumer<Element, Boolean> getCssWriter();
-    
+
     /** Get a CSS direction style */
+    @Nonnull
     default CharSequence getSortableDirection(@Nonnull final Direction direction) {
         switch (direction) {
             case ASC:
@@ -104,7 +110,29 @@ public interface TableBuilderConfig<D> {
                 throw new IllegalArgumentException("Unsupported " + direction);
         }
     }
-    
+
+    /** Get a CSS direction style */
+    @Nullable
+    default InputStream getInnerSortableImageToStream(@Nonnull final Direction direction) {
+        return getClass().getResourceAsStream(getInnerSortableImage(direction));
+    }
+
+    /** Get a CSS direction style */
+    @Nonnull
+    default String getInnerSortableImage(@Nonnull final Direction direction) {
+        final String baseDir = "/META-INF/resources/org/ujorm/images/v1/order";
+        switch (direction) {
+            case ASC:
+                return String.join("/", baseDir, "up.png");
+            case DESC:
+                return String.join("/", baseDir, "down.png");
+            case NONE:
+                return String.join("/", baseDir, "both.png");
+            default:
+                throw new IllegalArgumentException("Unsupported " + direction);
+        }
+    }
+
     /** Returns a default implementation */
     @Nonnull
     public static TableBuilderConfigImpl of(@Nonnull final HtmlConfig config) {

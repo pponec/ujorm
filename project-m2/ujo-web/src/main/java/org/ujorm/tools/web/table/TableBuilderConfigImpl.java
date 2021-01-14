@@ -15,10 +15,9 @@
  */
 package org.ujorm.tools.web.table;
 
-import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import java.time.Duration;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -26,15 +25,16 @@ import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
+import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import static org.ujorm.tools.web.table.TableBuilderConfigImpl.Constants.*;
 
 /**
  * A HTML page builder for table based an AJAX.
- * 
+ *
  * <h3>Usage</h3>
- * 
+ *
  * <pre class="pre">
  *  TableBuilder.of("Hotel Report", service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input)))
  *          .add(Hotel::getName, "Hotel", NAME)
@@ -42,14 +42,14 @@ import static org.ujorm.tools.web.table.TableBuilderConfigImpl.Constants.*;
  *          .add(Hotel::getStreet, "Street")
  *          .build(httpServletRequest, HtpServletResponse);
  * </pre>
- * 
+ *
  * @author Pavel Ponec
  */
 public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
-    
+
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(TableBuilderConfigImpl.class.getName());
-    
+
     /** HTML config */
     @Nonnull
     protected final HtmlConfig config;
@@ -79,16 +79,16 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     private String controlCss;
     /** CSS class name for the output box */
     @Nonnull
-    private String subtitleCss; 
+    private String subtitleCss;
     /** Table selector */
     @Nonnull
-    private CharSequence tableSelector; 
+    private CharSequence tableSelector;
     /** Table CSS class */
     @Nonnull
     private List<CharSequence> tableCssClass;
     /** Sortable column CSS style */
     @Nonnull
-    private CharSequence sortableColumn; 
+    private CharSequence sortableColumn;
     /** Sortable column ascending CSS style */
     @Nonnull
     private CharSequence sortableAsc;
@@ -97,7 +97,9 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     private CharSequence sortableDesc;
     /** Sortable column undefined CSS style */
     @Nonnull
-    private CharSequence sortableBoth; 
+    private CharSequence sortableBoth;
+    /** Use an external images for sortable icons */
+    private boolean embeddedIcons;
     /** Inline CSS writer */
     @Nullable
     private BiConsumer<Element,Boolean> cssWriter;
@@ -118,25 +120,27 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
            "asc",  // sortableAsc
            "desc", // sortableDesc
            "both",  // sortableBoth
+           false, // embeddedIcons
            null // cssWriter
         );
     }
 
-    public TableBuilderConfigImpl(
-            @Nonnull final HtmlConfig config, 
-            @Nonnull final String cssLink, 
-            @Nonnull final String jqueryLink, 
-            @Nonnull final Duration idleDelay, 
+    protected TableBuilderConfigImpl(
+            @Nonnull final HtmlConfig config,
+            @Nonnull final String cssLink,
+            @Nonnull final String jqueryLink,
+            @Nonnull final Duration idleDelay,
             @Nonnull final HttpParameter ajaxRequestParam,
             @Nonnull final HttpParameter sortRequestParam,
-            @Nonnull final String formId, 
-            @Nonnull final String controlCss, 
+            @Nonnull final String formId,
+            @Nonnull final String controlCss,
             @Nonnull final String subtitleCss,
             @Nonnull final List<CharSequence> tableCssClass,
             @Nonnull final String sortableColumn,
             @Nonnull final String sortableAsc,
             @Nonnull final String sortableDesc,
             @Nonnull final String sortableBoth,
+            final boolean embeddedIcons,
             @Nonnull final BiConsumer<Element,Boolean> cssWriter
     ) {
         this.config = config;
@@ -153,9 +157,10 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
         this.sortableAsc = sortableAsc;
         this.sortableDesc = sortableDesc;
         this.sortableBoth = sortableBoth;
+        this.embeddedIcons = embeddedIcons;
         this.cssWriter = cssWriter;
     }
-    
+
     /** Returns a fist class of table element by defult */
     @Nonnull
     protected CharSequence getTableClassSelector() {
@@ -163,7 +168,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
                 ? Html.TABLE
                 : String.join(" .", Html.TABLE, tableCssClass.get(0));
     }
-  
+
     public TableBuilderConfigImpl<D> setCssLink(@Nonnull final String cssLink) {
         this.cssLink = Assert.notNull(cssLink, "cssLink");
         return this;
@@ -183,12 +188,12 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
         this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
         return this;
     }
-    
+
     public TableBuilderConfigImpl<D> setSortRequestParam(@Nonnull final HttpParameter sortRequestParam) {
         this.sortRequestParam = Assert.notNull(sortRequestParam, "sortRequestParam");
         return this;
     }
-    
+
     public TableBuilderConfigImpl<D> setAjaxReadyMessage(@Nonnull final CharSequence ajaxReadyMessage) {
         this.ajaxReadyMessage = Assert.hasLength(ajaxReadyMessage, "ajaxReadyMessage");
         return this;
@@ -218,12 +223,18 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
         this.tableCssClass = Assert.notNull(tableCssClass, "tableCssClass");
         return this;
     }
-    
+
     /** Inline CSS writer */
     public TableBuilderConfigImpl<D> setCssWriter(@Nullable final BiConsumer<Element,Boolean> cssWriter) {
         this.cssWriter = cssWriter;
         return this;
     }
+
+    /** Use an external images for sortable icons */
+    public boolean setEmbeddedIcons(boolean embeddedIcons) {
+        return this.embeddedIcons = embeddedIcons;
+    }
+
     // --- GETTERS ---
 
     @Override
@@ -255,13 +266,13 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     public HttpParameter getAjaxRequestParam() {
         return ajaxRequestParam;
     }
-    
+
     @Override
     @Nonnull
     public HttpParameter getSortRequestParam() {
         return sortRequestParam;
     }
-    
+
     @Override
     @Nonnull
     public CharSequence getAjaxReadyMessage() {
@@ -334,6 +345,11 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
         return cssWriter != null ? cssWriter : inlineCssWriter();
     }
 
+    /** Use an external images for sortable icons */
+    public boolean isEmbeddedIcons() {
+        return this.embeddedIcons;
+    }
+
     /** Default header CSS style printer */
     @Nonnull
     protected BiConsumer<Element,Boolean> inlineCssWriter() {
@@ -342,22 +358,29 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
             final CharSequence newLine = conf.getConfig().getNewLine();
             try (Element css = element.addElement(Html.STYLE)) {
                 css.addRawText(newLine, "body { margin: 10px;}");
-                css.addRawText(newLine, ".", conf.getSubtitleCss(), " { font-size: 10px; color: silver;}");
-                css.addRawText(newLine, "#", conf.getFormId(), " { margin-bottom: 2px;}");
-                css.addRawText(newLine, "#", conf.getFormId(), " input { width: 200px;}");
-                css.addRawText(newLine, ".", conf.getControlCss(), " { display: inline;}");
-                css.addRawText(newLine, ".table th { background-color: #e8e8e8;}");
-                if (sortable) {    
-                    final String img = "/org/ujorm/images/v1/order/";
-                    css.addRawText(newLine, ".", conf.getSortable(), " {background-repeat: no-repeat; background-position: right; padding-right: 14px; color: #212529;}");
-                    css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableAsc(),  " {background-image: url('", img, "up"  , ".png')}");
-                    css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableDesc(), " {background-image: url('", img, "down", ".png')}");
-                    css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableBoth(), " {background-image: url('", img, "both", ".png')}");
+                css.addRawText(newLine, ".", conf.getSubtitleCss(), " {font-size: 10px; color: silver;}");
+                css.addRawText(newLine, "#", conf.getFormId(), " {margin-bottom: 2px;}");
+                css.addRawText(newLine, "#", conf.getFormId(), " input {width: 200px;}");
+                css.addRawText(newLine, ".", conf.getControlCss(), " {display: inline;}");
+                css.addRawText(newLine, ".table th {background-color: #e8e8e8;}");
+                if (Boolean.TRUE.equals(sortable)) {
+                    if (isEmbeddedIcons()) {
+                        css.addRawText(newLine, ".sortable img {margin-left: 6px;} ");
+                    } else {
+                        final String img = "/org/ujorm/images/v1/order/";
+                        css.addRawText(newLine, ".", conf.getSortable()
+                                , " {background-repeat: no-repeat;"
+                                + " background-position: right;"
+                                + " padding-right: 14px; color: #212529;}");
+                        css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableAsc(),  " {background-image: url('", img, "up"  , ".png')}");
+                        css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableDesc(), " {background-image: url('", img, "down", ".png')}");
+                        css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableBoth(), " {background-image: url('", img, "both", ".png')}");
+                    }
                 }
             }
         };
     }
-    
+
     /** Config constants */
     public static class Constants {
         /** Link to a Bootstrap URL of CDN */
@@ -369,7 +392,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
         /** Bootstrap form control CSS class name */
         public static final String CONTROL_CSS = "form-control";
         /** CSS class name for the output box */
-        public static final String SUBTITLE_CSS = "subtitle";      
+        public static final String SUBTITLE_CSS = "subtitle";
         /** Table CSS classes */
         public static List<CharSequence> TABLE_CSS_CLASS = Arrays.asList("table", "table-striped", "table-bordered");
         /** Key delay */

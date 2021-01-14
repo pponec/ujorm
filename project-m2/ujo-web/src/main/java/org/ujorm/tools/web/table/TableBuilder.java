@@ -15,11 +15,10 @@
  */
 package org.ujorm.tools.web.table;
 
-import org.ujorm.tools.web.ajax.ReqestDispatcher;
-import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import java.io.IOException;
-import java.util.List;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -34,20 +33,22 @@ import org.ujorm.tools.Assert;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
+import org.ujorm.tools.web.ajax.JavaScriptWriter;
+import org.ujorm.tools.web.ajax.ReqestDispatcher;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
-import org.ujorm.tools.web.json.JsonBuilder;
-import org.ujorm.tools.web.ao.WebUtils;
-import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.web.ao.Injector;
+import org.ujorm.tools.web.ao.WebUtils;
+import org.ujorm.tools.web.json.JsonBuilder;
+import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
  * A HTML page builder for table based an AJAX.
- * 
+ *
  * <br>Please note that this is an experimental implementation.
- * 
+ *
  * <h3>Usage<h3>
- * 
+ *
  * <pre class="pre">
  *  TableBuilder.of("Hotel Report", service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input)))
  *          .add(Hotel::getName, "Hotel", NAME)
@@ -55,16 +56,16 @@ import org.ujorm.tools.web.ao.Injector;
  *          .add(Hotel::getStreet, "Street")
  *          .build(httpServletRequest, HtpServletResponse);
  * </pre>
- * 
+ *
  * @author Pavel Ponec
  */
 public class TableBuilder<D> {
-    
+
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(TableBuilder.class.getName());
-    
+
     /** Columns */
-    protected final List<ColumnModel<D,?>> columns = new ArrayList<>(); 
+    protected final List<ColumnModel<D,?>> columns = new ArrayList<>();
     /** Table builder config */
     protected final TableBuilderConfig config;
     /** AJAX request param */
@@ -80,7 +81,9 @@ public class TableBuilder<D> {
     protected Injector formAdditions = footer;
     /** Javascript writer */
     @Nonnull
-    protected Supplier<Injector> javascritWriter = () -> new JavaScriptWriter().setSubtitleSelector("." + TableBuilder.this.config.getSubtitleCss());
+    protected Supplier<Injector> javascritWriter = () -> new JavaScriptWriter()
+            .setSortable(TableBuilder.this.isSortable())
+            .setSubtitleSelector("." + TableBuilder.this.config.getSubtitleCss());
     /** is An AJAX enabled? */
     protected boolean ajaxEnabled = true;
     /** Call an autosubmit on first load */
@@ -88,7 +91,7 @@ public class TableBuilder<D> {
     /** Sorted column index */
     @Nullable
     private int sortedColumn = -1;
-    
+
     public TableBuilder(@Nonnull CharSequence title) {
         this((HtmlConfig) HtmlConfig.ofDefault().setTitle(title).setNiceFormat());
     }
@@ -110,22 +113,22 @@ public class TableBuilder<D> {
     public <V> TableBuilder<D> add(Function<D,?> column, CharSequence title) {
         return addInternal(column, title, null);
     }
-    
+
     @Nonnull
     public <V> TableBuilder<D> add(Function<D,?> column, Injector title) {
         return addInternal(column, title, null);
     }
-    
+
     @Nonnull
     public <V> TableBuilder<D> add(Function<D,?> column, CharSequence title, @Nullable HttpParameter param) {
         return addInternal(column, title, param);
     }
-    
+
     @Nonnull
     public <V> TableBuilder<D> add(Function<D,?> column, Injector title, @Nullable HttpParameter param) {
         return addInternal(column, title, param);
     }
-    
+
     @Nonnull
     public <V> TableBuilder<D> addToElement(Column<D> column, CharSequence title) {
         return addInternal(column, title, null);
@@ -135,45 +138,45 @@ public class TableBuilder<D> {
     public <V> TableBuilder<D> addToElement(Column<D> column, Injector title) {
         return addInternal(column, title, null);
     }
-    
+
     @Nonnull
     protected <V> TableBuilder<D> addInternal(@Nonnull final Function<D,?> column, @Nonnull final CharSequence title, @Nullable final HttpParameter param) {
         columns.add(new ColumnModel(columns.size(), column, title, param));
         return this;
     }
-    
+
     /** Get column model by index */
     public ColumnModel<D,?> getColumn(int index) {
         return columns.get(index);
     }
-    
+
     /** Returns a count of columns */
     public int getColumnSize() {
         return columns.size();
     }
-    
+
     /**
      * Add a sortable indicator to the last column model
-     * @return 
+     * @return
      */
     @Nonnull
     public <V> TableBuilder<D> sortable() {
         return sortable(Direction.NONE);
-    }    
+    }
     /**
      * Add a sortable indicator to the last column model
      * @param ascending Ascending or descending direction of the sort
-     * @return 
+     * @return
      */
     @Nonnull
     public <V> TableBuilder<D> sortable(@Nullable final boolean ascending) {
         return sortable(ascending ? Direction.ASC : Direction.DESC);
     }
-  
+
     /**
      * Add a sortable indicator to the last column model
      * @param direction The {@code null} value shows an unused sorting action.
-     * @return 
+     * @return
      */
     @Nonnull
     public <V> TableBuilder<D> sortable(@Nonnull final Direction direction) {
@@ -182,7 +185,7 @@ public class TableBuilder<D> {
         columns.get(columns.size() - 1).setSortable(direction);
         return this;
     }
-    
+
     /** Get sorted column or a stub of the sorted column was not found */
     @Nonnull
     public ColumnModel<D,?> getSortedColumn() {
@@ -213,32 +216,41 @@ public class TableBuilder<D> {
     public TableBuilder<D> setFormAdditions(@Nonnull Injector formAdditions) {
         this.formAdditions = Assert.notNull(formAdditions, "formAdditions");
         return this;
-    }    
-    
+    }
+
     /** Enable of disable an AJAX feature, default value si {@code true} */
     public TableBuilder<D> setAjaxEnabled(boolean ajaxEnabled) {
         this.ajaxEnabled = ajaxEnabled;
         return this;
     }
-    
+
     public TableBuilder<D> setJavascritWriter(@Nonnull Supplier<Injector> javascritWriter) {
         this.javascritWriter =  Assert.notNull(javascritWriter, "javascritWriter");;
         return this;
     }
-  
+
+    public TableBuilder<D> setEmbeddedIcons(boolean embeddedIcons) throws IllegalStateException {
+        if (config instanceof TableBuilderConfigImpl) {
+            ((TableBuilderConfigImpl)config).setEmbeddedIcons(embeddedIcons);
+        } else {
+            throw new IllegalStateException("Configuration must be type of: " + TableBuilderConfigImpl.class);
+        }
+        return this;
+    }
+
     /** Build the HTML page including a table */
     public void build(
-            @Nonnull final HttpServletRequest input, 
-            @Nonnull final HttpServletResponse output, 
-            @Nonnull final Stream<D> resource) {  
+            @Nonnull final HttpServletRequest input,
+            @Nonnull final HttpServletResponse output,
+            @Nonnull final Stream<D> resource) {
         build(input, output, tableBuilder -> resource);
     }
-    
+
     /** Build the HTML page including a table */
     public void build(
-            @Nonnull final HttpServletRequest input, 
-            @Nonnull final HttpServletResponse output, 
-            @Nonnull final Function<TableBuilder<D>, Stream<D>> resource) {    
+            @Nonnull final HttpServletRequest input,
+            @Nonnull final HttpServletResponse output,
+            @Nonnull final Function<TableBuilder<D>, Stream<D>> resource) {
         try {
             setSort(ColumnModel.ofCode(config.getSortRequestParam().of(input)));
             new ReqestDispatcher(input, output, config.getConfig())
@@ -249,7 +261,7 @@ public class TableBuilder<D> {
             output.setStatus(500);
         }
     }
-    
+
     /** Mark a column as sorted */
     protected void setSort(@Nonnull final ColumnModel sort) {
         this.sortedColumn = sort.getIndex();
@@ -262,16 +274,16 @@ public class TableBuilder<D> {
             }
         }
     }
-    
+
     protected void printHtmlBody(
-            @Nonnull final HttpServletRequest input, 
-            @Nonnull final HtmlElement html, 
+            @Nonnull final HttpServletRequest input,
+            @Nonnull final HtmlElement html,
             @Nonnull final Function<TableBuilder<D>, Stream<D>> resource
     ) {
         Assert.notNull(input, "input");
         Assert.notNull(html, "html");
         Assert.notNull(resource, "resource");
-        
+
         html.addJavascriptLink(false, config.getJqueryLink());
         html.addCssLink(config.getCssLink());
         config.getCssWriter().accept(html.getHead(), isSortable());
@@ -279,7 +291,7 @@ public class TableBuilder<D> {
             javascritWriter.get().write(html.getHead());
     //        writeJavascript(html.getHead(), autoSubmmitOnLoad,
     //                "#" + FORM_ID,
-    //                "#" + FORM_ID + " input");            
+    //                "#" + FORM_ID + " input");
         }
         try (Element body = html.getBody()) {
             header.write(body);
@@ -293,29 +305,29 @@ public class TableBuilder<D> {
                         form.addInput(config.getControlCss(), column.getParam())
                                 .setName(column.getParam())
                                 .setValue(column.getParam().of(input, ""))
-                                .setAttribute(Html.A_PLACEHOLDER, column.getTitle());                            
+                                .setAttribute(Html.A_PLACEHOLDER, column.getTitle());
                     }
                 }
                 if (isSortable()) {
                         form.addInput()
                                 .setAttribute(Html.A_TYPE, Html.V_HIDDEN)
                                 .setName(config.getSortRequestParam())
-                                .setValue(config.getSortRequestParam().of(input));                                    
+                                .setValue(config.getSortRequestParam().of(input));
                 }
-                form.addInput().setType(Html.V_SUBMIT).setAttribute(Html.V_HIDDEN);    
+                form.addInput().setType(Html.V_SUBMIT).setAttribute(Html.V_HIDDEN);
                 formAdditions.write(form);
             }
             final List<CharSequence> tableCss = config.getTableCssClass();
             printTableBody(body.addTable(tableCss.toArray(new CharSequence[tableCss.size()])), input, resource);
             footer.write(body);
-        }  
+        }
     }
-    
+
     protected void printTableBody(
-            @Nonnull final Element table, 
-            @Nonnull final HttpServletRequest input, 
+            @Nonnull final Element table,
+            @Nonnull final HttpServletRequest input,
             @Nonnull final Function<TableBuilder<D>, Stream<D>> resource
-    ) {       
+    ) {
         final Element headerElement = table.addElement(Html.THEAD).addElement(Html.TR);
         for (ColumnModel<D,?> col : columns) {
             final Object value = col.getTitle();
@@ -323,7 +335,7 @@ public class TableBuilder<D> {
             final Element thLink =  col.isSortable() ? th.addAnchor("javascript:sort(" + col.toCode(true) + ")") : th;
             if (col.isSortable()) {
                 thLink.setClass(
-                        config.getSortable(), 
+                        config.getSortable(),
                         config.getSortableDirection(col.getDirection())
                 );
             }
@@ -331,6 +343,12 @@ public class TableBuilder<D> {
                 ((Injector)value).write(thLink);
             } else {
                 thLink.addText(value);
+            }
+            if (col.isSortable() && config.isEmbeddedIcons()) {
+                InputStream img = config.getInnerSortableImageToStream(col.getDirection());
+                if (img != null) {
+                    thLink.addImage(img, col.getDirection().toString());
+                }
             }
         }
         try (Element tBody = table.addElement(Html.TBODY)) {
@@ -349,7 +367,7 @@ public class TableBuilder<D> {
             });
         }
     }
-    
+
     /**
      * Return lighlited text in HTML format according a regular expression
      * @param input servlet request
@@ -358,14 +376,14 @@ public class TableBuilder<D> {
      * @throws IOException if an I/O error occurs
      */
     protected void doAjax(
-            @Nonnull final HttpServletRequest input, 
-            @Nonnull final JsonBuilder output, 
+            @Nonnull final HttpServletRequest input,
+            @Nonnull final JsonBuilder output,
             @Nonnull final Function<TableBuilder<D>, Stream<D>> resource)
             throws ServletException, IOException {
         output.writeClass(config.getTableSelector(), e -> printTableBody(e, input, resource));
         output.writeClass(config.getSubtitleCss(), config.getAjaxReadyMessage());
     }
-    
+
     /** If the table is sortable */
     protected boolean isSortable() {
         for (ColumnModel<D, ?> column : columns) {
@@ -375,21 +393,21 @@ public class TableBuilder<D> {
         }
         return false;
     }
-    
+
     /** URL constants */
-    public static class Url {        
+    public static class Url {
         /** Link to a Bootstrap URL of CDN */
         protected static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
         /** Link to jQuery of CDN */
         protected static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
-        
+
         final String bootstrapCss;
         final String jQueryJs;
 
         public Url() {
             this(BOOTSTRAP_CSS, JQUERY_JS);
         }
-        
+
         public Url(@Nonnull final String bootstrapCss, @Nonnull final String jQueryJs) {
             this.bootstrapCss = Assert.hasLength(bootstrapCss, "bootstrapCss");
             this.jQueryJs = Assert.hasLength(jQueryJs, "jQueryJs");

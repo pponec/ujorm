@@ -28,7 +28,6 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.table.TableBuilder;
-
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
 import org.ujorm.ujoservlet.ajax.ao.HotelResourceService;
 import static org.ujorm.ujoservlet.ajax.HotelReportServlet.Attrib.*;
@@ -59,7 +58,7 @@ public class HotelReportServlet extends HttpServlet {
     @Override
     protected void doGet(
             final HttpServletRequest input,
-            final HttpServletResponse output) throws ServletException, IOException {  
+            final HttpServletResponse output) throws ServletException, IOException {
 
         new TableBuilder<Hotel>("Hotel Report")
                 .add(Hotel::getName, "Hotel", NAME).sortable(true)
@@ -73,10 +72,11 @@ public class HotelReportServlet extends HttpServlet {
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
                 .setFooter(e -> printFooter(e))
-                .build(input, output, 
+                .setEmbeddedIcons(false)
+                .build(input, output,
                         builder -> service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input), builder));
     }
-    
+
     /** Create a stars Column */
     protected Column<Hotel> starsColumn() {
         return new Column<Hotel>() {
@@ -90,10 +90,10 @@ public class HotelReportServlet extends HttpServlet {
             @Override
             public Float apply(Hotel hotel) {
                 return hotel.getStars();
-            } 
+            }
         };
     }
-    
+
     /**  Data are from hotelsbase.org, see the original license */
     protected void printFooter(final Element body) throws IllegalStateException {
         //
@@ -117,7 +117,7 @@ public class HotelReportServlet extends HttpServlet {
             return name().toLowerCase(Locale.ENGLISH);
         }
     }
-    
+
     /** URL constants */
     static class Url {
         /** Help image */
@@ -133,7 +133,7 @@ public class HotelReportServlet extends HttpServlet {
                 + "/samples/servlet/src/main/java"
                 + "/org/ujorm/ujoservlet/ajax/HotelReportServlet.java";
     }
-    
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *
