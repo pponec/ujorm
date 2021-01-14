@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>sample-binding</artifactId>
     <packaging>jar</packaging>
-    <version>2.11-SNAPSHOT</version>
+    <version>2.12-SNAPSHOT</version>
     <name>sample-binding</name>
     <url>http://ujorm.org</url>
     
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>2.11-SNAPSHOT</version>
+            <version>2.12-SNAPSHOT</version>
         </dependency>
 
         <dependency>
