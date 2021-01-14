@@ -6,6 +6,12 @@ The Ujorm release notes
 release 2.11-SNAPSHOT (yyyy-mm-dd)
 ...
 
+release 2.11 (2011-01-14)
++ WEB: TableBuilder supports sortable columns.
++ WEB: The method Element.setAttribute() have got a new shortcut: Element.setAttr().
++ WEB: Code cleaning.
++ CORE: An Confessionable interface for a export an Object content to Appendable writers for a common use.
+
 release 2.10 (2021-01-03)
 + COMMON: More general API and better performance due removing unnecessary Writable class.
 + WEB: New TableBuilder class with an AJAX support is ready to a common use.
