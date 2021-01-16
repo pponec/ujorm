@@ -309,11 +309,11 @@ public class TableBuilder<D> {
 
                 for (ColumnModel<D, ?> column : columns) {
                     if (column.isFiltered()) {
-                        form.addInput(config.getControlCss(), column.getParam())
-                                .setName(column.getParam())
-                                .setValue(column.getParam().of(input, ""))
-                                .setAttribute(Html.A_PLACEHOLDER, column.getTitle())
-                                .setAttribute(Html.A_TITLE, column.getTitle());
+                        form.addTextInput(input,
+                                column.getParam(), 
+                                column.getTitle(), 
+                                config.getControlCss(), 
+                                column.getParam());
                     }
                 }
                 if (isSortable()) {

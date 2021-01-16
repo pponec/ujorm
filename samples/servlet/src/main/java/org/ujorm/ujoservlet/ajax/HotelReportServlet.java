@@ -69,7 +69,7 @@ public class HotelReportServlet extends HttpServlet {
                 .addToElement(
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
-                .setFormItem(e -> e.addTextInput(LIMIT, input, "Limit", "form-control", LIMIT))
+                .setFormItem(e -> e.addTextInput(input, LIMIT, "Limit", "form-control", LIMIT))
                 .setFooter(e -> printFooter(e))
                 .build(input, output, builder -> service.findHotels(builder, 
                                 LIMIT.of(input, 15), 

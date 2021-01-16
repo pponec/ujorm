@@ -593,8 +593,8 @@ public final class Element implements ApiElement<Element>, Html {
     /** Add new input element type of text including attributes: name, value, placeholder and title */
     @Nonnull
     public Element addTextInput(
-            @Nonnull HttpParameter param, 
             @Nonnull HttpServletRequest req, 
+            @Nonnull HttpParameter param, 
             @Nonnull CharSequence title, 
             @Nonnull final CharSequence... cssClasses) {
         return addTextInput(cssClasses)
