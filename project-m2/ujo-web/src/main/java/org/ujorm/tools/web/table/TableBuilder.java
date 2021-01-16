@@ -213,9 +213,16 @@ public class TableBuilder<D> {
     }
 
     @Nonnull
-    public TableBuilder<D> setFormAdditions(@Nonnull Injector formAdditions) {
-        this.formAdditions = Assert.notNull(formAdditions, "formAdditions");
+    public TableBuilder<D> setFormItem(@Nonnull Injector formItem) {
+        this.formAdditions = Assert.notNull(formItem, "formAdditions");
         return this;
+    }
+
+    /** Use the method {@link #setFormItem(org.ujorm.tools.web.ao.Injector) } rather. */
+    @Deprecated
+    @Nonnull
+    public TableBuilder<D> setFormAdditions(@Nonnull Injector formItem) {
+        return setFormItem(formItem);
     }
 
     /** Enable of disable an AJAX feature, default value si {@code true} */
@@ -305,7 +312,8 @@ public class TableBuilder<D> {
                         form.addInput(config.getControlCss(), column.getParam())
                                 .setName(column.getParam())
                                 .setValue(column.getParam().of(input, ""))
-                                .setAttribute(Html.A_PLACEHOLDER, column.getTitle());
+                                .setAttribute(Html.A_PLACEHOLDER, column.getTitle())
+                                .setAttribute(Html.A_TITLE, column.getTitle());
                     }
                 }
                 if (isSortable()) {

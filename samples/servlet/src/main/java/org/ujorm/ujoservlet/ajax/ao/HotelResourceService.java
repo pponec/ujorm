@@ -53,7 +53,7 @@ public class HotelResourceService {
      * Direct stream of data source.
      * @return
      */
-    public Stream<Hotel> findHotels(int limit, @Nonnull String namePattern, @Nonnull String cityPattern, TableBuilder<Hotel> builder) {
+    public Stream<Hotel> findHotels( TableBuilder<Hotel> builder, int limit, @Nonnull String namePattern, @Nonnull String cityPattern) {
         String nameUp = namePattern.toUpperCase(Locale.ENGLISH);
         String cityUp = cityPattern.toUpperCase(Locale.ENGLISH);
         try {
@@ -61,7 +61,7 @@ public class HotelResourceService {
                         .filter(t -> nameUp.isEmpty() || t.getName().toUpperCase().contains(nameUp))
                         .filter(t -> cityUp.isEmpty() || t.getCityName().toUpperCase().contains(cityUp))
                         .sorted(builder.getSortedColumn().getComparator(Hotel::getName))
-                        .limit(limit);
+                        .limit(Math.max(0, limit));
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

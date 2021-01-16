@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.rowset.spi.XmlWriter;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
@@ -42,6 +43,7 @@ import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.model.XmlModel;
 import static org.ujorm.tools.web.Html.LEGEND;
+import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.Injector;
 
 /**
@@ -586,6 +588,20 @@ public final class Element implements ApiElement<Element>, Html {
     @Nonnull
     public Element addTextInput(@Nonnull final CharSequence... cssClasses) {
         return addInput(cssClasses).setType(V_TEXT);
+    }
+    
+    /** Add new input element type of text including attributes: name, value, placeholder and title */
+    @Nonnull
+    public Element addTextInput(
+            @Nonnull HttpParameter param, 
+            @Nonnull HttpServletRequest req, 
+            @Nonnull CharSequence title, 
+            @Nonnull final CharSequence... cssClasses) {
+        return addTextInput(cssClasses)
+                .setName(param)
+                .setValue(param.of(req))
+                .setAttribute(Html.A_PLACEHOLDER, title)
+                .setAttribute(Html.A_TITLE, title);
     }
 
     /** Add new input element type of password */

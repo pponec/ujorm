@@ -44,8 +44,6 @@ public class HotelReportServlet extends HttpServlet {
     public static final String URL_PATTERN = "/TableHotelServlet";
     /** A hotel service */
     private final HotelResourceService service = new HotelResourceService();
-    /** Row limit */
-    private final int ROW_LIMIT = 15;
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -71,9 +69,12 @@ public class HotelReportServlet extends HttpServlet {
                 .addToElement(
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
+                .setFormItem(e -> e.addTextInput(LIMIT, input, "Limit", "form-control", LIMIT))
                 .setFooter(e -> printFooter(e))
-                .build(input, output,
-                        builder -> service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input), builder));
+                .build(input, output, builder -> service.findHotels(builder, 
+                                LIMIT.of(input, 15), 
+                                NAME.of(input), 
+                                CITY.of(input)));
     }
 
     /** Create a stars Column */
@@ -109,7 +110,8 @@ public class HotelReportServlet extends HttpServlet {
      */
     enum Attrib implements HttpParameter {
         NAME,
-        CITY;
+        CITY,
+        LIMIT;
 
         @Override
         public String toString() {
