@@ -97,7 +97,7 @@ public class RegexpServlet extends HttpServlet {
                     form.addDiv(CONTROL_CSS, OUTPUT_CSS).addRawText(msg);
                 }
                 body.addElement(Html.HR);
-                body.addAnchor(SOURCE_URL).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
+                body.addAnchor(SOURCE_URL).addTextTemplated("Source code <{}.{}.{}>", 1, 2, 3);
             }
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Internal server error", e);
@@ -199,7 +199,7 @@ public class RegexpServlet extends HttpServlet {
 
         @Override
         public String toString() {
-            return name().toLowerCase(Locale.ENGLISH);
+            return name().toLowerCase();
         }
     }
 }

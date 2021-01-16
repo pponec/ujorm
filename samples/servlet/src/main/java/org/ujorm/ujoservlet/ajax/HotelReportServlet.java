@@ -102,7 +102,7 @@ public class HotelReportServlet extends HttpServlet {
         body.addText(", ", "see an original", " ")
                 .addLinkedText(Url.DATA_LICENSE, "license");
         body.addBreak();
-        body.addAnchor(Url.SOURCE_REPO).addTextTemplated("Version <{}.{}.{}>", 1, 2, 3);
+        body.addAnchor(Url.SOURCE_REPO).addTextTemplated("Source code <{}.{}.{}>", 1, 2, 3);
     }
 
     /**
@@ -115,7 +115,7 @@ public class HotelReportServlet extends HttpServlet {
 
         @Override
         public String toString() {
-            return name().toLowerCase(Locale.ENGLISH);
+            return name().toLowerCase();
         }
     }
 

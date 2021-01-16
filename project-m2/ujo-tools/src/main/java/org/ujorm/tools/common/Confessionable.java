@@ -20,7 +20,7 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 
 /**
- * An interface supporting a data export to an Appendable writer
+ * An interface for common export an object to an appendable writer
  * 
  * @author Pavel Ponec
  */
