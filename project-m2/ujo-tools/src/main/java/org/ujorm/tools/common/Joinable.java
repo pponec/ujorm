@@ -26,23 +26,32 @@ import javax.annotation.Nullable;
  */
 public interface Joinable<D, R> extends Function<D, R> {
     
+    /**
+     * Applies this function to the given argument.
+     *
+     * @param d The {@code nullable} function argument
+     * @return The function result
+     */
+    @Override
+    @Nullable
+    R apply(@Nullable D d);
+    
     /** Send a result of the first function to the next one.
-     * @param <T> A middle type
+     * @param <F> A final result type
      * @param next Next function
      * @return If a result of the first function is {@code null} than the final result is {@code null} too.
      */
     @Nullable
-    default <T> Joinable<D, T> add(@Nonnull final Joinable<R,T> next) {
-        return (D t) -> {
-            final R value = apply(t);
-            return value != null
-                    ? next.apply(value)
-                    : null;
+    default <F> Joinable<D, F> add(@Nonnull final Joinable<R, F> next) {
+        return (D d) -> {
+            final R value = apply(d);
+            return value != null ? next.apply(value) : null;
         };
     }
     
     /** Create a joinable function */
+    @Nonnull
     public static <D, R> Joinable<D, R> of(@Nonnull final Function<D, R> fce) {
-        return (D d) -> fce.apply(d); 
+        return (D d) -> d != null ? fce.apply(d) : null; 
     }
 }

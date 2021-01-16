@@ -30,48 +30,43 @@ public class JoinableTest {
         Person p3 = new Person(3, "Name-3", null);
         Person p2 = new Person(2, "Name-2", p3);
         Person p1 = new Person(1, "Name-1", p2);
+        Person p0 = null;
         
-        Function<Person, String> nameProvider = Joinable.of(Person::getParent).add(Person::getName);
+        Function<Person, String> nameProvider1 = Joinable.of(Person::getName);
+        Function<Person, String> nameProvider2 = Joinable.of(Person::getBoss).add(Person::getName);
+        Function<Person, String> nameProvider3 = Joinable.of(Person::getBoss).add(Person::getBoss).add(Person::getName);
         
+        assertEquals("Name-1", nameProvider1.apply(p1));
+        assertEquals("Name-2", nameProvider2.apply(p1));
+        assertEquals("Name-3", nameProvider3.apply(p1));
         
-        Joinable<Person, String> ss = new Joinable<Person, String>() {
-            @Override
-            public String apply(Person person) {
-                return person.getName();
-            }
-        };
-        
-        assertEquals("Name-1", ss.apply(p1));        
-        assertEquals("Name-1", Joinable.of(Person::getParent).apply(p1));
-        
-        assertEquals("Name-1", Joinable.of(Person::getParent).apply(p1));
-        assertEquals("Name-2", nameProvider.apply(p1));
-        assertEquals("Name-3", nameProvider.apply(p2));
-        assertEquals(null, nameProvider.apply(p3));
+        assertEquals(null, nameProvider1.apply(p0));
+        assertEquals(null, nameProvider2.apply(p3));
+        assertEquals(null, nameProvider3.apply(p3));
     }
 
-    class Person {
+    final static class Person {
 
         final Integer id;
         final String name;
-        final Person parent;
+        final Person boss;
 
-        public Person(Integer id, String name, Person parent) {
+        public Person(Integer id, String name, Person boss) {
             this.id = id;
             this.name = name;
-            this.parent = parent;
+            this.boss = boss;
         }
 
-        public Integer getId() {
+        Integer getId() {
             return id;
         }
 
-        public String getName() {
+        String getName() {
             return name;
         }
 
-        public Person getParent() {
-            return parent;
+        Person getBoss() {
+            return boss;
         }
     }
 }
