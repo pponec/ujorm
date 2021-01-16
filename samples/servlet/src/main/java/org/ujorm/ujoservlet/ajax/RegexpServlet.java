@@ -107,7 +107,7 @@ public class RegexpServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        if (AJAX.isTrue(input)) {
+        if (AJAX.of(input, false)) {
             doAjax(input, JsonBuilder.of(input, output, getConfig("?"))).close();
         } else {
             doGet(input, output);

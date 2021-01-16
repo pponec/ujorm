@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2020 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2021 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.ujorm.tools.web.ao;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.ServletRequest;
-
 
 /**
  * An interface for bulding HTML parameters by an Enumerator.
@@ -67,18 +66,89 @@ public interface HttpParameter extends CharSequence {
         return of(request, "");
     }
 
-    /** Returns a parameter of the request of a default value */
-    default String of(@Nonnull final ServletRequest request, @Nullable final String defaultValue) {
+    /** Returns a parameter of the request or the default value */
+    @Nonnull
+    default String of(@Nonnull final ServletRequest request, @Nonnull final String defaultValue) {
         final String result = request.getParameter(toString());
         return result != null ? result : defaultValue;
     }
 
-    default boolean isTrue(@Nonnull final ServletRequest request) {
-        return "true".equals(request.getParameter(toString()));
+    /** Returns a parameter of the request or the default value */
+    default boolean of(@Nonnull final ServletRequest request, @Nullable final boolean defaultValue) {
+        switch (of(request)) {
+            case "true": 
+                return true;
+            case "false":
+                return false;
+            default:
+                return defaultValue;
+        }
     }
 
-    default boolean isFalse(@Nonnull final ServletRequest request) {
-        return "false".equals(request.getParameter(toString()));
+    /** Returns a parameter of the request or the default value */
+    default char of(@Nonnull final ServletRequest request, @Nullable final char defaultValue) {
+        final String value = of(request);
+        return value.isEmpty() ? defaultValue : value.charAt(0);
+    }  
+
+    /** Returns a parameter of the request or the default value */
+    default short of(@Nonnull final ServletRequest request, @Nullable final short defaultValue) {
+        final String value = of(request);
+        if (value.isEmpty()) {
+            return defaultValue;
+        } else try {
+            return Short.parseShort(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+    
+    /** Returns a parameter of the request or the default value */
+    default int of(@Nonnull final ServletRequest request, @Nullable final int defaultValue) {
+        final String value = of(request);
+        if (value.isEmpty()) {
+            return defaultValue;
+        } else try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+    
+    /** Returns a parameter of the request or the default value */
+    default long of(@Nonnull final ServletRequest request, @Nullable final long defaultValue) {
+        final String value = of(request);
+        if (value.isEmpty()) {
+            return defaultValue;
+        } else try {
+            return Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+    
+    /** Returns a parameter of the request or the default value */
+    default float of(@Nonnull final ServletRequest request, @Nullable final float defaultValue) {
+        final String value = of(request);
+        if (value.isEmpty()) {
+            return defaultValue;
+        } else try {
+            return Float.parseFloat(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+    
+    /** Returns a parameter of the request or the default value */
+    default double of(@Nonnull final ServletRequest request, @Nullable final double defaultValue) {
+        final String value = of(request);
+        if (value.isEmpty()) {
+            return defaultValue;
+        } else try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
 }
