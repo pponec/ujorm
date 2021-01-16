@@ -62,7 +62,7 @@ public class HotelReportServlet extends HttpServlet {
 
         new TableBuilder<Hotel>("Hotel Report")
                 .add(Hotel::getName, "Hotel", NAME).sortable(true)
-                .add(Hotel::getCity, "City", CITY).sortable(false)
+                .add(hotel -> hotel.getCity().getName(), "City", CITY).sortable(false)
                 .add(Hotel::getStreet, "Street").sortable()
                 .add(Hotel::getPrice, "Price").sortable()
                 .add(Hotel::getCurrency, "Currency")

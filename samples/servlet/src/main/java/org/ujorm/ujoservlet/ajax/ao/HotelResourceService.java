@@ -59,7 +59,7 @@ public class HotelResourceService {
         try {
             return loadHotelStream()
                         .filter(t -> nameUp.isEmpty() || t.getName().toUpperCase().contains(nameUp))
-                        .filter(t -> cityUp.isEmpty() || t.getCity().toUpperCase().contains(cityUp))
+                        .filter(t -> cityUp.isEmpty() || t.getCityName().toUpperCase().contains(cityUp))
                         .sorted(builder.getSortedColumn().getComparator(Hotel::getName))
                         .limit(limit);
         } catch (IOException e) {
@@ -94,7 +94,7 @@ public class HotelResourceService {
                         hotel = new Hotel();
                         hotel.setName(c[0]);
                         hotel.setNote(c[1]);
-                        hotel.setCity(cityService.getCity(c[2]).getName());
+                        hotel.setCity(cityService.getCity(c[2]));
                         hotel.setStreet(c[3]);
                         hotel.setPhone(c[4]);
                         hotel.setStars(Float.parseFloat(c[5]));

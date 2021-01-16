@@ -23,14 +23,13 @@ import java.math.BigDecimal;
  */
 public class Hotel {
 
-
     private Long id;
     /** Name of the Hotel */
     private String name;
     /** Description of the hotel */
     private String note;
     /** Relation to the City address */
-    private String city;
+    private City city;
     /** Street of address */
     private String street;
     /** Phone */
@@ -45,6 +44,11 @@ public class Hotel {
     private String currency;
     /** Is active */
     private Boolean active;
+    
+    public String getCityName() {
+        final City city = getCity();
+        return city != null ? city.getName() : null;
+    }
 
     public Long getId() {
         return id;
@@ -70,11 +74,11 @@ public class Hotel {
         this.note = note;
     }
 
-    public String getCity() {
+    public City getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(City city) {
         this.city = city;
     }
 
