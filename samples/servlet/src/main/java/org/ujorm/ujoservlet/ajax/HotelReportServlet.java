@@ -72,7 +72,6 @@ public class HotelReportServlet extends HttpServlet {
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
                 .setFooter(e -> printFooter(e))
-                .setEmbeddedIcons(false)
                 .build(input, output,
                         builder -> service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input), builder));
     }

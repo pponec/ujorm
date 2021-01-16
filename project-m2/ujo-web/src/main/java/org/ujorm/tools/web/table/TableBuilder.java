@@ -105,42 +105,42 @@ public class TableBuilder<D> {
     }
 
     @Nonnull
-    public <V> TableBuilder<D> add(Function<D,?> column) {
+    public <V> TableBuilder<D> add(Function<D,V> column) {
         return addInternal(column, "Column-" + (columns.size() + 1), null);
     }
 
     @Nonnull
-    public <V> TableBuilder<D> add(Function<D,?> column, CharSequence title) {
+    public <V> TableBuilder<D> add(Function<D,V> column, CharSequence title) {
         return addInternal(column, title, null);
     }
 
     @Nonnull
-    public <V> TableBuilder<D> add(Function<D,?> column, Injector title) {
+    public <V> TableBuilder<D> add(Function<D,V> column, Injector title) {
         return addInternal(column, title, null);
     }
 
     @Nonnull
-    public <V> TableBuilder<D> add(Function<D,?> column, CharSequence title, @Nullable HttpParameter param) {
+    public <V> TableBuilder<D> add(Function<D,V> column, CharSequence title, @Nullable HttpParameter param) {
         return addInternal(column, title, param);
     }
 
     @Nonnull
-    public <V> TableBuilder<D> add(Function<D,?> column, Injector title, @Nullable HttpParameter param) {
+    public <V> TableBuilder<D> add(Function<D,V> column, Injector title, @Nullable HttpParameter param) {
         return addInternal(column, title, param);
     }
 
     @Nonnull
-    public <V> TableBuilder<D> addToElement(Column<D> column, CharSequence title) {
+    public TableBuilder<D> addToElement(Column<D> column, CharSequence title) {
         return addInternal(column, title, null);
     }
 
     @Nonnull
-    public <V> TableBuilder<D> addToElement(Column<D> column, Injector title) {
+    public TableBuilder<D> addToElement(Column<D> column, Injector title) {
         return addInternal(column, title, null);
     }
 
     @Nonnull
-    protected <V> TableBuilder<D> addInternal(@Nonnull final Function<D,?> column, @Nonnull final CharSequence title, @Nullable final HttpParameter param) {
+    protected <V> TableBuilder<D> addInternal(@Nonnull final Function<D,V> column, @Nonnull final CharSequence title, @Nullable final HttpParameter param) {
         columns.add(new ColumnModel(columns.size(), column, title, param));
         return this;
     }
