@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -97,6 +98,27 @@ public abstract class StreamUtils {
     @Nonnull
     public static <T> Collector<T, ?, ArrayDeque<T>> collectToDequeue() {
         return Collectors.toCollection(ArrayDeque::new);
+    }
+    
+    /** Create a joinable function 
+     * 
+     * <h3>Usage</h3>
+     * <pre>
+     *  Function&lt;Person, String&gt; nameProvider = Joinable
+     *     .of (Person::getBoss)
+     *     .add(Person::getBoss)
+     *     .add(Person::getName);
+     *  String superBossName = nameProvider.apply(getPerson());
+     * </pre>
+     * 
+     * @param <D> Domain value
+     * @param <R> Result value
+     * @param fce An original function
+     * @return The new object type of Function
+     */
+    @Nonnull
+    public static <D, R> Joinable<D, R> toJoinable(@Nonnull final Function<D, R> fce) {
+        return Joinable.of(fce);
     }
 
 }

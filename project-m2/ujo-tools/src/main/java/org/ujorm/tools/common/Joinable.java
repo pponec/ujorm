@@ -22,6 +22,15 @@ import javax.annotation.Nullable;
 /**
  * A joinable function
  * 
+ * <h3>Usage</h3>
+ * <pre>
+ *  Function&lt;Person, String&gt; nameProvider = Joinable
+ *     .of (Person::getBoss)
+ *     .add(Person::getBoss)
+ *     .add(Person::getName);
+ *  String superBossName = nameProvider.apply(getPerson());
+ * </pre>
+ * 
  * @author Pavel Ponec 
  */
 public interface Joinable<D, R> extends Function<D, R> {
@@ -49,7 +58,13 @@ public interface Joinable<D, R> extends Function<D, R> {
         };
     }
     
-    /** Create a joinable function */
+    /** Create a joinable function
+     * 
+     * @param <D> Domain value
+     * @param <R> Result value
+     * @param fce An original function
+     * @return The new object type of Function
+     */
     @Nonnull
     public static <D, R> Joinable<D, R> of(@Nonnull final Function<D, R> fce) {
         return (D d) -> d != null ? fce.apply(d) : null; 
