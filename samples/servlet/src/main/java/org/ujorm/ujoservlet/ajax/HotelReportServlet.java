@@ -96,7 +96,6 @@ public class HotelReportServlet extends HttpServlet {
 
     /**  Data are from hotelsbase.org, see the original license */
     protected void printFooter(final Element body) throws IllegalStateException {
-        //
         body.addText("Data are from", " ")
                 .addLinkedText(Url.HOTELBASE, "hotelsbase.org");
         body.addText(", ", "see an original", " ")
