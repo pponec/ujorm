@@ -18,6 +18,7 @@ package org.ujorm.tools.web.ao;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.ServletRequest;
+import org.ujorm.tools.Assert;
 
 /**
  * An interface for bulding HTML parameters by an Enumerator.
@@ -39,7 +40,7 @@ import javax.servlet.ServletRequest;
  * @author Pavel Ponec
  */
 public interface HttpParameter extends CharSequence {
-    
+     
     /** Returns a parameter name */
     @Nonnull
     @Override
@@ -59,11 +60,18 @@ public interface HttpParameter extends CharSequence {
     default CharSequence subSequence(int start, int end) {
         return toString().subSequence(start, end);
     }
+    
+    /** Returns a non-null default text value. 
+     *  The standard value is an empty String, override it for a change. */
+    @Nonnull
+    default String defaultValue() {
+        return "";
+    }
 
     /** Default value is an empty String */
     @Nonnull
     default String of(@Nonnull final ServletRequest request) {
-        return of(request, "");
+        return of(request, Assert.notNull(defaultValue(), "Default value is required"));
     }
 
     /** Returns a parameter of the request or the default value */
