@@ -17,7 +17,6 @@ package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Locale;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

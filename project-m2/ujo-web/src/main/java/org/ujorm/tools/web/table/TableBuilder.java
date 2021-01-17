@@ -338,10 +338,11 @@ public class TableBuilder<D> {
     ) {
         final Element headerElement = table.addElement(Html.THEAD).addElement(Html.TR);
         for (ColumnModel<D,?> col : columns) {
+            final boolean columnSortable = ajaxEnabled && col.isSortable();
             final Object value = col.getTitle();
             final Element th = headerElement.addElement(Html.TH);
-            final Element thLink =  col.isSortable() ? th.addAnchor("javascript:sort(" + col.toCode(true) + ")") : th;
-            if (col.isSortable()) {
+            final Element thLink = columnSortable ? th.addAnchor("javascript:sort(" + col.toCode(true) + ")") : th;
+            if (columnSortable) {
                 thLink.setClass(
                         config.getSortable(),
                         config.getSortableDirection(col.getDirection())
@@ -352,7 +353,7 @@ public class TableBuilder<D> {
             } else {
                 thLink.addText(value);
             }
-            if (col.isSortable() && config.isEmbeddedIcons()) {
+            if (columnSortable && config.isEmbeddedIcons()) {
                 InputStream img = config.getInnerSortableImageToStream(col.getDirection());
                 if (img != null) {
                     thLink.addImage(img, col.getDirection().toString());
@@ -386,17 +387,19 @@ public class TableBuilder<D> {
     protected void doAjax(
             @Nonnull final HttpServletRequest input,
             @Nonnull final JsonBuilder output,
-            @Nonnull final Function<TableBuilder<D>, Stream<D>> resource)
-            throws ServletException, IOException {
+            @Nonnull final Function<TableBuilder<D>, Stream<D>> resource
+    ) throws ServletException, IOException {
         output.writeClass(config.getTableSelector(), e -> printTableBody(e, input, resource));
         output.writeClass(config.getSubtitleCss(), config.getAjaxReadyMessage());
     }
 
     /** If the table is sortable */
     protected boolean isSortable() {
-        for (ColumnModel<D, ?> column : columns) {
-            if (column.isSortable()) {
-                return true;
+        if (ajaxEnabled) {            
+            for (ColumnModel<D, ?> column : columns) {
+                if (column.isSortable()) {
+                    return true;
+                }
             }
         }
         return false;
