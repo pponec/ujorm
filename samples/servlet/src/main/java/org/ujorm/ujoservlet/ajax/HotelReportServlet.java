@@ -41,6 +41,8 @@ public class HotelReportServlet extends HttpServlet {
 
     /** URL pattern */
     public static final String URL_PATTERN = "/TableHotelServlet";
+    /** Row limit */
+    private static final int DEFAULT_ROW_LIMIT = 15;
     /** A hotel service */
     private final HotelResourceService service = new HotelResourceService();
 
@@ -71,7 +73,7 @@ public class HotelReportServlet extends HttpServlet {
                 .setFormItem(e -> e.addTextInput(input, LIMIT, "Limit", "form-control", LIMIT))
                 .setFooter(e -> printFooter(e))
                 .build(input, output, builder -> service.findHotels(builder, 
-                                LIMIT.of(input, 15), 
+                                LIMIT.of(input, DEFAULT_ROW_LIMIT), 
                                 NAME.of(input), 
                                 CITY.of(input)));
     }
@@ -109,7 +111,10 @@ public class HotelReportServlet extends HttpServlet {
     enum Attrib implements HttpParameter {
         NAME,
         CITY,
-        LIMIT;
+        LIMIT { @Override public String defaultValue() {
+                return "" + DEFAULT_ROW_LIMIT;
+            }
+        };
 
         @Override
         public String toString() {
