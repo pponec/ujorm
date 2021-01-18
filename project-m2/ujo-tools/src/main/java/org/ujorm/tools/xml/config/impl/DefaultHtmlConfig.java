@@ -53,6 +53,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     private boolean htmlHeaderRequest = true;
 
     /** Raw text to insert to each HTML header */
+    @Nullable
     private CharSequence rawHeaderText = null;
 
     /** A name of root element */

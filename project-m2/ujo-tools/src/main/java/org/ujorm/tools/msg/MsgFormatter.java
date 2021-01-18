@@ -38,6 +38,7 @@ import org.ujorm.tools.common.ObjectUtils;
 public class MsgFormatter {
 
     /** An undefined writter */
+    @Nullable
     private static final Appendable NO_WRITER = null;
 
     /** Parameter mark */

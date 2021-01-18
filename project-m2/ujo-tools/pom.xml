@@ -18,7 +18,10 @@
 
     <properties>
         <spring.version>4.3.9.RELEASE</spring.version>
-        <yworks.uml.path>${basedir}/../scripts/javadoc/doclets/yworks-uml-doclet-3.0_02-jdk1.5</yworks.uml.path>
+        <!-- These properties will be set by the Maven Dependency plugin,
+             see: https://checkerframework.org/manual/#maven
+        -->
+        <errorProneJavac>${com.google.errorprone:javac:jar}</errorProneJavac>
     </properties>
 
     <scm>
@@ -142,7 +145,7 @@
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>  
     </dependencies>
 
     <build>
@@ -276,7 +279,7 @@
                 </plugins>
             </build>
         </profile>
-     </profiles>
+    </profiles>
 
 </project>
 

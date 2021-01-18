@@ -86,18 +86,21 @@ public abstract class AbstractWriter {
     private final Appendable writerEscaped = new Appendable() {
             private final boolean attribute = false;
 
+            @Nonnull
             @Override
-            public Appendable append(final CharSequence value) throws IOException {
+            public Appendable append(@Nonnull final CharSequence value) throws IOException {
                 write(value, attribute);
                 return this;
             }
 
+            @Nonnull
             @Override
-            public Appendable append(final CharSequence value, int start, int end) throws IOException {
+            public Appendable append(@Nonnull final CharSequence value, int start, int end) throws IOException {
                 write(value, start, end, attribute);
                 return this;
             }
 
+            @Nonnull
             @Override
             public Appendable append(final char value) throws IOException {
                 write(value, attribute);
@@ -236,6 +239,7 @@ public abstract class AbstractWriter {
     // ---- STATIC METHOD(s) ---
 
     /** Assign a no-cache and an Edge compatibility mode and returns a writer from HttpServletResponse */
+    @Nonnull
     public static Appendable createWriter(
             @Nonnull final Object httpServletResponse,
             @Nonnull final Charset charset,
