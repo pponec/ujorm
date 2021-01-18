@@ -211,9 +211,9 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
                      + COMMENT_END.length()
                      + comment.length() + 2);
             addRawText(msg.append(COMMENT_BEG)
-                    .append(CHAR_SPACE)
+                    .append(SPACE)
                     .append(comment)
-                    .append(CHAR_SPACE)
+                    .append(SPACE)
                     .append(COMMENT_END));
         }
         return  this;

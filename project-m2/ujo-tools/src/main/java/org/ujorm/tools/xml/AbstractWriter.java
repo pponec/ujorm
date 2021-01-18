@@ -50,9 +50,9 @@ public abstract class AbstractWriter {
     /** A special XML character */
     public static final char XML_2QUOT = '"';
     /** A special XML character */
-    public static final char CHAR_SPACE = ' ';
-    /** Non-breaking space */
-    public static final char NON_BREAKING_SPACE = '\u00A0';
+    public static final char SPACE = ' ';
+    /** Non-breaking space character */
+    public static final char NBSP = '\u00A0';
     /** A forward slash character */
     public static final char FORWARD_SLASH = '/';
     /** A CDATA beg markup sequence */
@@ -166,12 +166,11 @@ public abstract class AbstractWriter {
                     out.append(XML_AMPERSAND).append("apos;");
                 }
                 break;
-            case CHAR_SPACE:
+            case SPACE:
                 out.append(c);
                 break;
-            case NON_BREAKING_SPACE:
+            case NBSP:
                 out.append(XML_AMPERSAND).append("#160;");
-                out.append(c);
                 break;
             default: {
                 if (c > 32) {

@@ -26,12 +26,12 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.XmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
-import static org.ujorm.tools.xml.AbstractWriter.CHAR_SPACE;
 import static org.ujorm.tools.xml.AbstractWriter.FORWARD_SLASH;
 import static org.ujorm.tools.xml.AbstractWriter.XML_2QUOT;
 import static org.ujorm.tools.xml.AbstractWriter.XML_GT;
 import static org.ujorm.tools.xml.AbstractWriter.XML_LT;
 import static org.ujorm.tools.xml.AbstractWriter.createWriter;
+import static org.ujorm.tools.xml.AbstractWriter.SPACE;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -76,7 +76,7 @@ public class XmlPrinter extends AbstractWriter {
 
     void writeAttrib(@Nonnull String name, Object data, XmlBuilder owner) throws IOException {
         if (owner.getName() != null) {
-            out.append(CHAR_SPACE);
+            out.append(SPACE);
             out.append(name);
             out.append('=');
             out.append(XML_2QUOT);

@@ -89,7 +89,7 @@ public class XmlWriter extends AbstractWriter {
             if (Check.hasLength(attributes)) {
                 assert attributes != null; // For static analyzer only
                 for (String key : attributes.keySet()) {
-                    out.append(CHAR_SPACE);
+                    out.append(SPACE);
                     out.append(key);
                     out.append('=');
                     out.append(XML_2QUOT);

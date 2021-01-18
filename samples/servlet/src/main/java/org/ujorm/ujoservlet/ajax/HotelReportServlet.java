@@ -16,7 +16,7 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.stream.Stream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,6 +30,7 @@ import org.ujorm.tools.web.table.TableBuilder;
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
 import org.ujorm.ujoservlet.ajax.ao.HotelResourceService;
 import static org.ujorm.ujoservlet.ajax.HotelReportServlet.Attrib.*;
+import static org.ujorm.tools.xml.AbstractWriter.NBSP;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
@@ -83,9 +84,9 @@ public class HotelReportServlet extends HttpServlet {
         return new Column<Hotel>() {
             @Override
             public void write(Element e, Hotel hotel) {
-                e.setAttribute(Html.A_TITLE, hotel.getStars())
-                        .setAttribute(Html.STYLE, "color: Gold")
-                        .addRawText(String.join(Html.NON_BREAKING_SPACE, Collections.nCopies(Math.round(hotel.getStars()), "🟊")));
+                e.setAttribute(Html.A_TITLE, hotel.getStars()).setAttribute(Html.STYLE, "color: Gold");
+                Stream.generate(() -> "🟊" + NBSP).limit(Math.round(hotel.getStars()))
+                        .forEach(s -> e.addText(s));
             }
             /** Implement it for a sortable column only */
             @Override

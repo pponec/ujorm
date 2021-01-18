@@ -158,10 +158,5 @@ public interface Html {
     String V_TEXT = "text";
     String V_PASSWORD = "password";
     String V_TEXT_CSS = "text/css";
-    
-    // --- Special characters ---
-    
-    /** The non-breaking space */
-    String NON_BREAKING_SPACE = "&nbsp;";
 
 }
