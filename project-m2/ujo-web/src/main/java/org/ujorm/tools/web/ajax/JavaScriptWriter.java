@@ -202,8 +202,8 @@ public class JavaScriptWriter implements Injector {
                     , onLoadSubmit ? "  $('" + formSelector + "').submit();" : ""
                 );
             }
+            js.addRawText(newLine, "", "});");
             if (isSortable) {
-                js.addRawText(newLine, "", "});");
                 js.addRawText(newLine, "function sort(col){");
                 js.addRawText(newLine, " document.querySelector('", "input[name=\"_sort\"]').value=col;");
                 js.addRawText(newLine, " document.querySelector('", formSelector , "').submit();");
