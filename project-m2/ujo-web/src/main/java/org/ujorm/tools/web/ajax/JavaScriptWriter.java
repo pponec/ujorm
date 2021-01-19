@@ -163,7 +163,7 @@ public class JavaScriptWriter implements Injector {
                 js.addRawTexts(newLine, ""
                         , "var globalTimeout = null;"
                         , "$('" + inpSelectors + "').keyup(function(){"
-                        , "  if (globalTimeout != null){"
+                        , "  if (!!globalTimeout){"
                         , "    clearTimeout(globalTimeout);"
                         , "  }"
                         , "  globalTimeout = setTimeout(function(){"
