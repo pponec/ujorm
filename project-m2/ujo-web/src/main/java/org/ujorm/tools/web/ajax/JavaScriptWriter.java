@@ -145,7 +145,7 @@ public class JavaScriptWriter implements Injector {
 
     /** Assign a Sortable table */
     public JavaScriptWriter setSortable(boolean isSortable) {
-        this.isSortable = isSortable;
+        this.isSortable=isSortable;
         return this;
     }
 
@@ -161,38 +161,43 @@ public class JavaScriptWriter implements Injector {
                 final String inpSelectors = Stream.of(inputCssSelectors)
                         .collect(Collectors.joining(", "));
                 js.addRawTexts(newLine, ""
-                        , "var globalTimeout = null;"
+                        , "var timeout=null, ajaxRun=false, submitReq=false;"
                         , "$('" + inpSelectors + "').keyup(function(){"
-                        , "  if (!!globalTimeout){"
-                        , "    clearTimeout(globalTimeout);"
+                        , "  if (!!timeout){"
+                        , "    clearTimeout(timeout);"
                         , "  }"
-                        , "  globalTimeout = setTimeout(function(){"
-                        , "    globalTimeout = null;"
-                        , "    $('" + formSelector + "').submit();"
+                        , "  timeout=setTimeout(function(){"
+                        , "    timeout=null;"
+                        , "    if(ajaxRun){submitReq=true;}"
+                        , "    else{$('" + formSelector + "').submit();}"
                         , "  }, " + idleDelay.toMillis() + ");"
                         , "});"
                     );
             } {
             js.addRawTexts(newLine, ""
                     , "$('form').submit(function(event){"
-                    , "  var data = $('" + formSelector + "').serialize();"
+                    , "  event.preventDefault();"
+                    , "  ajaxRun=true;"
+                    , "  var data=$('" + formSelector + "').serialize();"
                     , "  $.ajax("
                         + (version == 2
-                            ? ("{ url: '" + ajaxRequestPath + "'")
-                            : ("{ url: '?" + ajaxRequestParam + "=true'"))
-                        + ", type: 'POST'"
-                        + ", data: data"
-                        + ", timeout: " + ajaxTimeout.toMillis()
-                        + ", error: function (xhr, ajaxOptions, thrownError){", Check.hasLength(subtitleSelector)
-                        ? "   $('" + subtitleSelector + "').html('" + errorMessage + ": ' + thrownError);" : ""
+                            ? ("{ url:'" + ajaxRequestPath + "'")
+                            : ("{ url:'?" + ajaxRequestParam + "=true'"))
+                        + ", type:'POST'"
+                        + ", data:data"
+                        + ", timeout:" + ajaxTimeout.toMillis()
+                        + ", error:function(xhr,ajaxOptions,thrownError){", Check.hasLength(subtitleSelector)
+                        ? "   ajaxRun=false;"
+                        +    " $('" + subtitleSelector + "').html('" + errorMessage + ":' + thrownError);":""
                         , "  }"
-                        + ", success: function(result){"
-                    , "    var jsn = JSON.parse(result);"
-                    , "    $.each(jsn, function(key, value){"
+                        + ", success:function(result){"
+                    , "    var jsn=JSON.parse(result);"
+                    , "    $.each(jsn,function(key,value){"
                     , "      $(key).html(value);"
-                    , "    })"
+                    , "    }); "
+                    , "    if(submitReq){submitReq=false; $('" + formSelector + "').submit();} "
+                    , "    else{ajaxRun=false;}"
                     , "  }});"
-                    , "  event.preventDefault();"
                     , "});"
                     , onLoadSubmit ? "  $('" + formSelector + "').submit();" : ""
                 );
