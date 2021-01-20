@@ -53,6 +53,8 @@ public class JavaScriptWriter implements Injector {
 
     /** Javascript ajax request parameter */
     protected final HttpParameter ajaxRequestParam;
+    /** Javascript ajax request parameter */
+    protected final HttpParameter sortRequestParam;
      /** Input selectors */
     protected final CharSequence[] inputCssSelectors;
     /** Input idle delay */
@@ -79,21 +81,28 @@ public class JavaScriptWriter implements Injector {
     protected String ajaxRequestPath = "/ajax";
     /** Is the table sortable */
     protected boolean isSortable = true;
+    /** Function order of name */
+    protected int fceOrder = 1;
 
     public JavaScriptWriter() {
         this("form input");
     }
 
     public JavaScriptWriter(@Nonnull CharSequence... inputSelectors) {
-        this(DEFAULT_DURATION, JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM, inputSelectors);
+        this(DEFAULT_DURATION, 
+                DEFAULT_AJAX_REQUEST_PARAM, 
+                DEFAULT_SORT_REQUEST_PARAM, 
+                inputSelectors);
     }
 
     public JavaScriptWriter(
             @Nonnull Duration idleDelay,
             @Nonnull HttpParameter ajaxRequestParam,
+            @Nonnull HttpParameter sortRequestParam,
             @Nonnull CharSequence... inputSelectors) {
         this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
         this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
+        this.sortRequestParam = Assert.notNull(ajaxRequestParam, "sortRequestParam");
         this.inputCssSelectors = Assert.hasLength(inputSelectors, "inputSelectors");
     }
 
@@ -145,8 +154,19 @@ public class JavaScriptWriter implements Injector {
 
     /** Assign a Sortable table */
     public JavaScriptWriter setSortable(boolean isSortable) {
-        this.isSortable=isSortable;
+        this.isSortable = isSortable;
         return this;
+    }
+
+    /** Set a function order */
+    public JavaScriptWriter setSortable(int fceOrder) {
+        this.fceOrder = fceOrder;
+        return this;
+    }
+
+    /** Set a function order name */
+    public int getFceOrder() {
+        return fceOrder;
     }
 
     /**
@@ -156,7 +176,7 @@ public class JavaScriptWriter implements Injector {
     public void write(@Nonnull final Element parent) {
         try (Element js = parent.addElement(Html.SCRIPT)) {
             js.addRawText(newLine);
-            js.addRawText("$(document).ready(function(){");
+            js.addRawText("var f", fceOrder, "=function(){");
             if (Check.hasLength(inputCssSelectors)) {
                 final String inpSelectors = Stream.of(inputCssSelectors)
                         .collect(Collectors.joining(", "));
@@ -199,16 +219,20 @@ public class JavaScriptWriter implements Injector {
                     , "    else{ajaxRun=false;}"
                     , "  }});"
                     , "});"
-                    , onLoadSubmit ? "  $('" + formSelector + "').submit();" : ""
                 );
+                if (onLoadSubmit) {
+                    js.addRawText(newLine, "  $('" + formSelector + "').submit();");
+                }
+                if (isSortable) {
+                    js.addRawText(newLine, "function sort(col){");
+                    js.addRawText(newLine, " document.querySelector('", "input[name=\"", ajaxRequestParam, "\"]').value=col;");
+                    js.addRawText(newLine, " if(ajaxRun){submitReq=true}");
+                    js.addRawText(newLine, " else{document.querySelector('", formSelector , "').submit();}");
+                    js.addRawText(newLine, "}");
+                }
             }
-            js.addRawText(newLine, "", "});");
-            if (isSortable) {
-                js.addRawText(newLine, "function sort(col){");
-                js.addRawText(newLine, " document.querySelector('", "input[name=\"_sort\"]').value=col;");
-                js.addRawText(newLine, " document.querySelector('", formSelector , "').submit();");
-                js.addRawText(newLine, "}");
-            }
+            js.addRawText("};");
+            js.addRawText("$(document).ready(f", fceOrder, ");");
         }
     }
 }

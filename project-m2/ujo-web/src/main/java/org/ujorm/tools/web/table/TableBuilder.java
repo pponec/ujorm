@@ -341,7 +341,7 @@ public class TableBuilder<D> {
             final boolean columnSortable = ajaxEnabled && col.isSortable();
             final Object value = col.getTitle();
             final Element th = headerElement.addElement(Html.TH);
-            final Element thLink = columnSortable ? th.addAnchor("javascript:sort(" + col.toCode(true) + ")") : th;
+            final Element thLink = columnSortable ? th.addAnchor("javascript:f1.sort(" + col.toCode(true) + ")") : th;
             if (columnSortable) {
                 thLink.setClass(
                         config.getSortable(),
