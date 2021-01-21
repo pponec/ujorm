@@ -102,7 +102,7 @@ public class JavaScriptWriter implements Injector {
             @Nonnull CharSequence... inputSelectors) {
         this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
         this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
-        this.sortRequestParam = Assert.notNull(ajaxRequestParam, "sortRequestParam");
+        this.sortRequestParam = Assert.notNull(sortRequestParam, "sortRequestParam");
         this.inputCssSelectors = Assert.hasLength(inputSelectors, "inputSelectors");
     }
 
@@ -223,15 +223,15 @@ public class JavaScriptWriter implements Injector {
                 if (onLoadSubmit) {
                     js.addRawText(newLine, "  $('" + formSelector + "').submit();");
                 }
-                if (isSortable) {
-                    js.addRawText(newLine, "function sort(col){");
-                    js.addRawText(newLine, " document.querySelector('", "input[name=\"", ajaxRequestParam, "\"]').value=col;");
-                    js.addRawText(newLine, " if(ajaxRun){submitReq=true;}");
-                    js.addRawText(newLine, " else{document.querySelector('", formSelector , "').submit();}");
-                    js.addRawText(newLine, "}");
-                }
             }
             js.addRawText("};");
+            if (isSortable) {
+                js.addRawText(newLine, "f1.sort=function(col){");
+                js.addRawText(newLine, " document.querySelector('", "input[name=\"", sortRequestParam, "\"]').value=col;");
+                js.addRawText(newLine, " if(this.ajaxRun){this.submitReq=true;}");
+                js.addRawText(newLine, " else{document.querySelector('", formSelector , "').submit();}");
+                js.addRawText(newLine, "};");
+            } 
             js.addRawText("$(document).ready(f", fceOrder, ");");
         }
     }
