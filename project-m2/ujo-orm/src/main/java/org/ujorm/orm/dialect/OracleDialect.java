@@ -75,8 +75,8 @@ public class OracleDialect extends PostgreSqlDialect {
     }
 
     @Override
-    public void printOffset(Query query, Appendable out) throws IOException {
-        // ORACLE has a special implementation of the LIMIT & OFFSET.
+    public void printLimitAndOffset(Query query, Appendable out) throws IOException {
+        // TODO: ORACLE has a special implementation of the LIMIT & OFFSET.
     }
 
     /** PostgreSql dialect uses a database type OID (instead of the BLBO). */

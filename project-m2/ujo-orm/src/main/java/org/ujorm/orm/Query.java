@@ -761,7 +761,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-    /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
+    /** The max row count for the resultset. The value -1 means no change, 
+     * value 0 means no limit (or a default value by the JDBC driver implementation.
      * @see #getLimit()
      */
     public final boolean isLimit() {
