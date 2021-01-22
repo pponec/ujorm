@@ -35,19 +35,9 @@ import org.ujorm.tools.web.ao.Injector;
 public class JavaScriptWriter implements Injector {
 
     /** Default AJAX request parameter name */
-    public static final HttpParameter DEFAULT_AJAX_REQUEST_PARAM = new HttpParameter() {
-            @Override
-            public String toString() {
-                return "_ajax";
-            }
-        };
+    public static final HttpParameter DEFAULT_AJAX_REQUEST_PARAM = HttpParameter.of("_ajax");
     /** Default AJAX request parameter name */
-    public static final HttpParameter DEFAULT_SORT_REQUEST_PARAM = new HttpParameter() {
-            @Override
-            public String toString() {
-                return "_sort";
-            }
-        };
+    public static final HttpParameter DEFAULT_SORT_REQUEST_PARAM = HttpParameter.of("_sort");
     /** Default duration */
     public static final Duration DEFAULT_DURATION = Duration.ofMillis(250);
 

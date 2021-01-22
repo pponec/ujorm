@@ -238,6 +238,16 @@ public class HtmlElement implements ApiElement<Element>, Html {
                 .setAttribute(Html.A_HREF, css)
                 .setAttribute(Html.A_REL, "stylesheet");
     }
+    
+    /** Create a new CSS element and return it
+     * @param css CSS content
+     * @return New CSS element
+     */
+    public Element addCssBody(@Nonnull final CharSequence css) {
+        Assert.notNull(css, REQUIRED_MSG, "css");
+        return getHead().addElement(Html.STYLE)
+                .addRawText(css);
+    }
 
     /** Create a new CSS element and return it.
      * Each item is separated by a new line.

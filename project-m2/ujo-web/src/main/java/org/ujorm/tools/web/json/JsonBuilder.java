@@ -278,21 +278,40 @@ public class JsonBuilder implements Closeable {
     /** An object factory */
     @Nonnull
     public static final JsonBuilder of(
-            @Nonnull final HttpServletRequest request,
+            @Nonnull final HtmlConfig config,
+            @Nonnull final HttpServletResponse response) 
+            throws IllegalStateException, IOException {
+        return of(null, response, config);
+    }
+    
+    /** An object factory */
+    @Deprecated
+    @Nonnull
+    public static final JsonBuilder of(
+            @Nullable final HttpServletRequest request,
             @Nonnull final HttpServletResponse response,
-            @Nonnull final HtmlConfig config) 
+            @Nonnull final HtmlConfig config) throws IllegalStateException, IOException {
+        return of(config, request, response);
+    }
+    
+    /** An object factory */
+    @Nonnull
+    public static final JsonBuilder of(
+            @Nonnull final HtmlConfig config,
+            @Nullable final HttpServletRequest request,
+            @Nonnull final HttpServletResponse response) 
             throws IllegalStateException, IOException {
         if (config.isHtmlHeaderRequest()) {
             response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
             response.addHeader("Pragma", "no-cache"); // HTTP 1.0
             response.addHeader("Expires", "0"); // Proxies
         }
-        {
-            final String charset = config.getCharset().toString();
+        final String charset = config.getCharset().toString();
+        response.setCharacterEncoding(charset);
+        if (request != null) {
             request.setCharacterEncoding(charset);
-            response.setCharacterEncoding(charset);
-            return of(response.getWriter());
         }
+        return of(response.getWriter());
     }
 
     /** CSS selector types */
