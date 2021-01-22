@@ -43,6 +43,8 @@ public class CriterionTest extends MyTestCase {
         p.set(p.NAME, "aa");
         boolean filled = p.NAME.whereHasLength().evaluate(p);
         assertEquals(expected, filled);
+        assertEquals("Person(name NOT_EQ null) AND (name NOT_EQ \"\")", 
+                p.NAME.whereHasLength().toString());
 
         expected = false;
         p.set(p.NAME, "");
@@ -79,7 +81,11 @@ public class CriterionTest extends MyTestCase {
         crnTrue = Person.NAME.forAll();
         crnFalse = Person.NAME.forNone();
         crnAny = Person.CASH.whereGt(10.00);
-        //
+
+        assertEquals("Person(true)", crnTrue.toString());
+        assertEquals("Person(false)", crnFalse.toString());
+        assertEquals("Person(cash GT 10.0)", crnAny.toString());
+
         result = crnTrue.or(crnAny);
         assertSame(crnTrue, result);
         assertEquals(true, result.evaluate(person));
@@ -176,6 +182,7 @@ public class CriterionTest extends MyTestCase {
         Criterion<Person> expected = Person.NAME.whereEq(Person.ADDRESS);
         Criterion<Person> result = serialize(expected);
         //
+        assertEquals("Person(name EQ address)", expected.toString());
         assertSame(expected.getLeftNode(), result.getLeftNode());
         assertSame(expected.getOperator(), result.getOperator());
         assertEquals(expected.getRightNode(), result.getRightNode());
