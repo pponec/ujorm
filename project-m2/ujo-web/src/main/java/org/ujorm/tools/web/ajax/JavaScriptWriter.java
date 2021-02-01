@@ -28,7 +28,7 @@ import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.Injector;
 
 /**
- * A common Javascript Writer of the Ujorm framework
+ * A common ES6 Vanilla Javascript Writer of the Ujorm framework
  *
  * @author Pavel Ponec
  */
