@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-web</artifactId>
-    <packaging>jar</packaging>
     <version>2.12-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <url>http://ujorm.org</url>
     <name>ujo-web</name>
     <description>Ujorm-web module for a common use</description>
