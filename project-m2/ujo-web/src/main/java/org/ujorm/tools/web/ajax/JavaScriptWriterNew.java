@@ -73,7 +73,7 @@ public class JavaScriptWriterNew implements Injector {
     /** Javascript ajax request parameter */
     protected String ajaxRequestPath = "/ajax";
     /** Is the table sortable */
-    protected boolean isSortable = true;
+    protected boolean isSortable = false;
     /** Function order of name */
     protected int fceOrder = 1;
 
@@ -168,46 +168,40 @@ public class JavaScriptWriterNew implements Injector {
     @Override
     public void write(@Nonnull final Element parent) {
         try ( Element js = parent.addElement(Html.SCRIPT)) {
-            String row = String.join(NLINE, "/* -------- x3: " + LocalDateTime.now() + " -------- */"
+            String row = String.join(NLINE, "/* -------- x4: " + LocalDateTime.now() + " -------- */"
                 , "var f1 = function() {"
                 , "    var timeout = null, ajaxRun = false, submitReq = false;"
-                , "    document.querySelector('#regexp, #text').addEventListener('xkeyup', e=>{"
-                , "        if (timeout) {"
-                , "            clearTimeout(timeout);"
-                , "        }"
+                , "    document.querySelectorAll('#regexp, #text').forEach(item=>{item.addEventListener('keyup',e=>{"
+                , "        if(timeout) {clearTimeout(timeout);}"
                 , "        timeout = setTimeout(function() {"
-                , "            timeout = null;"
-                , "            if (ajaxRun) {"
-                , "                submitReq = true;"
-                , "            } else {"
-                , "                document.querySelector('#form').submit();"
-                , "            }"
+                , "            timeout=null;"
+                , "            if(ajaxRun) submitReq=true; "
+                , "            else process(null);"
                 , "        }, 250);"
-                , "    }, false);"
-                , "    document.querySelector('#form').addEventListener('submit', e=>{"
-                , "        e.preventDefault();"
-                , "        ajaxRun = true;"
-                , "        var data = Object.fromEntries(new FormData(document.querySelector('#form')));"
+                , "      }, false);"
+                , "    });"
+                , "    function process(e) {"
+                , "        if(e!=null) e.preventDefault();"
                 , "        fetch('?_ajax=true', {"
                 , "                method: 'POST',"
-                , "                body: data"
+                , "                body: new FormData(document.querySelector('#form'))"
                 , "           })"
-                , "          .then(response => response.json())"
-                , "          .then(data => {"
+                , "          .then(response=>response.json())"
+                , "          .then(data=>{"
                 , "                for (var key of Object.keys(data)) {"
                 , "                    document.querySelector(key).innerHTML = data[key];"
-                , "	               alert('debug: ' + key + ':' + data[key]);"
-                , "                }               "
-                , "                if (submitReq) {"
+                , "                }"
+                , "                if(submitReq) {"
                 , "                    submitReq = false;"
                 , "                    document.querySelector('#form').submit();" // Submit all form
                 , "                } else {"
                 , "                    ajaxRun = false;"
                 , "                }"
                 , "        }).catch(function (err) {"
-                , "	       console.warn('Something went wrong.', err);"
+                , "	       alert('Something went wrong:' + err);"
                 , "        });"
-                , "    }, false);"
+                , "    }"
+                , "    document.querySelector('#form').addEventListener('submit', process, false);"
                 , "};"
             );
             js.addRawTexts(NLINE, row);
@@ -227,7 +221,7 @@ public class JavaScriptWriterNew implements Injector {
                      "  if (document.readyState!='loading') callback();",
                      "  else document.addEventListener('DOMContentLoaded',callback);",
                      "};",
-                     "ready(() => { f1(); });");
+                     "ready(f1);");
         }
     }
 }
