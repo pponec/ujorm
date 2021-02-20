@@ -30,6 +30,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
@@ -291,7 +292,9 @@ public class TableBuilder<D> {
         Assert.notNull(html, "html");
         Assert.notNull(resource, "resource");
 
-        html.addJavascriptLink(false, config.getJqueryLink());
+        if (Check.hasLength(config.getJavascriptLink())) {
+            html.addJavascriptLink(false, config.getJavascriptLink());
+        }
         html.addCssLink(config.getCssLink());
         config.getCssWriter().accept(html.getHead(), isSortable());
         if (ajaxEnabled) {
@@ -310,9 +313,9 @@ public class TableBuilder<D> {
                 for (ColumnModel<D, ?> column : columns) {
                     if (column.isFiltered()) {
                         form.addTextInput(input,
-                                column.getParam(), 
-                                column.getTitle(), 
-                                config.getControlCss(), 
+                                column.getParam(),
+                                column.getTitle(),
+                                config.getControlCss(),
                                 column.getParam());
                     }
                 }
@@ -395,7 +398,7 @@ public class TableBuilder<D> {
 
     /** If the table is sortable */
     protected boolean isSortable() {
-        if (ajaxEnabled) {            
+        if (ajaxEnabled) {
             for (ColumnModel<D, ?> column : columns) {
                 if (column.isSortable()) {
                     return true;

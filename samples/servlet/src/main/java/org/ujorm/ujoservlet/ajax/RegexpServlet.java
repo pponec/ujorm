@@ -16,7 +16,6 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -72,7 +71,7 @@ public class RegexpServlet extends HttpServlet {
             final HttpServletResponse output) throws ServletException, IOException {
 
         try (HtmlElement html = HtmlElement.of(input, output, getConfig("Regular expression tester"))) {
-            html.addJavascriptLink(false, JQUERY_JS);
+            //html.addJavascriptLink(false, JQUERY_JS); // For jQuery implementation only
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             writeJavaScript(html, AJAX_ENABLED);
@@ -154,8 +153,7 @@ public class RegexpServlet extends HttpServlet {
                     .setSubtitleSelector("." + SUBTITLE_CSS)
                     .setFormSelector("#" + FORM_ID)
                     .setSortable(isSortable)
-                    .write(html.getHead()
-                    );
+                    .write(html.getHead());
         }
     }
 

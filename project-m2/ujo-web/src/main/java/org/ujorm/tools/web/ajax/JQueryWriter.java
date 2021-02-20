@@ -39,9 +39,9 @@ public class JQueryWriter extends JavaScriptWriter {
     }
 
     public JQueryWriter(
-            Duration idleDelay, 
-            HttpParameter ajaxRequestParam, 
-            HttpParameter sortRequestParam, 
+            Duration idleDelay,
+            HttpParameter ajaxRequestParam,
+            HttpParameter sortRequestParam,
             CharSequence... inputSelectors) {
         super(idleDelay, ajaxRequestParam, sortRequestParam, inputSelectors);
     }
@@ -106,7 +106,7 @@ public class JQueryWriter extends JavaScriptWriter {
                 js.addRawText(newLine, " if(this.ajaxRun){this.submitReq=true;}");
                 js.addRawText(newLine, " else{document.querySelector('", formSelector , "').submit();}");
                 js.addRawText(newLine, "};");
-            } 
+            }
             js.addRawText("$(document).ready(f", fceOrder, ");");
         }
     }

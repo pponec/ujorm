@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2020 Pavel Ponec, https://github.com/pponec
+ * Copyright 2021-2021 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.Injector;
 
 /**
- * A common ES6 Vanilla Javascript Writer of the Ujorm framework
+ * A prototype of ES6 Vanilla Javascript Writer of the Ujorm framework.
  *
  * @author Pavel Ponec
  */
@@ -79,9 +79,9 @@ public class JavaScriptWriter implements Injector {
     }
 
     public JavaScriptWriter(@Nonnull CharSequence... inputSelectors) {
-        this(DEFAULT_DURATION, 
-                DEFAULT_AJAX_REQUEST_PARAM, 
-                DEFAULT_SORT_REQUEST_PARAM, 
+        this(DEFAULT_DURATION,
+                DEFAULT_AJAX_REQUEST_PARAM,
+                DEFAULT_SORT_REQUEST_PARAM,
                 inputSelectors);
     }
 
@@ -164,63 +164,58 @@ public class JavaScriptWriter implements Injector {
      */
     @Override
     public void write(@Nonnull final Element parent) {
+        final String inpSelectors = Check.hasLength(inputCssSelectors)
+        ? Stream.of(inputCssSelectors).collect(Collectors.joining(", "))
+        : "#!@";
         try (Element js = parent.addElement(Html.SCRIPT)) {
-            js.addRawText(newLine);
-            js.addRawText("var f", fceOrder, "=function(){");
-            if (Check.hasLength(inputCssSelectors)) {
-                final String inpSelectors = Stream.of(inputCssSelectors)
-                        .collect(Collectors.joining(", "));
-                js.addRawTexts(newLine, ""
-                        , "var timeout=null, ajaxRun=false, submitReq=false;"
-                        , "$('" + inpSelectors + "').keyup(function(){"
-                        , "  if(timeout){clearTimeout(timeout);}"
-                        , "  timeout=setTimeout(function(){"
-                        , "    timeout=null;"
-                        , "    if(ajaxRun){submitReq=true;}"
-                        , "    else{$('" + formSelector + "').submit();}"
-                        , "  }, " + idleDelay.toMillis() + ");"
-                        , "});"
-                    );
-            } {
+            js.addRawText(newLine, "/* jshint esversion:6 */");
+            js.addRawText(newLine, "var f", fceOrder, "=function(){");
             js.addRawTexts(newLine, ""
-                    , "$('form').submit(function(event){"
-                    , "  event.preventDefault();"
-                    , "  ajaxRun=true;"
-                    , "  var data=$('" + formSelector + "').serialize();"
-                    , "  $.ajax("
-                        + (version == 2
-                            ? ("{ url:'" + ajaxRequestPath + "'")
-                            : ("{ url:'?" + ajaxRequestParam + "=true'"))
-                        + ", type:'POST'"
-                        + ", data:data"
-                        + ", timeout:" + ajaxTimeout.toMillis()
-                        + ", error:function(xhr,ajaxOptions,thrownError){", Check.hasLength(subtitleSelector)
-                        ? "   ajaxRun=false;"
-                        +    " $('" + subtitleSelector + "').html('" + errorMessage + ":' + thrownError);":""
-                        , "  }"
-                        + ", success:function(result){"
-                    , "    var jsn=JSON.parse(result);"
-                    , "    $.each(jsn,function(key,value){"
-                    , "      $(key).html(value);"
-                    , "    }); "
-                    , "    if(submitReq){submitReq=false; $('" + formSelector + "').submit();} "
-                    , "    else{ajaxRun=false;}"
-                    , "  }});"
-                    , "});"
-                );
-                if (onLoadSubmit) {
-                    js.addRawText(newLine, "  $('" + formSelector + "').submit();");
-                }
+                , "var timeout=null, ajaxRun=false, submitReq=false;"
+                , "document.querySelectorAll('" + inpSelectors + "').forEach(item=>{item.addEventListener('keyup',e=>{"
+                , "  if(timeout){clearTimeout(timeout);}"
+                , "  timeout=setTimeout(()=>{"
+                , "    timeout=null;"
+                , "    if(ajaxRun) submitReq=true; "
+                , "    else process(null);"
+                , "  }, " + idleDelay.toMillis() + ");"
+                , "  }, false);"
+                , "});"
+                , "document.querySelector('#form').addEventListener('submit', process, false);"
+            );
+            if (onLoadSubmit) {
+                js.addRawText(newLine, "process(null);");
             }
-            js.addRawText("};");
+            js.addRawTexts(newLine, ""
+                , "function process(e){"
+                , "  if(e!==null) e.preventDefault();"
+                , "  fetch('?_ajax=true', {"
+                , "    method:'POST',"
+                , "    body:new URLSearchParams(new FormData(document.querySelector('" + formSelector + "'))),"
+                , "    headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},"
+                , "  })"
+                , "  .then(response=>response.json())"
+                , "  .then(data=>{"
+                , "    for (var key of Object.keys(data)) {"
+                , "      document.querySelector(key).innerHTML=data[key];"
+                , "    }"
+                , "    if(submitReq){submitReq=false;process(e);}" // Next submit the form
+                , "    else{ajaxRun=false;}"
+                , "  }).catch((err)=>{"
+                , "    ajaxRun=false;"
+                , "    document.querySelector('" + subtitleSelector + "').innerHTML='" + errorMessage + ": ' + err;"
+                , "  });"
+                , "}"
+            );
             if (isSortable) {
-                js.addRawText(newLine, "f1.sort=function(col){");
-                js.addRawText(newLine, " document.querySelector('", "input[name=\"", sortRequestParam, "\"]').value=col;");
-                js.addRawText(newLine, " if(this.ajaxRun){this.submitReq=true;}");
-                js.addRawText(newLine, " else{document.querySelector('", formSelector , "').submit();}");
-                js.addRawText(newLine, "};");
-            } 
-            js.addRawText("$(document).ready(f", fceOrder, ");");
+                js.addRawText(newLine, "function sort(col){");
+                js.addRawText(newLine, "  document.querySelector('", "input[name=\"", sortRequestParam, "\"]').value=col;");
+                js.addRawText(newLine, "  if(this.ajaxRun){this.submitReq=true;}");
+                js.addRawText(newLine, "  else{this.process(null);}");
+                js.addRawText(newLine, "} f", fceOrder, ".process=process;f", fceOrder, ".sort=sort;");
+            }
+            js.addRawTexts(newLine, "};");
+            js.addRawText(newLine, "document.addEventListener('DOMContentLoaded',f", fceOrder, ");");
         }
     }
 }

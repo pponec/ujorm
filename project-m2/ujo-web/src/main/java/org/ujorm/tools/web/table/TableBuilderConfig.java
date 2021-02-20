@@ -48,8 +48,9 @@ public interface TableBuilderConfig<D> {
     @Nonnull
     public String getCssLink();
 
+    /** Link to an external Javascript library where a no-library returns an empty String */
     @Nonnull
-    public String getJqueryLink();
+    public String getJavascriptLink();
 
     @Nonnull
     public Duration getIdleDelay();

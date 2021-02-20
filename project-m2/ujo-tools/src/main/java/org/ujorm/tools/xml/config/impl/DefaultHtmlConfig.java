@@ -131,7 +131,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** Title is a required element by HTML 5 */
     public DefaultHtmlConfig setTitle(@Nonnull CharSequence title) {
-        this.title = Assert.hasLength(title, "title");
+        this.title = Assert.notNull(title, "title");
         return this;
     }
 

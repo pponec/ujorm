@@ -56,7 +56,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     /** Link to CSS file */
     @Nonnull
     private String cssLink;
-    /** Link to jQuery */
+    /** Link to an external JavaScript library where no-library returns an empty String */
     @Nonnull
     private String jqueryLink;
     /** Iddle delay in millis */
@@ -105,10 +105,9 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     private BiConsumer<Element,Boolean> cssWriter;
 
     public TableBuilderConfigImpl(@Nonnull final HtmlConfig config) {
-        this(
-           config, // config
+        this(config, // config
            BOOTSTRAP_CSS, // cssLink
-           JQUERY_JS, // jqueryLink
+           "", // jQueryLink
            IDLE_DELAY, // idleDelay
            JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM, // ajaxRequestParam
            JavaScriptWriter.DEFAULT_SORT_REQUEST_PARAM, // sortRequestParam
@@ -249,9 +248,10 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
         return cssLink;
     }
 
+    /** Link to an external Javascript library */
     @Override
     @Nonnull
-    public String getJqueryLink() {
+    public String getJavascriptLink() {
         return jqueryLink;
     }
 
