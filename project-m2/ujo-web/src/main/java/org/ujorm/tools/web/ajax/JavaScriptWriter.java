@@ -178,8 +178,7 @@ public class JavaScriptWriter implements Injector {
                 , "    timeout=null;"
                 , "    if(ajaxRun) submitReq=true; "
                 , "    else process(null);"
-                , "  }, " + idleDelay.toMillis() + ");"
-                , "  }, false);"
+                , "  }, " + idleDelay.toMillis() + ");}, false);"
                 , "});"
                 , "document.querySelector('#form').addEventListener('submit', process, false);"
             );
