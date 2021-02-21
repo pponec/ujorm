@@ -68,7 +68,7 @@ public class JavaScriptWriter implements Injector {
     /** JavaScript version */
     protected int version = 1;
     /** Javascript ajax request parameter */
-    protected String ajaxRequestPath = "/ajax";
+    protected String ajaxRequestPath = "_ajax";
     /** Is the table sortable */
     protected boolean isSortable = true;
     /** Function order of name */
@@ -188,7 +188,9 @@ public class JavaScriptWriter implements Injector {
             js.addRawTexts(newLine, ""
                 , "function process(e){"
                 , "  if(e!==null) e.preventDefault();"
-                , "  fetch('?_ajax=true', {"
+                , "  fetch('" + (version == 2
+                        ? ajaxRequestPath
+                        : ("?" + ajaxRequestPath + "=true")) + "', {"
                 , "    method:'POST',"
                 , "    body:new URLSearchParams(new FormData(document.querySelector('" + formSelector + "'))),"
                 , "    headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},"
