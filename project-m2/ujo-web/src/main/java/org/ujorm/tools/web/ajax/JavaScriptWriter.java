@@ -198,7 +198,7 @@ public class JavaScriptWriter implements Injector {
                 , "  .then(response=>response.json())"
                 , "  .then(data=>{"
                 , "    for (var key of Object.keys(data)) {"
-                , "      document.querySelector(key).innerHTML=data[key];"
+                , "      document.querySelectorAll(key).forEach(i=>{i.innerHTML=data[key];})"
                 , "    }"
                 , "    if(submitReq){submitReq=false;process(e);}" // Next submit the form
                 , "    else{ajaxRun=false;}"
