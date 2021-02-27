@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-web</artifactId>
-    <version>2.12-SNAPSHOT</version>
+    <version>2.13-SNAPSHOT</version>
     <packaging>jar</packaging>
     <url>http://ujorm.org</url>
     <name>ujo-web</name>
@@ -64,13 +64,13 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
-            <version>2.12-SNAPSHOT</version>
+            <version>2.13-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
-            <version>2.12-SNAPSHOT</version>
+            <version>2.13-SNAPSHOT</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
