@@ -3,11 +3,16 @@ The Ujorm release notes
 *******************************
 
 
-release 2.11-SNAPSHOT (yyyy-mm-dd)
+release 2.13-SNAPSHOT (yyyy-mm-dd)
 ...
 
-release 2.12-rc (2021-01-16)
-WEB: API of TableBuilder class is extended
+release 2.12 (2021-02-27)
++ ORM: SQL LIMIT a OFFET are fixed for some cases on PosgtgreSQL
++ ORM: Criterion.toString() method is extended
++ WEB: ES6 Vanilla Javascript Writer is ready for AJAX requests
++ WEB: The NON_BREAKING_SPACE is supported for rendering a HTML now.
++ WEB: API of TableBuilder class is extended
++ CORE: Code cleaning
 
 release 2.11 (2011-01-14)
 + WEB: TableBuilder supports sortable columns.
@@ -56,7 +61,7 @@ release 2.01 (2020-05-12)
 + CORE: Criterion implements implements Predicate<U>
 + ORM: Elements of the XML log are intended
 + ORM: Foreign key type of UUID is fixed for reading
-+ TOOLS: DefaultXmlXonfig have got extended API 
++ TOOLS: DefaultXmlXonfig have got extended API
 + TOOLS: XmlPrinter API refactoring
 
 release 2.00 (2020-03-08)
@@ -125,14 +130,14 @@ release 1.84 (2018-09-26)
 + ORM: fixing the table sequences using the class FixingTableSequences.
 + ORM: Method Session.save() is renamed to insert()
 + ORM: New config definition is available: ujorm-1.84.xsd
-+ WICKET: new method DataProviderCached.clearCache() 
-+ WICKET: column CSS style settings is fixed for DataProvider class    
++ WICKET: new method DataProviderCached.clearCache()
++ WICKET: column CSS style settings is fixed for DataProvider class
 + An alternative home page: http://pponec.github.io/ujorm/
 
 release 1.83 (2018-04-21)
-+ CORE New persistent interface called ValueWrapper where a sample implementation is the UnsignedShort class.  
++ CORE New persistent interface called ValueWrapper where a sample implementation is the UnsignedShort class.
 + ORM: New persistent interface called ValueWrapper is supported in ORM.
-+ ORM: Optional quoting of individual database items by an annotation argument 
++ ORM: Optional quoting of individual database items by an annotation argument
 + ORM: New method Session.updateSafely(batch)
 + SQL keyword list of SQL:2011
 + WICKET: Simple LocalDateTimeField implementation
@@ -154,13 +159,13 @@ release 1.82 (2018-03-18)
 + ORM: A LazyLoading enumerator is renamed to the LoadingPolicy enumerator
 + ORM: Some annotation in the UjormTransactionManager class
 + ORM: Some obsolete code is removed
-+ ORM: A new method OrmTable.clone() for clonning first of parameters level. 
-+ ORM: A method update() of the CommonDao class is fixed 
-+ ORM: A new methods CommonDao.updateSafely() are implemented 
++ ORM: A new method OrmTable.clone() for clonning first of parameters level.
++ ORM: A method update() of the CommonDao class is fixed
++ ORM: A new methods CommonDao.updateSafely() are implemented
 + ORM: Mysql is supported to version 3.1.14 only
 + ORM: A method CompositeKey.getCompositeCount() is renamed to CompositeKey.getKeyCount() +
-+ ORM: A method CompositeKey.getKey(int) is created 
-+ ORM: A method CompositeKey.getFirstKey() is deleted 
++ ORM: A method CompositeKey.getKey(int) is created
++ ORM: A method CompositeKey.getFirstKey() is deleted
 + ORM: A Criterion class implements methods equals() and hashCode()
 + ORM: A SQL operator ILIKE is supported for dialects: PostrgreSQL and H2
 + ORM: The method Session.save() accept a domain list type of Collection now.
@@ -168,7 +173,7 @@ release 1.82 (2018-03-18)
 + WICKET: New optimized OrmDataProvider with a a cache is available now
 + WICKET: The method FieldProvider.getLast() is fixed
 + WICKET: Create a wicket model by Lambda expression (Supplier) WICKET: UjoTab supports a visibility (by a Supplier)
-    
+
 release 1.81 (2018-02-22)
 + A nullable Ujo property (mandatory=false) have got a SQL join of type LEFT OUTER JOIN by default
 
@@ -201,7 +206,7 @@ release 1.76 (2017-12-09)
 + TOOLS: Formatting the SQL statement is supported now.
 + WICKET: new features and extended API
 + WICKET: API of the AbstractToolbar is fixed
-+ WICKET: The method UjoEvent.get() returns newer NULL    
++ WICKET: The method UjoEvent.get() returns newer NULL
 
 release 1.75 (2017-11-10)
 + ORM: Bugfix: closing JDBC resources
@@ -262,7 +267,7 @@ release 1.62 (2017-02-18)
 + CORE: Criterion join optimization is done for the next cases: CriterionProvider.forAll(), CriterionProvider.forNone()
 + ORM: The error is fixed for the case If two database model ORDER attributes have got a default value, then the the different databases are considered as the same.
 + ORM: An implementation is fixed for the method: HsqldbDialect.getJdbcUrl()
-+ ORM: The table alias solution is improved 
++ ORM: The table alias solution is improved
 + ORM: The UjoSequencer logs are extended
 + ORM: The method NativeDbSequencer.reset() is unsupported.
 + ORM: Wrong import of the SampleORM class is fixed
