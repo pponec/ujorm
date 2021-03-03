@@ -87,6 +87,7 @@ public class TableBuilder<D> {
     @Nonnull
     protected Supplier<Injector> javascritWriter = () -> new JavaScriptWriter()
             .setSortable(TableBuilder.this.isSortable())
+            .setAjax(TableBuilder.this.ajaxEnabled)
             .setSubtitleSelector("." + TableBuilder.this.config.getSubtitleCss());
     /** is An AJAX enabled? */
     protected boolean ajaxEnabled = true;
@@ -306,12 +307,7 @@ public class TableBuilder<D> {
         }
         html.addCssLink(config.getCssLink());
         config.getCssWriter().accept(html.getHead(), isSortable());
-        if (ajaxEnabled) {
-            javascritWriter.get().write(html.getHead());
-    //        writeJavascript(html.getHead(), autoSubmmitOnLoad,
-    //                "#" + FORM_ID,
-    //                "#" + FORM_ID + " input");
-        }
+        javascritWriter.get().write(html.getHead());
         htmlHeader.write(html.getHead());
         try (Element body = html.getBody()) {
             header.write(body);
@@ -351,7 +347,7 @@ public class TableBuilder<D> {
     ) {
         final Element headerElement = table.addElement(Html.THEAD).addElement(Html.TR);
         for (ColumnModel<D,?> col : columns) {
-            final boolean columnSortable = ajaxEnabled && col.isSortable();
+            final boolean columnSortable = col.isSortable();
             final Object value = col.getTitle();
             final Element th = headerElement.addElement(Html.TH);
             final Element thLink = columnSortable ? th.addAnchor("javascript:f1.sort(" + col.toCode(true) + ")") : th;
@@ -408,11 +404,9 @@ public class TableBuilder<D> {
 
     /** If the table is sortable */
     protected boolean isSortable() {
-        if (ajaxEnabled) {
-            for (ColumnModel<D, ?> column : columns) {
-                if (column.isSortable()) {
-                    return true;
-                }
+        for (ColumnModel<D, ?> column : columns) {
+            if (column.isSortable()) {
+                return true;
             }
         }
         return false;
@@ -423,10 +417,9 @@ public class TableBuilder<D> {
         /** Link to a Bootstrap URL of CDN */
         protected static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
         /** Link to jQuery of CDN */
-        protected static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
+        protected static final String JQUERY_JS = "";
 
         final String bootstrapCss;
-        final String jQueryJs;
 
         public Url() {
             this(BOOTSTRAP_CSS, JQUERY_JS);
@@ -434,7 +427,6 @@ public class TableBuilder<D> {
 
         public Url(@Nonnull final String bootstrapCss, @Nonnull final String jQueryJs) {
             this.bootstrapCss = Assert.hasLength(bootstrapCss, "bootstrapCss");
-            this.jQueryJs = Assert.hasLength(jQueryJs, "jQueryJs");
         }
     }
 }

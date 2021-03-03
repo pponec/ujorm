@@ -73,6 +73,8 @@ public class JavaScriptWriter implements Injector {
     protected boolean isSortable = true;
     /** Function order of name */
     protected int fceOrder = 1;
+    /** Ajax support */
+    protected boolean isAjax = true;
 
     public JavaScriptWriter() {
         this("form input");
@@ -159,6 +161,17 @@ public class JavaScriptWriter implements Injector {
         return fceOrder;
     }
 
+    /** Set a function order */
+    public JavaScriptWriter setAjax(boolean ajax) {
+        this.isAjax = ajax;
+        return this;
+    }
+
+    /** Set a function order name */
+    public boolean isAjax() {
+        return isAjax;
+    }
+
     /**
      * Generate a Javascript
      */
@@ -169,53 +182,61 @@ public class JavaScriptWriter implements Injector {
         : "#!@";
         try (Element js = parent.addElement(Html.SCRIPT)) {
             js.addRawText(newLine, "/* jshint esversion:6 */");
-            js.addRawText(newLine, "var f", fceOrder, "=function(){");
-            js.addRawTexts(newLine, ""
-                , "var timeout=null, ajaxRun=false, submitReq=false;"
-                , "document.querySelectorAll('" + inpSelectors + "').forEach(item=>{item.addEventListener('keyup',e=>{"
-                , "  if(timeout){clearTimeout(timeout);}"
-                , "  timeout=setTimeout(()=>{"
-                , "    timeout=null;"
-                , "    if(ajaxRun) submitReq=true; "
-                , "    else process(null);"
-                , "  }, " + idleDelay.toMillis() + ");}, false);"
-                , "});"
-                , "document.querySelector('#form').addEventListener('submit', process, false);"
-            );
-            if (onLoadSubmit) {
-                js.addRawText(newLine, "process(null);");
-            }
-            js.addRawTexts(newLine, ""
-                , "function process(e){"
-                , "  if(e!==null) e.preventDefault();"
-                , "  fetch('" + (version == 2
-                        ? ajaxRequestPath
-                        : ("?" + ajaxRequestPath + "=true")) + "', {"
-                , "    method:'POST',"
-                , "    body:new URLSearchParams(new FormData(document.querySelector('" + formSelector + "'))),"
-                , "    headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},"
-                , "  })"
-                , "  .then(response=>response.json())"
-                , "  .then(data=>{"
-                , "    for (var key of Object.keys(data))"
-                , "      document.querySelectorAll(key).forEach(i=>{i.innerHTML=data[key];})"
-                , "    if(submitReq){submitReq=false;process(e);}" // Next submit the form
-                , "    else{ajaxRun=false;}"
-                , "  }).catch((err)=>{"
-                , "    ajaxRun=false;"
-                , "    document.querySelector('" + subtitleSelector + "').innerHTML='" + errorMessage + ": ' + err;"
-                , "  });"
-                , "}"
-            );
-            if (isSortable) {
-                js.addRawText(newLine, "function sort(col){");
+            if (isAjax) {
+                js.addRawText(newLine, "var f", fceOrder, "=function(){");
+                js.addRawTexts(newLine, ""
+                    , "var timeout=null, ajaxRun=false, submitReq=false;"
+                    , "document.querySelectorAll('" + inpSelectors + "').forEach(item=>{item.addEventListener('keyup',e=>{"
+                    , "  if(timeout){clearTimeout(timeout);}"
+                    , "  timeout=setTimeout(()=>{"
+                    , "    timeout=null;"
+                    , "    if(ajaxRun) submitReq=true; "
+                    , "    else process(null);"
+                    , "  }, " + idleDelay.toMillis() + ");}, false);"
+                    , "});"
+                    , "document.querySelector('#form').addEventListener('submit', process, false);"
+                );
+                if (onLoadSubmit) {
+                    js.addRawText(newLine, "process(null);");
+                }
+                js.addRawTexts(newLine, ""
+                    , "function process(e){"
+                    , "  if(e!==null) e.preventDefault();"
+                    , "  fetch('" + (version == 2
+                            ? ajaxRequestPath
+                            : ("?" + ajaxRequestPath + "=true")) + "', {"
+                    , "    method:'POST',"
+                    , "    body:new URLSearchParams(new FormData(document.querySelector('" + formSelector + "'))),"
+                    , "    headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},"
+                    , "  })"
+                    , "  .then(response=>response.json())"
+                    , "  .then(data=>{"
+                    , "    for (var key of Object.keys(data))"
+                    , "      document.querySelectorAll(key).forEach(i=>{i.innerHTML=data[key];})"
+                    , "    if(submitReq){submitReq=false;process(e);}" // Next submit the form
+                    , "    else{ajaxRun=false;}"
+                    , "  }).catch((err)=>{"
+                    , "    ajaxRun=false;"
+                    , "    document.querySelector('" + subtitleSelector + "').innerHTML='" + errorMessage + ": ' + err;"
+                    , "  });"
+                    , "}"
+                );
+                if (isSortable) {
+                    js.addRawText(newLine, "function sort(col){");
+                    js.addRawText(newLine, "  document.querySelector('", "input[name=\"", sortRequestParam, "\"]').value=col;");
+                    js.addRawText(newLine, "  if(this.ajaxRun){this.submitReq=true;}");
+                    js.addRawText(newLine, "  else{this.process(null);}");
+                    js.addRawText(newLine, "} f", fceOrder, ".process=process;f", fceOrder, ".sort=sort;");
+                }
+                js.addRawTexts(newLine, "};");
+                js.addRawText(newLine, "document.addEventListener('DOMContentLoaded',f", fceOrder, ");");
+            } else if (isSortable) {
+                js.addRawText(newLine, "var f", fceOrder, "={");
+                js.addRawText(newLine, "  sort:col=>{");
                 js.addRawText(newLine, "  document.querySelector('", "input[name=\"", sortRequestParam, "\"]').value=col;");
-                js.addRawText(newLine, "  if(this.ajaxRun){this.submitReq=true;}");
-                js.addRawText(newLine, "  else{this.process(null);}");
-                js.addRawText(newLine, "} f", fceOrder, ".process=process;f", fceOrder, ".sort=sort;");
+                js.addRawText(newLine, "  document.querySelector('" + formSelector + "').submit();");
+                js.addRawText(newLine, "}}");
             }
-            js.addRawTexts(newLine, "};");
-            js.addRawText(newLine, "document.addEventListener('DOMContentLoaded',f", fceOrder, ");");
         }
     }
 }

@@ -73,9 +73,10 @@ public class HotelReportServlet extends HttpServlet {
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
                 .setFormItem(e -> e.addTextInput(input, LIMIT, "Limit", "form-control", LIMIT))
                 .setFooter(e -> printFooter(e))
-                .build(input, output, builder -> service.findHotels(builder, 
-                                LIMIT.of(input, DEFAULT_ROW_LIMIT), 
-                                NAME.of(input), 
+                .setAjaxEnabled(true)
+                .build(input, output, builder -> service.findHotels(builder,
+                                LIMIT.of(input, DEFAULT_ROW_LIMIT),
+                                NAME.of(input),
                                 CITY.of(input)));
     }
 

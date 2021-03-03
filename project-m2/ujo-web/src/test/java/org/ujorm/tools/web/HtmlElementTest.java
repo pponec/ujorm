@@ -57,8 +57,9 @@ public class HtmlElementTest {
                 "<html lang=\"en\">",
                 "<head>",
                 "<meta charset=\"UTF-8\"/>",
-                "<title>Demo</title></head>",
-                "<meta name='description' content='Powered by Ujorm'><body>",
+                "<title>Demo</title>",
+                "<meta name='description' content='Powered by Ujorm'></head>",
+                "<body>",
                 "<h1>Hello!</h1></body></html>");
         assertEquals(result, writer.toString());
     }
