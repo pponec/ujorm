@@ -71,6 +71,9 @@ public class TableBuilder<D> {
     protected final TableBuilderConfig config;
     /** AJAX request param */
     protected HttpParameter ajaxRequestParam = JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM;
+    /** Extension is empty by default */
+    @Nonnull
+    protected Injector htmlHeader = e -> {};
     /** Print a config title by default */
     @Nonnull
     protected Injector header = e -> e.addHeading(TableBuilder.this.config.getConfig().getTitle());
@@ -202,6 +205,12 @@ public class TableBuilder<D> {
     }
 
     @Nonnull
+    public TableBuilder<D> setHtmlHeader(@Nonnull Injector htmlHeader) {
+        this.htmlHeader = Assert.notNull(htmlHeader, "htmlHeader");
+        return this;
+    }
+
+    @Nonnull
     public TableBuilder<D> setHeader(@Nonnull Injector header) {
         this.header = Assert.notNull(header, "header");
         return this;
@@ -303,6 +312,7 @@ public class TableBuilder<D> {
     //                "#" + FORM_ID,
     //                "#" + FORM_ID + " input");
         }
+        htmlHeader.write(html.getHead());
         try (Element body = html.getBody()) {
             header.write(body);
             body.addDiv(config.getSubtitleCss()).addText(ajaxEnabled ? config.getAjaxReadyMessage() : "");

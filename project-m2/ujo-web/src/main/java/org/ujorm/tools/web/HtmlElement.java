@@ -238,7 +238,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
                 .setAttribute(Html.A_HREF, css)
                 .setAttribute(Html.A_REL, "stylesheet");
     }
-    
+
     /** Create a new CSS element and return it
      * @param css CSS content
      * @return New CSS element
@@ -419,7 +419,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         request.setCharacterEncoding(config.getCharset().toString());
         return of(config, response);
     }
-    
+
     /** A base method to create new instance with empty html headers
      * @param response HttpResponse to write a result
      * @param config Html configuration
@@ -483,8 +483,8 @@ public class HtmlElement implements ApiElement<Element>, Html {
             result.addCssLinks(config.getCssLinks());
             final CharSequence rawHeaderText = config.getRawHeaderText();
             if (Check.hasLength(rawHeaderText)) {
-                result.addRawText(config.getNewLine());
-                result.addRawText(rawHeaderText);
+                result.getHead().addRawText(config.getNewLine());
+                result.getHead().addRawText(rawHeaderText);
             }
         }
         return result;

@@ -27,8 +27,10 @@ import org.ujorm.tools.web.ao.HttpParameter;
 /**
  * A common jQuery Writer of the Ujorm framework
  *
+ * @Depreated This class is no longer maintained
  * @author Pavel Ponec
  */
+@Deprecated
 public class JQueryWriter extends JavaScriptWriter {
 
     public JQueryWriter() {
