@@ -481,6 +481,9 @@ public class HtmlElement implements ApiElement<Element>, Html {
             result.getHead().addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
             result.getHead().addElement(Html.TITLE).addText(config.getTitle());
             result.addCssLinks(config.getCssLinks());
+            config.getHeaderInjector().write(result.getHead());
+
+            // A deprecated solution:
             final CharSequence rawHeaderText = config.getRawHeaderText();
             if (Check.hasLength(rawHeaderText)) {
                 result.getHead().addRawText(config.getNewLine());

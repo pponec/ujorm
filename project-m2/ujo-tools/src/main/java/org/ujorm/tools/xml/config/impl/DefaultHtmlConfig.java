@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.builder.XmlBuilder;
+import org.ujorm.tools.xml.config.ApiInjector;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
@@ -53,8 +54,13 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     private boolean htmlHeaderRequest = true;
 
     /** Raw text to insert to each HTML header */
+    @Deprecated
     @Nullable
     private CharSequence rawHeaderText = null;
+
+    /** Header injector */
+    @Nonnull
+    private ApiInjector headerInjector = e -> {};
 
     /** A name of root element */
     private CharSequence rootElementName = XmlBuilder.HTML;
@@ -71,6 +77,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         this.buildDom = htmlConfig.isDocumentObjectModel();
         this.htmlHeaderRequest = htmlConfig.isDocumentObjectModel();
         this.rawHeaderText = htmlConfig.getRawHeaderText();
+        this.headerInjector = htmlConfig.getHeaderInjector();
         this.rootElementName = htmlConfig.getRootElementName();
     }
 
@@ -119,6 +126,13 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     @Override
     public CharSequence getRawHeaderText() {
         return rawHeaderText;
+    }
+
+    /** Return a header injector */
+    @Override
+    @Nonnull
+    public ApiInjector getHeaderInjector() {
+        return headerInjector;
     }
 
     /** A name of root element */
@@ -178,8 +192,21 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         return this;
     }
 
+    /**
+     * Use the {@link #setHeaderInjector(org.ujorm.tools.xml.config.ApiInjector) } method rather.
+     * @param rawHeaderText
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     public DefaultHtmlConfig setRawHedaderCode(@Nullable String rawHeaderText) {
         this.rawHeaderText = Assert.notNull(rawHeaderText, REQUIRED_MSG, "rawHeaderText");
+        return this;
+    }
+
+    /** Assign a new header injector */
+    public DefaultHtmlConfig setHeaderInjector(@Nonnull ApiInjector headerInjector) {
+        this.headerInjector = Assert.notNull(headerInjector, REQUIRED_MSG, "headerInjector");
         return this;
     }
 }

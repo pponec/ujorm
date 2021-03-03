@@ -50,13 +50,19 @@ public interface HtmlConfig extends XmlConfig {
     /** A request to generate a minimal HTML header */
     boolean isHtmlHeaderRequest();
 
-    /** A raw text for HTML header */
+    /** A raw text for HTML header
+     * @deprecated Use method {@link #getHeaderInjector() }
+     */
+    @Deprecated
     @Nullable
     CharSequence getRawHeaderText();
 
+    @Nonnull
+    ApiInjector getHeaderInjector();
+
     /** A name of root element */
     CharSequence getRootElementName();
-    
+
     /** Clone the config for an AJAX processing */
     default DefaultHtmlConfig cloneForAjax() {
         final DefaultHtmlConfig result = new DefaultHtmlConfig(this);
@@ -114,7 +120,7 @@ public interface HtmlConfig extends XmlConfig {
         result.setNewLine(EMPTY);
         return result;
     }
-    
+
     /** Clone config form another */
     public static DefaultHtmlConfig of(@Nonnull final HtmlConfig htmlConfig) {
         return new DefaultHtmlConfig(htmlConfig);
