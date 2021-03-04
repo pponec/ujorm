@@ -16,6 +16,7 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -63,6 +64,7 @@ public class HotelReportServlet extends HttpServlet {
             final HttpServletResponse output) throws ServletException, IOException {
 
         new TableBuilder<Hotel>("Hotel Report")
+                .add(orderColumn(), "Ord")
                 .add(Hotel::getName, "Hotel", NAME).sortable(true)
                 .add(hotel -> hotel.getCity().getName(), "City", CITY).sortable(false)
                 .add(Hotel::getStreet, "Street").sortable()
@@ -95,6 +97,17 @@ public class HotelReportServlet extends HttpServlet {
             @Override
             public Float apply(Hotel hotel) {
                 return hotel.getStars();
+            }
+        };
+    }
+
+    /** Create an order column */
+    protected Column<Hotel> orderColumn() {
+        return new Column<Hotel>() {
+            final AtomicInteger order = new AtomicInteger();
+            @Override
+            public void write(Element e, Hotel hotel) {
+                e.setClass(Html.A_CLASS, "text-right").addText(order.incrementAndGet(), '.');
             }
         };
     }
