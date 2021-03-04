@@ -54,62 +54,70 @@ public class JQueryWriter extends JavaScriptWriter {
     @Override
     public void write(@Nonnull final Element parent) {
         try (Element js = parent.addElement(Html.SCRIPT)) {
-            js.addRawText(newLine);
-            js.addRawText("var f", fceOrder, "=function(){");
-            if (Check.hasLength(inputCssSelectors)) {
-                final String inpSelectors = Stream.of(inputCssSelectors)
-                        .collect(Collectors.joining(", "));
+            if (isAjax) {
+                js.addRawText(newLine);
+                js.addRawText("var f", fceOrder, "=function(){");
+                if (Check.hasLength(inputCssSelectors)) {
+                    final String inpSelectors = Stream.of(inputCssSelectors)
+                            .collect(Collectors.joining(", "));
+                    js.addRawTexts(newLine, ""
+                            , "var timeout=null, ajaxRun=false, submitReq=false;"
+                            , "$('" + inpSelectors + "').keyup(function(){"
+                            , "  if(timeout){clearTimeout(timeout);}"
+                            , "  timeout=setTimeout(function(){"
+                            , "    timeout=null;"
+                            , "    if(ajaxRun){submitReq=true;}"
+                            , "    else{$('" + formSelector + "').submit();}"
+                            , "  }, " + idleDelay.toMillis() + ");"
+                            , "});"
+                        );
+                } {
                 js.addRawTexts(newLine, ""
-                        , "var timeout=null, ajaxRun=false, submitReq=false;"
-                        , "$('" + inpSelectors + "').keyup(function(){"
-                        , "  if(timeout){clearTimeout(timeout);}"
-                        , "  timeout=setTimeout(function(){"
-                        , "    timeout=null;"
-                        , "    if(ajaxRun){submitReq=true;}"
-                        , "    else{$('" + formSelector + "').submit();}"
-                        , "  }, " + idleDelay.toMillis() + ");"
+                        , "$('form').submit(function(event){"
+                        , "  event.preventDefault();"
+                        , "  ajaxRun=true;"
+                        , "  var data=$('" + formSelector + "').serialize();"
+                        , "  $.ajax("
+                            + (version == 2
+                                ? ("{ url:'" + ajaxRequestPath + "'")
+                                : ("{ url:'?" + ajaxRequestParam + "=true'"))
+                            + ", type:'POST'"
+                            + ", data:data"
+                            + ", timeout:" + ajaxTimeout.toMillis()
+                            + ", error:function(xhr,ajaxOptions,thrownError){", Check.hasLength(subtitleSelector)
+                            ? "   ajaxRun=false;"
+                            +    " $('" + subtitleSelector + "').html('" + errorMessage + ":' + thrownError);":""
+                            , "  }"
+                            + ", success:function(result){"
+                        , "    var jsn=JSON.parse(result);"
+                        , "    $.each(jsn,function(key,value){"
+                        , "      $(key).html(value);"
+                        , "    }); "
+                        , "    if(submitReq){submitReq=false; $('" + formSelector + "').submit();} "
+                        , "    else{ajaxRun=false;}"
+                        , "  }});"
                         , "});"
                     );
-            } {
-            js.addRawTexts(newLine, ""
-                    , "$('form').submit(function(event){"
-                    , "  event.preventDefault();"
-                    , "  ajaxRun=true;"
-                    , "  var data=$('" + formSelector + "').serialize();"
-                    , "  $.ajax("
-                        + (version == 2
-                            ? ("{ url:'" + ajaxRequestPath + "'")
-                            : ("{ url:'?" + ajaxRequestParam + "=true'"))
-                        + ", type:'POST'"
-                        + ", data:data"
-                        + ", timeout:" + ajaxTimeout.toMillis()
-                        + ", error:function(xhr,ajaxOptions,thrownError){", Check.hasLength(subtitleSelector)
-                        ? "   ajaxRun=false;"
-                        +    " $('" + subtitleSelector + "').html('" + errorMessage + ":' + thrownError);":""
-                        , "  }"
-                        + ", success:function(result){"
-                    , "    var jsn=JSON.parse(result);"
-                    , "    $.each(jsn,function(key,value){"
-                    , "      $(key).html(value);"
-                    , "    }); "
-                    , "    if(submitReq){submitReq=false; $('" + formSelector + "').submit();} "
-                    , "    else{ajaxRun=false;}"
-                    , "  }});"
-                    , "});"
-                );
-                if (onLoadSubmit) {
-                    js.addRawText(newLine, "  $('" + formSelector + "').submit();");
+                    if (onLoadSubmit) {
+                        js.addRawText(newLine, "  $('" + formSelector + "').submit();");
+                    }
                 }
+                js.addRawText("};");
+                if (isSortable) {
+                    js.addRawText(newLine, "f1.sort=function(col){");
+                    js.addRawText(newLine, " document.querySelector('", "input[name=\"", sortRequestParam, "\"]').value=col;");
+                    js.addRawText(newLine, " if(this.ajaxRun){this.submitReq=true;}");
+                    js.addRawText(newLine, " else{document.querySelector('", formSelector , "').submit();}");
+                    js.addRawText(newLine, "};");
+                }
+                js.addRawText("$(document).ready(f", fceOrder, ");");
+            } else if (isSortable) {
+                js.addRawText(newLine, "var f", fceOrder, "={");
+                js.addRawText(newLine, "  sort:col=>{");
+                js.addRawText(newLine, "  document.querySelector('", "input[name=\"", sortRequestParam, "\"]').value=col;");
+                js.addRawText(newLine, "  document.querySelector('" + formSelector + "').submit();");
+                js.addRawText(newLine, "}}");
             }
-            js.addRawText("};");
-            if (isSortable) {
-                js.addRawText(newLine, "f1.sort=function(col){");
-                js.addRawText(newLine, " document.querySelector('", "input[name=\"", sortRequestParam, "\"]').value=col;");
-                js.addRawText(newLine, " if(this.ajaxRun){this.submitReq=true;}");
-                js.addRawText(newLine, " else{document.querySelector('", formSelector , "').submit();}");
-                js.addRawText(newLine, "};");
-            }
-            js.addRawText("$(document).ready(f", fceOrder, ");");
         }
     }
 }

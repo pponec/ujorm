@@ -44,6 +44,8 @@ public class HotelReportServlet extends HttpServlet {
     public static final String URL_PATTERN = "/TableHotelServlet";
     /** Row limit */
     private static final int DEFAULT_ROW_LIMIT = 15;
+    /** CSS for inputs */
+    private static final String CSS_INPUT = "form-control";
     /** A hotel service */
     private final HotelResourceService service = new HotelResourceService();
 
@@ -71,7 +73,7 @@ public class HotelReportServlet extends HttpServlet {
                 .addToElement(
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
-                .setFormItem(e -> e.addTextInput(input, LIMIT, "Limit", "form-control", LIMIT))
+                .setFormItem(e -> e.addTextInp(LIMIT, LIMIT.of(input), "Limit", CSS_INPUT, LIMIT))
                 .setFooter(e -> printFooter(e))
                 .setAjaxEnabled(true)
                 .build(input, output, builder -> service.findHotels(builder,

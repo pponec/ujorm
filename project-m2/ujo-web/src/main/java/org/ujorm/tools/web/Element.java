@@ -82,7 +82,7 @@ public final class Element implements ApiElement<Element>, Html {
         internalElement.setAttribute(name, value);
         return this;
     }
-    
+
     /**
      * Set an attribute
      * @param name Required element name
@@ -96,7 +96,7 @@ public final class Element implements ApiElement<Element>, Html {
         final String val = Stream.of(value)
                 .filter(Objects::nonNull)
                 .map(v -> v.toString())
-                .collect(Collectors.joining(separator));     
+                .collect(Collectors.joining(separator));
         internalElement.setAttribute(name, val);
         return this;
     }
@@ -110,7 +110,7 @@ public final class Element implements ApiElement<Element>, Html {
     public final Element setAttribute(@Nonnull final String name) {
         return setAttribute(name, "");
     }
-    
+
     /**
      * An deprecated shortcut for the method {@link #setAttribute(java.lang.String, java.lang.Object) }.
      * @param name Required element name
@@ -124,8 +124,8 @@ public final class Element implements ApiElement<Element>, Html {
     @Override
     public final Element setAttrib(@Nonnull final String name, @Nullable final Object value) {
         return setAttribute(name, value);
-    }    
-    
+    }
+
     /**
      * A shortcut for the method {@link #setAttribute(java.lang.String, java.lang.Object) }.
      * @param name Required element name
@@ -589,17 +589,35 @@ public final class Element implements ApiElement<Element>, Html {
     public Element addTextInput(@Nonnull final CharSequence... cssClasses) {
         return addInput(cssClasses).setType(V_TEXT);
     }
-    
-    /** Add new input element type of text including attributes: name, value, placeholder and title */
+
+    /** Add new input element type of text including attributes: name, value, placeholder and title
+     *
+     * @deprecated Use the method of the same name with an explicit value.
+     */
+    @Deprecated
     @Nonnull
     public Element addTextInput(
-            @Nonnull HttpServletRequest req, 
-            @Nonnull HttpParameter param, 
-            @Nonnull CharSequence title, 
+            @Nonnull HttpServletRequest req,
+            @Nonnull HttpParameter param,
+            @Nonnull CharSequence title,
             @Nonnull final CharSequence... cssClasses) {
         return addTextInput(cssClasses)
                 .setName(param)
                 .setValue(param.of(req))
+                .setAttribute(Html.A_PLACEHOLDER, title)
+                .setAttribute(Html.A_TITLE, title);
+    }
+
+    /** Add new input element type of text including attributes: name, value, placeholder and title */
+    @Nonnull
+    public <V> Element addTextInp(
+            @Nonnull HttpParameter param,
+            @Nullable V value,
+            @Nonnull CharSequence title,
+            @Nonnull final CharSequence... cssClasses) {
+        return addTextInput(cssClasses)
+                .setName(param)
+                .setValue(value)
                 .setAttribute(Html.A_PLACEHOLDER, title)
                 .setAttribute(Html.A_TITLE, title);
     }
@@ -871,7 +889,7 @@ public final class Element implements ApiElement<Element>, Html {
         setAttribute(A_HREF, value);
         return this;
     }
-    
+
     /** String value */
     @Override
     @Nonnull
