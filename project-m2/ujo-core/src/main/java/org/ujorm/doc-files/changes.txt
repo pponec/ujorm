@@ -3,8 +3,14 @@ The Ujorm release notes
 *******************************
 
 
-release 2.13-SNAPSHOT (yyyy-mm-dd)
+release 2.14 (yyyy-mm-dd)
 ...
+
+release 2.13 (2021-03-04)
++ WEB: New method Element.addTextInp() for an explicit value
++ WEB: TableBuilder can be sortable without AJAX
++ TOOLS: New attribute HtmlConfig.getHeaderInjector() is available
++ TOOLS: The parameter HtmlConfig.getRawHeaderText() is deprecated now.
 
 release 2.12 (2021-02-27)
 + ORM: SQL LIMIT a OFFET are fixed for some cases on PosgtgreSQL
