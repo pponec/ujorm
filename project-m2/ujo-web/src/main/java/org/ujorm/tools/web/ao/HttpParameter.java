@@ -172,7 +172,6 @@ public interface HttpParameter extends CharSequence {
         }
     }
 
-
     /** Create a default implementation */
     public static HttpParameter of(@Nonnull final String name) {
         return new DefaultHttpParam(name, "");
