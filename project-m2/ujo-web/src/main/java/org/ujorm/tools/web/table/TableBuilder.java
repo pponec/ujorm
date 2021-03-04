@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -134,18 +135,46 @@ public class TableBuilder<D> {
         return addInternal(column, title, param);
     }
 
+    @Deprecated
     @Nonnull
     public TableBuilder<D> addToElement(Column<D> column, CharSequence title) {
-        return addInternal(column, title, null);
+        return addColumn(column, title);
     }
 
+    @Deprecated
     @Nonnull
     public TableBuilder<D> addToElement(Column<D> column, Injector title) {
+        return addColumn(column, title);
+    }
+
+    @Nonnull
+    public TableBuilder<D> addColumn(@Nonnull final Column<D> column, @Nonnull final CharSequence title) {
         return addInternal(column, title, null);
     }
 
     @Nonnull
-    protected <V> TableBuilder<D> addInternal(@Nonnull final Function<D,V> column, @Nonnull final CharSequence title, @Nullable final HttpParameter param) {
+    public TableBuilder<D> addColumn(@Nonnull final Column<D> column, @Nonnull final Injector title) {
+        return addInternal(column, title, null);
+    }
+
+    /** Add new column for a row counting */
+    @Nonnull
+    public TableBuilder<D> addOrder(@Nonnull final CharSequence title) {
+        final String textRight = "text-right";
+        return addColumn(new Column<D>() {
+            final AtomicInteger order = new AtomicInteger();
+            @Override
+            public void write(final Element e, final D row) {
+                e.setClass(Html.A_CLASS, textRight).addText(order.incrementAndGet(), '.');
+            }
+        }, e -> e.setClass(Html.A_CLASS, textRight).addText(title));
+    }
+
+    @Nonnull
+    protected <V> TableBuilder<D> addInternal(
+            @Nonnull final Function<D,V> column,
+            @Nonnull final CharSequence title,
+            @Nullable final HttpParameter param) {
         columns.add(new ColumnModel(columns.size(), column, title, param));
         return this;
     }
