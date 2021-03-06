@@ -16,7 +16,6 @@
 package org.ujorm.ujoservlet.ajax;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -72,7 +71,7 @@ public class HotelReportServlet extends HttpServlet {
                 .add(Hotel::getCurrency, "Currency")
                 .add(Hotel::getPhone, "Phone")
                 .add(starsColumn(), "Stars").sortable()
-                .addToElement(
+                .addColumn(
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
                 .setFormItem(e -> e.addTextInp(LIMIT, LIMIT.of(input), "Limit", CSS_INPUT, LIMIT))
