@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -162,10 +163,14 @@ public class TableBuilder<D> {
     public TableBuilder<D> addOrder(@Nonnull final CharSequence title) {
         final String textRight = "text-right";
         return addColumn(new Column<D>() {
-            final AtomicInteger order = new AtomicInteger();
+            final AtomicLong order = new AtomicLong();
             @Override
             public void write(final Element e, final D row) {
                 e.setClass(Html.A_CLASS, textRight).addText(order.incrementAndGet(), '.');
+            }
+            @Override
+            public Object apply(D t) {
+                return order.incrementAndGet();
             }
         }, e -> e.setClass(Html.A_CLASS, textRight).addText(title));
     }
