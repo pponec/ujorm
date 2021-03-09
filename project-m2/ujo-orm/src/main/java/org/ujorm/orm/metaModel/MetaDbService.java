@@ -156,14 +156,9 @@ public class MetaDbService {
         for (MetaTable table : TABLES.getList(db)) {
             if (table.isTable()) {
                 // CHECK COLUMNS AND INDEXES OF THE TABLE:
-                final boolean tableExists = addNewColumns
-                          ( dbModel
-                          , table
-                          , news.getTables()
-                          , news.getColumns());
-                if (tableExists) {
-                    addNewIndexes(dbModel, table, news.getIndexes());
-                }
+                addNewColumns(dbModel, table, news.getTables(), news.getColumns());
+                addNewIndexes(dbModel, table, news.getIndexes());
+
                 switch (table.getOrm2ddlPolicy()) {
                     case CREATE_DDL:
                     case CREATE_OR_UPDATE_DDL: {
