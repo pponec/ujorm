@@ -48,7 +48,18 @@ import org.ujorm.tools.web.ao.Injector;
 
 /**
  * A HTML Element implements some methods for frequently used elements and attributes
- * A proxy class in the current release
+ *
+ * <h3>Usage</h3>
+ *
+ * <pre class="pre">
+ *    MockServletResponse response = new MockServletResponse();
+ *    try (HtmlElement html = HtmlElement.of(response)) {
+ *        try (Element body = html.getBody()) {
+ *            body.addHeading("Hello!");
+ *        }
+ *    }
+ *    assertTrue(response.toString().contains("&lt;h1&gt;Hello!&lt;/h1&gt;"));
+ * </pre>
  *
  * @see HtmlElement#of(org.ujorm.tools.xml.config.HtmlConfig)
  */
