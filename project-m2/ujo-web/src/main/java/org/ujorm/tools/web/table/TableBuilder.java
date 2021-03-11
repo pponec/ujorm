@@ -166,7 +166,7 @@ public class TableBuilder<D> {
             final AtomicLong order = new AtomicLong();
             @Override
             public void write(final Element e, final D row) {
-                e.setClass(Html.A_CLASS, textRight).addText(order.incrementAndGet(), '.');
+                e.setClass(Html.A_CLASS, textRight).addText(apply(row), '.');
             }
             @Override
             public Object apply(D t) {
