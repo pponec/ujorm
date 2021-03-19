@@ -26,7 +26,7 @@ import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
-import org.ujorm.tools.web.table.TableBuilder;
+import org.ujorm.tools.web.report.ReportBuilder;
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
 import org.ujorm.ujoservlet.ajax.ao.HotelResourceService;
 import static org.ujorm.ujoservlet.ajax.HotelReportServlet.Attrib.*;
@@ -62,7 +62,7 @@ public class HotelReportServlet extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
 
-        new TableBuilder<Hotel>("Hotel Report")
+        new ReportBuilder<Hotel>("Hotel Report")
                 .addOrder("Ord")
                 .add(Hotel::getName, "Hotel", NAME).sortable(true)
                 .add(hotel -> hotel.getCity().getName(), "City", CITY).sortable(false)

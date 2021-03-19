@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2020 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2021 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools.web.table;
+package org.ujorm.tools.web.report;
 
 import java.io.InputStream;
 import java.time.Duration;
@@ -23,6 +23,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.ao.HttpParameter;
+import org.ujorm.tools.web.table.Direction;
+import org.ujorm.tools.web.table.GridBuilderConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
@@ -40,7 +42,7 @@ import org.ujorm.tools.xml.config.HtmlConfig;
  *
  * @author Pavel Ponec
  */
-public interface TableBuilderConfig<D> {
+public interface ReportBuilderConfig<D> extends GridBuilderConfig<D> {
 
     @Nonnull
     public HtmlConfig getConfig();
@@ -136,7 +138,7 @@ public interface TableBuilderConfig<D> {
 
     /** Returns a default implementation */
     @Nonnull
-    public static TableBuilderConfigImpl of(@Nonnull final HtmlConfig config) {
-        return new TableBuilderConfigImpl(config);
+    public static ReportBuilderConfigImpl of(@Nonnull final HtmlConfig config) {
+        return new ReportBuilderConfigImpl(config);
     }
 }

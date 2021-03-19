@@ -68,8 +68,10 @@ public final class Element implements ApiElement<Element>, Html {
     /** An original XML element */
     protected final ApiElement internalElement;
 
-    /** New element with a parent */
-    public Element(@Nonnull final ApiElement original) {
+    /** New element for an API element
+     * @see #of(org.ujorm.tools.xml.ApiElement)
+     */
+    protected Element(@Nonnull final ApiElement original) {
         this.internalElement = original;
     }
 
@@ -906,5 +908,13 @@ public final class Element implements ApiElement<Element>, Html {
     @Nonnull
     public String toString() {
         return internalElement.toString();
+    }
+
+    /** New element for an API element */
+    @Nonnull
+    public static final Element of(@Nonnull final ApiElement original) {
+        return (original instanceof Element)
+            ? (Element) original
+            : new Element(original);
     }
 }

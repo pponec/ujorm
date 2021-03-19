@@ -32,10 +32,10 @@ import org.ujorm.tools.web.ao.HttpParameter;
  * @author Pavel Ponec
  */
 public class ColumnModel<D, V> {
-    
+
     private static final NullPointerException x = null;
-    
-    /** Number pattern */ 
+
+    /** Number pattern */
     private static final Pattern NUMBER = Pattern.compile("-?\\d+");
 
     private final int index;
@@ -49,7 +49,7 @@ public class ColumnModel<D, V> {
     private boolean sortable = false;
     @Nonnull
     private Direction direction = Direction.NONE;
-    
+
     public ColumnModel(@Nonnull Direction direction, int index) {
         this(index, x -> null, "", null);
         setSortable(direction);
@@ -81,6 +81,11 @@ public class ColumnModel<D, V> {
         return param;
     }
 
+    @Nonnull
+    public HttpParameter getParam(@Nonnull final HttpParameter defaultValue) {
+        return param != null ? param : defaultValue;
+    }
+
     public boolean isSortable() {
         return sortable;
     }
@@ -93,7 +98,7 @@ public class ColumnModel<D, V> {
     public boolean isFiltered() {
         return param != null;
     }
-    
+
     public final void setSortable(@Nonnull final Direction direction) {
         this.sortable = true;
         setDirection(direction);
@@ -113,7 +118,7 @@ public class ColumnModel<D, V> {
             throw new IllegalStateException(e);
         }
     }
-    
+
     /**
      * Write the content to an appendable text stream where the default direction is an ASCENDING.
      */
@@ -122,13 +127,13 @@ public class ColumnModel<D, V> {
         writer.append(String.valueOf(coeff * (index + 1)));
         return writer;
     }
-    
+
     /** Get comparator of a sortable column */
     @Nonnull
     public Comparator<D> getComparator(@Nullable final Function<D,?> defaultFce) {
-        return getComparator(Comparator.comparing((Function)defaultFce));   
+        return getComparator(Comparator.comparing((Function)defaultFce));
     }
-    
+
     /** Get comparator of a sortable column */
     @Nonnull
     public Comparator<D> getComparator(@Nonnull final Comparator<D> defaultCompar) {
@@ -159,7 +164,7 @@ public class ColumnModel<D, V> {
     }
 
     @Nonnull
-    protected static ColumnModel ofCode(@Nonnull final String paramValue) {
+    public static ColumnModel ofCode(@Nonnull final String paramValue) {
         if (NUMBER.matcher(paramValue).matches()) {
             final int intCode = Integer.parseInt(paramValue);
             final Direction direction = Direction.of(intCode > 0);
@@ -168,7 +173,7 @@ public class ColumnModel<D, V> {
             return new ColumnModel<>(Direction.NONE, -1);
         }
     }
-    
+
     /** Create a stub column */
     public static <D, V> ColumnModel<D, V> ofStub() {
         return new ColumnModel<D,V>(-1, x -> null, "", null);

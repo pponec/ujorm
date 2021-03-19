@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2020 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2021 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools.web.table;
+package org.ujorm.tools.web.report;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
-import static org.ujorm.tools.web.table.TableBuilderConfigImpl.Constants.*;
+import static org.ujorm.tools.web.report.ReportBuilderConfigImpl.Constants.*;
 
 /**
  * A HTML page builder for table based an AJAX.
@@ -45,10 +45,10 @@ import static org.ujorm.tools.web.table.TableBuilderConfigImpl.Constants.*;
  *
  * @author Pavel Ponec
  */
-public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
+public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(TableBuilderConfigImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ReportBuilderConfigImpl.class.getName());
 
     /** HTML config */
     @Nonnull
@@ -104,7 +104,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     @Nullable
     private BiConsumer<Element,Boolean> cssWriter;
 
-    public TableBuilderConfigImpl(@Nonnull final HtmlConfig config) {
+    public ReportBuilderConfigImpl(@Nonnull final HtmlConfig config) {
         this(config, // config
            BOOTSTRAP_CSS, // cssLink
            "", // jQueryLink
@@ -124,7 +124,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
         );
     }
 
-    protected TableBuilderConfigImpl(
+    protected ReportBuilderConfigImpl(
             @Nonnull final HtmlConfig config,
             @Nonnull final String cssLink,
             @Nonnull final String jqueryLink,
@@ -168,63 +168,63 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
                 : String.join(" .", Html.TABLE, tableCssClass.get(0));
     }
 
-    public TableBuilderConfigImpl<D> setCssLink(@Nonnull final String cssLink) {
+    public ReportBuilderConfigImpl<D> setCssLink(@Nonnull final String cssLink) {
         this.cssLink = Assert.notNull(cssLink, "cssLink");
         return this;
     }
 
-    public TableBuilderConfigImpl<D> setJqueryLink(@Nonnull final String jqueryLink) {
+    public ReportBuilderConfigImpl<D> setJqueryLink(@Nonnull final String jqueryLink) {
         this.jqueryLink = Assert.notNull(jqueryLink, "jqueryLink");
         return this;
     }
 
-    public TableBuilderConfigImpl<D> setIdleDelay(@Nonnull final Duration idleDelay) {
+    public ReportBuilderConfigImpl<D> setIdleDelay(@Nonnull final Duration idleDelay) {
         this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
         return this;
     }
 
-    public TableBuilderConfigImpl<D> setAjaxRequestParam(@Nonnull final HttpParameter ajaxRequestParam) {
+    public ReportBuilderConfigImpl<D> setAjaxRequestParam(@Nonnull final HttpParameter ajaxRequestParam) {
         this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
         return this;
     }
 
-    public TableBuilderConfigImpl<D> setSortRequestParam(@Nonnull final HttpParameter sortRequestParam) {
+    public ReportBuilderConfigImpl<D> setSortRequestParam(@Nonnull final HttpParameter sortRequestParam) {
         this.sortRequestParam = Assert.notNull(sortRequestParam, "sortRequestParam");
         return this;
     }
 
-    public TableBuilderConfigImpl<D> setAjaxReadyMessage(@Nonnull final CharSequence ajaxReadyMessage) {
+    public ReportBuilderConfigImpl<D> setAjaxReadyMessage(@Nonnull final CharSequence ajaxReadyMessage) {
         this.ajaxReadyMessage = Assert.hasLength(ajaxReadyMessage, "ajaxReadyMessage");
         return this;
     }
 
-    public TableBuilderConfigImpl<D> setFormId(@Nonnull final String formId) {
+    public ReportBuilderConfigImpl<D> setFormId(@Nonnull final String formId) {
         this.formId = Assert.hasLength(formId, "formId");
         return this;
     }
 
-    public TableBuilderConfigImpl<D> setControlCss(@Nonnull final String controlCss) {
+    public ReportBuilderConfigImpl<D> setControlCss(@Nonnull final String controlCss) {
         this.controlCss = Assert.hasLength(controlCss, "controlCss");
         return this;
     }
 
-    public TableBuilderConfigImpl<D> setSubtitleCss(@Nonnull final String subtitleCss) {
+    public ReportBuilderConfigImpl<D> setSubtitleCss(@Nonnull final String subtitleCss) {
         this.subtitleCss = Assert.hasLength(subtitleCss, "subtitleCss");
         return this;
     }
 
-    public TableBuilderConfigImpl<D> setTableSelector(@Nonnull final CharSequence tableSelector) {
+    public ReportBuilderConfigImpl<D> setTableSelector(@Nonnull final CharSequence tableSelector) {
         this.tableSelector = Assert.notNull(tableSelector, "tableSelector");
         return this;
     }
 
-    public TableBuilderConfigImpl<D> setTableCssClass(@Nonnull final List<CharSequence> tableCssClass) {
+    public ReportBuilderConfigImpl<D> setTableCssClass(@Nonnull final List<CharSequence> tableCssClass) {
         this.tableCssClass = Assert.notNull(tableCssClass, "tableCssClass");
         return this;
     }
 
     /** Inline CSS writer */
-    public TableBuilderConfigImpl<D> setCssWriter(@Nullable final BiConsumer<Element,Boolean> cssWriter) {
+    public ReportBuilderConfigImpl<D> setCssWriter(@Nullable final BiConsumer<Element,Boolean> cssWriter) {
         this.cssWriter = cssWriter;
         return this;
     }
@@ -354,7 +354,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     @Nonnull
     protected BiConsumer<Element,Boolean> inlineCssWriter() {
         return (Element element, Boolean sortable) -> {
-            final TableBuilderConfig conf = this;
+            final ReportBuilderConfig conf = this;
             final CharSequence newLine = conf.getConfig().getNewLine();
             try (Element css = element.addElement(Html.STYLE)) {
                 css.addRawText(newLine, "body { margin: 10px;}");
@@ -384,9 +384,7 @@ public class TableBuilderConfigImpl<D> implements TableBuilderConfig<D> {
     /** Config constants */
     public static class Constants {
         /** Link to a Bootstrap URL of CDN */
-        protected static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
-        /** Link to jQuery of CDN */
-        protected static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
+        public static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
         /** Form identifier */
         public static final String FORM_ID = "form";
         /** Bootstrap form control CSS class name */

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.common.StreamUtils;
-import org.ujorm.tools.web.table.TableBuilder;
+import org.ujorm.tools.web.table.GridBuilder;
 
 /**
  *
@@ -53,7 +53,7 @@ public class HotelResourceService {
      * Direct stream of data source.
      * @return
      */
-    public Stream<Hotel> findHotels( TableBuilder<Hotel> builder, int limit, @Nonnull String namePattern, @Nonnull String cityPattern) {
+    public Stream<Hotel> findHotels( GridBuilder<Hotel> builder, int limit, @Nonnull String namePattern, @Nonnull String cityPattern) {
         String nameUp = namePattern.toUpperCase(Locale.ENGLISH);
         String cityUp = cityPattern.toUpperCase(Locale.ENGLISH);
         try {
@@ -66,7 +66,7 @@ public class HotelResourceService {
             throw new IllegalStateException(e);
         }
     }
-    
+
     /**
      * Return a raw stream
      *
