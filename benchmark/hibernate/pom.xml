@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>benchmark.hibernate.pojo</artifactId>
     <packaging>jar</packaging>
-    <version>2.14-SNAPSHOT</version>
+    <version>2.15-SNAPSHOT</version>
     <name>xBenchmark-HibernatePojo</name>
     <url>http://ujorm.org</url>
     
