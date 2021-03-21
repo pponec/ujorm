@@ -3,8 +3,14 @@ The Ujorm release notes
 *******************************
 
 
-release 2.14 (yyyy-mm-dd)
+release 2.15-SNAPSHOT (yyyy-mm-dd)
 ...
+
+release 2.14 (2021-03-21)
++ ORM: Indices are created for new tables as well
++ WEB: A TableBuilder class was divided into two new ones: ReportBulder & GridBuilder, the original class is deprecated now.
++ WEB: New factory method Element.of() supports both argument types: Elemnt and ApiElement
++ WEB: Extended JavaDoc
 
 release 2.13 (2021-03-04)
 + WEB: New method Element.addTextInp() for an explicit value
