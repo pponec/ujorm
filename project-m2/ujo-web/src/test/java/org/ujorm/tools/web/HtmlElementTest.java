@@ -21,6 +21,7 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.ujorm.tools.xml.ApiElement;
 
 /**
  *
@@ -70,7 +71,7 @@ public class HtmlElementTest {
     @Test
     public void sample_2a() {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setRootElementName(null);
+        config.setRootElementName(ApiElement.HIDDEN_NAME);
         config.setHtmlHeader(false);
         config.setDoctype("");
         config.setDocumentObjectModel(true);
@@ -101,7 +102,7 @@ public class HtmlElementTest {
     @Test
     public void sample_2b() {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setRootElementName(null);
+        config.setRootElementName(ApiElement.HIDDEN_NAME);
         config.setHtmlHeader(false);
         config.setDoctype("");
 

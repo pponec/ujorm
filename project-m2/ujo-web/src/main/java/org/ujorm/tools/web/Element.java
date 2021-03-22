@@ -77,8 +77,13 @@ public final class Element implements ApiElement<Element>, Html {
 
     @Nonnull
     @Override
-    public CharSequence getName() {
+    public String getName() {
         return internalElement.getName();
+    }
+
+    @Override
+    public boolean isHidden() {
+        return internalElement.isHidden();
     }
 
     /**
@@ -302,7 +307,7 @@ public final class Element implements ApiElement<Element>, Html {
      * @throws IllegalStateException An envelope for IO exceptions
      */
     @Override @Nonnull
-    public Element addElement(@Nullable final String name) throws IllegalStateException {
+    public Element addElement(@Nonnull final String name) throws IllegalStateException {
             return new Element(internalElement.addElement(name));
     }
 
@@ -328,7 +333,7 @@ public final class Element implements ApiElement<Element>, Html {
     public final Element addElementIf(final boolean enabled,
             @Nonnull final String name,
             @Nonnull final CharSequence... cssClasses) {
-        return addElement(enabled ? name : null).setClass(cssClasses);
+        return addElement(enabled ? name : HIDDEN_NAME).setClass(cssClasses);
     }
 
     /** Add new Table */

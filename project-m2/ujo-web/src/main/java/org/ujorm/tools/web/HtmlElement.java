@@ -84,8 +84,9 @@ public class HtmlElement implements ApiElement<Element>, Html {
         this.writer = writer;
     }
 
+    @Nonnull
     @Override
-    public CharSequence getName() {
+    public String getName() {
         return root.getName();
     }
 
