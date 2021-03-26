@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ao.Column;
@@ -190,7 +191,7 @@ public class GridBuilder<D> {
     public void build(
             @Nonnull final ApiElement parent,
             @Nonnull final Function<GridBuilder<D>, Stream<D>> resource) {
-        printTableBody(Element.of(parent), resource);
+        printTable(Element.of(parent), resource);
     }
 
     /** Build the HTML page including a table */
@@ -201,7 +202,7 @@ public class GridBuilder<D> {
 
         // An original code: setSort(ColumnModel.ofCode(config.getSortRequestParam().of(input)));
         setSort(Assert.notNull(sortedColumn, "sortedColumn"));
-        printTableBody(Element.of(parent), resource);
+        printTable(Element.of(parent), resource);
     }
 
     /** Mark a column as sorted */
@@ -217,16 +218,24 @@ public class GridBuilder<D> {
         }
     }
 
-    /** Print table body */
-    protected void printTableBody(
+    /**
+     * Print table
+     * @param table If the element name is a {@code "table"} value of an empty text then do not create it.
+     * @param resource Data source
+     */
+    protected void printTable(
             @Nonnull final Element table,
             @Nonnull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
-        final Element headerElement = table.addElement(Html.THEAD).addElement(Html.TR);
+        final String elementName = table.getName();
+        final Element myTable = (Check.isEmpty(elementName) || Html.TABLE.equals(elementName))
+                ? table
+                : table.addTable();
+        final Element headerRow = myTable.addElement(Html.THEAD).addElement(Html.TR);
         for (ColumnModel<D,?> col : columns) {
             final boolean columnSortable = col.isSortable();
             final Object value = col.getTitle();
-            final Element th = headerElement.addElement(Html.TH);
+            final Element th = headerRow.addElement(Html.TH);
             final Element thLink = columnSortable ? th.addAnchor("javascript:f1.sort(" + col.toCode(true) + ")") : th;
             if (columnSortable) {
                 thLink.setClass(
@@ -246,7 +255,7 @@ public class GridBuilder<D> {
                 }
             }
         }
-        try (Element tBody = table.addElement(Html.TBODY)) {
+        try (Element tBody = myTable.addElement(Html.TBODY)) {
             final boolean hasRenderer = WebUtils.isType(Column.class, columns.stream().map(t -> t.getColumn()));
             resource.apply(this).forEach(value -> {
                 final Element rowElement = tBody.addElement(Html.TR);

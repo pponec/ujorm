@@ -354,9 +354,10 @@ public class ReportBuilder<D> {
                 }
                 form.addInput().setType(Html.V_SUBMIT).setAttribute(Html.V_HIDDEN);
                 formAdditions.write(form);
+                // Add the table:
+                final List<CharSequence> tableCss = config.getTableCssClass();
+                printTableBody(body.addTable(tableCss.toArray(new CharSequence[tableCss.size()])), input, resource);
             }
-            final List<CharSequence> tableCss = config.getTableCssClass();
-            printTableBody(body.addTable(tableCss.toArray(new CharSequence[tableCss.size()])), input, resource);
             footer.write(body);
         }
     }
@@ -366,7 +367,6 @@ public class ReportBuilder<D> {
             @Nonnull final HttpServletRequest input,
             @Nonnull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
-        final Element headerElement = table.addElement(Html.THEAD).addElement(Html.TR);
         final ColumnModel sortedColumn = ColumnModel.ofCode(config.getSortRequestParam().of(input));
         this.gridBuilder.build(table, sortedColumn, resource);
     }
