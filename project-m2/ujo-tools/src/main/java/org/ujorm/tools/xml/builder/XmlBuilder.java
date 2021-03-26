@@ -66,7 +66,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
 
     /** Element name */
     @Nullable
-    protected final CharSequence elementName;
+    protected final String elementName;
 
     /** Node writer */
     @Nonnull
@@ -95,7 +95,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param name The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      */
-    public XmlBuilder(@Nullable final CharSequence name, @Nonnull final XmlPrinter writer, final int level) {
+    public XmlBuilder(@Nullable final String name, @Nonnull final XmlPrinter writer, final int level) {
         this(name, writer, level, true);
     }
 
@@ -106,7 +106,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param level Level of the Element
      * @param printName Print the element name immediately.
      */
-    protected XmlBuilder(@Nullable final CharSequence elementName, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
+    protected XmlBuilder(@Nullable final String elementName, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
         this.elementName = elementName;
         this.lastText = elementName == null;
         this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
@@ -120,13 +120,13 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     }
 
     /** New element with a parent */
-    public XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer) {
+    public XmlBuilder(@Nonnull final String name, @Nonnull final XmlPrinter writer) {
         this(name, writer, 0);
     }
 
     @Nullable
     @Override
-    public CharSequence getName() {
+    public String getName() {
         return elementName;
     }
 

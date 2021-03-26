@@ -63,7 +63,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     private ApiInjector headerInjector = e -> {};
 
     /** A name of root element */
-    private CharSequence rootElementName = XmlBuilder.HTML;
+    private String rootElementName = XmlBuilder.HTML;
 
     public DefaultHtmlConfig() {
     }
@@ -137,7 +137,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** A name of root element */
     @Override
-    public CharSequence getRootElementName() {
+    public String getRootElementName() {
         return rootElementName;
     }
 

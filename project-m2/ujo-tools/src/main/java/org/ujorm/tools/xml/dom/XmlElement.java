@@ -51,11 +51,11 @@ import org.ujorm.tools.xml.model.*;
 @Deprecated
 public class XmlElement extends XmlModel {
 
-    public XmlElement(CharSequence name) {
+    public XmlElement(String name) {
         super(name);
     }
 
-    public XmlElement(CharSequence name, XmlModel parent) {
+    public XmlElement(String name, XmlModel parent) {
         super(name, parent);
     }
 

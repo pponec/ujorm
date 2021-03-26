@@ -81,11 +81,6 @@ public final class Element implements ApiElement<Element>, Html {
         return internalElement.getName();
     }
 
-    @Override
-    public boolean isHidden() {
-        return internalElement.isHidden();
-    }
-
     /**
      * Set an attribute
      * @param name Required element name
