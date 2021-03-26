@@ -66,7 +66,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
 
     /** Element name */
     @Nullable
-    protected final String elementName;
+    protected final String name;
 
     /** Node writer */
     @Nonnull
@@ -100,15 +100,15 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     }
 
     /** The new element constructor
-     * @param elementName The element name must not be special HTML characters.
+     * @param name The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      * @param writer A XmlPrinter
      * @param level Level of the Element
      * @param printName Print the element name immediately.
      */
-    protected XmlBuilder(@Nullable final String elementName, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
-        this.elementName = elementName;
-        this.lastText = elementName == null;
+    protected XmlBuilder(@Nullable final String name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
+        this.name = name;
+        this.lastText = name == null;
         this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
         this.level = level;
 
@@ -127,7 +127,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     @Nullable
     @Override
     public String getName() {
-        return elementName;
+        return name;
     }
 
     /**
@@ -136,7 +136,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      */
     @Nonnull
     protected XmlBuilder nextChild(@Nullable final XmlBuilder element) {
-        Assert.isFalse(closed, "The node '{}' was closed", this.elementName);
+        Assert.isFalse(closed, "The node '{}' was closed", this.name);
         if (!filled) try {
             writer.writeMid(this);
         } catch (IOException e) {
@@ -179,10 +179,10 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      */
     @Override @Nonnull
     public final XmlBuilder setAttribute(@Nullable final String name, @Nullable final Object value) {
-        if (elementName != null) {
+        if (name != null) {
             Assert.hasLength(name, REQUIRED_MSG, "name");
-            Assert.isFalse(closed, "The node '{}' was closed", elementName);
-            Assert.isTrue(attributeMode, "Writing attributes to the '{}' node was closed", elementName);
+            Assert.isFalse(closed, "The node '{}' was closed", name);
+            Assert.isTrue(attributeMode, "Writing attributes to the '{}' node was closed", name);
             if (value != null) try {
                 writer.writeAttrib(name, value, this);
             } catch (IOException e) {

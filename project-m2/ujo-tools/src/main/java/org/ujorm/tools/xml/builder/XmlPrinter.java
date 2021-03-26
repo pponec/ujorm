@@ -91,13 +91,13 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Open the Node */
     void writeBeg(XmlBuilder element, final boolean lastText) throws IOException {
-        final CharSequence elementName = element.getName();
-        if (elementName != null) {
+        final CharSequence name = element.getName();
+        if (name != null) {
             if (!lastText) {
                 writeNewLine(element.getLevel());
             }
             out.append(XML_LT);
-            out.append(elementName);
+            out.append(name);
         }
     }
 
@@ -110,15 +110,15 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Close the Node */
     void writeEnd(XmlBuilder element) throws IOException {
-        final CharSequence elementName = element.getName();
-        if (elementName != null) {
+        final CharSequence name = element.getName();
+        if (name != null) {
             if (element.isFilled()) {
                 if (indentationEnabled && !element.isLastText()) {
                     writeNewLine(element.getLevel());
                 }
                 out.append(XML_LT);
                 out.append(FORWARD_SLASH);
-                out.append(elementName);
+                out.append(name);
                 out.append(XML_GT);
             } else {
                 out.append(FORWARD_SLASH);
@@ -138,8 +138,8 @@ public class XmlPrinter extends AbstractWriter {
     // ------- FACTORY METHODS -------
 
     /** Create any element */
-    public XmlBuilder createElement(@Nonnull final String elementName) throws IOException {
-        return new XmlBuilder(elementName, this);
+    public XmlBuilder createElement(@Nonnull final String name) throws IOException {
+        return new XmlBuilder(name, this);
     }
 
     // ------- STATIC METHODS -------
