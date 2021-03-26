@@ -54,7 +54,7 @@ import org.ujorm.tools.web.ao.Injector;
  * <pre class="pre">
  *    MockServletResponse response = new MockServletResponse();
  *    try (HtmlElement html = HtmlElement.of(response)) {
- *        try (Element body = html.getBody()) {
+ *        try (Element body = html.addBody()) {
  *            body.addHeading("Hello!");
  *        }
  *    }
@@ -308,6 +308,10 @@ public final class Element implements ApiElement<Element>, Html {
      */
     @Override @Nonnull
     public Element addElement(@Nonnull final String name) throws IllegalStateException {
+        if (name.isEmpty()) {
+            System.out.println("");
+        }
+
             return new Element(internalElement.addElement(name));
     }
 

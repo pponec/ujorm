@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.XmlConfig;
@@ -66,8 +67,8 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 public class XmlModel implements ApiElement<XmlModel>, Serializable {
 
     /** Element name */
-    @Nullable
-    protected final CharSequence name;
+    @Nonnull
+    protected final String name;
 
     /** Attributes */
     @Nullable
@@ -81,19 +82,20 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      * @param name The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      */
-    public XmlModel(@Nonnull final CharSequence name) {
+    public XmlModel(@Nonnull final String name) {
+        assert name != null : MsgFormatter.format("{} is required", "name");
         this.name = name;
     }
 
     /** New element with a parent */
-    public XmlModel(@Nonnull final CharSequence name, @Nonnull final XmlModel parent) {
+    public XmlModel(@Nonnull final String name, @Nonnull final XmlModel parent) {
         this(name);
         parent.addChild(this);
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public CharSequence getName() {
+    public String getName() {
         return name;
     }
 

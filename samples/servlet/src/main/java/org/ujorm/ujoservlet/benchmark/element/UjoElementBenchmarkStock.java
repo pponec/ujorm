@@ -106,7 +106,7 @@ public class UjoElementBenchmarkStock extends HttpServlet {
                         .setAttribute(Html.A_TYPE, "text/css")
                         .addRawText(STOCKS_CSS);
             }
-            try (Element body = html.getBody()) {
+            try (Element body = html.addBody()) {
                 body.addElement(Html.H1).addText("Stock Prices");
                 Element table = body.addElement(Html.TABLE);
                 {

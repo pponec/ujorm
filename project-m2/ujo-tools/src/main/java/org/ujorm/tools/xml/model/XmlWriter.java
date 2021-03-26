@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.XmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 
@@ -76,12 +77,12 @@ public class XmlWriter extends AbstractWriter {
      */
     @Nonnull
     protected XmlWriter write(final int level
-            , @Nullable final CharSequence name
+            , @Nonnull final CharSequence name
             , @Nullable final Map<String, Object> attributes
             , @Nullable final List<Object> children
             , @Nonnull final XmlModel element) throws IOException {
 
-        final boolean validName = name != null;
+        final boolean validName = (name != ApiElement.HIDDEN_NAME);
         if (validName) {
             out.append(XML_LT);
             out.append(name);
@@ -107,7 +108,7 @@ public class XmlWriter extends AbstractWriter {
             for (Object child : children) {
                 if (child instanceof XmlModel) {
                     final XmlModel xmlChild = (XmlModel) child;
-                    if (writeNewLine && xmlChild.name != null) {
+                    if (writeNewLine && !xmlChild.isHidden()) {
                         writeNewLine(level);
                     } else {
                         writeNewLine = validName;

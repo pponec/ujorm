@@ -22,8 +22,10 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.ApiElement;
+import org.ujorm.tools.xml.config.XmlConfig;
 
 /**
  * A XML builder.
@@ -58,6 +60,9 @@ import org.ujorm.tools.xml.ApiElement;
  */
 public class XmlBuilder implements ApiElement<XmlBuilder> {
 
+    /** A hidden element */
+    private static final XmlBuilder HIDDEN = new XmlBuilder();
+
     /** The HTML tag name */
     public static final String HTML = "html";
 
@@ -65,8 +70,8 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     protected static final String REQUIRED_MSG = "The argument '{}' is required";
 
     /** Element name */
-    @Nullable
-    protected final CharSequence elementName;
+    @Nonnull
+    protected final String name;
 
     /** Node writer */
     @Nonnull
@@ -95,20 +100,26 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param name The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      */
-    public XmlBuilder(@Nullable final CharSequence name, @Nonnull final XmlPrinter writer, final int level) {
-        this(name, writer, level, true);
+    public XmlBuilder(@Nonnull final String name, @Nonnull final XmlPrinter writer, final int level) {
+        this(name, writer, level, name != HIDDEN_NAME);
+    }
+
+    /** New element with a parent */
+    public XmlBuilder(@Nonnull final String name, @Nonnull final XmlPrinter writer) {
+        this(name, writer, 0);
     }
 
     /** The new element constructor
-     * @param elementName The element name must not be special HTML characters.
+     * @param name The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      * @param writer A XmlPrinter
      * @param level Level of the Element
      * @param printName Print the element name immediately.
      */
-    protected XmlBuilder(@Nullable final CharSequence elementName, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
-        this.elementName = elementName;
-        this.lastText = elementName == null;
+    protected XmlBuilder(@Nonnull final String name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
+        assert name != null : MsgFormatter.format("{} is required", "name");
+        this.name = name;
+        this.lastText = name.isEmpty();
         this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
         this.level = level;
 
@@ -120,14 +131,37 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     }
 
     /** New element with a parent */
-    public XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer) {
-        this(name, writer, 0);
+    protected XmlBuilder() {
+        this.name = ApiElement.HIDDEN_NAME;
+        this.level = 0;
+        this.writer = new XmlPrinter(false, XmlConfig.ofDefault(), new Appendable() {
+            @Override
+            public Appendable append(CharSequence arg0) throws IOException {
+                return append('0');
+            }
+
+            @Override
+            public Appendable append(CharSequence arg0, int arg1, int arg2) throws IOException {
+                return append('0');
+            }
+
+            @Override
+            public Appendable append(char arg0) throws IOException {
+                throw new UnsupportedOperationException("Not supported");
+            }
+        });
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public CharSequence getName() {
-        return elementName;
+    public String getName() {
+        return name;
+    }
+
+    /** Hidden element has the same instance an the {@link HIDDEN_NAME} */
+    @Override
+    public final boolean isHidden() {
+        return name == HIDDEN_NAME;
     }
 
     /**
@@ -135,8 +169,8 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param element A child Node or {@code null} value for a text data
      */
     @Nonnull
-    protected XmlBuilder nextChild(@Nullable final XmlBuilder element) {
-        Assert.isFalse(closed, "The node '{}' was closed", this.elementName);
+    protected XmlBuilder nextChild(@Nonnull final XmlBuilder element) {
+        Assert.isFalse(closed, "The node '{}' was closed", this.name);
         if (!filled) try {
             writer.writeMid(this);
         } catch (IOException e) {
@@ -145,16 +179,16 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
         if (lastChild != null) {
             lastChild.close();
         }
-        if (element != null) try {
+        if (!element.isHidden()) try {
             writer.writeBeg(element, lastText);
+            lastChild = element;
+            lastText = true;
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
 
         filled = true;
         attributeMode = false;
-        lastChild = element;
-        lastText = element == null || element.getName() == null;
 
         return element;
     }
@@ -179,10 +213,10 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      */
     @Override @Nonnull
     public final XmlBuilder setAttribute(@Nullable final String name, @Nullable final Object value) {
-        if (elementName != null) {
+        if (this.name != null && !this.name.isEmpty()) {
             Assert.hasLength(name, REQUIRED_MSG, "name");
-            Assert.isFalse(closed, "The node '{}' was closed", elementName);
-            Assert.isTrue(attributeMode, "Writing attributes to the '{}' node was closed", elementName);
+            Assert.isFalse(closed, "The node '{}' was closed", this.name);
+            Assert.isTrue(attributeMode, "Writing attributes to the '{}' node was closed", this.name);
             if (value != null) try {
                 writer.writeAttrib(name, value, this);
             } catch (IOException e) {
@@ -202,7 +236,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     @Nonnull
     public final XmlBuilder addText(@Nullable final Object value) {
         try {
-            nextChild(null);
+            nextChild(HIDDEN);
             writer.writeValue(value, this, null);
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -221,7 +255,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     @Nonnull
     public final XmlBuilder addTextTemplated(@Nullable final CharSequence template, @Nonnull final Object... values) {
         try {
-            nextChild(null);
+            nextChild(HIDDEN);
             AbstractWriter.FORMATTER.formatMsg(writer.getWriterEscaped(), template, values);
             return this;
         } catch (IOException e) {
@@ -235,7 +269,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     @Override @Nonnull
     public final XmlBuilder addRawText(@Nullable final Object value) {
         try {
-            nextChild(null);
+            nextChild(HIDDEN);
             writer.writeRawValue(value, this);
         } catch (IOException e) {
             throw new IllegalStateException(e);

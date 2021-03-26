@@ -19,6 +19,7 @@ package org.ujorm.tools.xml.config;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.*;
 
@@ -61,7 +62,8 @@ public interface HtmlConfig extends XmlConfig {
     ApiInjector getHeaderInjector();
 
     /** A name of root element */
-    CharSequence getRootElementName();
+    @Nonnull
+    String getRootElementName();
 
     /** Clone the config for an AJAX processing */
     default DefaultHtmlConfig cloneForAjax() {
@@ -103,7 +105,7 @@ public interface HtmlConfig extends XmlConfig {
     @Nonnull
     public static DefaultHtmlConfig ofElement(@Nullable String rootElementName, boolean enabled) {
         final DefaultHtmlConfig result = ofDefault();
-        result.setRootElementName(enabled ? rootElementName : null);
+        result.setRootElementName(enabled ? rootElementName : ApiElement.HIDDEN_NAME);
         result.setHtmlHeader(false);
         result.setDoctype(EMPTY);
         return result;

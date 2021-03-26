@@ -33,9 +33,19 @@ import javax.annotation.Nullable;
  */
 public interface ApiElement<E extends ApiElement<?>> extends Closeable {
 
+    /** A hidden element do not affect its childs */
+    static final String HIDDEN_NAME = new String("");
+
     /** Get an element name */
     @Nonnull
-    CharSequence getName();
+    String getName();
+
+    /** An hidden element has the same instance as the {@link HIDDEN_NAME}.
+     *  The hidden element do not affect its childs
+     */
+    default boolean isHidden() {
+        return getName() == HIDDEN_NAME;
+    }
 
     /** Create a new {@link XmlElement} for a required name and add it to children.
      * @param name A name of the new XmlElement is required.

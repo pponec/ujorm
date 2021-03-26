@@ -17,6 +17,7 @@
 
 package org.ujorm.tools.xml.dom;
 
+import javax.annotation.Nonnull;
 import org.ujorm.tools.xml.model.*;
 
 /**
@@ -51,11 +52,11 @@ import org.ujorm.tools.xml.model.*;
 @Deprecated
 public class XmlElement extends XmlModel {
 
-    public XmlElement(CharSequence name) {
+    public XmlElement(@Nonnull String name) {
         super(name);
     }
 
-    public XmlElement(CharSequence name, XmlModel parent) {
+    public XmlElement(@Nonnull String name, XmlModel parent) {
         super(name, parent);
     }
 

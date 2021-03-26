@@ -77,7 +77,7 @@ public class ElementTest {
     private HtmlElement createHtmlPage(HtmlConfig config) throws IllegalStateException {
         HtmlElement result = HtmlElement.of(config);
         try (HtmlElement instance = result) {
-            Element body = instance.getBody();
+            Element body = instance.addBody();
 
             Object value = 2;
             LinkedHashMap options = new LinkedHashMap<>();
@@ -103,7 +103,7 @@ public class ElementTest {
 
         HtmlElement resInstance = HtmlElement.of(config);
         try (HtmlElement instance = resInstance) {
-            instance.getBody()
+            instance.addBody()
                     .addElementIf(false, Html.DIV)
                     .addText("text");
         }
@@ -129,7 +129,7 @@ public class ElementTest {
 
         HtmlElement resInstance = HtmlElement.of(config);
         try (HtmlElement instance = resInstance) {
-            instance.getBody()
+            instance.addBody()
                     .addElementIf(false, Html.DIV)
                     .addText("text");
         }
@@ -153,7 +153,7 @@ public class ElementTest {
         CharSequence[] cssClasses = null;
         HtmlElement resInstance = HtmlElement.of(null);
         try (HtmlElement instance = resInstance) {
-            instance.getBody().addTextTemplated("Test <{}.{}{}", 1, 2, ">");
+            instance.addBody().addTextTemplated("Test <{}.{}{}", 1, 2, ">");
         }
 
         String result = resInstance.toString();
@@ -176,7 +176,7 @@ public class ElementTest {
         CharSequence[] cssClasses = null;
         HtmlElement resInstance = HtmlElement.of(null);
         try (HtmlElement instance = resInstance) {
-            Element body = instance.getBody();
+            Element body = instance.addBody();
             body.addFieldset("MyTitle", "myCssClass").addText("Lorem ipsum ...");
         }
 

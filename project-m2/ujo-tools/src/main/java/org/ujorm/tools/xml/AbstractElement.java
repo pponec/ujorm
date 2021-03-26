@@ -19,6 +19,7 @@ package org.ujorm.tools.xml;
 import java.io.Closeable;
 import javax.annotation.Nonnull;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.msg.MsgFormatter;
 
 /**
  * An element model API.
@@ -38,11 +39,13 @@ public abstract class AbstractElement<E extends AbstractElement<?>> implements A
     protected final String name;
 
     public AbstractElement(@Nonnull final String name) {
-        this.name = Assert.hasLength(name, "name");
+        assert name != null : MsgFormatter.format("{} is required", "name");
+        this.name = name;
     }
 
+    @Nonnull
     @Override
-    public CharSequence getName() {
+    public String getName() {
         return name;
     }
 

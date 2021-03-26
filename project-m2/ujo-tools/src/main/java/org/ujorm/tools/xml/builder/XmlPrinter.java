@@ -57,8 +57,17 @@ public class XmlPrinter extends AbstractWriter {
      * @param config A configuration object
      */
     public <T> XmlPrinter(@Nonnull final Appendable out, @Nullable final XmlConfig config) {
+        this(true, config, out);
+    }
+
+    /**
+     * A writer constructor
+     * @param out A writer
+     * @param config A configuration object
+     */
+    public <T> XmlPrinter(boolean init, @Nullable final XmlConfig config, @Nonnull final Appendable out) {
         super(out, config);
-        try {
+        if (init) try {
             out.append(config.getDoctype());
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -75,7 +84,7 @@ public class XmlPrinter extends AbstractWriter {
     }
 
     void writeAttrib(@Nonnull String name, Object data, XmlBuilder owner) throws IOException {
-        if (owner.getName() != null) {
+        if (!owner.isHidden()) {
             out.append(SPACE);
             out.append(name);
             out.append('=');
@@ -103,22 +112,21 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Middle closing the Node */
     void writeMid(XmlBuilder element) throws IOException {
-        if (element.getName() != null) {
+        if (!element.isHidden()) {
             out.append(XML_GT);
         }
     }
 
     /** Close the Node */
     void writeEnd(XmlBuilder element) throws IOException {
-        final CharSequence elementName = element.getName();
-        if (elementName != null) {
+        if (!element.isHidden()) {
             if (element.isFilled()) {
                 if (indentationEnabled && !element.isLastText()) {
                     writeNewLine(element.getLevel());
                 }
                 out.append(XML_LT);
                 out.append(FORWARD_SLASH);
-                out.append(elementName);
+                out.append(element.getName());
                 out.append(XML_GT);
             } else {
                 out.append(FORWARD_SLASH);
@@ -138,8 +146,8 @@ public class XmlPrinter extends AbstractWriter {
     // ------- FACTORY METHODS -------
 
     /** Create any element */
-    public XmlBuilder createElement(@Nonnull final String elementName) throws IOException {
-        return new XmlBuilder(elementName, this);
+    public XmlBuilder createElement(@Nonnull final String name) throws IOException {
+        return new XmlBuilder(name, this);
     }
 
     // ------- STATIC METHODS -------

@@ -20,6 +20,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.config.ApiInjector;
@@ -63,7 +64,8 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     private ApiInjector headerInjector = e -> {};
 
     /** A name of root element */
-    private CharSequence rootElementName = XmlBuilder.HTML;
+    @Nonnull
+    private String rootElementName = XmlBuilder.HTML;
 
     public DefaultHtmlConfig() {
     }
@@ -136,8 +138,9 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     /** A name of root element */
+    @Nonnull
     @Override
-    public CharSequence getRootElementName() {
+    public String getRootElementName() {
         return rootElementName;
     }
 
@@ -187,7 +190,8 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     /**The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      */
-    public DefaultHtmlConfig setRootElementName(@Nullable String rootElementName) {
+    public DefaultHtmlConfig setRootElementName(@Nonnull String rootElementName) {
+        assert rootElementName != null : MsgFormatter.format("{} is required", "rootElementName");
         this.rootElementName = rootElementName;
         return this;
     }

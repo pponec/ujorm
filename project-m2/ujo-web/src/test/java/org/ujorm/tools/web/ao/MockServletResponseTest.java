@@ -32,7 +32,7 @@ public class MockServletResponseTest {
         MockServletResponse instance = new MockServletResponse();
 
         try (HtmlElement html = HtmlElement.niceOf(instance)) {
-            html.getBody().addHeading("ABC:ČÁŠ", "cssType");
+            html.addBody().addHeading("ABC:ČÁŠ", "cssType");
         }
         String result = instance.toString();
         String expected = String.join("\n"

@@ -96,7 +96,7 @@ public class HtmlElementTest {
         assertEquals("<h1>Hello!</h1>", writer.toString());
     }
 
-     /**
+    /**
      * Test of getName method, of class HtmlElement.
      */
     @Test

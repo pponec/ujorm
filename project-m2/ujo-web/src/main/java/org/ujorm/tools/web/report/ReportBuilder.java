@@ -328,7 +328,7 @@ public class ReportBuilder<D> {
         config.getCssWriter().accept(html.getHead(), gridBuilder.isSortable());
         javascritWriter.get().write(html.getHead());
         htmlHeader.write(html.getHead());
-        try (Element body = html.getBody()) {
+        try (Element body = html.addBody()) {
             header.write(body);
             body.addDiv(config.getSubtitleCss()).addText(ajaxEnabled ? config.getAjaxReadyMessage() : "");
             try (Element form =  body.addForm()
@@ -366,9 +366,9 @@ public class ReportBuilder<D> {
             @Nonnull final HttpServletRequest input,
             @Nonnull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
-        final Element headerElement = table.addElement(Html.THEAD).addElement(Html.TR);
-        final ColumnModel sortedColumn = ColumnModel.ofCode(config.getSortRequestParam().of(input));
-        this.gridBuilder.build(table, sortedColumn, resource);
+        // final String elementName = table.getName(); // POP:TODO
+        final ColumnModel sortedColumnModel = ColumnModel.ofCode(config.getSortRequestParam().of(input));
+        this.gridBuilder.build(table, sortedColumnModel, resource);
     }
 
     /**
