@@ -37,7 +37,6 @@ import org.ujorm.tools.web.ajax.ReqestDispatcher;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.Injector;
-import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.web.json.JsonBuilder;
 import org.ujorm.tools.web.table.ColumnModel;
 import org.ujorm.tools.web.table.Direction;
@@ -356,7 +355,7 @@ public class ReportBuilder<D> {
                 formAdditions.write(form);
                 // Add the table:
                 final List<CharSequence> tableCss = config.getTableCssClass();
-                printTableBody(body.addTable(tableCss.toArray(new CharSequence[tableCss.size()])), input, resource);
+                printTableBody(form.addTable(tableCss.toArray(new CharSequence[tableCss.size()])), input, resource);
             }
             footer.write(body);
         }
