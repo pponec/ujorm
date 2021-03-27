@@ -220,18 +220,19 @@ public class GridBuilder<D> {
 
     /**
      * Print table
-     * @param table If the element name is a {@code "table"} value of an empty text then do not create it.
+     * @param parent If a name of the element is a {@code "table"} or an empty text
+     *    then do not create new table element.
      * @param resource Data source
      */
     protected void printTable(
-            @Nonnull final Element table,
+            @Nonnull final Element parent,
             @Nonnull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
-        final String elementName = table.getName();
-        final Element myTable = (Check.isEmpty(elementName) || Html.TABLE.equals(elementName))
-                ? table
-                : table.addTable();
-        final Element headerRow = myTable.addElement(Html.THEAD).addElement(Html.TR);
+        final String elementName = parent.getName();
+        final Element table = (Check.isEmpty(elementName) || Html.TABLE.equals(elementName))
+                ? parent
+                : parent.addTable();
+        final Element headerRow = table.addElement(Html.THEAD).addElement(Html.TR);
         for (ColumnModel<D,?> col : columns) {
             final boolean columnSortable = col.isSortable();
             final Object value = col.getTitle();
@@ -255,7 +256,7 @@ public class GridBuilder<D> {
                 }
             }
         }
-        try (Element tBody = myTable.addElement(Html.TBODY)) {
+        try (Element tBody = table.addElement(Html.TBODY)) {
             final boolean hasRenderer = WebUtils.isType(Column.class, columns.stream().map(t -> t.getColumn()));
             resource.apply(this).forEach(value -> {
                 final Element rowElement = tBody.addElement(Html.TR);
