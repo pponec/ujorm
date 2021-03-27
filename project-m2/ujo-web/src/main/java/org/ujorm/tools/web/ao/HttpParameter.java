@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.ServletRequest;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
 
 /**
  * An interface for bulding HTML parameters by an Enumerator.
@@ -75,11 +76,11 @@ public interface HttpParameter extends CharSequence {
         return of(request, Assert.notNull(defaultValue(), "Default value is required"));
     }
 
-    /** Returns a parameter of the request or the default value */
+    /** Returns the last parameter value of the request or a default value */
     @Nonnull
     default String of(@Nonnull final ServletRequest request, @Nonnull final String defaultValue) {
-        final String result = request.getParameter(toString());
-        return result != null ? result : defaultValue;
+        final String[] result = request.getParameterValues(toString());
+        return Check.hasLength(result) ? result[result.length - 1] : defaultValue;
     }
 
     /** Returns a parameter of the request or the default value */
