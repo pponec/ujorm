@@ -186,15 +186,16 @@ public class JavaScriptWriter implements Injector {
                 js.addRawText(newLine, "var f", fceOrder, "=function(){");
                 js.addRawTexts(newLine, ""
                     , "var timeout=null, ajaxRun=false, submitReq=false;"
+                  //, "document.querySelectorAll('button.sortable').forEach(item=>{item.addEventListener('click',e=>sort(e.target.value));},false);" // Wrong way
+                    , "document.querySelector('#form').addEventListener('submit',process,false);"
                     , "document.querySelectorAll('" + inpSelectors + "').forEach(item=>{item.addEventListener('keyup',e=>{"
                     , "  if(timeout){clearTimeout(timeout);}"
                     , "  timeout=setTimeout(()=>{"
                     , "    timeout=null;"
                     , "    if(ajaxRun) submitReq=true; "
                     , "    else process(null);"
-                    , "  }, " + idleDelay.toMillis() + ");}, false);"
+                    , "  }," + idleDelay.toMillis() + ");},false);"
                     , "});"
-                    , "document.querySelector('#form').addEventListener('submit', process, false);"
                 );
                 if (onLoadSubmit) {
                     js.addRawText(newLine, "process(null);");

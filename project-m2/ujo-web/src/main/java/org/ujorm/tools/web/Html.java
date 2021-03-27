@@ -144,6 +144,7 @@ public interface Html {
     String A_COLS = "cols";
     String A_ROWSPAN = "cols";
     String A_COLSPAN = "colspan";
+    String A_ONCLICK = "onclick";
 
     // --- Attribute values ---
 

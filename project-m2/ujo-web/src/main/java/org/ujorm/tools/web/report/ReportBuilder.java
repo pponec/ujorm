@@ -258,7 +258,7 @@ public class ReportBuilder<D> {
     }
 
     public ReportBuilder<D> setJavascritWriter(@Nonnull Supplier<Injector> javascritWriter) {
-        this.javascritWriter =  Assert.notNull(javascritWriter, "javascritWriter");;
+        this.javascritWriter =  Assert.notNull(javascritWriter, "javascritWriter");
         return this;
     }
 

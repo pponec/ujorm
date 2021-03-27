@@ -363,15 +363,17 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
                 css.addRawText(newLine, "#", conf.getFormId(), " input {width: 200px;}");
                 css.addRawText(newLine, ".", conf.getControlCss(), " {display: inline;}");
                 css.addRawText(newLine, ".table th {background-color: #e8e8e8;}");
+                css.addRawText(newLine, "button.", conf.getSortable(), " {border: none; padding: 0;background: none; font-weight: bold;}");
                 if (Boolean.TRUE.equals(sortable)) {
                     if (isEmbeddedIcons()) {
                         css.addRawText(newLine, ".sortable img {margin-left: 6px;} ");
                     } else {
                         final String img = "/org/ujorm/images/v1/order/";
-                        css.addRawText(newLine, ".", conf.getSortable()
+                        css.addRawText(newLine, "button.", conf.getSortable()
                                 , " {background-repeat: no-repeat;"
                                 + " background-position: right;"
-                                + " padding-right: 14px; color: #212529;}");
+                                + " padding-right: 14px;"
+                                + " color: #212529;}");
                         css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableAsc(),  " {background-image: url('", img, "up"  , ".png')}");
                         css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableDesc(), " {background-image: url('", img, "down", ".png')}");
                         css.addRawText(newLine, ".", conf.getSortable(), ".", conf.getSortableBoth(), " {background-image: url('", img, "both", ".png')}");

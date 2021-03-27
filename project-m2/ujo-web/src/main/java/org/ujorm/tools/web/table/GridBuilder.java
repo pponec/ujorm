@@ -237,13 +237,13 @@ public class GridBuilder<D> {
             final boolean columnSortable = col.isSortable();
             final Object value = col.getTitle();
             final Element th = headerRow.addElement(Html.TH);
-            final Element thLink = columnSortable ? th.addAnchor("javascript:f1.sort(" + col.toCode(true) + ")") : th;
-            if (columnSortable) {
-                thLink.setClass(
+            final Element thLink = columnSortable ? th.addSubmitButton(
                         config.getSortable(),
-                        config.getSortableDirection(col.getDirection())
-                );
-            }
+                        config.getSortableDirection(col.getDirection()))
+                    .setAttribute(Html.A_NAME, this.config.getSortRequestParam())
+                    .setAttribute(Html.A_VALUE, col.toCode(true))
+                    .setAttribute(Html.A_ONCLICK, "f1.sort(this.value)")
+                    : th;
             if (value instanceof Injector) {
                 ((Injector)value).write(thLink);
             } else {
