@@ -77,7 +77,7 @@ public class JavaScriptWriter implements Injector {
     protected boolean isAjax = true;
 
     public JavaScriptWriter() {
-        this("form input");
+        this("form input:not([type=\"button\"])");
     }
 
     public JavaScriptWriter(@Nonnull CharSequence... inputSelectors) {
@@ -216,17 +216,19 @@ public class JavaScriptWriter implements Injector {
                     , "      document.querySelectorAll(key).forEach(i=>{i.innerHTML=data[key];});"
                     , "    if(submitReq){submitReq=false;process(e);}" // Next submit the form
                     , "    else{ajaxRun=false;}"
-                    , "  }).catch((err)=>{"
+                    , "  }).catch(err=>{"
                     , "    ajaxRun=false;"
                     , "    document.querySelector('" + subtitleSelector + "').innerHTML='" + errorMessage + ": ' + err;"
                     , "  });"
                     , "}"
                 );
                 if (isSortable) {
-                    js.addRawText(newLine, "function sort(col){");
-                    js.addRawText(newLine, "  document.querySelector('", "input[name=\"", sortRequestParam, "\"]').value=col;");
+                    js.addRawText(newLine, "function sort(e){");
+                    //js.addRawText(newLine, "  e.preventDefault();"); // TypeError: e.preventDefault is not a function
+                    js.addRawText(newLine, "  document.querySelector('", "input[name=\"", sortRequestParam, "\"]').value=e.value;");
                     js.addRawText(newLine, "  if(this.ajaxRun){this.submitReq=true;}");
                     js.addRawText(newLine, "  else{this.process(null);}");
+                    js.addRawText(newLine, "  return false;");
                     js.addRawText(newLine, "} f", fceOrder, ".process=process;f", fceOrder, ".sort=sort;");
                 }
                 js.addRawTexts(newLine, "};");

@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.model.XmlModel;
-import org.ujorm.ujoservlet.HtmlElementOrig;
+import org.ujorm.ujoservlet.tools.HtmlElementOrig;
 import org.ujorm.ujoservlet.tools.ApplService;
 
 /**

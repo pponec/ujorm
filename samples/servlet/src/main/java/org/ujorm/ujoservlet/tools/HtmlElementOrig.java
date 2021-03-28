@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.ujoservlet;
+package org.ujorm.ujoservlet.tools;
 
 import java.io.IOException;
 import java.io.Writer;

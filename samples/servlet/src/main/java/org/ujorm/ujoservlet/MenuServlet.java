@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.ujoservlet.xmlElement;
+package org.ujorm.ujoservlet;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -25,10 +25,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.model.XmlModel;
-import org.ujorm.ujoservlet.HtmlElementOrig;
+import org.ujorm.ujoservlet.tools.HtmlElementOrig;
 import org.ujorm.ujoservlet.ajax.RegexpServlet;
 import org.ujorm.ujoservlet.ajax.HotelReportServlet;
 import org.ujorm.ujoservlet.tools.ApplService;
+import org.ujorm.ujoservlet.xmlElement.FormServlet;
+import org.ujorm.ujoservlet.xmlElement.HelloServlet;
+import org.ujorm.ujoservlet.xmlElement.TableServlet;
 
 /**
  * A live example of the HtmlElement inside a servlet.
@@ -38,7 +41,7 @@ import org.ujorm.ujoservlet.tools.ApplService;
 public class MenuServlet extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTER = "/dom";
+    public static final String URL_PATTER = "/menu";
 
     /** Show the first line of soufce code */
     public static final short SHOW_LINE = 52;

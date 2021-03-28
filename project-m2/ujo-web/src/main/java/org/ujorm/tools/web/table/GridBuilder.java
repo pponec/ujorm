@@ -242,7 +242,7 @@ public class GridBuilder<D> {
                         config.getSortableDirection(col.getDirection()))
                     .setAttribute(Html.A_NAME, this.config.getSortRequestParam())
                     .setAttribute(Html.A_VALUE, col.toCode(true))
-                    .setAttribute(Html.A_ONCLICK, "f1.sort(this.value)")
+                    .setAttribute(Html.A_ONCLICK, "return f1.sort(this)")
                     : th;
             if (value instanceof Injector) {
                 ((Injector)value).write(thLink);
