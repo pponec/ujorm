@@ -43,7 +43,7 @@ public class HotelReportServlet extends HttpServlet {
     /** URL pattern */
     public static final String URL_PATTERN = "/TableHotelServlet";
     /** Row limit */
-    private static final int DEFAULT_ROW_LIMIT = 15;
+    private static final int DEFAULT_ROW_LIMIT = 5;
     /** CSS for inputs */
     private static final String CSS_INPUT = "form-control";
     /** A hotel service */
@@ -116,10 +116,7 @@ public class HotelReportServlet extends HttpServlet {
     enum Attrib implements HttpParameter {
         NAME,
         CITY,
-        LIMIT { @Override public String defaultValue() {
-                return "" + DEFAULT_ROW_LIMIT;
-            }
-        };
+        LIMIT { @Override public String defaultValue() { return "" + DEFAULT_ROW_LIMIT;}};
 
         @Override
         public String toString() {
