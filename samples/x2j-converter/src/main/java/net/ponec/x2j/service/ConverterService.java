@@ -3,8 +3,6 @@ package net.ponec.x2j.service;
 import java.io.IOException;
 import java.io.InputStream;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.ponec.x2j.model.Message;
 
 import javax.annotation.Nonnull;
@@ -25,7 +23,7 @@ public class ConverterService {
     private final XmlParserService parserService;
 
     /** XML demo data */
-    private static final String DEMO_FILE = "/data/sample.xml";
+    private static final String DEMO_FILE = "/data/sample.html";
 
     /** Create a CSS */
     @Nonnull
