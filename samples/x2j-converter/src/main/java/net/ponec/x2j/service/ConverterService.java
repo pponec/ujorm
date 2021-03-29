@@ -35,34 +35,12 @@ public class ConverterService {
     }
 
     /**
-     * Highlights the original text according to the regular expression
-     * using HTML element {@code <span>}.
+     * Convert XML to Java
      *
-     * @param text An original text
-     * @param regexp An regular expression
+     * @param xml An original XML content t
      * @return Raw HTML text.
      */
-    public Message highlight(String text, String regexp) {
-        try {
-            if (text.length() > MAX_LENGTH) {
-                String msg = String.format("Shorten text to a maximum of %s characters.",
-                        MAX_LENGTH);
-                throw new IllegalArgumentException(msg);
-            }
-            SecureRandom random = new SecureRandom();
-            String begTag = "_" + random.nextLong();
-            String endTag = "_" + random.nextLong();
-            String rawText = text.replaceAll(
-                    "(" + regexp + ")",
-                    begTag + "$1" + endTag);
-            XmlPrinter printer = new XmlPrinter(new StringBuilder(), XmlConfig.ofDoctype(""));
-            printer.write(rawText, false);
-            return Message.of(printer.toString()
-                    .replaceAll(begTag, "<span>")
-                    .replaceAll(endTag, "</span>")
-            );
-        } catch (Exception | OutOfMemoryError e) {
-            return Message.of(e);
-        }
+    public Message toJavaCode(String xml) {
+        return Message.of(xml);
     }
 }

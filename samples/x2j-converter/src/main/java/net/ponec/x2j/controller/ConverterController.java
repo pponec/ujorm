@@ -19,72 +19,49 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestParam;
 import net.ponec.x2j.service.ConverterService;
 import net.ponec.x2j.model.Message;
-import static net.ponec.x2j.controller.Converter.Constants.*;
+import static net.ponec.x2j.controller.ConverterController.Constants.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 import org.ujorm.tools.web.ajax.JavaScriptWriter;
+import org.ujorm.tools.web.ao.MockServletResponse;
 
 @RequiredArgsConstructor
 @RestController
-public class Converter {
-    /** A service */
+public class ConverterController {
+
+    /**
+     * A service
+     */
     private final ConverterService service;
 
     @RequestMapping(path = {"/converter"}, method = {GET, POST}, produces = MediaType.TEXT_HTML_VALUE)
-    public void regexp(
-            @RequestParam(defaultValue = "") String text,
-            @RequestParam(defaultValue = "") String regexp,
-            @RequestParam(defaultValue = "false", name = "_ajax") boolean ajax,
-            HttpServletResponse response) throws IOException {
-        if (ajax) {
-            ajax(text, regexp, response);
-            return;
-        }
-        try (HtmlElement html = HtmlElement.of(getConfig("Convert XML file to Java code on-line"), response)) {
+    public String converter(@RequestParam(defaultValue = "") String text) throws IOException {
+
+        final MockServletResponse response = new MockServletResponse();
+        try ( HtmlElement html = HtmlElement.of(getConfig("Convert XML file to Java code on-line"), response)) {
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
-            writeJavascript(html);
-            try (Element body = html.getBody()) {
+            try ( Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
-                try (Element form = body.addForm()
+                try ( Element form = body.addForm()
                         .setId(FORM_ID)
                         .setMethod(Html.V_POST).setAction("?")) {
-                    form.addInput(CONTROL_CSS)
-                            .setId(REGEXP)
-                            .setName(REGEXP)
-                            .setValue(regexp)
-                            .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
+                    form.addDiv().addLabel().addText("Enter a XML file");
                     form.addTextArea(CONTROL_CSS)
                             .setId(TEXT)
                             .setName(TEXT)
-                            .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
+                            .setAttribute(Html.A_PLACEHOLDER, "Entern a XML file")
                             .addText(text);
                     form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
-                    form.addDiv(CONTROL_CSS, OUTPUT_CSS).addRawText(service.highlight(text, regexp));
+                    form.addDiv(CONTROL_CSS, OUTPUT_CSS).addText(service.toJavaCode(text));
                 }
             }
         }
+        return response.toString();
     }
 
-    private void ajax(String text, String regexp, HttpServletResponse response)
-            throws IOException {
-        try (JsonBuilder builder = JsonBuilder.of(getConfig(""), response)) {
-            final Message msg = service.highlight(text, regexp);
-            builder.writeClass(OUTPUT_CSS, e ->
-                    e.addElementIf(msg.isError(), Html.SPAN, "error")
-                    .addRawText(msg));
-        }
-    }
-
-    private void writeJavascript(HtmlElement html) {
-        new JavaScriptWriter(
-                "#" + REGEXP,
-                "#" + TEXT)
-                .setSubtitleSelector("." + SUBTITLE_CSS)
-                .setFormSelector("#" + FORM_ID)
-                .write(html.getHead());
-    }
-
-    /** Create a configuration of HTML model */
+    /**
+     * Create a configuration of HTML model
+     */
     private DefaultHtmlConfig getConfig(@Nonnull String title) {
         DefaultHtmlConfig config;
         config = HtmlConfig.ofDefault();
@@ -93,23 +70,42 @@ public class Converter {
         return config;
     }
 
-    /** CSS constants */
+    /**
+     * CSS constants
+     */
     static class Constants {
-        /** Bootstrap form control CSS class name */
+
+        /**
+         * Bootstrap form control CSS class name
+         */
         static final String CONTROL_CSS = "form-control";
-        /** CSS class name for the output box */
+        /**
+         * CSS class name for the output box
+         */
         static final String OUTPUT_CSS = "out";
-        /** CSS class name for the output box */
+        /**
+         * CSS class name for the output box
+         */
         static final String SUBTITLE_CSS = "subtitle";
-        /** Form identifier */
+        /**
+         * Form identifier
+         */
         static final String FORM_ID = "form";
-        /** Link to a Bootstrap URL of CDN */
+        /**
+         * Link to a Bootstrap URL of CDN
+         */
         static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
-        /** Link to jQuery of CDN */
+        /**
+         * Link to jQuery of CDN
+         */
         static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
-        /** Regula expression parameter */
+        /**
+         * Regula expression parameter
+         */
         static final HttpParameter REGEXP = HttpParameter.of("regexp");
-        /** Text value parameter */
+        /**
+         * Text value parameter
+         */
         static final HttpParameter TEXT = HttpParameter.of("text");
     }
 }
