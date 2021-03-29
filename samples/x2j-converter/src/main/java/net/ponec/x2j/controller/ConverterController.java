@@ -18,10 +18,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestParam;
 import net.ponec.x2j.service.ConverterService;
-import net.ponec.x2j.model.Message;
 import static net.ponec.x2j.controller.ConverterController.Constants.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
-import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import org.ujorm.tools.web.ao.MockServletResponse;
 
 @RequiredArgsConstructor
@@ -34,7 +32,14 @@ public class ConverterController {
     private final ConverterService service;
 
     @RequestMapping(path = {"/converter"}, method = {GET, POST}, produces = MediaType.TEXT_HTML_VALUE)
-    public String converter(@RequestParam(defaultValue = "") String text) throws IOException {
+    public String converter(
+            @RequestParam(defaultValue = "") String text,
+            @RequestParam(defaultValue = "") String submit
+    ) throws IOException {
+
+        if (DEMO.equals(submit)) {
+            text = service.getDemoXml();
+        }
 
         final MockServletResponse response = new MockServletResponse();
         try ( HtmlElement html = HtmlElement.of(getConfig("Convert XML file to Java code on-line"), response)) {
@@ -51,7 +56,16 @@ public class ConverterController {
                             .setName(TEXT)
                             .setAttribute(Html.A_PLACEHOLDER, "Entern a XML file")
                             .addText(text);
-                    form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
+                    try (Element buttons = form.addDiv()) {
+                        buttons.addSubmitButton("btn", "btn-primary")
+                                .setName(SUBMIT)
+                                .setValue("send")
+                                .addText("Evaluate");
+                        buttons.addSubmitButton("btn", "btn-secondary")
+                                .setName(SUBMIT)
+                                .setValue(DEMO)
+                                .addText("Demo");
+                    }
                     form.addDiv(CONTROL_CSS, OUTPUT_CSS).addText(service.toJavaCode(text));
                 }
             }
@@ -100,12 +114,16 @@ public class ConverterController {
          */
         static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
         /**
-         * Regula expression parameter
-         */
-        static final HttpParameter REGEXP = HttpParameter.of("regexp");
-        /**
          * Text value parameter
          */
         static final HttpParameter TEXT = HttpParameter.of("text");
+        /**
+         * Submit button name
+         */
+        static final String SUBMIT = "submit";
+        /**
+         * Demo value
+         */
+        static final String DEMO = "demo";
     }
 }

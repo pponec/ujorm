@@ -1,12 +1,13 @@
 package net.ponec.x2j.service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import net.ponec.x2j.model.Message;
-import org.ujorm.tools.xml.builder.XmlPrinter;
-import org.ujorm.tools.xml.config.XmlConfig;
 
 import javax.annotation.Nonnull;
-import java.security.SecureRandom;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
 /**
  *
@@ -15,8 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConverterService {
 
-    /** Max text length */
-    private static final int MAX_LENGTH = 1_100;
+    /** XML demo data */
+    private static final String DEMO_FILE = "/data/sample.xml";
 
     /** Create a CSS */
     @Nonnull
@@ -43,4 +44,15 @@ public class ConverterService {
     public Message toJavaCode(String xml) {
         return Message.of(xml);
     }
+
+    public String getDemoXml() {
+        try {
+            InputStream is = getClass().getResourceAsStream(DEMO_FILE);
+            byte[] content = FileCopyUtils.copyToByteArray(is);
+            return new String(content, UTF_8);
+        } catch (IOException e) {
+            throw new IllegalStateException(DEMO_FILE, e);
+        }
+    }
+
 }
