@@ -1,4 +1,4 @@
-package net.ponec.x2j.controller.ao;
+package net.ponec.x2j.model;
 import org.ujorm.tools.Assert;
 
 import javax.annotation.Nonnull;

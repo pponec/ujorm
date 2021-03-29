@@ -1,15 +1,18 @@
-package net.ponec.x2j.controller.ao;
+package net.ponec.x2j.service;
 
+import net.ponec.x2j.model.Message;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.XmlConfig;
 
 import javax.annotation.Nonnull;
 import java.security.SecureRandom;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Pavel Ponec
  */
+@Service
 public class ConverterService {
 
     /** Max text length */

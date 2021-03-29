@@ -14,18 +14,20 @@ import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestParam;
-import net.ponec.x2j.controller.ao.ConverterService;
-import net.ponec.x2j.controller.ao.Message;
+import net.ponec.x2j.service.ConverterService;
+import net.ponec.x2j.model.Message;
 import static net.ponec.x2j.controller.Converter.Constants.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 import org.ujorm.tools.web.ajax.JavaScriptWriter;
 
+@RequiredArgsConstructor
 @RestController
 public class Converter {
     /** A service */
-    private final ConverterService service = new ConverterService();
+    private final ConverterService service;
 
     @RequestMapping(path = {"/converter"}, method = {GET, POST}, produces = MediaType.TEXT_HTML_VALUE)
     public void regexp(
