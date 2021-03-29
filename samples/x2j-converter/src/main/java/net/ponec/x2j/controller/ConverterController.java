@@ -7,12 +7,10 @@ import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
-import org.ujorm.tools.web.json.JsonBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 
 import javax.annotation.Nonnull;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +30,7 @@ public class ConverterController {
      */
     private final ConverterService service;
 
-    @RequestMapping(path = {"/converter"}, method = {GET, POST}, produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(path = {"/converter", ""}, method = {GET, POST}, produces = MediaType.TEXT_HTML_VALUE)
     public String converter(
             @RequestParam(defaultValue = "") String text,
             @RequestParam(defaultValue = "") String submit
@@ -46,7 +44,7 @@ public class ConverterController {
 
         final MockServletResponse response = new MockServletResponse();
         try ( HtmlElement html = HtmlElement.of(getConfig("Convert XML file to Java code on-line"), response)) {
-            html.addCssLink(BOOTSTRAP_CSS);
+            html.addCssLink(CSS_STYLE);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             try ( Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
@@ -109,13 +107,9 @@ public class ConverterController {
          */
         static final String FORM_ID = "form";
         /**
-         * Link to a Bootstrap URL of CDN
+         * Link to CSS including a Bootstrap URL of CDN
          */
-        static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
-        /**
-         * Link to jQuery of CDN
-         */
-        static final String JQUERY_JS = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js";
+        static final String CSS_STYLE = "/css/main.css";
         /**
          * Text value parameter
          */
