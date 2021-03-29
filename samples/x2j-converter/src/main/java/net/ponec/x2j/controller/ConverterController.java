@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestParam;
 import net.ponec.x2j.service.ConverterService;
 import static net.ponec.x2j.controller.ConverterController.Constants.*;
+import net.ponec.x2j.model.Message;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 import org.ujorm.tools.web.ao.MockServletResponse;
 
@@ -41,6 +42,8 @@ public class ConverterController {
             text = service.getDemoXml();
         }
 
+        Message message = service.toJavaCode(text);
+
         final MockServletResponse response = new MockServletResponse();
         try ( HtmlElement html = HtmlElement.of(getConfig("Convert XML file to Java code on-line"), response)) {
             html.addCssLink(BOOTSTRAP_CSS);
@@ -50,11 +53,11 @@ public class ConverterController {
                 try ( Element form = body.addForm()
                         .setId(FORM_ID)
                         .setMethod(Html.V_POST).setAction("?")) {
-                    form.addDiv().addLabel().addText("Enter a XML file");
+                    form.addDiv().addLabel().addText("Enter a XML file:");
                     form.addTextArea(CONTROL_CSS)
                             .setId(TEXT)
                             .setName(TEXT)
-                            .setAttribute(Html.A_PLACEHOLDER, "Entern a XML file")
+                            .setAttribute(Html.A_PLACEHOLDER, "XML file")
                             .addText(text);
                     try (Element buttons = form.addDiv()) {
                         buttons.addSubmitButton("btn", "btn-primary")
@@ -66,7 +69,7 @@ public class ConverterController {
                                 .setValue(DEMO)
                                 .addText("Demo");
                     }
-                    form.addDiv(CONTROL_CSS, OUTPUT_CSS).addText(service.toJavaCode(text));
+                    form.addDiv(CONTROL_CSS, OUTPUT_CSS).addText(message);
                 }
             }
         }

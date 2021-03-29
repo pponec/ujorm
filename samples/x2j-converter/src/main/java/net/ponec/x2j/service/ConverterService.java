@@ -3,9 +3,14 @@ package net.ponec.x2j.service;
 import java.io.IOException;
 import java.io.InputStream;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.ponec.x2j.model.Message;
 
 import javax.annotation.Nonnull;
+import lombok.RequiredArgsConstructor;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
@@ -14,7 +19,10 @@ import org.springframework.util.FileCopyUtils;
  * @author Pavel Ponec
  */
 @Service
+@RequiredArgsConstructor
 public class ConverterService {
+
+    private final XmlParserService parserService;
 
     /** XML demo data */
     private static final String DEMO_FILE = "/data/sample.xml";
@@ -42,7 +50,12 @@ public class ConverterService {
      * @return Raw HTML text.
      */
     public Message toJavaCode(String xml) {
-        return Message.of(xml);
+        try {
+            Document doc = parserService.parse(xml);
+            return Message.of(doc.toString());
+        } catch (DocumentException e) {
+            return Message.of(e);
+        }
     }
 
     public String getDemoXml() {
