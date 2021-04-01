@@ -35,7 +35,7 @@
         <version>9</version>
     </parent>
 
-    <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->        
+    <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->
     <pluginRepositories>
         <pluginRepository>
             <id>central</id>
@@ -71,7 +71,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -110,6 +110,7 @@
                 <module>samples/wicket</module>
                 <module>samples/servlet</module>
                 <module>samples/generated</module>
+                <module>samples/x2j-converter</module>
 
                 <module>benchmark/hibernate</module>
                 <module>benchmark/hibernate-ujo</module>
