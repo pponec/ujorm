@@ -3,8 +3,13 @@ The Ujorm release notes
 *******************************
 
 
-release 2.15-SNAPSHOT (yyyy-mm-dd)
+release 2.16-SNAPSHOT (yyyy-mm-dd)
 ...
+
+release 2.15 (2021-04-02)
++ WEB: The TableBuilder component sorts columns with no Javascript support.
++ WEB: HttpParameter returns the last value of the HttpServletRequest.
++ WEB: Element name is type of String.
 
 release 2.14 (2021-03-21)
 + ORM: Indices are created for new tables as well
