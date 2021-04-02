@@ -911,7 +911,7 @@ public final class Element implements ApiElement<Element>, Html {
         try {
             builder.accept(this);
             close();
-        } catch (Throwable e) {
+        } catch (RuntimeException e) {
             return ExceptionProvider.of(e);
         }
         return ExceptionProvider.of();

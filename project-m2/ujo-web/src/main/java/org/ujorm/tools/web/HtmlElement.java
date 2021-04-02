@@ -501,7 +501,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         try {
             builder.accept(this);
             close();
-        } catch (Throwable e) {
+        } catch (RuntimeException e) {
             return ExceptionProvider.of(e);
         }
         return ExceptionProvider.of();
