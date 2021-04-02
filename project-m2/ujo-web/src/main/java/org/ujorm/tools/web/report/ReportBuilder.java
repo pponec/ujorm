@@ -48,7 +48,7 @@ import org.ujorm.tools.xml.config.HtmlConfig;
  *
  * <br>Please note that this is an experimental implementation.
  *
- * <h3>Usage<h3>
+ * <h3>Usage</h3>
  *
  * <pre class="pre">
  *  ReportBuilder.of("Hotel Report", service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input)))
