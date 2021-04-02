@@ -55,7 +55,7 @@ import org.ujorm.tools.xml.config.HtmlConfig;
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")
- *          .build(httpServletRequest, HtpServletResponse);
+ *          .build(httpServletRequest, httpServletResponse);
  * </pre>
  *
  * @author Pavel Ponec
