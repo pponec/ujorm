@@ -18,6 +18,7 @@ package org.ujorm.tools.web;
 import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.tools.Assert;
 
 /**
  *
@@ -25,15 +26,15 @@ import javax.annotation.Nullable;
  */
 public final class ExceptionProvider {
 
+    /** Provider with no exception */
+    @Nonnull
+    private static final ExceptionProvider EMPTY = new ExceptionProvider(null);
+
     @Nullable
     private final Throwable e;
 
     private ExceptionProvider(@Nullable final Throwable e) {
         this.e = e;
-    }
-
-    public Throwable getE() {
-        return e;
     }
 
     /**
@@ -45,12 +46,16 @@ public final class ExceptionProvider {
         }
     }
 
+    /** A factory method */
+    @Nonnull
     public static final ExceptionProvider of(@Nonnull final Throwable e) {
-        return new ExceptionProvider(e);
+        return new ExceptionProvider(Assert.notNull(e, "Exception is required"));
     }
 
+    /** A factory method */
+    @Nonnull
     public static final ExceptionProvider of() {
-        return new ExceptionProvider(null);
+        return EMPTY;
     }
 
 }

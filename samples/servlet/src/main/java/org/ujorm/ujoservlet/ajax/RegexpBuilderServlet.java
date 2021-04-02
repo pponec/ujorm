@@ -69,15 +69,15 @@ public class RegexpBuilderServlet extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
 
-        HtmlElement.of(input, output, getConfig("Regular expression tester by a builder")).build(html -> {
+        HtmlElement.of(input, output, getConfig("Regular expression tester by a builder")).then(html -> {
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             writeJavaScript(html, AJAX_ENABLED);
             Message msg = highlight(input);
-            html.addBody().build(body -> {
+            html.addBody().then(body -> {
                 body.addHeading(html.getTitle());
                 body.addDiv(SUBTITLE_CSS).addText(AJAX_ENABLED ? AJAX_READY_MSG : "");
-                body.addForm().build(form -> {
+                body.addForm().then(form -> {
                     form.setId(FORM_ID)
                         .setMethod(Html.V_POST).setAction("?");
                     form.addInput(CONTROL_CSS)

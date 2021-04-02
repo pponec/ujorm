@@ -495,11 +495,12 @@ public class HtmlElement implements ApiElement<Element>, Html {
         return result;
     }
 
-    /** An element builder */
+    /** Apply an element builder */
     @Nonnull
-    public ExceptionProvider build(@Nonnull final Consumer<HtmlElement> builder) {
+    public ExceptionProvider then(@Nonnull final Consumer<HtmlElement> builder) {
         try {
             builder.accept(this);
+            close();
         } catch (Throwable e) {
             return ExceptionProvider.of(e);
         }

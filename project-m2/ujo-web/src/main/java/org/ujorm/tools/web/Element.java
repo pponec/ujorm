@@ -904,10 +904,17 @@ public final class Element implements ApiElement<Element>, Html {
         return this;
     }
 
-    /** An element builder */
-    public void build(@Nonnull final Consumer<Element> builder) {
-        builder.accept(this);
-        close();
+
+    /** Apply an element builder */
+    @Nonnull
+    public ExceptionProvider then(@Nonnull final Consumer<Element> builder) {
+        try {
+            builder.accept(this);
+            close();
+        } catch (Throwable e) {
+            return ExceptionProvider.of(e);
+        }
+        return ExceptionProvider.of();
     }
 
     /** String value */
