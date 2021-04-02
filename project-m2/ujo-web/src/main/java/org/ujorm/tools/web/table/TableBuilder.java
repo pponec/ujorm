@@ -27,11 +27,11 @@ import org.ujorm.tools.web.report.ReportBuilderConfig;
  * <h3>Usage<h3>
  *
  * <pre class="pre">
- *  TableBuilder.of("Hotel Report", service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input)))
+ *  TableBuilder.of("Hotel Report")
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")
- *          .build(httpServletRequest, HtpServletResponse);
+ *          .build(httpServletRequest, httpServletResponse, resource);
  * </pre>
  *
  * @author Pavel Ponec

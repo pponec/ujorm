@@ -51,7 +51,7 @@ import org.ujorm.tools.xml.config.HtmlConfig;
  * <h3>Usage</h3>
  *
  * <pre class="pre">
- *  ReportBuilder.of("Hotel Report", service.findHotels(ROW_LIMIT, NAME.of(input), CITY.of(input)))
+ *  ReportBuilder.of("Hotel Report")
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")
