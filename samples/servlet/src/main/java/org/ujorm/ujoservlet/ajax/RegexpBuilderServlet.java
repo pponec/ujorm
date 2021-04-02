@@ -24,7 +24,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ajax.JavaScriptWriter;
@@ -71,12 +70,10 @@ public class RegexpBuilderServlet extends HttpServlet {
             final HttpServletResponse output) throws ServletException, IOException {
 
         HtmlElement.of(input, output, getConfig("Regular expression tester by a builder")).build(html -> {
-            //html.addJavascriptLink(false, JQUERY_JS); // For jQuery implementation only
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             writeJavaScript(html, AJAX_ENABLED);
             Message msg = highlight(input);
-
             html.addBody().build(body -> {
                 body.addHeading(html.getTitle());
                 body.addDiv(SUBTITLE_CSS).addText(AJAX_ENABLED ? AJAX_READY_MSG : "");
@@ -99,34 +96,10 @@ public class RegexpBuilderServlet extends HttpServlet {
                 body.addElement(Html.HR);
                 body.addAnchor(SOURCE_URL).addTextTemplated("Source code <{}.{}.{}>", 1, 2, 3);
             });
-            try (Element body = html.getBody()) {
-                body.addHeading(html.getTitle());
-                body.addDiv(SUBTITLE_CSS).addText(AJAX_ENABLED ? AJAX_READY_MSG : "");
-                try (Element form = body.addForm()
-                        .setId(FORM_ID)
-                        .setMethod(Html.V_POST).setAction("?")) {
-                    form.addInput(CONTROL_CSS)
-                            .setId(REGEXP)
-                            .setName(REGEXP)
-                            .setValue(REGEXP.of(input))
-                            .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
-                    form.addTextArea(CONTROL_CSS)
-                            .setId(TEXT)
-                            .setName(TEXT)
-                            .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
-                            .addText(TEXT.of(input));
-                    form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
-                    form.addDiv(CONTROL_CSS, OUTPUT_CSS).addRawText(msg);
-                }
-                body.addElement(Html.HR);
-                body.addAnchor(SOURCE_URL).addTextTemplated("Source code <{}.{}.{}>", 1, 2, 3);
-            }
+        }).catche(e -> {
+            LOGGER.log(Level.WARNING, "Internal server error", e);
+            output.setStatus(500);
         });
-
-//        } catch (Exception e) {
-//            LOGGER.log(Level.WARNING, "Internal server error", e);
-//            output.setStatus(500);
-//        }
     }
 
     @Override
