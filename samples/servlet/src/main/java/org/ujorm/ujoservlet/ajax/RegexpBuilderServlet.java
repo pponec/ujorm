@@ -34,21 +34,21 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.ujoservlet.ajax.ao.Message;
 import org.ujorm.ujoservlet.ajax.ao.Service;
-import static org.ujorm.ujoservlet.ajax.RegexpServlet.Attrib.*;
-import static org.ujorm.ujoservlet.ajax.RegexpServlet.Css.*;
-import static org.ujorm.ujoservlet.ajax.RegexpServlet.Url.*;
+import static org.ujorm.ujoservlet.ajax.RegexpBuilderServlet.Attrib.*;
+import static org.ujorm.ujoservlet.ajax.RegexpBuilderServlet.Css.*;
+import static org.ujorm.ujoservlet.ajax.RegexpBuilderServlet.Url.*;
 
 /**
  * A live example of the HtmlElement inside a servlet using a Dom4j library.
  * @author Pavel Ponec
  */
-@WebServlet(RegexpServlet.URL_PATTERN)
-public class RegexpServlet extends HttpServlet {
+@WebServlet(RegexpBuilderServlet.URL_PATTERN)
+public class RegexpBuilderServlet extends HttpServlet {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(RegexpServlet.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(RegexpBuilderServlet.class.getName());
     /** URL pattern */
-    public static final String URL_PATTERN = "/RegexpServlet";
+    public static final String URL_PATTERN = "/RegexpBuilderServlet";
     /** Enable AJAX feature */
     private static final boolean AJAX_ENABLED = true;
     /** AJAX param */
@@ -70,13 +70,36 @@ public class RegexpServlet extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
 
-        try (HtmlElement html = HtmlElement.of(input, output, getConfig("Regular expression tester"))) {
+        HtmlElement.of(input, output, getConfig("Regular expression tester by a builder")).build(html -> {
             //html.addJavascriptLink(false, JQUERY_JS); // For jQuery implementation only
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             writeJavaScript(html, AJAX_ENABLED);
             Message msg = highlight(input);
-            try (Element body = html.addBody()) {
+
+            html.addBody().build(body -> {
+                body.addHeading(html.getTitle());
+                body.addDiv(SUBTITLE_CSS).addText(AJAX_ENABLED ? AJAX_READY_MSG : "");
+                body.addForm().build(form -> {
+                    form.setId(FORM_ID)
+                        .setMethod(Html.V_POST).setAction("?");
+                    form.addInput(CONTROL_CSS)
+                            .setId(REGEXP)
+                            .setName(REGEXP)
+                            .setValue(REGEXP.of(input))
+                            .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
+                    form.addTextArea(CONTROL_CSS)
+                            .setId(TEXT)
+                            .setName(TEXT)
+                            .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
+                            .addText(TEXT.of(input));
+                    form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
+                    form.addDiv(CONTROL_CSS, OUTPUT_CSS).addRawText(msg);
+                });
+                body.addElement(Html.HR);
+                body.addAnchor(SOURCE_URL).addTextTemplated("Source code <{}.{}.{}>", 1, 2, 3);
+            });
+            try (Element body = html.getBody()) {
                 body.addHeading(html.getTitle());
                 body.addDiv(SUBTITLE_CSS).addText(AJAX_ENABLED ? AJAX_READY_MSG : "");
                 try (Element form = body.addForm()
@@ -98,10 +121,12 @@ public class RegexpServlet extends HttpServlet {
                 body.addElement(Html.HR);
                 body.addAnchor(SOURCE_URL).addTextTemplated("Source code <{}.{}.{}>", 1, 2, 3);
             }
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Internal server error", e);
-            output.setStatus(500);
-        }
+        });
+
+//        } catch (Exception e) {
+//            LOGGER.log(Level.WARNING, "Internal server error", e);
+//            output.setStatus(500);
+//        }
     }
 
     @Override
