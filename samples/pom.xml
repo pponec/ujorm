@@ -3,7 +3,7 @@
 
     <properties>
         <ujo.version>1.44</ujo.version>
-        <java.version>2.15-SNAPSHOT</java.version>
+        <java.version>2.16-SNAPSHOT</java.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
