@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -901,6 +902,12 @@ public final class Element implements ApiElement<Element>, Html {
     public Element setHref(@Nullable final CharSequence value) {
         setAttribute(A_HREF, value);
         return this;
+    }
+
+    /** An element builder */
+    public void build(@Nonnull final Consumer<Element> builder) {
+        builder.accept(this);
+        close();
     }
 
     /** String value */

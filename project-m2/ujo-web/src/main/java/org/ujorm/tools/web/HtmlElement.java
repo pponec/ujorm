@@ -19,6 +19,7 @@ package org.ujorm.tools.web;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
@@ -492,5 +493,16 @@ public class HtmlElement implements ApiElement<Element>, Html {
             }
         }
         return result;
+    }
+
+    /** An element builder */
+    @Nonnull
+    public ExceptionProvider build(@Nonnull final Consumer<HtmlElement> builder) {
+        try {
+            builder.accept(this);
+        } catch (Throwable e) {
+            return ExceptionProvider.of(e);
+        }
+        return ExceptionProvider.of();
     }
 }
