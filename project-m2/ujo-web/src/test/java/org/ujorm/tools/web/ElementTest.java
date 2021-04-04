@@ -20,6 +20,8 @@ package org.ujorm.tools.web;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.*;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.MockServletResponse;
@@ -33,6 +35,9 @@ import org.ujorm.tools.web.ao.Injector;
  * @author Pavel Ponec
  */
 public class ElementTest {
+
+    /** Logger */
+    private final Logger logger = Logger.getLogger(ElementTest.class.getName());
 
     /** Link to a Bootstrap URL */
     private static final String BOOTSTRAP_CSS = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
@@ -216,6 +221,26 @@ public class ElementTest {
      * Test of addSelect method, of class Element.
      */
     @Test
+    public void testElementThenCatch() {
+        StringBuilder writer = new StringBuilder();
+        DefaultHtmlConfig config = HtmlConfig.ofDefault()
+                .setTitle("Element-try-catche");
+
+        HtmlElement.of(config, writer).addBody()
+                .then(body -> {
+                    body.addHeading(config.getTitle());
+                })
+                .catche(e -> {
+                    logger.log(Level.SEVERE, "An error", e);
+                });
+        String expected = "<h1>Element-try-catche</h1>";
+        assertTrue(writer.toString().contains(expected));
+    }
+
+    /**
+     * Test of addSelect method, of class Element.
+     */
+    @Test
     public void testAddTable() {
         System.out.println("addTable");
         MockServletResponse response = new MockServletResponse();
@@ -241,7 +266,7 @@ public class ElementTest {
         MockServletResponse response = new MockServletResponse();
 
         CharSequence[] cssClasses = {"table"};
-        CharSequence[] titles = {"Id", "Name", "Enabled", 
+        CharSequence[] titles = {"Id", "Name", "Enabled",
                     (Injector) td -> td.addSpan("red").addText("Home page")};
         try (HtmlElement html = HtmlElement.of(response, BOOTSTRAP_CSS)) {
             html.addBody().addHeading("Cars");
@@ -251,7 +276,7 @@ public class ElementTest {
                     Car::getEnabled,
                     (Column<Car>) (td, car) -> td.addLinkedText(car.getHomePage(), "link")
             );
-        }   
+        }
         assertTrue(response.toString().contains("<td>Scala</td>"));
         assertTrue(response.toString().contains("<th>\n<span class=\"red\">Home page</span></th>"));
         assertTrue(response.toString().contains("<td>\n<a href=\"http://demo.car.org"));

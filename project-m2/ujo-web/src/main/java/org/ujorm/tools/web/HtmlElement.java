@@ -495,7 +495,20 @@ public class HtmlElement implements ApiElement<Element>, Html {
         return result;
     }
 
-    /** Apply an element builder */
+    /** Apply body of element by a lambda expression.
+     *
+     * <h3>Usage</h3>
+     *
+     * <pre class="pre">
+     *  HtmlElement.of(config, writer).addBody()
+     *      .then(body -> {
+     *         body.addHeading(config.getTitle());
+     *      })
+     *      .catche(e -> {
+     *          logger.log(Level.SEVERE, "An error", e);
+     *      });
+     * </pre>
+     */
     @Nonnull
     public ExceptionProvider then(@Nonnull final Consumer<HtmlElement> builder) {
         try {
