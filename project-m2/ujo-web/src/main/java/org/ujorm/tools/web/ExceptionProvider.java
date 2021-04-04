@@ -31,16 +31,16 @@ public final class ExceptionProvider {
     private static final ExceptionProvider EMPTY = new ExceptionProvider(null);
 
     @Nullable
-    private final RuntimeException e;
+    private final Exception e;
 
-    private ExceptionProvider(@Nullable final RuntimeException e) {
+    private ExceptionProvider(@Nullable final Exception e) {
         this.e = e;
     }
 
     /**
      * Apply consumer if the exception is not null.
      */
-    public void catche(@Nonnull final Consumer<RuntimeException> exceptionConsumer) {
+    public void catche(@Nonnull final Consumer<Exception> exceptionConsumer) {
         if (e != null) {
             exceptionConsumer.accept(e);
         }
@@ -48,7 +48,7 @@ public final class ExceptionProvider {
 
     /** A factory method */
     @Nonnull
-    public static final ExceptionProvider of(@Nonnull final RuntimeException e) {
+    public static final ExceptionProvider of(@Nonnull final Exception e) {
         return new ExceptionProvider(Assert.notNull(e, "Exception is required"));
     }
 

@@ -910,9 +910,10 @@ public final class Element implements ApiElement<Element>, Html {
     public ExceptionProvider then(@Nonnull final Consumer<Element> builder) {
         try {
             builder.accept(this);
-            close();
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return ExceptionProvider.of(e);
+        } finally {
+            close();
         }
         return ExceptionProvider.of();
     }
