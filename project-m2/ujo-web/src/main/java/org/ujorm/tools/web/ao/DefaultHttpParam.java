@@ -15,11 +15,7 @@
  */
 package org.ujorm.tools.web.ao;
 
-import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.servlet.ServletRequest;
-import org.ujorm.tools.Assert;
 
 /**
  * An interface for bulding HTML parameters by an Enumerator.
@@ -27,7 +23,7 @@ import org.ujorm.tools.Assert;
  * <h3>Usage</h3>
  * <pre class="pre">
  * {
- * String value = Param.text(httpServletRequest, "my default value"); } enum Param implements HttpParam { REGEXP, TEXT;
+ * String value = Param.TEXT(httpServletRequest, "my default value"); } enum Param implements HttpParam { REGEXP, TEXT;
  *
  * @Override public String toString() { return name().toLowerCase(); } }
  * </pre>
@@ -51,7 +47,7 @@ public final class DefaultHttpParam implements HttpParameter {
     public String defaultValue() {
         return defaultValue;
     }
-    
+
     @Nonnull
     @Override
     public String toString() {

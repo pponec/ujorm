@@ -486,31 +486,31 @@ public final class Element implements ApiElement<Element>, Html {
         return addElement(BODY, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new title element */
     @Nonnull
     public Element addTitle(@Nonnull final CharSequence... cssClasses) {
         return addElement(TITLE, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new link element */
     @Nonnull
     public Element addLink(@Nonnull final CharSequence... cssClasses) {
         return addElement(LINK, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new style element */
     @Nonnull
     public Element addStyle(@Nonnull final CharSequence... cssClasses) {
         return addElement(STYLE, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new script element */
     @Nonnull
     public Element addScript(@Nonnull final CharSequence... cssClasses) {
         return addElement(SCRIPT, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new div element */
     @Nonnull
     public Element addDiv(@Nonnull final CharSequence... cssClasses) {
         return addElement(DIV, cssClasses);
@@ -531,25 +531,25 @@ public final class Element implements ApiElement<Element>, Html {
         return result;
     }
 
-    /** Add new body element */
+    /** Add new pre element */
     @Nonnull
     public Element addPreformatted(@Nonnull final CharSequence... cssClasses) {
         return addElement(PRE, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new span element */
     @Nonnull
     public Element addSpan(@Nonnull final CharSequence... cssClasses) {
         return addElement(SPAN, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new paragram element */
     @Nonnull
     public Element addParagraph(@Nonnull final CharSequence... cssClasses) {
         return addElement(P, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new form element */
     @Nonnull
     public Element addForm(@Nonnull final CharSequence... cssClasses) {
         return addElement(FORM, cssClasses);
@@ -568,25 +568,25 @@ public final class Element implements ApiElement<Element>, Html {
         return addElement(HEADING_PREFIX + level, cssClasses).addText(title);
     }
 
-    /** Add new body element */
+    /** Add new head of table element */
     @Nonnull
     public Element addTableHead(@Nonnull final CharSequence... cssClasses) {
         return addElement(THEAD, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new table row element */
     @Nonnull
     public Element addTableRow(@Nonnull final CharSequence... cssClasses) {
         return addElement(TR, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new detail of table element */
     @Nonnull
     public Element addTableDetail(@Nonnull final CharSequence... cssClasses) {
         return addElement(TD, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new label element */
     @Nonnull
     public Element addLabel(@Nonnull final CharSequence... cssClasses) {
         return addElement(LABEL, cssClasses);
@@ -642,7 +642,7 @@ public final class Element implements ApiElement<Element>, Html {
         return addInput(cssClasses).setType(V_PASSWORD);
     }
 
-    /** Add new body element */
+    /** Add new text area element */
     @Nonnull
     public Element addTextArea(@Nonnull final CharSequence... cssClasses) {
         return addElement(TEXT_AREA, cssClasses);
@@ -677,13 +677,13 @@ public final class Element implements ApiElement<Element>, Html {
         return this;
     }
 
-    /** Add new body element */
+    /** Add new option element */
     @Nonnull
     public Element addOption(@Nonnull final CharSequence... cssClasses) {
         return addElement(OPTION, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new button element */
     @Nonnull
     public Element addButton(@Nonnull final CharSequence... cssClasses) {
         return addElement(BUTTON, cssClasses);
@@ -722,13 +722,13 @@ public final class Element implements ApiElement<Element>, Html {
         return this;
     }
 
-    /** Add new body element */
+    /** Add new unordered list element */
     @Nonnull
     public Element addUnorderedlist(@Nonnull final CharSequence... cssClasses) {
         return addElement(UL, cssClasses);
     }
 
-    /** Add new body element */
+    /** Add new ordered list element */
     @Nonnull
     public Element addOrderedList(@Nonnull final CharSequence... cssClasses) {
         return addElement(OL, cssClasses);
