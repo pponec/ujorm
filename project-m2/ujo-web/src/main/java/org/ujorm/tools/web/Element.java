@@ -922,7 +922,7 @@ public final class Element implements ApiElement<Element>, Html {
     public ExceptionProvider then(@Nonnull final Consumer<Element> builder) {
         try {
             builder.accept(this);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return ExceptionProvider.of(e);
         } finally {
             close();

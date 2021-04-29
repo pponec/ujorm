@@ -20,7 +20,6 @@ package org.ujorm.tools.web;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.*;
 import org.ujorm.tools.web.ao.Column;
@@ -215,26 +214,6 @@ public class ElementTest {
         }
         String expected = "<div><span>test</span></div>";
         assertEquals(expected, writer.toString());
-    }
-
-    /**
-     * Test of addSelect method, of class Element.
-     */
-    @Test
-    public void testElementThenCatch() {
-        StringBuilder writer = new StringBuilder();
-        DefaultHtmlConfig config = HtmlConfig.ofDefault()
-                .setTitle("Element-try-catche");
-
-        HtmlElement.of(config, writer).addBody()
-                .then(body -> {
-                    body.addHeading(config.getTitle());
-                })
-                .catche(e -> {
-                    logger.log(Level.SEVERE, "An error", e);
-                });
-        String expected = "<h1>Element-try-catche</h1>";
-        assertTrue(writer.toString().contains(expected));
     }
 
     /**
