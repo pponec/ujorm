@@ -38,8 +38,6 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 /**
  * Build a content of a HTML page for a sortable data grid.
  *
- * <br>Please note that this is an experimental implementation.
- *
  * @author Pavel Ponec
  */
 public class GridBuilder<D> {

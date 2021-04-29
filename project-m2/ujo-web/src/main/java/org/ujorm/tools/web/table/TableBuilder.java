@@ -22,8 +22,6 @@ import org.ujorm.tools.web.report.ReportBuilderConfig;
 /**
  * A HTML page builder for table based an AJAX.
  *
- * <br>Please note that this is an experimental implementation.
- *
  * <h3>Usage<h3>
  *
  * <pre class="pre">

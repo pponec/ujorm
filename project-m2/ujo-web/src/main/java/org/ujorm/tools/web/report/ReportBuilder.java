@@ -46,8 +46,6 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 /**
  * A HTML page builder for table based report with an AJAX support.
  *
- * <br>Please note that this is an experimental implementation.
- *
  * <h3>Usage</h3>
  *
  * <pre class="pre">
