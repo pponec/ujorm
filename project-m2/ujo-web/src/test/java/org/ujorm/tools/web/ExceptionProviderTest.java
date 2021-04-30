@@ -28,7 +28,9 @@ import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
  */
 public class ExceptionProviderTest {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private final Logger logger = Logger.getLogger(ElementTest.class.getName());
 
     /**
@@ -51,7 +53,6 @@ public class ExceptionProviderTest {
         assertTrue(writer.toString().contains(expected));
     }
 
-
     /**
      * Test of addSelect method, of class Element.
      */
@@ -73,13 +74,11 @@ public class ExceptionProviderTest {
         assertEquals(expected, result[0]);
     }
 
-
-
     /**
      * Test of addSelect method, of class Element.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testElementThenCatch3() {
+    public void testElementThenCatch3a() {
         StringBuilder writer = new StringBuilder();
         DefaultHtmlConfig config = HtmlConfig.ofDefault()
                 .setTitle("Element-try-catche");
@@ -95,6 +94,67 @@ public class ExceptionProviderTest {
         String expected = "test";
         assertEquals(expected, result[0]);
     }
+    /**
+     * Test of addSelect method, of class Element.
+     */
+    @Test()
+    public void testElementThenCatch3b() {
+        StringBuilder writer = new StringBuilder();
+        DefaultHtmlConfig config = HtmlConfig.ofDefault()
+                .setTitle("Element-try-catche");
 
+        String[] result = {""};
+        HtmlElement.of(config, writer).addBody()
+                .then(body -> {
+                    throw new NullPointerException("test");
+                })
+                .catche(NullPointerException.class, e -> {
+                    result[0] = e.getMessage();
+                });
+        String expected = "test";
+        assertEquals(expected, result[0]);
+    }
+
+    /**
+     * Test of addSelect method, of class Element.
+     */
+    @Test(expected = OutOfMemoryError.class)
+    public void testElementThenCatch4a() {
+        StringBuilder writer = new StringBuilder();
+        DefaultHtmlConfig config = HtmlConfig.ofDefault()
+                .setTitle("Element-try-catche");
+
+        String[] result = {""};
+        HtmlElement.of(config, writer).addBody()
+                .then(body -> {
+                    throw new OutOfMemoryError("test");
+                })
+                .catche(NullPointerException.class, e -> {
+                    result[0] = e.getMessage();
+                });
+        String expected = "test";
+        assertEquals(expected, result[0]);
+    }
+
+    /**
+     * Test of addSelect method, of class Element.
+     */
+    @Test
+    public void testElementThenCatch4b() {
+        StringBuilder writer = new StringBuilder();
+        DefaultHtmlConfig config = HtmlConfig.ofDefault()
+                .setTitle("Element-try-catche");
+
+        String[] result = {""};
+        HtmlElement.of(config, writer).addBody()
+                .then(body -> {
+                    throw new OutOfMemoryError("test");
+                })
+                .catche(OutOfMemoryError.class, e -> {
+                    result[0] = e.getMessage();
+                });
+        String expected = "test";
+        assertEquals(expected, result[0]);
+    }
 
 }

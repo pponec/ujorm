@@ -48,12 +48,16 @@ public final class ExceptionProvider {
      * Apply consumer if the exception is not null.
      */
     public <T extends Throwable> void catche(@Nonnull final Class<T> exceptionClass, @Nonnull final Consumer<T> exceptionConsumer) {
-        if (exceptionClass.isInstance(e)) {
-            exceptionConsumer.accept((T) e);
-        } else if (e != null) {
-           throw (e instanceof RuntimeException)
-                   ? (RuntimeException) e
-                   : new IllegalStateException(e);
+        if (e != null) {
+            if (exceptionClass.isInstance(e)) {
+                exceptionConsumer.accept((T) e);
+            } else if (e instanceof RuntimeException) {
+                throw (RuntimeException) e;
+            } else if (e instanceof Error) {
+                throw (Error) e;
+            } else {
+                throw new IllegalStateException(e);
+            }
         }
     }
 
