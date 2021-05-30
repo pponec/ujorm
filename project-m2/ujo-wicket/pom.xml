@@ -22,7 +22,7 @@
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-wicket</connection>
     </scm>
 
-    <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->            
+    <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->
     <pluginRepositories>
         <pluginRepository>
             <id>central</id>
@@ -48,7 +48,7 @@
             </snapshots>
         </repository>
     </repositories>
-    
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -58,7 +58,7 @@
     </licenses>
 
     <properties>
-        <wicket.version>7.7.0</wicket.version>
+        <wicket.version>7.18.0</wicket.version>
         <spring.version>4.3.9.RELEASE</spring.version>
     </properties>
 
@@ -161,7 +161,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
         <resources>
             <resource>

@@ -26,15 +26,15 @@
     <properties>
         <project.war.name>demo-hotels</project.war.name>
         <ujorm.version>2.16-SNAPSHOT</ujorm.version>
-        <wicket.version>7.10.0</wicket.version>
-        <jetty.version>9.2.14.v20151106</jetty.version>
+        <wicket.version>7.18.0</wicket.version>
+        <jetty.version>10.0.3</jetty.version>
         <spring.version>4.3.22.RELEASE</spring.version>
         <java.version>1.8</java.version>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.deploy.server>Tomcat60</netbeans.hint.deploy.server>
     </properties>
-    
+
     <pluginRepositories>
         <pluginRepository>
             <id>central</id>
@@ -59,10 +59,10 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-    </repositories>  
+    </repositories>
 
     <dependencies>
-        
+
         <!-- API, java.xml.bind module -->
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
@@ -75,8 +75,8 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
             <version>2.3.2</version>
-        </dependency>         
-        
+        </dependency>
+
         <!-- Ujorm -->
         <dependency>
             <groupId>org.ujorm</groupId>
@@ -340,7 +340,7 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.7</version>
         </dependency>
-        
+
         <!-- Annotations -->
         <dependency>
             <groupId>javax.annotation</groupId>
@@ -393,17 +393,17 @@
                             <Build-Time>${maven.build.timestamp}</Build-Time>
                         </manifestEntries>
                     </archive>
-                    
+
                     <!-- Include java sources -->
                     <webResources>
                         <resource>
                             <directory>${build.sourceDirectory}</directory>
                             <targetPath>WEB-INF/classes</targetPath>
                         </resource>
-                    </webResources>  
+                    </webResources>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -425,7 +425,7 @@
                 <configuration>
                     <httpConnector>
                         <port>8080</port>
-                    </httpConnector>                    
+                    </httpConnector>
                     <webApp>
                         <contextPath>/</contextPath>
                         <extraClasspath>${basedir}/src/main/java</extraClasspath>
