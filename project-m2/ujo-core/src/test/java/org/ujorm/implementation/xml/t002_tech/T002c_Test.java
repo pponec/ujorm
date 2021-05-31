@@ -9,6 +9,7 @@ package org.ujorm.implementation.xml.t002_tech;
 
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
+import java.nio.charset.StandardCharsets;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
 import org.ujorm.Key;
@@ -19,16 +20,16 @@ import org.ujorm.core.UjoManagerXML;
  * @author Pavel Ponec
  */
 public class T002c_Test extends MyTestCase {
-    
+
     public T002c_Test(String testName) {
         super(testName);
     }
-    
+
     public static TestSuite suite() {
         TestSuite suite = new TestSuite(T002c_Test.class);
         return suite;
     }
-    
+
     /**
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
      */
@@ -42,13 +43,13 @@ public class T002c_Test extends MyTestCase {
         if (true) {
             System.err.println("XML:\n" + writer.toString() );
         }
-        
-        ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));
+
+        ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));
         UTechnicalBean person2 = UjoManagerXML.getInstance().parseXML(is, UTechnicalBean.class, false);
 
         assertEquals(person, person2);
     }
-    
+
     protected UTechnicalBean createPerson() {
         UTechnicalBean result = new UTechnicalBean();
         for (Key prop : result.readKeys()) {
@@ -56,9 +57,9 @@ public class T002c_Test extends MyTestCase {
         }
         return result;
     }
-    
+
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
     }
-    
+
 }
