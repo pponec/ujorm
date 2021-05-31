@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2019, Pavel Ponec
+ * Copyright 2019-2021, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,7 @@
  */
 package org.ujorm.hotels.sources;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
@@ -28,7 +25,7 @@ import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ujorm.tools.msg.MsgFormatter;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import org.ujorm.tools.common.StringUtils;
 
 /**
  * AboutPanel
@@ -57,10 +54,9 @@ public class SrcTabPanel extends GenericPanel<Class> {
     public static String getResourceAsString(@Nonnull Class javaClass) {
         try {
             final String javaSource = MsgFormatter.format("/{}.java", javaClass.getName().replace('.', '/'));
-            final InputStream is = javaClass.getClassLoader().getResourceAsStream(javaSource);
+            final InputStream is = javaClass.getClassLoader().getResourceAsStream(javaSource); //
             if (is != null) {
-                final BufferedReader reader = new BufferedReader(new InputStreamReader(is, UTF_8));
-                return reader.lines().collect(Collectors.joining("\n"));
+                return StringUtils.read(is);
             }
         } catch (Exception e) {
             LOGGER.warn("Wrong resource " + javaClass, e);

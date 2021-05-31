@@ -1,16 +1,13 @@
 package net.ponec.x2j.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import net.ponec.x2j.model.Message;
-
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.ujorm.tools.common.StringUtils;
 
 /**
  *
@@ -57,13 +54,7 @@ public class ConverterService {
     }
 
     public String getDemoXml() {
-        try {
-            InputStream is = getClass().getResourceAsStream(DEMO_FILE);
-            byte[] content = FileCopyUtils.copyToByteArray(is);
-            return new String(content, UTF_8);
-        } catch (IOException e) {
-            throw new IllegalStateException(DEMO_FILE, e);
-        }
+        return StringUtils.read(getClass().getResourceAsStream(DEMO_FILE));
     }
 
 }

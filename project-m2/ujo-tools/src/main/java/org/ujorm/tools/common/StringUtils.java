@@ -38,11 +38,12 @@ public abstract class StringUtils {
 
     /**
      * Read a content of resource encoded by UTF-8
+     * A line separator can be modifed.
      */
     @Nonnull
     public static String read(@Nonnull final String resource) {
         Assert.hasLength(resource, "Resource is not available: {}", resource);
-        try ( InputStream is = StringUtils.class.getResourceAsStream(resource)) {
+        try (InputStream is = StringUtils.class.getResourceAsStream(resource)) {
             return read(is);
         } catch (IOException | NullPointerException e) {
             throw new IllegalStateException("Reading the resource failed: " + resource, e);
@@ -50,7 +51,8 @@ public abstract class StringUtils {
     }
 
     /**
-     * Read a content of resource encoded by UTF-8
+     * Read a content of resource encoded by UTF-8.
+     * A line separator can be modifed.
      */
     @Nonnull
     public static String read(InputStream is) {
