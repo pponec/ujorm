@@ -33,14 +33,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
-import org.ujorm.tools.Assert;
 
 /**
  * Static methods
  * @author Pavel Ponec
  */
 public abstract class StreamUtils {
-    
+
         static final Set<Collector.Characteristics> CH_ID
             = Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH));
 
@@ -48,60 +47,51 @@ public abstract class StreamUtils {
     }
 
     /** Returns a stream of lines form URL resource
-     * 
+     *
      * @param url An URL link to a resource
-     * @return The customer is responsible for closing the stream. 
+     * @return The customer is responsible for closing the stream.
      *         During closing, an IllegalStateException may occur due to an IOException.
-     * @throws IOException 
      */
-    public static Stream<String> rowsOfUrl(@Nonnull final URL url) throws IOException  {
-        final InputStream is = url.openStream();
-        Assert.notNull(is, "Resource is not available: {}", url);
-        return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8)).lines().onClose(() -> {
-            try {
-                is.close();
-            } catch (IOException e) {
-                throw new IllegalStateException("Can't close: " + url, e);
-            }
-        });
+    public static Stream<String> rowsOfUrl(@Nonnull final URL url) throws IOException {
+        return StringUtils.readLines(url);
     }
-    
+
     /**
      * Convert an interator to a Stream
      * @param <T> An item type
      * @param iterator Source iterator
-     * @return 
+     * @return
      */
     public static <T> Stream<T> toStream(@Nonnull final Iterator<T> iterator) {
         return toStream(iterator, false);
     }
-    
+
     /**
      * Convert an interator to a Stream
      * @param <T> An item type
      * @param iterator Source iterator
      * @param parallel Parrallell processing is enabled
-     * @return 
+     * @return
      */
     public static <T> Stream<T> toStream(@Nonnull final Iterator<T> iterator, final boolean parallel) {
         final Iterable<T> iterable = () -> iterator;
         return StreamSupport.stream(iterable.spliterator(), parallel);
-        
+
         // # For Java 9:
         //
         //Stream.generate(() -> null)
         //    .takeWhile(x -> iterator.hasNext())
         //    .map(n -> iterator.next());
     }
-    
+
     /** A stream collecetor to a ArrayDeque type */
     @Nonnull
     public static <T> Collector<T, ?, ArrayDeque<T>> collectToDequeue() {
         return Collectors.toCollection(ArrayDeque::new);
     }
-    
-    /** Create a joinable function 
-     * 
+
+    /** Create a joinable function
+     *
      * <h3>Usage</h3>
      * <pre>
      *  Function&lt;Person, String&gt; nameProvider = Joinable
@@ -110,7 +100,7 @@ public abstract class StreamUtils {
      *     .add(Person::getName);
      *  String superBossName = nameProvider.apply(getPerson());
      * </pre>
-     * 
+     *
      * @param <D> Domain value
      * @param <R> Result value
      * @param fce An original function
