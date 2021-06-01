@@ -36,9 +36,8 @@ public abstract class StringUtils {
     private StringUtils() {
     }
 
-    /**
-     * Read a content of resource encoded by UTF-8
-     * A line separator can be modifed.
+    /** Read a content of the resource encoded by UTF-8.
+     * A line separator can be modifed in the result.
      */
     @Nonnull
     public static String read(@Nonnull final String resource) {
@@ -50,9 +49,8 @@ public abstract class StringUtils {
         }
     }
 
-    /**
-     * Read a content of resource encoded by UTF-8.
-     * A line separator can be modifed.
+    /** Read a content of the resource encoded by UTF-8.
+     * A line separator can be modifed in the result.
      */
     @Nonnull
     public static String read(InputStream is) {
@@ -62,7 +60,8 @@ public abstract class StringUtils {
     }
 
     /**
-     * Read a closeable line stream of the URL
+     * Read a closeable line stream of the URL.
+     * A line separator can be modifed in the result.
      */
     @Nonnull
     public static Stream<String> readLines(@Nonnull final URL url) throws IOException {
