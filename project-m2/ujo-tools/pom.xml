@@ -16,14 +16,6 @@
         </contributor>
     </contributors>
 
-    <properties>
-        <spring.version>4.3.9.RELEASE</spring.version>
-        <!-- These properties will be set by the Maven Dependency plugin,
-             see: https://checkerframework.org/manual/#maven
-        -->
-        <errorProneJavac>${com.google.errorprone:javac:jar}</errorProneJavac>
-    </properties>
-
     <scm>
         <url>https://github.com/pponec/ujorm/blob/master/project-m2/ujo-core/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-core</connection>
@@ -36,22 +28,7 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    
-    <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
+
     <repositories>
         <repository>
             <id>central</id>
@@ -63,7 +40,7 @@
             </snapshots>
         </repository>
     </repositories>
-    
+
     <dependencies>
 
         <!-- Static analyzer support -->
@@ -73,7 +50,7 @@
             <version>3.0.2</version>
             <optional>true</optional>
         </dependency>
-        
+
         <!-- API, java.xml.bind module -->
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
@@ -88,7 +65,7 @@
             <artifactId>jaxb-runtime</artifactId>
             <version>2.3.2</version>
             <scope>provided</scope>
-        </dependency>        
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -96,42 +73,35 @@
             <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
             <scope>test</scope>
         </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
-        </dependency>
-        
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
+            <version>5.3.5</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.196</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>io.reactivex.rxjava2</groupId>
             <artifactId>rxjava</artifactId>
@@ -145,7 +115,7 @@
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
             <scope>test</scope>
-        </dependency>  
+        </dependency>
     </dependencies>
 
     <build>
@@ -228,7 +198,7 @@
                             <goal>test-jar</goal>
                         </goals>
                     </execution>
-                </executions>             
+                </executions>
             </plugin>
         </plugins>
     </build>
