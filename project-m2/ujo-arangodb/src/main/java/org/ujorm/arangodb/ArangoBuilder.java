@@ -59,7 +59,8 @@ public class ArangoBuilder {
 
     public ArangoBuilder param(Object value, String name) {
         params.put(name, value);
-        return add("@", name);
+        builder.append(" @").append(name);
+        return this;
     }
 
     public ArangoBuilder param(OffsetDateTime value) {
@@ -70,16 +71,24 @@ public class ArangoBuilder {
         return param(value.toEpochSecond(), name);
     }
 
-    public Stream<BaseDocument> query(ArangoDatabase arangoDB) {
-        return query(arangoDB, BaseDocument.class);
+    /** Execute the query */
+    public Stream<BaseDocument> execute(ArangoDatabase arangoDB) {
+        return execute(arangoDB, BaseDocument.class);
     }
 
-    public <T> Stream<T> query(ArangoDatabase arangoDB, Class<T> returnType) {
+    /** Execute the query */
+    public <T> Stream<T> execute(ArangoDatabase arangoDB, Class<T> returnType) {
         return arangoDB.query(builder.toString(), params, null, returnType).stream();
     }
 
     protected String getDefaultParameterName() {
-        return "param-" + (params.size() + 1);
+        return "param" + (params.size() + 1);
+    }
+
+    /** AQL statement */
+    @Override
+    public String toString() {
+        return builder.toString();
     }
 
 }

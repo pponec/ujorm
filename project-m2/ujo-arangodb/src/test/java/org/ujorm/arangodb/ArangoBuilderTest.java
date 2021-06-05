@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Stream;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
 import org.junit.Test;
 
@@ -36,6 +37,7 @@ import org.junit.Test;
  */
 public class ArangoBuilderTest extends TestCase {
 
+    @Ignore
     @Test
     public void testBulder() throws ArangoDBException {
         String dbName = "myTestDb";
@@ -57,13 +59,49 @@ public class ArangoBuilderTest extends TestCase {
                 .add("FILTER t.date <=").param(OffsetDateTime.now()).line()
                 .add("FILTER t.name ==").param("TEST").line()
                 .add("RETURN t")
-                .query(arangoDB.db(dbName));
+                .execute(arangoDB.db(dbName));
         BaseDocument[] arrayResult = result.toArray(BaseDocument[]::new);
         assertEquals(0, arrayResult.length);
     }
 
-    // --- UTILITIES ---
+    @Test
+    public void testAQL() {
+        String collectionName = "firstCollection";
 
+        // A sample with an argument type of date-time:
+        ArangoBuilder result = new ArangoBuilder()
+                .add("FOR t IN", collectionName).line()
+                .add("FILTER t.date <=").param(OffsetDateTime.now()).line()
+                .add("FILTER t.name ==").param("TEST").line()
+                .add("RETURN t");
+
+        String expected = "FOR t IN firstCollection\n"
+                + " FILTER t.date <= @param1\n"
+                + " FILTER t.name == @param2\n"
+                + " RETURN t";
+        assertEquals(expected, result.toString());
+    }
+
+
+    @Test
+    public void testAQLwithNamedParams() {
+        String collectionName = "firstCollection";
+
+        // A sample with an argument type of date-time:
+        ArangoBuilder result = new ArangoBuilder()
+                .add("FOR t IN", collectionName).line()
+                .add("FILTER t.date <=").param(OffsetDateTime.now(), "date").line()
+                .add("FILTER t.name ==").param("TEST", "name").line()
+                .add("RETURN t");
+
+        String expected = "FOR t IN firstCollection\n"
+                + " FILTER t.date <= @date\n"
+                + " FILTER t.name == @name\n"
+                + " RETURN t";
+        assertEquals(expected, result.toString());
+    }
+
+    // --- UTILITIES ---
     protected void createDB(ArangoDB arangoDB, String dbName) {
         try {
             arangoDB.createDatabase(dbName);
