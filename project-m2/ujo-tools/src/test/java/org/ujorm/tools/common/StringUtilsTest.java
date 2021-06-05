@@ -47,7 +47,7 @@ public class StringUtilsTest {
     public void testBuildResource() {
         StringUtils instance = new StringUtils();
 
-        String s1 = instance.buildResource(null, "/text", "dummy.txt");
+        String s1 = instance.buildResource(StringUtils.class, "/text", "dummy.txt");
         String s2 = instance.buildResource(StringUtils.class, "text", "dummy.txt");
 
         assertEquals("/text/dummy.txt", s1);

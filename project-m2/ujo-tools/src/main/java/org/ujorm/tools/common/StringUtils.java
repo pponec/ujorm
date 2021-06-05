@@ -49,7 +49,12 @@ public class StringUtils {
     private static final String NO_RESOURCE_MSG = "Resource is not available: ";
 
     /** Charset of the resource */
+    @Nonnull
     private final Charset charset;
+
+    /** Class loader */
+    @Nonnull
+    private final Class<?> classOfLoader;
 
     /** With a charset UTF-8 */
     public StringUtils() {
@@ -57,7 +62,12 @@ public class StringUtils {
     }
 
     public StringUtils(@Nonnull final Charset charset) {
+        this(charset, StringUtils.class);
+    }
+
+    public StringUtils(@Nonnull final Charset charset, @Nonnull final Class<?> classOfLoader) {
         this.charset = Assert.notNull(charset, "charset");
+        this.classOfLoader = Assert.notNull(classOfLoader, "classOfLoader");
     }
 
     /** Read a content of the resource encoded by UTF-8.
@@ -74,7 +84,7 @@ public class StringUtils {
     @Nonnull
     public String readBody(@Nonnull final Class<?> basePackage, @Nonnull final String... resourcePath) {
         final String resource = buildResource(basePackage, resourcePath);
-        try (InputStream is = (basePackage != null ? basePackage : StringUtils.class).getResourceAsStream(resource)) {
+        try (InputStream is = classOfLoader.getResourceAsStream(resource)) {
             return readBody(is);
         } catch (IOException | NullPointerException e) {
             throw new IllegalStateException(NO_RESOURCE_MSG + resource, e);
@@ -99,7 +109,7 @@ public class StringUtils {
     public Stream<String> readRows(@Nullable final Class<?> basePackage, @Nonnull final String... resourcePath) {
         final String resource = buildResource(basePackage, resourcePath);
         try {
-            return readRows(basePackage.getResource(resource));
+            return readRows(classOfLoader.getResource(resource));
         } catch (IOException | NullPointerException e) {
             throw new IllegalStateException(NO_RESOURCE_MSG + resource, e);
         }
@@ -133,9 +143,9 @@ public class StringUtils {
     /** Build a resource */
     protected String buildResource(@Nullable final Class<?> basePackage, @Nonnull final String... resourcePath) {
         final String endPath = resourcePath.length == 1 ? resourcePath[0] : String.join("/", resourcePath);
-        return basePackage != null
-                ? MsgFormatter.format("/{}/{}", basePackage.getPackage().getName().replace('.', '/'), endPath)
-                : endPath;
+        return endPath.startsWith("/")
+                ? endPath
+                : MsgFormatter.format("/{}/{}", basePackage.getPackage().getName().replace('.', '/'), endPath);
     }
 
     // --- STATIC METHODS ---
@@ -145,7 +155,7 @@ public class StringUtils {
      */
     @Nonnull
     public static String read(@Nonnull final Class<?> basePackage, @Nonnull final String... resourcePath) {
-        return new StringUtils().readBody(basePackage, resourcePath);
+        return new StringUtils(StandardCharsets.UTF_8, basePackage).readBody(basePackage, resourcePath);
     }
 
     /** Read a content of the resource encoded by UTF-8.
@@ -171,7 +181,7 @@ public class StringUtils {
      */
     @Nonnull
     public static Stream<String> readLines(@Nullable final Class<?> basePackage, @Nonnull final String... resourcePath) {
-        return new StringUtils().readRows(basePackage, resourcePath);
+        return new StringUtils(StandardCharsets.UTF_8, basePackage).readRows(basePackage, resourcePath);
     }
 
 }
