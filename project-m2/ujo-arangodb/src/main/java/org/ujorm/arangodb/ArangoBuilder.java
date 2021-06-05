@@ -23,6 +23,9 @@ import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.BaseDocument;
 
 /**
+ * A prototype of the ArangoDB bulider.
+ *
+ * See: https://www.arangodb.com/tutorials/tutorial-java-driver/
  *
  * @author Pavel Ponec
  */
@@ -78,7 +81,5 @@ public class ArangoBuilder {
     protected String getDefaultParameterName() {
         return "param-" + (params.size() + 1);
     }
-
-
 
 }

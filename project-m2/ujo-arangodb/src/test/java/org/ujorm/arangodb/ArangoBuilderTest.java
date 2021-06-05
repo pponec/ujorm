@@ -1,17 +1,17 @@
 /*
- * Copyright 2021 pavel.
+ *  Copyright 2021-2021 Pavel Ponec
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 package org.ujorm.arangodb;
 
@@ -26,21 +26,18 @@ import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Stream;
+import junit.framework.TestCase;
 
 import org.junit.Test;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
-public class ArangoBuilderTest {
-
-    public ArangoBuilderTest() {
-    }
+public class ArangoBuilderTest extends TestCase {
 
     @Test
-    public void testBulder() {
-
+    public void testBulder() throws ArangoDBException {
         String dbName = "myTestDb";
         String collectionName = "firstCollection";
 
@@ -54,23 +51,18 @@ public class ArangoBuilderTest {
             executeQuery(arangoDB, dbName);
         }
 
-        try {
-            Stream<BaseDocument> result1 = new ArangoBuilder()
+        // A sample with an argument type of date-time:
+        Stream<BaseDocument> result = new ArangoBuilder()
                 .add("FOR t IN", collectionName).line()
-                .add("FILTER t.name == ").param("Homer").line()
+                .add("FILTER t.date <=").param(OffsetDateTime.now()).line()
+                .add("FILTER t.name ==").param("TEST").line()
                 .add("RETURN t")
                 .query(arangoDB.db(dbName));
-
-            Stream<BaseDocument> result2 = new ArangoBuilder()
-                    .add("FOR t IN", collectionName).line()
-                    .add("FILTER t.date < ").param(OffsetDateTime.now()).line()
-                    .add("RETURN t")
-                    .query(arangoDB.db(dbName));
-
-        } catch (ArangoDBException e) {
-            System.err.println("Failed to execute query. " + e.getMessage());
-        }
+        BaseDocument[] arrayResult = result.toArray(BaseDocument[]::new);
+        assertEquals(0, arrayResult.length);
     }
+
+    // --- UTILITIES ---
 
     protected void createDB(ArangoDB arangoDB, String dbName) {
         try {
