@@ -21,6 +21,7 @@ import com.arangodb.ArangoDBException;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.entity.CollectionEntity;
 import com.arangodb.mapping.ArangoJack;
+import java.io.InputStream;
 
 import java.time.OffsetDateTime;
 import java.util.Collections;
@@ -32,6 +33,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
+ * Test of ArangoDB  builder
+ *
+ * See: https://www.arangodb.com/tutorials/tutorial-java-driver/
  *
  * @author Pavel Ponec
  */
@@ -43,7 +47,10 @@ public class ArangoBuilderTest extends TestCase {
         String dbName = "myTestDb";
         String collectionName = "firstCollection";
 
+        // The default connection is to http://127.0.0.1:8529
+        InputStream in = ArangoBuilderTest.class.getResourceAsStream("/arangodb.properties");
         ArangoDB arangoDB = new ArangoDB.Builder()
+                .loadProperties(in)
                 .serializer(new ArangoJack())
                 .build();
         {
@@ -61,7 +68,7 @@ public class ArangoBuilderTest extends TestCase {
                 .add("RETURN t")
                 .execute(arangoDB.db(dbName));
         BaseDocument[] arrayResult = result.toArray(BaseDocument[]::new);
-        assertEquals(0, arrayResult.length);
+        assertTrue(arrayResult.length >= 1);
     }
 
     @Test
@@ -102,6 +109,7 @@ public class ArangoBuilderTest extends TestCase {
     }
 
     // --- UTILITIES ---
+
     protected void createDB(ArangoDB arangoDB, String dbName) {
         try {
             arangoDB.createDatabase(dbName);
@@ -125,7 +133,10 @@ public class ArangoBuilderTest extends TestCase {
         myObject.setKey("myKey");
         myObject.addAttribute("a", "Foo");
         myObject.addAttribute("b", 42);
+        myObject.addAttribute("name", "TEST");
+        myObject.addAttribute("date", OffsetDateTime.now().minusDays(1).toEpochSecond());
         try {
+            arangoDB.db(dbName).collection(collectionName).deleteDocument(myObject.getKey());
             arangoDB.db(dbName).collection(collectionName).insertDocument(myObject);
             System.out.println("Document created");
         } catch (ArangoDBException e) {
@@ -136,7 +147,7 @@ public class ArangoBuilderTest extends TestCase {
     protected void executeQuery(ArangoDB arangoDB, String dbName) {
         try {
             String query = "FOR t IN firstCollection FILTER t.name == @name RETURN t";
-            Map<String, Object> bindVars = Collections.singletonMap("name", "Homer");
+            Map<String, Object> bindVars = Collections.singletonMap("name", "TEST");
             ArangoCursor<BaseDocument> cursor = arangoDB.db(dbName).query(query, bindVars, null, BaseDocument.class);
             cursor.forEachRemaining(aDocument -> {
                 System.out.println("Key: " + aDocument.getKey());
