@@ -59,6 +59,7 @@
         <module>ujo-xsd</module>
         <module>ujo-web</module>
         <module>ujo-arangodb</module>
+        <module>ujo2kt-core</module>
     </modules>
 
 
