@@ -61,7 +61,7 @@ public class EntityDialogPane<U extends Ujo> extends AbstractDialogPane<U> {
 
     /** Input fields provider
      * @see #fields
-     * @deprecated Use the {@link #getFieldPBuilder() } rather
+     * @deprecated Use the {@link #getFieldBuilder() } rather
      */
     @Deprecated
     public final FieldProvider<U> getFields() {

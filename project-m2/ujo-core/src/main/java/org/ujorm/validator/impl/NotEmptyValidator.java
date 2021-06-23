@@ -33,7 +33,7 @@ public class NotEmptyValidator<VALUE extends CharSequence> extends NotNullValida
 
 
     /** The CharSequence is trimmed */
-    public static final MessageArg<Boolean> TRIM = new MessageArg<Boolean>("TRIM");
+    public static final MessageArg<Boolean> TRIM = MessageArg.of("TRIM");
 
     /** The CharSequence is trimmed */
     private final boolean trim;

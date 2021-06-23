@@ -31,6 +31,7 @@ import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.ao.LoadingPolicy;
 import org.ujorm.orm.dialect.DerbyDialect;
 import org.ujorm.orm.dialect.FirebirdDialect;
@@ -41,7 +42,6 @@ import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.criterion.Operator.*;
-import org.ujorm.orm.ao.CheckReport;
 import static org.ujorm.orm.template.AliasTable.Build.*;
 
 /**
@@ -642,7 +642,7 @@ public class SampleORM {
                 .orderBy(parentName)
                 .uniqueResult();
 
-        Assert.notNull(customer != null, "The result have got the one customers");
+        Assert.notNull(customer, "The result have got the one customers");
         Assert.isTrue(Customer.PARENT instanceof CompositeKey, "The key is type of CompositeKey {}", Customer.PARENT);
         Assert.isTrue(parentName.getFullName().equals("Customer.parent[customerAlias].surname"),
                 "The wrong implementation CompositeKey.toString()");
@@ -937,7 +937,7 @@ public class SampleORM {
     public void useUpdateSafely() {
         Order order = session.load(Order.class, anyOrderId);
         Order original = order.cloneUjo();
-        
+
         order.setCreated(LocalDateTime.now());
         int count = session.updateSafely(order, original);
         session.commit();
@@ -947,7 +947,7 @@ public class SampleORM {
         count = session.updateSafely(order, original);
         session.commit();
         Assert.isTrue(count == 0);
-        
+
         count = session.updateSafely(order, original);
         session.commit();
         Assert.isTrue(count == -1); // No column changed

@@ -15,13 +15,9 @@
  */
 package org.ujorm.implementation.quick;
 
-import java.util.List;
 import javax.annotation.Nullable;
-import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
-import org.ujorm.ListKey;
-import org.ujorm.Ujo;
 import org.ujorm.extensions.UjoMiddle;
 
 /**
@@ -59,37 +55,6 @@ abstract public class SmartUjo<UJO extends SmartUjo>
 
     /** No constructor parameters  */
     public SmartUjo() {
-    }
-
-    /** Getter based on one Key */
-    @SuppressWarnings("unchecked")
-    @Override
-    public final <VALUE> VALUE get(final Key<? super UJO, VALUE> key) {
-        return key.of((UJO) this);
-    }
-
-    /** The setter  based on a composite Key.
-     * If the {@link Key} argument is type of {@link CompositeKey} the method creates all missing relations.
-     * <h4>See the next correct use case:</h4>
-     * <pre class="pre">
-     *   Person person = new Person();
-     *   person.set(Person.MOTHER.add(Person.MOTHER).add(Person.NAME), "grandMothersName");
-     * </pre>
-     * Every <strong>set()</strong> method creates a new mother's instance (type of Person)  before assigning its name.
-     * @see CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean)
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public final <VALUE> Ujo set(final Key<? super UJO, VALUE> key, final VALUE value) {
-        key.setValue((UJO)this, value);
-        return this;
-    }
-
-    /** Get a not null result */
-    @SuppressWarnings("unchecked")
-    @Override
-    public final <VALUE> List<VALUE> getList(final ListKey<? super UJO, VALUE> key) {
-        return key.getList((UJO)this);
     }
 
     /**

@@ -508,7 +508,10 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
      * @param type Optional subtype class of the key type.
      * @return Instance of new result.
      */
-    public final <T> T decodeValue(final Key<?,T> key, final String aValue, Class type) {
+    public final <T> T decodeValue(
+            @Nullable final Key<?,T> key,
+            @Nullable final String aValue,
+            @Nullable final Class type) {
         return coder.decodeValue(key, aValue, type);
     }
 
@@ -518,7 +521,9 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
      * @param aValue Text value to decode.
      * @return Instance of new result.
      */
-    public final <T> T decodeValue(final Key<?,T> key, final String aValue) {
+    public final <T> T decodeValue(
+            @Nonnull final Key<?,T> key,
+            @Nullable final String aValue) {
         return coder.decodeValue(key, aValue, null);
     }
 

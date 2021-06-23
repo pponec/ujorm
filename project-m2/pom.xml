@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.ujorm</groupId>
+    <artifactId>ujo</artifactId>
+    <version>2.16-SNAPSHOT</version>
+    <name>Module UJO</name>
+    <packaging>pom</packaging>
+    <description>Ujorm common project</description>
+
     <properties>
-        <ujo.version>1.89-SNAPSHOT</ujo.version>
+        <ujo.version>2.16-SNAPSHOT</ujo.version>
         <java.version>1.8</java.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
@@ -15,15 +23,55 @@
         <developerConnection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2</developerConnection>
     </scm>
 
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.ujorm</groupId>
-    <artifactId>ujo</artifactId>
-    <version>1.89-SNAPSHOT</version>
-    <name>Module UJO</name>
-    <packaging>pom</packaging>
-    <description>Ujorm common project</description>
+    <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
-    <!-- SUB PROJECTS -->
+    <modules>
+        <module>ujo-tools</module>
+        <module>ujo-core</module>
+        <module>ujo-orm</module>
+        <module>ujo-spring</module>
+        <module>ujo-wicket</module>
+        <module>ujo-xsd</module>
+        <module>ujo-web</module>
+        <module>ujo-arangodb</module>
+    </modules>
+
+
+    <!-- DEPENDENCES -->
+    <dependencies>
+       <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -36,27 +84,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <modules>
-        <module>ujo-tools</module>
-        <module>ujo-core</module>
-        <module>ujo-orm</module>
-        <module>ujo-spring</module>
-        <module>ujo-wicket</module>
-        <module>ujo-xsd</module>
-        <module>ujo-web</module>
-    </modules>
-
-
-    <!-- DEPENDENCES -->
-    <dependencies>
-       <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
 
 </project>

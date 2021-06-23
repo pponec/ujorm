@@ -30,8 +30,9 @@ The Ujorm (original name was UJO Framework) is designed primarily for the rapid 
 
 ## JavaDoc
 
-* [Module ujo-orm](https://ujorm.org/javadoc/org/ujorm/orm/package-summary.html)
-* [Module ujo-tools](https://pponec.github.io/ujorm/javadoc/1.88/ujo-tools/)
+* [Module ujo-orm](https://ujorm.org/javadoc/org/ujorm/orm/package-summary.html),
+* [Module ujo-tools](https://pponec.github.io/ujorm/javadoc/1.88/ujo-tools/),
+* [Module ujo-web](https://pponec.github.io/ujorm/javadoc/2.05/ujo-web/), look at the [sample use](https://jbook-samples-free.ponec.net/sample?src=net.ponec.jbook.s05_table.TableRandomData).
 
 ## Maven Repository
 

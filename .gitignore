@@ -3,3 +3,6 @@
 **/build/
 a.sh
 *~
+**/nb-configuration.xml
+**/*.iml
+.idea/

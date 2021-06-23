@@ -17,20 +17,27 @@ package org.ujorm.tools.msg;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import static org.ujorm.tools.msg.MessageService.PARAM_BEG;
-import static org.ujorm.tools.msg.MessageService.PARAM_END;
+import org.ujorm.tools.common.ObjectUtils;
 
 /**
  * Message Argument
+ * @param <T> The parameter has only a descriptive meaning with no functionality.
  * @author Pavel Ponec
  * @see MessageService
  * @since 1.54
  */
-public final class MessageArg<T> implements Serializable {
+public final class MessageArg<T> implements Serializable, CharSequence {
+
+    /** Two-character mark ("${") to introducing a template argument. */
+    public static final String PARAM_BEG = "${";
+
+    /** The mark ("}") to finishing a template argument. */
+    public static final char PARAM_END = '}';
 
     /** Name of the argument */
     @Nonnull
@@ -40,8 +47,12 @@ public final class MessageArg<T> implements Serializable {
     @Nullable
     private final String format;
 
+    /** A code name for a template */
+    @Nonnull
+    private final String code;
+
     /** Name constructor */
-    public MessageArg(@Nonnull String name) {
+    public MessageArg(@Nonnull final String name) {
         this(name, null);
     }
 
@@ -50,18 +61,25 @@ public final class MessageArg<T> implements Serializable {
      * @param format Format syntax is described on
      * <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html">java.util.Formatter</a>
      */
-    public MessageArg(@Nonnull String name, @Nullable String format) {
+    public MessageArg(@Nonnull final String name, @Nullable final String format) {
         Assert.notNull(name, "Name is required", name);
-        Assert.isTrue(name.indexOf(PARAM_END)<0  , "Forbidden character {} in argument {}", PARAM_END, name);
+        Assert.isTrue(name.indexOf(PARAM_END) < 0  , "Forbidden character {} in argument {}", PARAM_END, name);
         Assert.isTrue(format == null
-                   || format.indexOf(PARAM_END)<0, "Forbidden character {} in argument {}", PARAM_END, format);
+                   || format.indexOf(PARAM_END) < 0, "Forbidden character {} in argument {}", PARAM_END, format);
         this.name = name;
         this.format = format;
+        this.code = toCode();
     }
 
     /** Get Name of argument */
     @Nonnull
     public String getName() {
+        return name;
+    }
+
+    /** An alias for method {@code #getName()} */
+    @Nonnull
+    public final String name() {
         return name;
     }
 
@@ -71,10 +89,17 @@ public final class MessageArg<T> implements Serializable {
         return format;
     }
 
-    /** Returns the name */
-    @Override
-    public String toString() {
-        final StringBuilder result = new StringBuilder(32);
+    /** A code name for a template */
+    @Nonnull
+    public String getCode() {
+        return code;
+    }
+
+    /** Convert attributes to a code */
+    @Nonnull
+    protected final String toCode() {
+        final StringBuilder result = new StringBuilder(PARAM_BEG.length() + 1 + name.length()
+                + (format != null ? format.length() + 1 : 0));
         result.append(PARAM_BEG).append(name);
         if (Check.hasLength(format)) {
             result.append(',').append(format);
@@ -84,7 +109,47 @@ public final class MessageArg<T> implements Serializable {
     }
 
     /** Get a value from a map */
-    public T getValue(final Map<String, Object> map) {
+    public <T extends Object> T getValue(final Map<String, Object> map) {
         return (T) map.get(name);
     }
+
+    /** Returns a code name */
+    @Override
+    public final String toString() {
+        return getCode();
+    }
+
+    @Override
+    public final int length() {
+        return getCode().length();
+    }
+
+    @Override
+    public final char charAt(final int index) {
+        return getCode().charAt(index);
+    }
+
+    @Override
+    public final CharSequence subSequence(final int start, final int end) {
+        return getCode().subSequence(start, end);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return this == obj
+                || ObjectUtils.check(obj, MessageArg.class, v
+                        -> Objects.equals(name, v.name)
+                        && Objects.equals(format, v.format));
+    }
+
+    // --- STATIC METHOD ---
+
+    public static <T> MessageArg<T> of(@Nonnull String name) {
+        return new MessageArg<>(name);
+    }
+
+    public static <T> MessageArg<T> of(@Nonnull String name, @Nullable String format) {
+        return new MessageArg<>(name, format);
+    }
+
 }

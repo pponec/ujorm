@@ -111,8 +111,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         , @Nullable final Criterion<UJO> criterion
         , @Nullable final Session session) {
 
-        Assert.notNull(table, "table");
-        this.table = table;
+        this.table = Assert.notNull(table, "table");
         this.columns = null;
         this.criterion = criterion;
         this.session = session;
@@ -140,16 +139,13 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         } else if (session != null) {
             handler = session.getHandler();
         }
-        Assert.notNull(handler, "The base class must be assigned first!");
-        assert handler != null;
-        return handler;
+        return Assert.notNull(handler, "The base class must be assigned first!");
     }
 
     /** An open session must be assigned before executing a database request. */
     @Nonnull
     public Query<UJO> setSession(@Nonnull Session session) {
-        Assert.notNull(session, "session");
-        this.session = session;
+        this.session =  Assert.notNull(session, "session");
         return this;
     }
 
@@ -198,7 +194,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     public void addCriterion(@Nonnull Criterion<UJO> criterion) throws IllegalArgumentException {
         Assert.notNull(criterion, "Argument must not be {}", criterion);
 
-        this.criterion = this.criterion!=null
+        this.criterion = this.criterion != null
             ? this.criterion.and(criterion)
             : criterion
             ;
@@ -765,7 +761,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-    /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
+    /** The max row count for the resultset. The value -1 means no change, 
+     * value 0 means no limit (or a default value by the JDBC driver implementation.
      * @see #getLimit()
      */
     public final boolean isLimit() {

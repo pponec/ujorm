@@ -89,9 +89,11 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
     /** Print the condition in a human reading format. */
     @Override
     public String toString() {
-        return toPrinter(new SimpleValuePrinter(256)).toString();
+        final SimpleValuePrinter result = new SimpleValuePrinter(128)
+                .append(getDomain().getSimpleName());
+        return toPrinter(result).toString();
     }
-   
+
     /** Print the condition in a human reading format. */
     @Override
     public SimpleValuePrinter toPrinter(@Nonnull SimpleValuePrinter out) {

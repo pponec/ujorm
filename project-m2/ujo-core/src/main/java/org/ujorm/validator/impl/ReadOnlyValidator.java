@@ -18,8 +18,8 @@ package org.ujorm.validator.impl;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 /**
@@ -29,7 +29,7 @@ import org.ujorm.validator.ValidationError;
 public class ReadOnlyValidator<VALUE> extends AbstractValidator<VALUE> {
 
     /** Sign to read only / all enabled */
-    public static final MessageArg<Boolean> READ_ONLY = new MessageArg<>("READ_ONLY");
+    public static final MessageArg READ_ONLY = MessageArg.of("READ_ONLY");
 
     /** Sign to a state read-only / all enabled */
     private final boolean readOnly;

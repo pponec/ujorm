@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec
+ * Copyright 2018-2020 Pavel Ponec
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/jdbc/JdbcBuilder.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ujorm.tools.jdbc;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -78,7 +78,7 @@ import org.ujorm.tools.set.LoopingIterator;
  * href="https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/test/java/org/ujorm/tools/jdbc/JdbcBuilderTest.java#L33">jUnit</a> test.
  * @author Pavel Ponec
  */
-public final class JdbcBuilder implements Serializable {
+public class JdbcBuilder implements Serializable {
 
     /** Separator of database columns */
     public static final SqlEnvelope ITEM_SEPARATOR = new SqlEnvelope(",");
@@ -159,7 +159,7 @@ public final class JdbcBuilder implements Serializable {
 
     /** Write many sql fragments with no space before */
     @Nonnull
-    public JdbcBuilder writeManyNoSpace(@Nonnull final CharSequence ... sqlFragments) {
+    public JdbcBuilder writeManyNoSpace(@Nonnull final CharSequence... sqlFragments) {
         for (CharSequence text : sqlFragments) {
             writeNoSpace(text);
         }
@@ -176,7 +176,7 @@ public final class JdbcBuilder implements Serializable {
     /** Set new value to column by template {@code name = ? */
     @Nonnull
     public JdbcBuilder columnUpdate(@Nonnull final CharSequence column, @Nonnull final Object value) {
-        Assert.validState(!insertMode, "An insertion mode has been started.");
+        Assert.state(!insertMode, "An insertion mode has been started.");
         sql.add(new SqlEnvelope(column, columnCounter++));
         sql.add("=");
         addValue(value);
@@ -215,8 +215,8 @@ public final class JdbcBuilder implements Serializable {
     public JdbcBuilder andCondition(@Nonnull final CharSequence sqlCondition, @Nonnull final String operator, @Nullable final Object... values) {
         writeOperator(true, conditionCounter++ > 0);
         return Check.hasLength(values)
-             ? condition(sqlCondition, operator, values)
-             : condition(sqlCondition, operator, null);
+                ? condition(sqlCondition, operator, values)
+                : condition(sqlCondition, operator, null);
     }
 
     /**
@@ -241,8 +241,8 @@ public final class JdbcBuilder implements Serializable {
     public JdbcBuilder orCondition(@Nonnull final CharSequence sqlCondition, @Nonnull final String operator, @Nullable final Object... values) {
         writeOperator(false, conditionCounter++ > 0);
         return Check.hasLength(values)
-             ? condition(sqlCondition, operator, values)
-             : condition(sqlCondition, operator, null);
+                ? condition(sqlCondition, operator, values)
+                : condition(sqlCondition, operator, null);
     }
 
     /** Add a condition for an <strong>argument</strong> with length
@@ -254,7 +254,7 @@ public final class JdbcBuilder implements Serializable {
     public JdbcBuilder condition(@Nullable final CharSequence sqlCondition, @Nullable final String operator, @Nonnull final Object value) {
         if (Check.hasLength(sqlCondition)) {
             final boolean multiValue = value instanceof Object[];
-            final Object[] values =  multiValue ? (Object[]) value : new Object[]{value};
+            final Object[] values = multiValue ? (Object[]) value : new Object[]{value};
             if (Check.hasLength(operator)) {
                 sql.add(sqlCondition);
                 sql.add(operator);
@@ -276,7 +276,7 @@ public final class JdbcBuilder implements Serializable {
                 for (Object val : values) {
                     int i = cond.indexOf(VALUE_MARKER);
                     if (i >= 0) {
-                        int i2 = i - (i > 0 && cond.charAt(i - 1 ) == SPACE ? 1 : 0); // Remove last space, if any
+                        int i2 = i - (i > 0 && cond.charAt(i - 1) == SPACE ? 1 : 0); // Remove last space, if any
                         writeNoSpace(cond.subSequence(0, i2));
                         addValue(val);
                     } else {
@@ -291,7 +291,7 @@ public final class JdbcBuilder implements Serializable {
     }
 
     /**
-     *  Write an opetaror AND / OR
+     * Write an opetaror AND / OR
      * @param andOperator
      * @param enabled
      */
@@ -307,7 +307,7 @@ public final class JdbcBuilder implements Serializable {
     @Nonnull
     public JdbcBuilder value(@Nonnull final Object value) {
         if (value != null && !arguments.isEmpty()) {
-                sql.add(ITEM_SEPARATOR);
+            sql.add(ITEM_SEPARATOR);
         }
         return addValue(value);
     }
@@ -330,7 +330,7 @@ public final class JdbcBuilder implements Serializable {
      * @see #writeNoSpace(java.lang.CharSequence)
      */
     @Nonnull
-    public JdbcBuilder addArguments(final @Nonnull Object ... values) {
+    public JdbcBuilder addArguments(final @Nonnull Object... values) {
         final Object[] vals = values.length == 1 && values[0] instanceof Object[] ? (Object[]) values[0] : values;
         for (int i = 0; i < vals.length; i++) {
             arguments.add(values[i]);
@@ -414,7 +414,7 @@ public final class JdbcBuilder implements Serializable {
     public String getSql(final boolean preview) {
         final StringBuilder result = new StringBuilder(getBufferSizeEstimation(preview));
         final ValuePrinter printer = preview ? createValuePrinter(result) : null;
-
+        try {
         for (int i = 0, max = sql.size(); i < max; i++) {
             final CharSequence item = sql.get(i);
             if (item instanceof SqlEnvelope) {
@@ -447,13 +447,16 @@ public final class JdbcBuilder implements Serializable {
             }
             result.append(" )");
         }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
         return result.toString();
     }
 
     /** Create a value printer */
     @Nonnull
-    protected static ValuePrinter createValuePrinter(@Nonnull final StringBuilder result) {
-        return new ValuePrinter(VALUE_MARKER,  "'",  result);
+    protected static ValuePrinter createValuePrinter(@Nonnull final Appendable result) {
+        return new ValuePrinter(VALUE_MARKER, "'", result);
     }
 
     /** Estimate a buffer size in characters */

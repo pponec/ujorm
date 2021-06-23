@@ -5,7 +5,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-wicket</artifactId>
     <packaging>jar</packaging>
-    <version>1.89-SNAPSHOT</version>
+    <version>2.16-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-wicket</name>
     <description>The Ujo-Wicket is designed for supprot a Wicket framework applications.</description>
@@ -22,6 +22,33 @@
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-wicket</connection>
     </scm>
 
+    <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -31,9 +58,109 @@
     </licenses>
 
     <properties>
-        <wicket.version>7.7.0</wicket.version>
+        <wicket.version>7.18.0</wicket.version>
         <spring.version>4.3.9.RELEASE</spring.version>
     </properties>
+
+    <dependencies>
+
+        <!-- UJO -->
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-orm</artifactId>
+            <version>2.16-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Wicket -->
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
+            <version>${wicket.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-extensions</artifactId>
+            <version>${wicket.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.wicket-jquery-ui</groupId>
+            <artifactId>wicket-jquery-ui</artifactId>
+            <version>${wicket.version}</version> <!-- or 1.5.10 -->
+            <scope>provided</scope>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-spring</artifactId>
+            <version>${wicket.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        -->
+
+        <!-- LOGGER SLF4J -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.4</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Database H2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.196</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Test for an abstract parameter implementation service -->
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-spring</artifactId>
+            <version>2.16-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <resources>
@@ -103,106 +230,6 @@
 
         </plugins>
     </build>
-
-    <dependencies>
-
-        <!-- UJO -->
-        <dependency>
-            <groupId>org.ujorm</groupId>
-            <artifactId>ujo-orm</artifactId>
-            <version>1.89-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Wicket -->
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-core</artifactId>
-            <version>${wicket.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-extensions</artifactId>
-            <version>${wicket.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.wicket-jquery-ui</groupId>
-            <artifactId>wicket-jquery-ui</artifactId>
-            <version>${wicket.version}</version> <!-- or 1.5.10 -->
-            <scope>provided</scope>
-        </dependency>
-        <!--
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-spring</artifactId>
-            <version>${wicket.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        -->
-
-        <!-- LOGGER SLF4J -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.6.4</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Database H2 -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.196</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- Test for an abstract parameter implementation service -->
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.ujorm</groupId>
-            <artifactId>ujo-spring</artifactId>
-            <version>1.89-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>

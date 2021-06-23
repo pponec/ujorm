@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2021 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,8 @@
 
 package org.ujorm.tools.web;
 
-/** A proxy for a HTML element */
+/** A proxy for a HTML element
+ * <nr>NOTE: All fields in interface are public static final, i.e. they are constants. */
 public interface Html {
 
     // --- Element names ---
@@ -26,6 +27,8 @@ public interface Html {
     String HTML = "html";
     /** Head element */
     String HEAD = "head";
+    /** Horizontal rule (line) */
+    String HR = "hr";
     /** Meta element */
     String META = "meta";
     /** Body element */
@@ -58,14 +61,18 @@ public interface Html {
     String H3 = HEADING_PREFIX + 3;
     /** Table element */
     String TABLE = "table";
-    /** Table header line */
+    /** Table header group */
     String THEAD = "thead";
+    /** Table body group */
+    String TBODY = "tbody";
     /** Table header cell */
     String TH = "th";
     /** Table row element */
     String TR = "tr";
     /** Table detail element */
     String TD = "td";
+    /** Image element */
+    String IMAGE = "img";
     /** Label element */
     String LABEL = "label";
     /** Input element */
@@ -88,11 +95,21 @@ public interface Html {
     String LI = "li";
     /** A line break */
     String BR = "br";
+    /** Field set */
+    String FIELDSET  = "fieldset";
+    /** Legend */
+    String LEGEND  = "legend";
 
     // --- Attribute names ---
 
     String A_ACTION = "action";
+    /** Alternate text */
+    String A_ALT = "alt";
+    /** @deprecated Attribute {@code cellpadding} is not supported in HTML 5. */
+    @Deprecated
     String A_CELLPADDING = "cellpadding";
+    /** @deprecated Attribute {@code cellspacing} is not supported in HTML 5. */
+    @Deprecated
     String A_CELLSPACING = "cellspacing";
     String A_CHARSET = "charset";
     String A_CHECKED = "checked";
@@ -100,6 +117,7 @@ public interface Html {
     String A_CONTENT = "content";
     String A_FOR = "for";
     String A_HREF = "href";
+    String A_HTTP_EQUIV = "http-equiv";
     String A_ID = "id";
     /** Language attribute of the HTML pagee (e.g. "en")  */
     String A_LANG = "lang";
@@ -109,19 +127,26 @@ public interface Html {
     String A_MEDIA = "media";
     String A_METHOD = "method";
     String A_NAME = "name";
+    /** A short hint to describe the expected value of an input field */
+    String A_PLACEHOLDER = "placeholder";
     String A_READONLY = "readonly";
     String A_REL = "rel";
     String A_SELECTED = "selected";
     String A_SRC = "src";
+    /** CSS style */
+    String A_STYLE = "style";
     String A_TARGET = "target";
     String A_TYPE = "type";
+    /** A tooltip of an element*/
+    String A_TITLE = "title";
     String A_VALUE = "value";
     String A_ROWS = "rows";
     String A_COLS = "cols";
     String A_ROWSPAN = "cols";
     String A_COLSPAN = "colspan";
+    String A_ONCLICK = "onclick";
 
-    // --- Some attribute values ---
+    // --- Attribute values ---
 
     String V_BLANK = "_blank";
     String V_CHECKBOX = "checkbox";
@@ -132,6 +157,7 @@ public interface Html {
     String V_SUBMIT = "submit";
     String V_STYLESHEET = "stylesheet";
     String V_TEXT = "text";
+    String V_PASSWORD = "password";
     String V_TEXT_CSS = "text/css";
 
 }

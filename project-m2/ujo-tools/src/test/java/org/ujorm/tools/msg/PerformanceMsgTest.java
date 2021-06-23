@@ -15,8 +15,6 @@
  */
 package org.ujorm.tools.msg;
 
-import org.ujorm.tools.msg.MessageService;
-import org.ujorm.tools.msg.MsgFormatter;
 import ch.qos.logback.classic.Logger;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -245,7 +243,7 @@ public class PerformanceMsgTest {
     public void testMessage2() {
         System.out.println("testMessage2");
 
-        String expected = "~~A~~, B, C";
+        String expected = "~~A~~ B C";
         String template = "~~{}~~";
         Object[] arguments = {"A", "B", "C"};
         String result = MsgFormatter.format(template, arguments);

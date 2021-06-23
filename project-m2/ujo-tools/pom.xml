@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-tools</artifactId>
     <packaging>jar</packaging>
-    <version>1.89-SNAPSHOT</version>
+    <version>2.16-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-tools</name>
     <description>Ujorm-tools module is a basic library tools for common use</description>
@@ -16,13 +16,8 @@
         </contributor>
     </contributors>
 
-    <properties>
-        <spring.version>4.3.9.RELEASE</spring.version>
-        <yworks.uml.path>${basedir}/../scripts/javadoc/doclets/yworks-uml-doclet-3.0_02-jdk1.5</yworks.uml.path>
-    </properties>
-
     <scm>
-        <url>http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/project-m2/ujo-core/</url>
+        <url>https://github.com/pponec/ujorm/blob/master/project-m2/ujo-core/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-core</connection>
     </scm>
 
@@ -34,18 +29,96 @@
         </license>
     </licenses>
 
-    <build>
-        <resources>
-            <resource>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <directory>src/main/java</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
+    <dependencies>
+
+        <!-- Static analyzer support -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- API, java.xml.bind module -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Runtime, com.sun.xml.bind module -->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>5.3.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.196</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.reactivex.rxjava2</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>2.2.17</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- LOGGING DEPENDENCIES - Logback -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -114,77 +187,21 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.ujorm.core.UjoManager</mainClass>
-                            <packageName>org.ujorm.core</packageName>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
-
         </plugins>
     </build>
-    <dependencies>
-
-        <!-- Static analyzer support -->
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.196</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- LOGGING DEPENDENCIES - Logback -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -232,7 +249,7 @@
                 </plugins>
             </build>
         </profile>
-     </profiles>
+    </profiles>
 
 </project>
 

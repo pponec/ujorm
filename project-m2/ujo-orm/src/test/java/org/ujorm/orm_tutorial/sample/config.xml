@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.89-SNAPSHOT was created 2018-12-21 21:42 -->
+<!-- The Ujorm configuration file release 1.91-SNAPSHOT was created 2019-03-28 10:28 -->
 <body>
     <database id="Database">
         <schema>db1</schema>
         <readOnly>false</readOnly>
         <dialect>org.ujorm.orm.dialect.H2Dialect</dialect>
-        <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
+        <jdbcUrl>jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1</jdbcUrl>
         <jdbcDriver>org.h2.Driver</jdbcDriver>
         <user>sa</user>
         <sequencer>org.ujorm.orm.UjoSequencer</sequencer>
@@ -239,6 +239,7 @@
         <typeService>org.ujorm.orm.TypeServiceForOlderJdbc</typeService>
         <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
         <moreParams/>
+        <autoClosingDefaultSession>false</autoClosingDefaultSession>
         <fixingTableSequences>org.ujorm.orm.FixingTableSequencesDisabled</fixingTableSequences>
     </parameters>
 </body>

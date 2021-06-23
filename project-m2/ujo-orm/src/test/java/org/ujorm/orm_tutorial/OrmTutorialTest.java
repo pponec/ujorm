@@ -46,7 +46,7 @@ public class OrmTutorialTest extends TestCase {
 //        if (conn==null) {
 //            Class.forName(new H2Dialect().getJdbcDriver());
 //            conn = java.sql.DriverManager.getConnection
-//                ( "jdbc:h2:mem:db1"
+//                ( "jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1"
 //                , "sa"
 //                , ""
 //                );

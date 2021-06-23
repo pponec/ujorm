@@ -23,6 +23,7 @@ import org.ujorm.Ujo;
  * Closable interface
  * @author Pavel Ponec
  */
+@FunctionalInterface
 public interface Closeable<U extends Ujo & Serializable> extends Serializable {
 
     /** Close the dialog */

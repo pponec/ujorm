@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec,
+ * Copyright 2018-2020 Pavel Ponec,
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/XmlElement.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,8 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.xml.AbstractElement;
+import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.ApiElement;
 
 /**
  * A XML builder.
@@ -55,10 +56,17 @@ import org.ujorm.tools.xml.AbstractElement;
  * @since 1.86
  * @author Pavel Ponec
  */
-public class XmlBuilder extends AbstractElement<XmlBuilder> {
+public class XmlBuilder implements ApiElement<XmlBuilder> {
+
+    /** The HTML tag name */
+    public static final String HTML = "html";
 
     /** Assertion message template */
-    protected static final String REQUIRED_MSG = "The argument {} is required";
+    protected static final String REQUIRED_MSG = "The argument '{}' is required";
+
+    /** Element name */
+    @Nullable
+    protected final String name;
 
     /** Node writer */
     @Nonnull
@@ -84,70 +92,81 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
     private boolean attributeMode = true;
 
     /** The new element constructor
-     * @param name The element name must not be empty nor special HTML characters.
+     * @param name The element name must not be special HTML characters.
+     * The {@code null} value is intended to build a root of AJAX queries.
      */
-    public XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer, final int level) throws IOException {
+    public XmlBuilder(@Nullable final String name, @Nonnull final XmlPrinter writer, final int level) {
         this(name, writer, level, true);
     }
 
-
     /** The new element constructor
-     * @param name The element name must not be empty nor special HTML characters.
+     * @param name The element name must not be special HTML characters.
+     * The {@code null} value is intended to build a root of AJAX queries.
      * @param writer A XmlPrinter
      * @param level Level of the Element
      * @param printName Print the element name immediately.
-     * @throws IOException
      */
-    protected XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) throws IOException {
-        super(name);
-        Assert.notNull(name, REQUIRED_MSG, "name");
-        Assert.notNull(writer, REQUIRED_MSG, "writer");
-        this.writer = writer;
+    protected XmlBuilder(@Nullable final String name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
+        this.name = name;
+        this.lastText = name == null;
+        this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
         this.level = level;
 
-        if (printName) {
+        if (printName) try {
             writer.writeBeg(this, lastText);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
     }
 
     /** New element with a parent */
-    public XmlBuilder(@Nonnull final CharSequence name, @Nonnull final XmlPrinter writer) throws IOException {
+    public XmlBuilder(@Nonnull final String name, @Nonnull final XmlPrinter writer) {
         this(name, writer, 0);
     }
 
+    @Nullable
+    @Override
+    public String getName() {
+        return name;
+    }
+
     /**
-     * Settup states
+     * Setup states
      * @param element A child Node or {@code null} value for a text data
-     * @throws IOException
      */
     @Nonnull
-    protected XmlBuilder nextChild(@Nullable final XmlBuilder element) throws IOException {
-        Assert.isFalse(closed, "The node {} was closed", this.name);
-        if (!filled) {
+    protected XmlBuilder nextChild(@Nullable final XmlBuilder element) {
+        Assert.isFalse(closed, "The node '{}' was closed", this.name);
+        if (!filled) try {
             writer.writeMid(this);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
         if (lastChild != null) {
             lastChild.close();
         }
-        if (element != null) {
+        if (element != null) try {
             writer.writeBeg(element, lastText);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
 
         filled = true;
         attributeMode = false;
         lastChild = element;
-        lastText = element == null;
+        lastText = element == null || element.getName() == null;
 
         return element;
     }
 
-    /** *  Create a new {@link XmlBuilder} for a required name and add it to children.
+    /** Create a new {@link XmlBuilder} for a required name and add it to children.
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
      */
     @Override @Nonnull
-    public final <T extends XmlBuilder> T addElement(@Nonnull final String name) throws IOException {
-        return (T) nextChild(new XmlBuilder(name, writer, level + 1, false));
+    public final XmlBuilder addElement(@Nonnull final String name) {
+        XmlBuilder xb = new XmlBuilder(name, writer, level + 1, false);
+        return nextChild(xb);
     }
 
     /**
@@ -159,14 +178,18 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
      * @return The original element
      */
     @Override @Nonnull
-    public final <T extends XmlBuilder> T setAttrib(@Nonnull final String name, @Nullable final Object value) throws IOException {
-        Assert.hasLength(name, REQUIRED_MSG, "name");
-        Assert.isFalse(closed, "The node {} was closed", this.name);
-        Assert.isTrue(attributeMode, "Writing attributes to the {} node was closed", this.name);
-        if (value != null) {
-            writer.writeAttrib(name, value, this);
+    public final XmlBuilder setAttribute(@Nullable final String name, @Nullable final Object value) {
+        if (name != null) {
+            Assert.hasLength(name, REQUIRED_MSG, "name");
+            Assert.isFalse(closed, "The node '{}' was closed", name);
+            Assert.isTrue(attributeMode, "Writing attributes to the '{}' node was closed", name);
+            if (value != null) try {
+                writer.writeAttrib(name, value, this);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
         }
-        return (T) this;
+        return this;
     }
 
     /**
@@ -175,21 +198,49 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
      *   {@link XmlPrinter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
-    @Override @Nonnull
-    public final <T extends XmlBuilder> T addText(@Nullable final Object value) throws IOException {
-        nextChild(null);
-        writer.writeValue(value, this, null);
-        return (T) this;
+    @Override
+    @Nonnull
+    public final XmlBuilder addText(@Nullable final Object value) {
+        try {
+            nextChild(null);
+            writer.writeValue(value, this, null);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+        return this;
+    }
+
+    /**
+     * Message template with hight performance.
+     *
+     * @param template Message template where parameters are marked by the {@code {}} symbol
+     * @param values argument values
+     * @return The original builder
+     */
+    @Override
+    @Nonnull
+    public final XmlBuilder addTextTemplated(@Nullable final CharSequence template, @Nonnull final Object... values) {
+        try {
+            nextChild(null);
+            AbstractWriter.FORMATTER.formatMsg(writer.getWriterEscaped(), template, values);
+            return this;
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */
     @Override @Nonnull
-    public final <T extends XmlBuilder> T addRawText(@Nullable final Object value) throws IOException {
-        nextChild(null);
-        writer.writeRawValue(value, this);
-        return (T) this;
+    public final XmlBuilder addRawText(@Nullable final Object value) {
+        try {
+            nextChild(null);
+            writer.writeRawValue(value, this);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+        return this;
     }
 
     /**
@@ -199,7 +250,7 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
      * @return This instance
      */
     @Override @Nonnull @Deprecated
-    public final <T extends XmlBuilder> T addComment(@Nullable final CharSequence comment) {
+    public final XmlBuilder addComment(@Nullable final CharSequence comment) {
         throw new UnsupportedOperationException();
     }
 
@@ -210,19 +261,21 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
      * @return This instance
      */
     @Override @Nonnull @Deprecated
-    public final <T extends XmlBuilder> T addCDATA(@Nullable final CharSequence charData) {
+    public final XmlBuilder addCDATA(@Nullable final CharSequence charData) {
         throw new UnsupportedOperationException();
     }
 
     /** Close the Node */
     @Override
-    public final void close() throws IOException {
-        if (!closed) {
+    public final void close() {
+        if (!closed) try {
             closed = true;
             if (lastChild != null) {
                 lastChild.close();
             }
             writer.writeEnd(this);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
     }
 
@@ -254,4 +307,18 @@ public class XmlBuilder extends AbstractElement<XmlBuilder> {
     public String toString() {
         return writer.toString();
     }
+
+    // --- Factory method ---
+
+    /** Create builder for HTML */
+    @Nonnull
+    public static XmlBuilder forHtml(@Nonnull Appendable response) {
+         return new XmlBuilder(HTML, XmlPrinter.forHtml(response));
+    }
+
+    @Nonnull
+    public static XmlBuilder forNiceHtml(@Nonnull Appendable response) {
+        return new XmlBuilder(HTML, XmlPrinter.forNiceHtml(response));
+    }
+
 }

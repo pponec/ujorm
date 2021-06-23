@@ -34,6 +34,7 @@ import org.ujorm.orm.Session;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.ao.CommentPolicy;
+import org.ujorm.tools.Assert;
 import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.logger.UjoLogger.*;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
@@ -115,11 +116,11 @@ public class MetaDbService {
             createSequenceTable(createSequenceTable);
             // 8. Create table comment for the all tables:
             createTableComments(news.getTables());
-            // 8. Create table comment for the all tables:
-            createTableComments(news.getTables());
-            // 9. Fixing the sequences and commit it:
+            // 9. Fixing the sequences and commit it optionally:
             sql.setLength(0);
-            db.getParams().getFixingTableSequences(db, conn).run();
+            if (createSequenceTable) {
+                db.getParams().getFixingTableSequences(db, conn).run();
+            }
             // 10. Commit:
             conn.commit();
 
@@ -155,14 +156,9 @@ public class MetaDbService {
         for (MetaTable table : TABLES.getList(db)) {
             if (table.isTable()) {
                 // CHECK COLUMNS AND INDEXES OF THE TABLE:
-                final boolean tableExists = addNewColumns
-                          ( dbModel
-                          , table
-                          , news.getTables()
-                          , news.getColumns());
-                if (tableExists) {
-                    addNewIndexes(dbModel, table, news.getIndexes());
-                }
+                addNewColumns(dbModel, table, news.getTables(), news.getColumns());
+                addNewIndexes(dbModel, table, news.getIndexes());
+
                 switch (table.getOrm2ddlPolicy()) {
                     case CREATE_DDL:
                     case CREATE_OR_UPDATE_DDL: {
@@ -231,7 +227,7 @@ public class MetaDbService {
 
     /** 0. Initialization
      * @param conn
-     * @return A createSequenceTable request
+     * @return A SequenceTable request to create
      * @throws java.sql.SQLException
      * @throws java.io.IOException */
     protected boolean initialize(Connection conn) throws SQLException, IOException, IllegalUjormException {
@@ -244,7 +240,8 @@ public class MetaDbService {
             String logMsg = "";
 
             try {
-                db.getDialect().printSequenceCurrentValue(findFirstSequencer(), sql);
+                UjoSequencer sequencer = Assert.notNull(findFirstSequencer(), "sequencer");
+                db.getDialect().printSequenceCurrentValue(sequencer, sql);
                 ps = conn.prepareStatement(sql.toString());
                 ps.setString(1, "-");
                 rs = ps.executeQuery();

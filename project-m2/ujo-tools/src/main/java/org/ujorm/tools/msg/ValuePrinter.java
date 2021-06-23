@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2018 Pavel Ponec
+ *  Copyright 2018-2020 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.ujorm.tools.msg;
 
+import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -26,7 +27,7 @@ import javax.annotation.Nullable;
 public class ValuePrinter extends ValueFormatter {
 
     /** Writer */
-    protected final StringBuilder out;
+    protected final Appendable out;
 
     /** Constructor */
     public ValuePrinter(final int size) {
@@ -34,19 +35,19 @@ public class ValuePrinter extends ValueFormatter {
     }
 
     /** Constructor */
-    public ValuePrinter(@Nonnull final StringBuilder out) {
+    public ValuePrinter(@Nonnull final Appendable out) {
         this("?", "\"", out);
     }
 
     /** Constructor */
-    public ValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final StringBuilder out) {
+    public ValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final Appendable out) {
         super(mark, textBorder);
         this.out = out;
     }
 
     /** Append value */
     @Nonnull
-    public ValuePrinter appendValue(@Nullable final Object value) {
+    public ValuePrinter appendValue(@Nullable final Object value) throws IOException {
         if (value instanceof Object[]) {
             boolean first = true;
             for (Object object : (Object[]) value) {
@@ -64,7 +65,7 @@ public class ValuePrinter extends ValueFormatter {
     }
 
     /** Standarad writter */
-    public StringBuilder getWriter() {
+    public Appendable getWriter() {
         return out;
     }
 

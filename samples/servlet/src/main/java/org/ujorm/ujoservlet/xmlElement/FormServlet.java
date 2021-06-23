@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2019 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Html;
-import org.ujorm.tools.xml.dom.HtmlElement;
-import org.ujorm.tools.xml.dom.XmlElement;
+import org.ujorm.tools.xml.model.XmlModel;
+import org.ujorm.ujoservlet.tools.HtmlElementOrig;
 import org.ujorm.ujoservlet.tools.ApplService;
 
 /**
@@ -61,10 +61,10 @@ public class FormServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         input.setCharacterEncoding(charset.toString());
 
-        HtmlElement html = createHtmlElement("Simple user form", "css/userForm.css");
-        XmlElement form = html.addElementToBody(Html.FORM)
-                .setAttrib(Html.A_METHOD, Html.V_POST)
-                .setAttrib(Html.A_ACTION, postMethod ? null : input.getRequestURI());
+        HtmlElementOrig html = createHtmlElement("Simple user form", "css/userForm.css");
+        XmlModel form = html.addElementToBody(Html.FORM)
+                .setAttribute(Html.A_METHOD, Html.V_POST)
+                .setAttribute(Html.A_ACTION, postMethod ? null : input.getRequestURI());
         for (Field field : getFieldDescriptions()) {
             createInputField(field, form, input);
         }
@@ -74,25 +74,25 @@ public class FormServlet extends HttpServlet {
     }
 
     /** Create new HtmlElement incliding title and CSS style */
-    private HtmlElement createHtmlElement(String title, String css) {
-        final HtmlElement result = new HtmlElement(title, charset, css);
+    private HtmlElementOrig createHtmlElement(String title, String css) {
+        final HtmlElementOrig result = new HtmlElementOrig(title, charset, css);
         result.addElementToBody(Html.H1).addText(title);
         return result;
     }
 
     /** Create an input field including label and validation message */
-    private XmlElement createInputField(Field field, XmlElement form, HttpServletRequest input) {
-        XmlElement result = form.addElement(Html.DIV) // An envelope
-                .setAttrib(Html.A_CLASS, field.isSubmit() ? "submit" : null);
+    private XmlModel createInputField(Field field, XmlModel form, HttpServletRequest input) {
+        XmlModel result = form.addElement(Html.DIV) // An envelope
+                .setAttribute(Html.A_CLASS, field.isSubmit() ? "submit" : null);
         result.addElement(Html.LABEL)
-                .setAttrib(Html.A_FOR, field.getName())
+                .setAttribute(Html.A_FOR, field.getName())
                 .addText(field.getLabel());
-        XmlElement inputBox = result.addElement(Html.DIV);
+        XmlModel inputBox = result.addElement(Html.DIV);
         inputBox.addElement(Html.INPUT)
-                .setAttrib(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
-                .setAttrib(Html.A_ID, field.getName())
-                .setAttrib(Html.A_NAME, field.getName())
-                .setAttrib(Html.A_VALUE, field.getValue(input));
+                .setAttribute(Html.A_TYPE, field.isSubmit() ? Html.V_SUBMIT : Html.V_TEXT)
+                .setAttribute(Html.A_ID, field.getName())
+                .setAttribute(Html.A_NAME, field.getName())
+                .setAttribute(Html.A_VALUE, field.getValue(input));
         field.getErrorMessage(input, postMethod).ifPresent(msg -> inputBox.addElement(Html.SPAN)
                 .addText(msg)); // Raw validation message
         return result;

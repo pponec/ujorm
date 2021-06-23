@@ -16,6 +16,7 @@
 
 package org.ujorm.criterion;
 
+import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
@@ -34,63 +35,74 @@ public class SimpleValuePrinter extends ValuePrinter {
     }
 
     /** Constructor */
-    public SimpleValuePrinter(@Nonnull final StringBuilder out) {
+    public SimpleValuePrinter(@Nonnull final Appendable out) {
         super(out);
     }
 
     /** Constructor */
-    public SimpleValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final StringBuilder out) {
+    public SimpleValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final Appendable out) {
         super(mark, textBorder, out);
     }
 
     /** Append value */
     @Nonnull
     public SimpleValuePrinter append(final char c) {
-        out.append(c);
+        try {
+            out.append(c);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
         return this;
     }
 
     /** Append value */
     @Nonnull
     public SimpleValuePrinter append(@Nullable final Object value) {
-        out.append(value != null ? value.toString() : null);
+        try {
+            out.append(value != null ? value.toString() : null);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
         return this;
     }
 
     /** Append value */
     @Nonnull
     public SimpleValuePrinter append(@Nullable final CharSequence value) {
-        out.append(value);
+        try {
+            out.append(value);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
         return this;
     }
 
     /** Append value */
     @Nonnull
     public SimpleValuePrinter appendValue(@Nullable final Object value) {
-        if (value == null) {
-           out.append((String) null);
-        } else if (value instanceof Key) {
-            out.append((Key) value);
-        } else if (value instanceof Ujo) {
-            final Ujo ujo = (Ujo) value;
-            final Key firstProperty = ujo.readKeys().get(0);
-            final Object firstValue = firstProperty.of(ujo);
+        try {
+            if (value == null) {
+               out.append((String) null);
+            } else if (value instanceof Key) {
+                out.append((Key) value);
+            } else if (value instanceof Ujo) {
+                final Ujo ujo = (Ujo) value;
+                final Key firstProperty = ujo.readKeys().get(0);
+                final Object firstValue = firstProperty.of(ujo);
 
-            out.append(ujo.getClass().getSimpleName());
-            out.append('[');
-            out.append(firstProperty);
-            out.append('=');
-            appendValue(firstValue);
-            out.append(']');
-        } else {
-            super.writeValue(value, out, true);
+                out.append(ujo.getClass().getSimpleName());
+                out.append('[');
+                out.append(firstProperty);
+                out.append('=');
+                appendValue(firstValue);
+                out.append(']');
+            } else {
+                super.writeValue(value, out, true);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
         return this;
-    }
-
-    /** Standarad writter */
-    public StringBuilder getWriter() {
-        return out;
     }
 
     /** Writer result */

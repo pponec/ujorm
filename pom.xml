@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <properties>
-        <ujo.version>1.89-SNAPSHOT</ujo.version>
+        <ujo.version>2.16-SNAPSHOT</ujo.version>
         <java.version>1.8</java.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
@@ -12,7 +12,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ujorm</groupId>
     <artifactId>ujo</artifactId>
-    <version>1.89-SNAPSHOT</version>
+    <version>2.16-SNAPSHOT</version>
     <name>Main UJO</name>
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
@@ -35,7 +35,43 @@
         <version>9</version>
     </parent>
 
-    <!-- SUB PROJECTS -->
+    <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <!-- DEPENDENCES -->
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -48,16 +84,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <!-- DEPENDENCES -->
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <!-- The default prfile is "production" -->
     <profiles>
@@ -75,6 +101,7 @@
                 <module>project-m2/ujo-wicket</module>
                 <module>project-m2/ujo-xsd</module>
                 <module>project-m2/ujo-web</module>
+                <module>project-m2/ujo-arangodb</module>
 
                 <module>samples/core</module>
                 <module>samples/parameters</module>
@@ -85,6 +112,7 @@
                 <module>samples/wicket</module>
                 <module>samples/servlet</module>
                 <module>samples/generated</module>
+                <module>samples/x2j-converter</module>
 
                 <module>benchmark/hibernate</module>
                 <module>benchmark/hibernate-ujo</module>
@@ -101,6 +129,7 @@
                 <module>project-m2/ujo-spring</module>
                 <module>project-m2/ujo-wicket</module>
                 <module>project-m2/ujo-xsd</module>
+                <module>project-m2/ujo-web</module>
             </modules>
         </profile>
     </profiles>

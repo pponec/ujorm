@@ -18,8 +18,6 @@ package org.ujorm.implementation.mapImpl;
 import java.io.Serializable;
 import java.util.HashMap;
 import org.ujorm.Key;
-import org.ujorm.Ujo;
-import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.UjoMiddle;
 
@@ -61,22 +59,6 @@ abstract public class MapImplUjoMiddle<UJO extends MapImplUjoMiddle>
 
     /** No parameters constructor */
     public MapImplUjoMiddle() {
-    }
-
-    /** Getter based on one Key */
-    @SuppressWarnings("unchecked")
-    @Override
-    public <VALUE> VALUE get(final Key<? super UJO, VALUE> key) {
-        return key.of((UJO)this);
-    }
-
-    /** Setter  based on Key. Type of value is checked in the runtime. */
-    @SuppressWarnings("unchecked")
-    @Override
-    public <VALUE> Ujo set(final Key<? super UJO, VALUE> key, final VALUE value) {
-        assert UjoManager.assertDirectAssign(key, value, this);
-        key.setValue((UJO)this, value);
-        return this;
     }
 
     /**

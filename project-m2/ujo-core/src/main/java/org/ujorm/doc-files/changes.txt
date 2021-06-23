@@ -2,10 +2,127 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 1.89-SNAPSHOT
-+ ...
 
-release 1.88-SNAPSHOT
+release 2.16-SNAPSHOT (yyyy-mm-dd)
+...
+
+release 2.15 (2021-04-02)
++ WEB: The TableBuilder component sorts columns with no Javascript support.
++ WEB: HttpParameter returns the last value of the HttpServletRequest.
++ WEB: Element name is type of String.
+
+release 2.14 (2021-03-21)
++ ORM: Indices are created for new tables as well
++ WEB: A TableBuilder class was divided into two new ones: ReportBulder & GridBuilder, the original class is deprecated now.
++ WEB: New factory method Element.of() supports both argument types: Elemnt and ApiElement
++ WEB: Extended JavaDoc
+
+release 2.13 (2021-03-04)
++ WEB: New method Element.addTextInp() for an explicit value
++ WEB: TableBuilder can be sortable without AJAX
++ TOOLS: New attribute HtmlConfig.getHeaderInjector() is available
++ TOOLS: The parameter HtmlConfig.getRawHeaderText() is deprecated now.
+
+release 2.12 (2021-02-27)
++ ORM: SQL LIMIT a OFFET are fixed for some cases on PosgtgreSQL
++ ORM: Criterion.toString() method is extended
++ WEB: ES6 Vanilla Javascript Writer is ready for AJAX requests
++ WEB: The NON_BREAKING_SPACE is supported for rendering a HTML now.
++ WEB: API of TableBuilder class is extended
++ CORE: Code cleaning
+
+release 2.11 (2011-01-14)
++ WEB: TableBuilder supports sortable columns.
++ WEB: The method Element.setAttribute() have got a new shortcut: Element.setAttr().
++ WEB: Code cleaning.
++ CORE: An general Confessionable interface for an export to an appendable writer is ready for a common use.
+
+release 2.10 (2021-01-03)
++ COMMON: More general API and better performance due removing unnecessary Writable class.
++ WEB: New TableBuilder class with an AJAX support is ready to a common use.
++ WEB: New JsonBuilder class to write a common JSON file is ready to a common use.
+- WEB: The Element.addTextTemplated() method was fixed.
+
+release 2.05 (2020-12-02)
++ WEB: New Element.addTextTemplated() method for a template based texts.
++ WEB: New Element.addLinkedText() method for anchors.
++ WEB: Element.addTable() method by an array of functions to getting values.
+- WEB: Bugfixing of the method: HtmlElement of(response, cssLinks).
++ TOOLS: New Wrapper class for a generic implementation: equals(), hash() and comparable().
++ TOOLS: New ApiElement.addTextTemplated() method for a template based texts.
+
+release 2.04 (2020-08-29)
++ TOOLS: New method ObjectUtil.iof() for a processing a value in case the one is the instance of a required class.
++ TOOLS: New method MessageService.formatMsg() for a parsing values to a template.
++ WEB-TOOLS: New method Element.addImage() to add an image to HTML model.
+
+release 2.03 (2020-07-23)
++ WEB: A ProxyServletRespnse class is renamed to a MockServletResponse.
++ WEB: New element constat is available: Html.HL.
++ WEB: New method is available for formatted texts: Element.addTemplate().
++ WEB: API cleaning, new interface ApiElement is available.
++ WEB: Method ApiElement.addAttrib() is renamed to ApiElement.addAttribute().
++ WEB: A HtmlElement class provides two method: addHead() and addBody().
++ TOOLS: XmlNew method is available for formatted texts: Element.addTemplate().
++ TOOLS: The interface MessageMaker was removed due a minority use.
++ TOOLS: The Thread package has been removed without replacement. Try project: https://projectreactor.io/docs/ .
++ TOOLS: API of an Assert can validate Supplier<V> supplier by a method: notNullValue().
++ TOOLS: Method Element.addTable() does not insert zero attributes CELLPADDING and CELLSPACING.
++ TOOLS: HtmlConfig class supports new config parameter for the 'Content type'.
+
+release 2.02-SNAPSHOT (2020-06-26)
++ WEB: New class ProxyServletResponse for a common use is available.
++ WEB: New configuration method HtmlConfig.isBuilderElement() controls an Element implementation.
+
+release 2.01 (2020-05-12)
++ CORE: Criterion implements implements Predicate<U>
++ ORM: Elements of the XML log are intended
++ ORM: Foreign key type of UUID is fixed for reading
++ TOOLS: DefaultXmlXonfig have got extended API
++ TOOLS: XmlPrinter API refactoring
+
+release 2.00 (2020-03-08)
++ TOOLS: Assert API is exended
++ TOOLS: An extended MultiJob class is ready for mulithreading tasks
++ TOOLS: New configuration interface XmlConfig is avalilable
++ TOOLS: New AsyncStreamBuilder class is avalilable for a common use
+
+release 1.94 (2019-12-05)
++ TOOLS: A new MultiJob class is ready for mulithreading tasks
+
+release 1.93 (2019-11-20)
++ ORM: new method LoopingIterator.toStream() is ready to a common use
+
+release 1.92 (2019-11-13)
++ ORM: An read-only database support is fixed.
++ ORM: new method MetaParams.getApplicationContext() is available.
++ TOOLS: Two methods are improved: Assert.isTrue() & Assert.isFalse()
++ TOOLS: UjoTools: New method LoopingIterator.toStream() is available.
++ HOTELS: Spring config cleaning
++ JavaDoc is extended
+
+release 1.91 (2019-05-26)
++ ORM: A default session is closed now, see the issue for detail: https://github.com/pponec/ujorm/issues/1
++ WEB: New class `Element` to building HTML pages is ready
+
+release 1.90 (2019-03-24)
++ ORM: Some OrmUjo improvement is done for better performance and less memory footprint
++ TOOLS: New method: JdbcBuilder.uniqueValueOptional()
++ TOOLS: Cleaning of an Element API
++ TOOLS: XmlBulder cleaning
++ TOOLS: The XMlBuilder is moved to a TOOLS module
++ TOOLS: New method JdbcBuilder.executeSelect() using a lambda expression
++ TOOLS: API of the XmlWriter is fixed
++ TOOLS: MsgFormatter: the output is type of StrringBuilder class instead of the CharArrayWriter class.
++ WICKET: A list of hotels is provided by a service, a correction of typo in method name: AbstractToolbar.createSearchField() is done
++ WICKET Hotels: Applicastion parameters are fixed
++ WICKET Hotels: Java sources can be visibled from the application
++ WICKET Hotels: Preselect an index of the tab by an URL parametr
++ WICKET Hotels: searching customers by its login is done
++ WICKET Hotels: CSS cleaning
++ ALL: Obsolete JavaDoc is removed
+
+release 1.88 (2018-11-17)
 + TOOLS: An API of the XmlElement class is extended
 + TOOLS: An API of the JdbcBuilder class is extended
 
@@ -30,14 +147,14 @@ release 1.84 (2018-09-26)
 + ORM: fixing the table sequences using the class FixingTableSequences.
 + ORM: Method Session.save() is renamed to insert()
 + ORM: New config definition is available: ujorm-1.84.xsd
-+ WICKET: new method DataProviderCached.clearCache() 
-+ WICKET: column CSS style settings is fixed for DataProvider class    
++ WICKET: new method DataProviderCached.clearCache()
++ WICKET: column CSS style settings is fixed for DataProvider class
 + An alternative home page: http://pponec.github.io/ujorm/
 
 release 1.83 (2018-04-21)
-+ CORE New persistent interface called ValueWrapper where a sample implementation is the UnsignedShort class.  
++ CORE New persistent interface called ValueWrapper where a sample implementation is the UnsignedShort class.
 + ORM: New persistent interface called ValueWrapper is supported in ORM.
-+ ORM: Optional quoting of individual database items by an annotation argument 
++ ORM: Optional quoting of individual database items by an annotation argument
 + ORM: New method Session.updateSafely(batch)
 + SQL keyword list of SQL:2011
 + WICKET: Simple LocalDateTimeField implementation
@@ -59,13 +176,13 @@ release 1.82 (2018-03-18)
 + ORM: A LazyLoading enumerator is renamed to the LoadingPolicy enumerator
 + ORM: Some annotation in the UjormTransactionManager class
 + ORM: Some obsolete code is removed
-+ ORM: A new method OrmTable.clone() for clonning first of parameters level. 
-+ ORM: A method update() of the CommonDao class is fixed 
-+ ORM: A new methods CommonDao.updateSafely() are implemented 
++ ORM: A new method OrmTable.clone() for clonning first of parameters level.
++ ORM: A method update() of the CommonDao class is fixed
++ ORM: A new methods CommonDao.updateSafely() are implemented
 + ORM: Mysql is supported to version 3.1.14 only
 + ORM: A method CompositeKey.getCompositeCount() is renamed to CompositeKey.getKeyCount() +
-+ ORM: A method CompositeKey.getKey(int) is created 
-+ ORM: A method CompositeKey.getFirstKey() is deleted 
++ ORM: A method CompositeKey.getKey(int) is created
++ ORM: A method CompositeKey.getFirstKey() is deleted
 + ORM: A Criterion class implements methods equals() and hashCode()
 + ORM: A SQL operator ILIKE is supported for dialects: PostrgreSQL and H2
 + ORM: The method Session.save() accept a domain list type of Collection now.
@@ -73,7 +190,7 @@ release 1.82 (2018-03-18)
 + WICKET: New optimized OrmDataProvider with a a cache is available now
 + WICKET: The method FieldProvider.getLast() is fixed
 + WICKET: Create a wicket model by Lambda expression (Supplier) WICKET: UjoTab supports a visibility (by a Supplier)
-    
+
 release 1.81 (2018-02-22)
 + A nullable Ujo property (mandatory=false) have got a SQL join of type LEFT OUTER JOIN by default
 
@@ -106,7 +223,7 @@ release 1.76 (2017-12-09)
 + TOOLS: Formatting the SQL statement is supported now.
 + WICKET: new features and extended API
 + WICKET: API of the AbstractToolbar is fixed
-+ WICKET: The method UjoEvent.get() returns newer NULL    
++ WICKET: The method UjoEvent.get() returns newer NULL
 
 release 1.75 (2017-11-10)
 + ORM: Bugfix: closing JDBC resources
@@ -167,7 +284,7 @@ release 1.62 (2017-02-18)
 + CORE: Criterion join optimization is done for the next cases: CriterionProvider.forAll(), CriterionProvider.forNone()
 + ORM: The error is fixed for the case If two database model ORDER attributes have got a default value, then the the different databases are considered as the same.
 + ORM: An implementation is fixed for the method: HsqldbDialect.getJdbcUrl()
-+ ORM: The table alias solution is improved 
++ ORM: The table alias solution is improved
 + ORM: The UjoSequencer logs are extended
 + ORM: The method NativeDbSequencer.reset() is unsupported.
 + ORM: Wrong import of the SampleORM class is fixed

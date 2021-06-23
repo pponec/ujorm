@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
@@ -65,6 +66,7 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Temporary configuration */
     private MetaRoot configuration;
     /** The default ORM session */
+    @Nullable
     private Session defaultSession;
 
     /** Map a <strong>key</strong> to a database <strong>column</strong> model */
@@ -95,10 +97,18 @@ public class OrmHandler implements OrmHandlerProvider {
       * @see #createSession()
       */
     public Session getDefaultSession() {
-        if (defaultSession==null) {
+        if (defaultSession == null) {
             defaultSession = createSession();
         }
         return defaultSession;
+    }
+
+     /** Close the default session, the method is not thread safe. */
+    public void closeDefaultSession() {
+        if (defaultSession != null) {
+            defaultSession.close();
+            defaultSession = null;
+        }
     }
 
      /** Get a <strong>default</strong> Session of the OrmHandler.
@@ -153,7 +163,7 @@ public class OrmHandler implements OrmHandlerProvider {
 
         // The parameters assigning:
         MetaParams params = MetaRoot.PARAMETERS.of(configuration);
-        if (params!=null) {
+        if (params != null) {
             config(params);
         }
     }
@@ -260,34 +270,34 @@ public class OrmHandler implements OrmHandlerProvider {
             throw new IllegalUjormException("Can't create configuration " + outConfigFile, e);
         }
 
-        for (MetaDatabase dbModel : getDatabases()) {
-            dbModel.create(getDefaultSession());
-        }
+        try {
+            for (MetaDatabase dbModel : getDatabases()) {
+                dbModel.create(getDefaultSession());
+            }
 
-        // Run an initializaton batch:
-        final InitializationBatch batch = params.getInitializationBatch();
-        if (batch != null) {
-            Session session = null;
-            try {
-                session = createSession();
-                LOGGER.log(UjoLogger.INFO, "The initializaton batch is running: {}", batch.getClass().getName());
-                batch.run(session);
-                session.commit();
-                session.close();
-            } catch (Exception e) {
-                final String msg = "The batch failed: " + batch.getClass().getName();
-                LOGGER.log(UjoLogger.ERROR, msg, e);
-                throw new IllegalUjormException(msg, e);
-            } finally {
-                if (session != null) {
-                    session.rollback();
-                    session.close();
+            // Run an initializaton batch:
+            final InitializationBatch batch = params.getInitializationBatch();
+            if (batch != null) {
+                try (Session session = createSession()) {
+                    LOGGER.log(UjoLogger.INFO, "The initializaton batch is running: {}", batch.getClass().getName());
+                    batch.run(session);
+                    session.commit();
+                } catch (Exception e) {
+                    final String msg = "The batch failed: " + batch.getClass().getName();
+                    LOGGER.log(UjoLogger.ERROR, msg, e);
+                    throw new IllegalUjormException(msg, e);
                 }
+            }
+
+            // Lock the meta-model:
+            databases.lock();
+
+        } finally {
+            if (MetaParams.AUTO_CLOSING_DEFAULT_SESSION.of(params)) {
+               closeDefaultSession();
             }
         }
 
-        // Lock the meta-model:
-        databases.lock();
     }
 
     /** Do the handler have a read-only state? */
@@ -418,11 +428,10 @@ public class OrmHandler implements OrmHandlerProvider {
      */
     @Nonnull
     public MetaProcedure findProcedureModel(Class<? extends DbProcedure> procedureClass) throws IllegalUjormException {
-        MetaProcedure result = procedureMap.get(procedureClass);
-        Assert.notNull(result
+        final MetaProcedure result = procedureMap.get(procedureClass);
+        return Assert.notNull(result
                 , "An procedure mapping bug: the {} is not mapped to the Database."
                 , procedureClass);
-        return result;
     }
 
     /** Returns parameters */

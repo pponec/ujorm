@@ -170,6 +170,17 @@ public final class MetaParams extends AbstractMetaModel {
      */
     public static final Key<MetaParams,Boolean> LOG_SQL_MULTI_INSERT = f.newKey("logSqlMultiInsert", false);
 
+    /** If the parameter is true, then the OrmHandler closes a {@code default session} after creating database structures.
+     * Note, a closing the session of in-memory databases can remove all data structure.
+     * The default value is {@code true}.
+     *
+     * @see See the note of the H2 Database documentation: By default, closing the last connection to a database closes the database.
+     * For an in-memory database, this means the content is lost. To keep the database open,
+     * add {@code ;DB_CLOSE_DELAY=-1} to the database URL. To keep the content of an in-memory database as long
+     * as the virtual machine is alive, use jdbc:h2:mem:test;DB_CLOSE_DELAY=-1.
+     */
+    public static final Key<MetaParams,Boolean> AUTO_CLOSING_DEFAULT_SESSION = f.newKey("autoClosingDefaultSession", true);
+
     /** Parameter tries to install a bridge to the <a href="http://logback.qos.ch/">Logback</a> logging framework
      * using a statement <code>SLF4JBridgeHandler.install()</code>;
      */
@@ -192,17 +203,17 @@ public final class MetaParams extends AbstractMetaModel {
     public static final Key<MetaParams,Object> APPL_CONTEXT = f.newKey("applContext");
 
     /** The key initialization */
-    static { 
+    static {
         f.lock();
     }
-    
+
     /** CheckReport a keyword in the database table or colum name inside the meta-model.
      * The default value is EXCEPTION.
      * @see CheckReport Parameter values
      * @see #QUOTE_SQL_NAMES
      */
     public static final Key<MetaParams,CheckReport> CHECK_KEYWORDS = QUOTATION_POLICY;
-    
+
     /** An extended index name strategy
      * @see MoreParams#EXTENTED_INDEX_NAME_STRATEGY
      */
@@ -284,7 +295,7 @@ public final class MetaParams extends AbstractMetaModel {
             case QUOTE_ONLY_SQL_KEYWORDS:
                 return true;
             default:
-                return false;            
+                return false;
         }
     }
 
@@ -343,6 +354,12 @@ public final class MetaParams extends AbstractMetaModel {
         } catch (RuntimeException | ReflectiveOperationException e) {
             return throwInstantiationException(resultType, e);
         }
+    }
+
+    /** Get an application context,  */
+    @Nullable
+    public <T> T getApplicationContext() {
+        return (T) APPL_CONTEXT.of(this);
     }
 
     /** Throws an unchecked exception due an InstantiationException */

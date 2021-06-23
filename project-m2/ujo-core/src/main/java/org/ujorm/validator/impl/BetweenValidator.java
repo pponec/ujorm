@@ -29,9 +29,9 @@ import org.ujorm.validator.ValidationError;
 public class BetweenValidator<VALUE extends Comparable> extends AbstractValidator<VALUE> {
 
     /** Serializable minimum (inclusive) */
-    public static final MessageArg MIN = new MessageArg("MIN");
+    public static final MessageArg MIN = MessageArg.of("MIN");
     /** Serializable maximum (exclusive) */
-    public static final MessageArg MAX = new MessageArg("MAX");
+    public static final MessageArg MAX = MessageArg.of("MAX");
 
     /** Serializable minimum (inclusive) */
     protected final Comparable min;

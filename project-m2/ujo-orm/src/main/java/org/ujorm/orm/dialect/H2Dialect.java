@@ -24,11 +24,11 @@ public class H2Dialect extends SqlDialect {
 
     /** Returns a default JDBC URL.
      * <br>For a PostgreSQL simulation use:
-     * {@code jdbc:h2:mem:db1;MODE=PostgreSQL}
+     * {@code jdbc:h2:mem:db1;MODE=PostgreSQL;DB_CLOSE_DELAY=-1}
      */
     @Override
     public String getJdbcUrl() {
-        return "jdbc:h2:mem:db1";
+        return "jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1";
     }
 
     /** Returns a JDBC Driver */

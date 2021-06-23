@@ -5,7 +5,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-orm</artifactId>
     <packaging>jar</packaging>
-    <version>1.89-SNAPSHOT</version>
+    <version>2.16-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-orm</name>
     <description>The Ujorm is designed for rapid Java development with great performance
@@ -21,9 +21,35 @@
     </contributors>
 
     <scm>
-        <url>http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/project-m2/ujo-orm/</url>
+        <url>https://github.com/pponec/ujorm/blob/master/project-m2/ujo-orm/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2ujo-orm</connection>
     </scm>
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <licenses>
         <license>
@@ -37,113 +63,13 @@
         <yworks.uml.path>${basedir}/../scripts/javadoc/doclets/yworks-uml-doclet-3.0_02-jdk1.5</yworks.uml.path>
     </properties>
 
-    <build>
-        <resources>
-            <resource>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                    <include>**/*.txt</include>
-                </includes>
-                <directory>src/main/java</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
-        <testResources>
-            <testResource>
-                <directory>src/test/java</directory>
-            </testResource>
-        </testResources>
-
-        <plugins>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
-                <configuration>
-                    <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile>
-                    <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
-                    <docfilessubdirs>true</docfilessubdirs>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                    <failOnError>false</failOnError>
-                    <encoding>UTF-8</encoding>
-                    <author>Pavel Ponec</author>
-                    <bottom><![CDATA[Copyright 2013, <a target="_blank" href="http://ujorm.org/">Pavel Ponec<a>]]></bottom>
-                    <doctitle>Ujorm ${project.version} (${project.name})</doctitle>
-                    <windowtitle>Ujorm ${project.version} - ${project.name}</windowtitle>
-                    <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="http://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
-
-                    <!-- Doclet (yWorks UML Doclet)
-                    <doclet>ydoc.doclets.YStandard</doclet>
-                    <docletPath>${yworks.uml.path}/lib/ydoc.jar:${yworks.uml.path}/lib/class2svg.jar:${yworks.uml.path}/resources</docletPath>
-                    <additionalparam>-link http://docs.oracle.com/javase/6/docs/api/ -umlautogen</additionalparam>
-                    -->
-
-                    <!-- Doclet (sudo apt-get install graphviz) -.->
-                    <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-                    <docletArtifact>
-                        <groupId>org.umlgraph</groupId>
-                        <artifactId>umlgraph</artifactId>
-                        <version>5.6</version>
-                    </docletArtifact>
-                    <additionalparam>
-                        -inferrel -quiet -hide java.*
-                        -collpackages java.util.* -qualify
-                        -postfixpackage -nodefontsize 9
-                        -nodefontpackagesize 7
-                    </additionalparam>
-                    -->
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>UTF-8</encoding>
-                    <debug>true</debug>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <filters></filters>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>org.ujorm.core.UjoManager</mainClass>
-                            <packageName>org.ujorm.core</packageName>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                            <!-- <addClasspath>true</addClasspath> -->
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
-
-        </plugins>
-    </build>
-
     <dependencies>
 
         <!-- UJO Core -->
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>1.89-SNAPSHOT</version>
+            <version>2.16-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -248,10 +174,109 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
+    
+    <build>
+        <resources>
+            <resource>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.txt</include>
+                </includes>
+                <directory>src/main/java</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <testResources>
+            <testResource>
+                <directory>src/test/java</directory>
+            </testResource>
+        </testResources>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <configuration>
+                    <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile>
+                    <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
+                    <docfilessubdirs>true</docfilessubdirs>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <failOnError>false</failOnError>
+                    <encoding>UTF-8</encoding>
+                    <author>Pavel Ponec</author>
+                    <bottom><![CDATA[Copyright 2013, <a target="_blank" href="http://ujorm.org/">Pavel Ponec<a>]]></bottom>
+                    <doctitle>Ujorm ${project.version} (${project.name})</doctitle>
+                    <windowtitle>Ujorm ${project.version} - ${project.name}</windowtitle>
+                    <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="http://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
+
+                    <!-- Doclet (yWorks UML Doclet)
+                    <doclet>ydoc.doclets.YStandard</doclet>
+                    <docletPath>${yworks.uml.path}/lib/ydoc.jar:${yworks.uml.path}/lib/class2svg.jar:${yworks.uml.path}/resources</docletPath>
+                    <additionalparam>-link http://docs.oracle.com/javase/6/docs/api/ -umlautogen</additionalparam>
+                    -->
+
+                    <!-- Doclet (sudo apt-get install graphviz) -.->
+                    <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                    <docletArtifact>
+                        <groupId>org.umlgraph</groupId>
+                        <artifactId>umlgraph</artifactId>
+                        <version>5.6</version>
+                    </docletArtifact>
+                    <additionalparam>
+                        -inferrel -quiet -hide java.*
+                        -collpackages java.util.* -qualify
+                        -postfixpackage -nodefontsize 9
+                        -nodefontpackagesize 7
+                    </additionalparam>
+                    -->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <filters></filters>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.ujorm.core.UjoManager</mainClass>
+                            <packageName>org.ujorm.core</packageName>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <!-- <addClasspath>true</addClasspath> -->
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>

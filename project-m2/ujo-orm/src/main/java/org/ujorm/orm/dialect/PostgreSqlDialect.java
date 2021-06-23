@@ -94,14 +94,6 @@ public class PostgreSqlDialect extends SqlDialect {
         return out;
     }
 
-    /** Print an OFFSET of the statement SELECT. */
-    @Override
-    public void printOffset(Query query, Appendable out) throws IOException {
-        if (query.isOffset()) {
-            out.append(" OFFSET " + query.getOffset());
-        }
-    }
-
     /** Print an SQL DELETE statement. */
     @Override
     public Appendable printDelete

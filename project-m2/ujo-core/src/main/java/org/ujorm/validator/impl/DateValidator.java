@@ -18,8 +18,8 @@ package org.ujorm.validator.impl;
 import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 /**
@@ -29,9 +29,9 @@ import org.ujorm.validator.ValidationError;
 public class DateValidator<VALUE extends Date> extends AbstractValidator<VALUE> {
 
     /** TODAY date*/
-    public static final MessageArg<Date> NOW = new MessageArg<>("NOW");
+    public static final MessageArg<Date> NOW = MessageArg.of("NOW");
     /** A sing for Past {@code true} / Future {@code false} */
-    public static final MessageArg<Boolean> PAST = new MessageArg<>("PAST");
+    public static final MessageArg<Boolean> PAST = MessageArg.of("PAST");
 
     /** A sing for Past {@code true} / Future {@code false} */
     private final boolean past;

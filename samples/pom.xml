@@ -3,7 +3,7 @@
 
     <properties>
         <ujo.version>1.44</ujo.version>
-        <java.version>1.89-SNAPSHOT</java.version>
+        <java.version>2.16-SNAPSHOT</java.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,7 +23,30 @@
     <packaging>pom</packaging>
     <description>Ujorm Sample Projects</description>
 
-    <!-- SUB PROJECTS -->
+    <modules>
+        <module>core</module>
+        <module>parameters</module>
+        <module>table2xml</module>
+        <module>ujorm</module>
+        <module>inheritance</module>
+        <module>binding</module>
+        <module>wicket</module>
+        <module>servlet</module>
+        <module>generated</module>
+    </modules>
+
+
+    <!-- DEPENDENCES -->
+    
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
     <build>
         <plugins>
             <plugin>
@@ -36,29 +59,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <modules>
-        <module>core</module>
-        <module>parameters</module>
-        <module>table2xml</module>
-        <module>ujorm</module>
-        <module>inheritance</module>
-        <module>binding</module>
-        <module>wicket</module>
-        <module>servlet</module>
-        <module>generated</module>
-  </modules>
-
-
-    <!-- DEPENDENCES -->
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
 
 </project>

@@ -40,7 +40,9 @@ public enum BinaryOperator implements AbstractOperator {
     NOR,
     /** NOT (a AND b) <br>Note: the SQL language may not support the operator. */
     NAND,
-    /** (a == b) <br>Note: the SQL language may not support the operator. */
+    /** (a == b) <br>Note: the SQL language may not support the operator.
+     * @see XAND, XNOR, EQV
+     */
     EQ,
     /** NOT a */
     NOT,

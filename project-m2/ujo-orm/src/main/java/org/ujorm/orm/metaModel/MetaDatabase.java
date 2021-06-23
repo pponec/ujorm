@@ -118,6 +118,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public static final Key<MetaDatabase,Class<? extends UjoSequencer>> SEQUENCER = fa.newClassKey("sequencer", UjoSequencer.class);
     /** A policy to defining the database structure by a DDL.
      * @see Orm2ddlPolicy Parameter values
+     * @see #READ_ONLY
      */
     public static final Key<MetaDatabase,Orm2ddlPolicy> ORM2DLL_POLICY = fa.newKey("orm2ddlPolicy", Orm2ddlPolicy.INHERITED);
     /** List of tables */
@@ -485,12 +486,13 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
             InitialContext initContext = dialect.createJndiInitialContext(this);
             final int lastItem = jndi.size()-1;
-            for (int i=0; i<lastItem; i++) {
-                initContext = (InitialContext) initContext.lookup(jndi.get(i));
-                Assert.notNull(initContext, "JNDI problem: InitialContext was not found for the: {}", jndi.get(i));
+            for (int i = 0; i < lastItem; i++) {
+                final String jndiItem = jndi.get(i);
+                initContext = (InitialContext) Assert.notNull(initContext.lookup(jndiItem)
+                        , "JNDI failed due initialContext is empty for: {}", jndiItem);
             }
-            final DataSource dataSource = (DataSource) initContext.lookup(jndi.get(lastItem));
-            Assert.notNull(dataSource, "JNDI problem: database connection was not found for the: {}", jndi);
+            final DataSource dataSource = (DataSource) Assert.notNull(initContext.lookup(jndi.get(lastItem))
+                    , "JNDI failed: database connection was not found for the: {}", jndi);
 
             result = dataSource.getConnection();
         } else {
@@ -581,6 +583,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public boolean isSequenceTableRequired() {
         for (MetaTable table : TABLES.getList(this)) {
             if (table.isTable()
+            && !table.isReadOnly()
             &&  table.getSequencer().isSequenceTableRequired()) {
                 return true;
             }

@@ -17,8 +17,8 @@ package org.ujorm.validator.impl;
 
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 /**
@@ -28,11 +28,11 @@ import org.ujorm.validator.ValidationError;
 public class LengthValidator<VALUE extends String> extends AbstractValidator<VALUE> {
 
     /** String minimal length (inclusive) */
-    public static final MessageArg<Integer> MIN = new MessageArg<>("MIN");
+    public static final MessageArg<Integer> MIN = MessageArg.of("MIN");
     /** String maximal length (inclusive) */
-    public static final MessageArg<Integer> MAX = new MessageArg<>("MAX");
+    public static final MessageArg<Integer> MAX = MessageArg.of("MAX");
     /** Current length of the text value */
-    public static final MessageArg<Integer> LENGTH = new MessageArg<>("LENGTH");
+    public static final MessageArg<Integer> LENGTH = MessageArg.of("LENGTH");
 
     /** String minimal length (inclusive) */
     private final int min;

@@ -330,7 +330,9 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
 
    @Override
     public String toString() {
-        return toPrinter(new SimpleValuePrinter(128)).toString();
+        final SimpleValuePrinter result = new SimpleValuePrinter(128)
+                .append(getDomain().getSimpleName());
+        return toPrinter(result).toString();
     }
     
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2020 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.ujorm.tools.common.ObjectUtils;
 
 /**
  * Implementation of the Map interface where methods
@@ -151,8 +152,9 @@ public class CustomMap<K, V> implements Map<K, V>, Serializable {
 
         @Override
         public boolean equals(@Nullable final Object proxyValue) {
-            return proxyValue instanceof MapKeyProxy
-                && Objects.equals(originalKey,  ((MapKeyProxy)proxyValue).getOriginal());
+            return this == proxyValue
+                    || ObjectUtils.check(proxyValue, DefaultMapKey.class, v
+                            -> Objects.equals(originalKey, v.getOriginal()));
         }
 
         /** Get original key */

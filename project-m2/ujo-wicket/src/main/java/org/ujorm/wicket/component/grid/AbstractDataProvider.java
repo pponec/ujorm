@@ -123,8 +123,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     public AbstractDataProvider
             ( @Nonnull final IModel<Criterion<U>> filter
             , @Nullable Key<? super U,?> defaultSort) {
-        Assert.notNull(filter, "Filter is required");
-        this.filter = filter;
+        this.filter = Assert.notNull(filter, "Filter is required");
 
         if (defaultSort == null) {
             KeyRing<U> keys = KeyRing.of((Class<U>)filter.getObject().getDomain());

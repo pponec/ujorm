@@ -26,6 +26,7 @@ import org.ujorm.orm.inheritance.sample.bo.Customer;
 import org.ujorm.orm.inheritance.sample.bo.IUser;
 import org.ujorm.orm.inheritance.sample.bo.User;
 import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.orm.metaModel.MetaParams;
 
 /**
  * Sample of inheritance for the persistent objects.
@@ -40,8 +41,11 @@ public class SampleOfInheritance extends TestCase {
      * Database tables will be name in the first time.
      */
     public void loadMetaModel() {
-
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(UjoLogger.TRACE);
+
+        MetaParams params = new MetaParams();
+        params.set(MetaParams.AUTO_CLOSING_DEFAULT_SESSION, false); // For in-memory database only
+        handler.config(params);
         handler.loadDatabase(Database.class);
     }
 
@@ -69,8 +73,8 @@ public class SampleOfInheritance extends TestCase {
     public void useSelect() {
 
         final Criterion<Customer> cn1, cn2, crit;
-        cn1 = Customer.user.add(User.login).whereEq("ponec");
-        cn2 = Customer.company.whereEq("ABC");
+        cn1 = Customer.USER.add(User.login).whereEq("ponec");
+        cn2 = Customer.COMPANY.whereEq("ABC");
         crit = cn1.and(cn2);
 
         Session session = handler.getDefaultSession();
@@ -86,8 +90,8 @@ public class SampleOfInheritance extends TestCase {
 
         Criterion<Customer> cn1, cn2, crit;
 
-        cn1 = Criterion.where(Customer.user.add(User.login), "ponec");
-        cn2 = Criterion.where(Customer.company, "ABC");
+        cn1 = Criterion.where(Customer.USER.add(User.login), "ponec");
+        cn2 = Criterion.where(Customer.COMPANY, "ABC");
         crit = cn1.or(cn2);
 
         Session session = handler.getDefaultSession();
@@ -103,14 +107,14 @@ public class SampleOfInheritance extends TestCase {
 
         Criterion<Customer> cn1, cn2, crit;
 
-        cn1 = Criterion.where(Customer.user.add(User.login), "ponec");
-        cn2 = Criterion.where(Customer.company, "ABC");
+        cn1 = Criterion.where(Customer.USER.add(User.login), "ponec");
+        cn2 = Criterion.where(Customer.COMPANY, "ABC");
         crit = cn1.and(cn2);
 
         Session session = handler.getDefaultSession();
         Query<Customer> customers = session.createQuery(crit);
 
-        final Key<Customer,User> USER = Customer.user;
+        final Key<Customer,User> USER = Customer.USER;
         for (Customer customer : customers) {
             User origUser = customer.get(USER);
             assertNotNull(origUser);
@@ -125,9 +129,9 @@ public class SampleOfInheritance extends TestCase {
 
     /** Print some meta-data of the key Order.note. */
     public void printMetadata() {
-        MetaColumn col = handler.findColumnModel(Customer.discount);
+        MetaColumn col = handler.findColumnModel(Customer.DISCOUNT);
 
-        String msg = "** METADATA OF COLUMN: " + Customer.discount.toString() + '\n'
+        String msg = "** METADATA OF COLUMN: " + Customer.DISCOUNT.toString() + '\n'
             + "DB name: " + col.getFullName()  + '\n'
             + "Comment: " + col.getComment()   + '\n'
             + "Length : " + col.getMaxLength() + '\n'

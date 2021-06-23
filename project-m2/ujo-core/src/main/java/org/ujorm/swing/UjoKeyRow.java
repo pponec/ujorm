@@ -19,6 +19,7 @@ package org.ujorm.swing;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoActionImpl;
 import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.UjoTextable;
@@ -33,28 +34,28 @@ import org.ujorm.implementation.quick.SmartUjo;
 @SuppressWarnings("unchecked")
 public class UjoKeyRow extends SmartUjo<UjoKeyRow> {
 
-    /** Index of key */
-    public static final Key<UjoKeyRow,Integer> P_INDEX   = newKey("Index");
-    /** Name of key */
-    public static final Key<UjoKeyRow,String> P_NAME     = newKey("Name");
-    /** Type of key */
-    public static final Key<UjoKeyRow,Class>  P_TYPE     = newKey("Class");
-    /** Class name without packages */
-    public static final Key<UjoKeyRow,String> P_TYPENAME = newKey("Type");
-    /** Value */
-    public static final Key<UjoKeyRow,Object> P_VALUE    = newKey("Value");
-    /** Text Value */
-    public static final Key<UjoKeyRow,String> P_TEXT     = newKey("Text");
-    /** Default Value */
-    public static final Key<UjoKeyRow,Object> P_DEFAULT  = newKey("Default");
-    /** A user column can be used in table renderer for any purpose */
-    public static final Key<UjoKeyRow,Object> P_USER1    = newKey("User1");
-    /** A user column can be used in table renderer for any purpose */
-    public static final Key<UjoKeyRow,Object> P_USER2    = newKey("User2");
+     private static final KeyFactory<UjoKeyRow> f = KeyFactory.CamelBuilder.get(UjoKeyRow.class);
 
-    static {
-       init(UjoKeyRow.class);
-    }
+    /** Index of key */
+    public static final Key<UjoKeyRow,Integer> P_INDEX   = f.newKey("Index");
+    /** Name of key */
+    public static final Key<UjoKeyRow,String> P_NAME     = f.newKey("Name");
+    /** Type of key */
+    public static final Key<UjoKeyRow,Class>  P_TYPE     = f.newKey("Class");
+    /** Class name without packages */
+    public static final Key<UjoKeyRow,String> P_TYPENAME = f.newKey("Type");
+    /** Value */
+    public static final Key<UjoKeyRow,Object> P_VALUE    = f.newKey("Value");
+    /** Text Value */
+    public static final Key<UjoKeyRow,String> P_TEXT     = f.newKey("Text");
+    /** Default Value */
+    public static final Key<UjoKeyRow,Object> P_DEFAULT  = f.newKey("Default");
+    /** A user column can be used in table renderer for any purpose */
+    public static final Key<UjoKeyRow,Object> P_USER1    = f.newKey("User1");
+    /** A user column can be used in table renderer for any purpose */
+    public static final Key<UjoKeyRow,Object> P_USER2    = f.newKey("User2");
+
+    static { f.lock(); }
 
     final protected Ujo content;
     final protected Key key;
@@ -109,8 +110,14 @@ public class UjoKeyRow extends SmartUjo<UjoKeyRow> {
     }
 
     /** Returns an assigned key (a parameter e.g.) */
-    public final Key getProperty() {
+    public final Key getKey() {
         return key;
+    }
+
+    /** Returns an assigned key (a parameter e.g.) */
+    @Deprecated
+    public final Key getProperty() {
+        return getKey();
     }
 
     /** Property name + value */

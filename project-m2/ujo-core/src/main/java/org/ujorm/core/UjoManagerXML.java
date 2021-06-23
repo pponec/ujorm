@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -32,9 +33,13 @@ import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.UjoTextable;
-import org.ujorm.tools.xml.AbstractElement;
+import org.ujorm.tools.Check;
+import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
+import org.ujorm.tools.xml.config.XmlConfig;
+import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -56,7 +61,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class UjoManagerXML extends UjoService<UjoTextable> {
 
     /** A default XML header: &lt;?xml version="1.0" encoding="UTF-8"?&gt; */
-    public static final String XML_HEADER = AbstractElement.XML_HEADER;
+    public static final String XML_HEADER = AbstractWriter.XML_HEADER;
 
     /** A name of Java Class of XML attribute. */
     public static final String ATTR_CLASS = "javaClass";
@@ -133,26 +138,35 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
 
     /** Write keys to XML including a XML header. A root tag is "body" by default. */
-    public void saveXML(Writer writer, UjoTextable ujo, XmlHeader xmlHeader, Object context) throws IOException {
+    public void saveXML(Appendable writer, UjoTextable ujo, XmlHeader xmlHeader, Object context) throws IOException {
         saveXML(writer, xmlHeader, ujo, context);
-        writer.flush();
+        if (writer instanceof Writer) {
+            ((Writer) writer).flush();
+        }
     }
 
     /** Write keys to XML including a XML header. */
     @SuppressWarnings("deprecation")
-    public void saveXML(Writer writer, XmlHeader xmlHeader, UjoTextable ujo, Object context) throws IOException {
+    public void saveXML(
+            @Nonnull Appendable writer,
+            @Nullable XmlHeader xmlHeader,
+            @Nullable UjoTextable ujo,
+            Object context
+    ) throws IOException {
         if (xmlHeader == null ) {
             xmlHeader = new XmlHeader();
         }
-        this.actionExport  = new UjoActionImpl(UjoAction.ACTION_XML_EXPORT , context);
-        writer.write(xmlHeader.getHeader());
-        if (xmlHeader.getComment() != null) {
-            writer.write("\n<!-- ");
-            writer.write(xmlHeader.getComment());
-            writer.write(" -->");
-        }
-
-        final XmlPrinter printer = new XmlPrinter(writer);
+        this.actionExport  = new UjoActionImpl(UjoAction.ACTION_XML_EXPORT, context);
+        final DefaultXmlConfig xmlConfig = XmlConfig.ofDefault();
+        final String doctype = Check.isEmpty(xmlHeader.getComment())
+                ? xmlHeader.getHeader()
+                : String.join("",
+                    xmlHeader.getHeader(),
+                    xmlConfig.getNewLine(),
+                    "<!-- ", xmlHeader.getComment(), " -->");
+        xmlConfig.setDoctype(doctype);
+        xmlConfig.setNiceFormat("  ");
+        final XmlPrinter printer = new XmlPrinter(writer, xmlConfig);
         try (XmlBuilder rootElement = printer.createElement(xmlHeader.getRootElement())) {
             printProperty(null, null, null, ujo, rootElement, false);
         }
@@ -178,7 +192,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     @SuppressWarnings("unchecked")
     protected void printAttributes
     ( final UjoTextable ujo
-    , final AbstractElement writer
+    , final ApiElement writer
     ) throws IOException {
 
         // Write attributes:
@@ -198,13 +212,13 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
 
     /** Write required keys to XML writer. */
-    public void printProperties(AbstractElement writer, UjoTextable ujo) throws IOException {
+    public void printProperties(ApiElement writer, UjoTextable ujo) throws IOException {
         printProperties(writer, ujo, ujo.readKeys());
     }
 
     /** Write required keys to a XML writer. */
     @SuppressWarnings("unchecked")
-    public void printProperties(final AbstractElement writer, UjoTextable ujo, final KeyList<?> keys) throws IOException {
+    public void printProperties(final ApiElement writer, UjoTextable ujo, final KeyList<?> keys) throws IOException {
         Key bodyProperty = getUjoManager().getXmlElementBody(ujo.getClass());
 
         for (Key key : keys) {
@@ -262,7 +276,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     , @Nullable final Key key
     , @Nullable final Class valueType
     , @Nullable final Object value
-    , @Nullable final AbstractElement parent
+    , @Nullable final ApiElement parent
     , final boolean simpleProperty
     ) throws IOException {
 
@@ -272,7 +286,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             return; // listType;
         }
 
-        final AbstractElement writer = ujo == null
+        final ApiElement writer = ujo == null
                 ? parent // The root
                 : parent.addElement(key.getName());
 
@@ -288,7 +302,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         if (simpleProperty && key instanceof ListKey) {
             final List valueList = (List) value;
             for (int i = 0, max = valueList.size(); i < max; i++) {
-                final AbstractElement nextChild = i == 0
+                final ApiElement nextChild = i == 0
                         ? writer
                         : parent.addElement(key.getName());
                 nextChild.addText(getUjoManager().encodeValue(valueList.get(i), false));
@@ -300,14 +314,14 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
     /** Print "value" to XML. */
     public void printItem
-    ( final AbstractElement parent
+    ( final ApiElement parent
     , final Class defaultType
     , final Object value
     , final UjoTextable ujo
     , final Key prop
     ) throws IOException {
 
-        final AbstractElement writer = parent.addElement(ATTR_ITEM);
+        final ApiElement writer = parent.addElement(ATTR_ITEM);
 
         if (value!=null
         && (defaultType ==null
@@ -323,7 +337,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     /** Print "value" to XML. */
     @SuppressWarnings("unchecked")
     public void printValue2XML
-    ( final AbstractElement writer
+    ( final ApiElement writer
     , final Class itemType
     , final Object value
     , final UjoTextable ujo

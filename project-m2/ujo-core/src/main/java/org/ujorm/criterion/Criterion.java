@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
@@ -79,13 +80,18 @@ import org.ujorm.tools.Assert;
  * @author Pavel Ponec
  * @composed 1 - 1 AbstractOperator
  */
-public abstract class Criterion<U extends Ujo> implements Serializable {
+public abstract class Criterion<U extends Ujo> implements Predicate<U>, Serializable {
     static final long serialVersionUID = 2017_12_04;
 
     /** Apply the criterion to the UJO object
      * @return Returns the value {@code true} in case the ujo object satisfies the condition.
      */
     public abstract boolean evaluate(U ujo);
+
+    @Override
+    public final boolean test(final U ujo) {
+        return evaluate(ujo);
+    }
 
     /** Returns a first evaluated item from an iterable collection. */
     @Nullable

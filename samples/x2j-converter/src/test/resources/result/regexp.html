@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Regular expression tester</title>
+        <link href="/css/regexp.css" rel="stylesheet"/>
+        <script>/* jshint esversion:6 ... */</script>
+    </head>
+    <body>
+        <h1>Regular expression tester</h1>
+        <div class="subtitle">AJAX ready</div>
+        <form id="form"
+                method="post"
+                action="?">
+            <input class="form-control"
+                    id="regexp" name="regexp"
+                    value="[aeiyou]"
+                    placeholder="Regular expression"/>
+            <textarea class="form-control"
+                    id="text"
+                    name="text"
+                    placeholder="Plain Text">"Write</textarea>
+            <div>
+                <button class="btn btn-primary">Evaluate</button>
+            </div>
+            <div class="form-control out">"Wr<span>i</span>t<span>e</span></div>
+        </form>
+    </body>
+</html>

@@ -25,6 +25,7 @@ import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.ujorm.Key;
+import org.ujorm.core.UjoTools;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
@@ -56,7 +57,7 @@ public class ParamServiceCacheImpl extends ParamServiceImpl {
     @Override
     public <U extends ModuleParams, T> T getValue(final Key<? super U, T> key, final ModuleEnum module, final Customer aCustomer) {
         final T result;
-        final boolean personalParam = key.getClass().isAnnotationPresent(PersonalParam.class);
+        final boolean personalParam = UjoTools.findAnnotation(key, PersonalParam.class) != null;
         final Customer customer = personalParam ? aCustomer : null;
         final Cache cache = getObjectCache();
         final CacheKey cacheKey = new CacheKey(key.getName(), module, customer);

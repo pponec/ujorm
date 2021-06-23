@@ -4,7 +4,9 @@
 # SNAPSHOT deploy: mvn clean deploy -Pproduction -Psign -DskipTests
 ###################################################################
 
+export JAVA_HOME=/opt/java/default.8
 alias mvn='/opt/maven/default/bin/mvn'
+mvn -version || exit
 
 # Required Release (example: RELEASE=1.30):
 RELEASE=$( cd project-m2/ujo-core; mvn help:evaluate -Dexpression=project.version | grep -v "\[" )
@@ -31,6 +33,6 @@ do
     )
 done
 
-echo "Finished"
+echo "Release $RELEASE is done"
 
 

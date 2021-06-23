@@ -926,9 +926,7 @@ abstract public class SqlDialect {
             if (!query.getOrderBy().isEmpty()) {
                printSelectOrder(query, out);
             }
-            if (query.isOffset()) {
-                printOffset(query, out);
-            }
+            printLimitAndOffset(query, out);
             if (query.isLockRequest()) {
                out.append(SPACE);
                printLockForSelect(query, out);
@@ -995,16 +993,21 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print an OFFSET of the statement SELECT. */
-    public void printOffset
+    /** Print an OFFSET of the statement SELECT. 
+     * @see <a href="https://bit.ly/3paHwNS">Note about an implementation Statement.setMaxRow() method (Stackoverflow).</a>
+     * 
+     */
+    public void printLimitAndOffset
         ( @Nonnull final Query query
-        , @Nonnull final Appendable out) throws IOException {
-        int limit = query.isLimit()
-            ? query.getLimit()
-            : Integer.MAX_VALUE
-            ;
-        out.append(" LIMIT " + limit);
-        out.append(" OFFSET " + query.getOffset());
+        , @Nonnull final Appendable out) throws IOException {  
+        // int requiredLimit = query.isLimit() ? query.getLimit() : Integer.MAX_VALUE ;
+        
+        if (query.isLimit()) {
+            out.append(" LIMIT ").append(String.valueOf(query.getLimit()));
+        }
+        if (query.isOffset()) {
+            out.append(" OFFSET ").append(String.valueOf(query.getOffset()));
+        }
     }
 
     /** Print the full sequence table */

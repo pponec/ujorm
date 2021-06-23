@@ -57,8 +57,7 @@ public class UiValidator<T> implements IValidator<T>, INullAcceptingValidator<T>
      * @param key Optional key
      */
     public UiValidator(@Nonnull Validator<T> validator, @Nullable KeyRing key) {
-        Assert.notNull(validator, "validator");
-        this.validator = validator;
+        this.validator = Assert.notNull(validator, "validator");
         this.key = key;
     }
 

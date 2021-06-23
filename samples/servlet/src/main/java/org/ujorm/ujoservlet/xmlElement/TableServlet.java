@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2020 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Html;
-import org.ujorm.tools.xml.dom.HtmlElement;
-import org.ujorm.tools.xml.dom.XmlElement;
+import org.ujorm.tools.xml.model.XmlModel;
+import org.ujorm.ujoservlet.tools.HtmlElementOrig;
 import org.ujorm.ujoservlet.tools.ApplService;
 
 /**
@@ -37,7 +37,7 @@ import org.ujorm.ujoservlet.tools.ApplService;
 public class TableServlet extends HttpServlet {
 
     /** URL pattern */
-    public static final String URL_PATTERN = "/tableServlet";
+    public static final String URL_PATTERN = "/tableHotelServlet";
 
     /** Show the first line of soufce code */
     public static final short SHOW_LINE = 53;
@@ -51,13 +51,13 @@ public class TableServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        final HtmlElement html = new HtmlElement(getClass().getSimpleName(), StandardCharsets.UTF_8, "css/tableForm.css");
+        final HtmlElementOrig html = new HtmlElementOrig(getClass().getSimpleName(), StandardCharsets.UTF_8, "css/tableForm.css");
         html.addElementToBody(Html.H1)
                 .addText("Show table");
-        final XmlElement table = html.addElementToBody(Html.TABLE)
-                .setAttrib(Html.A_CLASS, "numbers");
+        final XmlModel table = html.addElementToBody(Html.TABLE)
+                .setAttribute(Html.A_CLASS, "numbers");
         for (Object[] rowValue : getTableData()) {
-            final XmlElement rowElement = table.addElement(Html.TR);
+            final XmlModel rowElement = table.addElement(Html.TR);
             for (Object value : rowValue) {
                 rowElement.addElement(Html.TD)
                         .addText(value);

@@ -15,13 +15,12 @@
  */
 package org.ujorm.tools.msg;
 
-import org.ujorm.tools.msg.MessageArg;
-import org.ujorm.tools.msg.MessageService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import junit.framework.TestCase;
@@ -33,26 +32,39 @@ import junit.framework.TestCase;
 public class MessageServiceTest extends TestCase {
 
     /** Message Argument */
-    private static MessageArg<Integer> ID = new MessageArg<>("ID");
+    private static MessageArg ID = new MessageArg("ID");
     /** Message Argument */
-    private static MessageArg<Date> DATE = new MessageArg<>("DATE");
+    private static MessageArg DATE = new MessageArg("DATE");
     /** Message Argument */
-    private static MessageArg<String> TEXT = new MessageArg<>("TEXT");
+    private static MessageArg TEXT = new MessageArg("TEXT");
     /** Message Argument */
-    private static MessageArg<BigDecimal> NUMBER = new MessageArg<>("NUMBER");
+    private static MessageArg NUMBER = new MessageArg("NUMBER");
 
-    /** Demo test. */
-    public void testDemo() {
+    /** Demo test 1. */
+    public void testDemo1() {
+        final MessageArg TYPE = MessageArg.of("TYPE");
+        final MessageArg NAME = MessageArg.of("NAME");
+
+        String expResult = "The ORM framework Ujorm.";
+        String template = "The " + TYPE + " framework " + NAME + ".";
+        String result = MessageService.formatMsg(template, TYPE, "ORM", NAME, "Ujorm");
+        assertEquals(expResult, result);
+    }
+
+    /** Demo test 2. */
+    public void testDemo2() {
         final MessageService service = new MessageService();
-        final MessageArg TYPE = new MessageArg("TYPE");
-        final MessageArg NAME = new MessageArg("NAME");
+        final MessageArg TYPE = MessageArg.of("TYPE");
+        final MessageArg NAME = MessageArg.of("NAME");
 
         String expResult = "The ORM framework Ujorm.";
         String expTemplate = "The ${TYPE} framework ${NAME}.";
         String template = service.template("The ", TYPE, " framework ", NAME, ".");
-        Map<String, Object> args = service.map
-               ( TYPE, "ORM"
-               , NAME, "Ujorm");
+
+        Map<String, Object> args = new HashMap<>();
+        args.put(TYPE.name(), "ORM");
+        args.put(NAME.name(), "Ujorm");
+
         String result = service.format(template, args);
         assertEquals(expTemplate, template);
         assertEquals(expResult, result);
@@ -116,6 +128,16 @@ public class MessageServiceTest extends TestCase {
         String template = ("${TEXT} is 1");
         Map<String, Object> args = service.map(TEXT, "Number");
         String result = service.format(template, args, Locale.ENGLISH);
+        assertEquals(expResult, result);
+    }
+
+    /** Test of format method, of class MessageService. */
+    public void testFormat_1c() {
+        System.out.println("format");
+
+        String expResult = "Number is 1";
+        String template = ("Number is ${ID}");
+        String result = MessageService.formatMsg(template, ID.getName(), 1);
         assertEquals(expResult, result);
     }
 
@@ -199,6 +221,13 @@ public class MessageServiceTest extends TestCase {
         String template2 = "Date is: ${DATE,%tF %tT}";
         String result2 = service.format(template2, args, Locale.ENGLISH);
         assertEquals(expResult, result2);
+    }
+
+    /** Test of format method, of class MessageService. */
+    public void testEquals() {
+        System.out.println("equals");
+        assertTrue(ID.equals(ID));
+        assertFalse(ID.equals(DATE));
     }
 
     /** Create a new Calendar for date: 2016-05-04T03:02:01  */

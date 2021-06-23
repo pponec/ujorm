@@ -16,7 +16,6 @@
 package org.ujorm.hotels.config.demoData;
 
 import java.io.CharArrayReader;
-import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -104,10 +103,10 @@ public class DataLoaderTest {
     /** Extended method to open resource to fix some errors of data source */
     protected StreamSource openStreamExt(URL dataUrl) throws IOException {
         Reader reader = new InputStreamReader(dataUrl.openStream(), "utf-8");
-        CharArrayWriter writer = new CharArrayWriter(10000);
+        StringBuilder writer = new StringBuilder(10000);
         int c;
         while((c=reader.read())!=-1) {
-            writer.write(c);
+            writer.append(c);
         }
         reader.close();
 
@@ -139,7 +138,7 @@ public class DataLoaderTest {
             xformer.setParameter(p[0], p[1]);
         }
 
-        //CharArrayWriter writer = new CharArrayWriter(128);
+        //StringBuilder writer = new StringBuilder(128);
         File file = new File(System.getProperty("user.home"), "HotelData" + params[0][1] + ".csv");
         Result result = new StreamResult(file);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2020 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +17,6 @@
 
 package org.ujorm.tools.xml;
 
-import org.ujorm.tools.xml.dom.HtmlElement;
-
 /** Some HTML constants, but this not a whole list of HTML elements,
 * attributes and allowed values. */
 public interface Html {
@@ -26,21 +24,23 @@ public interface Html {
     // --- Element names ---
 
     /** Body element */
-    String HTML = HtmlElement.Html.HTML;
-    /** Head element */
-    String HEAD = HtmlElement.Html.HEAD;
-    /** Meta element */
-    String META = HtmlElement.Html.META;
+    String HTML_DOCTYPE = "<!DOCTYPE html>";
     /** Body element */
-    String BODY = HtmlElement.Html.BODY;
+    String HTML = "html";
+    /** Head element */
+    String HEAD = "head";
+    /** Meta element */
+    String META = "meta";
+    /** Body element */
+    String BODY = "body";
     /** Title element */
-    String TITLE = HtmlElement.Html.TITLE;
-    /** Style element */
-    String STYLE = HtmlElement.Html.STYLE;
+    String TITLE = "title";
     /** Link element */
     String LINK = "link";
-    /** Script element */
-    String SCRIPT =  HtmlElement.Html.SCRIPT;
+    /** Style element */
+    String STYLE = "style";
+    /** Javascript element */
+    String SCRIPT = "script";
     /** Divission element */
     String DIV = "div";
     /** Span element */
@@ -49,11 +49,11 @@ public interface Html {
     String P = "p";
     /** Form element */
     String FORM = "form";
-    /** Header element level 1 */
+    /** Heading element level 1 */
     String H1 = "h1";
-    /** Header element level 2 */
+    /** Heading element level 2 */
     String H2 = "h2";
-    /** Header element level 3 */
+    /** Heading element level 3 */
     String H3 = "h3";
     /** Table element */
     String TABLE = "table";
@@ -87,12 +87,12 @@ public interface Html {
     String A_ACTION = "action";
     String A_CELLPADDING = "cellpadding";
     String A_CELLSPACING = "cellspacing";
-    String A_CHARSET = HtmlElement.Html.A_CHARSET;
+    String A_CHARSET = "charset";
     String A_CHECKED = "checked";
     String A_CLASS = "class";
     String A_CONTENT = "content";
     String A_FOR = "for";
-    String A_HREF = HtmlElement.Html.A_HREF;
+    String A_HREF = "href";
     String A_ID = "id";
     String A_LANG = "lang";
     String A_MAXLENGTH = "maxlength";
@@ -100,11 +100,11 @@ public interface Html {
     String A_METHOD = "method";
     String A_NAME = "name";
     String A_READONLY = "readonly";
-    String A_REL = HtmlElement.Html.A_REL;
+    String A_REL = "rel";
     String A_SELECTED = "selected";
-    String A_SRC = HtmlElement.Html.A_SRC;
+    String A_SRC = "src";
     String A_TARGET = "target";
-    String A_TYPE = HtmlElement.Html.A_TYPE;
+    String A_TYPE = "type";
     String A_VALUE = "value";
 
     // --- Some attribute values ---

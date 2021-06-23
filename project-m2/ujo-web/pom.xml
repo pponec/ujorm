@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-web</artifactId>
+    <version>2.16-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <version>1.89-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-web</name>
-    <description>Ujorm-web module for common use</description>
+    <description>Ujorm-web module for a common use</description>
     <contributors>
         <contributor>
             <name>Pavel Ponec</name>
@@ -22,9 +22,35 @@
     </properties>
 
     <scm>
-        <url>http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/project-m2/ujo-core/</url>
+        <url>https://github.com/pponec/ujorm/blob/master/project-m2/ujo-core/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-core</connection>
     </scm>
+     
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <licenses>
         <license>
@@ -33,19 +59,82 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-   
-    <build>
-        <resources>
-            <resource>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <directory>src/main/java</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
 
+    <dependencies>    
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-tools</artifactId>
+            <version>2.16-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-tools</artifactId>
+            <version>2.16-SNAPSHOT</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Static analyzer support -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.196</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- LOGGING DEPENDENCIES - Logback -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -94,7 +183,7 @@
                     <source>1.8</source>
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
-                    <debug>false</debug>
+                    <debug>true</debug>
                 </configuration>
             </plugin>
 
@@ -114,8 +203,6 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.ujorm.core.UjoManager</mainClass>
-                            <packageName>org.ujorm.core</packageName>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
@@ -125,72 +212,6 @@
 
         </plugins>
     </build>
-    <dependencies>
-        
-        <dependency>
-            <groupId>org.ujorm</groupId>
-            <artifactId>ujo-tools</artifactId>
-            <version>1.89-SNAPSHOT</version>
-        </dependency>
-
-        <!-- Static analyzer support -->
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.196</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- LOGGING DEPENDENCIES - Logback -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -238,7 +259,7 @@
                 </plugins>
             </build>
         </profile>
-     </profiles>
+    </profiles>
 
 </project>
 

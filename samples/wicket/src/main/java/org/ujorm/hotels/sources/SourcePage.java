@@ -17,7 +17,6 @@ package org.ujorm.hotels.sources;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nonnull;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -30,7 +29,6 @@ import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ujorm.hotels.gui.*;
-import org.ujorm.hotels.gui.about.AboutPanel;
 import org.ujorm.hotels.gui.about.BuildInfo;
 import org.ujorm.hotels.gui.hotel.HotelTable;
 import org.ujorm.hotels.service.param.ApplicationParams;
@@ -101,11 +99,6 @@ public class SourcePage extends WebPage {
         }
 
         return defaultResult;
-    }
-
-    /** Show the about tab */
-    private void showAboutTab(@Nonnull AjaxRequestTarget target) {
-        ((UjoTabbedPanel) SourcePage.this.get("tabs")).selectTab(AboutPanel.class, target);
     }
 
     /** Set a MSIE compatibility mode to a response header */

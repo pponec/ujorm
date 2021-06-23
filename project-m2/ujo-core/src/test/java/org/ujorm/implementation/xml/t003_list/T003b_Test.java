@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
@@ -21,50 +22,50 @@ import org.ujorm.core.UjoManagerXML;
  * @author Pavel Ponec
  */
 public class T003b_Test extends MyTestCase {
-    
+
     public T003b_Test(String testName) {
         super(testName);
     }
-    
+
     public static TestSuite suite() {
         TestSuite suite = new TestSuite(T003a_Test.class);
         return suite;
     }
-    
+
     /**
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
     public void testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         //
         UMasterBean person = createMaster();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
-        
+
         if (true) {
             System.out.println("XML:\n" + writer.toString());
         }
-        
-        ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));
+
+        ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));
         UMasterBean person2 = UjoManagerXML.getInstance().parseXML(is, UMasterBean.class, false);
-        
+
         assertEquals(person, person2);
-        
+
     }
-    
+
 
     protected UMasterBean createMaster() {
         UMasterBean masterBean = new UMasterBean();
         //
         UMasterBean.P0_L1ST.addItem(masterBean, createItem());
-        
+
 //        UMasterBean.P1_L1ST.addItem(masterBean, createItem());
 //        UMasterBean.P1_L1ST.addItem(masterBean, createItem());
-        
+
         return masterBean;
-        
+
     }
-    
+
     protected UItemBean createItem() {
         UItemBean result = new UItemBean();
         UItemBean.P0_BOOL.setValue(result, true);
@@ -83,12 +84,12 @@ public class T003b_Test extends MyTestCase {
         //
         //-UMasterBean.P0_L1ST.setValue(result, new ArrayList());
         //-UMasterBean.P1_L1ST.setValue(result, new ArrayList());
-        //         
+        //
         return result;
     }
-    
+
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
     }
-    
+
 }

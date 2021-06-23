@@ -42,8 +42,7 @@ public final class FunctionCriterion<U extends Ujo, T> extends ValueCriterion<U>
         ( @Nonnull final Key<U, ? extends Object> key
         , @Nonnull final Operator operator
         , @Nonnull final Supplier<T> proxyValue) {
-        super(key, operator, proxyValue);
-        Assert.notNull(proxyValue, "Proxy is required");
+        super(key, operator, Assert.notNull(proxyValue, "proxyValue"));
         Assert.isFalse(operator == Operator.XFIXED, "Unsupported operator {}", operator);
     }
 

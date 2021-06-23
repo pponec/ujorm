@@ -7,7 +7,7 @@
     <groupId>org.ujorm.wicket.sample</groupId>
     <artifactId>demo-hotels</artifactId>
     <name>sample-wicket-hotels</name>
-    <version>1.89-SNAPSHOT</version>
+    <version>2.16-SNAPSHOT</version>
     <packaging>war</packaging>
     <description>A sample application based on the Ujorm, Wicket and Spring frameworks</description>
 
@@ -25,9 +25,9 @@
 
     <properties>
         <project.war.name>demo-hotels</project.war.name>
-        <ujorm.version>1.89-SNAPSHOT</ujorm.version>
-        <wicket.version>7.10.0</wicket.version>
-        <jetty.version>9.2.14.v20151106</jetty.version>
+        <ujorm.version>2.16-SNAPSHOT</ujorm.version>
+        <wicket.version>7.18.0</wicket.version>
+        <jetty.version>10.0.3</jetty.version>
         <spring.version>4.3.22.RELEASE</spring.version>
         <java.version>1.8</java.version>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
@@ -35,7 +35,48 @@
         <netbeans.hint.deploy.server>Tomcat60</netbeans.hint.deploy.server>
     </properties>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencies>
+
+        <!-- API, java.xml.bind module -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
+        <!-- Runtime, com.sun.xml.bind module -->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
         <!-- Ujorm -->
         <dependency>
             <groupId>org.ujorm</groupId>
@@ -253,7 +294,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -298,6 +339,14 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.7</version>
+        </dependency>
+
+        <!-- Annotations -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.2</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 
@@ -344,17 +393,17 @@
                             <Build-Time>${maven.build.timestamp}</Build-Time>
                         </manifestEntries>
                     </archive>
-                    
+
                     <!-- Include java sources -->
                     <webResources>
                         <resource>
                             <directory>${build.sourceDirectory}</directory>
                             <targetPath>WEB-INF/classes</targetPath>
                         </resource>
-                    </webResources>  
+                    </webResources>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -376,7 +425,7 @@
                 <configuration>
                     <httpConnector>
                         <port>8080</port>
-                    </httpConnector>                    
+                    </httpConnector>
                     <webApp>
                         <contextPath>/</contextPath>
                         <extraClasspath>${basedir}/src/main/java</extraClasspath>

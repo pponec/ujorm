@@ -25,13 +25,15 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import javax.annotation.Nullable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.Check;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * A 'ring buffer' implementation whith a required length of the buffer.
  * See a sample use case of finding some substrings:
- * <pre>
+ * <pre class="pre">
  *    String text = "xxx ${abc} ${def} xyz";
  *    Reader reader = RingBuffer.createReader(text);
  *    String word_1 = RingBuffer.findWord(reader, "${", "}");
@@ -149,7 +151,7 @@ final public class RingBuffer implements CharSequence {
      * The method is designed for a very large data source (a character stream).
      * <br>
      * Sample:
-     * <pre>
+     * <pre class="pre">
      *    String text = "xxx ${abc} def";
      *    String word = RingBuffer.findWord(text, "${", "}");
      *    assert "abc".equals(word)
@@ -169,7 +171,7 @@ final public class RingBuffer implements CharSequence {
      * The method is designed for a very large data source (a character stream).
      * <br>
      * Sample:
-     * <pre>
+     * <pre class="pre">
      *    String text = "xxx ${abc} def";
      *    String word = RingBuffer.findWord(text, "${", "}");
      *    assert "abc".equals(word)
@@ -189,7 +191,7 @@ final public class RingBuffer implements CharSequence {
      * The method is designed for a very large data source (a character stream).
      * <br>
      * Sample:
-     * <pre>
+     * <pre class="pre">
      *    String text = "xxx ${abc} def";
      *    String word = RingBuffer.findWord(text, "${", "}");
      *    assert "abc".equals(word)
@@ -222,7 +224,7 @@ final public class RingBuffer implements CharSequence {
      * The method is designed for a very large data source (a character stream).
      * <br>
      * Sample:
-     * <pre>
+     * <pre class="pre">
      *    String text = "xxx ${abc} def";
      *    String word = RingBuffer.findWord(text, "${", "}");
      *    assert "abc".equals(word)
@@ -246,9 +248,9 @@ final public class RingBuffer implements CharSequence {
      * @return Return a result between beg and end tags (texts). The result is newer NULL.
      * @throws IOException
      */
-    public static String findWordNoTrim(final Reader reader, String beg, String end) throws IOException {
-        boolean begEmpty = beg == null || beg.isEmpty();
-        boolean endEmpty = end == null || end.isEmpty();
+    public static String findWordNoTrim(final Reader reader, @Nullable String beg, @Nullable String end) throws IOException {
+        final boolean begEmpty = Check.isEmpty(beg);
+        final boolean endEmpty = Check.isEmpty(end);
 
         if (begEmpty && endEmpty) {
             return "";

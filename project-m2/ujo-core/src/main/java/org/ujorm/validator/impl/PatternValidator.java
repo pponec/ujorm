@@ -18,8 +18,8 @@ package org.ujorm.validator.impl;
 import java.util.regex.Pattern;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 /**
@@ -31,7 +31,7 @@ public class PatternValidator<VALUE extends String> extends AbstractValidator<VA
     /** The simple email pattern. For a better regular expression see the <a href="http://ex-parrot.com/~pdw/Mail-RFC822-Address.html">next link</a> */
     public static final String EMAIL = "^[\\w\\.=-]+@[\\w\\.-]+\\.[\\w]{2,3}$";
 
-    public static final MessageArg<String> PATTERN = new MessageArg<String>("pattern");
+    public static final MessageArg<String> PATTERN = MessageArg.of("pattern");
 
     /** Regual expression */
     public final Pattern pattern;

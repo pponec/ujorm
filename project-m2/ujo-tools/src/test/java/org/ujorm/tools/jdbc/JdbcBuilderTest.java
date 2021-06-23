@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2018 Pavel Ponec
+ *  Copyright 2018-2020 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package org.ujorm.tools.jdbc;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,7 +30,7 @@ import static org.junit.Assert.*;
  * Testing the JdbcBuillder class
  * @author Pavel Ponec
  */
-public class JdbcBuilderTest {
+public class JdbcBuilderTest extends AbstractJdbcConnector {
 
     /** Some testing date */
     private final LocalDate someDate = LocalDate.parse("2018-09-12");
@@ -276,7 +275,7 @@ public class JdbcBuilderTest {
         assertNotNull(tempRs);
         assertTrue(tempRs.isClosed());
     }
-    
+
    /** How to SELECT a list using a lambda expression */
     public void showSelect_2(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
@@ -329,7 +328,7 @@ public class JdbcBuilderTest {
     }
 
     /** Crete new DB connection */
-    private Connection createTable(Connection dbConnection) throws ClassNotFoundException, SQLException {
+    Connection createTable(Connection dbConnection) throws ClassNotFoundException, SQLException {
         String sql = "CREATE TABLE testTable"
             + "\n( id INTEGER PRIMARY KEY"
             + "\n, name VARCHAR(256)"
@@ -342,13 +341,5 @@ public class JdbcBuilderTest {
             dbConnection.commit();
         }
         return dbConnection;
-    }
-
-    /** Crete a new DB connection */
-    private Connection createDbConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(org.h2.Driver.class.getName());
-        Connection result = DriverManager.getConnection("jdbc:h2:mem:test", "", "");
-        result.setAutoCommit(false);
-        return result;
     }
 }

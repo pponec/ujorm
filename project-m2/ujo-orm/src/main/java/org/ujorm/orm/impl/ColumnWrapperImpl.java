@@ -53,8 +53,7 @@ public class ColumnWrapperImpl implements ColumnWrapper {
      * @param key Optional Key
      */
     public ColumnWrapperImpl(@Nonnull final MetaColumn column, @Nullable final String tableAlias, @Nullable final Key key) {
-        Assert.notNull(column, "MetaColumn is required");
-        this.column = column;
+        this.column = Assert.notNull(column, "column");
         this.tableAlias = tableAlias != null ? tableAlias : column.getTableAlias();
         this.key = key != null ? key : column.getKey();
     }

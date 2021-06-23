@@ -17,6 +17,9 @@
 package org.ujorm.extensions;
 
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.ListKey;
@@ -44,8 +47,12 @@ import org.ujorm.Ujo;
 public interface UjoMiddle<U extends UjoMiddle> extends Ujo {
 
     /** Getter based on one Key */
-    public <VALUE> VALUE get
-        ( Key<? super U, VALUE> key);
+    @SuppressWarnings("unchecked")
+    @Nullable
+    default <VALUE> VALUE get
+        ( @Nonnull final Key<? super U, VALUE> key) {
+            return key.of((U)this);
+        }
 
     /** The setter  based on a composite Key.
      * If the {@code Key} argument is type of {@link CompositeKey} the method creates all missing relations.
@@ -57,12 +64,20 @@ public interface UjoMiddle<U extends UjoMiddle> extends Ujo {
      * Every <strong>set()</strong> method creates a new mother's instance (type of Person)  before assigning its name.
      * @see CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean)
      */
-    public <VALUE> Ujo set
-        ( Key<? super U, VALUE> key
-        , VALUE value);
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    default <VALUE> UjoMiddle<?> set
+        ( @Nonnull final Key<? super U, VALUE> key
+        , VALUE value) {
+            key.setValue((U)this, value);
+            return this;
+        }
 
     /** Get a <strong>not null</strong> list result */
-    public <VALUE> List<VALUE> getList(final ListKey<? super U, VALUE> key);
+    @SuppressWarnings("unchecked")
+    default <VALUE> List<VALUE> getList(final ListKey<? super U, VALUE> key) {
+        return key.getList((U)this);
+    }
 
     /**
      * Returns a String value by a NULL context.

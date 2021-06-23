@@ -15,6 +15,7 @@
  */
 package org.ujorm.tools.msg;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -60,11 +61,11 @@ public class ValueFormatter extends MsgFormatter {
 
     /**
      * Print argument to the Writter with an optional format.
-     * @param out Writer
+     * @param out Appendable
      * @param value A one value where the {@code Supplier} interface is supported.
      */
     @Override
-    protected void writeValue(@Nullable final Object value, @Nonnull final StringBuilder out, final boolean marked) {
+    protected void writeValue(@Nullable final Object value, @Nonnull final Appendable out, final boolean marked) throws IOException  {
         final Object val = value instanceof Supplier
                 ? ((Supplier)value).get()
                 : value;
@@ -107,7 +108,7 @@ public class ValueFormatter extends MsgFormatter {
     }
 
     /** Write bytes as hexa */
-    protected void writeByteArray(@Nonnull byte[] bytes, @Nonnull final StringBuilder out) {
+    protected void writeByteArray(@Nonnull byte[] bytes, @Nonnull final Appendable out) throws IOException {
         final int length = bytes != null ? bytes.length : -1; // Length of the bytes
         final int limit = getSizeLimit() >> 1;                // Limit for the bytes
         final int half = (limit - 4) >> 1;
@@ -132,7 +133,7 @@ public class ValueFormatter extends MsgFormatter {
     }
 
     /** You can call the method from a child class */
-    protected void writeLongValue(@Nonnull final CharSequence value, @Nonnull final StringBuilder out) {
+    protected void writeLongValue(@Nonnull final CharSequence value, @Nonnull final Appendable out) throws IOException {
         final int length = value != null ? value.length() : -1;
         final int limit = getSizeLimit();
         final int half = (limit - 4) >> 1;
@@ -169,7 +170,11 @@ public class ValueFormatter extends MsgFormatter {
     public static <T> String format
     ( @Nullable final String messageTemplate
     , @Nullable final T... arguments) {
-        return new ValueFormatter().formatMsg(messageTemplate, arguments);
+        try {
+            return new ValueFormatter().formatMsg(null, messageTemplate, arguments);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
    /**
@@ -187,7 +192,10 @@ public class ValueFormatter extends MsgFormatter {
     public static <T> String formatSql
     ( @Nullable final String sqlTemplate
     , @Nullable final T... arguments) {
-        return new ValueFormatter("?", "\'").formatMsg(sqlTemplate, arguments);
+        try {
+            return new ValueFormatter("?", "\'").formatMsg(null, sqlTemplate, arguments);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
-
 }

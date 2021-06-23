@@ -41,6 +41,7 @@ public class SrcLinkPanel extends Panel {
             protected void onClick(AjaxRequestTarget target) {
                 PageParameters params = new PageParameters();
                 params.add(SourcePage.SOURCE_PARAM, sourceComponent.getClass().getName());
+                params.add(SourcePage.INDEX_PARAM, 0);
                 setResponsePage(SourcePage.class, params);
             }
         };

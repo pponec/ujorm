@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2018 Pavel Ponec
+ *  Copyright 2009-2019 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,12 @@
 package org.ujorm.tools.set;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+import javax.annotation.Nonnull;
+import org.ujorm.tools.jdbc.RowIterator;
 
 /**
  * An exteded {@link Iterator} is suitable for use in the  {@code for ( ; ; )} statement.
@@ -28,4 +33,29 @@ import java.util.Iterator;
 
 public interface LoopingIterator<T> extends Iterator<T>, Iterable<T>, Closeable {
 
+    /**
+     * Returns the same object to iterate over elements of type {@code T}.
+     *
+     * @return an Iterator.
+     */
+    @Nonnull
+    @Override
+    default Iterator<T> iterator() {
+        return this;
+    }
+
+    /** Convert to a closeable Stream
+     *
+     * @see RowIterator class implementation for example how to use
+     */
+    @Nonnull
+    default Stream<T> toStream() {
+        return StreamSupport.stream(spliterator(), false).onClose(() -> {
+            try {
+                close();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+        });
+    }
 }

@@ -2,12 +2,10 @@
 
 package org.version2.bo.generated;
 
-import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
-import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
@@ -48,22 +46,6 @@ public class $Address extends Address implements UjoMiddle<$Address> {
     @Nonnull
     public Address original() {
         return data != null ? data : this;
-    }
-
-    @Override
-    public <VALUE> VALUE get(Key<? super $Address, VALUE> key) {
-        return key.of(this);
-    }
-
-    @Override
-    public <VALUE> $Address set(Key<? super $Address, VALUE> key, VALUE value) {
-        key.setValue(this, value);
-        return this;
-    }
-
-    @Override
-    public <VALUE> List<VALUE> getList(ListKey<? super $Address, VALUE> key) {
-        return key.getList(this);
     }
 
     @Override

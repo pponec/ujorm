@@ -53,7 +53,7 @@ public class SourceMap implements Serializable {
         classMap.put(HotelTable.class, array(HotelEditor.class, Toolbar.class, CommonServiceImpl.class, Hotel.class, ApplicationParams.class));
         classMap.put(BookingTable.class, array(BookingEditor.class, Booking.class, ApplicationParams.class));
         classMap.put(CustomerTable.class, array(CustomerEditor.class, Customer.class, ApplicationParams.class));
-        classMap.put(ParamsTable.class, array(ParamsEditor.class, ParamServiceImpl.class, ParamValue.class, ParamKey.class));
+        classMap.put(ParamsTable.class, array(ApplicationParams.class, ParamServiceImpl.class, ParamValue.class, ParamKey.class, ParamsEditor.class));
     }
 
     /** Build an array */

@@ -16,10 +16,8 @@
 
 package org.ujorm.orm.metaModel;
 
-import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -48,7 +46,7 @@ final public class MetaRoot extends AbstractMetaModel {
     private static final Class<MetaRoot> CLASS = MetaRoot.class;
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(CLASS);
     /** XSD source */
-    private static final String XSD_SOURCE = "http://ujorm.org/ujorm-1.84.xsd";
+    private static final String XSD_SOURCE = "https://pponec.github.io/ujorm/xsd/ujorm-1.91.xsd";
 
     /** Property Factory */
     private static final KeyFactory<MetaRoot> fa = KeyFactory.CamelBuilder.get(CLASS);
@@ -96,7 +94,7 @@ final public class MetaRoot extends AbstractMetaModel {
     /** Returns all model in a XML format */
     @Override
     public String toString() {
-        CharArrayWriter out = new CharArrayWriter(128);
+        final StringBuilder out = new StringBuilder(128);
         try {
             print(out);
             out.append("\n---\n");
@@ -124,7 +122,7 @@ final public class MetaRoot extends AbstractMetaModel {
     }
 
     /** Pring all model in a XML format */
-    public void print(Writer writer) throws IOException {
+    public void print(final Appendable writer) throws IOException {
         UjoManagerXML.getInstance().saveXML(writer, this, getXmlHeader(), getClass());
     }
 

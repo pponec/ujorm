@@ -239,8 +239,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     @Nonnull
     public <V, F extends Field<V>> F getField(final Key<? super U,V> key) {
         final F result = (F) fields.get(key.getName());
-        Assert.notNull(result, "Filed nebyl nalezen pro {}", key.getFullName());
-        return result;
+        return Assert.notNull(result, "Filed nebyl nalezen pro {}", key.getFullName());
     }
 
     /** Returns the last field or throw an exception
@@ -249,8 +248,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
      */
     @Nonnull
     public <T> Field<T> getLast() throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
-        Assert.notNull(lastField);
-        return (Field<T>) lastField;
+        return (Field<T>) Assert.notNull(lastField);
     }
 
     /** Return all keys in a String format */

@@ -49,7 +49,7 @@ public class DerbyDialect extends SqlDialect {
     }
 
     @Override
-    public void printOffset(Query query, Appendable out) throws IOException {
+    public void printLimitAndOffset(Query query, Appendable out) throws IOException {
         out.append(" OFFSET " + query.getOffset());
         out.append(" ROWS");
     }

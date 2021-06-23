@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 Pavel Ponec,
+ * Copyright 2018-2020 Pavel Ponec,
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/XmlWriter.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,18 +17,21 @@
 
 package org.ujorm.tools.xml.builder;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.ujorm.tools.xml.CommonXmlWriter;
-import org.ujorm.tools.xml.dom.HtmlElement;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.ujorm.tools.xml.AbstractElement.DEFAULT_INTENDATION;
-import static org.ujorm.tools.xml.AbstractElement.HTML_DOCTYPE;
-import static org.ujorm.tools.xml.AbstractElement.XML_HEADER;
+import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.config.HtmlConfig;
+import org.ujorm.tools.xml.config.XmlConfig;
+import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
+import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
+import static org.ujorm.tools.xml.AbstractWriter.FORWARD_SLASH;
+import static org.ujorm.tools.xml.AbstractWriter.XML_2QUOT;
+import static org.ujorm.tools.xml.AbstractWriter.XML_GT;
+import static org.ujorm.tools.xml.AbstractWriter.XML_LT;
+import static org.ujorm.tools.xml.AbstractWriter.createWriter;
+import static org.ujorm.tools.xml.AbstractWriter.SPACE;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -36,29 +39,27 @@ import static org.ujorm.tools.xml.AbstractElement.XML_HEADER;
  * @since 1.88
  * @author Pavel Ponec
  */
-public class XmlPrinter extends CommonXmlWriter {
+public class XmlPrinter extends AbstractWriter {
 
     /** Default constructor a zero offset */
     public XmlPrinter() {
-        this(new CharArrayWriter(512));
+        this(new StringBuilder(512));
     }
 
     /** Writer constructor with a zero offset */
     public XmlPrinter(@Nonnull final Appendable out) {
-        this(out, "");
+        this(out, XmlConfig.ofDefault());
     }
 
     /**
      * A writer constructor
      * @param out A writer
-     * @param indentationSpace String for a one level offset.
+     * @param config A configuration object
      */
-    public <T> XmlPrinter(@Nonnull final Appendable out, @Nullable final String indentationSpace, @Nonnull final T... prefix) {
-        super(out, indentationSpace);
+    public <T> XmlPrinter(@Nonnull final Appendable out, @Nullable final XmlConfig config) {
+        super(out, config);
         try {
-            for (Object text : prefix) {
-                out.append(String.valueOf(text));
-            }
+            out.append(config.getDoctype());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -73,13 +74,15 @@ public class XmlPrinter extends CommonXmlWriter {
         out.append(rawValue.toString());
     }
 
-    void writeAttrib(String name, Object data, XmlBuilder owner) throws IOException {
-        out.append(CHAR_SPACE);
-        out.append(name);
-        out.append('=');
-        out.append(XML_2QUOT);
-        writeValue(data, owner, name);
-        out.append(XML_2QUOT);
+    void writeAttrib(@Nonnull String name, Object data, XmlBuilder owner) throws IOException {
+        if (owner.getName() != null) {
+            out.append(SPACE);
+            out.append(name);
+            out.append('=');
+            out.append(XML_2QUOT);
+            writeValue(data, owner, name);
+            out.append(XML_2QUOT);
+        }
     }
 
     void writeRawText(Object rawText) throws IOException {
@@ -88,31 +91,39 @@ public class XmlPrinter extends CommonXmlWriter {
 
     /** Open the Node */
     void writeBeg(XmlBuilder element, final boolean lastText) throws IOException {
-        if (!lastText) {
-            writeNewLine(element.getLevel());
+        final CharSequence name = element.getName();
+        if (name != null) {
+            if (!lastText) {
+                writeNewLine(element.getLevel());
+            }
+            out.append(XML_LT);
+            out.append(name);
         }
-        out.append(XML_LT);
-        out.append(element.getName());
     }
 
     /** Middle closing the Node */
     void writeMid(XmlBuilder element) throws IOException {
-        out.append(XML_GT);
+        if (element.getName() != null) {
+            out.append(XML_GT);
+        }
     }
 
     /** Close the Node */
     void writeEnd(XmlBuilder element) throws IOException {
-        if (element.isFilled()) {
-            if (indentationEnabled && !element.isLastText()) {
-                writeNewLine(element.getLevel());
+        final CharSequence name = element.getName();
+        if (name != null) {
+            if (element.isFilled()) {
+                if (indentationEnabled && !element.isLastText()) {
+                    writeNewLine(element.getLevel());
+                }
+                out.append(XML_LT);
+                out.append(FORWARD_SLASH);
+                out.append(name);
+                out.append(XML_GT);
+            } else {
+                out.append(FORWARD_SLASH);
+                out.append(XML_GT);
             }
-            out.append(XML_LT);
-            out.append(FORWARD_SLASH);
-            out.append(element.getName());
-            out.append(XML_GT);
-        } else {
-            out.append(FORWARD_SLASH);
-            out.append(XML_GT);
         }
     }
 
@@ -126,14 +137,9 @@ public class XmlPrinter extends CommonXmlWriter {
 
     // ------- FACTORY METHODS -------
 
-    /** Create new {@code html} element */
-    public XmlBuilder createHtmlElement() throws IOException {
-        return createElement(HtmlElement.Html.HTML);
-    }
-
     /** Create any element */
-    public XmlBuilder createElement(@Nonnull final String elementName) throws IOException {
-        return new XmlBuilder(elementName, this);
+    public XmlBuilder createElement(@Nonnull final String name) throws IOException {
+        return new XmlBuilder(name, this);
     }
 
     // ------- STATIC METHODS -------
@@ -142,50 +148,100 @@ public class XmlPrinter extends CommonXmlWriter {
      * The result provides a method {@link #toString() }
      */
     public static XmlPrinter forXml() {
-        return new XmlPrinter(new StringBuilder(512), null, XML_HEADER);
+        return forXml(null, XmlConfig.ofDefault());
     }
 
-    /** Crete a new instance with no header.
+    /** Crete a new instance with a formatted output.
      * The result provides a method {@link #toString() }
-     * @param indentation An intendation by four spaces.
      * @return New instance of the XmlPrinter
      */
-    public static XmlPrinter forXml(boolean indentation) {
-        return new XmlPrinter(new StringBuilder(512), indentation ? DEFAULT_INTENDATION : null, XML_HEADER);
+    public static XmlPrinter forNiceXml() {
+        DefaultXmlConfig config = XmlConfig.ofDefault();
+        config.setNiceFormat();
+        return forXml(null, config);
     }
+
+    /** A basic XmlPrinter factory method.
+     * The result provides a method {@link #toString() }
+     * @return New instance of the XmlPrinter
+     */
+    public static XmlPrinter forXml(
+            @Nullable final Appendable out,
+            @Nonnull final XmlConfig config
+    ) {
+        return new XmlPrinter(out != null ? out : new StringBuilder(512), config);
+    }
+
+    // --- HTML ---
 
     /** Crete a new instance including a DOCTYPE.
      * The result provides a method {@link #toString() }
      */
     public static XmlPrinter forHtml() {
-        return new XmlPrinter(new StringBuilder(512), null, HTML_DOCTYPE);
+        return forXml(null, HtmlConfig.ofDefault());
     }
 
     /** Crete a new instance including a DOCTYPE */
     public static XmlPrinter forHtml(final Appendable out) {
-        return new XmlPrinter(out, null, HTML_DOCTYPE);
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        return forXml(out, config);
     }
 
     /** Crete a new instance including a DOCTYPE */
     public static XmlPrinter forNiceHtml(final Appendable out) {
-        return new XmlPrinter(out, DEFAULT_INTENDATION, HTML_DOCTYPE);
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setNiceFormat();
+        return forHtml(out, config);
     }
 
     /** Create XmlPrinter for UTF-8 */
     public static XmlPrinter forHtml(@Nonnull final Object httpServletResponse) throws IOException {
-        return forHtml(httpServletResponse, UTF_8, null, false);
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        return forHtml(httpServletResponse, config);
     }
 
     /** Create XmlPrinter for UTF-8 */
     public static XmlPrinter forNiceHtml(@Nonnull final Object httpServletResponse) throws IOException {
-        return forHtml(httpServletResponse, UTF_8, DEFAULT_INTENDATION, false);
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setNiceFormat();
+        return forHtml(httpServletResponse, config);
     }
 
     /** Create XmlPrinter for UTF-8 */
-    public static XmlPrinter forHtml(@Nonnull final Object httpServletResponse, @Nonnull final Charset charset, final String indentationSpace, final boolean noCache) throws IOException {
+    public static <T> XmlPrinter forHtml(
+            @Nullable final Appendable out,
+            @Nonnull final HtmlConfig config
+    ) {
+        return new XmlPrinter(out != null ? out : new StringBuilder(512), config);
+    }
+
+    /** Create XmlPrinter for UTF-8 */
+    public static XmlPrinter forHtml(
+            @Nonnull final Object httpServletResponse,
+            @Nonnull final Charset charset,
+            @Nonnull final String indentationSpace,
+            final boolean noCache
+    ) throws IOException {
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setCharset(charset);
+        config.setIndentationSpace(indentationSpace);
+        config.setCacheAllowed(!noCache);
+        return forHtml(httpServletResponse, config);
+    }
+
+    /** Create XmlPrinter for UTF-8.
+     * The basic HTML factory.
+     */
+    public static XmlPrinter forHtml(
+            @Nonnull final Object httpServletResponse,
+            @Nonnull final HtmlConfig config
+    ) throws IOException {
         try {
-            final Writer writer = createWriter(httpServletResponse, charset, noCache);
-            return new XmlPrinter(writer, indentationSpace, HtmlElement.HTML_DOCTYPE);
+            final Appendable writer = createWriter(
+                    httpServletResponse,
+                    config.getCharset(),
+                    config.isCacheAllowed());
+            return new XmlPrinter(writer, config);
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
         }

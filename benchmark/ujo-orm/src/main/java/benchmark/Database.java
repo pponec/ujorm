@@ -27,7 +27,7 @@ import org.ujorm.orm.annot.Db;
  * @hidden
  */
 @Db(schema="bmk", dialect=org.ujorm.orm.dialect.PostgreSqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:postgresql://127.0.0.1:5432/benchmark")
-//@Db(schema="db1", dialect=org.ujorm.orm.dialect.H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
+//@Db(schema="db1", dialect=org.ujorm.orm.dialect.H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1")
 public class Database extends OrmTable<Database> {
 
     /** Customer ORDER. The used annotation overwrites a database schema from the key schema. */

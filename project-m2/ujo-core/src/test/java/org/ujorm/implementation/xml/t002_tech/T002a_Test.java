@@ -8,9 +8,9 @@
 package org.ujorm.implementation.xml.t002_tech;
 
 import java.io.ByteArrayInputStream;
-import java.io.CharArrayWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
@@ -21,48 +21,48 @@ import org.ujorm.core.UjoManagerXML;
  * @author Pavel Ponec
  */
 public class T002a_Test extends MyTestCase {
-    
+
     public T002a_Test(String testName) {
         super(testName);
     }
-    
+
     public static TestSuite suite() {
         TestSuite suite = new TestSuite(T002a_Test.class);
         return suite;
     }
-    
+
     /**
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
      */
     public void testPrintXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         try {
             UTechnicalBean person = createPerson();
             UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
-            
+
             System.out.println("XML:\n" + writer.toString());
         } catch (RuntimeException | OutOfMemoryError ex) {
             ex.printStackTrace();
         }
     }
-    
+
     /**
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
     public void testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
-        CharArrayWriter writer = new CharArrayWriter(256);
+        StringBuilder writer = new StringBuilder(256);
         //
         UTechnicalBean person = createPerson();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
-        ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));
+        ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));
         UTechnicalBean person2 = UjoManagerXML.getInstance().parseXML(is, UTechnicalBean.class, false);
-        
+
         assertEquals(person, person2);
     }
-    
-    
+
+
     protected UTechnicalBean createPerson() {
         UTechnicalBean result = new UTechnicalBean();
         UTechnicalBean.P0_BOOL.setValue(result, true);
@@ -78,12 +78,12 @@ public class T002a_Test extends MyTestCase {
         UTechnicalBean.PD_DATE.setValue(result, new Date());
         UTechnicalBean.PA_BYTES.setValue(result, new byte[]{ 63,64,65 });
         UTechnicalBean.PB_CHARS.setValue(result, new char[]{ 'X', 'Y', 'X' });
-        
+
         return result;
     }
-    
+
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
     }
-    
+
 }

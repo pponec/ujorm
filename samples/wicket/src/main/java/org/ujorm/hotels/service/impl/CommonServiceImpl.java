@@ -1,5 +1,5 @@
 /*
- * Copyright 2014, Pavel Ponec
+ * Copyright 2014-2019, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,10 +50,11 @@ import static org.ujorm.tools.Check.hasLength;
 public class CommonServiceImpl implements CommonService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonServiceImpl.class);
 
-    @Inject private AuthService authService;
-
-    /** DAO layer */
+    /** Common DAO layer */
     @Inject private CommonDao<OrmUjo> dao;
+
+    /** Authentication service */
+    @Inject private AuthService authService;
 
     /** Read only sign */
     private boolean readOnly;
@@ -200,8 +201,7 @@ public class CommonServiceImpl implements CommonService {
     /** Insert new booking */
     @Override
     public void saveBooking(Booking booking) {
-        Customer cust = booking.getCustomer();
-        Assert.notNull(booking.getCustomer(), Booking.CUSTOMER.getFullName());
+        Customer cust = Assert.notNull(booking.getCustomer(), Booking.CUSTOMER.getFullName());
         if (cust.getId()==null) {
             if (!authService.authenticate(cust)) {
                 throw new ValidationException("login.failed", "Login failed");

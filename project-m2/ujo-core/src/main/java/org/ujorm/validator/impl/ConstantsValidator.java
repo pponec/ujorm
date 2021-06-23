@@ -31,9 +31,9 @@ import org.ujorm.validator.ValidationError;
 public class ConstantsValidator<VALUE> extends AbstractValidator<VALUE> {
 
     /** Set of constant to a check */
-    public static final MessageArg<Set> SET = new MessageArg<Set>("SET");
+    public static final MessageArg<Set> SET = MessageArg.of("SET");
     /** Constants are forbidden / required */
-    public static final MessageArg<Boolean> FORBIDDEN = new MessageArg<Boolean>("FORBIDDEN");
+    public static final MessageArg<Boolean> FORBIDDEN = MessageArg.of("FORBIDDEN");
 
     /** Set of constant to a check */
     private final Set set;

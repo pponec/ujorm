@@ -100,8 +100,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
 
     /** Filtering */
     public OfferModel(@Nonnull final Criterion<U> filter) {
-        Assert.notNull(filter, "filter");
-        this.filter = filter;
+        this.filter = Assert.notNull(filter, "filter");
         this.filterModel = Model.of(filter);
         this.highliting = new Model<Criterion<U>>(null);
     }
@@ -384,8 +383,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
 
     /** Closable object */
     public void setClosable(@Nonnull final Closeable<U> closable) {
-        Assert.notNull(closable, "closable");
-        this.closable = closable;
+        this.closable = Assert.notNull(closable, "closable");
     }
 
     /** Enable finder */

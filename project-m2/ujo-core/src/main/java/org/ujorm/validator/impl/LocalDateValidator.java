@@ -21,8 +21,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.tools.msg.MessageArg;
+import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 /**
@@ -32,9 +32,9 @@ import org.ujorm.validator.ValidationError;
 public class LocalDateValidator<VALUE extends LocalDate> extends AbstractValidator<VALUE> {
 
     /** TODAY date*/
-    public static final MessageArg<LocalDate> NOW = new MessageArg<>("NOW");
+    public static final MessageArg<LocalDate> NOW = MessageArg.of("NOW");
     /** A sing for Past {@code true} / Future {@code false} */
-    public static final MessageArg<Boolean> PAST = new MessageArg<>("PAST");
+    public static final MessageArg<Boolean> PAST = MessageArg.of("PAST");
 
     /** A sing for Past {@code true} / Future {@code false} */
     private final boolean past;
@@ -46,7 +46,7 @@ public class LocalDateValidator<VALUE extends LocalDate> extends AbstractValidat
      * @param past Serializable maximum valuem (inclusive)
      */
     public LocalDateValidator(final boolean past) {
-        this(past, ZoneId.systemDefault());    
+        this(past, ZoneId.systemDefault());
     }
 
     /**
@@ -56,7 +56,7 @@ public class LocalDateValidator<VALUE extends LocalDate> extends AbstractValidat
     public LocalDateValidator(final boolean past, @Nonnull final ZoneId zoneId) {
         this.past = past;
         this.pastWord = past ? "past" : "future";
-        this.zoneId = zoneId;        
+        this.zoneId = zoneId;
     }
 
     /** {@inheritDoc} */

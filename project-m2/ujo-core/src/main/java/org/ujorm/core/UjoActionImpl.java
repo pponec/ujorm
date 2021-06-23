@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2014 Pavel Ponec
+ *  Copyright 2007-2020 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.ujorm.core;
 
+import javax.annotation.Nullable;
 import org.ujorm.UjoAction;
 
 /**
@@ -23,24 +24,25 @@ import org.ujorm.UjoAction;
  * @author Pavel Ponec
  */
 public class UjoActionImpl implements UjoAction {
-    
+
     private final int type;
+    @Nullable
     private final Object context;
-    
-    public UjoActionImpl(int type, Object context) {
+
+    public UjoActionImpl(int type, @Nullable Object context) {
         this.type = type;
         this.context = context;
     }
-     
+
     public UjoActionImpl(Object context) {
         this(ACTION_UNDEFINED, context);
     }
-     
+
     public UjoActionImpl(int type) {
         this(type, null);
     }
-     
-    /** Returns a type of the action. The default type is ACTION_UNDEFINED. 
+
+    /** Returns a type of the action. The default type is ACTION_UNDEFINED.
      * <ul>
      * <li>Numbers are reserved in range (from 0 to 999, inclusive) for an internal usage of the Ujorm.</li>
      * <li>Zero is an undefined action</li>
@@ -54,6 +56,7 @@ public class UjoActionImpl implements UjoAction {
     }
 
     /** Returns a conetxt of the action. The value is dedicated to a user usage and the value can be null. */
+    @Nullable
     @Override
     public final Object getContext() {
         return context;

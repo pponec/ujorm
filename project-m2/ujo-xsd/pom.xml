@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-xsd</artifactId>
     <packaging>jar</packaging>
-    <version>1.89-SNAPSHOT</version>
+    <version>2.16-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-xsd</name>
     <description>XSD generator according the Ujo
@@ -25,6 +25,57 @@
         </license>
     </licenses>
 
+    <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->                
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-core</artifactId>
+            <version>2.16-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-orm</artifactId>
+            <version>2.16-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+    
     <build>
         <plugins>
             <plugin>
@@ -59,30 +110,6 @@
 
         </plugins>
     </build>
-    <dependencies>
-
-        <dependency>
-            <groupId>org.ujorm</groupId>
-            <artifactId>ujo-core</artifactId>
-            <version>1.89-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.ujorm</groupId>
-            <artifactId>ujo-orm</artifactId>
-            <version>1.89-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>

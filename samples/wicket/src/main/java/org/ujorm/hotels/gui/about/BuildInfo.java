@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, Pavel Ponec
+ * Copyright 2016-2021, Pavel Ponec
  */
 package org.ujorm.hotels.gui.about;
 
@@ -57,21 +57,12 @@ public class BuildInfo extends Label {
     /** Returns a build date from manifest */
     protected String getBuildDate() {
         final ServletContext application = WebApplication.get().getServletContext();
-        InputStream is = null;
-        try {
-            is = application.getResourceAsStream("/" + JarFile.MANIFEST_NAME);
+        try (InputStream is = application.getResourceAsStream("/" + JarFile.MANIFEST_NAME)){
             Attributes mainAttribs = new Manifest(is).getMainAttributes();
             return mainAttribs.getValue("Build-Time");
         } catch (Exception e) {
             LOGGER.debug("Illegal file {}", JarFile.MANIFEST_NAME, e);
             return "-";
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                }
-            }
         }
     }
 }

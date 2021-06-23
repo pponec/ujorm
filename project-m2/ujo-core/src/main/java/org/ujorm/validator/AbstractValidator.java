@@ -30,12 +30,12 @@ import org.ujorm.validator.impl.CompositeValidator;
 public abstract class AbstractValidator<VALUE> implements Validator<VALUE>, Serializable {
 
     /** Ujo-key */
-    public static final MessageArg<String> KEY = new MessageArg<>("KEY");
+    public static final MessageArg KEY = MessageArg.of("KEY");
     /** Input value */
-    public static final MessageArg<Object> INPUT = new MessageArg<>("INPUT");
+    public static final MessageArg INPUT = MessageArg.of("INPUT");
     /** Two-character mark ("${") to introducing a template argument.
      * @see MessageService#PARAM_BEG */
-    public static final MessageArg<Object> MARK = new MessageArg<>("MARK");
+    public static final MessageArg MARK = MessageArg.of("MARK");
 
     /** Validator service */
     protected static final MessageService service = new MessageService();

@@ -16,27 +16,34 @@
 package org.ujorm.orm.inheritance.sample.bo;
 
 import org.ujorm.Key;
-import org.ujorm.orm.annot.Column;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Table;
 
 /** Customer extends User */
-@Table(name="usr_customer")
+    @Table(name="usr_customer")
 public class Customer extends OrmTable<Customer> implements ICustomer {
+
+    private static final KeyFactory f = newFactory(Customer.class);
+
 
     /** Primary key */
     @Column(pk=true, name="id")
-    public static final Key<Customer, User> user = newKey();
+    public static final Key<Customer, User> USER = f.newKey();
     /** Company */
-    public static final Key<Customer, String> company = newKey();
+    public static final Key<Customer, String> COMPANY = f.newKey();
     /** Discount [%] */
-    public static final Key<Customer, Integer> discount = newKeyDefault(0);
+    public static final Key<Customer, Integer> DISCOUNT = f.newKeyDefault(0);
 
+    static {
+        f.lock();
+    }
 
     // -------- Setters and getters ---------
 
     public User getUser() {
-        return get(user);
+        return get(USER);
     }
 
     @Override
@@ -71,22 +78,22 @@ public class Customer extends OrmTable<Customer> implements ICustomer {
 
     @Override
     public String getCompany() {
-        return get(company);
+        return get(COMPANY);
     }
 
     @Override
     public void setCompany(String _company) {
-        set(company, _company);
+        set(COMPANY, _company);
     }
 
     @Override
     public int getDiscount() {
-        return get(discount);
+        return get(DISCOUNT);
     }
 
     @Override
     public void setDiscount(int _discount) {
-        set(discount, _discount);
+        set(DISCOUNT, _discount);
     }
 
     // -------- Static methods ---------
@@ -94,7 +101,7 @@ public class Customer extends OrmTable<Customer> implements ICustomer {
     /** Factory method */
     public static Customer newInstance() {
         Customer result = new Customer();
-        result.set(user, new User());
+        result.set(USER, new User());
         return result;
     }
 

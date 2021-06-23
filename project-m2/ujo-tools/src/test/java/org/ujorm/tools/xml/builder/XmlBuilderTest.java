@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Pavel Ponec
+ * Copyright 2018-2020 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
 package org.ujorm.tools.xml.builder;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.ujorm.tools.xml.Html;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.*;
@@ -26,7 +28,7 @@ import static org.junit.Assert.*;
  * A test of the XmlNode class
  * @author Pavel Ponec
  */
-public class XmlBuilderTest {
+public class XmlBuilderTest implements Html {
 
     @Test
     public void testXmlBuilding() throws IOException {
@@ -35,25 +37,26 @@ public class XmlBuilderTest {
         final XmlPrinter writer = XmlPrinter.forXml();
         try (XmlBuilder root = writer.createElement("root")) {
             root.addElement("childA")
-                    .setAttrib("x", 1)
-                    .setAttrib("y", 2);
+                    .setAttribute("x", 1)
+                    .setAttribute("y", 2);
             root.addElement("childB")
-                    .setAttrib("x", 3)
-                    .setAttrib("y", 4)
-                    .setAttrib("z", "<'&\">")
+                    .setAttribute("x", 3)
+                    .setAttribute("y", 4)
+                    .setAttribute("z", "<'&\">")
                     .addText("A text message <'&\">");
             root.addRawText("\n<rawXml/>\n");
          // root.addCDATA("A character data <'&\">");
         }
 
         String result = writer.toString();
-        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "\n<root>"
-                + "\n<childA x=\"1\" y=\"2\"/>"
-                + "\n<childB x=\"3\" y=\"4\" z=\"&lt;'&amp;&quot;&gt;\">A text message &lt;'&amp;\"&gt;</childB>"
-                + "\n<rawXml/>"
-           //   + "\n<![CDATA[A character data <'&\">]]>"
-                + "\n</root>";
+        String expected = String.join("\n"
+                , "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                , "<root>"
+                , "<childA x=\"1\" y=\"2\"/>"
+                , "<childB x=\"3\" y=\"4\" z=\"&lt;'&amp;&quot;&gt;\">A text message &lt;'&amp;\"&gt;</childB>"
+                , "<rawXml/>"
+           //   , "<![CDATA[A character data <'&\">]]>"
+                , "</root>");
         assertEquals(expected, result);
     }
 
@@ -61,29 +64,29 @@ public class XmlBuilderTest {
     public void testXmlBuildingNice() throws IOException {
         System.out.println("XmlBuildingNice");
 
-        boolean intendation = true;
-        final XmlPrinter writer = XmlPrinter.forXml(intendation);
+        final XmlPrinter writer = XmlPrinter.forNiceXml();
         try (XmlBuilder root = writer.createElement("root")) {
             root.addElement("childA")
-                    .setAttrib("x", 1)
-                    .setAttrib("y", 2);
+                    .setAttribute("x", 1)
+                    .setAttribute("y", 2);
             root.addElement("childB")
-                    .setAttrib("x", 3)
-                    .setAttrib("y", 4)
-                    .setAttrib("z", "<'&\">")
+                    .setAttribute("x", 3)
+                    .setAttribute("y", 4)
+                    .setAttribute("z", "<'&\">")
                     .addText("A text message <'&\">");
             root.addRawText("\n    <rawXml/>\n");
          // root.addCDATA("A character data <'&\">");
         }
 
         String result = writer.toString();
-        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "\n<root>"
-                + "\n    <childA x=\"1\" y=\"2\"/>"
-                + "\n    <childB x=\"3\" y=\"4\" z=\"&lt;'&amp;&quot;&gt;\">A text message &lt;'&amp;\"&gt;</childB>"
-                + "\n    <rawXml/>"
-           //   + "\n<![CDATA[A character data <'&\">]]>"
-                + "\n</root>";
+        String expected = String.join("\n"
+                , "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                , "<root>"
+                , "    <childA x=\"1\" y=\"2\"/>"
+                , "    <childB x=\"3\" y=\"4\" z=\"&lt;'&amp;&quot;&gt;\">A text message &lt;'&amp;\"&gt;</childB>"
+                , "    <rawXml/>"
+           //   , "<![CDATA[A character data <'&\">]]>"
+                , "</root>");
         assertEquals(expected, result);
     }
 
@@ -92,12 +95,12 @@ public class XmlBuilderTest {
         System.out.println("testHtmlBuildingNice1");
 
         final XmlPrinter writer = XmlPrinter.forNiceHtml((Appendable) new StringBuilder());
-        try (XmlBuilder html = writer.createHtmlElement()) {
-            html.setAttrib("lang", "en");
+        try (XmlBuilder html = writer.createElement("html")) {
+            html.setAttribute("lang", "en");
             try(XmlBuilder head = html.addElement("head")) {
-               head.addElement("meta").setAttrib("charset", StandardCharsets.UTF_8);
+               head.addElement("meta").setAttribute("charset", StandardCharsets.UTF_8);
                head.addElement("title").addText("Demo");
-               head.addElement("link").setAttrib("href", "word.css").setAttrib("rel", "stylesheet");
+               head.addElement("link").setAttribute("href", "word.css").setAttribute("rel", "stylesheet");
             }
             try(XmlBuilder body = html.addElement("body")) {
                body.addElement("h1").addText("Hello, World!");
@@ -105,17 +108,18 @@ public class XmlBuilderTest {
         }
 
         String result = writer.toString();
-        String expected = "<!DOCTYPE html>"
-                + "\n<html lang=\"en\">"
-                + "\n    <head>"
-                + "\n        <meta charset=\"UTF-8\"/>"
-                + "\n        <title>Demo</title>"
-                + "\n        <link href=\"word.css\" rel=\"stylesheet\"/>"
-                + "\n    </head>"
-                + "\n    <body>"
-                + "\n        <h1>Hello, World!</h1>"
-                + "\n    </body>"
-                + "\n</html>";
+        String expected = String.join("\n"
+                , "<!DOCTYPE html>"
+                , "<html lang=\"en\">"
+                , "    <head>"
+                , "        <meta charset=\"UTF-8\"/>"
+                , "        <title>Demo</title>"
+                , "        <link href=\"word.css\" rel=\"stylesheet\"/>"
+                , "    </head>"
+                , "    <body>"
+                , "        <h1>Hello, World!</h1>"
+                , "    </body>"
+                , "</html>");
         assertEquals(expected, result);
     }
 
@@ -124,12 +128,14 @@ public class XmlBuilderTest {
         System.out.println("testHtmlBuildingNice2");
 
         final XmlPrinter writer = XmlPrinter.forNiceHtml((Appendable) new StringBuilder());
-        try (XmlBuilder html = writer.createHtmlElement()) {
-            html.setAttrib("lang", "en");
+        try (XmlBuilder html = writer.createElement("html")) {
+            html.setAttribute("lang", "en");
             XmlBuilder head = html.addElement("head");
-            head.addElement("meta").setAttrib("charset", StandardCharsets.UTF_8);
+            head.addElement("meta").setAttribute("charset", StandardCharsets.UTF_8);
             head.addElement("title").addText("Demo");
-            head.addElement("link").setAttrib("href", "word.css").setAttrib("rel", "stylesheet");
+            head.addElement("link")
+                    .setAttribute("href", "word.css")
+                    .setAttribute("rel", "stylesheet");
 
             XmlBuilder body = html.addElement("body");
             body.addElement("h1").addText("Hello, World!");
@@ -137,17 +143,18 @@ public class XmlBuilderTest {
         }
 
         String result = writer.toString();
-        String expected = "<!DOCTYPE html>"
-                + "\n<html lang=\"en\">"
-                + "\n    <head>"
-                + "\n        <meta charset=\"UTF-8\"/>"
-                + "\n        <title>Demo</title>"
-                + "\n        <link href=\"word.css\" rel=\"stylesheet\"/>"
-                + "\n    </head>"
-                + "\n    <body>"
-                + "\n        <h1>Hello, World!</h1>"
-                + "\n    </body>"
-                + "\n</html>";
+        String expected = String.join("\n"
+                , "<!DOCTYPE html>"
+                , "<html lang=\"en\">"
+                , "    <head>"
+                , "        <meta charset=\"UTF-8\"/>"
+                , "        <title>Demo</title>"
+                , "        <link href=\"word.css\" rel=\"stylesheet\"/>"
+                , "    </head>"
+                , "    <body>"
+                , "        <h1>Hello, World!</h1>"
+                , "    </body>"
+                , "</html>");
         assertEquals(expected, result);
     }
 
@@ -157,9 +164,9 @@ public class XmlBuilderTest {
         System.out.println("HttpServletResponse");
 
         XmlPrinter writer = XmlPrinter.forHtml();
-        try (XmlBuilder html = writer.createHtmlElement()) {
+        try (XmlBuilder html = writer.createElement(Html.HTML)) {
              try (XmlBuilder head = html.addElement(Html.HEAD)) {
-                   head.addElement(Html.META).setAttrib(Html.A_CHARSET, UTF_8);
+                   head.addElement(Html.META).setAttribute(Html.A_CHARSET, UTF_8);
                    head.addElement(Html.TITLE).addText("Test");
              }
              try (XmlBuilder body = html.addElement(Html.BODY)) {
@@ -169,15 +176,84 @@ public class XmlBuilderTest {
         };
 
         String result = writer.toString();
-        String expected = "<!DOCTYPE html>"
-                + "\n<html>"
-                + "\n<head>"
-                + "\n<meta charset=\"UTF-8\"/>"
-                + "\n<title>Test</title></head>"
-                + "\n<body>"
-                + "\n<h1>Hello word!</h1>"
-                + "\n<div>null</div></body></html>";
+        String expected = String.join("\n"
+                , "<!DOCTYPE html>"
+                , "<html>"
+                , "<head>"
+                , "<meta charset=\"UTF-8\"/>"
+                , "<title>Test</title></head>"
+                , "<body>"
+                , "<h1>Hello word!</h1>"
+                , "<div></div></body></html>");
         assertEquals(expected, result);
+    }
+
+
+    /** Test rendering to the HttpServletResponse */
+    @Test
+    public void testHtmlResponse() throws IOException {
+        System.out.println("HtmlResponse");
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        try (XmlBuilder html = XmlBuilder.forNiceHtml(response.getWriter())) {
+            html.setAttribute("lang", "en");
+            try(XmlBuilder head = html.addElement("head")) {
+               head.addElement("meta").setAttribute("charset", UTF_8);
+               head.addElement("title").addText("Demo");
+               head.addElement("link").setAttribute("href", "css/basic.css").setAttribute("rel", "stylesheet");
+            }
+            try(XmlBuilder body = html.addElement("body")) {
+               body.addElement("h1").addText("Hello, World! (extended)");
+            }
+        }
+
+        String expected = String.join("\n"
+                , "<!DOCTYPE html>"
+                , "<html lang=\"en\">"
+                , "    <head>"
+                , "        <meta charset=\"UTF-8\"/>"
+                , "        <title>Demo</title>"
+                , "        <link href=\"css/basic.css\" rel=\"stylesheet\"/>"
+                , "    </head>"
+                , "    <body>"
+                , "        <h1>Hello, World! (extended)</h1>"
+                , "    </body>"
+                , "</html>");
+        assertEquals(expected, response.getContentAsString());
+    }
+
+    /** Test rendering to the HttpServletResponse */
+    @Test
+    public void testHtmlResponse4const() throws IOException {
+        System.out.println("HtmlResponse4const");
+        Charset lang = StandardCharsets.UTF_8;
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        try (XmlBuilder html = XmlBuilder.forNiceHtml(response.getWriter())) {
+            html.setAttribute(A_LANG, "en");
+            try(XmlBuilder head = html.addElement(HEAD)) {
+               head.addElement(META).setAttribute(A_CHARSET, lang);
+               head.addElement(TITLE).addText("Demo");
+               head.addElement(LINK).setAttribute(A_HREF, "css/basic.css").setAttribute(A_REL, V_STYLESHEET);
+            }
+            try(XmlBuilder body = html.addElement(BODY)) {
+               body.addElement(H1).addText("Hello, World! (extended)");
+            }
+        }
+
+        String expected = String.join("\n"
+                , "<!DOCTYPE html>"
+                , "<html lang=\"en\">"
+                , "    <head>"
+                , "        <meta charset=\"UTF-8\"/>"
+                , "        <title>Demo</title>"
+                , "        <link href=\"css/basic.css\" rel=\"stylesheet\"/>"
+                , "    </head>"
+                , "    <body>"
+                , "        <h1>Hello, World! (extended)</h1>"
+                , "    </body>"
+                , "</html>");
+        assertEquals(expected, response.getContentAsString());
     }
 
 }

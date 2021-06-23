@@ -33,6 +33,7 @@ import org.ujorm.extensions.StringWrapper;
 import org.ujorm.extensions.ValueWrapper;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.msg.MsgFormatter;
 
 /**
@@ -44,35 +45,35 @@ public class TypeService implements ITypeService<Object,Object> {
 
     // --- Java type book: ---
 
-    public static final char UNDEFINED = (char) 0;
-    public static final char BOOLEAN = 1;
-    public static final char BYTE = 2;
-    public static final char CHAR = 3;
-    public static final char SHORT = 4;
-    public static final char INT = 5;
-    public static final char LONG = 6;
-    public static final char FLOAT = 7;
-    public static final char DOUBLE = 8;
-    public static final char BIG_DECI = 9;
-    public static final char BIG_INTE = 10;
-    public static final char STRING = 11;
-    public static final char BYTES = 12;
-    public static final char DATE_UTIL = 13;
-    public static final char DATE_SQL = 14;
-    public static final char TIME_SQL = 15;
-    public static final char TIMESTAMP = 16;
-    public static final char BLOB = 17;
-    public static final char CLOB = 18;
-    public static final char EXPORT_ENUM = 19;
-    public static final char STRING_WRAP = 20;
-    public static final char BYTES_WRAP = 21;
-    public static final char ENUM = 22;
-    public static final char COLOR = 23;
-    public static final char UUID = 24; // An object type
-    public static final char LOCAL_DATE = 25;
-    public static final char LOCAL_TIME = 26;
-    public static final char LOCAL_DATE_TIME = 27;
-    public static final char OFFSET_DATE_TIME = 28;
+    public static final char UNDEFINED = '!';
+    public static final char BOOLEAN = UNDEFINED + 1;
+    public static final char BYTE = UNDEFINED + 2;
+    public static final char CHAR = UNDEFINED + 3;
+    public static final char SHORT = UNDEFINED + 4;
+    public static final char INT = UNDEFINED + 5;
+    public static final char LONG = UNDEFINED + 6;
+    public static final char FLOAT = UNDEFINED + 7;
+    public static final char DOUBLE = UNDEFINED + 8;
+    public static final char BIG_DECI = UNDEFINED + 9;
+    public static final char BIG_INTE = UNDEFINED + 10;
+    public static final char STRING = UNDEFINED + 11;
+    public static final char BYTES = UNDEFINED + 12;
+    public static final char DATE_UTIL = UNDEFINED + 13;
+    public static final char DATE_SQL = UNDEFINED + 14;
+    public static final char TIME_SQL = UNDEFINED + 15;
+    public static final char TIMESTAMP = UNDEFINED + 16;
+    public static final char BLOB = UNDEFINED + 17;
+    public static final char CLOB = UNDEFINED + 18;
+    public static final char EXPORT_ENUM = UNDEFINED + 19;
+    public static final char STRING_WRAP = UNDEFINED + 20;
+    public static final char BYTES_WRAP = UNDEFINED + 21;
+    public static final char ENUM = UNDEFINED + 22;
+    public static final char COLOR = UNDEFINED + 23;
+    public static final char UUID = UNDEFINED + 24; // An object type
+    public static final char LOCAL_DATE = UNDEFINED + 25;
+    public static final char LOCAL_TIME = UNDEFINED + 26;
+    public static final char LOCAL_DATE_TIME = UNDEFINED + 27;
+    public static final char OFFSET_DATE_TIME = UNDEFINED + 28;
 
     /** Constructor for the String argument type */
     private static final Class[] STR_ARGS = new Class[] {String.class};
@@ -180,7 +181,11 @@ public class TypeService implements ITypeService<Object,Object> {
             case BYTES_WRAP : return createBytesWrapper(rs.getBytes(c), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(c), mColumn);
             case UUID:
-            default         : return rs.getObject(c, mColumn.getType());
+            default         :
+                final Class cType = mColumn.isForeignKey()
+                        ? mColumn.getForeignColumns().get(0).getType()
+                        : mColumn.getType();
+                return rs.getObject(c, cType);
         }
         return rs.wasNull() ? null : r;
     }
@@ -237,7 +242,12 @@ public class TypeService implements ITypeService<Object,Object> {
             case BYTES_WRAP : return createBytesWrapper(rs.getBytes(c), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(c), mColumn);
             case UUID:
-            default         : return rs.getObject(c, mColumn.getType());
+            default:
+                final Class cType = mColumn.isForeignKey()
+                        ? mColumn.getForeignColumns().get(0).getType()
+                        : mColumn.getType();
+                return rs.getObject(c, cType);
+
         }
         return rs.wasNull() ? null : r;
     }
@@ -303,7 +313,7 @@ public class TypeService implements ITypeService<Object,Object> {
     private Object findEnum
         ( @Nullable final String key
         , @Nonnull final MetaColumn mColumn) throws IllegalUjormException {
-        if (key==null || key.isEmpty()) {
+        if (Check.isEmpty(key)) {
             return null;
         }
         for (Object o : mColumn.getType().getEnumConstants()) {
@@ -322,7 +332,7 @@ public class TypeService implements ITypeService<Object,Object> {
     /** Create the new StringWrapper by the KEY. */
     @SuppressWarnings("unchecked")
     private Object createStringWrapper(@Nullable final String key, @Nonnull final MetaColumn mColumn) throws IllegalUjormException {
-        if (key==null || key.isEmpty()) {
+        if (Check.isEmpty(key)) {
             return null;
         }
         try {
