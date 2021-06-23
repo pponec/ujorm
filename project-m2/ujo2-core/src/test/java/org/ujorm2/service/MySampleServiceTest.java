@@ -15,8 +15,6 @@
  */
 package org.ujorm2.service;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.ujorm2.Key;
 import org.ujorm2.doman.Item;
@@ -29,15 +27,6 @@ import static org.junit.Assert.assertEquals;
  * @author Pavel Ponec
  */
 public class MySampleServiceTest {
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of doOrderAccess method, of class MySampleService.
      */
