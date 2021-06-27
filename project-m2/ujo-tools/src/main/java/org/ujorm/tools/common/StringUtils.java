@@ -184,4 +184,9 @@ public class StringUtils {
         return new StringUtils(StandardCharsets.UTF_8, basePackage).readRows(basePackage, resourcePath);
     }
 
+    @Nonnull
+    public static Stream<String> readLines(@Nonnull final String... resourcePath) {
+        return readLines(StringUtils.class, resourcePath);
+    }
+
 }
