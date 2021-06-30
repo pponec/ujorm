@@ -122,7 +122,9 @@ public class StringUtils {
     @Nonnull
     public Stream<String> readRows(@Nonnull final URL url) throws IOException {
         final InputStream is = url.openStream();
-        return readRows(is).onClose(()-> {
+        if (is == null) {
+            throw new IllegalStateException("Can't open: " + url);
+        } else return readRows(is).onClose(()-> {
             try {
                 is.close();
             } catch (IOException e) {
@@ -184,6 +186,10 @@ public class StringUtils {
         return new StringUtils(StandardCharsets.UTF_8, basePackage).readRows(basePackage, resourcePath);
     }
 
+    /** Read a content of the resource encoded by UTF-8.
+     * A line separator can be modifed in the result.
+     * @return The result must be closed.
+     */
     @Nonnull
     public static Stream<String> readLines(@Nonnull final String... resourcePath) {
         return readLines(StringUtils.class, resourcePath);
