@@ -14,11 +14,11 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
     @Nullable
     protected final Key<D, ?> keyPrefix;
 
-    /** All direct keys */
+    /** All direct directKeys */
     @Nonnull
     protected final DirectKeyRing directKeyRing;
 
-    /** All direct keys */
+    /** All direct directKeys */
     protected final boolean descending;
 
     protected AbstractDomainModel(@Nullable Key<D, ?> keyPrefix, @Nonnull DirectKeyRing directKeyRing, boolean descending) {
@@ -36,7 +36,7 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
 
 
     /** Provider of an instance of DirectKeys */
-    protected abstract DirectKeyRing keys();
+    protected abstract DirectKeyRing directKeys();
 
     @Deprecated
     protected ModelContext getContext$() {

@@ -18,7 +18,7 @@ import org.ujorm2.doman.Order;
  */
 public class _Item<D> extends AbstractDomainModel<D, Item> {
 
-    /** All direct keys */
+    /** All direct directKeys */
     static final class DirectKeys<T extends Item> extends DirectKeyRing<T> {
 
         final KeyFactory<T> keyFactory = new KeyFactory(Item.class);
@@ -63,7 +63,7 @@ public class _Item<D> extends AbstractDomainModel<D, Item> {
 
     @Override
     public <A> AbstractDomainModel<A, Item> prefix(Key<A, D> key) {
-        return new _Item(key, keys(), false);
+        return new _Item(key, directKeys(), false);
     }
 
     @Override
@@ -73,34 +73,34 @@ public class _Item<D> extends AbstractDomainModel<D, Item> {
 
     /** Provider of an instance of DirectKeys */
     @Override
-    protected final DirectKeys keys() {
+    protected final DirectKeys directKeys() {
         return (DirectKeys) directKeyRing;
     }
 
     // --- KEY PROVIDERS ---
 
     public Key<D, Integer> id() {
-        return getKey(keys().id);
+        return getKey(directKeys().id);
     }
 
     public Key<D, String> note() {
-        return getKey(keys().note);
+        return getKey(directKeys().note);
     }
 
     public Key<D, BigDecimal> price() {
-        return getKey(keys().price);
+        return getKey(directKeys().price);
     }
 
     public _Order<D> order() {
-        return (_Order) getKey(keys().order);
+        return (_Order) getKey(directKeys().order);
     }
 
     public Key<D, Boolean> descending$() {
-        return getKey(keys().descending);
+        return getKey(directKeys().descending);
     }
 
     public Key<D, Integer> codePoints$() {
-        return getKey(keys().codePoints);
+        return getKey(directKeys().codePoints);
     }
 
     // ---- Helper method

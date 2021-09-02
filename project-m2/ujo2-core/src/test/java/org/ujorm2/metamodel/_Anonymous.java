@@ -17,7 +17,7 @@ import org.ujorm2.doman.Item;
  */
 public class _Anonymous<D> extends AbstractDomainModel<D, Anonymous> {
 
-    /** All direct keys */
+    /** All direct directKeys */
     static final class DirectKeys<T extends Anonymous> extends DirectKeyRing<T> {
 
         final KeyFactory<T> keyFactory = new KeyFactory(Anonymous.class);
@@ -54,7 +54,7 @@ public class _Anonymous<D> extends AbstractDomainModel<D, Anonymous> {
 
     @Override
     public <A> AbstractDomainModel<A, Anonymous> prefix(Key<A, D> key) {
-        return new _Anonymous(key, keys(), false);
+        return new _Anonymous(key, directKeys(), false);
     }
 
     @Override
@@ -64,26 +64,26 @@ public class _Anonymous<D> extends AbstractDomainModel<D, Anonymous> {
 
     /** Provider of an instance of DirectKeys */
     @Override
-    protected final DirectKeys keys() {
+    protected final DirectKeys directKeys() {
         return (DirectKeys) directKeyRing;
     }
 
     // --- KEY PROVIDERS ---
 
     public Key<D, Integer> id() {
-        return getKey(keys().id);
+        return getKey(directKeys().id);
     }
 
     public Key<D, Short> pin() {
-        return getKey(keys().pin);
+        return getKey(directKeys().pin);
     }
 
     public Key<D, LocalDateTime> created() {
-        return getKey(keys().created);
+        return getKey(directKeys().created);
     }
 
     public _Anonymous<D> parent() {
-        return (_Anonymous) getKey(keys().parent);
+        return (_Anonymous) getKey(directKeys().parent);
     }
 
 }

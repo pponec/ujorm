@@ -53,6 +53,7 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
     }
 
     /** Create new Key */
+    @Deprecated
     public <K> Key<D, K> newKeyOld(Function<D, K> reader, BiConsumer<D, K> writer) {
         final KeyImpl<D, K> result = new KeyImpl(domainClass);
 //        final KeyImpl.PropertyWriter keyWriter = result.getPropertyWriter();

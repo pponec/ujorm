@@ -19,7 +19,7 @@ import org.ujorm2.doman.User;
  */
 public class _Order<D> extends AbstractDomainModel<D, Order> {
 
-    /** All direct keys */
+    /** All direct directKeys */
     static final class DirectKeys<T extends Order> extends DirectKeyRing<T> {
 
         final KeyFactory<T> keyFactory = new KeyFactory(Order.class);
@@ -64,7 +64,7 @@ public class _Order<D> extends AbstractDomainModel<D, Order> {
 
     @Override
     public <A> AbstractDomainModel<A, Order> prefix(Key<A, D> key) {
-        return new _Order(key, keys(), false);
+        return new _Order(key, directKeys(), false);
     }
 
     @Override
@@ -73,34 +73,34 @@ public class _Order<D> extends AbstractDomainModel<D, Order> {
     }
 
     @Override
-    protected final DirectKeys keys() {
+    protected final DirectKeys directKeys() {
         return (DirectKeys) directKeyRing;
     }
 
     // --- KEY PROVIDERS ---
 
     public Key<D, Integer> id() {
-        return getKey(keys().id);
+        return getKey(directKeys().id);
     }
 
     public Key<D, State> state() {
-        return getKey(keys().state);
+        return getKey(directKeys().state);
     }
 
     public  Key<D, BigDecimal> totalPrice() {
-        return getKey(keys().totalPrice);
+        return getKey(directKeys().totalPrice);
     }
 
     public _User<D> user() {
-        return (_User) getKey(keys().user);
+        return (_User) getKey(directKeys().user);
     }
 
     public Key<D, String> note() {
-        return getKey(keys().note);
+        return getKey(directKeys().note);
     }
 
     public Key<D, LocalDateTime> created() {
-        return getKey(keys().created);
+        return getKey(directKeys().created);
     }
 
 }
