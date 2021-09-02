@@ -20,10 +20,10 @@ import org.ujorm.tools.Assert;
 import org.ujorm2.Key;
 
 /**
- * Proxy Domain
+ * Proxy Domain Model
  * @author Pavel Ponec
  */
-public class MKey<V> {
+public class XKey<V> {
 
     private Key<?, V> model;
 

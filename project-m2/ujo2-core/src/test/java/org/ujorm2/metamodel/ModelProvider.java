@@ -16,7 +16,7 @@
  */
 package org.ujorm2.metamodel;
 
-import org.ujorm2.core.MDomain;
+import org.ujorm2.core.XDomain;
 import org.ujorm2.core.ModelContext;
 import org.ujorm2.doman.Anonymous;
 import org.ujorm2.doman.Item;
@@ -30,10 +30,10 @@ import org.ujorm2.doman.User;
 public final class ModelProvider {
 
     final ModelContext context = new ModelContext();
-    final MDomain<_Item> item = context.newModel();
-    final MDomain<_Order> order = context.newModel();
-    final MDomain<_User> user = context.newModel();
-    final MDomain<_Anonymous> anonumous = context.newModel();
+    final XDomain<_Item> item = context.newModel();
+    final XDomain<_Order> order = context.newModel();
+    final XDomain<_User> user = context.newModel();
+    final XDomain<_Anonymous> anonumous = context.newModel();
 
     public ModelProvider() {
         context.close(this);

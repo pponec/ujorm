@@ -7,7 +7,7 @@ import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
 import org.ujorm2.core.DirectKeyRing;
 import org.ujorm2.core.KeyFactory;
-import org.ujorm2.core.MKey;
+import org.ujorm2.core.XKey;
 import org.ujorm2.doman.Anonymous;
 import org.ujorm2.doman.Item;
 
@@ -22,19 +22,19 @@ public class _Anonymous<D> extends AbstractDomainModel<D, Anonymous> {
 
         final KeyFactory<T> keyFactory = new KeyFactory(Anonymous.class);
 
-        final MKey<Integer> id = keyFactory.newKey(
+        final XKey<Integer> id = keyFactory.newKey(
                 (d) -> d.getId(),
                 (d, v) -> d.setId(v));
 
-        final MKey<Short> pin = keyFactory.newKey(
+        final XKey<Short> pin = keyFactory.newKey(
                 (d) -> d.getPin(),
                 (d, v) -> d.setPin(v));
 
-        final MKey<LocalDateTime> created = keyFactory.newKey(
+        final XKey<LocalDateTime> created = keyFactory.newKey(
                 (d) -> d.getCreated(),
                 (d, v) -> d.setCreated(v));
 
-        final MKey<Anonymous> parent = keyFactory.newKey(
+        final XKey<Anonymous> parent = keyFactory.newKey(
                 (d) -> d.getParent(),
                 (d, v) -> d.setParent(v));
 

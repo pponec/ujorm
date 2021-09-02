@@ -59,7 +59,7 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
     }
 
     @Nonnull
-    protected final <V> Key<D, V> getKey(final @Nonnull MKey<V> directKey) {
+    protected final <V> Key<D, V> getKey(final @Nonnull XKey<V> directKey) {
         if (keyPrefix != null) {
             final AbstractDomainModel domainModel = null; // TODO.pop ??? directKeyRing.getContext().getStore$().getDomainModel(directKey.getValueClass());
             Assert.validState(domainModel != null, "No model found for the key: {}.{}",

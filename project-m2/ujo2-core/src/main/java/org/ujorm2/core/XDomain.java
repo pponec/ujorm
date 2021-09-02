@@ -19,10 +19,10 @@ package org.ujorm2.core;
 import org.ujorm.tools.Assert;
 
 /**
- * Proxy Domain
+ * Proxy Domain model
  * @author Pavel Ponec
  */
-public class MDomain<D> {
+public class XDomain<D> {
 
     private AbstractDomainModel model;
 

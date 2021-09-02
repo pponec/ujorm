@@ -36,7 +36,7 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     private final Class<? extends D> domainClass;
 
-    private final ArrayList<MKey> keys = new ArrayList<>();
+    private final ArrayList<XKey> keys = new ArrayList<>();
 
     @Nullable
     private ModelContext context;
@@ -46,8 +46,8 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
     }
 
     /** Create new Key */
-    public <K> MKey<K> newKey(Function<D, K> reader, BiConsumer<D, K> writer) {
-        MKey result = new MKey();
+    public <K> XKey<K> newKey(Function<D, K> reader, BiConsumer<D, K> writer) {
+        XKey result = new XKey();
         keys.add(result);
         return result;
     }

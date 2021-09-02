@@ -7,7 +7,7 @@ import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
 import org.ujorm2.core.DirectKeyRing;
 import org.ujorm2.core.KeyFactory;
-import org.ujorm2.core.MKey;
+import org.ujorm2.core.XKey;
 import org.ujorm2.doman.Item;
 import org.ujorm2.doman.User;
 
@@ -22,27 +22,27 @@ public class _User<D> extends AbstractDomainModel<D, User> {
 
         final KeyFactory<T> keyFactory = new KeyFactory(User.class);
 
-        final MKey<Integer> id = keyFactory.newKey(
+        final XKey<Integer> id = keyFactory.newKey(
                 (d) -> d.getId(),
                 (d, v) -> d.setId(v));
 
-        final MKey<Short> pin = keyFactory.newKey(
+        final XKey<Short> pin = keyFactory.newKey(
                 (d) -> d.getPin(),
                 (d, v) -> d.setPin(v));
 
-        final MKey<String> firstName = keyFactory.newKey(
+        final XKey<String> firstName = keyFactory.newKey(
                 (d) -> d.getFirstName(),
                 (d, v) -> d.setFirstName(v));
 
-        final MKey<String> sureName = keyFactory.newKey(
+        final XKey<String> sureName = keyFactory.newKey(
                 (d) -> d.getSureName(),
                 (d, v) -> d.setSureName(v));
 
-        final MKey<LocalDateTime> born = keyFactory.newKey(
+        final XKey<LocalDateTime> born = keyFactory.newKey(
                 (d) -> d.getBorn(),
                 (d, v) -> d.setBorn(v));
 
-        final MKey<User> parent = keyFactory.newKey(
+        final XKey<User> parent = keyFactory.newKey(
                 (d) -> d.getParent(),
                 (d, v) -> d.setParent(v));
 
