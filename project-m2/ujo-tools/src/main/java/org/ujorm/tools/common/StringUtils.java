@@ -45,6 +45,9 @@ import org.ujorm.tools.msg.MsgFormatter;
  */
 public class StringUtils {
 
+     /** File separator (one character is required) */
+     public static final String SEPARATOR = "/";
+
     /** A messge template: "Resource is not available: {}"  */
     private static final String NO_RESOURCE_MSG = "Resource is not available: ";
 
@@ -144,10 +147,13 @@ public class StringUtils {
 
     /** Build a resource */
     protected String buildResource(@Nullable final Class<?> basePackage, @Nonnull final String... resourcePath) {
-        final String endPath = resourcePath.length == 1 ? resourcePath[0] : String.join("/", resourcePath);
-        return endPath.startsWith("/")
-                ? endPath
-                : MsgFormatter.format("/{}/{}", basePackage.getPackage().getName().replace('.', '/'), endPath);
+        final String endPath = resourcePath.length == 1 ? resourcePath[0] : String.join(SEPARATOR, resourcePath);
+        return endPath.startsWith(SEPARATOR)
+             ? endPath
+             : String.join(SEPARATOR, "",
+                    basePackage.getPackage().getName().replace('.', SEPARATOR.charAt(0)),
+                    endPath);
+
     }
 
     // --- STATIC METHODS ---
