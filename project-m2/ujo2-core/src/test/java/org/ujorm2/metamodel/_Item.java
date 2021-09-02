@@ -16,7 +16,7 @@ import org.ujorm2.doman.Order;
  * @author Pavel Ponec
  * @param <D> Domain
  */
-public class MetaItem<D> extends AbstractDomainModel<D, Item> {
+public class _Item<D> extends AbstractDomainModel<D, Item> {
 
     /** All direct keys */
     static final class DirectKeys<T extends Item> extends DirectKeyRing<T> {
@@ -53,17 +53,17 @@ public class MetaItem<D> extends AbstractDomainModel<D, Item> {
         }
     };
 
-    public MetaItem() {
+    public _Item() {
         super(new DirectKeys());
     }
 
-    public MetaItem(@Nullable final Key<D, ?> keyPrefix, @Nonnull final DirectKeyRing directKeyRing, final boolean descending) {
+    public _Item(@Nullable final Key<D, ?> keyPrefix, @Nonnull final DirectKeyRing directKeyRing, final boolean descending) {
         super(keyPrefix, directKeyRing, descending);
     }
 
     @Override
     public <A> AbstractDomainModel<A, Item> prefix(Key<A, D> key) {
-        return new MetaItem(key, keys(), false);
+        return new _Item(key, keys(), false);
     }
 
     @Override
@@ -91,8 +91,8 @@ public class MetaItem<D> extends AbstractDomainModel<D, Item> {
         return getKey(keys().price);
     }
 
-    public MetaOrder<D> order() {
-        return (MetaOrder) getKey(keys().order);
+    public _Order<D> order() {
+        return (_Order) getKey(keys().order);
     }
 
     public Key<D, Boolean> descending$() {
@@ -105,8 +105,8 @@ public class MetaItem<D> extends AbstractDomainModel<D, Item> {
 
     // ---- Helper method
 
-    public static final MetaItem<Item> of(@Nullable KeyFactory context) {
-        return new MetaItem<>();
+    public static final _Item<Item> of(@Nullable KeyFactory context) {
+        return new _Item<>();
     }
 
 }

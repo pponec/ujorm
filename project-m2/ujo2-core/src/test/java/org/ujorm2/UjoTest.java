@@ -21,7 +21,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ujorm2.metamodel.DomainModelProvider;
+import org.ujorm2.metamodel.ModelProvider;
 
 /**
  *
@@ -55,7 +55,7 @@ public class UjoTest {
     public void testModelContext() {
         System.out.println("ModelContext");
 
-        final DomainModelProvider context = new DomainModelProvider();
+        final ModelProvider context = new ModelProvider();
 
         Assert.assertNotNull(context.item());
         Assert.assertNotNull(context.item().id());

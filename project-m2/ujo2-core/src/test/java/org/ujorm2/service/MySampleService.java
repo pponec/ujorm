@@ -7,9 +7,9 @@ import org.ujorm2.criterion.Criterion;
 import org.ujorm2.doman.Item;
 import org.ujorm2.doman.Order;
 import org.ujorm2.doman.User;
-import org.ujorm2.metamodel.MetaItem;
-import org.ujorm2.metamodel.MetaOrder;
-import org.ujorm2.metamodel.DomainModelProvider;
+import org.ujorm2.metamodel._Item;
+import org.ujorm2.metamodel._Order;
+import org.ujorm2.metamodel.ModelProvider;
 
 /**
  *
@@ -17,12 +17,12 @@ import org.ujorm2.metamodel.DomainModelProvider;
  */
 public class MySampleService {
 
-    private final DomainModelProvider modelProvider = new DomainModelProvider();
+    private final ModelProvider modelProvider = new ModelProvider();
     private final HelpService helpService = new HelpService();
 
     /** Reading / writing */
     public void doOrderAccess() {
-        MetaOrder<Order> metaOrder = modelProvider.order();
+        _Order<Order> metaOrder = modelProvider.order();
 
         Key<Order, Integer> orderIdKey = metaOrder.id();
         Key<Order, String> userNameKey = metaOrder.user().firstName();
@@ -36,7 +36,7 @@ public class MySampleService {
 
     /** Reading / writing */
     public void doItemAccess() {
-        MetaItem<Item> metaItem = modelProvider.item();
+        _Item<Item> metaItem = modelProvider.item();
 
         Key<Item, Integer> itemIdKey = metaItem.id();
         Key<Item, User> userKey = metaItem.order().user();
@@ -53,7 +53,7 @@ public class MySampleService {
 
     /** Criterions */
     public void doItemCondition() {
-        MetaItem<Item> mItem = modelProvider.item();
+        _Item<Item> mItem = modelProvider.item();
 
         Criterion<Item> itemCrn1 = mItem.forAll();
         List<Item> items = itemCrn1.select(helpService.findItemsService());
