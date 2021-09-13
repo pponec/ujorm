@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>9</version>
+    </parent>
+
+    <groupId>org.ujorm</groupId>
+    <artifactId>parent</artifactId>
+    <version>2.16-SNAPSHOT</version>
+    <name>Main UJO</name>
+    <packaging>pom</packaging>
+    <description>Ujorm common project</description>
 
     <properties>
         <ujo.version>2.16-SNAPSHOT</ujo.version>
@@ -9,13 +22,51 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.ujorm</groupId>
-    <artifactId>ujo</artifactId>
-    <version>2.16-SNAPSHOT</version>
-    <name>Main UJO</name>
-    <packaging>pom</packaging>
-    <description>Ujorm common project</description>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.ujorm</groupId>
+                <artifactId>ujo-tools</artifactId>
+                <version>${ujo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ujorm</groupId>
+                <artifactId>ujo-core</artifactId>
+                <version>${ujo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ujorm</groupId>
+                <artifactId>ujo-orm</artifactId>
+                <version>${ujo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ujorm</groupId>
+                <artifactId>ujo-spring</artifactId>
+                <version>${ujo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ujorm</groupId>
+                <artifactId>ujo-orm-spring</artifactId>
+                <version>${ujo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ujorm</groupId>
+                <artifactId>ujo-web</artifactId>
+                <version>${ujo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ujorm</groupId>
+                <artifactId>ujo-wicket</artifactId>
+                <version>${ujo.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13.1</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <!--
     <contributor>
@@ -28,12 +79,6 @@
         <url>http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk</connection>
     </scm>
-
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
 
     <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->
     <pluginRepositories>
@@ -61,16 +106,6 @@
             </snapshots>
         </repository>
     </repositories>
-
-    <!-- DEPENDENCES -->
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <build>
         <plugins>

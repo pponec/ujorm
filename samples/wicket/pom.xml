@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.ujorm.wicket.sample</groupId>
     <artifactId>demo-hotels</artifactId>
     <name>sample-wicket-hotels</name>
@@ -386,7 +386,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId> <!-- or maven-jar-plugin -->
-                <version>2.2</version>
+                <version>3.2.2</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
@@ -397,7 +397,7 @@
                     <!-- Include java sources -->
                     <webResources>
                         <resource>
-                            <directory>${build.sourceDirectory}</directory>
+                            <directory>${project.build.sourceDirectory}</directory>
                             <targetPath>WEB-INF/classes</targetPath>
                         </resource>
                     </webResources>
@@ -430,7 +430,6 @@
                         <contextPath>/</contextPath>
                         <extraClasspath>${basedir}/src/main/java</extraClasspath>
                     </webApp>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
                 </configuration>
             </plugin>
 

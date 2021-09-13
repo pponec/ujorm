@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.ujorm</groupId>
+        <artifactId>ujo</artifactId>
+        <version>2.16-SNAPSHOT</version>
+    </parent>
+
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-spring</artifactId>
     <packaging>jar</packaging>
@@ -85,7 +92,6 @@
                     <additionalparam>-Xdoclint:none</additionalparam>
                     <failOnError>false</failOnError>
                     <encoding>UTF-8</encoding>
-                    <author>Pavel Ponec</author>
                 </configuration>
             </plugin>
             <plugin>
@@ -155,7 +161,6 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>2.16-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -175,7 +180,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -201,12 +205,6 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
-
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
 
     <!-- PROFILE(S) -->
 

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.ujorm</groupId>
+        <artifactId>ujo</artifactId>
+        <version>2.16-SNAPSHOT</version>
+    </parent>
+
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-arangodb</artifactId>
     <version>2.16-SNAPSHOT</version>
@@ -54,14 +61,13 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
-            <version>2.16-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
-            <version>2.16-SNAPSHOT</version>
             <type>test-jar</type>
+            <version>${ujo.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -83,7 +89,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -141,12 +146,6 @@
 
         </plugins>
     </build>
-
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
 
     <!-- PROFILE(S) -->
 
