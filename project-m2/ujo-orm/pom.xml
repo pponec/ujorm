@@ -6,13 +6,13 @@
     <parent>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo</artifactId>
-        <version>2.16-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-orm</artifactId>
     <packaging>jar</packaging>
-    <version>2.16-SNAPSHOT</version>
+    <version>${revision}</version>
     <url>http://ujorm.org</url>
     <name>ujo-orm</name>
     <description>The Ujorm is designed for rapid Java development with great performance
