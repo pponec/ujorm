@@ -16,6 +16,8 @@
 
 package org.ujorm.tools.common;
 
+import java.io.BufferedReader;
+import java.io.CharArrayReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayDeque;
@@ -40,6 +42,15 @@ public abstract class StreamUtils {
             = Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH));
 
     private StreamUtils() {
+    }
+
+        /** Read a String.
+     * A line separator can be modifed in the result
+     * @return The result must be closed.
+     */
+    @Nonnull
+    public Stream<String> rows(@Nonnull final String text) {
+        return new BufferedReader(new CharArrayReader(text.toCharArray())).lines();
     }
 
     /** Returns a stream of lines form URL resource
