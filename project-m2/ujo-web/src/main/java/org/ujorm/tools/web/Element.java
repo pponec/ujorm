@@ -862,6 +862,12 @@ public final class Element implements ApiElement<Element>, Html {
         return this;
     }
 
+    /** Set name &amp; value to the input element */
+    @Nonnull
+    public Element setNameValue(@Nullable final CharSequence name, @Nullable final Object value) {
+        return setName(name).setValue(value);
+    }
+
     /** Set an value of input element */
     @Nonnull
     public Element setFor(@Nullable final CharSequence value) {

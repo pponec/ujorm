@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class TextBuilderTest {
 
