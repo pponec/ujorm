@@ -58,7 +58,7 @@ public class JavaScriptWriter implements Injector {
     protected CharSequence newLine = "\n";
     /** A subtitle selector */
     @Nullable
-    protected CharSequence subtitleSelector;
+    protected CharSequence subtitleSelector="?";
     /** A subtitle selector */
     @Nonnull
     protected CharSequence errorMessage = "AJAX fails due";
@@ -202,12 +202,13 @@ public class JavaScriptWriter implements Injector {
                 }
                 js.addRawTexts(newLine, ""
                     , "function process(e){"
-                    , "  if(e!==null) e.preventDefault();"
+                    , "  let pars = new URLSearchParams(new FormData(document.querySelector('" + formSelector + "')));"
+                    , "  if(e!==null){e.preventDefault();pars.append(e.submitter.name,e.submitter.value);}"
                     , "  fetch('" + (version == 2
                             ? ajaxRequestPath
                             : ("?" + ajaxRequestPath + "=true")) + "', {"
                     , "    method:'POST',"
-                    , "    body:new URLSearchParams(new FormData(document.querySelector('" + formSelector + "'))),"
+                    , "    body:pars,"
                     , "    headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},"
                     , "  })"
                     , "  .then(response=>response.json())"
