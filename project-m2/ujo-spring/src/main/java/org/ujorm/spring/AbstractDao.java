@@ -2,8 +2,8 @@ package org.ujorm.spring;
 
 import java.util.List;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.core.enums.OptionEnum;
 import org.ujorm.criterion.Criterion;
@@ -26,45 +26,45 @@ public abstract class AbstractDao<T extends OrmUjo> {
     private final UjormTransactionManager transactionManager;
 
     /** Constructor */
-    public AbstractDao(@Nonnull final UjormTransactionManager transactionManager) {
+    public AbstractDao(@NotNull final UjormTransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 
     /** Get a lazy loaded ORM session */
-    @Nonnull
+    @NotNull
     protected Session getSessionDao() {
         return transactionManager.getLocalSession();
     }
 
     /** Create a new query */
-    @Nonnull
-    protected final <U extends T> Query<U> createQueryDao(@Nonnull final Criterion<U> criteron) {
+    @NotNull
+    protected final <U extends T> Query<U> createQueryDao(@NotNull final Criterion<U> criteron) {
         return getSessionDao().createQuery(criteron);
     }
 
     /** Insert or update an persistent object */
-    protected final <U extends T> void insertOrUpdateDao(@Nonnull final U bo) {
+    protected final <U extends T> void insertOrUpdateDao(@NotNull final U bo) {
         getSessionDao().insertOrUpdate(bo);
     }
 
     /** Insert a persistent object to database */
-    protected final <U extends T> void insertDao(@Nonnull final U bo) {
+    protected final <U extends T> void insertDao(@NotNull final U bo) {
         getSessionDao().insert(bo);
     }
 
     /** Insert list of persistent objects to database */
-    protected final <U extends T> void insertDao(@Nonnull final List<U> bos) {
+    protected final <U extends T> void insertDao(@NotNull final List<U> bos) {
         getSessionDao().insert(bos);
     }
 
     /** Update a persistent object on database */
-    protected final <U extends T> int updateDao(@Nonnull final U bo) {
+    protected final <U extends T> int updateDao(@NotNull final U bo) {
         return getSessionDao().update(bo);
     }
 
     /** Update a persistent object on database secure */
     protected final <U extends T> int updateSafelyDao
-        ( @Nonnull final U bo
+        ( @NotNull final U bo
         , @Nullable final U original
         , @Nullable final OptionEnum ... required) {
         return getSessionDao().updateSafely(bo, original, required);
@@ -81,35 +81,35 @@ public abstract class AbstractDao<T extends OrmUjo> {
      * @return The row count.
      */
     protected <U extends OrmUjo> int updateSafelyDao
-        ( @Nonnull final Consumer<U> batch
-        , @Nonnull final U bo
+        ( @NotNull final Consumer<U> batch
+        , @NotNull final U bo
         , @Nullable final OptionEnum ... required)
         {
         return getSessionDao().updateSafely(batch, bo, required);
     }
 
     /** Delete a persistent object from database */
-    protected final <U extends T> int deleteDao(@Nonnull final U bo) {
+    protected final <U extends T> int deleteDao(@NotNull final U bo) {
         return getSessionDao().delete(bo);
     }
 
     /** Delete list of persistent objects from database */
-    protected final <U extends T> int deleteDao(@Nonnull final List<U> bos) {
+    protected final <U extends T> int deleteDao(@NotNull final List<U> bos) {
         return getSessionDao().delete(bos);
     }
 
     /** Delete list of persistent objects from database */
-    protected final <U extends T> boolean existsDao(@Nonnull final Criterion<U> criteron) {
+    protected final <U extends T> boolean existsDao(@NotNull final Criterion<U> criteron) {
         return getSessionDao().exists(criteron);
     }
 
     /** Delete list of persistent objects from database */
-    protected final <U extends T> boolean existsDao(@Nonnull final Class<U> entity) {
+    protected final <U extends T> boolean existsDao(@NotNull final Class<U> entity) {
         return getSessionDao().exists(entity);
     }
 
     /** Get column model */
-    protected final <U extends T> MetaColumn getColumnDao(@Nonnull final Key<U,?> compositeKey) {
+    protected final <U extends T> MetaColumn getColumnDao(@NotNull final Key<U,?> compositeKey) {
         return (MetaColumn) getSessionDao().getHandler().findColumnModel(compositeKey);
     }
 

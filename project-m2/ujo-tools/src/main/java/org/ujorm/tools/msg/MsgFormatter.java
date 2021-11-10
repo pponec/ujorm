@@ -17,9 +17,9 @@ package org.ujorm.tools.msg;
 
 import java.io.IOException;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.common.ObjectUtils;
 
@@ -34,7 +34,7 @@ import org.ujorm.tools.common.ObjectUtils;
  * @author Pavel Ponec
  * @since 1.73
  */
-@Immutable
+@Unmodifiable
 public class MsgFormatter {
 
     /** An undefined writter */
@@ -55,7 +55,7 @@ public class MsgFormatter {
     }
 
     /** Static methods are available only */
-    protected MsgFormatter(@Nonnull final String mark) {
+    protected MsgFormatter(@NotNull final String mark) {
         this.mark = mark;
     }
 
@@ -71,7 +71,7 @@ public class MsgFormatter {
      * @param argumentValues Optional arguments, where the {@code Supplier} interface is supported.
      * @return A result text or an empty text, if the writer is available.
      */
-    @Nonnull
+    @NotNull
     public <T> String formatMsg
         ( @Nullable final Appendable writer
         , @Nullable final CharSequence messageTemplate
@@ -133,7 +133,7 @@ public class MsgFormatter {
      * @param out Appendable
      * @param value Value where the {@code Supplier} interface is supported.
      */
-    protected void writeValue(@Nullable final Object value, @Nonnull final Appendable out, final boolean marked) throws IOException {
+    protected void writeValue(@Nullable final Object value, @NotNull final Appendable out, final boolean marked) throws IOException {
         final Object val = value instanceof Supplier
                 ? ((Supplier)value).get()
                 : value;
@@ -163,7 +163,7 @@ public class MsgFormatter {
      * @param arguments Optional arguments, where the {@code Supplier} interface is supported.
      * @return
      */
-    @Nonnull
+    @NotNull
     public static <T> String format
     ( @Nullable final CharSequence messageTemplate
     , @Nullable final T... arguments) {

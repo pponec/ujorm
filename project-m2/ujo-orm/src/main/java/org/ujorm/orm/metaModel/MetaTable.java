@@ -19,9 +19,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
@@ -57,7 +57,7 @@ import static org.ujorm.tools.Check.hasLength;
  * @composed 1 - 1 MetaPKey
  * @composed 1 - * MetaIndex
  */
-@Immutable
+@Unmodifiable
 final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     private static final Class<MetaTable> CLASS = MetaTable.class;
 
@@ -402,7 +402,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
      * @since 1.72
      * @return No schema returns an empty value
      */
-    @Nonnull
+    @NotNull
     public String getSchema() {
         return SCHEMA.of(this);
     }
@@ -411,7 +411,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
      * @since 1.75
      * @return No schema returns an empty value
      */
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME.of(this);
     }
@@ -423,7 +423,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     }
 
     /** Returns schema + table */
-    @Override @Nonnull
+    @Override @NotNull
     public String toString() {
         return getFullName();
     }

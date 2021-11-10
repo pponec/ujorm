@@ -15,7 +15,7 @@
  */
 package org.ujorm.orm.ao;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.tools.Assert;
 
@@ -32,15 +32,15 @@ public enum QuoteEnum implements StringWrapper {
     /** Using of quotation marks depends on the global configuration (default value). */
     BY_CONFIG("byConfig");
 
-    @Nonnull
+    @NotNull
     private final String id;
 
-    private QuoteEnum(@Nonnull final String id) {
+    private QuoteEnum(@NotNull final String id) {
         Assert.hasLength(id);
         this.id = id;
     }
 
-    @Override @Nonnull
+    @Override @NotNull
     public String exportToString() {
         return id;
     }

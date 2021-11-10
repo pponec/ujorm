@@ -17,7 +17,7 @@ package org.ujorm.tools.web.ao;
 
 import org.ujorm.tools.web.json.JsonBuilder;
 import java.io.IOException;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Value provider
@@ -28,6 +28,6 @@ import javax.annotation.Nonnull;
 public interface ObjectProvider {
 
     /** Write a HTML code to the element */
-    void accept(@Nonnull JsonBuilder element) throws IOException;
+    void accept(@NotNull JsonBuilder element) throws IOException;
 
 }

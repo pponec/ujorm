@@ -15,7 +15,7 @@
  */
 package org.ujorm.wicket.component.form;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.ujorm.Key;
@@ -101,8 +101,8 @@ public class FieldEvent {
     // ----------- STATIC ------------
 
     /** Get Payload type UjoEvent from the argument */
-    @Nonnull
-    public static FieldEvent get(@Nonnull final IEvent<?> argEvent) {
+    @NotNull
+    public static FieldEvent get(@NotNull final IEvent<?> argEvent) {
         final Object payLoad = argEvent.getPayload();
         return payLoad instanceof FieldEvent
                 ? (FieldEvent) payLoad

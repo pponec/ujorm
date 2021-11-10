@@ -19,8 +19,8 @@ package org.ujorm.wicket.component.form.fields;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -91,7 +91,7 @@ public class Field<T> extends GenericPanel<T> {
      * @param cssClass Optional CSS class
      */
     @SuppressWarnings("unchecked")
-    public <U extends Ujo> Field(@Nonnull final String componentId, Key<U,T> key, @Nonnull final String cssClass) {
+    public <U extends Ujo> Field(@NotNull final String componentId, Key<U,T> key, @NotNull final String cssClass) {
         super(componentId, new Model());
         this.key = KeyRing.of(key);
         this.cssClass = cssClass;
@@ -143,7 +143,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Create Form inputComponent */
-    protected FormComponent createInput(@Nonnull final String componentId, @Nonnull final IModel<T> model) {
+    protected FormComponent createInput(@NotNull final String componentId, @NotNull final IModel<T> model) {
         @SuppressWarnings("unchecked")
         final FormComponent result = new TextField(componentId, model, key.getFirstKey().getType());
 
@@ -153,7 +153,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Validator getter */
-    @Nonnull
+    @NotNull
     public List<IValidator<? super T>> getValidators() {
         if (validators != null) {
             return validators;
@@ -165,7 +165,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Validator setter */
-    public Field<T> addValidator(@Nonnull final IValidator<T> validator) {
+    public Field<T> addValidator(@NotNull final IValidator<T> validator) {
         if (validators == null) {
             validators = new ArrayList<>();
         }
@@ -174,7 +174,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** The UJO Validator setter */
-    public Field<T> addValidator(@Nonnull final Validator<T> ujoValidator) {
+    public Field<T> addValidator(@NotNull final Validator<T> ujoValidator) {
         return addValidator(new UiValidator(ujoValidator, key));
     }
 
@@ -193,7 +193,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** add Behaviour */
-    public Field<T> addBehaviour(@Nonnull final AjaxEventBehavior behavior) {
+    public Field<T> addBehaviour(@NotNull final AjaxEventBehavior behavior) {
         if (behaviors==null) {
             behaviors = new ArrayList<Behavior>();
         }
@@ -211,7 +211,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Add a CSS style to the current field */
-    public Field<T> addCssStyle(@Nonnull final CharSequence cssStyle) {
+    public Field<T> addCssStyle(@NotNull final CharSequence cssStyle) {
         add(new CssAppender(cssStyle.toString()));
         return this;
     }
@@ -222,7 +222,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Add a {@code maxlength} of a text-field for String attributes */
-    protected void addMaxLength(@Nonnull final FormComponent result) {
+    protected void addMaxLength(@NotNull final FormComponent result) {
         if (key.getFirstKey().isTypeOf(String.class)) {
             int length = Integer.MAX_VALUE;
             for (IValidator<? super T> item : validators) {
@@ -238,7 +238,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Create Label and assign the CSS class {@code required} for the mandatory Field */
-    protected Component createLabel(@Nonnull final Component inp) {
+    protected Component createLabel(@NotNull final Component inp) {
         final SimpleFormComponentLabel result = new SimpleFormComponentLabel("label", (LabeledWebMarkupContainer)input);
         //result.setDefaultModel(createLabelModel()); // see the: FormComponent.setLabel()
 
@@ -257,7 +257,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Resource Label Key */
-    protected String getResourceLabelKey(@Nonnull final Key<?,?> key) {
+    protected String getResourceLabelKey(@NotNull final Key<?,?> key) {
         return PROPERTY_PREFIX + getKeyName();
     }
 
@@ -275,7 +275,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Assign a feedback message */
-    public void setFeedbackMessage(@Nonnull final IModel<String> message) {
+    public void setFeedbackMessage(@NotNull final IModel<String> message) {
         feedback.setFeedbackMessage(message);
     }
 
@@ -297,7 +297,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Extended visible model, the {@code null} value means a default manner. */
-    public Field setVisibleModel(@Nonnull final IModel<Boolean> visibleModel) {
+    public Field setVisibleModel(@NotNull final IModel<Boolean> visibleModel) {
         this.visibleModel = visibleModel;
         return this;
     }
@@ -329,15 +329,15 @@ public class Field<T> extends GenericPanel<T> {
 
     /** Create new AjaxFormComponentUpdatingBehavior with delay 300 ms. */
     protected AjaxEventBehavior createChangeBehaviour
-        ( @Nonnull final String action
-        , @Nonnull final String jsEvent) {
+        ( @NotNull final String action
+        , @NotNull final String jsEvent) {
         return new AjaxFormComponentUpdatingBehavior(jsEvent) {
             @Override protected void onUpdate(final AjaxRequestTarget target) {
                         send(Field.this, Broadcast.BUBBLE, new FieldEvent(action, key, target));
             }
 
             @Override protected void updateAjaxAttributes
-        ( @Nonnull final AjaxRequestAttributes attributes) {
+        ( @NotNull final AjaxRequestAttributes attributes) {
                 super.updateAjaxAttributes(attributes);
                 attributes.setThrottlingSettings(new ThrottlingSettings("thr2Id", DEFAULT_DELAY, true));
             }
@@ -353,7 +353,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Set a focus to the component */
-    public void requestFocus(@Nonnull final AjaxRequestTarget target) {
+    public void requestFocus(@NotNull final AjaxRequestTarget target) {
        target.focusComponent(getInput());
     }
 
@@ -363,7 +363,7 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Get a simple key name for a localization */
-    protected String getKeyName(@Nonnull final Key<?,?> key) {
+    protected String getKeyName(@NotNull final Key<?,?> key) {
         return LocalizedModel.getSimpleKeyName(key);
     }
 

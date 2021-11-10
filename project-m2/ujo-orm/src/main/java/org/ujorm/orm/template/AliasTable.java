@@ -16,7 +16,7 @@
 package org.ujorm.orm.template;
 
 import java.io.IOException;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Key;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.*;
@@ -48,7 +48,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
  *
  * @author Pavel Ponec
  */
-@Immutable
+@Unmodifiable
 public class AliasTable<UJO extends OrmUjo> {
 
     /** Default handler */

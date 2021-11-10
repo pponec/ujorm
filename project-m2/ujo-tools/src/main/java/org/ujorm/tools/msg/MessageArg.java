@@ -18,8 +18,8 @@ package org.ujorm.tools.msg;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.common.ObjectUtils;
@@ -40,7 +40,7 @@ public final class MessageArg<T> implements Serializable, CharSequence {
     public static final char PARAM_END = '}';
 
     /** Name of the argument */
-    @Nonnull
+    @NotNull
     private final String name;
 
     /** Optional format of the argument */
@@ -48,11 +48,11 @@ public final class MessageArg<T> implements Serializable, CharSequence {
     private final String format;
 
     /** A code name for a template */
-    @Nonnull
+    @NotNull
     private final String code;
 
     /** Name constructor */
-    public MessageArg(@Nonnull final String name) {
+    public MessageArg(@NotNull final String name) {
         this(name, null);
     }
 
@@ -61,7 +61,7 @@ public final class MessageArg<T> implements Serializable, CharSequence {
      * @param format Format syntax is described on
      * <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html">java.util.Formatter</a>
      */
-    public MessageArg(@Nonnull final String name, @Nullable final String format) {
+    public MessageArg(@NotNull final String name, @Nullable final String format) {
         Assert.notNull(name, "Name is required", name);
         Assert.isTrue(name.indexOf(PARAM_END) < 0  , "Forbidden character {} in argument {}", PARAM_END, name);
         Assert.isTrue(format == null
@@ -72,13 +72,13 @@ public final class MessageArg<T> implements Serializable, CharSequence {
     }
 
     /** Get Name of argument */
-    @Nonnull
+    @NotNull
     public String getName() {
         return name;
     }
 
     /** An alias for method {@code #getName()} */
-    @Nonnull
+    @NotNull
     public final String name() {
         return name;
     }
@@ -90,13 +90,13 @@ public final class MessageArg<T> implements Serializable, CharSequence {
     }
 
     /** A code name for a template */
-    @Nonnull
+    @NotNull
     public String getCode() {
         return code;
     }
 
     /** Convert attributes to a code */
-    @Nonnull
+    @NotNull
     protected final String toCode() {
         final StringBuilder result = new StringBuilder(PARAM_BEG.length() + 1 + name.length()
                 + (format != null ? format.length() + 1 : 0));
@@ -144,11 +144,11 @@ public final class MessageArg<T> implements Serializable, CharSequence {
 
     // --- STATIC METHOD ---
 
-    public static <T> MessageArg<T> of(@Nonnull String name) {
+    public static <T> MessageArg<T> of(@NotNull String name) {
         return new MessageArg<>(name);
     }
 
-    public static <T> MessageArg<T> of(@Nonnull String name, @Nullable String format) {
+    public static <T> MessageArg<T> of(@NotNull String name, @Nullable String format) {
         return new MessageArg<>(name, format);
     }
 

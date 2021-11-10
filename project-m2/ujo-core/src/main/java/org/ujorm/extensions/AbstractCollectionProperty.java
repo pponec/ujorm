@@ -16,7 +16,7 @@
 
 package org.ujorm.extensions;
 
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Ujo;
 import org.ujorm.tools.Assert;
 import static org.ujorm.extensions.PropertyModifier.*;
@@ -25,7 +25,7 @@ import static org.ujorm.extensions.PropertyModifier.*;
  * The abstract implementation for the {@link Key} of the collection type.
  * @author Pavel Ponec
  */
-@Immutable
+@Unmodifiable
 abstract public class AbstractCollectionProperty<UJO extends Ujo,VALUE,ITEM> extends Property<UJO,VALUE> {
 
     /** Class of the list item. */

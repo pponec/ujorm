@@ -35,7 +35,7 @@
         <url>https://github.com/pponec/ujorm/blob/master/project-m2/ujo-spring/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-spring</connection>
     </scm>
-    
+
     <pluginRepositories>
         <pluginRepository>
             <id>central</id>
@@ -113,7 +113,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -204,9 +204,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>21.0.1</version>
             <optional>true</optional>
         </dependency>
     </dependencies>

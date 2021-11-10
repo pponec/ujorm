@@ -15,8 +15,8 @@
  */
 package org.ujorm.wicket.component.dialog;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -230,7 +230,7 @@ public abstract class AbstractDialogPanel<T> extends GenericPanel<T> {
      * @param target Target
      */
     public void show
-            ( @Nonnull AjaxRequestTarget target
+            ( @NotNull AjaxRequestTarget target
             , @Nullable IModel<String> title
             , @Nullable IModel<T> body
             , @Nullable String actionButtonProperty) {

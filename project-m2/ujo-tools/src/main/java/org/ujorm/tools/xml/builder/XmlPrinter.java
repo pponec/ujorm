@@ -19,8 +19,8 @@ package org.ujorm.tools.xml.builder;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.XmlConfig;
@@ -47,7 +47,7 @@ public class XmlPrinter extends AbstractWriter {
     }
 
     /** Writer constructor with a zero offset */
-    public XmlPrinter(@Nonnull final Appendable out) {
+    public XmlPrinter(@NotNull final Appendable out) {
         this(out, XmlConfig.ofDefault());
     }
 
@@ -56,7 +56,7 @@ public class XmlPrinter extends AbstractWriter {
      * @param out A writer
      * @param config A configuration object
      */
-    public <T> XmlPrinter(@Nonnull final Appendable out, @Nullable final XmlConfig config) {
+    public <T> XmlPrinter(@NotNull final Appendable out, @Nullable final XmlConfig config) {
         super(out, config);
         try {
             out.append(config.getDoctype());
@@ -70,11 +70,11 @@ public class XmlPrinter extends AbstractWriter {
      * @param rawValue A raw value to print
      * @param element An original element
      */
-    protected void writeRawValue(@Nonnull final Object rawValue, @Nonnull final XmlBuilder element) throws IOException {
+    protected void writeRawValue(@NotNull final Object rawValue, @NotNull final XmlBuilder element) throws IOException {
         out.append(rawValue.toString());
     }
 
-    void writeAttrib(@Nonnull String name, Object data, XmlBuilder owner) throws IOException {
+    void writeAttrib(@NotNull String name, Object data, XmlBuilder owner) throws IOException {
         if (owner.getName() != null) {
             out.append(SPACE);
             out.append(name);
@@ -127,7 +127,7 @@ public class XmlPrinter extends AbstractWriter {
         }
     }
 
-    @Override @Nonnull
+    @Override @NotNull
     public String toString() {
         final String result = out.toString();
         return result != null
@@ -138,7 +138,7 @@ public class XmlPrinter extends AbstractWriter {
     // ------- FACTORY METHODS -------
 
     /** Create any element */
-    public XmlBuilder createElement(@Nonnull final String name) throws IOException {
+    public XmlBuilder createElement(@NotNull final String name) throws IOException {
         return new XmlBuilder(name, this);
     }
 
@@ -167,7 +167,7 @@ public class XmlPrinter extends AbstractWriter {
      */
     public static XmlPrinter forXml(
             @Nullable final Appendable out,
-            @Nonnull final XmlConfig config
+            @NotNull final XmlConfig config
     ) {
         return new XmlPrinter(out != null ? out : new StringBuilder(512), config);
     }
@@ -195,13 +195,13 @@ public class XmlPrinter extends AbstractWriter {
     }
 
     /** Create XmlPrinter for UTF-8 */
-    public static XmlPrinter forHtml(@Nonnull final Object httpServletResponse) throws IOException {
+    public static XmlPrinter forHtml(@NotNull final Object httpServletResponse) throws IOException {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
         return forHtml(httpServletResponse, config);
     }
 
     /** Create XmlPrinter for UTF-8 */
-    public static XmlPrinter forNiceHtml(@Nonnull final Object httpServletResponse) throws IOException {
+    public static XmlPrinter forNiceHtml(@NotNull final Object httpServletResponse) throws IOException {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         return forHtml(httpServletResponse, config);
@@ -210,16 +210,16 @@ public class XmlPrinter extends AbstractWriter {
     /** Create XmlPrinter for UTF-8 */
     public static <T> XmlPrinter forHtml(
             @Nullable final Appendable out,
-            @Nonnull final HtmlConfig config
+            @NotNull final HtmlConfig config
     ) {
         return new XmlPrinter(out != null ? out : new StringBuilder(512), config);
     }
 
     /** Create XmlPrinter for UTF-8 */
     public static XmlPrinter forHtml(
-            @Nonnull final Object httpServletResponse,
-            @Nonnull final Charset charset,
-            @Nonnull final String indentationSpace,
+            @NotNull final Object httpServletResponse,
+            @NotNull final Charset charset,
+            @NotNull final String indentationSpace,
             final boolean noCache
     ) throws IOException {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
@@ -233,8 +233,8 @@ public class XmlPrinter extends AbstractWriter {
      * The basic HTML factory.
      */
     public static XmlPrinter forHtml(
-            @Nonnull final Object httpServletResponse,
-            @Nonnull final HtmlConfig config
+            @NotNull final Object httpServletResponse,
+            @NotNull final HtmlConfig config
     ) throws IOException {
         try {
             final Appendable writer = createWriter(

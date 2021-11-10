@@ -25,8 +25,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.msg.MsgFormatter;
 
@@ -52,11 +52,11 @@ public class StringUtils {
     private static final String NO_RESOURCE_MSG = "Resource is not available: ";
 
     /** Charset of the resource */
-    @Nonnull
+    @NotNull
     private final Charset charset;
 
     /** Class loader */
-    @Nonnull
+    @NotNull
     private final Class<?> classOfLoader;
 
     /** With a charset UTF-8 */
@@ -64,11 +64,11 @@ public class StringUtils {
         this(StandardCharsets.UTF_8);
     }
 
-    public StringUtils(@Nonnull final Charset charset) {
+    public StringUtils(@NotNull final Charset charset) {
         this(charset, StringUtils.class);
     }
 
-    public StringUtils(@Nonnull final Charset charset, @Nonnull final Class<?> classOfLoader) {
+    public StringUtils(@NotNull final Charset charset, @NotNull final Class<?> classOfLoader) {
         this.charset = Assert.notNull(charset, "charset");
         this.classOfLoader = Assert.notNull(classOfLoader, "classOfLoader");
     }
@@ -76,16 +76,16 @@ public class StringUtils {
     /** Read a content of the resource encoded by UTF-8.
      * A line separator can be modifed in the result.
      */
-    @Nonnull
-    public String readBody(@Nonnull final String... resource) {
+    @NotNull
+    public String readBody(@NotNull final String... resource) {
         return readBody(null, resource);
     }
 
     /** Read a content of the resource encoded by UTF-8.
      * A line separator can be modifed in the result.
      */
-    @Nonnull
-    public String readBody(@Nonnull final Class<?> basePackage, @Nonnull final String... resourcePath) {
+    @NotNull
+    public String readBody(@NotNull final Class<?> basePackage, @NotNull final String... resourcePath) {
         final String resource = buildResource(basePackage, resourcePath);
         try (InputStream is = classOfLoader.getResourceAsStream(resource)) {
             return readBody(is);
@@ -97,8 +97,8 @@ public class StringUtils {
     /** Read a content of the resource encoded by UTF-8.
      * A line separator can be modifed in the result.
      */
-    @Nonnull
-    public String readBody(@Nonnull final InputStream is) {
+    @NotNull
+    public String readBody(@NotNull final InputStream is) {
         return new BufferedReader(new InputStreamReader(is, charset))
                 .lines()
                 .collect(Collectors.joining("\n"));
@@ -108,8 +108,8 @@ public class StringUtils {
      * A line separator can be modifed in the result.
      * @return The result must be closed.
      */
-    @Nonnull
-    public Stream<String> readRows(@Nullable final Class<?> basePackage, @Nonnull final String... resourcePath) {
+    @NotNull
+    public Stream<String> readRows(@Nullable final Class<?> basePackage, @NotNull final String... resourcePath) {
         final String resource = buildResource(basePackage, resourcePath);
         try {
             return readRows(classOfLoader.getResource(resource));
@@ -122,8 +122,8 @@ public class StringUtils {
      * A line separator can be modifed in the result.
      * @return The result must be closed.
      */
-    @Nonnull
-    public Stream<String> readRows(@Nonnull final URL url) throws IOException {
+    @NotNull
+    public Stream<String> readRows(@NotNull final URL url) throws IOException {
         final InputStream is = url.openStream();
         if (is == null) {
             throw new IllegalStateException("Can't open: " + url);
@@ -140,13 +140,13 @@ public class StringUtils {
      * A line separator can be modifed in the result
      * @return The result must be closed.
      */
-    @Nonnull
-    public Stream<String> readRows(@Nonnull final InputStream is) throws IOException {
+    @NotNull
+    public Stream<String> readRows(@NotNull final InputStream is) throws IOException {
         return new BufferedReader(new InputStreamReader(is, charset)).lines();
     }
 
     /** Build a resource */
-    protected String buildResource(@Nullable final Class<?> basePackage, @Nonnull final String... resourcePath) {
+    protected String buildResource(@Nullable final Class<?> basePackage, @NotNull final String... resourcePath) {
         final String endPath = resourcePath.length == 1 ? resourcePath[0] : String.join(SEPARATOR, resourcePath);
         return endPath.startsWith(SEPARATOR)
              ? endPath
@@ -161,16 +161,16 @@ public class StringUtils {
     /** Read a content of the resource encoded by UTF-8.
      * A line separator can be modifed in the result.
      */
-    @Nonnull
-    public static String read(@Nonnull final Class<?> basePackage, @Nonnull final String... resourcePath) {
+    @NotNull
+    public static String read(@NotNull final Class<?> basePackage, @NotNull final String... resourcePath) {
         return new StringUtils(StandardCharsets.UTF_8, basePackage).readBody(basePackage, resourcePath);
     }
 
     /** Read a content of the resource encoded by UTF-8.
      * A line separator can be modifed in the result.
      */
-    @Nonnull
-    public static String read(@Nonnull final InputStream is) {
+    @NotNull
+    public static String read(@NotNull final InputStream is) {
         return new StringUtils().readBody(is);
     }
 
@@ -178,8 +178,8 @@ public class StringUtils {
      * A line separator can be modifed in the result.
      * @return The result must be closed.
      */
-    @Nonnull
-    public static Stream<String> readLines(@Nonnull final URL url) throws IOException {
+    @NotNull
+    public static Stream<String> readLines(@NotNull final URL url) throws IOException {
         return new StringUtils().readRows(url);
     }
 
@@ -187,8 +187,8 @@ public class StringUtils {
      * A line separator can be modifed in the result.
      * @return The result must be closed.
      */
-    @Nonnull
-    public static Stream<String> readLines(@Nullable final Class<?> basePackage, @Nonnull final String... resourcePath) {
+    @NotNull
+    public static Stream<String> readLines(@Nullable final Class<?> basePackage, @NotNull final String... resourcePath) {
         return new StringUtils(StandardCharsets.UTF_8, basePackage).readRows(basePackage, resourcePath);
     }
 
@@ -196,8 +196,8 @@ public class StringUtils {
      * A line separator can be modifed in the result.
      * @return The result must be closed.
      */
-    @Nonnull
-    public static Stream<String> readLines(@Nonnull final String... resourcePath) {
+    @NotNull
+    public static Stream<String> readLines(@NotNull final String... resourcePath) {
         return readLines(StringUtils.class, resourcePath);
     }
 

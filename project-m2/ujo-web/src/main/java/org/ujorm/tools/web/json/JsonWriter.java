@@ -16,7 +16,7 @@
 package org.ujorm.tools.web.json;
 
 import java.io.IOException;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.Assert;
 
 /**
@@ -31,7 +31,7 @@ public final class JsonWriter implements Appendable {
 
     private final Appendable writer;
 
-    protected JsonWriter(@Nonnull final Appendable writer) {
+    protected JsonWriter(@NotNull final Appendable writer) {
         this.writer = Assert.notNull(writer, "writer");
     }
 
@@ -42,7 +42,7 @@ public final class JsonWriter implements Appendable {
 
     @Override
     public Appendable append(
-            @Nonnull final CharSequence csq,
+            @NotNull final CharSequence csq,
             final int start,
             final int end)
             throws IOException {
@@ -89,7 +89,7 @@ public final class JsonWriter implements Appendable {
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public Appendable original() {
         return writer;
     }

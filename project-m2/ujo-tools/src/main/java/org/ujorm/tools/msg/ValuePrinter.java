@@ -17,8 +17,8 @@
 package org.ujorm.tools.msg;
 
 import java.io.IOException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Print values to an output
@@ -35,18 +35,18 @@ public class ValuePrinter extends ValueFormatter {
     }
 
     /** Constructor */
-    public ValuePrinter(@Nonnull final Appendable out) {
+    public ValuePrinter(@NotNull final Appendable out) {
         this("?", "\"", out);
     }
 
     /** Constructor */
-    public ValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final Appendable out) {
+    public ValuePrinter(@NotNull final String mark, @NotNull final String textBorder, @NotNull final Appendable out) {
         super(mark, textBorder);
         this.out = out;
     }
 
     /** Append value */
-    @Nonnull
+    @NotNull
     public ValuePrinter appendValue(@Nullable final Object value) throws IOException {
         if (value instanceof Object[]) {
             boolean first = true;
@@ -70,7 +70,7 @@ public class ValuePrinter extends ValueFormatter {
     }
 
     /** Writer result */
-    @Override @Nonnull
+    @Override @NotNull
     public String toString() {
         return out.toString();
     }

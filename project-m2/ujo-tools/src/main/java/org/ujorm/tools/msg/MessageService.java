@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.common.ObjectUtils;
 
@@ -62,7 +62,7 @@ import org.ujorm.tools.common.ObjectUtils;
  * @since 1.53
  * @see MessageArg
  */
-@Immutable
+@Unmodifiable
 public class MessageService {
 
     /** Two-character mark ("${") to introducing a template argument. */
@@ -71,7 +71,7 @@ public class MessageService {
     protected final char endTag;
 
     /** Default locale */
-    @Nonnull
+    @NotNull
     protected final Locale defaultLocale;
 
     /** Create new instance with the {@code Locale.ENGLISH} */
@@ -80,9 +80,9 @@ public class MessageService {
     }
 
     public MessageService(
-            @Nonnull final String begTag,
-            @Nonnull final char endTag,
-            @Nonnull final Locale defaultLocale) {
+            @NotNull final String begTag,
+            @NotNull final char endTag,
+            @NotNull final Locale defaultLocale) {
         this.begTag = Assert.hasLength(begTag, "begTag");
         this.endTag = endTag;
         this.defaultLocale = Assert.notNull(defaultLocale, "defaultLocale");
@@ -91,7 +91,7 @@ public class MessageService {
     /** Create a map from man pairs key-value
      * @param args Key-value pairs
      */
-    public <T> Map<String, Object> map(@Nonnull final T... args) {
+    public <T> Map<String, Object> map(@NotNull final T... args) {
         final int max = args.length;
         final Map<String, Object> result = new HashMap(max >> 1);
         for (int i = 1; i < max; i += 2) {
@@ -103,7 +103,7 @@ public class MessageService {
     /** Create a message template from argument pairs key-value
      * @param args Sequence of the Objects and Arguments
      */
-    public <T> String template(@Nonnull final T... args) {
+    public <T> String template(@NotNull final T... args) {
         final StringBuilder result = new StringBuilder(256);
         for (Object arg : args) {
             result.append(arg);
@@ -146,9 +146,9 @@ public class MessageService {
     public final String format(
             @Nullable final String msg,
             @Nullable final Locale locale,
-            @Nonnull final CharSequence key,
+            @NotNull final CharSequence key,
             @Nullable final Object value,
-            @Nonnull final Object... keyValuePairs) {
+            @NotNull final Object... keyValuePairs) {
 
         final Map<String, Object> map = map(keyValuePairs);
         map.put(convertKey(key), value);
@@ -237,7 +237,7 @@ public class MessageService {
      * The method can be overwrited for special data types, for example: {@code Key -> Key.getFullName() }.
      */
     @Nullable
-    protected String convertKey(@Nonnull final Object key) {
+    protected String convertKey(@NotNull final Object key) {
         return key instanceof MessageArg
             ? ((MessageArg)key).getName()
             : key.toString();
@@ -248,8 +248,8 @@ public class MessageService {
      *  The method can be overwrited for special data types.
      */
     protected void writeValue
-        ( @Nonnull final Object value
-        , @Nonnull final Appendable writer
+        ( @NotNull final Object value
+        , @NotNull final Appendable writer
         , @Nullable final Locale locale
         ) throws IOException {
         if (value instanceof Throwable) {
@@ -269,9 +269,9 @@ public class MessageService {
     /** Format a target message by a template with arguments type of Map */
     public static final String formatMsg(
             @Nullable final String template,
-            @Nonnull final CharSequence key,
+            @NotNull final CharSequence key,
             @Nullable final Object value,
-            @Nonnull final Object... keyValuePairs) {
+            @NotNull final Object... keyValuePairs) {
         return new MessageService().format(template, (Locale) null, key, value, keyValuePairs);
     }
 

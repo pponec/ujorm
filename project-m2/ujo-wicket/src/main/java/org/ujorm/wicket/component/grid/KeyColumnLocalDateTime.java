@@ -18,7 +18,7 @@ package org.ujorm.wicket.component.grid;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;

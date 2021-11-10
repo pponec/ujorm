@@ -17,8 +17,8 @@
 package org.ujorm.tools.xml.config.impl;
 
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.builder.XmlBuilder;
@@ -32,19 +32,19 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** Title */
-    @Nonnull
+    @NotNull
     private CharSequence title = "Demo";
 
     /** Css links with a required order */
-    @Nonnull
+    @NotNull
     private CharSequence[] cssLinks = new CharSequence[0];
 
     /** Language of the HTML page */
-    @Nonnull
+    @NotNull
     private CharSequence language = "en";
 
     /** Application content type */
-    @Nonnull
+    @NotNull
     private String contentType = "text/html";
 
     /** Build a real model or a plain writer */
@@ -59,7 +59,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     private CharSequence rawHeaderText = null;
 
     /** Header injector */
-    @Nonnull
+    @NotNull
     private ApiInjector headerInjector = e -> {};
 
     /** A name of root element */
@@ -68,7 +68,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     public DefaultHtmlConfig() {
     }
 
-    public DefaultHtmlConfig(@Nonnull final HtmlConfig htmlConfig) {
+    public DefaultHtmlConfig(@NotNull final HtmlConfig htmlConfig) {
         super(htmlConfig);
         this.title = htmlConfig.getTitle();
         this.cssLinks = htmlConfig.getCssLinks();
@@ -82,12 +82,12 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public CharSequence getDoctype() {
         return nonnull(doctype, AbstractWriter.HTML_DOCTYPE);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public CharSequence getTitle() {
         return title;
@@ -99,13 +99,13 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public Optional<CharSequence> getLanguage() {
         return Optional.ofNullable(language);
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public String getContentType() {
         return contentType;
     }
@@ -130,7 +130,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** Return a header injector */
     @Override
-    @Nonnull
+    @NotNull
     public ApiInjector getHeaderInjector() {
         return headerInjector;
     }
@@ -144,22 +144,22 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     // --- SETTERS ---
 
     /** Title is a required element by HTML 5 */
-    public DefaultHtmlConfig setTitle(@Nonnull CharSequence title) {
+    public DefaultHtmlConfig setTitle(@NotNull CharSequence title) {
         this.title = Assert.notNull(title, "title");
         return this;
     }
 
-    public DefaultHtmlConfig setCssLinks(@Nonnull CharSequence... cssLinks) {
+    public DefaultHtmlConfig setCssLinks(@NotNull CharSequence... cssLinks) {
         this.cssLinks = Assert.notNull(cssLinks, REQUIRED_MSG, "cssLinks");
         return this;
     }
 
-    public DefaultHtmlConfig setLanguage(@Nonnull CharSequence language) {
+    public DefaultHtmlConfig setLanguage(@NotNull CharSequence language) {
         this.language = language;
         return this;
     }
 
-    public DefaultHtmlConfig setContentType(@Nonnull String contentType) {
+    public DefaultHtmlConfig setContentType(@NotNull String contentType) {
         this.contentType = Assert.notNull(contentType, REQUIRED_MSG, "contentType");
         return this;
     }
@@ -205,7 +205,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     /** Assign a new header injector */
-    public DefaultHtmlConfig setHeaderInjector(@Nonnull ApiInjector headerInjector) {
+    public DefaultHtmlConfig setHeaderInjector(@NotNull ApiInjector headerInjector) {
         this.headerInjector = Assert.notNull(headerInjector, REQUIRED_MSG, "headerInjector");
         return this;
     }

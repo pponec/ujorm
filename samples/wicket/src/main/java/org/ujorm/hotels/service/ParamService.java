@@ -16,8 +16,8 @@
 package org.ujorm.hotels.service;
 
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
@@ -45,7 +45,7 @@ public interface ParamService {
     public List<? super ParamValue> getValues(@Nullable Customer customer, Criterion<ParamValue> criterion);
 
     /** Get all parameters for a logged Customer using an extended criterion */
-    public List<? super ParamValue> getValues(@Nonnull Criterion<ParamValue> criterion);
+    public List<? super ParamValue> getValues(@NotNull Criterion<ParamValue> criterion);
 
     /** Get all parameters for a required Customer */
     public List<? super ParamValue> getValues(@Nullable Customer customer);

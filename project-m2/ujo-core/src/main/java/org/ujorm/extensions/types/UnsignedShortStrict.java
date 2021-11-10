@@ -15,7 +15,7 @@
  */
 package org.ujorm.extensions.types;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Wrap an {@code Integer} type to an {@code unsigned Short} and back. <br/>
@@ -24,11 +24,11 @@ import javax.annotation.Nonnull;
  */
 public class UnsignedShortStrict extends UnsignedShort {
 
-    public UnsignedShortStrict(@Nonnull final Short dbValue) {
+    public UnsignedShortStrict(@NotNull final Short dbValue) {
         super(dbValue);
     }
 
-    public UnsignedShortStrict(@Nonnull final Integer appValue) {
+    public UnsignedShortStrict(@NotNull final Integer appValue) {
         super(appValue);
     }
 
@@ -52,8 +52,8 @@ public class UnsignedShortStrict extends UnsignedShort {
 
     // --- Static method ---
 
-    @Nonnull
-    public static UnsignedShortStrict of(@Nonnull final Integer value) {
+    @NotNull
+    public static UnsignedShortStrict of(@NotNull final Integer value) {
         return new UnsignedShortStrict(value);
     }
 

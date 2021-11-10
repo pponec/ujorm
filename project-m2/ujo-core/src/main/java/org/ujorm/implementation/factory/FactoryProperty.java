@@ -17,7 +17,7 @@
 package org.ujorm.implementation.factory;
 
 import java.lang.reflect.Constructor;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;

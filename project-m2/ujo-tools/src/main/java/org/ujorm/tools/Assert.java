@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.tools.msg.MsgFormatter.format;
 
@@ -72,7 +72,7 @@ public abstract class Assert {
 
     /** Checks if the argument is not {@code null}.
      * @return The original value */
-    @Nonnull
+    @NotNull
     public static <V,M> V notNullState(@Nullable final V value, @Nullable final M... message)
             throws IllegalStateException {
         if (value == null) {
@@ -93,7 +93,7 @@ public abstract class Assert {
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}. */
     public static <V,M> void isTrueRequired
         ( @Nullable final V condition
-        , @Nonnull final Predicate<V> predicate
+        , @NotNull final Predicate<V> predicate
         , @Nullable final M... message)
     {
         if (condition == null || !predicate.test(condition)) {
@@ -106,7 +106,7 @@ public abstract class Assert {
      * An argument of the {@code Predicable#test()} method can be {@code null}. */
     public static <V,M> void isTrue
         ( @Nullable final V value
-        , @Nonnull  final Predicate<V> predicate
+        , @NotNull  final Predicate<V> predicate
         , @Nullable final M... message)
     {
         if (!predicate.test(value)) {
@@ -116,7 +116,7 @@ public abstract class Assert {
 
     /** Return a result with <strong>presented value</strong> or throw an exception.
      * @return An {@code Optional} object with the original value */
-    @Nonnull
+    @NotNull
     public static <V,M> Optional<V> isPresented(@Nullable final V value, @Nullable final M... message)
             throws IllegalArgumentException {
         return Optional.of(notNull(value, message));
@@ -124,7 +124,7 @@ public abstract class Assert {
 
     /** Checks if the argument is not {@code null}.
      * @return The original value */
-    @Nonnull
+    @NotNull
     public static <V,M> V notNull(@Nullable final V value, @Nullable final M... message)
             throws IllegalArgumentException {
         if (value == null) {
@@ -135,9 +135,9 @@ public abstract class Assert {
 
     /** Checks if the value of a supplier is not {@code null} without exception..
      * @return The original value */
-    @Nonnull
+    @NotNull
     public static <V,M> V notNullValue(
-            @Nonnull final Supplier<V> supplier,
+            @NotNull final Supplier<V> supplier,
             @Nullable final M... message)
             throws IllegalArgumentException {
         final V result;
@@ -152,7 +152,7 @@ public abstract class Assert {
 
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
-    @Nonnull
+    @NotNull
     public static <M> byte[] hasLength(@Nullable final byte[] array, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(array)) {
@@ -164,7 +164,7 @@ public abstract class Assert {
 
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
-    @Nonnull
+    @NotNull
     public static <M> char[] hasLength(@Nullable final char[] array, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(array)) {
@@ -176,7 +176,7 @@ public abstract class Assert {
 
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
-    @Nonnull
+    @NotNull
     public static <V, M> V[] hasLength(@Nullable final V[] array, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(array)) {
@@ -188,7 +188,7 @@ public abstract class Assert {
 
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
-    @Nonnull
+    @NotNull
     public static <V, M> Collection<V> hasLength(@Nullable final Collection<V> value, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(value)) {
@@ -200,7 +200,7 @@ public abstract class Assert {
 
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
-    @Nonnull
+    @NotNull
     public static <V, K, M>  Map<K, V> hasLength(@Nullable final Map<K, V> value, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(value)) {
@@ -212,7 +212,7 @@ public abstract class Assert {
 
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
-    @Nonnull
+    @NotNull
     public static <V extends CharSequence, M> V hasLength(@Nullable final V value, @Nullable final M... message)
             throws IllegalArgumentException {
         if (!Check.hasLength(value)) {
@@ -236,7 +236,7 @@ public abstract class Assert {
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}. */
     public static <V,M> void isFalseRequired
         ( @Nullable final V value
-        , @Nonnull  final Predicate<V> predicate
+        , @NotNull  final Predicate<V> predicate
         , @Nullable final M... message)
     {
         if (value == null || predicate.test(value)) {
@@ -250,7 +250,7 @@ public abstract class Assert {
      */
     public static <V,M> void isFalse
         ( @Nullable final V value
-        , @Nonnull  final Predicate<V> predicate
+        , @NotNull  final Predicate<V> predicate
         , @Nullable final M... message)
     {
         if (predicate.test(value)) {

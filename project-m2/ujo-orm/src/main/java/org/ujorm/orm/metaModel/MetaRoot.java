@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
@@ -41,7 +41,7 @@ import static org.ujorm.tools.Check.hasLength;
  * @composed 1 - * MetaDatabase
  * @composed 1 - 1 MetaParams
  */
-@Immutable
+@Unmodifiable
 final public class MetaRoot extends AbstractMetaModel {
     private static final Class<MetaRoot> CLASS = MetaRoot.class;
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(CLASS);

@@ -18,7 +18,7 @@ package org.ujorm.ujoservlet.ajax;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -119,7 +119,7 @@ public class RegexpServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Nonnull
+    @NotNull
     protected JsonBuilder doAjax(HttpServletRequest input, JsonBuilder output)
             throws ServletException, IOException {
             final Message msg = highlight(input);
@@ -137,7 +137,7 @@ public class RegexpServlet extends HttpServlet {
     }
 
     /** Write a Javascript to a header */
-    protected void writeJavaScript(@Nonnull final HtmlElement html, final boolean enabled) {
+    protected void writeJavaScript(@NotNull final HtmlElement html, final boolean enabled) {
         if (enabled) {
             new JavaScriptWriter(Html.INPUT, Html.TEXT_AREA)
                     .setSubtitleSelector("." + SUBTITLE_CSS)
@@ -147,7 +147,7 @@ public class RegexpServlet extends HttpServlet {
     }
 
     /** Create a configuration of HTML model */
-    private DefaultHtmlConfig getConfig(@Nonnull String title) {
+    private DefaultHtmlConfig getConfig(@NotNull String title) {
         DefaultHtmlConfig config;
         config = HtmlConfig.ofDefault();
         config.setNiceFormat();

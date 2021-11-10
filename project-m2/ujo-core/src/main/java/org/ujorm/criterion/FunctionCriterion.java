@@ -17,8 +17,8 @@
 package org.ujorm.criterion;
 
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.tools.Assert;
@@ -39,9 +39,9 @@ public final class FunctionCriterion<U extends Ujo, T> extends ValueCriterion<U>
      * @see #where(org.ujorm.Key, org.ujorm.Key)
      */
     protected FunctionCriterion
-        ( @Nonnull final Key<U, ? extends Object> key
-        , @Nonnull final Operator operator
-        , @Nonnull final Supplier<T> proxyValue) {
+        ( @NotNull final Key<U, ? extends Object> key
+        , @NotNull final Operator operator
+        , @NotNull final Supplier<T> proxyValue) {
         super(key, operator, Assert.notNull(proxyValue, "proxyValue"));
         Assert.isFalse(operator == Operator.XFIXED, "Unsupported operator {}", operator);
     }

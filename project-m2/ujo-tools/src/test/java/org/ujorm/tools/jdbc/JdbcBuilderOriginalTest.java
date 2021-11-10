@@ -22,7 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -214,7 +214,7 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
     }
 
     /** How to UPDATE single value (no commit) */
-    public void showInsert(@Nonnull Connection dbConnection) throws SQLException {
+    public void showInsert(@NotNull Connection dbConnection) throws SQLException {
         System.out.println("Show INSERT");
         JdbcBuilder sql = new JdbcBuilder()
             .write("INSERT INTO testTable (")
@@ -230,7 +230,7 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
     }
 
     /** How to SELECT value(s) */
-    public void showSelect(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
+    public void showSelect(@NotNull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         JdbcBuilder sql = new JdbcBuilder()
             .write("SELECT")
@@ -254,7 +254,7 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
     }
 
     /** How to SELECT single value */
-    public void showSelectForSingleValue(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
+    public void showSelectForSingleValue(@NotNull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         JdbcBuilder sql = new JdbcBuilder()
             .write("SELECT")
@@ -267,7 +267,7 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
     }
 
     /** How to UPDATE single value (no commit) */
-    public void showUpdate(@Nonnull Connection dbConnection) {
+    public void showUpdate(@NotNull Connection dbConnection) {
         System.out.println("Show UPDATE");
         JdbcBuilder sql = new JdbcBuilder()
             .write("UPDATE testTable SET")

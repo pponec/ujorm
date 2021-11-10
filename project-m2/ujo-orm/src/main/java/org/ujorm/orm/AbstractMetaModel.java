@@ -18,7 +18,7 @@ package org.ujorm.orm;
 
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
@@ -34,7 +34,7 @@ import static org.ujorm.tools.Check.hasLength;
  * Abstract Metamodel
  * @author Pavel Ponec
  */
-@Immutable
+@Unmodifiable
 abstract public class AbstractMetaModel extends AbstractUjo implements UjoLockable {
 
     /** Read-only state */

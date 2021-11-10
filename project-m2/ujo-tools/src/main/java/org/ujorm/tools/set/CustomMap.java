@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.common.ObjectUtils;
 
 /**
@@ -35,11 +35,11 @@ import org.ujorm.tools.common.ObjectUtils;
 public class CustomMap<K, V> implements Map<K, V>, Serializable {
 
     /** Original implementation */
-    @Nonnull
+    @NotNull
     private final HashMap<MapKeyProxy<K>, V> impl;
 
     /** Factory to create a {@code proxyMapKey} instance */
-    @Nonnull
+    @NotNull
     private final Function<K, MapKeyProxy<K>> keyFactory;
 
     /** The same mapper as a {@link  HashMap} */
@@ -48,12 +48,12 @@ public class CustomMap<K, V> implements Map<K, V>, Serializable {
     }
 
     /** Mapper with a required equals and hasCode maker */
-    public CustomMap(@Nonnull final Function<K, MapKeyProxy<K>> keyFactory) {
+    public CustomMap(@NotNull final Function<K, MapKeyProxy<K>> keyFactory) {
         this(new HashMap<>(), keyFactory);
     }
 
     /** Full configuration mapper */
-    public CustomMap(@Nonnull final HashMap<MapKeyProxy<K>, V> impl, @Nonnull final Function<K, MapKeyProxy<K>> keyFactory) {
+    public CustomMap(@NotNull final HashMap<MapKeyProxy<K>, V> impl, @NotNull final Function<K, MapKeyProxy<K>> keyFactory) {
         this.impl = impl;
         this.keyFactory = keyFactory;
     }
@@ -79,7 +79,7 @@ public class CustomMap<K, V> implements Map<K, V>, Serializable {
     }
 
     @Override
-    public V get(@Nonnull final Object key) {
+    public V get(@NotNull final Object key) {
         return impl.get(keyFactory.apply((K) key));
     }
 
@@ -94,7 +94,7 @@ public class CustomMap<K, V> implements Map<K, V>, Serializable {
     }
 
     @Override
-    public void putAll(@Nonnull final Map<? extends K, ? extends V> m) {
+    public void putAll(@NotNull final Map<? extends K, ? extends V> m) {
         for (K k : m.keySet()) {
             impl.put(keyFactory.apply(k), m.get(k));
         }

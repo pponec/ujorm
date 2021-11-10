@@ -15,7 +15,7 @@ package org.ujorm.wicket.component.dialog.domestic;
  * limitations under the License.
  */
 import java.io.Serializable;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -93,7 +93,7 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
 
     /** Set a focus to the Search Toolbar by default */
     @Override
-    public void requestFocus(@Nonnull final AjaxRequestTarget target) {
+    public void requestFocus(@NotNull final AjaxRequestTarget target) {
         searching.setModelValue(null);
         getCriterion().setObject(null);
         target.focusComponent(searching);

@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.common.StreamUtils;
 import org.ujorm.tools.web.table.GridBuilder;
 
@@ -53,7 +53,7 @@ public class HotelResourceService {
      * Direct stream of data source.
      * @return
      */
-    public Stream<Hotel> findHotels( GridBuilder<Hotel> builder, int limit, @Nonnull String namePattern, @Nonnull String cityPattern) {
+    public Stream<Hotel> findHotels( GridBuilder<Hotel> builder, int limit, @NotNull String namePattern, @NotNull String cityPattern) {
         String nameUp = namePattern.toUpperCase(Locale.ENGLISH);
         String cityUp = cityPattern.toUpperCase(Locale.ENGLISH);
         try {

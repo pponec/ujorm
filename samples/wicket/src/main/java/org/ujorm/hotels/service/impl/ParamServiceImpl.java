@@ -23,8 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,7 +127,7 @@ implements ParamService {
 
     /** Get all parameters for a logged Customer */
     @Override
-    public List<ParamValue> getValues(@Nonnull Criterion<ParamValue> criterion) {
+    public List<ParamValue> getValues(@NotNull Criterion<ParamValue> criterion) {
         return getValues(authService.getLoggedCustomer(), criterion);
     }
 
@@ -137,7 +137,7 @@ implements ParamService {
      * @todo add next argument removeObsolete type of Boolean to exclude obsolete parameter keys
      */
     @Override
-    public List<ParamValue> getValues(@Nullable Customer customer, @Nonnull Criterion<ParamValue> criterion) {
+    public List<ParamValue> getValues(@Nullable Customer customer, @NotNull Criterion<ParamValue> criterion) {
         Assert.notNull(criterion, "criterion");
 
         final Criterion<ParamValue> crn1,crn2,crn3;

@@ -17,9 +17,9 @@
 package org.ujorm.orm.metaModel;
 
 import java.lang.reflect.Field;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
@@ -41,7 +41,7 @@ import org.ujorm.tools.Assert;
  * @see MetaColumn
  * @author Pavel Ponec
  */
-@Immutable
+@Unmodifiable
 public class MetaRelation2Many extends AbstractMetaModel {
     private static final Class<MetaRelation2Many> CLASS = MetaRelation2Many.class;
 
@@ -77,7 +77,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
      * @param tableKey The direct Key
      * @param param XML content
      */
-    public MetaRelation2Many(@Nonnull final MetaTable table, @Nonnull final Key tableKey, @Nullable final MetaRelation2Many param) {
+    public MetaRelation2Many(@NotNull final MetaTable table, @NotNull final Key tableKey, @Nullable final MetaRelation2Many param) {
         this.tableAlias = table.getAlias();
         Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableKey, false);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
@@ -132,7 +132,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     }
 
     /** Returns true if the key type is a type or subtype of the parameter class. */
-    public final boolean isTypeOf(@Nonnull final Class type) {
+    public final boolean isTypeOf(@NotNull final Class type) {
         return getKey().isTypeOf(type);
     }
 

@@ -17,7 +17,7 @@
 package org.ujorm.hibernateSupport;
 
 import java.lang.reflect.Method;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
 

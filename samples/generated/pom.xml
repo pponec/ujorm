@@ -14,7 +14,7 @@
     <version>2.16-SNAPSHOT</version>
     <name>sample-generated</name>
     <url>http://ujorm.org</url>
-    
+
     <pluginRepositories>
         <pluginRepository>
             <id>central</id>
@@ -39,8 +39,8 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-    </repositories>  
-    
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.ujorm</groupId>
@@ -49,9 +49,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>21.0.1</version>
             <optional>true</optional>
         </dependency>
 
@@ -86,7 +86,7 @@
             <type>jar</type>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>

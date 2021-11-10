@@ -16,7 +16,7 @@
 package org.ujorm.orm;
 
 import java.sql.Connection;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.orm.metaModel.MetaDatabase;
 
 /**

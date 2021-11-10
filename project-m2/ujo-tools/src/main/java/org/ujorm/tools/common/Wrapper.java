@@ -19,8 +19,8 @@ package org.ujorm.tools.common;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 
 /**
@@ -41,27 +41,27 @@ import org.ujorm.tools.Assert;
 public final class Wrapper<V> implements Comparable<Wrapper<V>>, Confessionable {
 
     /** The original value */
-    @Nonnull
+    @NotNull
     private final V value;
-    @Nonnull
+    @NotNull
     private final Function<V, ?>[] functions;
     /** Sort null values first */
     private final boolean nullFirst;
 
-    private Wrapper(@Nonnull final V value, boolean nullFirst, @Nonnull final Function<V, ?>[] functions) {
+    private Wrapper(@NotNull final V value, boolean nullFirst, @NotNull final Function<V, ?>[] functions) {
         this.value = value;
         this.functions = functions;
         this.nullFirst = nullFirst;
     }
 
     /** Returns the original value */
-    @Nonnull
+    @NotNull
     public V getValue() {
         return value;
     }
 
     /** Create a new wrapper for the value */
-    public Wrapper<V> wrap(@Nonnull final V value) {
+    public Wrapper<V> wrap(@NotNull final V value) {
         return new Wrapper(value, nullFirst, functions);
     }
 
@@ -135,16 +135,16 @@ public final class Wrapper<V> implements Comparable<Wrapper<V>>, Confessionable 
 
     /** Create a new wrapper */
     public static final <D, P> Wrapper<D> of(
-            @Nonnull final D value,
-            @Nonnull final Function<D, P>... functions) {
+            @NotNull final D value,
+            @NotNull final Function<D, P>... functions) {
         return Wrapper.of(value, true, functions);
     }
 
     /** Create a new wrapper */
     public static final <D, P> Wrapper<D> of(
-            @Nonnull final D value,
+            @NotNull final D value,
             final boolean nullFirst,
-            @Nonnull final Function<D, P>... functions) {
+            @NotNull final Function<D, P>... functions) {
         Assert.hasLength(functions, "Function is required");
         return new Wrapper<>(value, nullFirst, functions);
     }

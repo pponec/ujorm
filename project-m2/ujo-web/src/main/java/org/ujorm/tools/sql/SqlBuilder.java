@@ -18,7 +18,7 @@
 package org.ujorm.tools.sql;
 
 import java.util.List;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.jdbc.JdbcBuilder;
 
@@ -77,7 +77,7 @@ public class SqlBuilder extends JdbcBuilder {
     }
 
     /** Write SELECT columns */
-    public SqlBuilder select(@Nonnull final CharSequence ... columns) {
+    public SqlBuilder select(@NotNull final CharSequence ... columns) {
         super.write(Sql.SELECT);
         for (CharSequence column : columns) {
             super.column(column);
@@ -86,7 +86,7 @@ public class SqlBuilder extends JdbcBuilder {
     }
 
     /** Write FORM tables */
-    public SqlBuilder from(@Nonnull final CharSequence ... tables) {
+    public SqlBuilder from(@NotNull final CharSequence ... tables) {
         super.write(Sql.FROM);
         for (CharSequence table : tables) {
             super.write(table);
@@ -101,7 +101,7 @@ public class SqlBuilder extends JdbcBuilder {
     }
 
     /** Write WHERE */
-    public SqlBuilder insert(@Nonnull final CharSequence table) {
+    public SqlBuilder insert(@NotNull final CharSequence table) {
         Assert.hasLength(table, "table");
         super.write(Sql.INSERT_INTO);
         super.write(table);
@@ -109,7 +109,7 @@ public class SqlBuilder extends JdbcBuilder {
     }
 
     /** Write WHERE */
-    public SqlBuilder update(@Nonnull final CharSequence table) {
+    public SqlBuilder update(@NotNull final CharSequence table) {
         Assert.hasLength(table, "table");
         super.write(Sql.UPDATE);
         super.write(table);
@@ -118,7 +118,7 @@ public class SqlBuilder extends JdbcBuilder {
     }
 
     /** Write WHERE */
-    public SqlBuilder delete(@Nonnull final CharSequence table) {
+    public SqlBuilder delete(@NotNull final CharSequence table) {
         Assert.hasLength(table, "table");
         super.write(Sql.DELETE);
         super.write(Sql.FROM);

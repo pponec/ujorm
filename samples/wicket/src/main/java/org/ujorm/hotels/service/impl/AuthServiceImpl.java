@@ -15,8 +15,8 @@
  */
 package org.ujorm.hotels.service.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.slf4j.Logger;
@@ -99,8 +99,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /** Get an immutable logged Customer from session of returns the default Value  */
-    @Override @Nonnull
-    public Customer getLoggedCustomer(@Nonnull Customer defaultValue) {
+    @Override @NotNull
+    public Customer getLoggedCustomer(@NotNull Customer defaultValue) {
         return getSession().getLoggedCustomer(defaultValue);
     }
 

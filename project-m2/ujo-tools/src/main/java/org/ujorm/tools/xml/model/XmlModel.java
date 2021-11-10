@@ -24,8 +24,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractWriter;
@@ -81,12 +81,12 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      * @param name The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      */
-    public XmlModel(@Nonnull final String name) {
+    public XmlModel(@NotNull final String name) {
         this.name = name;
     }
 
     /** New element with a parent */
-    public XmlModel(@Nonnull final String name, @Nonnull final XmlModel parent) {
+    public XmlModel(@NotNull final String name, @NotNull final XmlModel parent) {
         this(name);
         parent.addChild(this);
     }
@@ -98,7 +98,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     }
 
     /** Return attributes */
-    @Nonnull
+    @NotNull
     protected Map<String, Object> getAttribs() {
         if (attributes == null) {
             attributes = new LinkedHashMap<>();
@@ -107,7 +107,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     }
 
     /** Add a child entity */
-    @Nonnull
+    @NotNull
     protected void addChild(@Nullable final Object child) {
         if (children == null) {
             children = new ArrayList<>();
@@ -119,8 +119,8 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      * Add a child element
      * @param element Add a child element is required. An undefined argument is ignored.
      * @return The argument type of XmlElement! */
-    @Nonnull
-    public final XmlModel addElement(@Nonnull final XmlModel element) {
+    @NotNull
+    public final XmlModel addElement(@NotNull final XmlModel element) {
         addChild(Assert.notNull(element, REQUIRED_MSG, "element"));
         return element;
     }
@@ -129,8 +129,8 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
      */
-    @Override @Nonnull
-    public XmlModel addElement(@Nonnull final String name) {
+    @Override @NotNull
+    public XmlModel addElement(@NotNull final String name) {
         return new XmlModel(name, this);
     }
 
@@ -142,8 +142,8 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
-    @Override @Nonnull
-    public final XmlModel setAttribute(@Nonnull final String name, @Nullable final Object value) {
+    @Override @NotNull
+    public final XmlModel setAttribute(@NotNull final String name, @Nullable final Object value) {
         Assert.hasLength(name, REQUIRED_MSG, "name");
         if (value != null) {
             if (attributes == null) {
@@ -160,7 +160,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
-    @Override @Nonnull
+    @Override @NotNull
     public final XmlModel addText(@Nullable final Object value) {
         addChild(value);
         return  this;
@@ -173,8 +173,8 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      * @param values argument values
      * @return The original builder
      */
-    @Override @Nonnull
-    public final XmlModel addTextTemplated(@Nullable final CharSequence template, @Nonnull final Object... values) {
+    @Override @NotNull
+    public final XmlModel addTextTemplated(@Nullable final CharSequence template, @NotNull final Object... values) {
         try {
             return addText(AbstractWriter.FORMATTER.formatMsg(null, template, values));
         } catch (IOException e) {
@@ -188,7 +188,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */
-    @Override @Nonnull
+    @Override @NotNull
     public final XmlModel addRawText(@Nullable final Object value) {
         if (value != null) {
             addChild(new RawEnvelope(value));
@@ -202,7 +202,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      * @param comment A comment text must not contain a string {@code -->} .
      * @return This instance
      */
-    @Override @Nonnull
+    @Override @NotNull
     public final XmlModel addComment(@Nullable final CharSequence comment) {
         if (Check.hasLength(comment)) {
             Assert.isTrue(!comment.toString().contains(COMMENT_END), "The text contains a forbidden string: " + COMMENT_END);
@@ -225,7 +225,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      * @param charData A text including the final DATA sequence. An empty argument is ignored.
      * @return This instance
      */
-    @Override @Nonnull
+    @Override @NotNull
     public final XmlModel addCDATA(@Nullable final CharSequence charData) {
         if (Check.hasLength(charData)) {
             addRawText(CDATA_BEG);
@@ -245,7 +245,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     }
 
     /** Get an unmodifiable map of attributes */
-    @Nonnull
+    @NotNull
     public Map<String, Object> getAttributes() {
         return attributes != null
             ? Collections.unmodifiableMap(attributes)
@@ -253,7 +253,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     }
 
     /** Get an unmodifiable list of children */
-    @Nonnull
+    @NotNull
     public List<Object> getChildren() {
         return children != null
             ? Collections.unmodifiableList(children)
@@ -266,7 +266,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     }
 
     /** Render the XML code including header */
-    @Nonnull
+    @NotNull
     @Override
     public String toString() {
         try {
@@ -281,8 +281,8 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     }
 
     /** Render the XML code without header */
-    @Nonnull
-    public XmlWriter toWriter(final int level, @Nonnull final XmlWriter out) throws IOException {
+    @NotNull
+    public XmlWriter toWriter(final int level, @NotNull final XmlWriter out) throws IOException {
         return out.write(level, this);
     }
 
@@ -291,15 +291,15 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     /** Raw XML code envelope */
     protected static final class RawEnvelope {
         /** XML content */
-        @Nonnull
+        @NotNull
         private final Object body;
 
-        public RawEnvelope(@Nonnull final Object body) {
+        public RawEnvelope(@NotNull final Object body) {
             this.body = body;
         }
 
         /** Get the body */
-        @Nonnull
+        @NotNull
         public Object get() {
             return body;
         }

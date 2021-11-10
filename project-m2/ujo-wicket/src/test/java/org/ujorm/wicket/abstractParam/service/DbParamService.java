@@ -16,8 +16,8 @@
 package org.ujorm.wicket.abstractParam.service;
 
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmUjo;
@@ -43,7 +43,7 @@ public interface DbParamService<V extends OrmUjo, K extends OrmUjo, C extends Or
     public List<? super V> getValues(@Nullable C customer, Criterion<V> criterion);
 
     /** Get all parameters for a logged Customer using an extended criterion */
-    public List<? super V> getValues(@Nonnull Criterion<V> criterion);
+    public List<? super V> getValues(@NotNull Criterion<V> criterion);
 
     /** Get all parameters for a required Customer */
     public List<? super V> getValues(@Nullable C customer);

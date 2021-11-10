@@ -18,7 +18,7 @@ package org.ujorm.wicket.component.grid;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -93,7 +93,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
     }
 
     /** Returns original data rows */
-    @Nonnull
+    @NotNull
     public List<U> getRows() {
         return dataRows != null
              ? dataRows
@@ -101,7 +101,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
     }
 
     /** Returns a filtered rows and cach the result */
-    @Nonnull
+    @NotNull
     protected List<U> getFileredRows() {
         if (filteredRows == null) {
             filteredRows = filter.getObject().evaluate(getRows());
@@ -173,7 +173,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
      * @param row Insert the one table row
      */
     @Override
-    public boolean insertRow(@Nonnull final U row) {
+    public boolean insertRow(@NotNull final U row) {
         clearBuffer();
         return getRows().add(row);
     }
@@ -182,7 +182,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
      * @param deleteCondition Remove all row with a condition.
      */
     @Override
-    public long deleteRow(@Nonnull final Criterion<? super U> deleteCondition) {
+    public long deleteRow(@NotNull final Criterion<? super U> deleteCondition) {
         long result = 0;
         final List<U> rows = getRows();
         for (int i = rows.size() - 1; i >= 0; i--) {
@@ -201,7 +201,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
      * @param updatedRow Updated row
      */
     @Override
-    public long updateRow(@Nonnull final Criterion<? super U> updateCondition, @Nonnull final U updatedRow) {
+    public long updateRow(@NotNull final Criterion<? super U> updateCondition, @NotNull final U updatedRow) {
         long result = 0;
         final List<U> rows = getRows();
         for (int i = rows.size() - 1; i >= 0; i--) {

@@ -17,8 +17,8 @@ package org.ujorm.wicket.component.form.fields;
 
 import java.io.Serializable;
 import java.util.Locale;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -59,7 +59,7 @@ public class OfferField<U extends Ujo & Serializable> extends Field<U> implement
     }
 
     /** Constructor */
-    public <W extends Ujo> OfferField(@Nonnull String id, @Nonnull Key<W,U> key, @Nullable Key<U,?> display) {
+    public <W extends Ujo> OfferField(@NotNull String id, @NotNull Key<W,U> key, @Nullable Key<U,?> display) {
         this(id, key, (OfferModel<U>) null);
         this.displayKey = display != null ? KeyRing.<U>of(display) : null;
     }

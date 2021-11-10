@@ -15,7 +15,7 @@
  */
 package org.ujorm.tools.set;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Implementation of the Map with customize hash and equals functions.

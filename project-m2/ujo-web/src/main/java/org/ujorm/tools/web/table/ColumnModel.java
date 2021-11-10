@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.web.ao.Column;
@@ -39,23 +39,23 @@ public class ColumnModel<D, V> {
     private static final Pattern NUMBER = Pattern.compile("-?\\d+");
 
     private final int index;
-    @Nonnull
+    @NotNull
     private final Function<D, V> column;
-    @Nonnull
+    @NotNull
     private final CharSequence title;
     @Nullable
     private final HttpParameter param;
     /** Is the column sortable? */
     private boolean sortable = false;
-    @Nonnull
+    @NotNull
     private Direction direction = Direction.NONE;
 
-    public ColumnModel(@Nonnull Direction direction, int index) {
+    public ColumnModel(@NotNull Direction direction, int index) {
         this(index, x -> null, "", null);
         setSortable(direction);
     }
 
-    public ColumnModel(final int index, @Nonnull final Function<D, V> column, @Nonnull final CharSequence title, @Nonnull final HttpParameter param) {
+    public ColumnModel(final int index, @NotNull final Function<D, V> column, @NotNull final CharSequence title, @NotNull final HttpParameter param) {
         this.index = index;
         this.column = Assert.notNull(column, "column");
         this.title = Assert.notNull(title, "title");
@@ -66,12 +66,12 @@ public class ColumnModel<D, V> {
         return index;
     }
 
-    @Nonnull
+    @NotNull
     public Function<D, V> getColumn() {
         return column;
     }
 
-    @Nonnull
+    @NotNull
     public CharSequence getTitle() {
         return title;
     }
@@ -81,8 +81,8 @@ public class ColumnModel<D, V> {
         return param;
     }
 
-    @Nonnull
-    public HttpParameter getParam(@Nonnull final HttpParameter defaultValue) {
+    @NotNull
+    public HttpParameter getParam(@NotNull final HttpParameter defaultValue) {
         return param != null ? param : defaultValue;
     }
 
@@ -90,7 +90,7 @@ public class ColumnModel<D, V> {
         return sortable;
     }
 
-    @Nonnull
+    @NotNull
     public Direction getDirection() {
         return direction;
     }
@@ -99,12 +99,12 @@ public class ColumnModel<D, V> {
         return param != null;
     }
 
-    public final void setSortable(@Nonnull final Direction direction) {
+    public final void setSortable(@NotNull final Direction direction) {
         this.sortable = true;
         setDirection(direction);
     }
 
-    public final void setDirection(@Nonnull final Direction direction) {
+    public final void setDirection(@NotNull final Direction direction) {
         this.direction = Assert.notNull(direction, "direction");
     }
 
@@ -122,21 +122,21 @@ public class ColumnModel<D, V> {
     /**
      * Write the content to an appendable text stream where the default direction is an ASCENDING.
      */
-    public Appendable toCode(final boolean opposite, @Nonnull final Appendable writer) throws IOException {
+    public Appendable toCode(final boolean opposite, @NotNull final Appendable writer) throws IOException {
         final int coeff = (Direction.ASC.safeEquals(direction) == opposite) ? -1 : 1;
         writer.append(String.valueOf(coeff * (index + 1)));
         return writer;
     }
 
     /** Get comparator of a sortable column */
-    @Nonnull
+    @NotNull
     public Comparator<D> getComparator(@Nullable final Function<D,?> defaultFce) {
         return getComparator(Comparator.comparing((Function)defaultFce));
     }
 
     /** Get comparator of a sortable column */
-    @Nonnull
-    public Comparator<D> getComparator(@Nonnull final Comparator<D> defaultCompar) {
+    @NotNull
+    public Comparator<D> getComparator(@NotNull final Comparator<D> defaultCompar) {
         if (sortable && isIncludeColumnType()) {
             final Comparator<D> compar = Comparator.comparing((Function) column);
             switch (direction) {
@@ -163,8 +163,8 @@ public class ColumnModel<D, V> {
         return MsgFormatter.format("[{}]:{}:{}", index, title, sortable ? direction.name() : "-");
     }
 
-    @Nonnull
-    public static ColumnModel ofCode(@Nonnull final String paramValue) {
+    @NotNull
+    public static ColumnModel ofCode(@NotNull final String paramValue) {
         if (NUMBER.matcher(paramValue).matches()) {
             final int intCode = Integer.parseInt(paramValue);
             final Direction direction = Direction.of(intCode > 0);

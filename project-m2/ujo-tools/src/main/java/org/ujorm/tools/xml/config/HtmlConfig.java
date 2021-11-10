@@ -17,8 +17,8 @@
 package org.ujorm.tools.xml.config;
 
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.*;
 
@@ -29,19 +29,19 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.*;
 public interface HtmlConfig extends XmlConfig {
 
     /** Title is a required element by HTML 5 */
-    @Nonnull
+    @NotNull
     CharSequence getTitle();
 
     /** CSS links of a HTML page */
-    @Nonnull
+    @NotNull
     CharSequence[] getCssLinks();
 
     /** Language of a HTML page */
-    @Nonnull
+    @NotNull
     Optional<CharSequence> getLanguage();
 
     /** Get a content type where a recommended value is {@code "text/html"} */
-    @Nonnull
+    @NotNull
     String getContentType();
 
     /** Build a real model or a plain writer with a recommended value {@code false} */
@@ -57,7 +57,7 @@ public interface HtmlConfig extends XmlConfig {
     @Nullable
     CharSequence getRawHeaderText();
 
-    @Nonnull
+    @NotNull
     ApiInjector getHeaderInjector();
 
     /** A name of root element */
@@ -77,7 +77,7 @@ public interface HtmlConfig extends XmlConfig {
     /**
      * Create a new default config
      */
-    @Nonnull
+    @NotNull
     public static DefaultHtmlConfig ofDefault() {
         return new DefaultHtmlConfig();
     }
@@ -88,7 +88,7 @@ public interface HtmlConfig extends XmlConfig {
      * @param rootElementName Element name cannot contain special HTML characters. An undefined value ignores the creation of the root element.
      * @return
      */
-    @Nonnull
+    @NotNull
     public static DefaultHtmlConfig ofElementName(@Nullable String rootElementName) {
         return ofElement(rootElementName, true);
     }
@@ -100,7 +100,7 @@ public interface HtmlConfig extends XmlConfig {
      * @param enabled Disabled root element ignores the creation of the root element.
      * @return
      */
-    @Nonnull
+    @NotNull
     public static DefaultHtmlConfig ofElement(@Nullable String rootElementName, boolean enabled) {
         final DefaultHtmlConfig result = ofDefault();
         result.setRootElementName(enabled ? rootElementName : null);
@@ -112,7 +112,7 @@ public interface HtmlConfig extends XmlConfig {
     /**
      * Create a configuration for an AJAX response.
      */
-    @Nonnull
+    @NotNull
     public static DefaultHtmlConfig ofEmptyElement() {
         final DefaultHtmlConfig result = ofElement(EMPTY, false);
         result.setHtmlHeader(false);
@@ -122,7 +122,7 @@ public interface HtmlConfig extends XmlConfig {
     }
 
     /** Clone config form another */
-    public static DefaultHtmlConfig of(@Nonnull final HtmlConfig htmlConfig) {
+    public static DefaultHtmlConfig of(@NotNull final HtmlConfig htmlConfig) {
         return new DefaultHtmlConfig(htmlConfig);
     }
 }

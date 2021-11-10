@@ -16,8 +16,8 @@
 package org.ujorm.wicket.component.tabs;
 
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
@@ -64,7 +64,7 @@ public class UjoWizardPanel<T extends UjoTab> extends UjoTabbedPanel<T>  {
     }
 
     /** Get a title of the required tab or returns the {@code null} */
-    @Nonnull
+    @NotNull
     public IModel<String> getNextTitleModel(final boolean next) {
         int i = getSelectedTab() + (next ? 1 : -1);
         return (i >= 0 && i < getTabSize())

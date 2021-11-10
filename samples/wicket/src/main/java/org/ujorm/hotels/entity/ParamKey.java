@@ -16,7 +16,7 @@
 package org.ujorm.hotels.entity;
 
 import java.time.LocalDateTime;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.hotels.entity.enums.ModuleEnum;
@@ -80,7 +80,7 @@ public final class ParamKey extends OrmTable<ParamKey> {
     }
 
     /** Key constructor */
-    public ParamKey(@Nonnull final String name, @Nonnull final ModuleEnum module) {
+    public ParamKey(@NotNull final String name, @NotNull final ModuleEnum module) {
         setName(name);
         setModule(module);
     }

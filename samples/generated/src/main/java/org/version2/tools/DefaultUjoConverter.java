@@ -19,7 +19,7 @@ package org.version2.tools;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;

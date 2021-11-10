@@ -21,8 +21,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -62,7 +62,7 @@ public class UjoSequencer {
     /** Total limit, zero means no restriction */
     protected long maxValue = 0;
 
-    public UjoSequencer(@Nonnull MetaTable table) {
+    public UjoSequencer(@NotNull MetaTable table) {
         this.table = table;
     }
 
@@ -269,9 +269,9 @@ public class UjoSequencer {
      * @throws SQLException
      */
     protected int executeSql
-            ( @Nonnull final Connection connection
-            , @Nonnull final String sql
-            , @Nonnull final String tableName) throws SQLException {
+            ( @NotNull final Connection connection
+            , @NotNull final String sql
+            , @NotNull final String tableName) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, tableName);
             return statement.executeUpdate();

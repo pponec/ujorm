@@ -21,8 +21,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Ujo;
 import org.ujorm.logger.UjoLogger;
@@ -41,10 +41,10 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(ResultSetIterator.class);
 
     /** Base query */
-    @Nonnull
+    @NotNull
     private final Query query;
     /** Query columns */
-    @Nonnull
+    @NotNull
     private final ColumnWrapper[] queryColumns;
     /** Result set */
     @Nullable
@@ -63,7 +63,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
     /** Has a resultset a next row? */
     private boolean hasNext = true;
 
-    public ResultSetIterator(@Nonnull Query query) throws IllegalUjormException {
+    public ResultSetIterator(@NotNull Query query) throws IllegalUjormException {
         try {
             this.query = query;
             this.queryColumns = query.getColumnArray();
@@ -76,7 +76,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
     }
 
     /** Close all resources and create new exception class */
-    @Nonnull
+    @NotNull
     private RuntimeException newException(@Nullable final Throwable e) {
         close(false);
         final boolean noSuchElement = (e == null);
@@ -87,7 +87,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implement
     }
 
    /** Close all resources and create new NoSuchElementException class */
-    @Nonnull
+    @NotNull
     private RuntimeException newNoSuchElementException() {
         return newException(null);
     }

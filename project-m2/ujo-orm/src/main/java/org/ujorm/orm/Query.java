@@ -30,8 +30,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.core.IllegalUjormException;
@@ -64,7 +64,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     protected static final String GENERATED_ALIAS_PREFIX = "ujorm_alias_";
 
     /** The base table */
-    @Nonnull
+    @NotNull
     final private MetaTable table;
     /** Modified columns, the default value is the {@code null}.
      * @see #getDefaultColumns()
@@ -107,7 +107,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @param session Session
      */
     public Query
-        ( @Nonnull final MetaTable table
+        ( @NotNull final MetaTable table
         , @Nullable final Criterion<UJO> criterion
         , @Nullable final Session session) {
 
@@ -126,12 +126,12 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @param criterion If criterion is null, then a TRUE constant criterion is used.
      * @see #setSession(org.ujorm.orm.Session)
      */
-    public Query(@Nonnull final MetaTable table, @Nullable final Criterion<UJO> criterion) {
+    public Query(@NotNull final MetaTable table, @Nullable final Criterion<UJO> criterion) {
         this(table, criterion, null);
     }
 
     /** Get Handler */
-    @Nonnull
+    @NotNull
     private OrmHandler getHandler() {
         OrmHandler handler = null;
         if (table != null) {
@@ -143,8 +143,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** An open session must be assigned before executing a database request. */
-    @Nonnull
-    public Query<UJO> setSession(@Nonnull Session session) {
+    @NotNull
+    public Query<UJO> setSession(@NotNull Session session) {
         this.session =  Assert.notNull(session, "session");
         return this;
     }
@@ -181,8 +181,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** Not yet implemented */
     public <ITEM> void setParameter
-        ( @Nonnull final Key<UJO,ITEM> key
-        , @Nonnull final ITEM value) {
+        ( @NotNull final Key<UJO,ITEM> key
+        , @NotNull final ITEM value) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -191,7 +191,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see Session#createQuery(org.ujorm.criterion.Criterion) createQuery(Criterion)
      * @see #setCriterion(org.ujorm.criterion.Criterion) setCriterion(..)
      */
-    public void addCriterion(@Nonnull Criterion<UJO> criterion) throws IllegalArgumentException {
+    public void addCriterion(@NotNull Criterion<UJO> criterion) throws IllegalArgumentException {
         Assert.notNull(criterion, "Argument must not be {}", criterion);
 
         this.criterion = this.criterion != null
@@ -207,7 +207,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see Session#createQuery(org.ujorm.criterion.Criterion) createQuery(Criterion)
      * @see #addCriterion(org.ujorm.criterion.Criterion) addCriterion(..)
      **/
-    @Nonnull
+    @NotNull
     public Query<UJO> setCriterion(@Nullable final Criterion<UJO> criterion) {
         this.criterion = criterion != null
             ? criterion
@@ -225,7 +225,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * The new decoder is cached to a next order by change.
      */
     @SuppressWarnings("unchecked")
-    @Nonnull
+    @NotNull
     public final CriterionDecoder getDecoder() {
         if (decoder==null) {
             final List<Key> relations = new ArrayList<>(16);
@@ -273,13 +273,13 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Returns all direct columns of the base table. */
-    @Nonnull
+    @NotNull
     protected List<ColumnWrapper> getDefaultColumns() {
         return (List<ColumnWrapper>) (List) MetaTable.COLUMNS.getList(table);
     }
 
     /** Create a new column List. */
-    @Nonnull
+    @NotNull
     @SuppressWarnings("empty-statement")
     public ColumnWrapper[] getColumnArray() {
         final Collection<ColumnWrapper> resColumns = getColumns();
@@ -338,7 +338,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @param mapKey Ujo Key for the mapKey
      * @see #iterator()
      */
-    public <T> Map<T,UJO> map(@Nonnull final Key<UJO,T> mapKey, @Nonnull final Map<T,UJO> result) {
+    public <T> Map<T,UJO> map(@NotNull final Key<UJO,T> mapKey, @NotNull final Map<T,UJO> result) {
         for (UJO ujo : iterator()) {
             result.put(mapKey.of(ujo), ujo);
         }
@@ -389,7 +389,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see #iterator()
      * @see #exists()
      */
-    @Nonnull
+    @NotNull
     public Optional<UJO> uniqueResultOptional() throws NoSuchElementException {
         return Optional.ofNullable(uniqueResult());
     }
@@ -425,7 +425,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see #orderByMany(org.ujorm.Key[])
      */
     @Deprecated
-    public Query<UJO> setOrder(@Nonnull final Key... order) {
+    public Query<UJO> setOrder(@NotNull final Key... order) {
         return orderByMany(order);
     }
 
@@ -436,17 +436,17 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
    /** Set an order of the rows by a SQL ORDER BY phrase. */
     public Query<UJO> orderBy
-        ( @Nonnull final Key<UJO,?> orderItem1
-        , @Nonnull final Key<UJO,?> orderItem2
+        ( @NotNull final Key<UJO,?> orderItem1
+        , @NotNull final Key<UJO,?> orderItem2
         ) {
         return orderByMany(new Key[]{orderItem1, orderItem2});
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase. */
     public Query<UJO> orderBy
-        ( @Nonnull final Key<UJO,?> orderItem1
-        , @Nonnull final Key<UJO,?> orderItem2
-        , @Nonnull final Key<UJO,?> orderItem3
+        ( @NotNull final Key<UJO,?> orderItem1
+        , @NotNull final Key<UJO,?> orderItem2
+        , @NotNull final Key<UJO,?> orderItem3
         ) {
         return orderByMany(new Key[]{orderItem1, orderItem2, orderItem3});
     }
@@ -455,8 +455,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * <br>WARNING: the parameters are not type checked.
     */
     @SuppressWarnings("unchecked")
-    @Nonnull
-    public final Query<UJO> orderByMany(@Nonnull final Key... orderItems) {
+    @NotNull
+    public final Query<UJO> orderByMany(@NotNull final Key... orderItems) {
         clearDecoder();
         this.orderBy = new ArrayList<>(Math.max(orderItems.length, 4));
         for (final Key p : orderItems) {
@@ -469,7 +469,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * Method cleans all columns assigned before.
      * @see #addColumn(org.ujorm.Key)
      */
-    @Nonnull
+    @NotNull
     public Query<UJO> fetchAll() throws IllegalArgumentException {
         clearDecoder();
         final List<MetaColumn> mTables = MetaTable.COLUMNS.getList(table);
@@ -504,8 +504,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @param column A Property to select. A composite Property is allowed however only the first item will be used.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     */
-    @Nonnull
-    public Query<UJO> addColumn(@Nonnull final Key<UJO,?> column) throws IllegalArgumentException {
+    @NotNull
+    public Query<UJO> addColumn(@NotNull final Key<UJO,?> column) throws IllegalArgumentException {
         clearDecoder();
         final MetaColumn mc = getHandler().findColumnModel(getLastProperty(column));
         Assert.notNull(mc, "Column {} was not foud in the meta-model", column.getFullName());
@@ -527,7 +527,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
     @SuppressWarnings("unchecked")
-    public Query<UJO> setColumn(@Nonnull final Key<UJO, ?> column) throws IllegalArgumentException {
+    public Query<UJO> setColumn(@NotNull final Key<UJO, ?> column) throws IllegalArgumentException {
         return setColumns(false, column);
     }
 
@@ -541,7 +541,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     @SuppressWarnings("unchecked")
     public final Query<UJO> setColumns
         ( final boolean addPrimaryKey
-        , @Nonnull final Key... columns)  throws IllegalArgumentException {
+        , @NotNull final Key... columns)  throws IllegalArgumentException {
         return setColumns(addPrimaryKey, true, columns);
     }
 
@@ -553,8 +553,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
-    @Nonnull
-    public final Query<UJO> setColumns(@Nonnull final Collection<ColumnWrapper> columns) throws IllegalArgumentException {
+    @NotNull
+    public final Query<UJO> setColumns(@NotNull final Collection<ColumnWrapper> columns) throws IllegalArgumentException {
         clearDecoder();
         this.columns = new ArrayList<>(columns);
         return this;
@@ -570,7 +570,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
-    @Nonnull
+    @NotNull
     public final Query<UJO> setColumns
         ( final boolean addPrimaryKey
         , final boolean addChilds
@@ -604,7 +604,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @param optionalRelation Is the key is an optional relation
      */
     protected void addMissingColumn
-        ( @Nonnull final ColumnWrapper column
+        ( @NotNull final ColumnWrapper column
         , final boolean addChilds
         , final boolean checkDuplicities
         , final boolean optionalRelation) {
@@ -639,7 +639,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Only direct keys are supported */
-    private Key getLastProperty(@Nonnull final Key<UJO,?> p) {
+    private Key getLastProperty(@NotNull final Key<UJO,?> p) {
         return p.isComposite()
             ? ((CompositeKey)p).getLastKey()
             : p ;
@@ -651,7 +651,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @see #addOrderBy(org.ujorm.Key)
     */
     @SuppressWarnings("unchecked")
-    @Nonnull
+    @NotNull
     public Query<UJO> orderBy(@Nullable final Collection<Key<UJO,?>> orderItems) {
         clearDecoder();
         if (orderItems==null) {
@@ -664,8 +664,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Add an item to the end of order list. */
-    @Nonnull
-    public Query<UJO> addOrderBy(@Nonnull final Key<UJO,?> ... keys) {
+    @NotNull
+    public Query<UJO> addOrderBy(@NotNull final Key<UJO,?> ... keys) {
         clearDecoder();
         for (Key<UJO, ?> key : keys) {
            orderBy.add(key);
@@ -674,8 +674,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Add an item to the end of order list. */
-    @Nonnull
-    public Query<UJO> addOrderBy(@Nonnull final Key<UJO,?> key) {
+    @NotNull
+    public Query<UJO> addOrderBy(@NotNull final Key<UJO,?> key) {
         clearDecoder();
         orderBy.add(key);
         return this;
@@ -700,21 +700,21 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** A nullable Ujo property (mandatory=false) have got a SQL join of type LEFT OUTER JOIN by default */
-    @Nonnull
-    public Query<UJO> addInnerJoin(@Nonnull final Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
+    @NotNull
+    public Query<UJO> addInnerJoin(@NotNull final Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
         return modifyJoin(false, relation);
     }
 
     /** A nullable Ujo property (mandatory=false) have got a SQL join of type LEFT OUTER JOIN by default */
-    @Nonnull
-    public Query<UJO> addOuterJoin(@Nonnull final Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
+    @NotNull
+    public Query<UJO> addOuterJoin(@NotNull final Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
         return modifyJoin(true, relation);
     }
 
     /** Modify a SQL JOIN to OUTER or INNER */
 
-    @Nonnull
-    protected Query<UJO> modifyJoin(final boolean outerJoin, @Nonnull final Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
+    @NotNull
+    protected Query<UJO> modifyJoin(final boolean outerJoin, @NotNull final Key<UJO,? extends OrmTable> relation) throws IllegalArgumentException {
         this.sqlStatement = null;
         if (outerJoins == null) {
             outerJoins = new HashSet<>();
@@ -754,7 +754,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Get the first row to retrieve (offset). Default value is 0.
      * @see #setLimit(int, int)
      */
-    @Nonnull
+    @NotNull
     public Query<UJO> setOffset(final int offset) {
         this.offset = offset;
         this.sqlStatement = null;
@@ -779,7 +779,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
      * @see java.sql.Statement#setMaxRows(int)
      */
-    @Nonnull
+    @NotNull
     public Query<UJO> setLimit(final int limit) {
         this.limit = limit;
         this.sqlStatement = null;
@@ -793,7 +793,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see #setLimit(int)
      * @see #setOffset(int)
      */
-    @Nonnull
+    @NotNull
     public Query<UJO> setLimit(final int limit, final long offset) {
         this.limit = limit;
         this.offset = offset;
@@ -821,7 +821,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * Retrieves the number of result set rows that is the default fetch size for ResultSet objects generated from this Statement object.
      * @see java.sql.Statement#setFetchSize(int)
      */
-    @Nonnull
+    @NotNull
     public Query<UJO> setFetchSize(final int fetchSize) {
         this.fetchSize = fetchSize;
         this.sqlStatement = null;
@@ -829,13 +829,13 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
         /** Create a PreparedStatement including assigned parameter values */
-    @Nonnull
+    @NotNull
     public PreparedStatement getStatement() {
         return session.getStatement(this).getPreparedStatement();
     }
 
     /** Get or create the SQL statement. */
-    @Nonnull
+    @NotNull
     public String getSqlStatement(final boolean clearCache) {
         if (clearCache || sqlStatement==null) try {
             final MetaDatabase db = table.getDatabase();
@@ -854,7 +854,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Pessimistic lock request. A default value is false.
      * @see org.ujorm.orm.dialect.HsqldbDialect#printLockForSelect(org.ujorm.orm.Query, java.lang.Appendable) HsqldbDialect
      */
-    @Nonnull
+    @NotNull
     public Query<UJO> setLockRequest(final boolean lockRequest) {
         this.lockRequest = lockRequest;
         this.sqlStatement = null;
@@ -869,7 +869,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Get the SQL statement from a cache */
-    @Override @Nonnull
+    @Override @NotNull
     public String toString() {
         return getSqlStatement(false);
     }
@@ -880,7 +880,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Select DISTINCT for a unique row result */
-    @Nonnull
+    @NotNull
     public Query<UJO> setDistinct(final boolean distinct) {
         this.distinct = distinct;
         this.sqlStatement = null;
@@ -902,7 +902,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see org.ujorm.orm.annot.View
      * @throws IllegalArgumentException The SQL parameters can be used for the VIEW only
      */
-    @Nonnull
+    @NotNull
     public Query<UJO> setSqlParameters(@Nullable final SqlParameters sqlParameters) throws IllegalArgumentException {
         this.sqlParameters = sqlParameters;
         return this;
@@ -912,7 +912,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see org.ujorm.orm.annot.View
      * @throws IllegalArgumentException The SQL parameters can be used for the VIEW only
      */
-    public Query<UJO> setSqlParameters(@Nonnull final Object ... parameters) throws IllegalArgumentException {
+    public Query<UJO> setSqlParameters(@NotNull final Object ... parameters) throws IllegalArgumentException {
         return setSqlParameters(new SqlParameters(parameters));
     }
 

@@ -3,8 +3,8 @@
 package org.version2.bo.generated;
 
 import java.util.Date;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -49,7 +49,7 @@ public class $User extends User implements UjoMiddle<$User> {
         this(null);
     }
 
-    @Nonnull
+    @NotNull
     public User original() {
         return data != null ? data : this;
     }

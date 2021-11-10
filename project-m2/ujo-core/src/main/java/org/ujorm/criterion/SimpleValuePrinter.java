@@ -17,8 +17,8 @@
 package org.ujorm.criterion;
 
 import java.io.IOException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.tools.msg.ValuePrinter;
@@ -35,17 +35,17 @@ public class SimpleValuePrinter extends ValuePrinter {
     }
 
     /** Constructor */
-    public SimpleValuePrinter(@Nonnull final Appendable out) {
+    public SimpleValuePrinter(@NotNull final Appendable out) {
         super(out);
     }
 
     /** Constructor */
-    public SimpleValuePrinter(@Nonnull final String mark, @Nonnull final String textBorder, @Nonnull final Appendable out) {
+    public SimpleValuePrinter(@NotNull final String mark, @NotNull final String textBorder, @NotNull final Appendable out) {
         super(mark, textBorder, out);
     }
 
     /** Append value */
-    @Nonnull
+    @NotNull
     public SimpleValuePrinter append(final char c) {
         try {
             out.append(c);
@@ -56,7 +56,7 @@ public class SimpleValuePrinter extends ValuePrinter {
     }
 
     /** Append value */
-    @Nonnull
+    @NotNull
     public SimpleValuePrinter append(@Nullable final Object value) {
         try {
             out.append(value != null ? value.toString() : null);
@@ -67,7 +67,7 @@ public class SimpleValuePrinter extends ValuePrinter {
     }
 
     /** Append value */
-    @Nonnull
+    @NotNull
     public SimpleValuePrinter append(@Nullable final CharSequence value) {
         try {
             out.append(value);
@@ -78,7 +78,7 @@ public class SimpleValuePrinter extends ValuePrinter {
     }
 
     /** Append value */
-    @Nonnull
+    @NotNull
     public SimpleValuePrinter appendValue(@Nullable final Object value) {
         try {
             if (value == null) {
@@ -106,7 +106,7 @@ public class SimpleValuePrinter extends ValuePrinter {
     }
 
     /** Writer result */
-    @Override @Nonnull
+    @Override @NotNull
     public String toString() {
         return out.toString();
     }

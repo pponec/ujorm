@@ -19,8 +19,8 @@ package org.ujorm.tools.xml.model;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.config.XmlConfig;
@@ -40,7 +40,7 @@ public class XmlWriter extends AbstractWriter {
     }
 
     /** Writer constructor with a zero offset */
-    public XmlWriter(@Nonnull final Appendable out) {
+    public XmlWriter(@NotNull final Appendable out) {
         super(out, XmlConfig.ofDefault());
     }
 
@@ -49,20 +49,20 @@ public class XmlWriter extends AbstractWriter {
      * @param out A writer
      * @param indentationSpace String for a one level offset.
      */
-    public XmlWriter(@Nonnull final Appendable out, @Nonnull final CharSequence indentationSpace) {
+    public XmlWriter(@NotNull final Appendable out, @NotNull final CharSequence indentationSpace) {
         super(out, createConfig(indentationSpace));
     }
 
     /** Create a config */
-    private static XmlConfig createConfig(@Nonnull final CharSequence indentationSpace) {
+    private static XmlConfig createConfig(@NotNull final CharSequence indentationSpace) {
         final DefaultXmlConfig config = XmlConfig.ofDefault();
         config.setIndentationSpace(indentationSpace);
         return config;
     }
 
     /** Render the XML code without header */
-    @Nonnull
-    public final XmlWriter write(final int level, @Nonnull final XmlModel element) throws IOException {
+    @NotNull
+    public final XmlWriter write(final int level, @NotNull final XmlModel element) throws IOException {
         return write(level, element.getName(), element.attributes, element.children, element);
     }
 
@@ -74,12 +74,12 @@ public class XmlWriter extends AbstractWriter {
      * @param element Original element
      * @return This
      */
-    @Nonnull
+    @NotNull
     protected XmlWriter write(final int level
             , @Nullable final CharSequence name
             , @Nullable final Map<String, Object> attributes
             , @Nullable final List<Object> children
-            , @Nonnull final XmlModel element) throws IOException {
+            , @NotNull final XmlModel element) throws IOException {
 
         final boolean validName = name != null;
         if (validName) {

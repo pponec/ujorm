@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Key;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyFactory;
@@ -51,7 +51,7 @@ import org.ujorm.orm.utility.OrmTools;
  * The class is a root of a database configuration.
  * @author Pavel Ponec
  */
-@Immutable
+@Unmodifiable
 public final class MetaParams extends AbstractMetaModel {
     private static final Class<MetaParams> CLASS = MetaParams.class;
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(CLASS);
@@ -347,7 +347,7 @@ public final class MetaParams extends AbstractMetaModel {
     }
 
     /** Returns an instance of the initialization batch */
-    public FixingTableSequences getFixingTableSequences(@Nullable final MetaDatabase db, @Nonnull Connection conn) throws IllegalStateException {
+    public FixingTableSequences getFixingTableSequences(@Nullable final MetaDatabase db, @NotNull Connection conn) throws IllegalStateException {
         final Class<? extends FixingTableSequences> resultType = FIXING_TABLE_SEQUENCES.of(this);
         try {
             return resultType.getConstructor(MetaDatabase.class, Connection.class).newInstance(db, conn);

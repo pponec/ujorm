@@ -15,7 +15,7 @@
  */
 package org.ujorm.tools.web.ao;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An interface for bulding HTML parameters by an Enumerator.
@@ -32,23 +32,23 @@ import javax.annotation.Nonnull;
  */
 public final class DefaultHttpParam implements HttpParameter {
 
-    @Nonnull
+    @NotNull
     private final String name;
-    @Nonnull
+    @NotNull
     private final String defaultValue;
 
-    protected DefaultHttpParam(@Nonnull String name, @Nonnull String defaultValue) {
+    protected DefaultHttpParam(@NotNull String name, @NotNull String defaultValue) {
         this.name = name;
         this.defaultValue = defaultValue;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String defaultValue() {
         return defaultValue;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String toString() {
         return name;

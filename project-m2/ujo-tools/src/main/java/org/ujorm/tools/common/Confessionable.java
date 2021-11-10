@@ -17,7 +17,7 @@
 package org.ujorm.tools.common;
 
 import java.io.IOException;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An interface for common export an object to an appendable writer
@@ -32,7 +32,7 @@ public interface Confessionable {
      * @param writer An output sequence
      * @return Return the argument object.
      */
-    @Nonnull
-    Appendable confessTo(@Nonnull Appendable writer) throws IOException;
+    @NotNull
+    Appendable confessTo(@NotNull Appendable writer) throws IOException;
     
 }

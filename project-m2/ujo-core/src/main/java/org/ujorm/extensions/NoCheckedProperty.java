@@ -15,7 +15,7 @@
  */
 package org.ujorm.extensions;
 
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.UjoManager;
@@ -26,7 +26,7 @@ import static org.ujorm.extensions.PropertyModifier.*;
  * @see UjoManager#validate(org.ujorm.Ujo)
  * @author Pavel Ponec
  */
-@Immutable
+@Unmodifiable
 public class NoCheckedProperty<UJO extends Ujo, VALUE> extends Property<UJO, VALUE> {
 
     /** Protected constructor */

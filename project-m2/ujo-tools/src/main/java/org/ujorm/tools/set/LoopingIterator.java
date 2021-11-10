@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.jdbc.RowIterator;
 
 /**
@@ -38,7 +38,7 @@ public interface LoopingIterator<T> extends Iterator<T>, Iterable<T>, Closeable 
      *
      * @return an Iterator.
      */
-    @Nonnull
+    @NotNull
     @Override
     default Iterator<T> iterator() {
         return this;
@@ -48,7 +48,7 @@ public interface LoopingIterator<T> extends Iterator<T>, Iterable<T>, Closeable 
      *
      * @see RowIterator class implementation for example how to use
      */
-    @Nonnull
+    @NotNull
     default Stream<T> toStream() {
         return StreamSupport.stream(spliterator(), false).onClose(() -> {
             try {

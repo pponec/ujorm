@@ -15,7 +15,7 @@ package org.ujorm.wicket.component.toolbar;
  * limitations under the License.
  */
 import java.util.Arrays;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -49,10 +49,10 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
     protected static final Duration DEFAULT_DELAY = Duration.milliseconds(400);
 
     /** Model criterion */
-    @Nonnull
+    @NotNull
     private final IModel<Criterion<U>> criterionModel = Model.of();
 
-    public AbstractToolbar(@Nonnull final String id) {
+    public AbstractToolbar(@NotNull final String id) {
         super(id);
     }
 
@@ -109,17 +109,17 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
     }
 
     /** Create new DropDownChoice component */
-    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final E defaultItem) {
+    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@NotNull final String id, @NotNull final E defaultItem) {
         return createSearchChoice(id, Model.of(defaultItem));
     }
 
     /** Create new DropDownChoice component */
-    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final E offerItem, final boolean required) {
+    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@NotNull final String id, @NotNull final E offerItem, final boolean required) {
         return createSearchChoice(id, Model.of(offerItem), required);
     }
 
         /** Create new DropDownChoice component */
-    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final IModel<E> defaultItemModel) {
+    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@NotNull final String id, @NotNull final IModel<E> defaultItemModel) {
          return createSearchChoice(id, defaultItemModel, false);
     }
 
@@ -131,7 +131,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
      * @param required Optionally choice have got a empty default value.
      * @return New GUI component
      */
-    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@Nonnull final String id, @Nonnull final IModel<E> offerItem, final boolean required) {
+    protected <E extends Enum<E>> DropDownChoice<E> createSearchChoice(@NotNull final String id, @NotNull final IModel<E> offerItem, final boolean required) {
         final E defaultValue = Assert.notNull(offerItem.getObject(), "defaultValue");
         final DropDownChoice<E> result = new DropDownChoice<E>
            ( id
@@ -163,7 +163,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
      * @param field Field is not used by default, however it can be a switch for different results for example.
      * @return
      */
-    protected void addChangeBehavior(@Nonnull final FormComponent field) {
+    protected void addChangeBehavior(@NotNull final FormComponent field) {
         final AjaxEventBehavior behavior = createAjaxUpdateingBehaviorWithDelay();
         field.add(behavior);
     }
@@ -172,7 +172,7 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
      * @param field Field is not used by default, however it can be a switch for different results for example.
      * @return
      */
-    protected void addChangeBehavior(@Nonnull final AbstractChoice field) {
+    protected void addChangeBehavior(@NotNull final AbstractChoice field) {
         field.add(createAjaxUpdateingBehavior("onchange"));
         field.add(createAjaxUpdateingBehavior("onkeyup"));
     }
@@ -216,6 +216,6 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
     }
 
     /** Implements the method to request focus */
-    public void requestFocus(@Nonnull final AjaxRequestTarget target) {
+    public void requestFocus(@NotNull final AjaxRequestTarget target) {
     }
 }

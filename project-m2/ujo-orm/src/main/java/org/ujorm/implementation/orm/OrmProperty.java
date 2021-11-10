@@ -15,8 +15,8 @@
  */
 package org.ujorm.implementation.orm;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Validator;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.Property;
@@ -64,7 +64,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
     @SuppressWarnings("unchecked")
     @Override
     @Nullable
-    public VALUE of(@Nonnull final U ujo) {
+    public VALUE of(@NotNull final U ujo) {
         final Session mySession = ujo.readSession();
         Object result = ujo.readValue(this);
 

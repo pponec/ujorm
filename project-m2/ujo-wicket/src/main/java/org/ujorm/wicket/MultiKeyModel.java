@@ -15,7 +15,7 @@
  */
 package org.ujorm.wicket;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.ujorm.Key;
@@ -78,8 +78,8 @@ public class MultiKeyModel<U extends Ujo> implements IModel<CharSequence> {
     }
     
     /** Format the result value */
-    @Nonnull
-    protected String format(@Nonnull final Object value) {
+    @NotNull
+    protected String format(@NotNull final Object value) {
         return value != null
              ? value.toString()
              : "";
@@ -106,7 +106,7 @@ public class MultiKeyModel<U extends Ujo> implements IModel<CharSequence> {
      * @param keys key array
      * @return {@link PropertyModel} instance
      */
-    public static <UJO extends Ujo, T> MultiKeyModel<UJO> of(@Nonnull final IModel<UJO> domainModel, Key<UJO, ?> ... keys) {
+    public static <UJO extends Ujo, T> MultiKeyModel<UJO> of(@NotNull final IModel<UJO> domainModel, Key<UJO, ?> ... keys) {
         return new MultiKeyModel<UJO>(domainModel, " ", keys);
     }
 
@@ -115,7 +115,7 @@ public class MultiKeyModel<U extends Ujo> implements IModel<CharSequence> {
      * @param keys key array
      * @return {@link PropertyModel} instance
      */
-    public static <UJO extends Ujo, T> MultiKeyModel<UJO> of(@Nonnull final IModel<UJO> domainModel, @Nonnull final String separator, Key<UJO, ?> ... keys) {
+    public static <UJO extends Ujo, T> MultiKeyModel<UJO> of(@NotNull final IModel<UJO> domainModel, @NotNull final String separator, Key<UJO, ?> ... keys) {
         return new MultiKeyModel<UJO>(domainModel, separator, keys);
     }
 

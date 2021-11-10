@@ -16,8 +16,8 @@
 package org.ujorm.tools.web;
 
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 
 /**
@@ -27,7 +27,7 @@ import org.ujorm.tools.Assert;
 public final class ExceptionProvider {
 
     /** Provider with no exception */
-    @Nonnull
+    @NotNull
     private static final ExceptionProvider EMPTY = new ExceptionProvider(null);
 
     @Nullable
@@ -40,14 +40,14 @@ public final class ExceptionProvider {
     /**
      * Apply consumer if the exception is a required type (or not null).
      */
-    public void catche(@Nonnull final Consumer<Throwable> exceptionConsumer) {
+    public void catche(@NotNull final Consumer<Throwable> exceptionConsumer) {
         catche(Throwable.class, exceptionConsumer);
     }
 
     /**
      * Apply consumer if the exception is not null.
      */
-    public <T extends Throwable> void catche(@Nonnull final Class<T> exceptionClass, @Nonnull final Consumer<T> exceptionConsumer) {
+    public <T extends Throwable> void catche(@NotNull final Class<T> exceptionClass, @NotNull final Consumer<T> exceptionConsumer) {
         if (e != null) {
             if (exceptionClass.isInstance(e)) {
                 exceptionConsumer.accept((T) e);
@@ -62,13 +62,13 @@ public final class ExceptionProvider {
     }
 
     /** A factory method */
-    @Nonnull
-    public static final ExceptionProvider of(@Nonnull final Throwable e) {
+    @NotNull
+    public static final ExceptionProvider of(@NotNull final Throwable e) {
         return new ExceptionProvider(Assert.notNull(e, "Exception is required"));
     }
 
     /** A factory method */
-    @Nonnull
+    @NotNull
     public static final ExceptionProvider of() {
         return EMPTY;
     }

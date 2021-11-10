@@ -15,8 +15,8 @@
  */
 package org.ujorm.hotels.service.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
@@ -51,8 +51,8 @@ public class SessionServiceImpl implements SessionService {
     }
 
     /** Get an immutable logged Customer from session of returns the default Value */
-    @Override @Nonnull
-    public Customer getLoggedCustomer(@Nonnull final Customer defaultValue) {
+    @Override @NotNull
+    public Customer getLoggedCustomer(@NotNull final Customer defaultValue) {
         final Customer customer = getLoggedCustomer();
         final Customer result = customer != null ? customer : defaultValue;
         Assert.notNull(result, "Default value is required");

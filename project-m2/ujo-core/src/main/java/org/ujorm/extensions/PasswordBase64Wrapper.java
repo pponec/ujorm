@@ -16,7 +16,7 @@
 package org.ujorm.extensions;
 
 import java.nio.ByteBuffer;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -75,8 +75,8 @@ public class PasswordBase64Wrapper extends BinaryWrapper {
     }
 
     /** Factory to create an instance of {@link BinaryWrapper} class. */
-    @Nonnull
-    public static PasswordBase64Wrapper of(@Nonnull String password) {
+    @NotNull
+    public static PasswordBase64Wrapper of(@NotNull String password) {
         return new PasswordBase64Wrapper(password.toCharArray());
     }
 

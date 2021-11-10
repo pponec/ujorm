@@ -17,8 +17,8 @@ package org.ujorm.wicket.component.dialog.domestic;
 
 import java.io.Serializable;
 import java.util.Iterator;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.IEvent;
@@ -161,7 +161,7 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
     }
 
     /** Refresh DataTable */
-    public void reloadTable(@Nonnull final AjaxRequestTarget target) {
+    public void reloadTable(@NotNull final AjaxRequestTarget target) {
         target.add(getTable());
     }
 
@@ -176,7 +176,7 @@ public class OfferDialogPane<T extends Ujo & Serializable> extends AbstractDialo
      * @param title Window title
      * @param target target
      */
-    public void show(@Nonnull AjaxRequestTarget target, IModel<String> title, IModel<T> body) {
+    public void show(@NotNull AjaxRequestTarget target, IModel<String> title, IModel<T> body) {
         toolbar.requestFocus(target);
         buildCriterion();
         reloadTable(target);

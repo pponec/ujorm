@@ -16,8 +16,8 @@
 package org.ujorm.wicket.component.grid;
 
 import java.io.Serializable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.ujorm.Ujo;
@@ -49,7 +49,7 @@ public class CommonAction<U extends Ujo> implements Serializable, CommonActions 
      * @param label Optional Label, the {@code null} value is replaced by the key: {@code "label.action." + actionId}.
      * @see CommonActions
      */
-    public CommonAction(@Nonnull String actionId, @Nullable IModel<String> label) {
+    public CommonAction(@NotNull String actionId, @Nullable IModel<String> label) {
         this.actionId = actionId;
         this.label = label != null ? label
                 : new ResourceModel(DEFAULT_PREFIX + actionId, actionId);

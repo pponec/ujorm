@@ -16,8 +16,8 @@
 package org.ujorm.wicket;
 
 import java.io.Serializable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.tools.Assert;
@@ -31,10 +31,10 @@ public final class UjoModel<V extends Serializable> implements IModel<V>, UjoSup
     private static final long serialVersionUID = 1L;
 
     /** ProxyValue */
-    @Nonnull
+    @NotNull
     private final UjoSupplier<V> proxyValue;
 
-    public UjoModel(@Nonnull final UjoSupplier<V> proxyValue) {
+    public UjoModel(@NotNull final UjoSupplier<V> proxyValue) {
         this.proxyValue = Assert.notNull(proxyValue, "proxyValue");
     }
 
@@ -61,7 +61,7 @@ public final class UjoModel<V extends Serializable> implements IModel<V>, UjoSup
     // --- Static method ---
 
     /** A factory method */
-    public static <V extends Serializable> UjoModel<V> of(@Nonnull final UjoSupplier<V> proxyValue) {
+    public static <V extends Serializable> UjoModel<V> of(@NotNull final UjoSupplier<V> proxyValue) {
         return new UjoModel(proxyValue);
     }
 

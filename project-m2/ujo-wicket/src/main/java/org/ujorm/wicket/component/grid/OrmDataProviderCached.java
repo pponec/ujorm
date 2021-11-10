@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -23,7 +23,7 @@ import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATAT
 public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> {
 
     /** Duration of data cache */
-    @Nonnull
+    @NotNull
     private static final Duration dataLife = Duration.ofMinutes(2);
 
     /** Duration of data cache */
@@ -42,12 +42,12 @@ public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> 
     private final List<U> rows = new ArrayList<>(rowsPerPage);
 
     /** Consturctor */
-    public OrmDataProviderCached(@Nonnull final IModel<Criterion<U>> criterion) {
+    public OrmDataProviderCached(@NotNull final IModel<Criterion<U>> criterion) {
         super(criterion);
     }
 
     /** Consturctor */
-    public OrmDataProviderCached(@Nonnull final IModel<Criterion<U>> criterion, @Nonnull final Key<? super U, ?> defaultSort) {
+    public OrmDataProviderCached(@NotNull final IModel<Criterion<U>> criterion, @NotNull final Key<? super U, ?> defaultSort) {
         super(criterion, defaultSort);
     }
 
@@ -77,7 +77,7 @@ public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> 
     }
 
     /** Refresh rows */
-    private void refreshRows(@Nonnull final Criterion<U> crn) {
+    private void refreshRows(@NotNull final Criterion<U> crn) {
         rows.clear();
         final Iterator<U> it = iterator(0L, getRowCountLimit(), crn);
         while(it.hasNext()) {
@@ -86,7 +86,7 @@ public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> 
     }
 
     /** Get a sublist. */
-    @Override @Nonnull
+    @Override @NotNull
     public Iterator<U> iterator(final long first, final long count) {
         return rows.subList((int)first, (int)(first + count)).iterator();
     }
@@ -116,7 +116,7 @@ public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> 
     }
 
     /** Cache duration is 2 minutes by default */
-    @Nonnull
+    @NotNull
     public Duration getDataLife() {
         return dataLife;
     }
@@ -135,17 +135,17 @@ public class OrmDataProviderCached<U extends OrmUjo> extends OrmDataProvider<U> 
     // ============= STATIC METHOD =============
 
     /** Factory for the class */
-    public static <T extends OrmUjo> OrmDataProvider<T> of(@Nonnull final IModel<Criterion<T>> criterion, Key<? super T,?> defaultSort) {
+    public static <T extends OrmUjo> OrmDataProvider<T> of(@NotNull final IModel<Criterion<T>> criterion, Key<? super T,?> defaultSort) {
         return new OrmDataProviderCached<T>(criterion, defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> OrmDataProvider<T> of(@Nonnull final IModel<Criterion<T>> criterion) {
+    public static <T extends OrmUjo> OrmDataProvider<T> of(@NotNull final IModel<Criterion<T>> criterion) {
         return new OrmDataProviderCached<T>(criterion, null);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> OrmDataProvider<T> of(@Nonnull final Criterion<T> criterion, Key<? super T,?> defaultSort) {
+    public static <T extends OrmUjo> OrmDataProvider<T> of(@NotNull final Criterion<T> criterion, Key<? super T,?> defaultSort) {
         return new OrmDataProviderCached<T>(new Model(criterion), defaultSort);
     }
 

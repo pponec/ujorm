@@ -22,8 +22,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -99,20 +99,20 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     }
 
     /** Filtering */
-    public OfferModel(@Nonnull final Criterion<U> filter) {
+    public OfferModel(@NotNull final Criterion<U> filter) {
         this.filter = Assert.notNull(filter, "filter");
         this.filterModel = Model.of(filter);
         this.highliting = new Model<Criterion<U>>(null);
     }
 
     /** Returns the original filter */
-    @Nonnull
+    @NotNull
     public Criterion<U> getFilter() {
         return filter;
     }
 
     /** Returns filter model */
-    @Nonnull
+    @NotNull
     public IModel<Criterion<U>> getFilterModel() {
         return filterModel;
     }
@@ -124,19 +124,19 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     }
 
     /** Returns highliting with a non-null model */
-    @Nonnull
+    @NotNull
     public IModel<Criterion<U>> getHighliting() {
         return highliting;
     }
 
     /** Return a base class */
-    @Nonnull
+    @NotNull
     public Class<U> getType() {
         return (Class<U>) filter.getDomain();
     }
 
     /** Dialog title */
-    @Nonnull
+    @NotNull
     public IModel<String> getTitle() {
         if (title== null) {
             title = new Model<String>("Offer");
@@ -151,7 +151,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     }
 
     /** Set dimension of Window */
-    @Nonnull
+    @NotNull
     public Dimension getDimension() {
         return dimension;
     }
@@ -325,7 +325,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     }
 
     /** Display column of the UjoField */
-    @Nonnull
+    @NotNull
     public <V> Key<U,V> getId() {
         if (id == null) {
             if (isOrm()) {
@@ -382,7 +382,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     }
 
     /** Closable object */
-    public void setClosable(@Nonnull final Closeable<U> closable) {
+    public void setClosable(@NotNull final Closeable<U> closable) {
         this.closable = Assert.notNull(closable, "closable");
     }
 

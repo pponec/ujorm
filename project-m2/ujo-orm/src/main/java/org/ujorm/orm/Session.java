@@ -31,8 +31,8 @@ import java.util.NoSuchElementException;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import javax.transaction.Status;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
@@ -295,27 +295,27 @@ public class Session implements Closeable {
      * @see #createQuery(org.ujorm.criterion.Criterion)
      */
     public final <U extends OrmUjo> Query<U> createQuery
-        ( @Nonnull final Criterion<U> criterion
-        , @Nonnull final Class<U> aClass) {
+        ( @NotNull final Criterion<U> criterion
+        , @NotNull final Class<U> aClass) {
         final MetaTable metaTable = handler.findTableModel(aClass);
         return new Query<>(metaTable, criterion, this);
     }
 
     /** The table class is derived from the first criterion column. */
-    public final <U extends OrmUjo> Query<U> createQuery(@Nonnull final Criterion<U> criterion) {
+    public final <U extends OrmUjo> Query<U> createQuery(@NotNull final Criterion<U> criterion) {
         final MetaRelation2Many column = getBasicColumn(criterion);
         final MetaTable table = MetaRelation2Many.TABLE.of(column);
         return new Query<>(table, criterion, this);
     }
 
     /** Returns {@code true} if exists any database row with the required condition. */
-    public final <U extends OrmUjo> boolean exists(@Nonnull final Criterion<U> criterion) {
+    public final <U extends OrmUjo> boolean exists(@NotNull final Criterion<U> criterion) {
         final MetaTable table = MetaRelation2Many.TABLE.of(getBasicColumn(criterion));
         return exists(table, criterion, table.getFirstPK().getKey());
     }
 
     /** Returns {@code true} if exists any database row for the required entity. */
-    public final <U extends OrmUjo> boolean exists(@Nonnull final Class<U> entity) {
+    public final <U extends OrmUjo> boolean exists(@NotNull final Class<U> entity) {
         final MetaTable table = handler.findTableModel(entity);
         final Key pk = table.getFirstPK().getKey();
         return exists(table, pk.forAll(), pk);
@@ -323,9 +323,9 @@ public class Session implements Closeable {
 
     /** Returns {@code true} if exists any database row for the required criterion. */
     protected final <U extends OrmUjo> boolean exists
-        ( @Nonnull final MetaTable table
+        ( @NotNull final MetaTable table
         , @Nullable final Criterion<U> criterion
-        , @Nonnull final Key<U,?> pk) {
+        , @NotNull final Key<U,?> pk) {
         final Ujo result = new Query<>(table, criterion, this)
                 .setColumn(pk)
                 .setLimit(1)
@@ -337,7 +337,7 @@ public class Session implements Closeable {
      * @return Not null result
      */
     @Nullable
-    public MetaRelation2Many getBasicColumn(@Nonnull Criterion criterion) {
+    public MetaRelation2Many getBasicColumn(@NotNull Criterion criterion) {
         while (criterion.isBinary()) {
             criterion = ((BinaryCriterion) criterion).getLeftNode();
         }
@@ -381,7 +381,7 @@ public class Session implements Closeable {
      * @deprecated Use the method insertOrUpdate() rather
      */
     @Deprecated
-    public final void saveOrUpdate(@Nonnull final OrmUjo bo) throws IllegalStateException {
+    public final void saveOrUpdate(@NotNull final OrmUjo bo) throws IllegalStateException {
         insertOrUpdate(bo);
     }
 
@@ -391,7 +391,7 @@ public class Session implements Closeable {
      * The method cleans all flags of modified attributes.
      * @since 1.84
      */
-    public void insertOrUpdate(@Nonnull final OrmUjo bo) throws IllegalStateException {
+    public void insertOrUpdate(@NotNull final OrmUjo bo) throws IllegalStateException {
         Assert.notNull(bo);
         if (bo.readSession() == null) {
             insert(bo);
@@ -558,7 +558,7 @@ public class Session implements Closeable {
      * @deprecated Use the method insert() rather
      */
     @Deprecated
-    public final void save(@Nonnull final OrmUjo bo) throws IllegalStateException {
+    public final void save(@NotNull final OrmUjo bo) throws IllegalStateException {
         insert(bo);
     }
 
@@ -566,7 +566,7 @@ public class Session implements Closeable {
      * The method cleans all flags of modified attributes.
      * @since 1.84
      */
-    public void insert(@Nonnull final OrmUjo bo) throws IllegalStateException {
+    public void insert(@NotNull final OrmUjo bo) throws IllegalStateException {
         Assert.notNull(bo);
         JdbcStatement statement = null;
         String sql = "";
@@ -602,7 +602,7 @@ public class Session implements Closeable {
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
-    public int update(@Nonnull final OrmUjo bo) throws IllegalStateException {
+    public int update(@NotNull final OrmUjo bo) throws IllegalStateException {
         return update(bo, createPkCriterion(bo), true);
     }
 
@@ -619,7 +619,7 @@ public class Session implements Closeable {
      * @see OrmUjo#readChangedProperties(boolean)
      */
     public <U extends OrmUjo> int updateSafely
-        ( @Nonnull final U bo
+        ( @NotNull final U bo
         , @Nullable final U original
         , @Nullable final OptionEnum ... required
         ) throws NoSuchElementException {
@@ -658,8 +658,8 @@ public class Session implements Closeable {
      * @see OrmUjo#readChangedProperties(boolean)
      */
     public <U extends OrmUjo> int updateSafely
-        ( @Nonnull final Consumer<U> batch
-        , @Nonnull final U bo
+        ( @NotNull final Consumer<U> batch
+        , @NotNull final U bo
         , @Nullable final OptionEnum ... required
         ) throws NoSuchElementException
         {
@@ -684,7 +684,7 @@ public class Session implements Closeable {
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count where value -1  means: No changed column to update
      */
-    public <U extends OrmUjo> int update(@Nonnull U bo, @Nonnull Criterion<U> criterion) {
+    public <U extends OrmUjo> int update(@NotNull U bo, @NotNull Criterion<U> criterion) {
         return update(bo, criterion, false);
     }
 
@@ -693,7 +693,7 @@ public class Session implements Closeable {
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count where value -1  means: No changed column to update
      */
-    private <U extends OrmUjo> int update(@Nonnull final U bo, @Nonnull final Criterion<U> criterion, boolean singleObject) {
+    private <U extends OrmUjo> int update(@NotNull final U bo, @NotNull final Criterion<U> criterion, boolean singleObject) {
         Assert.notNull(bo);
 
         int result = 0;
@@ -890,7 +890,7 @@ public class Session implements Closeable {
     }
 
     /** Get a list of modified columns */
-    protected List<MetaColumn> getChangedOrmColumns(@Nonnull final OrmUjo bo) {
+    protected List<MetaColumn> getChangedOrmColumns(@NotNull final OrmUjo bo) {
         final KeyList<Ujo> keys = bo.readKeys();
         final List<MetaColumn> result = new ArrayList<>(keys.size());
 
@@ -954,8 +954,8 @@ public class Session implements Closeable {
     }
 
     /** Run SQL SELECT by query. */
-    @Nonnull
-    public JdbcStatement getStatement(@Nonnull final Query query) {
+    @NotNull
+    public JdbcStatement getStatement(@NotNull final Query query) {
         try {
             final MetaDatabase db = query.getTableModel().getDatabase();
             final JdbcStatement result = getStatement(db, query.getSqlStatement(true), false);
@@ -1085,7 +1085,7 @@ public class Session implements Closeable {
     }
 
     /** Create new statement and assigng Savepoint for a trnasaction sase. */
-    public JdbcStatement getStatement(@Nonnull MetaDatabase database, @Nonnull CharSequence sql, final boolean toModify) throws SQLException {
+    public JdbcStatement getStatement(@NotNull MetaDatabase database, @NotNull CharSequence sql, final boolean toModify) throws SQLException {
         final JdbcStatement result = new JdbcStatement(getConnection(database, toModify), sql, handler);
         return result;
     }

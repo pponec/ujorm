@@ -26,8 +26,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.orm.metaModel.MetaColumn;
 import static org.ujorm.orm.TypeService.*;
@@ -50,8 +50,8 @@ public class TypeServiceForOlderJdbc extends TypeService {
    /** Set a value to obsolete PreparedStatement. */
     @Override
     public void setValue
-        ( @Nonnull final MetaColumn mColumn
-        , @Nonnull final PreparedStatement rs
+        ( @NotNull final MetaColumn mColumn
+        , @NotNull final PreparedStatement rs
         , @Nullable final Object value
         , final int c) throws SQLException {
         if (value != null) {
@@ -75,8 +75,8 @@ public class TypeServiceForOlderJdbc extends TypeService {
    /** Get a value from an older CallableStatement. */
     @Override
     public Object getValue
-        ( @Nonnull final MetaColumn mColumn
-        , @Nonnull final CallableStatement rs
+        ( @NotNull final MetaColumn mColumn
+        , @NotNull final CallableStatement rs
         , final int c) throws SQLException, IllegalUjormException {
         switch (mColumn.getTypeCode()) {
             case LOCAL_DATE:
@@ -98,8 +98,8 @@ public class TypeServiceForOlderJdbc extends TypeService {
    /** Get a value from an older ResultSet. */
     @Override
     public Object getValue
-        ( @Nonnull final MetaColumn mColumn
-        , @Nonnull final ResultSet rs
+        ( @NotNull final MetaColumn mColumn
+        , @NotNull final ResultSet rs
         , final int c) throws SQLException, IllegalUjormException {
         switch (mColumn.getTypeCode()) {
             case LOCAL_DATE:

@@ -20,9 +20,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 /**
  * Formatter of log messages where argument is located by the {@code {} } characters.
@@ -35,7 +35,7 @@ import javax.annotation.concurrent.Immutable;
  * @author Pavel Ponec
  * @since 1.73
  */
-@Immutable
+@Unmodifiable
 public class ValueFormatter extends MsgFormatter {
 
     /** Three dots symbol */
@@ -54,7 +54,7 @@ public class ValueFormatter extends MsgFormatter {
     }
 
     /** Static methods are available only */
-    protected ValueFormatter(@Nonnull final String mark, @Nonnull final String textBorder) {
+    protected ValueFormatter(@NotNull final String mark, @NotNull final String textBorder) {
         super(mark);
         this.valueBorder = textBorder;
     }
@@ -65,7 +65,7 @@ public class ValueFormatter extends MsgFormatter {
      * @param value A one value where the {@code Supplier} interface is supported.
      */
     @Override
-    protected void writeValue(@Nullable final Object value, @Nonnull final Appendable out, final boolean marked) throws IOException  {
+    protected void writeValue(@Nullable final Object value, @NotNull final Appendable out, final boolean marked) throws IOException  {
         final Object val = value instanceof Supplier
                 ? ((Supplier)value).get()
                 : value;
@@ -108,7 +108,7 @@ public class ValueFormatter extends MsgFormatter {
     }
 
     /** Write bytes as hexa */
-    protected void writeByteArray(@Nonnull byte[] bytes, @Nonnull final Appendable out) throws IOException {
+    protected void writeByteArray(@NotNull byte[] bytes, @NotNull final Appendable out) throws IOException {
         final int length = bytes != null ? bytes.length : -1; // Length of the bytes
         final int limit = getSizeLimit() >> 1;                // Limit for the bytes
         final int half = (limit - 4) >> 1;
@@ -133,7 +133,7 @@ public class ValueFormatter extends MsgFormatter {
     }
 
     /** You can call the method from a child class */
-    protected void writeLongValue(@Nonnull final CharSequence value, @Nonnull final Appendable out) throws IOException {
+    protected void writeLongValue(@NotNull final CharSequence value, @NotNull final Appendable out) throws IOException {
         final int length = value != null ? value.length() : -1;
         final int limit = getSizeLimit();
         final int half = (limit - 4) >> 1;
@@ -166,7 +166,7 @@ public class ValueFormatter extends MsgFormatter {
      * @param arguments Optional arguments
      * @return
      */
-    @Nonnull
+    @NotNull
     public static <T> String format
     ( @Nullable final String messageTemplate
     , @Nullable final T... arguments) {
@@ -188,7 +188,7 @@ public class ValueFormatter extends MsgFormatter {
      * @param arguments Optional arguments
      * @return
      */
-    @Nonnull
+    @NotNull
     public static <T> String formatSql
     ( @Nullable final String sqlTemplate
     , @Nullable final T... arguments) {

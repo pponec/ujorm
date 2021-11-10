@@ -17,8 +17,8 @@ package org.ujorm.wicket;
 
 import java.io.Serializable;
 import java.util.Collection;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
@@ -53,7 +53,7 @@ public class UjoEvent<U> {
      * @param action Required action code
      * @param target target
      */
-    public UjoEvent(@Nonnull String action, @Nonnull AjaxRequestTarget target) {
+    public UjoEvent(@NotNull String action, @NotNull AjaxRequestTarget target) {
         this(action, (U) null, target);
     }
 
@@ -63,7 +63,7 @@ public class UjoEvent<U> {
      * @param ujo Optional data context
      * @param target target
      */
-    public UjoEvent(@Nonnull String action, @Nullable U ujo, @Nonnull AjaxRequestTarget target) {
+    public UjoEvent(@NotNull String action, @Nullable U ujo, @NotNull AjaxRequestTarget target) {
         this(action, true, ujo, target);
     }
 
@@ -74,7 +74,7 @@ public class UjoEvent<U> {
      * @param ujo Optional data context type of Ujo
      * @param target Target
      */
-    public UjoEvent(@Nonnull final String action, boolean dialogRequest, @Nullable U ujo, @Nonnull AjaxRequestTarget target) {
+    public UjoEvent(@NotNull final String action, boolean dialogRequest, @Nullable U ujo, @NotNull AjaxRequestTarget target) {
         this.action = Assert.notNull(action, "action");
         this.domain = ujo;
         this.showDialog = dialogRequest;
@@ -88,19 +88,19 @@ public class UjoEvent<U> {
     }
 
     /** Get Ujo domain model */
-    @Nonnull
+    @NotNull
     public IModel<U> getUjoModel() {
         return new Model((Serializable)domain);
     }
 
     /** Get target */
-    @Nonnull
+    @NotNull
     public AjaxRequestTarget getTarget() {
         return target;
     }
 
     /** Add required component to the target */
-    public void addTarget(@Nonnull Component... components) {
+    public void addTarget(@NotNull Component... components) {
         target.add(components);
     }
 
@@ -114,7 +114,7 @@ public class UjoEvent<U> {
      * @param action Nullable argument
      * @return The true value for the match.
      */
-    public final boolean isAction(@Nonnull final String action) {
+    public final boolean isAction(@NotNull final String action) {
         return action != null
             && this.action.hashCode() == action.hashCode()
             && this.action.equals(action);
@@ -138,7 +138,7 @@ public class UjoEvent<U> {
      * @param actions An nonnull argument
      * @return The true value for the match.
      */
-    public final boolean isAction(@Nonnull String ... actions) {
+    public final boolean isAction(@NotNull String ... actions) {
         for (String act : actions) {
             if (isAction(act)) {
                 return true;
@@ -165,8 +165,8 @@ public class UjoEvent<U> {
     // ----------- STATIC ------------
 
     /** Get Payload type UjoEvent from the argument or return the {@link EMPTY_EVENT}*/
-    @Nonnull
-    public static <T> UjoEvent<T> get(@Nonnull IEvent<?> argEvent) {
+    @NotNull
+    public static <T> UjoEvent<T> get(@NotNull IEvent<?> argEvent) {
         final Object payLoad = Assert.notNull(argEvent, "argEvent").getPayload();
         return payLoad instanceof UjoEvent
                 ? (UjoEvent<T>) payLoad

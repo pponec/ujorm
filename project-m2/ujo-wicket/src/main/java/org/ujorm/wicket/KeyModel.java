@@ -15,7 +15,7 @@
  */
 package org.ujorm.wicket;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.ujorm.Key;
@@ -95,7 +95,7 @@ public class KeyModel<U extends Ujo, T> implements IModel<T> {
      * @param key key path
      * @return {@link PropertyModel} instance
      */
-    public static <U extends Ujo, T> KeyModel<U, T> of(@Nonnull final U parent, @Nonnull final Key<U, T> key) {
+    public static <U extends Ujo, T> KeyModel<U, T> of(@NotNull final U parent, @NotNull final Key<U, T> key) {
         return new KeyModel<U, T>(parent, key);
     }
 
@@ -106,7 +106,7 @@ public class KeyModel<U extends Ujo, T> implements IModel<T> {
      * @return {@link PropertyModel} instance
      */
     @SuppressWarnings("unchecked")
-    public static <U extends Ujo, T> KeyModel<U, T> of(@Nonnull final IModel<U> domain, @Nonnull final KeyRing<U> key) {
+    public static <U extends Ujo, T> KeyModel<U, T> of(@NotNull final IModel<U> domain, @NotNull final KeyRing<U> key) {
         return (KeyModel<U, T>) of(domain.getObject(), key.getFirstKey());
     }
 

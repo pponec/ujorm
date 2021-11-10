@@ -15,7 +15,7 @@
  */
 package org.ujorm.wicket.component.form.fields;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * interpretation of the "quick and dirty" Java converter found in the comments

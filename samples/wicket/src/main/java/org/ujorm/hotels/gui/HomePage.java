@@ -17,7 +17,7 @@ package org.ujorm.hotels.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
@@ -94,7 +94,7 @@ public class HomePage extends WebPage implements IAjaxIndicatorAware {
     }
 
     /** Show the about tab */
-    private void showAboutTab(@Nonnull AjaxRequestTarget target) {
+    private void showAboutTab(@NotNull AjaxRequestTarget target) {
         ((UjoTabbedPanel)HomePage.this.get("tabs")).selectTab(AboutPanel.class, target);
     }
 

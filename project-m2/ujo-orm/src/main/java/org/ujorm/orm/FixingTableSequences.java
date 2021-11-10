@@ -22,8 +22,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
@@ -54,7 +54,7 @@ public class FixingTableSequences implements Runnable {
     protected final String sequenceTableName;
 
     /** Constructor */
-    public FixingTableSequences(@Nullable final MetaDatabase db, @Nonnull final Connection conn) throws Exception {
+    public FixingTableSequences(@Nullable final MetaDatabase db, @NotNull final Connection conn) throws Exception {
         final boolean noDb = db == null;
 
         this.db = db;
@@ -78,11 +78,11 @@ public class FixingTableSequences implements Runnable {
     }
 
     /** Method called before internal processing is empty by default */
-    protected void onBefore(@Nonnull final Connection connection) throws SQLException, IOException {
+    protected void onBefore(@NotNull final Connection connection) throws SQLException, IOException {
     }
 
     /** Method called after internal processing is empty by default */
-    protected void onAfter(@Nonnull final Connection connection) throws SQLException, IOException {
+    protected void onAfter(@NotNull final Connection connection) throws SQLException, IOException {
     }
 
     /** A correction code */
@@ -164,7 +164,7 @@ public class FixingTableSequences implements Runnable {
     /** Return the required column from sequences table<br>
      * SELECT {} FROM {} WHERE {} LIKE '?' */
     @Nullable
-    protected <T> T selectValueFromSequence(@Nonnull final String id, final int dbColumn) throws SQLException, IOException {
+    protected <T> T selectValueFromSequence(@NotNull final String id, final int dbColumn) throws SQLException, IOException {
         try (PreparedStatement ps = selectFromSequence(id, dbColumn, false); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 switch (dbColumn) {
@@ -182,7 +182,7 @@ public class FixingTableSequences implements Runnable {
 
     /** Return the first column from sequences table<br>
      * SELECT {}, {} FROM {} WHERE {} LIKE '?' */
-    protected PreparedStatement selectFromSequence(@Nonnull final String id, final int dbColumn, boolean likeOp) throws SQLException, IOException {
+    protected PreparedStatement selectFromSequence(@NotNull final String id, final int dbColumn, boolean likeOp) throws SQLException, IOException {
         final JdbcBuilder sql = new JdbcBuilder()
            .write("SELECT")
            .column(dialect.getQuotedName(seqModel.getId())) // 1
@@ -196,7 +196,7 @@ public class FixingTableSequences implements Runnable {
     }
 
     /** UPDATE {} SET {} = ? WHERE {} = '?' */
-    protected int updateSequence(@Nonnull final String id, final long value) throws SQLException, IOException {
+    protected int updateSequence(@NotNull final String id, final long value) throws SQLException, IOException {
         final JdbcBuilder sql = new JdbcBuilder()
            .write("UPDATE")
            .write(sequenceTableName)
@@ -209,7 +209,7 @@ public class FixingTableSequences implements Runnable {
     }
 
     /** DELETE FROM {} WHERE {} = '?' */
-    protected int deleteSequence(@Nonnull final String id) throws SQLException, IOException {
+    protected int deleteSequence(@NotNull final String id) throws SQLException, IOException {
         final JdbcBuilder sql = new JdbcBuilder()
            .write("DELETE FROM")
            .write(sequenceTableName)

@@ -16,8 +16,8 @@
 package org.ujorm.wicket.component.form;
 
 import java.io.Serializable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
@@ -56,7 +56,7 @@ public class UiValidator<T> implements IValidator<T>, INullAcceptingValidator<T>
      * @param validator Required validator
      * @param key Optional key
      */
-    public UiValidator(@Nonnull Validator<T> validator, @Nullable KeyRing key) {
+    public UiValidator(@NotNull Validator<T> validator, @Nullable KeyRing key) {
         this.validator = Assert.notNull(validator, "validator");
         this.key = key;
     }

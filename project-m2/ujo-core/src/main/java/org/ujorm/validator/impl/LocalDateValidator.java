@@ -17,8 +17,8 @@ package org.ujorm.validator.impl;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.tools.msg.MessageArg;
@@ -53,7 +53,7 @@ public class LocalDateValidator<VALUE extends LocalDate> extends AbstractValidat
      * Between validator
      * @param past Serializable maximum valuem (inclusive)
      */
-    public LocalDateValidator(final boolean past, @Nonnull final ZoneId zoneId) {
+    public LocalDateValidator(final boolean past, @NotNull final ZoneId zoneId) {
         this.past = past;
         this.pastWord = past ? "past" : "future";
         this.zoneId = zoneId;
@@ -64,7 +64,7 @@ public class LocalDateValidator<VALUE extends LocalDate> extends AbstractValidat
     public <UJO extends Ujo> ValidationError validate
         ( @Nullable final VALUE input
         , @Nullable final Key<UJO, VALUE> key
-        , @Nonnull final UJO bo) {
+        , @NotNull final UJO bo) {
 
             final LocalDate now = LocalDate.now(zoneId);
             final boolean ok = input==null

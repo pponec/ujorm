@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -50,7 +50,7 @@ import org.ujorm.tools.Assert;
  */
 public class PackageDbConfig<U extends OrmUjo> extends NativeUjoDecorator<U> {
 
-    @Nonnull
+    @NotNull
     protected final KeyList<U> keyList;
 
     /**
@@ -59,7 +59,7 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeUjoDecorator<U> {
      * @param dbClass
      * @throws IllegalArgumentException At least one table is needed
      */
-    public <U extends OrmUjo> PackageDbConfig(@Nonnull final Class<U> dbClass) throws IllegalArgumentException{
+    public <U extends OrmUjo> PackageDbConfig(@NotNull final Class<U> dbClass) throws IllegalArgumentException{
         super(dbClass);
         final List result = new ArrayList<>();
         final List<Class> tables = findTables();
@@ -72,7 +72,7 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeUjoDecorator<U> {
         this.keyList = KeyRing.of(dbClass, result);
     }
 
-    @Override @Nonnull
+    @Override @NotNull
     public KeyList<U> getKeys() {
         return keyList;
     }
@@ -95,7 +95,7 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeUjoDecorator<U> {
     }
 
     /** Find all table from required package */
-    @Nonnull
+    @NotNull
     private List<Class> findTables() {
         try {
             final List<Class> result = new ArrayList<>();
@@ -124,12 +124,12 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeUjoDecorator<U> {
     }
 
     /** Resolve Base Package */
-    private String resolveBasePackage(@Nonnull final String basePackage) {
+    private String resolveBasePackage(@NotNull final String basePackage) {
         return ClassUtils.convertClassNameToResourcePath(SystemPropertyUtils.resolvePlaceholders(basePackage));
     }
 
     /** Check a candidate */
-    protected boolean isCandidate(@Nonnull final Class<?> clazz) throws ReflectiveOperationException {
+    protected boolean isCandidate(@NotNull final Class<?> clazz) throws ReflectiveOperationException {
         if (!OrmTable.class.isAssignableFrom(clazz)) {
             return false;
         }
@@ -143,7 +143,7 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeUjoDecorator<U> {
     }
 
     /** Create new instance */
-    public static <U extends Ujo> UjoDecorator<U> of(@Nonnull final Class<U> dbClass) {
+    public static <U extends Ujo> UjoDecorator<U> of(@NotNull final Class<U> dbClass) {
         return new PackageDbConfig(dbClass);
     }
 }

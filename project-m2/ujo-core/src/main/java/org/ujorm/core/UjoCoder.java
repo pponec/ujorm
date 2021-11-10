@@ -35,8 +35,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
@@ -176,7 +176,7 @@ public class UjoCoder {
      */
     @SuppressWarnings("unchecked")
     public <T> T decodeValue(
-            @Nonnull final Key<?,T> key,
+            @NotNull final Key<?,T> key,
             @Nullable final String value,
             @Nullable final Class type) throws IllegalArgumentException {
         if (key instanceof ListKey) {

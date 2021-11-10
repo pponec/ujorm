@@ -17,8 +17,8 @@ package org.ujorm.tools.web.json;
 
 import java.io.Closeable;
 import java.io.IOException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.HtmlElement;
@@ -35,10 +35,10 @@ public class JsonBuilder implements Closeable {
     private static final char DOUBLE_QUOTE = JsonWriter.DOUBLE_QUOTE;
 
     /** An original writer */
-    @Nonnull
+    @NotNull
     private final Appendable writer;
     /** JSON writer with character escaping */
-    @Nonnull
+    @NotNull
     private final JsonWriter jsonWriter;
     /** HTML config */
     private final HtmlConfig config;
@@ -46,12 +46,12 @@ public class JsonBuilder implements Closeable {
     private int paramCounter = 0;
 
     /** Constructor with a default HTML config */
-    protected JsonBuilder(@Nonnull final Appendable writer) {
+    protected JsonBuilder(@NotNull final Appendable writer) {
         this(writer, HtmlConfig.ofEmptyElement());
     }
 
     /** Common constructor */
-    protected JsonBuilder(@Nonnull final Appendable writer, HtmlConfig config) {
+    protected JsonBuilder(@NotNull final Appendable writer, HtmlConfig config) {
         this.writer = writer;
         this.jsonWriter = new JsonWriter(writer);
         this.config = config;
@@ -64,7 +64,7 @@ public class JsonBuilder implements Closeable {
      * @throws IOException
      */
     public JsonBuilder writeId(
-            @Nonnull final CharSequence elementId,
+            @NotNull final CharSequence elementId,
             @Nullable final CharSequence... values) throws IOException {
         write(SelectorType.ID.prefix, elementId, values);
         return this;
@@ -78,7 +78,7 @@ public class JsonBuilder implements Closeable {
      * @throws IOException
      */
     public JsonBuilder writeClass(
-            @Nonnull final CharSequence elementId,
+            @NotNull final CharSequence elementId,
             @Nullable final CharSequence... values) throws IOException {
         write(SelectorType.CLASS.prefix, elementId, values);
         return this;
@@ -91,7 +91,7 @@ public class JsonBuilder implements Closeable {
      * @throws IOException
      */
     public JsonBuilder write(
-            @Nonnull final CharSequence key,
+            @NotNull final CharSequence key,
             @Nullable final CharSequence... values) throws IOException {
         write(SelectorType.INCLUDED.prefix, key, values);
         return this;
@@ -104,8 +104,8 @@ public class JsonBuilder implements Closeable {
      * @throws IOException
      */
     public JsonBuilder write(
-            @Nonnull final String keyPrefix,
-            @Nonnull final CharSequence key,
+            @NotNull final String keyPrefix,
+            @NotNull final CharSequence key,
             @Nullable final CharSequence... values) throws IOException {
         writeKey(keyPrefix, key);
         if (values == null) {
@@ -140,8 +140,8 @@ public class JsonBuilder implements Closeable {
      * @throws IOException
      */
     public JsonBuilder writeId(
-            @Nonnull final CharSequence elementId,
-            @Nonnull final ValueProvider valueProvider) throws IOException {
+            @NotNull final CharSequence elementId,
+            @NotNull final ValueProvider valueProvider) throws IOException {
         return write(SelectorType.ID.prefix, elementId, valueProvider);
     }
 
@@ -153,8 +153,8 @@ public class JsonBuilder implements Closeable {
      * @throws IOException
      */
     public JsonBuilder writeClass(
-            @Nonnull final CharSequence elementId,
-            @Nonnull final ValueProvider valueProvider) throws IOException {
+            @NotNull final CharSequence elementId,
+            @NotNull final ValueProvider valueProvider) throws IOException {
         return write(SelectorType.CLASS.prefix, elementId, valueProvider);
     }
 
@@ -165,8 +165,8 @@ public class JsonBuilder implements Closeable {
      * @throws IOException
      */
     public JsonBuilder write(
-            @Nonnull final CharSequence key,
-            @Nonnull final ValueProvider valueProvider) throws IOException {
+            @NotNull final CharSequence key,
+            @NotNull final ValueProvider valueProvider) throws IOException {
         return write(SelectorType.INCLUDED.prefix, key, valueProvider);
     }
 
@@ -178,9 +178,9 @@ public class JsonBuilder implements Closeable {
      * @throws IOException
      */
     public JsonBuilder write(
-            @Nonnull final String keyPrefix,
-            @Nonnull final CharSequence key,
-            @Nonnull final ValueProvider valueProvider)
+            @NotNull final String keyPrefix,
+            @NotNull final CharSequence key,
+            @NotNull final ValueProvider valueProvider)
             throws IOException {
 
         writeKey(keyPrefix, key);
@@ -209,8 +209,8 @@ public class JsonBuilder implements Closeable {
      * @throws IOException
      */
     public JsonBuilder writeIdObj(
-            @Nonnull final CharSequence elementId,
-            @Nonnull final ObjectProvider objectProvider) throws IOException {
+            @NotNull final CharSequence elementId,
+            @NotNull final ObjectProvider objectProvider) throws IOException {
         return writeObj(SelectorType.ID.prefix, elementId, objectProvider);
     }
 
@@ -222,8 +222,8 @@ public class JsonBuilder implements Closeable {
      * @throws IOException
      */
     public JsonBuilder writeClassObj(
-            @Nonnull final CharSequence elementId,
-            @Nonnull final ObjectProvider objectProvider) throws IOException {
+            @NotNull final CharSequence elementId,
+            @NotNull final ObjectProvider objectProvider) throws IOException {
         return writeObj(SelectorType.CLASS.prefix, elementId, objectProvider);
     }
 
@@ -234,8 +234,8 @@ public class JsonBuilder implements Closeable {
      * @throws IOException
      */
     public JsonBuilder writeObj(
-            @Nonnull final CharSequence key,
-            @Nonnull final ObjectProvider objectProvider) throws IOException {
+            @NotNull final CharSequence key,
+            @NotNull final ObjectProvider objectProvider) throws IOException {
         return writeObj(SelectorType.INCLUDED.prefix, key, objectProvider);
     }
 
@@ -248,9 +248,9 @@ public class JsonBuilder implements Closeable {
      * @throws IOException
      */
     public JsonBuilder writeObj(
-            @Nonnull final String keyPrefix,
-            @Nonnull final CharSequence key,
-            @Nonnull final ObjectProvider objectProvider)
+            @NotNull final String keyPrefix,
+            @NotNull final CharSequence key,
+            @NotNull final ObjectProvider objectProvider)
             throws IOException {
 
         writeKey(keyPrefix, key);
@@ -262,44 +262,44 @@ public class JsonBuilder implements Closeable {
     // --- UTILS ---
 
     /** An object factory */
-    @Nonnull
-    public static final JsonBuilder of(@Nonnull final Appendable writer) {
+    @NotNull
+    public static final JsonBuilder of(@NotNull final Appendable writer) {
         return new JsonBuilder(writer);
     }
 
     /** An object factory */
-    @Nonnull
+    @NotNull
     public static final JsonBuilder of(
-            @Nonnull final HttpServletRequest request,
-            @Nonnull final HttpServletResponse response) throws IllegalStateException, IOException {
+            @NotNull final HttpServletRequest request,
+            @NotNull final HttpServletResponse response) throws IllegalStateException, IOException {
         return of(request, response, HtmlConfig.ofDefault());
     }
 
     /** An object factory */
-    @Nonnull
+    @NotNull
     public static final JsonBuilder of(
-            @Nonnull final HtmlConfig config,
-            @Nonnull final HttpServletResponse response) 
+            @NotNull final HtmlConfig config,
+            @NotNull final HttpServletResponse response) 
             throws IllegalStateException, IOException {
         return of(null, response, config);
     }
     
     /** An object factory */
     @Deprecated
-    @Nonnull
+    @NotNull
     public static final JsonBuilder of(
             @Nullable final HttpServletRequest request,
-            @Nonnull final HttpServletResponse response,
-            @Nonnull final HtmlConfig config) throws IllegalStateException, IOException {
+            @NotNull final HttpServletResponse response,
+            @NotNull final HtmlConfig config) throws IllegalStateException, IOException {
         return of(config, request, response);
     }
     
     /** An object factory */
-    @Nonnull
+    @NotNull
     public static final JsonBuilder of(
-            @Nonnull final HtmlConfig config,
+            @NotNull final HtmlConfig config,
             @Nullable final HttpServletRequest request,
-            @Nonnull final HttpServletResponse response) 
+            @NotNull final HttpServletResponse response) 
             throws IllegalStateException, IOException {
         if (config.isHtmlHeaderRequest()) {
             response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
@@ -325,11 +325,11 @@ public class JsonBuilder implements Closeable {
 
         final String prefix;
 
-        private SelectorType(@Nonnull String prefix) {
+        private SelectorType(@NotNull String prefix) {
             this.prefix = prefix;
         }
 
-        @Nonnull
+        @NotNull
         public String getPrefix() {
             return prefix;
         }

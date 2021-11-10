@@ -16,8 +16,8 @@
 
 package org.ujorm;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.annot.XmlElementBody;
 
 /**
@@ -67,7 +67,7 @@ public interface Ujo {
      * @see Key#getValue(org.ujorm.Ujo)
      * @see Key#isDirect()
      */
-    public Object readValue(@Nonnull Key<?,?> key);
+    public Object readValue(@NotNull Key<?,?> key);
 
 
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
@@ -81,7 +81,7 @@ public interface Ujo {
      * @see Key#setValue(Ujo,Object)
      * @see Key#isDirect()
      */
-    public void writeValue(@Nonnull Key<?,?> key, @Nullable Object value);
+    public void writeValue(@NotNull Key<?,?> key, @Nullable Object value);
 
     /** Returns all direct keys.
      * There is recommended to be a "name" of each key is unique (but it is NOT a necessary condition).
@@ -104,6 +104,6 @@ public interface Ujo {
      * @return Returns a TRUE value in case the key is authorized successfully.
      * @see UjoAction
      */
-    public boolean readAuthorization(@Nonnull UjoAction action, @Nonnull Key<?,?> key, @Nullable Object value);
+    public boolean readAuthorization(@NotNull UjoAction action, @NotNull Key<?,?> key, @Nullable Object value);
 
 }

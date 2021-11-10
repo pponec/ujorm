@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -233,7 +233,7 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     }
 
     /** How to INSERT (no commit) */
-    public void showInsert(@Nonnull Connection dbConnection) throws SQLException {
+    public void showInsert(@NotNull Connection dbConnection) throws SQLException {
         System.out.println("Show INSERT");
         JdbcBuilder sql = new JdbcBuilder()
             .write(Sql.INSERT_INTO)
@@ -251,7 +251,7 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     }
 
     /** How to SELECT a list */
-    public void showSelect_1(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
+    public void showSelect_1(@NotNull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         JdbcBuilder sql = new JdbcBuilder()
             .write(Sql.SELECT)
@@ -277,7 +277,7 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     }
 
    /** How to SELECT a list using a lambda expression */
-    public void showSelect_2(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
+    public void showSelect_2(@NotNull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         JdbcBuilder sql = new JdbcBuilder()
             .write(Sql.SELECT)
@@ -296,7 +296,7 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     }
 
     /** How to SELECT single value */
-    public void showSelectForSingleValue(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
+    public void showSelectForSingleValue(@NotNull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         JdbcBuilder sql = new JdbcBuilder()
             .write(Sql.SELECT)
@@ -311,7 +311,7 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     }
 
     /** How to UPDATE single value (no commit) */
-    public void showUpdate(@Nonnull Connection dbConnection) {
+    public void showUpdate(@NotNull Connection dbConnection) {
         System.out.println("Show UPDATE");
         JdbcBuilder sql = new JdbcBuilder()
             .write(Sql.UPDATE)

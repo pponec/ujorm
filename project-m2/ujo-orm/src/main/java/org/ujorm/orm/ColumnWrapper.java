@@ -16,7 +16,7 @@
 
 package org.ujorm.orm;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.Key;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -52,8 +52,8 @@ public interface ColumnWrapper {
     // --- STATIC METHOD ----
 
     /** Create new instance for a required name */
-    @Nonnull
-    public static ColumnWrapper forName(@Nonnull final MetaColumn column, @Nonnull final String name) {
+    @NotNull
+    public static ColumnWrapper forName(@NotNull final MetaColumn column, @NotNull final String name) {
         return new ColumnWrapperImpl(column, column.getColumnAlias()) {
             @Override public String getName() {
                 return name;
@@ -62,8 +62,8 @@ public interface ColumnWrapper {
     }
 
     /** Create new instance for a required name */
-    @Nonnull
-    public static ColumnWrapper forAlias(@Nonnull final MetaColumn column, @Nonnull final String alias) {
+    @NotNull
+    public static ColumnWrapper forAlias(@NotNull final MetaColumn column, @NotNull final String alias) {
         return new ColumnWrapperImpl(column, alias);
     }
 

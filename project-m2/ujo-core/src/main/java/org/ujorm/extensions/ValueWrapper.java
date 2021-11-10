@@ -18,8 +18,8 @@ package org.ujorm.extensions;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.msg.MsgFormatter;
 
 /**
@@ -55,20 +55,20 @@ public interface ValueWrapper<DbValue, AppValue>
     public static final String _PERSISTENT_DEFAULT_VALUE_NAME = "_PERSISTENT_DEFAULT_VALUE";
 
     /** Get an application type */
-    @Nonnull
+    @NotNull
     public AppValue get();
 
     /** Get a value as a database type */
-    @Nonnull
+    @NotNull
     public DbValue readPersistentValue();
 
     /** The type that JDBC knows how to handle out of the box. */
-    @Nonnull
+    @NotNull
     public Class<DbValue> readPersistentClass();
 
     /** Instance factory for a Technical issues where value is not significant */
-    @Nonnull
-    public static <T extends ValueWrapper> T getInstance(@Nonnull final Class<T> wrapperClass) {
+    @NotNull
+    public static <T extends ValueWrapper> T getInstance(@NotNull final Class<T> wrapperClass) {
         try {
             final Field field = wrapperClass.getField(_PERSISTENT_DEFAULT_VALUE_NAME);
             return wrapperClass.getConstructor(field.getType()).newInstance(field.get(null));
@@ -82,8 +82,8 @@ public interface ValueWrapper<DbValue, AppValue>
     }
 
     /** Instance factory for a Technical issues where value is not significant */
-    @Nonnull
-    public static <T extends ValueWrapper> T getInstance(@Nonnull final Class<T> wrapperClass, @Nullable final Object dbValue) {
+    @NotNull
+    public static <T extends ValueWrapper> T getInstance(@NotNull final Class<T> wrapperClass, @Nullable final Object dbValue) {
         if (dbValue == null) {
             return null;
         }

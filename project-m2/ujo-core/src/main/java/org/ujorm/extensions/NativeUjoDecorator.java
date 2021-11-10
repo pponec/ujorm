@@ -15,7 +15,7 @@
  */
 package org.ujorm.extensions;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -32,12 +32,12 @@ public class NativeUjoDecorator<U extends Ujo> implements UjoDecorator<U> {
     /** Instance of the configuration */
     protected final U domain;
 
-    public <U extends Ujo> NativeUjoDecorator(@Nonnull Class<U> domainClass) {
+    public <U extends Ujo> NativeUjoDecorator(@NotNull Class<U> domainClass) {
         this.domain = getInstance(domainClass);
     }
 
     /** Create an instance from the class */
-    private U getInstance(@Nonnull Class<?> domainClass) {
+    private U getInstance(@NotNull Class<?> domainClass) {
         try {
             return (U) domainClass.newInstance();
         } catch (RuntimeException | ReflectiveOperationException e) {
@@ -56,17 +56,17 @@ public class NativeUjoDecorator<U extends Ujo> implements UjoDecorator<U> {
     }
 
     @Override
-    public <VALUE> VALUE get(@Nonnull final Key<? super U, VALUE> key) {
+    public <VALUE> VALUE get(@NotNull final Key<? super U, VALUE> key) {
         return key.of(domain);
     }
 
     @Override
-    public <VALUE> void set(@Nonnull final Key<? super U, VALUE> key, VALUE value) {
+    public <VALUE> void set(@NotNull final Key<? super U, VALUE> key, VALUE value) {
         key.setValue(domain, value);
     }
 
     /** Create new instance */
-    public static <U extends Ujo> UjoDecorator<U> of(@Nonnull final Class<U> domainClass) {
+    public static <U extends Ujo> UjoDecorator<U> of(@NotNull final Class<U> domainClass) {
         return new NativeUjoDecorator<U>(domainClass);
     }
 }

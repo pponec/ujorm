@@ -16,7 +16,7 @@
 package org.ujorm.tools.common;
 
 import java.io.IOException;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.Assert;
 
 /**
@@ -38,7 +38,7 @@ public class TextBuilder implements CharSequence {
 
     public static final char NEW_LINE = '\n';
 
-    @Nonnull
+    @NotNull
     private final StringBuilder builder;
 
     public TextBuilder() {
@@ -49,14 +49,14 @@ public class TextBuilder implements CharSequence {
         this.builder = Assert.notNull(builder, "builder");
     }
 
-    public TextBuilder add(@Nonnull final CharSequence... items) {
+    public TextBuilder add(@NotNull final CharSequence... items) {
         for (CharSequence item : items) {
             builder.append(item);
         }
         return this;
     }
 
-    public TextBuilder line(@Nonnull final CharSequence... items) {
+    public TextBuilder line(@NotNull final CharSequence... items) {
         if (!endsByNewLine()) {
             builder.append(NEW_LINE);
         }
@@ -78,7 +78,7 @@ public class TextBuilder implements CharSequence {
         return length == 0 || builder.charAt(length - 1) == NEW_LINE;
     }
 
-    public void writeTo(@Nonnull final Appendable writer) throws IOException {
+    public void writeTo(@NotNull final Appendable writer) throws IOException {
         writer.append(builder);
     }
 
@@ -98,7 +98,7 @@ public class TextBuilder implements CharSequence {
         return builder.subSequence(from, to);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String toString() {
         return builder.toString();

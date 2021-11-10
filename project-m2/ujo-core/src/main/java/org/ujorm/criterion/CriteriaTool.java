@@ -19,7 +19,7 @@ package org.ujorm.criterion;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoComparator;
 

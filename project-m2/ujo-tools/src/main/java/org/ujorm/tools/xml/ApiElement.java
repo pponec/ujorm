@@ -18,8 +18,8 @@
 package org.ujorm.tools.xml;
 
 import java.io.Closeable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An element model API.
@@ -38,15 +38,15 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
     public static final String HIDDEN_NAME = null;
 
     /** Get an element name */
-    @Nonnull
+    @NotNull
     String getName();
 
     /** Create a new {@link XmlElement} for a required name and add it to children.
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
      */
-    @Nonnull
-    E addElement(@Nonnull String name);
+    @NotNull
+    E addElement(@NotNull String name);
 
     /**
      * Set an attribute
@@ -56,15 +56,15 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
-    @Nonnull
-    E setAttribute(@Nonnull String name, @Nullable Object value);
+    @NotNull
+    E setAttribute(@NotNull String name, @Nullable Object value);
 
     /**
      * @deprecated Call a method {@link #setAttribute(java.lang.String, java.lang.Object) } rather.
      */
     @Deprecated
-    @Nonnull
-    default E setAttrib(@Nonnull String name, @Nullable Object value) {
+    @NotNull
+    default E setAttrib(@NotNull String name, @Nullable Object value) {
         return setAttribute(name, value);
     }
 
@@ -74,7 +74,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
-    @Nonnull
+    @NotNull
     E addText(@Nullable Object value);
 
     /**
@@ -84,13 +84,13 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      * @param values argument values
      * @return The original builder
      */
-    @Nonnull
-    E addTextTemplated(@Nullable final CharSequence template, @Nonnull final Object... values);
+    @NotNull
+    E addTextTemplated(@Nullable final CharSequence template, @NotNull final Object... values);
 
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */
-    @Nonnull
+    @NotNull
     E addRawText(@Nullable Object value);
 
     /**
@@ -99,7 +99,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      * @param comment A comment text must not contain a string {@code -->} .
      * @return This instance
      */
-    @Nonnull
+    @NotNull
     E addComment(@Nullable CharSequence comment);
 
     /**
@@ -108,7 +108,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      * @param charData A text including the final DATA sequence. An empty argument is ignored.
      * @return This instance
      */
-    @Nonnull
+    @NotNull
     E addCDATA(@Nullable CharSequence charData);
 
     /** Close the element */

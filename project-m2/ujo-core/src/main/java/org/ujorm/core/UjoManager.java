@@ -27,8 +27,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -270,7 +270,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
      * @throws java.lang.IllegalStateException
      */
     @SuppressWarnings("unchecked")
-    public static Ujo clone(@Nonnull final Ujo ujo, int depth, @Nullable final Object context)
+    public static Ujo clone(@NotNull final Ujo ujo, int depth, @Nullable final Object context)
             throws IllegalStateException {
         final UjoAction action = new UjoActionImpl(UjoAction.ACTION_CLONE, context);
         if (--depth < 0
@@ -522,7 +522,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
      * @return Instance of new result.
      */
     public final <T> T decodeValue(
-            @Nonnull final Key<?,T> key,
+            @NotNull final Key<?,T> key,
             @Nullable final String aValue) {
         return coder.decodeValue(key, aValue, null);
     }
@@ -843,7 +843,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
     }
 
     /** Returns version of the current library or the {@code "UNDEFINED"} text */
-    @Nonnull
+    @NotNull
     public static String version() {
         final Package libPackage = Ujo.class.getPackage();
         final String result = libPackage != null ? libPackage.getSpecificationVersion() : null;

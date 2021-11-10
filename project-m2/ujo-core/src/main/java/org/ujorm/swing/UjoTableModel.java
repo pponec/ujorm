@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 import org.ujorm.Key;
@@ -70,7 +70,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     }
 
     /** Assign a table rows */
-    public void setRows(@Nonnull List<ROW> rows) {
+    public void setRows(@NotNull List<ROW> rows) {
         this.rows =  Assert.notNull(rows, "rows are required");
         fireTableDataChanged();
     }

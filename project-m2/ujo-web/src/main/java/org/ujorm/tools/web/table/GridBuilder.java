@@ -22,8 +22,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
@@ -54,56 +54,56 @@ public class GridBuilder<D> {
     /** Is the table sortable */
     private Boolean isSortable;
 
-    public GridBuilder(@Nonnull CharSequence title) {
+    public GridBuilder(@NotNull CharSequence title) {
         this((HtmlConfig) HtmlConfig.ofDefault().setTitle(title).setNiceFormat());
     }
 
-    public GridBuilder(@Nonnull HtmlConfig config) {
+    public GridBuilder(@NotNull HtmlConfig config) {
         this(GridBuilderConfig.of(config));
     }
 
-    public GridBuilder(@Nonnull GridBuilderConfig config) {
+    public GridBuilder(@NotNull GridBuilderConfig config) {
         this.config = config;
     }
 
-    @Nonnull
+    @NotNull
     public <V> GridBuilder<D> add(Function<D,V> column) {
         return addInternal(column, "Column-" + (columns.size() + 1), null);
     }
 
-    @Nonnull
+    @NotNull
     public <V> GridBuilder<D> add(Function<D,V> column, CharSequence title) {
         return addInternal(column, title, null);
     }
 
-    @Nonnull
+    @NotNull
     public <V> GridBuilder<D> add(Function<D,V> column, Injector title) {
         return addInternal(column, title, null);
     }
 
-    @Nonnull
+    @NotNull
     public <V> GridBuilder<D> add(Function<D,V> column, CharSequence title, @Nullable HttpParameter param) {
         return addInternal(column, title, param);
     }
 
-    @Nonnull
+    @NotNull
     public <V> GridBuilder<D> add(Function<D,V> column, Injector title, @Nullable HttpParameter param) {
         return addInternal(column, title, param);
     }
 
-    @Nonnull
-    public GridBuilder<D> addColumn(@Nonnull final Column<D> column, @Nonnull final CharSequence title) {
+    @NotNull
+    public GridBuilder<D> addColumn(@NotNull final Column<D> column, @NotNull final CharSequence title) {
         return addInternal(column, title, null);
     }
 
-    @Nonnull
-    public GridBuilder<D> addColumn(@Nonnull final Column<D> column, @Nonnull final Injector title) {
+    @NotNull
+    public GridBuilder<D> addColumn(@NotNull final Column<D> column, @NotNull final Injector title) {
         return addInternal(column, title, null);
     }
 
     /** Add new column for a row counting */
-    @Nonnull
-    public GridBuilder<D> addOrder(@Nonnull final CharSequence title) {
+    @NotNull
+    public GridBuilder<D> addOrder(@NotNull final CharSequence title) {
         final String textRight = "text-right";
         return addColumn(new Column<D>() {
             final AtomicLong order = new AtomicLong();
@@ -118,10 +118,10 @@ public class GridBuilder<D> {
         }, e -> e.setClass(Html.A_CLASS, textRight).addText(title));
     }
 
-    @Nonnull
+    @NotNull
     protected <V> GridBuilder<D> addInternal(
-            @Nonnull final Function<D,V> column,
-            @Nonnull final CharSequence title,
+            @NotNull final Function<D,V> column,
+            @NotNull final CharSequence title,
             @Nullable final HttpParameter param) {
         columns.add(new ColumnModel(columns.size(), column, title, param));
         return this;
@@ -141,7 +141,7 @@ public class GridBuilder<D> {
      * Add a sortable indicator to the last column model
      * @return
      */
-    @Nonnull
+    @NotNull
     public <V> GridBuilder<D> sortable() {
         return sortable(Direction.NONE);
     }
@@ -150,7 +150,7 @@ public class GridBuilder<D> {
      * @param ascending Ascending or descending direction of the sort
      * @return
      */
-    @Nonnull
+    @NotNull
     public <V> GridBuilder<D> sortable(@Nullable final boolean ascending) {
         return sortable(ascending ? Direction.ASC : Direction.DESC);
     }
@@ -160,8 +160,8 @@ public class GridBuilder<D> {
      * @param direction The {@code null} value shows an unused sorting action.
      * @return
      */
-    @Nonnull
-    public <V> GridBuilder<D> sortable(@Nonnull final Direction direction) {
+    @NotNull
+    public <V> GridBuilder<D> sortable(@NotNull final Direction direction) {
         Assert.notNull(direction, "direction");
         Assert.hasLength(columns, "No column is available");
         columns.get(columns.size() - 1).setSortable(direction);
@@ -169,7 +169,7 @@ public class GridBuilder<D> {
     }
 
     /** Get sorted column or a stub of the sorted column was not found */
-    @Nonnull
+    @NotNull
     public ColumnModel<D,?> getSortedColumn() {
         return (sortedColumn >= 0 && sortedColumn < getColumnSize())
                 ? getColumn(sortedColumn)
@@ -187,16 +187,16 @@ public class GridBuilder<D> {
 
     /** Build the HTML page including a table */
     public void build(
-            @Nonnull final ApiElement parent,
-            @Nonnull final Function<GridBuilder<D>, Stream<D>> resource) {
+            @NotNull final ApiElement parent,
+            @NotNull final Function<GridBuilder<D>, Stream<D>> resource) {
         printTable(Element.of(parent), resource);
     }
 
     /** Build the HTML page including a table */
     public void build(
-            @Nonnull final ApiElement parent,
-            @Nonnull final ColumnModel sortedColumn,
-            @Nonnull final Function<GridBuilder<D>, Stream<D>> resource) {
+            @NotNull final ApiElement parent,
+            @NotNull final ColumnModel sortedColumn,
+            @NotNull final Function<GridBuilder<D>, Stream<D>> resource) {
 
         // An original code: setSort(ColumnModel.ofCode(config.getSortRequestParam().of(input)));
         setSort(Assert.notNull(sortedColumn, "sortedColumn"));
@@ -204,7 +204,7 @@ public class GridBuilder<D> {
     }
 
     /** Mark a column as sorted */
-    protected void setSort(@Nonnull final ColumnModel sort) {
+    protected void setSort(@NotNull final ColumnModel sort) {
         this.sortedColumn = sort.getIndex();
         if (sortedColumn >= 0) {
             for (int i = 0, max = columns.size(); i < max; i++) {
@@ -223,8 +223,8 @@ public class GridBuilder<D> {
      * @param resource Data source
      */
     protected void printTable(
-            @Nonnull final Element parent,
-            @Nonnull final Function<GridBuilder<D>, Stream<D>> resource
+            @NotNull final Element parent,
+            @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
         final String elementName = parent.getName();
         final Element table = (Check.isEmpty(elementName) || Html.TABLE.equals(elementName))

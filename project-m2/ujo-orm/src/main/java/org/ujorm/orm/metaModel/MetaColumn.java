@@ -23,9 +23,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
@@ -59,7 +59,7 @@ import static org.ujorm.tools.Check.isEmpty;
  * @author Pavel Ponec
  * @composed 1 - * DbType
  */
-@Immutable
+@Unmodifiable
 public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper {
     private static final Class<MetaColumn> CLASS = MetaColumn.class;
 
@@ -131,7 +131,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     }
 
     @SuppressWarnings({"LeakingThisInConstructor", "unchecked"})
-    public MetaColumn(@Nonnull final MetaTable table, @Nonnull final Key tableProperty, @Nullable final MetaColumn param) {
+    public MetaColumn(@NotNull final MetaTable table, @NotNull final Key tableProperty, @Nullable final MetaColumn param) {
         super(table, tableProperty, param);
         this.foreignKey = isTypeOf(OrmUjo.class);
         this.isValueWrapper = isTypeOf(ValueWrapper.class);
@@ -374,7 +374,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
      * @param value A value to assign.
      */
     @SuppressWarnings("unchecked")
-    public void setValueRaw(@Nonnull final Ujo bo, @Nullable final Object value) {
+    public void setValueRaw(@NotNull final Ujo bo, @Nullable final Object value) {
         if (isValueWrapper) {
             setValue(bo, ValueWrapper.getInstance(getType(), value));
         } else {
@@ -387,7 +387,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
      * @param value A value to assign.
      */
     @SuppressWarnings("unchecked")
-    public void setValue(@Nonnull final Ujo bo, @Nullable Object value) {
+    public void setValue(@NotNull final Ujo bo, @Nullable Object value) {
         final Key key = super.getKey();
 
         if (isForeignKey()
@@ -557,8 +557,8 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     }
 
     /** Find a related key */
-    @Nonnull
-    public MetaColumn findRelatedColumn(@Nonnull final Session session) {
+    @NotNull
+    public MetaColumn findRelatedColumn(@NotNull final Session session) {
         if (!foreignKey) {
             final String msg = MsgFormatter.format("The {} column is not relation", this);
             throw new IllegalArgumentException(msg);

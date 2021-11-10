@@ -17,7 +17,7 @@
 
 package org.ujorm.tools.common;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An object safely equals to a value.

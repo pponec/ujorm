@@ -16,7 +16,7 @@
 
 package org.ujorm.criterion;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.Ujo;
 import static org.ujorm.core.UjoTools.SPACE;
 
@@ -96,7 +96,7 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
 
     /** Print the condition in a human reading format. */
     @Override
-    public SimpleValuePrinter toPrinter(@Nonnull SimpleValuePrinter out) {
+    public SimpleValuePrinter toPrinter(@NotNull SimpleValuePrinter out) {
         final boolean parentheses = operator != BinaryOperator.AND;
         final boolean notOperator = operator == BinaryOperator.NOT;
         if ( parentheses) out.append('(');

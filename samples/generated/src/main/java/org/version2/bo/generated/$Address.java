@@ -2,8 +2,8 @@
 
 package org.version2.bo.generated;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -43,7 +43,7 @@ public class $Address extends Address implements UjoMiddle<$Address> {
         this(null);
     }
 
-    @Nonnull
+    @NotNull
     public Address original() {
         return data != null ? data : this;
     }

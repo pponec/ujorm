@@ -15,7 +15,7 @@
  */
 package org.ujorm.spring;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
@@ -40,16 +40,16 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     /** Thrad local session */
     final private ThreadLocal<Session> session = new ThreadLocal<Session>();
     /** Dummy transaction object */
-    @Nonnull
+    @NotNull
     final private Object dummy = new Object();
 
     /** Assign a provider of the OrmHandler */
-    public void setOrmHandlerProvider(@Nonnull final OrmHandlerProvider ormHandlerProvider) {
+    public void setOrmHandlerProvider(@NotNull final OrmHandlerProvider ormHandlerProvider) {
         this.handler = ormHandlerProvider.getOrmHandler();
     }
 
     /** Return a transaction object for the current transaction state. */
-    @Override @Nonnull
+    @Override @NotNull
     protected Object doGetTransaction() throws TransactionException {
         LOGGER.log(UjoLogger.TRACE, "GetTransaction is running");
         return dummy;
@@ -68,7 +68,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     }
 
     /** Begin a new transaction with semantics according to the given transaction */
-    protected void doEnd(final boolean commit, @Nonnull final Session localSession) throws TransactionException {
+    protected void doEnd(final boolean commit, @NotNull final Session localSession) throws TransactionException {
         if (localSession.isClosed()) {
             final String msg = "Transaction is closed, can't be " + (commit ? "commited" : "rollbacked");
             throw new TransactionException(msg) {
@@ -99,7 +99,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
 
     /** Perform an actual commit of the given transaction. */
     @Override
-    protected void doCommit(@Nonnull final DefaultTransactionStatus dts) throws TransactionException {
+    protected void doCommit(@NotNull final DefaultTransactionStatus dts) throws TransactionException {
         final Session localSession = getLocalSession();
         final boolean rollbackOnly = dts.isGlobalRollbackOnly() || localSession.isRollbackOnly();
         if (rollbackOnly) {
@@ -115,7 +115,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     }
 
     /** Return a local default session */
-    @Nonnull
+    @NotNull
     public Session getLocalSession() throws IllegalStateException {
         final Session result = session.get();
         Assert.state(result != null, "ORM session does not exists, check pointcut mapping");

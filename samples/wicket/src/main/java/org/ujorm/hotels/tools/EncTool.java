@@ -18,7 +18,7 @@ package org.ujorm.hotels.tools;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**

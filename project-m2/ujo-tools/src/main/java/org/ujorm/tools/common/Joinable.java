@@ -16,8 +16,8 @@
 package org.ujorm.tools.common;
 
 import java.util.function.Function;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A joinable function
@@ -51,7 +51,7 @@ public interface Joinable<D, R> extends Function<D, R> {
      * @return If a result of the first function is {@code null} than the final result is {@code null} too.
      */
     @Nullable
-    default <F> Joinable<D, F> add(@Nonnull final Joinable<R, F> next) {
+    default <F> Joinable<D, F> add(@NotNull final Joinable<R, F> next) {
         return (D d) -> {
             final R value = apply(d);
             return value != null ? next.apply(value) : null;
@@ -65,8 +65,8 @@ public interface Joinable<D, R> extends Function<D, R> {
      * @param fce An original function
      * @return The new object type of Function
      */
-    @Nonnull
-    public static <D, R> Joinable<D, R> of(@Nonnull final Function<D, R> fce) {
+    @NotNull
+    public static <D, R> Joinable<D, R> of(@NotNull final Function<D, R> fce) {
         return (D d) -> d != null ? fce.apply(d) : null; 
     }
 }

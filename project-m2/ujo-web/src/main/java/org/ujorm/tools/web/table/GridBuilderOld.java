@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
@@ -53,8 +53,8 @@ public class GridBuilderOld<D> extends GridBuilder<D>{
 
     /** Print table body */
     protected void printTable(
-            @Nonnull final Element table,
-            @Nonnull final Function<GridBuilder<D>, Stream<D>> resource
+            @NotNull final Element table,
+            @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
         final String elementName = table.getName();
         final Element myTable = (Check.isEmpty(elementName) || Html.TABLE.equals(elementName))

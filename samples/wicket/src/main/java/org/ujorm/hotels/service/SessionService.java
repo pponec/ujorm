@@ -15,8 +15,8 @@
  */
 package org.ujorm.hotels.service;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.hotels.entity.Customer;
 
 /**
@@ -34,8 +34,8 @@ public interface SessionService {
 
     /** Get an immutable logged Customer from session of returns the default Value
      * @return  */
-    @Nonnull
-    public Customer getLoggedCustomer(@Nonnull Customer defaultValue);
+    @NotNull
+    public Customer getLoggedCustomer(@NotNull Customer defaultValue);
 
     /** Logout */
     public void logout();

@@ -16,7 +16,7 @@
 package org.ujorm.orm.support;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
@@ -102,7 +102,7 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
         }
     }
 
-    @Nonnull
+    @NotNull
     private Session getSession() throws IllegalUjormException {
         if (this.session == null) {
             throw new IllegalUjormException("ORM session doesnt exist, check pointcut mapping");

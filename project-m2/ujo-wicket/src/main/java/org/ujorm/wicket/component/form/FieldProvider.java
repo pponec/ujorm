@@ -21,8 +21,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -236,7 +236,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Returns the related Field component */
-    @Nonnull
+    @NotNull
     public <V, F extends Field<V>> F getField(final Key<? super U,V> key) {
         final F result = (F) fields.get(key.getName());
         return Assert.notNull(result, "Filed nebyl nalezen pro {}", key.getFullName());
@@ -246,7 +246,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
      * @return Not {@code null} always
      * @throws ArrayIndexOutOfBoundsException No last filed was found.
      */
-    @Nonnull
+    @NotNull
     public <T> Field<T> getLast() throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
         return (Field<T>) Assert.notNull(lastField);
     }
@@ -474,7 +474,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         }
     }
     /** Set a focus to the first component by default */
-    public void requestFocus(@Nonnull final AjaxRequestTarget target) {
+    public void requestFocus(@NotNull final AjaxRequestTarget target) {
         if (focusRequestEnabled) {
             final Field field = findFirstField();
             if (field != null) {

@@ -16,7 +16,7 @@
 package org.ujorm.hotels.sources;
 
 import java.io.InputStream;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -51,7 +51,7 @@ public class SrcTabPanel extends GenericPanel<Class> {
      * @param javaClass the path to the resource file
      * @return the file's contents or null if the file could not be opened
      */
-    public static String getResourceAsString(@Nonnull Class javaClass) {
+    public static String getResourceAsString(@NotNull Class javaClass) {
         try {
             final String javaSource = MsgFormatter.format("/{}.java", javaClass.getName().replace('.', '/'));
             final InputStream is = javaClass.getClassLoader().getResourceAsStream(javaSource); //

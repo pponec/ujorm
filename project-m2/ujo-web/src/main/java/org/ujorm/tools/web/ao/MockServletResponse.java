@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
@@ -195,7 +195,7 @@ public class MockServletResponse implements HttpServletResponse {
         };
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public PrintWriter getWriter() throws IOException {
         return printWriter;

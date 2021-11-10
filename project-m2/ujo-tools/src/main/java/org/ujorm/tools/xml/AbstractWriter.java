@@ -19,8 +19,8 @@ package org.ujorm.tools.xml;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.msg.MsgFormatter;
@@ -68,39 +68,39 @@ public abstract class AbstractWriter {
     public static final MsgFormatter FORMATTER = new MsgFormatter(){};
 
     /** Output */
-    @Nonnull
+    @NotNull
     protected final Appendable out;
 
     /** XML configuration */
-    @Nonnull
+    @NotNull
     protected final XmlConfig config;
 
     /** Value formatter */
-    @Nonnull
+    @NotNull
     private final Formatter formatter;
 
     /** An indentation request */
     protected final boolean indentationEnabled;
 
-    @Nonnull
+    @NotNull
     private final Appendable writerEscaped = new Appendable() {
             private final boolean attribute = false;
 
-            @Nonnull
+            @NotNull
             @Override
-            public Appendable append(@Nonnull final CharSequence value) throws IOException {
+            public Appendable append(@NotNull final CharSequence value) throws IOException {
                 write(value, attribute);
                 return this;
             }
 
-            @Nonnull
+            @NotNull
             @Override
-            public Appendable append(@Nonnull final CharSequence value, int start, int end) throws IOException {
+            public Appendable append(@NotNull final CharSequence value, int start, int end) throws IOException {
                 write(value, start, end, attribute);
                 return this;
             }
 
-            @Nonnull
+            @NotNull
             @Override
             public Appendable append(final char value) throws IOException {
                 write(value, attribute);
@@ -113,7 +113,7 @@ public abstract class AbstractWriter {
      * @param out A writer
      * @param config XML configuration
      */
-    public AbstractWriter(@Nonnull final Appendable out, @Nonnull final XmlConfig config) {
+    public AbstractWriter(@NotNull final Appendable out, @NotNull final XmlConfig config) {
         this.out = Assert.notNull(out, "out");
         this.config = Assert.notNull(config, "config");
         this.indentationEnabled = Check.hasLength(config.getIndentation());
@@ -124,7 +124,7 @@ public abstract class AbstractWriter {
      * @param text A value to write
      * @param attribute Write an attribute value
      */
-    public final void write(@Nonnull final CharSequence text, final boolean attribute) throws IOException {
+    public final void write(@NotNull final CharSequence text, final boolean attribute) throws IOException {
         write(text, 0, text.length(), attribute);
     }
 
@@ -132,7 +132,7 @@ public abstract class AbstractWriter {
      * @param text A value to write
      * @param attribute Write an attribute value
      */
-    void write(@Nonnull final CharSequence text, final int from, final int max, final boolean attribute) throws IOException {
+    void write(@NotNull final CharSequence text, final int from, final int max, final boolean attribute) throws IOException {
         for (int i = from; i < max; i++) {
             write(text.charAt(i), attribute);
         }
@@ -194,7 +194,7 @@ public abstract class AbstractWriter {
      */
     public void writeValue(
             @Nullable final Object value,
-            @Nonnull final ApiElement element,
+            @NotNull final ApiElement element,
             @Nullable final String attributeName
     ) throws IOException {
         write(formatter.format(value, element, attributeName), attributeName != null);
@@ -205,7 +205,7 @@ public abstract class AbstractWriter {
      * @param rawValue A raw value to print
      * @param element An original element
      */
-    public final void writeRawValue(@Nonnull final CharSequence rawValue, @Nonnull final ApiElement element) throws IOException {
+    public final void writeRawValue(@NotNull final CharSequence rawValue, @NotNull final ApiElement element) throws IOException {
         out.append(rawValue);
     }
 
@@ -225,13 +225,13 @@ public abstract class AbstractWriter {
     }
 
     /** For internal usage only */
-    @Nonnull
+    @NotNull
     public Appendable getWriter() {
         return out;
     }
 
     /** Get Writer to escape HTML characters. */
-    @Nonnull
+    @NotNull
     public Appendable getWriterEscaped() {
         return writerEscaped;
     }
@@ -239,10 +239,10 @@ public abstract class AbstractWriter {
     // ---- STATIC METHOD(s) ---
 
     /** Assign a no-cache and an Edge compatibility mode and returns a writer from HttpServletResponse */
-    @Nonnull
+    @NotNull
     public static Appendable createWriter(
-            @Nonnull final Object httpServletResponse,
-            @Nonnull final Charset charset,
+            @NotNull final Object httpServletResponse,
+            @NotNull final Charset charset,
             final boolean noCache
     ) throws ReflectiveOperationException {
         final Method setEncoding = httpServletResponse.getClass().getMethod("setCharacterEncoding", String.class);

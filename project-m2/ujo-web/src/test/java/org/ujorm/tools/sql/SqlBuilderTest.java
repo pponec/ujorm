@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.ujorm.tools.jdbc.AbstractJdbcConnector;
 import static org.junit.Assert.assertEquals;
@@ -220,7 +220,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
     }
 
     /** How to INSERT (no commit) */
-    public void showInsert(@Nonnull Connection dbConnection) throws SQLException {
+    public void showInsert(@NotNull Connection dbConnection) throws SQLException {
         System.out.println("Show INSERT");
         SqlBuilder sql = new SqlBuilder()
             .insert("testTable")
@@ -237,7 +237,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
     }
 
     /** How to SELECT a list */
-    public void showSelect_1(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
+    public void showSelect_1(@NotNull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         SqlBuilder sql = new SqlBuilder()
             .select("t.id", "t.name")
@@ -260,7 +260,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
     }
 
    /** How to SELECT a list using a lambda expression */
-    public void showSelect_2(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
+    public void showSelect_2(@NotNull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         SqlBuilder sql = new SqlBuilder()
             .select("t.id", "t.name")
@@ -276,7 +276,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
     }
 
     /** How to SELECT single value */
-    public void showSelectForSingleValue(@Nonnull Connection dbConnection) throws IllegalStateException, SQLException {
+    public void showSelectForSingleValue(@NotNull Connection dbConnection) throws IllegalStateException, SQLException {
         System.out.println("Show SELECT");
         SqlBuilder sql = new SqlBuilder()
             .select("t.name")
@@ -289,7 +289,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
     }
 
     /** How to UPDATE single value (no commit) */
-    public void showUpdate(@Nonnull Connection dbConnection) {
+    public void showUpdate(@NotNull Connection dbConnection) {
         System.out.println("Show UPDATE");
         SqlBuilder sql = new SqlBuilder()
             .update("testTable")

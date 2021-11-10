@@ -21,8 +21,8 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Static methods
@@ -44,8 +44,8 @@ public abstract class ObjectUtils {
      */
     public static final <V,R> Optional<R> iof(
             @Nullable final Object value,
-            @Nonnull final Class<V> requiredClass,
-            @Nonnull final Function<V,R> function) {
+            @NotNull final Class<V> requiredClass,
+            @NotNull final Function<V,R> function) {
         return requiredClass.isInstance(value)
                 ? Optional.ofNullable(function.apply((V) value))
                 : Optional.empty();
@@ -62,16 +62,16 @@ public abstract class ObjectUtils {
      */
     public static final <V> boolean check(
             @Nullable final Object value,
-            @Nonnull final Class<V> requiredClass,
-            @Nonnull final Function<V,Boolean> function) {
+            @NotNull final Class<V> requiredClass,
+            @NotNull final Function<V,Boolean> function) {
         return value != null
                 && value.getClass() == requiredClass
                 && function.apply((V) value);
     }
 
     /** Convert appendable to object type of PrintWriter */
-    @Nonnull
-    public static PrintWriter toPrintWriter(@Nonnull final Appendable appendable) {
+    @NotNull
+    public static PrintWriter toPrintWriter(@NotNull final Appendable appendable) {
         final Writer myWriter = new Writer() {
             @Override
             public void flush() throws IOException {}

@@ -15,7 +15,7 @@
  */
 package org.ujorm.tools.web.ao;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import org.ujorm.tools.Check;
@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 public abstract class WebUtils {
 
     /** Check if any attribute is typeof the Renderer */
-    public static final <V extends Object> boolean isType(@Nonnull final Class type, @Nonnull final V... items) {
+    public static final <V extends Object> boolean isType(@NotNull final Class type, @NotNull final V... items) {
         boolean result = false;
         for (Object item : items) {
             if (type.isInstance(item)) {
@@ -41,7 +41,7 @@ public abstract class WebUtils {
     }
      
     /** Check if any attribute is typeof the Renderer */
-    public static final boolean isType(final Class type, final @Nonnull Stream<Object> items) {
+    public static final boolean isType(final Class type, final @NotNull Stream<Object> items) {
         final boolean[] result = {false};
         items.filter(t -> !result[0])
                 .forEach(t -> {
@@ -53,8 +53,8 @@ public abstract class WebUtils {
     }
 
    /** Returns an URL of the servlet of the root where a default value is an empty string */
-    @Nonnull
-    public static String urlOfServlet(@Nonnull final Class<? extends HttpServlet> servlet, String... params) {
+    @NotNull
+    public static String urlOfServlet(@NotNull final Class<? extends HttpServlet> servlet, String... params) {
         final String result = urlOfServlet(servlet);
         if (Check.hasLength(params) && params[0] != null) {
             return result + "?" + String.join("&", params);
@@ -70,10 +70,10 @@ public abstract class WebUtils {
      * @param defaultUrl A default result
      * @return A URL link.
      */
-    @Nonnull
+    @NotNull
     public static String urlOfServlet(
-            @Nonnull final Class<? extends HttpServlet> servlet,
-            @Nonnull final String defaultUrl
+            @NotNull final Class<? extends HttpServlet> servlet,
+            @NotNull final String defaultUrl
     ) {
         final WebServlet[] webServlets = servlet.getAnnotationsByType(WebServlet.class);
         for (WebServlet webServlet : webServlets) {

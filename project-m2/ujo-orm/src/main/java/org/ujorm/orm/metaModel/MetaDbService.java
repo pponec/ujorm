@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -46,7 +46,7 @@ import static org.ujorm.tools.Check.hasLength;
  * @author Pavel Ponec
  * @see MetaParams#META_DB_SERVICE
  */
-@Immutable
+@Unmodifiable
 public class MetaDbService {
 
     /** Logger */
@@ -479,7 +479,7 @@ public class MetaDbService {
      * @throws IllegalUjormException An runtime exception
      * @throws SQLException SQL exception
      */
-    protected void executeUpdate(@Nonnull final Appendable sqlAppendable, @Nonnull final MetaTable table) throws IllegalUjormException, SQLException {
+    protected void executeUpdate(@NotNull final Appendable sqlAppendable, @NotNull final MetaTable table) throws IllegalUjormException, SQLException {
         final String sql = sqlAppendable.toString();
         if (sql.isEmpty()) {
             LOGGER.log(Level.FINEST, "Empty SQL statement");

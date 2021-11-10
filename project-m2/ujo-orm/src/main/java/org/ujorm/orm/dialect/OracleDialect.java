@@ -18,7 +18,7 @@ package org.ujorm.orm.dialect;
 
 import java.io.IOException;
 import java.util.List;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
@@ -168,8 +168,8 @@ public class OracleDialect extends PostgreSqlDialect {
     /** The implementation NOT suppoorts {@code ILIKE} operator
      * @return Template with arguments type of {@code {1}={2}}
      */
-    @Nonnull @Override
-    public String getCriterionTemplate(@Nonnull final ValueCriterion crit) {
+    @NotNull @Override
+    public String getCriterionTemplate(@NotNull final ValueCriterion crit) {
         switch (crit.getOperator()) {
             case STARTS_CASE_INSENSITIVE:
             case ENDS_CASE_INSENSITIVE:

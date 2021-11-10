@@ -26,9 +26,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import org.ujorm.Key;
@@ -67,7 +67,7 @@ import static org.ujorm.tools.Check.hasLength;
  * @composed 1 - * MetaTable
  * @composed 1 - * MetaProcedure
  */
-@Immutable
+@Unmodifiable
 final public class MetaDatabase extends AbstractMetaModel implements Comparable<MetaDatabase> {
     private static final Class<MetaDatabase> CLASS = MetaDatabase.class;
 
@@ -246,7 +246,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Returns a SQL dialect for the current database. */
-    @Nonnull
+    @NotNull
     public SqlDialect getDialect() {
         if (dialect==null) try {
             dialect = (SqlDialect) DIALECT.of(this).newInstance();
@@ -621,7 +621,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
 
     /** Returns an JNDI or a JDBC URL */
-    @Nonnull
+    @NotNull
     public String toString() {
         final String jndi = JNDI.getFirstItem(this);
         return Check.hasLength(jndi)

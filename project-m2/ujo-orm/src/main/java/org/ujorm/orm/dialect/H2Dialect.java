@@ -15,7 +15,7 @@
  */
 package org.ujorm.orm.dialect;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.orm.SqlDialect;
 
@@ -40,8 +40,8 @@ public class H2Dialect extends SqlDialect {
     /** The implementation suppoorts {@code ILIKE} operator
      * @return Template with arguments type of {@code {1}={2}}
      */
-    @Nonnull  @Override
-    public String getCriterionTemplate(@Nonnull final ValueCriterion crit) {
+    @NotNull  @Override
+    public String getCriterionTemplate(@NotNull final ValueCriterion crit) {
         switch (crit.getOperator()) {
             case STARTS_CASE_INSENSITIVE:
             case ENDS_CASE_INSENSITIVE:

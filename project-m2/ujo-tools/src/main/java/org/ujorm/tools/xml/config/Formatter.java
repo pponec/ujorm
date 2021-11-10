@@ -16,8 +16,8 @@
  */
 package org.ujorm.tools.xml.config;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.xml.ApiElement;
 
 /**
@@ -33,7 +33,7 @@ public interface Formatter {
      * @param attributeName A name of the attribute, if any.
      * @return A target non-nnul sequence is required.
      */
-    @Nonnull
-    CharSequence format(@Nullable Object value, @Nonnull ApiElement element, @Nullable String attributeName);
+    @NotNull
+    CharSequence format(@Nullable Object value, @NotNull ApiElement element, @Nullable String attributeName);
 
 }

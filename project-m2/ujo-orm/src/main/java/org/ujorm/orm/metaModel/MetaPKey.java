@@ -18,7 +18,7 @@ package org.ujorm.orm.metaModel;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.core.IllegalUjormException;
@@ -34,7 +34,7 @@ import org.ujorm.tools.Assert;
  * @author Pavel Ponec
  * @composed 1 - * MetaColumn
  */
-@Immutable
+@Unmodifiable
 final public class MetaPKey extends AbstractMetaModel {
     private static final Class<MetaPKey> CLASS = MetaPKey.class;
 

@@ -16,8 +16,8 @@
 
 package org.ujorm.orm.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.orm.ColumnWrapper;
@@ -38,11 +38,11 @@ public class ColumnWrapperImpl implements ColumnWrapper {
     /** The base key */
     private Key key;
 
-    public ColumnWrapperImpl(@Nonnull final MetaColumn column, @Nullable final String tableAlias) {
+    public ColumnWrapperImpl(@NotNull final MetaColumn column, @Nullable final String tableAlias) {
         this(column, tableAlias, column.getKey());
     }
 
-    public ColumnWrapperImpl(@Nonnull final MetaColumn column, @Nullable final Key key) {
+    public ColumnWrapperImpl(@NotNull final MetaColumn column, @Nullable final Key key) {
         this(column, key.isComposite() ? getAlias((CompositeKey)key) : null, key);
     }
 
@@ -52,7 +52,7 @@ public class ColumnWrapperImpl implements ColumnWrapper {
      * @param tableAlias Optional table
      * @param key Optional Key
      */
-    public ColumnWrapperImpl(@Nonnull final MetaColumn column, @Nullable final String tableAlias, @Nullable final Key key) {
+    public ColumnWrapperImpl(@NotNull final MetaColumn column, @Nullable final String tableAlias, @Nullable final Key key) {
         this.column = Assert.notNull(column, "column");
         this.tableAlias = tableAlias != null ? tableAlias : column.getTableAlias();
         this.key = key != null ? key : column.getKey();

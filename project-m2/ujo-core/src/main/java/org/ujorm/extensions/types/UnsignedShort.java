@@ -15,7 +15,7 @@
  */
 package org.ujorm.extensions.types;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.extensions.ValueWrapper;
 import org.ujorm.tools.Assert;
 
@@ -44,12 +44,12 @@ public class UnsignedShort extends AbstractValueWrapper<Short, Integer> {
     public static final Short _PERSISTENT_DEFAULT_VALUE = DB_ZERO;
 
     /** Public constructor for a <stong>persistent</stong> value where the type {@link Object} is required. */
-    public UnsignedShort(@Nonnull final Short dbValue) {
+    public UnsignedShort(@NotNull final Short dbValue) {
         super(toApplValue(dbValue));
     }
 
     /** Protected constructor */
-    protected UnsignedShort(@Nonnull final Integer appValue) {
+    protected UnsignedShort(@NotNull final Integer appValue) {
         super(appValue);
     }
 
@@ -109,13 +109,13 @@ public class UnsignedShort extends AbstractValueWrapper<Short, Integer> {
 
     // --- Static method ---
 
-    @Nonnull
-    public static UnsignedShort of(@Nonnull final Integer value) {
+    @NotNull
+    public static UnsignedShort of(@NotNull final Integer value) {
         return new UnsignedShort(value);
     }
 
     /** Instance factory for a Technical issues where value is not significant */
-    @Nonnull
+    @NotNull
     public static ValueWrapper getInstance() throws ReflectiveOperationException {
         return of(0);
     }

@@ -15,7 +15,7 @@
  */
 package org.ujorm.tools.jdbc;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A proxy CharSequence implementation
@@ -24,10 +24,10 @@ import javax.annotation.Nonnull;
 public abstract class ProxySequence implements CharSequence {
 
     /** An original sequence */
-    @Nonnull
+    @NotNull
     private final CharSequence orig;
 
-    public ProxySequence(@Nonnull final CharSequence orig) {
+    public ProxySequence(@NotNull final CharSequence orig) {
         this.orig = orig;
     }
 

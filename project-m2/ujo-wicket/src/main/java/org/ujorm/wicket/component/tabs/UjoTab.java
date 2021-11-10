@@ -15,8 +15,8 @@
  */
 package org.ujorm.wicket.component.tabs;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
@@ -41,29 +41,29 @@ public class UjoTab extends AbstractTab {
     private UjoSupplier<Boolean> visible;
 
     /** Constructor */
-    public UjoTab(@Nonnull final IModel<String> title, @Nonnull final Class<? extends WebMarkupContainer> panel) {
+    public UjoTab(@NotNull final IModel<String> title, @NotNull final Class<? extends WebMarkupContainer> panel) {
         this(title, null, panel);
     }
 
     /** Constructor */
-    public UjoTab(@Nonnull final String title, String cssClass, @Nonnull final Class<? extends WebMarkupContainer> panel) {
+    public UjoTab(@NotNull final String title, String cssClass, @NotNull final Class<? extends WebMarkupContainer> panel) {
         this(Model.of(title), cssClass, panel);
     }
 
     /** Constructor */
     public UjoTab
-        ( @Nonnull final String title
+        ( @NotNull final String title
         , @Nullable final String cssClass
-        , @Nonnull final Class<? extends WebMarkupContainer> panel
+        , @NotNull final Class<? extends WebMarkupContainer> panel
         , @Nullable final UjoSupplier<Boolean> visible) {
         this(Model.of(title), cssClass, panel, visible);
     }
 
     /** Constructor */
     public UjoTab
-        ( @Nonnull final IModel<String> title
+        ( @NotNull final IModel<String> title
         , @Nullable final String cssClass
-        , @Nonnull final Class<? extends WebMarkupContainer> panel) {
+        , @NotNull final Class<? extends WebMarkupContainer> panel) {
         this(title, cssClass, panel, (UjoSupplier<Boolean>) null);
     }
 
@@ -75,9 +75,9 @@ public class UjoTab extends AbstractTab {
      * @param visible Optional visible model
      */
     public UjoTab
-            ( @Nonnull IModel<String> title
+            ( @NotNull IModel<String> title
             , @Nullable String cssClass
-            , @Nonnull Class<? extends WebMarkupContainer> panel
+            , @NotNull Class<? extends WebMarkupContainer> panel
             , @Nullable UjoSupplier<Boolean> visible) {
         super(title);
         this.cssClass = cssClass;

@@ -18,8 +18,8 @@ package org.ujorm.tools.web.ajax;
 import java.time.Duration;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
@@ -48,7 +48,7 @@ public class JavaScriptWriter implements Injector {
      /** Input selectors */
     protected final CharSequence[] inputCssSelectors;
     /** Input idle delay */
-    @Nonnull
+    @NotNull
     protected Duration idleDelay = DEFAULT_DURATION;
     /** Form selector */
     protected String formSelector = Html.FORM;
@@ -60,10 +60,10 @@ public class JavaScriptWriter implements Injector {
     @Nullable
     protected CharSequence subtitleSelector="?";
     /** A subtitle selector */
-    @Nonnull
+    @NotNull
     protected CharSequence errorMessage = "AJAX fails due";
     /** Ajax Timeout */
-    @Nonnull
+    @NotNull
     protected Duration ajaxTimeout = Duration.ofMillis(30_000);
     /** JavaScript version */
     protected int version = 1;
@@ -78,7 +78,7 @@ public class JavaScriptWriter implements Injector {
         this("form input:not([type=\"button\"])");
     }
 
-    public JavaScriptWriter(@Nonnull CharSequence... inputSelectors) {
+    public JavaScriptWriter(@NotNull CharSequence... inputSelectors) {
         this(DEFAULT_DURATION,
                 DEFAULT_AJAX_REQUEST_PARAM,
                 DEFAULT_SORT_REQUEST_PARAM,
@@ -86,10 +86,10 @@ public class JavaScriptWriter implements Injector {
     }
 
     public JavaScriptWriter(
-            @Nonnull Duration idleDelay,
-            @Nonnull HttpParameter ajaxRequestParam,
-            @Nonnull HttpParameter sortRequestParam,
-            @Nonnull CharSequence... inputSelectors) {
+            @NotNull Duration idleDelay,
+            @NotNull HttpParameter ajaxRequestParam,
+            @NotNull HttpParameter sortRequestParam,
+            @NotNull CharSequence... inputSelectors) {
         this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
         this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
         this.sortRequestParam = Assert.notNull(sortRequestParam, "sortRequestParam");
@@ -106,7 +106,7 @@ public class JavaScriptWriter implements Injector {
         return this;
     }
 
-    public JavaScriptWriter setNewLine(@Nonnull CharSequence newLine) {
+    public JavaScriptWriter setNewLine(@NotNull CharSequence newLine) {
         this.newLine = Assert.notNull(newLine, "newLine");
         return this;
     }
@@ -124,13 +124,13 @@ public class JavaScriptWriter implements Injector {
     }
 
     /** Assign an AJAX timeout */
-    public JavaScriptWriter setAjaxTimeout(@Nonnull Duration ajaxTimeout) {
+    public JavaScriptWriter setAjaxTimeout(@NotNull Duration ajaxTimeout) {
         this.ajaxTimeout = Assert.notNull(ajaxTimeout, "ajaxTimeout");
         return this;
     }
 
     /** Assign an AJAX timeout */
-    public JavaScriptWriter setAjaxRequestPath(@Nonnull String ajaxRequestPath) {
+    public JavaScriptWriter setAjaxRequestPath(@NotNull String ajaxRequestPath) {
         this.ajaxRequestPath = ajaxRequestPath;
         setVersion(2);
         return this;
@@ -168,7 +168,7 @@ public class JavaScriptWriter implements Injector {
      * Generate a Javascript
      */
     @Override
-    public void write(@Nonnull final Element parent) {
+    public void write(@NotNull final Element parent) {
         final String inpSelectors = Check.hasLength(inputCssSelectors)
         ? Stream.of(inputCssSelectors).collect(Collectors.joining(", "))
         : "#!@";

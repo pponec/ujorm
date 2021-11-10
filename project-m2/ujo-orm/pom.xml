@@ -32,7 +32,7 @@
         <url>https://github.com/pponec/ujorm/blob/master/project-m2/ujo-orm/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2ujo-orm</connection>
     </scm>
-    
+
     <pluginRepositories>
         <pluginRepository>
             <id>central</id>
@@ -105,9 +105,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>21.0.1</version>
             <optional>true</optional>
         </dependency>
 
@@ -189,7 +189,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
         <resources>
             <resource>

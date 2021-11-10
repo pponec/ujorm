@@ -16,7 +16,7 @@
 package org.ujorm.tools.web.ao;
 
 import java.util.function.Function;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.web.Element;
 
 /**
@@ -33,7 +33,7 @@ public interface Column<T> extends Function<T, Object> {
      * @return Returns a constatn {@code "?"}, for a Sortable columns must return a serializable object.
      */
     @Override
-    public default Object apply(@Nonnull T t) {
+    public default Object apply(@NotNull T t) {
         return "?";
     }
 
@@ -42,6 +42,6 @@ public interface Column<T> extends Function<T, Object> {
      * @param parent An element of the table detail.
      * @param value Value to write.
      */
-    public void write(@Nonnull Element parent, T value);
+    public void write(@NotNull Element parent, T value);
 
 }

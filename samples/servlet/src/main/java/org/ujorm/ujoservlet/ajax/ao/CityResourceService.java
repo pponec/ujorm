@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.common.StreamUtils;
 
 /**
@@ -24,12 +24,12 @@ public class CityResourceService {
 
     private Map<Integer,City> cityMap = null;
 
-    @Nonnull
+    @NotNull
     public City getCity(String id) {
         return getCity(Integer.valueOf(id));
     }
 
-    @Nonnull
+    @NotNull
     public City getCity(Integer id) {
         try {
             final City result = getCityMap().get(id);

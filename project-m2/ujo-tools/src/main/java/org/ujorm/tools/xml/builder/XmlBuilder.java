@@ -19,8 +19,8 @@ package org.ujorm.tools.xml.builder;
 
 import java.io.Closeable;
 import java.io.IOException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.ApiElement;
@@ -69,7 +69,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     protected final String name;
 
     /** Node writer */
-    @Nonnull
+    @NotNull
     private final XmlPrinter writer;
 
     /** Element level */
@@ -95,7 +95,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param name The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      */
-    public XmlBuilder(@Nullable final String name, @Nonnull final XmlPrinter writer, final int level) {
+    public XmlBuilder(@Nullable final String name, @NotNull final XmlPrinter writer, final int level) {
         this(name, writer, level, true);
     }
 
@@ -106,7 +106,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param level Level of the Element
      * @param printName Print the element name immediately.
      */
-    protected XmlBuilder(@Nullable final String name, @Nonnull final XmlPrinter writer, final int level, final boolean printName) {
+    protected XmlBuilder(@Nullable final String name, @NotNull final XmlPrinter writer, final int level, final boolean printName) {
         this.name = name;
         this.lastText = name == null;
         this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
@@ -120,7 +120,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     }
 
     /** New element with a parent */
-    public XmlBuilder(@Nonnull final String name, @Nonnull final XmlPrinter writer) {
+    public XmlBuilder(@NotNull final String name, @NotNull final XmlPrinter writer) {
         this(name, writer, 0);
     }
 
@@ -134,7 +134,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * Setup states
      * @param element A child Node or {@code null} value for a text data
      */
-    @Nonnull
+    @NotNull
     protected XmlBuilder nextChild(@Nullable final XmlBuilder element) {
         Assert.isFalse(closed, "The node '{}' was closed", this.name);
         if (!filled) try {
@@ -163,8 +163,8 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
      */
-    @Override @Nonnull
-    public final XmlBuilder addElement(@Nonnull final String name) {
+    @Override @NotNull
+    public final XmlBuilder addElement(@NotNull final String name) {
         XmlBuilder xb = new XmlBuilder(name, writer, level + 1, false);
         return nextChild(xb);
     }
@@ -177,7 +177,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
-    @Override @Nonnull
+    @Override @NotNull
     public final XmlBuilder setAttribute(@Nullable final String name, @Nullable final Object value) {
         if (name != null) {
             Assert.hasLength(name, REQUIRED_MSG, "name");
@@ -199,7 +199,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Override
-    @Nonnull
+    @NotNull
     public final XmlBuilder addText(@Nullable final Object value) {
         try {
             nextChild(null);
@@ -218,8 +218,8 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @return The original builder
      */
     @Override
-    @Nonnull
-    public final XmlBuilder addTextTemplated(@Nullable final CharSequence template, @Nonnull final Object... values) {
+    @NotNull
+    public final XmlBuilder addTextTemplated(@Nullable final CharSequence template, @NotNull final Object... values) {
         try {
             nextChild(null);
             AbstractWriter.FORMATTER.formatMsg(writer.getWriterEscaped(), template, values);
@@ -232,7 +232,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */
-    @Override @Nonnull
+    @Override @NotNull
     public final XmlBuilder addRawText(@Nullable final Object value) {
         try {
             nextChild(null);
@@ -249,7 +249,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param comment A comment text must not contain a string {@code -->} .
      * @return This instance
      */
-    @Override @Nonnull @Deprecated
+    @Override @NotNull @Deprecated
     public final XmlBuilder addComment(@Nullable final CharSequence comment) {
         throw new UnsupportedOperationException();
     }
@@ -260,7 +260,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param charData A text including the final DATA sequence. An empty argument is ignored.
      * @return This instance
      */
-    @Override @Nonnull @Deprecated
+    @Override @NotNull @Deprecated
     public final XmlBuilder addCDATA(@Nullable final CharSequence charData) {
         throw new UnsupportedOperationException();
     }
@@ -303,7 +303,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     }
 
     /** Render the XML code including header */
-    @Override @Nonnull
+    @Override @NotNull
     public String toString() {
         return writer.toString();
     }
@@ -311,13 +311,13 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     // --- Factory method ---
 
     /** Create builder for HTML */
-    @Nonnull
-    public static XmlBuilder forHtml(@Nonnull Appendable response) {
+    @NotNull
+    public static XmlBuilder forHtml(@NotNull Appendable response) {
          return new XmlBuilder(HTML, XmlPrinter.forHtml(response));
     }
 
-    @Nonnull
-    public static XmlBuilder forNiceHtml(@Nonnull Appendable response) {
+    @NotNull
+    public static XmlBuilder forNiceHtml(@NotNull Appendable response) {
         return new XmlBuilder(HTML, XmlPrinter.forNiceHtml(response));
     }
 

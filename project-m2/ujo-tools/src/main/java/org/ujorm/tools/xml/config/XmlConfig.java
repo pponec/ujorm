@@ -17,8 +17,8 @@
 package org.ujorm.tools.xml.config;
 
 import java.nio.charset.Charset;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 
 /**
@@ -28,14 +28,14 @@ import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 public interface XmlConfig {
 
     /** Doctype */
-    @Nonnull
+    @NotNull
     CharSequence getDoctype();
 
     /**
      * Charset
      * @return the charset
      */
-    @Nonnull
+    @NotNull
     Charset getCharset();
 
     /**
@@ -51,11 +51,11 @@ public interface XmlConfig {
     CharSequence getIndentation();
 
     /** A replacement text instead of the {@code null} value */
-    @Nonnull
+    @NotNull
     CharSequence getDefaultValue();
 
     /** A new line sequence */
-    @Nonnull
+    @NotNull
     CharSequence getNewLine();
 
     /**
@@ -67,7 +67,7 @@ public interface XmlConfig {
     /**
      * Get a value formatter
      */
-    @Nonnull
+    @NotNull
     Formatter getFormatter();
 
     /**

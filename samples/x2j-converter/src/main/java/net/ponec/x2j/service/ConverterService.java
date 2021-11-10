@@ -1,7 +1,7 @@
 package net.ponec.x2j.service;
 
 import net.ponec.x2j.model.Message;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -23,7 +23,7 @@ public class ConverterService {
     private static final String DEMO_FILE = "/data/sample.html";
 
     /** Create a CSS */
-    @Nonnull
+    @NotNull
     public CharSequence[] getCss() {
         return new CharSequence[] { ""
                 , "body   { margin-left:20px; background-color: #f3f6f7;}"

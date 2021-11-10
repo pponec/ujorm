@@ -18,7 +18,7 @@ package org.ujorm.tools.web.ajax;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -43,13 +43,13 @@ public class ReqestDispatcher {
      */
     private static final Logger LOGGER = Logger.getLogger(ReqestDispatcher.class.getName());
 
-    @Nonnull
+    @NotNull
     private final HttpServletRequest input;
 
-    @Nonnull
+    @NotNull
     private final HttpServletResponse output;
 
-    @Nonnull
+    @NotNull
     private HtmlConfig htmlConfig;
 
     private boolean done = false;
@@ -60,24 +60,24 @@ public class ReqestDispatcher {
     private final boolean noCache = true;
     
     public ReqestDispatcher(
-            @Nonnull HttpServletRequest input,
-            @Nonnull HttpServletResponse output) {
+            @NotNull HttpServletRequest input,
+            @NotNull HttpServletResponse output) {
         this("Info", input, output);
     }
     
     public ReqestDispatcher(
-            @Nonnull CharSequence title,
-            @Nonnull HttpServletRequest input,
-            @Nonnull HttpServletResponse output) {
+            @NotNull CharSequence title,
+            @NotNull HttpServletRequest input,
+            @NotNull HttpServletResponse output) {
         this(input, output, (HtmlConfig) HtmlConfig.ofDefault()
                 .setTitle(title)
                 .setNiceFormat());
     }
 
     public ReqestDispatcher(
-            @Nonnull HttpServletRequest input,
-            @Nonnull HttpServletResponse output,
-            @Nonnull HtmlConfig htmlConfig
+            @NotNull HttpServletRequest input,
+            @NotNull HttpServletResponse output,
+            @NotNull HtmlConfig htmlConfig
     ) {
         this.input = input;
         this.output = output;
@@ -98,7 +98,7 @@ public class ReqestDispatcher {
         }
     }
 
-    @Nonnull
+    @NotNull
     public HtmlConfig getAjaxConfig() {
         return htmlConfig.cloneForAjax();
     }
@@ -110,7 +110,7 @@ public class ReqestDispatcher {
      * @param processor processor
      * @return
      */
-    public ReqestDispatcher onParam(@Nonnull final HttpParameter key, @Nonnull final IOConsumer<JsonBuilder> processor) throws IOException, ServletException {
+    public ReqestDispatcher onParam(@NotNull final HttpParameter key, @NotNull final IOConsumer<JsonBuilder> processor) throws IOException, ServletException {
         Assert.notNull(key, "Parameter {} is required", "key");
         if (!done && key.of(input, false)) {
             try (JsonBuilder builder = JsonBuilder.of(input, output, getAjaxConfig())) {
@@ -124,7 +124,7 @@ public class ReqestDispatcher {
     /**
      * The process writes to an element
      */
-    public void onDefaultToElement(@Nonnull final IOElement defaultProcessor) throws ServletException, IOException {
+    public void onDefaultToElement(@NotNull final IOElement defaultProcessor) throws ServletException, IOException {
         if (!done) {
             try (HtmlElement html = HtmlElement.of(htmlConfig, output.getWriter())) {
                 defaultProcessor.run(html);
@@ -135,7 +135,7 @@ public class ReqestDispatcher {
     /**
      * Process the request
      */
-    public void onDefault(@Nonnull final IORunnable defaultProcessor) throws ServletException, IOException {
+    public void onDefault(@NotNull final IORunnable defaultProcessor) throws ServletException, IOException {
         if (!done) {
             defaultProcessor.run();
         }

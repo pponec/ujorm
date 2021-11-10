@@ -17,8 +17,8 @@
 package org.ujorm.tools.xml.config.impl;
 
 import java.nio.charset.Charset;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractWriter;
@@ -52,7 +52,7 @@ public class DefaultXmlConfig implements XmlConfig {
     protected CharSequence doctype;
 
     /** Charset */
-    @Nonnull
+    @NotNull
     private Charset charset = UTF_8;
 
     /** Level of the root element, the value may be negative number */
@@ -60,15 +60,15 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** An indentation space for elements of the next level,
      * where default value is an empty `String` */
-    @Nonnull
+    @NotNull
     private CharSequence indentation = EMPTY;
 
     /** A replacement text instead of the {@code null} value */
-    @Nonnull
+    @NotNull
     private CharSequence defaultValue = EMPTY;
 
     /** A new line sequence */
-    @Nonnull
+    @NotNull
     private CharSequence newLine = DEFAULT_NEW_LINE;
 
     /** Is HTTP cache allowed */
@@ -79,14 +79,14 @@ public class DefaultXmlConfig implements XmlConfig {
      * {@code Formatter formatter -> value != null ? value.toString() : ""};
      * </code>
      */
-    @Nonnull
+    @NotNull
     private Formatter formatter = (value, element, attribute) -> value != null ? value.toString() : EMPTY;
 
     public DefaultXmlConfig() {
     }
 
     /** Copy attributes from other config */
-    public DefaultXmlConfig(@Nonnull final XmlConfig config) {
+    public DefaultXmlConfig(@NotNull final XmlConfig config) {
         this.doctype = config.getDoctype();
         this.charset = config.getCharset();
         this.firstLevel = config.getFirstLevel();
@@ -99,13 +99,13 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** A header declaration of the document or a doctype */
     @Override
-    @Nonnull
+    @NotNull
     public CharSequence getDoctype() {
         return nonnull(doctype, AbstractWriter.XML_HEADER);
     }
 
-    @Nonnull
-    protected final <T> T nonnull(@Nullable final T value, @Nonnull final T defaultValue) {
+    @NotNull
+    protected final <T> T nonnull(@Nullable final T value, @NotNull final T defaultValue) {
         return value != null ? value : defaultValue;
     }
 
@@ -120,7 +120,7 @@ public class DefaultXmlConfig implements XmlConfig {
      * @return the charset
      */
     @Override
-    @Nonnull
+    @NotNull
     public Charset getCharset() {
         return charset;
     }
@@ -129,7 +129,7 @@ public class DefaultXmlConfig implements XmlConfig {
      * Charset
      * @param charset the charset to set
      */
-    public DefaultXmlConfig setCharset(@Nonnull final Charset charset) {
+    public DefaultXmlConfig setCharset(@NotNull final Charset charset) {
         this.charset = Assert.notNull(charset, REQUIRED_MSG, "charset");
         return this;
     }
@@ -183,7 +183,7 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** An indentation space for elements of the next level,
      * where default value is an empty `String` */
-    @Nonnull
+    @NotNull
     @Override
     public CharSequence getIndentation() {
         return nonnull(indentation, EMPTY);
@@ -191,7 +191,7 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** An indentation space for elements of the next level,
      * where default value is an empty `String` */
-    public DefaultXmlConfig setIndentationSpace(@Nonnull CharSequence indentation) {
+    public DefaultXmlConfig setIndentationSpace(@NotNull CharSequence indentation) {
         this.indentation = Assert.notNull(indentation, REQUIRED_MSG, "indentation");
         return this;
     }
@@ -204,7 +204,7 @@ public class DefaultXmlConfig implements XmlConfig {
 
 
     /** A default implementation is: {@code String.valueOf(value)} */
-    @Nonnull
+    @NotNull
     @Override
     public Formatter getFormatter() {
         return formatter;
@@ -213,7 +213,7 @@ public class DefaultXmlConfig implements XmlConfig {
     // --- SETTERS ---
 
     /** A replacement text instead of the {@code null} value */
-    public DefaultXmlConfig setDefaultValue(@Nonnull String defaultValue) {
+    public DefaultXmlConfig setDefaultValue(@NotNull String defaultValue) {
         this.defaultValue = Assert.notNull(defaultValue, "defaultValue");
         return this;
     }
@@ -235,13 +235,13 @@ public class DefaultXmlConfig implements XmlConfig {
     }
 
     /** A new line sequence */
-    public DefaultXmlConfig setNewLine(@Nonnull final CharSequence newLine) {
+    public DefaultXmlConfig setNewLine(@NotNull final CharSequence newLine) {
         this.newLine = Assert.notNull(newLine, "newLine");
         return this;
     }
 
     /** A default value formatter is implemented by the method {@code String.valueOf(value)} */
-    public DefaultXmlConfig setFormatter(@Nonnull Formatter formatter) {
+    public DefaultXmlConfig setFormatter(@NotNull Formatter formatter) {
         this.formatter = Assert.notNull(formatter, "formatter");
         return this;
     }

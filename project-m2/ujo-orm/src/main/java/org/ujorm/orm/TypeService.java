@@ -26,8 +26,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.extensions.ValueWrapper;
@@ -85,7 +85,7 @@ public class TypeService implements ITypeService<Object,Object> {
      * @param column Colum provides a Type, there is supported a relation types too.
      * @return Java type code for frequently used types.
      */
-    public static char getTypeCode(@Nonnull final MetaColumn column) {
+    public static char getTypeCode(@NotNull final MetaColumn column) {
         final Class appType = column.getType();
         final Class type = column.isValueWrapper()
                 ? ValueWrapper.getInstance(appType).readPersistentClass()
@@ -140,8 +140,8 @@ public class TypeService implements ITypeService<Object,Object> {
      */
     @Override
     public Object getValue
-        ( @Nonnull final MetaColumn mColumn
-        , @Nonnull final ResultSet rs
+        ( @NotNull final MetaColumn mColumn
+        , @NotNull final ResultSet rs
         , final int c) throws SQLException {
         final Object r;
         switch (mColumn.getTypeCode()) {
@@ -201,8 +201,8 @@ public class TypeService implements ITypeService<Object,Object> {
      */
     @Override
     public Object getValue
-        ( @Nonnull final MetaColumn mColumn
-        , @Nonnull final CallableStatement rs
+        ( @NotNull final MetaColumn mColumn
+        , @NotNull final CallableStatement rs
         , final int c) throws SQLException {
         final Object r;
         switch (mColumn.getTypeCode()) {
@@ -261,8 +261,8 @@ public class TypeService implements ITypeService<Object,Object> {
      */
     @Override
     public void setValue
-        ( @Nonnull final MetaColumn mColumn
-        , @Nonnull final PreparedStatement rs
+        ( @NotNull final MetaColumn mColumn
+        , @NotNull final PreparedStatement rs
         , @Nullable final Object dbValue
         , final int c
         ) throws SQLException {
@@ -312,7 +312,7 @@ public class TypeService implements ITypeService<Object,Object> {
     /** Find an enumeration by the Key. */
     private Object findEnum
         ( @Nullable final String key
-        , @Nonnull final MetaColumn mColumn) throws IllegalUjormException {
+        , @NotNull final MetaColumn mColumn) throws IllegalUjormException {
         if (Check.isEmpty(key)) {
             return null;
         }
@@ -331,7 +331,7 @@ public class TypeService implements ITypeService<Object,Object> {
 
     /** Create the new StringWrapper by the KEY. */
     @SuppressWarnings("unchecked")
-    private Object createStringWrapper(@Nullable final String key, @Nonnull final MetaColumn mColumn) throws IllegalUjormException {
+    private Object createStringWrapper(@Nullable final String key, @NotNull final MetaColumn mColumn) throws IllegalUjormException {
         if (Check.isEmpty(key)) {
             return null;
         }
@@ -345,7 +345,7 @@ public class TypeService implements ITypeService<Object,Object> {
 
     /** Create the new BytesWrapper by the KEY. */
     @SuppressWarnings("unchecked")
-    private Object createBytesWrapper(@Nullable final byte[] key, @Nonnull final MetaColumn mColumn) throws IllegalUjormException {
+    private Object createBytesWrapper(@Nullable final byte[] key, @NotNull final MetaColumn mColumn) throws IllegalUjormException {
         if (key==null || key.length==0) {
             return null;
         }
@@ -359,7 +359,7 @@ public class TypeService implements ITypeService<Object,Object> {
 
     /** Return an converted Java type to database <b>DDL statements</b> by a generic test. */
     @Override
-    public Class getDbTypeClass(@Nonnull final MetaColumn column) {
+    public Class getDbTypeClass(@NotNull final MetaColumn column) {
         assert column.getConverter()==this : "Invalid column for this service: " + column;
 
         switch (column.getTypeCode()) {

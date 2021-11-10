@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.msg.ValuePrinter;
@@ -90,11 +90,11 @@ public class JdbcBuilder implements Serializable {
     protected static final char SPACE = ' ';
 
     /** SQL string fragments */
-    @Nonnull
+    @NotNull
     protected final List<CharSequence> sql;
 
     /** Argument list */
-    @Nonnull
+    @NotNull
     protected final List<Object> arguments;
 
     /** Condition counter */
@@ -112,14 +112,14 @@ public class JdbcBuilder implements Serializable {
     }
 
     /** Default constructor */
-    public JdbcBuilder(final @Nonnull List<CharSequence> sql, final @Nonnull List<Object> arguments) {
+    public JdbcBuilder(final @NotNull List<CharSequence> sql, final @NotNull List<Object> arguments) {
         this.sql = sql;
         this.arguments = arguments;
     }
 
     /** Add a another statement to the end of this statement. */
-    @Nonnull
-    public JdbcBuilder write(@Nonnull final JdbcBuilder builder) {
+    @NotNull
+    public JdbcBuilder write(@NotNull final JdbcBuilder builder) {
         this.sql.addAll(builder.sql);
         this.arguments.addAll(builder.arguments);
 
@@ -129,7 +129,7 @@ public class JdbcBuilder implements Serializable {
     /** Write a sql fragment including a space before
      * @param sqlFragment An empty or {@code null} value is ignored.
      */
-    @Nonnull
+    @NotNull
     public JdbcBuilder write(@Nullable final CharSequence sqlFragment) {
         if (Check.hasLength(sqlFragment)) {
             sql.add(sqlFragment);
@@ -140,8 +140,8 @@ public class JdbcBuilder implements Serializable {
     /** Write a sql fragment with no space before
      * @param sqlFragment An empty or null fragment is ignored.
      */
-    @Nonnull
-    public JdbcBuilder writeNoSpace(@Nonnull final CharSequence sqlFragment) {
+    @NotNull
+    public JdbcBuilder writeNoSpace(@NotNull final CharSequence sqlFragment) {
         if (Check.hasLength(sqlFragment)) {
             sql.add(new SqlEnvelope(sqlFragment));
         }
@@ -149,8 +149,8 @@ public class JdbcBuilder implements Serializable {
     }
 
     /** Write many sql fragments including a space before */
-    @Nonnull
-    public JdbcBuilder writeMany(@Nonnull CharSequence... sqlFragments) {
+    @NotNull
+    public JdbcBuilder writeMany(@NotNull CharSequence... sqlFragments) {
         for (CharSequence text : sqlFragments) {
             write(text);
         }
@@ -158,8 +158,8 @@ public class JdbcBuilder implements Serializable {
     }
 
     /** Write many sql fragments with no space before */
-    @Nonnull
-    public JdbcBuilder writeManyNoSpace(@Nonnull final CharSequence... sqlFragments) {
+    @NotNull
+    public JdbcBuilder writeManyNoSpace(@NotNull final CharSequence... sqlFragments) {
         for (CharSequence text : sqlFragments) {
             writeNoSpace(text);
         }
@@ -167,15 +167,15 @@ public class JdbcBuilder implements Serializable {
     }
 
     /** Add new column */
-    @Nonnull
-    public JdbcBuilder column(@Nonnull final CharSequence column) {
+    @NotNull
+    public JdbcBuilder column(@NotNull final CharSequence column) {
         sql.add(new SqlEnvelope(column, columnCounter++));
         return this;
     }
 
     /** Set new value to column by template {@code name = ? */
-    @Nonnull
-    public JdbcBuilder columnUpdate(@Nonnull final CharSequence column, @Nonnull final Object value) {
+    @NotNull
+    public JdbcBuilder columnUpdate(@NotNull final CharSequence column, @NotNull final Object value) {
         Assert.state(!insertMode, "An insertion mode has been started.");
         sql.add(new SqlEnvelope(column, columnCounter++));
         sql.add("=");
@@ -185,8 +185,8 @@ public class JdbcBuilder implements Serializable {
     }
 
     /** Set new value to column by template {@code name = ? */
-    @Nonnull
-    public JdbcBuilder columnInsert(@Nonnull final CharSequence column, @Nonnull final Object value) {
+    @NotNull
+    public JdbcBuilder columnInsert(@NotNull final CharSequence column, @NotNull final Object value) {
         insertMode = true;
         sql.add(new SqlEnvelope(column, columnCounter++));
         arguments.add(value);
@@ -199,8 +199,8 @@ public class JdbcBuilder implements Serializable {
      * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
      * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
      */
-    @Nonnull
-    public JdbcBuilder andCondition(@Nonnull final CharSequence sqlCondition, @Nullable final String operator, @Nullable final Object value) {
+    @NotNull
+    public JdbcBuilder andCondition(@NotNull final CharSequence sqlCondition, @Nullable final String operator, @Nullable final Object value) {
         writeOperator(true, conditionCounter++ > 0);
         return condition(sqlCondition, operator, value);
     }
@@ -211,8 +211,8 @@ public class JdbcBuilder implements Serializable {
      * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
      * @param values The value of the condition (a replacement for the question character)
      */
-    @Nonnull
-    public JdbcBuilder andCondition(@Nonnull final CharSequence sqlCondition, @Nonnull final String operator, @Nullable final Object... values) {
+    @NotNull
+    public JdbcBuilder andCondition(@NotNull final CharSequence sqlCondition, @NotNull final String operator, @Nullable final Object... values) {
         writeOperator(true, conditionCounter++ > 0);
         return Check.hasLength(values)
                 ? condition(sqlCondition, operator, values)
@@ -225,8 +225,8 @@ public class JdbcBuilder implements Serializable {
      * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
      * @param value Add the value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}.
      */
-    @Nonnull
-    public JdbcBuilder orCondition(@Nonnull final CharSequence sqlCondition, @Nullable final String operator, @Nullable final Object value) {
+    @NotNull
+    public JdbcBuilder orCondition(@NotNull final CharSequence sqlCondition, @Nullable final String operator, @Nullable final Object value) {
         writeOperator(false, conditionCounter++ > 0);
         return condition(sqlCondition, operator, value);
     }
@@ -237,8 +237,8 @@ public class JdbcBuilder implements Serializable {
      * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
      * @param values The value of the condition (a replacement for the question character)
      */
-    @Nonnull
-    public JdbcBuilder orCondition(@Nonnull final CharSequence sqlCondition, @Nonnull final String operator, @Nullable final Object... values) {
+    @NotNull
+    public JdbcBuilder orCondition(@NotNull final CharSequence sqlCondition, @NotNull final String operator, @Nullable final Object... values) {
         writeOperator(false, conditionCounter++ > 0);
         return Check.hasLength(values)
                 ? condition(sqlCondition, operator, values)
@@ -250,8 +250,8 @@ public class JdbcBuilder implements Serializable {
      * @param operator An optional operator is followed by the {@link #VALUE_MARKER} automatically
      * @param value Add a value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}. An array is supported
      */
-    @Nonnull
-    public JdbcBuilder condition(@Nullable final CharSequence sqlCondition, @Nullable final String operator, @Nonnull final Object value) {
+    @NotNull
+    public JdbcBuilder condition(@Nullable final CharSequence sqlCondition, @Nullable final String operator, @NotNull final Object value) {
         if (Check.hasLength(sqlCondition)) {
             final boolean multiValue = value instanceof Object[];
             final Object[] values = multiValue ? (Object[]) value : new Object[]{value};
@@ -304,8 +304,8 @@ public class JdbcBuilder implements Serializable {
     /** Add an argument value (including a SEPARATOR and a MARKER) for buidling a SQL INSERT statement
      * @see #addArguments(java.lang.Object...)
      */
-    @Nonnull
-    public JdbcBuilder value(@Nonnull final Object value) {
+    @NotNull
+    public JdbcBuilder value(@NotNull final Object value) {
         if (value != null && !arguments.isEmpty()) {
             sql.add(ITEM_SEPARATOR);
         }
@@ -316,7 +316,7 @@ public class JdbcBuilder implements Serializable {
      * @param value A {@code null} value is ignored
      * @see #addArguments(java.lang.Object...)
      */
-    @Nonnull
+    @NotNull
     protected JdbcBuilder addValue(@Nullable final Object value) {
         if (value != null) {
             sql.add(new MarkerEnvelope(value));
@@ -329,8 +329,8 @@ public class JdbcBuilder implements Serializable {
      * @see #value(java.lang.Object)
      * @see #writeNoSpace(java.lang.CharSequence)
      */
-    @Nonnull
-    public JdbcBuilder addArguments(final @Nonnull Object... values) {
+    @NotNull
+    public JdbcBuilder addArguments(final @NotNull Object... values) {
         final Object[] vals = values.length == 1 && values[0] instanceof Object[] ? (Object[]) values[0] : values;
         for (int i = 0; i < vals.length; i++) {
             arguments.add(values[i]);
@@ -340,14 +340,14 @@ public class JdbcBuilder implements Serializable {
 
     /** Returns an array of all JDBC arguments
      * @return Array of arguments */
-    @Nonnull
+    @NotNull
     public Object[] getArguments() {
         return arguments.toArray(new Object[arguments.size()]);
     }
 
     /** Build the PreparedStatement with arguments */
-    @Nonnull
-    public PreparedStatement prepareStatement(@Nonnull final Connection connection) throws SQLException {
+    @NotNull
+    public PreparedStatement prepareStatement(@NotNull final Connection connection) throws SQLException {
         final PreparedStatement result = connection.prepareStatement(getSql());
         for (int i = 0, max = arguments.size(); i < max; ++i) {
             result.setObject(i + 1, arguments.get(i));
@@ -358,14 +358,14 @@ public class JdbcBuilder implements Serializable {
     /** Create an iterator ready to a <strong>loop</strong> statement {@code for ( ; ; )}
      * Supported SQL statements are: INSERT, UPDATE, DELETE .
      */
-    @Nonnull
-    public LoopingIterator<ResultSet> executeSelect(@Nonnull final Connection connection) throws IllegalStateException, SQLException {
+    @NotNull
+    public LoopingIterator<ResultSet> executeSelect(@NotNull final Connection connection) throws IllegalStateException, SQLException {
         return new RowIterator(prepareStatement(connection));
     }
 
     /** Create a new result list */
-    @Nonnull
-    public <T> List<T> executeSelect(@Nonnull final Connection connection, JdbcFunction<T> function) throws SQLException {
+    @NotNull
+    public <T> List<T> executeSelect(@NotNull final Connection connection, JdbcFunction<T> function) throws SQLException {
         final ArrayList<T> result = new ArrayList<>(128);
         try (PreparedStatement ps = prepareStatement(connection); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
@@ -378,7 +378,7 @@ public class JdbcBuilder implements Serializable {
     /** Create statement and call {@link PreparedStatement.executeUpdate() }.
      * Supported SQL statements are: INSERT, UPDATE, DELETE .
      */
-    public int executeUpdate(@Nonnull final Connection connection) throws IllegalStateException {
+    public int executeUpdate(@NotNull final Connection connection) throws IllegalStateException {
         try (PreparedStatement ps = prepareStatement(connection)) {
             return ps.executeUpdate();
         } catch (SQLException e) {
@@ -388,7 +388,7 @@ public class JdbcBuilder implements Serializable {
 
     /** Return the first column value of a unique resultset, else returns {@code null} value */
     @Nullable
-    public <T> T uniqueValue(@Nonnull Class<T> resultType, @Nonnull final Connection connection) {
+    public <T> T uniqueValue(@NotNull Class<T> resultType, @NotNull final Connection connection) {
         try (PreparedStatement ps = prepareStatement(connection); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 final T result = rs.getObject(1, resultType);
@@ -404,13 +404,13 @@ public class JdbcBuilder implements Serializable {
     }
 
     /** Return the first column value of a unique resultset */
-    @Nonnull
-    public <T> Optional<T> uniqueValueOptional(@Nonnull Class<T> resultType, @Nonnull final Connection connection) {
+    @NotNull
+    public <T> Optional<T> uniqueValueOptional(@NotNull Class<T> resultType, @NotNull final Connection connection) {
         return Optional.ofNullable(uniqueValue(resultType, connection));
     }
 
     /** Returns a SQL text */
-    @Nonnull
+    @NotNull
     public String getSql(final boolean preview) {
         final StringBuilder result = new StringBuilder(getBufferSizeEstimation(preview));
         final ValuePrinter printer = preview ? createValuePrinter(result) : null;
@@ -454,8 +454,8 @@ public class JdbcBuilder implements Serializable {
     }
 
     /** Create a value printer */
-    @Nonnull
-    protected static ValuePrinter createValuePrinter(@Nonnull final Appendable result) {
+    @NotNull
+    protected static ValuePrinter createValuePrinter(@NotNull final Appendable result) {
         return new ValuePrinter(VALUE_MARKER, "'", result);
     }
 
@@ -466,13 +466,13 @@ public class JdbcBuilder implements Serializable {
     }
 
     /** Returns a SQL statement */
-    @Nonnull
+    @NotNull
     public String getSql() {
         return getSql(false);
     }
 
     /** Returns a SQL preview including values */
-    @Nonnull
+    @NotNull
     public String toString() {
         return getSql(true);
     }
@@ -482,16 +482,16 @@ public class JdbcBuilder implements Serializable {
     /** A value marker envelope */
     protected static class MarkerEnvelope extends ProxySequence {
         /** Value argumenent */
-        @Nonnull
+        @NotNull
         private final Object value;
 
-        protected MarkerEnvelope(@Nonnull final Object value) {
+        protected MarkerEnvelope(@NotNull final Object value) {
             super(VALUE_MARKER);
             this.value = value;
         }
 
         /** SQL argumenent */
-        @Nonnull
+        @NotNull
         public Object getValue() {
             return value;
         }
@@ -504,7 +504,7 @@ public class JdbcBuilder implements Serializable {
         private final short columnOrder;
 
         /** Default constructor */
-        protected SqlEnvelope(@Nonnull final CharSequence sql) {
+        protected SqlEnvelope(@NotNull final CharSequence sql) {
             this(sql, (short) -1);
         }
 
@@ -513,7 +513,7 @@ public class JdbcBuilder implements Serializable {
          * @param sql
          * @param columnOrder The first position have got zero.
          */
-        protected SqlEnvelope(@Nonnull final CharSequence sql, final int columnOrder) {
+        protected SqlEnvelope(@NotNull final CharSequence sql, final int columnOrder) {
             super(sql);
             this.columnOrder = (short) columnOrder;
         }

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
 import org.ujorm.CompositeKey;
@@ -174,7 +174,7 @@ final public class OrmTools {
     }
 
     /** Convert StringBuilder to a character array */
-    public static char[] toCharArray(final @Nonnull StringBuilder baos) {
+    public static char[] toCharArray(final @NotNull StringBuilder baos) {
         final char[] result = new char[baos.length()];
         baos.getChars(0, result.length, result, 0);
         return result;

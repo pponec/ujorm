@@ -15,8 +15,8 @@
  */
 package org.ujorm.tools.web.table;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Sort direction
@@ -36,7 +36,7 @@ public enum Direction {
         return equals(direction);
     }
     
-    @Nonnull
+    @NotNull
     public static final Direction of(@Nullable Boolean ascending) {
         if (ascending == null) {
             return NONE;

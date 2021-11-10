@@ -21,8 +21,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.set.LoopingIterator;
 
 /**
@@ -43,7 +43,7 @@ import org.ujorm.tools.set.LoopingIterator;
 public class RowIterator implements LoopingIterator<ResultSet> {
 
     /** Prepared Statement */
-    @Nonnull
+    @NotNull
     private final PreparedStatement ps;
     /** ResultSet */
     @Nullable
@@ -53,7 +53,7 @@ public class RowIterator implements LoopingIterator<ResultSet> {
     /** Has a resultset a next row? */
     private boolean hasNext = false;
 
-    public RowIterator(@Nonnull final PreparedStatement ps) {
+    public RowIterator(@NotNull final PreparedStatement ps) {
         this.ps = ps;
     }
 

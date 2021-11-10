@@ -17,7 +17,7 @@
 package org.ujorm.extensions;
 
 import java.util.List;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
@@ -33,7 +33,7 @@ import org.ujorm.Ujo;
  * @author Pavel Ponec
  * @since 0.81
  */
-@Immutable
+@Unmodifiable
 @SuppressWarnings("deprecation")
 final public class PathListProperty<U extends Ujo, VALUE>
       extends PathProperty<U, List<VALUE>>

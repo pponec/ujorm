@@ -16,7 +16,7 @@
 package org.ujorm.orm.metaModel;
 
 import java.util.List;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
@@ -28,7 +28,7 @@ import org.ujorm.orm.AbstractMetaModel;
  * DB index meta-model.
  * @author Pavel Ponec
  */
-@Immutable
+@Unmodifiable
 final public class MetaIndex extends AbstractMetaModel {
     private static final Class<MetaIndex> CLASS = MetaIndex.class;
 

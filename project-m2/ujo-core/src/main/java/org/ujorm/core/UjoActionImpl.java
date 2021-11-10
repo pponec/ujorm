@@ -16,7 +16,7 @@
 
 package org.ujorm.core;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.UjoAction;
 
 /**

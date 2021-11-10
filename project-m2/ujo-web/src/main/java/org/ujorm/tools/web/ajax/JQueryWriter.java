@@ -18,7 +18,7 @@ package org.ujorm.tools.web.ajax;
 import java.time.Duration;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
@@ -52,7 +52,7 @@ public class JQueryWriter extends JavaScriptWriter {
      * Generate a Javascript
      */
     @Override
-    public void write(@Nonnull final Element parent) {
+    public void write(@NotNull final Element parent) {
         try (Element js = parent.addElement(Html.SCRIPT)) {
             if (isAjax) {
                 js.addRawText(newLine);

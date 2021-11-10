@@ -17,8 +17,8 @@
 package org.ujorm.extensions;
 
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -50,7 +50,7 @@ public interface UjoMiddle<U extends UjoMiddle> extends Ujo {
     @SuppressWarnings("unchecked")
     @Nullable
     default <VALUE> VALUE get
-        ( @Nonnull final Key<? super U, VALUE> key) {
+        ( @NotNull final Key<? super U, VALUE> key) {
             return key.of((U)this);
         }
 
@@ -65,9 +65,9 @@ public interface UjoMiddle<U extends UjoMiddle> extends Ujo {
      * @see CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean)
      */
     @SuppressWarnings("unchecked")
-    @Nonnull
+    @NotNull
     default <VALUE> UjoMiddle<?> set
-        ( @Nonnull final Key<? super U, VALUE> key
+        ( @NotNull final Key<? super U, VALUE> key
         , VALUE value) {
             key.setValue((U)this, value);
             return this;

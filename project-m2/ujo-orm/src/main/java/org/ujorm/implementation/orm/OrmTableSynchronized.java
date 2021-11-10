@@ -19,7 +19,7 @@ package org.ujorm.implementation.orm;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Set;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -114,12 +114,12 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
 
     /** Check the attribute modification flag */
     @Override
-    public synchronized boolean checkModificationFlag(@Nonnull final Key key) {
+    public synchronized boolean checkModificationFlag(@NotNull final Key key) {
         return changes != null && changes.get(key.getIndex());
     }
 
     /** Type safe checking the modification flag */
-    public synchronized final <UJO extends U, VALUE> boolean checkModificationFlagSafe(final @Nonnull Key<UJO, VALUE> key) {
+    public synchronized final <UJO extends U, VALUE> boolean checkModificationFlagSafe(final @NotNull Key<UJO, VALUE> key) {
         return checkModificationFlag(key);
     }
 
@@ -187,7 +187,7 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     }
 
     /** Clone the first level */
-    @Override @Nonnull
+    @Override @NotNull
     public U cloneUjo() {
         return (U) clone(1, null);
     }

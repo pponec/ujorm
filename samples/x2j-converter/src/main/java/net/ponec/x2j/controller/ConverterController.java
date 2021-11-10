@@ -10,7 +10,7 @@ import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 
@@ -77,7 +77,7 @@ public class ConverterController {
     /**
      * Create a configuration of HTML model
      */
-    private DefaultHtmlConfig getConfig(@Nonnull String title) {
+    private DefaultHtmlConfig getConfig(@NotNull String title) {
         DefaultHtmlConfig config;
         config = HtmlConfig.ofDefault();
         config.setNiceFormat();

@@ -21,8 +21,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackHeadersToolbar;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxNavigationToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -97,12 +97,12 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     /** Data size */
     protected Long size;
     /** Data criterion model for filtering the data resource */
-    @Nonnull
+    @NotNull
     protected final IModel<Criterion<U>> filter;
     /** Data criterion model for highlighting data rows */
     protected IModel<Criterion<U>> highlighting;
     /** Visible table columns */
-    @Nonnull
+    @NotNull
     private final List<IColumn<U, ?>> columns = new ArrayList<>();
     /** Default column sorting for the method {@link #addColumn(org.ujorm.Key) }
      * where the feature is enabled by default
@@ -112,7 +112,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     /** Constructor
      * @param criterion Condition to a database query
      */
-    public AbstractDataProvider(@Nonnull IModel<Criterion<U>> criterion) {
+    public AbstractDataProvider(@NotNull IModel<Criterion<U>> criterion) {
         this(criterion, null);
     }
 
@@ -121,7 +121,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @param defaultSort Default sorting can be assigned optionally
      */
     public AbstractDataProvider
-            ( @Nonnull final IModel<Criterion<U>> filter
+            ( @NotNull final IModel<Criterion<U>> filter
             , @Nullable Key<? super U,?> defaultSort) {
         this.filter = Assert.notNull(filter, "Filter is required");
 
@@ -281,8 +281,8 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @param cssClass CSS class
      */
     public <V> void add
-            ( @Nonnull final Key<? super U,V> column
-            , @Nonnull final Class<? extends WebMarkupContainer> panelClass
+            ( @NotNull final Key<? super U,V> column
+            , @NotNull final Class<? extends WebMarkupContainer> panelClass
             , final boolean sortable
             , @Nullable final String cssClass) {
          add(column, panelClass, sortable ? column : null, cssClass);
@@ -301,8 +301,8 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @param cssClass CSS class
      */
     public <V> void add
-            ( @Nonnull final Key<? super U,V> column
-            , @Nonnull final Class<? extends WebMarkupContainer> panelClass
+            ( @NotNull final Key<? super U,V> column
+            , @NotNull final Class<? extends WebMarkupContainer> panelClass
             , @Nullable final Key<? super U,V> sortColumn
             , @Nullable final String cssClass ) {
         final Class<? super U> domainType = column.getDomainType();
@@ -348,7 +348,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @param column Key for the column, where the Key can't get data.
      * @param actions Action array
      */
-    public <V> void add(@Nonnull final Key<? super U,V> column, final CommonAction ... actions) {
+    public <V> void add(@NotNull final Key<? super U,V> column, final CommonAction ... actions) {
         final KeyColumn<U, Object> col = new KeyColumn<U, Object>(KeyRing.<U>of(column), null) {
             @Override public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
                 item.add(new CommonActionPanel(componentId, model.getObject(), actions));
@@ -505,7 +505,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * Data criterion model for select data rows
      * @param criterion The highlighting criterion to set
      */
-    public void setHighlighting(@Nonnull Criterion<U> criterion) {
+    public void setHighlighting(@NotNull Criterion<U> criterion) {
         setHighlighting(new Model(criterion));
     }
 
@@ -525,13 +525,13 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @depreated Use the method {@link #setHighlighting(org.ujorm.criterion.Criterion) }
      */
     @Deprecated
-    public final void setSelected(@Nonnull Criterion<U> criterion) {
+    public final void setSelected(@NotNull Criterion<U> criterion) {
         setHighlighting(criterion);
     }
 
     /** A common tool returns the first row of the selected dataTable or the {@code null} value if no row was found */
     @SuppressWarnings("unchecked")
-    protected U getFirstTableRow(@Nonnull DataTable dataTable) {
+    protected U getFirstTableRow(@NotNull DataTable dataTable) {
         final Long firstRowIndex = dataTable.getCurrentPage() * dataTable.getItemsPerPage();
         final Iterator<U> iterator = dataTable.getDataProvider().iterator(firstRowIndex, 1);
         return iterator.hasNext()

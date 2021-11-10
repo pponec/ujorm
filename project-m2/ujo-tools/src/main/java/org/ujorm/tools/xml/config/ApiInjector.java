@@ -15,7 +15,7 @@
  */
 package org.ujorm.tools.xml.config;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.xml.ApiElement;
 
 /**
@@ -31,5 +31,5 @@ public interface ApiInjector {
      *
      * @param element An element to write
      */
-    void write(@Nonnull ApiElement element);
+    void write(@NotNull ApiElement element);
 }

@@ -18,7 +18,7 @@ package org.ujorm.tools;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Common checker. See the next positive tests:

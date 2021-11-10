@@ -17,7 +17,7 @@ package org.ujorm.orm.dialect;
 
 import java.io.IOException;
 import java.util.List;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -115,8 +115,8 @@ public class FirebirdDialect extends org.ujorm.orm.SqlDialect {
      */
     @Override
     public Appendable printQuotedName
-        ( @Nonnull final CharSequence name
-        , @Nonnull final Appendable sql) throws IOException {
+        ( @NotNull final CharSequence name
+        , @NotNull final Appendable sql) throws IOException {
         //sql.append('"'); // quotation start character based on SQL dialect
         sql.append(name);
         //sql.append('"'); // quotation end character based on SQL dialect

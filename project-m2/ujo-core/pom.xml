@@ -34,7 +34,7 @@
         <url>https://github.com/pponec/ujorm/blob/master/project-m2/ujo-core/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-core</connection>
     </scm>
-    
+
     <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->
     <pluginRepositories>
         <pluginRepository>
@@ -69,7 +69,7 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    
+
     <dependencies>
 
         <!-- Tools of Ujorm -->
@@ -80,12 +80,12 @@
 
         <!-- Static analyzer support -->
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>21.0.1</version>
             <optional>true</optional>
         </dependency>
-        
+
         <!-- API, java.xml.bind module -->
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
@@ -100,8 +100,8 @@
             <artifactId>jaxb-runtime</artifactId>
             <version>2.3.2</version>
             <scope>provided</scope>
-        </dependency> 
-        
+        </dependency>
+
         <!-- HIBERNATE -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -139,7 +139,7 @@
         </dependency>
         -->
     </dependencies>
-    
+
 
     <build>
         <resources>

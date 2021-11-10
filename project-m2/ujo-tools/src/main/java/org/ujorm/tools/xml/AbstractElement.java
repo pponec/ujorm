@@ -17,7 +17,7 @@
 package org.ujorm.tools.xml;
 
 import java.io.Closeable;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.Assert;
 
 /**
@@ -34,10 +34,10 @@ import org.ujorm.tools.Assert;
 @Deprecated
 public abstract class AbstractElement<E extends AbstractElement<?>> implements ApiElement<E> {
 
-    @Nonnull
+    @NotNull
     protected final String name;
 
-    public AbstractElement(@Nonnull final String name) {
+    public AbstractElement(@NotNull final String name) {
         this.name = Assert.hasLength(name, "name");
     }
 

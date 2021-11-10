@@ -15,8 +15,8 @@
  */
 package org.ujorm.extensions.types;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.extensions.ValueWrapper;
 import org.ujorm.tools.Assert;
 
@@ -31,11 +31,11 @@ import org.ujorm.tools.Assert;
  */
 public abstract class AbstractValueWrapper<DbValue, AppValue> implements ValueWrapper<DbValue, AppValue>, Comparable<AbstractValueWrapper> {
 
-    @Nonnull
+    @NotNull
     protected final AppValue applValue;
 
     /** Constructor */
-    public AbstractValueWrapper(@Nonnull AppValue appValue) {
+    public AbstractValueWrapper(@NotNull AppValue appValue) {
         this.applValue = Assert.notNull(appValue);
     }
 
@@ -67,7 +67,7 @@ public abstract class AbstractValueWrapper<DbValue, AppValue> implements ValueWr
         return ((Comparable)applValue).compareTo(o.applValue);
     }
 
-    @Override @Nonnull
+    @Override @NotNull
     public String toString() {
         return String.valueOf(applValue);
     }

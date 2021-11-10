@@ -25,8 +25,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.ListKey;
@@ -148,7 +148,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     /** Write keys to XML including a XML header. */
     @SuppressWarnings("deprecation")
     public void saveXML(
-            @Nonnull Appendable writer,
+            @NotNull Appendable writer,
             @Nullable XmlHeader xmlHeader,
             @Nullable UjoTextable ujo,
             Object context

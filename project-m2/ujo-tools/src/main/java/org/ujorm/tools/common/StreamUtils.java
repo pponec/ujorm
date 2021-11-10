@@ -30,7 +30,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Static methods
@@ -48,8 +48,8 @@ public abstract class StreamUtils {
      * A line separator can be modifed in the result
      * @return The result must be closed.
      */
-    @Nonnull
-    public Stream<String> rows(@Nonnull final String text) {
+    @NotNull
+    public Stream<String> rows(@NotNull final String text) {
         return new BufferedReader(new CharArrayReader(text.toCharArray())).lines();
     }
 
@@ -59,7 +59,7 @@ public abstract class StreamUtils {
      * @return The customer is responsible for closing the stream.
      *         During closing, an IllegalStateException may occur due to an IOException.
      */
-    public static Stream<String> rowsOfUrl(@Nonnull final URL url) throws IOException {
+    public static Stream<String> rowsOfUrl(@NotNull final URL url) throws IOException {
         return StringUtils.readLines(url);
     }
 
@@ -69,7 +69,7 @@ public abstract class StreamUtils {
      * @param iterator Source iterator
      * @return
      */
-    public static <T> Stream<T> toStream(@Nonnull final Iterator<T> iterator) {
+    public static <T> Stream<T> toStream(@NotNull final Iterator<T> iterator) {
         return toStream(iterator, false);
     }
 
@@ -80,7 +80,7 @@ public abstract class StreamUtils {
      * @param parallel Parrallell processing is enabled
      * @return
      */
-    public static <T> Stream<T> toStream(@Nonnull final Iterator<T> iterator, final boolean parallel) {
+    public static <T> Stream<T> toStream(@NotNull final Iterator<T> iterator, final boolean parallel) {
         final Iterable<T> iterable = () -> iterator;
         return StreamSupport.stream(iterable.spliterator(), parallel);
 
@@ -92,7 +92,7 @@ public abstract class StreamUtils {
     }
 
     /** A stream collecetor to a ArrayDeque type */
-    @Nonnull
+    @NotNull
     public static <T> Collector<T, ?, ArrayDeque<T>> collectToDequeue() {
         return Collectors.toCollection(ArrayDeque::new);
     }
@@ -113,8 +113,8 @@ public abstract class StreamUtils {
      * @param fce An original function
      * @return The new object type of Function
      */
-    @Nonnull
-    public static <D, R> Joinable<D, R> toJoinable(@Nonnull final Function<D, R> fce) {
+    @NotNull
+    public static <D, R> Joinable<D, R> toJoinable(@NotNull final Function<D, R> fce) {
         return Joinable.of(fce);
     }
 

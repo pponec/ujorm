@@ -20,8 +20,8 @@ import java.io.InputStream;
 import java.time.Duration;
 import java.util.List;
 import java.util.function.BiConsumer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
@@ -43,53 +43,53 @@ import org.ujorm.tools.xml.config.HtmlConfig;
  */
 public interface GridBuilderConfig<D> {
 
-    @Nonnull
+    @NotNull
     public HtmlConfig getConfig();
 
-    @Nonnull
+    @NotNull
     public String getCssLink();
 
     /** Link to an external Javascript library where a no-library returns an empty String */
-    @Nonnull
+    @NotNull
     public String getJavascriptLink();
 
-    @Nonnull
+    @NotNull
     public Duration getIdleDelay();
 
-    @Nonnull
+    @NotNull
     public HttpParameter getAjaxRequestParam();
 
-    @Nonnull
+    @NotNull
     public HttpParameter getSortRequestParam();
 
-    @Nonnull
+    @NotNull
     public CharSequence getAjaxReadyMessage();
 
-    @Nonnull
+    @NotNull
     public String getFormId();
 
-    @Nonnull
+    @NotNull
     public String getControlCss();
 
-    @Nonnull
+    @NotNull
     public String getSubtitleCss();
 
-    @Nonnull
+    @NotNull
     public CharSequence getTableSelector();
 
-    @Nonnull
+    @NotNull
     public List<CharSequence> getTableCssClass();
 
-    @Nonnull
+    @NotNull
     public CharSequence getSortable();
 
-    @Nonnull
+    @NotNull
     public CharSequence getSortableAsc();
 
-    @Nonnull
+    @NotNull
     public CharSequence getSortableDesc();
 
-    @Nonnull
+    @NotNull
     public CharSequence getSortableBoth();
 
     /** Use inner icons for sortable images */
@@ -99,8 +99,8 @@ public interface GridBuilderConfig<D> {
     public BiConsumer<Element, Boolean> getCssWriter();
 
     /** Get a CSS direction style */
-    @Nonnull
-    default CharSequence getSortableDirection(@Nonnull final Direction direction) {
+    @NotNull
+    default CharSequence getSortableDirection(@NotNull final Direction direction) {
         switch (direction) {
             case ASC:
                 return getSortableAsc();
@@ -115,13 +115,13 @@ public interface GridBuilderConfig<D> {
 
     /** Get a CSS direction style */
     @Nullable
-    default InputStream getInnerSortableImageToStream(@Nonnull final Direction direction) {
+    default InputStream getInnerSortableImageToStream(@NotNull final Direction direction) {
         return getClass().getResourceAsStream(getInnerSortableImage(direction));
     }
 
     /** Get a CSS direction style */
-    @Nonnull
-    default String getInnerSortableImage(@Nonnull final Direction direction) {
+    @NotNull
+    default String getInnerSortableImage(@NotNull final Direction direction) {
         final String baseDir = "/META-INF/resources/org/ujorm/images/v1/order";
         switch (direction) {
             case ASC:
@@ -136,8 +136,8 @@ public interface GridBuilderConfig<D> {
     }
 
     /** Returns a default implementation */
-    @Nonnull
-    public static GridBuilderConfig of(@Nonnull final HtmlConfig config) {
+    @NotNull
+    public static GridBuilderConfig of(@NotNull final HtmlConfig config) {
         return new ReportBuilderConfigImpl(config);
     }
 }

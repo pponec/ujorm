@@ -16,7 +16,7 @@
 package org.ujorm.orm.metaModel;
 
 import java.lang.reflect.Field;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
@@ -38,7 +38,7 @@ import org.ujorm.orm.annot.Table;
  * @author Pavel Ponec
  * @composed 1 - * MetaColumn
  */
-@Immutable
+@Unmodifiable
 final public class MetaProcedure extends AbstractMetaModel {
     private static final Class<MetaProcedure> CLASS = MetaProcedure.class;
 

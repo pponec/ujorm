@@ -17,8 +17,8 @@
 package org.ujorm.orm;
 
 import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.implementation.orm.RelationToMany;
@@ -63,13 +63,13 @@ public interface OrmUjo extends Ujo {
     public Key[] readChangedProperties(boolean clear);
 
     /** Check the attribute modification flag */
-    public <UJO, VALUE> boolean checkModificationFlag(@Nonnull Key key);
+    public <UJO, VALUE> boolean checkModificationFlag(@NotNull Key key);
 
     /** Clear all modification flags */
     public void clearModificationFlags();
 
     /** Clone the first level of properties */
-    @Nonnull
+    @NotNull
     public OrmUjo cloneUjo();
 
 }

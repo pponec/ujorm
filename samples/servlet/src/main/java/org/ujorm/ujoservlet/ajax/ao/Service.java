@@ -16,7 +16,7 @@
 package org.ujorm.ujoservlet.ajax.ao;
 
 import java.security.SecureRandom;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.XmlConfig;
 
@@ -30,7 +30,7 @@ public class Service {
     private static final int MAX_LENGTH = 1_100;
 
     /** Create a CSS */
-    @Nonnull
+    @NotNull
     public CharSequence[] getCss() {
         return new CharSequence[] { ""
                 , "body   { margin-left:20px; background-color: #f3f6f7;}"

@@ -20,8 +20,8 @@ package org.ujorm.ujoservlet.tools;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.config.HtmlConfig;
@@ -49,19 +49,19 @@ public class HtmlElementOrig extends XmlModel {
     protected static final char CHAR_NEW_LINE = '\n';
 
     /** Head element */
-    @Nonnull
+    @NotNull
     private final XmlModel head;
 
     /** Body element */
-    @Nonnull
+    @NotNull
     private final XmlModel body;
 
     /** Charset */
-    @Nonnull
+    @NotNull
     protected final Charset charset;
 
     /** Create new instance with empty html headers */
-    public HtmlElementOrig(@Nonnull final XmlConfig config) {
+    public HtmlElementOrig(@NotNull final XmlConfig config) {
         super(Html.HTML);
 
         this.charset = config.getCharset();
@@ -70,7 +70,7 @@ public class HtmlElementOrig extends XmlModel {
     }
 
     /** Create new instance with empty html headers */
-    public HtmlElementOrig(@Nonnull final Charset charset) {
+    public HtmlElementOrig(@NotNull final Charset charset) {
         super(Html.HTML);
 
         this.charset = Assert.notNull(charset, REQUIRED_MSG, "charset");
@@ -79,7 +79,7 @@ public class HtmlElementOrig extends XmlModel {
     }
 
     /** Constructor buliding default html headers with codepage UTF-8 */
-    public HtmlElementOrig(@Nonnull final Object title, @Nullable final CharSequence... cssLinks) {
+    public HtmlElementOrig(@NotNull final Object title, @Nullable final CharSequence... cssLinks) {
         this(title, UTF_8, cssLinks);
     }
 
@@ -88,7 +88,7 @@ public class HtmlElementOrig extends XmlModel {
      * @param charset A charset
      * @param cssLinks Nullable CSS link array
      */
-    public HtmlElementOrig(@Nonnull final Object title, @Nonnull final Charset charset, @Nullable final CharSequence... cssLinks) {
+    public HtmlElementOrig(@NotNull final Object title, @NotNull final Charset charset, @Nullable final CharSequence... cssLinks) {
         this(charset);
         head.addElement(Html.META).setAttribute(Html.A_CHARSET, charset);
         head.addElement(Html.TITLE).addText(title);
@@ -102,13 +102,13 @@ public class HtmlElementOrig extends XmlModel {
 
     /** Returns body element
      * @deprecated Use the method {@link #addElementToHead(java.lang.String) } rather. */
-    @Nonnull @Deprecated
+    @NotNull @Deprecated
     public <T extends XmlModel> T getHead() {
         return (T) head;
     }
 
     /** Returns body element */
-    @Nonnull
+    @NotNull
     public <T extends XmlModel> T getBody() {
         return (T) body;
     }
@@ -117,7 +117,7 @@ public class HtmlElementOrig extends XmlModel {
      * @param name A name of the new XmlModel is requred.
      * @return The new XmlModel!
      */
-    public <T extends XmlModel> T  addElementToHead(@Nonnull final String name) {
+    public <T extends XmlModel> T  addElementToHead(@NotNull final String name) {
         return (T) head.addElement(name);
     }
 
@@ -125,7 +125,7 @@ public class HtmlElementOrig extends XmlModel {
      * @param name A name of the new XmlModel is requred.
      * @return The new XmlModel!
      */
-    public <T extends XmlModel> T  addElementToBody(@Nonnull final String name) {
+    public <T extends XmlModel> T  addElementToBody(@NotNull final String name) {
         return (T) body.addElement(name);
     }
 
@@ -134,7 +134,7 @@ public class HtmlElementOrig extends XmlModel {
      * @param defer A script that will not run until after the page has loaded
      * @return
      */
-    public <T extends XmlModel> T addJavascriptLink(final boolean defer, @Nonnull final CharSequence ... javascriptLink) {
+    public <T extends XmlModel> T addJavascriptLink(final boolean defer, @NotNull final CharSequence ... javascriptLink) {
         Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
         return (T) head.addElement(Html.SCRIPT)
                 .setAttribute(Html.A_SRC, javascriptLink)
@@ -147,7 +147,7 @@ public class HtmlElementOrig extends XmlModel {
      * @param javascript Add a javascriptLink link
      * @return New CSS element
      */
-    public <T extends XmlModel> T addJavascriptContent(@Nonnull final CharSequence javascript) {
+    public <T extends XmlModel> T addJavascriptContent(@NotNull final CharSequence javascript) {
         Assert.notNull(javascript, REQUIRED_MSG, "javascript");
         return (T) head.addElement(Html.SCRIPT)
                 .setAttribute(Html.A_LANGUAGE, "javascript")
@@ -159,7 +159,7 @@ public class HtmlElementOrig extends XmlModel {
      * @param css Add a CSS link
      * @return New CSS element
      */
-    public final <T extends XmlModel> T addCssLink(@Nonnull final CharSequence css) {
+    public final <T extends XmlModel> T addCssLink(@NotNull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
         return (T) head.addElement(Html.LINK)
                 .setAttribute(Html.A_HREF, css)
@@ -171,7 +171,7 @@ public class HtmlElementOrig extends XmlModel {
      * @param css CSS content
      * @return New CSS element
      */
-    public <T extends XmlModel> T addCssBody(@Nonnull final CharSequence css) {
+    public <T extends XmlModel> T addCssBody(@NotNull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
         return (T) head.addElement(Html.STYLE)
                 .setAttribute(Html.A_TYPE, "text/css")
@@ -179,7 +179,7 @@ public class HtmlElementOrig extends XmlModel {
     }
 
     /** Render the HTML code including header */
-    @Override @Nonnull
+    @Override @NotNull
     public String toString() throws IllegalStateException {
         try {
             return toWriter(0, new XmlWriter(new StringBuilder(512)
@@ -199,7 +199,7 @@ public class HtmlElementOrig extends XmlModel {
      * @throws IllegalArgumentException Wrong argument type
      */
     public final void toResponse(
-            @Nonnull final Object httpServletResponse,
+            @NotNull final Object httpServletResponse,
             final boolean noCache)
             throws IOException, IllegalArgumentException {
         DefaultHtmlConfig config = new DefaultHtmlConfig();
@@ -208,7 +208,7 @@ public class HtmlElementOrig extends XmlModel {
     }
 
     /** Render the result with an indentation */
-    public final void toNiceResponse(@Nonnull final Object httpServletResponse)
+    public final void toNiceResponse(@NotNull final Object httpServletResponse)
             throws IOException, IllegalArgumentException {
         DefaultHtmlConfig config = new DefaultHtmlConfig();
         config.setNiceFormat();
@@ -221,7 +221,7 @@ public class HtmlElementOrig extends XmlModel {
      * @throws IOException
      * @throws IllegalArgumentException
      */
-    public void toResponse(@Nonnull final Object httpServletResponse, final HtmlConfig config) throws IOException, IllegalArgumentException {
+    public void toResponse(@NotNull final Object httpServletResponse, final HtmlConfig config) throws IOException, IllegalArgumentException {
         try {
             final Appendable writer = AbstractWriter.createWriter(httpServletResponse, charset, !config.isCacheAllowed());
             toWriter(new XmlWriter(
@@ -241,7 +241,7 @@ public class HtmlElementOrig extends XmlModel {
      * @throws IOException An writting error.
      * @throws IllegalArgumentException Wrong argument type
      */
-    public XmlWriter toWriter(@Nonnull final XmlWriter xmlWriter) throws IOException, IllegalArgumentException {
+    public XmlWriter toWriter(@NotNull final XmlWriter xmlWriter) throws IOException, IllegalArgumentException {
             return toWriter(0, xmlWriter);
     }
 

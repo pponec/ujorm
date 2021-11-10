@@ -17,8 +17,8 @@
 package org.ujorm;
 
 import java.util.Collection;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.criterion.*;
 
 public interface CriterionProvider<U extends Ujo, VALUE> {
@@ -34,7 +34,7 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @return A new criterion
      */
     public Criterion<U> where
-        ( @Nonnull Operator operator
+        ( @NotNull Operator operator
         , @Nullable VALUE value
         );
 
@@ -49,10 +49,10 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @return A new criterion
      * @see proxyValue
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> where
-        ( @Nonnull Operator operator
-        , @Nonnull ProxyValue<VALUE> proxyValue
+        ( @NotNull Operator operator
+        , @NotNull ProxyValue<VALUE> proxyValue
         );
 
     /**
@@ -65,17 +65,17 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * </ul>
      * @return A new criterion
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> where
-        ( @Nonnull Operator operator
-        , @Nonnull Key<?,VALUE> value
+        ( @NotNull Operator operator
+        , @NotNull Key<?,VALUE> value
         );
 
     /**
      * Create a new Criterion where this key equals the parameter value.
      * @return The new immutable Criterion
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> whereEq(@Nullable VALUE value);
 
     /**
@@ -84,25 +84,25 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @return The new immutable Criterion
      * @see SerialSupplier
      */
-    @Nonnull
-    public Criterion<U> whereEq(@Nonnull ProxyValue<VALUE> proxyValue);
+    @NotNull
+    public Criterion<U> whereEq(@NotNull ProxyValue<VALUE> proxyValue);
 
     /**
      * Create a new Criterion where this key value equals the parameter value.
      * @param key Key can be type a direct of indirect (for a relation) key
      * @return The new immutable Criterion
      */
-    @Nonnull
-    public Criterion<U> whereEq(@Nonnull Key<U,VALUE> key);
+    @NotNull
+    public Criterion<U> whereEq(@NotNull Key<U,VALUE> key);
 
     /**
      * Create new Criterion where this key value is in the one of parameter values.
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return The new immutable Criterion.
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> whereIn
-        ( @Nonnull Collection<VALUE> list
+        ( @NotNull Collection<VALUE> list
         );
 
     /**
@@ -110,9 +110,9 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return The new immutable Criterion.
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> whereNotIn
-        ( @Nonnull Collection<VALUE> list
+        ( @NotNull Collection<VALUE> list
         );
 
     /**
@@ -120,9 +120,9 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return The new immutable Criterion
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> whereIn
-        ( @Nonnull VALUE... list
+        ( @NotNull VALUE... list
         );
 
     /**
@@ -130,31 +130,31 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return The new immutable Criterion.
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> whereNotIn
-        ( @Nonnull VALUE... list
+        ( @NotNull VALUE... list
         );
 
     /** Create a new Criterion where this key value is not equals the value
      * @see org.ujorm.criterion.Operator#NOT_EQ */
-    @Nonnull
+    @NotNull
     public Criterion<U> whereNeq(@Nullable VALUE value);
 
     /** Create a new Criterion where this key is great then the value
      * @see org.ujorm.criterion.Operator#GT */
-    public Criterion<U> whereGt(@Nonnull VALUE value);
+    public Criterion<U> whereGt(@NotNull VALUE value);
 
     /** Create a new Criterion where this key is great or equals the value
      * @see org.ujorm.criterion.Operator#GE */
-    public Criterion<U> whereGe(@Nonnull VALUE value);
+    public Criterion<U> whereGe(@NotNull VALUE value);
 
     /** Create a new Criterion where this key is less then the value
      * @see org.ujorm.criterion.Operator#LT */
-    public Criterion<U> whereLt(@Nonnull VALUE value);
+    public Criterion<U> whereLt(@NotNull VALUE value);
 
     /** Create a new Criterion where this key is less or equals than the value
      * @see org.ujorm.criterion.Operator#LE */
-    public Criterion<U> whereLe(@Nonnull VALUE value);
+    public Criterion<U> whereLe(@NotNull VALUE value);
 
     /**
      * Create a new Criterion where this key is {@code null}.
@@ -165,7 +165,7 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> whereNull();
 
     /**
@@ -177,7 +177,7 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @see #whereNull(org.ujorm.Key)
      * @see Operator#NOT_EQ
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> whereNotNull();
 
     /**
@@ -185,7 +185,7 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> whereHasLength();
 
     /**
@@ -193,7 +193,7 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> whereIsEmpty();
 
     /** Create a new Criterion for a Native Criterion in SQL statement format.
@@ -211,8 +211,8 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @see SerialSupplier
      * @see Operator#XSQL
      */
-    @Nonnull
-    public Criterion<U> forSql(@Nonnull String sqlCondition);
+    @NotNull
+    public Criterion<U> forSql(@NotNull String sqlCondition);
     /** Create a new Criterion for a Native Criterion in SQL statement format.
      * Special features:
      * <ul>
@@ -229,10 +229,10 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @param value a condition value, array, list or an another key
      * @see Operator#XSQL
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> forSql
-        ( @Nonnull String sqlTemplate
-        , @Nonnull VALUE value);
+        ( @NotNull String sqlTemplate
+        , @NotNull VALUE value);
     /** Create a new Criterion for a Native Criterion in SQL statement format.
      * Special features:
      * <ul>
@@ -249,29 +249,29 @@ public interface CriterionProvider<U extends Ujo, VALUE> {
      * @param value a condition value, array, list or an another key
      * @see Operator#XSQL
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> forSqlUnchecked
-        ( @Nonnull String sqlTemplate
-        , @Nonnull Object value);
+        ( @NotNull String sqlTemplate
+        , @NotNull Object value);
 
     /** Create a new Criterion for this key where all results will be true (the result is independed on the value).
      *  The method evaluate(ujo) returns TRUE always.
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> forAll();
 
     /** Create a new Criterion for this key where all results will be false (the result is independed on the value).
      *  The  method evaluate(method) returns FALSE always.
      */
-    @Nonnull
+    @NotNull
     public Criterion<U> forNone();
 
     /** An alias for the method: {@link #forAll() } */
-    @Nonnull
+    @NotNull
     public Criterion<U> whereAll();
 
     /** An alias for the method: {@link #forNone() } */
-    @Nonnull
+    @NotNull
     public Criterion<U> whereNone();
 
 }

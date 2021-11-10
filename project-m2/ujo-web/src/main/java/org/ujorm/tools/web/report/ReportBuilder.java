@@ -22,8 +22,8 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,27 +66,27 @@ public class ReportBuilder<D> {
     private static final HttpParameter UNDEFINED_PARAM = HttpParameter.of("UNDEFINED_PARAM");
 
     /** Grid builder */
-    @Nonnull
+    @NotNull
     protected final GridBuilder<D> gridBuilder;
     /** Table builder config */
     protected final ReportBuilderConfig config;
     /** AJAX request param */
-    @Nonnull
+    @NotNull
     protected HttpParameter ajaxRequestParam = JavaScriptWriter.DEFAULT_AJAX_REQUEST_PARAM;
     /** Extension is empty by default */
-    @Nonnull
+    @NotNull
     protected Injector htmlHeader = e -> {};
     /** Print a config title by default */
-    @Nonnull
+    @NotNull
     protected Injector header = e -> e.addHeading(ReportBuilder.this.config.getConfig().getTitle());
     /** Print an empty text by default */
-    @Nonnull
+    @NotNull
     protected Injector footer = e -> e.addText("");
     /** Form injector */
-    @Nonnull
+    @NotNull
     protected Injector formAdditions = footer;
     /** Javascript writer */
-    @Nonnull
+    @NotNull
     protected Supplier<Injector> javascritWriter = () -> new JavaScriptWriter()
             .setAjax(ReportBuilder.this.ajaxEnabled)
             .setSubtitleSelector("." + ReportBuilder.this.config.getSubtitleCss());
@@ -98,68 +98,68 @@ public class ReportBuilder<D> {
     @Nullable
     private int sortedColumn = -1;
 
-    public ReportBuilder(@Nonnull CharSequence title) {
+    public ReportBuilder(@NotNull CharSequence title) {
         this((HtmlConfig) HtmlConfig.ofDefault().setTitle(title).setNiceFormat());
     }
 
-    public ReportBuilder(@Nonnull HtmlConfig config) {
+    public ReportBuilder(@NotNull HtmlConfig config) {
         this(ReportBuilderConfig.of(config));
     }
 
-    public ReportBuilder(@Nonnull ReportBuilderConfig config) {
+    public ReportBuilder(@NotNull ReportBuilderConfig config) {
         this(config, new GridBuilder<>(config));
     }
 
-    public ReportBuilder(@Nonnull ReportBuilderConfig config, @Nonnull GridBuilder<D> builder) {
+    public ReportBuilder(@NotNull ReportBuilderConfig config, @NotNull GridBuilder<D> builder) {
         this.gridBuilder = builder;
         this.config = config;
     }
 
-    @Nonnull
+    @NotNull
     public <V> ReportBuilder<D> add(Function<D,V> column) {
         gridBuilder.add(column);
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public <V> ReportBuilder<D> add(Function<D,V> column, CharSequence title) {
         gridBuilder.add(column, title);
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public <V> ReportBuilder<D> add(Function<D,V> column, Injector title) {
         gridBuilder.add(column, title);
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public <V> ReportBuilder<D> add(Function<D,V> column, CharSequence title, @Nullable HttpParameter param) {
         gridBuilder.add(column, title, param);
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public <V> ReportBuilder<D> add(Function<D,V> column, Injector title, @Nullable HttpParameter param) {
         gridBuilder.add(column, title, param);
         return this;
     }
 
-    @Nonnull
-    public ReportBuilder<D> addColumn(@Nonnull final Column<D> column, @Nonnull final CharSequence title) {
+    @NotNull
+    public ReportBuilder<D> addColumn(@NotNull final Column<D> column, @NotNull final CharSequence title) {
         gridBuilder.add(column, title);
         return this;
     }
 
-    @Nonnull
-    public ReportBuilder<D> addColumn(@Nonnull final Column<D> column, @Nonnull final Injector title) {
+    @NotNull
+    public ReportBuilder<D> addColumn(@NotNull final Column<D> column, @NotNull final Injector title) {
         gridBuilder.add(column, title);
         return this;
     }
 
     /** Add new column for a row counting */
-    @Nonnull
-    public ReportBuilder<D> addOrder(@Nonnull final CharSequence title) {
+    @NotNull
+    public ReportBuilder<D> addOrder(@NotNull final CharSequence title) {
         gridBuilder.addOrder(title);
         return this;
     }
@@ -178,7 +178,7 @@ public class ReportBuilder<D> {
      * Add a sortable indicator to the last column model
      * @return
      */
-    @Nonnull
+    @NotNull
     public <V> ReportBuilder<D> sortable() {
         gridBuilder.sortable();
         return this;
@@ -188,7 +188,7 @@ public class ReportBuilder<D> {
      * @param ascending Ascending or descending direction of the sort
      * @return
      */
-    @Nonnull
+    @NotNull
     public <V> ReportBuilder<D> sortable(@Nullable final boolean ascending) {
         gridBuilder.sortable(ascending);
         return this;
@@ -199,52 +199,52 @@ public class ReportBuilder<D> {
      * @param direction The {@code null} value shows an unused sorting action.
      * @return
      */
-    @Nonnull
-    public <V> ReportBuilder<D> sortable(@Nonnull final Direction direction) {
+    @NotNull
+    public <V> ReportBuilder<D> sortable(@NotNull final Direction direction) {
         gridBuilder.sortable(direction);
         return this;
     }
 
     /** Get sorted column or a stub of the sorted column was not found */
-    @Nonnull
+    @NotNull
     public ColumnModel<D,?> getSortedColumn() {
         return gridBuilder.getSortedColumn();
     }
 
-    @Nonnull
-    public ReportBuilder<D> setAjaxRequestParam(@Nonnull HttpParameter ajaxRequestParam) {
+    @NotNull
+    public ReportBuilder<D> setAjaxRequestParam(@NotNull HttpParameter ajaxRequestParam) {
         this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
         return this;
     }
 
-    @Nonnull
-    public ReportBuilder<D> setHtmlHeader(@Nonnull Injector htmlHeader) {
+    @NotNull
+    public ReportBuilder<D> setHtmlHeader(@NotNull Injector htmlHeader) {
         this.htmlHeader = Assert.notNull(htmlHeader, "htmlHeader");
         return this;
     }
 
-    @Nonnull
-    public ReportBuilder<D> setHeader(@Nonnull Injector header) {
+    @NotNull
+    public ReportBuilder<D> setHeader(@NotNull Injector header) {
         this.header = Assert.notNull(header, "header");
         return this;
     }
 
-    @Nonnull
-    public ReportBuilder<D> setFooter(@Nonnull Injector footer) {
+    @NotNull
+    public ReportBuilder<D> setFooter(@NotNull Injector footer) {
         this.footer = Assert.notNull(footer, "footer");
         return this;
     }
 
-    @Nonnull
-    public ReportBuilder<D> setFormItem(@Nonnull Injector formItem) {
+    @NotNull
+    public ReportBuilder<D> setFormItem(@NotNull Injector formItem) {
         this.formAdditions = Assert.notNull(formItem, "formAdditions");
         return this;
     }
 
     /** Use the method {@link #setFormItem(org.ujorm.tools.web.ao.Injector) } rather. */
     @Deprecated
-    @Nonnull
-    public ReportBuilder<D> setFormAdditions(@Nonnull Injector formItem) {
+    @NotNull
+    public ReportBuilder<D> setFormAdditions(@NotNull Injector formItem) {
         return setFormItem(formItem);
     }
 
@@ -254,7 +254,7 @@ public class ReportBuilder<D> {
         return this;
     }
 
-    public ReportBuilder<D> setJavascritWriter(@Nonnull Supplier<Injector> javascritWriter) {
+    public ReportBuilder<D> setJavascritWriter(@NotNull Supplier<Injector> javascritWriter) {
         this.javascritWriter = Assert.notNull(javascritWriter, "javascritWriter");
         return this;
     }
@@ -270,17 +270,17 @@ public class ReportBuilder<D> {
 
     /** Build the HTML page including a table */
     public void build(
-            @Nonnull final HttpServletRequest input,
-            @Nonnull final HttpServletResponse output,
-            @Nonnull final Stream<D> resource) {
+            @NotNull final HttpServletRequest input,
+            @NotNull final HttpServletResponse output,
+            @NotNull final Stream<D> resource) {
         build(input, output, tableBuilder -> resource);
     }
 
     /** Build the HTML page including a table */
     public void build(
-            @Nonnull final HttpServletRequest input,
-            @Nonnull final HttpServletResponse output,
-            @Nonnull final Function<GridBuilder<D>, Stream<D>> resource) {
+            @NotNull final HttpServletRequest input,
+            @NotNull final HttpServletResponse output,
+            @NotNull final Function<GridBuilder<D>, Stream<D>> resource) {
         try {
             setSort(ColumnModel.ofCode(config.getSortRequestParam().of(input)));
             new ReqestDispatcher(input, output, config.getConfig())
@@ -293,7 +293,7 @@ public class ReportBuilder<D> {
     }
 
     /** Mark a column as sortable */
-    protected void setSort(@Nonnull final ColumnModel sort) {
+    protected void setSort(@NotNull final ColumnModel sort) {
         this.sortedColumn = sort.getIndex();
         if (sortedColumn >= 0) {
             final int[] i = {-1};
@@ -309,9 +309,9 @@ public class ReportBuilder<D> {
     }
 
     protected void printHtmlBody(
-            @Nonnull final HttpServletRequest input,
-            @Nonnull final HtmlElement html,
-            @Nonnull final Function<GridBuilder<D>, Stream<D>> resource
+            @NotNull final HttpServletRequest input,
+            @NotNull final HtmlElement html,
+            @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
         Assert.notNull(input, "input");
         Assert.notNull(html, "html");
@@ -359,9 +359,9 @@ public class ReportBuilder<D> {
     }
 
     protected void printTableBody(
-            @Nonnull final Element table,
-            @Nonnull final HttpServletRequest input,
-            @Nonnull final Function<GridBuilder<D>, Stream<D>> resource
+            @NotNull final Element table,
+            @NotNull final HttpServletRequest input,
+            @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
         final ColumnModel sortedColumn = ColumnModel.ofCode(config.getSortRequestParam().of(input));
         this.gridBuilder.build(table, sortedColumn, resource);
@@ -375,9 +375,9 @@ public class ReportBuilder<D> {
      * @throws IOException if an I/O error occurs
      */
     protected void doAjax(
-            @Nonnull final HttpServletRequest input,
-            @Nonnull final JsonBuilder output,
-            @Nonnull final Function<GridBuilder<D>, Stream<D>> resource
+            @NotNull final HttpServletRequest input,
+            @NotNull final JsonBuilder output,
+            @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) throws ServletException, IOException {
         output.writeClass(config.getTableSelector(), e -> printTableBody(e, input, resource));
         output.writeClass(config.getSubtitleCss(), config.getAjaxReadyMessage());
@@ -396,7 +396,7 @@ public class ReportBuilder<D> {
             this(BOOTSTRAP_CSS, JQUERY_JS);
         }
 
-        public Url(@Nonnull final String bootstrapCss, @Nonnull final String jQueryJs) {
+        public Url(@NotNull final String bootstrapCss, @NotNull final String jQueryJs) {
             this.bootstrapCss = Assert.hasLength(bootstrapCss, "bootstrapCss");
         }
     }

@@ -20,8 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
@@ -51,52 +51,52 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     private static final Logger LOGGER = Logger.getLogger(ReportBuilderConfigImpl.class.getName());
 
     /** HTML config */
-    @Nonnull
+    @NotNull
     protected final HtmlConfig config;
     /** Link to CSS file */
-    @Nonnull
+    @NotNull
     private String cssLink;
     /** Link to an external JavaScript library where no-library returns an empty String */
-    @Nonnull
+    @NotNull
     private String jqueryLink;
     /** Iddle delay in millis */
-    @Nonnull
+    @NotNull
     private Duration idleDelay;
     /** AJAX request param */
-    @Nonnull
+    @NotNull
     private HttpParameter ajaxRequestParam;
     /** AJAX request param */
-    @Nonnull
+    @NotNull
     private HttpParameter sortRequestParam;
     /** AJA ready param */
-    @Nonnull
+    @NotNull
     private CharSequence ajaxReadyMessage = "AJAX ready";
     /** Form identifier */
-    @Nonnull
+    @NotNull
     private String formId;
     /** Bootstrap form control CSS class name */
-    @Nonnull
+    @NotNull
     private String controlCss;
     /** CSS class name for the output box */
-    @Nonnull
+    @NotNull
     private String subtitleCss;
     /** Table selector */
-    @Nonnull
+    @NotNull
     private CharSequence tableSelector;
     /** Table CSS class */
-    @Nonnull
+    @NotNull
     private List<CharSequence> tableCssClass;
     /** Sortable column CSS style */
-    @Nonnull
+    @NotNull
     private CharSequence sortableColumn;
     /** Sortable column ascending CSS style */
-    @Nonnull
+    @NotNull
     private CharSequence sortableAsc;
     /** Sortable column descending CSS style */
-    @Nonnull
+    @NotNull
     private CharSequence sortableDesc;
     /** Sortable column undefined CSS style */
-    @Nonnull
+    @NotNull
     private CharSequence sortableBoth;
     /** Use an external images for sortable icons */
     private boolean embeddedIcons;
@@ -104,7 +104,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     @Nullable
     private BiConsumer<Element,Boolean> cssWriter;
 
-    public ReportBuilderConfigImpl(@Nonnull final HtmlConfig config) {
+    public ReportBuilderConfigImpl(@NotNull final HtmlConfig config) {
         this(config, // config
            BOOTSTRAP_CSS, // cssLink
            "", // jQueryLink
@@ -125,22 +125,22 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     }
 
     protected ReportBuilderConfigImpl(
-            @Nonnull final HtmlConfig config,
-            @Nonnull final String cssLink,
-            @Nonnull final String jqueryLink,
-            @Nonnull final Duration idleDelay,
-            @Nonnull final HttpParameter ajaxRequestParam,
-            @Nonnull final HttpParameter sortRequestParam,
-            @Nonnull final String formId,
-            @Nonnull final String controlCss,
-            @Nonnull final String subtitleCss,
-            @Nonnull final List<CharSequence> tableCssClass,
-            @Nonnull final String sortableColumn,
-            @Nonnull final String sortableAsc,
-            @Nonnull final String sortableDesc,
-            @Nonnull final String sortableBoth,
+            @NotNull final HtmlConfig config,
+            @NotNull final String cssLink,
+            @NotNull final String jqueryLink,
+            @NotNull final Duration idleDelay,
+            @NotNull final HttpParameter ajaxRequestParam,
+            @NotNull final HttpParameter sortRequestParam,
+            @NotNull final String formId,
+            @NotNull final String controlCss,
+            @NotNull final String subtitleCss,
+            @NotNull final List<CharSequence> tableCssClass,
+            @NotNull final String sortableColumn,
+            @NotNull final String sortableAsc,
+            @NotNull final String sortableDesc,
+            @NotNull final String sortableBoth,
             final boolean embeddedIcons,
-            @Nonnull final BiConsumer<Element,Boolean> cssWriter
+            @NotNull final BiConsumer<Element,Boolean> cssWriter
     ) {
         this.config = config;
         this.cssLink = cssLink;
@@ -161,64 +161,64 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     }
 
     /** Returns a fist class of table element by defult */
-    @Nonnull
+    @NotNull
     protected CharSequence getTableClassSelector() {
         return tableCssClass.isEmpty()
                 ? Html.TABLE
                 : String.join(" .", Html.TABLE, tableCssClass.get(0));
     }
 
-    public ReportBuilderConfigImpl<D> setCssLink(@Nonnull final String cssLink) {
+    public ReportBuilderConfigImpl<D> setCssLink(@NotNull final String cssLink) {
         this.cssLink = Assert.notNull(cssLink, "cssLink");
         return this;
     }
 
-    public ReportBuilderConfigImpl<D> setJqueryLink(@Nonnull final String jqueryLink) {
+    public ReportBuilderConfigImpl<D> setJqueryLink(@NotNull final String jqueryLink) {
         this.jqueryLink = Assert.notNull(jqueryLink, "jqueryLink");
         return this;
     }
 
-    public ReportBuilderConfigImpl<D> setIdleDelay(@Nonnull final Duration idleDelay) {
+    public ReportBuilderConfigImpl<D> setIdleDelay(@NotNull final Duration idleDelay) {
         this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
         return this;
     }
 
-    public ReportBuilderConfigImpl<D> setAjaxRequestParam(@Nonnull final HttpParameter ajaxRequestParam) {
+    public ReportBuilderConfigImpl<D> setAjaxRequestParam(@NotNull final HttpParameter ajaxRequestParam) {
         this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
         return this;
     }
 
-    public ReportBuilderConfigImpl<D> setSortRequestParam(@Nonnull final HttpParameter sortRequestParam) {
+    public ReportBuilderConfigImpl<D> setSortRequestParam(@NotNull final HttpParameter sortRequestParam) {
         this.sortRequestParam = Assert.notNull(sortRequestParam, "sortRequestParam");
         return this;
     }
 
-    public ReportBuilderConfigImpl<D> setAjaxReadyMessage(@Nonnull final CharSequence ajaxReadyMessage) {
+    public ReportBuilderConfigImpl<D> setAjaxReadyMessage(@NotNull final CharSequence ajaxReadyMessage) {
         this.ajaxReadyMessage = Assert.hasLength(ajaxReadyMessage, "ajaxReadyMessage");
         return this;
     }
 
-    public ReportBuilderConfigImpl<D> setFormId(@Nonnull final String formId) {
+    public ReportBuilderConfigImpl<D> setFormId(@NotNull final String formId) {
         this.formId = Assert.hasLength(formId, "formId");
         return this;
     }
 
-    public ReportBuilderConfigImpl<D> setControlCss(@Nonnull final String controlCss) {
+    public ReportBuilderConfigImpl<D> setControlCss(@NotNull final String controlCss) {
         this.controlCss = Assert.hasLength(controlCss, "controlCss");
         return this;
     }
 
-    public ReportBuilderConfigImpl<D> setSubtitleCss(@Nonnull final String subtitleCss) {
+    public ReportBuilderConfigImpl<D> setSubtitleCss(@NotNull final String subtitleCss) {
         this.subtitleCss = Assert.hasLength(subtitleCss, "subtitleCss");
         return this;
     }
 
-    public ReportBuilderConfigImpl<D> setTableSelector(@Nonnull final CharSequence tableSelector) {
+    public ReportBuilderConfigImpl<D> setTableSelector(@NotNull final CharSequence tableSelector) {
         this.tableSelector = Assert.notNull(tableSelector, "tableSelector");
         return this;
     }
 
-    public ReportBuilderConfigImpl<D> setTableCssClass(@Nonnull final List<CharSequence> tableCssClass) {
+    public ReportBuilderConfigImpl<D> setTableCssClass(@NotNull final List<CharSequence> tableCssClass) {
         this.tableCssClass = Assert.notNull(tableCssClass, "tableCssClass");
         return this;
     }
@@ -237,102 +237,102 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     // --- GETTERS ---
 
     @Override
-    @Nonnull
+    @NotNull
     public HtmlConfig getConfig() {
         return config;
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public String getCssLink() {
         return cssLink;
     }
 
     /** Link to an external Javascript library */
     @Override
-    @Nonnull
+    @NotNull
     public String getJavascriptLink() {
         return jqueryLink;
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public Duration getIdleDelay() {
         return idleDelay;
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public HttpParameter getAjaxRequestParam() {
         return ajaxRequestParam;
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public HttpParameter getSortRequestParam() {
         return sortRequestParam;
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public CharSequence getAjaxReadyMessage() {
         return ajaxReadyMessage;
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public String getFormId() {
         return formId;
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public String getControlCss() {
         return controlCss;
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public String getSubtitleCss() {
         return subtitleCss;
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public CharSequence getTableSelector() {
         return tableSelector != null ? tableSelector : getTableCssClass().get(0);
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public List<CharSequence> getTableCssClass() {
         return tableCssClass;
     }
 
     /** Sortable CSS class */
     @Override
-    @Nonnull
+    @NotNull
     public CharSequence getSortable() {
         return sortableColumn;
     }
 
     /** Sortable ascending CSS class */
     @Override
-    @Nonnull
+    @NotNull
     public CharSequence getSortableAsc() {
         return sortableAsc;
     }
 
     /** Sortable descending CSS class */
     @Override
-    @Nonnull
+    @NotNull
     public CharSequence getSortableDesc() {
         return sortableDesc;
     }
 
     /** Sortable both CSS class */
     @Override
-    @Nonnull
+    @NotNull
     public CharSequence getSortableBoth() {
         return sortableBoth;
     }
@@ -340,7 +340,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     /** Inline CSS writer where a default value is generated from the {@link #inlineCssWriter() } method.
      * } */
     @Override
-    @Nonnull
+    @NotNull
     public BiConsumer<Element, Boolean> getCssWriter() {
         return cssWriter != null ? cssWriter : inlineCssWriter();
     }
@@ -351,7 +351,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     }
 
     /** Default header CSS style printer */
-    @Nonnull
+    @NotNull
     protected BiConsumer<Element,Boolean> inlineCssWriter() {
         return (Element element, Boolean sortable) -> {
             final ReportBuilderConfig conf = this;

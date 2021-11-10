@@ -20,7 +20,7 @@ import java.nio.CharBuffer;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.Arrays;
 import java.util.Base64;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A byte array wrapper is ready is to save (to database) 
@@ -31,29 +31,29 @@ public class BinaryWrapper implements StringWrapper, Serializable {
     private static final long serialVersionUID = 2017_08_04L;
 
     /** Binary content */
-    @Nonnull
+    @NotNull
     protected byte[] binary;
 
     /**
      * Constructor for Base64
      * @param base64 Restore object using a BASE64 string
      */
-    public BinaryWrapper(@Nonnull String base64) {
+    public BinaryWrapper(@NotNull String base64) {
         this.binary = Base64.getDecoder().decode(base64);
     }
 
     /** Constructor for an array of code characters */
-    public BinaryWrapper(@Nonnull char[] code) {
+    public BinaryWrapper(@NotNull char[] code) {
         binary = UTF_8.encode(CharBuffer.wrap(code)).array();
     }
 
     /** Constructor for bytes */
-    public BinaryWrapper(@Nonnull byte[] bytes) {
+    public BinaryWrapper(@NotNull byte[] bytes) {
         binary = new byte[bytes.length];
         System.arraycopy(bytes, 0, binary, 0, binary.length);
     }
 
-    @Nonnull
+    @NotNull
     /** Export data in Base64 format
      * @throws IllegalStateException Object can be invalid by an {line #internalClean() method}
      */
@@ -62,7 +62,7 @@ public class BinaryWrapper implements StringWrapper, Serializable {
         return Base64.getEncoder().encodeToString(binary);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     /** Export data in Base64 format
      * @throws IllegalStateException Object can be invalid by an {line #internalClean() method}
@@ -74,7 +74,7 @@ public class BinaryWrapper implements StringWrapper, Serializable {
     /** Get a copy of binary content
      * @throws IllegalStateException Object can be invalid by an {line #internalClean() method}
      */
-    @Nonnull
+    @NotNull
     public byte[] getBinary() throws IllegalStateException {
         checkNoClean();
         final byte[] result = new byte[binary.length];
@@ -83,7 +83,7 @@ public class BinaryWrapper implements StringWrapper, Serializable {
     }
 
     /** Returns a data encoded by BASE64 or {@code "null"} for invalidated object. */
-    @Nonnull
+    @NotNull
     @Override
     public String toString() {
         return binary != null
@@ -119,8 +119,8 @@ public class BinaryWrapper implements StringWrapper, Serializable {
 
 
     /** Factory to create an instance of {@link BinaryWrapper} class from any text */
-    @Nonnull
-    public static BinaryWrapper of(@Nonnull String text) {
+    @NotNull
+    public static BinaryWrapper of(@NotNull String text) {
         return new BinaryWrapper(text.toCharArray());
     }
 

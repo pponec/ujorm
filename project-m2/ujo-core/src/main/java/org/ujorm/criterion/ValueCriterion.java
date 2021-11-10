@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.IllegalUjormException;
@@ -66,7 +66,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
     }
 
     /** An constructor for an internal cloning */
-    protected ValueCriterion(@Nonnull final ValueCriterion criterion) {
+    protected ValueCriterion(@NotNull final ValueCriterion criterion) {
         this.key = criterion.key;
         this.operator = criterion.operator;
         this.value = criterion.getRightNode();
@@ -336,7 +336,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
     }
     
     @Override
-    public SimpleValuePrinter toPrinter(@Nonnull final SimpleValuePrinter out) {
+    public SimpleValuePrinter toPrinter(@NotNull final SimpleValuePrinter out) {
         out.append('(');
         if (operator == Operator.XSQL) {  
             out.appendValue(getRightNode());

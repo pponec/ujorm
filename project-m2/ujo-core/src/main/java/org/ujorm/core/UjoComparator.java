@@ -22,7 +22,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import javax.annotation.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 
@@ -34,7 +35,7 @@ import org.ujorm.Ujo;
  */
 final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
 
-    @Nonnull
+    @NotNull
     final Key[] keys;
     final private Locale collatorLocale;
     final private int collatorStrength;
@@ -47,7 +48,7 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
      * @see Key#isAscending()
      * @see Key#descending()
      */
-    public UjoComparator(@Nonnull final Key ... keys) {
+    public UjoComparator(@NotNull final Key ... keys) {
         this(Locale.ENGLISH, Collator.IDENTICAL, keys);
     }
 
@@ -62,7 +63,7 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
     public UjoComparator
         ( @Nullable final Locale locale
         , final int collatorStrength
-        , @Nonnull final  Key ... keys) {
+        , @NotNull final  Key ... keys) {
         this.keys = keys;
         this.collatorLocale = locale;
         switch (collatorStrength) {
@@ -82,7 +83,7 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
     /** Collator for String comparations.
      * Default collator have en English locale with the IDENTICAL strength (case sensitive);
      */
-    @Nonnull
+    @NotNull
     public Collator getCollator() {
         if (collator==null) {
             collator = Collator.getInstance(collatorLocale);
@@ -139,13 +140,13 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
     }
 
     /** Sort a list by this Comparator. */
-    public List<UJO> sort(@Nonnull final List<UJO> list) {
+    public List<UJO> sort(@NotNull final List<UJO> list) {
         Collections.sort(list, this);
         return list;
     }
 
     /** Sort a list by this Comparator. */
-    public UJO[] sort(@Nonnull final UJO[] array) {
+    public UJO[] sort(@NotNull final UJO[] array) {
         Arrays.sort(array, this);
         return array;
     }
@@ -183,27 +184,27 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
      * @see Key#isAscending()
      * @see Key#descending()
      */
-    public static <U extends Ujo> UjoComparator<U> of(@Nonnull final Key<U,?> ... keys) {
+    public static <U extends Ujo> UjoComparator<U> of(@NotNull final Key<U,?> ... keys) {
         return new UjoComparator<>(keys);
     }
 
     /** @see #of(org.ujorm.KeyU[])  */
-    public static <U extends Ujo> UjoComparator<U> of(@Nonnull final Key<U,?> p1) {
+    public static <U extends Ujo> UjoComparator<U> of(@NotNull final Key<U,?> p1) {
         return new UjoComparator<>(p1);
     }
 
     /** @see #of(org.ujorm.KeyU[])  */
     public static <U extends Ujo> UjoComparator<U> of
-        ( @Nonnull final Key<U,?> p1
-        , @Nonnull final Key<U,?> p2) {
+        ( @NotNull final Key<U,?> p1
+        , @NotNull final Key<U,?> p2) {
         return new UjoComparator<>(p1, p2);
     }
 
     /** @see #of(org.ujorm.KeyU[])  */
     public static <U extends Ujo> UjoComparator<? extends U> of
-        ( @Nonnull final Key<U,?> p1
-        , @Nonnull final Key<U,?> p2
-        , @Nonnull final Key<U,?> p3) {
+        ( @NotNull final Key<U,?> p1
+        , @NotNull final Key<U,?> p2
+        , @NotNull final Key<U,?> p3) {
         return new UjoComparator<>(p1, p2, p3);
     }
 
@@ -216,9 +217,9 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
      * @see Key#descending()
      */
     public static <UJO extends Ujo> UjoComparator<UJO> of
-        ( @Nonnull final Locale locale
+        ( @NotNull final Locale locale
         , final int collatorStrength
-        , @Nonnull final  Key<UJO,?> ... keys) {
+        , @NotNull final  Key<UJO,?> ... keys) {
         return new UjoComparator<>(keys);
     }
 

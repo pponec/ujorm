@@ -16,7 +16,7 @@
 
 package org.ujorm.orm.metaModel;
 
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.orm.AbstractMetaModel;
@@ -25,7 +25,7 @@ import org.ujorm.orm.AbstractMetaModel;
  * Class contains the special parameters with for different use.
  * @author Pavel Ponec
  */
-@Immutable
+@Unmodifiable
 final public class MoreParams extends AbstractMetaModel {
     private static final Class<MoreParams> CLASS = MoreParams.class;
 

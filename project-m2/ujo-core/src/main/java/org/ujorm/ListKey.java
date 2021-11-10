@@ -17,23 +17,23 @@
 package org.ujorm;
 
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 /**
  * A key metadata interface for value type of {@code List<ITEM>}.
  * @author Pavel Ponec
  */
-@Immutable
+@Unmodifiable
 public interface ListKey<UJO extends Ujo, ITEM> extends Key<UJO,List<ITEM>> {
 
     /** Returns a class of the key. */
-    @Nonnull
+    @NotNull
     public Class<ITEM> getItemType();
 
     /** Returns a count of Items. If the key is null, method returns 0. */
-    public int getItemCount(@Nonnull UJO ujo);
+    public int getItemCount(@NotNull UJO ujo);
 
     /** Returns true if the item type is a type or subtype of the parameter class. */
     public boolean isItemTypeOf(Class type);
@@ -42,19 +42,19 @@ public interface ListKey<UJO extends Ujo, ITEM> extends Key<UJO,List<ITEM>> {
      * Returns a value of key. The result is the same, like Ujo#readValue(ListUjoPropertyCommon).
      */
     @Nullable
-    public ITEM getItem(@Nonnull UJO ujo, int index);
+    public ITEM getItem(@NotNull UJO ujo, int index);
 
     /**
      * Returns the first item value or the null, if no item was found.
      */
     @Nullable
-    public ITEM getFirstItem(@Nonnull UJO ujo);
+    public ITEM getFirstItem(@NotNull UJO ujo);
 
     /**
      * Returns the last item value or the null, if no item was found.
      */
     @Nullable
-    public ITEM getLastItem(@Nonnull UJO ujo);
+    public ITEM getLastItem(@NotNull UJO ujo);
 
 
     /**
@@ -62,19 +62,19 @@ public interface ListKey<UJO extends Ujo, ITEM> extends Key<UJO,List<ITEM>> {
      * @return Returns a value of key. The result is the same, like Ujo#readValue(ListUjoPropertyCommon).
      */
     @Nullable
-    public ITEM of(@Nonnull UJO ujo, int index);
+    public ITEM of(@NotNull UJO ujo, int index);
 
     /**
      * Return a not null List. If original list value is empty, the new List is created.
      * @see #getItem(Ujo, int)
      */
-    @Nonnull
-    public List<ITEM> getList(@Nonnull UJO ujo);
+    @NotNull
+    public List<ITEM> getList(@NotNull UJO ujo);
 
     /** Set a key item value.
      * @return the element previously at the specified position.
      */
-    public ITEM setItem(@Nonnull UJO ujo, int index, @Nullable ITEM value);
+    public ITEM setItem(@NotNull UJO ujo, int index, @Nullable ITEM value);
 
     /** Add an Item value to a List key. If the list is {@code null}, than the method create a new instance of List (for exact behaviour see an implementation).
      * The method works like a similar code:
@@ -86,16 +86,16 @@ public interface ListKey<UJO extends Ujo, ITEM> extends Key<UJO,List<ITEM>> {
      * </pre>
      * @return Value {@code true} as per the general contract of Collection.add.
      */
-    public boolean addItem(@Nonnull UJO ujo, @Nullable ITEM value);
+    public boolean addItem(@NotNull UJO ujo, @Nullable ITEM value);
 
     /** Removes the first occurrence in this list of the specified element.
      * @return true if this list is not null and contains the specified element, otherwise returns false.
      * @since 0.81
      */
-    public boolean removeItem(@Nonnull UJO ujo, @Nonnull ITEM value);
+    public boolean removeItem(@NotNull UJO ujo, @NotNull ITEM value);
 
     /** Indicates whether a list of items is null or empty. */
     @Override
-    public boolean isDefault(@Nonnull UJO ujo);
+    public boolean isDefault(@NotNull UJO ujo);
 
 }

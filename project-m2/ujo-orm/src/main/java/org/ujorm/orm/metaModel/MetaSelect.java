@@ -16,7 +16,7 @@
 
 package org.ujorm.orm.metaModel;
 
-import javax.annotation.concurrent.Immutable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.core.KeyFactory;
@@ -28,7 +28,7 @@ import org.ujorm.orm.AbstractMetaModel;
  * Contains a SQL statement for a UJO view user SELECT.
  * @author Ponec
  */
-@Immutable
+@Unmodifiable
 final public class MetaSelect extends AbstractMetaModel {
     private static final Class<MetaSelect> CLASS = MetaSelect.class;
 

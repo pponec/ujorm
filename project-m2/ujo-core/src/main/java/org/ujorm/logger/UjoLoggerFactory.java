@@ -16,7 +16,7 @@
 package org.ujorm.logger;
 
 import java.util.logging.*;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.msg.MsgFormatter;
 
 /**
@@ -34,36 +34,36 @@ final public class UjoLoggerFactory implements UjoLogger {
     /** Target Logger */
     private final Logger logger;
 
-    private UjoLoggerFactory(@Nonnull String name) {
+    private UjoLoggerFactory(@NotNull String name) {
         this.logger = java.util.logging.Logger.getLogger(name);
     }
 
     /** Konstructor */
-    public UjoLoggerFactory(@Nonnull Class name) {
+    public UjoLoggerFactory(@NotNull Class name) {
         this(name.getName());
     }
 
     /** {@inheritdoc} */
     @Override
-    public boolean isLoggable(@Nonnull final Level level) {
+    public boolean isLoggable(@NotNull final Level level) {
         return logger.isLoggable(level);
     }
 
     /** {@inheritdoc} */
     @Override
-    public void log(@Nonnull final Level level, final String message) {
+    public void log(@NotNull final Level level, final String message) {
         logger.log(level, message);
     }
 
     /** {@inheritdoc} */
     @Override
-    public void log(@Nonnull final Level level, final String message, final Throwable e) {
+    public void log(@NotNull final Level level, final String message, final Throwable e) {
         logger.log(level, message, e);
     }
 
     /** {@inheritdoc} */
     @Override
-    public void log(@Nonnull final Level level, final String message, final Object parameter) {
+    public void log(@NotNull final Level level, final String message, final Object parameter) {
         if (logger.isLoggable(level)) {
             logger.log(level, MsgFormatter.format(message, parameter));
         }
@@ -71,7 +71,7 @@ final public class UjoLoggerFactory implements UjoLogger {
 
     /** {@inheritdoc} */
     @Override
-    public void log(@Nonnull final Level level, final String message, final Object... parameters) {
+    public void log(@NotNull final Level level, final String message, final Object... parameters) {
         if (logger.isLoggable(level)) {
             logger.log(level, MsgFormatter.format(message, parameters));
         }
@@ -79,14 +79,14 @@ final public class UjoLoggerFactory implements UjoLogger {
 
     // ---------- FACTORY -----------------
 
-    public static UjoLogger getLogger(@Nonnull Class<?> name) {
+    public static UjoLogger getLogger(@NotNull Class<?> name) {
         return slf4jSupport
              ? newUjoLoggerBridge2Slf4j(name)
              : new UjoLoggerFactory(name)
              ;
     }
 
-    private static UjoLogger newUjoLoggerBridge2Slf4j(@Nonnull Class name) {
+    private static UjoLogger newUjoLoggerBridge2Slf4j(@NotNull Class name) {
         UjoLogger result;
         try {
             result = new UjoLoggerBridge2Slf4j(name);

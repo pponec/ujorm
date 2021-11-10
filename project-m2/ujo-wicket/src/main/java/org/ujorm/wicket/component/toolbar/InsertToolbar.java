@@ -15,7 +15,7 @@
  */
 package org.ujorm.wicket.component.toolbar;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;

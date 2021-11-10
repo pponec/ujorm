@@ -16,7 +16,7 @@
 package org.ujorm.tools.web.json;
 
 import java.io.IOException;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.web.Element;
 
 /**
@@ -28,6 +28,6 @@ import org.ujorm.tools.web.Element;
 public interface ValueProvider {
 
     /** Write a HTML code to the element */
-    void accept(@Nonnull Element element) throws IOException;
+    void accept(@NotNull Element element) throws IOException;
 
 }
