@@ -3,8 +3,19 @@ The Ujorm release notes
 *******************************
 
 
-release 2.16-SNAPSHOT (yyyy-mm-dd)
+release 2.17-SNAPSHOT (yyyy-mm-dd)
 ...
+
+release 2.16 (2021-11-10)
++ WEB: An attribute 'JavaScriptWrier.isSortable' has been removed because it will no longer be needed.
++ WEB: A 'formSelector' is fixed in JavaScriptWriter
++ TOOLS: new method for HTML INPUT component: Element.setNameValue()
++ TOOLS: A new text builder class is available for a common use
++ TOOLS: StringUtils class is extended
++ TOOLS: ExceptionProvider class is fixed
++ COMMON: JetBrains annotations are used instead of JSR305
++ COMMON: jUnit was migrated from 4 to 5
++ COMMON: Maven cleaning
 
 release 2.15 (2021-04-02)
 + WEB: The TableBuilder component sorts columns with no Javascript support.
