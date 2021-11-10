@@ -88,7 +88,6 @@ public class ReportBuilder<D> {
     /** Javascript writer */
     @Nonnull
     protected Supplier<Injector> javascritWriter = () -> new JavaScriptWriter()
-            .setSortable(ReportBuilder.this.gridBuilder.isSortable())
             .setAjax(ReportBuilder.this.ajaxEnabled)
             .setSubtitleSelector("." + ReportBuilder.this.config.getSubtitleCss());
     /** is An AJAX enabled? */

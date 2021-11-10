@@ -51,7 +51,7 @@ public class JavaScriptWriter implements Injector {
     @Nonnull
     protected Duration idleDelay = DEFAULT_DURATION;
     /** Form selector */
-    protected String formSelector = "form";
+    protected String formSelector = Html.FORM;
     /** On load submit request */
     protected boolean onLoadSubmit = false;
     /** New line characters */
@@ -69,8 +69,6 @@ public class JavaScriptWriter implements Injector {
     protected int version = 1;
     /** Javascript ajax request parameter */
     protected String ajaxRequestPath = "_ajax";
-    /** Is the table sortable */
-    protected boolean isSortable = true;
     /** Function order of name */
     protected int fceOrder = 1;
     /** Ajax support */
@@ -144,12 +142,6 @@ public class JavaScriptWriter implements Injector {
         return this;
     }
 
-    /** Assign a Sortable table */
-    public JavaScriptWriter setSortable(boolean isSortable) {
-        this.isSortable = isSortable;
-        return this;
-    }
-
     /** Set a function order */
     public JavaScriptWriter setSortable(int fceOrder) {
         this.fceOrder = fceOrder;
@@ -202,7 +194,7 @@ public class JavaScriptWriter implements Injector {
                 }
                 js.addRawTexts(newLine, ""
                     , "function process(e){"
-                    , "  let pars = new URLSearchParams(new FormData(document.querySelector('" + formSelector + "')));"
+                    , "  let pars=new URLSearchParams(new FormData(document.querySelector('" + formSelector + "')));"
                     , "  if(e!==null){e.preventDefault();pars.append(e.submitter.name,e.submitter.value);}"
                     , "  fetch('" + (version == 2
                             ? ajaxRequestPath
@@ -223,23 +215,8 @@ public class JavaScriptWriter implements Injector {
                     , "  });"
                     , "}"
                 );
-                if (isSortable) {
-                    js.addRawText(newLine, "function sort(e){");
-                    //js.addRawText(newLine, "  e.preventDefault();"); // TypeError: e.preventDefault is not a function
-                    js.addRawText(newLine, "  document.querySelector('", "input[name=\"", sortRequestParam, "\"]').value=e.value;");
-                    js.addRawText(newLine, "  if(this.ajaxRun){this.submitReq=true;}");
-                    js.addRawText(newLine, "  else{this.process(null);}");
-                    js.addRawText(newLine, "  return false;");
-                    js.addRawText(newLine, "} f", fceOrder, ".process=process;f", fceOrder, ".sort=sort;");
-                }
                 js.addRawTexts(newLine, "};");
                 js.addRawText(newLine, "document.addEventListener('DOMContentLoaded',f", fceOrder, ");");
-            } else if (isSortable) {
-                js.addRawText(newLine, "var f", fceOrder, "={");
-                js.addRawText(newLine, "  sort:col=>{");
-                js.addRawText(newLine, "  document.querySelector('", "input[name=\"", sortRequestParam, "\"]').value=col;");
-                js.addRawText(newLine, "  document.querySelector('" + formSelector + "').submit();");
-                js.addRawText(newLine, "}}");
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2020 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2021 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,10 +78,8 @@ public class RegexpBuilderServlet extends HttpServlet {
                 body.addHeading(html.getTitle());
                 body.addDiv(SUBTITLE_CSS).addText(AJAX_ENABLED ? AJAX_READY_MSG : "");
                 body.addForm().then(form -> {
-                    form.setId(FORM_ID)
-                        .setMethod(Html.V_POST).setAction("?");
+                    form.setMethod(Html.V_POST).setAction("?");
                     form.addInput(CONTROL_CSS)
-                            .setId(REGEXP)
                             .setName(REGEXP)
                             .setValue(REGEXP.of(input))
                             .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
@@ -145,12 +143,9 @@ public class RegexpBuilderServlet extends HttpServlet {
             final boolean enabled,
             final boolean isSortable) {
         if (enabled) {
-            new JavaScriptWriter(
-                    "#" + REGEXP,
-                    "#" + TEXT)
+            new JavaScriptWriter(Html.INPUT, Html.TEXT_AREA)
                     .setSubtitleSelector("." + SUBTITLE_CSS)
-                    .setFormSelector("#" + FORM_ID)
-                    .setSortable(isSortable)
+                    .setFormSelector(Html.FORM)
                     .write(html.getHead());
         }
     }
@@ -184,8 +179,6 @@ public class RegexpBuilderServlet extends HttpServlet {
         static final String OUTPUT_CSS = "out";
         /** CSS class name for the output box */
         static final String SUBTITLE_CSS = "subtitle";
-        /** Form identifier */
-        static final String FORM_ID = "form";
     }
 
     /** Servlet attributes */
