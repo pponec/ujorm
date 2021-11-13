@@ -10,7 +10,7 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-web</artifactId>
-    <version>2.17-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>jar</packaging>
     <url>http://ujorm.org</url>
     <name>ujo-web</name>

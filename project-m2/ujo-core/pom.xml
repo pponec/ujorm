@@ -11,7 +11,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-core</artifactId>
     <packaging>jar</packaging>
-    <version>2.17-SNAPSHOT</version>
+    <version>${revision}</version>
 
     <url>http://ujorm.org</url>
     <name>ujo-core</name>
