@@ -4,7 +4,7 @@
 
     <parent>
        <groupId>org.ujorm</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>main</artifactId>
         <version>2.17-SNAPSHOT</version>
     </parent>
 
@@ -15,11 +15,16 @@
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
 
-    <scm>
-        <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/project-m2/</url>
-        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2</connection>
-        <developerConnection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2</developerConnection>
-    </scm>
+    <modules>
+        <module>ujo-tools</module>
+        <module>ujo-core</module>
+        <module>ujo-orm</module>
+        <module>ujo-spring</module>
+        <module>ujo-wicket</module>
+        <module>ujo-xsd</module>
+        <module>ujo-web</module>
+        <module>ujo-arangodb</module>
+    </modules>
 
     <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->
     <pluginRepositories>
@@ -48,16 +53,6 @@
         </repository>
     </repositories>
 
-    <modules>
-        <module>ujo-tools</module>
-        <module>ujo-core</module>
-        <module>ujo-orm</module>
-        <module>ujo-spring</module>
-        <module>ujo-wicket</module>
-        <module>ujo-xsd</module>
-        <module>ujo-web</module>
-        <module>ujo-arangodb</module>
-    </modules>
 
     <build>
         <plugins>

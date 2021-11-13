@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 pavel.
+ * Copyright 2021 Pavel Ponec.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,9 @@
 package org.ujorm.tools.common;
 
 import java.util.function.Function;
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

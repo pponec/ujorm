@@ -8,7 +8,7 @@
     </parent>
 
     <groupId>org.ujorm</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>main</artifactId>
     <version>2.17-SNAPSHOT</version>
     <name>Main UJO</name>
     <packaging>pom</packaging>
@@ -139,42 +139,16 @@
                <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>project-m2/ujo-tools</module>
-                <module>project-m2/ujo-core</module>
-                <module>project-m2/ujo-orm</module>
-                <module>project-m2/ujo-spring</module>
-                <module>project-m2/ujo-wicket</module>
-                <module>project-m2/ujo-xsd</module>
-                <module>project-m2/ujo-web</module>
-                <module>project-m2/ujo-arangodb</module>
-
-                <module>samples/core</module>
-                <module>samples/parameters</module>
-                <module>samples/table2xml</module>
-                <module>samples/ujorm</module>
-                <module>samples/inheritance</module>
-                <module>samples/binding</module>
-                <module>samples/wicket</module>
-                <module>samples/servlet</module>
-                <module>samples/generated</module>
-                <module>samples/x2j-converter</module>
-
-                <module>benchmark/hibernate</module>
-                <module>benchmark/hibernate-ujo</module>
-                <module>benchmark/ujo-orm</module>
+                <module>project-m2</module>
+                <module>samples</module>
+                <module>benchmark</module>
             </modules>
         </profile>
 
         <profile>
             <id>production</id>
             <modules>
-                <module>project-m2/ujo-tools</module>
-                <module>project-m2/ujo-core</module>
-                <module>project-m2/ujo-orm</module>
-                <module>project-m2/ujo-spring</module>
-                <module>project-m2/ujo-wicket</module>
-                <module>project-m2/ujo-xsd</module>
-                <module>project-m2/ujo-web</module>
+                <module>project-m2</module>
             </modules>
         </profile>
     </profiles>

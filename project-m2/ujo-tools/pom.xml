@@ -15,7 +15,6 @@
     <artifactId>ujo-tools</artifactId>
     <version>2.17-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <url>http://ujorm.org</url>
     <name>ujo-tools</name>
     <description>Ujorm-tools module is a basic library tools for common use</description>
 
