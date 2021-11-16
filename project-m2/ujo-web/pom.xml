@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo</artifactId>
-        <version>2.17-SNAPSHOT</version>
+        <version>2.18-SNAPSHOT</version>
     </parent>
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-web</artifactId>
-    <version>2.17-SNAPSHOT</version>
+    <version>2.18-SNAPSHOT</version>
     <packaging>jar</packaging>
     <url>http://ujorm.org</url>
     <name>ujo-web</name>
@@ -77,7 +77,7 @@
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
             <type>test-jar</type>
-            <version>2.17-SNAPSHOT</version>
+            <version>2.18-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 
