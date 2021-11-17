@@ -3,10 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>9</version>
+    </parent>
+    <!--<parent>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo</artifactId>
         <version>2.18-SNAPSHOT</version>
-    </parent>
+    </parent>-->
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-arangodb</artifactId>
@@ -22,6 +27,15 @@
             <timezone>+1</timezone>
         </contributor>
     </contributors>
+
+    <properties>
+        <revision>2.18-SNAPSHOT</revision>
+        <java.version>1.8</java.version>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>5.8.0</junit.version>
+    </properties>
 
     <repositories>
         <repository>
@@ -61,13 +75,14 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
+            <version>${revision}</version>
         </dependency>
 
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
+            <version>${revision}</version>
             <type>test-jar</type>
-            <version>2.18-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 
@@ -89,11 +104,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
