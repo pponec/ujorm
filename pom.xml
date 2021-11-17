@@ -131,7 +131,7 @@
         </plugins>
     </build>
 
-    <!-- The default prfile is "production" -->
+    <!-- The default profile is "common" -->
     <profiles>
         <profile>
             <id>common</id>

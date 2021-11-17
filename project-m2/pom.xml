@@ -15,32 +15,6 @@
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
 
-    <modules>
-        <module>ujo-tools</module>
-        <module>ujo-core</module>
-        <module>ujo-orm</module>
-        <module>ujo-spring</module>
-        <module>ujo-wicket</module>
-        <module>ujo-xsd</module>
-        <module>ujo-web</module>
-        <module>ujo-arangodb</module>
-    </modules>
-
-    <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
     <repositories>
         <repository>
             <id>central</id>
@@ -53,18 +27,37 @@
         </repository>
     </repositories>
 
+    <!-- The default profile is "common" -->
+    <profiles>
+        <profile>
+            <id>common</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>ujo-tools</module>
+                <module>ujo-core</module>
+                <module>ujo-orm</module>
+                <module>ujo-spring</module>
+                <module>ujo-wicket</module>
+                <module>ujo-xsd</module>
+                <module>ujo-web</module>
+                <module>ujo-arangodb</module>
+            </modules>
+        </profile>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${maven.compiler.target}</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+        <profile>
+            <id>production</id>
+            <modules>
+                <module>ujo-tools</module>
+                <module>ujo-core</module>
+                <module>ujo-orm</module>
+                <module>ujo-spring</module>
+                <module>ujo-wicket</module>
+                <module>ujo-xsd</module>
+                <module>ujo-web</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>
