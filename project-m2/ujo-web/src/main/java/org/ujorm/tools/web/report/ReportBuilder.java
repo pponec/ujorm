@@ -95,7 +95,6 @@ public class ReportBuilder<D> {
     /** Call an autosubmit on first load */
     protected boolean autoSubmmitOnLoad = false;
     /** Sorted column index */
-    @Nullable
     private int sortedColumn = -1;
 
     public ReportBuilder(@NotNull CharSequence title) {
@@ -205,7 +204,7 @@ public class ReportBuilder<D> {
         return this;
     }
 
-    /** Get sorted column or a stub of the sorted column was not found */
+    /** Get sorted column or a stub if the sorted column not found */
     @NotNull
     public ColumnModel<D,?> getSortedColumn() {
         return gridBuilder.getSortedColumn();
@@ -342,6 +341,8 @@ public class ReportBuilder<D> {
                                 column.getParam(UNDEFINED_PARAM));
                     }
                 });
+                // Hidden submit button is important if a javascript is disabled:
+                form.addInput().setType(Html.V_SUBMIT).setAttribute(Html.V_HIDDEN);
                 if (gridBuilder.isSortable()) {
                     printSortedField(form.addSpan().setId(config.getSortRequestParam()), input);
                 }
@@ -356,9 +357,9 @@ public class ReportBuilder<D> {
 
     /** The hidden field contains an index of the last sorted column */
     protected void printSortedField(Element parent, final HttpServletRequest input) {
+        final int index = config.getSortRequestParam().of(input, -1);
         parent.addInput().setAttribute(Html.A_TYPE, Html.V_HIDDEN)
-                .setNameValue(config.getSortRequestParam(),
-                              config.getSortRequestParam().of(input));
+                .setNameValue(config.getSortRequestParam(), index);
     }
 
     protected void printTableBody(
