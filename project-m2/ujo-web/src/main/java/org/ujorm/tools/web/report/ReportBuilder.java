@@ -343,12 +343,8 @@ public class ReportBuilder<D> {
                     }
                 });
                 if (gridBuilder.isSortable()) {
-                        form.addInput()
-                                .setAttribute(Html.A_TYPE, Html.V_HIDDEN)
-                                .setName(config.getSortRequestParam())
-                                .setValue(config.getSortRequestParam().of(input));
+                    printSortedField(form.addSpan().setId(config.getSortRequestParam()), input);
                 }
-                form.addInput().setType(Html.V_SUBMIT).setAttribute(Html.V_HIDDEN);
                 formAdditions.write(form);
                 // Add the table:
                 final List<CharSequence> tableCss = config.getTableCssClass();
@@ -356,6 +352,13 @@ public class ReportBuilder<D> {
             }
             footer.write(body);
         }
+    }
+
+    /** The hidden field contains an index of the last sorted column */
+    protected void printSortedField(Element parent, final HttpServletRequest input) {
+        parent.addInput().setAttribute(Html.A_TYPE, Html.V_HIDDEN)
+                .setNameValue(config.getSortRequestParam(),
+                              config.getSortRequestParam().of(input));
     }
 
     protected void printTableBody(
@@ -381,6 +384,9 @@ public class ReportBuilder<D> {
     ) throws ServletException, IOException {
         output.writeClass(config.getTableSelector(), e -> printTableBody(e, input, resource));
         output.writeClass(config.getSubtitleCss(), config.getAjaxReadyMessage());
+        if (gridBuilder.isSortable()) {
+           output.writeId(config.getSortRequestParam(), e -> printSortedField(e, input));
+        }
     }
 
     /** URL constants */
