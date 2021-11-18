@@ -2,11 +2,10 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-
-release 2.18-SNAPSHOT (yyyy-mm-dd)
+release 2.21-SNAPSHOT (yyyy-mm-dd)
 ...
 
-release 2.17 (2021-11-16)
+release 2.20 (2021-11-18)
 + WEB: An attribute 'JavaScriptWrier.isSortable' has been removed because it will no longer be needed.
 + WEB: A 'formSelector' is fixed in JavaScriptWriter
 + TOOLS: new method for HTML INPUT component: Element.setNameValue()
