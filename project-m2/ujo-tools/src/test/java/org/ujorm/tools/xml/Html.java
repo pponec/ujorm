@@ -111,6 +111,7 @@ public interface Html {
 
     String V_BLANK = "_blank";
     String V_CHECKBOX = "checkbox";
+    /** Default FORM method by the W3C standard */
     String V_GET = "get";
     String V_HIDDEN = "hidden";
     String V_POST = "post";

@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.msg.MsgFormatter;
 
 /**
  * Methods to reading an text resource to the {@code String}.
