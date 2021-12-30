@@ -134,7 +134,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * Setup states
      * @param element A child Node or {@code null} value for a text data
      */
-    @NotNull
+    @Nullable
     protected XmlBuilder nextChild(@Nullable final XmlBuilder element) {
         Assert.isFalse(closed, "The node '{}' was closed", this.name);
         if (!filled) try {

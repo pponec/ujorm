@@ -21,16 +21,15 @@ import com.arangodb.ArangoDBException;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.entity.CollectionEntity;
 import com.arangodb.mapping.ArangoJack;
-import java.io.InputStream;
+import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 
+import java.io.InputStream;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Stream;
-import junit.framework.TestCase;
-import org.junit.Ignore;
-
-import org.junit.Test;
 
 /**
  * Test of ArangoDB  builder
@@ -40,10 +39,15 @@ import org.junit.Test;
  * @author Pavel Ponec
  */
 public class ArangoBuilderTest extends TestCase {
+    private static final boolean DISABLED = true;
 
-    @Ignore
+    @Disabled
     @Test
     public void testBulder() throws ArangoDBException {
+        if (DISABLED) {
+            return;
+        }
+
         String dbName = "myTestDb";
         String collectionName = "firstCollection";
 
