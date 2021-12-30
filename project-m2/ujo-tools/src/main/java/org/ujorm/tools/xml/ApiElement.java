@@ -26,8 +26,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * The XmlElement class implements the {@link Closeable} implementation
  * for an optional highlighting the tree structure in the source code.
-*
- * @see HtmlElement
+ *
  * @since 1.86
  * @author Pavel Ponec
  */
@@ -35,13 +34,13 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
 
     /** A name of a hidden element */
     @Nullable
-    public static final String HIDDEN_NAME = null;
+    static final String HIDDEN_NAME = null;
 
     /** Get an element name */
     @NotNull
     String getName();
 
-    /** Create a new {@link XmlElement} for a required name and add it to children.
+    /** Create a new {@link ApiElement} for a required name and add it to children.
      * @param name A name of the new XmlElement is required.
      * @return The new XmlElement!
      */
@@ -52,7 +51,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      * Set an attribute
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
+     *   {@link org.ujorm.tools.xml.model.XmlWriter#writeValue(Object, ApiElement, String)}
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
@@ -71,7 +70,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
     /**
      * Add a text and escape special character
      * @param value The {@code null} value is allowed. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
+     *   {@link org.ujorm.tools.xml.model.XmlWriter#writeValue(Object, ApiElement, String)}  }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @NotNull
