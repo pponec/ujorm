@@ -52,7 +52,6 @@ import org.ujorm.tools.xml.ApiElement;
  *
  * The XmlElement class implements the {@link Closeable} implementation
  * for an optional highlighting the tree structure in the source code.
- * @see HtmlElement
  * @since 1.86
  * @author Pavel Ponec
  */
@@ -173,7 +172,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * Add an attribute
      * @param name Required element name
      * @param value The {@code null} value is ignored. Formatting is performed by the
-     *   {@link XmlPrinter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
+     *   {@link XmlPrinter#writeValue(Object, ApiElement, String)}
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
@@ -195,7 +194,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     /**
      * Add a text and escape special character
      * @param value The {@code null} value is allowed. Formatting is performed by the
-     *   {@link XmlPrinter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
+     *   {@link XmlPrinter#writeValue(Object, ApiElement, String)}
      *   method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Override
