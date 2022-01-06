@@ -94,7 +94,7 @@ public class RegexpBuilderServlet extends HttpServlet {
                 body.addElement(Html.HR);
                 body.addAnchor(SOURCE_URL).addTextTemplated("Source code <{}.{}.{}>", 1, 2, 3);
             });
-        }).catche(e -> {
+        }).catchEx(e -> {
             LOGGER.log(Level.WARNING, "Internal server error", e);
             output.setStatus(500);
         });

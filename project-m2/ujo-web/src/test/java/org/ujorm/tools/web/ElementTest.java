@@ -20,7 +20,6 @@ package org.ujorm.tools.web;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.*;
 import org.ujorm.tools.web.ao.Column;
@@ -271,7 +270,7 @@ public class ElementTest {
         HtmlElement.niceOf(response).next(html -> html
             .getBody().next(body -> body
                 .addHeading(html.getTitle()))
-        ).catche(e -> {
+        ).catchEx(e -> {
             throw new IllegalStateException("Error", e);
         });
 

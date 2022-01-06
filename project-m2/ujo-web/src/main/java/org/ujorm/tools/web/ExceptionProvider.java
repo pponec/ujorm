@@ -38,16 +38,37 @@ public final class ExceptionProvider {
     }
 
     /**
+     * Re-throw any exception.
+     *
+     * @deprecated Use the method {@link #catchEx(Class, Consumer)} rather
+     */
+    @Deprecated
+    public void catchEx() {
+        catchEx(IllegalStateException.class, e -> {throw e;});
+    }
+
+    /**
+     * Apply consumer if the exception is a required type (or not null).
+     *
+     * @deprecated Use the method {@link #catchEx(Class, Consumer)} rather
+     */
+    @Deprecated
+    public void catche(@NotNull final Consumer<Throwable> exceptionConsumer) {
+        catchEx(Throwable.class, exceptionConsumer);
+    }
+
+
+    /**
      * Apply consumer if the exception is a required type (or not null).
      */
-    public void catche(@NotNull final Consumer<Throwable> exceptionConsumer) {
-        catche(Throwable.class, exceptionConsumer);
+    public void catchEx(@NotNull final Consumer<Throwable> exceptionConsumer) {
+        catchEx(Throwable.class, exceptionConsumer);
     }
 
     /**
      * Apply consumer if the exception is not null.
      */
-    public <T extends Throwable> void catche(@NotNull final Class<T> exceptionClass, @NotNull final Consumer<T> exceptionConsumer) {
+    public <T extends Throwable> void catchEx(@NotNull final Class<T> exceptionClass, @NotNull final Consumer<T> exceptionConsumer) {
         if (e != null) {
             if (exceptionClass.isInstance(e)) {
                 exceptionConsumer.accept((T) e);
@@ -63,13 +84,13 @@ public final class ExceptionProvider {
 
     /** A factory method */
     @NotNull
-    public static final ExceptionProvider of(@NotNull final Throwable e) {
+    public static ExceptionProvider of(@NotNull final Throwable e) {
         return new ExceptionProvider(Assert.notNull(e, "Exception is required"));
     }
 
     /** A factory method */
     @NotNull
-    public static final ExceptionProvider of() {
+    public static ExceptionProvider of() {
         return EMPTY;
     }
 

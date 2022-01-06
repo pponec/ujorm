@@ -46,7 +46,7 @@ public class ExceptionProviderTest {
                 .then(body -> {
                     body.addHeading(config.getTitle());
                 })
-                .catche(e -> {
+                .catchEx(e -> {
                     logger.log(Level.SEVERE, "An error", e);
                 });
         String expected = "<h1>Element-try-catche</h1>";
@@ -67,7 +67,7 @@ public class ExceptionProviderTest {
                 .then(body -> {
                     throw new IllegalArgumentException("test");
                 })
-                .catche(e -> {
+                .catchEx(e -> {
                     result[0] = e.getMessage();
                 });
         String expected = "test";
@@ -88,7 +88,7 @@ public class ExceptionProviderTest {
                 .then(body -> {
                     throw new IllegalArgumentException("test");
                 })
-                .catche(NullPointerException.class, e -> {
+                .catchEx(NullPointerException.class, e -> {
                     result[0] = e.getMessage();
                 });
         String expected = "test";
@@ -108,7 +108,7 @@ public class ExceptionProviderTest {
                 .then(body -> {
                     throw new NullPointerException("test");
                 })
-                .catche(NullPointerException.class, e -> {
+                .catchEx(NullPointerException.class, e -> {
                     result[0] = e.getMessage();
                 });
         String expected = "test";
@@ -129,7 +129,7 @@ public class ExceptionProviderTest {
                 .then(body -> {
                     throw new OutOfMemoryError("test");
                 })
-                .catche(NullPointerException.class, e -> {
+                .catchEx(NullPointerException.class, e -> {
                     result[0] = e.getMessage();
                 });
         String expected = "test";
@@ -150,7 +150,7 @@ public class ExceptionProviderTest {
                 .then(body -> {
                     throw new OutOfMemoryError("test");
                 })
-                .catche(OutOfMemoryError.class, e -> {
+                .catchEx(OutOfMemoryError.class, e -> {
                     result[0] = e.getMessage();
                 });
         String expected = "test";
