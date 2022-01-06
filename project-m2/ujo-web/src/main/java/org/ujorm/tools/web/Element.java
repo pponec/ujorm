@@ -636,10 +636,18 @@ public final class Element implements ApiElement<Element>, Html {
                 .setAttribute(Html.A_TITLE, title);
     }
 
-    /** Add new input element type of password */
+    /** Add a new password input element */
     @NotNull
     public Element addPasswordInput(@NotNull final CharSequence... cssClasses) {
         return addInput(cssClasses).setType(V_PASSWORD);
+    }
+
+    /** Add a new hidden input element */
+    @NotNull
+    public Element addHiddenInput(
+            @NotNull final CharSequence name,
+            @NotNull final Object value) {
+        return addInput().setType(V_HIDDEN).setNameValue(name, value);
     }
 
     /** Add new text area element */
