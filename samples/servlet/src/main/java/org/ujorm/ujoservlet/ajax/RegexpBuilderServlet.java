@@ -69,7 +69,7 @@ public class RegexpBuilderServlet extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
 
-        HtmlElement.of(input, output, getConfig("Regular expression tester by a builder")).then(html -> {
+        HtmlElement.of(input, output, getConfig("Regular expression tester by a builder")).next(html -> {
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             writeJavaScript(html, AJAX_ENABLED);
@@ -145,7 +145,6 @@ public class RegexpBuilderServlet extends HttpServlet {
         if (enabled) {
             new JavaScriptWriter(Html.INPUT, Html.TEXT_AREA)
                     .setSubtitleSelector("." + SUBTITLE_CSS)
-                    .setFormSelector(Html.FORM)
                     .write(html.getHead());
         }
     }

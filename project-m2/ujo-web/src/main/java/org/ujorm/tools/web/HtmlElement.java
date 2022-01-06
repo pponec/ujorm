@@ -497,11 +497,21 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Apply body of element by a lambda expression.
      *
+     * @deprecated Use the method {@link #next(Consumer)} rather.
+     */
+    @Deprecated
+    @NotNull
+    public final ExceptionProvider then(@NotNull final Consumer<HtmlElement> builder) {
+        return next(builder);
+    }
+
+    /** Add nested elements to the element.
+     *
      * <h3>Usage</h3>
      *
      * <pre class="pre">
      *  HtmlElement.of(config, writer).addBody()
-     *      .then(body -> {
+     *      .next(body -> {
      *         body.addHeading(config.getTitle());
      *      })
      *      .catche(e -> {
@@ -510,13 +520,14 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * </pre>
      */
     @NotNull
-    public ExceptionProvider then(@NotNull final Consumer<HtmlElement> builder) {
+    public ExceptionProvider next(@NotNull final Consumer<HtmlElement> builder) {
         try {
             builder.accept(this);
-            close();
+            return ExceptionProvider.of();
         } catch (RuntimeException e) {
             return ExceptionProvider.of(e);
+        } finally {
+            close();
         }
-        return ExceptionProvider.of();
     }
 }

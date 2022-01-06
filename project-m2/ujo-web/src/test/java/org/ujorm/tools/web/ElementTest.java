@@ -20,6 +20,7 @@ package org.ujorm.tools.web;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.*;
 import org.ujorm.tools.web.ao.Column;
@@ -259,6 +260,34 @@ public class ElementTest {
         assertTrue(response.toString().contains("<td>Scala</td>"));
         assertTrue(response.toString().contains("<th>\n<span class=\"red\">Home page</span></th>"));
         assertTrue(response.toString().contains("<td>\n<a href=\"http://demo.car.org"));
+    }
+
+    /**
+     * Test inner elements by a lambda
+     */
+    @Test
+    public void testNext() {
+        MockServletResponse response = new MockServletResponse();
+        HtmlElement.niceOf(response).next(html -> html
+            .getBody().next(body -> body
+                .addHeading(html.getTitle()))
+        ).catche(e -> {
+            throw new IllegalStateException("Error", e);
+        });
+
+        String result = response.toString();
+        String expected = String.join("\n",
+                "<!DOCTYPE html>",
+                "<html lang=\"en\">",
+                "    <head>",
+                "        <meta charset=\"UTF-8\"/>",
+                "        <title>Demo</title>",
+                "    </head>",
+                "    <body>",
+                "        <h1>Demo</h1>",
+                "    </body>",
+                "</html>");
+        assertEquals(expected, result);
     }
 
     private Collection<Car> getCars() {
