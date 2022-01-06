@@ -918,6 +918,14 @@ public final class Element implements ApiElement<Element>, Html {
         return this;
     }
 
+    /** Set an alternative image name &amp; a placeholder name */
+    @NotNull
+    public Element setHint(@Nullable final CharSequence value) {
+        setAttribute(A_ALT, value);
+        setAttribute(A_PLACEHOLDER, value);
+        return this;
+    }
+
     /** Apply body of element by a lambda expression.
      *
      * @deprecated Use the method {@link #next(Consumer)} rather.
