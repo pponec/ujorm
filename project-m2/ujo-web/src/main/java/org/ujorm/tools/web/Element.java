@@ -642,11 +642,11 @@ public final class Element implements ApiElement<Element>, Html {
         return addInput(cssClasses).setType(V_PASSWORD);
     }
 
-    /** Add a new hidden input element */
+    /** Add a new hidden input element with a name &amp; value */
     @NotNull
     public Element addHiddenInput(
-            @NotNull final CharSequence name,
-            @NotNull final Object value) {
+            @Nullable final CharSequence name,
+            @Nullable final Object value) {
         return addInput().setType(V_HIDDEN).setNameValue(name, value);
     }
 
