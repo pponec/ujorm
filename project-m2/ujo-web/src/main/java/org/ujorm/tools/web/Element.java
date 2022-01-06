@@ -918,10 +918,9 @@ public final class Element implements ApiElement<Element>, Html {
         return this;
     }
 
-    /** Set an alternative image name &amp; a placeholder name */
+    /** Set a placeholder name */
     @NotNull
     public Element setHint(@Nullable final CharSequence value) {
-        setAttribute(A_ALT, value);
         setAttribute(A_PLACEHOLDER, value);
         return this;
     }
