@@ -311,7 +311,7 @@ public class JsonBuilder implements Closeable {
         if (request != null) {
             request.setCharacterEncoding(charset);
         }
-        return of(response.getWriter());
+        return new JsonBuilder(response.getWriter(), config);
     }
 
     /** CSS selector types */
