@@ -158,8 +158,8 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
         }
     }
 
-    /** The Name must not contain any dot character */
-    private void setName(@NotNull final String name) throws IllegalArgumentException{
+    /** The Name must not contain any dot character. The null value is ignored. */
+    private void setName(@Nullable final String name) throws IllegalArgumentException{
         if (name==null) {
             return;
         }

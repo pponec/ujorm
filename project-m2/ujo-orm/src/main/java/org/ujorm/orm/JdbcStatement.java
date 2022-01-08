@@ -134,7 +134,7 @@ public class JdbcStatement /*implements Closeable*/ {
 
     /** Assign values into the prepared statement */
     @SuppressWarnings("unchecked")
-    public void assignValues(@NotNull OrmUjo table, @NotNull List<MetaColumn> columns) throws SQLException {
+    public void assignValues(@Nullable OrmUjo table, @NotNull List<MetaColumn> columns) throws SQLException {
         for (MetaColumn column : columns) {
             if (column.isForeignKey()) {
                 Key key = column.getKey();

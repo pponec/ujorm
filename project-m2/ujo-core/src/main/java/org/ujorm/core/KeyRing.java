@@ -67,7 +67,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
     /**
      * Constructor
      * @param keys Property array
-     * @see #of(java.lang.Class, org.ujorm.Key<T,?>[])
+     * @see #of(Key[])  
      */
     public KeyRing(Key<U, ?>... keys) {
         this(null, keys);
@@ -77,7 +77,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
      * Constructor
      * @param domainClass If the parameter is null then the value is calculated from keys.
      * @param keys Property array
-     * @see #of(java.lang.Class, org.ujorm.Key<T,?>[])
+     * @see #of(Key[]) 
      */
     protected KeyRing(Class<U> domainClass, Key<U, ?>... keys) {
         this.type = domainClass;
@@ -451,7 +451,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
      * @return If the keys are {@code null}, than the result is the {@code null} too.
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo> KeyRing<UJO> of(@NotNull final Key<? super UJO, ?> key) {
+    public static <UJO extends Ujo> KeyRing<UJO> of(@Nullable final Key<? super UJO, ?> key) {
         return key != null
              ? new KeyRing<>((Class<UJO>) key.getDomainType(), new Key[] {key})
              : null;
@@ -463,7 +463,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
      * @return If the keys are {@code null}, than the result is the {@code null} too.
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo> KeyRing<UJO> of(@NotNull final Class<UJO> domainClass, @NotNull Key<? super UJO, ?>... keys) {
+    public static <UJO extends Ujo> KeyRing<UJO> of(@Nullable final Class<UJO> domainClass, @Nullable Key<? super UJO, ?>... keys) {
         if (keys == null) {
             return null;
         }
@@ -520,7 +520,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
      */
     @SuppressWarnings("unchecked")
     @Nullable
-    public static <UJO extends Ujo> KeyRing<UJO> of(@NotNull final Class<UJO> domainClass, @NotNull final Collection<Key<? super UJO, ?>> keys) {
+    public static <UJO extends Ujo> KeyRing<UJO> of(@Nullable final Class<UJO> domainClass, @NotNull final Collection<Key<? super UJO, ?>> keys) {
         if (Check.isEmpty(keys)) {
             return null;
         }

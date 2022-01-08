@@ -615,7 +615,7 @@ abstract public class SqlDialect {
      */
     public void printTableColumns
         ( @NotNull final Collection<? extends ColumnWrapper> columns
-        , @NotNull final Appendable values
+        , @Nullable final Appendable values
         , @NotNull final Appendable out) throws IOException {
         String separator = "";
         boolean select = values==null; // SELECT

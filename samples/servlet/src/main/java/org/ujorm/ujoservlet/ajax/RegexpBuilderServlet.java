@@ -74,10 +74,10 @@ public class RegexpBuilderServlet extends HttpServlet {
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             writeJavaScript(html, AJAX_ENABLED);
             Message msg = highlight(input);
-            html.addBody().then(body -> {
+            html.addBody().next(body -> {
                 body.addHeading(html.getTitle());
                 body.addDiv(SUBTITLE_CSS).addText(AJAX_ENABLED ? AJAX_READY_MSG : "");
-                body.addForm().then(form -> {
+                body.addForm().next(form -> {
                     form.setMethod(Html.V_POST).setAction("?");
                     form.addInput(CONTROL_CSS)
                             .setName(REGEXP)

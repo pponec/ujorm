@@ -43,7 +43,7 @@ public class ExceptionProviderTest {
                 .setTitle("Element-try-catche");
 
         HtmlElement.of(config, writer).addBody()
-                .then(body -> {
+                .next(body -> {
                     body.addHeading(config.getTitle());
                 })
                 .catchEx(e -> {
@@ -147,7 +147,7 @@ public class ExceptionProviderTest {
 
         String[] result = {""};
         HtmlElement.of(config, writer).addBody()
-                .then(body -> {
+                .next(body -> {
                     throw new OutOfMemoryError("test");
                 })
                 .catchEx(OutOfMemoryError.class, e -> {
