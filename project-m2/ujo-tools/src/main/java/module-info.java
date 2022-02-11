@@ -1,6 +1,7 @@
 module ujo.tools {
     requires org.jetbrains.annotations;
     requires java.sql;
+    requires java.sql.rowset;
 
     exports org.ujorm.tools;
     exports org.ujorm.tools.common;
@@ -12,5 +13,4 @@ module ujo.tools {
     exports org.ujorm.tools.xml.config;
     exports org.ujorm.tools.xml.config.impl;
     exports org.ujorm.tools.xml.model;
-
 }

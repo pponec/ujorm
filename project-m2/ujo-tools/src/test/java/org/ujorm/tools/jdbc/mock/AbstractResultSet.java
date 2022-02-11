@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 /**
@@ -112,13 +112,13 @@ public abstract class AbstractResultSet implements ResultSet {
             final AbstractResultSet result = Mockito.mock(AbstractResultSet.class);
 
             Mockito.doCallRealMethod().when(result).init();
-            Mockito.doCallRealMethod().when(result).addRow(Matchers.anyMap());
-            Mockito.doCallRealMethod().when(result).addRow(Matchers.<Object>anyVararg());
+            Mockito.doCallRealMethod().when(result).addRow(ArgumentMatchers.anyMap());
+            Mockito.doCallRealMethod().when(result).addRow(ArgumentMatchers.<Object>any());
             Mockito.doCallRealMethod().when(result).next();
-            Mockito.doCallRealMethod().when(result).getObject(Matchers.anyInt(), Matchers.any(Class.class));
-            Mockito.doCallRealMethod().when(result).getObject(Matchers.any(String.class), Matchers.any(Class.class));
-            Mockito.doCallRealMethod().when(result).getInt(Matchers.anyInt());
-            Mockito.doCallRealMethod().when(result).getString(Matchers.anyInt());
+            Mockito.doCallRealMethod().when(result).getObject(ArgumentMatchers.anyInt(), ArgumentMatchers.any(Class.class));
+            Mockito.doCallRealMethod().when(result).getObject(ArgumentMatchers.any(String.class), ArgumentMatchers.any(Class.class));
+            Mockito.doCallRealMethod().when(result).getInt(ArgumentMatchers.anyInt());
+            Mockito.doCallRealMethod().when(result).getString(ArgumentMatchers.anyInt());
             Mockito.doCallRealMethod().when(result).close();
             Mockito.doCallRealMethod().when(result).isClosed();
 

@@ -21,7 +21,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-import org.mockito.Matchers;
+
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 /**
@@ -55,7 +56,7 @@ public abstract class AbstractPreparedStatement implements PreparedStatement {
         Mockito.doCallRealMethod().when(statement).isClosed();
 
         Connection result = Mockito.mock(Connection.class);
-        Mockito.when(result.prepareStatement(Matchers.<String>any()))
+        Mockito.when(result.prepareStatement(ArgumentMatchers.<String>any()))
                 .thenReturn(statement);
 
         return result;

@@ -2,7 +2,7 @@ module ujo.core {
     //requires hibernate.core;
     requires org.jetbrains.annotations;
     //requires slf4j.api;
-    //requires ujo.tools;
+    requires ujo.tools;
 
     exports org.ujorm;
     exports org.ujorm.core;
