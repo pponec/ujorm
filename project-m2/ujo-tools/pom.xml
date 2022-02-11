@@ -65,12 +65,12 @@
     <dependencies>
 
         <!-- Static analyzer support -->
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>16.0.2</version>
-            <optional>true</optional>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.jetbrains</groupId>-->
+<!--            <artifactId>annotations</artifactId>-->
+<!--            <version>23.0.0</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
 
         <!-- API, java.xml.bind module -->
         <dependency>

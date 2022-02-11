@@ -1,6 +1,6 @@
 module ujo.core {
     requires org.slf4j;
-    requires org.jetbrains.annotations;
+    //requires org.jetbrains.annotations;
     requires ujo.tools;
 
     uses org.slf4j.spi.LoggerFactoryBinder;
