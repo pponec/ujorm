@@ -93,7 +93,7 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>23.0.0</version>
-<!--            <optional>true</optional>-->
+            <optional>true</optional>
         </dependency>
 
         <!-- API, java.xml.bind module -->
