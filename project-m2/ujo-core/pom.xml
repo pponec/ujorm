@@ -33,8 +33,9 @@
 
     <properties>
         <revision>2.21-SNAPSHOT</revision>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.8.0</junit.version>
@@ -89,12 +90,12 @@
         </dependency>
 
         <!-- Static analyzer support -->
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>23.0.0</version>
+<!--        <dependency>-->
+<!--            <groupId>org.jetbrains</groupId>-->
+<!--            <artifactId>annotations</artifactId>-->
+<!--            <version>23.0.0</version>-->
 <!--            <optional>true</optional>-->
-        </dependency>
+<!--        </dependency>-->
 
         <!-- API, java.xml.bind module -->
         <dependency>
@@ -132,6 +133,12 @@
             <artifactId>junit-vintage-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.33</version>
+            <optional>true</optional>
         </dependency>
 
         <!--
