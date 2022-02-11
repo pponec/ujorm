@@ -92,8 +92,8 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>21.0.1</version>
-            <optional>true</optional>
+            <version>23.0.0</version>
+<!--            <optional>true</optional>-->
         </dependency>
 
         <!-- API, java.xml.bind module -->
