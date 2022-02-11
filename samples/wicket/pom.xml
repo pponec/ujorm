@@ -34,7 +34,7 @@
         <wicket.version>7.18.0</wicket.version>
         <jetty.version>10.0.3</jetty.version>
         <spring.version>4.3.22.RELEASE</spring.version>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.deploy.server>Tomcat60</netbeans.hint.deploy.server>
