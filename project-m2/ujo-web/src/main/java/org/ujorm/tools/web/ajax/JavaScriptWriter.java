@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2021 Pavel Ponec, https://github.com/pponec
+ * Copyright 2021-2022 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -175,48 +175,48 @@ public class JavaScriptWriter implements Injector {
         try (Element js = parent.addElement(Html.SCRIPT)) {
             js.addRawText(newLine, "/* jshint esversion:6 */");
             if (isAjax) {
-                js.addRawText(newLine, "var f", fceOrder, "=function(){");
+                js.addRawText(newLine, "const f", fceOrder, "={");
                 js.addRawTexts(newLine, ""
-                    , "var timeout=null, ajaxRun=false, submitReq=false;"
-                  //, "document.querySelectorAll('button.sortable').forEach(item=>{item.addEventListener('click',e=>sort(e.target.value));},false);" // Wrong way
-                    , "document.querySelector('" + formSelector + "').addEventListener('submit',process,false);"
-                    , "document.querySelectorAll('" + inpSelectors + "').forEach(item=>{item.addEventListener('keyup',e=>{"
-                    , "  if(timeout){clearTimeout(timeout);}"
-                    , "  timeout=setTimeout(()=>{"
-                    , "    timeout=null;"
-                    , "    if(ajaxRun) submitReq=true; "
-                    , "    else process(null);"
+                    , "timeout:null, ajaxRun:false, submitReq:false,"
+                    , "init(e){"
+                    , " document.querySelector('" + formSelector + "').addEventListener('submit',this.process,false);"
+                    , " document.querySelectorAll('" + inpSelectors + "').forEach(item=>{item.addEventListener('keyup',e=>{"
+                    , "  if(this.timeout){clearTimeout(this.timeout);}"
+                    , "  this.timeout=setTimeout(()=>{"
+                    , "   this.timeout=null;"
+                    , "   if(this.ajaxRun) this.submitReq=true; "
+                    , "   else this.process(null);"
                     , "  }," + idleDelay.toMillis() + ");},false);"
-                    , "});"
+                    , "});},"
                 );
-                if (onLoadSubmit) {
-                    js.addRawText(newLine, "process(null);");
-                }
                 js.addRawTexts(newLine, ""
-                    , "function process(e){"
-                    , "  let pars=new URLSearchParams(new FormData(document.querySelector('" + formSelector + "')));"
-                    , "  if(e!==null){e.preventDefault();pars.append(e.submitter.name,e.submitter.value);}"
-                    , "  fetch('" + (version == 2
+                    , "process(e){"
+                    , " let pars=new URLSearchParams(new FormData(document.querySelector('" + formSelector + "')));"
+                    , " if(e!==null){e.preventDefault();pars.append(e.submitter.name,e.submitter.value);}"
+                    , " fetch('" + (version == 2
                             ? ajaxRequestPath
                             : ("?" + ajaxRequestPath + "=true")) + "', {"
-                    , "    method:'POST',"
-                    , "    body:pars,"
-                    , "    headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},"
-                    , "  })"
-                    , "  .then(response=>response.json())"
-                    , "  .then(data=>{"
-                    , "    for (var key of Object.keys(data))"
-                    , "      document.querySelectorAll(key).forEach(i=>{i.innerHTML=data[key];});"
-                    , "    if(submitReq){submitReq=false;process(e);}" // Next submit the form
-                    , "    else{ajaxRun=false;}"
-                    , "  }).catch(err=>{"
-                    , "    ajaxRun=false;"
+                    , "   method:'POST',"
+                    , "   body:pars,"
+                    , "   headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},"
+                    , " })"
+                    , " .then(response=>response.json())"
+                    , " .then(data=>{"
+                    , "   for(const key of Object.keys(data))"
+                    , "    document.querySelectorAll(key).forEach(i=>{i.innerHTML=data[key];});"
+                    , "   if(this.submitReq){this.submitReq=false;this.process(e);}" // Next submit the form
+                    , "   else{this.ajaxRun=false;}"
+                    , " }).catch(err=>{"
+                    , "   this.ajaxRun=false;"
                     , "    document.querySelector('" + subtitleSelector + "').innerHTML='" + errorMessage + ": ' + err;"
-                    , "  });"
+                    , " });"
                     , "}"
                 );
                 js.addRawTexts(newLine, "};");
-                js.addRawText(newLine, "document.addEventListener('DOMContentLoaded',f", fceOrder, ");");
+                js.addRawText(newLine, "document.addEventListener('DOMContentLoaded',e=>f", fceOrder, ".init(e));");
+                if (onLoadSubmit) {
+                    js.addRawText(newLine, "f", fceOrder, ".process(null);");
+                }
             }
         }
     }
