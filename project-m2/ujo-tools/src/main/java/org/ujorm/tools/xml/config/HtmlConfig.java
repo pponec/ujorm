@@ -125,4 +125,16 @@ public interface HtmlConfig extends XmlConfig {
     public static DefaultHtmlConfig of(@NotNull final HtmlConfig htmlConfig) {
         return new DefaultHtmlConfig(htmlConfig);
     }
+    
+    /**
+     * Create a new configuration with a nice format by an HTML title.
+     * @param title If the title is null then create an EMPTY element.
+     */
+    public static DefaultHtmlConfig ofTitle(@Nullable String title) {
+        return title == null
+                ? ofEmptyElement()
+                : ofDefault()
+                    .setTitle(title)
+                    .setNiceFormat();
+    }
 }
