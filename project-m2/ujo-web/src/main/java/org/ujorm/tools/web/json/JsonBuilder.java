@@ -272,7 +272,7 @@ public class JsonBuilder implements Closeable {
     public static final JsonBuilder of(
             @NotNull final HttpServletRequest request,
             @NotNull final HttpServletResponse response) throws IllegalStateException, IOException {
-        return of(request, response, HtmlConfig.ofDefault());
+        return of(HtmlConfig.ofEmptyElement(), request, response);
     }
 
     /** An object factory */
