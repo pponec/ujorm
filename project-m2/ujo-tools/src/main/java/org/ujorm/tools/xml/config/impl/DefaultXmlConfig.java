@@ -33,7 +33,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class DefaultXmlConfig implements XmlConfig {
     
     /** Default intendation per level */
-    public static final String DEFAULT_INTENDATION = "    "; //"\t";
+    public static final String DEFAULT_INTENDATION = "\t";
 
     /** Default string or the new line */
     public static final String DEFAULT_NEW_LINE = "\n";

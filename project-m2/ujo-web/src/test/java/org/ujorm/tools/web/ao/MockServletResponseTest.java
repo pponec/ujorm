@@ -38,13 +38,13 @@ public class MockServletResponseTest {
         String expected = String.join("\n"
                 , "<!DOCTYPE html>"
                 , "<html lang=\"en\">" 
-                , "    <head>" 
-                , "        <meta charset=\"UTF-8\"/>"
-                , "        <title>Demo</title>"
-                , "    </head>" 
-                , "    <body>"
-                , "        <h1 class=\"cssType\">ABC:ČÁŠ</h1>"
-                , "    </body>"
+                , "\t<head>" 
+                , "\t\t<meta charset=\"UTF-8\"/>"
+                , "\t\t<title>Demo</title>"
+                , "\t</head>" 
+                , "\t<body>"
+                , "\t\t<h1 class=\"cssType\">ABC:ČÁŠ</h1>"
+                , "\t</body>"
                 , "</html>");
         assertEquals(expected, result);
 

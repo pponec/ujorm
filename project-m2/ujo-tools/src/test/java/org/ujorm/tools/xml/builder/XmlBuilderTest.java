@@ -74,7 +74,7 @@ public class XmlBuilderTest implements Html {
                     .setAttribute("y", 4)
                     .setAttribute("z", "<'&\">")
                     .addText("A text message <'&\">");
-            root.addRawText("\n    <rawXml/>\n");
+            root.addRawText("\n\t<rawXml/>\n");
          // root.addCDATA("A character data <'&\">");
         }
 
@@ -82,9 +82,9 @@ public class XmlBuilderTest implements Html {
         String expected = String.join("\n"
                 , "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 , "<root>"
-                , "    <childA x=\"1\" y=\"2\"/>"
-                , "    <childB x=\"3\" y=\"4\" z=\"&lt;'&amp;&quot;&gt;\">A text message &lt;'&amp;\"&gt;</childB>"
-                , "    <rawXml/>"
+                , "\t<childA x=\"1\" y=\"2\"/>"
+                , "\t<childB x=\"3\" y=\"4\" z=\"&lt;'&amp;&quot;&gt;\">A text message &lt;'&amp;\"&gt;</childB>"
+                , "\t<rawXml/>"
            //   , "<![CDATA[A character data <'&\">]]>"
                 , "</root>");
         assertEquals(expected, result);
@@ -111,14 +111,14 @@ public class XmlBuilderTest implements Html {
         String expected = String.join("\n"
                 , "<!DOCTYPE html>"
                 , "<html lang=\"en\">"
-                , "    <head>"
-                , "        <meta charset=\"UTF-8\"/>"
-                , "        <title>Demo</title>"
-                , "        <link href=\"word.css\" rel=\"stylesheet\"/>"
-                , "    </head>"
-                , "    <body>"
-                , "        <h1>Hello, World!</h1>"
-                , "    </body>"
+                , "\t<head>"
+                , "\t\t<meta charset=\"UTF-8\"/>"
+                , "\t\t<title>Demo</title>"
+                , "\t\t<link href=\"word.css\" rel=\"stylesheet\"/>"
+                , "\t</head>"
+                , "\t<body>"
+                , "\t\t<h1>Hello, World!</h1>"
+                , "\t</body>"
                 , "</html>");
         assertEquals(expected, result);
     }
@@ -146,14 +146,14 @@ public class XmlBuilderTest implements Html {
         String expected = String.join("\n"
                 , "<!DOCTYPE html>"
                 , "<html lang=\"en\">"
-                , "    <head>"
-                , "        <meta charset=\"UTF-8\"/>"
-                , "        <title>Demo</title>"
-                , "        <link href=\"word.css\" rel=\"stylesheet\"/>"
-                , "    </head>"
-                , "    <body>"
-                , "        <h1>Hello, World!</h1>"
-                , "    </body>"
+                , "\t<head>"
+                , "\t\t<meta charset=\"UTF-8\"/>"
+                , "\t\t<title>Demo</title>"
+                , "\t\t<link href=\"word.css\" rel=\"stylesheet\"/>"
+                , "\t</head>"
+                , "\t<body>"
+                , "\t\t<h1>Hello, World!</h1>"
+                , "\t</body>"
                 , "</html>");
         assertEquals(expected, result);
     }
@@ -210,14 +210,14 @@ public class XmlBuilderTest implements Html {
         String expected = String.join("\n"
                 , "<!DOCTYPE html>"
                 , "<html lang=\"en\">"
-                , "    <head>"
-                , "        <meta charset=\"UTF-8\"/>"
-                , "        <title>Demo</title>"
-                , "        <link href=\"css/basic.css\" rel=\"stylesheet\"/>"
-                , "    </head>"
-                , "    <body>"
-                , "        <h1>Hello, World! (extended)</h1>"
-                , "    </body>"
+                , "\t<head>"
+                , "\t\t<meta charset=\"UTF-8\"/>"
+                , "\t\t<title>Demo</title>"
+                , "\t\t<link href=\"css/basic.css\" rel=\"stylesheet\"/>"
+                , "\t</head>"
+                , "\t<body>"
+                , "\t\t<h1>Hello, World! (extended)</h1>"
+                , "\t</body>"
                 , "</html>");
         assertEquals(expected, response.getContentAsString());
     }
@@ -244,14 +244,14 @@ public class XmlBuilderTest implements Html {
         String expected = String.join("\n"
                 , "<!DOCTYPE html>"
                 , "<html lang=\"en\">"
-                , "    <head>"
-                , "        <meta charset=\"UTF-8\"/>"
-                , "        <title>Demo</title>"
-                , "        <link href=\"css/basic.css\" rel=\"stylesheet\"/>"
-                , "    </head>"
-                , "    <body>"
-                , "        <h1>Hello, World! (extended)</h1>"
-                , "    </body>"
+                , "\t<head>"
+                , "\t\t<meta charset=\"UTF-8\"/>"
+                , "\t\t<title>Demo</title>"
+                , "\t\t<link href=\"css/basic.css\" rel=\"stylesheet\"/>"
+                , "\t</head>"
+                , "\t<body>"
+                , "\t\t<h1>Hello, World! (extended)</h1>"
+                , "\t</body>"
                 , "</html>");
         assertEquals(expected, response.getContentAsString());
     }
