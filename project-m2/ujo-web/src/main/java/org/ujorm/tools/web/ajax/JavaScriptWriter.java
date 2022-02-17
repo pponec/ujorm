@@ -186,10 +186,10 @@ public class JavaScriptWriter implements Injector {
                 );
                 js.addRawTexts(newLine, ""
                     , "timeEvent(e){"
-                    , " if(this.timeout) clearTimeout(this.timeout);"
+                    , " if(this.timeout)clearTimeout(this.timeout);"
                     , " this.timeout=setTimeout(()=>{"
                     , "  this.timeout=null;"
-                    , "  if(this.ajaxRun) this.submitReq=true;"
+                    , "  if(this.ajaxRun)this.submitReq=true;"
                     , "  else this.process(null);"
                     , " },this.millis);},"
                 );
@@ -207,7 +207,8 @@ public class JavaScriptWriter implements Injector {
                     , " .then(response=>response.json())"
                     , " .then(data=>{"
                     , "   for(const key of Object.keys(data))"
-                    , "    document.querySelectorAll(key).forEach(i=>{i.innerHTML=data[key];});"
+                    , "    if(key=='')eval(data[key]);"
+                    , "    else document.querySelectorAll(key).forEach(i=>{i.innerHTML=data[key];});"
                     , "   if(this.submitReq){this.submitReq=false;this.process(e);}" // Next submit the form
                     , "   else{this.ajaxRun=false;}"
                     , " }).catch(err=>{"

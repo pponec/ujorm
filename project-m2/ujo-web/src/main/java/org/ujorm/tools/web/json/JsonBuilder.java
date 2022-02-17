@@ -66,7 +66,7 @@ public class JsonBuilder implements Closeable {
     public JsonBuilder writeId(
             @NotNull final CharSequence elementId,
             @Nullable final CharSequence... values) throws IOException {
-        write(SelectorType.ID.prefix, elementId, values);
+        writePrefix(SelectorType.ID.prefix, elementId, values);
         return this;
     }
 
@@ -80,7 +80,7 @@ public class JsonBuilder implements Closeable {
     public JsonBuilder writeClass(
             @NotNull final CharSequence elementId,
             @Nullable final CharSequence... values) throws IOException {
-        write(SelectorType.CLASS.prefix, elementId, values);
+        writePrefix(SelectorType.CLASS.prefix, elementId, values);
         return this;
     }
 
@@ -93,17 +93,17 @@ public class JsonBuilder implements Closeable {
     public JsonBuilder write(
             @NotNull final CharSequence key,
             @Nullable final CharSequence... values) throws IOException {
-        write(SelectorType.INCLUDED.prefix, key, values);
+        writePrefix(SelectorType.INCLUDED.prefix, key, values);
         return this;
     }
 
-    /** Write a key-value
+    /** Write a key-value with a prefix
      *
      * @param key A JSON key
      * @param values The text array to join.
      * @throws IOException
      */
-    public JsonBuilder write(
+    public JsonBuilder writePrefix(
             @NotNull final String keyPrefix,
             @NotNull final CharSequence key,
             @Nullable final CharSequence... values) throws IOException {
