@@ -44,6 +44,8 @@ public class JsonBuilder implements Closeable {
     private final HtmlConfig config;
     /** Parameter counter */
     private int paramCounter = 0;
+    /** Dummy selector to run a JavaScript */
+    private final String JAVACRIPT_DUMMY_SELECTOR = "";
 
     /** Constructor with a default HTML config */
     protected JsonBuilder(@NotNull final Appendable writer) {
@@ -118,6 +120,14 @@ public class JsonBuilder implements Closeable {
         }
         writer.append(DOUBLE_QUOTE);
         return this;
+    }
+    
+    /** Write a Javascript to a call. 
+     * The response can contain only one Javascript code, 
+     * so this method can be called only once per request.
+     */
+    public JsonBuilder writeJs(@Nullable final CharSequence... javascript) throws IOException {
+        return write(JAVACRIPT_DUMMY_SELECTOR, javascript);
     }
     
     /** Write a JSON property */
