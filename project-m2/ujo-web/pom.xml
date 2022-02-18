@@ -35,7 +35,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>5.3.15</spring.version>
+        <spring.version>4.3.9.RELEASE</spring.version>
         <junit.version>5.8.0</junit.version>
     </properties>
 
@@ -97,7 +97,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>23.0.0</version>
+            <version>21.0.1</version>
             <optional>true</optional>
         </dependency>
 

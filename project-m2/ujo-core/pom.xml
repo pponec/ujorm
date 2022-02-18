@@ -93,7 +93,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>23.0.0</version>
+            <version>21.0.1</version>
             <optional>true</optional>
         </dependency>
 
@@ -133,12 +133,6 @@
             <artifactId>junit-vintage-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.33</version>
-            <optional>true</optional>
         </dependency>
 
         <!--

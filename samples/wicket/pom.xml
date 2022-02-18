@@ -33,7 +33,7 @@
         <ujorm.version>2.21</ujorm.version>
         <wicket.version>7.18.0</wicket.version>
         <jetty.version>10.0.3</jetty.version>
-        <spring.version>5.3.15</spring.version>
+        <spring.version>4.3.22.RELEASE</spring.version>
         <java.version>1.8</java.version>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -163,7 +163,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.0</version>
+            <version>1.1.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -320,7 +320,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>23.0.0</version>
+            <version>21.0.1</version>
             <optional>true</optional>
         </dependency>
 
@@ -330,14 +330,14 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.0.206</version>
+            <version>1.4.196</version>
         </dependency>
 
         <!-- Database MySql -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.16</version>
+            <version>3.1.14</version>
         </dependency>
 
         <!-- Database PostgreSql -->
