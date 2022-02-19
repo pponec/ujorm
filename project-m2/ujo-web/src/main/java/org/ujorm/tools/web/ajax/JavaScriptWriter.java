@@ -173,7 +173,7 @@ public class JavaScriptWriter implements Injector {
         ? Stream.of(inputCssSelectors).collect(Collectors.joining(", "))
         : "#!@";
         try (Element js = parent.addElement(Html.SCRIPT)) {
-            js.addRawText(newLine, "/* JS license: https://ujorm.org */");
+            js.addRawText(newLine, "/* Code of: ujorm.org */");
             js.addRawText(newLine, "/* jshint esversion:6 */");
             if (isAjax) {
                 js.addRawText(newLine, "const f", fceOrder, "={");
