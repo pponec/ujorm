@@ -4,7 +4,7 @@ The Ujorm release notes
 
 release 2.22-SNAPSHOT (yyyy-mm-dd)
 
-release 2.21 (2022-02-18)
+release 2.21 (2022-02-20)
 WEB: The AJAX implementation allows sending part of Javascript commands to the web browser via JSON format.
 WEB: The AJAX implementation allows a direct calling a JavaScript method process(), which is necessary for creating custom AJAX components.
 WEB: New method Element.addHiddenInput() is available.
