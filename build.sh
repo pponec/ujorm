@@ -4,6 +4,7 @@
 # SNAPSHOT deploy: mvn clean deploy -Pproduction -Psign -DskipTests
 ###################################################################
 
+set -e
 export JAVA_HOME=/opt/java/default.8
 alias mvn='/opt/maven/default/bin/mvn'
 mvn -version || exit
@@ -16,7 +17,7 @@ echo RELEASE=${RELEASE}
 URL=https://oss.sonatype.org/service/local/staging/deploy/maven2/
 
 # Create the build:
-mvn clean install javadoc:jar source:jar -Pproduction || exit 1
+mvn clean install javadoc:jar source:jar -Pproduction
 cd "project-m2"
 
 # For all artefact SIGN and DEPLOY:
