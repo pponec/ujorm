@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012-2014 Pavel Ponec
+ *  Copyright 2012-2022 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.WorkingCopy;
-import static com.ujorm.UjoCodeGenerator.bo.PrefixEnum.*;
 
 /**
  * String service

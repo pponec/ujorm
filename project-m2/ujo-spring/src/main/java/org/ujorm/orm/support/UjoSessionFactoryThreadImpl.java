@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2014 Tomas Hampl
+ *  Copyright 2020-2022 Tomas Hampl
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.

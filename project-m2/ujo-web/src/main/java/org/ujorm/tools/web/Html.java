@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2022 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

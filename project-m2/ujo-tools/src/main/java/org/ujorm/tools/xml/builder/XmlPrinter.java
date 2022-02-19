@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 Pavel Ponec,
+ * Copyright 2018-2022 Pavel Ponec,
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/XmlWriter.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
