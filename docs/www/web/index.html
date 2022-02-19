@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+
+Design Name: Firming
+Description: A two-column, fixed-width design suitable for small websites and blogs.
+Version    : 1.0
+Released   : 20080129
+-->
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Ujorm Core</title>
+    <link rel="shortcut icon" href="../images/favicon2.ico" type="image/x-icon" />
+    <meta name="keywords" content="UJO, Framework, UJO Framework, introspection, reflection, property, key, Java, JavaBean, open source, XML, CSV, serialization, marshal, unmarshal, ORM, object-relation, Key Value Coding, ORM, Ujorm" />
+    <meta name="description" content="The revolutionary architecture of the bean object" />
+    <link href="../images/style.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="../images/style2.css" rel="stylesheet" type="text/css" media="screen" />
+   
+    <!-- syntaxhighlighter -->
+    <link type="text/css" rel="stylesheet" href="../orm/SyntaxHighlighter/Styles/SyntaxHighlighter.css"/>
+    <script type="text/javascript" src="../orm/SyntaxHighlighter/Scripts/shCore.js"></script>
+    <script type="text/javascript" src="../orm/SyntaxHighlighter/Scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="../orm/SyntaxHighlighter/Scripts/shBrushXml.js"></script>    
+    <script type="text/javascript">
+    window.onload = function () {
+        dp.SyntaxHighlighter.ClipboardSwf = '../orm/SyntaxHighlighter/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="menu">
+        <ul>
+          <li><a href="#license">License</a></li>
+          <li><a href="../index.html">ORM support</a></li>
+          <li class="current_page_item"><a href="http://ujorm.org/core">Core</a></li>
+          <li><a href="#reference">Reference</a></li>
+          <li><a href="#download">Download</a></li>
+          <li><a href="#support">Support</a></li>
+        </ul>
+      </div>
+      <div id="logo">
+        <h1><a href="http://ujorm.org/orm/">Ujorm WEB</a></h1>
+        <h2>a simple library to build HTML pages by a Java code</h2>
+        <h2><img src="../images/ujo80.png" width="80" height="80" alt="Logo" style="margin-left:50px;" /></h2>
+      </div>
+      <hr />
+      <div id="page">
+        <div id="content">
+
+          <div class="post">
+            <div class="entry">
+              If you're not a fan of text templates when creating HTML pages and 
+              you are looking for a simple low-level solution with AJAX support, 
+              you might appreciate this library.
+            </div><p class="meta">&nbsp;</p>
+          </div><!-- post -->
+
+          <div class="post">
+            <img src="../images/milky-44.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title"><a href="#">Features</a></h2>
+            <div class="entry">
+              <div style="margin-top: 28px;">
+                 An objects of the <strong>Element</strong> class are used instead of long HTML strings in ǰava code. 
+                 What makes this solution interesting? The simple API is worth mentioning.  
+                 Because once we get the root element of the model, we only need to know <strong>three</strong> 
+                 of its methods to build the rest of the HTML page:
+
+                <ol>
+                  <li><strong>setAttribute()</strong> - the method assigns an attribute with a value to the current element (note: I added the name of the whole method after the suggestion in the discussion).
+                  </li>
+                  <li><strong>addElement()</strong> - the method adds a new element to the object with the name of the first argument and returns its instance. The next arguments can contain a list of CSS style classes of the new element.
+                  </li>
+                  <li><strong>addText()</strong> - method adds arbitrary text to the element body and handles the writing of special characters. An alternative method addRawText() is available for writing raw text (for example, for inserting JavaScript body).
+                  </li>
+
+                </ol>
+                 
+                 Using these methods, it is possible to create virtually any HTML page with properly enclosed tags 
+                 - without the user having to pay much attention to HTML header creation and other formalities. 
+                 After the object model is built, the close() method is called on the root element to send the content 
+                 to the PrintWriter. Since the Element class implements the Closeable interface from the standard Java library, 
+                 you just need to wrap it with a try() block.
+                 What are the other benefits of the Element class?
+
+                 <ol>
+                     
+<li>The Element class provides predefined methods (API) for inserting selected HTML elements, such as: title, paragraph, form, table and several others.
+     
+        
+</li><li>The root element (HtmlElement) contains the default (miminal) HTML header content and a method for writing the body of the HTML page. The default header element is obtained by the getHead() method and the body element by the getBody() method.
+     
+        
+</li><li>The internal elements of the resulting HTML code are automatically indented with spaces.
+     
+        
+</li><li>Most typos are detected by the compiler, but the validity of the HTML elements used remains the responsibility of the developer.
+     
+        
+</li><li>While closing internal elements is not mandatory, closing them with try-with-resources leads to a Java source code structure that resembles formatted HTML/XML.
+</li>    
+                 </ol>
+                 
+                 Some additional information:
+                 
+                 <ol>
+
+<li>The default implementation is an envelope over the PrintWriter class, so all texts written to Element are sent directly to the writer. The close() method then closes the open tags and empties the buffer. The advantage of such a solution is good performance and minimal memory consumption when building bulky pages.
+     
+        
+</li><li>However, if we need a full memory model, it can be activated by changing the configuration when building the root element. This may make sense in cases where we are going to add some additional (backwards) elements to the model. The build of the original elements remains unchanged.
+     
+        
+</li><li>The configuration can also be used to change the indentation characters for nested elements, line wrapping, setting the national page environment, character set and several other properties. Since version 2.03, support for custom formatting of data types has been added; the default implementation uses the toString() method.
+     
+        
+</li><li>When the root element is built, it sets (among other things) the necessary PrintWriter properties such as the response header code or browser cache suppression.
+     
+        
+</li><li>However, the Element class can also find its use outside of servlets - for example, in a REST implementation with output of type: "text/html".
+     
+</li><li>PrintWriter class and so all text written to Element is sent directly to the writer. The close() method then closes the open tags and empties the buffer. The advantage of such a solution is good performance and minimal memory consumption when building bulky pages.
+     
+        
+</li><li>However, if we need a full memory model, it can be activated by changing the configuration when building the root element. This may make sense in cases where we are going to add some additional (backwards) elements to the model. The build of the original elements remains unchanged.
+     
+        
+</li><li>The configuration can also be used to change the indentation characters for nested elements, line wrapping, setting the national page environment, character set and several other properties. Since version 2.03, support for custom formatting of data types has been added; the default implementation uses the toString() method.
+     
+        
+</li><li>When the root element is built, it sets (among other things) the necessary PrintWriter properties such as the response header code or browser cache suppression.
+     
+        
+</li><li>However, the Element class can also find its use outside of servlets - for example, in a REST implementation with output of type: "text/html".
+The library offers simple AJAX support that dispenses with coding custom JavaScripts.
+</li>
+
+                </ol>
+
+                 
+              </div>
+
+            </div>
+            <p class="meta">&nbsp;</p>
+          </div><!-- post -->
+
+
+          <div class="post">
+            <img src="../images/milky-10.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title" id="sample"><a href="#">Usage:</a></h2>
+            <div class="entry">
+              How do you <strong>write your first</strong> HTML page?	
+              See the next servlet:
+
+              <pre name="code" class="java">
+@WebServlet("/hello-word")
+public class HelloWorld extends HttpServlet {
+  @Override 
+  protected void doGet(
+        HttpServletRequest request, 
+        HttpServletResponse response)
+        throws ServletException, IOException {
+
+      try (HtmlElement html = HtmlElement
+          .niceOf(response, "style.css")) {
+        html.addBody().addHeading("Hello, World!");
+      }
+  }
+}</pre>
+
+            </div>
+          </div><!-- post -->
+
+
+          <div class="post">
+            <img src="../images/milky-46.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title"  id="license"><a href="#">Licence:</a></h2>
+            <div class="entry">
+              Source code was released under license <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>. <br />
+              <br />
+
+              <div class="pre apache"><code>
+ Copyright 2020-2022 Pavel Ponec, ujorm.org
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.</code>
+              </div>
+            </div>
+            <p class="meta">&nbsp;</p>
+
+          </div><!-- post -->
+
+          <div class="post">
+            <img src="../images/milky-07.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title" id="download"><a href="#">Download:</a></h2>
+            <div class="entry">
+                See the source on a <a href="https://github.com/pponec/ujorm">GitHub</a>
+                or use the next dependency in a <a href="http://en.wikipedia.org/wiki/Apache_Maven">Maven</a> project for core:
+<pre class="pre">
+<span class="xml-tag">&lt;dependency&gt;</span>
+    <span class="xml-tag">&lt;groupId&gt;</span>org.ujorm<span class="xml-tag">&lt;/groupId&gt;</span>
+    <span class="xml-tag">&lt;artifactId&gt;</span>ujo-web<span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span>${ujorm.version}<span class="xml-tag">&lt;/version&gt;</span>
+<span class="xml-tag">&lt;/dependency&gt;</span>
+</pre>
+      Get the latest version of the source code by the <strong>git</strong> statement:<br/>
+              <div style="font-style: italic;">git clone https://github.com/pponec/ujorm.git</div>
+            </div>
+            <p class="meta">&nbsp;</p>
+
+          </div><!-- post -->
+
+
+
+          <div class="post">
+            <img src="../images/milky-27.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title" id="similar"><a href="#">Similar projects:</a></h2>
+            <div class="entry">
+                Here are links to some other Java projects with similar concerns:
+                <ul>
+                <li><a href="http://joda-beans.sourceforge.net/">dom4j</a> - an open-source Java library for working with XML, XPath and XSLT.</li>
+                <li>A lot of interesting information can be found on this blog.: 
+                    <a href="https://bean-keys.dev.java.net/">Modern Type-Safe Template Engines</a>
+                    a's abilities (interfaces, annotations, generics etc.) to create a more powerful, extensible and object oriented system to expose component state.</li>
+                </ul>
+            </div>
+            <p class="meta">&nbsp;</p>
+
+          </div><!-- post -->
+
+          <div class="post">
+            <img src="../images/milky-06.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title"  id="support"><a href="#">Support:</a></h2>
+            <div class="entry">
+              <ul>
+                <li>Forum: <a href="http://sourceforge.net/forum/forum.php?forum_id=744237">discussion forums</a></li>
+                <li>Contact: ponec@ujorm.com</li>
+                <li>Blog: <a href="http://ujorm.blogspot.com/">http://ujorm.blogspot.com/</a></li>
+            </ul>
+            </div>
+            <p>&nbsp;</p>
+          </div><!-- post -->
+
+
+
+          <!--
+          <div class="post">
+            <h2 class="title"><a href="#">Xxx</a></h2>
+            <div class="entry">
+              ...
+            </div>
+            <p class="meta"> <a href="javadoc/org/ujorm/package-summary.html#UJO" class="permalink">Read more</a> </p>
+          </div><!-.- post -.->
+          -->
+
+
+        </div><!-- end #content -->
+
+        <div id="sidebar">
+          <ul>
+            <li id="search">
+              <h2>Search</h2>
+                <div>
+<form action="http://www.google.cz/cse" id="cse-search-box">
+  <div>
+    <input type="hidden" name="cx" value="partner-pub-5317001675717556:njjc462bpai" />
+    <input type="hidden" name="ie" value="UTF-8" />
+    <input type="text" name="q" size="19" />
+    <input type="submit" name="sa" value="Search" />
+  </div>
+</form>
+<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
+              </div>
+            </li>
+            <li>
+              <h2>Selection</h2>
+              <ul>
+                 <li><a href="../presentation/index.htm#core">Quick start <span style="font-style: italic;">(a slide show)</span></a></li>
+                 <li><a href="../javadoc/index.html">JavaDoc</a></li>
+                 <li><a href="#download">Download</a></li>
+                 <li><a href="#license">License</a></li>
+                 <!--
+                 <li><a href="../javadoc/changes.txt">Release Notes</a></li>
+                 -->
+                 <li><a href="https://raw.githubusercontent.com/pponec/ujorm/master/project-m2/ujo-core/src/main/java/org/ujorm/doc-files/changes.txt">Release Notes</a></li>
+                 <li><a href="../patternDesing/index.htm">Unified Access Pattern Design</a></li>
+                 <li><a href="#similar">Similar projects</a></li>
+              </ul>
+            </li>
+
+            <li><h2 id="emblems">Emblems</h2>
+              <ul>
+
+              <li>
+<script type="text/javascript" src="http://www.ohloh.net/p/93634/widgets/project_thin_badge.js"></script>
+              </li>
+
+              <li><a href="http://www.java.net">
+<img height="25" width="90" style="border:0;" alt="java.net Member Button: 90px wide" src="../images/javanet_button_90.gif"/>
+</a>
+              </li>
+              <li>
+<a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+
+<div style="display: none;">
+<script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
+</div>
+
+<a href="http://navrcholu.cz/Statistika/111542/" style="text-decoration: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+              </li>
+
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <!-- end #sidebar -->
+      </div>
+      <!-- end #page -->
+      <div id="footer">
+        <p>(c) 2007-2011 <a href="http://ujorm.org">Ujorm Core</a> from Pavel Ponec. Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>. Icons by <a href="http://min.frexy.com">Min Tran</a></p>
+      </div>
+    </div>
+
+
+<!-- google analytics beg -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-9284194-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- google analytics end -->
+
+
+  </body>
+</html>
