@@ -106,7 +106,10 @@ public final class Element implements ApiElement<Element>, Html {
      * @return The original element
      */
     @NotNull
-    public final Element setAttributes(@NotNull final String name, @NotNull final CharSequence separator, @NotNull final Object... value) {
+    public final Element setAttributes(
+            @NotNull final String name, 
+            @NotNull final CharSequence separator, 
+            @NotNull final Object... value) {
         final String val = Stream.of(value)
                 .filter(Objects::nonNull)
                 .map(v -> v.toString())
@@ -879,7 +882,7 @@ public final class Element implements ApiElement<Element>, Html {
     /** Set an value of input element */
     @NotNull
     public Element setFor(@Nullable final CharSequence value) {
-        setAttribute(A_VALUE, value);
+        setAttribute(A_FOR, value);
         return this;
     }
 
