@@ -156,6 +156,30 @@ public class HelloWorld extends HttpServlet {
       }
   }
 }</pre>
+                
+The following is a sample Java code for building a simple form:
+                                
+<pre name="code" class="java">
+try (HtmlElement html = HtmlElement
+    .niceOf(response, "/style.css")) {
+  try (Element body = html.addBody()) {
+    body.addHeading("Simple form");
+      try (Element form = body
+             .addForm("form-inline")) {
+        form.addLabel("control-label")
+            .addText("Note:");
+        form.addInput("form-control", "col-lg-1")
+            .setNameValue(NOTE, NOTE.of(request));
+        form.addSubmitButton("btn", "btn-primary")
+            .addText("Submit");
+        }
+    }
+}</pre>
+
+See the result:
+<p style="text-align: center;">
+<image src="form.png" style="width: 297px; height: auto; text-align: center;" />
+</p>
 
                             </div>
                             <p class="meta"> <a href="https://dzone.com/articles/a-simple-ajax-website-in-java" class="permalink">Learn more</a> </p>
