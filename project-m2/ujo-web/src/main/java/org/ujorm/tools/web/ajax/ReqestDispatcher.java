@@ -113,7 +113,8 @@ public class ReqestDispatcher {
     public ReqestDispatcher onParam(@NotNull final HttpParameter key, @NotNull final IOConsumer<JsonBuilder> processor) throws IOException, ServletException {
         Assert.notNull(key, "Parameter {} is required", "key");
         if (!done && key.of(input, false)) {
-            try (JsonBuilder builder = JsonBuilder.of(input, output, getAjaxConfig())) {
+            JsonBuilder.of(HtmlConfig.ofEmptyElement(), input, output);
+            try (JsonBuilder builder = JsonBuilder.of(getAjaxConfig(), input, output)) {
                 done = true;
                 processor.accept(builder);
             }

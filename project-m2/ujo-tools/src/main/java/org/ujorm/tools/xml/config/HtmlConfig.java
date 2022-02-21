@@ -66,8 +66,8 @@ public interface HtmlConfig extends XmlConfig {
     /** Clone the config for an AJAX processing */
     default DefaultHtmlConfig cloneForAjax() {
         final DefaultHtmlConfig result = new DefaultHtmlConfig(this);
+        result.setRootElementName(null);
         result.setNiceFormat();
-        result.setRootElementName(EMPTY);
         result.setDoctype(EMPTY);
         result.setHtmlHeader(false);
         result.setCacheAllowed(false);
