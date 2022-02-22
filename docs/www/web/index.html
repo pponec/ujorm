@@ -139,25 +139,15 @@
                             <h2 class="title" id="sample"><a href="#">Quick start:</a></h2>
                             <div class="entry">
                                 How do you <strong>write your first</strong> HTML page based on Element object?	
-                                See the&nbsp;next simple Java servlet for an example:
+                                See a body the method <i>HttpServlet.doGet()</i>:
 
                                 <pre name="code" class="java">
-@WebServlet("/hello-word")
-public class HelloWorld extends HttpServlet {
-  @Override 
-  protected void doGet(
-        HttpServletRequest request, 
-        HttpServletResponse response)
-        throws ServletException, IOException {
-
-      try (HtmlElement html = HtmlElement
-          .niceOf(response, "style.css")) {
-        html.addBody().addHeading("Hello, World!");
-      }
-  }
+try (HtmlElement html = HtmlElement
+    .niceOf(response, "/style.css")) {
+  html.addBody().addHeading("Hello, World!");
 }</pre>
                 
-The following is a sample Java code for building a simple form:
+A more complex example demonstrates the use of a simple web form.
                                 
 <pre name="code" class="java">
 try (HtmlElement html = HtmlElement
@@ -176,11 +166,13 @@ try (HtmlElement html = HtmlElement
     }
 }</pre>
 
-See the result:
-<p style="text-align: center;">
-<image src="form.png" style="width: 297px; height: auto; text-align: center;" />
-</p>
+                            See the result:
+                            <p style="text-align: center;">
+                            <image src="form.png" style="width: 297px; height: auto; text-align: center;" />
+                            </p>
 
+                            Some more sample code can be found in this <a href="https://github.com/pponec/demo-ajax">Maven project</a>.
+                            
                             </div>
                             <p class="meta"> <a href="https://dzone.com/articles/a-simple-ajax-website-in-java" class="permalink">Learn more</a> </p>
                         </div><!-- post -->
