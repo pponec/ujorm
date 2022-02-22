@@ -163,6 +163,13 @@ try (HtmlElement html = HtmlElement.niceOf(
             .addText("Submit");
         }
     }
+}
+
+enum Attrib implements HttpParameter {
+  NOTE;
+  @Override public String toString() {
+    return name().toLowerCase();
+  }
 }</pre>
 
                             See the result:
@@ -276,8 +283,6 @@ git clone <strong>https://github.com/pponec/ujorm.git</strong></pre>
                           <p class="meta"> <a href="javadoc/org/ujorm/package-summary.html#UJO" class="permalink">Read more</a> </p>
                         </div><!-.- post -.->
                         -->
-
-
                     </div><!-- end #content -->
 
                     <div id="sidebar">
