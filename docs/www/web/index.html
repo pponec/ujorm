@@ -142,20 +142,19 @@
                                 See a body the method <i>HttpServlet.doGet()</i>:
 
                                 <pre name="code" class="java">
-try (HtmlElement html = HtmlElement
-    .niceOf(response, "/style.css")) {
+try (HtmlElement html = HtmlElement.niceOf(response) {
   html.addBody().addHeading("Hello, World!");
 }</pre>
                 
 A more complex example demonstrates the use of a simple web form.
                                 
 <pre name="code" class="java">
-try (HtmlElement html = HtmlElement
-    .niceOf(response, "/style.css")) {
+try (HtmlElement html = HtmlElement.niceOf(
+      response, "/style.css")) {
   try (Element body = html.addBody()) {
     body.addHeading("Simple form");
       try (Element form = body
-             .addForm("form-inline")) {
+            .addForm("form-inline")) {
         form.addLabel("control-label")
             .addText("Note:");
         form.addInput("form-control", "col-lg-1")
