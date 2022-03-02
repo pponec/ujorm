@@ -160,6 +160,18 @@ public interface HttpParameter extends CharSequence {
             return defaultValue;
         }
     }
+    
+    /** Returns a parameter of the request or the default value */
+    @NotNull
+    default <V extends Enum<V>> V of(@NotNull final ServletRequest request, @NotNull final V defaultValue) {
+        final String value = of(request);
+        for (Enum item : defaultValue.getClass().getEnumConstants()) {
+            if (item.name().equals(value)) {
+                return (V) item;
+            }
+        }
+        return defaultValue;
+    }
 
     /** Returns a parameter of the request or the default value */
     default <V> V of(@NotNull final ServletRequest request, @NotNull final V defaultValue, @NotNull final Function<String, V> decoder) {
@@ -171,7 +183,7 @@ public interface HttpParameter extends CharSequence {
         } catch (RuntimeException e) {
             return defaultValue;
         }
-    }
+    }  
 
     /** Create a default implementation */
     public static HttpParameter of(@NotNull final String name) {
