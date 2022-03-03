@@ -161,16 +161,23 @@ public interface HttpParameter extends CharSequence {
         }
     }
     
-    /** Returns a parameter of the request or the default value */
+    /** Returns a parameter of the request or the Enum class */
     @NotNull
     default <V extends Enum<V>> V of(@NotNull final ServletRequest request, @NotNull final V defaultValue) {
+        final V result = of(request, (Class<V>) defaultValue.getClass());
+        return result != null ? result : defaultValue;
+    }
+    
+    /** Returns a parameter of the request or the default value */
+    @Nullable
+    default <V extends Enum<V>> V of(@NotNull final ServletRequest request, @NotNull final Class<V> clazz) {
         final String value = of(request);
-        for (Enum item : defaultValue.getClass().getEnumConstants()) {
+        for (Enum item : clazz.getEnumConstants()) {
             if (item.name().equals(value)) {
                 return (V) item;
             }
         }
-        return defaultValue;
+        return null;
     }
 
     /** Returns a parameter of the request or the default value */
