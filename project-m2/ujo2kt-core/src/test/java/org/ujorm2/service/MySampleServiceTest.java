@@ -31,7 +31,7 @@ public class MySampleServiceTest {
      * Test of doOrderAccess method, of class MySampleService.
      */
     @Test
-    public void testMetaItem() {
+    void testMetaItem() {
         System.out.println("testMetaItem");
 
         DomainModelProvider provider = new DomainModelProvider();
@@ -47,7 +47,7 @@ public class MySampleServiceTest {
      * Test of doOrderAccess method, of class MySampleService.
      */
     @Test
-    public void testDoOrderAccess() {
+    void testDoOrderAccess() {
         System.out.println("doOrderAccess");
         MySampleService instance = instance();
         instance.doOrderAccess();
@@ -57,7 +57,7 @@ public class MySampleServiceTest {
      * Test of doItemAccess method, of class MySampleService.
      */
     @Test
-    public void testDoItemAccess() {
+    void testDoItemAccess() {
         System.out.println("doItemAccess");
         MySampleService instance = instance();
         instance.doItemAccess();
@@ -67,7 +67,7 @@ public class MySampleServiceTest {
      * Test of doItemCondition method, of class MySampleService.
      */
     @Test
-    public void testDoItemCondition() {
+    void testDoItemCondition() {
         System.out.println("doItemCondition");
         MySampleService instance = instance();
         instance.doItemCondition();
