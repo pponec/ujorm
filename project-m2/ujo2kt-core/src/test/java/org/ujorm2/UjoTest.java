@@ -15,44 +15,32 @@
  */
 package org.ujorm2;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ujorm2.metamodel.DomainModelProvider;
+import org.ujorm2.service.MySampleService;
 
 /**
  *
  * @author Pavel Ponec
  */
 public class UjoTest {
-
-    public UjoTest() {
+    
+    /** The main examples & test */
+    void mainUjo2Test() {
+        MySampleService instance = new MySampleService();
+        
+        instance.doOrderAccess();
+        instance.doItemAccess();
+        instance.doItemCondition();
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of readValue method, of class Ujo.
      */
     @Test
-    public void testModelContext() {
+    void testModelContext() {
         System.out.println("ModelContext");
 
         final DomainModelProvider context = new DomainModelProvider();
@@ -60,8 +48,6 @@ public class UjoTest {
         Assert.assertNotNull(context.item());
         Assert.assertNotNull(context.item().id());
         Assert.assertTrue(context.item().id().isDomainOf(Integer.class));
-
-
 
         // TODO
     }
