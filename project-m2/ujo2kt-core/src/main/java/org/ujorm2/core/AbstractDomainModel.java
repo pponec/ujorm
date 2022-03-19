@@ -59,7 +59,7 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
     }
 
     @Nonnull
-    protected final <V> Key<D, V> getKey(final @Nonnull MKey<V> directKey) {
+    protected final <V> Key<D, V> getKey(final @Nonnull ProxyKey<V> directKey) {
         if (keyPrefix != null) {
             final AbstractDomainModel domainModel = null; // TODO.pop ??? directKeyRing.getContext().getStore$().getDomainModel(directKey.getValueClass());
             Assert.validState(domainModel != null, "No model found for the key: {}.{}",
@@ -67,11 +67,7 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
                     directKey);
             return domainModel.prefix(directKey.get());
         } else {
-            // An exception is throwed due:
-            //   java.lang.ClassCastException: org.ujorm2.core.MKey 
-            //   cannot be cast to org.ujorm2.Key
-	    //   at org.ujorm2.Ujo2Test.mainUjo2Test(Ujo2Test.java:34)
-            return (Key) directKey;
+            return directKey.get();
         }
     }
 

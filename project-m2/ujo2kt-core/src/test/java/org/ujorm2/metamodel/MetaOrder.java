@@ -8,7 +8,7 @@ import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
 import org.ujorm2.core.DirectKeyRing;
 import org.ujorm2.core.KeyFactory;
-import org.ujorm2.core.MKey;
+import org.ujorm2.core.ProxyKey;
 import org.ujorm2.doman.Order;
 import org.ujorm2.doman.Order.State;
 import org.ujorm2.doman.User;
@@ -24,27 +24,27 @@ public class MetaOrder<D> extends AbstractDomainModel<D, Order> {
 
         final KeyFactory<T> keyFactory = new KeyFactory(Order.class);
 
-        final MKey<Integer> id = keyFactory.newKey(
+        final ProxyKey<Integer> id = keyFactory.newKey(
                 (d) -> d.getId(),
                 (d, v) -> d.setId(v));
 
-        final MKey<State> state = keyFactory.newKey(
+        final ProxyKey<State> state = keyFactory.newKey(
                 (d) -> d.getState(),
                 (d, v) -> d.setState(v));
 
-        final MKey<BigDecimal> totalPrice = keyFactory.newKey(
+        final ProxyKey<BigDecimal> totalPrice = keyFactory.newKey(
                 (d) -> d.getTotalPrice(),
                 (d, v) -> d.setTotalPrice(v));
 
-        final MKey<User> user = keyFactory.newKey(
+        final ProxyKey<User> user = keyFactory.newKey(
                 (d) -> d.getUser(),
                 (d, v) -> d.setUser(v));
 
-        final MKey<String> note = keyFactory.newKey(
+        final ProxyKey<String> note = keyFactory.newKey(
                 (d) -> d.getNote(),
                 (d, v) -> d.setNote(v));
 
-        final MKey<LocalDateTime> created = keyFactory.newKey(
+        final ProxyKey<LocalDateTime> created = keyFactory.newKey(
                 (d) -> d.getCreated(),
                 (d, v) -> d.setCreated(v));
 

@@ -7,7 +7,7 @@ import org.ujorm2.Key;
 import org.ujorm2.core.AbstractDomainModel;
 import org.ujorm2.core.DirectKeyRing;
 import org.ujorm2.core.KeyFactory;
-import org.ujorm2.core.MKey;
+import org.ujorm2.core.ProxyKey;
 import org.ujorm2.doman.Item;
 import org.ujorm2.doman.Order;
 
@@ -23,27 +23,27 @@ public class MetaItem<D> extends AbstractDomainModel<D, Item> {
 
         final KeyFactory<T> keyFactory = new KeyFactory(Item.class);
 
-        final MKey<Integer> id = keyFactory.newKey(
+        final ProxyKey<Integer> id = keyFactory.newKey(
                 (d) -> d.getId(),
                 (d, v) -> d.setId(v));
 
-        final MKey<String> note = keyFactory.newKey(
+        final ProxyKey<String> note = keyFactory.newKey(
                 (d) -> d.getNote(),
                 (d, v) -> d.setNote(v));
 
-        final MKey<BigDecimal> price = keyFactory.newKey(
+        final ProxyKey<BigDecimal> price = keyFactory.newKey(
                 (d) -> d.getPrice(),
                 (d, v) -> d.setPrice(v));
 
-        final MKey<Order> order = keyFactory.newKey(
+        final ProxyKey<Order> order = keyFactory.newKey(
                 (d) -> d.getOrder(),
                 (d, v) -> d.setOrder(v));
 
-        final MKey<Boolean> descending = keyFactory.newKey(
+        final ProxyKey<Boolean> descending = keyFactory.newKey(
                 (d) -> d.getDescending(),
                 (d, v) -> d.setDescending(v));
 
-        final MKey<Integer> codePoints = keyFactory.newKey(
+        final ProxyKey<Integer> codePoints = keyFactory.newKey(
                 (d) -> d.getCodePoints(),
                 (d, v) -> d.setCodePoints(v));
 
