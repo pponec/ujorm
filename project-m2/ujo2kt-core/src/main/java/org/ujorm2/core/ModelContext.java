@@ -37,13 +37,13 @@ public class ModelContext {
     private final HashMap<Class, AbstractDomainModel> map = new HashMap<>(8);
 
     /** A Temporary proxyDomainModels  */
-    private List<MDomain> proxyDomainsModels = new ArrayList<>();
+    private List<ProxyDomain> proxyDomainsModels = new ArrayList<>();
 
     /** An provider of public API */
     private final Tools tools = new Tools();
 
-    public MDomain newModel() {
-        final MDomain result = new MDomain();
+    public ProxyDomain newModel() {
+        final ProxyDomain result = new ProxyDomain();
         proxyDomainsModels.add(result);
         return result;
     }
@@ -54,7 +54,7 @@ public class ModelContext {
             try {
                 final List<Field> fields = getFields(motherObject, proxyDomainsModels);
                 for (int i = 0, max = proxyDomainsModels.size(); i < max; i++) {
-                    final MDomain proxyDomain = proxyDomainsModels.get(i);
+                    final ProxyDomain proxyDomain = proxyDomainsModels.get(i);
                     final Field field = fields.get(i);
                     field.setAccessible(true);
                     final Class modelClass = getClassFromGenerics(field, true);

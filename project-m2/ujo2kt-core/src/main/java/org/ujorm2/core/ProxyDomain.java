@@ -22,7 +22,7 @@ import org.ujorm.tools.Assert;
  * Proxy Domain
  * @author Pavel Ponec
  */
-public class MDomain<D> {
+public class ProxyDomain<D> {
 
     private AbstractDomainModel model;
 
@@ -32,6 +32,10 @@ public class MDomain<D> {
 
     void close(AbstractDomainModel model) {
         Assert.validState(this.model == null, "Object is closed");
+        
+        if (model == null) {
+            throw new IllegalArgumentException("Unknown domain model");
+        }
         this.model = Assert.notNull(model, "model");
     }
 }
