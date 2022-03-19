@@ -21,7 +21,8 @@ import org.ujorm2.metamodel.DomainModelProvider;
 import org.ujorm2.service.MySampleService;
 
 /**
- *
+ * The main test of API Ujorm2
+ * 
  * @author Pavel Ponec
  */
 public class Ujo2Test {
