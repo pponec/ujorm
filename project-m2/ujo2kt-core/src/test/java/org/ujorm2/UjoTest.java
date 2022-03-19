@@ -27,6 +27,7 @@ import org.ujorm2.service.MySampleService;
 public class UjoTest {
     
     /** The main examples & test */
+    @Test
     void mainUjo2Test() {
         MySampleService instance = new MySampleService();
         
