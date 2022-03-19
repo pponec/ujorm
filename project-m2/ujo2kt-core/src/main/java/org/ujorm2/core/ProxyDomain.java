@@ -19,7 +19,7 @@ package org.ujorm2.core;
 import org.ujorm.tools.Assert;
 
 /**
- * Proxy Domain
+ * Proxy Domain Model of entity.
  * @author Pavel Ponec
  */
 public class ProxyDomain<D> {
@@ -30,12 +30,8 @@ public class ProxyDomain<D> {
         return (T) model;
     }
 
-    void close(AbstractDomainModel model) {
-        Assert.validState(this.model == null, "Object is closed");
-        
-        if (model == null) {
-            throw new IllegalArgumentException("Unknown domain model");
-        }
+    /** Assign domain model */
+    void setModel(AbstractDomainModel model) {
         this.model = Assert.notNull(model, "model");
     }
 }

@@ -22,10 +22,14 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
     protected final boolean descending;
 
     protected AbstractDomainModel(@Nullable Key<D, ?> keyPrefix, @Nonnull DirectKeyRing directKeyRing, boolean descending) {
-        super(keyPrefix != null ? keyPrefix.getDomainClass() : directKeyRing.getKeyFactory().getDomainClass());
+        super(keyPrefix != null 
+                ? keyPrefix.getDomainClass() 
+                : directKeyRing.getKeyFactory().getDomainClass());
         this.keyPrefix = keyPrefix;
         this.directKeyRing = directKeyRing;
         this.descending = descending;
+        // Close directKeyRing:
+        directKeyRing.getKeyFactory().close(directKeyRing);
     }
 
     public AbstractDomainModel(@Nonnull DirectKeyRing keyRing) {
@@ -37,18 +41,6 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
 
     /** Provider of an instance of DirectKeys */
     protected abstract DirectKeyRing keys();
-
-    @Deprecated
-    protected ModelContext getContext$() {
-        return directKeyRing.getContext();
-    }
-
-    @Deprecated
-    public void setContext$(@Nonnull final ModelContext context) {
-        throw new UnsupportedOperationException("Move the method to: DirectKeyRing");
-//        Assert.validState(this.context == null, "Context is clocked");
-//        this.context = context;
-    }
 
     public D createDomain() {
         try {
@@ -67,18 +59,11 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
                     directKey);
             return domainModel.prefix(directKey.get());
         } else {
-            Key<D, V> result = directKey.get();
-            if (result == null) {
-                ModelContext modelContent = directKeyRing.getContext();
-                System.out.println("modelContent: " + modelContent);
-                // initialize it ? 
-            }
-            
-            return result;
+            return directKey.get();
         }
     }
 
-    protected DirectKeyRing getDirecKey() {
+    protected DirectKeyRing getDirectKey() {
         return directKeyRing;
     }
 }

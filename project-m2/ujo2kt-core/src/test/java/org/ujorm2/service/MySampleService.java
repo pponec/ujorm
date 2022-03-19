@@ -17,11 +17,11 @@ import org.ujorm2.metamodel.DomainModelProvider;
  */
 public class MySampleService {
 
-    private final DomainModelProvider modelProvider = new DomainModelProvider();
     private final HelpService helpService = new HelpService();
 
     /** Reading / writing */
     public void doOrderAccess() {
+        DomainModelProvider modelProvider = new DomainModelProvider();
         MetaOrder<Order> metaOrder = modelProvider.order();
 
         Key<Order, Integer> orderIdKey = metaOrder.id();
@@ -36,6 +36,7 @@ public class MySampleService {
 
     /** Reading / writing */
     public void doItemAccess() {
+        DomainModelProvider modelProvider = new DomainModelProvider();
         MetaItem<Item> metaItem = modelProvider.item();
 
         Key<Item, Integer> itemIdKey = metaItem.id();
@@ -53,6 +54,7 @@ public class MySampleService {
 
     /** Criterions */
     public void doItemCondition() {
+        DomainModelProvider modelProvider = new DomainModelProvider();
         MetaItem<Item> mItem = modelProvider.item();
 
         Criterion<Item> itemCrn1 = mItem.forAll();

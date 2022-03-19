@@ -38,9 +38,6 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     private final ArrayList<ProxyKey> keys = new ArrayList<>();
 
-    @Nullable
-    private ModelContext context;
-
     public KeyFactory(@Nonnull final Class<? extends D> domainClass) {
         this.domainClass = Assert.notNull(domainClass, "domainClass");
     }
@@ -81,11 +78,10 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
     }
 
     /** Close the factory */
-    public void close(@Nonnull final ModelContext context) {
-        this.context = Assert.notNull(context, "modelProvider");
-        final List<Field> fields = context.getFields(domainClass, keys);
+    public void close(D domainObject) {
+        final List<Field> fields = ModelContext.getFields(domainObject, keys);
         for (int i = 0, max = keys.size(); i < max; i++) {
-            final KeyImpl key = (KeyImpl) keys.get(i).get();
+            final KeyImpl key = (KeyImpl) keys.get(i).get(); // THE BUG!!!
             final KeyImpl.PropertyWriter writer = key.getPropertyWriter();
             final Field field = fields.get(i);
 
@@ -96,7 +92,7 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
                 writer.setName(field.getName());
             }
             if (key.getValueClass() == null) {
-                writer.setValueClass(context.getClassFromGenerics(field, false));
+                writer.setValueClass(ModelContext.getClassFromGenerics(field, false));
             }
             if (key.getReader() == null) {
                 writer.setReader(null); // TODO: use a Java reflection by the: field.getName()

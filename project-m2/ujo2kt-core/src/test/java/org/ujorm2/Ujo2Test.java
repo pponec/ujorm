@@ -29,7 +29,7 @@ public class Ujo2Test {
     
     /** The main examples & test */
     @Test
-    void mainUjo2Test() {    
+    void mainUjo2Test() {
         MySampleService instance = new MySampleService();
 
         instance.doOrderAccess();

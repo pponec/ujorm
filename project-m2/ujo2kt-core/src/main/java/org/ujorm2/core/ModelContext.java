@@ -33,7 +33,7 @@ import org.ujorm.tools.msg.MsgFormatter;
  */
 public class ModelContext {
 
-    /** Domain - Model Map */
+    /** A final Domain - Model Map */
     private final HashMap<Class, AbstractDomainModel> map = new HashMap<>(8);
 
     /** A Temporary proxyDomainModels  */
@@ -58,10 +58,9 @@ public class ModelContext {
                     final Field field = fields.get(i);
                     field.setAccessible(true);
                     final Class modelClass = getClassFromGenerics(field, true);
-                    final AbstractDomainModel abstractDomainModel = (AbstractDomainModel) modelClass.newInstance();
-                    abstractDomainModel.getDirecKey().setContext(this);
-                    map.put(modelClass, abstractDomainModel); 
-                    proxyDomain.close(abstractDomainModel);
+                    final AbstractDomainModel modelInstance = (AbstractDomainModel) modelClass.newInstance();
+                    proxyDomain.setModel(modelInstance);
+                    map.put(modelClass, modelInstance); 
                 }
             } catch (SecurityException | ReflectiveOperationException e) {
                 throw new IllegalStateException(e);
@@ -99,7 +98,7 @@ public class ModelContext {
     // --- STATIC UTILS ---
 
     /** Get all final fileds from items on the same order */
-    protected List<Field> getFields(@Nonnull final Object container, @Nonnull final List<?> items) {
+    protected static List<Field> getFields(@Nonnull final Object container, @Nonnull final List<?> items) {
         final List<Field> result = new ArrayList<>(items.size());
         int counter = 0;
         try {
@@ -132,7 +131,7 @@ public class ModelContext {
      * @return type
      * @throws IllegalArgumentException
      */
-    protected Class getClassFromGenerics(@Nonnull final Field field, final boolean firstPosition) throws IllegalArgumentException {
+    static protected Class getClassFromGenerics(@Nonnull final Field field, final boolean firstPosition) throws IllegalArgumentException {
         try {
             final ParameterizedType type = (ParameterizedType) field.getGenericType();
             final Type[] types = type.getActualTypeArguments();

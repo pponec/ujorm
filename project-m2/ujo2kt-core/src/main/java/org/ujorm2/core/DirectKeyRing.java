@@ -16,7 +16,6 @@
 package org.ujorm2.core;
 
 import javax.annotation.Nonnull;
-import org.ujorm.tools.Assert;
 
 /**
  *
@@ -24,18 +23,7 @@ import org.ujorm.tools.Assert;
  */
 public abstract class DirectKeyRing<D> {
 
-    private ModelContext context;
-
     @Nonnull
     public abstract KeyFactory<? super D> getKeyFactory();
-
-    public ModelContext getContext() {
-        return context;
-    }
-
-    public void setContext(@Nonnull ModelContext context) {
-        Assert.validState(this.context == null, "Context was assigned");
-        this.context = Assert.notNull(context);
-    }
 
 }
