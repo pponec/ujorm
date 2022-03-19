@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 pavel.
+ * Copyright 2019-2022 Pavel Ponec.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package org.ujorm2;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm2.metamodel.DomainModelProvider;
 import org.ujorm2.service.MySampleService;
 
@@ -35,7 +35,6 @@ public class UjoTest {
         instance.doItemCondition();
     }
 
-
     /**
      * Test of readValue method, of class Ujo.
      */
@@ -45,9 +44,9 @@ public class UjoTest {
 
         final DomainModelProvider context = new DomainModelProvider();
 
-        Assert.assertNotNull(context.item());
-        Assert.assertNotNull(context.item().id());
-        Assert.assertTrue(context.item().id().isDomainOf(Integer.class));
+        assertNotNull(context.item());
+        assertNotNull(context.item().id());
+        assertTrue(context.item().id().isDomainOf(Integer.class));
 
         // TODO
     }

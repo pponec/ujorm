@@ -15,12 +15,12 @@
  */
 package org.ujorm2.service;
 
-import org.junit.Test;
 import org.ujorm2.Key;
 import org.ujorm2.doman.Item;
 import org.ujorm2.metamodel.DomainModelProvider;
 import org.ujorm2.metamodel.MetaItem;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  *
