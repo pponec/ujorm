@@ -60,7 +60,7 @@ public class ModelContext {
                     final Class modelClass = getClassFromGenerics(field, true);
                     final AbstractDomainModel abstractDomainModel = (AbstractDomainModel) modelClass.newInstance();
                     abstractDomainModel.getDirecKey().setContext(this);
-                    map.put(modelClass, proxyDomain.get());
+                    map.put(modelClass, abstractDomainModel); 
                     proxyDomain.close(abstractDomainModel);
                 }
             } catch (SecurityException | ReflectiveOperationException e) {

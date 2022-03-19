@@ -67,7 +67,14 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
                     directKey);
             return domainModel.prefix(directKey.get());
         } else {
-            return directKey.get();
+            Key<D, V> result = directKey.get();
+            if (result == null) {
+                ModelContext modelContent = directKeyRing.getContext();
+                System.out.println("modelContent: " + modelContent);
+                // initialize it ? 
+            }
+            
+            return result;
         }
     }
 
