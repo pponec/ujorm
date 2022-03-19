@@ -597,8 +597,8 @@ public class KeyImpl<D, V> implements Key<D, V> {
             Assert.hasLength(getName(), "name");
             Assert.notNull(getDomainClass(), "domainClass");
             Assert.notNull(getValueClass(), "valueClass");
-            Assert.notNull(getReader(), "reader");
-            Assert.notNull(getWriter(), "writer");
+            //Assert.notNull(getReader(), "reader");
+            //Assert.notNull(getWriter(), "writer");
             propertyWriter = null; // Close the Key
         }
 

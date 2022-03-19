@@ -25,14 +25,13 @@ import org.ujorm2.Key;
  */
 public class ProxyKey<V> {
 
-    private Key<?, V> model;
+    private final Key<?, V> model;
+
+    public ProxyKey(Class clazz) {
+        this.model = new KeyImpl(clazz);
+    }
 
     public <T extends Key<?, V>> T get() {
         return (T) model;
-    }
-
-    void close(AbstractDomainModel model) {
-        Assert.validState(this.model == null, "Object is closed");
-        this.model = Assert.notNull(model, "model");
     }
 }

@@ -44,7 +44,7 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     /** Create new Key */
     public <K> ProxyKey<K> newKey(Function<D, K> reader, BiConsumer<D, K> writer) {
-        ProxyKey result = new ProxyKey();
+        ProxyKey result = new ProxyKey(domainClass);
         keys.add(result);
         return result;
     }
@@ -81,7 +81,7 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
     public void close(D domainObject) {
         final List<Field> fields = ModelContext.getFields(domainObject, keys);
         for (int i = 0, max = keys.size(); i < max; i++) {
-            final KeyImpl key = (KeyImpl) keys.get(i).get(); // THE BUG!!!
+            final KeyImpl key = (KeyImpl) keys.get(i).get();
             final KeyImpl.PropertyWriter writer = key.getPropertyWriter();
             final Field field = fields.get(i);
 
@@ -95,10 +95,10 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
                 writer.setValueClass(ModelContext.getClassFromGenerics(field, false));
             }
             if (key.getReader() == null) {
-                writer.setReader(null); // TODO: use a Java reflection by the: field.getName()
+                //writer.setReader(null); // TODO: use a Java reflection by the: field.getName()
             }
             if (key.getWriter() == null) {
-                writer.setWriter(null); // TODO: use a Java reflection by the: field.getName()
+                //writer.setWriter(null); // TODO: use a Java reflection by the: field.getName()
             }
             writer.close();
         }
