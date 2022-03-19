@@ -23,7 +23,7 @@ import org.ujorm2.Key;
  * Proxy Domain
  * @author Pavel Ponec
  */
-public class MKey<V> {
+public class MKey<V> /*implements Key<Object, V>*/ {
 
     private Key<?, V> model;
 

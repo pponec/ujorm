@@ -67,6 +67,10 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
                     directKey);
             return domainModel.prefix(directKey.get());
         } else {
+            // An exception is throwed due:
+            //   java.lang.ClassCastException: org.ujorm2.core.MKey 
+            //   cannot be cast to org.ujorm2.Key
+	    //   at org.ujorm2.Ujo2Test.mainUjo2Test(Ujo2Test.java:34)
             return (Key) directKey;
         }
     }

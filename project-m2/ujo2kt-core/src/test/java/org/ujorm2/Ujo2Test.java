@@ -28,12 +28,17 @@ public class Ujo2Test {
     
     /** The main examples & test */
     @Test
-    void mainUjo2Test() {
-        MySampleService instance = new MySampleService();
-        
-        instance.doOrderAccess();
-        instance.doItemAccess();
-        instance.doItemCondition();
+    void mainUjo2Test() {    
+        try {
+            MySampleService instance = new MySampleService();
+
+            instance.doOrderAccess();
+            instance.doItemAccess();
+            instance.doItemCondition();
+        } catch (RuntimeException | Error e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     /**
