@@ -24,7 +24,7 @@ import org.ujorm2.service.MySampleService;
  *
  * @author Pavel Ponec
  */
-public class UjoTest {
+public class Ujo2Test {
     
     /** The main examples & test */
     @Test
