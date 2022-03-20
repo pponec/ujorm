@@ -10,6 +10,7 @@ import org.ujorm2.doman.User;
 import org.ujorm2.metamodel.MetaItem;
 import org.ujorm2.metamodel.MetaOrder;
 import org.ujorm2.metamodel.DomainModelProvider;
+import org.ujorm2.metamodel.MetaUser;
 
 /**
  *
@@ -25,6 +26,7 @@ public class MySampleService {
         MetaOrder<Order> metaOrder = modelProvider.order();
 
         Key<Order, Integer> orderIdKey = metaOrder.id();
+        MetaUser<Order> orderUserKey = metaOrder.user();
         Key<Order, String> userNameKey = metaOrder.user().firstName();
 
         Order order = metaOrder.createDomain();
