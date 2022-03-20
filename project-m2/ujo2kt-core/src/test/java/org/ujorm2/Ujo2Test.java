@@ -17,17 +17,38 @@ package org.ujorm2;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import org.ujorm2.doman.Item;
 import org.ujorm2.metamodel.DomainModelProvider;
+import org.ujorm2.metamodel.MetaItem;
+import org.ujorm2.metamodel.MetaOrder;
 import org.ujorm2.service.MySampleService;
 
 /**
  * The main test of API Ujorm2
- * 
+ *
  * @author Pavel Ponec
  */
 public class Ujo2Test {
-    
-    /** The main examples & test */
+
+    /**
+     * Intro test of reading properties.
+     */
+    @Test
+    void testProperties() {
+        final DomainModelProvider provider = new DomainModelProvider();
+
+        MetaItem<Item> _item = provider.item();
+        Key<Item, Integer> _itemId = _item.id();
+        MetaOrder<Item> _itemOrder = _item.order();
+
+        assertNotNull(_item);
+        assertNotNull(_itemId);
+        assertNotNull(_itemOrder);
+    }
+
+    /**
+     * The main examples & test
+     */
     @Test
     void mainUjo2Test() {
         MySampleService instance = new MySampleService();
@@ -42,15 +63,11 @@ public class Ujo2Test {
      */
     @Test
     void testModelContext() {
-        System.out.println("ModelContext");
+        final DomainModelProvider provider = new DomainModelProvider();
 
-        final DomainModelProvider context = new DomainModelProvider();
-
-        assertNotNull(context.item());
-        assertNotNull(context.item().id());
-        assertTrue(context.item().id().isDomainOf(Integer.class));
-
-        // TODO
+        assertNotNull(provider.item());
+        assertNotNull(provider.item().id());
+        assertTrue(provider.item().id().isDomainOf(Integer.class));
     }
 
 }

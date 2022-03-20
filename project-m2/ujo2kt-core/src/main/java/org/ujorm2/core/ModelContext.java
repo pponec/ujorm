@@ -59,6 +59,7 @@ public class ModelContext {
                     field.setAccessible(true);
                     final Class modelClass = getClassFromGenerics(field, true);
                     final AbstractDomainModel modelInstance = (AbstractDomainModel) modelClass.newInstance();
+                    modelInstance.setContext(this); // assign a model context
                     proxyDomain.setModel(modelInstance);
                     map.put(modelClass, modelInstance); 
                 }
