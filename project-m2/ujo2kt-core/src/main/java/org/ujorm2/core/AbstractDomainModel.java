@@ -68,7 +68,7 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
             return domainModel.prefix(directKey.get());
         } else {
             if (context == null) {
-                throw new IllegalStateException("Context was not assigned");
+                throw new IllegalStateException("A context is required");
             }
             final Class valueClass = directKey.get().getValueClass();
             final AbstractDomainModel<D, V> result = context.getDomainModel(valueClass);
