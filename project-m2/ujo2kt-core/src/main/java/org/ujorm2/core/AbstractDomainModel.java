@@ -51,7 +51,7 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
     }
 
     @Nonnull
-    protected final <V> Key<D, V> getKey(final @Nonnull ProxyKey<V> directKey) {
+    protected final <V> AbstractDomainModel<D, V> getKey(final @Nonnull ProxyKey<V> directKey) {
         if (keyPrefix != null) {
             final AbstractDomainModel domainModel = null; // TODO.pop ??? directKeyRing.getContext().getStore$().getDomainModel(directKey.getValueClass());
             Assert.validState(domainModel != null, "No model found for the key: {}.{}",
@@ -59,11 +59,19 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
                     directKey);
             return domainModel.prefix(directKey.get());
         } else {
-            return directKey.get();
+            AbstractDomainModel<D, V> result = null;
+            result = directKey.get(); // convert it to a MetaUser
+            return result;
         }
     }
 
     protected DirectKeyRing getDirectKey() {
         return directKeyRing;
+    }
+
+    @Override
+    public String toString() {
+        return "Domain model '" + super.toString() + "' : "
+                + directKeyRing.getKeyFactory().getDomainClass().getSimpleName();
     }
 }

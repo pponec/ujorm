@@ -386,7 +386,7 @@ public class KeyImpl<D, V> implements Key<D, V> {
 
     /** Returns a name of Property */
     @Override
-    public final String toString() {
+    public String toString() {
         return name;
     }
 
