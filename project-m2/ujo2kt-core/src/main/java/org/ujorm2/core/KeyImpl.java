@@ -487,8 +487,7 @@ public class KeyImpl<D, V> implements Key<D, V> {
     @Override
     public Criterion<D> forLength() {
         final Criterion<D> result = forNotNull()
-            .and(Criterion.forCriton(this, Operator.NOT_EQ, (V) getEmptyValue()))
-                ;
+            .and(Criterion.forCriton(this, Operator.NOT_EQ, (V) getEmptyValue()));
         return result;
     }
 
