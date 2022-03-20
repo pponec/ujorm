@@ -22,7 +22,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.mockito.Mockito;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;

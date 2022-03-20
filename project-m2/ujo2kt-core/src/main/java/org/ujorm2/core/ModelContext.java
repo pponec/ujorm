@@ -33,7 +33,7 @@ import org.ujorm.tools.msg.MsgFormatter;
  */
 public class ModelContext {
 
-    /** A final Domain - Model Map */
+    /** An entity Domain class To Metamodel Map */
     private final HashMap<Class, AbstractDomainModel> map = new HashMap<>(8);
 
     /** A Temporary proxyDomainModels  */
@@ -61,7 +61,8 @@ public class ModelContext {
                     final AbstractDomainModel modelInstance = (AbstractDomainModel) modelClass.newInstance();
                     modelInstance.setContext(this); // assign a model context
                     proxyDomain.setModel(modelInstance);
-                    map.put(modelClass, modelInstance); 
+                    Class entityClass = modelInstance.getDirectKey().getKeyFactory().getDomainClass();
+                    map.put(entityClass, modelInstance);  // ERR
                 }
             } catch (SecurityException | ReflectiveOperationException e) {
                 throw new IllegalStateException(e);
