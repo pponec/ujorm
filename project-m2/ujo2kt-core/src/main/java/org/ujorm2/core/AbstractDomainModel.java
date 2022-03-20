@@ -57,8 +57,9 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
         }
     }
 
+    /** Return an AbstractDomainModel or a property Key. */
     @Nonnull
-    protected final <V> AbstractDomainModel<D, V> getKey(final @Nonnull ProxyKey<V> directKey) {
+    protected final <V> Key<D, V> getKey(final @Nonnull ProxyKey<V> directKey) {
         if (keyPrefix != null) {
             final AbstractDomainModel domainModel = null; // TODO.pop ??? directKeyRing.getContext().getStore$().getDomainModel(directKey.getValueClass());
             Assert.validState(domainModel != null, "No model found for the key: {}.{}",
@@ -69,8 +70,9 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
             if (context == null) {
                 throw new IllegalStateException("Context was not assigned");
             }
-            final AbstractDomainModel<D, V> result = context.getDomainModel(directKey.get());
-            return result;
+            final Class valueClass = directKey.get().getValueClass();
+            final AbstractDomainModel<D, V> result = context.getDomainModel(valueClass);
+            return result != null ? result : directKey.get();
         }
     }
 
