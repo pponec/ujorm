@@ -17,11 +17,18 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
     /** All direct keys */
     @Nonnull
     protected final DirectKeyRing directKeyRing;
+    
+    /** Model context */
+    @Nullable
+    protected ModelContext context;
 
     /** All direct keys */
     protected final boolean descending;
 
-    protected AbstractDomainModel(@Nullable Key<D, ?> keyPrefix, @Nonnull DirectKeyRing directKeyRing, boolean descending) {
+    protected AbstractDomainModel(
+            @Nullable Key<D, ?> keyPrefix, 
+            @Nonnull DirectKeyRing directKeyRing, 
+            boolean descending) {
         super(keyPrefix != null 
                 ? keyPrefix.getDomainClass() 
                 : directKeyRing.getKeyFactory().getDomainClass());
@@ -59,14 +66,21 @@ public abstract class AbstractDomainModel<D, V> extends KeyImpl<D, V> {
                     directKey);
             return domainModel.prefix(directKey.get());
         } else {
-            AbstractDomainModel<D, V> result = null;
-            result = directKey.get(); // convert it to a MetaUser
+            if (context == null) {
+                throw new IllegalStateException("Context was not assigned");
+            }
+            final AbstractDomainModel<D, V> result = context.getDomainModel(directKey.get());
             return result;
         }
     }
 
     protected DirectKeyRing getDirectKey() {
         return directKeyRing;
+    }
+
+    /** Assign a model context*/
+    public void setContext(@Nonnull ModelContext context) {
+        this.context = context;
     }
 
     @Override

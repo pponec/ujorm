@@ -3,6 +3,7 @@ package org.ujorm2.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.ujorm2.Key;
+import org.ujorm2.core.AbstractDomainModel;
 import org.ujorm2.criterion.Criterion;
 import org.ujorm2.doman.Item;
 import org.ujorm2.doman.Order;
@@ -26,7 +27,10 @@ public class MySampleService {
         MetaOrder<Order> metaOrder = modelProvider.order();
 
         Key<Order, Integer> orderIdKey = metaOrder.id();
-        MetaUser<Order> orderUserKey = metaOrder.user();
+        Key<Order, User> orderUserKey1 = metaOrder.user();
+        MetaUser<Order> orderUserKey2 = metaOrder.user();
+        AbstractDomainModel<Order, User> orderUserKey3 = metaOrder.user();
+
         Key<Order, String> userNameKey = metaOrder.user().firstName();
 
         Order order = metaOrder.createDomain();
