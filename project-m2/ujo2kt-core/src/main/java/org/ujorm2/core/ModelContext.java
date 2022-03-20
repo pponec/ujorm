@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.ujorm.tools.msg.MsgFormatter;
 
 /**
@@ -74,18 +75,9 @@ public class ModelContext {
     }
 
     /** Get a (unique) direct domain model */
+    @Nullable
     public AbstractDomainModel getDomainModel(@Nonnull final Class<AbstractDomainModel> domainClass) {
-        AbstractDomainModel result = map.get(domainClass);
-        if (result == null) {
-            try {
-                result = domainClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException  e) {
-                throw new IllegalStateException("Can't reate an instance of the " + domainClass);
-            }
-            map.put(domainClass, result);
-        }
-
-        return result;
+        return map.get(domainClass);
     }
 
     public Stream<AbstractDomainModel> getDomainModels() {
