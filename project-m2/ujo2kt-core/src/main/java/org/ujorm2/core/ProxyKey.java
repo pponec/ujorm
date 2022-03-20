@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020-2020 Pavel Ponec
+ *  Copyright 2020-2022 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,19 +16,23 @@
  */
 package org.ujorm2.core;
 
-import org.ujorm.tools.Assert;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import org.ujorm2.Key;
 
 /**
- * Proxy Domain Key
+ * Proxy Domain Key of an Object Property
  * @author Pavel Ponec
  */
 public class ProxyKey<V> {
 
     private final Key<?, V> model;
 
-    public ProxyKey(Class clazz) {
-        this.model = new KeyImpl(clazz);
+    public ProxyKey(Class clazz, Function<?, V> reader, BiConsumer<?, V> writer) {
+        final KeyImpl key = new KeyImpl(clazz);
+        key.getPropertyWriter().setReader(reader);
+        key.getPropertyWriter().setWriter(writer);
+        this.model = key;
     }
 
     public <T extends Key<?, V>> T get() {

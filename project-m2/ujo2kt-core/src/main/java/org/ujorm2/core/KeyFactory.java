@@ -44,7 +44,7 @@ public class KeyFactory<D> /* implements Serializable , Closeable*/ {
 
     /** Create new Key */
     public <K> ProxyKey<K> newKey(Function<D, K> reader, BiConsumer<D, K> writer) {
-        ProxyKey result = new ProxyKey(domainClass);
+        ProxyKey result = new ProxyKey(domainClass, reader, writer);
         keys.add(result);
         return result;
     }
