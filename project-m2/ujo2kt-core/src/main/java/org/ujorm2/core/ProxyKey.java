@@ -38,4 +38,9 @@ public class ProxyKey<V> {
     public <T extends Key<?, V>> T get() {
         return (T) model;
     }
+
+    @Override
+    public String toString() {
+        return model.getFullName();
+    }  
 }

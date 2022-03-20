@@ -48,6 +48,11 @@ public interface Key<D, V> extends CharSequence, Comparable<Key>, CriterionProvi
      * separated by the dot (.) character. */
     @Nonnull
     public String getFullName();
+    
+    /** An alias for the {@link #getFullName() }. */
+    default String getInfo() {
+        return getFullName();
+    }
 
     /** Returns a class of the domain Ujo object. */
     @Nonnull
