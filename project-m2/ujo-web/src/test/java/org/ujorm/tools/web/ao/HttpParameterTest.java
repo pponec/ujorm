@@ -3,15 +3,18 @@ package org.ujorm.tools.web.ao;
 import java.time.Month;
 import static java.time.Month.JANUARY;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import static java.time.Month.*;
+import java.util.function.Supplier;
 
 /**
  *
  * @author Pavel Ponec
  */
 public class HttpParameterTest {
+    
+    private static final double DELTA = 0.0000001;
 
     /**
      * Test of of method, of class HttpParameter.
@@ -20,7 +23,7 @@ public class HttpParameterTest {
     public void testOf_ServletRequest_String() {
         String defaultValue = "x";
         String result = Param.TEXT.of(request(), defaultValue);
-        assertEquals("acb", result);
+        assertEquals("abc", result);
         
         result = Param.UNDEFINED.of(request(), defaultValue);
         assertEquals(defaultValue, result);
@@ -46,7 +49,7 @@ public class HttpParameterTest {
     public void testOf_ServletRequest_char() {
         char defaultValue = 'Z';
         char result = Param.CHAR.of(request(), defaultValue);
-        assertEquals("acb", result);
+        assertEquals('A', result);
         
         result = Param.UNDEFINED.of(request(), defaultValue);
         assertEquals(defaultValue, result);
@@ -84,11 +87,11 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_float() {
         float defaultValue = 9F;
-        float result = Param.TEXT.of(request(), defaultValue);
-        assertEquals("acb", result);
+        float result = Param.FLOAT.of(request(), defaultValue);
+        assertEquals(3F, result, DELTA);
         
         result = Param.UNDEFINED.of(request(), defaultValue);
-        assertEquals(defaultValue, result);
+        assertEquals(defaultValue, result, DELTA);
     }
 
     /**
@@ -97,11 +100,11 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_double() {
         double defaultValue = 9D;
-        double result = Param.TEXT.of(request(), defaultValue);
-        assertEquals("acb", result);
+        double result = Param.DOUBLE.of(request(), defaultValue);
+        assertEquals(4D, result, DELTA);
         
         result = Param.UNDEFINED.of(request(), defaultValue);
-        assertEquals(defaultValue, result);
+        assertEquals(defaultValue, result, DELTA);
     }
 
     /**
@@ -117,6 +120,21 @@ public class HttpParameterTest {
         assertEquals(defaultValue, result);
     }
 
+    /**
+     * Test name of the HTTP method.
+     */
+    @Test
+    public void testOfNamedAttributes() {
+        assertEquals("a", Param2.TEXT.toString());
+        assertEquals("b", Param2.BOOLEAN.toString());
+        assertEquals("c", Param2.CHAR.toString());
+        assertEquals("d", Param2.INT.toString());
+        assertEquals("long", Param2.LONG.toString());
+        assertEquals("float", Param2.FLOAT.toString());
+        assertEquals("double", Param2.DOUBLE.toString());
+        assertEquals("month-enum", Param2.MONTH_ENUM.toString());
+        assertEquals("undefined", Param2.UNDEFINED.toString());
+    }
     
     // --- Helper methods ---
     
@@ -149,6 +167,29 @@ public class HttpParameterTest {
 
         public String toString() {
             return name().toString();
+        }
+    }
+    
+        /** Parameter */
+    public enum Param2 implements HttpParameter {
+        TEXT("a"),
+        BOOLEAN("b"),
+        CHAR("c"),
+        INT("d"),
+        LONG(null),
+        FLOAT(null),
+        DOUBLE(null),
+        MONTH_ENUM(null),
+        UNDEFINED(null);
+        
+        private final Supplier<String> nameSupplier;
+
+        private Param2(String name) {
+            this.nameSupplier = createNameSupplier(name);
+        }
+        
+        public String toString() {
+            return nameSupplier.get();
         }
     }
     

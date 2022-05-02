@@ -15,11 +15,12 @@
  */
 package org.ujorm.tools.web.ao;
 
+import java.util.Locale;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import javax.servlet.ServletRequest;
-import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 
 /**
@@ -42,6 +43,8 @@ import org.ujorm.tools.Check;
  * @author Pavel Ponec
  */
 public interface HttpParameter extends CharSequence {
+    /** An empty text value */
+    public static final String EMPTY_VALUE = "";
 
     /** Returns a parameter name */
     @NotNull
@@ -69,18 +72,30 @@ public interface HttpParameter extends CharSequence {
     default String defaultValue() {
         return "";
     }
+    
+    /** Create new attribute name supplier. */
+    default public Supplier<String> createNameSupplier(@Nullable String name) {
+        return () -> name != null ? name : name().toLowerCase(Locale.ENGLISH).replace('_', '-');
+    }
+
+    /** Get a raw name of the HTTP parameter.
+     * The method can be called from the {@link #createNameSupplier(java.lang.String)} method. */    
+    default public String name() {
+        throw new UnsupportedOperationException("Implement the method");
+    }
 
     /** Default value is an empty String */
     @NotNull
     default String of(@NotNull final ServletRequest request) {
-        return of(request, Assert.notNull(defaultValue(), "Default value is required"));
+        return of(request, defaultValue());
     }
 
     /** Returns the last parameter value of the request or a default value */
     @NotNull
     default String of(@NotNull final ServletRequest request, @NotNull final String defaultValue) {
-        final String[] result = request.getParameterValues(toString());
-        return Check.hasLength(result) ? result[result.length - 1] : defaultValue;
+        final String[] results = request.getParameterValues(toString());
+        final String result = Check.hasLength(results) ? results[results.length - 1] : defaultValue;
+        return result != null ? result : defaultValue;
     }
 
     /** Returns a parameter of the request or the default value */
@@ -103,7 +118,7 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the default value */
     default short of(@NotNull final ServletRequest request, @Nullable final short defaultValue) {
-        final String value = of(request);
+        final String value = of(request, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -115,7 +130,7 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the default value */
     default int of(@NotNull final ServletRequest request, @Nullable final int defaultValue) {
-        final String value = of(request);
+        final String value = of(request, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -127,7 +142,7 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the default value */
     default long of(@NotNull final ServletRequest request, @Nullable final long defaultValue) {
-        final String value = of(request);
+        final String value = of(request, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -139,7 +154,7 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the default value */
     default float of(@NotNull final ServletRequest request, @Nullable final float defaultValue) {
-        final String value = of(request);
+        final String value = of(request, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -151,7 +166,7 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the default value */
     default double of(@NotNull final ServletRequest request, @Nullable final double defaultValue) {
-        final String value = of(request);
+        final String value = of(request, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -182,7 +197,7 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the default value */
     default <V> V of(@NotNull final ServletRequest request, @NotNull final V defaultValue, @NotNull final Function<String, V> decoder) {
-        final String value = of(request);
+        final String value = of(request, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -194,7 +209,7 @@ public interface HttpParameter extends CharSequence {
 
     /** Create a default implementation */
     public static HttpParameter of(@NotNull final String name) {
-        return new DefaultHttpParam(name, "");
+        return new DefaultHttpParam(name, EMPTY_VALUE);
     }
 
     /** Create a default implementation */
