@@ -182,14 +182,14 @@ public class HttpParameterTest {
         MONTH_ENUM(null),
         UNDEFINED(null);
         
-        private final Supplier<String> nameSupplier;
+        private final String paramName;
 
         private Param2(String name) {
-            this.nameSupplier = createNameSupplier(name);
+            this.paramName = buildParamName(name);
         }
         
         public String toString() {
-            return nameSupplier.get();
+            return paramName;
         }
     }
     

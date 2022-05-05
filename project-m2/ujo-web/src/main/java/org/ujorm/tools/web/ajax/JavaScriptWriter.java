@@ -39,7 +39,9 @@ public class JavaScriptWriter implements Injector {
     /** Default AJAX request parameter name */
     public static final HttpParameter DEFAULT_SORT_REQUEST_PARAM = HttpParameter.of("_sort");
     /** Default duration */
-    public static final Duration DEFAULT_DURATION = Duration.ofMillis(250);
+    public static final Duration DEFAULT_DELAY = Duration.ofMillis(250);
+    /** Default timeou */
+    public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 
     /** Javascript ajax request parameter */
     protected final HttpParameter ajaxRequestParam;
@@ -47,9 +49,12 @@ public class JavaScriptWriter implements Injector {
     protected final HttpParameter sortRequestParam;
      /** Input selectors */
     protected final CharSequence[] inputCssSelectors;
-    /** Input idle delay */
+    /** An AJAX delay to the input request */
     @NotNull
-    protected Duration idleDelay = DEFAULT_DURATION;
+    protected Duration idleDelay = DEFAULT_DELAY;
+    /** An AJAX timeout of the input response */
+    @NotNull
+    protected Duration ajaxTimeout = DEFAULT_TIMEOUT;
     /** Form selector */
     protected String formSelector = Html.FORM;
     /** On load submit request */
@@ -62,9 +67,6 @@ public class JavaScriptWriter implements Injector {
     /** A subtitle selector */
     @NotNull
     protected CharSequence errorMessage = "AJAX fails due";
-    /** Ajax Timeout */
-    @NotNull
-    protected Duration ajaxTimeout = Duration.ofMillis(30_000);
     /** JavaScript version */
     protected int version = 1;
     /** Javascript ajax request parameter */
@@ -79,7 +81,7 @@ public class JavaScriptWriter implements Injector {
     }
 
     public JavaScriptWriter(@NotNull CharSequence... inputSelectors) {
-        this(DEFAULT_DURATION,
+        this(DEFAULT_DELAY,
                 DEFAULT_AJAX_REQUEST_PARAM,
                 DEFAULT_SORT_REQUEST_PARAM,
                 inputSelectors);
@@ -123,9 +125,15 @@ public class JavaScriptWriter implements Injector {
         return this;
     }
 
-    /** Assign an AJAX timeout */
+    /** An AJAX timeout to get a response  */
     public JavaScriptWriter setAjaxTimeout(@NotNull Duration ajaxTimeout) {
         this.ajaxTimeout = Assert.notNull(ajaxTimeout, "ajaxTimeout");
+        return this;
+    }
+    
+    /** An AJAX delay to the input request */
+    public JavaScriptWriter setIdleDelay(@NotNull Duration idleDelay) {
+        this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
         return this;
     }
 
@@ -177,7 +185,7 @@ public class JavaScriptWriter implements Injector {
             if (isAjax) {
                 js.addRawText(newLine, "const f", fceOrder, "={");
                 js.addRawTexts(newLine, ""
-                    , "timeout:null, ajaxRun:false, submitReq:false, millis:" + idleDelay.toMillis() + ","
+                    , "ajaxRun:false, submitReq:false, delayMs:" + idleDelay.toMillis() + ", timeout:null,"
                     , "init(e){"
                     , " document.querySelector('" + formSelector + "').addEventListener('submit',this.process,false);"
                     , " document.querySelectorAll('" + inpSelectors + "').forEach(i=>{"
@@ -191,7 +199,7 @@ public class JavaScriptWriter implements Injector {
                     , "  this.timeout=null;"
                     , "  if(this.ajaxRun)this.submitReq=true;"
                     , "  else this.process(null);"
-                    , " },this.millis);},"
+                    , " },this.delayMs);},"
                 );
                 js.addRawTexts(newLine, ""
                     , "process(e){"
