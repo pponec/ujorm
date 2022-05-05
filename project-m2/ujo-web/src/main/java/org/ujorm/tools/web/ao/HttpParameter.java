@@ -74,12 +74,14 @@ public interface HttpParameter extends CharSequence {
     }
     
     /** Build a default non-null parameter name. */
+    @NotNull
     default public String buildParameterName(@Nullable String name) {
         return name != null ? name : name().toLowerCase(Locale.ENGLISH).replace('_', '-');
     }
 
     /** Get a raw name of the HTTP parameter.
      * The method can be called from the {@link #buildParameterName(java.lang.String)} method. */    
+    @NotNull
     default public String name() {
         throw new UnsupportedOperationException("Implement the method");
     }
