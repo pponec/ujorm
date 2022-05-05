@@ -185,7 +185,7 @@ public class HttpParameterTest {
         private final String paramName;
 
         private Param2(String name) {
-            this.paramName = buildParamName(name);
+            this.paramName = buildParameterName(name);
         }
         
         public String toString() {
