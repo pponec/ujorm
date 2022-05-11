@@ -3,21 +3,31 @@ The Ujorm release notes
 *******************************
 
 
-release 2.23-SNAPSHOT (yyyy-mm-dd)
+release 2.25-SNAPSHOT (yyyy-mm-dd)
+
+release 2.24 (2022-05-11)
++ WEB: New method: JavaScriptWriter.setIdleDelay().
++ WEB: New method: HttpParameter.buildParamName().
++ WEB: New method:  HttpParameter.createNameSupplier() to build a default parameter name. 
++ WEB: The metod Element.addTable(Collection<Object[]>) ignores empty rows.
++ WEB: Some parser method of the HttpParameter class was fixed
+
+release 2.23
+- UNRELEASED
 
 release 2.22 (2022-02-22)
-WEB: A method Element.setFor() is fixed.
-WEB: ReportBuilder class is fixed for an AJAX table rendering.
++ WEB: A method Element.setFor() is fixed.
++ WEB: ReportBuilder class is fixed for an AJAX table rendering.
 
 release 2.21 (2022-02-20)
-WEB: The AJAX implementation allows sending part of Javascript commands to the web browser via JSON format.
-WEB: The AJAX implementation allows a direct calling a JavaScript method process(), which is necessary for creating custom AJAX components.
-WEB: New method Element.addHiddenInput() is available.
-WEB: New method Element.setHint() is available to add both an 'alt' and 'placehoder' attributes.
-WEB: The tab character is used to indent nested HTML code blocks in the default configuration.
-WEB: External config of the JsonBuilder is fixed.
-WEB: The method Element.then() was renamed to Element.next();
-CORE: Test Database H2 is upgraded to 2.0.202.
++ WEB: The AJAX implementation allows sending part of Javascript commands to the web browser via JSON format.
++ WEB: The AJAX implementation allows a direct calling a JavaScript method process(), which is necessary for creating custom AJAX components.
++ WEB: New method Element.addHiddenInput() is available.
++ WEB: New method Element.setHint() is available to add both an 'alt' and 'placehoder' attributes.
++ WEB: The tab character is used to indent nested HTML code blocks in the default configuration.
++ WEB: External config of the JsonBuilder is fixed.
++ WEB: The method Element.then() was renamed to Element.next();
++ CORE: Test Database H2 is upgraded to 2.0.202.
 
 release 2.20 (2021-11-18)
 + WEB: An attribute 'JavaScriptWrier.isSortable' has been removed because it will no longer be needed.
