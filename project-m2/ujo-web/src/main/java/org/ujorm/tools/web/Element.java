@@ -366,10 +366,12 @@ public final class Element implements ApiElement<Element>, Html {
             @NotNull final Collection<Object[]> data,
             @NotNull final CharSequence... cssClass) {
         final Element result = addTable(cssClass);
-        for (Object[] rowValue : data) {
-            final Element rowElement = result.addElement(Html.TR);
-            for (Object value : rowValue) {
-                rowElement.addElement(Html.TD).addText(value);
+        for (final Object[] rowValue : data) {
+            if (rowValue != null) {
+                final Element rowElement = result.addElement(Html.TR);
+                for (final Object value : rowValue) {
+                    rowElement.addElement(Html.TD).addText(value);
+                }
             }
         }
         return result;
