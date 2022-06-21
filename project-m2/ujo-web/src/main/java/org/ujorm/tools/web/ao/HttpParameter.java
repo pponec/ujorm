@@ -76,14 +76,19 @@ public interface HttpParameter extends CharSequence {
     /** Build a default non-null parameter name. */
     @NotNull
     default public String buildParameterName(@Nullable String name) {
-        return name != null ? name : name().toLowerCase(Locale.ENGLISH).replace('_', '-');
+        return name != null ? name : originalName().toLowerCase(Locale.ENGLISH).replace('_', '-');
     }
 
     /** Get a raw name of the HTTP parameter.
-     * The method can be called from the {@link #buildParameterName(java.lang.String)} method. */    
+     * The method can be called from the {@link #buildParameterName(java.lang.String)} method.
+     * NOTE: The method was renamed from obsolete {@code name()} due a Kotlin compatibility. */  
     @NotNull
-    default public String name() {
-        throw new UnsupportedOperationException("Implement the method");
+    default public String originalName() {
+        try {
+            return String.valueOf(getClass().getMethod("name").invoke(this));
+        } catch (ReflectiveOperationException | SecurityException e) {
+            throw new IllegalStateException("Method 'name()' is not available", e);
+        }
     }
 
     /** Default value is an empty String */
