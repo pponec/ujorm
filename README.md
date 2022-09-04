@@ -59,8 +59,8 @@ Use a one of the preferred tools to open the project:
 
   *  NetBeans IDE,
   *  InteliJ IDEA,
-  *  Eclipse with some Maven pluggin, or use the
-  *  Maven toolkit if you like a console command line
+  *  Eclipse with some Maven pluggin, or use the,
+  *  Maven toolkit if you like a console command line.
 
 
 
