@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.ujorm.tools.jdbc.AbstractJdbcConnector;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

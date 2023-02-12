@@ -18,8 +18,8 @@ package org.ujorm.hotels.service.impl;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public class ModuleParamsImplTest {
     /** Wicket tester  */
     protected WicketTester tester;
 
-    @Before
+    @BeforeEach
     public void before() {
         tester = new WicketTester();
     }

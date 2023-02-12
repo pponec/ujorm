@@ -21,9 +21,9 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.test.context.ContextConfiguration;
@@ -59,7 +59,7 @@ public class DatabaseTest {
     private CommonDao<OrmUjo> dao;
 
     /** Create a one reservation in the Prague */
-    @Before
+    @BeforeEach
     @Transactional(SpringContext.TRANSACTION_MANAGER)
     public void setUp() {
         final String login = "test";

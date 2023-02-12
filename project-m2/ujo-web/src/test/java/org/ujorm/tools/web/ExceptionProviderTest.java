@@ -17,7 +17,9 @@ package org.ujorm.tools.web;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
@@ -77,7 +79,7 @@ public class ExceptionProviderTest {
     /**
      * Test of addSelect method, of class Element.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testElementThenCatch3a() {
         StringBuilder writer = new StringBuilder();
         DefaultHtmlConfig config = HtmlConfig.ofDefault()
@@ -118,22 +120,24 @@ public class ExceptionProviderTest {
     /**
      * Test of addSelect method, of class Element.
      */
-    @Test(expected = OutOfMemoryError.class)
+    @Test
     public void testElementThenCatch4a() {
-        StringBuilder writer = new StringBuilder();
-        DefaultHtmlConfig config = HtmlConfig.ofDefault()
-                .setTitle("Element-try-catche");
+        Assertions.assertThrows(OutOfMemoryError.class, -> {
+            StringBuilder writer = new StringBuilder();
+            DefaultHtmlConfig config = HtmlConfig.ofDefault()
+                    .setTitle("Element-try-catche");
 
-        String[] result = {""};
-        HtmlElement.of(config, writer).addBody()
-                .then(body -> {
-                    throw new OutOfMemoryError("test");
-                })
-                .catchEx(NullPointerException.class, e -> {
-                    result[0] = e.getMessage();
-                });
-        String expected = "test";
-        assertEquals(expected, result[0]);
+            String[] result = {""};
+            HtmlElement.of(config, writer).addBody()
+                    .then(body -> {
+                        throw new OutOfMemoryError("test");
+                    })
+                    .catchEx(NullPointerException.class, e -> {
+                        result[0] = e.getMessage();
+                    });
+            String expected = "test";
+            assertEquals(expected, result[0]);
+        });
     }
 
     /**

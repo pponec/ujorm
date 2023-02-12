@@ -2,7 +2,7 @@
 package org.ujorm.tools.web.ao;
 
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
 import org.ujorm.tools.web.HtmlElement;
 
@@ -37,11 +37,11 @@ public class MockServletResponseTest {
         String result = instance.toString();
         String expected = String.join("\n"
                 , "<!DOCTYPE html>"
-                , "<html lang=\"en\">" 
-                , "\t<head>" 
+                , "<html lang=\"en\">"
+                , "\t<head>"
                 , "\t\t<meta charset=\"UTF-8\"/>"
                 , "\t\t<title>Demo</title>"
-                , "\t</head>" 
+                , "\t</head>"
                 , "\t<body>"
                 , "\t\t<h1 class=\"cssType\">ABC:ČÁŠ</h1>"
                 , "\t</body>"

@@ -15,7 +15,7 @@
  */
 package org.ujorm.orm;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.ujorm.extensions.types.UnsignedShort;
 import org.ujorm.orm.bo.ACustomerExtended;
 import org.ujorm.orm.bo.XCustomerExtended;

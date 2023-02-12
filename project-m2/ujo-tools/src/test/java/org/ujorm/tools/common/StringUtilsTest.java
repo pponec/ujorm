@@ -16,8 +16,10 @@
  */
 package org.ujorm.tools.common;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.stream.Stream;
-import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**

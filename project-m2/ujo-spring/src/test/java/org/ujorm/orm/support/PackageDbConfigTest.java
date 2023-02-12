@@ -15,7 +15,7 @@
  */
 package org.ujorm.orm.support;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.ujorm.KeyList;
 import org.ujorm.UjoDecorator;
 import org.ujorm.implementation.orm.RelationToMany;

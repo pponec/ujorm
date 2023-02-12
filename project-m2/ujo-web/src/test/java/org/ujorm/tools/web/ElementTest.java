@@ -21,7 +21,8 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
-import org.junit.*;
+
+import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.MockServletResponse;
 import org.ujorm.tools.xml.config.HtmlConfig;

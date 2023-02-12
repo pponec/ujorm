@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import javax.xml.bind.DatatypeConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static junit.framework.TestCase.assertSame;
 import static org.junit.Assert.assertEquals;
 

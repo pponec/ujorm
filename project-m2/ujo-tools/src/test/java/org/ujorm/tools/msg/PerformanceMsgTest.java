@@ -29,7 +29,7 @@ import java.util.Formatter;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
 import static java.util.Locale.ENGLISH;

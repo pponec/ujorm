@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
 
 /**
@@ -113,7 +113,8 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     }
 
     /** Test raw SQL INSERT of class JdbcBuillder for a better performace and general use. */
-    @Test @Deprecated
+    @Test
+    @Deprecated
     public void testInsertRaw() {
         System.out.println("INSERT");
         JdbcBuilder sql = new JdbcBuilder()

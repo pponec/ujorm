@@ -3,7 +3,7 @@ package org.ujorm.tools.web.ao;
 import java.time.Month;
 import static java.time.Month.JANUARY;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
 import static java.time.Month.*;
 
@@ -12,7 +12,7 @@ import static java.time.Month.*;
  * @author Pavel Ponec
  */
 public class HttpParameterTest {
-    
+
     private static final double DELTA = 0.0000001;
 
     /**
@@ -23,7 +23,7 @@ public class HttpParameterTest {
         String defaultValue = "x";
         String result = Param.TEXT.of(request(), defaultValue);
         assertEquals("abc", result);
-        
+
         result = Param.UNDEFINED.of(request(), defaultValue);
         assertEquals(defaultValue, result);
     }
@@ -36,7 +36,7 @@ public class HttpParameterTest {
         boolean defaultValue = true;
         Boolean result = Param.BOOLEAN.of(request(), false);
         assertEquals(true, result);
-        
+
         result = Param.UNDEFINED.of(request(), defaultValue);
         assertEquals(defaultValue, result);
     }
@@ -49,7 +49,7 @@ public class HttpParameterTest {
         char defaultValue = 'Z';
         char result = Param.CHAR.of(request(), defaultValue);
         assertEquals('A', result);
-        
+
         result = Param.UNDEFINED.of(request(), defaultValue);
         assertEquals(defaultValue, result);
     }
@@ -62,7 +62,7 @@ public class HttpParameterTest {
         int defaultValue = 9;
         int result = Param.INT.of(request(), defaultValue);
         assertEquals(1, result);
-        
+
         result = Param.UNDEFINED.of(request(), defaultValue);
         assertEquals(defaultValue, result);
     }
@@ -75,7 +75,7 @@ public class HttpParameterTest {
         long defaultValue = 9L;
         long result = Param.LONG.of(request(), defaultValue);
         assertEquals(2L, result);
-        
+
         result = Param.UNDEFINED.of(request(), defaultValue);
         assertEquals(defaultValue, result);
     }
@@ -88,7 +88,7 @@ public class HttpParameterTest {
         float defaultValue = 9F;
         float result = Param.FLOAT.of(request(), defaultValue);
         assertEquals(3F, result, DELTA);
-        
+
         result = Param.UNDEFINED.of(request(), defaultValue);
         assertEquals(defaultValue, result, DELTA);
     }
@@ -101,7 +101,7 @@ public class HttpParameterTest {
         double defaultValue = 9D;
         double result = Param.DOUBLE.of(request(), defaultValue);
         assertEquals(4D, result, DELTA);
-        
+
         result = Param.UNDEFINED.of(request(), defaultValue);
         assertEquals(defaultValue, result, DELTA);
     }
@@ -114,7 +114,7 @@ public class HttpParameterTest {
         Month defaultValue = DECEMBER;
         Month result = Param.MONTH_ENUM.of(request(), defaultValue);
         assertEquals(JANUARY, result);
-        
+
         result = Param.UNDEFINED.of(request(), defaultValue);
         assertEquals(defaultValue, result);
     }
@@ -134,9 +134,9 @@ public class HttpParameterTest {
         assertEquals("month-enum", Param2.MONTH_ENUM.toString());
         assertEquals("undefined", Param2.UNDEFINED.toString());
     }
-    
+
     // --- Helper methods ---
-    
+
     private MockHttpServletRequest request() {
         MockHttpServletRequest result = new MockHttpServletRequest();
         result.setParameter(Param.TEXT.name(), "abc");
@@ -148,7 +148,7 @@ public class HttpParameterTest {
         result.setParameter(Param.DOUBLE.name(), String.valueOf(4D));
         result.setParameter(Param.MONTH_ENUM.name(), JANUARY.name());
         result.setParameter(Param.UNDEFINED.name(), (String) null);
-        
+
         return result;
     }
 
@@ -168,7 +168,7 @@ public class HttpParameterTest {
             return name().toString();
         }
     }
-    
+
         /** Parameter */
     public enum Param2 implements HttpParameter {
         TEXT("a"),
@@ -180,16 +180,16 @@ public class HttpParameterTest {
         DOUBLE(null),
         MONTH_ENUM(null),
         UNDEFINED(null);
-        
+
         private final String paramName;
 
         private Param2(String name) {
             this.paramName = buildParameterName(name);
         }
-        
+
         public String toString() {
             return paramName;
         }
     }
-    
+
 }

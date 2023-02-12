@@ -16,7 +16,7 @@
  */
 package org.ujorm.tools.web.table;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
 
 /**
@@ -24,24 +24,24 @@ import static org.junit.Assert.*;
  * @author Pavel Ponec
  */
 public class ColumnModelTest {
-    
+
     private static final boolean OPPSITE = true;
     private static final boolean NATURAL = !OPPSITE;
 
     @Test
     public void testToCode_boolean_Appendable() throws Exception {
-        
+
         ColumnModel col = new ColumnModel(Direction.ASC, 0);
         assertEquals("1", col.toCode(NATURAL));
         assertEquals("-1", col.toCode(OPPSITE));
-        
+
         col = new ColumnModel(Direction.DESC, 0);
         assertEquals("-1", col.toCode(NATURAL));
         assertEquals("1", col.toCode(OPPSITE));
-        
+
         col = new ColumnModel(Direction.NONE, 0);
         assertEquals("-1", col.toCode(NATURAL));
         assertEquals("1", col.toCode(OPPSITE));
-        
+
     }
 }

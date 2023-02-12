@@ -16,7 +16,7 @@
 package org.ujorm.tools.common;
 
 import java.util.function.Function;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,15 +32,15 @@ public class JoinableTest {
         Person p2 = new Person(2, "Name-2", p3);
         Person p1 = new Person(1, "Name-1", p2);
         Person p0 = null;
-        
+
         Function<Person, String> nameProvider1 = Joinable.of(Person::getName);
         Function<Person, String> nameProvider2 = Joinable.of(Person::getBoss).add(Person::getName);
         Function<Person, String> nameProvider3 = Joinable.of(Person::getBoss).add(Person::getBoss).add(Person::getName);
-        
+
         assertEquals("Name-1", nameProvider1.apply(p1));
         assertEquals("Name-2", nameProvider2.apply(p1));
         assertEquals("Name-3", nameProvider3.apply(p1));
-        
+
         assertEquals(null, nameProvider1.apply(p0));
         assertEquals(null, nameProvider2.apply(p3));
         assertEquals(null, nameProvider3.apply(p3));

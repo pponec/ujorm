@@ -15,7 +15,7 @@
  */
 package org.ujorm.hotels.tools;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
 import static org.ujorm.hotels.tools.EncTool.getHash;
 
