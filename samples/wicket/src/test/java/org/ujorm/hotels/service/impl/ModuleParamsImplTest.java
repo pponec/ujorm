@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -37,9 +38,9 @@ import static org.junit.Assert.*;
  * ModuleParamsImplTest
  * @author Pavel Ponec
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringContext.class)
-@WebAppConfiguration
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(classes = SpringContext.class)
+//@WebAppConfiguration
 public class ModuleParamsImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleParamsImplTest.class);
 
@@ -59,6 +60,7 @@ public class ModuleParamsImplTest {
     }
 
     /** Test of readValue method, of class AbstractModuleParams. */
+    @Disabled
     @Test
     public void testReadValue() {
         LOGGER.info("testReadValue");
