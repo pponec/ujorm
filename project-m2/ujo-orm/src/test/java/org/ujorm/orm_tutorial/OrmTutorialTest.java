@@ -17,6 +17,7 @@
 package org.ujorm.orm_tutorial;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.orm_tutorial.sample.SampleORM;
 import org.ujorm.ujo_core.SampleCORE;
 
@@ -24,17 +25,9 @@ import org.ujorm.ujo_core.SampleCORE;
  * Tutorial test
  * @author Pavel Ponec
  */
-public class OrmTutorialTest extends TestCase {
+public class OrmTutorialTest {
 
     private static boolean noRunned = true;
-
-    public OrmTutorialTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return OrmTutorialTest.class;
-    }
 
     // ----------------------------------------------------
 
@@ -57,17 +50,18 @@ public class OrmTutorialTest extends TestCase {
     /**
      * Test of getItemCount method, of class AbstractPropertyList.
      */
+    @Test
     public void testOrmTutorial() {
         if (noRunned) {
             noRunned = true;
-            SampleORM.main(new String[]{});
-          //SampleCORE.main(new String[]{});
+            new SampleORM().main();
         }
     }
 
     /**
      * Test of getItemCount method, of class AbstractPropertyList.
      */
+    @Test
     public void testCoreTutorial() {
          SampleCORE.main(new String[]{});
     }
@@ -83,7 +77,4 @@ public class OrmTutorialTest extends TestCase {
 //        }
 //    }
 
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
 }

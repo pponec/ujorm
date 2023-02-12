@@ -66,57 +66,56 @@ public class SampleORM {
 
     // ------- TUTORIAL MENU: -------
 
-    public static void main(String[] args) {
-        SampleORM sample = new SampleORM();
+    public void main() {
         try {
-            sample.createMetaModel();
-            sample.useInsert();
-            sample.useSelect();
-            sample.useSelectWithFetch();
-            sample.useSelectOuterJoin();
-            sample.useBatchInsert();
-            sample.useCriterions();
-            sample.useSortOrders();
-            sample.useSortOrderItems();
-            sample.useSelectViewOrders();
-            sample.useSelectWithNativeSQL();
-            sample.useSelectWithAliasTable();
-            sample.useSelectItems_1();
-            sample.useSelectItems_2();
-            sample.useSelectItems_3();
-            sample.useSelectItems_4();
-            sample.useSelectItems_5();
-            sample.useSelectItems_5b();
-            sample.useSelectItems_6();
-            sample.useSelectItems_7();
-            sample.useHierarchicalQuery();
-            sample.useHierarchicalQuerySimple();
-            sample.useHierarchicalQueryMore();
-            sample.useOptimizedSelect();
-            sample.useOneRequestLoading();
-            sample.useSelectByLambda();
-            sample.useNativeCriterion();
-            sample.useReloading();
-            sample.useLazyLoadingOnClosedSession();
-            sample.useLimitAndOffset();
-            sample.useSelectCount();
-            sample.useForeignKey_1();
-            sample.useForeignKey_2();
-            sample.useIteratorSkip();
-            sample.useRelation();
-            sample.useStoredProcedure();
-            sample.useUpdate();
-            sample.useUpdateSafely();
-            sample.useUpdateSafelyBy();
-            sample.useBatchUpdate();
-            sample.useExtendedUpdate();
-            sample.usePesimisticUpdate();
-            sample.useDelete();
-            sample.useBatchDelete();
-            sample.useExtendedDelete();
-            sample.useMetadata();
+            createMetaModel();
+            useInsert();
+            useSelect();
+            useSelectWithFetch();
+            useSelectOuterJoin();
+            useBatchInsert();
+            useCriterions();
+            useSortOrders();
+            useSortOrderItems();
+            useSelectViewOrders();
+            useSelectWithNativeSQL();
+            useSelectWithAliasTable();
+            useSelectItems_1();
+            useSelectItems_2();
+            useSelectItems_3();
+            useSelectItems_4();
+            useSelectItems_5();
+            useSelectItems_5b();
+            useSelectItems_6();
+            useSelectItems_7();
+            useHierarchicalQuery();
+            useHierarchicalQuerySimple();
+            useHierarchicalQueryMore();
+            useOptimizedSelect();
+            useOneRequestLoading();
+            useSelectByLambda();
+            useNativeCriterion();
+            useReloading();
+            useLazyLoadingOnClosedSession();
+            useLimitAndOffset();
+            useSelectCount();
+            useForeignKey_1();
+            useForeignKey_2();
+            useIteratorSkip();
+            useRelation();
+            useStoredProcedure();
+            useUpdate();
+            useUpdateSafely();
+            useUpdateSafelyBy();
+            useBatchUpdate();
+            useExtendedUpdate();
+            usePesimisticUpdate();
+            useDelete();
+            useBatchDelete();
+            useExtendedDelete();
+            useMetadata();
         } finally {
-            sample.useCloseSession();
+            useCloseSession();
         }
     }
 
