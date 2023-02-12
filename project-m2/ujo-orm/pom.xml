@@ -221,7 +221,7 @@
                     <additionalparam>-Xdoclint:none</additionalparam>
                     <failOnError>false</failOnError>
                     <encoding>UTF-8</encoding>
-                    <author>Pavel Ponec</author>
+                    <author>true</author>
                     <bottom><![CDATA[Copyright 2013, <a target="_blank" href="http://ujorm.org/">Pavel Ponec<a>]]></bottom>
                     <doctitle>Ujorm ${project.version} (${project.name})</doctitle>
                     <windowtitle>Ujorm ${project.version} - ${project.name}</windowtitle>
