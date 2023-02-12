@@ -81,7 +81,7 @@ public class HttpParameterTest {
     }
 
     /**
-     * Test of of method, of class HttpParameter.
+     * Test of method, of class HttpParameter.
      */
     @Test
     public void testOf_ServletRequest_float() {

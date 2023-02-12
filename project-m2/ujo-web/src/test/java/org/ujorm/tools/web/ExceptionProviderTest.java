@@ -122,7 +122,7 @@ public class ExceptionProviderTest {
      */
     @Test
     public void testElementThenCatch4a() {
-        Assertions.assertThrows(OutOfMemoryError.class, -> {
+        Assertions.assertThrows(OutOfMemoryError.class, () -> {
             StringBuilder writer = new StringBuilder();
             DefaultHtmlConfig config = HtmlConfig.ofDefault()
                     .setTitle("Element-try-catche");
