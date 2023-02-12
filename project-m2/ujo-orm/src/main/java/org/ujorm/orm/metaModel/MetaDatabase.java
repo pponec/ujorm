@@ -85,7 +85,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Property Factory */
     private static final KeyFactory<MetaDatabase> fa = KeyFactory.CamelBuilder.get(CLASS);
-    /** The meta-model id */
+    /** The metamodel id */
     @XmlAttribute
     public static final Key<MetaDatabase,String> ID = fa.newKey("id", "");
     /** MetaDatabase default schema */

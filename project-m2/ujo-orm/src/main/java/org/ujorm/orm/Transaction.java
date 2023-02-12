@@ -57,7 +57,7 @@ final public class Transaction implements javax.transaction.Transaction{
 
     /**
      * Assign new Savepoint
-     * @param db Database meta-model
+     * @param db Database metamodel
      * @param conn Database connection
      * @throws IllegalStateException An envelope for a run-time SQL exception
      */

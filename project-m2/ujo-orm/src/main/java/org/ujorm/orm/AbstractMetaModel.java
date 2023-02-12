@@ -46,7 +46,7 @@ abstract public class AbstractMetaModel extends AbstractUjo implements UjoLockab
         return readOnly;
     }
 
-    /** Unlock the meta-model. the method is for internal use only.
+    /** Unlock the metamodel. the method is for internal use only.
      * The method must be enabled by parameter: {@link MoreParams#ENABLE_TO_UNLOCK_IMMUTABLE_METAMODEL}.
      */
     protected void clearReadOnly(OrmHandler handler) {

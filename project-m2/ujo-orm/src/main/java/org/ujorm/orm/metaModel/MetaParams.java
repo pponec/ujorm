@@ -47,7 +47,7 @@ import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.utility.OrmTools;
 
 /**
- * An ORM configuration parameters is a part of meta-model.
+ * An ORM configuration parameters is a part of metamodel.
  * The class is a root of a database configuration.
  * @author Pavel Ponec
  */
@@ -94,7 +94,7 @@ public final class MetaParams extends AbstractMetaModel {
     public static final Key<MetaParams,CommentPolicy> COMMENT_POLICY = f.newKey("commentPolicy", CommentPolicy.ON_ANY_CHANGE);
     /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
     public static final Key<MetaParams,File> SAVE_CONFIG_TO_FILE = f.newKey("saveConfigToFile");
-    /** An initialization batch implementation can be called after building the ORM meta-model.
+    /** An initialization batch implementation can be called after building the ORM metamodel.
      * Default value means: run no batch.
      * @see InitializationBatch
      */
@@ -112,7 +112,7 @@ public final class MetaParams extends AbstractMetaModel {
      * @see org.ujorm.orm.ao.IndexModelOrderedBuilder
      */
     public static final Key<MetaParams,Class<? extends IndexModelBuilder>> INDEX_MODEL_BUILDER = f.newClassKey("indexModelBuilder", IndexModelBuilder.class);
-    /** The instance of the parameter class {@see MetaDbService} is used for creating and validation a database according to the meta-model.
+    /** The instance of the parameter class {@see MetaDbService} is used for creating and validation a database according to the metamodel.
      * You can overwrite some method for your ideas.
      */
     public static final Key<MetaParams,Class<? extends MetaDbService>> META_DB_SERVICE = f.newClassKey("metaDbService", MetaDbService.class);
@@ -158,7 +158,7 @@ public final class MetaParams extends AbstractMetaModel {
      */
     public static final Key<MetaParams,MoreParams> MORE_PARAMS = f.newKey("moreParams");
 
-    /** Set a logging level for a full meta-model information in the XML format
+    /** Set a logging level for a full metamodel information in the XML format
      * where the default parameter value is {@code true}.
      * The TRUE value means the INFO level and the FALSE value means the FINE logging level.
      */
@@ -198,7 +198,7 @@ public final class MetaParams extends AbstractMetaModel {
     @Transient
     public static final Key<MetaParams,Set<String>> KEYWORD_SET = f.newKey("keywordSet", Collections.EMPTY_SET);
 
-    /** An application context for initialization of the customer components of the meta-model. */
+    /** An application context for initialization of the customer components of the metamodel. */
     @Transient
     public static final Key<MetaParams,Object> APPL_CONTEXT = f.newKey("applContext");
 
@@ -207,7 +207,7 @@ public final class MetaParams extends AbstractMetaModel {
         f.lock();
     }
 
-    /** CheckReport a keyword in the database table or colum name inside the meta-model.
+    /** CheckReport a keyword in the database table or colum name inside the metamodel.
      * The default value is EXCEPTION.
      * @see CheckReport Parameter values
      * @see #QUOTE_SQL_NAMES

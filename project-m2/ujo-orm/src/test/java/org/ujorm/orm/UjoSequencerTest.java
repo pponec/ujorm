@@ -107,7 +107,7 @@ public class UjoSequencerTest extends TestCase {
         return result;
     }
 
-    /** Before the first: create a meta-model.
+    /** Before the first: create a metamodel.
      * Database tables will be CREATED in the first time.
      */
     private OrmHandler createHandler(int sequenceCache) {

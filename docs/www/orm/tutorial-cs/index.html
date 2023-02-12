@@ -8,7 +8,7 @@
 
 <base target="_top">
 <style type="text/css">
-  
+
 
 /* default css */
 
@@ -20,9 +20,9 @@ table {
 
 
 tr {
-  
+
   text-align: left;
-  
+
 }
 
 
@@ -63,14 +63,14 @@ img {
     overflow-y: scroll;
   }
 
-  
+
 
   body {
     min-height: 1100px;
-    
+
     counter-reset: __goog_page__;
   }
-  
+
   * html body {
     height: 1100px;
   }
@@ -86,7 +86,7 @@ img {
     top: 0;
     left: 0;
   }
-  
+
   .pageview body {
     border-top: 1px solid #ccc;
     border-left: 1px solid #ccc;
@@ -103,14 +103,14 @@ img {
   * html.pageview body {
     overflow-x: auto;
   }
-  
 
-  
-    
+
+
+
     .writely-callout-data {
       display: none;
     }
-    
+
 
     .writely-footnote-marker {
       background-image: url('MISSING');
@@ -121,7 +121,7 @@ img {
       height: 16px;
       vertical-align: top;
 
-      
+
       -moz-user-select: none;
     }
     .editor .writely-footnote-marker {
@@ -161,19 +161,19 @@ img {
       background-color: #eed7ff;
     }
 
-  
 
 
-  
+
+
   .br_fix span+br:not(:-moz-last-node) {
-    
+
     position:relative;
-    
+
     left: -1ex
-    
+
   }
 
-  
+
   #cb-p-tgt {
     font-size: 8pt;
     padding: .4em;
@@ -329,7 +329,7 @@ ol[type="disc"], ol[type="circle"], ol[type="square"] {
     }
 
     callout.google_footnote {
-      
+
       display: prince-footnote;
       footnote-style-position: inside;
       /* These styles keep the footnote from taking on the style of the text
@@ -396,7 +396,7 @@ ol[type="disc"], ol[type="circle"], ol[type="square"] {
 
 body {
   font-family: Verdana;
-  
+
   font-size: 10.0pt;
   line-height: normal;
   background-color: #ffffff;
@@ -432,17 +432,17 @@ body {
 
 </style>
 
-  
+
   <title>Ujorm - dokumentace frameworku</title>
 
 </head>
 
-<body 
-    
+<body
+
     >
-    
-    
-    
+
+
+
 <h1 style="color: #4646a6;">
   Ujorm - dokumentace frameworku<img height=65 id=syq1 src="images/ddcs2pg5_136gwrcjzf3_b.png" style=FLOAT:right;MARGIN-LEFT:40pt;MARGIN-RIGHT:1em width=65>
 </h1>
@@ -695,18 +695,18 @@ Při pozdním načtení objektu spouští Ujorm nový databázový dotaz, který
     </li>
   </ul>
   <br>
-  Z pohledu cache: Ujorm nemusí mít výhradní přístup do databáze, při zápisu bude třeba pouze sjednotit přidělování primárních klíčů. Pomocí parametru <a href=http://ujorm.org/javadoc/org/ujorm/orm/metaModel/MetaParams.html#CACHE_POLICY id=xo:2 title=CACHE_POLICY>CACHE_POLICY</a> lze pro celý meta-model cache zakázat, alternativně je možné zakázat uvolňování cache pomocí garbage collectoru.<br>
+  Z pohledu cache: Ujorm nemusí mít výhradní přístup do databáze, při zápisu bude třeba pouze sjednotit přidělování primárních klíčů. Pomocí parametru <a href=http://ujorm.org/javadoc/org/ujorm/orm/metaModel/MetaParams.html#CACHE_POLICY id=xo:2 title=CACHE_POLICY>CACHE_POLICY</a> lze pro celý metamodel cache zakázat, alternativně je možné zakázat uvolňování cache pomocí garbage collectoru.<br>
   <br>
   Pro optimalizaci performance je doporučeno udržovat cache logických celků (například článek) na úrovni aplikační logiky.<br>
   <br>
   <h2>
     <a id=DDL_support_36207173943347537_ name=DDL_support_36207173943347537_></a><b>DDL support:</b>
   </h2>
-  Ujorm umí upravovat databázové schema pomocí DDL aktualizací podle svého meta-modelu. Meta-model obsahuje popis struktury reálné databáze, který se sestavuje z názvů tříd, názvů Keys a jejich anotací a případně podle konfiguračního XML souboru. Po načtení do paměti je meta-model uzamčen tak, že žádné pozdější úpravy nejsou možné. Aktualizace databáze se řídí následujícími pravidly:<br>
+  Ujorm umí upravovat databázové schema pomocí DDL aktualizací podle svého metamodelu. Meta-model obsahuje popis struktury reálné databáze, který se sestavuje z názvů tříd, názvů Keys a jejich anotací a případně podle konfiguračního XML souboru. Po načtení do paměti je metamodel uzamčen tak, že žádné pozdější úpravy nejsou možné. Aktualizace databáze se řídí následujícími pravidly:<br>
   <br>
   <ul>
     <li>
-      aktualizace se provádí podle meta-modelu ihned po jeho sestavení v objektu OrmHandler<br>
+      aktualizace se provádí podle metamodelu ihned po jeho sestavení v objektu OrmHandler<br>
     </li>
     <li>
       aktualizace se provádí pouze pro <b>databázové položky</b>:
@@ -884,7 +884,7 @@ Ujorm podporuje automatické generování primárního klíče pomocí třídy <
   </li>
 </ul>
 <br>
-Častá otázka zní, jak využít nativní podporu databázové sequence? Řešení spočívá ve vytvoření vlastní implementace (potomka) třídy UjoSequencer. Třídu tohoto potomka je třeba zaregistrovat v parametrech Ujorm před sestavením meta-modelu. Jediná podmínka řešení je, že získání nového primárního klíče (například pomocí JDBC) musí proběhnout ještě před zavoláním příkazu INSERT. Odstranění této podmínky je v plánu rozvoje Ujorm.<br>
+Častá otázka zní, jak využít nativní podporu databázové sequence? Řešení spočívá ve vytvoření vlastní implementace (potomka) třídy UjoSequencer. Třídu tohoto potomka je třeba zaregistrovat v parametrech Ujorm před sestavením metamodelu. Jediná podmínka řešení je, že získání nového primárního klíče (například pomocí JDBC) musí proběhnout ještě před zavoláním příkazu INSERT. Odstranění této podmínky je v plánu rozvoje Ujorm.<br>
 <br>
 <h2>
   <a id=Datab_zov_procedury_6024463592 name=Datab_zov_procedury_6024463592></a><b><b>Databázové procedury:</b></b>
@@ -1026,9 +1026,9 @@ Doporučuji mít na paměti následujcí vlastnosti UJO, které mají vliv na je
 <h2>
   <a id=Meta_model_11271129394580981_6 name=Meta_model_11271129394580981_6></a>Meta-model:
 </h2>
-Meta-model se sestavuje podle obsahu Ujo keys třídy Database a jejích tabulek. Názvy tabulek, view, procedur se odvozují z názvů Ujo property. Většinu vlastností modelu lze překrývat anotacemi umístěnými přímo u property a nebo u názvu třídy. Vlastnosti nastavené anotacemi lze dále překrývat konfiguračním XML souborem, který může modifikovat volitelně jen vybrané části meta-modelu.<br>
+Meta-model se sestavuje podle obsahu Ujo keys třídy Database a jejích tabulek. Názvy tabulek, view, procedur se odvozují z názvů Ujo property. Většinu vlastností modelu lze překrývat anotacemi umístěnými přímo u property a nebo u názvu třídy. Vlastnosti nastavené anotacemi lze dále překrývat konfiguračním XML souborem, který může modifikovat volitelně jen vybrané části metamodelu.<br>
 <br>
-Po sestavení meta-modelu v paměti se model uzamkne a není možné do něj dále zapisovat, za běhu programu však lze získávat z něj užitečné informace. Mírně zjednodušený class diagram meta je na následujícím obrázku:<br>
+Po sestavení metamodelu v paměti se model uzamkne a není možné do něj dále zapisovat, za běhu programu však lze získávat z něj užitečné informace. Mírně zjednodušený class diagram meta je na následujícím obrázku:<br>
 <br>
 <div style=MARGIN-LEFT:40px>
   <br>
@@ -1043,10 +1043,10 @@ Po sestavení meta-modelu v paměti se model uzamkne a není možné do něj dá
 </p>
 <ul>
   <li>
-    OrmHandler je třída poskytující meta-model, v rámci aplikace je doporučeno držet pouze jednu instanci této třídy. Třída nabízí několik metod zpřístupňujících efektivně vybrané části meta-modelu. OrmHandler je jediná entita v diagramu, která není potomkem abstraktní třídy AbstractMetaModel (implementující rozhraní Ujo).<br>
+    OrmHandler je třída poskytující metamodel, v rámci aplikace je doporučeno držet pouze jednu instanci této třídy. Třída nabízí několik metod zpřístupňujících efektivně vybrané části metamodelu. OrmHandler je jediná entita v diagramu, která není potomkem abstraktní třídy AbstractMetaModel (implementující rozhraní Ujo).<br>
   </li>
   <li>
-    MetaRoot tvoří kořen meta-modelu a umožňuje tak čtení nebo tisk konfiguračního XML souboru
+    MetaRoot tvoří kořen metamodelu a umožňuje tak čtení nebo tisk konfiguračního XML souboru
   </li>
   <li>
     MetaParams obsahuje obecné parametry Ujorm, které se dají také modifikovat konfiguračním XML souborem<br>

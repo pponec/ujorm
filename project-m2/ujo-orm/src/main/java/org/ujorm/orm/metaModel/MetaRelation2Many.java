@@ -47,7 +47,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
 
     /** Key Factory */
     private static final KeyFactory<MetaRelation2Many> fa = KeyFactory.CamelBuilder.get(CLASS);
-    /** The meta-model ID. */
+    /** The metamodel ID. */
     @XmlAttribute
     public static final Key<MetaRelation2Many,String> ID = fa.newKey("id", "");
     /** The database column name.

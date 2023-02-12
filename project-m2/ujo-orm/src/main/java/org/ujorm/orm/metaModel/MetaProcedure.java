@@ -34,7 +34,7 @@ import org.ujorm.orm.annot.Table;
 
 
 /**
- * DB procudure or function meta-model.
+ * DB procudure or function metamodel.
  * @author Pavel Ponec
  * @composed 1 - * MetaColumn
  */
@@ -45,7 +45,7 @@ final public class MetaProcedure extends AbstractMetaModel {
 
     /** Property Factory */
     private static final KeyFactory<MetaProcedure> fa = KeyFactory.CamelBuilder.get(CLASS);
-    /** The meta-model id */
+    /** The metamodel id */
     @XmlAttribute
     public static final Key<MetaProcedure,String> ID = fa.newKey("id", Table.NULL);
     /** Procedure name */
@@ -84,7 +84,7 @@ final public class MetaProcedure extends AbstractMetaModel {
     }
 
     /**
-     * Create the new stored procedure meta-model.
+     * Create the new stored procedure metamodel.
      * @param database
      * @param dbProperty
      * @param parProcedure Configuration data from a XML file

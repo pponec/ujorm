@@ -50,7 +50,7 @@ import static org.ujorm.orm.metaModel.MetaParams.INDEX_MODEL_BUILDER;
 import static org.ujorm.tools.Check.hasLength;
 
 /**
- * DB table or view meta-model.
+ * DB table or view metamodel.
  * @author Pavel Ponec
  * @composed 1 - * MetaRelation2Many
  * @composed 1 - * MetaColumn
@@ -63,7 +63,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
 
     /** Property Factory */
     private static final KeyFactory<MetaTable> fa = KeyFactory.CamelBuilder.get(CLASS);
-    /** The meta-model id */
+    /** The metamodel id */
     @XmlAttribute
     public static final Key<MetaTable,String> ID = fa.newKey("id", Table.NULL);
     /** Table name is quoted */
@@ -325,7 +325,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return !COMMENT.isDefault(this);
     }
 
-    /** Get a Comment from meta-model annotation.
+    /** Get a Comment from metamodel annotation.
      * @see org.ujorm.orm.annot.Comment
      */
     public String getComment() {
@@ -467,7 +467,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Assert that the table may be changed. */
     public void assertChangeAllowed() throws IllegalUjormException {
         if (isReadOnly()) {
-            final String msg = MsgFormatter.format("The table '{}' have got the READ-ONLY mode. Check the {} meta-model configuration."
+            final String msg = MsgFormatter.format("The table '{}' have got the READ-ONLY mode. Check the {} metamodel configuration."
                 , NAME.of(this)
                 , "Ujorm");
             throw new IllegalUjormException(msg);
@@ -491,7 +491,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return MetaTable.COLUMNS.getList(this);
     }
 
-    /** Unlock the meta-model, the method is for internal use only.
+    /** Unlock the metamodel, the method is for internal use only.
      * The method must be enabled by parameter: {@link MoreParams#ENABLE_TO_UNLOCK_IMMUTABLE_METAMODEL}.
      */
     public void clearReadOnly() {

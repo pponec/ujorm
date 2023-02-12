@@ -17,12 +17,12 @@
 package org.ujorm.orm;
 
 /**
- * An inicializaton batch implementation can be called after building the ORM meta-model.
+ * An inicializaton batch implementation can be called after building the ORM metamodel.
  */
 public interface InitializationBatch {
 
     /**
-     * Inicializaton batch implementation can be called after building a meta-model.
+     * Inicializaton batch implementation can be called after building a metamodel.
      * @param session A session ready to use, the session is commited in the parent method.
      * @throws Exception Any exception causes the call session.rollback() method.
      */

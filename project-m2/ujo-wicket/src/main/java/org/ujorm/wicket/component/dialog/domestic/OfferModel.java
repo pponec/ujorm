@@ -342,7 +342,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
         return (Key<U, V>) id.getFirstKey();
     }
 
-    /** Find a meta-model for a ORM doman class */
+    /** Find a metamodel for a ORM doman class */
     protected MetaTable getMetaTable() throws IllegalStateException {
         final Class<OrmUjo> ormType = (Class<OrmUjo>) (Class) getType();
         return getOrmHandler().findTableModel(ormType);

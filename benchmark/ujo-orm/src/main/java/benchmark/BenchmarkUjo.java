@@ -55,7 +55,7 @@ public class BenchmarkUjo {
         this.COMMIT_FLUSH_MODE = commitFlushMode;
     }
 
-    /** Before the first use you must load a meta-model. */
+    /** Before the first use you must load a metamodel. */
     public void loadMetaModel() {
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.SEVERE);
 

@@ -8,7 +8,7 @@ release 2.25-SNAPSHOT (yyyy-mm-dd)
 release 2.24 (2022-05-11)
 + WEB: New method: JavaScriptWriter.setIdleDelay().
 + WEB: New method: HttpParameter.buildParamName().
-+ WEB: New method:  HttpParameter.createNameSupplier() to build a default parameter name. 
++ WEB: New method:  HttpParameter.createNameSupplier() to build a default parameter name.
 + WEB: The metod Element.addTable(Collection<Object[]>) ignores empty rows.
 + WEB: Some parser method of the HttpParameter class was fixed
 
@@ -492,7 +492,7 @@ release 1.34 (2013-05-11)
 + new method Criterion.toStringFull() prints the condition including a domain name by example: Person(id EQ 3)
 + new method to print all information about the Key.toStringFull(true)
 + CSV parser and creator have got extended API
-+ the AliasTable class supports building free SQL scripts using the Ujorm meta-model
++ the AliasTable class supports building free SQL scripts using the Ujorm metamodel
 + new ORM parameter MetaParams.INITIALIZATION_BATCH can specify a user initicialization code
 + very much small changes, JavaDoc information and code cleaning is done
 
@@ -589,7 +589,7 @@ release 1.20 (2011-05-29)
 + the batch UPDATE is supoorted now, see documentation for more information
 + new method Query.setColumns(..) is implemented for the SQL SELECT performance optimization
 + select DISTINCT is supported now
-+ each meta-model table can be marked like a READ-ONLY using a new parameter in annotation @Table
++ each metamodel table can be marked like a READ-ONLY using a new parameter in annotation @Table
 + configuration supports the READ-ONLY mode for required table(s)
 + core class UjoComparator supports the Collator for comparation of the String items.
 + composite class UjoProperty have got implemented two new methods: equals() and hashCode() and the getName() method is optimized now
@@ -634,15 +634,15 @@ release 0.94 (2010-05-02)
 + new method Criterion.whereNull(..) to simple comparison to the NULL literal
 + MetaParams supports the "set(..)" value to change values
 + checking an open Session is done
-+ assembling the meta-model is synchronized now
++ assembling the metamodel is synchronized now
 + parameter name 'Orm2ddlPolicy' is renamed to 'orm2ddlPolicy'
 + class MetaView is renamed to MetaSelect
 + JavaDoc and Tutorial in the class are improved
 
 release 0.93 (2010-03-07)
-+ orm: the incremental database update by meta-model using DDL statements
++ orm: the incremental database update by metamodel using DDL statements
 + orm: the LIMIT and OFFSET are supported by attributes of the Query
-+ orm: database indexes are created by the meta-model, there are supported unique, non-unique indexes including a composed one
++ orm: database indexes are created by the metamodel, there are supported unique, non-unique indexes including a composed one
 + orm: new method to get a foreign key: OrmTable.readPK(property)
 + orm: checking the SQL keywords
 + orm: note: database table by the SQL statement: ALTER TABLE ormujo_pk_support RENAME TO ujorm_pk_support;

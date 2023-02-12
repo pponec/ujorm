@@ -27,12 +27,12 @@ import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.support.PackageDbConfig;
 
-/** Build and configure database meta-model */
+/** Build and configure database metamodel */
 public final class DatabaseConfig implements OrmHandlerProvider {
     /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseConfig.class);
 
-    /** Database meta-model */
+    /** Database metamodel */
     final OrmHandler handler = new OrmHandler();
 
     /** Spring context */

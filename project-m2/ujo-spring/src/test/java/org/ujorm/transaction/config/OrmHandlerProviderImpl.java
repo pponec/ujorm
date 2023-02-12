@@ -21,7 +21,7 @@ import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.support.PackageDbConfig;
 
-/** Build and configure database meta-model */
+/** Build and configure database metamodel */
 @Service
 public final class OrmHandlerProviderImpl implements OrmHandlerProvider{
 

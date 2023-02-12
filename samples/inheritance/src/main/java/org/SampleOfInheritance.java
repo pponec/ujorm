@@ -30,7 +30,7 @@ public class SampleOfInheritance {
 
     private OrmHandler handler = new OrmHandler();
 
-    /** Before the first use load a meta-model.
+    /** Before the first use load a metamodel.
      * Database tables will be name in the first time.
      */
     public void loadMetaModel() {

@@ -397,7 +397,7 @@ public class MSSqlDialect extends SqlDialect {
         return out;
     }
 
-    /** Important note for MySQL: the change of column modifies all another column attributes so the comment update can revert some hand-made changes different from meta-model.<br>
+    /** Important note for MySQL: the change of column modifies all another column attributes so the comment update can revert some hand-made changes different from metamodel.<br>
      * See the official MySQL <a href="http://dev.mysql.com/doc/refman/5.1/en/alter-table.html">documentation</a> for more information.
      * The column comments can be suppresed by the overwritting the method with an empty body.
      */

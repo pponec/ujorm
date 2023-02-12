@@ -44,7 +44,7 @@ import org.ujorm.tools.Check;
  * </pre>
  *
  * The builder class can be changed by the parameter {@link MetaParams#INDEX_MODEL_BUILDER}
- * in time of building a meta-model according the next example:
+ * in time of building a metamodel according the next example:
  *
  * <pre class="pre">
  *   MetaParams params = new MetaParams();

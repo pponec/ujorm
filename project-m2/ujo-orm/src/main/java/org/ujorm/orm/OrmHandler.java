@@ -214,7 +214,7 @@ public class OrmHandler implements OrmHandlerProvider {
     }
 
     /** Load a meta-data, lock it and create database tables.
-     * There is not allowed to make any change to the created meta-model.
+     * There is not allowed to make any change to the created metamodel.
      */
     @SuppressWarnings("unchecked")
     public final <UJO extends OrmUjo> void loadDatabase(final Class<UJO> databaseModel) {
@@ -222,7 +222,7 @@ public class OrmHandler implements OrmHandlerProvider {
     }
 
     /** Load a meta-data, lock it and create database tables.
-     * There is not allowed to make any change to the created meta-model.
+     * There is not allowed to make any change to the created metamodel.
      */
     public final synchronized <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModel) {
         final UjoDecorator[] databases = new UjoDecorator[databaseModel.length];
@@ -234,13 +234,13 @@ public class OrmHandler implements OrmHandlerProvider {
 
 
     /** Load a meta-data, lock it and create database tables.
-     * There is not allowed to make any change to the created meta-model.
+     * There is not allowed to make any change to the created metamodel.
      */
     public final synchronized <UJO extends OrmUjo> void loadDatabase(final UjoDecorator<UJO> ... databaseModel) {
-        Assert.isFalse(isReadOnly(), "The meta-model is locked and can´t be changed.");
+        Assert.isFalse(isReadOnly(), "The metamodel is locked and can´t be changed.");
         Assert.hasLength(databaseModel, "databaseModel is required");
 
-        // Load meta-model:
+        // Load metamodel:
         for (UjoDecorator<UJO> db : databaseModel) {
             loadDatabaseInternal(db);
         }
@@ -253,7 +253,7 @@ public class OrmHandler implements OrmHandlerProvider {
             }
         }
 
-        // Log the meta-model:
+        // Log the metamodel:
         final Level level = MetaParams.LOG_METAMODEL_INFO.of(params)
             ? UjoLogger.INFO
             : UjoLogger.DEBUG;
@@ -262,7 +262,7 @@ public class OrmHandler implements OrmHandlerProvider {
            LOGGER.log(level, msg);
         }
 
-        // Export the meta-model into a XML file:
+        // Export the metamodel into a XML file:
         final File outConfigFile = MetaParams.SAVE_CONFIG_TO_FILE.of(getParameters());
         if (outConfigFile!=null) try {
             databases.print(outConfigFile);
@@ -289,7 +289,7 @@ public class OrmHandler implements OrmHandlerProvider {
                 }
             }
 
-            // Lock the meta-model:
+            // Lock the metamodel:
             databases.lock();
 
         } finally {
@@ -383,7 +383,7 @@ public class OrmHandler implements OrmHandlerProvider {
         final MetaRelation2Many result = propertyMap.get(compositeKey);
         if (throwException && result == null) {
             String propertyName = compositeKey != null ? compositeKey.getFullName() : String.valueOf(compositeKey);
-            throw new IllegalUjormException("The key " + propertyName + " have got no meta-model.");
+            throw new IllegalUjormException("The key " + propertyName + " have got no metamodel.");
         }
         return (T) result;
     }
@@ -440,7 +440,7 @@ public class OrmHandler implements OrmHandlerProvider {
         return MetaRoot.PARAMETERS.of(databases);
     }
 
-    /** Returns true, if a database meta-model is loaded. */
+    /** Returns true, if a database metamodel is loaded. */
     public boolean isDatabaseLoaded() {
         int itemCount = MetaRoot.DATABASES.getItemCount(databases);
         return itemCount>0;
@@ -465,7 +465,7 @@ public class OrmHandler implements OrmHandlerProvider {
         return result;
     }
 
-    /** Returns a final meta-model in the XML format */
+    /** Returns a final metamodel in the XML format */
     public String getConfig() {
         return databases.toString();
     }

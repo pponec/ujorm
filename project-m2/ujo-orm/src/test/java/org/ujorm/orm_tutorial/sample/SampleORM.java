@@ -50,7 +50,7 @@ import static org.ujorm.orm.template.AliasTable.Build.*;
  * Learn the basic skills in 15 minutes by a live Java code.
  * The next several methods demonstrate the use of statements:
  *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE
- * and show how to use a meta-model.
+ * and show how to use a metamodel.
  *
  * Entities: <pre>
  * - Order [ID, NOTE, CREATED, ...]
@@ -121,7 +121,7 @@ public class SampleORM {
 
     // ------- CHAPTERS: -------
 
-    /** The handler contains the one or more database meta-models,
+    /** The handler contains the one or more database metamodels,
      * the one application can have more OrmHandler instances. */
     private OrmHandler handler;
     /** The session contains a cache and database connections. */
@@ -129,7 +129,7 @@ public class SampleORM {
     /** Temporary field */
     private Long anyOrderId;
 
-    /** Before the first: create a meta-model.
+    /** Before the first: create a metamodel.
      * Database tables will be CREATED in the first time.
      */
     public void createMetaModel() {

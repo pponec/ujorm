@@ -508,7 +508,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     public Query<UJO> addColumn(@NotNull final Key<UJO,?> column) throws IllegalArgumentException {
         clearDecoder();
         final MetaColumn mc = getHandler().findColumnModel(getLastProperty(column));
-        Assert.notNull(mc, "Column {} was not foud in the meta-model", column.getFullName());
+        Assert.notNull(mc, "Column {} was not foud in the metamodel", column.getFullName());
 
         final ColumnWrapper wColumn = column.isComposite()
                 ? new ColumnWrapperImpl(mc, column)

@@ -40,7 +40,7 @@ import static org.ujorm.criterion.Operator.*;
  * Learn the basic skills in 15 minutes by a live Java code.
  * The next several methods demonstrate the use of statements:
  *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE
- * and show how to use a meta-model.
+ * and show how to use a metamodel.
  *
  * Copyright 2010, Pavel Ponec
  */
@@ -83,14 +83,14 @@ public class SampleORM {
 
     // ------- CHAPTERS: -------
 
-    /** The handler contains the one or more database meta-models,
+    /** The handler contains the one or more database metamodels,
      * the one applicatin can have more OrmHandler instances. */
     private OrmHandler handler;
 
     /** The session contains a cache and database connections. */
     private Session session;
 
-    /** Before the first use load a meta-model.
+    /** Before the first use load a metamodel.
      * Database tables will be created in the first time.
      */
     public void loadMetaModel() {

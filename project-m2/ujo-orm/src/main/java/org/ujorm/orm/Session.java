@@ -1067,7 +1067,7 @@ public class Session implements Closeable {
 
     /** Get or create a Connection for a required database with an autocommit na false.
      * If a transaction is running, than assign savepoints.
-     * @param database Database meta-model
+     * @param database Database metamodel
      * @param toModify By the value {@code false} is disabled to assign savepoints in an active transaction.
      * @throws IllegalStateException An envelope for a run-time SQL exception
      */

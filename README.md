@@ -7,7 +7,7 @@ The Ujorm (original name was UJO Framework) is designed primarily for the rapid 
 *    easy to configure the ORM model by java source code, optionally by annotations and a XML file
 *    great performance, some types of SELECT query are very fast in comparison to its competitors
 *    lazy loading or the one request data loading of relations are supported optionally as a fetch strategy
-*    database tables, columns and indexes can be optionally updated according to Java meta-model in the run-time
+*    database tables, columns and indexes can be optionally updated according to Java metamodel in the run-time
 *    no confusing proxy or binary modified business objects
 *    very lightweight framework with no library dependencies in the run-time
 
@@ -22,7 +22,7 @@ The Ujorm (original name was UJO Framework) is designed primarily for the rapid 
 *    stored database procedures and functions are supported
 *    all persistent objects are based on the interface OrmUjo, namely on the implementation OrmTable
 *    internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException
-*    database indexes are created by the meta-model, added support for unique, non-unique indexes including the composed one
+*    database indexes are created by the metamodel, added support for unique, non-unique indexes including the composed one
 
 ## Home Pages
 1. [https://ujorm.org/](https://ujorm.org/)

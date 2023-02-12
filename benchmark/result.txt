@@ -13,9 +13,9 @@ ENVIRONMENT:
 --
 
 ACTION DESCRIPTIONS:
- * META-DATA: time to loading meta-model and to verify database model (auto-update option is enabled)
+ * META-DATA: time to loading metamodel and to verify database model (auto-update option is enabled)
  * INSERT: insert 2000 orders, 14000 items and 1 user
- * SINGLE SELECT: the one big select for all order items (with a condition) 
+ * SINGLE SELECT: the one big select for all order items (with a condition)
  * EMPTY SELECTS: 2000 selects with the empty result - where a condition contains different parameter values
  * MULTI SELECT: many different selects to emulate a server application or statements with no optimization
  * UPDATE: modify and save a loaded BO

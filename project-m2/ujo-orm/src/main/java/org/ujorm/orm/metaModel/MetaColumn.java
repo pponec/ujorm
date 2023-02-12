@@ -255,7 +255,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         return !COMMENT.isDefault(this);
     }
 
-    /** Get a Comment from meta-model annotation.
+    /** Get a Comment from metamodel annotation.
      * @see org.ujorm.orm.annot.Comment
      */
     public final String getComment() {
@@ -534,7 +534,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         return converter.getDbTypeClass(this);
     }
 
-    /** Get link to a column meta-model */
+    /** Get link to a column metamodel */
     @Override
     public MetaColumn getModel() {
         return this;

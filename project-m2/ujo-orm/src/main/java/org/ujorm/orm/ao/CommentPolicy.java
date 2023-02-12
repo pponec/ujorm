@@ -35,7 +35,7 @@ public enum CommentPolicy {
     FOR_NEW_OBJECT,
     /** No comments are assigned */
     NEVER,
-    /** Write all available comments from annotations to database on each meta-model loading event. */
+    /** Write all available comments from annotations to database on each metamodel loading event. */
     ALWAYS,
     ;
 
