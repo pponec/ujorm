@@ -5,15 +5,15 @@
     <parent>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo-samples</artifactId>
-        <version>2.23-SNAPSHOT</version>
+        <version>2.25-SNAPSHOT</version>
     </parent>
-    
+
     <groupId>org.ujorm</groupId>
     <artifactId>sample-inheritance</artifactId>
     <packaging>jar</packaging>
-    <version>2.23-SNAPSHOT</version>
+    <version>2.25-SNAPSHOT</version>
     <url>http://ujorm.org</url>
-    
+
     <pluginRepositories>
         <pluginRepository>
             <id>central</id>
@@ -38,13 +38,13 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-    </repositories>  
-    
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>2.23-SNAPSHOT</version>
+            <version>2.25-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -72,7 +72,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -93,7 +93,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <name>sample-inheritance</name>
 </project>
 
