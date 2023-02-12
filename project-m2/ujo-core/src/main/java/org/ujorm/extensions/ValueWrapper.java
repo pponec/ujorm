@@ -52,23 +52,20 @@ public interface ValueWrapper<DbValue, AppValue>
         extends Serializable /*, Supplier<AppValue> -- It is not good idea */ {
 
     /** Name a static final non-null attributed with a <strong>defaut persistent value</strong> ready to create new instance. */
-    public static final String _PERSISTENT_DEFAULT_VALUE_NAME = "_PERSISTENT_DEFAULT_VALUE";
+    String _PERSISTENT_DEFAULT_VALUE_NAME = "_PERSISTENT_DEFAULT_VALUE";
 
     /** Get an application type */
-    @NotNull
-    public AppValue get();
+    @NotNull AppValue get();
 
     /** Get a value as a database type */
-    @NotNull
-    public DbValue readPersistentValue();
+    @NotNull DbValue readPersistentValue();
 
     /** The type that JDBC knows how to handle out of the box. */
-    @NotNull
-    public Class<DbValue> readPersistentClass();
+    @NotNull Class<DbValue> readPersistentClass();
 
     /** Instance factory for a Technical issues where value is not significant */
     @NotNull
-    public static <T extends ValueWrapper> T getInstance(@NotNull final Class<T> wrapperClass) {
+    static <T extends ValueWrapper> T getInstance(@NotNull final Class<T> wrapperClass) {
         try {
             final Field field = wrapperClass.getField(_PERSISTENT_DEFAULT_VALUE_NAME);
             return wrapperClass.getConstructor(field.getType()).newInstance(field.get(null));
@@ -83,12 +80,12 @@ public interface ValueWrapper<DbValue, AppValue>
 
     /** Instance factory for a Technical issues where value is not significant */
     @NotNull
-    public static <T extends ValueWrapper> T getInstance(@NotNull final Class<T> wrapperClass, @Nullable final Object dbValue) {
+    static <T extends ValueWrapper> T getInstance(@NotNull final Class<T> wrapperClass, @Nullable final Object dbValue) {
         if (dbValue == null) {
             return null;
         }
         try {
-            return (T) wrapperClass.getConstructor(wrapperClass.getField(_PERSISTENT_DEFAULT_VALUE_NAME).getType()).newInstance(dbValue);
+            return wrapperClass.getConstructor(wrapperClass.getField(_PERSISTENT_DEFAULT_VALUE_NAME).getType()).newInstance(dbValue);
         } catch (ReflectiveOperationException e) {
             final String msg = MsgFormatter.format
                     ( "The class {} has not implemented {} interface correctly."

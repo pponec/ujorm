@@ -54,8 +54,8 @@ public class UniUjoBaseTest extends MyTestCase {
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
@@ -76,10 +76,10 @@ public class UniUjoBaseTest extends MyTestCase {
     }
 
     public void testSpeedTime() throws Throwable {
-        System.out.println("A1:testSpeedTime: " + suite().toString());
+        System.out.println("A1:testSpeedTime: " + suite());
 
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
@@ -139,7 +139,7 @@ public class UniUjoBaseTest extends MyTestCase {
         } catch (RuntimeException | OutOfMemoryError e) {
             return;
         }
-        assertEquals("The exception " + IllegalArgumentException.class.getSimpleName() + " is expected.", null);
+        assertNull("The exception " + IllegalArgumentException.class.getSimpleName() + " is expected.");
     }
 
     /** Tesn an Interface */
@@ -151,8 +151,8 @@ public class UniUjoBaseTest extends MyTestCase {
         assertEquals("proP3", UniUjoInterface.PRO_P3.getName());
         assertEquals("proP4", UniUjoInterface.PRO_P4.getName());
 
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);

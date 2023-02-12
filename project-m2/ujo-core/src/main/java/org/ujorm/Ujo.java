@@ -67,7 +67,7 @@ public interface Ujo {
      * @see Key#getValue(org.ujorm.Ujo)
      * @see Key#isDirect()
      */
-    public Object readValue(@NotNull Key<?,?> key);
+    Object readValue(@NotNull Key<?,?> key);
 
 
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
@@ -81,7 +81,7 @@ public interface Ujo {
      * @see Key#setValue(Ujo,Object)
      * @see Key#isDirect()
      */
-    public void writeValue(@NotNull Key<?,?> key, @Nullable Object value);
+    void writeValue(@NotNull Key<?,?> key, @Nullable Object value);
 
     /** Returns all direct keys.
      * There is recommended to be a "name" of each key is unique (but it is NOT a necessary condition).
@@ -90,7 +90,7 @@ public interface Ujo {
      * <br>An index key in the array UJO must be unique a continuous, an order of key array depends on an implementation of UJO object.
      * @see Key#isDirect()
      */
-    public <U extends Ujo> KeyList<U> readKeys();
+    <U extends Ujo> KeyList<U> readKeys();
 
     /**
      * Get an authorization of the key for different actions.
@@ -104,6 +104,6 @@ public interface Ujo {
      * @return Returns a TRUE value in case the key is authorized successfully.
      * @see UjoAction
      */
-    public boolean readAuthorization(@NotNull UjoAction action, @NotNull Key<?,?> key, @Nullable Object value);
+    boolean readAuthorization(@NotNull UjoAction action, @NotNull Key<?,?> key, @Nullable Object value);
 
 }

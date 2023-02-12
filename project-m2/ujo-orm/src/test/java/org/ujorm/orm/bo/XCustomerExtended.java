@@ -27,7 +27,7 @@ import org.ujorm.orm.annot.Table;
 @Table(name = "ord_order_extended")
 public class XCustomerExtended extends XCustomer {
 
-    private static KeyFactory<XCustomerExtended> f = newCamelFactory(XCustomerExtended.class);
+    private static final KeyFactory<XCustomerExtended> f = newCamelFactory(XCustomerExtended.class);
 
     /** Extended key */
     public static final Key<XCustomerExtended, Long> ID_EXTENDED = f.newKeyDefault(202L);

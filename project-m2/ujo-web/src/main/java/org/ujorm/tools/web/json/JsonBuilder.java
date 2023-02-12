@@ -121,15 +121,15 @@ public class JsonBuilder implements Closeable {
         writer.append(DOUBLE_QUOTE);
         return this;
     }
-    
-    /** Write a Javascript to a call. 
-     * The response can contain only one Javascript code, 
+
+    /** Write a Javascript to a call.
+     * The response can contain only one Javascript code,
      * so this method can be called only once per request.
      */
     public JsonBuilder writeJs(@Nullable final CharSequence... javascript) throws IOException {
         return write(JAVACRIPT_DUMMY_SELECTOR, javascript);
     }
-    
+
     /** Write a JSON property */
     private void writeKey(final String keyPrefix, final CharSequence key) throws IOException {
         writer.append(paramCounter++ == 0 ? '{' : ',');
@@ -201,7 +201,7 @@ public class JsonBuilder implements Closeable {
         writer.append(DOUBLE_QUOTE);
         return this;
     }
-    
+
     @Override
     public void close() throws IOException {
         if (paramCounter == 0) {
@@ -209,7 +209,7 @@ public class JsonBuilder implements Closeable {
         }
         writer.append('}');
     }
-    
+
     // --- OBJECT PROVIER ---
 
     /** An experimental feature: write the value for a CSS ID selector
@@ -251,7 +251,7 @@ public class JsonBuilder implements Closeable {
 
     /**
      * An experimental feature: write key-object value
-     * 
+     *
      * @param keyPrefix Key Prefix
      * @param key Main Key
      * @param objectProvider A value provider
@@ -268,7 +268,7 @@ public class JsonBuilder implements Closeable {
         writer.append(DOUBLE_QUOTE);
         return this;
     }
-    
+
     // --- UTILS ---
 
     /** An object factory */
@@ -289,11 +289,11 @@ public class JsonBuilder implements Closeable {
     @NotNull
     public static final JsonBuilder of(
             @NotNull final HtmlConfig config,
-            @NotNull final HttpServletResponse response) 
+            @NotNull final HttpServletResponse response)
             throws IllegalStateException, IOException {
         return of(null, response, config);
     }
-    
+
     /** An object factory */
     @Deprecated
     @NotNull
@@ -303,13 +303,13 @@ public class JsonBuilder implements Closeable {
             @NotNull final HtmlConfig config) throws IllegalStateException, IOException {
         return of(config, request, response);
     }
-    
+
     /** An object factory */
     @NotNull
     public static final JsonBuilder of(
             @NotNull final HtmlConfig config,
             @Nullable final HttpServletRequest request,
-            @NotNull final HttpServletResponse response) 
+            @NotNull final HttpServletResponse response)
             throws IllegalStateException, IOException {
         if (config.isHtmlHeaderRequest()) {
             response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
@@ -335,7 +335,7 @@ public class JsonBuilder implements Closeable {
 
         final String prefix;
 
-        private SelectorType(@NotNull String prefix) {
+        SelectorType(@NotNull String prefix) {
             this.prefix = prefix;
         }
 

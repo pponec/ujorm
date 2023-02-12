@@ -37,7 +37,7 @@ public class EnumField<T extends Enum<T>> extends Field<T> {
     /** This component does not support the {@code null} item now. */
     private static final boolean NULL_SUPPORT = false;
     /** Available items */
-    private List<T> items;
+    private final List<T> items;
     /** Choice Renderer */
     private IChoiceRenderer<T> renderer;
 

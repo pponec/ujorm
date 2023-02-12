@@ -42,13 +42,13 @@ public class T002b_Test extends MyTestCase {
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
     public void testRestoreXMLb() throws Exception {
-        System.out.println("testPrintXMLb: " + suite().toString());
+        System.out.println("testPrintXMLb: " + suite());
         StringBuilder writer = new StringBuilder(256);
         //
         UTechnicalBean person = createPerson();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
         if (true) {
-            System.err.println("XML:\n" + writer.toString() );
+            System.err.println("XML:\n" + writer);
         }
 
         ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));

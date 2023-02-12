@@ -255,7 +255,7 @@ public class UjoManagerCSV<U extends Ujo> extends UjoService<U> {
                     readHeader = false;
                     continue;
                 }
-                final U ujo = (U) getUjoClass().newInstance();
+                final U ujo = getUjoClass().newInstance();
                 result.add(ujo);
                 int keyPointer = 0;  // Key pointer
 

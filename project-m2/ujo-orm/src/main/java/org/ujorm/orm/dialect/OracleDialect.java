@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.criterion.ValueCriterion;
+import org.ujorm.orm.DbType;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -83,13 +84,10 @@ public class OracleDialect extends PostgreSqlDialect {
     @Override
     protected String getColumnType(final MetaColumn column) {
 
-        switch (MetaColumn.DB_TYPE.of(column)) {
-            case BIGINT:
-                return "NUMBER";
-            default:
-                // Don't call the super.getColumnType(..)
-                return MetaColumn.DB_TYPE.of(column).name();
-        }
+        if (MetaColumn.DB_TYPE.of(column) == DbType.BIGINT) {
+            return "NUMBER";
+        }// Don't call the super.getColumnType(..)
+        return MetaColumn.DB_TYPE.of(column).name();
     }
 
     /** Print a SQL sript to add a new column to the table

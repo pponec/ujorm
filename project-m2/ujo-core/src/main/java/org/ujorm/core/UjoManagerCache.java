@@ -34,18 +34,18 @@ public class UjoManagerCache {
 
     /** A XML <strong>element body</strong> cache */
     private HashMap<Class, Key> xmlBodyCache;
-    
+
     /** A XML <strong>attribute</strong> cache. */
     private HashSet<Key> attributesCache;
 
     /** A transient <strong>attribute</strong> cache. */
-    private HashSet<Key> transientCache = null;
-    
+    private final HashSet<Key> transientCache = null;
+
     /** Constructor. */
     public UjoManagerCache(boolean recursion, Ujo ... ujos) {
         this.propertiesCache = new HashMap<>();
     }
-    
+
     /** Returns true, if the class is abstract. */
     protected boolean isAbstract(Class type) {
         final boolean result = Modifier.isAbstract(type.getModifiers() );
@@ -54,7 +54,7 @@ public class UjoManagerCache {
 
     /** Is the key an XML attribute? */
     public final boolean isXmlAttribute(final Key key) {
-        final boolean result 
+        final boolean result
             =  attributesCache!=null
             && attributesCache.contains(key)
             ;

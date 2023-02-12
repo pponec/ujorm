@@ -37,6 +37,5 @@ public enum CommentPolicy {
     NEVER,
     /** Write all available comments from annotations to database on each metamodel loading event. */
     ALWAYS,
-    ;
 
 }

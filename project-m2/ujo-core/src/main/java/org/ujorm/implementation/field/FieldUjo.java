@@ -122,6 +122,6 @@ public abstract class FieldUjo extends SuperAbstractUjo {
         ( String name
         , ValueAgent<UJO, List<ITEM>> agent
         ) {
-        return new FieldPropertyList<UJO,ITEM> (name, (Class) null, -1, agent);
+        return new FieldPropertyList<UJO,ITEM> (name, null, -1, agent);
     }
 }

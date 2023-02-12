@@ -16,6 +16,8 @@
 package org.ujorm.extensions.types;
 
 import java.util.function.Consumer;
+
+import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.extensions.ValueWrapper;
 import static junit.framework.TestCase.assertFalse;

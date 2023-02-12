@@ -26,30 +26,27 @@ import org.ujorm.hotels.entity.Customer;
 public interface AuthService {
 
     /** Authenticate the user and save the result to the Wicket session */
-    public boolean authenticate(Customer customer);
+    boolean authenticate(Customer customer);
 
     /** Logout */
-    public void logout();
+    void logout();
 
     /** Is logged any user ? */
-    public boolean isLogged();
+    boolean isLogged();
 
     /** Is logged an administrator ? */
-    public boolean isAdmin();
+    boolean isAdmin();
 
     /** Is logged selected user */
-    public boolean isLogged(Customer customer);
+    boolean isLogged(Customer customer);
 
     /** Get a login of the current Customer or the {@code null} value */
-    @Nullable
-    public String getLogin();
+    @Nullable String getLogin();
 
     /** Get an immutable logged customer from session */
-    @Nullable
-    public Customer getLoggedCustomer();
+    @Nullable Customer getLoggedCustomer();
 
     /** Get an immutable logged customer from session or returns a default value  */
-    @NotNull
-    public Customer getLoggedCustomer(@NotNull Customer defaultValue);
+    @NotNull Customer getLoggedCustomer(@NotNull Customer defaultValue);
 
 }

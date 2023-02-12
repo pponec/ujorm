@@ -35,8 +35,8 @@ public class LoopingIteratorTest {
         assertTrue(rs.next());
         assertTrue(rs.next());
         assertTrue(rs.next());
-        assertTrue(30 == rs.getInt(1));
-        assertTrue("C name".equals(rs.getString(2)));
+        assertEquals(30, rs.getInt(1));
+        assertEquals("C name", rs.getString(2));
         assertNull(rs.getObject(3, String.class));
         assertFalse(rs.next());
 

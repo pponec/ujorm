@@ -32,13 +32,13 @@ import junit.framework.TestCase;
 public class MessageServiceTest extends TestCase {
 
     /** Message Argument */
-    private static MessageArg ID = new MessageArg("ID");
+    private static final MessageArg ID = new MessageArg("ID");
     /** Message Argument */
-    private static MessageArg DATE = new MessageArg("DATE");
+    private static final MessageArg DATE = new MessageArg("DATE");
     /** Message Argument */
-    private static MessageArg TEXT = new MessageArg("TEXT");
+    private static final MessageArg TEXT = new MessageArg("TEXT");
     /** Message Argument */
-    private static MessageArg NUMBER = new MessageArg("NUMBER");
+    private static final MessageArg NUMBER = new MessageArg("NUMBER");
 
     /** Demo test 1. */
     public void testDemo1() {

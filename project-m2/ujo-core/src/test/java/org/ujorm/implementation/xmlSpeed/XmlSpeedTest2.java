@@ -15,7 +15,7 @@ import junit.framework.TestSuite;
  * @author Pavel Ponec
  */
 public class XmlSpeedTest2 extends XmlSpeedTest {
-    
+
     public XmlSpeedTest2(String testName) {
         super(testName);
     }
@@ -25,58 +25,58 @@ public class XmlSpeedTest2 extends XmlSpeedTest {
     protected boolean isJaxbXmlEnabled() {
         return true;
     }
-    
+
     public static TestSuite suite() {
         return new TestSuite(XmlSpeedTest2.class);
     }
-    
+
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
     }
-    
+
     @Override
     protected int getCount() {
         return COUNT;
     }
-    
+
     // ---------------------------------------------------
-    
+
     public void test2MapXML1() throws Throwable {
-        System.out.println("MapUJO.Speed:WARMING: " + suite().toString());
+        System.out.println("MapUJO.Speed:WARMING: " + suite());
         super.testMapXML();
     }
-    
+
     public void test2ArrayXML1() throws Throwable {
-        System.out.println("ArrayUJO.Speed:WARMING: " + suite().toString());
+        System.out.println("ArrayUJO.Speed:WARMING: " + suite());
         super.testArrayXML();
     }
-    
+
     public void testBeanUjoXML1() throws Throwable {
-        System.out.println("BeanUjo.Speed:WARMING: " + suite().toString());
+        System.out.println("BeanUjo.Speed:WARMING: " + suite());
         super.testBeanUjoXML();
     }
-    
+
     public void testFieldUjoXML1() throws Throwable {
-        System.out.println("FieldUjo.Speed:WARMING: " + suite().toString());
+        System.out.println("FieldUjo.Speed:WARMING: " + suite());
         super.testFieldUjoXML();
     }
-    
+
     // -----
-    
+
     public void testXMLEncoderXML1() throws Throwable {
-        System.out.println("XMLEncoder.Speed:WARMING: " + suite().toString());
+        System.out.println("XMLEncoder.Speed:WARMING: " + suite());
         super.testXMLEncoderXML();
     }
-    
+
     public void testJaxbXML1() throws Throwable {
         if (isJaxbXmlEnabled()) {
-            System.out.println("PojoJAXB.Speed:WARMING: " + suite().toString());
+            System.out.println("PojoJAXB.Speed:WARMING: " + suite());
             super.testJaxbXML();
         }
     }
 
     public void testJavolution1() throws Throwable {
-        System.out.println("Javolution .Speed:WARMING: " + suite().toString());
+        System.out.println("Javolution .Speed:WARMING: " + suite());
         super.testJavolution();
     }
 
@@ -85,5 +85,5 @@ public class XmlSpeedTest2 extends XmlSpeedTest {
     }
 
 
-    
+
 }

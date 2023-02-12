@@ -87,13 +87,13 @@ public interface WeakKey<VALUE> extends Key<Ujo, VALUE> {
     /**
      * It is an extended method for setting an appropriate type safe value to a common Map object.
      */
-    public void setValue(Map<String,? super VALUE> map, VALUE value);
+    void setValue(Map<String,? super VALUE> map, VALUE value);
 
     /**
      * An alias for the method {@link #of(java.util.Map) } .
      * @see #getValue(java.util.Map)
      */
-    public VALUE getValue(Map<String,? super VALUE> map);
+    VALUE getValue(Map<String,? super VALUE> map);
 
 
    /**
@@ -101,32 +101,32 @@ public interface WeakKey<VALUE> extends Key<Ujo, VALUE> {
      * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the map object.
      */
-    public VALUE of(Map<String,? super VALUE> map);
+   VALUE of(Map<String,? super VALUE> map);
 
     /**
      * It is an extended method for setting an appropriate type safe value to a common Map object.
      * In case the size of the list is insufficient, the list is filled by the {@code null} values.
      */
-    public void setValue(List<? super VALUE> list, VALUE value);
+    void setValue(List<? super VALUE> list, VALUE value);
 
     /**
      * An alias for the method {@link #of(java.util.List) } .
      * @see #getValue(java.util.List)
      */
-    public VALUE getValue(List<? super VALUE> list);
+    VALUE getValue(List<? super VALUE> list);
 
     /**
      * It is an extended method for getting an appropriate type safe value from a common Map object.
      * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the map object.
      */
-    public VALUE of(List<? super VALUE> list);
+    VALUE of(List<? super VALUE> list);
 
     /**
      * Returns an value from the Servlet Request.
      * @param An object type of: javax.servlet.ServletRequest, where the {@code null} result is replaced for a default value
      * @return Returns object converted to a required type.
      */
-    public VALUE getRequestValue(Object servletReqest) throws IllegalArgumentException;
+    VALUE getRequestValue(Object servletReqest) throws IllegalArgumentException;
 
 }

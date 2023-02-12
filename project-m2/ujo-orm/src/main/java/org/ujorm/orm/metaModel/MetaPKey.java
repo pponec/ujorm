@@ -103,7 +103,7 @@ final public class MetaPKey extends AbstractMetaModel {
     }
 
     /** Generate a next value */
-    protected final long nextValue(final Session session) {
+    private long nextValue(final Session session) {
         return TABLE.of(this).getSequencer().nextValue(session);
     }
 

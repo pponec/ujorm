@@ -34,7 +34,7 @@ public class T004a_Test extends MyTestCase {
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
      */
     public void testPrintXML() throws Exception {
-        System.out.println("testPrintXML: " + suite().toString());
+        System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);
         try {
             AtrPerson person = createPerson();

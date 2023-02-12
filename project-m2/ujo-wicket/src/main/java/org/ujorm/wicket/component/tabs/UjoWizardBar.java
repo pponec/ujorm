@@ -49,8 +49,8 @@ import org.ujorm.wicket.component.link.MessageLink;
  */
 public class UjoWizardBar extends GenericPanel<Object> {
     /** The repeater  */
-    private RepeatingView repeater;
-    private UjoWizardPanel<UjoTab> wizardPanel;
+    private final RepeatingView repeater;
+    private final UjoWizardPanel<UjoTab> wizardPanel;
 
     public UjoWizardBar(String id, UjoWizardPanel<UjoTab> aWizard) {
         super(id);

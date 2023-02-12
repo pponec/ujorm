@@ -28,26 +28,26 @@ import org.ujorm.Ujo;
  * @author Pavel Ponec
  */
 public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegistrar<Ujo>*/ {
-    
+
     /** Source */
     final private Ujo source;
 
     /** Supported actions: Before, After or both. */
     final private Boolean before;
-    
+
     /** Property Listeners Before */
     private HashMap<Key,List<UjoPropertyChangeListener>> listenerMapBefore;
 
     /** Property Listeners After */
     private HashMap<Key,List<UjoPropertyChangeListener>> listenerMapAfter;
-    
+
     /** Constructor */
     public UjoPropertyChangeSupport(Ujo source) {
         this(source, null);
     }
-    
+
     /**
-     * Constructor 
+     * Constructor
      * @param source The source object.
      * @param before The parameter can create a restriction for a listener type
      * <ul>
@@ -60,20 +60,20 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
         this.source = source;
         this.before = before;
     }
-    
-    /** Get a not null listener list for the required key. 
+
+    /** Get a not null listener list for the required key.
      * <br>The method creates an empty list if the one was not found.
      */
     private List<UjoPropertyChangeListener> getListeners
         ( final Key key
         , final boolean before
         ){
-        
+
         HashMap<Key,List<UjoPropertyChangeListener>> listenerMap = before
             ? listenerMapBefore
             : listenerMapAfter
             ;
-        
+
         if (listenerMap==null) {
             listenerMap = new HashMap<Key,List<UjoPropertyChangeListener>>();
             if (before) {
@@ -82,16 +82,16 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
                 listenerMapAfter  = listenerMap;
             }
         }
-        
+
         List<UjoPropertyChangeListener> result = listenerMap.get(key);
-        
+
         if (result==null) {
             result = new ArrayList<>(1);
             listenerMap.put(key, result);
         }
         return result;
     }
-    
+
     /** Add listener */
     public boolean addPropertyChangeListener
         ( final Key key
@@ -99,7 +99,7 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
         , final UjoPropertyChangeListener listener
         ){
         testSupport(before);
-        
+
         if (before==null) {
             boolean b1 = getListeners(key, true ).add(listener);
             boolean b2 = getListeners(key, false).add(listener);
@@ -116,7 +116,7 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
         , final UjoPropertyChangeListener listener
         ){
         testSupport(before);
-        
+
         if (before==null) {
             boolean b1 = getListeners(key, true ).remove(listener);
             boolean b2 = getListeners(key, false).remove(listener);
@@ -125,7 +125,7 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
             return getListeners(key, before).remove(listener);
         }
     }
-    
+
     /** Fire event for the key */
     public void firePropertyChange
         ( final Key key
@@ -133,34 +133,33 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
         , final Object newValue
         , final boolean beforeChange
         ){
-        
+
           HashMap<Key,List<UjoPropertyChangeListener>> listenerMap = beforeChange
               ? listenerMapBefore
               : listenerMapAfter
               ;
-          
+
           if (listenerMap==null) { return; }
-        
+
           List<UjoPropertyChangeListener> listeners = listenerMap.get(key);
-        
+
           if (listeners!=null) {
              UjoPropertyChangeEvent event = new UjoPropertyChangeEvent(source, key, oldValue, newValue, beforeChange);
-            
+
              for (UjoPropertyChangeListener listener : listeners) {
                  listener.propertyChange(event);
              }
           }
     }
-    
+
     /** Test support. In case the unsupported operation throws an exception. */
     private void testSupport(final Boolean before) {
         if (this.before==null
         ||  this.before==before
         ||  this.before.equals(before)
         ){
-            return;
         } else {
-            String action = before == null ? "before or after" : before==true ? "before" : "after" ;
+            String action = before == null ? "before or after" : before ? "before" : "after" ;
             throw new UnsupportedOperationException("Action is not supported : " + action);
         }
     }
@@ -172,7 +171,7 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
     public Boolean getBefore() {
         return before;
     }
-    
-    
+
+
 
 }

@@ -139,7 +139,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * sort key
      */
     public final void setSort(Key<? super U, ?> key) {
-        super.setSort((KeyRing)KeyRing.of(key), key.isAscending()
+        super.setSort(KeyRing.of(key), key.isAscending()
                 ? SortOrder.ASCENDING
                 : SortOrder.DESCENDING);
     }
@@ -306,12 +306,12 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
             , @Nullable final Key<? super U,V> sortColumn
             , @Nullable final String cssClass ) {
         final Class<? super U> domainType = column.getDomainType();
-        final KeyRing<U> keyCol = KeyRing.<U>of(column);
+        final KeyRing<U> keyCol = KeyRing.of(column);
         final KeyRing<U> sortCol = sortColumn == null
                 ? null
                 : column.equals(sortColumn)
                 ? keyCol
-                : KeyRing.<U>of(sortColumn)
+                : KeyRing.of(sortColumn)
                 ;
         final KeyColumn<U, Object> keyColumn = new KeyColumn<U, Object>(keyCol, sortCol) {
             @Override
@@ -349,7 +349,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @param actions Action array
      */
     public <V> void add(@NotNull final Key<? super U,V> column, final CommonAction ... actions) {
-        final KeyColumn<U, Object> col = new KeyColumn<U, Object>(KeyRing.<U>of(column), null) {
+        final KeyColumn<U, Object> col = new KeyColumn<U, Object>(KeyRing.of(column), null) {
             @Override public void populateItem(final Item<ICellPopulator<U>> item, final String componentId, final IModel<U> model) {
                 item.add(new CommonActionPanel(componentId, model.getObject(), actions));
             }

@@ -50,7 +50,7 @@ public class ReqestDispatcher {
     private final HttpServletResponse output;
 
     @NotNull
-    private HtmlConfig htmlConfig;
+    private final HtmlConfig htmlConfig;
 
     private boolean done = false;
 
@@ -58,18 +58,18 @@ public class ReqestDispatcher {
      * Disable client cache
      */
     private final boolean noCache = true;
-    
+
     public ReqestDispatcher(
             @NotNull HttpServletRequest input,
             @NotNull HttpServletResponse output) {
         this("Info", input, output);
     }
-    
+
     public ReqestDispatcher(
             @NotNull CharSequence title,
             @NotNull HttpServletRequest input,
             @NotNull HttpServletResponse output) {
-        this(input, output, (HtmlConfig) HtmlConfig.ofDefault()
+        this(input, output, HtmlConfig.ofDefault()
                 .setTitle(title)
                 .setNiceFormat());
     }
@@ -132,7 +132,7 @@ public class ReqestDispatcher {
             }
         }
     }
-    
+
     /**
      * Process the request
      */

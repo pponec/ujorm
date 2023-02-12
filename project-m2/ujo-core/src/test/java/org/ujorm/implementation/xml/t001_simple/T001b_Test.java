@@ -38,7 +38,7 @@ public class T001b_Test extends MyTestCase {
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
     public void restoreXML(String name, boolean printText) throws Exception {
-        System.out.println( "restoreXML \"" + name + "\": " + suite().toString() );
+        System.out.println( "restoreXML \"" + name + "\": " + suite());
         StringBuilder writer = new StringBuilder(256);
         //
         UPerson person = createPerson();
@@ -46,7 +46,7 @@ public class T001b_Test extends MyTestCase {
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
 
         if (printText) {
-           System.out.println("XML:\n" + writer.toString());
+           System.out.println("XML:\n" + writer);
         }
 
         ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));

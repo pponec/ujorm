@@ -107,7 +107,7 @@ public class KeyModel<U extends Ujo, T> implements IModel<T> {
      */
     @SuppressWarnings("unchecked")
     public static <U extends Ujo, T> KeyModel<U, T> of(@NotNull final IModel<U> domain, @NotNull final KeyRing<U> key) {
-        return (KeyModel<U, T>) of(domain.getObject(), key.getFirstKey());
+        return of(domain.getObject(), key.getFirstKey());
     }
 
     /**

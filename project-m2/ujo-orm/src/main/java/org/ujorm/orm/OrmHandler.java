@@ -303,7 +303,7 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Do the handler have a read-only state? */
     public boolean isReadOnly() {
         final List<MetaDatabase> dbs = getDatabases();
-        final boolean result = Check.hasLength(dbs) ? dbs.get(0).readOnly() : false;
+        final boolean result = Check.hasLength(dbs) && dbs.get(0).readOnly();
         return result;
     }
 

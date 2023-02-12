@@ -49,7 +49,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
      * Creates a new instance of UjoTableModel
      * @param columns Columns in a required order.
      */
-    public UjoTableModel(Key ... columns) {;
+    public UjoTableModel(Key ... columns) {
         this.columns = columns;
         initData();
     }

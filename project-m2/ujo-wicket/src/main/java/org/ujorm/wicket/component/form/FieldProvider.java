@@ -71,8 +71,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     /** Password key name to create a component PasswordField */
     public static final String PASSWORD_KEY_NAME = "password";
 
-    private RepeatingView repeatingView;
-    private Map<String, Field> fields;
+    private final RepeatingView repeatingView;
+    private final Map<String, Field> fields;
     private U domain;
     /** Enable method {@link #requestFocus(AjaxRequestTarget)}. The default value is {@code true} */
     private final boolean focusRequestEnabled = true;
@@ -212,7 +212,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     @SuppressWarnings("unchecked")
     public <T> T getValue(Key<? super U, T> key) {
         final Field filed = fields.get(key.getName());
-        return (T) filed != null
+        return filed != null
                 ? (T) filed.getModelValue()
                 : key.getDefault();
     }

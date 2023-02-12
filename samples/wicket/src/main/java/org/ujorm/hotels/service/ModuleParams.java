@@ -25,6 +25,6 @@ import org.ujorm.hotels.entity.enums.ModuleEnum;
 public interface ModuleParams<U extends ModuleParams> extends UjoMiddle<U>  {
 
     /** Returns a module */
-    public ModuleEnum getModule();
+    ModuleEnum getModule();
 
 }

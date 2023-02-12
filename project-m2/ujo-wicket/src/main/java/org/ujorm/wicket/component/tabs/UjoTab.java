@@ -38,7 +38,7 @@ public class UjoTab extends AbstractTab {
     /** Model for tab's component panel */
     private IModel<?> tabModel;
     /** Optional visible model */
-    private UjoSupplier<Boolean> visible;
+    private final UjoSupplier<Boolean> visible;
 
     /** Constructor */
     public UjoTab(@NotNull final IModel<String> title, @NotNull final Class<? extends WebMarkupContainer> panel) {
@@ -64,7 +64,7 @@ public class UjoTab extends AbstractTab {
         ( @NotNull final IModel<String> title
         , @Nullable final String cssClass
         , @NotNull final Class<? extends WebMarkupContainer> panel) {
-        this(title, cssClass, panel, (UjoSupplier<Boolean>) null);
+        this(title, cssClass, panel, null);
     }
 
     /**

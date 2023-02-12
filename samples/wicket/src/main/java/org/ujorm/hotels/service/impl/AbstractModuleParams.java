@@ -35,7 +35,7 @@ import org.ujorm.tools.msg.MsgFormatter;
 public abstract class AbstractModuleParams<U extends AbstractModuleParams>
         extends SmartUjoLockable<U>
         implements ModuleParams<U> {
-    
+
     /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractModuleParams.class);
 
@@ -56,7 +56,7 @@ public abstract class AbstractModuleParams<U extends AbstractModuleParams>
     @PostConstruct
     public void init() throws IllegalStateException {
         if (paramService != null) try {
-            paramService.init((ModuleParams) this);
+            paramService.init(this);
             lock();
             LOGGER.info("The parameter module '{}' is initialized", getClass().getName());
         } catch (Exception e) {

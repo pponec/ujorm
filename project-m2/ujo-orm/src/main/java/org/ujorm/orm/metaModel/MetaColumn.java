@@ -33,6 +33,7 @@ import org.ujorm.Validator;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.UjoTools;
 import org.ujorm.extensions.ValueWrapper;
 import org.ujorm.implementation.orm.RelationToOne;
 import org.ujorm.orm.ColumnWrapper;
@@ -136,7 +137,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         this.foreignKey = isTypeOf(OrmUjo.class);
         this.isValueWrapper = isTypeOf(ValueWrapper.class);
 
-        Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty);
+        Field field = UjoTools.getPropertyField(table.getType(), tableProperty);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
 
         if (param!=null) {
@@ -210,7 +211,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     }
 
     /** Create an UnmodifiableList */
-    private static final List<String> toList(String[] items) {
+    private static List<String> toList(String[] items) {
         if (items == null || items.length == 0) {
             return Collections.emptyList();
         } else if (items.length == 1 && isEmpty(items[0])) {
@@ -230,54 +231,54 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
 
     /** Is it a Foreign Key ? */
     @Override
-    public final boolean isForeignKey() {
+    public boolean isForeignKey() {
         return foreignKey;
     }
 
     /** Is the value type of ValueWrapper? */
     @Override
-    public final boolean isValueWrapper() {
+    public boolean isValueWrapper() {
         return isValueWrapper;
     }
 
     /** Is it a Primary Key? */
-    public final boolean isPrimaryKey() {
+    public boolean isPrimaryKey() {
         return PRIMARY_KEY.of(this);
     }
 
     /** Returns true if the column is an optional relation */
-    public final boolean isOptionalRelation() {
+    public boolean isOptionalRelation() {
         return foreignKey && !MANDATORY.of(this);
     }
 
     /** Has the instance assigned a non empty comment? */
-    public final boolean isCommented() {
+    public boolean isCommented() {
         return !COMMENT.isDefault(this);
     }
 
     /** Get a Comment from metamodel annotation.
      * @see org.ujorm.orm.annot.Comment
      */
-    public final String getComment() {
+    public String getComment() {
         return COMMENT.of(this);
     }
 
     /** Returns a maximal db column length in the database.
      * @return If key is undefined then the method returns value -1.
      */
-    public final int getMaxLength() {
+    public int getMaxLength() {
         return MAX_LENGTH.of(this);
     }
 
     /** Returns the db column precision.
      * @return If key is undefined then the method returns value -1.
      */
-    public final int getPrecision() {
+    public int getPrecision() {
         return PRECISION.of(this);
     }
 
     /** Returns true if the related db column is NOT NULL. */
-    public final boolean isMandatory() {
+    public boolean isMandatory() {
         return MANDATORY.of(this);
     }
 
@@ -305,7 +306,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         MetaTable table;
         if (getKey() instanceof RelationToOne) {
             RelationToOne rto = (RelationToOne) TABLE_KEY.of(this);
-            MetaColumn mc = (MetaColumn) getHandler().findColumnModel(rto.getRelatedKey(), true);
+            MetaColumn mc = getHandler().findColumnModel(rto.getRelatedKey(), true);
             result = new ArrayList<>(1);
             result.add(mc);
         } else {
@@ -357,7 +358,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     }
 
     /** Returns a name of foreign column by index */
-    public final String getForeignColumnName(final int index) {
+    public String getForeignColumnName(final int index) {
         return getForeignColumnNames()[index];
     }
 
@@ -406,7 +407,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
 
     /** Returns a column name */
     @Override
-    public final String getName() {
+    public String getName() {
         return NAME.of(this);
     }
 
@@ -550,7 +551,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
      * @param alias Nullable alias value
      * @return New instance of ColumnWrapper for a different alias.
      */
-    public final ColumnWrapper addTableAlias(final String alias) {
+    public ColumnWrapper addTableAlias(final String alias) {
         return alias != null
             ? ColumnWrapper.forAlias(this, alias)
             : this ;
@@ -575,11 +576,9 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
 
     /** Quotation request */
     public boolean isQuoted() {
-        switch (QUOTED.of(this)) {
-            case YES:
-                return true;
-            default:
-                return false;
+        if (QUOTED.of(this) == QuoteEnum.YES) {
+            return true;
         }
+        return false;
     }
 }

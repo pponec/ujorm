@@ -153,12 +153,10 @@ public abstract class OrmTableSynchronized<U extends OrmTableSynchronized> exten
     /** Test an authorization of the action. */
     @Override
     public boolean readAuthorization(UjoAction action, Key key, Object value) {
-        switch (action.getType()) {
-            case UjoAction.ACTION_TO_STRING:
-                return !(key instanceof RelationToMany);
-            default:
-                return super.readAuthorization(action, key, value);
+        if (action.getType() == UjoAction.ACTION_TO_STRING) {
+            return !(key instanceof RelationToMany);
         }
+        return super.readAuthorization(action, key, value);
     }
 
     /** Read the foreign key.

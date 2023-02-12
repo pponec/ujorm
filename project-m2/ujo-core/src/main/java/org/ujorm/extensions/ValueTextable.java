@@ -67,6 +67,6 @@ public interface ValueTextable {
 
     /** A result must be acceptable for one constructor parameter (of the same class) to restore an equal object. */
     @Override
-    public String toString();
+    String toString();
 
 }

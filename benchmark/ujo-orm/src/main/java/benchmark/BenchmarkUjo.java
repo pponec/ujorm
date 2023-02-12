@@ -110,7 +110,7 @@ public class BenchmarkUjo {
             order.set(UjoOrder.PAID, true);
             order.set(UjoOrder.PARENT, null);
             order.set(UjoOrder.PAYMENT_TYPE, "C");
-            order.set(UjoOrder.PUBLIC_ID, "P" + String.valueOf(1001000 + i));
+            order.set(UjoOrder.PUBLIC_ID, "P" + (1001000 + i));
             order.set(UjoOrder.USER, user1);
             session.insert(order);
 
@@ -165,7 +165,7 @@ public class BenchmarkUjo {
 
         for (int i = -ORDER_COUNT; i < 0; i++) {
             final Criterion<UjoOrder> crn1, crn2;
-            crn1 = UjoOrder.ID.whereEq(new Long(i));
+            crn1 = UjoOrder.ID.whereEq(Long.valueOf(i));
             crn2 = UjoOrder.DELETED.whereEq(true);
 
             UjoIterator<UjoOrder> orders = session.createQuery(crn1.and(crn2)).iterator();

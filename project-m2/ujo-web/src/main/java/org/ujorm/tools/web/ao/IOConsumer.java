@@ -24,6 +24,6 @@ import javax.servlet.ServletException;
  */
 public interface IOConsumer<T> {
 
-    public void accept(T t) throws ServletException, IOException;
-    
+    void accept(T t) throws ServletException, IOException;
+
 }

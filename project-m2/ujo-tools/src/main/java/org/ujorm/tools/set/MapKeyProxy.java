@@ -25,13 +25,13 @@ public interface MapKeyProxy<K> {
 
     /** Calculate hash code */
     @Override
-    public int hashCode();
+    int hashCode();
 
     /** Make equals */
     @Override
-    public boolean equals(@Nullable Object o);
+    boolean equals(@Nullable Object o);
 
     /** Get the original key */
-    public K getOriginal() ;
+    K getOriginal() ;
 
 }

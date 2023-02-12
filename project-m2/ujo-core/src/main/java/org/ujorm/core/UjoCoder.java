@@ -226,8 +226,8 @@ public class UjoCoder {
                     return result;
                 }
                 if (Long.class==type) {
-                    final Long result = new Long(aValue);
-                    return 0L==result ? 0L : result;
+                    final Long result = Long.valueOf(aValue);
+                    return result;
                 }
                 if (Float.class==type) {
                     final Float result = new Float(aValue);
@@ -243,7 +243,7 @@ public class UjoCoder {
                 }
                 if (true) {
                     final Constructor constructor = type.getConstructor(CONSTRUCTOR_TYPE);
-                    final Object result = constructor.newInstance(new Object[]{aValue});
+                    final Object result = constructor.newInstance(aValue);
                     return result;
                 }
             }
@@ -373,7 +373,7 @@ public class UjoCoder {
             }
             if (true) {
                     final Constructor constructor = type.getConstructor(CONSTRUCTOR_TYPE);
-                    final Object result = constructor.newInstance(new Object[]{aValue});
+                    final Object result = constructor.newInstance(aValue);
                     return result;
             }
         } catch ( RuntimeException | ReflectiveOperationException | OutOfMemoryError e) {

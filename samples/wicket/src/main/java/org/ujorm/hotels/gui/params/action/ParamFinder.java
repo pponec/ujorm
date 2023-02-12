@@ -37,9 +37,9 @@ public final class ParamFinder<U extends ParamValue> extends AbstractToolbar<U> 
     public static final Criterion<ParamValue> defaultCriterion = ParamValue.ID.forAll();
 
     /** Search parameter */
-    private DropDownChoice<ModuleEnum> searchModule;
+    private final DropDownChoice<ModuleEnum> searchModule;
     /** Search parameter */
-    private TextField searchParam;
+    private final TextField searchParam;
 
     public ParamFinder(String id) {
         super(id);

@@ -9,6 +9,7 @@ package samples.bundle;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import junit.framework.*;
 
@@ -42,7 +43,7 @@ public class JPropertyTest extends TestCase {
         props.put("test_02", "Úplně žluťoučný kůň = ŘÍP");
 
         if (false) {
-            props.put("test_01", new Integer(256));
+            props.put("test_01", Integer.valueOf(256));
             props.put("test_02", new Float(25688.25));
         }
 

@@ -19,6 +19,7 @@ import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  *
@@ -41,9 +42,9 @@ public class JoinableTest {
         assertEquals("Name-2", nameProvider2.apply(p1));
         assertEquals("Name-3", nameProvider3.apply(p1));
 
-        assertEquals(null, nameProvider1.apply(p0));
-        assertEquals(null, nameProvider2.apply(p3));
-        assertEquals(null, nameProvider3.apply(p3));
+        assertNull(nameProvider1.apply(p0));
+        assertNull(nameProvider2.apply(p3));
+        assertNull(nameProvider3.apply(p3));
     }
 
     final static class Person {

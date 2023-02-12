@@ -44,7 +44,7 @@ public class UjoTabbedPanel<T extends UjoTab>
         extends org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel<T> {
 
     /** Tab Index Key */
-    private String indexKey;
+    private final String indexKey;
 
     /** Constructor with a model for all tabs
      * @param id

@@ -22,6 +22,7 @@ import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.UjoTools;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.implementation.orm.RelationToMany;
@@ -98,7 +99,7 @@ final public class MetaProcedure extends AbstractMetaModel {
         DATABASE.setValue(this, database);
         DB_PROPERTY.setValue(this, dbProperty);
 
-        final Field field = UjoManager.getInstance().getPropertyField(MetaDatabase.ROOT.of(database), dbProperty);
+        final Field field = UjoTools.getPropertyField(MetaDatabase.ROOT.of(database), dbProperty);
         Procedure proc1 =  field!=null ? field.getAnnotation(Procedure.class) : null;
         Procedure proc2 = (Procedure) dbProperty.getType().getAnnotation(Procedure.class);
 
@@ -145,12 +146,12 @@ final public class MetaProcedure extends AbstractMetaModel {
 
     /** Returns a base table class. */
     @SuppressWarnings("unchecked")
-    public final Class<OrmUjo> getType() {
+    public Class<OrmUjo> getType() {
         return DB_PROPERTY.of(this).getType();
     }
 
     /** Returns the database */
-    public final MetaDatabase getDatabase() {
+    public MetaDatabase getDatabase() {
         return DATABASE.of(this);
     }
 

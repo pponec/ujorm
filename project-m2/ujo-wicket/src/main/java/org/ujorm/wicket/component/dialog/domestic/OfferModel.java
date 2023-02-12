@@ -68,7 +68,7 @@ public class OfferModel<U extends Ujo & Serializable> implements Serializable {
     /** Main filter model */
     private final IModel<Criterion<U>> filterModel;
     /** Main filter */
-    private IModel<Criterion<U>> highliting;
+    private final IModel<Criterion<U>> highliting;
     /** Title */
     private IModel<String> title;
     /** Window dimension */

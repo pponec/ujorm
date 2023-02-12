@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * A joinable function
- * 
+ *
  * <h3>Usage</h3>
  * <pre>
  *  Function&lt;Person, String&gt; nameProvider = Joinable
@@ -30,11 +30,11 @@ import org.jetbrains.annotations.Nullable;
  *     .add(Person::getName);
  *  String superBossName = nameProvider.apply(getPerson());
  * </pre>
- * 
- * @author Pavel Ponec 
+ *
+ * @author Pavel Ponec
  */
 public interface Joinable<D, R> extends Function<D, R> {
-    
+
     /**
      * Applies this function to the given argument.
      *
@@ -44,7 +44,7 @@ public interface Joinable<D, R> extends Function<D, R> {
     @Override
     @Nullable
     R apply(@Nullable D d);
-    
+
     /** Send a result of the first function to the next one.
      * @param <F> A final result type
      * @param next Next function
@@ -57,16 +57,16 @@ public interface Joinable<D, R> extends Function<D, R> {
             return value != null ? next.apply(value) : null;
         };
     }
-    
+
     /** Create a joinable function
-     * 
+     *
      * @param <D> Domain value
      * @param <R> Result value
      * @param fce An original function
      * @return The new object type of Function
      */
     @NotNull
-    public static <D, R> Joinable<D, R> of(@NotNull final Function<D, R> fce) {
-        return (D d) -> d != null ? fce.apply(d) : null; 
+    static <D, R> Joinable<D, R> of(@NotNull final Function<D, R> fce) {
+        return (D d) -> d != null ? fce.apply(d) : null;
     }
 }

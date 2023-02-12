@@ -47,10 +47,10 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
     @Named("applParams")
     @SpringBean ApplicationParams<ApplicationParams> params;
 
-    private CustomerEditor editDialog;
-    private MessageDialogPane removeDialog;
-    private LoginDialog loginDialog;
-    private Toolbar<U> toolbar = new Toolbar("toolbar");
+    private final CustomerEditor editDialog;
+    private final MessageDialogPane removeDialog;
+    private final LoginDialog loginDialog;
+    private final Toolbar<U> toolbar = new Toolbar("toolbar");
 
     public CustomerTable(String id) {
         super(id);

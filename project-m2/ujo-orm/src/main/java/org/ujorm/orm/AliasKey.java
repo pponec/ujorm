@@ -17,6 +17,8 @@ package org.ujorm.orm;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
+
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.core.annot.PackagePrivate;
@@ -31,7 +33,7 @@ import org.ujorm.tools.msg.MsgFormatter;
 final public class AliasKey {
 
     /** The default relation alias contains an unsupported character(s) (e.g. space) */
-    @PackagePrivate static final String DEFAULT_RELATION_ALIAS = new String("[RELATION ALIAS]");
+    @PackagePrivate static final String DEFAULT_RELATION_ALIAS = "[RELATION ALIAS]";
 
     /** The Key is not null always */
     @PackagePrivate final Key<?,?> key;
@@ -103,17 +105,11 @@ final public class AliasKey {
         if (this.key != other.key) {
             return false;
         }
-        if (this.aliasFrom != other.aliasFrom
-        && (this.aliasFrom == null || !this.aliasFrom.equals(other.aliasFrom))
+        if (!Objects.equals(this.aliasFrom, other.aliasFrom)
         ){
             return false;
         }
-        if (this.aliasTo != other.aliasTo
-        && (this.aliasTo == null || !this.aliasTo.equals(other.aliasTo))
-        ){
-            return false;
-        }
-        return true;
+        return Objects.equals(this.aliasTo, other.aliasTo);
     }
 
     @Override

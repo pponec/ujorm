@@ -44,7 +44,7 @@ public class UjoDropDown<U extends Ujo> extends DropDownChoice<U> {
      * @param display Required display Key
      */
     public UjoDropDown(final String id, final List<? extends U> choices, Key<U, ?> index, Key<U, ?> display) {
-        this(id, choices, KeyRing.<U>of( Assert.notNull(index, "index")
+        this(id, choices, KeyRing.of( Assert.notNull(index, "index")
                                        , Assert.notNull(display, "display")));
     }
 
@@ -92,7 +92,7 @@ public class UjoDropDown<U extends Ujo> extends DropDownChoice<U> {
             @Override public boolean compare(final Component component, final Object newObject) {
                 if (display.getType().isInstance(newObject)) {
                     final U thisValue = (U) component.getDefaultModelObject();
-                    final Key<U, Object> ID = (Key<U, Object>) display.getFirstKey();
+                    final Key<U, Object> ID = display.getFirstKey();
                     return thisValue != null && ID.equals(thisValue, ID.of((U) newObject));
                 } else {
                     return UjoDropDown.super.getModelComparator().compare(component, newObject);

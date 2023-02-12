@@ -823,9 +823,9 @@ public class SampleORM {
 
     /** Print some meta-data of the key Order.NOTE. */
     public void useMetadata() {
-        MetaColumn col = (MetaColumn) handler.findColumnModel(Order.NOTE);
+        MetaColumn col = handler.findColumnModel(Order.NOTE);
 
-        String msg = "** METADATA OF COLUMN: " + Order.NOTE.toString() + '\n'
+        String msg = "** METADATA OF COLUMN: " + Order.NOTE + '\n'
             + "DB name: " + col.getFullName()  + '\n'
             + "Comment: " + col.getComment()   + '\n'
             + "Length : " + col.getMaxLength() + '\n'

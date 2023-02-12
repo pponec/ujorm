@@ -28,32 +28,32 @@ import org.ujorm.orm.metaModel.MetaColumn;
 public interface ColumnWrapper {
 
     /** Returns an original meta-table model */
-    public MetaColumn getModel();
+    MetaColumn getModel();
 
     /** Returns an original column name */
-    public String getName();
+    String getName();
 
     /** Returns always the NonNull alias of the related database table */
-    public String getTableAlias();
+    String getTableAlias();
 
     /** Build new table wrapper including an table alias */
-    public TableWrapper buildTableWrapper();
+    TableWrapper buildTableWrapper();
 
     /** Returns an original key */
-    public Key getKey();
+    Key getKey();
 
     /** Returns if key is type of {@link org.ujorm.CompositeKey} */
-    public boolean isCompositeKey();
+    boolean isCompositeKey();
 
     /** Method returns the {@code true} value if two attributes Keys are the same */
     @Override
-    public boolean equals(Object column);
+    boolean equals(Object column);
 
     // --- STATIC METHOD ----
 
     /** Create new instance for a required name */
     @NotNull
-    public static ColumnWrapper forName(@NotNull final MetaColumn column, @NotNull final String name) {
+    static ColumnWrapper forName(@NotNull final MetaColumn column, @NotNull final String name) {
         return new ColumnWrapperImpl(column, column.getColumnAlias()) {
             @Override public String getName() {
                 return name;
@@ -63,7 +63,7 @@ public interface ColumnWrapper {
 
     /** Create new instance for a required name */
     @NotNull
-    public static ColumnWrapper forAlias(@NotNull final MetaColumn column, @NotNull final String alias) {
+    static ColumnWrapper forAlias(@NotNull final MetaColumn column, @NotNull final String alias) {
         return new ColumnWrapperImpl(column, alias);
     }
 

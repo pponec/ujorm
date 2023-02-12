@@ -27,65 +27,65 @@ public interface UjoAction {
     /** This is an undefined action.
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
-    public static final int ACTION_UNDEFINED = 0;
+    int ACTION_UNDEFINED = 0;
     /** An authorization action (of a Key) for a XML export.
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
-    public static final int ACTION_XML_EXPORT = 2;
+    int ACTION_XML_EXPORT = 2;
     /** An authorization action (of a Key) for a XML import.
      * <br>Note: the authoriazation is not implemented yet.
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
-    public static final int ACTION_XML_IMPORT = 3;
+    int ACTION_XML_IMPORT = 3;
     /** An authorization action (of a Key) for a Resource Bundle export.
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
-    public static final int ACTION_RESBUNDLE_EXPORT = 10;
+    int ACTION_RESBUNDLE_EXPORT = 10;
     /** An authorization action (of a Key) for a Resource Bundle import.
      * <br>Note: the authoriazation is not implemented yet.
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
-    public static final int ACTION_RESBUNDLE_IMPORT = 11;
+    int ACTION_RESBUNDLE_IMPORT = 11;
     /** An authorization action (of a Key) for a CSV import.
      * <br>Note: the authoriazation is not implemented yet.
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
-    public static final int ACTION_CSV_IMPORT = 12;
+    int ACTION_CSV_IMPORT = 12;
     /** An authorization action (of a Key) for a CSV export.
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
-    public static final int ACTION_CSV_EXPORT = 13;
+    int ACTION_CSV_EXPORT = 13;
     /**
      * An authorization action (of a Key) for a method: UjoManager.clone(Ujo ujo, int depth) .
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
-    public static final int ACTION_CLONE = 20;
+    int ACTION_CLONE = 20;
     /**
      * An authorization action (of a Key) for a method: UjoManager.copy(Ujo source, Ujo target, Key... keys) .
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
-    public static final int ACTION_COPY = 21;
+    int ACTION_COPY = 21;
     /**
      * An authorization action (of a Key) for a method: {@link org.ujorm.extensions.SuperAbstractUjo#toString()}
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
-    public static final int ACTION_TO_STRING = 22;
+    int ACTION_TO_STRING = 22;
     /** An authorization action (of a Key) for a Zero provider.
      * The constant enable/disable a Zero Provide management.
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      * @deprecated use the Key.getDefault() value instead of.
      */
-    public static final int ACTION_ZERO_REPLACE = 30;
+    int ACTION_ZERO_REPLACE = 30;
     /** An authorization action for class UjoContentTabModel. Can by displayed the key in a JTable like a row?.
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
-    public static final int ACTION_TABLE_SHOW = 100;
+    int ACTION_TABLE_SHOW = 100;
 
 
     // ========= DUMMY ACTION =========
 
     /** A dummy action have got an ACTION_UNDEFINED id and the null context. */
-    public static final UjoAction DUMMY = new UjoActionImpl(null);
+    UjoAction DUMMY = new UjoActionImpl(null);
 
     // ========= METHODS =========
 
@@ -97,10 +97,10 @@ public interface UjoAction {
      * </ul>
      * <br>The number can be useful for a resolution of an action for a different purpose (e.g. export to 2 different XML files).
      */
-    public int getType();
+    int getType();
 
     /** Returns a context of the action. The value is dedicated to a user usage and the value can be {@code null}. */
-    public Object getContext();
+    Object getContext();
 
     /** Returns a default UjoManager */
     // TODO: public org.ujorm.core.UjoManager getManager();

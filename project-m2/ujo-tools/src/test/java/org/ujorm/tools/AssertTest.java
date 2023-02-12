@@ -63,36 +63,36 @@ public class AssertTest {
         Integer value = 20;
         try {
             Assert.isTrue(value, (x) -> x < 10, "Wrong number {}", value); // "Wrong number 20"
-            assertTrue(false);
+            fail();
         } catch (IllegalArgumentException e) {
             assertEquals("Wrong number 20", e.getMessage());
         }
 
         try {
             Assert.isTrue(value, (x) -> x < 10, "Wrong", value); // "Wrong, 20"
-            assertTrue(false);
+            fail();
         } catch (IllegalArgumentException e) {
             assertEquals("Wrong 20", e.getMessage());
         }
 
         try {
             Assert.isTrue(value, (x) -> x < 10, value); // "20"
-            assertTrue(false);
+            fail();
         } catch (IllegalArgumentException e) {
             assertEquals("20", e.getMessage());
         }
 
         try {
             Assert.isTrue(value, (x) -> x < 10); //  null
-            assertTrue(false);
+            fail();
         } catch (IllegalArgumentException e) {
-            assertEquals(null, e.getMessage());
+            assertNull(e.getMessage());
         }
 
         value = null;
         try {
             Assert.isTrueRequired(value, (x) -> x < 10, "Wrong number {}", value); // "Wrong number null"
-            assertTrue(false);
+            fail();
         } catch (IllegalArgumentException e) {
             assertEquals("Wrong number null", e.getMessage());
         }
@@ -223,7 +223,7 @@ public class AssertTest {
     @Test
     public void testHasLength_Collection_ObjectArr_ok() {
         System.out.println("hasLength");
-        Collection values = Arrays.asList("A", "B", "C");;
+        Collection values = Arrays.asList("A", "B", "C");
         Assert.hasLength(values, TEST_MESSAGE);
     }
 
@@ -400,7 +400,7 @@ public class AssertTest {
         String expResult = "MESSAGE:ABC";
         try {
             Assert.notNull(value, TEST_MESSAGE);
-            assertTrue(false);
+            fail();
         } catch (IllegalArgumentException e) {
             assertEquals(expResult, e.getMessage());
             assertTrue(e.getCause() instanceof NullPointerException);
@@ -408,7 +408,7 @@ public class AssertTest {
 
         try {
             Assert.isTrueRequired(value, (x) -> x.length() < 20, TEST_MESSAGE);
-            assertTrue(false);
+            fail();
         } catch (IllegalArgumentException e) {
             assertEquals(expResult, e.getMessage());
             assertNull(e.getCause());
@@ -426,7 +426,7 @@ public class AssertTest {
         String expResult = null;
         try {
             Assert.notNull(value, NO_MESSAGE);
-            assertTrue(false);
+            fail();
         } catch (IllegalArgumentException e) {
             assertEquals(expResult, e.getMessage());
             assertTrue(e.getCause() instanceof NullPointerException);

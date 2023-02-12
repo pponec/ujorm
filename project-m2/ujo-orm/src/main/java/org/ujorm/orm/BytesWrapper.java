@@ -23,6 +23,6 @@ package org.ujorm.orm;
 public interface BytesWrapper  {
 
     /** Export the value as an array of bytes. */
-    public byte[] exportToBytes();
+    byte[] exportToBytes();
 
 }

@@ -51,24 +51,24 @@ import org.ujorm.Ujo;
 public interface UjoExt<UJO extends UjoExt> extends UjoMiddle<UJO> {
 
     /** Getter based on two keys */
-    public <UJO2 extends Ujo, VALUE> VALUE get
+    <UJO2 extends Ujo, VALUE> VALUE get
         ( Key<? super UJO, UJO2 > key1
         , Key<UJO2, VALUE> key2);
 
     /** Getter based on three keys */
-    public <UJO2 extends Ujo, UJO3 extends Ujo, VALUE> VALUE get
+    <UJO2 extends Ujo, UJO3 extends Ujo, VALUE> VALUE get
         ( Key<? super UJO, UJO2 > key1
         , Key<UJO2, UJO3 > key2
         , Key<UJO3, VALUE> key3 );
 
     /** Setter  based on two keys. Type of value is checked in the runtime. */
-    public <UJO2 extends Ujo, VALUE> void set
+    <UJO2 extends Ujo, VALUE> void set
         ( Key<? super UJO, UJO2 > key1
         , Key<UJO2, VALUE> key2
         , VALUE value);
 
     /** Setter  based on three keys. Type of value is checked in the runtime. */
-    public <UJO2 extends Ujo, UJO3 extends Ujo, VALUE> void set
+    <UJO2 extends Ujo, UJO3 extends Ujo, VALUE> void set
         ( Key<? super UJO, UJO2 > key1
         , Key<UJO2, UJO3 > key2
         , Key<UJO3, VALUE> key3
@@ -80,21 +80,21 @@ public interface UjoExt<UJO extends UjoExt> extends UjoMiddle<UJO> {
     /** Returns a count of Items. If the key is null, method returns 0.
      * <br>Inside is called a method ListUjoPropertyCommon.getItemCount() .
      */
-    public <ITEM> int getItemCount
+    <ITEM> int getItemCount
         ( ListKey<? super UJO,ITEM> key);
 
 
     /** Add Value, if the List is null then the list will be created.
      * <br>Inside is called a method ListUjoPropertyCommon.addItem(...) .
      */
-    public <ITEM> Ujo add
+    <ITEM> Ujo add
         ( ListKey<? super UJO,ITEM> key
         , ITEM value);
 
     /** Add Value, if the List is null then the list will be created.
      * <br>Inside is called a method ListUjoPropertyCommon.setItem(...) .
      */
-    public <ITEM> Ujo set
+    <ITEM> Ujo set
         ( ListKey<? super UJO,ITEM> key
         , int index
         , ITEM value);
@@ -102,24 +102,24 @@ public interface UjoExt<UJO extends UjoExt> extends UjoMiddle<UJO> {
     /** Get Value
      * <br>Inside is called a method ListUjoPropertyCommon.getItem(...) .
      */
-    public <ITEM> ITEM get
+    <ITEM> ITEM get
         ( ListKey<? super UJO,ITEM> key
         , int index);
 
     /** Get Value */
-    public <ITEM> ITEM remove
+    <ITEM> ITEM remove
         ( ListKey<? super UJO,ITEM> key
         , int index);
 
     /** Returns a not null List. If original list value is empty, the new List is created.
      * <br>Inside is called a method ListUjoPropertyCommon.getList() .
      */
-    public <LIST extends List<ITEM>,ITEM> LIST list
+    <LIST extends List<ITEM>,ITEM> LIST list
         ( ListKey<? super UJO,ITEM> key
         );
 
     /** Indicates whether a parameter value "equal to" key default value. */
-    public <VALUE> boolean isDefault
+    <VALUE> boolean isDefault
         ( Key<? super UJO, VALUE> key);
 
 }

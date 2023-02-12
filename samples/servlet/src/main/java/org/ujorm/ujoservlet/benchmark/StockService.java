@@ -30,7 +30,7 @@ public enum StockService {
     /** Immutable stocks */
     final List<Stock> stocks;
 
-    private StockService() {
+    StockService() {
         stocks = createStock();
     }
 

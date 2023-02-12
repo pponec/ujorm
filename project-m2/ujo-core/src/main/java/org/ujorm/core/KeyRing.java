@@ -67,7 +67,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
     /**
      * Constructor
      * @param keys Property array
-     * @see #of(Key[])  
+     * @see #of(Key[])
      */
     public KeyRing(Key<U, ?>... keys) {
         this(null, keys);
@@ -77,7 +77,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
      * Constructor
      * @param domainClass If the parameter is null then the value is calculated from keys.
      * @param keys Property array
-     * @see #of(Key[]) 
+     * @see #of(Key[])
      */
     protected KeyRing(Class<U> domainClass, Key<U, ?>... keys) {
         this.type = domainClass;
@@ -213,13 +213,13 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
     /** Get The First Keys */
     @Override
     public <T> Key<U, T> getFirstKey() {
-        return (Key<U, T>) get(0);
+        return get(0);
     }
 
     /** Get The Last Keys */
     @Override
     public <T> Key<U,T> getLastKey() {
-        return (Key<U,T>) get(keys.length - 1);
+        return get(keys.length - 1);
     }
 
     /** Get The First value */
@@ -273,7 +273,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
             }
 
             @Override public Key<U,Object> next() {
-                return (Key<U,Object>) get(++i);
+                return get(++i);
             }
 
             /** The method is not supported. */
@@ -297,7 +297,7 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
     public U newBaseUjo() throws IllegalStateException {
         try {
             @SuppressWarnings("unchecked")
-            final U result = (U) type.newInstance();
+            final U result = type.newInstance();
             return result;
 
         } catch (RuntimeException | ReflectiveOperationException e) {
@@ -527,14 +527,14 @@ public class KeyRing<U extends Ujo> implements KeyList<U>, Serializable {
         final Key[] ps = new Key[keys.size()];
         int i = 0;
         for (Key<? super UJO, ?> p : keys) {
-            ps[i++] = (Key<UJO, ?>) p;
+            ps[i++] = p;
         }
         return new KeyRing<>(domainClass, ps);
     }
 
     /** Create a new instance, the parameters is cloned. */
     public static <UJO extends Ujo> KeyRing<UJO> of(@NotNull final Key<? super UJO, ?>... keys) {
-        return of(null, (Key<Ujo,Object>[]) keys);
+        return of(null, keys);
     }
 
     /** Create a new instance */

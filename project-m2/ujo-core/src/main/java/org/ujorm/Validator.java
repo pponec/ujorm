@@ -53,7 +53,7 @@ public interface Validator<VALUE> {
      * @return the ValidationError instance or the {
      * @null value} if the result is ok.
      */
-    public <UJO extends Ujo> ValidationError validate(Key<UJO, VALUE> key, UJO bo);
+    <UJO extends Ujo> ValidationError validate(Key<UJO, VALUE> key, UJO bo);
 
     /** Validate the input value and return an non-null result, if the input ís not valid;
      * @param input The input value to validation
@@ -62,36 +62,36 @@ public interface Validator<VALUE> {
      * @return the ValidationError instance or the {
      * @null value} if the result is ok.
      */
-    public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo);
+    <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo);
 
     /** Throw an exception if input value is not valid.
      * @param value Value to validation
      * @param key UJO Key
      * @param bo Target Domain object @null value} if the result is ok.
      */
-    public <UJO extends Ujo> void checkValue(VALUE value, Key<UJO, VALUE> key, UJO bo) throws ValidationException;
+    <UJO extends Ujo> void checkValue(VALUE value, Key<UJO, VALUE> key, UJO bo) throws ValidationException;
 
     /** Throw an exception if input value is not valid.
      * @param key UJO Key
      * @param bo Target Domain object @null value} if the result is ok.
      */
-    public <UJO extends Ujo> void checkValue(Key<UJO, VALUE> key, UJO bo) throws ValidationException;
+    <UJO extends Ujo> void checkValue(Key<UJO, VALUE> key, UJO bo) throws ValidationException;
 
     /** Returns a unique localization key for a constrain type. Two instances
      * of the same Validator class may returns two different keys
      * according the constructor parameter */
-    public String getLocalizationKey();
+    String getLocalizationKey();
 
     /** Join current validator with parameter using operator AND */
-    public Validator<VALUE> and(Validator<VALUE> validator);
+    Validator<VALUE> and(Validator<VALUE> validator);
 
     /** Join current validator with parameter using operator OR.
      * <br>Take note, please, that this operation may have higher requirements for processing.
      * Use the method carefully, or better you create a new implementation of the interface Validate.
      */
-    public Validator<VALUE> or(Validator<VALUE> validator);
+    Validator<VALUE> or(Validator<VALUE> validator);
 
     /** Validator Factory */
-    public static abstract class Build extends ValidatorFactory{}
+    abstract class Build extends ValidatorFactory{}
 
 }

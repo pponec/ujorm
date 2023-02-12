@@ -138,7 +138,7 @@ public class WeakKeyImpl<VALUE>
             final Method m = servletReqest.getClass().getMethod("getParameter", String.class);
             final Object result = m.invoke(servletReqest, getName());
             return result!=null
-                   ? (VALUE) UjoManager.getInstance().decodeValue(getType(), result.toString())
+                   ? UjoManager.getInstance().decodeValue(getType(), result.toString())
                    : getDefault() ;
         } catch (RuntimeException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new IllegalUjormException("Can't get parameter " + getName() + " from the servletRequest: " + servletReqest, e);

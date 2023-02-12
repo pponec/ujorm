@@ -84,13 +84,13 @@ public class KeyRingTest extends TestCase {
         assertSame(ring1.getFirstKey(), ring2.getFirstKey());
         assertSame(ring1.getFirstKey().of(ujo), ring2.getFirstKey().of(ujo));
         assertSame(ring1.getFirstKey().isAscending(), ring2.getFirstKey().isAscending());
-        assertTrue(ring1.getLastKey().equals( ring2.getLastKey()));
+        assertEquals(ring1.getLastKey(), ring2.getLastKey());
         assertEquals(ring1.getLastKey(), ring2.getLastKey());
         assertEquals(((CompositeKey)ring1.getLastKey()).getAlias(0), ((CompositeKey)ring2.getLastKey()).getAlias(0));
         assertSame(ring1.getLastKey().of(ujo), ring2.getLastKey().of(ujo));
         assertTrue(ring2.contains(ring1.getFirstKey()));
         assertFalse(ring2.contains(UjoCSV.P2));
-        assertTrue(ring2.equals(ring1));
+        assertEquals(ring2, ring1);
     }
 
     /**
@@ -112,7 +112,7 @@ public class KeyRingTest extends TestCase {
         assertSame(props1.getLastKey().of(ujo), props2.getLastKey().of(ujo));
         assertTrue(props2.contains(props1.getFirstKey()));
         assertFalse(props2.contains(UjoCSV.P2));
-        assertTrue(props2.equals(props1));
+        assertEquals(props2, props1);
     }
 
     /**
@@ -135,7 +135,7 @@ public class KeyRingTest extends TestCase {
         assertSame(props1.getLastKey().of(ujo), props2.getLastKey().of(ujo));
         assertTrue(props2.contains(props1.getFirstKey()));
         assertFalse(props2.contains(UjoCSV.P2));
-        assertTrue(props2.equals(props1));
+        assertEquals(props2, props1);
     }
 
     /**
@@ -157,7 +157,7 @@ public class KeyRingTest extends TestCase {
         assertSame(props1.getLastKey().of(ujo), props2.getLastKey().of(ujo));
         assertTrue(props2.contains(props1.getFirstKey()));
         assertFalse(props2.contains(UjoCSV.P2));
-        assertTrue(props2.equals(props1));
+        assertEquals(props2, props1);
     }
 
     // ------------ KEY SPACES ------------
@@ -172,16 +172,16 @@ public class KeyRingTest extends TestCase {
         key1 = KeyRing.of(S1.add(S2).add(S1));
         key2 = serialize(key1);
         cKey = (CompositeKey<UjoName,?>) key2.get(0);
-        assertEquals(null, cKey.getAlias(0));
-        assertEquals(null, cKey.getAlias(1));
-        assertEquals(null, cKey.getAlias(2));
+        assertNull(cKey.getAlias(0));
+        assertNull(cKey.getAlias(1));
+        assertNull(cKey.getAlias(2));
 
         // ---
 
         key1 = KeyRing.of(S1.add(S2, "A1").add(S1, "A2"));
         key2 = serialize(key1);
         cKey = (CompositeKey<UjoName,?>) key2.get(0);
-        assertEquals(null, cKey.getAlias(0));
+        assertNull(cKey.getAlias(0));
         assertEquals("A1", cKey.getAlias(1));
         assertEquals("A2", cKey.getAlias(2));
 
@@ -190,21 +190,21 @@ public class KeyRingTest extends TestCase {
         key1 = KeyRing.of(S1.add(S2, "A1").add(S1).add(S1, "A3").add(S1));
         key2 = serialize(key1);
         cKey = (CompositeKey<UjoName,?>) key2.get(0);
-        assertEquals(null, cKey.getAlias(0));
+        assertNull(cKey.getAlias(0));
         assertEquals("A1", cKey.getAlias(1));
-        assertEquals(null, cKey.getAlias(2));
+        assertNull(cKey.getAlias(2));
         assertEquals("A3", cKey.getAlias(3));
-        assertEquals(null, cKey.getAlias(4));
+        assertNull(cKey.getAlias(4));
 
         // ---
 
         key1 = KeyRing.of(S1.add(S1, "A1"), S1.add(S2, "A2"));
         key2 = serialize(key1);
         cKey = (CompositeKey<UjoName,?>) key2.get(0);
-        assertEquals(null, cKey.getAlias(0));
+        assertNull(cKey.getAlias(0));
         assertEquals("A1", cKey.getAlias(1));
         cKey = (CompositeKey<UjoName,?>) key2.get(1);
-        assertEquals(null, cKey.getAlias(0));
+        assertNull(cKey.getAlias(0));
         assertEquals("A2", cKey.getAlias(1));
     }
 
@@ -218,9 +218,9 @@ public class KeyRingTest extends TestCase {
         key1 = KeyRing.of(S1.add(S2).add(S1));
         key2 = serialize(key1);
         cKey = (CompositeKey<UjoName,?>) key2.get(0);
-        assertEquals(null, cKey.getAlias(0));
-        assertEquals(null, cKey.getAlias(1));
-        assertEquals(null, cKey.getAlias(2));
+        assertNull(cKey.getAlias(0));
+        assertNull(cKey.getAlias(1));
+        assertNull(cKey.getAlias(2));
 
         // ---
 
@@ -238,9 +238,9 @@ public class KeyRingTest extends TestCase {
         cKey = (CompositeKey<UjoName,?>) key2.get(0);
         assertEquals("A0", cKey.getAlias(0));
         assertEquals("A1", cKey.getAlias(1));
-        assertEquals(null, cKey.getAlias(2));
+        assertNull(cKey.getAlias(2));
         assertEquals("A3", cKey.getAlias(3));
-        assertEquals(null, cKey.getAlias(4));
+        assertNull(cKey.getAlias(4));
 
         // ---
 
@@ -250,7 +250,7 @@ public class KeyRingTest extends TestCase {
         assertEquals("A0", cKey.getAlias(0));
         assertEquals("A1", cKey.getAlias(1));
         cKey = (CompositeKey<UjoName,?>) key2.get(1);
-        assertEquals(null, cKey.getAlias(0));
+        assertNull(cKey.getAlias(0));
         assertEquals("A2", cKey.getAlias(1));
     }
 

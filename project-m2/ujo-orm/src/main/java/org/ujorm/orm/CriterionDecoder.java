@@ -147,7 +147,7 @@ public class CriterionDecoder {
     /** Returns direct column or throw an exception */
     public MetaColumn getColumn(int i) throws IllegalArgumentException {
         final Key p = values.get(i).getLeftNode();
-        final MetaColumn ormColumn = (MetaColumn) handler.findColumnModel(p, true);
+        final MetaColumn ormColumn = handler.findColumnModel(p, true);
         return ormColumn;
     }
 
@@ -299,7 +299,7 @@ public class CriterionDecoder {
         // Get relations from the 'order by':
         if (orderBy != null) {
             for (Key p1 : orderBy) {
-                AliasKey.addRelations((CompositeKey) p1, result);
+                AliasKey.addRelations(p1, result);
             }
         }
 

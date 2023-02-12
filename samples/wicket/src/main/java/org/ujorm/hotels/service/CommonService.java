@@ -36,38 +36,38 @@ public interface CommonService {
     public static final Period ONE_DAY = Period.ofDays(1);
 
     /** Find a customer */
-    public Customer getCustomer(String login);
+    Customer getCustomer(String login);
 
     /** Find enabled customer  */
-    public Customer findCustomer(String login, String password);
+    Customer findCustomer(String login, String password);
 
     /** Delete hotel if no related booking was found, or inactive it */
-    public void deleteHotel(Hotel hotel);
+    void deleteHotel(Hotel hotel);
 
     /** Update hotel */
-    public void saveOrUpdateHotel(Hotel hotel);
+    void saveOrUpdateHotel(Hotel hotel);
 
     /** Delete customer if no related booking was found, or inactive it */
-    public void deleteCustomer(Customer customer);
+    void deleteCustomer(Customer customer);
 
     /** Insert or Update customer */
-    public void saveOrUpdateCustomer(Customer customer);
+    void saveOrUpdateCustomer(Customer customer);
 
     /** Reload hotel from database and build new Booking model */
-    public IModel<Booking> prepareBooking(UjoEvent<Hotel> event);
+    IModel<Booking> prepareBooking(UjoEvent<Hotel> event);
 
     /** Create new booking */
-    public void saveBooking(Booking domain);
+    void saveBooking(Booking domain);
 
     /** Booking in the feature can be removed by its customer, or an administrator */
-    public void deleteBooking(Booking domain);
+    void deleteBooking(Booking domain);
 
     /** Returns a booking criterion */
-    public Criterion<Booking> getBookingPreview();
+    Criterion<Booking> getBookingPreview();
 
     /** Is the measuring code enabled? */
-    public boolean isMeasuringCode();
+    boolean isMeasuringCode();
 
     /** Find hotels according to condition. Max row count is 1000. */
-    public List<Hotel> findHotels(Criterion<? extends Hotel> condition);
+    List<Hotel> findHotels(Criterion<? extends Hotel> condition);
 }

@@ -136,10 +136,7 @@ public class PackageDbConfig<U extends OrmUjo> extends NativeUjoDecorator<U> {
         if (clazz.getAnnotation(Db.class) != null) {
             return false;
         }
-        if (domain.getClass().equals(clazz)) {
-            return false;
-        }
-        return true;
+        return !domain.getClass().equals(clazz);
     }
 
     /** Create new instance */

@@ -393,8 +393,8 @@ public class TypeService implements ITypeService<Object,Object> {
 
         // The default number of an Enum type is the Short type:
         if (dbValue instanceof Integer) {
-            switch (column.getTypeCode()) {
-                case ENUM: return Short.class;
+            if (column.getTypeCode() == ENUM) {
+                return Short.class;
             }
         }
 

@@ -24,6 +24,6 @@ import org.ujorm.extensions.UjoMiddle;
 public interface IModuleParams<U extends IModuleParams> extends UjoMiddle<U>  {
 
     /** Returns a module */
-    public IModule getModule();
+    IModule getModule();
 
 }

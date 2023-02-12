@@ -22,7 +22,7 @@ package org.ujorm.orm.support;
  */
 public interface  UjoSessionFactoryFilter {
 
-    public void openSession();
+    void openSession();
 
-    public void closeSession();
+    void closeSession();
 }

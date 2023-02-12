@@ -25,7 +25,7 @@ import org.ujorm.core.KeyFactory;
  */
 public class ACustomerExtended extends ACustomer {
 
-    private static KeyFactory<ACustomerExtended> f = newCamelFactory(ACustomerExtended.class);
+    private static final KeyFactory<ACustomerExtended> f = newCamelFactory(ACustomerExtended.class);
 
     /** Extended key */
     public static final Key<ACustomerExtended, Long> ID_EXTENDED = f.newKeyDefault(101L);

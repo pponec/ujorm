@@ -17,7 +17,7 @@
 package org.ujorm.orm.annot;
 import java.lang.annotation.*;
 
-/** 
+/**
  * Use the annotation to comment a database table or column.<br>
  * In case you are using the database MySQL, please see more information about the column {@link org.ujorm.orm.dialect.MySqlDialect#printComment(org.ujorm.orm.metaModel.MetaColumn, java.lang.Appendable) implementation }
  * @see org.ujorm.orm.dialect.MySqlDialect#printComment(org.ujorm.orm.metaModel.MetaColumn, java.lang.Appendable) MySqlDialect column implementation
@@ -27,8 +27,8 @@ import java.lang.annotation.*;
 public @interface Comment {
 
     /** A String for the NULL value. */
-    public static final String NULL = ""; // TODO: try to use: "<NULL>"
+    String NULL = ""; // TODO: try to use: "<NULL>"
 
     String value() default NULL;
-    
+
 }

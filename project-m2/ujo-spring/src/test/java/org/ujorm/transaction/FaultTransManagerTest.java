@@ -39,7 +39,7 @@ public class FaultTransManagerTest extends TestCase {
     }
 
     // ----------------------------------------------------
-    
+
     /** Test of fault TransactonManager. */
     public void testSubTransactionManager1() {
         System.out.println("testSubTransactionManager1");
@@ -50,7 +50,7 @@ public class FaultTransManagerTest extends TestCase {
 
         try {
            orderService.save(order);
-           assertTrue("Missing a duplicity exception", false);
+            fail("Missing a duplicity exception");
         } catch (IllegalStateException e) {
             assertTrue(true);
         }
@@ -69,7 +69,7 @@ public class FaultTransManagerTest extends TestCase {
 
         try {
            orderService.save(order);
-           assertTrue("Missing a duplicity exception", false);
+            fail("Missing a duplicity exception");
         } catch (IllegalStateException e) {
             assertTrue(true);
         }

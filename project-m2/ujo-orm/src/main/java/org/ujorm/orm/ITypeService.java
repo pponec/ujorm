@@ -40,7 +40,7 @@ public interface ITypeService<J,D> {
      * @return Value form the result set.
      * @throws SQLException
      */
-    public J getValue(final MetaColumn mColumn, final ResultSet rs, final int c) throws SQLException;
+    J getValue(final MetaColumn mColumn, final ResultSet rs, final int c) throws SQLException;
 
     /**
      * GetValue from the <b>stored precedure</b> by position.
@@ -51,7 +51,7 @@ public interface ITypeService<J,D> {
      * @return Value form the result set.
      * @throws SQLException
      */
-    public J getValue(final MetaColumn mColumn, final CallableStatement rs, final int c) throws SQLException;
+    J getValue(final MetaColumn mColumn, final CallableStatement rs, final int c) throws SQLException;
 
     /** GetValue from the result set by position.
      * @param mColumn Meta-model column, where the {@link MetaColumn#getTypeCode() typeCode} must be assigned before.
@@ -60,7 +60,7 @@ public interface ITypeService<J,D> {
      * @param c The database column index starts at #1
      * @throws SQLException
      */
-    public void setValue
+    void setValue
         ( final MetaColumn mColumn
         , final PreparedStatement rs
         , final J value
@@ -69,6 +69,6 @@ public interface ITypeService<J,D> {
 
 
     /** Returns converted Java type to use in database <b>DDL statements</b>. */
-    public Class<D> getDbTypeClass(final MetaColumn column);
+    Class<D> getDbTypeClass(final MetaColumn column);
 
 }

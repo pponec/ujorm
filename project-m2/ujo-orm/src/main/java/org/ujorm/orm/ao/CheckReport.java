@@ -37,5 +37,5 @@ public enum CheckReport {
     WARNING,
     /** No quoting, but all names are compared to keywords on starting. If a keyword is found, the <strong>exception</strong> is throwed.
      * This is the default option. */
-    EXCEPTION;
+    EXCEPTION
 }

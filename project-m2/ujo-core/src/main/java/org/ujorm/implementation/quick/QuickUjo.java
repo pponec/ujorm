@@ -135,7 +135,7 @@ public abstract class QuickUjo extends AbstractUjo {
      * @hidden
      */
     protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListKey() {
-        return ListProperty.newListProperty((String)null, null);
+        return ListProperty.newListProperty(null, null);
     }
 
     // ------------- DEPRECATED METHODS ---------------------
@@ -279,7 +279,7 @@ public abstract class QuickUjo extends AbstractUjo {
      */
     @Deprecated
     protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty() {
-        return ListProperty.newListProperty((String)null, null);
+        return ListProperty.newListProperty(null, null);
     }
 
 }

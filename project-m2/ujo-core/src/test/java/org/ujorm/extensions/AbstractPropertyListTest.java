@@ -25,14 +25,14 @@ import static org.ujorm.extensions.PersonExt.*;
  * @author Pavel Ponec
  */
 public class AbstractPropertyListTest extends MyTestCase {
-    
+
     public AbstractPropertyListTest(String testName) {
         super(testName);
-    }  
-    
+    }
+
     public static TestSuite suite() {
         return new TestSuite(AbstractPropertyListTest.class);
-    }    
+    }
 
     @Override
     protected void setUp() throws Exception {
@@ -60,28 +60,28 @@ public class AbstractPropertyListTest extends MyTestCase {
         Person.CHILDREN.addItem(root, p1);
         assertEquals(2, Person.CHILDREN.getItemCount(root));
         //
-        
+
         boolean result = Person.CHILDREN.removeItem(root, p0);
-        assertEquals(true, result);
+        assertTrue(result);
         assertEquals(1, Person.CHILDREN.getItemCount(root));
         result = Person.CHILDREN.removeItem(root, p0);
-        assertEquals(false, result);
+        assertFalse(result);
         assertEquals(1, Person.CHILDREN.getItemCount(root));
         result = Person.CHILDREN.removeItem(root, p1);
-        assertEquals(true, result);
+        assertTrue(result);
         assertEquals(0, Person.CHILDREN.getItemCount(root));
         result = Person.CHILDREN.removeItem(root, p1);
-        assertEquals(false, result);
+        assertFalse(result);
         assertEquals(0, Person.CHILDREN.getItemCount(root));
         //
-        
+
         assertEquals(0, Person.CHILDREN.getItemCount(root));
         Person.CHILDREN.addItem(root, p0);
         assertEquals(1, Person.CHILDREN.getItemCount(root));
         Person.CHILDREN.addItem(root, p1);
         assertEquals(2, Person.CHILDREN.getItemCount(root));
         //
-        
+
         assertEquals(p0, Person.CHILDREN.getItem(root, 0));
         assertEquals(p1, Person.CHILDREN.getItem(root, 1));
         //
@@ -95,10 +95,10 @@ public class AbstractPropertyListTest extends MyTestCase {
         assertEquals(p0, p);
         assertEquals(px, Person.CHILDREN.getItem(root, i));
         //
-        
+
         root = new Person(0);
         result = Person.CHILDREN.removeItem(root, p0);
-        assertEquals(false, false);
+        assertFalse(false);
     }
 
     /**
@@ -111,35 +111,35 @@ public class AbstractPropertyListTest extends MyTestCase {
         PersonExt p1 = new PersonExt(1);
         PersonExt px = new PersonExt(2);
         PersonExt p  = null;
-        
+
         assertEquals(0, root.getItemCount(PERS));
         root.add(PERS, p0);
         assertEquals(1, PersonExt.PERS.getItemCount(root));
         root.add(PERS, p1);
         assertEquals(2, PersonExt.PERS.getItemCount(root));
         //
-        
+
         boolean result = root.remove(PERS, p0);
-        assertEquals(true, result);
+        assertTrue(result);
         assertEquals(1, root.getItemCount(PERS));
         result = root.remove(PERS, p0);
-        assertEquals(false, result);
+        assertFalse(result);
         assertEquals(1, root.getItemCount(PERS));
         result = PersonExt.PERS.removeItem(root, p1);
-        assertEquals(true, result);
+        assertTrue(result);
         assertEquals(0, root.getItemCount(PERS));
         result = root.remove(PERS, p1);
-        assertEquals(false, result);
+        assertFalse(result);
         assertEquals(0, root.getItemCount(PERS));
         //
-        
+
         assertEquals(0, root.getItemCount(PERS));
         PersonExt.PERS.addItem(root, p0);
         assertEquals(1, root.getItemCount(PERS));
         PersonExt.PERS.addItem(root, p1);
         assertEquals(2, root.getItemCount(PERS));
         //
-        
+
         assertEquals(p0, root.get(PERS, 0));
         assertEquals(p1, root.get(PERS, 1));
         //
@@ -153,10 +153,10 @@ public class AbstractPropertyListTest extends MyTestCase {
         assertEquals(p0, p);
         assertEquals(px, root.get(PERS, i));
         //
-        
+
         root = new PersonExt(0);
         result = root.remove(PERS, p0);
-        assertEquals(false, false);
+        assertFalse(false);
     }
 
     public static void main(java.lang.String[] argList) {

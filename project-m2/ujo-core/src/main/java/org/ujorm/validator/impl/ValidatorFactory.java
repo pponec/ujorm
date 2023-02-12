@@ -34,11 +34,11 @@ import static org.ujorm.validator.impl.NotNullValidator.*;
 public abstract class ValidatorFactory {
 
     /** A modifier of the validator */
-    public static enum CheckType {
+    public enum CheckType {
         /** The nullable value is allowed (the default option) */
         NULLABLE,
         /** Only notnull value is allowed */
-        MANDATORY;
+        MANDATORY
     }
     /** The nullable value is allowed (the default option) */
     public static final CheckType NULLABLE = CheckType.NULLABLE;

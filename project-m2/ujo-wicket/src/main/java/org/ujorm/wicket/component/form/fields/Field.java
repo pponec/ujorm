@@ -239,7 +239,7 @@ public class Field<T> extends GenericPanel<T> {
 
     /** Create Label and assign the CSS class {@code required} for the mandatory Field */
     protected Component createLabel(@NotNull final Component inp) {
-        final SimpleFormComponentLabel result = new SimpleFormComponentLabel("label", (LabeledWebMarkupContainer)input);
+        final SimpleFormComponentLabel result = new SimpleFormComponentLabel("label", input);
         //result.setDefaultModel(createLabelModel()); // see the: FormComponent.setLabel()
 
         if (isRequired()) {

@@ -357,7 +357,7 @@ public class Session implements Closeable {
 
     /** Returns the first Database instance. */
     public final <DB extends OrmUjo> DB getFirstDatabase() {
-        return (DB) getDatabase(null);
+        return getDatabase(null);
     }
 
     /** Returns a Database instance. If parameter is null, than method returns the first database. */
@@ -703,7 +703,7 @@ public class Session implements Closeable {
         try {
             final MetaTable table = singleObject
                 ? modifyParent(bo)
-                : handler.findTableModel((Class) bo.getClass())
+                : handler.findTableModel(bo.getClass())
                 ;
             table.assertChangeAllowed();
             final MetaDatabase db = table.getDatabase();
@@ -1197,7 +1197,7 @@ public class Session implements Closeable {
         , final boolean mandatory
         ) throws NoSuchElementException {
         assertOpenSession();
-        MetaColumn column = (MetaColumn) handler.findColumnModel(relatedProperty, true);
+        MetaColumn column = handler.findColumnModel(relatedProperty, true);
         List<MetaColumn> columns = column.getForeignColumns();
         if (columns.size() != 1) {
             throw new UnsupportedOperationException("There is supported only a one-column foreign key: " + column);
@@ -1377,7 +1377,7 @@ public class Session implements Closeable {
         final LoadingPolicy orig = getLoadingPolicy();
         try {
             setLoadingPolicy(LoadingPolicy.CREATE_STUB);
-            return (V) key.of(ujo);
+            return key.of(ujo);
         } finally {
             setLoadingPolicy(orig);
         }

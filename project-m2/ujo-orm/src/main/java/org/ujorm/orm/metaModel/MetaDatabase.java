@@ -249,7 +249,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     @NotNull
     public SqlDialect getDialect() {
         if (dialect==null) try {
-            dialect = (SqlDialect) DIALECT.of(this).newInstance();
+            dialect = DIALECT.of(this).newInstance();
             dialect.setHandler(ormHandler);
         } catch (RuntimeException | ReflectiveOperationException e) {
             throw new IllegalUjormException("Can't create an instance of " + dialect, e);
@@ -369,7 +369,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** Returns a full count of the database tables (views are excluded) and columns
      * @return [tableTotalCount, columnTotalCount]
      */
-    protected int[] getDbItemCount() {
+    int[] getDbItemCount() {
         int tableCount = 0;
         int columnCount = 0;
         for (MetaTable metaTable : TABLES.getList(this)) {
@@ -594,7 +594,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Create a new sequencer for selected table */
     @SuppressWarnings("unchecked")
-    protected UjoSequencer createSequencer(MetaTable table) throws IllegalUjormException {
+    UjoSequencer createSequencer(MetaTable table) throws IllegalUjormException {
         UjoSequencer result;
         Class seqClass = SEQUENCER.of(this);
         if (seqClass==UjoSequencer.class) {
@@ -640,12 +640,10 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** The PASSWORD key is not exported to XML for a better security. */
     @Override
     public boolean readAuthorization(final UjoAction action, final Key key, final Object value) {
-        switch (action.getType()) {
-            case UjoAction.ACTION_XML_EXPORT:
-                return key != PASSWORD;
-            default:
-                return super.readAuthorization(action, key, value);
+        if (action.getType() == UjoAction.ACTION_XML_EXPORT) {
+            return key != PASSWORD;
         }
+        return super.readAuthorization(action, key, value);
     }
 
 }

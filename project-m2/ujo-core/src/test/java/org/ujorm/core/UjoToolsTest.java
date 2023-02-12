@@ -35,13 +35,13 @@ public class UjoToolsTest extends TestCase {
     public void testIsFilled_CharSequence() {
         System.out.println("isFilled_CharSequence");
         String text = null;
-        assertEquals(false, UjoTools.isFilled(text));
+        assertFalse(UjoTools.isFilled(text));
         //
         text = "";
-        assertEquals(false, UjoTools.isFilled(text));
+        assertFalse(UjoTools.isFilled(text));
         //
         text = "ABC";
-        assertEquals(true, UjoTools.isFilled(text));
+        assertTrue(UjoTools.isFilled(text));
     }
 
     /**
@@ -50,13 +50,13 @@ public class UjoToolsTest extends TestCase {
     public void testIsFilled_Collection() {
         System.out.println("tsFilled_Collection");
         List<String> list = null;
-        assertEquals(false, UjoTools.isFilled(list));
+        assertFalse(UjoTools.isFilled(list));
         //
         list = new ArrayList<>();
-        assertEquals(false, UjoTools.isFilled(list));
+        assertFalse(UjoTools.isFilled(list));
         //
         list.add("ABC");
-        assertEquals(true, UjoTools.isFilled(list));
+        assertTrue(UjoTools.isFilled(list));
     }
 
 }

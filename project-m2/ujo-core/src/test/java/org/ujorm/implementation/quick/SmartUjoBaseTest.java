@@ -111,8 +111,8 @@ public class SmartUjoBaseTest extends MyTestCase {
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Class<?> o4 = Color.class;
@@ -133,10 +133,10 @@ public class SmartUjoBaseTest extends MyTestCase {
     }
 
     public void testSpeedTime() throws Throwable {
-        System.out.println("A1:testSpeedTime: " + suite().toString());
+        System.out.println("A1:testSpeedTime: " + suite());
 
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Class<?> o4 = Color.class;
@@ -175,10 +175,10 @@ public class SmartUjoBaseTest extends MyTestCase {
     }
 
     public void testSpeedTimeRecur() throws Throwable {
-        System.out.println("A2:testSpeedTime (recur): " + suite().toString());
+        System.out.println("A2:testSpeedTime (recur): " + suite());
 
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Class<?> o4 = Color.class;

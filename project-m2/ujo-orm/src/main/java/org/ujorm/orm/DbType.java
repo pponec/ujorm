@@ -21,7 +21,7 @@ import java.sql.JDBCType;
 /**
  * Supported Database Types
  * @author Pavel Ponec
- * @see Similar enum {@link java.sql.JDBCType} missing types: 
+ * @see Similar enum {@link java.sql.JDBCType} missing types:
  * UUID, VARCHAR_IGNORECASE
  */
 public enum DbType {
@@ -61,7 +61,7 @@ public enum DbType {
     OTHER(JDBCType.OTHER),
     ;
 
-    private DbType(JDBCType sqlType) {
+    DbType(JDBCType sqlType) {
         this.sqlType = sqlType;
     }
 
@@ -78,7 +78,7 @@ public enum DbType {
         return sqlType.getVendorTypeNumber();
     }
 
-    /** Compatibility with a method {@link java.sql.JDBCType#getVendorTypeNumber() } 
+    /** Compatibility with a method {@link java.sql.JDBCType#getVendorTypeNumber() }
      * @deprecated Use the method {@link #getSqlType()} rather.
      */
     @Deprecated

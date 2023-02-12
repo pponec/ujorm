@@ -126,7 +126,7 @@ public final class Wrapper<V> implements Comparable<Wrapper<V>>, Confessionable 
     public String toString() {
         return value.toString();
     }
-    
+
     @Override
     public Appendable confessTo(Appendable writer) throws IOException {
         writer.append(value.toString());
@@ -134,14 +134,14 @@ public final class Wrapper<V> implements Comparable<Wrapper<V>>, Confessionable 
     }
 
     /** Create a new wrapper */
-    public static final <D, P> Wrapper<D> of(
+    public static <D, P> Wrapper<D> of(
             @NotNull final D value,
             @NotNull final Function<D, P>... functions) {
         return Wrapper.of(value, true, functions);
     }
 
     /** Create a new wrapper */
-    public static final <D, P> Wrapper<D> of(
+    public static <D, P> Wrapper<D> of(
             @NotNull final D value,
             final boolean nullFirst,
             @NotNull final Function<D, P>... functions) {

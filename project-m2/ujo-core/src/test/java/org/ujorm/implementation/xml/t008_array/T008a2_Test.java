@@ -34,14 +34,14 @@ public class T008a2_Test extends MyTestCase {
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
      */
     public void x_testPrintXML() throws Exception {
-        System.out.println("testPrintXML: " + suite().toString());
+        System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);
         try {
             AtrPerson person = createPerson();
             // Serialization:
             UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
 
-            System.out.println("XML==PERSON:\n" + writer.toString());
+            System.out.println("XML==PERSON:\n" + writer);
         } catch (RuntimeException ex) {
             ex.printStackTrace();
         }
@@ -52,7 +52,7 @@ public class T008a2_Test extends MyTestCase {
      * TODO.pop: to implement the nextfeature:
      */
     public void testRestoreXML() throws Exception {
-        System.out.println("testPrintXML: " + suite().toString());
+        System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);
         //
         AtrPerson person = createPerson();
@@ -65,7 +65,7 @@ public class T008a2_Test extends MyTestCase {
                 + "<Child>20</Child>"
                 + "<Child>30</Child>"
                 + "<Child>40</Child>");
-        ByteArrayInputStream is = new ByteArrayInputStream(body.toString().getBytes(StandardCharsets.UTF_8));
+        ByteArrayInputStream is = new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8));
         AtrPerson person2 = UjoManagerXML.getInstance().parseXML(is, AtrPerson.class, false);
 
         int size1 = AtrPerson.NUMBERS.of(person).size();

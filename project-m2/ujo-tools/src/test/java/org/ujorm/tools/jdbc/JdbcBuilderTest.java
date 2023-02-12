@@ -131,7 +131,6 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
             .value("A test")
             .value(someDate)
             .write(")");
-            ;
         String expResult1 = "INSERT INTO testTable ( id, name, created ) VALUES ( ?, ?, ? )";
         String expResult2 = "INSERT INTO testTable ( id, name, created ) VALUES ( 10, 'A test', 2018-09-12 )";
 
@@ -293,7 +292,7 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
         List<Integer> ids = sql.executeSelect(dbConnection, (rs) -> rs.getInt(1));
 
         assertNotNull(ids);
-        assertTrue(!ids.isEmpty());
+        assertFalse(ids.isEmpty());
     }
 
     /** How to SELECT single value */

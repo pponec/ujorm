@@ -22,6 +22,6 @@ package org.ujorm.orm;
 public interface OrmHandlerProvider {
 
     /** Create instance and configure the OrmHandler object */
-    public OrmHandler getOrmHandler();
+    OrmHandler getOrmHandler();
 
 }

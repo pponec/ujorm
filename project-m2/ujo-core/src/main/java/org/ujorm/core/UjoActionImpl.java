@@ -65,7 +65,7 @@ public class UjoActionImpl implements UjoAction {
     /** String value */
     @Override
     public String toString() {
-        String result = String.valueOf(type) + ", " + context;
+        String result = type + ", " + context;
         return result;
     }
 }

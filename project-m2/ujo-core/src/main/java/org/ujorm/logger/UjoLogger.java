@@ -27,15 +27,15 @@ import java.util.logging.Level;
 public interface UjoLogger {
 
     /** A level alias for the constant {@code SEVERE} from the class {@code java.util.logging.Level} */
-    public static final Level ERROR = Level.SEVERE;
+    Level ERROR = Level.SEVERE;
     /** A level alias for the constant {@code WARNING} from the class {@code java.util.logging.Level} */
-    public static final Level WARN = Level.WARNING;
+    Level WARN = Level.WARNING;
     /** A level alias for the constant {@code INFO} from the class {@code java.util.logging.Level} */
-    public static final Level INFO = Level.INFO;
+    Level INFO = Level.INFO;
     /** A level alias for the constant {@code FINE} from the class {@code java.util.logging.Level} */
-    public static final Level DEBUG = Level.FINE;
+    Level DEBUG = Level.FINE;
     /** A level alias for the constant {@code FINEST} from the class {@code java.util.logging.Level} */
-    public static final Level TRACE = Level.FINEST;
+    Level TRACE = Level.FINEST;
 
 
     /**
@@ -46,7 +46,7 @@ public interface UjoLogger {
      * @param	level   One of the message level identifiers, see for example {@link UjoLogger#ERROR},  {@link UjoLogger#DEBUG}
      * @return	true if the given message level is currently being logged.
      */
-    public boolean isLoggable(Level level);
+    boolean isLoggable(Level level);
 
     /**
      * Log a message, with no arguments.
@@ -58,7 +58,7 @@ public interface UjoLogger {
      * @param	level   One of the message level identifiers, see for example {@link UjoLogger#ERROR},  {@link UjoLogger#DEBUG}
      * @param   message	The string message (or a key in the message catalog)
      */
-    public void log(Level level, String message);
+    void log(Level level, String message);
 
     /**
      * Log a message, with associated Throwable information.
@@ -76,7 +76,7 @@ public interface UjoLogger {
      * @param   message	The string message (or a key in the message catalog)
      * @param   e  Throwable associated with log message.
      */
-    public void log(Level level, String message, Throwable e);
+    void log(Level level, String message, Throwable e);
 
     /**
      * Log a message, with an array of object arguments.
@@ -90,7 +90,7 @@ public interface UjoLogger {
      * @param   parameter An optional parameter for the message
      *          are replaced by the {@code {}} sequence or the {@code {0}} one
      */
-    public void log(Level level, String message, Object parameter);
+    void log(Level level, String message, Object parameter);
 
     /**
      * Log a message, with an array of object arguments.
@@ -104,6 +104,6 @@ public interface UjoLogger {
      * @param   parameters An optional array of parameters for the message
      *          are replaced by the {@code {}} sequence or the {@code {0}} one
      */
-    public void log(Level level, String message, Object ... parameters);
+    void log(Level level, String message, Object ... parameters);
 
 }

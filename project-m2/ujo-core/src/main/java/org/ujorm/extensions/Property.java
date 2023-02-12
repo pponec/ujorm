@@ -20,6 +20,8 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -311,8 +313,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
     public boolean isDefault(@NotNull final U ujo) {
         VALUE value = of(ujo);
         final boolean result
-        =  value==defaultValue
-        || (defaultValue!=null && defaultValue.equals(value))
+        = Objects.equals(defaultValue, value)
         ;
         return result;
     }
@@ -388,13 +389,13 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
      */
     @Override
     public <T> ListKey<U, T> add(@NotNull final ListKey<? super VALUE, T> key) {
-        return new PathListProperty<U, T>(PathProperty.DEFAULT_ALIAS, (Key)this, key);
+        return new PathListProperty<U, T>(PathProperty.DEFAULT_ALIAS, this, key);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> CompositeKey<U, T> add(@NotNull final Key<? super VALUE, T> key, final String alias) {
-        return new PathProperty(alias, (Key)this, key);
+        return new PathProperty(alias, this, key);
     }
 
     /** Create new composite (indirect) instance with a required alias name
@@ -438,9 +439,8 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
         if (myValue==value) { return true; }
 
         final boolean result
-        =  myValue!=null
-        && value  !=null
-        && myValue.equals(value)
+        = myValue != null
+                && myValue.equals(value)
         ;
         return result;
     }
@@ -727,7 +727,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
-        return of(name, type, value, index, (Validator) null, lock);
+        return of(name, type, value, index, null, lock);
     }
 
     /** Returns a new instance of key where the default value is null.
@@ -813,7 +813,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> of(final Key<UJO,VALUE> p) {
-         return of(p.getName(), p.getType(), (VALUE) p.getDefault(), UNDEFINED_INDEX, false);
+         return of(p.getName(), p.getType(), p.getDefault(), UNDEFINED_INDEX, false);
     }
 
     // --------- DEPRECATED STATIC METHODS -------------------
@@ -824,7 +824,7 @@ public class Property<U extends Ujo,VALUE> implements Key<U,VALUE> {
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
-        return newInstance(name, type, value, index, (Validator) null, lock);
+        return newInstance(name, type, value, index, null, lock);
     }
 
     /** Returns a new instance of key where the default value is null.

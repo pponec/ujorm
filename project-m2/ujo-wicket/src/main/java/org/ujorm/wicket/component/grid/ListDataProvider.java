@@ -68,7 +68,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
     /** Filtered list rows */
     private List<U> filteredRows;
     /** Sort request */
-    private boolean sortRequest;
+    private final boolean sortRequest;
 
     /** Constructor
      * @param criterion Condition to a database query
@@ -97,7 +97,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
     public List<U> getRows() {
         return dataRows != null
              ? dataRows
-             : Collections.<U>emptyList();
+             : Collections.emptyList();
     }
 
     /** Returns a filtered rows and cach the result */

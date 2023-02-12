@@ -26,14 +26,14 @@ import org.ujorm.orm.metaModel.MetaTable;
 public interface TableWrapper {
 
     /** Returns a meta-table model */
-    public MetaTable getModel();
+    MetaTable getModel();
 
     /** Returns a unique table name in the one SQL statement. */
-    public String getAlias();
+    String getAlias();
 
     /** Is the instance a database relation model? */
-    public boolean isView();
+    boolean isView();
 
     /** Get all table columns */
-    public List<? extends ColumnWrapper> getColumns();
+    List<? extends ColumnWrapper> getColumns();
 }

@@ -11,7 +11,7 @@ public class Parameters extends SmartUjo {
 
     /** The SysTray action on a second mouse click. */
     public enum Action {
-        NONE, EVENT, HIDE;
+        NONE, EVENT, HIDE
     }
 
     /** Localization */

@@ -44,11 +44,10 @@ import org.ujorm.implementation.orm.RelationToMany;
 public interface OrmUjo extends Ujo {
 
     /** Read an ORM session where the session is an transient key. */
-    @Nullable
-    public Session readSession();
+    @Nullable Session readSession();
 
     /** Write an ORM session. */
-    public void writeSession(@Nullable Session session);
+    void writeSession(@Nullable Session session);
 
     /**
      * Returns keys of changed values in a time when any <strong>session</strong> is assigned.
@@ -60,16 +59,15 @@ public interface OrmUjo extends Ujo {
      * @see Use the {@link #checkModificatinFlag(org.ujorm.Key) } rather
      */
     @Deprecated
-    public Key[] readChangedProperties(boolean clear);
+    Key[] readChangedProperties(boolean clear);
 
     /** Check the attribute modification flag */
-    public <UJO, VALUE> boolean checkModificationFlag(@NotNull Key key);
+    <UJO, VALUE> boolean checkModificationFlag(@NotNull Key key);
 
     /** Clear all modification flags */
-    public void clearModificationFlags();
+    void clearModificationFlags();
 
     /** Clone the first level of properties */
-    @NotNull
-    public OrmUjo cloneUjo();
+    @NotNull OrmUjo cloneUjo();
 
 }

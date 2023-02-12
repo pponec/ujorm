@@ -24,9 +24,9 @@ package org.ujorm.criterion;
 public interface AbstractOperator {
 
     /** Is the operator a binary type ? */
-    public boolean isBinary();
+    boolean isBinary();
 
     /** Returns Enum */
-    public Enum getEnum();
+    Enum getEnum();
 
 }

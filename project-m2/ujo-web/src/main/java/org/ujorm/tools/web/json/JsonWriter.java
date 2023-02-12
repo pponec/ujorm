@@ -26,12 +26,12 @@ import org.ujorm.tools.Assert;
  */
 public final class JsonWriter implements Appendable {
 
-    protected static final char BACKSLASH = '\\';
-    protected static final char DOUBLE_QUOTE = '"';
+    private static final char BACKSLASH = '\\';
+    static final char DOUBLE_QUOTE = '"';
 
     private final Appendable writer;
 
-    protected JsonWriter(@NotNull final Appendable writer) {
+    JsonWriter(@NotNull final Appendable writer) {
         this.writer = Assert.notNull(writer, "writer");
     }
 

@@ -500,7 +500,7 @@ public class SampleORM {
 
     /** Print some meta-data of the key Order.descr. */
     public void useMetadata() {
-        MetaColumn col = (MetaColumn) handler.findColumnModel(Order.descr);
+        MetaColumn col = handler.findColumnModel(Order.descr);
 
         StringBuilder msg = new StringBuilder()
             .append("** METADATA OF COLUMN: ")

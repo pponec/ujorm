@@ -31,10 +31,10 @@ public interface UjoLockable extends Ujo {
      * All the {@link List} attributes can be unmodifiabled.
      * Locking a related Ujo objects depends on implementations.
      */
-    public void lock();
+    void lock();
 
     /** Returns the value {@code true} if the current object is locked to a read only */
-    public boolean readOnly();
+    boolean readOnly();
 
     /**
      * Write a value to object if it is possible
@@ -43,7 +43,7 @@ public interface UjoLockable extends Ujo {
      * @throws UnsupportedOperationException Method throws the exception on write value to a locked object.
      */
     @Override
-    public void writeValue(Key<?,?> key, Object value) throws UnsupportedOperationException;
+    void writeValue(Key<?,?> key, Object value) throws UnsupportedOperationException;
 
 
 }

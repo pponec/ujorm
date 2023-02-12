@@ -31,7 +31,7 @@ public class TXmlTest_1 extends TestCase {
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
      */
     public void testPrintXMLRoot() throws Exception {
-        System.out.println("testPrintXMLRoot: " + suite().toString());
+        System.out.println("testPrintXMLRoot: " + suite());
 
         CharArrayWriter writer = null;
         try {
@@ -40,12 +40,12 @@ public class TXmlTest_1 extends TestCase {
             AbstractUjo ujo = createUjoRoot();
             UjoManagerXML.getInstance().saveXML(writer, ujo, null, "TEST");
 
-            System.err.println("XML Root:" + writer.toString());
+            System.err.println("XML Root:" + writer);
         } catch (RuntimeException ex) {
             ex.printStackTrace();
 
             if (writer != null) {
-                System.err.println("XML ERROR:" + writer.toString());
+                System.err.println("XML ERROR:" + writer);
             }
         }
     }
@@ -57,7 +57,7 @@ public class TXmlTest_1 extends TestCase {
         list.add(createUjoItem());
         list.add(createUjoItem());
 
-        ujb.PRO_P5.setValue(ujb, list);
+        TXmlUjoRoot.PRO_P5.setValue(ujb, list);
 
         return ujb;
     }

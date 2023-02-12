@@ -24,6 +24,7 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.UjoTools;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.orm.AbstractMetaModel;
@@ -79,7 +80,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
      */
     public MetaRelation2Many(@NotNull final MetaTable table, @NotNull final Key tableKey, @Nullable final MetaRelation2Many param) {
         this.tableAlias = table.getAlias();
-        Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableKey, false);
+        Field field = UjoTools.getPropertyField(table.getType(), tableKey, false);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
 
         if (true) {

@@ -29,7 +29,6 @@ public interface StringWrapper extends ValueTextable {
     /** Export the value as String.
      * The method replaces the original {@link ValueTextable#toString()}.
      */
-    @NotNull 
-    public String exportToString();
+    @NotNull String exportToString();
 
 }

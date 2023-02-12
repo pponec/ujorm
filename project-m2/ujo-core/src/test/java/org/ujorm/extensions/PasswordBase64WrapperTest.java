@@ -110,7 +110,7 @@ public class PasswordBase64WrapperTest {
         }
         try {
             instance.getPassword();
-            assertFalse(true);
+            fail();
         } catch (IllegalStateException e) {
             // OK
         } catch (Throwable e) {

@@ -93,8 +93,8 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Table Columns (no relations) */
     public static final ListKey<MetaTable,MetaColumn> COLUMNS = fa.newListKey("column");
     /** Table relations to many */
-    public static final ListKey<MetaTable,MetaRelation2Many> RELATIONS = fa.newListKey("relation2m");    
-    
+    public static final ListKey<MetaTable,MetaRelation2Many> RELATIONS = fa.newListKey("relation2m");
+
     /** SQL SELECT model. Note: this key must not be persistent due a blank spaces in key names! */
     @Transient
     public static final Key<MetaTable,MetaSelect> SELECT_MODEL = fa.newKey("selectModel");
@@ -137,7 +137,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
 
         final Field field = UjoManager.getPropertyField(MetaDatabase.ROOT.of(database), dbProperty);
         View view1 = field!=null ? field.getAnnotation(View.class) : null;
-        View view2 = (View) dbProperty.getItemType().getAnnotation(View.class);
+        View view2 = dbProperty.getItemType().getAnnotation(View.class);
         VIEW.setValue(this, view1!=null || view2!=null);
 
         if (parTable!=null) {
@@ -166,7 +166,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
             if (view2!=null) changeDefault(this, SELECT, view2.select());
         } else {
             Table table1 = field!=null ? field.getAnnotation(Table.class) : null;
-            Table table2 = (Table) dbProperty.getItemType().getAnnotation(Table.class);
+            Table table2 = dbProperty.getItemType().getAnnotation(Table.class);
             if (table1!=null) changeDefault(this, NAME  , table1.name());
             if (table1!=null) changeDefault(this, NAME  , table1.value());
             if (table1!=null) changeDefault(this, ALIAS , table1.alias());
@@ -175,7 +175,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
             if (table1!=null) changeDefault(this, ORM2DLL_POLICY, table1.orm2ddlPolicy());
             if (table1!=null) changeDefault(this, SEQUENCE,table1.sequence());
             if (table1!=null) changeDefault(this, QUOTED, table1.quoted());
-            
+
             if (table2!=null) changeDefault(this, NAME  , table2.name());
             if (table2!=null) changeDefault(this, NAME  , table2.value());
             if (table2!=null) changeDefault(this, ALIAS , table2.alias());
@@ -196,14 +196,14 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
 
         // Assign Comments:
         Comment comment1 = field!=null ? field.getAnnotation(Comment.class) : null;
-        Comment comment2 = (Comment) dbProperty.getItemType().getAnnotation(Comment.class);
+        Comment comment2 = dbProperty.getItemType().getAnnotation(Comment.class);
         if (comment1!=null) changeDefault(this, COMMENT  , comment1.value());
         if (comment2!=null) changeDefault(this, COMMENT  , comment2.value());
 
         if (VIEW.of(this) && !SELECT.isDefault(this)) {
             SELECT_MODEL.setValue(this, new MetaSelect(this));
         }
-        
+
         // -----------------------------------------------
 
         MetaPKey dpk = new MetaPKey(this);
@@ -235,7 +235,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
                 }
             }
         }
-        
+
         // Quoted table name by configuraton:
         if (QUOTED.isDefault(this)) {
             switch (dbHandler.getParameters().get(MetaParams.QUOTATION_POLICY)) {
@@ -244,12 +244,12 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
                     break;
                 case QUOTE_ONLY_SQL_KEYWORDS:
                     QUOTED.setValue(this, QuoteEnum.BY_CONFIG);
-                    break;                
+                    break;
                 default:
                     QUOTED.setValue(this, QuoteEnum.NO);
-                    break;                
+                    break;
             }
-        }        
+        }
     }
 
     /** Returns all columns from the class  */
@@ -279,7 +279,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
 
     /** Returns a base table class. */
     @SuppressWarnings("unchecked")
-    public final Class<OrmUjo> getType() {
+    public Class<OrmUjo> getType() {
         return DB_PROPERTY.of(this).getItemType();
     }
 
@@ -348,7 +348,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     }
 
     /** Returns the database */
-    public final MetaDatabase getDatabase() {
+    public MetaDatabase getDatabase() {
         return DATABASE.of(this);
     }
 
@@ -503,16 +503,14 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return alias != null
              ? new TableWrapperImpl(this, alias)
              : this ;
-    } 
-    
+    }
+
     /** Quotation request */
     public boolean isQuoted() {
-        switch (QUOTED.of(this)) {
-            case YES:
-                return true;
-            default:
-                return false;
+        if (QUOTED.of(this) == QuoteEnum.YES) {
+            return true;
         }
+        return false;
     }
-        
+
 }

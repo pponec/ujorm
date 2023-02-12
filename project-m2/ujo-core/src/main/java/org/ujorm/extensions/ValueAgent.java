@@ -22,15 +22,15 @@ package org.ujorm.extensions;
  * @author Pavel Ponec
  */
 public interface ValueAgent<UJO,VALUE> {
-   
+
     /** WARNING: There is recommended to call the method from the method Ujo.writeValue(...) only.
      * <br>A direct call can bypass a important actions implemented in the writeProperty(method).
      */
-    public void writeValue(final UJO bean, final VALUE value);
-    
+    void writeValue(final UJO bean, final VALUE value);
+
     /** WARNING: There is recommended to call the method from the method <code>Ujo.readValue(...)</code> only.
      * <br>A direct call can bypass a important actions implemented in the <code>readProperty(method)</code>.
      */
-    public VALUE readValue(final UJO bean);
-    
+    VALUE readValue(final UJO bean);
+
 }

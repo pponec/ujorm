@@ -155,7 +155,7 @@ public class ValidationError implements Serializable {
      * @see java.util.Formatter
      */
     public String getMessage(String template) {
-        return service.format(template, arguments, (Locale)null);
+        return service.format(template, arguments, null);
     }
 
     /** Get message from any text template with a named parameters according the sample: <strong>${argument}</strong>.

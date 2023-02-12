@@ -31,7 +31,7 @@ public class EntityDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
 
     /** Input fields provider */
     protected final FieldProvider<T> fields;
-    private FeedbackField feedbackField;
+    private final FeedbackField feedbackField;
 
     public EntityDialogPanel(ModalWindow modalWindow, IModel<T> model, boolean autoClose) {
         super(modalWindow, model, autoClose);

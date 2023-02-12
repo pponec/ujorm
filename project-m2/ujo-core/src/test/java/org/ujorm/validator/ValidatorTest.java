@@ -393,17 +393,17 @@ public class ValidatorTest extends MyTestCase {
 
     /** Test of readValue method, */
     public void testMandatory() {
-        assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidBo.NOT_NULL.getValidator()));
-        assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidBo.NOT_EMPTY.getValidator()));
-        assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidBo.NOT_BLANK.getValidator()));
+        assertTrue(ValidatorUtils.isMandatoryValidator(ValidBo.NOT_NULL.getValidator()));
+        assertTrue(ValidatorUtils.isMandatoryValidator(ValidBo.NOT_EMPTY.getValidator()));
+        assertTrue(ValidatorUtils.isMandatoryValidator(ValidBo.NOT_BLANK.getValidator()));
         //
-        assertEquals(false, ValidatorUtils.isMandatoryValidator(ValidBo.BETWEEN_1_10.getValidator()));
-        assertEquals(false, ValidatorUtils.isMandatoryValidator(ValidBo.MAIL.getValidator()));
-        assertEquals(false, ValidatorUtils.isMandatoryValidator(ValidBo.FORBIDDEN_1_3.getValidator()));
+        assertFalse(ValidatorUtils.isMandatoryValidator(ValidBo.BETWEEN_1_10.getValidator()));
+        assertFalse(ValidatorUtils.isMandatoryValidator(ValidBo.MAIL.getValidator()));
+        assertFalse(ValidatorUtils.isMandatoryValidator(ValidBo.FORBIDDEN_1_3.getValidator()));
         //
-        assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidMandatory.BETWEEN_1_10.getValidator()));
-        assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidMandatory.MAIL.getValidator()));
-        assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidMandatory.FORBIDDEN_1_3.getValidator()));
+        assertTrue(ValidatorUtils.isMandatoryValidator(ValidMandatory.BETWEEN_1_10.getValidator()));
+        assertTrue(ValidatorUtils.isMandatoryValidator(ValidMandatory.MAIL.getValidator()));
+        assertTrue(ValidatorUtils.isMandatoryValidator(ValidMandatory.FORBIDDEN_1_3.getValidator()));
     }
 
     /** Test of readValue method, */
@@ -439,7 +439,7 @@ public class ValidatorTest extends MyTestCase {
             result = false;
             resultMsg = e.getMessage();
         }
-        assertTrue(resultMsg, expected==result);
+        assertEquals(resultMsg, expected, result);
     }
 
     /** Method to test Validators */
@@ -455,7 +455,7 @@ public class ValidatorTest extends MyTestCase {
             result = false;
             resultMsg = e.getMessage();
         }
-        assertTrue(resultMsg, expected==result);
+        assertEquals(resultMsg, expected, result);
     }
 
     /** Returns a next Day */

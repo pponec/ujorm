@@ -43,60 +43,44 @@ import org.ujorm.tools.xml.config.HtmlConfig;
  */
 public interface GridBuilderConfig<D> {
 
-    @NotNull
-    public HtmlConfig getConfig();
+    @NotNull HtmlConfig getConfig();
 
-    @NotNull
-    public String getCssLink();
+    @NotNull String getCssLink();
 
     /** Link to an external Javascript library where a no-library returns an empty String */
-    @NotNull
-    public String getJavascriptLink();
+    @NotNull String getJavascriptLink();
 
-    @NotNull
-    public Duration getIdleDelay();
+    @NotNull Duration getIdleDelay();
 
-    @NotNull
-    public HttpParameter getAjaxRequestParam();
+    @NotNull HttpParameter getAjaxRequestParam();
 
-    @NotNull
-    public HttpParameter getSortRequestParam();
+    @NotNull HttpParameter getSortRequestParam();
 
-    @NotNull
-    public CharSequence getAjaxReadyMessage();
+    @NotNull CharSequence getAjaxReadyMessage();
 
-    @NotNull
-    public String getFormId();
+    @NotNull String getFormId();
 
-    @NotNull
-    public String getControlCss();
+    @NotNull String getControlCss();
 
-    @NotNull
-    public String getSubtitleCss();
+    @NotNull String getSubtitleCss();
 
-    @NotNull
-    public CharSequence getTableSelector();
+    @NotNull CharSequence getTableSelector();
 
-    @NotNull
-    public List<CharSequence> getTableCssClass();
+    @NotNull List<CharSequence> getTableCssClass();
 
-    @NotNull
-    public CharSequence getSortable();
+    @NotNull CharSequence getSortable();
 
-    @NotNull
-    public CharSequence getSortableAsc();
+    @NotNull CharSequence getSortableAsc();
 
-    @NotNull
-    public CharSequence getSortableDesc();
+    @NotNull CharSequence getSortableDesc();
 
-    @NotNull
-    public CharSequence getSortableBoth();
+    @NotNull CharSequence getSortableBoth();
 
     /** Use inner icons for sortable images */
-    public boolean isEmbeddedIcons();
+    boolean isEmbeddedIcons();
 
     /** Inline CSS writer where the first method is an Element and the seconnd one is a sortable  */
-    public BiConsumer<Element, Boolean> getCssWriter();
+    BiConsumer<Element, Boolean> getCssWriter();
 
     /** Get a CSS direction style */
     @NotNull
@@ -137,7 +121,7 @@ public interface GridBuilderConfig<D> {
 
     /** Returns a default implementation */
     @NotNull
-    public static GridBuilderConfig of(@NotNull final HtmlConfig config) {
+    static GridBuilderConfig of(@NotNull final HtmlConfig config) {
         return new ReportBuilderConfigImpl(config);
     }
 }

@@ -58,7 +58,7 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
     /** A delegate for the method {@link ApplicationContext#getBean(java.lang.String, java.lang.Class)} */
     @SuppressWarnings("unchecked")
     public <T> T getBean(Key<? extends Ujo, T> key) throws BeansException {
-        return (T) context.getBean(key.getName(), key.getType());
+        return context.getBean(key.getName(), key.getType());
     }
 
     /** Assign the application context by Spring framework only. Do not call the method directly. */

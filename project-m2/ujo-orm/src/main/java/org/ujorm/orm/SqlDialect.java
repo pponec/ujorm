@@ -20,6 +20,7 @@ import java.io.CharArrayReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
@@ -361,12 +362,10 @@ abstract public class SqlDialect {
     /** Returns a database column type */
     protected String getColumnType(final MetaColumn column) {
         final String sqlType = MetaColumn.DB_TYPE.of(column).name();
-        switch (MetaColumn.DB_TYPE.of(column)) {
-            case TIMESTAMP_WITH_TIMEZONE:
-                return "TIMESTAMP WITH TIME ZONE";
-            default:
-                return sqlType;
+        if (MetaColumn.DB_TYPE.of(column) == DbType.TIMESTAMP_WITH_TIMEZONE) {
+            return "TIMESTAMP WITH TIME ZONE";
         }
+        return sqlType;
     }
 
     /** Print a SQL to create foreign keys. */
@@ -396,7 +395,7 @@ abstract public class SqlDialect {
             ( @NotNull final OrmUjo bo
             , @NotNull final Appendable out) throws IOException {
 
-        MetaTable table = ormHandler.findTableModel((Class) bo.getClass());
+        MetaTable table = ormHandler.findTableModel(bo.getClass());
         StringBuilder values = new StringBuilder();
 
         out.append("INSERT INTO ");
@@ -993,15 +992,15 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print an OFFSET of the statement SELECT. 
+    /** Print an OFFSET of the statement SELECT.
      * @see <a href="https://bit.ly/3paHwNS">Note about an implementation Statement.setMaxRow() method (Stackoverflow).</a>
-     * 
+     *
      */
     public void printLimitAndOffset
         ( @NotNull final Query query
-        , @NotNull final Appendable out) throws IOException {  
+        , @NotNull final Appendable out) throws IOException {
         // int requiredLimit = query.isLimit() ? query.getLimit() : Integer.MAX_VALUE ;
-        
+
         if (query.isLimit()) {
             out.append(" LIMIT ").append(String.valueOf(query.getLimit()));
         }
@@ -1099,7 +1098,7 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Set sequence to the max value. 
+    /** Set sequence to the max value.
      * @TODO.pop: use JDBCV arguments
      */
     public Appendable printSetMaxSequence
@@ -1212,7 +1211,7 @@ abstract public class SqlDialect {
             assignKeywords(result, reader);
 
             // Get keywords from a text file:
-            reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/org/ujorm/orm/sql-keywords.txt"), "UTF8"));
+            reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/org/ujorm/orm/sql-keywords.txt"), StandardCharsets.UTF_8));
             assignKeywords(result, reader);
 
         } catch (RuntimeException | SQLException | IOException | OutOfMemoryError e) {
@@ -1250,9 +1249,10 @@ abstract public class SqlDialect {
     protected final void escape(@NotNull final CharSequence text, @NotNull final Appendable out) throws IOException {
         for (int i=0; i<text.length(); i++) {
             final char c = text.charAt(i);
-            switch(c) {
-                case '\'': out.append("''"); break;
-                default  : out.append(c);
+            if (c == '\'') {
+                out.append("''");
+            } else {
+                out.append(c);
             }
         }
     }

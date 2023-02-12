@@ -55,7 +55,7 @@ final public class PathListProperty<U extends Ujo, VALUE>
     /** Get the last Key of the current object. The result may not be the direct key. */
     @SuppressWarnings("unchecked")
     @Override
-    public final <U extends Ujo> ListKey<U, VALUE> getLastPartialProperty() {
+    public <U extends Ujo> ListKey<U, VALUE> getLastPartialProperty() {
         return (ListKey) super.getLastPartialProperty();
     }
 
@@ -71,7 +71,7 @@ final public class PathListProperty<U extends Ujo, VALUE>
     }
 
     @Override
-    public final VALUE getItem(U ujo, int index) {
+    public VALUE getItem(U ujo, int index) {
         return of(ujo, index);
     }
 
@@ -123,7 +123,7 @@ final public class PathListProperty<U extends Ujo, VALUE>
     @Override
     public boolean removeItem(U ujo, VALUE value) {
         final Ujo u = getSemiValue(ujo, false);
-        return u != null ? getLastPartialProperty().removeItem(u, value) : false;
+        return u != null && getLastPartialProperty().removeItem(u, value);
     }
 
     @Override

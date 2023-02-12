@@ -37,12 +37,12 @@ public class KeyColumnDecimal<U extends Ujo> extends KeyColumn<U, BigDecimal> {
 
     /** Default CSS class for  */
     public static String DEFAULT_CSS_CLASS = "decimal";
-    
+
     /** Default 'decimal' format key for localizations */
     public static final String DEFAULT_DECIMAL_FORMAT_KEY = "locale.decimal.pattern";
 
     /** Default 'decimal' format key for localizations */
-    private  String localeDecimalFormatKey;
+    private final String localeDecimalFormatKey;
 
     /** Constructor with the default value localeDateFormatKey = {@code "locale.date.pattern"}. */
     public KeyColumnDecimal(KeyRing<U> key, KeyRing<U> keySortable) {

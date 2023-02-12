@@ -19,16 +19,16 @@ import org.ujorm.implementation.pojo.PojoImplChild;
  * @author Pavel Ponec
  */
 @javax.xml.bind.annotation.XmlRootElement @javax.xml.bind.annotation.XmlType  /*JAXB*/
-public class PojoTree 
-    extends PojoImplChild 
-    implements Serializable 
+public class PojoTree
+    extends PojoImplChild
+    implements Serializable
 //             , javolution.xml.XMLSerializable  /*Javolution*/
 
 {
-    
+
     /** List<PojoTree> */
     private ArrayList<PojoTree> children = new ArrayList<>();
-    
+
     /** Creates a new instance of UnifiedDataObjectImlp */
     public PojoTree() {
     }
@@ -45,26 +45,26 @@ public class PojoTree
         getChilds().add(child);
         return getChilds();
     }
-    
+
     public int size() {
         int result = 0;
-        ArrayList<PojoTree> children = getChilds();      
-        
+        ArrayList<PojoTree> children = getChilds();
+
         if (children!=null) for (PojoTree tree : children) {
             result += tree.size() + 1;
         }
         return result;
-    }    
-    
+    }
+
     // * * * * * * * * * * *
-    
+
     public void init(ZCounter counter, int deep) {
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456f);
-        
+
         this.setP0(o0);
         this.setP1(o1);
         this.setP2(o2);
@@ -75,7 +75,7 @@ public class PojoTree
         this.setP7(o2);
         this.setP8(o3);
         this.setP9(o4);
-        
+
         for (int i=0; i<10; i++) {
             if (deep<=0 || counter.substract()){
                 return;
@@ -84,16 +84,16 @@ public class PojoTree
             item.init(counter, deep-1);
             this.addChild(item);
         }
-        
+
     }
 
-    
+
     /*Javolution*/
-//     protected static final javolution.xml.XMLFormat<PojoTree> 
+//     protected static final javolution.xml.XMLFormat<PojoTree>
 //           PERSON_XML = new javolution.xml.XMLFormat<PojoTree>(PojoTree.class) {
 //
 //        @Override
-//        public void write(PojoTree person, OutputElement xml) 
+//        public void write(PojoTree person, OutputElement xml)
 //            throws javolution.xml.stream.XMLStreamException {
 //            xml.setAttribute("p0", person.p0);
 //            xml.setAttribute("p1", person.p1);
@@ -109,7 +109,7 @@ public class PojoTree
 //        }
 //
 //        @Override
-//        public void read(InputElement xml, PojoTree person) 
+//        public void read(InputElement xml, PojoTree person)
 //            throws javolution.xml.stream.XMLStreamException {
 //                    person.p0 = xml.getAttribute("p0", new Long(0));
 //                    person.p1 = xml.getAttribute("p1", 0);
@@ -127,6 +127,6 @@ public class PojoTree
 //
 //    };
     /**/
-    
-    
+
+
 }

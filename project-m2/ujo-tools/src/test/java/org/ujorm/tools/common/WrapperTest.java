@@ -38,11 +38,11 @@ public class WrapperTest {
         Wrapper<Person> w3 = w1.wrap(p3);
         Wrapper<Person> w4 = w1.wrap(p4);
 
-        assertFalse(w1.equals(w2));
-        assertFalse(w1.equals(w3));
-        assertFalse(w2.equals(w3));
-        assertTrue (w3.equals(w4));
-        assertTrue (w4.equals(w4));
+        assertNotEquals(w1, w2);
+        assertNotEquals(w1, w3);
+        assertNotEquals(w2, w3);
+        assertEquals(w3, w4);
+        assertEquals(w4, w4);
 
         assertNotEquals(w1.hashCode(), w2.hashCode());
         assertNotEquals(w2.hashCode(), w3.hashCode());
@@ -70,7 +70,7 @@ public class WrapperTest {
         assertEquals(3, result.length);
         assertTrue(w1.compareTo(w2) < 0);
         assertTrue(w2.compareTo(w3) < 0);
-        assertTrue(w3.compareTo(w4) == 0);
+        assertEquals(0, w3.compareTo(w4));
         assertEquals(1, result[0].getId().intValue());
         assertEquals(1, result[1].getId().intValue());
         assertEquals(2, result[2].getId().intValue());
@@ -87,9 +87,9 @@ public class WrapperTest {
         Wrapper<Person> w3 = w1.wrap(p3);
 
         assertTrue(w1.compareTo(w2) < 0);
-        assertTrue(w1.compareTo(w3) == 0);
-        assertFalse(w1.equals(w2));
-        assertTrue(w1.equals(w3));
+        assertEquals(0, w1.compareTo(w3));
+        assertNotEquals(w1, w2);
+        assertEquals(w1, w3);
     }
 
     class Person {

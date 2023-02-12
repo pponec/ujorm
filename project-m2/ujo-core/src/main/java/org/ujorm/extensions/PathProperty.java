@@ -17,11 +17,8 @@
 package org.ujorm.extensions;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -348,8 +345,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         VALUE value = of(ujo);
         VALUE defaultValue = getDefault();
         final boolean result
-        =  value==defaultValue
-        || (defaultValue!=null && defaultValue.equals(value))
+        = Objects.equals(defaultValue, value)
         ;
         return result;
     }
@@ -389,9 +385,8 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
         if (myValue==value) { return true; }
 
         final boolean result
-        =  myValue!=null
-        && value  !=null
-        && myValue.equals(value)
+        = myValue != null
+                && myValue.equals(value)
         ;
         return result;
     }

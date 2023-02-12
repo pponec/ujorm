@@ -42,7 +42,7 @@ public class KeyColumnBoolean<U extends Ujo> extends KeyColumn<U, Boolean> {
     protected final String cssAffirmativeClass;
 
     public KeyColumnBoolean(Key<U,?> key, Key<U,?> keySortable, String cssClass) {
-        this(KeyRing.<U>of(key), KeyRing.<U>of(keySortable), cssClass, DEFAULT_CSS_AFFIRMATIVE_CLASS);
+        this(KeyRing.of(key), KeyRing.of(keySortable), cssClass, DEFAULT_CSS_AFFIRMATIVE_CLASS);
     }
 
     public KeyColumnBoolean(KeyRing<U> key, KeyRing<U> keySortable, String cssClass, String cssAffirmativeClass) {

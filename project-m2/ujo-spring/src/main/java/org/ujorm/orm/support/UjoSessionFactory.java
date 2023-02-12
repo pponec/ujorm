@@ -23,8 +23,8 @@ import org.ujorm.orm.Session;
  */
 public interface UjoSessionFactory {
 
-    public Session getDefaultSession();
+    Session getDefaultSession();
 
-    public void setAutoTransaction(boolean b);
+    void setAutoTransaction(boolean b);
 
 }

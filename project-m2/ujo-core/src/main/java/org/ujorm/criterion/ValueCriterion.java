@@ -79,7 +79,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
         , @Nullable Object value) {
 
         if (key==null) {
-            value = (Boolean) value; // Type test for the CriterionConstant.
+            value = value; // Type test for the CriterionConstant.
         }
         if (operator==null) {
             operator = Operator.EQ;  // The default operator.
@@ -161,7 +161,6 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
         final Object myValue = value instanceof Key
             ? ((Key)value).of(ujo)
             : getRightNode();
-            ;
         boolean caseInsensitve = true;
 
         switch (operator) {
@@ -334,11 +333,11 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
                 .append(getDomain().getSimpleName());
         return toPrinter(result).toString();
     }
-    
+
     @Override
     public SimpleValuePrinter toPrinter(@NotNull final SimpleValuePrinter out) {
         out.append('(');
-        if (operator == Operator.XSQL) {  
+        if (operator == Operator.XSQL) {
             out.appendValue(getRightNode());
             return out.append(')');
         }

@@ -47,7 +47,7 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
     @SpringBean
     private CommonService dbService;
 
-    private MessageDialogPane removeDialog;
+    private final MessageDialogPane removeDialog;
 
     public BookingTable(String id) {
         super(id);

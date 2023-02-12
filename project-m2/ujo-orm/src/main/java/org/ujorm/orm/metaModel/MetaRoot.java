@@ -87,7 +87,7 @@ final public class MetaRoot extends AbstractMetaModel {
     }
 
     /** Add a new database into repository. */
-    public final void add(MetaDatabase database) {
+    public void add(MetaDatabase database) {
         DATABASES.addItem(this, database);
     }
 
@@ -108,12 +108,10 @@ final public class MetaRoot extends AbstractMetaModel {
     private XmlHeader getXmlHeader() {
         final XmlHeader result = new XmlHeader();
         final SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
-        final String description = new StringBuilder(128)
-          .append("The Ujorm configuration file release ")
-          .append(UjoManager.version())
-          .append(" was created ")
-          .append(dFormat.format(new Date()))
-          .toString()
+        final String description = "The Ujorm configuration file release " +
+                UjoManager.version() +
+                " was created " +
+                dFormat.format(new Date())
           ;
         result.setComment(description);
         result.getAttributes().put("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");

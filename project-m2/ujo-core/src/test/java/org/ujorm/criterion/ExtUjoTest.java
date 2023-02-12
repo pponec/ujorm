@@ -75,7 +75,7 @@ public class ExtUjoTest extends MyTestCase {
         //
         assertEquals("Jack", name1);
         assertEquals(10D , cash1);
-        assertEquals(null, name2);
+        assertNull(name2);
         assertEquals(0D  , cash2);
     }
 

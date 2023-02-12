@@ -19,31 +19,31 @@ import org.ujorm.MyTestCase;
  */
 public class ImplUniUjoTest extends MyTestCase {
     private static final Class CLASS = ImplUniUjoTest.class;
-    
+
     public ImplUniUjoTest(String testName) {
         super(testName);
     }
-    
+
     public static TestSuite suite() {
         return new TestSuite(CLASS);
     }
-    
+
     @Override
     protected void setUp() throws Exception {
     }
-    
+
     @Override
     protected void tearDown() throws Exception {
     }
-    
+
     /**
      * Test of readValue method, of class org.ujorm.mapImlp.AUnifiedDataObject.
      */
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
@@ -74,10 +74,10 @@ public class ImplUniUjoTest extends MyTestCase {
     }
 
     public void testSpeedTime() throws Throwable {
-        System.out.println("testTime: " + suite().toString());
+        System.out.println("testTime: " + suite());
 
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);

@@ -40,35 +40,35 @@ public class CriterionTest extends MyTestCase {
         Person p = new Person();
 
         boolean expected = true;
-        p.set(p.NAME, "aa");
-        boolean filled = p.NAME.whereHasLength().evaluate(p);
+        p.set(NAME, "aa");
+        boolean filled = NAME.whereHasLength().evaluate(p);
         assertEquals(expected, filled);
-        assertEquals("Person(name NOT_EQ null) AND (name NOT_EQ \"\")", 
-                p.NAME.whereHasLength().toString());
+        assertEquals("Person(name NOT_EQ null) AND (name NOT_EQ \"\")",
+                NAME.whereHasLength().toString());
 
         expected = false;
-        p.set(p.NAME, "");
-        filled = p.NAME.whereHasLength().evaluate(p);
-        assertEquals(expected, filled);
-
-        expected = false;
-        p.set(p.NAME, null);
-        filled = p.NAME.whereHasLength().evaluate(p);
+        p.set(NAME, "");
+        filled = NAME.whereHasLength().evaluate(p);
         assertEquals(expected, filled);
 
         expected = false;
-        p.set(p.NAME, "xxx");
-        boolean noFilled = p.NAME.whereIsEmpty().evaluate(p);
+        p.set(NAME, null);
+        filled = NAME.whereHasLength().evaluate(p);
+        assertEquals(expected, filled);
+
+        expected = false;
+        p.set(NAME, "xxx");
+        boolean noFilled = NAME.whereIsEmpty().evaluate(p);
         assertEquals(expected, noFilled);
 
         expected = true;
-        p.set(p.NAME, "");
-        noFilled = p.NAME.whereIsEmpty().evaluate(p);
+        p.set(NAME, "");
+        noFilled = NAME.whereIsEmpty().evaluate(p);
         assertEquals(expected, noFilled);
 
         expected = true;
-        p.set(p.NAME, null);
-        noFilled = p.NAME.whereIsEmpty().evaluate(p);
+        p.set(NAME, null);
+        noFilled = NAME.whereIsEmpty().evaluate(p);
         assertEquals(expected, noFilled);
     }
 
@@ -88,19 +88,19 @@ public class CriterionTest extends MyTestCase {
 
         result = crnTrue.or(crnAny);
         assertSame(crnTrue, result);
-        assertEquals(true, result.evaluate(person));
+        assertTrue(result.evaluate(person));
         //
         result = crnFalse.or(crnAny);
         assertSame(crnAny, result);
-        assertEquals(false, result.evaluate(person));
+        assertFalse(result.evaluate(person));
         //
         result = crnTrue.and(crnAny);
         assertSame(crnAny, result);
-        assertEquals(false, result.evaluate(person));
+        assertFalse(result.evaluate(person));
         //
         result = crnFalse.and(crnAny);
         assertSame(crnFalse, result);
-        assertEquals(false, result.evaluate(person));
+        assertFalse(result.evaluate(person));
     }
 
 
@@ -116,19 +116,19 @@ public class CriterionTest extends MyTestCase {
         //
         result = crnAny.or(crnTrue);
         assertSame(crnTrue, result);
-        assertEquals(true, result.evaluate(person));
+        assertTrue(result.evaluate(person));
         //
         result = crnAny.or(crnFalse);
         assertSame(crnAny, result);
-        assertEquals(false, result.evaluate(person));
+        assertFalse(result.evaluate(person));
         //
         result = crnAny.and(crnTrue);
         assertSame(crnAny, result);
-        assertEquals(false, result.evaluate(person));
+        assertFalse(result.evaluate(person));
         //
         result = crnAny.and(crnFalse);
         assertSame(crnFalse, result);
-        assertEquals(false, result.evaluate(person));
+        assertFalse(result.evaluate(person));
     }
 
     /** Test Binary Join */
@@ -143,19 +143,19 @@ public class CriterionTest extends MyTestCase {
         //
         result = crnAny.or(crnTrue);
         assertSame(crnTrue, result);
-        assertEquals(true, result.evaluate(person));
+        assertTrue(result.evaluate(person));
         //
         result = crnAny.or(crnFalse);
         assertSame(crnAny, result);
-        assertEquals(false, result.evaluate(person));
+        assertFalse(result.evaluate(person));
         //
         result = crnAny.and(crnTrue);
         assertSame(crnAny, result);
-        assertEquals(false, result.evaluate(person));
+        assertFalse(result.evaluate(person));
         //
         result = crnAny.and(crnFalse);
         assertSame(crnFalse, result);
-        assertEquals(false, result.evaluate(person));
+        assertFalse(result.evaluate(person));
     }
 
     /** Serialization 1 */
@@ -187,7 +187,7 @@ public class CriterionTest extends MyTestCase {
         assertSame(expected.getOperator(), result.getOperator());
         assertEquals(expected.getRightNode(), result.getRightNode());
         assertEquals(expected.toString(), result.toString());
-        assertEquals(true, result.getRightNode() instanceof Key);
+        assertTrue(result.getRightNode() instanceof Key);
         //
         final Person person = new Person();
         person.init();
@@ -206,8 +206,8 @@ public class CriterionTest extends MyTestCase {
         assertSame  (expected.getOperator(), result.getOperator());
         assertEquals(expected.getRightNode().toString(), result.getRightNode().toString());
         assertEquals(expected.toString(), result.toString());
-        assertEquals(true, result.getLeftNode() instanceof Criterion);
-        assertEquals(true, result.getRightNode() instanceof Criterion);
+        assertTrue(result.getLeftNode() instanceof Criterion);
+        assertTrue(result.getRightNode() instanceof Criterion);
         //
         final Person person = new Person();
         person.init();
@@ -268,7 +268,7 @@ public class CriterionTest extends MyTestCase {
         //
         InputStream is = new ByteArrayInputStream(os.toByteArray());
         try (ObjectInputStream decoder = new ObjectInputStream(is)) {
-            Object result = (Serializable) decoder.readObject();
+            Object result = decoder.readObject();
             return (T) result;
         }
     }

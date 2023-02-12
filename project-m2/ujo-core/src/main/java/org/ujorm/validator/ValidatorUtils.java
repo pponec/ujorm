@@ -65,7 +65,7 @@ public final class ValidatorUtils {
      * @return return true if all operators are AND.
      */
     @SuppressWarnings("unchecked")
-    protected static boolean findValidators(Validator validator, Class<? extends Validator> requiredType, List<? extends Validator> validators) {
+    private static boolean findValidators(Validator validator, Class<? extends Validator> requiredType, List<? extends Validator> validators) {
         boolean and = true;
         if (validator instanceof CompositeValidator) {
             CompositeValidator cv = (CompositeValidator) validator;

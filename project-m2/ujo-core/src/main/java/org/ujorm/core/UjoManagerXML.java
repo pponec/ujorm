@@ -363,9 +363,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         } else {
             // A value from List or Array:
             final String str
-            = true
-            ? ujo.readValueString(prop, actionExport)
-            : getUjoManager().encodeValue(value, false)
+            = ujo.readValueString(prop, actionExport)
             ;
             writer.addText(str);
         }

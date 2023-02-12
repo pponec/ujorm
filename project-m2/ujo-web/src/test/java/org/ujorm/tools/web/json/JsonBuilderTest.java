@@ -61,7 +61,7 @@ public class JsonBuilderTest {
         }
         assertEquals("{\"abc\":\"'\"}", builder.toString());
 
-        value = "\b\f\n\r\t\"\'\\$%^";
+        value = "\b\f\n\r\t\"'\\$%^";
         builder.setLength(0);
         try (JsonBuilder writer = JsonBuilder.of(builder)) {
             writer.write(key, value);

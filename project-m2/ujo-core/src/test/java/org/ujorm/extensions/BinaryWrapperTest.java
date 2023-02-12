@@ -108,7 +108,7 @@ public class BinaryWrapperTest {
         }
         try {
             instance.getBinary();
-            assertFalse(true);
+            fail();
         } catch (IllegalStateException e) {
             // OK
         } catch (Throwable e) {

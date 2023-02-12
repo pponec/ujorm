@@ -118,7 +118,6 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
             .value("A test")
             .value(someDate)
             .write(")");
-            ;
         String expResult1 = "INSERT INTO testTable ( id, name, created ) VALUES ( ?, ?, ? )";
         String expResult2 = "INSERT INTO testTable ( id, name, created ) VALUES ( 10, 'A test', 2018-09-12 )";
 

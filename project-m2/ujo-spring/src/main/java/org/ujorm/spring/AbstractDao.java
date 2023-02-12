@@ -110,7 +110,7 @@ public abstract class AbstractDao<T extends OrmUjo> {
 
     /** Get column model */
     protected final <U extends T> MetaColumn getColumnDao(@NotNull final Key<U,?> compositeKey) {
-        return (MetaColumn) getSessionDao().getHandler().findColumnModel(compositeKey);
+        return getSessionDao().getHandler().findColumnModel(compositeKey);
     }
 
 }

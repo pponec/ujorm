@@ -18,10 +18,10 @@ import org.ujorm.implementation.map.MapUjoImplChild;
  * @author Pavel Ponec
  */
 public class MapTree extends MapUjoImplChild {
-    
+
     public static final ListKey<MapTree, MapTree> PRO_CHILDREN = newListProperty("CHILDREN", MapTree.class);
-    
-    
+
+
     public int size() {
         int result = 0;
         for (MapTree tree : PRO_CHILDREN.getList(this)) {
@@ -29,18 +29,18 @@ public class MapTree extends MapUjoImplChild {
         }
         return result;
     }
-    
-    
+
+
     // * * * * * * * * * * *
-    
+
     public void init(ZCounter counter, int deep) {
-        
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
-        
+
         PRO_P0.setValue(this, o0);
         PRO_P1.setValue(this, o1);
         PRO_P2.setValue(this, o2);
@@ -51,7 +51,7 @@ public class MapTree extends MapUjoImplChild {
         PRO_P7.setValue(this, o2);
         PRO_P8.setValue(this, o3);
         PRO_P9.setValue(this, o4);
-        
+
         for (int i=0; i<10; i++) {
             if (deep<=0 || counter.substract()){
                 return;
@@ -60,10 +60,10 @@ public class MapTree extends MapUjoImplChild {
             item.init(counter, deep-1);
             PRO_CHILDREN.addItem(this, item);
         }
-        
+
     }
-    
-    
+
+
 }
 
 

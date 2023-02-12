@@ -36,14 +36,14 @@ public class T003a_Test extends MyTestCase {
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
     public void testRestoreXML() throws Exception {
-        System.out.println("testPrintXML: " + suite().toString());
+        System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);
         //
         UMasterBean person = createMaster();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
 
         if (true) {
-            System.out.println("XML:\n" + writer.toString());
+            System.out.println("XML:\n" + writer);
         }
 
         ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));
@@ -85,9 +85,9 @@ public class T003a_Test extends MyTestCase {
     protected UItemBean createItem() {
         UItemBean result = new UItemBean();
         UItemBean.P0_BOOL.setValue(result, true);
-        UItemBean.P1_BYTE.setValue(result, new Byte((byte)60));
+        UItemBean.P1_BYTE.setValue(result, Byte.valueOf((byte) 60));
         UItemBean.P2_CHAR.setValue(result, 'A');
-        UItemBean.P3_SHORT.setValue(result, new Short((short)314));
+        UItemBean.P3_SHORT.setValue(result, Short.valueOf((short) 314));
         UItemBean.P4_INTE.setValue(result, 314000);
         UItemBean.P5_LONG.setValue(result, 123456789L);
         UItemBean.P6_FLOAT.setValue(result, 5.5f);

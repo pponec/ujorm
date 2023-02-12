@@ -37,7 +37,7 @@ public final class DefaultHttpParam implements HttpParameter {
     @NotNull
     private final String defaultValue;
 
-    protected DefaultHttpParam(@NotNull String name, @NotNull String defaultValue) {
+    DefaultHttpParam(@NotNull String name, @NotNull String defaultValue) {
         this.name = name;
         this.defaultValue = defaultValue;
     }

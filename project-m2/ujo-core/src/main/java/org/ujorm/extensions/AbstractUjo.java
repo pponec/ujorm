@@ -131,6 +131,6 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
      */
     @SuppressWarnings("unchecked")
     protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newFactory(Class<? extends UJO> ujoClass) {
-        return (FACTORY) (KeyFactory) KeyFactory.Builder.get(ujoClass);
+        return (FACTORY) KeyFactory.Builder.get(ujoClass);
     }
 }

@@ -44,7 +44,7 @@ import org.ujorm.tools.Check;
  */
 public interface HttpParameter extends CharSequence {
     /** An empty text value */
-    public static final String EMPTY_VALUE = "";
+    String EMPTY_VALUE = "";
 
     /** Returns a parameter name */
     @NotNull
@@ -72,18 +72,18 @@ public interface HttpParameter extends CharSequence {
     default String defaultValue() {
         return "";
     }
-    
+
     /** Build a default non-null parameter name. */
     @NotNull
-    default public String buildParameterName(@Nullable String name) {
+    default String buildParameterName(@Nullable String name) {
         return name != null ? name : originalName().toLowerCase(Locale.ENGLISH).replace('_', '-');
     }
 
     /** Get a raw name of the HTTP parameter.
      * The method can be called from the {@link #buildParameterName(java.lang.String)} method.
-     * NOTE: The method was renamed from obsolete {@code name()} due a Kotlin compatibility. */  
+     * NOTE: The method was renamed from obsolete {@code name()} due a Kotlin compatibility. */
     @NotNull
-    default public String originalName() {
+    default String originalName() {
         try {
             return String.valueOf(getClass().getMethod("name").invoke(this));
         } catch (ReflectiveOperationException | SecurityException e) {
@@ -182,14 +182,14 @@ public interface HttpParameter extends CharSequence {
             return defaultValue;
         }
     }
-    
+
     /** Returns a parameter of the request or the Enum class */
     @NotNull
     default <V extends Enum<V>> V of(@NotNull final ServletRequest request, @NotNull final V defaultValue) {
         final V result = of(request, (Class<V>) defaultValue.getClass());
         return result != null ? result : defaultValue;
     }
-    
+
     /** Returns a parameter of the request or the default value */
     @Nullable
     default <V extends Enum<V>> V of(@NotNull final ServletRequest request, @NotNull final Class<V> clazz) {
@@ -212,15 +212,15 @@ public interface HttpParameter extends CharSequence {
         } catch (RuntimeException e) {
             return defaultValue;
         }
-    }  
+    }
 
     /** Create a default implementation */
-    public static HttpParameter of(@NotNull final String name) {
+    static HttpParameter of(@NotNull final String name) {
         return new DefaultHttpParam(name, EMPTY_VALUE);
     }
 
     /** Create a default implementation */
-    public static HttpParameter of(
+    static HttpParameter of(
             @NotNull final String name,
             @NotNull final String defaultValue) {
         return new DefaultHttpParam(name, defaultValue);

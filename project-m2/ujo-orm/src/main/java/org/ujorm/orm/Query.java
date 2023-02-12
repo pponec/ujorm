@@ -431,7 +431,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
    /** Set an order of the rows by a SQL ORDER BY phrase. */
     public Query<UJO> orderBy(Key<UJO,?> orderItem) {
-        return orderByMany(new Key[]{orderItem});
+        return orderByMany(orderItem);
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase. */
@@ -439,7 +439,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         ( @NotNull final Key<UJO,?> orderItem1
         , @NotNull final Key<UJO,?> orderItem2
         ) {
-        return orderByMany(new Key[]{orderItem1, orderItem2});
+        return orderByMany(orderItem1, orderItem2);
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase. */
@@ -448,7 +448,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         , @NotNull final Key<UJO,?> orderItem2
         , @NotNull final Key<UJO,?> orderItem3
         ) {
-        return orderByMany(new Key[]{orderItem1, orderItem2, orderItem3});
+        return orderByMany(orderItem1, orderItem2, orderItem3);
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase.
@@ -585,7 +585,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         this.columns = new ArrayList<>(columns.length + 3);
         final OrmHandler handler = getHandler();
         for (Key key : columns) {
-            final MetaColumn mc = (MetaColumn) handler.findColumnModel(getLastProperty(key), true);
+            final MetaColumn mc = handler.findColumnModel(getLastProperty(key), true);
             final ColumnWrapper column = key.isComposite()
                     ? new ColumnWrapperImpl(mc, key)
                     : mc;
@@ -658,7 +658,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             return orderByMany(); // empty sorting
         } else {
             this.orderBy.clear();
-            this.orderBy.addAll( (Collection)orderItems );
+            this.orderBy.addAll(orderItems);
         }
         return this;
     }
@@ -761,7 +761,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-    /** The max row count for the resultset. The value -1 means no change, 
+    /** The max row count for the resultset. The value -1 means no change,
      * value 0 means no limit (or a default value by the JDBC driver implementation.
      * @see #getLimit()
      */

@@ -13,9 +13,9 @@ import static org.Person.*;
 /** Simple Table Frame. */
 public class TableFrame extends JFrame implements ActionListener, Runnable  {
 
-  private File dataFile = new File(System.getProperty("user.home"),"ujo-company.xml");
-  private Company company;
-  private UjoTableModel<Person> model;
+  private final File dataFile = new File(System.getProperty("user.home"),"ujo-company.xml");
+  private final Company company;
+  private final UjoTableModel<Person> model;
   private JTable table;
 
   /** Creates a new instance of TableFrame */
@@ -108,7 +108,7 @@ public class TableFrame extends JFrame implements ActionListener, Runnable  {
     }
   }
 
-  public static void main(String args[]) {
+  public static void main(String[] args) {
     new TableFrame().setVisible(true);
   }
 }

@@ -35,7 +35,7 @@ public enum QuoteEnum implements StringWrapper {
     @NotNull
     private final String id;
 
-    private QuoteEnum(@NotNull final String id) {
+    QuoteEnum(@NotNull final String id) {
         Assert.hasLength(id);
         this.id = id;
     }

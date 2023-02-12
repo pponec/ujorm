@@ -35,9 +35,9 @@ public final class Toolbar<U extends Hotel> extends AbstractToolbar<U> {
     /** Default criterion */
     public static final Criterion<Hotel> DEFAULT_CRITERION = Hotel.ACTIVE.whereEq(true);
     /** Searching Hotel Field */
-    private TextField searchHotel;
+    private final TextField searchHotel;
     /** Searching City Field */
-    private TextField searchCity;
+    private final TextField searchCity;
 
     public Toolbar(String id) {
         super(id);

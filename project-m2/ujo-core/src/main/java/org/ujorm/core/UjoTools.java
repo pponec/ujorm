@@ -240,7 +240,7 @@ public abstract class UjoTools implements Comparator<Key> {
             for (Field field : key.getDomainType().getFields()) {
                 if (field.getModifiers()==UjoTools.PROPERTY_MODIFIER
                 &&  field.get(null) == key) {
-                    return (T) field.getAnnotation(annotation);
+                    return field.getAnnotation(annotation);
                 }
             }
         } catch (RuntimeException | ReflectiveOperationException | OutOfMemoryError e) {

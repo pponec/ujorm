@@ -67,12 +67,12 @@ import org.ujorm.tools.web.ao.Injector;
 public final class Element implements ApiElement<Element>, Html {
 
     /** An original XML element */
-    protected final ApiElement internalElement;
+    final ApiElement internalElement;
 
     /** New element for an API element
      * @see #of(org.ujorm.tools.xml.ApiElement)
      */
-    protected Element(@NotNull final ApiElement original) {
+    Element(@NotNull final ApiElement original) {
         this.internalElement = original;
     }
 
@@ -92,7 +92,7 @@ public final class Element implements ApiElement<Element>, Html {
      */
     @NotNull
     @Override
-    public final Element setAttribute(@NotNull final String name, @Nullable final Object value) {
+    public Element setAttribute(@NotNull final String name, @Nullable final Object value) {
         internalElement.setAttribute(name, value);
         return this;
     }
@@ -106,9 +106,9 @@ public final class Element implements ApiElement<Element>, Html {
      * @return The original element
      */
     @NotNull
-    public final Element setAttributes(
-            @NotNull final String name, 
-            @NotNull final CharSequence separator, 
+    public Element setAttributes(
+            @NotNull final String name,
+            @NotNull final CharSequence separator,
             @NotNull final Object... value) {
         final String val = Stream.of(value)
                 .filter(Objects::nonNull)
@@ -124,7 +124,7 @@ public final class Element implements ApiElement<Element>, Html {
      * @return The original element
      */
     @NotNull
-    public final Element setAttribute(@NotNull final String name) {
+    public Element setAttribute(@NotNull final String name) {
         return setAttribute(name, "");
     }
 
@@ -139,7 +139,7 @@ public final class Element implements ApiElement<Element>, Html {
     @Deprecated
     @NotNull
     @Override
-    public final Element setAttrib(@NotNull final String name, @Nullable final Object value) {
+    public Element setAttrib(@NotNull final String name, @Nullable final Object value) {
         return setAttribute(name, value);
     }
 
@@ -152,7 +152,7 @@ public final class Element implements ApiElement<Element>, Html {
      * @return The original element
      */
     @NotNull
-    public final Element setAttr(@NotNull final String name, @Nullable final Object value) {
+    public Element setAttr(@NotNull final String name, @Nullable final Object value) {
         return setAttribute(name, value);
     }
 
@@ -317,7 +317,7 @@ public final class Element implements ApiElement<Element>, Html {
      * @return New instance of the Element
      */
     @NotNull
-    public final Element addElement(@NotNull final String name, @NotNull final CharSequence... cssClasses) {
+    public Element addElement(@NotNull final String name, @NotNull final CharSequence... cssClasses) {
         return addElement(name).setClass(cssClasses);
     }
 
@@ -329,9 +329,9 @@ public final class Element implements ApiElement<Element>, Html {
      * @return New instance of the Element
      */
     @NotNull
-    public final Element addElementIf(final boolean enabled,
-            @NotNull final String name,
-            @NotNull final CharSequence... cssClasses) {
+    public Element addElementIf(final boolean enabled,
+                                @NotNull final String name,
+                                @NotNull final CharSequence... cssClasses) {
         return addElement(enabled ? name : HIDDEN_NAME).setClass(cssClasses);
     }
 
@@ -463,7 +463,7 @@ public final class Element implements ApiElement<Element>, Html {
 
     /** Create a content of an embeded image */
     @NotNull
-    protected CharSequence createEmbededImage(
+    private CharSequence createEmbededImage(
             @NotNull final InputStream imageStream,
             @NotNull final StringBuilder result) {
         final int bufferSize = 3 * 1024;
@@ -936,7 +936,7 @@ public final class Element implements ApiElement<Element>, Html {
      */
     @Deprecated
     @NotNull
-    public final ExceptionProvider then(@NotNull final Consumer<Element> builder) {
+    public ExceptionProvider then(@NotNull final Consumer<Element> builder) {
         return next(builder);
     }
 
@@ -975,7 +975,7 @@ public final class Element implements ApiElement<Element>, Html {
 
     /** New element for an API element */
     @NotNull
-    public static final Element of(@NotNull final ApiElement original) {
+    public static Element of(@NotNull final ApiElement original) {
         return (original instanceof Element)
             ? (Element) original
             : new Element(original);

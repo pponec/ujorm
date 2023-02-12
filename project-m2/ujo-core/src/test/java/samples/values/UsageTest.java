@@ -28,8 +28,8 @@ public class UsageTest extends TestCase {
     public void testSetGet() {
         Person person = new Person();
 
-        assertEquals(null, person.get(MOTHER));
-        assertEquals(null, person.get(MOTHER.add(MOTHER)));
+        assertNull(person.get(MOTHER));
+        assertNull(person.get(MOTHER.add(MOTHER)));
 
         final Key<Person,String> myName = NAME;
         final Key<Person,String> mothersName = MOTHER.add(NAME);
@@ -39,9 +39,9 @@ public class UsageTest extends TestCase {
         assertEquals("MOTHER.NAME", mothersName.toString());
         assertEquals("MOTHER.MOTHER.NAME", grandMothersName.toString());
 
-        assertEquals(null, person.get(myName));
-        assertEquals(null, person.get(mothersName));   // Mother object is missing !
-        assertEquals(null, person.get(grandMothersName)); // Grandmother is missing !
+        assertNull(person.get(myName));
+        assertNull(person.get(mothersName));   // Mother object is missing !
+        assertNull(person.get(grandMothersName)); // Grandmother is missing !
 
         person.set(myName, "name1");
         person.set(mothersName, "name2");    // Wow, method creates a mother object !

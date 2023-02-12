@@ -29,45 +29,45 @@ import org.ujorm.hotels.entity.enums.ModuleEnum;
  * @author Ponec
  */
 public interface ParamService {
-    public static final String CACHED = "ParamServiceCached";
-    public static final String NATURAL = "ParamServiceNatural";
+    String CACHED = "ParamServiceCached";
+    String NATURAL = "ParamServiceNatural";
 
     /** Get a value of the key the */
-    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key);
+    <U extends ModuleParams, T> T getValue(Key<? super U, T> key);
 
     /** Get a value of the key where the module have got special parameter for getter performance */
-    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, ModuleEnum module);
+    <U extends ModuleParams, T> T getValue(Key<? super U, T> key, ModuleEnum module);
 
     /** Get a value of the key where the module have got special parameter for getter performance */
-    public <U extends ModuleParams, T> T getValue(Key<? super U, T> key, ModuleEnum module, Customer customer);
+    <U extends ModuleParams, T> T getValue(Key<? super U, T> key, ModuleEnum module, Customer customer);
 
     /** Get all parameters for a required Customer and an additional Customer */
-    public List<? super ParamValue> getValues(@Nullable Customer customer, Criterion<ParamValue> criterion);
+    List<? super ParamValue> getValues(@Nullable Customer customer, Criterion<ParamValue> criterion);
 
     /** Get all parameters for a logged Customer using an extended criterion */
-    public List<? super ParamValue> getValues(@NotNull Criterion<ParamValue> criterion);
+    List<? super ParamValue> getValues(@NotNull Criterion<ParamValue> criterion);
 
     /** Get all parameters for a required Customer */
-    public List<? super ParamValue> getValues(@Nullable Customer customer);
+    List<? super ParamValue> getValues(@Nullable Customer customer);
 
     /** Get all parameters for a logged Customer */
-    public List<? super ParamValue> getValues();
+    List<? super ParamValue> getValues();
 
     /** Save a modified text value of the parameter to database
      * @param param An persistent format of the parameter.
      * @param Logged user in case of the {@link @PersonalParam}
      */
-    public void updateValue(ParamValue param, Customer user);
+    void updateValue(ParamValue param, Customer user);
 
     /** Save a modified parameter text value of a logged user
      * @param param Undefined customer save an default parameters
      */
-    public void updateValue(ParamValue param);
+    void updateValue(ParamValue param);
 
     /** Clear all the cached parameters */
-    public void clearCache();
+    void clearCache();
 
     /** Save all parameters to database */
-    public void init(ModuleParams<?> params);
+    void init(ModuleParams<?> params);
 
 }

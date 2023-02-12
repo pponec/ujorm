@@ -22,13 +22,13 @@ public class ArrayTree extends ArrayUjoImplChild {
 
     /** Factory */
     private static final KeyFactory<ArrayTree> f = newFactory(ArrayTree.class);
-    
+
     public static final ListKey<ArrayTree, ArrayTree> PRO_CHILDREN = f.newListKey("CHILDREN");
 
     static {
         f.lock();
     }
-    
+
     public int size() {
         int result = 0;
         for (ArrayTree tree : PRO_CHILDREN.getList(this)) {
@@ -37,16 +37,16 @@ public class ArrayTree extends ArrayUjoImplChild {
         return result;
     }
 
-    // * * * * * * * * * * * 
-    
+    // * * * * * * * * * * *
+
     public void init(ZCounter counter, int deep) {
 
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
-        
+
         PRO_P0.setValue(this, o0);
         PRO_P1.setValue(this, o1);
         PRO_P2.setValue(this, o2);
@@ -57,16 +57,16 @@ public class ArrayTree extends ArrayUjoImplChild {
         PRO_P7.setValue(this, o2);
         PRO_P8.setValue(this, o3);
         PRO_P9.setValue(this, o4);
-        
+
         for (int i=0; i<10; i++) {
-            if (deep<=0 || counter.substract()){ 
-                return; 
+            if (deep<=0 || counter.substract()){
+                return;
             }
             ArrayTree item = new ArrayTree();
             item.init(counter, deep-1);
             PRO_CHILDREN.addItem(this, item);
         }
-        
+
     }
-    
+
 }

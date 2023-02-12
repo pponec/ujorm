@@ -22,7 +22,7 @@ import org.ujorm.ListKey;
  */
 public class MismuchUjoBase extends AbstractUjo {
 
-    private static Class<MismuchUjoBase> WRONG_CLASS = (Class<MismuchUjoBase>) (Object) UniUjoBaseTest.class;
+    private static final Class<MismuchUjoBase> WRONG_CLASS = (Class<MismuchUjoBase>) (Object) UniUjoBaseTest.class;
     /** Factory */
     private static final KeyFactory<MismuchUjoBase> f = KeyFactory.Builder.get(WRONG_CLASS);
 

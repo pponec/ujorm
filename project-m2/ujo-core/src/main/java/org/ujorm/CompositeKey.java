@@ -34,25 +34,25 @@ import org.ujorm.validator.ValidationException;
 @SuppressWarnings("deprecation")
 public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, Iterable<Key<?,?>> {
     /** Default name space have got the {@code null} value */
-    public static final String DEFAULT_ALIAS = null;
+    String DEFAULT_ALIAS = null;
 
     /** Get the a count of the <string>direct keys</strong>. */
-    public int getKeyCount();
+    int getKeyCount();
 
     /** Get required key */
-    public <U extends Ujo> Key<U, VALUE> getKey(int i);
+    <U extends Ujo> Key<U, VALUE> getKey(int i);
 
     /** Get the first key of the current object. The result is direct key always. */
-    public <U extends Ujo> Key<U, VALUE> getLastKey();
+    <U extends Ujo> Key<U, VALUE> getLastKey();
 
     /** Export all <strong>direct</strong> keys to the list from parameter. */
-    public void exportKeys(Collection<Key<?,?>> result);
+    void exportKeys(Collection<Key<?,?>> result);
 
     /** Returns a {@code directKey} for the required level.
      * @param level Level no. 0 returns the {@code null} value always.
      * @see #getKeyCount()
      */
-    public Key<?,?> getDirectKey(int level);
+    Key<?,?> getDirectKey(int level);
 
     /** The method writes a {@code value} to the domain object
      * and creates all missing relations.
@@ -64,7 +64,7 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
-    public void setValue(final UJO ujo, final VALUE value) throws ValidationException;
+    void setValue(final UJO ujo, final VALUE value) throws ValidationException;
 
     /**
      * It is a basic method for setting an appropriate type safe value to an Ujo object.
@@ -77,7 +77,7 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
      * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
-    public void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException;
+    void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException;
 
     /** Get a penultimate value of this composite key.
      * If any value is {@code null}, then the result is {@code null}.
@@ -86,7 +86,7 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
      * @param create create new instance of a related UJO object for an undefined ({@code null} case.
      * During the assigning the new relations are <strong>disabled</strong> all validators.
      */
-    public Ujo getSemiValue(UJO ujo, boolean create);
+    Ujo getSemiValue(UJO ujo, boolean create);
 
 
     /** Returns a {@code spaceName} for the required level.
@@ -96,10 +96,10 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
      * <br>The attribute is not serializable in the current Ujorm release.
      * @see #getKeyCount()
      */
-    public String getAlias(int level);
+    String getAlias(int level);
 
     /** Returns the {@code true} if the composite key contains any alias name */
-    public boolean hasAlias();
+    boolean hasAlias();
 
     /**
      * Returns the {@code true}, if the values
@@ -110,6 +110,6 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE>, I
      * @param key A checked {@link CompositeKey} implementation
      */
     @Override
-    public boolean equals(final Object key);
+    boolean equals(final Object key);
 
 }

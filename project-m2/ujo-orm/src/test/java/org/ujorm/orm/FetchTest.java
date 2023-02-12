@@ -67,7 +67,7 @@ public class FetchTest extends TestCase {
             assertNotNull(item.readSession());
             ++count;
         }
-        assertTrue("The one loop at least", count == 1);
+        assertEquals("The one loop at least", 1, count);
 
         // ------ ONE COLUMN TEST ------
 
@@ -75,8 +75,8 @@ public class FetchTest extends TestCase {
         query.setColumn(fetchColumn);
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
-            assertTrue("Order must be null", orderFk == null);
-            assertTrue(item.get(XItem.ORDER) == null);
+            assertNull("Order must be null", orderFk);
+            assertNull(item.get(XItem.ORDER));
             assertNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
             assertNull(item.get(XItem.$ORDER_NOTE));
@@ -90,8 +90,8 @@ public class FetchTest extends TestCase {
         query.setColumns(true, fetchColumn);
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
-            assertTrue("Order must be null", orderFk == null);
-            assertTrue(item.get(XItem.ORDER) == null);
+            assertNull("Order must be null", orderFk);
+            assertNull(item.get(XItem.ORDER));
             assertNotNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
             assertNull(item.get(XItem.$ORDER_NOTE));
@@ -264,7 +264,7 @@ public class FetchTest extends TestCase {
             params.set(MetaParams.AUTO_CLOSING_DEFAULT_SESSION, false); // For in-memory database only
             handler = new OrmHandler();
             handler.config(params);
-            
+
             handler.loadDatabase(XDatabase.class);
         }
         return handler;

@@ -102,7 +102,7 @@ public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAb
         ) {
 
         final Key<UJO, VALUE> path = PathProperty.of(property1, property2, property3);
-        set((Key)path, value);
+        set(path, value);
     }
 
     @Override

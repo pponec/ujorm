@@ -20,8 +20,8 @@ public class TextableSample {
     /** Run the class */
     public static void main(String[] args) {
 
-        Integer textable1 = new Integer(7);
-        Integer textable2 = new Integer(textable1.toString());
+        Integer textable1 = Integer.valueOf(7);
+        Integer textable2 = Integer.valueOf(textable1.toString());
         boolean result = textable1.equals(textable2);
 
 

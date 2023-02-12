@@ -54,7 +54,7 @@ public class UjoEvent<U> {
      * @param target target
      */
     public UjoEvent(@NotNull String action, @NotNull AjaxRequestTarget target) {
-        this(action, (U) null, target);
+        this(action, null, target);
     }
 
     /**

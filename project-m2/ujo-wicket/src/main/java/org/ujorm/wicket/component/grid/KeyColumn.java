@@ -155,7 +155,7 @@ public class KeyColumn<U extends Ujo, T> extends AbstractColumn<U, KeyRing<U>> {
 
     /** Get the Key */
     public Key<U,T> getKey() {
-        return (Key<U,T>) keySerializable.getFirstKey();
+        return keySerializable.getFirstKey();
     }
 
     /** Append a CSS class - to overwriting only */

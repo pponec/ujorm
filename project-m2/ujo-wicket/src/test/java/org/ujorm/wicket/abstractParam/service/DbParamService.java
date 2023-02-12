@@ -27,45 +27,45 @@ import org.ujorm.orm.OrmUjo;
  * @author ponec
  */
 public interface DbParamService<V extends OrmUjo, K extends OrmUjo, C extends OrmUjo> {
-    public static final String CACHED = "ParamServiceCached";
-    public static final String NATURAL = "ParamServiceNatural";
+    String CACHED = "ParamServiceCached";
+    String NATURAL = "ParamServiceNatural";
 
     /** Get a value of the key the */
-    public <U extends IModuleParams, T> T getValue(Key<? super U, T> key);
+    <U extends IModuleParams, T> T getValue(Key<? super U, T> key);
 
     /** Get a value of the key where the module have got special parameter for getter performance */
-    public <U extends IModuleParams, T> T getValue(Key<? super U, T> key, IModule module);
+    <U extends IModuleParams, T> T getValue(Key<? super U, T> key, IModule module);
 
     /** Get a value of the key where the module have got special parameter for getter performance */
-    public <U extends IModuleParams, T> T getValue(Key<? super U, T> key, IModule module, C customer);
+    <U extends IModuleParams, T> T getValue(Key<? super U, T> key, IModule module, C customer);
 
     /** Get all parameters for a required Customer and an additional Customer */
-    public List<? super V> getValues(@Nullable C customer, Criterion<V> criterion);
+    List<? super V> getValues(@Nullable C customer, Criterion<V> criterion);
 
     /** Get all parameters for a logged Customer using an extended criterion */
-    public List<? super V> getValues(@NotNull Criterion<V> criterion);
+    List<? super V> getValues(@NotNull Criterion<V> criterion);
 
     /** Get all parameters for a required Customer */
-    public List<? super V> getValues(@Nullable C customer);
+    List<? super V> getValues(@Nullable C customer);
 
     /** Get all parameters for a logged Customer */
-    public List<? super V> getValues();
+    List<? super V> getValues();
 
     /** Save a modified text value of the parameter to database
      * @param param An persistent format of the parameter.
      * @param Logged user in case of the {@link @PersonalParam}
      */
-    public void updateValue(V param, C user);
+    void updateValue(V param, C user);
 
     /** Save a modified parameter text value of a logged user
      * @param param Undefined customer save an default parameters
      */
-    public void updateValue(V param);
+    void updateValue(V param);
 
     /** Clear all the cached parameters */
-    public void clearCache();
+    void clearCache();
 
     /** Save all parameters to database */
-    public void init(IModuleParams params);
+    void init(IModuleParams params);
 
 }

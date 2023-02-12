@@ -35,7 +35,7 @@ import org.ujorm.orm.metaModel.MetaParams;
  */
 public class SampleOfInheritance extends TestCase {
 
-    private OrmHandler handler = new OrmHandler();
+    private final OrmHandler handler = new OrmHandler();
 
     /** Before the first use load a metamodel.
      * Database tables will be name in the first time.

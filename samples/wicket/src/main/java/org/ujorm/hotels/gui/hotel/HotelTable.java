@@ -54,11 +54,11 @@ public class HotelTable<U extends Hotel> extends GenericPanel<U> {
     @SpringBean ApplicationParams<ApplicationParams> params;
     @SpringBean CommonService commonService;
 
-    private Toolbar<U> toolbar = new Toolbar("toolbar");
-    private HotelEditor editDialog;
-    private BookingEditor bookingDialog;
-    private MessageDialogPane removeDialog;
-    private ListDataProvider<U> columnBuilder;
+    private final Toolbar<U> toolbar = new Toolbar("toolbar");
+    private final HotelEditor editDialog;
+    private final BookingEditor bookingDialog;
+    private final MessageDialogPane removeDialog;
+    private final ListDataProvider<U> columnBuilder;
 
     public HotelTable(String id) {
         super(id);

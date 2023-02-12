@@ -63,7 +63,7 @@ final public class OrmTools {
      * Create a new Blob
      * @param bytes The null value is supported.
      */
-    public static final SerialBlob createBlob(byte[] bytes) {
+    public static SerialBlob createBlob(byte[] bytes) {
         try {
             return bytes!=null ? new SerialBlob(bytes) : null;
         } catch (Exception e) {
@@ -133,7 +133,7 @@ final public class OrmTools {
      * Create a new Clob.
      * @param text The null value is supported.
      */
-    public static final SerialClob createClob(char[] text) {
+    public static SerialClob createClob(char[] text) {
         try {
             return text!=null ? new SerialClob(text) : null;
         } catch (Exception e) {
@@ -299,7 +299,7 @@ final public class OrmTools {
             return result;
         }
         final Session session = result.get(0).readSession();
-        final MetaColumn column = (MetaColumn) session.getHandler().findColumnModel(key, true);
+        final MetaColumn column = session.getHandler().findColumnModel(key, true);
         final MetaColumn pkColumn = column.getForeignColumns().get(0);
         final Query<OrmUjo> query = session.createQuery(pkColumn.getTable().getType());
         final int limit = session.getParameters().get(MetaParams.MAX_ITEM_COUNT_4_IN);

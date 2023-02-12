@@ -17,7 +17,7 @@
 package org.ujorm.orm.annot;
 import java.lang.annotation.*;
 
-/** 
+/**
  * Use the annotation to mark a Key static field like XML Attribute.
  * @see View
  */
@@ -26,7 +26,7 @@ import java.lang.annotation.*;
 public @interface Procedure {
 
     /** A String for the NULL value. */
-    public static final String NULL = Table.NULL;
+    String NULL = Table.NULL;
 
     /** A named parameter for the stored prodedure. Default value is taken from a relation key name. */
     String name() default NULL;
@@ -36,5 +36,5 @@ public @interface Procedure {
     String value() default NULL;
     /** Name of schema. If the value is empty than a default database schema is used. */
     String schema() default NULL;
-    
+
 }

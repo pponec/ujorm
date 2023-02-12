@@ -108,7 +108,7 @@ public class AliasTable<UJO extends OrmUjo> {
 
     /** Returns one column including an <strong>default</strong> special alias name after the 'AS' phrase.  */
     public <T> String columnAs(Key<UJO, T> key) throws IllegalStateException {
-        return columnAs(key, (CharSequence) null);
+        return columnAs(key, null);
     }
 
     /** Returns one column including the <strong>required</strong> alias name after the 'AS' phrase.
@@ -172,7 +172,7 @@ public class AliasTable<UJO extends OrmUjo> {
 
     /** Find Column Model or throw an IllegalArgumentException. */
     protected MetaColumn findColumnModel(Key<UJO, ?> key) throws IllegalArgumentException {
-        return (MetaColumn) handler.findColumnModel((Key) key, true);
+        return handler.findColumnModel(key, true);
     }
 
     // ------------ STATIC METHODS ------------

@@ -168,7 +168,7 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
     }
 
     /** An equals test */
-    public final boolean equals(@Nullable final UJO u1, @Nullable final UJO u2) {
+    public boolean equals(@Nullable final UJO u1, @Nullable final UJO u2) {
         return compare(u1, u2) == 0;
     }
 

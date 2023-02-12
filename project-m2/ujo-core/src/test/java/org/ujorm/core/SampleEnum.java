@@ -21,5 +21,5 @@ package org.ujorm.core;
  * @author Pavel Ponec
  */
 public enum SampleEnum {
-    ZERO, ONE, TWO;
+    ZERO, ONE, TWO
 }

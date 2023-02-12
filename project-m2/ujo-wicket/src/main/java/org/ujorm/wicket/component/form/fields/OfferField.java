@@ -49,9 +49,9 @@ public class OfferField<U extends Ujo & Serializable> extends Field<U> implement
     /** Attribute to display in the input field */
     private KeyRing<U> displayKey;
     /** Offer dialog */
-    private OfferDialogPane<U> offerDialog;
+    private final OfferDialogPane<U> offerDialog;
     /** Offer data model */
-    private OfferModel<U> model;
+    private final OfferModel<U> model;
 
     /** Constructor */
     public <W extends Ujo> OfferField(String id, Key<W,U> key) {
@@ -61,7 +61,7 @@ public class OfferField<U extends Ujo & Serializable> extends Field<U> implement
     /** Constructor */
     public <W extends Ujo> OfferField(@NotNull String id, @NotNull Key<W,U> key, @Nullable Key<U,?> display) {
         this(id, key, (OfferModel<U>) null);
-        this.displayKey = display != null ? KeyRing.<U>of(display) : null;
+        this.displayKey = display != null ? KeyRing.of(display) : null;
     }
 
     /** Constructor */

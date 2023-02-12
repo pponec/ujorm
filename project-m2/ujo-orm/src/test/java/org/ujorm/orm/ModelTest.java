@@ -53,14 +53,14 @@ public class ModelTest extends TestCase {
 
         for (MetaIndex index : indexes) {
             if (MetaIndex.NAME.of(index).equals(XOrder.IDX_STATE_NOTE)) {
-                assertEquals(false, MetaIndex.UNIQUE.getValue(index).booleanValue());
+                assertFalse(MetaIndex.UNIQUE.getValue(index).booleanValue());
                 assertEquals(2, index.getColumns().size());
                 assertSame(XOrder.STATE, index.getColumns().get(0).getKey());
                 assertSame(XOrder.NOTE, index.getColumns().get(1).getKey());
                 ++count;
             }
             if (MetaIndex.NAME.of(index).equals(XOrder.IDX_NOTE)) {
-                assertEquals(false, MetaIndex.UNIQUE.getValue(index).booleanValue());
+                assertFalse(MetaIndex.UNIQUE.getValue(index).booleanValue());
                 assertSame(1, index.getColumns().size());
                 assertSame(XOrder.NOTE, index.getColumns().get(0).getKey());
                 ++count;
@@ -80,14 +80,14 @@ public class ModelTest extends TestCase {
 
         for (MetaIndex index : indexes) {
             if (MetaIndex.NAME.of(index).equals(XOrder.IDX_STATE_NOTE)) {
-                assertEquals(false, MetaIndex.UNIQUE.getValue(index).booleanValue());
+                assertFalse(MetaIndex.UNIQUE.getValue(index).booleanValue());
                 assertEquals(2, index.getColumns().size());
                 assertSame(XOrder.STATE, index.getColumns().get(0).getKey());
                 assertSame(XOrder.NOTE, index.getColumns().get(1).getKey());
                 ++count;
             }
             if (MetaIndex.NAME.of(index).equals(XOrder.IDX_NOTE)) {
-                assertEquals(false, MetaIndex.UNIQUE.getValue(index).booleanValue());
+                assertFalse(MetaIndex.UNIQUE.getValue(index).booleanValue());
                 assertSame(1, index.getColumns().size());
                 assertSame(XOrder.NOTE, index.getColumns().get(0).getKey());
                 ++count;

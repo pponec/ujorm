@@ -24,9 +24,9 @@ public class BeanTree extends BeanUjoImplChild {
 
     /** Verify unique constants */
     static{init(BeanTree.class,true);}
-    
+
     private List<PojoTree> children;
-    
+
     public void setChilds(List<PojoTree> children) {
         this.children = children;
     }
@@ -37,10 +37,10 @@ public class BeanTree extends BeanUjoImplChild {
     public List<PojoTree> addChild(PojoTree child) {
         getChilds().add(child);
         return getChilds();
-    }    
-    
-    
-    
+    }
+
+
+
     public int size() {
         int result = 0;
         for (BeanTree tree : PRO_CHILDREN.getList(this)) {
@@ -48,18 +48,18 @@ public class BeanTree extends BeanUjoImplChild {
         }
         return result;
     }
-    
-    
+
+
     // * * * * * * * * * * *
-    
+
     public void init(ZCounter counter, int deep) {
-        
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
-        
+
         PRO_P0.setValue(this, o0);
         PRO_P1.setValue(this, o1);
         PRO_P2.setValue(this, o2);
@@ -70,7 +70,7 @@ public class BeanTree extends BeanUjoImplChild {
         PRO_P7.setValue(this, o2);
         PRO_P8.setValue(this, o3);
         PRO_P9.setValue(this, o4);
-        
+
         for (int i=0; i<10; i++) {
             if (deep<=0 || counter.substract()){
                 return;
@@ -79,10 +79,10 @@ public class BeanTree extends BeanUjoImplChild {
             item.init(counter, deep-1);
             PRO_CHILDREN.addItem(this, item);
         }
-        
+
     }
-    
-    
+
+
 }
 
 

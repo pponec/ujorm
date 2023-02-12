@@ -19,6 +19,7 @@ package org.ujorm.wicket.component.dialog;
 import com.googlecode.wicket.jquery.ui.widget.dialog.AbstractDialog;
 import com.googlecode.wicket.jquery.ui.widget.dialog.DialogButton;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
@@ -50,7 +51,7 @@ public class MessageDialogPanel<T extends Ujo> extends AbstractDialog {
     /** Create buttons */
     @Override
     protected List<DialogButton> getButtons() {
-        return Arrays.asList(this.btnSure);
+        return Collections.singletonList(this.btnSure);
     }
 
 

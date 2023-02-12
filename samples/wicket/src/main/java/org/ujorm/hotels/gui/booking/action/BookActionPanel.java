@@ -34,7 +34,7 @@ public class BookActionPanel<U extends Booking> extends GenericPanel<U> {
     public static final String BOOKING = "BOOKING";
 
     /** Current row */
-    private U row;
+    private final U row;
 
 
     public BookActionPanel(String id, final U row) {

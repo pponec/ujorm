@@ -246,7 +246,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                         LOGGER.log(UjoLogger.ERROR, msg, e);
                         throw new IllegalUjormException(msg, e);
                     }
-                    tmpStore = (InnerDataStore<UJO>) (Object) InnerDataStore.EMPTY;
+                    tmpStore = (InnerDataStore<UJO>) InnerDataStore.EMPTY;
                 }
             }
         }
@@ -417,7 +417,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         Assert.isTrue(key.getIndex() < 0, "Property index must be undefined");
 
         addKey(key);
-        return (P) key;
+        return key;
     }
 
     /** Common protected factory method */
@@ -473,7 +473,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             final Type rawType = types[valueType ? types.length - 1 : 0];
             final Type result = valueType && rawType instanceof ParameterizedType
                     ? ((ParameterizedType)rawType).getRawType()
-                    : rawType;            
+                    : rawType;
             return (result instanceof Class)
                     ? (Class) result
                     : Class.class;

@@ -59,7 +59,7 @@ public final class OfferToolbar<U extends Ujo & Serializable> extends AbstractTo
     }
 
     /** Is the type of value the String class */
-    protected boolean isStringType() {
+    private boolean isStringType() {
         return fields.getFirstKey().isTypeOf(String.class);
     }
 

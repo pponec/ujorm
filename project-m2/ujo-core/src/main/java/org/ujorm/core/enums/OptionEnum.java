@@ -18,7 +18,7 @@ package org.ujorm.core.enums;
 /**
  * Common attribues for many methods.
  * @author Pavel Ponec
- * @see org.ujorm.tools.Check#firstItem(java.lang.Object, java.lang.Object...) 
+ * @see org.ujorm.tools.Check#firstItem(java.lang.Object, java.lang.Object...)
  */
 public enum OptionEnum {
 
@@ -35,6 +35,5 @@ public enum OptionEnum {
      * the default behavior is described on the used method.
      */
     DEFAULT;
-    ;
 
 }

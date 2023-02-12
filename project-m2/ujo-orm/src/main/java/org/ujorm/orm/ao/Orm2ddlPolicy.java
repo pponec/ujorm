@@ -27,7 +27,7 @@ package org.ujorm.orm.ao;
  */
 public enum Orm2ddlPolicy {
 
-    /** Framework is expected to match the DDL structure with the ORM model and do not make any validation. 
+    /** Framework is expected to match the DDL structure with the ORM model and do not make any validation.
      * @see #WARNING
      */
     DO_NOTHING,
@@ -42,7 +42,7 @@ public enum Orm2ddlPolicy {
     CREATE_OR_UPDATE_DDL,
     /** Throw the IllegalStateException in case missing a table, index, or column in the connected database. */
     VALIDATE,
-    /** The value is defined from a parent. 
+    /** The value is defined from a parent.
      * The hierarchy from the parent to a child is:
      * <ul>
      *   <li>Meta Parameters</li>
@@ -53,6 +53,5 @@ public enum Orm2ddlPolicy {
      * @see #CREATE_OR_UPDATE_DDL
      */
     INHERITED,
-    ;
 
 }

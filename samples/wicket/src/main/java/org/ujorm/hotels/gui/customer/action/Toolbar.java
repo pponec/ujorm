@@ -40,7 +40,7 @@ public final class Toolbar<U extends Customer> extends AbstractToolbar<U> {
     @SpringBean private AuthService authService;
 
     /** search login */
-    private TextField searchLogin;
+    private final TextField searchLogin;
 
     public Toolbar(String id) {
         super(id);

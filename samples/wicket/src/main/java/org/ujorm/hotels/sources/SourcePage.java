@@ -49,7 +49,7 @@ public class SourcePage extends WebPage {
     @SpringBean
     private ApplicationParams applParams;
     /** Sources */
-    private SourceMap sourceMap = new SourceMap();
+    private final SourceMap sourceMap = new SourceMap();
 
     public SourcePage(PageParameters parameters) {
         super(parameters);

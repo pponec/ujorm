@@ -74,7 +74,7 @@ public interface XmlConfig {
      * Create a new default config
      * @return
      */
-    public static DefaultXmlConfig ofDefault() {
+    static DefaultXmlConfig ofDefault() {
         return new DefaultXmlConfig();
     }
 
@@ -82,7 +82,7 @@ public interface XmlConfig {
      * Create a new default config
      * @return
      */
-    public static DefaultXmlConfig ofDoctype(@Nullable final String doctype) {
+    static DefaultXmlConfig ofDoctype(@Nullable final String doctype) {
         final DefaultXmlConfig result = new DefaultXmlConfig();
         result.setDoctype(doctype);
         return result;

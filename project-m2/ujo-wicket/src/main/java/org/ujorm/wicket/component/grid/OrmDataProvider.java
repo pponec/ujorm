@@ -71,7 +71,7 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
     /** Hidden table columns for DB fetching */
     List<KeyRing<U>> hiddenColumns = null;
     /** OrmSession */
-    private OrmSessionProvider ormSession;
+    private final OrmSessionProvider ormSession;
     /** Fetch database columns for better SQL performance
      * where the feature is enabled by default
      */
@@ -98,7 +98,7 @@ public class OrmDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
         if (hiddenColumns == null) {
              hiddenColumns = new ArrayList<KeyRing<U>>();
         }
-        hiddenColumns.add(KeyRing.<U>of(column));
+        hiddenColumns.add(KeyRing.of(column));
     }
 
     /** Build a JDBC ResultSet always.

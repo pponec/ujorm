@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import javax.xml.transform.Result;
@@ -103,7 +104,7 @@ public class DataLoaderTest {
 
     /** Extended method to open resource to fix some errors of data source */
     protected StreamSource openStreamExt(URL dataUrl) throws IOException {
-        Reader reader = new InputStreamReader(dataUrl.openStream(), "utf-8");
+        Reader reader = new InputStreamReader(dataUrl.openStream(), StandardCharsets.UTF_8);
         StringBuilder writer = new StringBuilder(10000);
         int c;
         while((c=reader.read())!=-1) {
@@ -126,7 +127,7 @@ public class DataLoaderTest {
 
     /** Make a XSL transformation. */
     public static File makeXslTransformation(StreamSource source, StreamSource xsl, String[] ... params)
-    throws TransformerConfigurationException, TransformerException, IOException {
+    throws TransformerException, IOException {
         // Create transformer factory
         TransformerFactory factory = TransformerFactory.newInstance();
 

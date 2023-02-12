@@ -30,6 +30,6 @@ public interface UjoCloneable<U extends Object> /*extends Ujo, Cloneable */ {
      * @param context Context of the action. A default value can be a NULL.
      * @return A clone
      */
-    public U clone(int depth, Object context);
+    U clone(int depth, Object context);
 
 }

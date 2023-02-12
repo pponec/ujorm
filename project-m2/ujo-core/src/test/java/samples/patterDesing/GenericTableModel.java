@@ -8,5 +8,5 @@ import javax.swing.table.TableModel;
  */
 
 interface GenericTableModel<MyMap> extends TableModel {
-    public void setColumns(Property ... columns);
+    void setColumns(Property ... columns);
 }

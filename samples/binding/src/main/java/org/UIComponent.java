@@ -23,15 +23,15 @@ package org;
 public interface UIComponent<T> {
 
     /** Get component value */
-    public T getValue();
+    T getValue();
 
     /** Get component value */
-    public void setValue(T value);
+    void setValue(T value);
 
     /** Set HTML stype */
-    public void setStyle(String attr, String value);
+    void setStyle(String attr, String value);
 
     /** Is the input value valid? */
-    public boolean isValid();
+    boolean isValid();
 
 }

@@ -35,13 +35,13 @@ public class T002a_Test extends MyTestCase {
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
      */
     public void testPrintXML() throws Exception {
-        System.out.println("testPrintXML: " + suite().toString());
+        System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);
         try {
             UTechnicalBean person = createPerson();
             UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
 
-            System.out.println("XML:\n" + writer.toString());
+            System.out.println("XML:\n" + writer);
         } catch (RuntimeException | OutOfMemoryError ex) {
             ex.printStackTrace();
         }
@@ -51,7 +51,7 @@ public class T002a_Test extends MyTestCase {
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
     public void testRestoreXML() throws Exception {
-        System.out.println("testPrintXML: " + suite().toString());
+        System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);
         //
         UTechnicalBean person = createPerson();
@@ -66,9 +66,9 @@ public class T002a_Test extends MyTestCase {
     protected UTechnicalBean createPerson() {
         UTechnicalBean result = new UTechnicalBean();
         UTechnicalBean.P0_BOOL.setValue(result, true);
-        UTechnicalBean.P1_BYTE.setValue(result, new Byte((byte)60));
+        UTechnicalBean.P1_BYTE.setValue(result, Byte.valueOf((byte) 60));
         UTechnicalBean.P2_CHAR.setValue(result, 'A');
-        UTechnicalBean.P3_SHORT.setValue(result, new Short((short)314));
+        UTechnicalBean.P3_SHORT.setValue(result, Short.valueOf((short) 314));
         UTechnicalBean.P4_INTE.setValue(result, 314000);
         UTechnicalBean.P5_LONG.setValue(result, 123456789L);
         UTechnicalBean.P6_FLOAT.setValue(result, 5.5f);

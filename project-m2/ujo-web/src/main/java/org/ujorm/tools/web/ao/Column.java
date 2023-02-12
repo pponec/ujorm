@@ -28,12 +28,12 @@ import org.ujorm.tools.web.Element;
 public interface Column<T> extends Function<T, Object> {
 
     /**
-     *  The method can be implemented for sortable columns 
+     *  The method can be implemented for sortable columns
      * @param t A domaim objject
      * @return Returns a constatn {@code "?"}, for a Sortable columns must return a serializable object.
      */
     @Override
-    public default Object apply(@NotNull T t) {
+    default Object apply(@NotNull T t) {
         return "?";
     }
 
@@ -42,6 +42,6 @@ public interface Column<T> extends Function<T, Object> {
      * @param parent An element of the table detail.
      * @param value Value to write.
      */
-    public void write(@NotNull Element parent, T value);
+    void write(@NotNull Element parent, T value);
 
 }

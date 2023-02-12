@@ -27,7 +27,7 @@ import static org.ujorm.extensions.PropertyModifier.*;
  */
 public class RelationToOne<UJO extends ExtendedOrmUjo, VALUE> extends OrmProperty<UJO, VALUE> {
 
-    private Key relatedKey;
+    private final Key relatedKey;
 
     @SuppressWarnings("unchecked")
     protected RelationToOne(String name, Class type, Key relatedKey) {

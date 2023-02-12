@@ -33,7 +33,7 @@ public enum ModuleEnum implements StringWrapper {
     /** Short identifier */
     private final String id;
 
-    private ModuleEnum(String id) {
+    ModuleEnum(String id) {
         this.id = id;
     }
 

@@ -18,6 +18,8 @@ package org.ujorm.orm.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.metaModel.MetaTable;
@@ -77,12 +79,7 @@ public class TableWrapperImpl implements TableWrapper {
         if (this.table != other.table) {
             return false;
         }
-        if (this.alias != other.alias
-        && (this.alias == null || !this.alias.equals(other.alias))
-        ){
-            return false;
-        }
-        return true;
+        return Objects.equals(this.alias, other.alias);
     }
 
 }

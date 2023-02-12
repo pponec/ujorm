@@ -20,7 +20,7 @@ public class Person implements Ujo {
     }
 
     // --- The begin of the Ujo implementation ---
-    private HashMap map = new HashMap();
+    private final HashMap map = new HashMap();
 
     public Object readValue(Key key) {
         return map.get(key);

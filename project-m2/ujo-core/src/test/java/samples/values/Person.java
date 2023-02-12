@@ -21,6 +21,7 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.UjoTools;
 import org.ujorm.implementation.quick.SmartUjo;
 
 public class Person extends SmartUjo<Person> {
@@ -50,7 +51,7 @@ public class Person extends SmartUjo<Person> {
 
     /** Equals */
     public boolean equals(Object obj) {
-        return UjoManager.getInstance().equalsUjo(this, (Ujo) obj);
+        return UjoTools.equalsUjo(this, (Ujo) obj);
     }
 
 }

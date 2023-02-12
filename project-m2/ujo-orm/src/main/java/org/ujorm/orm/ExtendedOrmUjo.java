@@ -32,6 +32,6 @@ public interface ExtendedOrmUjo<U extends ExtendedOrmUjo> extends OrmUjo {
      * @throws IllegalStateException Method throws an exception for a wrong key type.
      * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the key.
      */
-    public <UJO extends U> ForeignKey readFK(Key<UJO, ? extends OrmUjo> key) throws IllegalStateException;
+   <UJO extends U> ForeignKey readFK(Key<UJO, ? extends OrmUjo> key) throws IllegalStateException;
 
 }

@@ -38,17 +38,17 @@ public final class FunctionCriterion<U extends Ujo, T> extends ValueCriterion<U>
      * @param proxyValue An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
      * @see #where(org.ujorm.Key, org.ujorm.Key)
      */
-    protected FunctionCriterion
-        ( @NotNull final Key<U, ? extends Object> key
-        , @NotNull final Operator operator
-        , @NotNull final Supplier<T> proxyValue) {
+    FunctionCriterion
+    (@NotNull final Key<U, ? extends Object> key
+            , @NotNull final Operator operator
+            , @NotNull final Supplier<T> proxyValue) {
         super(key, operator, Assert.notNull(proxyValue, "proxyValue"));
         Assert.isFalse(operator == Operator.XFIXED, "Unsupported operator {}", operator);
     }
 
     /** Returns the right node of the parent */
     @Override @Nullable
-    public final T getRightNode() {
+    public T getRightNode() {
         return ((Supplier<T>) super.value).get();
     }
 

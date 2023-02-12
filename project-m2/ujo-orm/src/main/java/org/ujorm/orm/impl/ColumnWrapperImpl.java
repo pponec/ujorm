@@ -32,11 +32,11 @@ import org.ujorm.tools.Assert;
 public class ColumnWrapperImpl implements ColumnWrapper {
 
     /** The base column */
-    private MetaColumn column;
+    private final MetaColumn column;
     /** SQL table alias */
-    private String tableAlias;
+    private final String tableAlias;
     /** The base key */
-    private Key key;
+    private final Key key;
 
     public ColumnWrapperImpl(@NotNull final MetaColumn column, @Nullable final String tableAlias) {
         this(column, tableAlias, column.getKey());

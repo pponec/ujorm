@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -194,15 +195,15 @@ public class UjoManagerTest extends MyTestCase {
         result   = manager.decodeValue(charset, manager.encodeValue(expected, false));
         assertEquals("1", expected, result);
         //
-        expected = Charset.forName("UTF-8");
+        expected = StandardCharsets.UTF_8;
         result   = manager.decodeValue(charset, manager.encodeValue(expected, false));
         assertEquals("2", expected, result);
         //
-        expected = Charset.forName("UTF-8");
+        expected = StandardCharsets.UTF_8;
         result   = manager.decodeValue(charset, manager.encodeValue(expected, false));
         assertEquals("3", expected, result);
         //
-        expected = Charset.forName("ascii");
+        expected = StandardCharsets.US_ASCII;
         result   = manager.decodeValue(charset, manager.encodeValue(expected, false));
         assertEquals("4", expected, result);
         //

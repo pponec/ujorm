@@ -78,7 +78,7 @@ public interface HtmlConfig extends XmlConfig {
      * Create a new default config
      */
     @NotNull
-    public static DefaultHtmlConfig ofDefault() {
+    static DefaultHtmlConfig ofDefault() {
         return new DefaultHtmlConfig();
     }
 
@@ -89,7 +89,7 @@ public interface HtmlConfig extends XmlConfig {
      * @return
      */
     @NotNull
-    public static DefaultHtmlConfig ofElementName(@Nullable String rootElementName) {
+    static DefaultHtmlConfig ofElementName(@Nullable String rootElementName) {
         return ofElement(rootElementName, true);
     }
 
@@ -101,7 +101,7 @@ public interface HtmlConfig extends XmlConfig {
      * @return
      */
     @NotNull
-    public static DefaultHtmlConfig ofElement(@Nullable String rootElementName, boolean enabled) {
+    static DefaultHtmlConfig ofElement(@Nullable String rootElementName, boolean enabled) {
         final DefaultHtmlConfig result = ofDefault();
         result.setRootElementName(enabled ? rootElementName : null);
         result.setHtmlHeader(false);
@@ -113,7 +113,7 @@ public interface HtmlConfig extends XmlConfig {
      * Create a configuration for an AJAX response.
      */
     @NotNull
-    public static DefaultHtmlConfig ofEmptyElement() {
+    static DefaultHtmlConfig ofEmptyElement() {
         final DefaultHtmlConfig result = ofElement(EMPTY, false);
         result.setHtmlHeader(false);
         result.setDoctype(EMPTY);
@@ -122,15 +122,15 @@ public interface HtmlConfig extends XmlConfig {
     }
 
     /** Clone config form another */
-    public static DefaultHtmlConfig of(@NotNull final HtmlConfig htmlConfig) {
+    static DefaultHtmlConfig of(@NotNull final HtmlConfig htmlConfig) {
         return new DefaultHtmlConfig(htmlConfig);
     }
-    
+
     /**
      * Create a new configuration with a nice format by an HTML title.
      * @param title If the title is null then create an EMPTY element.
      */
-    public static DefaultHtmlConfig ofTitle(@NotNull String title) {
+    static DefaultHtmlConfig ofTitle(@NotNull String title) {
         return ofDefault()
                     .setTitle(title)
                     .setNiceFormat();

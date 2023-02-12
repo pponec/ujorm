@@ -40,29 +40,29 @@ final class UjoHandlerXML extends DefaultHandler {
     int lastElement = -1;
 
     /** Class of the root. */
-    final protected Class rootType;
+    private final Class rootType;
 
     /** Import action */
-    final protected UjoAction actionImport;
+    private final UjoAction actionImport;
     /** UjoManager */
-    final protected UjoManager ujoManager;
+    private final UjoManager ujoManager;
 
     /** Ignore missing key related to an ELEMENT or ATTRIBUTE during XML import. */
     private boolean ignoreMissingProp = false;
 
     // -- Temporary fields --
-    protected String  $elementName  = null;
-    protected Class   $elementType  = null;
-    protected Key     $key     = null;
-    protected ListKey $propertyList = null;
-    protected Class   $listType     = null;
-    protected Class   $itemType     = null;
-    protected Element $parentObj    = null;
-    protected boolean $elementCont  = false;
-    protected StringBuilder $value  = new StringBuilder(64);
+    private String  $elementName  = null;
+    private Class   $elementType  = null;
+    private Key     $key     = null;
+    private ListKey $propertyList = null;
+    private Class   $listType     = null;
+    private Class   $itemType     = null;
+    private Element $parentObj    = null;
+    private boolean $elementCont  = false;
+    private StringBuilder $value  = new StringBuilder(64);
 
     /** A list of XML attributes, one item is always a pair: attribute - value */
-    protected ArrayList<String[]> $attributes = new ArrayList<>();
+    private ArrayList<String[]> $attributes = new ArrayList<>();
 
     /** Constructor. */
     @SuppressWarnings("deprecation")
@@ -246,7 +246,7 @@ final class UjoHandlerXML extends DefaultHandler {
     // === UTILITIES ==============================
 
     /** Returns true, if text in not empty. */
-    protected final boolean isEmpty(final CharSequence text) {
+    private boolean isEmpty(final CharSequence text) {
         return text==null || text.length()==0;
     }
 
@@ -276,7 +276,7 @@ final class UjoHandlerXML extends DefaultHandler {
     }
 
     /** Add all XML attributes from internal buffer to UJO. */
-    protected void addAttributes(final UjoTextable ujo, boolean ignoreMissingProp) {
+    private void addAttributes(final UjoTextable ujo, boolean ignoreMissingProp) {
         for (String[] attrib : $attributes) {
             final Key key = ujo.readKeys().findDirectKey
                     (ujo, attrib[0], actionImport, false, !ignoreMissingProp);
@@ -298,18 +298,18 @@ final class UjoHandlerXML extends DefaultHandler {
     }
 
     /** Set a BodyText. */
-    protected void addBodyText(CharSequence bodyText) {
+    private void addBodyText(CharSequence bodyText) {
         if (lastElement<0) { return; }
         getLastElement().addBody(bodyText);
     }
 
     /** Returns the getLastKey element from the object list  */
-    protected final Element getLastElement() {
+    private Element getLastElement() {
         return elementList[lastElement];
     }
 
     /** Returns the new element from the object list  */
-    protected final Element newElement() {
+    private Element newElement() {
         if (++lastElement==elementList.length) {
             Element[] newElem = new Element[lastElement + 32];
             System.arraycopy(elementList, 0, newElem, 0, elementList.length);
@@ -388,7 +388,7 @@ final class UjoHandlerXML extends DefaultHandler {
                     ((UjoTextable)ujo).writeValueString(bodyProperty, bodyText, null, actionImport);
                 } else {
                     final Object bodyObj = ujoManager.decodeValue(bodyProperty, bodyText, null);
-                    ((UjoTextable)ujo).writeValue(bodyProperty, bodyObj);
+                    ujo.writeValue(bodyProperty, bodyObj);
                 }
             }
         }

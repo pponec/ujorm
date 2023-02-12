@@ -65,10 +65,9 @@ public class Element extends SmartUjo<Element> {
     @Override
     @SuppressWarnings("unchecked")
     public boolean readAuthorization( final UjoAction action, final Key key, final Object value) {
-        switch (action.getType()) {
-            case ACTION_XML_EXPORT:
-                return ! (key == MIN_OCCURS && ((Integer)value).intValue() < 0
-                         ||  key == MAX_OCCURS && key.isDefault(this));
+        if (action.getType() == ACTION_XML_EXPORT) {
+            return !(key == MIN_OCCURS && ((Integer) value).intValue() < 0
+                    || key == MAX_OCCURS && key.isDefault(this));
         }
         return true;
     }

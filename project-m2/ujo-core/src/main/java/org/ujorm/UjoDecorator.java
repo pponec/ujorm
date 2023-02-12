@@ -23,15 +23,15 @@ package org.ujorm;
 public interface UjoDecorator<U extends Ujo> {
 
     /** Get database model */
-    public U getDomain();
+    U getDomain();
 
     /** Get table model */
-    public KeyList<U> getKeys();
+    KeyList<U> getKeys();
 
     /** Getter based on the Key */
-    public <VALUE> VALUE get(Key<? super U, VALUE> key);
+    <VALUE> VALUE get(Key<? super U, VALUE> key);
 
     /** Setter based on the Key */
-    public <VALUE> void set(Key<? super U, VALUE> key, VALUE value);
+    <VALUE> void set(Key<? super U, VALUE> key, VALUE value);
 
 }

@@ -63,7 +63,7 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
             , final Class<ITEM> itemType
             , final int index
             , final boolean lock) {
-        this(name, (Class<UJO>) null, itemType, index, lock);
+        this(name, null, itemType, index, lock);
     }
 
     /** Constructor
@@ -120,14 +120,14 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
                         // open temporary session if it's closed ;) - because of lazy-loading of detached objects (caches, etc.)
                         final Session tempSession = mySession.getHandler().createSession();
                         try {
-                            List<ITEM> list = (List) tempSession.iterateInternal((RelationToMany) this, ujo).toList();
+                            List<ITEM> list = (List) tempSession.iterateInternal(this, ujo).toList();
                             return UjoIterator.of(list);
                         } finally {
                             tempSession.close();
                         }
                 }
             } else {
-                return mySession.iterateInternal((RelationToMany) this, ujo);
+                return mySession.iterateInternal(this, ujo);
             }
             // Don't save the result!
         } else {

@@ -33,7 +33,7 @@ public interface EventRegistrar<UJO extends Ujo> {
      * @param before The null value means that listener will be called before as well as after reading/writting value to UJO.
      * @return A result of the operation
      */
-    public boolean addPropertyChangeListener
+    boolean addPropertyChangeListener
         ( final Key<? super UJO,?> key
         , final Boolean before
         , final UjoPropertyChangeListener listener
@@ -41,7 +41,7 @@ public interface EventRegistrar<UJO extends Ujo> {
 
 
     /** Remove listener */
-    public boolean removePropertyChangeListener
+    boolean removePropertyChangeListener
         ( final Key<? super UJO,?> key
         , final Boolean before
         , final UjoPropertyChangeListener listener

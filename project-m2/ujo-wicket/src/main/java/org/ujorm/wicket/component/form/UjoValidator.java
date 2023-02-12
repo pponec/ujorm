@@ -35,9 +35,9 @@ public class UjoValidator<T> implements IValidator<T>, INullAcceptingValidator<T
     public static final String PROPERTY_PREFIX = "validator.";
 
     /** Native Ujorm validator */
-    private Validator<T> validator;
+    private final Validator<T> validator;
     /** Required key */
-    private KeyRing<Ujo> key;
+    private final KeyRing<Ujo> key;
 
     /**
      * Constructor
@@ -54,7 +54,7 @@ public class UjoValidator<T> implements IValidator<T>, INullAcceptingValidator<T
     public void validate(IValidatable<T> validatable) {
         final ValidationError error = validator.validate
                 ( validatable.getValue()
-                , key != null ? (Key) key.getFirstKey() : null
+                , key != null ? key.getFirstKey() : null
                 , null);
         if (error != null) {
             org.apache.wicket.validation.ValidationError wicketErr = new org.apache.wicket.validation.ValidationError();

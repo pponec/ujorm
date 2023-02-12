@@ -166,12 +166,10 @@ public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements E
     /** Test an authorization of the action. */
     @Override
     public boolean readAuthorization(@NotNull final UjoAction action, @NotNull final Key key, @Nullable final Object value) {
-        switch (action.getType()) {
-            case UjoAction.ACTION_TO_STRING:
-                return !(key instanceof RelationToMany);
-            default:
-                return super.readAuthorization(action, key, value);
+        if (action.getType() == UjoAction.ACTION_TO_STRING) {
+            return !(key instanceof RelationToMany);
         }
+        return super.readAuthorization(action, key, value);
     }
 
     /** Read the foreign key.

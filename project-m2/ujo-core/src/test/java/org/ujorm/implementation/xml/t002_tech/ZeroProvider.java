@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
+ */
 
 package org.ujorm.implementation.xml.t002_tech;
 
@@ -23,26 +23,26 @@ import java.math.*;
  * @author Pavel Ponec
  */
 public interface ZeroProvider {
-    
-    public static final Boolean    ZERO_BOOL     = false;
-    public static final Byte       ZERO_BYTE     = (byte) 0;
-    public static final Character  ZERO_CHAR     = (char) 0;
-    public static final Short      ZERO_SHORT    = (short)0;
-    public static final Integer    ZERO_INT      = 0;
-    public static final Long       ZERO_LONG     = 0L;
-    public static final Float      ZERO_FLOAT    = 0F;
-    public static final Double     ZERO_DOUBLE   = 0D;
-    public static final BigInteger ZERO_BIG_INT  = BigInteger.ZERO;
-    public static final BigDecimal ZERO_BIG_DECI = BigDecimal.valueOf(0);
-    
+
+    Boolean    ZERO_BOOL     = false;
+    Byte       ZERO_BYTE     = (byte) 0;
+    Character  ZERO_CHAR     = (char) 0;
+    Short      ZERO_SHORT    = (short)0;
+    Integer    ZERO_INT      = 0;
+    Long       ZERO_LONG     = 0L;
+    Float      ZERO_FLOAT    = 0F;
+    Double     ZERO_DOUBLE   = 0D;
+    BigInteger ZERO_BIG_INT  = BigInteger.ZERO;
+    BigDecimal ZERO_BIG_DECI = BigDecimal.valueOf(0);
+
     // Some Arrays
-    public static final byte[]     ZERO_BYTES    = new byte[0];
-    public static final char[]     ZERO_CHARS    = new char[0];
-    public static final String     ZERO_STRING   = "";
+    byte[]     ZERO_BYTES    = new byte[0];
+    char[]     ZERO_CHARS    = new char[0];
+    String     ZERO_STRING   = "";
 
     /** Returns a zero equivalent for any class. If class is not supported, methods returns a null value.
      * <br>Supported clases depends on an implementation. */
-    public Object getZeroValue(Class type);
-    
-    
+    Object getZeroValue(Class type);
+
+
 }

@@ -19,7 +19,7 @@ public class Person implements Ujo {
     public static final Key<Person, Boolean> MALE = f.newKey();
     public static final Key<Person, Double> CASH = f.newKeyDefault(0.0);
     // --- The start of the Ujo implementation ---
-    private Object[] data = new Object[f.lockAndSize()];
+    private final Object[] data = new Object[f.lockAndSize()];
 
     @Override
     public Object readValue(Key key) {

@@ -25,17 +25,17 @@ import org.ujorm.tools.web.Element;
 public interface Injector extends CharSequence {
 
     @Override
-    public default int length() {
+    default int length() {
         return 1;
     }
 
     @Override
-    public default char charAt(int index) {
+    default char charAt(int index) {
         return '?';
     }
 
     @Override
-    public default CharSequence subSequence(int start, int end) {
+    default CharSequence subSequence(int start, int end) {
         return "?".subSequence(start, end);
     }
 

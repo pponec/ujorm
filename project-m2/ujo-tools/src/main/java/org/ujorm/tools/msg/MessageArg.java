@@ -79,7 +79,7 @@ public final class MessageArg<T> implements Serializable, CharSequence {
 
     /** An alias for method {@code #getName()} */
     @NotNull
-    public final String name() {
+    public String name() {
         return name;
     }
 
@@ -97,7 +97,7 @@ public final class MessageArg<T> implements Serializable, CharSequence {
 
     /** Convert attributes to a code */
     @NotNull
-    protected final String toCode() {
+    private String toCode() {
         final StringBuilder result = new StringBuilder(PARAM_BEG.length() + 1 + name.length()
                 + (format != null ? format.length() + 1 : 0));
         result.append(PARAM_BEG).append(name);
@@ -115,22 +115,22 @@ public final class MessageArg<T> implements Serializable, CharSequence {
 
     /** Returns a code name */
     @Override
-    public final String toString() {
+    public String toString() {
         return getCode();
     }
 
     @Override
-    public final int length() {
+    public int length() {
         return getCode().length();
     }
 
     @Override
-    public final char charAt(final int index) {
+    public char charAt(final int index) {
         return getCode().charAt(index);
     }
 
     @Override
-    public final CharSequence subSequence(final int start, final int end) {
+    public CharSequence subSequence(final int start, final int end) {
         return getCode().subSequence(start, end);
     }
 

@@ -82,7 +82,7 @@ public class SimpleValuePrinter extends ValuePrinter {
     public SimpleValuePrinter appendValue(@Nullable final Object value) {
         try {
             if (value == null) {
-               out.append((String) null);
+               out.append(null);
             } else if (value instanceof Key) {
                 out.append((Key) value);
             } else if (value instanceof Ujo) {

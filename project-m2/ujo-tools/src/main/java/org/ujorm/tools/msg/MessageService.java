@@ -174,7 +174,7 @@ public class MessageService {
             @Nullable final Map<String, Object> args,
             @Nullable Locale locale) {
         try {
-            return format((Appendable) null, msg, args, locale);
+            return format(null, msg, args, locale);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -272,7 +272,7 @@ public class MessageService {
             @NotNull final CharSequence key,
             @Nullable final Object value,
             @NotNull final Object... keyValuePairs) {
-        return new MessageService().format(template, (Locale) null, key, value, keyValuePairs);
+        return new MessageService().format(template, null, key, value, keyValuePairs);
     }
 
 }

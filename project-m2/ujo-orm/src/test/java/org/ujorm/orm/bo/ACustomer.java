@@ -28,7 +28,7 @@ import org.ujorm.orm.annot.Column;
  * @hidden
  */
 public class ACustomer extends SmartUjo<ACustomer> {
-    private static KeyFactory<ACustomer> f = newCamelFactory(ACustomer.class);
+    private static final KeyFactory<ACustomer> f = newCamelFactory(ACustomer.class);
 
     /** Unique key */
     @Column(pk = true, converter=TypeService.class)

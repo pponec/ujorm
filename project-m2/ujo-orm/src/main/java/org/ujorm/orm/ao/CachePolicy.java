@@ -29,6 +29,5 @@ public enum CachePolicy {
     SOLID_CACHE,
     /** No cache is enabled */
     NO_CACHE,
-    ;
 
 }

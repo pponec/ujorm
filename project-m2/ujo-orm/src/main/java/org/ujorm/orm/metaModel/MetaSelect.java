@@ -51,7 +51,7 @@ final public class MetaSelect extends AbstractMetaModel {
     /** The key initialization */
     static{fa.lock();}
 
-    private static String END_CHAR = ";";
+    private static final String END_CHAR = ";";
 
     /**
      * Constructor.
@@ -82,10 +82,10 @@ final public class MetaSelect extends AbstractMetaModel {
         while (i>=0) {
             final boolean constant = i>0 && select.charAt(i-1)=='\\';
             if (constant) {
-                sb.append(select.substring(j, i-1));
+                sb.append(select, j, i-1);
                 sb.append(SCHEMA);
             } else {
-                sb.append(select.substring(j, i));
+                sb.append(select, j, i);
                 sb.append(schema);
             }
 
@@ -136,7 +136,7 @@ final public class MetaSelect extends AbstractMetaModel {
         }
 
         if (LOGGER.isLoggable(UjoLogger.INFO)) {
-            final String msg = getClass().getSimpleName() + ": " + toString();
+            final String msg = getClass().getSimpleName() + ": " + this;
             LOGGER.log(UjoLogger.INFO, msg);
         }
     }

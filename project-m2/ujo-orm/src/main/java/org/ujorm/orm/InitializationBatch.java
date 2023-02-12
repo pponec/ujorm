@@ -26,7 +26,7 @@ public interface InitializationBatch {
      * @param session A session ready to use, the session is commited in the parent method.
      * @throws Exception Any exception causes the call session.rollback() method.
      */
-    public void run(Session session) throws Exception;
+    void run(Session session) throws Exception;
 
 
 }

@@ -96,7 +96,7 @@ public class CustomMapTest {
         String expResult = "B";
         String result = instance.get(key);
         assertEquals(expResult, result);
-        assertEquals(null, instance.get(-1));
+        assertNull(instance.get(-1));
     }
 
     /**
@@ -153,8 +153,8 @@ public class CustomMapTest {
         assertEquals("A", instance.get(1));
         assertEquals("B", instance.get(2));
         assertEquals("C", instance.get(3));
-        assertEquals(null, instance.get(4));
-        assertEquals(null, instance.get(-1));
+        assertNull(instance.get(4));
+        assertNull(instance.get(-1));
         //
         instance.putAll(createHashMap(9));
         assertEquals(9, instance.size());

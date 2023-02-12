@@ -25,9 +25,8 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.jdbc.AbstractJdbcConnector;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.Assert.*;
 
 /**
  * Testing the SqlBuillder class
@@ -123,7 +122,6 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
             .value("A test")
             .value(someDate)
             .write(")");
-            ;
         String expResult1 = "INSERT INTO testTable ( id, name, created ) VALUES ( ?, ?, ? )";
         String expResult2 = "INSERT INTO testTable ( id, name, created ) VALUES ( 10, 'A test', 2018-09-12 )";
 
@@ -272,7 +270,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
         List<Integer> ids = sql.executeSelect(dbConnection, (rs) -> rs.getInt(1));
 
         assertNotNull(ids);
-        assertTrue(!ids.isEmpty());
+        assertFalse(ids.isEmpty());
     }
 
     /** How to SELECT single value */

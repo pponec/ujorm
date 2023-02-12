@@ -29,7 +29,7 @@ import org.ujorm.orm.annot.Column;
  * @hidden
  */
 public class XCustomer extends OrmTable<XCustomer> {
-    private static KeyFactory<XCustomer> f = newCamelFactory(XCustomer.class);
+    private static final KeyFactory<XCustomer> f = newCamelFactory(XCustomer.class);
 
     /** Unique key */
     @Column(pk = true, converter=TypeService.class)

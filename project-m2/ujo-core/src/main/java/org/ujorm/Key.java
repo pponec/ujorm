@@ -42,21 +42,17 @@ import org.ujorm.validator.ValidationException;
 public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Key>, CriterionProvider<UJO,VALUE> {
 
     /** Returns a name of the Key. */
-    @NotNull
-    public String getName();
+    @NotNull String getName();
 
     /** Returns a name of the Key including  a simple class name (without package)
      * separated by the dot (.) character. */
-    @NotNull
-    public String getFullName();
+    @NotNull String getFullName();
 
     /** Returns a class of the current key. */
-    @NotNull
-    public Class<VALUE> getType();
+    @NotNull Class<VALUE> getType();
 
     /** Returns a class of the domain Ujo object. */
-    @NotNull
-    public Class<UJO> getDomainType();
+    @NotNull Class<UJO> getDomainType();
 
     /** Returns a container of the Key field. */
     // public Class<?> getContainerType(); // TODO (?)
@@ -71,7 +67,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
-    public void setValue(@NotNull UJO ujo, @Nullable VALUE value) throws ValidationException;
+    void setValue(@NotNull UJO ujo, @Nullable VALUE value) throws ValidationException;
 
     /**
      * TODO: Is it really the good idea to extend the interface with this method ?
@@ -91,7 +87,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * A shortcut for the method {@link #of(org.ujorm.Ujo)}.
      * @see #of(Ujo)
      */
-    public VALUE getValue(@NotNull UJO ujo);
+    VALUE getValue(@NotNull UJO ujo);
 
     /**
      * It is a basic method for getting an appropriate type safe value from an Ujo object.
@@ -104,7 +100,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see Ujo#readValue(Key)
      * @see #getValue(org.ujorm.Ujo)
      */
-    public VALUE of(@NotNull UJO ujo);
+    VALUE of(@NotNull UJO ujo);
 
 
 //    /**
@@ -121,18 +117,17 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see org.ujorm.implementation.array.ArrayUjo
      * @see org.ujorm.core.UjoManager#readProperties(Class)
      */
-    public int getIndex();
+    int getIndex();
 
     /** Method returns a default value for substitution of the <code>null</code> value for the current key.
      * The feature is purposeful only if the default value is not <code>null</code> and a propert value is <code>null</code> .
      * @see Ujo#readValue(Key)
      */
-    @Nullable
-    public VALUE getDefault();
+    @Nullable VALUE getDefault();
 
 
     /** Indicates whether a parameter value of the ujo "equal to" this key default value. */
-    public boolean isDefault(@NotNull UJO ujo);
+    boolean isDefault(@NotNull UJO ujo);
 
     /**
      * Returns the {@code true}:
@@ -144,7 +139,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @param key A checked {@link CompositeKey} implementation
      */
     @Override
-    public boolean equals(final Object key);
+    boolean equals(final Object key);
 
     /**
      * Returns true, if the key value equals to a parameter value. The key value can be null.
@@ -153,13 +148,13 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @param value Null value is supported.
      * @return Accordance
      */
-    public boolean equals(@NotNull UJO ujo, @Nullable VALUE value);
+    boolean equals(@NotNull UJO ujo, @Nullable VALUE value);
 
     /**
      * Returns true, if the key name equals to the parameter value.
      * @param name The name of a key
      */
-    public boolean equalsName(@Nullable CharSequence name);
+    boolean equalsName(@Nullable CharSequence name);
 
     /**
      * If the key is the direct key of the related UJO class then method returns the TRUE value.
@@ -172,7 +167,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @deprecated use rather a negation of the method {@link #isComposite() }
      */
     @Deprecated
-    public boolean isDirect();
+    boolean isDirect();
 
     /**
      * The composite key is an instance of CompositeKey.
@@ -184,19 +179,19 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see CompositeKey
      * @since 1.36
      */
-    public boolean isComposite();
+    boolean isComposite();
 
     /** Returns true if the key type is a type or subtype of the parameter class. */
-    public boolean isTypeOf(@NotNull Class type);
+    boolean isTypeOf(@NotNull Class type);
 
     /** Returns true if the domain type is a type or subtype of the parameter class. */
-    public boolean isDomainOf(@NotNull Class type);
+    boolean isDomainOf(@NotNull Class type);
 
     /** A flag for an ascending direction of sorting. It is recommended that the default result was true.
      * @since 0.85
      * @see org.ujorm.core.UjoComparator
      */
-    public boolean isAscending();
+    boolean isAscending();
 
     /** Create new instance of an <strong>indirect</strong> Key with the descending direction of sorting.
      * @return returns a new instance of the indirect Key
@@ -204,7 +199,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see #isAscending()
      * @see org.ujorm.core.UjoComparator
      */
-    public Key<UJO,VALUE> descending();
+    Key<UJO,VALUE> descending();
 
     /** Create new instance of an <strong>indirect</strong> Key with the descending direction of sorting.
      * @return returns a new instance of the indirect Key
@@ -212,15 +207,15 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see #isAscending()
      * @see org.ujorm.core.UjoComparator
      */
-    public Key<UJO,VALUE> descending(boolean descending);
+    Key<UJO,VALUE> descending(boolean descending);
 
     /** Get the ujorm key validator or return the {@code null} value if no validator was assigned */
-    public Validator<VALUE> getValidator();
+    Validator<VALUE> getValidator();
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 0.92
      */
-    public <T> CompositeKey<UJO, T> add(@NotNull Key<? super VALUE, T> key);
+    <T> CompositeKey<UJO, T> add(@NotNull Key<? super VALUE, T> key);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @param key The relation key
@@ -232,12 +227,12 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @since 1.43
      * @see CompositeKey#getSpaceName(int)
      */
-    public <T> CompositeKey<UJO, T> add(@NotNull Key<? super VALUE, T> key, String alias);
+    <T> CompositeKey<UJO, T> add(@NotNull Key<? super VALUE, T> key, String alias);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 1.36
      */
-    public <T> ListKey<UJO, T> add(@NotNull ListKey<? super VALUE, T> key);
+    <T> ListKey<UJO, T> add(@NotNull ListKey<? super VALUE, T> key);
 
     /** Create new composite (indirect) instance with a required alias name
      * @param alias This attribute is used to distinguish the same entities
@@ -249,16 +244,16 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see CompositeKey#getSpaceName(int)
      * @see KeyFactory#newKeyAlias(java.lang.String)
      */
-    public CompositeKey<UJO, VALUE> alias(@NotNull String alias);
+    CompositeKey<UJO, VALUE> alias(@NotNull String alias);
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
-    public void copy(@NotNull UJO from, @NotNull UJO to);
+    void copy(@NotNull UJO from, @NotNull UJO to);
 
     /** Compare to another Key object by the index and name of the Key.
      * @since 1.20
      */
     @Override
-    public int compareTo(@NotNull Key p);
+    int compareTo(@NotNull Key p);
 
     /** Returns the name of the Key without domain class.<br>
      * If an implementation provides the attribute called 'alias', so the alias name name
@@ -268,8 +263,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
 
     /** Returns the full name of the Key including a simple domain class and aliases.
      * <br>Example: Person.ID */
-    @NotNull
-    public String toStringFull();
+    @NotNull String toStringFull();
 
     /**
      * Returns the full name of the Key including all attributes.
@@ -277,6 +271,6 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @param extended arguments false calls the method {@link #getFullName()} only.
      * @return the full name of the Key including all attributes.
      */
-    public String toStringFull(boolean extended);
+    String toStringFull(boolean extended);
 
 }

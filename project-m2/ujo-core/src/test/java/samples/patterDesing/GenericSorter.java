@@ -16,5 +16,5 @@ import java.util.List;
  */
 
 interface GenericSorter {
-    public void sort(List<MyMap> items, Property ... key);
+    void sort(List<MyMap> items, Property ... key);
 }

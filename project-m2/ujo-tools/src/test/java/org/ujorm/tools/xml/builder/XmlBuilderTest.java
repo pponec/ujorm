@@ -94,7 +94,7 @@ public class XmlBuilderTest implements Html {
     public void testHtmlBuildingNice1() throws IOException {
         System.out.println("testHtmlBuildingNice1");
 
-        final XmlPrinter writer = XmlPrinter.forNiceHtml((Appendable) new StringBuilder());
+        final XmlPrinter writer = XmlPrinter.forNiceHtml(new StringBuilder());
         try (XmlBuilder html = writer.createElement("html")) {
             html.setAttribute("lang", "en");
             try(XmlBuilder head = html.addElement("head")) {
@@ -127,7 +127,7 @@ public class XmlBuilderTest implements Html {
     public void testHtmlBuildingNice2() throws IOException {
         System.out.println("testHtmlBuildingNice2");
 
-        final XmlPrinter writer = XmlPrinter.forNiceHtml((Appendable) new StringBuilder());
+        final XmlPrinter writer = XmlPrinter.forNiceHtml(new StringBuilder());
         try (XmlBuilder html = writer.createElement("html")) {
             html.setAttribute("lang", "en");
             XmlBuilder head = html.addElement("head");
@@ -173,7 +173,7 @@ public class XmlBuilderTest implements Html {
                    body.addElement(Html.H1).addText("Hello word!");
                    body.addElement(Html.DIV).addText(null);
              }
-        };
+        }
 
         String result = writer.toString();
         String expected = String.join("\n"

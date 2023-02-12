@@ -41,9 +41,9 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
     @SpringBean private AuthService authService;
     @SpringBean(name=ParamService.CACHED)
     private ParamService paramService;
-    private ListDataProvider<U> columnBuilder;
-    private ParamFinder<U> toolbar = new ParamFinder("paramFinder");
-    private ParamsEditor editDialog;
+    private final ListDataProvider<U> columnBuilder;
+    private final ParamFinder<U> toolbar = new ParamFinder("paramFinder");
+    private final ParamsEditor editDialog;
 
     /** Use the service to calling a PostConstruct method */
     @SpringBean

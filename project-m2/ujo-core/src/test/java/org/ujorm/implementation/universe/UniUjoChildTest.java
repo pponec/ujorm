@@ -19,23 +19,23 @@ import org.ujorm.MyTestCase;
  */
 public class UniUjoChildTest extends MyTestCase {
     private static final Class CLASS = UniUjoChildTest.class;
-    
+
     public UniUjoChildTest(String testName) {
         super(testName);
     }
-    
+
     public static TestSuite suite() {
         return new TestSuite(CLASS);
     }
-    
+
     @Override
     protected void setUp() throws Exception {
     }
-    
+
     @Override
     protected void tearDown() throws Exception {
     }
-    
+
     /**
      * Test of readValue method, of class org.ujorm.mapImlp.AUnifiedDataObject.
      */
@@ -63,16 +63,16 @@ public class UniUjoChildTest extends MyTestCase {
         assertEquals(7, UniUjoChild.PRO_P7.getIndex());
         assertEquals(8, UniUjoChild.PRO_P8.getIndex());
         assertEquals(9, UniUjoChild.PRO_P9.getIndex());
-        
-           
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+
+
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
 
         UniUjoChild ujb = new UniUjoChild();
-        assertEquals(10, ujb.readKeys().size());        
+        assertEquals(10, ujb.readKeys().size());
 
         UniUjoChild.PRO_P0.setValue(ujb, o0);
         UniUjoChild.PRO_P1.setValue(ujb, o1);
@@ -98,10 +98,10 @@ public class UniUjoChildTest extends MyTestCase {
     }
 
     public void testSpeedTime() throws Throwable {
-        System.out.println("testTime: " + suite().toString());
+        System.out.println("testTime: " + suite());
 
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
@@ -157,8 +157,8 @@ public class UniUjoChildTest extends MyTestCase {
         assertEquals(UniUjoBase.PRO_P3, props.get(3));
         assertEquals(UniUjoBase.PRO_P4, props.get(4));
     }
-    
-    
+
+
     /**
      * Test of readValue method, of class org.ujorm.mapImlp.AUnifiedDataObject.
      */
@@ -186,9 +186,9 @@ public class UniUjoChildTest extends MyTestCase {
         assertEquals(7, UniUjoChildImpl.PRO_P7.getIndex());
         assertEquals(8, UniUjoChildImpl.PRO_P8.getIndex());
         assertEquals(9, UniUjoChildImpl.PRO_P9.getIndex());
-                
-        Long    o0 = new Long(Long.MAX_VALUE);
-        Integer o1 = new Integer(1);
+
+        Long    o0 = Long.valueOf(Long.MAX_VALUE);
+        Integer o1 = Integer.valueOf(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
@@ -217,7 +217,7 @@ public class UniUjoChildTest extends MyTestCase {
         assertEquals(o2, UniUjoChildImpl.PRO_P7.of(ujb));
         assertEquals(o3, UniUjoChildImpl.PRO_P8.of(ujb));
         assertEquals(o4, UniUjoChildImpl.PRO_P9.of(ujb,0));
-    }    
+    }
 
     /** Test of keys */
     public void testDummy() throws Throwable {

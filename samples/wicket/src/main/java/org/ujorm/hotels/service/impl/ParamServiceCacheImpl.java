@@ -137,10 +137,7 @@ public class ParamServiceCacheImpl extends ParamServiceImpl {
             if (!this.keyName.equals(other.keyName)) {
                 return false;
             }
-            if (this.module != other.module) {
-                return false;
-            }
-            return true;
+            return this.module == other.module;
         }
 
         @Override

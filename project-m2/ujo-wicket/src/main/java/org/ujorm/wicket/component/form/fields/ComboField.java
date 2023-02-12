@@ -40,8 +40,8 @@ import org.ujorm.wicket.component.form.FieldEvent;
 public class ComboField<T extends Ujo> extends Field<T> {
 
     private static final long serialVersionUID = 20130621L;
-    private KeyRing<T> keys;
-    private List<T> items;
+    private final KeyRing<T> keys;
+    private final List<T> items;
 
     public <U extends Ujo> ComboField(Key<U,T> key, List<T> items, Key<T,?> selectId, Key<T,?> display) {
         super(key.getName(), key, null);

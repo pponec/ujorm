@@ -22,10 +22,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
@@ -332,9 +330,7 @@ public class JdbcBuilder implements Serializable {
     @NotNull
     public JdbcBuilder addArguments(final @NotNull Object... values) {
         final Object[] vals = values.length == 1 && values[0] instanceof Object[] ? (Object[]) values[0] : values;
-        for (int i = 0; i < vals.length; i++) {
-            arguments.add(values[i]);
-        }
+        arguments.addAll(Arrays.asList(values).subList(0, vals.length));
         return this;
     }
 

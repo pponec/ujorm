@@ -12,9 +12,9 @@ import static org.ujorm.swing.UjoKeyRow.*;
 /** Parameter manager. */
 public class ParamFrame extends JFrame implements ActionListener, Runnable {
 
-  private Parameters parameters;
-  private File dataFile = new File(System.getProperty("user.home"),"ujo-param.properties");
-  private SingleUjoTabModel model;
+  private final Parameters parameters;
+  private final File dataFile = new File(System.getProperty("user.home"),"ujo-param.properties");
+  private final SingleUjoTabModel model;
   private JTable table;
 
   /** Creates a new instance of TableFrame */
@@ -87,7 +87,7 @@ public class ParamFrame extends JFrame implements ActionListener, Runnable {
     }
   }
 
-  public static void main(String args[]) {
+  public static void main(String[] args) {
     new ParamFrame().setVisible(true);
   }
 }

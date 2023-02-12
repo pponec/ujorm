@@ -73,7 +73,7 @@ public class ValueFormatter extends MsgFormatter {
             out.append(SEPARATOR);
         }
         if (val == null) {
-            out.append((String) null);
+            out.append(null);
         } else if (val instanceof CharSequence) {
             out.append(valueBorder);
             writeLongValue((CharSequence) val, out);
@@ -193,7 +193,7 @@ public class ValueFormatter extends MsgFormatter {
     ( @Nullable final String sqlTemplate
     , @Nullable final T... arguments) {
         try {
-            return new ValueFormatter("?", "\'").formatMsg(null, sqlTemplate, arguments);
+            return new ValueFormatter("?", "'").formatMsg(null, sqlTemplate, arguments);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

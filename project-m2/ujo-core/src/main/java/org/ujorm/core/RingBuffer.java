@@ -67,7 +67,7 @@ final public class RingBuffer implements CharSequence {
         this.b = new char[length];
     }
 
-    public final void add(char c) {
+    public void add(char c) {
         b[pos] = c;
         pos = ++pos % this.length;
     }
@@ -103,7 +103,7 @@ final public class RingBuffer implements CharSequence {
      * @throws IndexOutOfBoundsException if the argument have not the same length
      */
     @SuppressWarnings("empty-statement")
-    protected boolean equalsInternal(final CharSequence s) throws IndexOutOfBoundsException {
+    private boolean equalsInternal(final CharSequence s) throws IndexOutOfBoundsException {
         int i;
         for (i = 0; i < this.length && s.charAt(i) == b[(pos + i) % length]; i++);
         return i == length;
@@ -134,7 +134,7 @@ final public class RingBuffer implements CharSequence {
 
     /** Length of the String */
     @Override
-    public final int length() {
+    public int length() {
         return length;
     }
 

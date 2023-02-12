@@ -20,16 +20,16 @@ package org.bo;
 /** The User interface */
 public interface IUser {
 
-    public String getLogin();
+    String getLogin();
 
-    public void setLogin(String login);
+    void setLogin(String login);
 
-    public String getName();
+    String getName();
 
-    public void setName(String name);
+    void setName(String name);
 
-    public String getPassword();
+    String getPassword();
 
-    public void setPassword(String password);
+    void setPassword(String password);
 
 }

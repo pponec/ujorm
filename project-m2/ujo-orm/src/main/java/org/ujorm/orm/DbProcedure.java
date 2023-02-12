@@ -57,7 +57,7 @@ abstract public class DbProcedure<UJO extends DbProcedure> extends SmartUjo<UJO>
      */
     @SuppressWarnings("unchecked")
     public <T> T call(final Session session) {
-        return (T) call(session, readKeyList().get(0));
+        return call(session, readKeyList().get(0));
     }
 
     /** Returns MetaModel of the procedure */

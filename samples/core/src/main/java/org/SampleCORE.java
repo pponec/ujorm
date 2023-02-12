@@ -400,7 +400,7 @@ public class SampleCORE {
 
                 InputStream is = new ByteArrayInputStream(os.toByteArray());
                 ObjectInputStream decoder = new ObjectInputStream(is);
-                Object result = (Serializable) decoder.readObject();
+                Object result = decoder.readObject();
                 decoder.close();
 
                 return (T) result;

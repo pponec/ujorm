@@ -17,6 +17,7 @@ import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
+import org.ujorm.core.UjoTools;
 import org.ujorm.extensions.AbstractUjo;
 import org.xml.sax.SAXException;
 
@@ -44,7 +45,7 @@ public class Person extends AbstractUjo {
     }
 
     public boolean equals(Object obj) {
-        return UjoManager.getInstance().equals(this, (Ujo) obj);
+        return UjoTools.equals(this, obj);
     }
 
     /** Run the class */

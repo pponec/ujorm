@@ -33,7 +33,7 @@ public enum TitleEnum implements StringWrapper {
     /** Short identifier */
     private final String id;
 
-    private TitleEnum(String id) {
+    TitleEnum(String id) {
         this.id = id;
     }
 

@@ -99,9 +99,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      */
     @Override
     public boolean equals(final Object obj) {
-        final boolean result = obj instanceof Ujo
-        ? readUjoManager().equalsUjo(this, (Ujo) obj )
-        : false
+        final boolean result = obj instanceof Ujo && readUjoManager().equalsUjo(this, (Ujo) obj)
         ;
         return result;
     }

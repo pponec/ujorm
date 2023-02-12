@@ -40,7 +40,7 @@ public class ActionPanel<U extends Hotel> extends GenericPanel<U> {
     private AuthService authService;
 
     /** Current row */
-    private U row;
+    private final U row;
 
 
     public ActionPanel(String id, final U row) {

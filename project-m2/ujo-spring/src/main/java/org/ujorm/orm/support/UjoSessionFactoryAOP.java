@@ -24,5 +24,5 @@ import org.aspectj.lang.ProceedingJoinPoint;
 public interface  UjoSessionFactoryAOP {
 
 
-      public Object aroundSession(ProceedingJoinPoint call) throws Throwable;
+      Object aroundSession(ProceedingJoinPoint call) throws Throwable;
 }

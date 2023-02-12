@@ -17,12 +17,12 @@ import javax.swing.table.TableModel;
  * @author Pavel Ponec
  */
 interface MyTableModelInteface2 extends TableModel {
-    
-    public int getRowCount();
-    public int getColumnCount();
-    public Object getValueAt(int rowIndex, int columnIndex);
-    public void   setValueAt(Object value, int rowIndex, int columnIndex);
-    public String getColumnName(int column);
-    public boolean isCellEditable(int rowIndex, int columnIndex);
-    
+
+    int getRowCount();
+    int getColumnCount();
+    Object getValueAt(int rowIndex, int columnIndex);
+    void   setValueAt(Object value, int rowIndex, int columnIndex);
+    String getColumnName(int column);
+    boolean isCellEditable(int rowIndex, int columnIndex);
+
 }

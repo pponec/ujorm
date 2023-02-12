@@ -50,18 +50,14 @@ public class ConstantsValidator<VALUE> extends AbstractValidator<VALUE> {
         this.forbidden = forbidden;
         this.set = new HashSet(values.length);
 
-        for (VALUE value : values) {
-            set.add(value);
-        }
+        Collections.addAll(set, values);
     }
 
     /** {@inheritDoc} */
     @Override
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean ok = input==null
-                    || ( forbidden
-                    ?  ! set.contains(input)
-                    :    set.contains(input) );
+                    || (forbidden != set.contains(input));
             return !ok ? createError
                     ( input
                     , key

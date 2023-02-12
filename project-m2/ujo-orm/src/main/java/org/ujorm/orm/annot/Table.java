@@ -28,7 +28,7 @@ import org.ujorm.orm.ao.QuoteEnum;
 public @interface Table {
 
     /** A String for the NULL value. */
-    public static final String NULL = ""; // TODO: try to use: "<NULL>"
+    String NULL = ""; // TODO: try to use: "<NULL>"
 
     /** A named parameter for the table name. Default value is taken from a related key name. */
     String name() default NULL;
@@ -64,7 +64,7 @@ public @interface Table {
      * @see Orm2ddlPolicy#CREATE_OR_UPDATE_DDL
      */
     Orm2ddlPolicy orm2ddlPolicy() default Orm2ddlPolicy.INHERITED;
-    
+
     /** Quoting policy for database table */
     QuoteEnum quoted() default QuoteEnum.BY_CONFIG;
 }

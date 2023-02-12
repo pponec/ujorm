@@ -88,16 +88,16 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     private List<CharSequence> tableCssClass;
     /** Sortable column CSS style */
     @NotNull
-    private CharSequence sortableColumn;
+    private final CharSequence sortableColumn;
     /** Sortable column ascending CSS style */
     @NotNull
-    private CharSequence sortableAsc;
+    private final CharSequence sortableAsc;
     /** Sortable column descending CSS style */
     @NotNull
-    private CharSequence sortableDesc;
+    private final CharSequence sortableDesc;
     /** Sortable column undefined CSS style */
     @NotNull
-    private CharSequence sortableBoth;
+    private final CharSequence sortableBoth;
     /** Use an external images for sortable icons */
     private boolean embeddedIcons;
     /** Inline CSS writer */

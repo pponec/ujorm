@@ -165,7 +165,7 @@ public class HttpParameterTest {
         UNDEFINED;
 
         public String toString() {
-            return name().toString();
+            return name();
         }
     }
 
@@ -183,7 +183,7 @@ public class HttpParameterTest {
 
         private final String paramName;
 
-        private Param2(String name) {
+        Param2(String name) {
             this.paramName = buildParameterName(name);
         }
 

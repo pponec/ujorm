@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */  
+ */
 
 package org.ujorm.core;
 
@@ -27,17 +27,17 @@ import org.ujorm.ListKey;
  * @author Pavel Ponec
  */
 public class BeanManager<UJO,VALUE> {
-    
+
     private final Key key;
-    
+
     /** An empty array of classes. */
     private Method setter;
-    private Method getter;    
-    
+    private Method getter;
+
     public BeanManager(Key key) {
         this.key = key;
     }
-    
+
     /** WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.
      * <br>A direct call can bypass a important actions implemented in the writeProperty(method).
      */
@@ -48,7 +48,7 @@ public class BeanManager<UJO,VALUE> {
             throw new IllegalUjormException("BeanProperty:"+key.getName()+"="+value, e);
         }
     }
-    
+
     /** WARNING: There is recommended to call the method from the method <code>Ujo.readProperty(...)</code> only.
      * <br>A direct call can bypass a important actions implemented in the <code>readProperty(method)</code>.
      */
@@ -59,8 +59,8 @@ public class BeanManager<UJO,VALUE> {
             throw new IllegalUjormException("BeanProperty:"+key.getName(), e);
         }
     }
-    
-    
+
+
     /**
      * Get or create a setter or getter.
      * @param ujo UJO object.
@@ -75,10 +75,10 @@ public class BeanManager<UJO,VALUE> {
             try {
                 Class ujoClass = ujo.getClass();
                 Class type = set ? key.getType() : null;
-                
+
                 result = getMethodPlain(ujoClass, type, methodName);
                 if (result==null) {
-                    if (ListKey.class.isInstance(key) && !methodName.endsWith("s")) {
+                    if (key instanceof ListKey && !methodName.endsWith("s")) {
                         // TAG name is a singular:
                         result = getMethodPlain(ujoClass, type, methodName+'s');
                     } else if ((type=getPrimitive(type))!=null) {
@@ -100,11 +100,11 @@ public class BeanManager<UJO,VALUE> {
         }
         return result;
     }
-    
+
     /** Returns a primitive type if can or a null value. */
     @Nullable
     protected Class getPrimitive(Class objClass) {
-        
+
         if (objClass!=null && !objClass.isPrimitive()) try {
             Field field = objClass.getField("TYPE");
             if (field.getType()==Class.class) {
@@ -116,7 +116,7 @@ public class BeanManager<UJO,VALUE> {
         }
         return null;
     }
-    
+
     @SuppressWarnings("unchecked")
     @Nullable
     private Method getMethodPlain
@@ -124,7 +124,7 @@ public class BeanManager<UJO,VALUE> {
     , final Class type
     , final String methodName
     ) throws SecurityException {
-        
+
         try {
             final Class[] types = type!=null ? new Class[]{type} : null ;
             final Method result = ujoClass.getMethod(methodName, types);
@@ -133,7 +133,7 @@ public class BeanManager<UJO,VALUE> {
             return null;
         }
     }
-    
+
     /** Returns a method name by a name */
     protected String getMethodName(final boolean set) {
         String result = (set ? "set" : Boolean.class.equals(key.getType()) ? "is" : "get")
@@ -141,8 +141,8 @@ public class BeanManager<UJO,VALUE> {
         + key.getName().substring(1)
         ;
         return result;
-    }    
-    
+    }
+
     /** Create new instance of BeanManager */
     public static <UJO,VALUE> BeanManager<UJO,VALUE> getInstance(Key key) {
         return new BeanManager<UJO,VALUE>(key);
@@ -153,5 +153,5 @@ public class BeanManager<UJO,VALUE> {
         return key.getName();
     }
 
-    
+
 }

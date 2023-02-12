@@ -33,14 +33,14 @@ public class T005a_Array_Test extends MyTestCase {
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
      */
     public void testPrintXML() throws Exception {
-        System.out.println("testPrintXML: " + suite().toString());
+        System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);
         try {
             AtrPersonArray person = createPerson();
             // Serialization:
             UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
 
-            System.out.println("XML==PERSON:\n" + writer.toString());
+            System.out.println("XML==PERSON:\n" + writer);
         } catch (RuntimeException | OutOfMemoryError ex) {
             ex.printStackTrace();
         }
@@ -50,7 +50,7 @@ public class T005a_Array_Test extends MyTestCase {
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
     public void testRestoreXML() throws Exception {
-        System.out.println("testPrintXML: " + suite().toString());
+        System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);
         //
         AtrPersonArray person = createPerson();

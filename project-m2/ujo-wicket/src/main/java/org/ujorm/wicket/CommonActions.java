@@ -22,30 +22,30 @@ package org.ujorm.wicket;
 public interface CommonActions {
 
     /** Default value is the same like the field */
-    public static final String CREATE = "CREATE";
+    String CREATE = "CREATE";
     /** Default value is the same like the field */
-    public static final String READ = "DISPLAY";
+    String READ = "DISPLAY";
     /** Default value is the same like the field */
-    public static final String UPDATE = "UPDATE";
+    String UPDATE = "UPDATE";
     /** Default value is the same like the field */
-    public static final String DELETE = "DELETE";
+    String DELETE = "DELETE";
     /** Default value is the same like the field */
-    public static final String CLONE = "CLONE";
+    String CLONE = "CLONE";
     /** Default value is the same like the field */
-    public static final String FILTER = "FILTER";
+    String FILTER = "FILTER";
     /** Default value is the same like the field */
-    public static final String EXIT = "EXIT";
+    String EXIT = "EXIT";
     /** Default value is the same like the field */
-    public static final String ERROR = "ERROR";
+    String ERROR = "ERROR";
     /** Default value is the same like the field */
-    public static final String LOGIN = "LOGIN";
+    String LOGIN = "LOGIN";
     /** Default value is the same like the field */
-    public static final String LOGIN_CHANGED = "LOGIN_CHANGED";
+    String LOGIN_CHANGED = "LOGIN_CHANGED";
     /** Default value is the same like the field */
-    public static final String SELECT = "SELECT";
+    String SELECT = "SELECT";
     /** Default value is the same like the field */
-    public static final String CHANGED = "CHANGED";
+    String CHANGED = "CHANGED";
     /** Default value is an empty string */
-    public static final String UNDEFINED = "";
+    String UNDEFINED = "";
 
 }

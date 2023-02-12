@@ -87,7 +87,7 @@ public interface UjoMiddle<U extends UjoMiddle> extends Ujo {
      * @param key A Property
      * @return If key type is "container" then result is null.
      */
-    public String getText(final Key key);
+    String getText(final Key key);
 
     /**
      * Set value from a String format by a NULL context. Property can't be an "container" type (Ujo, List, Object[]).
@@ -95,10 +95,10 @@ public interface UjoMiddle<U extends UjoMiddle> extends Ujo {
      * @param key Property
      * @param Key String value
      */
-    public void setText(final Key key, final String Key);
+    void setText(final Key key, final String Key);
 
     /** The same method as the {@link #readKeys()} with a different generic type.
      * @see #readKeys()
      */
-    public KeyList<U> readKeyList();
+    KeyList<U> readKeyList();
 }

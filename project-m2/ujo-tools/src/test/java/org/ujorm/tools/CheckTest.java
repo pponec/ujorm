@@ -17,6 +17,7 @@ package org.ujorm.tools;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
@@ -87,7 +88,7 @@ public class CheckTest {
         System.out.println("hasLength");
 
         assertFalse(Check.hasLength((Object[]) null));
-        assertFalse(Check.hasLength(new Object[0]));
+        assertFalse(Check.hasLength());
         assertTrue(Check.hasLength(new Object[1]));
 
         String[] emptyArray = {};
@@ -104,7 +105,7 @@ public class CheckTest {
         System.out.println("hasLength");
 
         assertFalse(Check.hasLength((Collection) null));
-        assertFalse(Check.hasLength(Arrays.asList()));
+        assertFalse(Check.hasLength(Collections.emptyList()));
         assertTrue(Check.hasLength(Arrays.asList("A", "B", "C")));
 
     }
@@ -153,7 +154,7 @@ public class CheckTest {
         System.out.println("isEmpty");
 
         assertTrue(Check.isEmpty((Object[]) null));
-        assertTrue(Check.isEmpty(new Object[0]));
+        assertTrue(Check.isEmpty());
         assertFalse(Check.isEmpty(new Object[1]));
 
     }
@@ -166,7 +167,7 @@ public class CheckTest {
         System.out.println("isEmpty");
 
         assertTrue(Check.isEmpty((Collection) null));
-        assertTrue(Check.isEmpty(Arrays.asList()));
+        assertTrue(Check.isEmpty(Collections.emptyList()));
         assertFalse(Check.isEmpty(Arrays.asList("A", "B", "C")));
     }
 

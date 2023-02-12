@@ -19,16 +19,16 @@ import org.ujorm.core.KeyFactory;
  */
 public interface UniUjoInterface extends Ujo {
     /** The factory will be an immutable object after locking */
-    public static final KeyFactory<UniUjoInterface> $factory
+    KeyFactory<UniUjoInterface> $factory
             = KeyFactory.CamelBuilder.get(UniUjoInterface.class);
-    
-    public static final Key<UniUjoInterface,Long>      PRO_P0 = $factory.newKey();
-    public static final Key<UniUjoInterface,Integer>   PRO_P1 = $factory.newKey();
-    public static final Key<UniUjoInterface,String>    PRO_P2 = $factory.newKey();
-    public static final Key<UniUjoInterface,Date>      PRO_P3 = $factory.newKey();
-    public static final ListKey<UniUjoInterface,Float> PRO_P4 = $factory.newListKey();
-    
+
+    Key<UniUjoInterface,Long>      PRO_P0 = $factory.newKey();
+    Key<UniUjoInterface,Integer>   PRO_P1 = $factory.newKey();
+    Key<UniUjoInterface,String>    PRO_P2 = $factory.newKey();
+    Key<UniUjoInterface,Date>      PRO_P3 = $factory.newKey();
+    ListKey<UniUjoInterface,Float> PRO_P4 = $factory.newListKey();
+
     /** Size of the all keys and lock internal factory. */
-    public static final int KEY_SIZE = $factory.lockAndSize();
+    int KEY_SIZE = $factory.lockAndSize();
 
 }

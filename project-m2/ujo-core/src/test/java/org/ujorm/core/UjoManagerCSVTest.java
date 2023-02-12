@@ -178,7 +178,7 @@ public class UjoManagerCSVTest extends MyTestCase {
             manager5.setHeaderContent("wrong header");
             ByteArrayInputStream is2 = createInputStream(out);
             List<UjoCSV> list2b = manager5.loadCSV(new Scanner(is2), context);
-            assertTrue("Wrong header", false);
+            fail("Wrong header");
         } catch (IllegalStateException e) {
             assertTrue("Wrong header", true);
         }

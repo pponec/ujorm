@@ -142,9 +142,6 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
         if (session == null) {
             return true;
         }
-        if (session.isClosed()) {
-            return true;
-        }
-        return false;
+        return session.isClosed();
     }
 }

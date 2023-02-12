@@ -41,7 +41,7 @@ public class AliasKeyTest extends TestCase {
         assertEquals("firstname", XCustomer.FIRSTNAME.getName());
         assertEquals("lastname", XCustomer.LASTNAME.getName());
     }
-    
+
     /**
      * Test of getKey method, of class Relation.
      */
@@ -102,7 +102,7 @@ public class AliasKeyTest extends TestCase {
         AliasKey.addRelations(key1, outSet);
         assertEquals(2, outList.size());
         assertEquals(2, outSet.size());
-        assertEquals(null, outList.getLast().getAliasFrom());
+        assertNull(outList.getLast().getAliasFrom());
         assertEquals("a1", outList.getLast().getAliasTo());
         //-
         Key key2 = XCustomer.SUPERIOR.add(SUPERIOR, "a1").add(SUPERIOR, "a2");
@@ -110,7 +110,7 @@ public class AliasKeyTest extends TestCase {
         AliasKey.addRelations(key2, outSet);
         assertEquals(4, outList.size());
         assertEquals(2, outSet.size());
-        assertEquals(null, outList.getLast().getAliasFrom());
+        assertNull(outList.getLast().getAliasFrom());
         assertEquals("a1", outList.getLast().getAliasTo());
         //-
         Key key3 = XCustomer.SUPERIOR.add(SUPERIOR, "b1").add(SUPERIOR, "b2");
@@ -118,7 +118,7 @@ public class AliasKeyTest extends TestCase {
         AliasKey.addRelations(key3, outSet);
         assertEquals(6, outList.size());
         assertEquals(3, outSet.size());
-        assertEquals(null, outList.getLast().getAliasFrom());
+        assertNull(outList.getLast().getAliasFrom());
         assertEquals("b1", outList.getLast().getAliasTo());
     }
 

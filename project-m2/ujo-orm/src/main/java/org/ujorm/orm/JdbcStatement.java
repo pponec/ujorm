@@ -85,7 +85,7 @@ public class JdbcStatement /*implements Closeable*/ {
     public String getAssignedValues() {
         if (values!=null
         &&  values.length()>0) {
-            return values.toString() + "]";
+            return values + "]";
         } else {
             return "NONE";
         }
@@ -115,7 +115,7 @@ public class JdbcStatement /*implements Closeable*/ {
     /** Assign values into the prepared statement */
     @SuppressWarnings("unchecked")
     public void assignValues(@NotNull OrmUjo bo) throws SQLException {
-        final MetaTable dbTable = bo.readSession().getHandler().findTableModel((Class) bo.getClass());
+        final MetaTable dbTable = bo.readSession().getHandler().findTableModel(bo.getClass());
         final List<MetaColumn> columns = MetaTable.COLUMNS.getList(dbTable);
         assignValues(bo, columns);
     }
@@ -124,7 +124,7 @@ public class JdbcStatement /*implements Closeable*/ {
     @SuppressWarnings("unchecked")
     public void assignValues(@NotNull List<? extends OrmUjo> bos, int idxFrom, int idxTo) throws SQLException {
         final OrmUjo bo = bos.get(idxFrom);
-        final MetaTable dbTable = bo.readSession().getHandler().findTableModel((Class) bo.getClass());
+        final MetaTable dbTable = bo.readSession().getHandler().findTableModel(bo.getClass());
         final List<MetaColumn> columns = MetaTable.COLUMNS.getList(dbTable);
 
         for (int i = idxFrom; i < idxTo; i++) {
@@ -374,7 +374,7 @@ public class JdbcStatement /*implements Closeable*/ {
         final boolean quotaType = key.isTypeOf(CharSequence.class)
                                || key.isTypeOf(java.util.Date.class)
                                 ;
-        final String textSeparator = quotaType ? "\'" : "";
+        final String textSeparator = quotaType ? "'" : "";
 
         values.append(parameterPointer == 0 ? "[" : ", ");
         values.append(textSeparator);

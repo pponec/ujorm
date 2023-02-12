@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.mockito.ArgumentMatchers;
@@ -56,7 +57,7 @@ public abstract class AbstractPreparedStatement implements PreparedStatement {
         Mockito.doCallRealMethod().when(statement).isClosed();
 
         Connection result = Mockito.mock(Connection.class);
-        Mockito.when(result.prepareStatement(ArgumentMatchers.<String>any()))
+        Mockito.when(result.prepareStatement(ArgumentMatchers.any()))
                 .thenReturn(statement);
 
         return result;
@@ -65,7 +66,7 @@ public abstract class AbstractPreparedStatement implements PreparedStatement {
     /** Creating a mock database connection for a single value ResultSet */
     public static Connection createSingleValueConnection(Object value) throws IllegalStateException {
         try {
-            return createConnection(Arrays.<Object[]>asList(new Object[] {value}));
+            return createConnection(Collections.<Object[]>singletonList(new Object[]{value}));
         } catch (IOException | SQLException e)  {
             throw new IllegalStateException(e);
         }

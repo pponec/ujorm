@@ -37,7 +37,7 @@ import org.ujorm.extensions.UjoTextable;
 abstract public class UjoService<UJO extends Ujo> {
 
     /** Undefined text VALUE have got a <strong>unique instance</strong>. */
-    public static final String UNDEFINED = new String("U");
+    public static final String UNDEFINED = "U";
     /** Basic UJO Class */
     final private Class<UJO> ujoClass;
     /** Keys */
@@ -92,7 +92,7 @@ abstract public class UjoService<UJO extends Ujo> {
     public KeyList<UJO> getKeys() throws IllegalStateException {
         if (keys == null) {
             try {
-                keys = (KeyList<UJO>) getUjoClass().newInstance().readKeys();
+                keys = getUjoClass().newInstance().readKeys();
             } catch (RuntimeException | ReflectiveOperationException e) {
                 throw new IllegalUjormException("New instance failed for the " + getUjoClass(), e);
             }

@@ -28,7 +28,7 @@ import org.ujorm.criterion.*;
  */
 public class SampleOfInheritance {
 
-    private OrmHandler handler = new OrmHandler();
+    private final OrmHandler handler = new OrmHandler();
 
     /** Before the first use load a metamodel.
      * Database tables will be name in the first time.

@@ -195,7 +195,7 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
      * @hidden
      */
     public static <UJO extends MapImplUjo,VALUE> Property<UJO,VALUE> newKey(String name) {
-        return Property.of(name, (Class)null, (Class)null);
+        return Property.of(name, null, (Class)null);
     }
 
     /** A Property Factory

@@ -23,6 +23,6 @@ public enum TitleEnum  {
 
     MR,
     MRS,
-    CHILD;
+    CHILD
 
 }
