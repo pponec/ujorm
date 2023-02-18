@@ -38,14 +38,10 @@ import static org.ujorm.spring.AplicationContextAdapter.*;
  * Test for AplicationContextAdapter
  * @author Pavel Ponec
  */
-public class AbstractAplicationContextAdapterTest extends TestCase {
+public class AbstractAplicationContextAdapterTest extends org.junit.jupiter.api.Assertions {
 
     @Autowired
     private AplicationContextAdapter context;
-
-    public AbstractAplicationContextAdapterTest(String testName) {
-        super(testName);
-    }
 
     /**
      * Test of getBean method, of class AbstractAplicationContextAdapter.

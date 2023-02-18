@@ -25,7 +25,7 @@ import org.ujorm.Key;
  * Test of the CompositeKey iterator:
  * @author Pavel Ponec
  */
-public class CompositeKeyTest extends TestCase {
+public class CompositeKeyTest extends org.junit.jupiter.api.Assertions {
 
     public void testCompositeKey2f() {
         CompositeKey<Person,String> ck = Person.FATHERS_NAME;
@@ -52,7 +52,4 @@ public class CompositeKeyTest extends TestCase {
         assertSame(Person.NAME, keys.get(2));
     }
 
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(CompositeKeyTest.class);
-    }
 }

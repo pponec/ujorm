@@ -29,10 +29,6 @@ public class UjoComparatorTest extends MyTestCase {
 
     private List<Person> persons;
 
-    public UjoComparatorTest(String testName) {
-        super(testName);
-    }
-
     /** Create new Person */
     private Person<Person> createPerson(String name, Double cash) {
         final Person<Person> result = new Person<>();

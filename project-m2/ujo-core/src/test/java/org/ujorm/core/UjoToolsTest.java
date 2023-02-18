@@ -23,11 +23,7 @@ import junit.framework.TestCase;
  *
  * @author Pavel Ponec
  */
-public class UjoToolsTest extends TestCase {
-
-    public UjoToolsTest(String testName) {
-        super(testName);
-    }
+public class UjoToolsTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of isFilled method, of class UjoTools.

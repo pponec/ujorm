@@ -26,19 +26,10 @@ import org.ujorm.transaction.service.OrderService;
  * Test for the class UjormTransactionManager.
  * @author Pavel Ponec
  */
-public class FaultTransManagerTest extends TestCase {
+public class FaultTransManagerTest extends org.junit.jupiter.api.Assertions {
 
     private ApplicationContext context;
 
-    public FaultTransManagerTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return FaultTransManagerTest.class;
-    }
-
-    // ----------------------------------------------------
 
     /** Test of fault TransactonManager. */
     public void testSubTransactionManager1() {

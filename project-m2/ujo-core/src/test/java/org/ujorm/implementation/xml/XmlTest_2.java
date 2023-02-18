@@ -18,13 +18,12 @@ import org.ujorm.implementation.map.MapUjo;
  * Short XmlTest_2
  * @author Pavel Ponec
  */
-public class XmlTest_2 extends TestCase {
+public class XmlTest_2 extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
      */
     public void testPrintXMLRoot() throws Exception {
-        System.out.println("testTime: " + suite());
 
         CharArrayWriter writer = null;
         try {

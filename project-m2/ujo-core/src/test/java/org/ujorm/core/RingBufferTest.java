@@ -23,25 +23,7 @@ import junit.framework.TestCase;
  * RingBuffer test
  * @author Pavel Ponec
  */
-public class RingBufferTest extends TestCase {
-
-    public RingBufferTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return RingBufferTest.class;
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+public class RingBufferTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of add method, of class RingBuffer.

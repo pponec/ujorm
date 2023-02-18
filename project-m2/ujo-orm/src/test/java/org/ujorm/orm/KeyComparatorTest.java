@@ -22,20 +22,11 @@ import org.ujorm.orm.bo.XItem;
  * The tests of the SQL LIMIT & OFFSET.
  * @author Pavel Ponec
  */
-public class KeyComparatorTest extends TestCase {
+public class KeyComparatorTest extends org.junit.jupiter.api.Assertions {
 
     /** Main Handler */
     private static OrmHandler handler;
 
-    public KeyComparatorTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return KeyComparatorTest.class;
-    }
-
-    // ---------- TESTS -----------------------
 
     /** Compare two keys according to inner key sequence count */
     @SuppressWarnings("deprecation")

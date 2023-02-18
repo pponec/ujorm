@@ -30,11 +30,7 @@ import org.ujorm.orm.bo.XOrder;
  *
  * @author Pavel Ponec
  */
-public class SerializatonTest extends TestCase {
-
-    public SerializatonTest(String testName) {
-        super(testName);
-    }
+public class SerializatonTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of getValue method, of class UniqueKey.

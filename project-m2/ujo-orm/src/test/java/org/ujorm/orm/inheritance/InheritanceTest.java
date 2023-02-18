@@ -22,17 +22,8 @@ import org.ujorm.orm.inheritance.sample.SampleOfInheritance;
  * The tests of the SQL LIMIT & OFFSET.
  * @author Pavel Ponec
  */
-public class InheritanceTest extends TestCase {
+public class InheritanceTest extends org.junit.jupiter.api.Assertions {
 
-    public InheritanceTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return InheritanceTest.class;
-    }
-
-    // ---------- TESTS -----------------------
 
     @SuppressWarnings("deprecation")
     public void testInheritance() {

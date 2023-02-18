@@ -27,11 +27,7 @@ import static org.ujorm.orm.bo.XCustomer.*;
  * The test of space key
  * @author ponec
  */
-public class AliasKeyTest extends TestCase {
-
-    public AliasKeyTest(String testName) {
-        super(testName);
-    }
+public class AliasKeyTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of getKey method, of class Relation.

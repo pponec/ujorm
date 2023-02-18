@@ -31,21 +31,7 @@ import static org.ujorm.core.ujos.UjoName.*;
  *
  * @author Ponec
  */
-public class KeyRingTest extends TestCase {
-
-    public KeyRingTest(String testName) {
-        super(testName);
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+public class KeyRingTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of getType method, of class KeyRing.

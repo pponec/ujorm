@@ -16,7 +16,7 @@ import junit.framework.*;
  *
  * @author Pavel Ponec
  */
-public class JPropertyTest extends TestCase {
+public class JPropertyTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of getItemClass method, of class org.ujorm.core.UjoManagerXML.

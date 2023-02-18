@@ -429,7 +429,7 @@ public class ValidatorTest extends MyTestCase {
             result = false;
             resultMsg = e.getMessage();
         }
-        assertEquals(resultMsg, expected, result);
+        assertEquals(expected, result, resultMsg);
     }
 
     /** Method to test Validators */
@@ -445,7 +445,7 @@ public class ValidatorTest extends MyTestCase {
             result = false;
             resultMsg = e.getMessage();
         }
-        assertEquals(resultMsg, expected, result);
+        assertEquals(expected, result, resultMsg);
     }
 
     /** Returns a next Day */

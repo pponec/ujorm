@@ -16,14 +16,13 @@ import org.ujorm.extensions.AbstractUjo;
  *
  * @author Pavel Ponec
  */
-public class TXmlTest_1 extends TestCase {
+public class TXmlTest_1 extends org.junit.jupiter.api.Assertions {
 
 
     /**
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
      */
     public void testPrintXMLRoot() throws Exception {
-        System.out.println("testPrintXMLRoot: " + suite());
 
         CharArrayWriter writer = null;
         try {

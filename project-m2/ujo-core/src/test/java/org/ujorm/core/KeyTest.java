@@ -20,14 +20,6 @@ import static org.ujorm.extensions.PersonExt.*;
  */
 public class KeyTest extends MyTestCase {
 
-    public KeyTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return KeyTest.class;
-    }
-
     /**
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */

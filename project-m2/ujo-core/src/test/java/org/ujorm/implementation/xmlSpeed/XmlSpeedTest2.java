@@ -16,10 +16,6 @@ import junit.framework.TestSuite;
  */
 public class XmlSpeedTest2 extends XmlSpeedTest {
 
-    public XmlSpeedTest2(String testName) {
-        super(testName);
-    }
-
     /** Is the JaxbXmlEnabled test enabled? */
     @Override
     protected boolean isJaxbXmlEnabled() {

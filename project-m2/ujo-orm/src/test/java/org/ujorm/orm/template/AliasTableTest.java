@@ -29,11 +29,7 @@ import static org.ujorm.orm.template.AliasTable.Build.*;
  * AliasTableTest
  * @author Pavel Ponec
  */
-public class AliasTableTest extends TestCase {
-
-    public AliasTableTest(String testName) {
-        super(testName);
-    }
+public class AliasTableTest extends org.junit.jupiter.api.Assertions {
 
     /** Test of getTableModel method, of class AliasTable. */
     public void testAlias_1() {

@@ -18,7 +18,7 @@ import org.ujorm.implementation.map.MapUjo;
 /**
  * @author Pavel Ponec
  */
-public class XmlTest_1 extends TestCase {
+public class XmlTest_1 extends org.junit.jupiter.api.Assertions {
 
 
     /**
@@ -36,7 +36,6 @@ public class XmlTest_1 extends TestCase {
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
      */
     public void testPrintXMLRoot() throws Exception {
-                System.out.println("testTime: " + suite());
 
         CharArrayWriter writer = null;
         try {

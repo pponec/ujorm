@@ -21,16 +21,6 @@ import org.ujorm.core.UjoManagerXML;
  */
 public class T002b_Test extends MyTestCase {
 
-
-
-    protected void setUp() throws Exception {
-        //UjoManager.getInstance().setZeroProviderEnabled(false);
-    }
-
-    protected void tearDown() throws Exception {
-        //UjoManager.getInstance().setZeroProviderEnabled(true);
-    }
-
     /**
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */

@@ -13,14 +13,13 @@ import junit.framework.*;
  *
  * @author Pavel Ponec
  */
-public class UjoManagerExtTest extends TestCase {
+public class UjoManagerExtTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of getItemClass method, of class org.ujorm.core.UjoPersistentManager.
      */
     public void testGetItemClass() {
         System.out.println("getItemClass");
-
     }
 
 }

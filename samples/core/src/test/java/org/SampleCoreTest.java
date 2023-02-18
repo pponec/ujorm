@@ -10,11 +10,7 @@ import junit.framework.TestCase;
  * Sample core test
  * @author Pavel Ponec
  */
-public class SampleCoreTest extends TestCase {
-
-    public SampleCoreTest(String testName) {
-        super(testName);
-    }
+public class SampleCoreTest extends org.junit.jupiter.api.Assertions {
 
     /** Test of main method, of class SampleCORE. */
     public void testMain() {

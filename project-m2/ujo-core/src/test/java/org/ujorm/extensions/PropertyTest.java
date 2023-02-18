@@ -26,7 +26,7 @@ import org.ujorm.implementation.quick.SmartUjo;
  * PropertyTest
  * @author Pavel Ponec
  */
-public class PropertyTest extends TestCase {
+public class PropertyTest extends org.junit.jupiter.api.Assertions {
 
     /** Number zero */
     private static final Integer NIL = 0;
@@ -34,10 +34,6 @@ public class PropertyTest extends TestCase {
     private static final Integer ONE = 1;
     /** Number tow */
     private static final Integer TWO = 2;
-
-    public PropertyTest(String testName) {
-        super(testName);
-    }
 
     /**
      * Test of getName method, of class Property.

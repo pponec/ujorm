@@ -9,6 +9,8 @@ package org.ujorm.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.ujos.UjoCSV;
 
@@ -24,15 +26,7 @@ public class UjoManagerRBundleTest extends MyTestCase {
     protected String header;
 
 
-    public UjoManagerRBundleTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return UjoManagerCSVTest.class;
-    }
-
-    @Override
+    @BeforeEach
     protected void setUp() throws Exception {
         manager = UjoManagerRBundle.of(UjoCSV.class);
         context = "Bundle-Context";

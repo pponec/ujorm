@@ -27,20 +27,11 @@ import org.ujorm.orm.metaModel.MetaTable;
  * The tests of the SQL LIMIT & OFFSET.
  * @author Pavel Ponec
  */
-public class ModelTest extends TestCase {
+public class ModelTest extends org.junit.jupiter.api.Assertions {
 
     static private OrmHandler handlerBase;
     static private OrmHandler handlerExtended;
 
-    public ModelTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return ModelTest.class;
-    }
-
-    // ---------- TESTS -----------------------
 
     public void testMetaIndexBase() {
         System.out.print("MetaIndex base");

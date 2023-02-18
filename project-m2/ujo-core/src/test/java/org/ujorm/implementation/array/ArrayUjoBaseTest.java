@@ -18,15 +18,6 @@ import org.ujorm.MyTestCase;
  * @author Pavel Ponec
  */
 public class ArrayUjoBaseTest extends MyTestCase {
-    private static final Class CLASS = ArrayUjoBaseTest.class;
-
-    @Override
-    protected void setUp() throws Exception {
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-    }
 
     /**
      * Test of readValue method,

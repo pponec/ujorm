@@ -10,6 +10,8 @@ package org.ujorm.criterion;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.ujorm.CompositeKey;
 import org.ujorm.MyTestCase;
 import org.ujorm.extensions.PathProperty;
@@ -35,7 +37,7 @@ public class CriterionValueTest extends MyTestCase {
         return result;
     }
 
-    @Override
+    @BeforeEach
     protected void setUp() throws Exception {
         persons = new ArrayList<>();
 
@@ -50,7 +52,7 @@ public class CriterionValueTest extends MyTestCase {
 
     }
 
-    @Override
+    @AfterEach
     protected void tearDown() throws Exception {
         persons = null;
     }

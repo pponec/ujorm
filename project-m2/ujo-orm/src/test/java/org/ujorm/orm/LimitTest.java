@@ -27,29 +27,10 @@ import static org.ujorm.criterion.Operator.*;
  * The tests of the SQL LIMIT & OFFSET.
  * @author Pavel Ponec
  */
-public class LimitTest extends TestCase {
+public class LimitTest extends org.junit.jupiter.api.Assertions {
 
     static private OrmHandler handler;
 
-    public LimitTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return LimitTest.class;
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
-    // ---------- TESTS -----------------------
 
     @SuppressWarnings("deprecation")
     public void testLimit_1() {

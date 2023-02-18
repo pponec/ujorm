@@ -33,7 +33,7 @@ import org.ujorm.orm.metaModel.MetaParams;
  *
  * Copyright 2010-2016, Pavel Ponec
  */
-public class SampleOfInheritance extends TestCase {
+public class SampleOfInheritance extends org.junit.jupiter.api.Assertions {
 
     private final OrmHandler handler = new OrmHandler();
 

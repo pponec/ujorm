@@ -23,21 +23,7 @@ import static org.ujorm.listener.Person.*;
  *
  * @author Pavel Ponec
  */
-public class RegistrarUjoExtTest extends TestCase {
-
-    public RegistrarUjoExtTest(String testName) {
-        super(testName);
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+public class RegistrarUjoExtTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of writeValue method, of class RegistrarExt.

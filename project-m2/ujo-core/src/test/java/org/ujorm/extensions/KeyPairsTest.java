@@ -22,21 +22,7 @@ import org.ujorm.implementation.universe.UniUjoBase;
  * KeyPairsTest
  * @author Pavel Ponec
  */
-public class KeyPairsTest extends TestCase {
-
-    public KeyPairsTest(String testName) {
-        super(testName);
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+public class KeyPairsTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of copyToTarget method, of class KeyPairList.

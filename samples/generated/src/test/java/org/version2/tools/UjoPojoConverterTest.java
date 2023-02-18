@@ -8,7 +8,7 @@ import org.version2.bo.*;
  * DefaultUjoConverter Test
  * @author Pavel Ponec
  */
-public class UjoPojoConverterTest extends TestCase {
+public class UjoPojoConverterTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of marshal method, of class DefaultUjoConverter.

@@ -23,7 +23,7 @@ import static samples.values.Person.*;
  * Sample of usage
  * @author Pavel Ponec
  */
-public class UsageTest extends TestCase {
+public class UsageTest extends org.junit.jupiter.api.Assertions {
 
     public void testSetGet() {
         Person person = new Person();
@@ -50,10 +50,5 @@ public class UsageTest extends TestCase {
         assertEquals("name1", person.get(myName));
         assertEquals("name2", person.get(mothersName));
         assertEquals("name3", person.get(grandMothersName));
-    }
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(UsageTest.class);
     }
 }

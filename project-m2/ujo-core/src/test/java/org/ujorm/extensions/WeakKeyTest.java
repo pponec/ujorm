@@ -33,7 +33,7 @@ import static java.math.BigDecimal.*;
  *
  * @author ponec
  */
-public class WeakKeyTest extends TestCase {
+public class WeakKeyTest extends org.junit.jupiter.api.Assertions {
 
     private static final WeakKeyFactory f = KeyFactory.WeakBuilder.get(WeakKeyTest.class);
 
@@ -44,20 +44,6 @@ public class WeakKeyTest extends TestCase {
 
     static {
         f.lock();
-    }
-
-    public WeakKeyTest(String testName) {
-        super(testName);
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
     }
 
     /**

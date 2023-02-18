@@ -55,7 +55,9 @@ public class T004d_Test extends MyTestCase {
     }
 
 
-    /** Create persons with different times */
+    /**
+     * Create persons with different times
+     */
     protected AtrPerson createPerson() {
         AtrPerson result = createPersonOne();                      sleep(10);
         AtrPerson child  = null;
@@ -72,8 +74,9 @@ public class T004d_Test extends MyTestCase {
     protected AtrPerson createPersonOne() {
         AtrPerson result = new AtrPerson();
         AtrPerson.NAME.setValue(result, "Pavel");
-        AtrPerson.MALE.setValue(result,  true);
+        AtrPerson.MALE.setValue(result, true);
         AtrPerson.BIRTH.setValue(result, new Date());
 
         return result;
     }
+}

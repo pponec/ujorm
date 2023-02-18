@@ -53,11 +53,10 @@ public class T005a_Array_Test extends MyTestCase {
         assertEquals(person, person2);
     }
 
-
-
     protected AtrPersonArray createPerson() {
         AtrPersonArray result = new AtrPersonArray();
         AtrPersonArray.NAME_ATTR.setValue(result, "ATTRIB");
         AtrPersonArray.NAME_ELEM.setValue(result, "ELEMENT");
         return result;
     }
+}

@@ -27,27 +27,7 @@ import org.ujorm.orm.metaModel.MetaTable;
  * The tests of the SQL LIMIT & OFFSET.
  * @author Pavel Ponec
  */
-public class CriterionDialectTest extends TestCase {
-
-    public CriterionDialectTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return CriterionDialectTest.class;
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
-    // ---------- TESTS -----------------------
+public class CriterionDialectTest extends org.junit.jupiter.api.Assertions {
 
     public void testRollbackTranactionA() throws IOException {
         XOrder user = new XOrder();

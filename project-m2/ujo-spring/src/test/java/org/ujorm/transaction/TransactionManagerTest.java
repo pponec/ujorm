@@ -25,17 +25,8 @@ import org.ujorm.transaction.service.OrderService;
  * Test for the class UjormTransactionManager.
  * @author Pavel Ponec
  */
-public class TransactionManagerTest extends TestCase {
+public class TransactionManagerTest extends org.junit.jupiter.api.Assertions {
 
-    public TransactionManagerTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return TransactionManagerTest.class;
-    }
-
-    // ----------------------------------------------------
 
     /**
      * Test of getItemCount method, of class AbstractPropertyList.

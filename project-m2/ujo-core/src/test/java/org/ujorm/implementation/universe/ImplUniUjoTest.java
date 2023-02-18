@@ -117,7 +117,4 @@ public class ImplUniUjoTest extends MyTestCase {
         assertEquals(UniUjoBase.PRO_P3, props.get(3));
         assertEquals(UniUjoBase.PRO_P4, props.get(4));
     }
-
-    /** Test of keys */
-    public void testDummy() throws Throwable {
-    }
+}

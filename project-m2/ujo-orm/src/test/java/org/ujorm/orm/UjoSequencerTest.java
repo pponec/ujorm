@@ -27,11 +27,7 @@ import org.ujorm.orm_tutorial.sample.*;
  * Test for the Ujorm sequence
  * @author ponec
  */
-public class UjoSequencerTest extends TestCase {
-
-    public UjoSequencerTest(String testName) {
-        super(testName);
-    }
+public class UjoSequencerTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of nextValue method, of class UjoSequencer.
@@ -52,7 +48,7 @@ public class UjoSequencerTest extends TestCase {
             seqEnd =  seq.nextValue(session);
         }
         session.close();
-        assertEquals("ID sequences must be the same", seqBeg + count, seqEnd);
+        assertEquals(seqBeg + count, seqEnd, "ID sequences must be the same");
     }
 
     /**
@@ -74,7 +70,7 @@ public class UjoSequencerTest extends TestCase {
             seqEnd =  seq.nextValue(session);
         }
         session.close();
-        assertEquals("ID sequences must be the same", seqBeg + count, seqEnd);
+        assertEquals(seqBeg + count, seqEnd, "ID sequences must be the same");
     }
 
     /**
@@ -94,9 +90,9 @@ public class UjoSequencerTest extends TestCase {
             orderEnd = createAndSaveOrder(session);
         }
         session.close();
-        assertEquals("ID sequences must be the same"
-                , orderBeg.getId().longValue() + count
-                , orderEnd.getId().longValue());
+        assertEquals(orderBeg.getId().longValue() + count
+                , orderEnd.getId().longValue()
+        , "ID sequences must be the same");
     }
 
     /** Create and Save Order to database */

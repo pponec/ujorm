@@ -22,27 +22,7 @@ import junit.framework.TestCase;
  *
  * @author Pavel Ponec
  */
-public class CacheKeyTest extends TestCase {
-
-    public CacheKeyTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return CacheKeyTest.class;
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
-    // -----------------------------------------
+public class CacheKeyTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of equals method, of class UjoCache_DELETE.

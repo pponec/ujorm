@@ -29,20 +29,11 @@ import static org.ujorm.criterion.Operator.*;
  * The tests of the SQL LIMIT & OFFSET.
  * @author Pavel Ponec
  */
-public class FetchTest extends TestCase {
+public class FetchTest extends org.junit.jupiter.api.Assertions {
 
     /** Main Handler */
     private static OrmHandler handler;
 
-    public FetchTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return FetchTest.class;
-    }
-
-    // ---------- TESTS -----------------------
 
     @SuppressWarnings("deprecation")
     public void testFetch() {
@@ -58,7 +49,7 @@ public class FetchTest extends TestCase {
         int count = 0;
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
-            assertTrue("Order must be a foreign key", orderFk instanceof ForeignKey);
+            assertTrue(orderFk instanceof ForeignKey, "Order must be a foreign key");
             assertTrue(item.get(XItem.ORDER) instanceof XOrder);
             assertNotNull(item.get(XItem.ID));
             assertNotNull(item.get(XItem.NOTE));
@@ -67,7 +58,7 @@ public class FetchTest extends TestCase {
             assertNotNull(item.readSession());
             ++count;
         }
-        assertEquals("The one loop at least", 1, count);
+        assertEquals(1, count, "The one loop at least");
 
         // ------ ONE COLUMN TEST ------
 
@@ -75,7 +66,7 @@ public class FetchTest extends TestCase {
         query.setColumn(fetchColumn);
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
-            assertNull("Order must be null", orderFk);
+            assertNull(orderFk, "Order must be null");
             assertNull(item.get(XItem.ORDER));
             assertNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
@@ -90,7 +81,7 @@ public class FetchTest extends TestCase {
         query.setColumns(true, fetchColumn);
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
-            assertNull("Order must be null", orderFk);
+            assertNull(orderFk, "Order must be null");
             assertNull(item.get(XItem.ORDER));
             assertNotNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
@@ -105,7 +96,7 @@ public class FetchTest extends TestCase {
         query.setColumn(fetchColumn);
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
-            assertTrue("Order instance", orderFk instanceof XOrder);
+            assertTrue(orderFk instanceof XOrder, "Order instance");
             assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
@@ -124,7 +115,7 @@ public class FetchTest extends TestCase {
         query.setColumns(true, fetchColumn);
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
-            assertTrue("Order instance", orderFk instanceof XOrder);
+            assertTrue(orderFk instanceof XOrder, "Order instance");
             assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNotNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
@@ -145,10 +136,10 @@ public class FetchTest extends TestCase {
         query.getColumns();
         for (XItem item : query) {
             Object objectFk = item.readValue(XItem.ORDER);
-            assertTrue("Order instance", objectFk instanceof XOrder);
+            assertTrue(objectFk instanceof XOrder, "Order instance");
             XOrder order = item.get(XItem.ORDER);
             objectFk = order.readValue(XOrder.CUSTOMER);
-            assertTrue("Order instance", objectFk instanceof ForeignKey);
+            assertTrue(objectFk instanceof ForeignKey, "Order instance");
             assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNotNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
@@ -170,9 +161,9 @@ public class FetchTest extends TestCase {
         query.setColumn(fetchColumn);
         for (XItem item : query) {
             Object objectFk = item.readValue(XItem.ORDER);
-            assertTrue("Order instance", objectFk instanceof XOrder);
+            assertTrue(objectFk instanceof XOrder, "Order instance");
             objectFk = item.getOrder().readValue(XOrder.CUSTOMER);
-            assertTrue("Order instance", objectFk instanceof XCustomer);
+            assertTrue(objectFk instanceof XCustomer, "Order instance");
             assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
@@ -194,9 +185,9 @@ public class FetchTest extends TestCase {
         query.setColumn(fetchColumn);
         for (XItem item : query) {
             Object objectFk = item.readValue(XItem.ORDER);
-            assertTrue("Order instance", objectFk instanceof XOrder);
+            assertTrue(objectFk instanceof XOrder, "Order instance");
             objectFk = item.getOrder().readValue(XOrder.CUSTOMER);
-            assertTrue("Order instance", objectFk instanceof XCustomer);
+            assertTrue(objectFk instanceof XCustomer, "Order instance");
             assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
@@ -238,7 +229,7 @@ public class FetchTest extends TestCase {
         query.addColumn(fetchColumn);
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
-            assertTrue("Order instance", orderFk instanceof XOrder);
+            assertTrue(orderFk instanceof XOrder, "Order instance");
             assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNotNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));

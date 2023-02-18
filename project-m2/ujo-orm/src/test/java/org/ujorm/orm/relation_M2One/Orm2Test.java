@@ -49,7 +49,7 @@ import static junit.framework.TestCase.assertEquals;
  *
  * Copyright 2010, Pavel Ponec
  */
-public class Orm2Test extends TestCase {
+public class Orm2Test extends org.junit.jupiter.api.Assertions {
 
     /** The parameter value TRUE affects to a Sequence key name in the internal sequence generator. */
     public static final boolean SEQUENCE_SCHEMA_SYMBOL = false;

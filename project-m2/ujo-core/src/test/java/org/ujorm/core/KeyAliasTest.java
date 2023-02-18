@@ -18,14 +18,6 @@ import static org.ujorm.extensions.PersonExt.*;
  */
 public class KeyAliasTest extends MyTestCase {
 
-    public KeyAliasTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return KeyAliasTest.class;
-    }
-
     /**
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */

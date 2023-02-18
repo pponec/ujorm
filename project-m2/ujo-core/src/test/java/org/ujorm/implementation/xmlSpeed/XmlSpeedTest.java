@@ -35,10 +35,6 @@ public class XmlSpeedTest extends MyTestCase {
     public static final int DEEP  = 4;
     public static final int COUNT = 6000;
 
-    public XmlSpeedTest(String testName) {
-        super(testName);
-    }
-
     /** Is the JaxbXmlEnabled test enabled? */
     protected boolean isJaxbXmlEnabled() {
         return false;

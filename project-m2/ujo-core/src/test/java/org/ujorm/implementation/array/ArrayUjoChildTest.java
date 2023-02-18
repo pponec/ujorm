@@ -20,14 +20,6 @@ import org.ujorm.KeyList;
 public class ArrayUjoChildTest extends MyTestCase {
     private static final Class CLASS = ArrayUjoChildTest.class;
 
-    @Override
-    protected void setUp() throws Exception {
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-    }
-
     /**
      * Test of readValue method, of class org.ujorm.mapImlp.AUnifiedDataObject.
      */

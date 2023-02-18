@@ -19,7 +19,7 @@ import org.ujorm.orm.dialect.H2Dialect;
  * @author Franta Mejta
  * @date 2021-03-09T14:19:05+01:00
  */
-public class IndexTest extends TestCase {
+public class IndexTest extends org.junit.jupiter.api.Assertions {
 
     public void testCreateIndicesOnDatabaseCreation() {
         MetaParams params = new MetaParams();

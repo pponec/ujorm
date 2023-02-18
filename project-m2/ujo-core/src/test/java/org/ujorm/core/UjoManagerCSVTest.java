@@ -13,6 +13,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.ujos.UjoCSV;
 import org.ujorm.tools.msg.MsgFormatter;
@@ -31,15 +33,7 @@ public class UjoManagerCSVTest extends MyTestCase {
     protected List<UjoCSV> ujoList;
 
 
-    public UjoManagerCSVTest(String testName) {
-        super(testName);
-    }
-
-    private static Class suite() {
-        return UjoManagerCSVTest.class;
-    }
-
-    @Override
+    @BeforeEach
     protected void setUp() throws Exception {
         manager = UjoManagerCSV.of(UjoCSV.class);
         context = "CSV-Context";
@@ -180,7 +174,7 @@ public class UjoManagerCSVTest extends MyTestCase {
             List<UjoCSV> list2b = manager5.loadCSV(new Scanner(is2), context);
             fail("Wrong header");
         } catch (IllegalStateException e) {
-            assertTrue("Wrong header", true);
+            assertTrue(true, "Wrong header");
         }
     }
 
