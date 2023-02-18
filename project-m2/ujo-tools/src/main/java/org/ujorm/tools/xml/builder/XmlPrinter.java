@@ -69,7 +69,7 @@ public class XmlPrinter extends AbstractWriter {
     }
 
     void writeAttrib(@NotNull String name, Object data, XmlBuilder owner) throws IOException {
-        if (owner.getName() != null) {
+        if (owner.getName() != XmlBuilder.HIDDEN_NAME) {
             out.append(SPACE);
             out.append(name);
             out.append('=');

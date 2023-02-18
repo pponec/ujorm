@@ -82,7 +82,7 @@ public class XmlWriter extends AbstractWriter {
             , @Nullable final List<Object> children
             , @NotNull final XmlModel element) throws IOException {
 
-        final boolean validName = name != null;
+        final boolean validName = name != XmlBuilder.HIDDEN_NAME;
         if (validName) {
             out.append(XML_LT);
             out.append(name);

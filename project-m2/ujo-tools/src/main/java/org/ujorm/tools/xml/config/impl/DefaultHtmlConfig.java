@@ -137,6 +137,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** A name of root element */
     @Override
+    @NotNull
     public String getRootElementName() {
         return rootElementName;
     }

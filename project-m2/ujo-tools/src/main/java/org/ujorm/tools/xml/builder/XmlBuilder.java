@@ -33,7 +33,7 @@ import org.ujorm.tools.xml.ApiElement;
  *     <li>a simple API built on a single XmlElement class</li>
  *     <li>creating XML components by a subclass is possible</li>
  *     <li>great performance and small memory footprint</li>
- * </ul>¨
+ * </ul>
  * <h3>How to use the class:</h3>
  * <pre class="pre">
  *  XmlPriter writer = XmlPriter.forXml();
@@ -112,9 +112,14 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param level Level of the Element
      * @param printName Print the element name immediately.
      */
-    protected XmlBuilder(@Nullable final String name, @NotNull final XmlPrinter writer, final int level, final boolean printName) {
+    protected XmlBuilder(
+            @NotNull final String name,
+            @NotNull final XmlPrinter writer,
+            final int level,
+            final boolean printName
+    ) {
         this.name = name;
-        this.lastText = name == null;
+        this.lastText = name == XmlBuilder.HIDDEN_NAME;
         this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
         this.level = level;
 

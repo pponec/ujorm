@@ -61,6 +61,7 @@ public interface HtmlConfig extends XmlConfig {
     ApiInjector getHeaderInjector();
 
     /** A name of root element */
+    @NotNull
     String getRootElementName();
 
     /** Clone the config for an AJAX processing */
