@@ -99,7 +99,7 @@ abstract public class MyTestCase extends org.junit.jupiter.api.Assertions{
      * Compare two Ujo objects.
      */
     public static void assertEquals(String item, char[] expected, char[] actual) {
-        assertArrayEquals(expected, actual, item); // msg
+        assertArrayEquals(expected, actual, item);
     }
 
     /**
@@ -107,7 +107,7 @@ abstract public class MyTestCase extends org.junit.jupiter.api.Assertions{
      */
     public static void assertEquals(String item, List expected, List actual) {
         if (expected==actual) { return; }
-        Assertions.assertEquals(expected.size(), actual.size(), item); // msg
+        Assertions.assertEquals(expected.size(), actual.size(), item);
 
         if (item.endsWith("\"")) {
             item = item.substring(0, item.length()-1);
