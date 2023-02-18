@@ -92,14 +92,14 @@ abstract public class MyTestCase extends org.junit.jupiter.api.Assertions{
      * Compare two Ujo objects.
      */
     public static void assertEquals(String item, byte[] expected, byte[] actual) {
-        assertTrue(Arrays.equals(expected, actual), item); // msg
+        assertArrayEquals(expected, actual, item);
     }
 
     /**
      * Compare two Ujo objects.
      */
     public static void assertEquals(String item, char[] expected, char[] actual) {
-        assertTrue(Arrays.equals(expected, actual), item); // msg
+        assertArrayEquals(expected, actual, item); // msg
     }
 
     /**

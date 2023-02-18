@@ -10,7 +10,6 @@ package samples.bundle;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-import junit.framework.*;
 
 /**
  *
