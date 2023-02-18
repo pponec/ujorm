@@ -27,7 +27,6 @@ abstract public class MyTestCase extends org.junit.jupiter.api.Assertions{
     public MyTestCase(String name) {
     }
 
-    @Deprecated
     protected String suite() {
         return getClass().getSimpleName();
     }

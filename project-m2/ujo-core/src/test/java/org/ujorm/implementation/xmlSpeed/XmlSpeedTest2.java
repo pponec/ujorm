@@ -7,7 +7,6 @@
 
 package org.ujorm.implementation.xmlSpeed;
 
-import junit.framework.TestSuite;
 import org.junit.jupiter.api.Test;
 
 

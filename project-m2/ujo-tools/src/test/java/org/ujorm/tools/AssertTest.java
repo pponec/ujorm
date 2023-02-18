@@ -769,7 +769,9 @@ public class AssertTest {
     public void testIsEmpty_CharSequence_ObjectArr_nok() {
         System.out.println("isEmpty");
         CharSequence value = "ABC";
-        Assert.isEmpty(value, TEST_MESSAGE);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Assert.isEmpty(value, TEST_MESSAGE);
+        });
     }
 
 }
