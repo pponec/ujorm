@@ -9,7 +9,6 @@ package samples.bundle;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import junit.framework.*;
 

@@ -66,7 +66,7 @@ public abstract class AbstractPreparedStatement implements PreparedStatement {
     /** Creating a mock database connection for a single value ResultSet */
     public static Connection createSingleValueConnection(Object value) throws IllegalStateException {
         try {
-            return createConnection(Collections.<Object[]>singletonList(new Object[]{value}));
+            return createConnection(Collections.singletonList(new Object[]{value}));
         } catch (IOException | SQLException e)  {
             throw new IllegalStateException(e);
         }

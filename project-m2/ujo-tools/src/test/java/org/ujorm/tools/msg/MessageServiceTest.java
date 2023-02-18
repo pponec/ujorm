@@ -24,12 +24,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for the class MessageService
  * @author Pavel Ponec
  */
-public class MessageServiceTest extends TestCase {
+public class MessageServiceTest {
 
     /** Message Argument */
     private static final MessageArg ID = new MessageArg("ID");
@@ -227,7 +229,7 @@ public class MessageServiceTest extends TestCase {
     public void testEquals() {
         System.out.println("equals");
         assertEquals(ID, ID);
-        assertFalse(ID.equals(DATE));
+        assertNotEquals(ID, DATE);
     }
 
     /** Create a new Calendar for date: 2016-05-04T03:02:01  */

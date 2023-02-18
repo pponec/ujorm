@@ -22,6 +22,7 @@ import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * A test of the UnsignedShort class
@@ -180,23 +181,23 @@ public class UnsignedShortTest {
         UnsignedShort v2x = UnsignedShort.of(2);
         UnsignedShort v3x = UnsignedShort.of(3);
 
-        TestCase.assertEquals(v1, v1x);
-        TestCase.assertEquals(v2, v2x);
-        TestCase.assertEquals(v3, v3x);
-        assertFalse(v1.equals(v2x));
-        assertFalse(v2.equals(v3x));
-        assertFalse(v3.equals(v1x));
+        assertEquals(v1, v1x);
+        assertEquals(v2, v2x);
+        assertEquals(v3, v3x);
+        assertNotEquals(v1, v2x);
+        assertNotEquals(v2, v3x);
+        assertNotEquals(v3, v1x);
 
-        TestCase.assertEquals(v1.hashCode(), v1x.hashCode());
-        TestCase.assertEquals(v2.hashCode(), v2x.hashCode());
-        TestCase.assertEquals(v3.hashCode(), v3x.hashCode());
+        assertEquals(v1.hashCode(), v1x.hashCode());
+        assertEquals(v2.hashCode(), v2x.hashCode());
+        assertEquals(v3.hashCode(), v3x.hashCode());
         assertFalse(v1.hashCode() == v2x.hashCode());
         assertFalse(v2.hashCode() == v3x.hashCode());
         assertFalse(v3.hashCode() == v1x.hashCode());
 
-        TestCase.assertEquals(0, v1.compareTo(v1x));
-        TestCase.assertEquals(0, v2.compareTo(v2x));
-        TestCase.assertEquals(0, v3.compareTo(v3x));
+        assertEquals(0, v1.compareTo(v1x));
+        assertEquals(0, v2.compareTo(v2x));
+        assertEquals(0, v3.compareTo(v3x));
         assertTrue(v1.compareTo(v3x) < 0);
         assertTrue(v2.compareTo(v1x) > 0);
         assertTrue(v3.compareTo(v2x) > 0);

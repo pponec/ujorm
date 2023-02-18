@@ -736,7 +736,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     public Set<ColumnWrapper> getOuterJoins()  {
         return outerJoins != null
             ? outerJoins
-            : Collections.<ColumnWrapper>emptySet();
+            : Collections.emptySet();
     }
 
     /** Has this Query an offset? */
