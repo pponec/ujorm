@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.ujorm.extensions.types.UnsignedShort;
 import org.ujorm.orm.bo.ACustomerExtended;
 import org.ujorm.orm.bo.XCustomerExtended;
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * A test of the OrmKeyFactory class.

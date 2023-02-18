@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
 import static java.util.Locale.ENGLISH;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests of the Message implementation

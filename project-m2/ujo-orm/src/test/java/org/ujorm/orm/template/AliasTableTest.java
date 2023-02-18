@@ -16,7 +16,6 @@
 package org.ujorm.orm.template;
 
 import java.util.logging.*;
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.Ujo;
 import org.ujorm.logger.UjoLogger;

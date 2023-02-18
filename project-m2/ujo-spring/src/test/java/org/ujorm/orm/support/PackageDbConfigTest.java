@@ -21,7 +21,7 @@ import org.ujorm.UjoDecorator;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.transaction.config.DatabaseModel;
 import org.ujorm.transaction.domains.Aaa;
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * PackageDbConfig Test

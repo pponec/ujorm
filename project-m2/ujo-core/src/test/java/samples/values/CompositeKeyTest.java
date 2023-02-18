@@ -17,7 +17,6 @@ package samples.values;
 
 import java.util.ArrayList;
 import java.util.List;
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;

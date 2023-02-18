@@ -16,7 +16,6 @@
 
 package org.ujorm.orm.ao;
 
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 
 /**

@@ -16,7 +16,7 @@
 package org.ujorm.transaction;
 
 import java.util.Date;
-import junit.framework.TestCase;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

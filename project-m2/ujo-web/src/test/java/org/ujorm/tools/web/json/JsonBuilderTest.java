@@ -17,7 +17,7 @@ package org.ujorm.tools.web.json;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.Html;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *

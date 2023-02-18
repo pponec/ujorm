@@ -30,7 +30,7 @@ package org.ujorm.spring;
  *  limitations under the License.
  */
 
-import junit.framework.TestCase;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.ujorm.spring.AplicationContextAdapter.*;

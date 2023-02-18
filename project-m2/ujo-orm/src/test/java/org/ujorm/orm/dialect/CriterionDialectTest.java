@@ -17,7 +17,7 @@ package org.ujorm.orm.dialect;
 
 import java.io.IOException;
 import java.util.Date;
-import junit.framework.TestCase;
+
 import org.junit.jupiter.api.Test;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.*;

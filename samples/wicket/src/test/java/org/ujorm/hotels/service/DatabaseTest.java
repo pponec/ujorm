@@ -15,20 +15,8 @@
  */
 package org.ujorm.hotels.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
-import javax.inject.Inject;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.Key;
 import org.ujorm.criterion.Criterion;
@@ -42,6 +30,14 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.template.AliasTable;
 import org.ujorm.spring.CommonDao;
+
+import javax.inject.Inject;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.ujorm.orm.template.AliasTable.Build.*;
 

@@ -21,7 +21,6 @@ import com.arangodb.ArangoDBException;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.entity.CollectionEntity;
 import com.arangodb.mapping.ArangoJack;
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
 

@@ -17,9 +17,7 @@ package org.ujorm.tools.msg;
 
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
-import static junit.framework.TestCase.assertSame;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests of the MsgFormatter class

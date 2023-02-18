@@ -18,7 +18,6 @@ package org.ujorm.orm;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import org.ujorm.orm.bo.XCustomer;

@@ -21,7 +21,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.*;
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
@@ -39,7 +38,7 @@ import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.orm_tutorial.sample.MyProcedure;
 import org.ujorm.orm_tutorial.sample.ViewOrder;
 import org.ujorm.tools.jdbc.JdbcBuilder;
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 /**
  * The tutorial in the class for the Ujorm <br>
  * --------------------------------------- <br>

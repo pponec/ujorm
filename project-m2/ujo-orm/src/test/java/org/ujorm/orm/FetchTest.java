@@ -17,7 +17,6 @@ package org.ujorm.orm;
 
 import java.awt.Color;
 import java.util.Date;
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import org.ujorm.criterion.*;

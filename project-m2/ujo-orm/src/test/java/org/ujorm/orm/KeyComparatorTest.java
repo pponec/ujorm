@@ -15,7 +15,6 @@
  */
 package org.ujorm.orm;
 
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.orm.bo.XItem;
 

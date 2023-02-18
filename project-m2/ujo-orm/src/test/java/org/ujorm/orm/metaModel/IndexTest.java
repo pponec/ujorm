@@ -2,8 +2,7 @@ package org.ujorm.orm.metaModel;
 
 import java.sql.SQLException;
 
-import junit.framework.TestCase;
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import org.ujorm.core.IllegalUjormException;
@@ -40,14 +39,14 @@ public class IndexTest extends org.junit.jupiter.api.Assertions {
 
         try {
             s.insert(r2);
-            Assert.fail("should have failed on unique index violation");
+            fail("should have failed on unique index violation");
         } catch (IllegalUjormException ex) {
             Throwable cause = ex.getCause();
-            Assert.assertNotNull(cause);
-            Assert.assertTrue(cause instanceof SQLException);
+            assertNotNull(cause);
+            assertTrue(cause instanceof SQLException);
 
             SQLException sql = (SQLException) cause;
-            Assert.assertEquals("23505", sql.getSQLState());
+            assertEquals("23505", sql.getSQLState());
         }
     }
 

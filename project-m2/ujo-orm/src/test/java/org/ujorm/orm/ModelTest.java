@@ -16,7 +16,6 @@
 package org.ujorm.orm;
 
 import java.util.Collection;
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.orm.ao.IndexModelOrderedBuilder;
 import org.ujorm.orm.bo.*;
