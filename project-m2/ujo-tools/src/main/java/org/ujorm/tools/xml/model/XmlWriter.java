@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.XmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 
@@ -107,7 +108,7 @@ public class XmlWriter extends AbstractWriter {
             for (Object child : children) {
                 if (child instanceof XmlModel) {
                     final XmlModel xmlChild = (XmlModel) child;
-                    if (writeNewLine && xmlChild.name != null) {
+                    if (writeNewLine && xmlChild.name != ApiElement.HIDDEN_NAME) {
                         writeNewLine(level);
                     } else {
                         writeNewLine = validName;

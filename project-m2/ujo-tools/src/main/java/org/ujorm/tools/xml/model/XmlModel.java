@@ -59,14 +59,13 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  *  String result = root.toString();
  * </pre>
  *
- * @see HtmlElement
  * @since 2.03
  * @author Pavel Ponec
  */
 public class XmlModel implements ApiElement<XmlModel>, Serializable {
 
     /** Element name */
-    @Nullable
+    @NotNull
     protected final String name;
 
     /** Attributes */

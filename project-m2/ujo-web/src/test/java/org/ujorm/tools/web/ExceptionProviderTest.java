@@ -85,17 +85,20 @@ public class ExceptionProviderTest {
         DefaultHtmlConfig config = HtmlConfig.ofDefault()
                 .setTitle("Element-try-catche");
 
-        String[] result = {""};
-        HtmlElement.of(config, writer).addBody()
-                .then(body -> {
-                    throw new IllegalArgumentException("test");
-                })
-                .catchEx(NullPointerException.class, e -> {
-                    result[0] = e.getMessage();
-                });
-        String expected = "test";
-        assertEquals(expected, result[0]);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            String[] result = {""};
+            HtmlElement.of(config, writer).addBody()
+                    .next(body -> {
+                        throw new IllegalArgumentException("test");
+                    })
+                    .catchEx(NullPointerException.class, e -> {
+                        result[0] = e.getMessage();
+                    });
+            String expected = "test";
+            assertEquals(expected, result[0]);
+        });
     }
+
     /**
      * Test of addSelect method, of class Element.
      */

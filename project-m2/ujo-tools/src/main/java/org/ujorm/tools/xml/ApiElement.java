@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 public interface ApiElement<E extends ApiElement<?>> extends Closeable {
 
     /** A name of a hidden element */
-    @Nullable String HIDDEN_NAME = null;
+    @Nullable String HIDDEN_NAME = new String("");
 
     /** Get an element name */
     @NotNull
