@@ -18,8 +18,8 @@ public class UjoPojoConverterTest extends TestCase {
         Account v = new Account();
         DefaultUjoConverter<$Account> instance = new DefaultUjoConverter<$Account>();
         Object result = instance.marshal(v);
-        assertTrue(Account.class.isInstance(result));
-        assertTrue($Account.class.isInstance(result));
+        assertTrue(result instanceof Account);
+        assertTrue(result instanceof $Account);
         //
         Integer expected = 10;
         v.setId(expected);
@@ -34,8 +34,8 @@ public class UjoPojoConverterTest extends TestCase {
         Address v = new Address();
         DefaultUjoConverter<$Address> instance = new DefaultUjoConverter<$Address>();
         Object result = instance.marshal(v);
-        assertTrue(Address.class.isInstance(result));
-        assertTrue($Address.class.isInstance(result));
+        assertTrue(result instanceof Address);
+        assertTrue(result instanceof $Address);
         //
         Integer expected = 10;
         v.setId(expected);
@@ -50,8 +50,8 @@ public class UjoPojoConverterTest extends TestCase {
         $Account v = new $Account(new Account());
         DefaultUjoConverter<$Account> instance = new DefaultUjoConverter<$Account>();
         Object result = instance.unmarshal(v);
-        assertTrue(Account.class.isInstance(result));
-        assertFalse($Account.class.isInstance(result));
+        assertTrue(result instanceof Account);
+        assertFalse(result instanceof $Account);
         //
         Integer expected = 10;
         v.setId(expected);
@@ -66,8 +66,8 @@ public class UjoPojoConverterTest extends TestCase {
         $Address v = new $Address(new Address());
         DefaultUjoConverter<$Address> instance = new DefaultUjoConverter<$Address>();
         Object result = instance.unmarshal(v);
-        assertTrue(Address.class.isInstance(result));
-        assertFalse($Address.class.isInstance(result));
+        assertTrue(result instanceof Address);
+        assertFalse(result instanceof $Address);
         //
         Integer expected = 10;
         v.setId(expected);

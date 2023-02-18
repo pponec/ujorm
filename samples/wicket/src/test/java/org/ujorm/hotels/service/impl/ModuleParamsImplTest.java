@@ -67,7 +67,7 @@ public class ModuleParamsImplTest {
         assertEquals(ApplicationParams.TEST1.getDefault(), appParams.getTest1());
         //
         boolean logged = authService.authenticate(getLoggedUser());
-        assertEquals(true, logged);
+        assertTrue(logged);
     }
 
     /** Logged User */

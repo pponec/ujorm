@@ -226,7 +226,7 @@ public class MessageServiceTest extends TestCase {
     /** Test of format method, of class MessageService. */
     public void testEquals() {
         System.out.println("equals");
-        assertTrue(ID.equals(ID));
+        assertEquals(ID, ID);
         assertFalse(ID.equals(DATE));
     }
 

@@ -45,12 +45,11 @@ public class BuildInfo extends Label {
     /** Get text */
     protected String getInfo() {
         final DateTimeFormatter format = DateTimeFormatter.ofPattern(FORMAT);
-        final StringBuilder result = new StringBuilder();
-
-        result.append(NEW_LINE).append("<!-- Build:");
-        result.append(NEW_LINE).append("Startup Date: ").append(format.format(STARTUP));
-        result.append(NEW_LINE).append("Build Time..: ").append(getBuildDate());
-        result.append(NEW_LINE).append("-->");
+        final StringBuilder result = new StringBuilder()
+              .append(NEW_LINE).append("<!-- Build:")
+              .append(NEW_LINE).append("Startup Date: ").append(format.format(STARTUP))
+              .append(NEW_LINE).append("Build Time..: ").append(getBuildDate())
+              .append(NEW_LINE).append("-->");
         return result.toString();
     }
 

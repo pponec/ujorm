@@ -15,6 +15,7 @@
  */
 package org.ujorm.extensions.types;
 
+import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.extensions.ValueWrapper;
 import static junit.framework.TestCase.assertFalse;
@@ -179,23 +180,23 @@ public class UnsignedShortTest {
         UnsignedShort v2x = UnsignedShort.of(2);
         UnsignedShort v3x = UnsignedShort.of(3);
 
-        assertTrue(v1.equals(v1x));
-        assertTrue(v2.equals(v2x));
-        assertTrue(v3.equals(v3x));
+        TestCase.assertEquals(v1, v1x);
+        TestCase.assertEquals(v2, v2x);
+        TestCase.assertEquals(v3, v3x);
         assertFalse(v1.equals(v2x));
         assertFalse(v2.equals(v3x));
         assertFalse(v3.equals(v1x));
 
-        assertTrue(v1.hashCode() == v1x.hashCode());
-        assertTrue(v2.hashCode() == v2x.hashCode());
-        assertTrue(v3.hashCode() == v3x.hashCode());
+        TestCase.assertEquals(v1.hashCode(), v1x.hashCode());
+        TestCase.assertEquals(v2.hashCode(), v2x.hashCode());
+        TestCase.assertEquals(v3.hashCode(), v3x.hashCode());
         assertFalse(v1.hashCode() == v2x.hashCode());
         assertFalse(v2.hashCode() == v3x.hashCode());
         assertFalse(v3.hashCode() == v1x.hashCode());
 
-        assertTrue(v1.compareTo(v1x) == 0);
-        assertTrue(v2.compareTo(v2x) == 0);
-        assertTrue(v3.compareTo(v3x) == 0);
+        TestCase.assertEquals(0, v1.compareTo(v1x));
+        TestCase.assertEquals(0, v2.compareTo(v2x));
+        TestCase.assertEquals(0, v3.compareTo(v3x));
         assertTrue(v1.compareTo(v3x) < 0);
         assertTrue(v2.compareTo(v1x) > 0);
         assertTrue(v3.compareTo(v2x) > 0);

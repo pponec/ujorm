@@ -30,10 +30,10 @@ import org.ujorm.wicket.UjoEvent;
  */
 public interface CommonService {
     /** System account is {@code null} always */
-    public static final Customer SYSTEM_ACCOUNT = null;
+    Customer SYSTEM_ACCOUNT = null;
 
     /** The one day */
-    public static final Period ONE_DAY = Period.ofDays(1);
+    Period ONE_DAY = Period.ofDays(1);
 
     /** Find a customer */
     Customer getCustomer(String login);

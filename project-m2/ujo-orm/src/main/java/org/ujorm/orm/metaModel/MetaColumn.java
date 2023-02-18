@@ -576,9 +576,6 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
 
     /** Quotation request */
     public boolean isQuoted() {
-        if (QUOTED.of(this) == QuoteEnum.YES) {
-            return true;
-        }
-        return false;
+        return QUOTED.of(this) == QuoteEnum.YES;
     }
 }

@@ -196,9 +196,9 @@ public class UnsignedShortStrictTest {
         assertFalse(v2.hashCode() == v3x.hashCode());
         assertFalse(v3.hashCode() == v1x.hashCode());
 
-        assertTrue(v1.compareTo(v1x) == 0);
-        assertTrue(v2.compareTo(v2x) == 0);
-        assertTrue(v3.compareTo(v3x) == 0);
+        TestCase.assertEquals(0, v1.compareTo(v1x));
+        TestCase.assertEquals(0, v2.compareTo(v2x));
+        TestCase.assertEquals(0, v3.compareTo(v3x));
         assertTrue(v1.compareTo(v3x) < 0);
         assertTrue(v2.compareTo(v1x) > 0);
         assertTrue(v3.compareTo(v2x) > 0);

@@ -59,10 +59,10 @@ final class UjoHandlerXML extends DefaultHandler {
     private Class   $itemType     = null;
     private Element $parentObj    = null;
     private boolean $elementCont  = false;
-    private StringBuilder $value  = new StringBuilder(64);
+    private final StringBuilder $value  = new StringBuilder(64);
 
     /** A list of XML attributes, one item is always a pair: attribute - value */
-    private ArrayList<String[]> $attributes = new ArrayList<>();
+    private final ArrayList<String[]> $attributes = new ArrayList<>();
 
     /** Constructor. */
     @SuppressWarnings("deprecation")

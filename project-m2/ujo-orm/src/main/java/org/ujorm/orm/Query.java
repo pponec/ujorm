@@ -667,9 +667,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     @NotNull
     public Query<UJO> addOrderBy(@NotNull final Key<UJO,?> ... keys) {
         clearDecoder();
-        for (Key<UJO, ?> key : keys) {
-           orderBy.add(key);
-        }
+        Collections.addAll(orderBy, keys);
         return this;
     }
 

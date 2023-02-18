@@ -167,7 +167,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
             case EQ:
             case NOT_EQ:
                 boolean result = key.equals(ujo, myValue);
-                return operator==Operator.EQ ? result : !result ;
+                return (operator == Operator.EQ) == result;
             case REGEXP:
             case NOT_REGEXP:
                 Pattern p = myValue instanceof Pattern
@@ -176,7 +176,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
                     ;
                 Object val1 = key.of(ujo);
                 boolean result2 = val1!=null && p.matcher(val1.toString()).matches();
-                return operator==Operator.REGEXP ? result2 : !result2 ;
+                return (operator == Operator.REGEXP) == result2;
             case STARTS:
             case ENDS:
             case CONTAINS:

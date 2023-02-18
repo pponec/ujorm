@@ -59,10 +59,10 @@ public final class Customer extends OrmTableLockable<Customer> {
 
     /** Returns a full name of the Customer */
     public String getFullName() {
-        final StringBuilder result = new StringBuilder(32);
-        result.append(FIRSTNAME.of(this));
-        result.append(" ");
-        result.append(SURNAME.of(this));
+        final StringBuilder result = new StringBuilder(32)
+            .append(FIRSTNAME.of(this))
+            .append(" ")
+            .append(SURNAME.of(this));
         return result.toString();
     }
 
