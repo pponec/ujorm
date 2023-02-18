@@ -15,13 +15,15 @@
  */
 package org.ujorm.orm;
 
-import java.util.logging.Logger;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.Ujo;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
-import org.ujorm.orm_tutorial.sample.*;
+import org.ujorm.orm_tutorial.sample.Database;
+import org.ujorm.orm_tutorial.sample.Order;
+
+import java.util.logging.Logger;
 
 /**
  * Test for the Ujorm sequence
@@ -32,6 +34,7 @@ public class UjoSequencerTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of nextValue method, of class UjoSequencer.
      */
+    @Test
     public void testNextValue_1() {
         System.out.println("testNextValue_1");
 
@@ -54,6 +57,7 @@ public class UjoSequencerTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of nextValue method, of class UjoSequencer.
      */
+    @Test
     public void testNextValue_2() {
         System.out.println("testNextValue_2");
 
@@ -76,6 +80,7 @@ public class UjoSequencerTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of nextValue method, of class UjoSequencer.
      */
+    @Test
     public void testNextValue_3() {
         System.out.println("testNextValue_3");
 

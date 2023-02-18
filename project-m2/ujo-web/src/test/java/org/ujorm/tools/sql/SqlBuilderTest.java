@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.jdbc.AbstractJdbcConnector;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing the SqlBuillder class
@@ -106,7 +106,8 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
     }
 
     /** Test raw SQL INSERT of class JdbcBuillder for a better performace and general use. */
-    @Test @Deprecated
+    @Deprecated
+    @Test
     public void testInsertRaw() {
         System.out.println("INSERT");
         SqlBuilder sql = new SqlBuilder()

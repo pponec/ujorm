@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.ujorm.tools.jdbc.mock.AbstractPreparedStatement;
 import org.ujorm.tools.jdbc.mock.AbstractResultSet;
 import org.ujorm.tools.set.LoopingIterator;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *

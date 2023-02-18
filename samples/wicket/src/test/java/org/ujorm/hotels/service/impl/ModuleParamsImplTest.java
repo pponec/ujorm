@@ -15,24 +15,22 @@
  */
 package org.ujorm.hotels.service.impl;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.ujorm.hotels.config.SpringContext;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.service.AuthService;
 import org.ujorm.hotels.service.ParamService;
 import org.ujorm.hotels.service.param.ApplicationParams;
-import static org.junit.Assert.*;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * ModuleParamsImplTest

@@ -16,7 +16,6 @@
 
 package org.ujorm.orm_tutorial;
 
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.orm_tutorial.sample.SampleORM;
 import org.ujorm.ujo_core.SampleCORE;
@@ -34,7 +33,8 @@ public class OrmTutorialTest {
 //    /**
 //     * Test of getItemCount method, of class AbstractPropertyList.
 //     */
-//    public void testInit() throws Exception {
+//    @Test
+    public void testInit() throws Exception {
 //
 //        if (conn==null) {
 //            Class.forName(new H2Dialect().getJdbcDriver());
@@ -45,7 +45,7 @@ public class OrmTutorialTest {
 //                );
 //            assertNotNull(conn);
 //        }
-//    }
+     }
 
     /**
      * Test of getItemCount method, of class AbstractPropertyList.
@@ -69,12 +69,12 @@ public class OrmTutorialTest {
     /**
      * Test of getItemCount method, of class AbstractPropertyList.
      */
-//    public void testTutorialExtended() {
-//
+//    @Test
+    public void testTutorialExtended() {
 //        if (noRunnedX) {
 //            noRunnedX = true;
 //            org.ujorm.orm_tutorial.xtended.XSampleORM.main(new String[]{});
 //        }
-//    }
+    }
 
 }

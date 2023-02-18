@@ -1,5 +1,7 @@
 package org.ujorm.criterion;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.HashMap;
 
 /**
@@ -20,6 +22,7 @@ public class GenericDomain<U extends GenericDomain> {
         return key.getValue((U) this);
     }
 
+    @Test
     public void test1() {
         // GenericDomain domain = this;
         GenericDomain<U> domain = this; // The Workarround
@@ -33,6 +36,7 @@ public class GenericDomain<U extends GenericDomain> {
         assert name == "MyName";
     }
 
+    @Test
     public void test2() {
         GenericDomain domain = this;
         domain.set(ID, 10);

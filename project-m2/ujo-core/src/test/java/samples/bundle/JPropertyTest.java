@@ -7,6 +7,8 @@
 
 package samples.bundle;
 
+    import org.junit.jupiter.api.Test;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -21,6 +23,7 @@ public class JPropertyTest extends org.junit.jupiter.api.Assertions {
      * Test of getItemClass method, of class org.ujorm.core.UjoManagerXML.
      * @throws java.io.IOException
      */
+    @Test
     public void testProperty() throws IOException {
 
         java.util.Properties props = new Properties();

@@ -10,7 +10,7 @@ package org.ujorm.implementation.xml.t005_attrib2;
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.UjoManagerXML;
 
@@ -23,6 +23,7 @@ public class T005d_Array_Test extends MyTestCase {
     /**
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
      */
+    @Test
     public void testPrintXML() throws Exception {
         System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);
@@ -40,6 +41,7 @@ public class T005d_Array_Test extends MyTestCase {
     /**
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
+    @Test
     public void testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);

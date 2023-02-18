@@ -10,7 +10,7 @@ package org.ujorm.implementation.xml;
 import java.io.CharArrayWriter;
 import java.util.ArrayList;
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.implementation.map.MapUjo;
 
@@ -23,6 +23,7 @@ public class XmlTest_2 extends org.junit.jupiter.api.Assertions {
     /**
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
      */
+    @Test
     public void testPrintXMLRoot() throws Exception {
 
         CharArrayWriter writer = null;

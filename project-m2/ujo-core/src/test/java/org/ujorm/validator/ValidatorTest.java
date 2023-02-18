@@ -13,7 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import org.ujorm.MyTestCase;
 import org.ujorm.Validator;
@@ -26,6 +26,7 @@ import static org.ujorm.validator.impl.BetweenValidator.*;
 public class ValidatorTest extends MyTestCase {
 
     /** Check the input must not be great than 10. */
+    @Test
     public void test_MAX_10() {
         System.out.println("test_MAX_10");
 
@@ -48,6 +49,7 @@ public class ValidatorTest extends MyTestCase {
     }
 
     /** Check the input must be in a range from 1 to 10 */
+    @Test
     public void test_RANGE_from_1_to_10() {
         System.out.println("test_RANGE_from_1_to_10");
 
@@ -72,6 +74,7 @@ public class ValidatorTest extends MyTestCase {
     }
 
     /** Check the input must not be great than 10. */
+    @Test
     public void test_DATE_format() {
         System.out.println("test_DATE");
 
@@ -89,6 +92,7 @@ public class ValidatorTest extends MyTestCase {
     }
 
     /** Test of readValue method, */
+    @Test
     public void testMayAssigns() {
         assertAssign(true , ValidBo.NOT_NULL, "");
         assertAssign(true , ValidBo.NOT_NULL, "TEXT");
@@ -235,6 +239,7 @@ public class ValidatorTest extends MyTestCase {
     }
 
     /** Test of readValue method, */
+    @Test
     public void testMayAssignsLegal() {
         assertAssignLeg(true , ValidMandatory.NOTNULL, "");
         assertAssignLeg(true , ValidMandatory.NOTNULL, "TEXT");
@@ -382,6 +387,7 @@ public class ValidatorTest extends MyTestCase {
 
 
     /** Test of readValue method, */
+    @Test
     public void testMandatory() {
         assertTrue(ValidatorUtils.isMandatoryValidator(ValidBo.NOT_NULL.getValidator()));
         assertTrue(ValidatorUtils.isMandatoryValidator(ValidBo.NOT_EMPTY.getValidator()));
@@ -397,6 +403,7 @@ public class ValidatorTest extends MyTestCase {
     }
 
     /** Test of readValue method, */
+    @Test
     public void testMaxLength() {
         assertEquals(-1, ValidatorUtils.getMaxLength(ValidBo.NOT_NULL.getValidator()));
         assertEquals(-1, ValidatorUtils.getMaxLength(ValidBo.NOT_EMPTY.getValidator()));

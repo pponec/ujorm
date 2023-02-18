@@ -10,7 +10,7 @@ package org.ujorm.implementation.quick;
 
 import java.awt.Color;
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.KeyList;
 import org.ujorm.MyTestCase;
 import org.ujorm.implementation.quick.domains.SmartUjoChild;
@@ -26,6 +26,7 @@ public class SmartUjoChildTest extends MyTestCase {
     /**
      * Test of readValue method, of class org.ujorm.mapImlp.AUnifiedDataObject.
      */
+    @Test
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
@@ -60,6 +61,7 @@ public class SmartUjoChildTest extends MyTestCase {
         assertEquals(o4, SmartUjoChild.PRO_P9.of(ujb));
     }
 
+    @Test
     public void testSpeedTime() throws Throwable {
         System.out.println("testTime: " + suite());
 
@@ -104,6 +106,7 @@ public class SmartUjoChildTest extends MyTestCase {
         System.out.println("TIME: " + (time2-time1)/1000f + " [sec]");
     }
 
+    @Test
     public void testPropertyCount() throws Throwable {
         SmartUjoImpl ujb1 = new SmartUjoImpl();
         SmartUjoChild  ujb2 = new SmartUjoChild();
@@ -112,6 +115,7 @@ public class SmartUjoChildTest extends MyTestCase {
         assertEquals(12, ujb2.readKeys().size());
     }
 
+    @Test
     public void testPropertyName() throws Throwable {
         SmartUjoImpl ujb1 = new SmartUjoImpl();
         SmartUjoChild  ujb2 = new SmartUjoChild();
@@ -123,6 +127,7 @@ public class SmartUjoChildTest extends MyTestCase {
     }
 
     /** */
+    @Test
     public void testGetProperties1() throws Throwable {
         SmartUjoImpl ujb1 = new SmartUjoImpl();
         KeyList props = ujb1.readKeys();
@@ -135,6 +140,7 @@ public class SmartUjoChildTest extends MyTestCase {
     }
 
     /** A compilation test of API Key class */
+    @Test
     public void testList() {
         SmartUjoChild<SmartUjoChild> ujo = new SmartUjoChild();
 

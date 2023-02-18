@@ -16,6 +16,7 @@
 package org.ujorm.orm;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.orm.bo.XItem;
 
 /**
@@ -30,6 +31,7 @@ public class KeyComparatorTest extends org.junit.jupiter.api.Assertions {
 
     /** Compare two keys according to inner key sequence count */
     @SuppressWarnings("deprecation")
+    @Test
     public void testKeyComparator() {
 
         assertEquals(0, Query.INNER_KEY_COMPARATOR.compare(XItem.ID, XItem.NOTE));

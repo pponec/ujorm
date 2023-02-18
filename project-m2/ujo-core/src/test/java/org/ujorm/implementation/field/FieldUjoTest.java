@@ -8,7 +8,7 @@
 package org.ujorm.implementation.field;
 
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 
 /**
@@ -17,6 +17,7 @@ import org.ujorm.MyTestCase;
  */
 public class FieldUjoTest extends MyTestCase {
 
+    @Test
     public void testSpeedTime() throws Throwable {
         System.out.println("M1:testTime: " + suite());
 
@@ -61,6 +62,7 @@ public class FieldUjoTest extends MyTestCase {
     }
 
 
+    @Test
     public void testSpeedTimeChild() throws Throwable {
         System.out.println("M2:testTime (child): " + suite());
 
@@ -105,6 +107,7 @@ public class FieldUjoTest extends MyTestCase {
     }
 
 
+    @Test
     public void testPropertyCount() throws Throwable {
         FieldUjoImpl ujb1 = new FieldUjoImpl();
         FieldUjoImplChild  ujb2 = new FieldUjoImplChild();

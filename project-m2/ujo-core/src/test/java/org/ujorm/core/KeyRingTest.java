@@ -22,6 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.CompositeKey;
 import org.ujorm.core.ujos.UjoCSV;
 import org.ujorm.core.ujos.UjoName;
@@ -36,6 +37,7 @@ public class KeyRingTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getType method, of class KeyRing.
      */
+    @Test
     public void testKeyName() {
         assertEquals("P1", UjoCSV.P1.getName());
         assertEquals("P2", UjoCSV.P2.getName());
@@ -49,6 +51,7 @@ public class KeyRingTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of the excluded keys
      */
+    @Test
     public void testExcludedKeys() throws Exception {
         KeyRing<UjoCSV> ring = KeyRing.ofExcluding(UjoCSV.class, UjoCSV.P1, UjoCSV.P2);
         assertEquals(1, ring.size());
@@ -58,6 +61,7 @@ public class KeyRingTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getType method, of class KeyRing.
      */
+    @Test
     public void testGetBaseClass() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
@@ -82,6 +86,7 @@ public class KeyRingTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getType method, of class KeyRing.
      */
+    @Test
     public void testGetBaseClass_2() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
@@ -104,6 +109,7 @@ public class KeyRingTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getType method, of class KeyRing.
      */
+    @Test
     public void testGetBaseClassDesc() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
@@ -127,6 +133,7 @@ public class KeyRingTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getType method, of class KeyRing.
      */
+    @Test
     public void testGetBaseClassDesc_2() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
@@ -151,6 +158,7 @@ public class KeyRingTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getType method, of class KeyRing.
      */
+    @Test
     public void testKeyAliasName() throws Exception {
         CompositeKey<UjoName,?> cKey;
         KeyRing<UjoName> key1, key2;
@@ -197,6 +205,7 @@ public class KeyRingTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getType method, of class KeyRing.
      */
+    @Test
     public void testKeyAliasName2() throws Exception {
         CompositeKey<UjoName,?> cKey;
         KeyRing<UjoName> key1, key2;

@@ -10,9 +10,9 @@ package org.ujorm.criterion;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import junit.framework.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.ujorm.CompositeKey;
 import org.ujorm.MyTestCase;
 import org.ujorm.extensions.PathProperty;
@@ -58,8 +58,7 @@ public class CriterionFunctionTest extends MyTestCase {
         persons = null;
     }
 
-
-
+    @Test
     public void testInit_01() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         ProxyValue<Double> value = () -> 10.0;
@@ -69,6 +68,7 @@ public class CriterionFunctionTest extends MyTestCase {
         assertEquals("John", result.get(0).get(NAME));
     }
 
+    @Test
     public void testInit_02a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         ProxyValue<Double> value = () -> 10.0;
@@ -78,6 +78,7 @@ public class CriterionFunctionTest extends MyTestCase {
         assertEquals("Marry", result.get(0).get(NAME) );
     }
 
+    @Test
     public void testInit_02b() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         ProxyValue<Double> value = () -> 20.0;
@@ -88,6 +89,7 @@ public class CriterionFunctionTest extends MyTestCase {
     }
 
 
+    @Test
     public void testInit_03a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         ProxyValue<Double> value = () -> 20.0;
@@ -96,6 +98,7 @@ public class CriterionFunctionTest extends MyTestCase {
         assertEquals(2, result.size());
     }
 
+    @Test
     public void testInit_03b() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         ProxyValue<Double> value = () -> 20.0;
@@ -105,6 +108,7 @@ public class CriterionFunctionTest extends MyTestCase {
         assertEquals("John", result.get(0).get(NAME) );
     }
 
+    @Test
     public void testInit_04a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         Criterion<Person>  ex1 = Criterion.where(CASH, Operator.GT, (ProxyValue<Double>) () -> 10.0);
@@ -116,6 +120,7 @@ public class CriterionFunctionTest extends MyTestCase {
         assertEquals(20.0, result.get(0).get(CASH) );
     }
 
+    @Test
     public void testInit_05a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         ProxyValue<LocalDate> value = () -> LocalDate.now();

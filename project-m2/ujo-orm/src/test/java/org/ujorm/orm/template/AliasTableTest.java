@@ -17,6 +17,7 @@ package org.ujorm.orm.template;
 
 import java.util.logging.*;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.Ujo;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.orm.*;
@@ -32,6 +33,7 @@ import static org.ujorm.orm.template.AliasTable.Build.*;
 public class AliasTableTest extends org.junit.jupiter.api.Assertions {
 
     /** Test of getTableModel method, of class AliasTable. */
+    @Test
     public void testAlias_1() {
         System.out.println("testAlias_1");
         OrmHandler handler = createHandler();
@@ -51,6 +53,7 @@ public class AliasTableTest extends org.junit.jupiter.api.Assertions {
     }
 
     /** Test of getTableModel method, of class AliasTable. */
+    @Test
     public void testAlias_2() {
         System.out.println("testAlias_2");
         OrmHandler handler = createHandler();

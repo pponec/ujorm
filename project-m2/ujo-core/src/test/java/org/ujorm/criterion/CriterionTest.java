@@ -8,7 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
@@ -28,6 +28,7 @@ public class CriterionTest extends MyTestCase {
     private List<Person> persons;
 
     /** Filled */
+    @Test
     public void testFilled() {
         Person p = new Person();
 
@@ -65,6 +66,7 @@ public class CriterionTest extends MyTestCase {
     }
 
     /** Test Value fix Join */
+    @Test
     public void testValueFixJoin() {
         final Criterion<Person> crnTrue, crnFalse, crnAny;
         final Person person = new Person();
@@ -97,6 +99,7 @@ public class CriterionTest extends MyTestCase {
 
 
     /** Test Value Other Join */
+    @Test
     public void testValueOtherJoin() {
         final Criterion<Person> crnTrue, crnFalse, crnAny;
         final Person person = new Person();
@@ -124,6 +127,7 @@ public class CriterionTest extends MyTestCase {
     }
 
     /** Test Binary Join */
+    @Test
     public void testBinaryJoin() {
         final Criterion<Person> crnTrue, crnFalse, crnAny;
         final Person person = new Person();
@@ -151,6 +155,7 @@ public class CriterionTest extends MyTestCase {
     }
 
     /** Serialization 1 */
+    @Test
     public void testSerialization_1() throws Exception {
         System.out.println("testSerialization_1: ");
 
@@ -168,6 +173,7 @@ public class CriterionTest extends MyTestCase {
     }
 
     /** Serialization 2 */
+    @Test
     public void testSerialization_2() throws Exception {
         System.out.println("testSerialization_2: ");
 
@@ -188,6 +194,7 @@ public class CriterionTest extends MyTestCase {
 
 
     /** Serialization 3 */
+    @Test
     public void testSerialization_3() throws Exception {
         System.out.println("testSerialization_3: ");
 
@@ -207,6 +214,7 @@ public class CriterionTest extends MyTestCase {
     }
 
     /** Serialization 1 */
+    @Test
     public void testSerialization_4() throws Exception {
         System.out.println("testSerialization_4: ");
 
@@ -226,6 +234,7 @@ public class CriterionTest extends MyTestCase {
 
     /** Serialization 3 */
     @SuppressWarnings("unchecked")
+    @Test
     public void testToStringFull() throws IOException, ClassNotFoundException {
         System.out.println("testToStringFull");
         String expected;

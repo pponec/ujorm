@@ -31,6 +31,7 @@ package org.ujorm.spring;
  */
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.ujorm.spring.AplicationContextAdapter.*;
 
@@ -58,6 +59,7 @@ public class AbstractAplicationContextAdapterTest extends org.junit.jupiter.api.
     /**
      * A dummy test.
      */
+    @Test
     public void testDummy() {
     }
 

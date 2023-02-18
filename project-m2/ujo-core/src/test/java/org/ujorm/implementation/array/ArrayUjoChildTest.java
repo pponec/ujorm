@@ -9,7 +9,7 @@ package org.ujorm.implementation.array;
 
 
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 import org.ujorm.KeyList;
 
@@ -23,6 +23,7 @@ public class ArrayUjoChildTest extends MyTestCase {
     /**
      * Test of readValue method, of class org.ujorm.mapImlp.AUnifiedDataObject.
      */
+    @Test
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
@@ -57,6 +58,7 @@ public class ArrayUjoChildTest extends MyTestCase {
         assertEquals(o4, ArrayUjoImplChild.PRO_P9.of(ujb));
     }
 
+    @Test
     public void testSpeedTime() throws Throwable {
         System.out.println("testTime: " + suite());
 
@@ -99,6 +101,7 @@ public class ArrayUjoChildTest extends MyTestCase {
         printTime("TIME: ", time1);
     }
 
+    @Test
     public void testPropertyCount() throws Throwable {
         ArrayUjoImpl ujb1 = new ArrayUjoImpl();
         ArrayUjoImplChild  ujb2 = new ArrayUjoImplChild();
@@ -108,6 +111,7 @@ public class ArrayUjoChildTest extends MyTestCase {
     }
 
     /** */
+    @Test
     public void testGetProperties1() throws Throwable {
         ArrayUjoImpl ujb1 = new ArrayUjoImpl();
         KeyList props = ujb1.readKeys();

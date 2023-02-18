@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 
@@ -99,7 +99,7 @@ public class ExceptionProviderTest {
     /**
      * Test of addSelect method, of class Element.
      */
-    @Test()
+    @Test
     public void testElementThenCatch3b() {
         StringBuilder writer = new StringBuilder();
         DefaultHtmlConfig config = HtmlConfig.ofDefault()

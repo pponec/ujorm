@@ -42,7 +42,7 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.template.AliasTable;
 import org.ujorm.spring.CommonDao;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.ujorm.orm.template.AliasTable.Build.*;
 
 /**
@@ -82,8 +82,8 @@ public class DatabaseTest {
 
     /** Database query using the Ujorm <strong>Keys</strong> */
     @Disabled
-    @Test
     @Transactional(SpringContext.TRANSACTION_MANAGER)
+    @Test
     public void testDbQueries() {
 
         // Simple criterion:
@@ -138,6 +138,7 @@ public class DatabaseTest {
     //@Test
     @Disabled
     @Transactional(SpringContext.TRANSACTION_MANAGER)
+    @Test
     public void testNativeQuery_1() {
         OrmHandler handler = dao.getSession().getHandler();
         AliasTable<Booking> booking = handler.tableOf(Booking.class, "a");

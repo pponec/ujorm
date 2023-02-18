@@ -16,6 +16,7 @@
 package samples.values;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import static samples.values.Person.*;
 
@@ -25,6 +26,7 @@ import static samples.values.Person.*;
  */
 public class UsageTest extends org.junit.jupiter.api.Assertions {
 
+    @Test
     public void testSetGet() {
         Person person = new Person();
 

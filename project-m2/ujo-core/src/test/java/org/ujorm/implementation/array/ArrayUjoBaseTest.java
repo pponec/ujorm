@@ -9,7 +9,7 @@ package org.ujorm.implementation.array;
 
 
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.KeyList;
 import org.ujorm.MyTestCase;
 
@@ -22,6 +22,7 @@ public class ArrayUjoBaseTest extends MyTestCase {
     /**
      * Test of readValue method,
      */
+    @Test
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
@@ -46,6 +47,7 @@ public class ArrayUjoBaseTest extends MyTestCase {
         assertEquals(o4, ArrayUjoImpl.PRO_P4.of(ujb));
     }
 
+    @Test
     public void testSpeedTime() throws Throwable {
         System.out.println("A1:testSpeedTime: " + suite());
 
@@ -86,6 +88,7 @@ public class ArrayUjoBaseTest extends MyTestCase {
         printTime("A1:TIME: ", time1);
     }
 
+    @Test
     public void testSpeedTimeRecur() throws Throwable {
         System.out.println("A2:testSpeedTime (recur): " + suite());
 
@@ -130,6 +133,7 @@ public class ArrayUjoBaseTest extends MyTestCase {
 
 
     /** Test of keys */
+    @Test
     public void testGetProperties1() throws Throwable {
         ArrayUjoImpl ujb1 = new ArrayUjoImpl();
         KeyList props = ujb1.readKeys();

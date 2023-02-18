@@ -7,8 +7,9 @@
 
 package samples.patterDesing;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
-import junit.framework.*;
 import java.util.List;
 
 /**
@@ -22,6 +23,7 @@ public class $PatternTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getItemClass method, of class org.ujorm.core.UjoPersistentManager.
      */
+    @Test
     public void testPattern() {
         new MyMap.UsageTest();
     }

@@ -1,6 +1,7 @@
 package org.version2.tools;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.version2.bo.generated.*;
 import org.version2.bo.*;
 
@@ -13,6 +14,7 @@ public class UjoPojoConverterTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of marshal method, of class DefaultUjoConverter.
      */
+    @Test
     public void testMarshal_1() {
         System.out.println("marshal_1");
         Account v = new Account();
@@ -29,6 +31,7 @@ public class UjoPojoConverterTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of marshal method, of class DefaultUjoConverter.
      */
+    @Test
     public void testMarshal_2() {
         System.out.println("marshal_2");
         Address v = new Address();
@@ -45,6 +48,7 @@ public class UjoPojoConverterTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of unmarshal method, of class DefaultUjoConverter.
      */
+    @Test
     public void testUnmarshal_1() {
         System.out.println("unmarshal_1");
         $Account v = new $Account(new Account());
@@ -61,6 +65,7 @@ public class UjoPojoConverterTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of unmarshal method, of class DefaultUjoConverter.
      */
+    @Test
     public void testUnmarshal_2() {
         System.out.println("unmarshal_2");
         $Address v = new $Address(new Address());

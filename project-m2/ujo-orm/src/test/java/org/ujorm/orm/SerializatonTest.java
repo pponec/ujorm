@@ -24,6 +24,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Date;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.orm.bo.XOrder;
 
 /**
@@ -35,6 +36,7 @@ public class SerializatonTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getValue method, of class UniqueKey.
      */
+    @Test
     public void testKeySerialization() throws Exception {
         System.out.println("testKeySerialization");
         ForeignKey expResult = new ForeignKey(123L);
@@ -46,6 +48,7 @@ public class SerializatonTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getValue method, of class UniqueKey.
      */
+    @Test
     public void testOrmTableSerialization() throws Exception {
         System.out.println("testOrmTableSerialization");
         XOrder expResult = new XOrder();

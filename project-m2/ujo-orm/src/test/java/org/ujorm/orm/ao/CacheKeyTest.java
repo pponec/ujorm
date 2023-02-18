@@ -17,6 +17,7 @@
 package org.ujorm.orm.ao;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -27,6 +28,7 @@ public class CacheKeyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of equals method, of class UjoCache_DELETE.
      */
+    @Test
     public void testEquals() {
         System.out.println("equals");
         Object obj = null;

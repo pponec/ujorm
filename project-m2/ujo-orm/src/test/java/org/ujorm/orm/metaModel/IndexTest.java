@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.implementation.orm.OrmTable;
@@ -21,6 +22,7 @@ import org.ujorm.orm.dialect.H2Dialect;
  */
 public class IndexTest extends org.junit.jupiter.api.Assertions {
 
+    @Test
     public void testCreateIndicesOnDatabaseCreation() {
         MetaParams params = new MetaParams();
         params.set(MetaParams.AUTO_CLOSING_DEFAULT_SESSION, false);

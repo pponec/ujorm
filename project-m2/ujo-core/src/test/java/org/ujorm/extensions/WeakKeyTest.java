@@ -15,19 +15,18 @@
  */
 package org.ujorm.extensions;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.WeakKey;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.WeakKeyFactory;
 import samples.weakKey.MyService;
-import static java.lang.Boolean.*;
-import static java.math.BigDecimal.*;
+
+import java.math.BigDecimal;
+import java.util.*;
+
+import static java.lang.Boolean.TRUE;
+import static java.math.BigDecimal.TEN;
+import static java.math.BigDecimal.ZERO;
 
 /**
  *
@@ -49,6 +48,7 @@ public class WeakKeyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of setValue method, of class WeakKey.
      */
+    @Test
     public void testKeyAtrributes() {
         System.out.println("testKeyAtrributes");
 
@@ -71,6 +71,7 @@ public class WeakKeyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of setValue method, of class WeakKey.
      */
+    @Test
     public void testSetValue2Map_1() {
         System.out.println("testSetValue2Map_1");
         Map<String, Object> map = new HashMap<String, Object>();
@@ -104,6 +105,7 @@ public class WeakKeyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of setValue method, of class WeakKey.
      */
+    @Test
     public void testSetValue2List_1() {
         System.out.println("testSetValue2List_1");
         List<Object> list = new ArrayList<>();
@@ -138,6 +140,7 @@ public class WeakKeyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of setValue method, of class WeakKey.
      */
+    @Test
     public void testSetValue2List_2() {
         System.out.println("testSetValue2List_2");
         List<Object> list = new ArrayList<Object>();
@@ -171,6 +174,7 @@ public class WeakKeyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of setValue method, of class WeakKey.
      */
+    @Test
     public void testSetValue2List_3() {
         System.out.println("testSetValue2List_3");
         List<BigDecimal> list = new ArrayList<>();
@@ -186,6 +190,7 @@ public class WeakKeyTest extends org.junit.jupiter.api.Assertions {
     }
 
     /** Test the sample class MyService */
+    @Test
     public void testMyService() {
         System.out.println("testMyService");
         new MyService().testWeakKeys2List();

@@ -9,9 +9,9 @@ package org.ujorm.criterion;
 
 import java.util.ArrayList;
 import java.util.List;
-import junit.framework.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.ujorm.CompositeKey;
 import org.ujorm.MyTestCase;
 import org.ujorm.extensions.PathProperty;
@@ -58,6 +58,7 @@ public class CriteriaWeakTest extends MyTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testInit_01() {
         CriteriaTool uc  = CriteriaTool.newInstance();
         Criterion  ex1 = Criterion.where(CASH, 10.0);
@@ -67,6 +68,7 @@ public class CriteriaWeakTest extends MyTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testInit_02a() {
         CriteriaTool ct  = CriteriaTool.newInstance();
         Criterion crn1 = Criterion.where(CASH, Operator.GT, 10.0);
@@ -76,6 +78,7 @@ public class CriteriaWeakTest extends MyTestCase {
     }
 
     /** For documentation (!) */
+    @Test
     public void testDoc() {
 
         // Make a criterion:
@@ -97,6 +100,7 @@ public class CriteriaWeakTest extends MyTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testInit_02b() {
         CriteriaTool uc  = CriteriaTool.newInstance();
         Criterion  ex1 = Criterion.where(CASH, Operator.LT, 20.0);
@@ -107,6 +111,7 @@ public class CriteriaWeakTest extends MyTestCase {
 
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testInit_03a() {
         CriteriaTool uc  = CriteriaTool.newInstance();
         Criterion  ex1 = Criterion.where(MOTHER_CASH, Operator.GT, 20.0);
@@ -115,6 +120,7 @@ public class CriteriaWeakTest extends MyTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testInit_03b() {
         CriteriaTool uc  = CriteriaTool.newInstance();
         Criterion  ex1 = Criterion.where(MOTHER_CASH, Operator.EQ, 20.0);
@@ -124,6 +130,7 @@ public class CriteriaWeakTest extends MyTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testInit_04a() {
         CriteriaTool uc  = CriteriaTool.newInstance();
         Criterion  ex1 = Criterion.where(CASH, Operator.GT, 10.0);

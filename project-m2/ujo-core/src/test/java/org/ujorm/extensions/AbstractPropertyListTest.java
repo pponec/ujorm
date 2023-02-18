@@ -16,9 +16,10 @@
 
 package org.ujorm.extensions;
 
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
-import static org.ujorm.extensions.PersonExt.*;
+
+import static org.ujorm.extensions.PersonExt.PERS;
 
 /**
  * List testing ...
@@ -29,6 +30,7 @@ public class AbstractPropertyListTest extends MyTestCase {
     /**
      * Test of getItemCount method, of class AbstractPropertyList.
      */
+    @Test
     public void testGetItemCount() {
         System.out.println("getItemCount");
         Person root = new Person(0);
@@ -86,6 +88,7 @@ public class AbstractPropertyListTest extends MyTestCase {
     /**
      * Test of getItemCount method, of class AbstractPropertyList.
      */
+    @Test
     public void testGetItemCount_EXT() {
         System.out.println("getItemCount_EXT");
         PersonExt root = new PersonExt(0);

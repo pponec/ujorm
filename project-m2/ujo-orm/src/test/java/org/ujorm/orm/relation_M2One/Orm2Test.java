@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.*;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;
@@ -56,6 +57,7 @@ public class Orm2Test extends org.junit.jupiter.api.Assertions {
 
     // ------- TUTORIAL MENU: -------
 
+    @Test
     public void testMain() {
         if(true) {
             // TODO: Fix a bug for the database H2 version 2.0.202:

@@ -5,6 +5,7 @@
 package org;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Sample core test
@@ -13,6 +14,7 @@ import junit.framework.TestCase;
 public class SampleCoreTest extends org.junit.jupiter.api.Assertions {
 
     /** Test of main method, of class SampleCORE. */
+    @Test
     public void testMain() {
         System.out.println("main");
         String[] args = null;

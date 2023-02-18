@@ -9,7 +9,7 @@ package org.ujorm.criterion;
 
 import java.util.ArrayList;
 import java.util.List;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.ujorm.CompositeKey;
@@ -57,8 +57,7 @@ public class CriterionValueTest extends MyTestCase {
         persons = null;
     }
 
-
-
+    @Test
     public void testInit_01() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         Criterion<Person>  ex1 = Criterion.where(CASH, 10.0);
@@ -67,6 +66,7 @@ public class CriterionValueTest extends MyTestCase {
         assertEquals("John", result.get(0).get(NAME) );
     }
 
+    @Test
     public void testInit_02a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         Criterion<Person>  ex1 = Criterion.where(CASH, Operator.GT, 10.0);
@@ -75,6 +75,7 @@ public class CriterionValueTest extends MyTestCase {
         assertEquals("Marry", result.get(0).get(NAME) );
     }
 
+    @Test
     public void testInit_02b() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         Criterion<Person>  ex1 = Criterion.where(CASH, Operator.LT, 20.0);
@@ -84,6 +85,7 @@ public class CriterionValueTest extends MyTestCase {
     }
 
 
+    @Test
     public void testInit_03a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         Criterion<Person>  ex1 = Criterion.where(MOTHER_CASH, Operator.GT, 20.0);
@@ -91,6 +93,7 @@ public class CriterionValueTest extends MyTestCase {
         assertEquals(2, result.size());
     }
 
+    @Test
     public void testInit_03b() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         Criterion<Person>  ex1 = Criterion.where(MOTHER_CASH, Operator.EQ, 20.0);
@@ -99,6 +102,7 @@ public class CriterionValueTest extends MyTestCase {
         assertEquals("John", result.get(0).get(NAME) );
     }
 
+    @Test
     public void testInit_04a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         Criterion<Person>  ex1 = Criterion.where(CASH, Operator.GT, 10.0);
@@ -110,6 +114,7 @@ public class CriterionValueTest extends MyTestCase {
         assertEquals(20.0, result.get(0).get(CASH) );
     }
 
+    @Test
     public void testInit_05a() {
         persons.get(0).set(NAME, null);
 
@@ -120,12 +125,14 @@ public class CriterionValueTest extends MyTestCase {
         assertEquals(10.0, result.get(0).get(CASH) );
     }
 
+    @Test
     public void testInit_in_01() {
         Criterion<Employee> crn = Criterion.whereIn(Employee.CASH, persons, Person.CASH);
         boolean ok = crn.evaluate(new Employee(10.0));
         assertTrue(ok);
     }
 
+    @Test
     public void testInit_in_02() {
         Criterion<Employee> crn = Criterion.whereIn(Employee.CASH, persons, Person.CASH);
         boolean ok = !crn.evaluate(new Employee(15.0));
@@ -133,30 +140,35 @@ public class CriterionValueTest extends MyTestCase {
     }
 
 
+    @Test
     public void testInit_in_03() {
         Criterion<Employee> crn = Criterion.whereIn(Employee.NAME, persons, Person.NAME);
         boolean ok = crn.evaluate(new Employee("Julia"));
         assertTrue(ok);
     }
 
+    @Test
     public void testInit_in_04() {
         Criterion<Employee> crn = Criterion.whereIn(Employee.NAME, persons, Person.NAME);
         boolean ok = !crn.evaluate(new Employee("Julya"));
         assertTrue(ok);
     }
 
+    @Test
     public void testInit_in_06() {
         Criterion<Employee> crn = Criterion.whereIn(Employee.NAME, persons, Person.NAME);
         boolean ok = !crn.evaluate(new Employee("Julya"));
         assertTrue(ok);
     }
 
+    @Test
     public void testInit_in_07() {
         Criterion<Employee> crn = Criterion.whereNotIn(Employee.NAME, new ArrayList<>(), Person.NAME);
         boolean ok = crn.evaluate(new Employee("Julia"));
         assertTrue(ok);
     }
 
+    @Test
     public void testInit_in_08() {
         Criterion<Employee> crn = Criterion.whereIn(Employee.NAME, new ArrayList<>(), Person.NAME);
         boolean ok = !crn.evaluate(new Employee("Julya"));

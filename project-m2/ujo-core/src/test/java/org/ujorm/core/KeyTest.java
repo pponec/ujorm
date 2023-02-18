@@ -8,6 +8,8 @@
 package org.ujorm.core;
 
 import java.util.ArrayList;
+
+import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import org.ujorm.MyTestCase;
 import org.ujorm.extensions.PathProperty;
@@ -23,6 +25,7 @@ public class KeyTest extends MyTestCase {
     /**
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */
+    @Test
     public void testCopy() {
 
         PersonExt from = new PersonExt(1);
@@ -42,6 +45,7 @@ public class KeyTest extends MyTestCase {
     /**
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */
+    @Test
     public void testDescending_1() {
 
         boolean descending = false;
@@ -73,6 +77,7 @@ public class KeyTest extends MyTestCase {
     /**
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */
+    @Test
     public void testDescending_2() {
 
         boolean descending = false;
@@ -103,6 +108,7 @@ public class KeyTest extends MyTestCase {
     /**
      * Test the toString name
      */
+    @Test
     public void testToStringFullTrue_1() {
         Key<PersonExt, Integer> key = PersonExt.ID;
 
@@ -114,6 +120,7 @@ public class KeyTest extends MyTestCase {
     /**
      * Test the toString name
      */
+    @Test
     public void testToStringFullTrue_2() {
         Key<PersonExt, Integer> key = new PathProperty<PersonExt, Integer>(null, PersonExt.PERS);
 

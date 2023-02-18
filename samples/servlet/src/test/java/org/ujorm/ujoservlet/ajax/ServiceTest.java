@@ -1,10 +1,9 @@
 package org.ujorm.ujoservlet.ajax;
 
 import org.junit.jupiter.api.Assertions;
-import org.ujorm.ujoservlet.ajax.ao.Service;
-import org.ujorm.ujoservlet.ajax.ao.Message;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
+import org.ujorm.ujoservlet.ajax.ao.Message;
+import org.ujorm.ujoservlet.ajax.ao.Service;
 
 /**
  *

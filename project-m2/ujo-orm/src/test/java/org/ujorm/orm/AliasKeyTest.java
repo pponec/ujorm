@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import org.ujorm.orm.bo.XCustomer;
 import static org.ujorm.orm.bo.XCustomer.*;
@@ -32,6 +33,7 @@ public class AliasKeyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getKey method, of class Relation.
      */
+    @Test
     public void testKeyName() {
         assertEquals("id", XCustomer.ID.getName());
         assertEquals("firstname", XCustomer.FIRSTNAME.getName());
@@ -41,6 +43,7 @@ public class AliasKeyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getKey method, of class Relation.
      */
+    @Test
     public void testConditions() {
         Set<AliasKey> outSet = new HashSet<>();
         LinkedList<AliasKey> outList = new LinkedList<>();
@@ -81,6 +84,7 @@ public class AliasKeyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getKey method, of class Relation.
      */
+    @Test
     public void testRelations() {
         Set<AliasKey> outSet = new HashSet<>();
         LinkedList<AliasKey> outList = new LinkedList<>();
@@ -121,6 +125,7 @@ public class AliasKeyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getKey method, of class Relation.
      */
+    @Test
     public void testLastCondition() {
         Set<AliasKey> outSet = new HashSet<>();
         LinkedList<AliasKey> outList = new LinkedList<>();

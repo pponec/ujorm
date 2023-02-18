@@ -16,6 +16,7 @@
 package org.ujorm.orm.transaction;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.orm.*;
 import org.ujorm.orm.inheritance.sample.Database;
 import org.ujorm.orm.inheritance.sample.bo.Customer;
@@ -31,6 +32,7 @@ public class TransactionTest extends org.junit.jupiter.api.Assertions {
 
     // ---------- TESTS -----------------------
 
+    @Test
     public void testRollbackTranaction() {
         try (Session session = getHandler().createSession()) {
             session.delete(Customer.USER.forAll()); // TODO ?
@@ -73,6 +75,7 @@ public class TransactionTest extends org.junit.jupiter.api.Assertions {
 
     // ---------- TESTS -----------------------
 
+    @Test
     public void testCommitTranaction() {
         try (Session session = getHandler().createSession()) {
             session.delete(Customer.USER.forAll()); // TODO ?
@@ -114,6 +117,7 @@ public class TransactionTest extends org.junit.jupiter.api.Assertions {
 
     // ---------- TESTS -----------------------
 
+    @Test
     public void testIComplexTranaction() {
         try (Session session = getHandler().createSession()) {
             session.delete(Customer.USER.forAll()); // TODO ?

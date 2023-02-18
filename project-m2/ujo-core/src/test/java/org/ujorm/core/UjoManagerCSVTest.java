@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.ujos.UjoCSV;
 import org.ujorm.tools.msg.MsgFormatter;
@@ -45,6 +46,7 @@ public class UjoManagerCSVTest extends MyTestCase {
     /**
      * Test of saveCSV method, of class org.ujorm.core.UjoManagerCSV.
      */
+    @Test
     public void testSaveCSV() throws Exception {
         System.out.println("saveCSV");
 
@@ -74,6 +76,7 @@ public class UjoManagerCSVTest extends MyTestCase {
         // System.out.print("-----\n" + out.toString("utf-8") + "\n-----\n");
     }
 
+    @Test
     public void testSaveCSV2() throws Exception {
         System.out.println("saveCSV-2");
         //
@@ -99,6 +102,7 @@ public class UjoManagerCSVTest extends MyTestCase {
     }
 
 
+    @Test
     public void testSaveCSV3() throws Exception {
         System.out.println("saveCSV-3");
         //
@@ -123,6 +127,7 @@ public class UjoManagerCSVTest extends MyTestCase {
         // System.out.print("-----\n" + out.toString("utf-8") + "\n-----\n");
     }
 
+    @Test
     public void testSaveCSV4() throws Exception {
         System.out.println("saveCSV-4");
         //
@@ -142,6 +147,7 @@ public class UjoManagerCSVTest extends MyTestCase {
     }
 
     /** Modify or validate the CSV header */
+    @Test
     public void testSaveCSV5() throws Exception {
         System.out.println("saveCSV");
         //
@@ -179,6 +185,7 @@ public class UjoManagerCSVTest extends MyTestCase {
     }
 
     /** Test of the new Lines inside a cell  */
+    @Test
     public void testSaveCSV6NewLine() throws Exception {
         System.out.println("SaveCSV6NewLine-3");
         //

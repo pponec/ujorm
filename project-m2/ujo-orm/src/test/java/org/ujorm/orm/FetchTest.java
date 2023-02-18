@@ -18,6 +18,7 @@ package org.ujorm.orm;
 import java.awt.Color;
 import java.util.Date;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import org.ujorm.criterion.*;
 import org.ujorm.extensions.types.UnsignedShort;
@@ -36,6 +37,7 @@ public class FetchTest extends org.junit.jupiter.api.Assertions {
 
 
     @SuppressWarnings("deprecation")
+    @Test
     public void testFetch() {
         createOrders(1);
 

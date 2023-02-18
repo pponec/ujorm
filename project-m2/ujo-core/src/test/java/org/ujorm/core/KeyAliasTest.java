@@ -7,6 +7,7 @@
 
 package org.ujorm.core;
 
+import org.junit.jupiter.api.Test;
 import org.ujorm.CompositeKey;
 import org.ujorm.MyTestCase;
 import org.ujorm.extensions.PersonExt;
@@ -21,6 +22,7 @@ public class KeyAliasTest extends MyTestCase {
     /**
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */
+    @Test
     public void testAlias() {
         final CompositeKey<PersonExt,PersonExt> keys1, keys2, keys3, keys4, keys5, keys6, keys7;
         final String aliasN = null;
@@ -72,6 +74,7 @@ public class KeyAliasTest extends MyTestCase {
     /**
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */
+    @Test
     public void testAlias2() {
         final CompositeKey<PersonExt,PersonExt> keys1, keys2, keys3, keys4, keys5, keys6, keys7;
         final String aliasN = null;

@@ -11,7 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.UjoManagerXML;
 
@@ -43,6 +43,7 @@ public class T008a2_Test extends MyTestCase {
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      * TODO.pop: to implement the nextfeature:
      */
+    @Test
     public void testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);

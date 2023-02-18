@@ -11,7 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.UjoManagerXML;
 
@@ -22,6 +22,7 @@ import org.ujorm.core.UjoManagerXML;
 public class T001b_Test extends MyTestCase {
 
 
+    @Test
     public void test_01 () throws Exception {
         restoreXML(" Naz dar \nxxx ", true);
     }

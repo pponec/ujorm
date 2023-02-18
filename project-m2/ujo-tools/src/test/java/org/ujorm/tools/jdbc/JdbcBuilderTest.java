@@ -24,7 +24,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing the JdbcBuillder class
@@ -113,8 +113,8 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
     }
 
     /** Test raw SQL INSERT of class JdbcBuillder for a better performace and general use. */
-    @Test
     @Deprecated
+    @Test
     public void testInsertRaw() {
         System.out.println("INSERT");
         JdbcBuilder sql = new JdbcBuilder()

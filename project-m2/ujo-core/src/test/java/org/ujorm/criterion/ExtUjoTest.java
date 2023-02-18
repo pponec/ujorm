@@ -7,10 +7,10 @@
 
 package org.ujorm.criterion;
 
-import junit.framework.*;
 import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 import org.ujorm.extensions.PathProperty;
+
 import static org.ujorm.criterion.Person.*;
 
 /**

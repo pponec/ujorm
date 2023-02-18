@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.Test;
 import org.ujorm.WeakKey;
 import org.ujorm.core.WeakKeyFactory;
 
@@ -30,7 +32,7 @@ import org.ujorm.core.WeakKeyFactory;
  */
 public class MyService {
     private static final WeakKeyFactory f = new WeakKeyFactory(MyService.class);
-    
+
     public static final WeakKey<String>     NAME = f.newKey();
     public static final WeakKey<Date>       BORN = f.newKey();
     public static final WeakKey<Boolean>    WIFE = f.newKeyDefault(Boolean.TRUE);
@@ -39,8 +41,9 @@ public class MyService {
     static {
         f.lock(); // Initialize all keys and lock them.
     }
-    
+
     /** Sample how to use weak keys with a List. */
+    @Test
     public void testWeakKeys2List() {
         List<Object> list = new ArrayList<>();
 
@@ -64,8 +67,9 @@ public class MyService {
         assert WIFE.of(list).equals(wife);
         assert CASH.of(list).equals(cash);
     }
-        
+
     /** Similar sample how to use weak keys with a Map. */
+    @Test
     public void testWeakKeys2Map() {
         Map<String,Object> map = new HashMap<String, Object>();
 
@@ -89,14 +93,15 @@ public class MyService {
         assert WIFE.of(map).equals(wife);
         assert CASH.of(map).equals(cash);
     }
-        
+
     /** Test key attributes */
+    @Test
     public void testWeakKeyAttributes() {
         assert NAME.getIndex()==0;
         assert BORN.getIndex()==1;
         assert WIFE.getIndex()==2;
         assert CASH.getIndex()==3;
-      
+
         assert NAME.getName().equals("name");
         assert BORN.getName().equals("born");
         assert WIFE.getName().equals("wife");
@@ -106,5 +111,5 @@ public class MyService {
         assert BORN.isTypeOf(Date.class);
         assert WIFE.isTypeOf(Boolean.class);
         assert CASH.isTypeOf(BigDecimal.class);
-    }        
+    }
 }

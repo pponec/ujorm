@@ -9,7 +9,7 @@ package org.ujorm.implementation.bean;
 
 
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 
 /**
@@ -21,6 +21,7 @@ public class BeanUjoTest extends MyTestCase {
     /**
      * Test of readValue method, of class org.ujorm.hmapImlp.AUnifiedDataObject.
      */
+    @Test
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
@@ -60,6 +61,7 @@ public class BeanUjoTest extends MyTestCase {
         testSpeedTime();
     }
 
+    @Test
     public void testSpeedTime() throws Throwable {
         System.out.println("U1:testSpeedTime: " + suite());
 
@@ -103,6 +105,7 @@ public class BeanUjoTest extends MyTestCase {
         System.out.println("U1:TIME: " + (time2-time1)/1000f + " [sec]");
     }
 
+    @Test
     public void testSpeedTime2() throws Throwable {
         System.out.println("U2:testSpeedTime (child): " + suite());
 

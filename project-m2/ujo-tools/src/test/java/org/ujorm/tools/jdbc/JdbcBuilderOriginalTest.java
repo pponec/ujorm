@@ -24,7 +24,7 @@ import java.time.LocalDate;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing the JdbcBuillder class

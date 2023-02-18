@@ -18,6 +18,7 @@ package org.ujorm.orm.dialect;
 import java.io.IOException;
 import java.util.Date;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.*;
 import org.ujorm.orm.bo.*;
@@ -29,6 +30,7 @@ import org.ujorm.orm.metaModel.MetaTable;
  */
 public class CriterionDialectTest extends org.junit.jupiter.api.Assertions {
 
+    @Test
     public void testRollbackTranactionA() throws IOException {
         XOrder user = new XOrder();
         user.setId(1L);
@@ -55,6 +57,7 @@ public class CriterionDialectTest extends org.junit.jupiter.api.Assertions {
     }
 
 
+    @Test
     public void testRollbackTranactionB() throws IOException {
         XOrder user = new XOrder();
         user.setId(1L);

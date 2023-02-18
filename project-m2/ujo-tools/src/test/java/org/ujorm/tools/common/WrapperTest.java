@@ -18,7 +18,7 @@ package org.ujorm.tools.common;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *

@@ -7,7 +7,7 @@
 
 package org.ujorm.core;
 
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -18,6 +18,7 @@ public class UjoManagerExtTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getItemClass method, of class org.ujorm.core.UjoPersistentManager.
      */
+    @Test
     public void testGetItemClass() {
         System.out.println("getItemClass");
     }

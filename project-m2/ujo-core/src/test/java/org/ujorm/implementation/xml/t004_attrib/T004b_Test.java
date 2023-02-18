@@ -7,15 +7,15 @@
 
 package org.ujorm.implementation.xml.t004_attrib;
 
+import org.junit.jupiter.api.Test;
+import org.ujorm.MyTestCase;
+import org.ujorm.core.UjoManagerXML;
+
 import java.io.ByteArrayInputStream;
-import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import junit.framework.*;
-import org.ujorm.MyTestCase;
-import org.ujorm.core.UjoManagerXML;
 
 /**
  *
@@ -26,6 +26,7 @@ public class T004b_Test extends MyTestCase {
     /**
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
      */
+    @Test
     public void testPrintXML() throws Exception {
         System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);
@@ -43,6 +44,7 @@ public class T004b_Test extends MyTestCase {
     /**
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
+    @Test
     public void testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);

@@ -11,7 +11,7 @@ import java.io.CharArrayWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.implementation.map.MapUjo;
 
@@ -24,6 +24,7 @@ public class XmlTest_1 extends org.junit.jupiter.api.Assertions {
     /**
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
      */
+    @Test
     public void testPrintXML() throws Exception {
         StringBuilder writer = new StringBuilder(256);
         MapUjo ujo = createUjo();
@@ -35,6 +36,7 @@ public class XmlTest_1 extends org.junit.jupiter.api.Assertions {
     /**
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
      */
+    @Test
     public void testPrintXMLRoot() throws Exception {
 
         CharArrayWriter writer = null;
@@ -57,6 +59,7 @@ public class XmlTest_1 extends org.junit.jupiter.api.Assertions {
     /**
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
      */
+    @Test
     public void testPrintXMLRoot2() throws Exception {
         System.out.println("testPrintXMLRoot2 ---");
 

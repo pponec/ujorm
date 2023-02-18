@@ -9,7 +9,7 @@ package org.ujorm.implementation.pojo;
 
 
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 
 /**
@@ -21,6 +21,7 @@ public class PojoTest extends MyTestCase {
     /**
      * Test of readValue method, of class org.ujorm.hmapImlp.AUnifiedDataObject.
      */
+    @Test
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
@@ -55,6 +56,7 @@ public class PojoTest extends MyTestCase {
         assertEquals(o4, ujb.getP4());
     }
 
+    @Test
     public void testSpeedTime() throws Throwable {
         System.out.println("P1:testSpeedTime: " + suite());
 
@@ -98,6 +100,7 @@ public class PojoTest extends MyTestCase {
         System.out.println("P1:TIME: " + (time2-time1)/1000f + " [sec]");
     }
 
+    @Test
     public void testSpeedTime2() throws Throwable {
         System.out.println("P2:testSpeedTime (child): " + suite());
 

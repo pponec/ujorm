@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.ujos.UjoCSV;
 
@@ -37,6 +38,7 @@ public class UjoManagerRBundleTest extends MyTestCase {
     /**
      * Test of saveBundle method, of class org.ujorm.core.UjoManagerCSV.
      */
+    @Test
     public void testSaveBundle() throws Exception {
         System.out.println("saveBundle");
         //
@@ -60,6 +62,7 @@ public class UjoManagerRBundleTest extends MyTestCase {
     /**
      * Test of saveBundle method, of class org.ujorm.core.UjoManagerCSV.
      */
+    @Test
     public void testSaveBundle1() throws Exception {
         System.out.println("saveCSV");
         //
@@ -83,6 +86,7 @@ public class UjoManagerRBundleTest extends MyTestCase {
     /**
      * Test of saveBundle method, of class org.ujorm.core.UjoManagerCSV.
      */
+    @Test
     public void testSaveBundle2A() throws Exception {
         System.out.println("saveBundle2A");
         //
@@ -106,6 +110,7 @@ public class UjoManagerRBundleTest extends MyTestCase {
     /**
      * Test of saveBundle method, of class org.ujorm.core.UjoManagerCSV.
      */
+    @Test
     public void testSaveBundle2B() throws Exception {
         System.out.println("saveBundle2B");
         //

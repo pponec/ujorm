@@ -7,7 +7,7 @@
 package org.ujorm.implementation.xml.test2;
 
 import java.util.ArrayList;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.extensions.AbstractUjo;
 
@@ -20,6 +20,7 @@ public class TXmlTest_2 extends org.junit.jupiter.api.Assertions {
     /**
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
      */
+    @Test
     public void testPrintXMLRoot() throws Exception {
 
         final StringBuilder writer = new StringBuilder(256);

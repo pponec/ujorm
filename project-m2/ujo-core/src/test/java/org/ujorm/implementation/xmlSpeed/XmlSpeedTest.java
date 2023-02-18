@@ -20,7 +20,7 @@ import java.io.ObjectOutputStream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.core.XmlHeader;
@@ -60,6 +60,7 @@ public class XmlSpeedTest extends MyTestCase {
         ;
     }
 
+    @Test
     public void testMapXML() throws Throwable {
         System.out.println("MapUJO:Speed: " + suite());
         ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-MAP.xml");
@@ -87,6 +88,7 @@ public class XmlSpeedTest extends MyTestCase {
     }
 
 
+    @Test
     public void testArrayXML() throws Throwable {
         System.out.println("ArrayUJO:Speed: " + suite());
         ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-ARRAY.xml");
@@ -113,6 +115,7 @@ public class XmlSpeedTest extends MyTestCase {
     }
 
 
+    @Test
     public void testBeanUjoXML() throws Throwable {
         System.out.println("BeanUjo:Speed: " + suite());
         ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-POUJO.xml");
@@ -140,6 +143,7 @@ public class XmlSpeedTest extends MyTestCase {
 
 
 
+    @Test
     public void testFieldUjoXML() throws Throwable {
 //        System.out.println("FieldUjo:Speed: " + suite().toString());
 //        ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-FIELD.xml");
@@ -166,6 +170,7 @@ public class XmlSpeedTest extends MyTestCase {
     }
 
 
+    @Test
     public void testXMLEncoderXML() throws Throwable {
         System.out.println("XMLEncoder:Speed: " + suite());
         ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-POJO.xml");
@@ -237,6 +242,7 @@ public class XmlSpeedTest extends MyTestCase {
         }
     }
 
+    @Test
     public void testJaxbXML() throws Throwable {
         if (isJaxbXmlEnabled()) {
 
@@ -269,6 +275,7 @@ public class XmlSpeedTest extends MyTestCase {
         }
     }
 
+    @Test
     public void testJavolution() throws Throwable {
     /* Javolution *./
         System.out.println("Javolution:Speed: " + suite().toString());

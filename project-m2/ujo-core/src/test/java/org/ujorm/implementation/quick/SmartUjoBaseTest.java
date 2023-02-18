@@ -9,7 +9,7 @@ package org.ujorm.implementation.quick;
 
 import java.awt.Color;
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.KeyList;
 import org.ujorm.MyTestCase;
 import org.ujorm.implementation.quick.domains.SmartUjoChild;
@@ -25,6 +25,7 @@ public class SmartUjoBaseTest extends MyTestCase {
     /**
      * Test of readValue method,
      */
+    @Test
     public void testPropertyType() throws Throwable {
         System.out.println("testPropertyType");
 
@@ -39,6 +40,7 @@ public class SmartUjoBaseTest extends MyTestCase {
     /**
      * Test of readValue method,
      */
+    @Test
     public void testPropertyName() throws Throwable {
         System.out.println("testPropertyName");
 
@@ -49,6 +51,7 @@ public class SmartUjoBaseTest extends MyTestCase {
     /**
      * Test of readValue method,
      */
+    @Test
     public void testPropertyChildype() throws Throwable {
         System.out.println("testPropertyType");
 
@@ -69,6 +72,7 @@ public class SmartUjoBaseTest extends MyTestCase {
     /**
      * Test of readValue method,
      */
+    @Test
     public void testPropertyDomainType() throws Throwable {
         System.out.println("testPropertyDomainType");
 
@@ -90,6 +94,7 @@ public class SmartUjoBaseTest extends MyTestCase {
     /**
      * Test of readValue method,
      */
+    @Test
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
@@ -114,6 +119,7 @@ public class SmartUjoBaseTest extends MyTestCase {
         assertEquals(o4, SmartUjoImpl.PRO_P4.of(ujb));
     }
 
+    @Test
     public void testSpeedTime() throws Throwable {
         System.out.println("A1:testSpeedTime: " + suite());
 
@@ -156,6 +162,7 @@ public class SmartUjoBaseTest extends MyTestCase {
         System.out.println("A1:TIME: " + (time2-time1)/1000f + " [sec]");
     }
 
+    @Test
     public void testSpeedTimeRecur() throws Throwable {
         System.out.println("A2:testSpeedTime (recur): " + super.suite());
 
@@ -201,6 +208,7 @@ public class SmartUjoBaseTest extends MyTestCase {
 
 
     /** Test of keys */
+    @Test
     public void testGetProperties1() throws Throwable {
         SmartUjoImpl ujb1 = new SmartUjoImpl();
         KeyList props = ujb1.readKeys();
@@ -213,6 +221,7 @@ public class SmartUjoBaseTest extends MyTestCase {
     }
 
     /** A compilation test of API Key class */
+    @Test
     public void testPathPropertyCompilation() {
         SmartUjoCompany company = new SmartUjoCompany();
         SmartUjoCompany.DIRECTOR.setValue(company, new SmartUjoChild());
@@ -224,6 +233,7 @@ public class SmartUjoBaseTest extends MyTestCase {
     }
 
     /** A compilation test of API Key class */
+    @Test
     public void testList() {
         SmartUjoImpl<SmartUjoImpl> ujo = new SmartUjoImpl();
 

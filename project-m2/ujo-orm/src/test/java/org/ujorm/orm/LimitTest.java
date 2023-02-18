@@ -18,6 +18,7 @@ package org.ujorm.orm;
 import java.awt.Color;
 import java.util.Date;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.bo.*;
 import org.ujorm.orm.metaModel.MetaParams;
@@ -32,6 +33,7 @@ public class LimitTest extends org.junit.jupiter.api.Assertions {
     static private OrmHandler handler;
 
     @SuppressWarnings("deprecation")
+    @Test
     public void testLimit_1() {
         long count = 10;
         int limit = 3;

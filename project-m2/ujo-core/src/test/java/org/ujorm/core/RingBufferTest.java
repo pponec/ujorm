@@ -18,6 +18,7 @@ package org.ujorm.core;
 import java.io.IOException;
 import java.io.Reader;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * RingBuffer test
@@ -28,6 +29,7 @@ public class RingBufferTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of add method, of class RingBuffer.
      */
+    @Test
     public void testAdd() {
         System.out.println("add");
 
@@ -59,6 +61,7 @@ public class RingBufferTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of add method, of class RingBuffer.
      */
+    @Test
     public void testFindWord_1() throws IOException {
         String text = "xxx ${abc} def";
         String word = RingBuffer.findWordNoTrim(text, "${", "}");
@@ -68,6 +71,7 @@ public class RingBufferTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of add method, of class RingBuffer.
      */
+    @Test
     public void testFindWord_2() throws IOException {
         Reader reader = RingBuffer.createReader("xxx ${abc} def");
         String word = RingBuffer.findWord(reader, "", "$");
@@ -80,6 +84,7 @@ public class RingBufferTest extends org.junit.jupiter.api.Assertions {
         assertEquals("", word);
     }
 
+    @Test
     public void testFindWord_2b() throws IOException {
         final Reader reader = RingBuffer.createReader("xxx ${abc} ${def} zzz");
 
@@ -96,6 +101,7 @@ public class RingBufferTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of add method, of class RingBuffer.
      */
+    @Test
     public void testFindWord_3() throws IOException {
         String text = "123-abc-789-def";
 
@@ -121,6 +127,7 @@ public class RingBufferTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of add method, of class RingBuffer.
      */
+    @Test
     public void testFindWord_4() throws IOException {
         Reader reader = RingBuffer.createReader("xxxAx ${abc} xex");
 
@@ -140,6 +147,7 @@ public class RingBufferTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of add method, of class RingBuffer.
      */
+    @Test
     public void testFindWord_5() throws IOException {
         Reader reader = RingBuffer.createReader("{{}}{{A}} {{abc}} {{def}}");
 
@@ -159,6 +167,7 @@ public class RingBufferTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of add method, of class RingBuffer.
      */
+    @Test
     public void testFindWord_6() throws IOException {
         Reader reader = RingBuffer.createReader("abcabccabcee");
 

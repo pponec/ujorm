@@ -9,7 +9,7 @@ package org.ujorm.implementation.universe;
 
 
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 import org.ujorm.KeyList;
 
@@ -23,6 +23,7 @@ public class UniUjoBaseTest extends MyTestCase {
     /**
      * Test of readValue method,
      */
+    @Test
     public void testPropertyName() throws Throwable {
         System.out.println("testPropertyName");
 
@@ -33,6 +34,7 @@ public class UniUjoBaseTest extends MyTestCase {
     /**
      * Test of readValue method,
      */
+    @Test
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
@@ -57,6 +59,7 @@ public class UniUjoBaseTest extends MyTestCase {
         assertEquals(o4, UniUjoBase.PRO_P4.of(ujb,0));
     }
 
+    @Test
     public void testSpeedTime() throws Throwable {
         System.out.println("A1:testSpeedTime: " + suite());
 
@@ -100,6 +103,7 @@ public class UniUjoBaseTest extends MyTestCase {
 
 
     /** Test of keys */
+    @Test
     public void testGetProperties1() throws Throwable {
         UniUjoBase ujb1 = new UniUjoBase();
         KeyList props = ujb1.readKeys();
@@ -125,6 +129,7 @@ public class UniUjoBaseTest extends MyTestCase {
     }
 
     /** Tesn an Interface */
+    @Test
     public void testUniUjoInterface() throws Throwable {
 
         assertEquals("proP0", UniUjoInterface.PRO_P0.getName());
@@ -156,6 +161,7 @@ public class UniUjoBaseTest extends MyTestCase {
 
 
     /** Test of keys */
+    @Test
     public void testDummy() throws Throwable {
     }
 }

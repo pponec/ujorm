@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.UjoManagerXML;
 
@@ -26,6 +26,7 @@ public class T003a_Test extends MyTestCase {
     /**
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
+    @Test
     public void testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite());
         StringBuilder writer = new StringBuilder(256);
@@ -46,6 +47,7 @@ public class T003a_Test extends MyTestCase {
     /**
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
+    @Test
     public void testPathProperty() throws Exception {
         URootMasterBean masterBean = new URootMasterBean();
         URootMasterBean.MASTER.setValue(masterBean, new UMasterBean());

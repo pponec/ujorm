@@ -7,15 +7,16 @@
 
 package org.ujorm.criterion;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.UjoComparator;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.ujorm.criterion.Person.*;
 
 /**
@@ -61,6 +62,7 @@ public class UjoComparatorTest extends MyTestCase {
 
     /** No sort for an empty Comparator */
     @SuppressWarnings("unchecked")
+    @Test
     public void testInit_00() {
         List<Person> result = UjoComparator.<Person>of().sort(persons);
         assertEquals("John", result.get(0).get(NAME));
@@ -68,6 +70,7 @@ public class UjoComparatorTest extends MyTestCase {
 
     /** Sort by name */
     @SuppressWarnings("unchecked")
+    @Test
     public void testInit_01() {
         List<Person> result = UjoComparator.of(NAME).sort(persons);
         assertEquals("Eva", result.get(0).get(NAME) );
@@ -75,6 +78,7 @@ public class UjoComparatorTest extends MyTestCase {
 
     /** Sort by mother's name */
     @SuppressWarnings("unchecked")
+    @Test
     public void testInit_02() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         UjoComparator comp = UjoComparator.of(MOTHERS_NAME);

@@ -15,7 +15,7 @@
  */
 package org.ujorm.extensions;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.implementation.universe.UniUjoBase;
 
 /**
@@ -27,6 +27,7 @@ public class KeyPairsTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of copyToTarget method, of class KeyPairList.
      */
+    @Test
     public void testCopyToTarget() {
         System.out.println("copyToTarget");
 

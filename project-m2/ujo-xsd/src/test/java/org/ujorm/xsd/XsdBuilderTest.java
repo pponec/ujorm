@@ -16,6 +16,7 @@
 package org.ujorm.xsd;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.orm.metaModel.MetaRoot;
 import org.ujorm.xsd.domains.Company;
 import org.ujorm.xsd.domains.Customer;
@@ -29,6 +30,7 @@ public class XsdBuilderTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of print method, of class XsdBuilder.
      */
+    @Test
     public void testBuildForCustomer() {
         System.out.println("testBuildForCustomer");
         XsdBuilder builder = new XsdBuilder(Customer.class);
@@ -39,6 +41,7 @@ public class XsdBuilderTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of print method, of class XsdBuilder.
      */
+    @Test
     public void testBuildForCompany() {
         System.out.println("testBuildForCompany");
         XsdBuilder builder = new XsdBuilder(Company.class);
@@ -49,6 +52,7 @@ public class XsdBuilderTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of print method, of class XsdBuilder.
      */
+    @Test
     public void testOrmModel() {
         System.out.println("testOrmModel");
         XsdBuilder builder = new XsdBuilder(MetaRoot.class);

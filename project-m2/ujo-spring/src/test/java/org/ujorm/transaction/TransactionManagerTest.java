@@ -16,6 +16,7 @@
 package org.ujorm.transaction;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.ujorm.transaction.domains.Order;
@@ -31,6 +32,7 @@ public class TransactionManagerTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getItemCount method, of class AbstractPropertyList.
      */
+    @Test
     public void testTransactionManager() {
         System.out.println("TransactionManager");
 

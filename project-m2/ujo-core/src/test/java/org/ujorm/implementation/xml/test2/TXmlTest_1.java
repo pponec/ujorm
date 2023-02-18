@@ -8,7 +8,7 @@ package org.ujorm.implementation.xml.test2;
 
 import java.io.CharArrayWriter;
 import java.util.ArrayList;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.extensions.AbstractUjo;
 
@@ -22,6 +22,7 @@ public class TXmlTest_1 extends org.junit.jupiter.api.Assertions {
     /**
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
      */
+    @Test
     public void testPrintXMLRoot() throws Exception {
 
         CharArrayWriter writer = null;

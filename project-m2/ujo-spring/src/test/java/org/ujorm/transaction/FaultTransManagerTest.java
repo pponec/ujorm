@@ -17,6 +17,7 @@ package org.ujorm.transaction;
 
 import java.util.Date;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.ujorm.transaction.domains.Order;
@@ -32,6 +33,7 @@ public class FaultTransManagerTest extends org.junit.jupiter.api.Assertions {
 
 
     /** Test of fault TransactonManager. */
+    @Test
     public void testSubTransactionManager1() {
         System.out.println("testSubTransactionManager1");
 
@@ -51,6 +53,7 @@ public class FaultTransManagerTest extends org.junit.jupiter.api.Assertions {
     }
 
     /** Test of fault TransactonManager. */
+    @Test
     public void testSubTransactionManager2() {
         System.out.println("testSubTransactionManager2");
 
@@ -70,6 +73,7 @@ public class FaultTransManagerTest extends org.junit.jupiter.api.Assertions {
     }
 
     /** Test of getItemCount method, of class AbstractPropertyList. */
+    @Test
     public void testSubTransactionManager() {
         System.out.println("testSubTransactionManager");
 

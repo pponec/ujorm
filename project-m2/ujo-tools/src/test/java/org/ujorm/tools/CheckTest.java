@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test of the Check class

@@ -25,6 +25,8 @@ import java.util.Locale;
 import java.util.Map;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -43,6 +45,7 @@ public class MessageServiceTest {
     private static final MessageArg NUMBER = new MessageArg("NUMBER");
 
     /** Demo test 1. */
+    @Test
     public void testDemo1() {
         final MessageArg TYPE = MessageArg.of("TYPE");
         final MessageArg NAME = MessageArg.of("NAME");
@@ -54,6 +57,7 @@ public class MessageServiceTest {
     }
 
     /** Demo test 2. */
+    @Test
     public void testDemo2() {
         final MessageService service = new MessageService();
         final MessageArg TYPE = MessageArg.of("TYPE");
@@ -73,6 +77,7 @@ public class MessageServiceTest {
     }
 
     /** Test of map method, of class MessageService. */
+    @Test
     public void testFormatTemplate() {
         final MessageService service = new MessageService();
         final MessageArg DAY = new MessageArg("DAY", "%tY-%tm-%td");
@@ -90,6 +95,7 @@ public class MessageServiceTest {
     }
 
     /** Test of map method, of class MessageService. */
+    @Test
     public void testTemplate_1() {
         System.out.println("testTemplate");
 
@@ -100,6 +106,7 @@ public class MessageServiceTest {
     }
 
     /** Test of map method, of class MessageService. */
+    @Test
     public void testTemplate_2() {
         System.out.println("testTemplate");
 
@@ -110,6 +117,7 @@ public class MessageServiceTest {
     }
 
     /** Test of format method, of class MessageService. */
+    @Test
     public void testFormat_1a() {
         System.out.println("format");
 
@@ -122,6 +130,7 @@ public class MessageServiceTest {
     }
 
     /** Test of format method, of class MessageService. */
+    @Test
     public void testFormat_1b() {
         System.out.println("format");
 
@@ -134,6 +143,7 @@ public class MessageServiceTest {
     }
 
     /** Test of format method, of class MessageService. */
+    @Test
     public void testFormat_1c() {
         System.out.println("format");
 
@@ -144,6 +154,7 @@ public class MessageServiceTest {
     }
 
     /** Test of format method, of class MessageService. */
+    @Test
     public void testFormat_2() {
         System.out.println("format");
 
@@ -156,6 +167,7 @@ public class MessageServiceTest {
     }
 
     /** Test of format method, of class MessageService. */
+    @Test
     public void testFormat_3() {
         System.out.println("format");
 
@@ -168,6 +180,7 @@ public class MessageServiceTest {
     }
 
     /** Test of format method, of class MessageService. */
+    @Test
     public void testFormat_4() {
         System.out.println("format");
 
@@ -180,6 +193,7 @@ public class MessageServiceTest {
     }
 
     /** Test of format method, of class MessageService. */
+    @Test
     public void testFormat_5() {
         System.out.println("format");
 
@@ -192,6 +206,7 @@ public class MessageServiceTest {
     }
 
     /** Test of format method, of class MessageService. */
+    @Test
     public void testFormat_6() {
         System.out.println("format");
 
@@ -209,6 +224,7 @@ public class MessageServiceTest {
     }
 
     /** Test of format method, of class MessageService. */
+    @Test
     public void testFormat_7() {
         System.out.println("format");
 
@@ -226,6 +242,7 @@ public class MessageServiceTest {
     }
 
     /** Test of format method, of class MessageService. */
+    @Test
     public void testEquals() {
         System.out.println("equals");
         assertEquals(ID, ID);

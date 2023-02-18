@@ -17,6 +17,8 @@
 package org.ujorm.listener;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
 import static org.ujorm.listener.Person.*;
 
 /**
@@ -28,6 +30,7 @@ public class RegistrarUjoExtTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of writeValue method, of class RegistrarExt.
      */
+    @Test
     public void testWriteValueBefore() {
         System.out.println("writeValueBefore");
 
@@ -69,6 +72,7 @@ public class RegistrarUjoExtTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of writeValue method, of class RegistrarExt.
      */
+    @Test
     public void testWriteValueAfger() {
         System.out.println("writeValueAftef");
 
@@ -108,6 +112,7 @@ public class RegistrarUjoExtTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of writeValue method, of class RegistrarExt.
      */
+    @Test
     public void testWriteValueBoth_A() {
         System.out.println("writeValueBoth_A");
 
@@ -154,6 +159,7 @@ public class RegistrarUjoExtTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of writeValue method, of class RegistrarExt.
      */
+    @Test
     public void testWriteValueBoth_B() {
         System.out.println("writeValueBoth_B");
 

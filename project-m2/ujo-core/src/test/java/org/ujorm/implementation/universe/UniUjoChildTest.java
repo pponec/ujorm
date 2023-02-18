@@ -9,7 +9,7 @@ package org.ujorm.implementation.universe;
 
 
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.KeyList;
 import org.ujorm.MyTestCase;
 
@@ -23,6 +23,7 @@ public class UniUjoChildTest extends MyTestCase {
     /**
      * Test of readValue method, of class org.ujorm.mapImlp.AUnifiedDataObject.
      */
+    @Test
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
@@ -81,6 +82,7 @@ public class UniUjoChildTest extends MyTestCase {
         assertEquals(o4, UniUjoChild.PRO_P9.of(ujb,0));
     }
 
+    @Test
     public void testSpeedTime() throws Throwable {
         System.out.println("testTime: " + suite());
 
@@ -122,6 +124,7 @@ public class UniUjoChildTest extends MyTestCase {
         printTime("TIME: ", time1);
     }
 
+    @Test
     public void testPropertyCount() throws Throwable {
         UniUjoBase  ujb1 = new UniUjoBase();
         UniUjoChild ujb2 = new UniUjoChild();
@@ -131,6 +134,7 @@ public class UniUjoChildTest extends MyTestCase {
     }
 
     /** */
+    @Test
     public void testGetProperties1() throws Throwable {
         UniUjoBase ujb1 = new UniUjoBase();
         KeyList props = ujb1.readKeys();
@@ -146,6 +150,7 @@ public class UniUjoChildTest extends MyTestCase {
     /**
      * Test of readValue method, of class org.ujorm.mapImlp.AUnifiedDataObject.
      */
+    @Test
     public void testReadWriteChildImpl() throws Throwable {
         System.out.println("testReadWriteChildImpl");
 
@@ -204,6 +209,7 @@ public class UniUjoChildTest extends MyTestCase {
     }
 
     /** Test of keys */
+    @Test
     public void testDummy() throws Throwable {
     }
 }

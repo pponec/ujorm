@@ -10,7 +10,7 @@ package org.ujorm.implementation.xml.t002_tech;
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 import org.ujorm.Key;
 import org.ujorm.core.UjoManagerXML;
@@ -24,6 +24,7 @@ public class T002b_Test extends MyTestCase {
     /**
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
+    @Test
     public void testRestoreXMLb() throws Exception {
         System.out.println("testPrintXMLb: " + suite());
         StringBuilder writer = new StringBuilder(256);

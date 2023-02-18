@@ -16,6 +16,7 @@
 package org.ujorm.orm.inheritance;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.orm.inheritance.sample.SampleOfInheritance;
 
 /**
@@ -26,6 +27,7 @@ public class InheritanceTest extends org.junit.jupiter.api.Assertions {
 
 
     @SuppressWarnings("deprecation")
+    @Test
     public void testInheritance() {
         final SampleOfInheritance sample = new SampleOfInheritance();
 

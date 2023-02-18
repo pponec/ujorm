@@ -8,7 +8,7 @@
 package org.ujorm.implementation.map;
 
 import java.util.Date;
-import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 
 /**
@@ -18,6 +18,7 @@ import org.ujorm.MyTestCase;
 public class MapUjoTest extends MyTestCase {
 
 
+    @Test
     public void testSpeedTime() throws Throwable {
         System.out.println("M1:testTime: " + suite());
 
@@ -61,6 +62,7 @@ public class MapUjoTest extends MyTestCase {
     }
 
 
+    @Test
     public void testSpeedTimeChild() throws Throwable {
         System.out.println("M2:testTime (child): " + suite());
 
@@ -104,6 +106,7 @@ public class MapUjoTest extends MyTestCase {
     }
 
 
+    @Test
     public void testPropertyCount() throws Throwable {
         MapUjoImpl ujb1 = new MapUjoImpl();
         MapUjoImplChild  ujb2 = new MapUjoImplChild();

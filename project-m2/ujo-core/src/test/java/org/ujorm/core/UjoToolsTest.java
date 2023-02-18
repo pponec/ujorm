@@ -15,9 +15,10 @@
  */
 package org.ujorm.core;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
-import junit.framework.TestCase;
 
 /**
  *
@@ -28,6 +29,7 @@ public class UjoToolsTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of isFilled method, of class UjoTools.
      */
+    @Test
     public void testIsFilled_CharSequence() {
         System.out.println("isFilled_CharSequence");
         String text = null;
@@ -43,6 +45,7 @@ public class UjoToolsTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of isFilled method, of class UjoTools.
      */
+    @Test
     public void testIsFilled_Collection() {
         System.out.println("tsFilled_Collection");
         List<String> list = null;

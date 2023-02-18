@@ -17,6 +17,7 @@ package org.ujorm.orm;
 
 import java.util.Collection;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.orm.ao.IndexModelOrderedBuilder;
 import org.ujorm.orm.bo.*;
 import org.ujorm.orm.metaModel.MetaIndex;
@@ -33,6 +34,7 @@ public class ModelTest extends org.junit.jupiter.api.Assertions {
     static private OrmHandler handlerExtended;
 
 
+    @Test
     public void testMetaIndexBase() {
         System.out.print("MetaIndex base");
         MetaTable metaTable = getHandlerBase().findTableModel(XOrder.class);
@@ -60,6 +62,7 @@ public class ModelTest extends org.junit.jupiter.api.Assertions {
         assertEquals(count, indexes.size());
     }
 
+    @Test
     public void testMetaIndexExtended() {
         System.out.print("MetaIndex extended");
         MetaTable metaTable = getHandlerExtended().findTableModel(XOrder.class);

@@ -18,6 +18,7 @@ package samples.values;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 
@@ -27,6 +28,7 @@ import org.ujorm.Key;
  */
 public class CompositeKeyTest extends org.junit.jupiter.api.Assertions {
 
+    @Test
     public void testCompositeKey2f() {
         CompositeKey<Person,String> ck = Person.FATHERS_NAME;
         List<Key<?,?>> keys = new ArrayList<>();
@@ -39,6 +41,7 @@ public class CompositeKeyTest extends org.junit.jupiter.api.Assertions {
         assertSame(Person.NAME, keys.get(1));
     }
 
+    @Test
     public void testCompositeKey3m() {
         CompositeKey<Person,String> ck = Person.GRANDMOTHERS_NAME;
         List<Key> keys = new ArrayList<>();

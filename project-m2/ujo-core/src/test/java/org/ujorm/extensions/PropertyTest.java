@@ -15,12 +15,13 @@
  */
 package org.ujorm.extensions;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.ujorm.criterion.Operator;
-import java.util.Date;
-import java.io.Serializable;
-import java.util.List;
 import org.ujorm.implementation.quick.SmartUjo;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 /**
  * PropertyTest
@@ -38,6 +39,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getName method, of class Property.
      */
+    @Test
     public void testGetName() {
         System.out.println("getName");
         assertEquals("id", Person.ID.getName());
@@ -50,6 +52,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getFullName method, of class Property.
      */
+    @Test
     public void testGetFullName() {
         System.out.println("getFullName");
         assertEquals("Person.id", Person.ID.getFullName());
@@ -61,6 +64,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getType method, of class Property.
      */
+    @Test
     public void testGetType() {
         System.out.println("getType");
         assertEquals(Integer.class, Person.ID.getType());
@@ -72,6 +76,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getDomainType method, of class Property.
      */
+    @Test
     public void testGetDomainType() {
         System.out.println("getDomainType");
         assertEquals(Person.class, Person.ID.getDomainType());
@@ -83,6 +88,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getIndex method, of class Property.
      */
+    @Test
     public void testGetIndex() {
         System.out.println("getIndex");
         assertEquals(0, Person.ID.getIndex());
@@ -94,6 +100,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of the {@code getValue} method, from a Property class.
      */
+    @Test
     public void testGetValue() {
         System.out.println("getValue");
         Integer expectedResult = TWO;
@@ -105,6 +112,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of the {@code of} method, from a Property class.
      */
+    @Test
     public void testOf() {
         System.out.println("of");
         Integer expectedResult = TWO;
@@ -116,6 +124,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of getDefault method, of class Property.
      */
+    @Test
     public void testGetDefault() {
         System.out.println("getDefault");
         assertSame(NIL, Person.ID.getDefault());
@@ -127,6 +136,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of isDefault method, of class Property.
      */
+    @Test
     public void testIsDefault() {
         System.out.println("isDefault");
         assertSame(NIL , Person.ID.getDefault());
@@ -143,6 +153,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of isComposite method, of class Property.
      */
+    @Test
     public void testIsComposite() {
         System.out.println("isComposite");
         assertFalse(Person.ID.isComposite());
@@ -154,6 +165,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of isAscending method, of class Property.
      */
+    @Test
     public void testIsAscending() {
         System.out.println("isAscending");
         assertTrue (Person.BORN.isAscending());
@@ -165,6 +177,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of copy method, of class Property.
      */
+    @Test
     public void testCopy() {
         System.out.println("copy");
         Person u1 = new Person(ONE);
@@ -181,6 +194,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of isTypeOf method, of class Property.
      */
+    @Test
     public void testIsTypeOf() {
         System.out.println("isTypeOf");
         assertTrue (Person.ID.isTypeOf(Object.class));
@@ -217,6 +231,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of isDomainOf method, of class Property.
      */
+    @Test
     public void testIsDomainOf() {
         System.out.println("isDomainOf");
         assertTrue (Person.BORN.isDomainOf(Object.class));
@@ -230,6 +245,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of equals method, of class Property.
      */
+    @Test
     public void testEquals() {
         System.out.println("equals");
         Integer id = TWO;
@@ -240,6 +256,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of equalsName method, of class Property.
      */
+    @Test
     public void testEqualsName() {
         System.out.println("equalsName");
         assertTrue(Person.ID.equalsName(Person.ID.getName()));
@@ -248,6 +265,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of compareTo method, of class Property.
      */
+    @Test
     public void testCompareTo() {
         System.out.println("compareTo");
         assertEquals(-1, Person.BORN.compareTo(Person.MOTHER));
@@ -258,6 +276,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of charAt method, of class Property.
      */
+    @Test
     public void testCharAt() {
         System.out.println("charAt");
         assertEquals('b', Person.BORN.charAt(0));
@@ -269,6 +288,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of length method, of class Property.
      */
+    @Test
     public void testLength() {
         System.out.println("length");
         assertEquals("born".length(), Person.BORN.length());
@@ -277,6 +297,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of subSequence method, of class Property.
      */
+    @Test
     public void testSubSequence() {
         System.out.println("subSequence");
         assertEquals("b", Person.BORN.subSequence(0, 1));
@@ -288,6 +309,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of toString method, of class Property.
      */
+    @Test
     public void testToString() {
         System.out.println("toString");
         assertEquals("born"  , Person.BORN.toString());
@@ -300,6 +322,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of where method, of class Property.
      */
+    @Test
     public void testWhere() {
         System.out.println("where");
         assertTrue(Person.ID.whereEq(TWO).evaluate(new Person(TWO)));
@@ -314,6 +337,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of forSql method, of class Property.
      */
+    @Test
     public void testForSql() {
         System.out.println("forSql");
         assertSame(Operator.XSQL, Person.ID.forSql("{0}=1").getOperator());
@@ -322,6 +346,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of forAll method, of class Property.
      */
+    @Test
     public void testForAll() {
         System.out.println("forAll");
         assertTrue(Person.ID.forAll().evaluate(new Person(null)));
@@ -333,6 +358,7 @@ public class PropertyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Test of forNone method, of class Property.
      */
+    @Test
     public void testForNone() {
         System.out.println("forNone");
         assertFalse(Person.ID.forNone().evaluate(new Person(null)));
