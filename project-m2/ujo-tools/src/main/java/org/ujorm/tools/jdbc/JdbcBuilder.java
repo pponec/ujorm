@@ -210,7 +210,7 @@ public class JdbcBuilder implements Serializable {
      * @param values The value of the condition (a replacement for the question character)
      */
     @NotNull
-    public JdbcBuilder andCondition(@NotNull final CharSequence sqlCondition, @NotNull final String operator, @Nullable final Object... values) {
+    public JdbcBuilder andCondition(@NotNull final CharSequence sqlCondition, @Nullable final String operator, @Nullable final Object... values) {
         writeOperator(true, conditionCounter++ > 0);
         return Check.hasLength(values)
                 ? condition(sqlCondition, operator, values)
@@ -249,7 +249,10 @@ public class JdbcBuilder implements Serializable {
      * @param value Add a value to arguments including a markup to the SQL statement. To ignore the value, send a {@code null}. An array is supported
      */
     @NotNull
-    public JdbcBuilder condition(@Nullable final CharSequence sqlCondition, @Nullable final String operator, @NotNull final Object value) {
+    public JdbcBuilder condition(
+            @Nullable final CharSequence sqlCondition,
+            @Nullable final String operator,
+            @Nullable final Object value) {
         if (Check.hasLength(sqlCondition)) {
             final boolean multiValue = value instanceof Object[];
             final Object[] values = multiValue ? (Object[]) value : new Object[]{value};
