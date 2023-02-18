@@ -18,6 +18,7 @@ package org.ujorm.tools;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -729,7 +730,9 @@ public class AssertTest {
     public void testIsEmpty_ObjectArr_ObjectArr_nok() {
         System.out.println("isEmpty");
         Object[] values = {"A"};
-        Assert.isEmpty(values, TEST_MESSAGE);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+           Assert.isEmpty(values, TEST_MESSAGE);
+       });
     }
 
     /**
@@ -739,7 +742,9 @@ public class AssertTest {
     public void testIsEmpty_Collection_nok() {
         System.out.println("isEmpty");
         Collection values = Arrays.asList("A", "B", "C");
-        Assert.isEmpty(values);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Assert.isEmpty(values);
+        });
     }
 
     /**
@@ -749,7 +754,9 @@ public class AssertTest {
     public void testIsEmpty_Collection_ObjectArr_nok() {
         System.out.println("isEmpty");
         Collection values = Arrays.asList("A", "B", "C");
-        Assert.isEmpty(values, TEST_MESSAGE);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Assert.isEmpty(values, TEST_MESSAGE);
+        });
     }
 
     /**
@@ -759,7 +766,9 @@ public class AssertTest {
     public void testIsEmpty_CharSequence_nok() {
         System.out.println("isEmpty");
         CharSequence value = "ABC";
-        Assert.isEmpty(value);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Assert.isEmpty(value);
+        });
     }
 
     /**
