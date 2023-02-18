@@ -79,11 +79,11 @@ public class XmlTest_1 extends org.junit.jupiter.api.Assertions {
 
 
     protected MapUjo createUjoRoot() {
-        Long    o0 = Long.valueOf(Long.MAX_VALUE);
-        Integer o1 = Integer.valueOf(1);
+        Long    o0 = Long.MAX_VALUE;
+        Integer o1 = 1;
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Float   o4 = 123456.456F;
 
         XmlUjoRoot_1 ujb = new XmlUjoRoot_1();
 
@@ -97,8 +97,8 @@ public class XmlTest_1 extends org.junit.jupiter.api.Assertions {
 
     @SuppressWarnings("unchecked")
     protected MapUjo createUjoRoot2() {
-        Long    o0 = Long.valueOf(Long.MAX_VALUE);
-        Integer o1 = Integer.valueOf(1);
+        Long    o0 = Long.MAX_VALUE;
+        Integer o1 = 1;
         String  o2 ="TEST";
         Date    o3 = new Date();
         List    o4 = new ArrayList();
@@ -126,11 +126,11 @@ public class XmlTest_1 extends org.junit.jupiter.api.Assertions {
 
 
     protected MapUjo createUjo() {
-        Long    o0 = Long.valueOf(Long.MAX_VALUE);
-        Integer o1 = Integer.valueOf(1);
+        Long    o0 = Long.MAX_VALUE;
+        Integer o1 = 1;
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Float   o4 = 123456.456F;
 
         XmlUjoItem ujb = new XmlUjoItem();
 

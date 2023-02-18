@@ -72,11 +72,11 @@ public class XmlTest_2 extends org.junit.jupiter.api.Assertions {
 
 
     protected MapUjo createUjo() {
-        Long    o0 = Long.valueOf(Long.MAX_VALUE);
-        Integer o1 = Integer.valueOf(1);
+        Long    o0 = Long.MAX_VALUE;
+        Integer o1 = 1;
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Float   o4 = 123456.456F;
 
         XmlUjoItem ujb = new XmlUjoItem();
 

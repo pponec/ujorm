@@ -24,11 +24,11 @@ public class BeanUjoTest extends MyTestCase {
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
-        Long    o0 = Long.valueOf(Long.MAX_VALUE);
-        Integer o1 = Integer.valueOf(1);
+        Long    o0 = Long.MAX_VALUE;
+        Integer o1 = 1;
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Float   o4 = 123456.456F;
 
         BeanUjoImpl ujb = new BeanUjoImpl();
 
@@ -63,11 +63,11 @@ public class BeanUjoTest extends MyTestCase {
     public void testSpeedTime() throws Throwable {
         System.out.println("U1:testSpeedTime: " + suite());
 
-        Long    o0 = Long.valueOf(Long.MAX_VALUE);
-        Integer o1 = Integer.valueOf(1);
+        Long    o0 = Long.MAX_VALUE;
+        Integer o1 = 1;
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Float   o4 = 123456.456F;
         Object result;
 
         callGC();
@@ -106,11 +106,11 @@ public class BeanUjoTest extends MyTestCase {
     public void testSpeedTime2() throws Throwable {
         System.out.println("U2:testSpeedTime (child): " + suite());
 
-        Long    o0 = Long.valueOf(Long.MAX_VALUE);
-        Integer o1 = Integer.valueOf(1);
+        Long    o0 = Long.MAX_VALUE;
+        Integer o1 = 1;
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Float   o4 = 123456.456F;
         Object result;
 
         callGC();

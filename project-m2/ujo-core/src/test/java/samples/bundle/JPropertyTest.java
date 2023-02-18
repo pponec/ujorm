@@ -32,7 +32,7 @@ public class JPropertyTest extends org.junit.jupiter.api.Assertions {
 
         if (false) {
             props.put("test_01", Integer.valueOf(256));
-            props.put("test_02", new Float(25688.25));
+            props.put("test_02", 25688.25F);
         }
 
         ByteArrayOutputStream os = new ByteArrayOutputStream(128);

@@ -29,8 +29,8 @@ public class SmartUjoChildTest extends MyTestCase {
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
-        Long    o0 = Long.valueOf(Long.MAX_VALUE);
-        Integer o1 = Integer.valueOf(1);
+        Long    o0 = Long.MAX_VALUE;
+        Integer o1 = 1;
         String  o2 ="TEST";
         Date    o3 = new Date();
         Class<?> o4 = Color.class;
@@ -63,8 +63,8 @@ public class SmartUjoChildTest extends MyTestCase {
     public void testSpeedTime() throws Throwable {
         System.out.println("testTime: " + suite());
 
-        Long    o0 = Long.valueOf(Long.MAX_VALUE);
-        Integer o1 = Integer.valueOf(1);
+        Long    o0 = Long.MAX_VALUE;
+        Integer o1 = 1;
         String  o2 ="TEST";
         Date    o3 = new Date();
         Class<?> o4 = Color.class;

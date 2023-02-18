@@ -49,11 +49,11 @@ public class UniUjoChildTest extends MyTestCase {
         assertEquals(9, UniUjoChild.PRO_P9.getIndex());
 
 
-        Long    o0 = Long.valueOf(Long.MAX_VALUE);
-        Integer o1 = Integer.valueOf(1);
+        Long    o0 = Long.MAX_VALUE;
+        Integer o1 = 1;
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Float   o4 = 123456.456F;
 
         UniUjoChild ujb = new UniUjoChild();
         assertEquals(10, ujb.readKeys().size());
@@ -84,11 +84,11 @@ public class UniUjoChildTest extends MyTestCase {
     public void testSpeedTime() throws Throwable {
         System.out.println("testTime: " + suite());
 
-        Long    o0 = Long.valueOf(Long.MAX_VALUE);
-        Integer o1 = Integer.valueOf(1);
+        Long    o0 = Long.MAX_VALUE;
+        Integer o1 = 1;
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Float   o4 = 123456.456F;
 
         callGC();
         long time1 = System.currentTimeMillis();
@@ -171,11 +171,11 @@ public class UniUjoChildTest extends MyTestCase {
         assertEquals(8, UniUjoChildImpl.PRO_P8.getIndex());
         assertEquals(9, UniUjoChildImpl.PRO_P9.getIndex());
 
-        Long    o0 = Long.valueOf(Long.MAX_VALUE);
-        Integer o1 = Integer.valueOf(1);
+        Long    o0 = Long.MAX_VALUE;
+        Integer o1 = 1;
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Float   o4 = 123456.456F;
 
         UniUjoChildImpl ujb = new UniUjoChildImpl();
         assertEquals(10, ujb.readKeys().size());
