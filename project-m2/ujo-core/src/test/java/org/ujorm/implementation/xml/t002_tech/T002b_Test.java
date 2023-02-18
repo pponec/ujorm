@@ -21,14 +21,7 @@ import org.ujorm.core.UjoManagerXML;
  */
 public class T002b_Test extends MyTestCase {
 
-    public T002b_Test(String testName) {
-        super(testName);
-    }
 
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(T002b_Test.class);
-        return suite;
-    }
 
     protected void setUp() throws Exception {
         //UjoManager.getInstance().setZeroProviderEnabled(false);
@@ -63,9 +56,4 @@ public class T002b_Test extends MyTestCase {
         }
         return result;
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

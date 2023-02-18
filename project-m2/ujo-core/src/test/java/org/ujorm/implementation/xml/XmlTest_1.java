@@ -20,15 +20,6 @@ import org.ujorm.implementation.map.MapUjo;
  */
 public class XmlTest_1 extends TestCase {
 
-    public XmlTest_1(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(XmlTest_1.class);
-        return suite;
-    }
-
 
     /**
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
@@ -151,11 +142,6 @@ public class XmlTest_1 extends TestCase {
         ujb.writeValue(XmlUjoItem.PRO_P4, o4);
 
         return ujb;
-    }
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 
 }

@@ -9,6 +9,9 @@ package org.ujorm.criterion;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.ujorm.Key;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.UjoComparator;
@@ -38,7 +41,7 @@ public class UjoComparatorTest extends MyTestCase {
         return result;
     }
 
-    @Override
+    @BeforeEach
     protected void setUp() throws Exception {
         persons = new ArrayList<>();
         final Person<Person> p,m,g,e;
@@ -53,7 +56,7 @@ public class UjoComparatorTest extends MyTestCase {
         g.set(MOTHER, e);
     }
 
-    @Override
+    @AfterAll
     protected void tearDown() throws Exception {
         persons = null;
     }

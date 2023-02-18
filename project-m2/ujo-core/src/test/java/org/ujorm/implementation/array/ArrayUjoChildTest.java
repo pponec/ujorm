@@ -20,14 +20,6 @@ import org.ujorm.KeyList;
 public class ArrayUjoChildTest extends MyTestCase {
     private static final Class CLASS = ArrayUjoChildTest.class;
 
-    public ArrayUjoChildTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        return new TestSuite(CLASS);
-    }
-
     @Override
     protected void setUp() throws Exception {
     }
@@ -133,9 +125,5 @@ public class ArrayUjoChildTest extends MyTestCase {
         assertEquals(ArrayUjoImpl.PRO_P2, props.get(2));
         assertEquals(ArrayUjoImpl.PRO_P3, props.get(3));
         assertEquals(ArrayUjoImpl.PRO_P4, props.get(4));
-    }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 }

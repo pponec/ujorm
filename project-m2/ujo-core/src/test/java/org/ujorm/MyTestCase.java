@@ -6,6 +6,8 @@
  */
 
 package org.ujorm;
+import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,10 +18,18 @@ import org.ujorm.extensions.UjoTextable;
  *
  * @author Pavel Ponec
  */
-abstract public class MyTestCase extends TestCase {
+abstract public class MyTestCase extends org.junit.jupiter.api.Assertions{
 
-    public MyTestCase(String testName) {
-        super(testName);
+    public MyTestCase() {
+    }
+
+    @Deprecated
+    public MyTestCase(String name) {
+    }
+
+    @Deprecated
+    protected String suite() {
+        return getClass().getSimpleName();
     }
 
     /** A TimeTest loop size. */
@@ -46,7 +56,7 @@ abstract public class MyTestCase extends TestCase {
     public static void assertEquals(Ujo expected, Ujo actual) {
 
         if (expected==actual) { return; }
-        assertEquals(expected.getClass(), expected.getClass());
+        Assertions.assertEquals(expected.getClass(), expected.getClass());
 
         KeyList keys = expected.readKeys();
 
@@ -55,7 +65,7 @@ abstract public class MyTestCase extends TestCase {
                 Key key = keys.get(i);
                 String o1 = String.valueOf(((UjoTextable)expected).readValueString(key, null));
                 String o2 = String.valueOf(((UjoTextable)actual  ).readValueString(key, null));
-                assertEquals("Property \"" + key.getName() + "\"", o1, o2);
+                Assertions.assertEquals(o1, o2, "Property \"" + key.getName() + "\""); //MSg
             }
         }
 
@@ -73,7 +83,7 @@ abstract public class MyTestCase extends TestCase {
             } else if (key.isTypeOf(List.class)) {
                 assertEquals(item, (List) o1, (List) o2);
             } else {
-                assertEquals(item, o1, o2);
+                Assertions.assertEquals(o1, o2, item);
             }
         }
     }
@@ -82,14 +92,14 @@ abstract public class MyTestCase extends TestCase {
      * Compare two Ujo objects.
      */
     public static void assertEquals(String item, byte[] expected, byte[] actual) {
-        assertTrue(item, Arrays.equals(expected, actual));
+        assertTrue(Arrays.equals(expected, actual), item); // msg
     }
 
     /**
      * Compare two Ujo objects.
      */
     public static void assertEquals(String item, char[] expected, char[] actual) {
-        assertTrue(item, Arrays.equals(expected, actual));
+        assertTrue(Arrays.equals(expected, actual), item); // msg
     }
 
     /**
@@ -97,7 +107,7 @@ abstract public class MyTestCase extends TestCase {
      */
     public static void assertEquals(String item, List expected, List actual) {
         if (expected==actual) { return; }
-        assertEquals(item, expected.size(), actual.size());
+        Assertions.assertEquals(expected.size(), actual.size(), item); // msg
 
         if (item.endsWith("\"")) {
             item = item.substring(0, item.length()-1);
@@ -107,7 +117,7 @@ abstract public class MyTestCase extends TestCase {
             Object oe = expected.get(i);
             Object oa = actual.get(i);
             if (oe==oa) { continue; }
-            assertEquals(item+"["+i+"\"]", oe, oa);
+            Assertions.assertEquals(oe, oa, item+"["+i+"\"]");
         }
     }
 

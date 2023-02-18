@@ -20,14 +20,6 @@ import org.ujorm.core.UjoManagerXML;
  */
 public class T005y_Map_Test extends MyTestCase {
 
-    public T005y_Map_Test(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(T005y_Map_Test.class);
-        return suite;
-    }
 
     /**
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
@@ -68,10 +60,6 @@ public class T005y_Map_Test extends MyTestCase {
         AtrPersonMap.NAME_ATTR.setValue(result, "ATTRIB");
         AtrPersonMap.NAME_ELEM.setValue(result, "ELEMENT");
         return result;
-    }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 
 }

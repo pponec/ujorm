@@ -26,15 +26,6 @@ public class CriterionValueTest extends MyTestCase {
 
     private List<Person> persons;
 
-    public CriterionValueTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(CriterionValueTest.class);
-        return suite;
-    }
-
     private Person newPerson(String name, Double cash) {
         Person result = new Person();
         result.set(NAME, name);
@@ -169,11 +160,4 @@ public class CriterionValueTest extends MyTestCase {
         boolean ok = !crn.evaluate(new Employee("Julya"));
         assertTrue(ok);
     }
-
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

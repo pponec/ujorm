@@ -44,11 +44,6 @@ public class XmlSpeedTest extends MyTestCase {
         return false;
     }
 
-    public static TestSuite suite() {
-        return new TestSuite(XmlSpeedTest.class);
-    }
-
-
     protected int getCount() {
         return 10;
         //return 1;
@@ -335,9 +330,4 @@ public class XmlSpeedTest extends MyTestCase {
         ByteArrayInputStream result = new ByteArrayInputStream(data.toByteArray());
         return result;
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

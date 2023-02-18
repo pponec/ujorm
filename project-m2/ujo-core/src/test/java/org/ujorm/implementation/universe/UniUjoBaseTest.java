@@ -20,24 +20,6 @@ import org.ujorm.KeyList;
 public class UniUjoBaseTest extends MyTestCase {
     private static final Class CLASS = UniUjoBaseTest.class;
 
-
-    public UniUjoBaseTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(CLASS);
-        return suite;
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-    }
-
     /**
      * Test of readValue method,
      */
@@ -176,10 +158,4 @@ public class UniUjoBaseTest extends MyTestCase {
     /** Test of keys */
     public void testDummy() throws Throwable {
     }
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

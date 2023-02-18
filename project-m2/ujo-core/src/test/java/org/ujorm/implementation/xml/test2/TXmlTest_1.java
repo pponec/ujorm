@@ -18,14 +18,6 @@ import org.ujorm.extensions.AbstractUjo;
  */
 public class TXmlTest_1 extends TestCase {
 
-    public TXmlTest_1(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(TXmlTest_1.class);
-        return suite;
-    }
 
     /**
      * Test of printProperties method, of class org.ujorm.implementation.imlXML.MapUjo.
@@ -65,9 +57,5 @@ public class TXmlTest_1 extends TestCase {
     protected TXmlUjoItem createUjoItem() {
         TXmlUjoItem ujb = new TXmlUjoItem();
         return ujb;
-    }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 }

@@ -18,15 +18,6 @@ import org.ujorm.MyTestCase;
  */
 public class BeanUjoTest extends MyTestCase {
 
-    public BeanUjoTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(BeanUjoTest.class);
-        return suite;
-    }
-
     /**
      * Test of readValue method, of class org.ujorm.hmapImlp.AUnifiedDataObject.
      */
@@ -154,9 +145,4 @@ public class BeanUjoTest extends MyTestCase {
 
         System.out.println("U2:TIME: " + (time2-time1)/1000f + " [sec]");
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

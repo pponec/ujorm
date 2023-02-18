@@ -223,8 +223,4 @@ public class LimitTest extends TestCase {
             createOrder("" + i);
         }
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
 }

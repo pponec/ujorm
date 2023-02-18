@@ -26,14 +26,6 @@ public class XmlSpeedTest2 extends XmlSpeedTest {
         return true;
     }
 
-    public static TestSuite suite() {
-        return new TestSuite(XmlSpeedTest2.class);
-    }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
     @Override
     protected int getCount() {
         return COUNT;

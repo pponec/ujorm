@@ -36,7 +36,7 @@ public class TransactionManagerTest extends TestCase {
     }
 
     // ----------------------------------------------------
-    
+
     /**
      * Test of getItemCount method, of class AbstractPropertyList.
      */
@@ -47,9 +47,5 @@ public class TransactionManagerTest extends TestCase {
         OrderService orderService = (OrderService) context.getBean("orderService");
         Order order = orderService.getOrder(-10L);
         assertNull(order);
-    }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 }

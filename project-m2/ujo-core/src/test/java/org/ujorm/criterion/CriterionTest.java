@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
 import junit.framework.*;
+import org.junit.jupiter.api.Assertions;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.MyTestCase;
@@ -26,15 +27,6 @@ public class CriterionTest extends MyTestCase {
 
     private List<Person> persons;
 
-    public CriterionTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(CriterionTest.class);
-        return suite;
-    }
-
     /** Filled */
     public void testFilled() {
         Person p = new Person();
@@ -42,24 +34,24 @@ public class CriterionTest extends MyTestCase {
         boolean expected = true;
         p.set(NAME, "aa");
         boolean filled = NAME.whereHasLength().evaluate(p);
-        assertEquals(expected, filled);
-        assertEquals("Person(name NOT_EQ null) AND (name NOT_EQ \"\")",
+        Assertions.assertEquals(expected, filled);
+        Assertions.assertEquals("Person(name NOT_EQ null) AND (name NOT_EQ \"\")",
                 NAME.whereHasLength().toString());
 
         expected = false;
         p.set(NAME, "");
         filled = NAME.whereHasLength().evaluate(p);
-        assertEquals(expected, filled);
+        Assertions.assertEquals(expected, filled);
 
         expected = false;
         p.set(NAME, null);
         filled = NAME.whereHasLength().evaluate(p);
-        assertEquals(expected, filled);
+        Assertions.assertEquals(expected, filled);
 
         expected = false;
         p.set(NAME, "xxx");
         boolean noFilled = NAME.whereIsEmpty().evaluate(p);
-        assertEquals(expected, noFilled);
+        Assertions.assertEquals(expected, noFilled);
 
         expected = true;
         p.set(NAME, "");
@@ -272,9 +264,4 @@ public class CriterionTest extends MyTestCase {
             return (T) result;
         }
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

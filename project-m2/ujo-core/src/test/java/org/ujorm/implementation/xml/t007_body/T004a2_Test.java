@@ -21,14 +21,6 @@ import org.ujorm.core.UjoManagerXML;
  */
 public class T004a2_Test extends MyTestCase {
 
-    public T004a2_Test(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(T004a2_Test.class);
-        return suite;
-    }
 
     /**
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
@@ -72,9 +64,4 @@ public class T004a2_Test extends MyTestCase {
 
         return result;
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

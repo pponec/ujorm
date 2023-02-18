@@ -128,9 +128,4 @@ public class KeyAliasTest extends MyTestCase {
         assertFalse(keys5.isAscending());
         assertTrue(keys5.hasAlias());
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

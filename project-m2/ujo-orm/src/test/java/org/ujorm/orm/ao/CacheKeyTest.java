@@ -23,7 +23,7 @@ import junit.framework.TestCase;
  * @author Pavel Ponec
  */
 public class CacheKeyTest extends TestCase {
-    
+
     public CacheKeyTest(String testName) {
         super(testName);
     }
@@ -56,12 +56,5 @@ public class CacheKeyTest extends TestCase {
         //assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
 
-    }
-
-    // -----------------------------------------------------
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 }

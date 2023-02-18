@@ -51,10 +51,6 @@ public class KeyComparatorTest extends TestCase {
         assertEquals(-1, Query.INNER_KEY_COMPARATOR.compare(XItem.$ORDER_DATE, XItem.$CUST_FIRSTNAME));
         assertEquals(1, Query.INNER_KEY_COMPARATOR.compare(XItem.$ORDER_DATE, XItem.ID));
         assertEquals(1, Query.INNER_KEY_COMPARATOR.compare(XItem.$CUST_FIRSTNAME, XItem.$ORDER_DATE));
-        
-    }
 
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 }

@@ -23,22 +23,6 @@ import org.ujorm.implementation.quick.domains.SmartUjoImpl;
 public class SmartUjoChildTest extends MyTestCase {
     private final static Class CLASS = SmartUjoChildTest.class;
 
-    public SmartUjoChildTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        return new TestSuite(CLASS);
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-    }
-
     /**
      * Test of readValue method, of class org.ujorm.mapImlp.AUnifiedDataObject.
      */
@@ -171,10 +155,5 @@ public class SmartUjoChildTest extends MyTestCase {
         assertEquals(3, i);
         assertEquals(3, ujo.getList(SmartUjoChild.PRO_LST1).size());
         assertEquals(3, ujo.getList(SmartUjoChild.PRO_LST2).size());
-    }
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 }

@@ -18,16 +18,6 @@ import junit.framework.*;
  */
 public class JPropertyTest extends TestCase {
 
-    public JPropertyTest(String testName) {
-        super(testName);
-    }
-
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(JPropertyTest.class);
-        return suite;
-    }
-
     /**
      * Test of getItemClass method, of class org.ujorm.core.UjoManagerXML.
      * @throws java.io.IOException
@@ -53,12 +43,6 @@ public class JPropertyTest extends TestCase {
         os = new ByteArrayOutputStream(128);
         props.store(os, "HEADER is not mandatory");
         System.err.println(":>>\n" + new String(os.toByteArray(), "UTF-8"));
-    }
-
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 
 }

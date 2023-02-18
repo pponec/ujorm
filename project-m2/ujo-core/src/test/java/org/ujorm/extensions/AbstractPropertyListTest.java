@@ -26,13 +26,6 @@ import static org.ujorm.extensions.PersonExt.*;
  */
 public class AbstractPropertyListTest extends MyTestCase {
 
-    public AbstractPropertyListTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        return new TestSuite(AbstractPropertyListTest.class);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -158,9 +151,4 @@ public class AbstractPropertyListTest extends MyTestCase {
         result = root.remove(PERS, p0);
         assertFalse(false);
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

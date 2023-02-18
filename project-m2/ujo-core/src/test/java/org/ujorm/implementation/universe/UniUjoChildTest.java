@@ -20,22 +20,6 @@ import org.ujorm.MyTestCase;
 public class UniUjoChildTest extends MyTestCase {
     private static final Class CLASS = UniUjoChildTest.class;
 
-    public UniUjoChildTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        return new TestSuite(CLASS);
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-    }
-
     /**
      * Test of readValue method, of class org.ujorm.mapImlp.AUnifiedDataObject.
      */
@@ -221,9 +205,5 @@ public class UniUjoChildTest extends MyTestCase {
 
     /** Test of keys */
     public void testDummy() throws Throwable {
-    }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 }

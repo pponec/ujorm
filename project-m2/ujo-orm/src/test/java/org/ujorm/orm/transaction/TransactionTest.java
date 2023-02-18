@@ -181,8 +181,4 @@ public class TransactionTest extends TestCase {
         result.loadDatabase(Database.class);
         return result;
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
 }

@@ -123,8 +123,4 @@ public class ModelTest extends TestCase {
         }
         return handlerExtended;
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
 }

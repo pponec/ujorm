@@ -330,8 +330,4 @@ public class FetchTest extends TestCase {
             createOrder("" + i, session);
         }
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
 }

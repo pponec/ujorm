@@ -46,10 +46,4 @@ public class InheritanceTest extends TestCase {
         sample.printMetadata();
 
     }
-
-    // -----------------------------------------------------
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
 }

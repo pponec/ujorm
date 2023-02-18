@@ -20,14 +20,6 @@ import org.ujorm.core.UjoManagerXML;
  */
 public class T005a_Array_Test extends MyTestCase {
 
-    public T005a_Array_Test(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(T005a_Array_Test.class);
-        return suite;
-    }
 
     /**
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
@@ -69,9 +61,3 @@ public class T005a_Array_Test extends MyTestCase {
         AtrPersonArray.NAME_ELEM.setValue(result, "ELEMENT");
         return result;
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
-}

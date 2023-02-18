@@ -20,16 +20,6 @@ import org.ujorm.MyTestCase;
 public class ArrayUjoBaseTest extends MyTestCase {
     private static final Class CLASS = ArrayUjoBaseTest.class;
 
-
-    public ArrayUjoBaseTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(CLASS);
-        return suite;
-    }
-
     @Override
     protected void setUp() throws Exception {
     }
@@ -159,10 +149,4 @@ public class ArrayUjoBaseTest extends MyTestCase {
         assertEquals(ArrayUjoImpl.PRO_P3, props.get(3));
         assertEquals(ArrayUjoImpl.PRO_P4, props.get(4));
     }
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

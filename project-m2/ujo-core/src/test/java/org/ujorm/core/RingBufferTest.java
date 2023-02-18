@@ -189,8 +189,4 @@ public class RingBufferTest extends TestCase {
         String word3 = RingBuffer.findWord(reader, "", "ee");
         assertEquals("abc", word3);
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
 }

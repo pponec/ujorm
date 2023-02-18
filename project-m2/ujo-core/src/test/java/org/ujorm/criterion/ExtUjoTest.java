@@ -8,6 +8,7 @@
 package org.ujorm.criterion;
 
 import junit.framework.*;
+import org.junit.jupiter.api.Test;
 import org.ujorm.MyTestCase;
 import org.ujorm.extensions.PathProperty;
 import static org.ujorm.criterion.Person.*;
@@ -18,15 +19,7 @@ import static org.ujorm.criterion.Person.*;
  */
 public class ExtUjoTest extends MyTestCase {
 
-    public ExtUjoTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(ExtUjoTest.class);
-        return suite;
-    }
-
+    @Test
     public void testInit1() throws Throwable {
         String nameExp1 = "Jack1";
         String nameExp2 = "Jane" ;
@@ -48,6 +41,7 @@ public class ExtUjoTest extends MyTestCase {
         assertEquals(cashExp, cash);
     }
 
+    @Test
     public void testInit2() throws Throwable {
 
         Person<Person> person = new Person();
@@ -57,6 +51,7 @@ public class ExtUjoTest extends MyTestCase {
         assertEquals("Jane", name);
     }
 
+    @Test
     public void testInit3() throws Throwable {
 
         Person<Person> person = new Person();
@@ -78,10 +73,4 @@ public class ExtUjoTest extends MyTestCase {
         assertNull(name2);
         assertEquals(0D  , cash2);
     }
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

@@ -129,9 +129,4 @@ public class KeyTest extends MyTestCase {
         String result = key.toStringFull(true);
         assertEquals(expectedResult, result);
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

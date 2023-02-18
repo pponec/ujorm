@@ -147,9 +147,4 @@ public class UjoManagerRBundleTest extends MyTestCase {
         ByteArrayInputStream result = new ByteArrayInputStream(data.toByteArray());
         return result;
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

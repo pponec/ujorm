@@ -113,8 +113,4 @@ public class FaultTransManagerTest extends TestCase {
         order.setUserId(1000);
         return order;
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
 }

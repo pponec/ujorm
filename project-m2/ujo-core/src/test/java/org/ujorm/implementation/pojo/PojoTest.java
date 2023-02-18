@@ -18,23 +18,6 @@ import org.ujorm.MyTestCase;
  */
 public class PojoTest extends MyTestCase {
 
-    public PojoTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(PojoTest.class);
-        return suite;
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-    }
-
     /**
      * Test of readValue method, of class org.ujorm.hmapImlp.AUnifiedDataObject.
      */
@@ -157,9 +140,4 @@ public class PojoTest extends MyTestCase {
 
         System.out.println("P2:TIME: " + (time2-time1)/1000f + " [sec]");
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

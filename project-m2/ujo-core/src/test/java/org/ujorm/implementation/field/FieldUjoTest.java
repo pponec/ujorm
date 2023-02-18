@@ -17,21 +17,6 @@ import org.ujorm.MyTestCase;
  */
 public class FieldUjoTest extends MyTestCase {
 
-    public FieldUjoTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(FieldUjoTest.class);
-        return suite;
-    }
-
-    protected void setUp() throws Exception {
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
     public void testSpeedTime() throws Throwable {
         System.out.println("M1:testTime: " + suite());
 
@@ -127,10 +112,4 @@ public class FieldUjoTest extends MyTestCase {
         assertEquals( 5, ujb1.readKeys().size());
         assertEquals(10, ujb2.readKeys().size());
     }
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

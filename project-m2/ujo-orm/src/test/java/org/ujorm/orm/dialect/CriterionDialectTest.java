@@ -120,10 +120,4 @@ public class CriterionDialectTest extends TestCase {
 
         return result;
     }
-
-    // -----------------------------------------------------
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
 }

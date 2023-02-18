@@ -21,24 +21,6 @@ import org.ujorm.implementation.quick.domains.SmartUjoImpl;
  * @author Pavel Ponec
  */
 public class SmartUjoBaseTest extends MyTestCase {
-    private static final Class CLASS = SmartUjoBaseTest.class;
-
-    public SmartUjoBaseTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(CLASS);
-        return suite;
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-    }
 
     /**
      * Test of readValue method,
@@ -175,7 +157,7 @@ public class SmartUjoBaseTest extends MyTestCase {
     }
 
     public void testSpeedTimeRecur() throws Throwable {
-        System.out.println("A2:testSpeedTime (recur): " + suite());
+        System.out.println("A2:testSpeedTime (recur): " + super.suite());
 
         Long    o0 = Long.valueOf(Long.MAX_VALUE);
         Integer o1 = Integer.valueOf(1);
@@ -256,10 +238,6 @@ public class SmartUjoBaseTest extends MyTestCase {
 
         assertEquals(3, i);
         assertEquals(3, ujo.getList(SmartUjoImpl.PRO_LST1).size());
-    }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 
 }

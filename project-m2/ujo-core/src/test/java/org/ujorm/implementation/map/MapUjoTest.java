@@ -17,15 +17,6 @@ import org.ujorm.MyTestCase;
  */
 public class MapUjoTest extends MyTestCase {
 
-    public MapUjoTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(MapUjoTest.class);
-        return suite;
-    }
-
 
     public void testSpeedTime() throws Throwable {
         System.out.println("M1:testTime: " + suite());
@@ -120,10 +111,4 @@ public class MapUjoTest extends MyTestCase {
         assertEquals( 5, ujb1.readKeys().size());
         assertEquals(10, ujb2.readKeys().size());
     }
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

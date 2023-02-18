@@ -21,14 +21,6 @@ import org.ujorm.core.UjoManagerXML;
  */
 public class T001b_Test extends MyTestCase {
 
-    public T001b_Test(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(T001b_Test.class);
-        return suite;
-    }
 
     public void test_01 () throws Exception {
         restoreXML(" Naz dar \nxxx ", true);
@@ -65,9 +57,4 @@ public class T001b_Test extends MyTestCase {
 
         return result;
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

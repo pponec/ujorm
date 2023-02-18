@@ -10,6 +10,8 @@ package org.ujorm.criterion;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.ujorm.CompositeKey;
 import org.ujorm.MyTestCase;
 import org.ujorm.extensions.PathProperty;
@@ -26,15 +28,6 @@ public class CriteriaWeakTest extends MyTestCase {
 
     private List<Person> persons;
 
-    public CriteriaWeakTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(CriteriaWeakTest.class);
-        return suite;
-    }
-
     private Person newPerson(String name, Double cash) {
         Person result = new Person();
         result.set(NAME, name);
@@ -44,7 +37,7 @@ public class CriteriaWeakTest extends MyTestCase {
         return result;
     }
 
-    @Override
+    @BeforeEach
     protected void setUp() throws Exception {
         persons = new ArrayList<>();
 
@@ -59,12 +52,10 @@ public class CriteriaWeakTest extends MyTestCase {
 
     }
 
-    @Override
+    @AfterEach
     protected void tearDown() throws Exception {
         persons = null;
     }
-
-
 
     @SuppressWarnings("unchecked")
     public void testInit_01() {
@@ -143,11 +134,4 @@ public class CriteriaWeakTest extends MyTestCase {
         assertEquals("Marry", result.get(0).get(NAME) );
         assertEquals(20.0, result.get(0).get(CASH) );
     }
-
-
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }

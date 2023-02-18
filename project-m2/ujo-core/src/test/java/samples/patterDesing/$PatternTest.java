@@ -16,16 +16,7 @@ import java.util.List;
  * @author Pavel Ponec
  */
 public class $PatternTest extends TestCase {
-    
-    public $PatternTest(String testName) {
-        super(testName);
-    }
-    
-    
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite($PatternTest.class);
-        return suite;
-    }      
+
 
 
     /**
@@ -35,9 +26,4 @@ public class $PatternTest extends TestCase {
         new MyMap.UsageTest();
     }
 
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-    
 }

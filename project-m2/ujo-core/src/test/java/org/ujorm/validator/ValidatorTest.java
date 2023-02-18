@@ -24,16 +24,6 @@ import static org.ujorm.validator.impl.BetweenValidator.*;
  * @author Pavel Ponec
  */
 public class ValidatorTest extends MyTestCase {
-    private static final Class CLASS = ValidatorTest.class;
-
-
-    public ValidatorTest(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        return new TestSuite(CLASS);
-    }
 
     /** Check the input must not be great than 10. */
     public void test_MAX_10() {
@@ -477,10 +467,6 @@ public class ValidatorTest extends MyTestCase {
        calendar.set(Calendar.MILLISECOND, 0);
 
        return calendar.getTime();
-    }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
     }
 
 }

@@ -23,15 +23,6 @@ import org.ujorm.core.UjoManagerXML;
  */
 public class T003b_Test extends MyTestCase {
 
-    public T003b_Test(String testName) {
-        super(testName);
-    }
-
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite(T003a_Test.class);
-        return suite;
-    }
-
     /**
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
@@ -87,9 +78,4 @@ public class T003b_Test extends MyTestCase {
         //
         return result;
     }
-
-    public static void main(java.lang.String[] argList) {
-        junit.textui.TestRunner.run(suite());
-    }
-
 }
