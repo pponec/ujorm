@@ -9,10 +9,10 @@ package org.ujorm;
 import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Arrays;
-import java.util.List;
-import junit.framework.*;
+import org.junit.jupiter.api.Assertions;
 import org.ujorm.extensions.UjoTextable;
+
+import java.util.List;
 
 /**
  *

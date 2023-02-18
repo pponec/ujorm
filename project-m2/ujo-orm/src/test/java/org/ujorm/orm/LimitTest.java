@@ -31,7 +31,6 @@ public class LimitTest extends org.junit.jupiter.api.Assertions {
 
     static private OrmHandler handler;
 
-
     @SuppressWarnings("deprecation")
     public void testLimit_1() {
         long count = 10;

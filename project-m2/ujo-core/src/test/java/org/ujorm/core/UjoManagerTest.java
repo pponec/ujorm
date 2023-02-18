@@ -239,24 +239,24 @@ public class UjoManagerTest extends MyTestCase {
         //
         expected = new Locale("en", "GB");
         result   = manager.decodeValue(type, manager.encodeValue(expected, false));
-        assertEquals(expected, result, "2");
+        assertEquals(expected, result, "3");
         //
         //
         expected = new Locale("cs");
         result   = manager.decodeValue(type, manager.encodeValue(expected, false));
-        assertEquals(expected, result, "2");
+        assertEquals(expected, result, "4");
         //
         expected = new Locale("en");
         result   = manager.decodeValue(type, manager.encodeValue(expected, false));
-        assertEquals( expected, result, "2");
+        assertEquals( expected, result, "5");
         //
         expected = new Locale("cs", "CZ", "XX");
         result   = manager.decodeValue(type, manager.encodeValue(expected, false));
-        assertEquals(expected, result, "2");
+        assertEquals(expected, result, "6");
         //
         expected = new Locale("en", "GB", "XX");
         result   = manager.decodeValue(type, manager.encodeValue(expected, false));
-        assertEquals(expected, result, "2");
+        assertEquals(expected, result, "7");
     }
 
     /**

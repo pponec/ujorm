@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.ujorm.Key;
 import org.ujorm.MyTestCase;
@@ -52,7 +53,7 @@ public class UjoComparatorTest extends MyTestCase {
         g.set(MOTHER, e);
     }
 
-    @AfterAll
+    @AfterEach
     protected void tearDown() throws Exception {
         persons = null;
     }
