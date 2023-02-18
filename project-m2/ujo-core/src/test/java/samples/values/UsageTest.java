@@ -15,7 +15,6 @@
  */
 package samples.values;
 
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
 import static samples.values.Person.*;

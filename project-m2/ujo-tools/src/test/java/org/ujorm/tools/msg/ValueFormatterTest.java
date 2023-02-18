@@ -21,8 +21,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import javax.xml.bind.DatatypeConverter;
 import org.junit.jupiter.api.Test;
-import static junit.framework.TestCase.assertSame;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *

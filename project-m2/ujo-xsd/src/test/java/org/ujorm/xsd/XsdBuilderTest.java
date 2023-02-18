@@ -15,7 +15,7 @@
  */
 package org.ujorm.xsd;
 
-import junit.framework.TestCase;
+
 import org.junit.jupiter.api.Test;
 import org.ujorm.orm.metaModel.MetaRoot;
 import org.ujorm.xsd.domains.Company;

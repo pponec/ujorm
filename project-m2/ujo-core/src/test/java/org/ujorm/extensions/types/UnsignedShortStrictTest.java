@@ -17,13 +17,8 @@ package org.ujorm.extensions.types;
 
 import java.util.function.Consumer;
 
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.extensions.ValueWrapper;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -197,9 +192,9 @@ public class UnsignedShortStrictTest {
         assertFalse(v2.hashCode() == v3x.hashCode());
         assertFalse(v3.hashCode() == v1x.hashCode());
 
-        TestCase.assertEquals(0, v1.compareTo(v1x));
-        TestCase.assertEquals(0, v2.compareTo(v2x));
-        TestCase.assertEquals(0, v3.compareTo(v3x));
+        assertEquals(0, v1.compareTo(v1x));
+        assertEquals(0, v2.compareTo(v2x));
+        assertEquals(0, v3.compareTo(v3x));
         assertTrue(v1.compareTo(v3x) < 0);
         assertTrue(v2.compareTo(v1x) > 0);
         assertTrue(v3.compareTo(v2x) > 0);
@@ -213,9 +208,9 @@ public class UnsignedShortStrictTest {
     private void assertEx(boolean exceptionExpected, Runnable batch) {
         try {
             batch.run();
-            assertFalse("Code must throw an exception", exceptionExpected);
+            assertFalse(exceptionExpected, "Code must throw an exception");
         } catch (RuntimeException e) {
-            assertTrue("Code must throw an exception", exceptionExpected);
+            assertTrue(exceptionExpected, "Code must throw an exception");
         }
     }
 
@@ -223,9 +218,9 @@ public class UnsignedShortStrictTest {
     private void assertEx(boolean exceptionExpected, Integer value, Consumer<Integer> batch) {
         try {
             batch.accept(value);
-            assertFalse("Code must throws an exception", exceptionExpected);
+            assertFalse(exceptionExpected, "Code must throws an exception");
         } catch (RuntimeException e) {
-            assertTrue("Code must NOT throw an exception", exceptionExpected);
+            assertTrue(exceptionExpected, "Code must NOT throw an exception");
         }
     }
 

@@ -15,13 +15,8 @@
  */
 package org.ujorm.extensions.types;
 
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.extensions.ValueWrapper;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

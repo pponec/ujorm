@@ -16,7 +16,7 @@
 package org.ujorm.orm.inheritance.sample;
 
 import java.util.logging.*;
-import junit.framework.TestCase;
+
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.criterion.*;

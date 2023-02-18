@@ -1,6 +1,5 @@
 package org.version2.tools;
 
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.version2.bo.generated.*;
 import org.version2.bo.*;

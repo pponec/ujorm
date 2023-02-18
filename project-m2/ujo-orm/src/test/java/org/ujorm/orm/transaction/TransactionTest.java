@@ -15,7 +15,6 @@
  */
 package org.ujorm.orm.transaction;
 
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.ujorm.orm.*;
 import org.ujorm.orm.inheritance.sample.Database;

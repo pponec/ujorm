@@ -17,7 +17,6 @@ package org.ujorm.core;
 
 import java.io.IOException;
 import java.io.Reader;
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 
 /**
