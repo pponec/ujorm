@@ -57,6 +57,10 @@ import org.ujorm.tools.xml.ApiElement;
  */
 public class XmlBuilder implements ApiElement<XmlBuilder> {
 
+    /** A name of a hidden element must be a unique instance */
+    @Nullable
+    public static String HIDDEN_NAME = new String("");
+
     /** The HTML tag name */
     public static final String HTML = "html";
 
@@ -64,7 +68,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     protected static final String REQUIRED_MSG = "The argument '{}' is required";
 
     /** Element name */
-    @Nullable
+    @NotNull
     protected final String name;
 
     /** Node writer */
@@ -94,7 +98,10 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      * @param name The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      */
-    public XmlBuilder(@Nullable final String name, @NotNull final XmlPrinter writer, final int level) {
+    public XmlBuilder(
+            @NotNull final String name,
+            @NotNull final XmlPrinter writer,
+            final int level) {
         this(name, writer, level, true);
     }
 
@@ -123,7 +130,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
         this(name, writer, 0);
     }
 
-    @Nullable
+    @NotNull
     @Override
     public String getName() {
         return name;

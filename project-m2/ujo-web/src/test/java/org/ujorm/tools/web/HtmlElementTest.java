@@ -17,6 +17,7 @@ package org.ujorm.tools.web;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.ao.MockServletResponse;
+import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.junit.jupiter.api.Assertions.*;
@@ -70,7 +71,7 @@ public class HtmlElementTest {
     @Test
     public void sample_2a() {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setRootElementName(ApiElement.HIDDEN_NAME);
+        config.setRootElementName(XmlBuilder.HIDDEN_NAME);
         config.setHtmlHeader(false);
         config.setDoctype("");
         config.setDocumentObjectModel(true);
@@ -101,7 +102,7 @@ public class HtmlElementTest {
     @Test
     public void sample_2b() {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setRootElementName(ApiElement.HIDDEN_NAME);
+        config.setRootElementName(XmlBuilder.HIDDEN_NAME);
         config.setHtmlHeader(false);
         config.setDoctype("");
 

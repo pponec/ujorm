@@ -26,12 +26,6 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.XmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
-import static org.ujorm.tools.xml.AbstractWriter.FORWARD_SLASH;
-import static org.ujorm.tools.xml.AbstractWriter.XML_2QUOT;
-import static org.ujorm.tools.xml.AbstractWriter.XML_GT;
-import static org.ujorm.tools.xml.AbstractWriter.XML_LT;
-import static org.ujorm.tools.xml.AbstractWriter.createWriter;
-import static org.ujorm.tools.xml.AbstractWriter.SPACE;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -92,7 +86,7 @@ public class XmlPrinter extends AbstractWriter {
     /** Open the Node */
     void writeBeg(XmlBuilder element, final boolean lastText) throws IOException {
         final CharSequence name = element.getName();
-        if (name != null) {
+        if (name != XmlBuilder.HIDDEN_NAME) {
             if (!lastText) {
                 writeNewLine(element.getLevel());
             }
@@ -103,7 +97,7 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Middle closing the Node */
     void writeMid(XmlBuilder element) throws IOException {
-        if (element.getName() != null) {
+        if (element.getName() != XmlBuilder.HIDDEN_NAME) {
             out.append(XML_GT);
         }
     }
@@ -111,7 +105,7 @@ public class XmlPrinter extends AbstractWriter {
     /** Close the Node */
     void writeEnd(XmlBuilder element) throws IOException {
         final CharSequence name = element.getName();
-        if (name != null) {
+        if (name != XmlBuilder.HIDDEN_NAME) {
             if (element.isFilled()) {
                 if (indentationEnabled && !element.isLastText()) {
                     writeNewLine(element.getLevel());

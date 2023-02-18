@@ -55,7 +55,10 @@ public class ColumnModel<D, V> {
         setSortable(direction);
     }
 
-    public ColumnModel(final int index, @NotNull final Function<D, V> column, @NotNull final CharSequence title, @NotNull final HttpParameter param) {
+    public ColumnModel(final int index,
+                       @NotNull final Function<D, V> column,
+                       @NotNull final CharSequence title,
+                       @Nullable final HttpParameter param) {
         this.index = index;
         this.column = Assert.notNull(column, "column");
         this.title = Assert.notNull(title, "title");

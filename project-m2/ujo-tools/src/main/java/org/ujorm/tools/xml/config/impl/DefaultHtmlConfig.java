@@ -188,7 +188,9 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
      * The {@code null} value is intended to build a root of AJAX queries.
      */
     public DefaultHtmlConfig setRootElementName(@Nullable String rootElementName) {
-        this.rootElementName = rootElementName;
+        this.rootElementName = rootElementName != null
+                ? rootElementName
+                : XmlBuilder.HIDDEN_NAME;
         return this;
     }
 

@@ -254,7 +254,8 @@ public class GridBuilder<D> {
             }
         }
         try (Element tBody = table.addElement(Html.TBODY)) {
-            final boolean hasRenderer = WebUtils.isType(Column.class, columns.stream().map(t -> t.getColumn()));
+            final Object cols = columns.stream().map(t -> t.getColumn());
+            final boolean hasRenderer = WebUtils.isType(Column.class, cols);
             resource.apply(this).forEach(value -> {
                 final Element rowElement = tBody.addElement(Html.TR);
                 for (ColumnModel<D, ?> col : columns) {

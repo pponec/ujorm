@@ -42,8 +42,8 @@ import org.ujorm.tools.Check;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.xml.ApiElement;
+import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.model.XmlModel;
-import static org.ujorm.tools.web.Html.LEGEND;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.Injector;
 
@@ -332,7 +332,7 @@ public final class Element implements ApiElement<Element>, Html {
     public Element addElementIf(final boolean enabled,
                                 @NotNull final String name,
                                 @NotNull final CharSequence... cssClasses) {
-        return addElement(enabled ? name : HIDDEN_NAME).setClass(cssClasses);
+        return addElement(enabled ? name : XmlBuilder.HIDDEN_NAME).setClass(cssClasses);
     }
 
     /** Add new Table */
