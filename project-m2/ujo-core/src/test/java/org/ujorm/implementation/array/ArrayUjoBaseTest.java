@@ -11,13 +11,13 @@ package org.ujorm.implementation.array;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.ujorm.KeyList;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 
 /**
  * TextCase
  * @author Pavel Ponec
  */
-public class ArrayUjoBaseTest extends MyTestCase {
+public class ArrayUjoBaseTest extends AbstractTest {
 
     /**
      * Test of readValue method,
@@ -49,7 +49,7 @@ public class ArrayUjoBaseTest extends MyTestCase {
 
     @Test
     public void testSpeedTime() throws Throwable {
-        System.out.println("A1:testSpeedTime: " + suite());
+        System.out.println("A1:testSpeedTime: " + testName());
 
         Long    o0 = Long.MAX_VALUE;
         Integer o1 = 1;
@@ -90,7 +90,7 @@ public class ArrayUjoBaseTest extends MyTestCase {
 
     @Test
     public void testSpeedTimeRecur() throws Throwable {
-        System.out.println("A2:testSpeedTime (recur): " + suite());
+        System.out.println("A2:testSpeedTime (recur): " + testName());
 
         Long    o0 = Long.MAX_VALUE;
         Integer o1 = 1;

@@ -21,7 +21,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.core.XmlHeader;
 
@@ -30,7 +30,7 @@ import org.ujorm.core.XmlHeader;
  * XmlSpeedTest
  * @author Pavel Ponec
  */
-public class XmlSpeedTest extends MyTestCase {
+public class XmlSpeedTest extends AbstractTest {
 
     public static final int DEEP  = 4;
     public static final int COUNT = 6000;
@@ -62,7 +62,7 @@ public class XmlSpeedTest extends MyTestCase {
 
     @Test
     public void testMapXML() throws Throwable {
-        System.out.println("MapUJO:Speed: " + suite());
+        System.out.println("MapUJO:Speed: " + testName());
         ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-MAP.xml");
 
 
@@ -90,7 +90,7 @@ public class XmlSpeedTest extends MyTestCase {
 
     @Test
     public void testArrayXML() throws Throwable {
-        System.out.println("ArrayUJO:Speed: " + suite());
+        System.out.println("ArrayUJO:Speed: " + testName());
         ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-ARRAY.xml");
 
         ArrayTree tree = new ArrayTree();
@@ -117,7 +117,7 @@ public class XmlSpeedTest extends MyTestCase {
 
     @Test
     public void testBeanUjoXML() throws Throwable {
-        System.out.println("BeanUjo:Speed: " + suite());
+        System.out.println("BeanUjo:Speed: " + testName());
         ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-POUJO.xml");
 
         BeanTree tree = new BeanTree();
@@ -172,7 +172,7 @@ public class XmlSpeedTest extends MyTestCase {
 
     @Test
     public void testXMLEncoderXML() throws Throwable {
-        System.out.println("XMLEncoder:Speed: " + suite());
+        System.out.println("XMLEncoder:Speed: " + testName());
         ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-POJO.xml");
 
         XMLEncoder encoder = null;
@@ -208,7 +208,7 @@ public class XmlSpeedTest extends MyTestCase {
 
     /** Serializable */
     public void XXX_testSerializableBIN() throws Throwable {
-        System.out.println("SerializableBIN:Speed: " + suite());
+        System.out.println("SerializableBIN:Speed: " + testName());
         ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-POJO.bin");
 
         ObjectOutput encoder = null;
@@ -246,7 +246,7 @@ public class XmlSpeedTest extends MyTestCase {
     public void testJaxbXML() throws Throwable {
         if (isJaxbXmlEnabled()) {
 
-            System.out.println("PojoJAXB:Speed: " + suite());
+            System.out.println("PojoJAXB:Speed: " + testName());
             ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-jaxb.xml");
 
             PojoTree root = new PojoTree();

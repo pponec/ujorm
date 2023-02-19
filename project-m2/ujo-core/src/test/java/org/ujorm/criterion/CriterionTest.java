@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.extensions.PathProperty;
 import static org.ujorm.criterion.Person.*;
 
@@ -20,7 +20,7 @@ import static org.ujorm.criterion.Person.*;
  * Criteria test
  * @author Pavel Ponec
  */
-public class CriterionTest extends MyTestCase {
+public class CriterionTest extends AbstractTest {
 
     CompositeKey<Person,Double> MOTHER_CASH  = PathProperty.of(MOTHER, CASH);
     CompositeKey<Person,Double> GMOTHER_CASH = PathProperty.of(MOTHER, MOTHER, CASH);

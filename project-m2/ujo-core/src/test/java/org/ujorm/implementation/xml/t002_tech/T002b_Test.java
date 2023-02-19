@@ -8,10 +8,9 @@
 package org.ujorm.implementation.xml.t002_tech;
 
 import java.io.ByteArrayInputStream;
-import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.Key;
 import org.ujorm.core.UjoManagerXML;
 
@@ -19,14 +18,14 @@ import org.ujorm.core.UjoManagerXML;
  *
  * @author Pavel Ponec
  */
-public class T002b_Test extends MyTestCase {
+public class T002b_Test extends AbstractTest {
 
     /**
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
     @Test
     public void testRestoreXMLb() throws Exception {
-        System.out.println("testPrintXMLb: " + suite());
+        System.out.println("testPrintXMLb: " + testName());
         StringBuilder writer = new StringBuilder(256);
         //
         UTechnicalBean person = createPerson();

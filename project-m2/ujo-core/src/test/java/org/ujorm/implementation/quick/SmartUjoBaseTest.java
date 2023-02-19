@@ -11,7 +11,7 @@ import java.awt.Color;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.ujorm.KeyList;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.implementation.quick.domains.SmartUjoChild;
 import org.ujorm.implementation.quick.domains.SmartUjoCompany;
 import org.ujorm.implementation.quick.domains.SmartUjoImpl;
@@ -20,7 +20,7 @@ import org.ujorm.implementation.quick.domains.SmartUjoImpl;
  * TextCase
  * @author Pavel Ponec
  */
-public class SmartUjoBaseTest extends MyTestCase {
+public class SmartUjoBaseTest extends AbstractTest {
 
     /**
      * Test of readValue method,
@@ -121,7 +121,7 @@ public class SmartUjoBaseTest extends MyTestCase {
 
     @Test
     public void testSpeedTime() throws Throwable {
-        System.out.println("A1:testSpeedTime: " + suite());
+        System.out.println("A1:testSpeedTime: " + testName());
 
         Long    o0 = Long.MAX_VALUE;
         Integer o1 = 1;
@@ -164,7 +164,7 @@ public class SmartUjoBaseTest extends MyTestCase {
 
     @Test
     public void testSpeedTimeRecur() throws Throwable {
-        System.out.println("A2:testSpeedTime (recur): " + super.suite());
+        System.out.println("A2:testSpeedTime (recur): " + super.testName());
 
         Long    o0 = Long.MAX_VALUE;
         Integer o1 = 1;

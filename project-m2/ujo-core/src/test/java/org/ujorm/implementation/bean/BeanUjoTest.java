@@ -10,13 +10,13 @@ package org.ujorm.implementation.bean;
 
 import java.util.Date;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class BeanUjoTest extends MyTestCase {
+public class BeanUjoTest extends AbstractTest {
 
     /**
      * Test of readValue method, of class org.ujorm.hmapImlp.AUnifiedDataObject.
@@ -63,7 +63,7 @@ public class BeanUjoTest extends MyTestCase {
 
     @Test
     public void testSpeedTime() throws Throwable {
-        System.out.println("U1:testSpeedTime: " + suite());
+        System.out.println("U1:testSpeedTime: " + testName());
 
         Long    o0 = Long.MAX_VALUE;
         Integer o1 = 1;
@@ -107,7 +107,7 @@ public class BeanUjoTest extends MyTestCase {
 
     @Test
     public void testSpeedTime2() throws Throwable {
-        System.out.println("U2:testSpeedTime (child): " + suite());
+        System.out.println("U2:testSpeedTime (child): " + testName());
 
         Long    o0 = Long.MAX_VALUE;
         Integer o1 = 1;

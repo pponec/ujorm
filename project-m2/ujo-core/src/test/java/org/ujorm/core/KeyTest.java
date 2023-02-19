@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.extensions.PathProperty;
 import org.ujorm.extensions.PersonExt;
 import static org.ujorm.extensions.PersonExt.*;
@@ -20,7 +20,7 @@ import static org.ujorm.extensions.PersonExt.*;
  *
  * @author Pavel Ponec
  */
-public class KeyTest extends MyTestCase {
+public class KeyTest extends AbstractTest {
 
     /**
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.

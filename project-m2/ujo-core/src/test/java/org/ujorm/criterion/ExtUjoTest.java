@@ -8,7 +8,7 @@
 package org.ujorm.criterion;
 
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.extensions.PathProperty;
 
 import static org.ujorm.criterion.Person.*;
@@ -17,7 +17,7 @@ import static org.ujorm.criterion.Person.*;
  * HashMap Unified Data Object Test
  * @author Pavel Ponec
  */
-public class ExtUjoTest extends MyTestCase {
+public class ExtUjoTest extends AbstractTest {
 
     @Test
     public void testInit1() throws Throwable {

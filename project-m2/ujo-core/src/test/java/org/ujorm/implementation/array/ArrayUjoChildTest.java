@@ -10,14 +10,14 @@ package org.ujorm.implementation.array;
 
 import java.util.Date;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.KeyList;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class ArrayUjoChildTest extends MyTestCase {
+public class ArrayUjoChildTest extends AbstractTest {
     private static final Class CLASS = ArrayUjoChildTest.class;
 
     /**
@@ -60,7 +60,7 @@ public class ArrayUjoChildTest extends MyTestCase {
 
     @Test
     public void testSpeedTime() throws Throwable {
-        System.out.println("testTime: " + suite());
+        System.out.println("testTime: " + testName());
 
         Long    o0 = Long.MAX_VALUE;
         Integer o1 = 1;

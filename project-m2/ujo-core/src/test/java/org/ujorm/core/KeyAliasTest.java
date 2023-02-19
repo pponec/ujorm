@@ -9,7 +9,7 @@ package org.ujorm.core;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.CompositeKey;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.extensions.PersonExt;
 import static org.ujorm.extensions.PersonExt.*;
 
@@ -17,7 +17,7 @@ import static org.ujorm.extensions.PersonExt.*;
  * KeyAliasTest
  * @author Pavel Ponec
  */
-public class KeyAliasTest extends MyTestCase {
+public class KeyAliasTest extends AbstractTest {
 
     /**
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.

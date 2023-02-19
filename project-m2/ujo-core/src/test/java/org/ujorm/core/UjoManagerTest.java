@@ -20,13 +20,13 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class UjoManagerTest extends MyTestCase {
+public class UjoManagerTest extends AbstractTest {
 
     /**
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.

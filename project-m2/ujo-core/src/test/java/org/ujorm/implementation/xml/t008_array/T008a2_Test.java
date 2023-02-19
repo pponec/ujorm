@@ -8,25 +8,24 @@
 package org.ujorm.implementation.xml.t008_array;
 
 import java.io.ByteArrayInputStream;
-import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.core.UjoManagerXML;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class T008a2_Test extends MyTestCase {
+public class T008a2_Test extends AbstractTest {
 
 
     /**
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
      */
     public void x_testPrintXML() throws Exception {
-        System.out.println("testPrintXML: " + suite());
+        System.out.println("testPrintXML: " + testName());
         StringBuilder writer = new StringBuilder(256);
         try {
             AtrPerson person = createPerson();
@@ -45,7 +44,7 @@ public class T008a2_Test extends MyTestCase {
      */
     @Test
     public void testRestoreXML() throws Exception {
-        System.out.println("testPrintXML: " + suite());
+        System.out.println("testPrintXML: " + testName());
         StringBuilder writer = new StringBuilder(256);
         //
         AtrPerson person = createPerson();

@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.core.ujos.UjoCSV;
 import org.ujorm.tools.msg.MsgFormatter;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -26,7 +26,7 @@ import static org.ujorm.core.ujos.UjoCSV.*;
  *
  * @author Pavel Ponec
  */
-public class UjoManagerCSVTest extends MyTestCase {
+public class UjoManagerCSVTest extends AbstractTest {
 
     protected UjoManagerCSV<UjoCSV> manager;
     protected Object context = "CSV-Context";
@@ -210,14 +210,14 @@ public class UjoManagerCSVTest extends MyTestCase {
         // System.out.print("-----\n" + out.toString("utf-8") + "\n-----\n");
     }
 
-    // ------------------------------------------------
+    // -- UTILS ---
 
-    public ByteArrayOutputStream createOutputStream() {
+    ByteArrayOutputStream createOutputStream() {
         ByteArrayOutputStream result = new ByteArrayOutputStream(8000*1000);
         return result;
     }
 
-    public ByteArrayInputStream createInputStream(ByteArrayOutputStream data) {
+    ByteArrayInputStream createInputStream(ByteArrayOutputStream data) {
         ByteArrayInputStream result = new ByteArrayInputStream(data.toByteArray());
         return result;
     }

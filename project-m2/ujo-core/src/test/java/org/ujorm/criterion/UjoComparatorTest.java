@@ -11,7 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.core.UjoComparator;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import static org.ujorm.criterion.Person.*;
  * Criteria test
  * @author Pavel Ponec
  */
-public class UjoComparatorTest extends MyTestCase {
+public class UjoComparatorTest extends AbstractTest {
 
     final Key<Person,Double> MOTHERS_CASH  = MOTHER.add(CASH);
     final Key<Person,String> MOTHERS_NAME  = MOTHER.add(NAME);

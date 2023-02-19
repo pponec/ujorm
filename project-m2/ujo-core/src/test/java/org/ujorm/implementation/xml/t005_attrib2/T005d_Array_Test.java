@@ -8,16 +8,15 @@
 package org.ujorm.implementation.xml.t005_attrib2;
 
 import java.io.ByteArrayInputStream;
-import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.core.UjoManagerXML;
 
 /**
  * @author Pavel Ponec
  */
-public class T005d_Array_Test extends MyTestCase {
+public class T005d_Array_Test extends AbstractTest {
 
 
     /**
@@ -25,7 +24,7 @@ public class T005d_Array_Test extends MyTestCase {
      */
     @Test
     public void testPrintXML() throws Exception {
-        System.out.println("testPrintXML: " + suite());
+        System.out.println("testPrintXML: " + testName());
         StringBuilder writer = new StringBuilder(256);
         try {
             AtrPersonArray person = createPerson();
@@ -43,7 +42,7 @@ public class T005d_Array_Test extends MyTestCase {
      */
     @Test
     public void testRestoreXML() throws Exception {
-        System.out.println("testPrintXML: " + suite());
+        System.out.println("testPrintXML: " + testName());
         StringBuilder writer = new StringBuilder(256);
         //
         AtrPersonArray person = createPerson();

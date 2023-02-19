@@ -12,7 +12,7 @@ import java.awt.Color;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.ujorm.KeyList;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.implementation.quick.domains.SmartUjoChild;
 import org.ujorm.implementation.quick.domains.SmartUjoImpl;
 
@@ -20,7 +20,7 @@ import org.ujorm.implementation.quick.domains.SmartUjoImpl;
  *
  * @author Pavel Ponec
  */
-public class SmartUjoChildTest extends MyTestCase {
+public class SmartUjoChildTest extends AbstractTest {
     private final static Class CLASS = SmartUjoChildTest.class;
 
     /**
@@ -63,7 +63,7 @@ public class SmartUjoChildTest extends MyTestCase {
 
     @Test
     public void testSpeedTime() throws Throwable {
-        System.out.println("testTime: " + suite());
+        System.out.println("testTime: " + testName());
 
         Long    o0 = Long.MAX_VALUE;
         Integer o1 = 1;

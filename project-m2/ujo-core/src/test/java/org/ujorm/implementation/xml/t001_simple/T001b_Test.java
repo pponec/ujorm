@@ -8,18 +8,17 @@
 package org.ujorm.implementation.xml.t001_simple;
 
 import java.io.ByteArrayInputStream;
-import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.core.UjoManagerXML;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class T001b_Test extends MyTestCase {
+public class T001b_Test extends AbstractTest {
 
 
     @Test
@@ -31,7 +30,7 @@ public class T001b_Test extends MyTestCase {
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      */
     public void restoreXML(String name, boolean printText) throws Exception {
-        System.out.println( "restoreXML \"" + name + "\": " + suite());
+        System.out.println( "restoreXML \"" + name + "\": " + testName());
         StringBuilder writer = new StringBuilder(256);
         //
         UPerson person = createPerson();

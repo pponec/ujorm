@@ -12,14 +12,14 @@ import java.io.ByteArrayOutputStream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.core.ujos.UjoCSV;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class UjoManagerRBundleTest extends MyTestCase {
+public class UjoManagerRBundleTest extends AbstractTest {
 
     protected UjoManagerRBundle<UjoCSV> manager;
     protected Object context;

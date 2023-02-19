@@ -9,17 +9,17 @@ package org.ujorm.implementation.field;
 
 import java.util.Date;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 
 /**
  * HashMap Unified Data Object Test
  * @author Pavel Ponec
  */
-public class FieldUjoTest extends MyTestCase {
+public class FieldUjoTest extends AbstractTest {
 
     @Test
     public void testSpeedTime() throws Throwable {
-        System.out.println("M1:testTime: " + suite());
+        System.out.println("M1:testTime: " + testName());
 
         Long    o0 = Long.MAX_VALUE;
         Integer o1 = 1;
@@ -64,7 +64,7 @@ public class FieldUjoTest extends MyTestCase {
 
     @Test
     public void testSpeedTimeChild() throws Throwable {
-        System.out.println("M2:testTime (child): " + suite());
+        System.out.println("M2:testTime (child): " + testName());
 
         Long    o0 = Long.MAX_VALUE;
         Integer o1 = 1;

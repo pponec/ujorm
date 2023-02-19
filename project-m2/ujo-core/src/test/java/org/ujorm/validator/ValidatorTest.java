@@ -15,7 +15,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
 import org.ujorm.Key;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.Validator;
 import static org.ujorm.validator.impl.BetweenValidator.*;
 
@@ -23,7 +23,7 @@ import static org.ujorm.validator.impl.BetweenValidator.*;
  * TextCase
  * @author Pavel Ponec
  */
-public class ValidatorTest extends MyTestCase {
+public class ValidatorTest extends AbstractTest {
 
     /** Check the input must not be great than 10. */
     @Test

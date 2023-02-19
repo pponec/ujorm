@@ -8,10 +8,9 @@
 package org.ujorm.implementation.xml.t002_tech;
 
 import java.io.ByteArrayInputStream;
-import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.Key;
 import org.ujorm.core.UjoManagerXML;
 
@@ -19,7 +18,7 @@ import org.ujorm.core.UjoManagerXML;
  *
  * @author Pavel Ponec
  */
-public class T002c_Test extends MyTestCase {
+public class T002c_Test extends AbstractTest {
 
 
     /**
@@ -27,7 +26,7 @@ public class T002c_Test extends MyTestCase {
      */
     @Test
     public void testRestoreXMLc() throws Exception {
-        System.out.println("testRestoreXMLc: " + suite());
+        System.out.println("testRestoreXMLc: " + testName());
         //
         StringBuilder writer = new StringBuilder(256);
         //

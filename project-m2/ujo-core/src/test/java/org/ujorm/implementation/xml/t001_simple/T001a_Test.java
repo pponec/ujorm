@@ -8,18 +8,17 @@
 package org.ujorm.implementation.xml.t001_simple;
 
 import java.io.ByteArrayInputStream;
-import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.core.UjoManagerXML;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class T001a_Test extends MyTestCase {
+public class T001a_Test extends AbstractTest {
 
 
     /**
@@ -27,7 +26,7 @@ public class T001a_Test extends MyTestCase {
      */
     @Test
     public void testPrintXML() throws Exception {
-        System.out.println("testPrintXML: " + suite());
+        System.out.println("testPrintXML: " + testName());
         StringBuilder writer = new StringBuilder(256);
         try {
             UPerson person = createPerson();
@@ -45,7 +44,7 @@ public class T001a_Test extends MyTestCase {
      */
     @Test
     public void testRestoreXML() throws Exception {
-        System.out.println("testPrintXML: " + suite());
+        System.out.println("testPrintXML: " + testName());
         StringBuilder writer = new StringBuilder(256);
         //
         UPerson person = createPerson();
@@ -61,7 +60,7 @@ public class T001a_Test extends MyTestCase {
      */
     @Test
     public void testEncodedXML() throws Exception {
-        System.out.println("testPrintXML: " + suite());
+        System.out.println("testPrintXML: " + testName());
         StringBuilder writer = new StringBuilder(256);
         String ENCODE = "windows-1250";
         String personName = "ÁĚŠČŘŽÝÁÍÉ-áěščřžýáíé";

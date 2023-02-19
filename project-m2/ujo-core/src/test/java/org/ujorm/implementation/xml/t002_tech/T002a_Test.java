@@ -13,21 +13,21 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.core.UjoManagerXML;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class T002a_Test extends MyTestCase {
+public class T002a_Test extends AbstractTest {
 
     /**
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
      */
     @Test
     public void testPrintXML() throws Exception {
-        System.out.println("testPrintXML: " + suite());
+        System.out.println("testPrintXML: " + testName());
         StringBuilder writer = new StringBuilder(256);
         try {
             UTechnicalBean person = createPerson();
@@ -44,7 +44,7 @@ public class T002a_Test extends MyTestCase {
      */
     @Test
     public void testRestoreXML() throws Exception {
-        System.out.println("testPrintXML: " + suite());
+        System.out.println("testPrintXML: " + testName());
         StringBuilder writer = new StringBuilder(256);
         //
         UTechnicalBean person = createPerson();

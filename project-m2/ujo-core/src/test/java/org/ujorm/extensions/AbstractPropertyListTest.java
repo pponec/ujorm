@@ -17,7 +17,7 @@
 package org.ujorm.extensions;
 
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 
 import static org.ujorm.extensions.PersonExt.PERS;
 
@@ -25,7 +25,7 @@ import static org.ujorm.extensions.PersonExt.PERS;
  * List testing ...
  * @author Pavel Ponec
  */
-public class AbstractPropertyListTest extends MyTestCase {
+public class AbstractPropertyListTest extends AbstractTest {
 
     /**
      * Test of getItemCount method, of class AbstractPropertyList.

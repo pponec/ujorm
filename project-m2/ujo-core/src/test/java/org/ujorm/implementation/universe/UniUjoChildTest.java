@@ -11,13 +11,13 @@ package org.ujorm.implementation.universe;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.ujorm.KeyList;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class UniUjoChildTest extends MyTestCase {
+public class UniUjoChildTest extends AbstractTest {
     private static final Class CLASS = UniUjoChildTest.class;
 
     /**
@@ -84,7 +84,7 @@ public class UniUjoChildTest extends MyTestCase {
 
     @Test
     public void testSpeedTime() throws Throwable {
-        System.out.println("testTime: " + suite());
+        System.out.println("testTime: " + testName());
 
         Long    o0 = Long.MAX_VALUE;
         Integer o1 = 1;

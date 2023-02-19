@@ -8,20 +8,19 @@
 package org.ujorm.implementation.xml.t006_attrib3;
 
 import java.io.ByteArrayInputStream;
-import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import org.junit.jupiter.api.Test;
-import org.ujorm.MyTestCase;
+import org.ujorm.AbstractTest;
 import org.ujorm.core.UjoManagerXML;
 
 /**
  * Annotation Test
  * @author Pavel Ponec
  */
-public class T004b_Test extends MyTestCase {
+public class T004b_Test extends AbstractTest {
 
 
     /**
@@ -29,7 +28,7 @@ public class T004b_Test extends MyTestCase {
      */
     @Test
     public void testPrintXML() throws Exception {
-        System.out.println("testPrintXML: " + suite());
+        System.out.println("testPrintXML: " + testName());
         StringBuilder writer = new StringBuilder(256);
         try {
             AtrPerson person = createPerson();
@@ -47,7 +46,7 @@ public class T004b_Test extends MyTestCase {
      */
     @Test
     public void testRestoreXML() throws Exception {
-        System.out.println("testPrintXML: " + suite());
+        System.out.println("testPrintXML: " + testName());
         StringBuilder writer = new StringBuilder(256);
         //
         AtrPerson person = createPerson();
