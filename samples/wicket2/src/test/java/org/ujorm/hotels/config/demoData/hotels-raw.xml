@@ -1,0 +1,291 @@
+<?xml  version="1.0" encoding="utf-8" ?>
+<?xml-stylesheet type="text/xsl" href="styles/hotels.xsl"?>
+
+<!--
+* DEMO HOTELS
+* Original data was loaded from the application "Sample Hotel Search" on the day 2013-05-25
+* using a resource type of: http://api.hotelsbase.org/search.php?longitude=14.421138&latitude=50.087533
+*
+* License (http://api.hotelsbase.org/documentation.php):
+* Each page that uses hotelsbase data must link to hotelsbase.org, in any many you choose.
+* Hotelsbase (http://www.hotelbase.org/) is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+* Creative Commons License
+-->
+
+<HotelList>
+    <avgLat>14.421138</avgLat>
+    <avgLong>50.087533</avgLong>
+    <Hotel>
+        <name>A O City Holesovice Hostel Prague</name>
+        <fulladdress>U Vystaviste 1/262 , Prague,Czech Republic</fulladdress>
+        <phone></phone>
+        <city>Prague</city>
+        <description>A O City Holesovice Hostel Prague is a Hostel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>3</stars>
+        <rating>6.73</rating>
+        <long>14.4358</long>
+        <lat>50.1066</lat>
+        <dist>1.63</dist>
+        <price>11</price>
+
+        <url></url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/1341/PragueCzech-Republic/AandampO-City-Holesovice-Hostel-Prague.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>Czech Inn Hostel</name>
+        <fulladdress>Francouzska 76 , Prague,Czech Republic</fulladdress>
+        <phone></phone>
+        <city>Prague</city>
+        <description>Czech Inn Hostel is a Hostel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>3</stars>
+        <rating>8.8</rating>
+        <long>14.4463</long>
+        <lat>50.0719</lat>
+        <dist>2.03</dist>
+        <price>11</price>
+        <tripadvisorurl>/Hotel_Review-g274707-d618230-Reviews-Czech_Inn_Hostel-Prague_Bohemia.html</tripadvisorurl>
+        <url>http://www.czech-inn.com/</url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/64300/PragueCzech-Republic/Czech-Inn-Hostel.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>City Bell Hotel in the city center</name>
+        <fulladdress>Belgicka 10 , Prague,Czech Republic</fulladdress>
+        <phone>+420 222 522 422</phone>
+        <city>Prague</city>
+        <description>City Bell Hotel in the city center is a  in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>3 stars</stars>
+        <rating>8.24</rating>
+        <long>14.4367</long>
+        <lat>50.0717</lat>
+        <dist>1.51</dist>
+        <price>12</price>
+        <tripadvisorurl>/Hotel_Review-g274707-d659780-Reviews-Hotel_City_Bell-Prague_Bohemia.html</tripadvisorurl>
+        <url>http://www.hotelcitybell.cz</url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/122316/PragueCzech-Republic/City-Bell-Hotel-in-the-city-center.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>Little Quarter Hostel</name>
+        <fulladdress>Nerudova 21 , Prague,Czech Republic</fulladdress>
+        <phone>+420 257 212 029</phone>
+        <city>Prague</city>
+        <description>Little Quarter Hostel is a Hotel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>3</stars>
+        <rating>8.57</rating>
+        <long>14.3996</long>
+        <lat>50.0884</lat>
+        <dist>1.49</dist>
+        <price>12</price>
+
+        <url>http://www.littlequarter.com/</url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/182694/PragueCzech-Republic/Little-Quarter-Hostel.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>A Plus Hostel</name>
+        <fulladdress>Na Florenci 1413/33 , Prague,Czech Republic</fulladdress>
+        <phone></phone>
+        <city>Prague</city>
+        <description>A Plus Hostel is a Hotel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>3</stars>
+        <rating>7</rating>
+        <long>14.4373</long>
+        <lat>50.0893</lat>
+        <dist>1.12</dist>
+        <price>14</price>
+        <tripadvisorurl>/Hotel_Review-g274707-d577576-Reviews-A_Plus_Hostel-Prague_Bohemia.html</tripadvisorurl>
+        <url>http://www.plushostels.com/hostels</url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/1227/PragueCzech-Republic/A-Plus-Hostel.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>Hostel Rosemary Prague</name>
+        <fulladdress>RĹŻĹžovĂĄ 5/971 , Prague,Czech Republic</fulladdress>
+        <phone></phone>
+        <city>Prague</city>
+        <description>Hostel Rosemary Prague is a Hostel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>2</stars>
+        <rating>8.01</rating>
+        <long>14.43</long>
+        <lat>50.0841</lat>
+        <dist>0.65</dist>
+        <price>12</price>
+
+        <url>http://tyn.prague-hostels.cz/</url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/113681/PragueCzech-Republic/Hostel-Rosemary-Prague.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>Hotel Andel</name>
+        <fulladdress>Radlicka 40 , Prague,Czech Republic</fulladdress>
+        <phone>+420 251 171 310</phone>
+        <city>Prague</city>
+        <description>Hotel Andel is a Hotel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>3</stars>
+        <rating>7.53</rating>
+        <long>14.4023</long>
+        <lat>50.0671</lat>
+        <dist>1.89</dist>
+        <price>16</price>
+
+        <url>http://hotelandel.com/</url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/116853/PragueCzech-Republic/Hotel-Andel.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>Hotel Ostas</name>
+        <fulladdress>Orebitska 8 , Prague,Czech Republic</fulladdress>
+        <phone>+420 222 540 960</phone>
+        <city>Prague</city>
+        <description>Hotel Ostas is a Hotel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>3</stars>
+        <rating>7.28</rating>
+        <long>14.4525</long>
+        <lat>50.0858</lat>
+        <dist>2.17</dist>
+        <price>16</price>
+        <tripadvisorurl>/Hotel_Review-g274707-d1418559-Reviews-Hotel_Ostas-Prague_Bohemia.html</tripadvisorurl>
+        <url>http://www.hotelostas.cz/aboutus.htm</url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/140961/PragueCzech-Republic/Hotel-Ostas.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>Hotel Residence Tabor</name>
+        <fulladdress>Taboritska 4 , Prague,Czech Republic</fulladdress>
+        <phone></phone>
+        <city>Prague</city>
+        <description>Hotel Residence Tabor is a Hotel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>3</stars>
+        <rating>7.6</rating>
+        <long>14.4537</long>
+        <lat>50.0837</lat>
+        <dist>2.26</dist>
+        <price>16</price>
+        <tripadvisorurl>/Hotel_Review-g274707-d646147-Reviews-Hotel_Residence_Tabor-Prague_Bohemia.html</tripadvisorurl>
+        <url>http://www.residencetaborhotel.com/</url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/144476/PragueCzech-Republic/Hotel-Residence-Tabor.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>Plus Hostel Prague</name>
+        <fulladdress>Privozni 1 , Prague,Czech Republic</fulladdress>
+        <phone></phone>
+        <city>Prague</city>
+        <description>Plus Hostel Prague is a Hostel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>2</stars>
+        <rating>7.13</rating>
+        <long>14.4513</long>
+        <lat>50.1094</lat>
+        <dist>2.55</dist>
+        <price>12</price>
+
+        <url>http://www.plushostels.com/plusprague</url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/218104/PragueCzech-Republic/Plus-Hostel-Prague.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>Ritchies Hostel</name>
+        <fulladdress>Karlova 9 and 13 , Prague,Czech Republic</fulladdress>
+        <phone></phone>
+        <city>Prague</city>
+        <description>Ritchies Hostel is a Hostel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>2</stars>
+        <rating>0</rating>
+        <long>14.4173</long>
+        <lat>50.086</lat>
+        <dist>0.28</dist>
+        <price>12</price>
+
+        <url></url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/236050/PragueCzech-Republic/Ritchies-Hostel.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>U Bubenicku</name>
+        <fulladdress>MyslĂ­kova 8 , Prague,Czech Republic</fulladdress>
+        <phone></phone>
+        <city>Prague</city>
+        <description>U Bubenicku is a Hotel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>2</stars>
+        <rating>0</rating>
+        <long>14.4156</long>
+        <lat>50.0774</lat>
+        <dist>0.78</dist>
+        <price>12</price>
+        <tripadvisorurl>/Hotel_Review-g274707-d2312813-Reviews-U_Bubenicku-Prague_Bohemia.html</tripadvisorurl>
+        <url></url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/277979/PragueCzech-Republic/U-Bubenicku.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>Hotel Slavia Prague</name>
+        <fulladdress>Vladivostocka 1460/10 , Prague,Czech Republic</fulladdress>
+        <phone></phone>
+        <city>Prague</city>
+        <description>Hotel Slavia Prague is a Hotel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>3</stars>
+        <rating>7.69</rating>
+        <long>14.4789</long>
+        <lat>50.0685</lat>
+        <dist>4.19</dist>
+        <price>17</price>
+
+        <url>http://www.slaviahotel.com/</url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/148976/PragueCzech-Republic/Hotel-Slavia-Prague.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>Hostel Marabou</name>
+        <fulladdress>Konevova 738-55 , Prague,Czech Republic</fulladdress>
+        <phone></phone>
+        <city>Prague</city>
+        <description>Hostel Marabou is a Hostel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>2</stars>
+        <rating>0</rating>
+        <long>14.4605</long>
+        <lat>50.0888</lat>
+        <dist>2.72</dist>
+        <price>13</price>
+
+        <url></url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/113590/PragueCzech-Republic/Hostel-Marabou.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>Aida Hotel Prague</name>
+        <fulladdress>Kubisova 23 , Prague,Czech Republic</fulladdress>
+        <phone></phone>
+        <city>Prague</city>
+        <description>Aida Hotel Prague is a Hotel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>4</stars>
+        <rating>7.57</rating>
+        <long>14.455</long>
+        <lat>50.1208</lat>
+        <dist>3.23</dist>
+        <price>23</price>
+        <tripadvisorurl>/Hotel_Review-g274707-d574317-Reviews-Hotel_Seifert-Prague_Bohemia.html</tripadvisorurl>
+        <url>http://www.pragueshotels.com/</url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/4585/PragueCzech-Republic/Aida-Hotel-Prague.html</hotelsbaseUrl>
+    </Hotel>
+    <Hotel>
+        <name>Wellness Hotel Step</name>
+        <fulladdress>Malletova 1141 , Prague,Czech Republic</fulladdress>
+        <phone>+420 296 786 350</phone>
+        <city>Prague</city>
+        <description>Wellness Hotel Step is a Hotel in Prague,Czech Republic.</description>
+        <featured></featured>
+        <stars>4</stars>
+        <rating>7.31</rating>
+        <long>14.4844</long>
+        <lat>50.1016</lat>
+        <dist>4.47</dist>
+        <price>23</price>
+        <tripadvisorurl>/Hotel_Review-g274707-d296749-Reviews-Wellness_Hotel_Step-Prague_Bohemia.html</tripadvisorurl>
+        <url>http://www.wellness-hotel-step.cz/</url>
+        <hotelsbaseUrl>http://www.hotelsbase.org/hotels/287933/PragueCzech-Republic/Wellness-Hotel-Step.html</hotelsbaseUrl>
+    </Hotel>
+
+</HotelList>

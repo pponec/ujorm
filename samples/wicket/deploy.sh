@@ -2,6 +2,7 @@
 #
 # Usage: sh /fullpath/deploy.sh
 
+set -e
 DOMAIN="hotels.ujorm.org"
 PROTOCOL="https"
 
@@ -10,8 +11,8 @@ PDIR=$(dirname $0)
 MSG=FAILED
 cd $PDIR
 
-/opt/maven/default/bin/mvn clean install \
-&& rsync -v target/*.war ponec@ponec.net:/home/tomcat/webapps/$REMOTEDIR/ROOT.war \
+sh ../../mvnw clean install \
+&& rsync -v target/*.war ponec@webfort:/home/tomcat/webapps/$REMOTEDIR/ROOT.war \
 && MSG="$PROTOCOL://$DOMAIN/"
 
 

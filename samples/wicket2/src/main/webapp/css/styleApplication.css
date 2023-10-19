@@ -1,0 +1,199 @@
+body {
+    font-family: "Titillium Web","Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    background-color: #f7f9fa;
+}
+
+div.tabpanel .tab-row li a.hotel {
+    background-image: url("../images/icons/house.png");
+}
+
+div.tabpanel .tab-row li a.booking {
+    background-image: url("../images/icons/book_open.png");
+}
+
+div.tabpanel .tab-row li a.customer {
+    background-image: url("../images/icons/user.png");
+}
+
+div.tabpanel .tab-row li a.params {
+    background-image: url("../images/icons/wrench.png");
+}
+
+div.tabpanel .tab-row li a.about {
+    background-image: url("../images/icons/help.png");
+}
+
+div.tabpanel .tab-row li a.source {
+    background-image: url("../images/icons/table.png");
+}
+
+span.srcLink {
+    background-image: url("../images/icons/table.png") ;
+    background-repeat: no-repeat;
+    background-position: left;
+    display: inline-block;
+    padding-left: 20px;
+    margin-top: 20px;
+}
+
+/* A fix width of hotel table */
+div.hotel table.border {
+    width: 800px;
+}
+table.border td.hotelName {
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 150px;
+}
+table.border td.streetName {
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100px;
+}
+table.border td div.actions {
+    white-space: nowrap;
+}
+
+/* Prologue */
+div.prologue {
+    color: silver;
+    font-style: italic;
+    padding-left: 33px;
+}
+
+/* Prologue */
+div.prologue a {
+    text-decoration: none;
+    color: silver;
+}
+
+div.chapter-about {
+    margin: 2px 0 10px 0px;
+    width: 790px;
+}
+
+h1, h2, h3, h4 {
+    font-family: inherit;
+}
+
+h1 {
+    text-shadow: 4px 4px 4px #aaa;
+    margin-left: 30px;
+}
+
+h1.applicationHeader {
+    background-image: url("../images/hotel.png");
+    background-position: right;
+    background-repeat: no-repeat;
+    padding-right: 120px;
+    line-height: 64px;
+    display: inline-block;
+}
+
+h1.applicationHeader.test {
+    color: #db4646;
+}
+
+/* About Panel*/
+div.about h1,
+div.about h2,
+div.about h3,
+div.about h4 {
+    margin: 25px 0 0 10px;
+}
+
+div.about h2 {
+    font-size: 24.5px;
+}
+
+div.about h3 {
+    font-size: 17.5px;
+    line-height: 20px;
+}
+
+div.about h4 {
+    font-size: 17.5px;
+    line-height: 20px;
+}
+
+div.home {
+    margin-left: 10px;
+}
+
+hr {
+    margin-top: 20px;
+}
+
+.toolbar {
+    margin-bottom: 3px;
+}
+
+div.footer {
+    color: gray;
+    border-top: thick solid #eeeeee;
+    margin-top: 100px;
+    padding: 10px 20px 15px;
+    font-size: 12px;
+    background-color: #f7f7f7;
+}
+
+div.footer a {
+    text-decoration: none;
+}
+
+div#logo {
+    width: 790px;
+}
+
+div.login {
+    float: right;
+    margin-top: 10px;
+}
+
+.login .loginLink a {
+    background-image: url("../images/icons/door_out.png");
+    background-position: right;
+    background-repeat: no-repeat;
+    padding-right: 25px;
+}
+
+img.world-icon {
+    width: 16px;
+    height: 16px;
+    margin-left: 4px;
+}
+
+.ui-widget {
+    font-family: inherit;
+}
+
+td.actions .insertHotel {
+    text-align: right;
+}
+
+td.insertHotel img.world-icon {
+    margin-right: 9px;
+}
+
+div .loginField input {
+    padding-right: 27px;
+    background: url(../images/icons/user_light.png) no-repeat scroll 97% center white;
+}
+
+div .passwordField input {
+    padding-right: 27px;
+    background: url(../images/icons/key_light.png) no-repeat scroll 97% center white;
+}
+
+div.date input {
+    background: url(../images/icons/date_light.png) no-repeat scroll 97% center white;
+}
+
+.tabpanel .tab-panel {
+    background-color: white;
+    margin: 0;
+    padding: 25px;
+    border: 2px solid #c0d8ec;
+    border-radius: 6px;
+}
+
