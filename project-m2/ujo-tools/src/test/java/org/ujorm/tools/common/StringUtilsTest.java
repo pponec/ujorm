@@ -18,6 +18,11 @@ package org.ujorm.tools.common;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,5 +60,10 @@ public class StringUtilsTest {
         assertEquals("/text/dummy.txt", s1);
         assertEquals("/org/ujorm/tools/common/text/dummy.txt", s2);
     }
+
+//    @Test
+//    public void shortSample() throws IOException {
+//        Stream<String> rows = Files.lines(Path.of("File.txt"), StandardCharsets.UTF_8);
+//    }
 
 }
