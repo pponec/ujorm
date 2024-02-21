@@ -8,7 +8,7 @@ import org.ujorm.tools.web.HtmlElement;
 
 /**
  *
- * @author Pavel Pone
+ * @author Pavel Ponec
  */
 public class MockServletResponseTest {
 

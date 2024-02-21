@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.ao.Column;
-import org.ujorm.tools.web.ao.MockServletResponse;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.junit.jupiter.api.Assertions.*;

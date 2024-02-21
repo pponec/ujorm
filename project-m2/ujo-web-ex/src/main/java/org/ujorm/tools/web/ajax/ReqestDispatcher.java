@@ -20,9 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.sun.net.httpserver.HttpExchange;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
@@ -44,10 +42,10 @@ public class ReqestDispatcher {
     private static final Logger LOGGER = Logger.getLogger(ReqestDispatcher.class.getName());
 
     @NotNull
-    private final HttpServletRequest input;
+    private final HttpExchange input;
 
     @NotNull
-    private final HttpServletResponse output;
+    private final HttpExchange output;
 
     @NotNull
     private final HtmlConfig htmlConfig;
@@ -60,23 +58,23 @@ public class ReqestDispatcher {
     private final boolean noCache = true;
 
     public ReqestDispatcher(
-            @NotNull HttpServletRequest input,
-            @NotNull HttpServletResponse output) {
+            @NotNull HttpExchange input,
+            @NotNull HttpExchange output) {
         this("Info", input, output);
     }
 
     public ReqestDispatcher(
             @NotNull CharSequence title,
-            @NotNull HttpServletRequest input,
-            @NotNull HttpServletResponse output) {
+            @NotNull HttpExchange input,
+            @NotNull HttpExchange output) {
         this(input, output, HtmlConfig.ofDefault()
                 .setTitle(title)
                 .setNiceFormat());
     }
 
     public ReqestDispatcher(
-            @NotNull HttpServletRequest input,
-            @NotNull HttpServletResponse output,
+            @NotNull HttpExchange input,
+            @NotNull HttpExchange output,
             @NotNull HtmlConfig htmlConfig
     ) {
         this.input = input;
