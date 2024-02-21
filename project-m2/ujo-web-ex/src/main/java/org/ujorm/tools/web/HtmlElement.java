@@ -17,12 +17,12 @@
 package org.ujorm.tools.web;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.sun.net.httpserver.HttpExchange;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.ApiElement;
@@ -318,7 +318,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @see MockServletResponse
      */
     @NotNull
-    public static HtmlElement of(@NotNull final HttpExchange response, @NotNull final CharSequence... cssLinks) {
+    public static HtmlElement of(@NotNull final OutputStream response, @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setCssLinks(cssLinks);
         return of(config, response);
@@ -329,19 +329,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @see MockServletResponse
      */
     @NotNull
-    public static HtmlElement of(@NotNull final CharSequence title, @NotNull final HttpExchange response, @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setTitle(title);
-        config.setCssLinks(cssLinks);
-        return of(config, response);
-    }
-
-    /** Create new instance with empty html headers
-     * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
-     */
-    @NotNull
-    public static HtmlElement of(@NotNull final CharSequence title, @NotNull final HttpExchange response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
+    public static HtmlElement of(@NotNull final CharSequence title, @NotNull final OutputStream response, @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
@@ -353,7 +341,19 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @see MockServletResponse
      */
     @NotNull
-    public static HtmlElement niceOf(@NotNull final CharSequence title, @NotNull final HttpExchange response, @NotNull final CharSequence... cssLinks) {
+    public static HtmlElement of(@NotNull final CharSequence title, @NotNull final OutputStream response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setTitle(title);
+        config.setCssLinks(cssLinks);
+        return of(config, response);
+    }
+
+    /** Create new instance with empty html headers
+     * @throws IllegalStateException IO exceptions
+     * @see MockServletResponse
+     */
+    @NotNull
+    public static HtmlElement niceOf(@NotNull final CharSequence title, @NotNull final OutputStream response, @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setTitle(title);
@@ -366,7 +366,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @see MockServletResponse
      */
     @NotNull
-    public static HtmlElement niceOf(@NotNull final CharSequence title, @NotNull final HttpExchange response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
+    public static HtmlElement niceOf(@NotNull final CharSequence title, @NotNull final OutputStream response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setTitle(title);
@@ -381,7 +381,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement niceOf(
-            @NotNull final HttpExchange response,
+            @NotNull final OutputStream response,
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
@@ -398,8 +398,8 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement of(
-            @NotNull final HttpExchange request,
-            @NotNull final HttpExchange response) throws IllegalStateException, UnsupportedEncodingException {
+            @NotNull final ServletRequest request,
+            @NotNull final OutputStream response) throws IllegalStateException, UnsupportedEncodingException {
         return of(request, response, HtmlConfig.ofDefault());
     }
 
@@ -413,8 +413,8 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement of(
-            @NotNull final HttpExchange request,
-            @NotNull final HttpExchange response,
+            @NotNull final ServletRequest request,
+            @NotNull final OutputStream response,
             @NotNull final HtmlConfig config) throws IllegalStateException, UnsupportedEncodingException {
         request.setCharacterEncoding(config.getCharset().toString());
         return of(config, response);
@@ -426,12 +426,12 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @return An instance of the HtmlPage
      * @throws IllegalStateException IO exceptions
      * @see MockServletResponse
-     * @deprecated Use the method {@link #of(org.ujorm.tools.xml.config.HtmlConfig, com.sun.net.httpserver.HttpExchange) } rather.
+     * @deprecated Use the method {@link #of(org.ujorm.tools.xml.config.HtmlConfig, javax.servlet.http.OutputStream) } rather.
      */
     @Deprecated
     @NotNull
     public static HtmlElement of(
-            @NotNull final HttpExchange response,
+            @NotNull final OutputStream response,
             @NotNull final HtmlConfig config) throws IllegalStateException {
         return of(config, response);
     }
@@ -446,7 +446,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     @NotNull
     public static HtmlElement of(
             @NotNull final HtmlConfig config,
-            @NotNull final HttpExchange response
+            @NotNull final OutputStream response
             ) throws IllegalStateException {
         response.setCharacterEncoding(config.getCharset().toString());
         response.setContentType(config.getContentType());
