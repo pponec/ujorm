@@ -47,11 +47,16 @@ public class Array<T> implements Serializable {
 
     @NotNull
     public Array<T> clone() {
+        return new Array<>(toArray());
+    }
+
+    @NotNull
+    public T[] toArray() {
         final Class<T> type = (Class<T>) array.getClass().getComponentType();
         @SuppressWarnings("unchecked")
-        final T[] result = (T[]) java.lang.reflect.Array.newInstance(type, array.length);
+        final T[] result =  (T[]) java.lang.reflect.Array.newInstance(type, array.length);
         System.arraycopy(array, 0, result, 0, array.length);
-        return new Array<>(result);
+        return result;
     }
 
     /** Negative index value is supported, the index out of the range returns the {@code null} value. */
@@ -89,12 +94,13 @@ public class Array<T> implements Serializable {
 
     /** Add new items */
     @NotNull
-    public Array<T> join(@NotNull  final T... toAdd) {
+    public Array<T> join(@NotNull final T... toAdd) {
         final T[] result = Arrays.copyOf(array, array.length + toAdd.length);
         System.arraycopy(toAdd, 0, result, array.length, toAdd.length);
         return new Array<>(result);
     }
 
+    @NotNull
     public List<T> toList() {
         return Arrays.asList(array);
     }
@@ -107,6 +113,7 @@ public class Array<T> implements Serializable {
         return array.length;
     }
 
+    @NotNull
     public Stream<T> stream() {
         return Stream.of(array);
     }
@@ -117,14 +124,15 @@ public class Array<T> implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@NotNull final Object obj) {
         return (obj instanceof Array)
-                ?  Arrays.equals(array, ((Array) obj).array)
+                ? Arrays.equals(array, ((Array) obj).array)
                 : false;
     }
 
     /** Factory method */
-    public static <T> Array<T> of(T... chars) {
+    @NotNull
+    public static <T> Array<T> of(@NotNull final T... chars) {
         return new Array<T>(chars);
     }
 
