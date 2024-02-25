@@ -50,13 +50,24 @@ public class Array<T> implements Serializable {
         return new Array<>(toArray());
     }
 
+    @SuppressWarnings("unchecked")
     @NotNull
     public T[] toArray() {
         final Class<T> type = (Class<T>) array.getClass().getComponentType();
         @SuppressWarnings("unchecked")
-        final T[] result =  (T[]) java.lang.reflect.Array.newInstance(type, array.length);
+        final T[] result = (T[]) java.lang.reflect.Array.newInstance(type, array.length);
         System.arraycopy(array, 0, result, 0, array.length);
         return result;
+    }
+
+    @NotNull
+    public List<T> toList() {
+        return Arrays.asList(array);
+    }
+
+    @NotNull
+    public Stream<T> stream() {
+        return Stream.of(array);
     }
 
     /** Negative index value is supported, the index out of the range returns the {@code null} value. */
@@ -92,17 +103,18 @@ public class Array<T> implements Serializable {
         return new Array<>(result);
     }
 
-    /** Add new items */
+    /** Add new items to the new Array */
     @NotNull
-    public Array<T> join(@NotNull final T... toAdd) {
+    public Array<T> add(@NotNull final T... toAdd) {
         final T[] result = Arrays.copyOf(array, array.length + toAdd.length);
         System.arraycopy(toAdd, 0, result, array.length, toAdd.length);
         return new Array<>(result);
     }
 
+    /** Add new items to the new Array */
     @NotNull
-    public List<T> toList() {
-        return Arrays.asList(array);
+    public Array<T> add(@NotNull final Array<T> toAdd) {
+        return add(toAdd.array);
     }
 
     public boolean isEmpty() {
@@ -111,11 +123,6 @@ public class Array<T> implements Serializable {
 
     public int size() {
         return array.length;
-    }
-
-    @NotNull
-    public Stream<T> stream() {
-        return Stream.of(array);
     }
 
     @Override
@@ -131,6 +138,7 @@ public class Array<T> implements Serializable {
     }
 
     /** Factory method */
+    @SuppressWarnings("unchecked")
     @NotNull
     public static <T> Array<T> of(@NotNull final T... chars) {
         return new Array<T>(chars);
