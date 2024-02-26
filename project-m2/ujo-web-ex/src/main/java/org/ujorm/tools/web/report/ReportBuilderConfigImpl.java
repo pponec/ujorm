@@ -40,7 +40,7 @@ import static org.ujorm.tools.web.report.ReportBuilderConfigImpl.Constants.*;
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")
- *          .build(HttpExchange, HttpExchange, resource);
+ *          .build(httpServletRequest, httpServletResponse, resource);
  * </pre>
  *
  * @author Pavel Ponec
