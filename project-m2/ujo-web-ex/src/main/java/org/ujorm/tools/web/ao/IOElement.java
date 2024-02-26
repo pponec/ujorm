@@ -16,7 +16,7 @@
 package org.ujorm.tools.web.ao;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
+
 import org.ujorm.tools.web.HtmlElement;
 
 /**
@@ -26,6 +26,6 @@ import org.ujorm.tools.web.HtmlElement;
 @FunctionalInterface
 public interface IOElement {
 
-    void run(HtmlElement html) throws ServletException, IOException;
+    void run(HtmlElement html) throws IOException;
     
 }

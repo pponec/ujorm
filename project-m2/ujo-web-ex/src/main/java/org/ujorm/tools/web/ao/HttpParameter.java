@@ -20,7 +20,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javax.servlet.ServletRequest;
 import org.ujorm.tools.Check;
 
 /**
@@ -29,7 +28,7 @@ import org.ujorm.tools.Check;
  * <h3>Usage</h3>
  * <pre class="pre">
  * {
- *    String value = Param.text(httpServletRequest, "my default value");
+ *    String value = Param.text(ServletRequest, "my default value");
  * }
  * enum Param implements HttpParam {
  *     REGEXP,

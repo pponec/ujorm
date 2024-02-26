@@ -20,9 +20,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
+import org.ujorm.tools.web.ao.ServletRequest;
+import org.ujorm.tools.web.ao.ServletResponse;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
@@ -44,10 +44,10 @@ public class ReqestDispatcher {
     private static final Logger LOGGER = Logger.getLogger(ReqestDispatcher.class.getName());
 
     @NotNull
-    private final HttpServletRequest input;
+    private final ServletRequest input;
 
     @NotNull
-    private final HttpServletResponse output;
+    private final ServletResponse output;
 
     @NotNull
     private final HtmlConfig htmlConfig;
@@ -60,23 +60,23 @@ public class ReqestDispatcher {
     private final boolean noCache = true;
 
     public ReqestDispatcher(
-            @NotNull HttpServletRequest input,
-            @NotNull HttpServletResponse output) {
+            @NotNull ServletRequest input,
+            @NotNull ServletResponse output) {
         this("Info", input, output);
     }
 
     public ReqestDispatcher(
             @NotNull CharSequence title,
-            @NotNull HttpServletRequest input,
-            @NotNull HttpServletResponse output) {
+            @NotNull ServletRequest input,
+            @NotNull ServletResponse output) {
         this(input, output, HtmlConfig.ofDefault()
                 .setTitle(title)
                 .setNiceFormat());
     }
 
     public ReqestDispatcher(
-            @NotNull HttpServletRequest input,
-            @NotNull HttpServletResponse output,
+            @NotNull ServletRequest input,
+            @NotNull ServletResponse output,
             @NotNull HtmlConfig htmlConfig
     ) {
         this.input = input;
@@ -93,7 +93,7 @@ public class ReqestDispatcher {
                 output.setHeader("Pragma", "no-cache");
                 output.setHeader("Expires", "0");
             }
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
     }
@@ -110,7 +110,7 @@ public class ReqestDispatcher {
      * @param processor processor
      * @return
      */
-    public ReqestDispatcher onParam(@NotNull final HttpParameter key, @NotNull final IOConsumer<JsonBuilder> processor) throws IOException, ServletException {
+    public ReqestDispatcher onParam(@NotNull final HttpParameter key, @NotNull final IOConsumer<JsonBuilder> processor) throws IOException {
         Assert.notNull(key, "Parameter {} is required", "key");
         if (!done && key.of(input, false)) {
             JsonBuilder.of(HtmlConfig.ofEmptyElement(), input, output);
@@ -125,9 +125,9 @@ public class ReqestDispatcher {
     /**
      * The process writes to an element
      */
-    public void onDefaultToElement(@NotNull final IOElement defaultProcessor) throws ServletException, IOException {
+    public void onDefaultToElement(@NotNull final IOElement defaultProcessor) throws IOException {
         if (!done) {
-            try (HtmlElement html = HtmlElement.of(htmlConfig, output.getWriter())) {
+            try (HtmlElement html = HtmlElement.of(htmlConfig, output)) {
                 defaultProcessor.run(html);
             }
         }
@@ -136,7 +136,7 @@ public class ReqestDispatcher {
     /**
      * Process the request
      */
-    public void onDefault(@NotNull final IORunnable defaultProcessor) throws ServletException, IOException {
+    public void onDefault(@NotNull final IORunnable defaultProcessor) throws IOException {
         if (!done) {
             defaultProcessor.run();
         }

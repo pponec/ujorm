@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import org.ujorm.tools.web.ao.ServletResponse;
 import org.ujorm.tools.common.ObjectUtils;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -35,7 +35,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * @author Pavel Ponec
  * @since 2.03
  */
-public class MockServletResponse implements HttpServletResponse {
+public class MockServletResponse implements ServletResponse {
 
     private final Charset charset = UTF_8;
     private final Appendable writer;

@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javax.servlet.http.HttpServletRequest;
+import org.ujorm.tools.web.ao.ServletRequest;
 import javax.sql.rowset.spi.XmlWriter;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
@@ -616,7 +616,7 @@ public final class Element implements ApiElement<Element>, Html {
     @Deprecated
     @NotNull
     public Element addTextInput(
-            @NotNull HttpServletRequest req,
+            @NotNull ServletRequest req,
             @NotNull HttpParameter param,
             @NotNull CharSequence title,
             @NotNull final CharSequence... cssClasses) {

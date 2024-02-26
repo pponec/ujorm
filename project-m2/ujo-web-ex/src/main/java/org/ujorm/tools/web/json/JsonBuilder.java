@@ -19,10 +19,10 @@ import java.io.Closeable;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.ObjectProvider;
+import org.ujorm.tools.web.ao.ServletRequest;
+import org.ujorm.tools.web.ao.ServletResponse;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
@@ -280,8 +280,8 @@ public class JsonBuilder implements Closeable {
     /** An object factory */
     @NotNull
     public static final JsonBuilder of(
-            @NotNull final HttpServletRequest request,
-            @NotNull final HttpServletResponse response) throws IllegalStateException, IOException {
+            @NotNull final ServletRequest request,
+            @NotNull final ServletResponse response) throws IllegalStateException, IOException {
         return of(HtmlConfig.ofEmptyElement(), request, response);
     }
 
@@ -289,7 +289,7 @@ public class JsonBuilder implements Closeable {
     @NotNull
     public static final JsonBuilder of(
             @NotNull final HtmlConfig config,
-            @NotNull final HttpServletResponse response)
+            @NotNull final ServletResponse response)
             throws IllegalStateException, IOException {
         return of(null, response, config);
     }
@@ -298,8 +298,8 @@ public class JsonBuilder implements Closeable {
     @Deprecated
     @NotNull
     public static final JsonBuilder of(
-            @Nullable final HttpServletRequest request,
-            @NotNull final HttpServletResponse response,
+            @Nullable final ServletRequest request,
+            @NotNull final ServletResponse response,
             @NotNull final HtmlConfig config) throws IllegalStateException, IOException {
         return of(config, request, response);
     }
@@ -308,8 +308,8 @@ public class JsonBuilder implements Closeable {
     @NotNull
     public static final JsonBuilder of(
             @NotNull final HtmlConfig config,
-            @Nullable final HttpServletRequest request,
-            @NotNull final HttpServletResponse response)
+            @Nullable final ServletRequest request,
+            @NotNull final ServletResponse response)
             throws IllegalStateException, IOException {
         if (config.isHtmlHeaderRequest()) {
             response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
@@ -321,7 +321,7 @@ public class JsonBuilder implements Closeable {
         if (request != null) {
             request.setCharacterEncoding(charset);
         }
-        return new JsonBuilder(response.getWriter(), config);
+        return new JsonBuilder(response, config);
     }
 
     /** CSS selector types */
