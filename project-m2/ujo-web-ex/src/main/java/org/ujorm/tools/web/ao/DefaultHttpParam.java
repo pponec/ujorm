@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  * <h3>Usage</h3>
  * <pre class="pre">
  * {
- * String value = Param.TEXT(ServletRequest, "my default value"); } enum Param implements HttpParam { REGEXP, TEXT;
+ * String value = Param.TEXT(HttpExchange, "my default value"); } enum Param implements HttpParam { REGEXP, TEXT;
  *
  * @Override public String toString() { return name().toLowerCase(); } }
  * </pre>

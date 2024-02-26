@@ -19,10 +19,9 @@ import java.io.Closeable;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.io.OutputStream;
+import com.sun.net.httpserver.HttpExchange;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.ObjectProvider;
-import org.ujorm.tools.web.ao.ServletRequest;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
@@ -280,8 +279,8 @@ public class JsonBuilder implements Closeable {
     /** An object factory */
     @NotNull
     public static final JsonBuilder of(
-            @NotNull final ServletRequest request,
-            @NotNull final OutputStream response) throws IllegalStateException, IOException {
+            @NotNull final HttpExchange request,
+            @NotNull final HttpExchange response) throws IllegalStateException, IOException {
         return of(HtmlConfig.ofEmptyElement(), request, response);
     }
 
@@ -289,7 +288,7 @@ public class JsonBuilder implements Closeable {
     @NotNull
     public static final JsonBuilder of(
             @NotNull final HtmlConfig config,
-            @NotNull final OutputStream response)
+            @NotNull final HttpExchange response)
             throws IllegalStateException, IOException {
         return of(null, response, config);
     }
@@ -298,8 +297,8 @@ public class JsonBuilder implements Closeable {
     @Deprecated
     @NotNull
     public static final JsonBuilder of(
-            @Nullable final ServletRequest request,
-            @NotNull final OutputStream response,
+            @Nullable final HttpExchange request,
+            @NotNull final HttpExchange response,
             @NotNull final HtmlConfig config) throws IllegalStateException, IOException {
         return of(config, request, response);
     }
@@ -308,20 +307,20 @@ public class JsonBuilder implements Closeable {
     @NotNull
     public static final JsonBuilder of(
             @NotNull final HtmlConfig config,
-            @Nullable final ServletRequest request,
-            @NotNull final OutputStream response)
+            @Nullable final HttpExchange request,
+            @NotNull final HttpExchange response)
             throws IllegalStateException, IOException {
         if (config.isHtmlHeaderRequest()) {
-//            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
-//            response.addHeader("Pragma", "no-cache"); // HTTP 1.0
-//            response.addHeader("Expires", "0"); // Proxies // TODO.pop
+            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+            response.addHeader("Pragma", "no-cache"); // HTTP 1.0
+            response.addHeader("Expires", "0"); // Proxies
         }
         final String charset = config.getCharset().toString();
         response.setCharacterEncoding(charset);
         if (request != null) {
             request.setCharacterEncoding(charset);
         }
-        return new JsonBuilder(response, config);
+        return new JsonBuilder(response.getWriter(), config);
     }
 
     /** CSS selector types */

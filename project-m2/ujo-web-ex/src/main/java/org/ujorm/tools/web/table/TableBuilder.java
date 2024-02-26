@@ -29,7 +29,7 @@ import org.ujorm.tools.web.report.ReportBuilderConfig;
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")
- *          .build(ServletRequest, OutputStream, resource);
+ *          .build(HttpExchange, HttpExchange, resource);
  * </pre>
  *
  * @author Pavel Ponec

@@ -2,7 +2,7 @@ package org.ujorm.tools.web.ao;
 
 import java.time.Month;
 import static java.time.Month.JANUARY;
-import org.springframework.mock.web.MockServletRequest;
+import org.springframework.mock.web.MockHttpExchange;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static java.time.Month.*;
@@ -19,7 +19,7 @@ public class HttpParameterTest {
      * Test of of method, of class HttpParameter.
      */
     @Test
-    public void testOf_ServletRequest_String() {
+    public void testOf_HttpExchange_String() {
         String defaultValue = "x";
         String result = Param.TEXT.of(request(), defaultValue);
         assertEquals("abc", result);
@@ -32,7 +32,7 @@ public class HttpParameterTest {
      * Test of of method, of class HttpParameter.
      */
     @Test
-    public void testOf_ServletRequest_boolean() {
+    public void testOf_HttpExchange_boolean() {
         boolean defaultValue = true;
         Boolean result = Param.BOOLEAN.of(request(), false);
         assertEquals(true, result);
@@ -45,7 +45,7 @@ public class HttpParameterTest {
      * Test of of method, of class HttpParameter.
      */
     @Test
-    public void testOf_ServletRequest_char() {
+    public void testOf_HttpExchange_char() {
         char defaultValue = 'Z';
         char result = Param.CHAR.of(request(), defaultValue);
         assertEquals('A', result);
@@ -58,7 +58,7 @@ public class HttpParameterTest {
      * Test of of method, of class HttpParameter.
      */
     @Test
-    public void testOf_ServletRequest_int() {
+    public void testOf_HttpExchange_int() {
         int defaultValue = 9;
         int result = Param.INT.of(request(), defaultValue);
         assertEquals(1, result);
@@ -71,7 +71,7 @@ public class HttpParameterTest {
      * Test of of method, of class HttpParameter.
      */
     @Test
-    public void testOf_ServletRequest_long() {
+    public void testOf_HttpExchange_long() {
         long defaultValue = 9L;
         long result = Param.LONG.of(request(), defaultValue);
         assertEquals(2L, result);
@@ -84,7 +84,7 @@ public class HttpParameterTest {
      * Test of method, of class HttpParameter.
      */
     @Test
-    public void testOf_ServletRequest_float() {
+    public void testOf_HttpExchange_float() {
         float defaultValue = 9F;
         float result = Param.FLOAT.of(request(), defaultValue);
         assertEquals(3F, result, DELTA);
@@ -97,7 +97,7 @@ public class HttpParameterTest {
      * Test of of method, of class HttpParameter.
      */
     @Test
-    public void testOf_ServletRequest_double() {
+    public void testOf_HttpExchange_double() {
         double defaultValue = 9D;
         double result = Param.DOUBLE.of(request(), defaultValue);
         assertEquals(4D, result, DELTA);
@@ -110,7 +110,7 @@ public class HttpParameterTest {
      * Test of of method, of class HttpParameter.
      */
     @Test
-    public void testOf_ServletRequest_Enum() {
+    public void testOf_HttpExchange_Enum() {
         Month defaultValue = DECEMBER;
         Month result = Param.MONTH_ENUM.of(request(), defaultValue);
         assertEquals(JANUARY, result);
@@ -137,8 +137,8 @@ public class HttpParameterTest {
 
     // --- Helper methods ---
 
-    private MockServletRequest request() {
-        MockServletRequest result = new MockServletRequest();
+    private MockHttpExchange request() {
+        MockHttpExchange result = new MockHttpExchange();
         result.setParameter(Param.TEXT.name(), "abc");
         result.setParameter(Param.BOOLEAN.name(), Boolean.TRUE.toString());
         result.setParameter(Param.CHAR.name(), "A");

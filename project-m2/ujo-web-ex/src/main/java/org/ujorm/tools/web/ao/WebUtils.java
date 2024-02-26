@@ -16,7 +16,9 @@
 package org.ujorm.tools.web.ao;
 
 import org.jetbrains.annotations.NotNull;
-
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import org.ujorm.tools.Check;
 import java.util.stream.Stream;
 
 /**
@@ -37,7 +39,7 @@ public abstract class WebUtils {
         }
         return result;
     }
-
+     
     /** Check if any attribute is typeof the Renderer */
     public static final boolean isType(final Class type, final @NotNull Stream<Object> items) {
         final boolean[] result = {false};
@@ -50,38 +52,38 @@ public abstract class WebUtils {
         return result[0];
     }
 
-//   /** Returns an URL of the servlet of the root where a default value is an empty string */
-//    @NotNull
-//    public static String urlOfServlet(@NotNull final Class<? extends HttpServlet> servlet, String... params) {
-//        final String result = urlOfServlet(servlet);
-//        if (Check.hasLength(params) && params[0] != null) {
-//            return result + "?" + String.join("&", params);
-//        }
-//        return result;
-//    }
+   /** Returns an URL of the servlet of the root where a default value is an empty string */
+    @NotNull
+    public static String urlOfServlet(@NotNull final Class<? extends HttpServlet> servlet, String... params) {
+        final String result = urlOfServlet(servlet);
+        if (Check.hasLength(params) && params[0] != null) {
+            return result + "?" + String.join("&", params);
+        }
+        return result;
+    }
 
-//    /**
-//     * Find a first URL from {@link WebServlet} annotation.
-//     *
-//     * Returns an URL of the servlet of the root
-//     * @param servlet Servlet type of HttpServlet
-//     * @param defaultUrl A default result
-//     * @return A URL link.
-//     */
-//    @NotNull
-//    public static String urlOfServlet(
-//            @NotNull final Class<? extends HttpServlet> servlet,
-//            @NotNull final String defaultUrl
-//    ) {
-//        final WebServlet[] webServlets = servlet.getAnnotationsByType(WebServlet.class);
-//        for (WebServlet webServlet : webServlets) {
-//            for (String link : webServlet.value()) {
-//                if (Check.hasLength(link)) {
-//                    return link;
-//                }
-//            }
-//        }
-//        return defaultUrl;
-//    }
+    /**
+     * Find a first URL from {@link WebServlet} annotation.
+     * 
+     * Returns an URL of the servlet of the root
+     * @param servlet Servlet type of HttpServlet
+     * @param defaultUrl A default result
+     * @return A URL link.
+     */
+    @NotNull
+    public static String urlOfServlet(
+            @NotNull final Class<? extends HttpServlet> servlet,
+            @NotNull final String defaultUrl
+    ) {
+        final WebServlet[] webServlets = servlet.getAnnotationsByType(WebServlet.class);
+        for (WebServlet webServlet : webServlets) {
+            for (String link : webServlet.value()) {
+                if (Check.hasLength(link)) {
+                    return link;
+                }
+            }
+        }
+        return defaultUrl;
+    }
 
 }

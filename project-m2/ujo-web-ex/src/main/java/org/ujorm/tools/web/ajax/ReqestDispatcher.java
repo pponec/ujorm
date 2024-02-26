@@ -20,18 +20,20 @@ import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.OutputStream;
+import com.sun.net.httpserver.HttpExchange;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.web.HtmlElement;
-import org.ujorm.tools.web.ao.*;
+import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
+import org.ujorm.tools.web.ao.IOConsumer;
+import org.ujorm.tools.web.ao.IOElement;
+import org.ujorm.tools.web.ao.IORunnable;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
  * A Reqest Dispatcher
  * @author Pavel Ponec
  */
-@Deprecated
 public class ReqestDispatcher {
 
     /**
@@ -40,10 +42,10 @@ public class ReqestDispatcher {
     private static final Logger LOGGER = Logger.getLogger(ReqestDispatcher.class.getName());
 
     @NotNull
-    private final ServletRequest input;
+    private final HttpExchange input;
 
     @NotNull
-    private final OutputStream output;
+    private final HttpExchange output;
 
     @NotNull
     private final HtmlConfig htmlConfig;
@@ -56,42 +58,42 @@ public class ReqestDispatcher {
     private final boolean noCache = true;
 
     public ReqestDispatcher(
-            @NotNull ServletRequest input,
-            @NotNull OutputStream output) {
+            @NotNull HttpExchange input,
+            @NotNull HttpExchange output) {
         this("Info", input, output);
     }
 
     public ReqestDispatcher(
             @NotNull CharSequence title,
-            @NotNull ServletRequest input,
-            @NotNull OutputStream output) {
+            @NotNull HttpExchange input,
+            @NotNull HttpExchange output) {
         this(input, output, HtmlConfig.ofDefault()
                 .setTitle(title)
                 .setNiceFormat());
     }
 
     public ReqestDispatcher(
-            @NotNull ServletRequest input,
-            @NotNull OutputStream output,
+            @NotNull HttpExchange input,
+            @NotNull HttpExchange output,
             @NotNull HtmlConfig htmlConfig
     ) {
         this.input = input;
         this.output = output;
         this.htmlConfig = htmlConfig ;
 
-//        try {
-//            final String charset = htmlConfig.getCharset().toString();
-//            input.setCharacterEncoding(charset);
-//            output.setCharacterEncoding(charset);
-//
-//            if (noCache) {
-//                output.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-//                output.setHeader("Pragma", "no-cache");
-//                output.setHeader("Expires", "0");
-//            }
-//        } catch (UnsupportedEncodingException e) {
-//            throw new IllegalArgumentException(e);
-//        }
+        try {
+            final String charset = htmlConfig.getCharset().toString();
+            input.setCharacterEncoding(charset);
+            output.setCharacterEncoding(charset);
+
+            if (noCache) {
+                output.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                output.setHeader("Pragma", "no-cache");
+                output.setHeader("Expires", "0");
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     @NotNull
@@ -121,9 +123,9 @@ public class ReqestDispatcher {
     /**
      * The process writes to an element
      */
-    public void onDefaultToElement(@NotNull final IOElement defaultProcessor) throws IOException {
+    public void onDefaultToElement(@NotNull final IOElement defaultProcessor) throws ServletException, IOException {
         if (!done) {
-            try (HtmlElement html = HtmlElement.of(htmlConfig, output)) {
+            try (HtmlElement html = HtmlElement.of(htmlConfig, output.getWriter())) {
                 defaultProcessor.run(html);
             }
         }
@@ -132,7 +134,7 @@ public class ReqestDispatcher {
     /**
      * Process the request
      */
-    public void onDefault(@NotNull final IORunnable defaultProcessor) throws IOException {
+    public void onDefault(@NotNull final IORunnable defaultProcessor) throws ServletException, IOException {
         if (!done) {
             defaultProcessor.run();
         }

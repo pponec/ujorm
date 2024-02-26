@@ -24,7 +24,9 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.io.OutputStream;
+import javax.servlet.ServletException;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpExchange;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
@@ -35,7 +37,6 @@ import org.ujorm.tools.web.ajax.ReqestDispatcher;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.Injector;
-import org.ujorm.tools.web.ao.ServletRequest;
 import org.ujorm.tools.web.json.JsonBuilder;
 import org.ujorm.tools.web.table.ColumnModel;
 import org.ujorm.tools.web.table.Direction;
@@ -52,7 +53,7 @@ import org.ujorm.tools.xml.config.HtmlConfig;
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")
- *          .build(ServletRequest, OutputStream, resource);
+ *          .build(HttpExchange, HttpExchange, resource);
  * </pre>
  *
  * @author Pavel Ponec
@@ -268,16 +269,16 @@ public class ReportBuilder<D> {
 
     /** Build the HTML page including a table */
     public void build(
-            @NotNull final ServletRequest input,
-            @NotNull final OutputStream output,
+            @NotNull final HttpExchange input,
+            @NotNull final HttpExchange output,
             @NotNull final Stream<D> resource) {
         build(input, output, tableBuilder -> resource);
     }
 
     /** Build the HTML page including a table */
     public void build(
-            @NotNull final ServletRequest input,
-            @NotNull final Stream output,
+            @NotNull final HttpExchange input,
+            @NotNull final HttpExchange output,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource) {
         try {
             setSort(ColumnModel.ofCode(config.getSortRequestParam().of(input)));
@@ -286,7 +287,7 @@ public class ReportBuilder<D> {
                     .onDefaultToElement(element -> printHtmlBody(input, element, resource));
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Internal server error", e);
-            //output.setStatus(500); TODO.pop
+            output.setStatus(500);
         }
     }
 
@@ -307,7 +308,7 @@ public class ReportBuilder<D> {
     }
 
     protected void printHtmlBody(
-            @NotNull final ServletRequest input,
+            @NotNull final HttpExchange input,
             @NotNull final HtmlElement html,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
@@ -355,7 +356,7 @@ public class ReportBuilder<D> {
     }
 
     /** The hidden field contains an index of the last sorted column */
-    protected void printSortedField(Element parent, final ServletRequest input) {
+    protected void printSortedField(Element parent, final HttpExchange input) {
         final int index = config.getSortRequestParam().of(input, -1);
         parent.addInput().setAttribute(Html.A_TYPE, Html.V_HIDDEN)
                 .setNameValue(config.getSortRequestParam(), index);
@@ -363,7 +364,7 @@ public class ReportBuilder<D> {
 
     protected void printTableBody(
             @NotNull final Element table,
-            @NotNull final ServletRequest input,
+            @NotNull final HttpExchange input,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
         final ColumnModel sortedColumn = ColumnModel.ofCode(config.getSortRequestParam().of(input));
@@ -378,7 +379,7 @@ public class ReportBuilder<D> {
      * @throws IOException if an I/O error occurs
      */
     protected void doAjax(
-            @NotNull final ServletRequest input,
+            @NotNull final HttpExchange input,
             @NotNull final JsonBuilder output,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) throws ServletException, IOException {
