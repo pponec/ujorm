@@ -26,4 +26,8 @@ public class ServletRequest extends HashMap<String, String> {
 
     public void setCharacterEncoding(String charset) {
     }
+
+    public void setParameter(String name, String value) {
+        super.put(name, value);
+    }
 }

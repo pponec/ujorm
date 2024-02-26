@@ -2,7 +2,6 @@ package org.ujorm.tools.web.ao;
 
 import java.time.Month;
 import static java.time.Month.JANUARY;
-import org.springframework.mock.web.MockServletRequest;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static java.time.Month.*;
@@ -55,7 +54,7 @@ public class HttpParameterTest {
     }
 
     /**
-     * Test of of method, of class HttpParameter.
+     * Test of method, of class HttpParameter.
      */
     @Test
     public void testOf_ServletRequest_int() {
@@ -137,8 +136,8 @@ public class HttpParameterTest {
 
     // --- Helper methods ---
 
-    private MockServletRequest request() {
-        MockServletRequest result = new MockServletRequest();
+    private ServletRequest request() {
+        ServletRequest result = new ServletRequest();
         result.setParameter(Param.TEXT.name(), "abc");
         result.setParameter(Param.BOOLEAN.name(), Boolean.TRUE.toString());
         result.setParameter(Param.CHAR.name(), "A");

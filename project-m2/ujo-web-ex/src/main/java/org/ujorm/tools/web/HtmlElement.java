@@ -26,7 +26,6 @@ import org.ujorm.tools.web.ao.ServletRequest;
 import org.ujorm.tools.web.ao.ServletResponse;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.web.ao.MockServletResponse;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
@@ -453,8 +452,8 @@ public class HtmlElement implements ApiElement<Element>, Html {
         response.setCharacterEncoding(config.getCharset().toString());
         response.setContentType(config.getContentType());
         try {
-            return of(config, response.getWriter());
-        } catch (IOException e) {
+            return of(config, response);
+        } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }

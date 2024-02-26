@@ -37,4 +37,7 @@ public class ServletResponse extends OutputStreamWriter {
 
     public void setHeader(String s, String s1) {
     }
+
+    public void setContentType(String contentType) {
+    }
 }
