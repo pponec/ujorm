@@ -414,27 +414,6 @@ public class HtmlElement implements ApiElement<Element>, Html {
         return of(config, response);
     }
 
-    /** A base method to create new instance with empty html headers
-     * @param response HttpResponse to write a result
-     * @param config Html configuration
-     * @return An instance of the HtmlPage
-     * @throws IllegalStateException IO exceptions
-     * @see ServletResponse
-     */
-    @NotNull
-    public static HtmlElement of(
-            @NotNull final HtmlConfig config,
-            @NotNull final ServletResponse response
-            ) throws IllegalStateException {
-        response.setCharacterEncoding(config.getCharset().toString());
-        response.setContentType(config.getContentType());
-        try {
-            return of(config, response);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     /** Create new instance with empty html headers
      * @param config Html configuration
      * @return An instance of the HtmlPage
