@@ -240,13 +240,6 @@ public class ReportBuilder<D> {
         return this;
     }
 
-    /** Use the method {@link #setFormItem(org.ujorm.tools.web.ao.Injector) } rather. */
-    @Deprecated
-    @NotNull
-    public ReportBuilder<D> setFormAdditions(@NotNull Injector formItem) {
-        return setFormItem(formItem);
-    }
-
     /** Enable of disable an AJAX feature, default value si {@code true} */
     public ReportBuilder<D> setAjaxEnabled(boolean ajaxEnabled) {
         this.ajaxEnabled = ajaxEnabled;

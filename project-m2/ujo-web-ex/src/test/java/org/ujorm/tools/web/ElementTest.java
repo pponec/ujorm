@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.ao.Column;
+import org.ujorm.tools.web.ao.ServletResponse;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.junit.jupiter.api.Assertions.*;
@@ -241,7 +242,7 @@ public class ElementTest {
     @Test
     public void testAddTableExtended() {
         System.out.println("addTableExtended");
-        MockServletResponse response = new MockServletResponse();
+        ServletResponse response = new ServletResponse();
 
         CharSequence[] cssClasses = {"table"};
         CharSequence[] titles = {"Id", "Name", "Enabled",
@@ -265,7 +266,7 @@ public class ElementTest {
      */
     @Test
     public void testNext() {
-        MockServletResponse response = new MockServletResponse();
+        ServletResponse response = new ServletResponse();
         HtmlElement.niceOf(response).next(html -> html
             .getBody().next(body -> body
                 .addHeading(html.getTitle()))

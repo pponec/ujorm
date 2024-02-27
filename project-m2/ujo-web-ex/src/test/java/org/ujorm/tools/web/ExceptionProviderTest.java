@@ -65,8 +65,7 @@ public class ExceptionProviderTest {
                 .setTitle("Element-try-catche");
 
         String[] result = {""};
-        HtmlElement.of(config, writer).addBody()
-                .then(body -> {
+        HtmlElement.of(config, writer).addBody().then(body -> {
                     throw new IllegalArgumentException("test");
                 })
                 .catchEx(e -> {

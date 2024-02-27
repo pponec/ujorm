@@ -40,7 +40,7 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  * <h3>Usage</h3>
  *
  * <pre class="pre">
- *    MockServletResponse response = new MockServletResponse();
+ *    ServletResponse response = new ServletResponse();
  *    try (HtmlElement html = HtmlElement.of(response)) {
  *        html.addBody().addHeading("Hello!");
  *    }
@@ -117,7 +117,6 @@ public class HtmlElement implements ApiElement<Element>, Html {
         return root.addComment(comment);
     }
 
-    @Deprecated
     @Override
     public Element addCDATA(CharSequence charData) {
         return root.addCDATA(charData);
@@ -191,12 +190,6 @@ public class HtmlElement implements ApiElement<Element>, Html {
                 .setAttribute(Html.A_SRC, javascriptLink)
                 .setAttribute("defer", defer ? "defer" : null)
                 .addText("");
-    }
-
-    /** User the method {@link #addJavascriptBody(java.lang.CharSequence...) } rather */
-    @Deprecated
-    public Element addJavascriptContents(@NotNull final CharSequence javascript) {
-        return addJavascriptBody(javascript);
     }
 
     /** Create a new Javascript element and return it.
@@ -316,7 +309,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see ServletResponse
      */
     @NotNull
     public static HtmlElement of(@NotNull final ServletResponse response, @NotNull final CharSequence... cssLinks) {
@@ -327,7 +320,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see ServletResponse
      */
     @NotNull
     public static HtmlElement of(@NotNull final CharSequence title, @NotNull final ServletResponse response, @NotNull final CharSequence... cssLinks) {
@@ -339,7 +332,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see ServletResponse
      */
     @NotNull
     public static HtmlElement of(@NotNull final CharSequence title, @NotNull final ServletResponse response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
@@ -351,7 +344,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see ServletResponse
      */
     @NotNull
     public static HtmlElement niceOf(@NotNull final CharSequence title, @NotNull final ServletResponse response, @NotNull final CharSequence... cssLinks) {
@@ -364,7 +357,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see ServletResponse
      */
     @NotNull
     public static HtmlElement niceOf(@NotNull final CharSequence title, @NotNull final ServletResponse response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
@@ -378,7 +371,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see ServletResponse
      */
     @NotNull
     public static HtmlElement niceOf(
@@ -395,7 +388,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @param response HttpResponse to write a result
      * @return An instance of the HtmlPage
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see ServletResponse
      */
     @NotNull
     public static HtmlElement of(
@@ -410,7 +403,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @param config Html configuration
      * @return An instance of the HtmlPage
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see ServletResponse
      */
     @NotNull
     public static HtmlElement of(
@@ -426,23 +419,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @param config Html configuration
      * @return An instance of the HtmlPage
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
-     * @deprecated Use the method {@link #of(org.ujorm.tools.xml.config.HtmlConfig, ServletResponse) } rather.
-     */
-    @Deprecated
-    @NotNull
-    public static HtmlElement of(
-            @NotNull final ServletResponse response,
-            @NotNull final HtmlConfig config) throws IllegalStateException {
-        return of(config, response);
-    }
-
-    /** A base method to create new instance with empty html headers
-     * @param response HttpResponse to write a result
-     * @param config Html configuration
-     * @return An instance of the HtmlPage
-     * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see ServletResponse
      */
     @NotNull
     public static HtmlElement of(
@@ -498,7 +475,6 @@ public class HtmlElement implements ApiElement<Element>, Html {
      *
      * @deprecated Use the method {@link #next(Consumer)} rather.
      */
-    @Deprecated
     @NotNull
     public final ExceptionProvider then(@NotNull final Consumer<HtmlElement> builder) {
         return next(builder);

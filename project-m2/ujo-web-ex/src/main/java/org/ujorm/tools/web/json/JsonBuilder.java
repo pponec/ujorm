@@ -291,17 +291,7 @@ public class JsonBuilder implements Closeable {
             @NotNull final HtmlConfig config,
             @NotNull final ServletResponse response)
             throws IllegalStateException, IOException {
-        return of(null, response, config);
-    }
-
-    /** An object factory */
-    @Deprecated
-    @NotNull
-    public static final JsonBuilder of(
-            @Nullable final ServletRequest request,
-            @NotNull final ServletResponse response,
-            @NotNull final HtmlConfig config) throws IllegalStateException, IOException {
-        return of(config, request, response);
+        return of(config, null, response);
     }
 
     /** An object factory */
