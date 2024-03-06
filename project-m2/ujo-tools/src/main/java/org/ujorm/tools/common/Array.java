@@ -137,6 +137,12 @@ public class Array<T> implements Serializable {
                 : false;
     }
 
+    @NotNull
+    @Override
+    public String toString() {
+        return Arrays.asList(array).toString();
+    }
+
     /** Factory method */
     @SuppressWarnings("unchecked")
     @NotNull

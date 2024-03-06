@@ -65,8 +65,8 @@ class ArrayTest {
     }
 
     @Test
-    void join() {
-        Array<Character> extended = array.join('P', 'C');
+    void add() {
+        Array<Character> extended = array.add('P', 'C');
         Assertions.assertEquals(array.size() + 2, extended.size());
         Assertions.assertEquals('P', extended.getItem(5));
         Assertions.assertEquals('C', extended.getItem(6));
