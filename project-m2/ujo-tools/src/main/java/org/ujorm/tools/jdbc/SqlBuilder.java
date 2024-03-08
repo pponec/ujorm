@@ -41,17 +41,17 @@ import java.util.stream.Collectors;
  * @author Pavel Ponec
  */
 public class SqlBuilder {
-    private final static Logger LOGGER = Logger.getLogger(SqlBuilder.class.getName());
+    private final static Logger logger = Logger.getLogger(SqlBuilder.class.getName());
 
-    protected static final char PARAM_MARK = '?';
-    protected static final String NEW_LINE = "\n";
-    protected static final String SPACE = "\t";
+    protected char paramMark = '?';
+    protected String newLine = "\n";
+    protected char newLineCh = newLine.charAt(0);
+    protected final String space = "\t";
     protected final List<CharSequence> sql;
 
     public SqlBuilder() {
         this(new ArrayList<>(), 0);
     }
-
 
     private SqlBuilder(List<CharSequence> sql, int offset) {
         this.sql = sql;
@@ -61,11 +61,13 @@ public class SqlBuilder {
     public SqlBuilder add(@NotNull CharSequence... items) throws IllegalArgumentException {
         assertNotNull(items, "Argument is required");
         for (int i = 0, max = items.length; i < max; i++) {
-            final CharSequence chars = items[i];
-            final String item = chars != null ? chars.toString() : null;
+            final CharSequence item = items[i];
             if (item == null) {
                 throw new IllegalArgumentException(String.format("Item[%s] is required", i));
-            } else {
+            } else if (item instanceof SqlValue || item.length() > 0) {
+                if (item != newLine && !beginningLine()) {
+                    sql.add(" ");
+                }
                 sql.add(item);
             }
         }
@@ -80,8 +82,8 @@ public class SqlBuilder {
 
     @NotNull
     public SqlBuilder line(@NotNull CharSequence... items) throws IllegalArgumentException {
-        if (!isNewLine()) {
-            add(NEW_LINE);
+        if (!beginningLine()) {
+            add(newLine);
         }
         add(items);
         return this;
@@ -143,6 +145,17 @@ public class SqlBuilder {
         return this;
     }
 
+    @NotNull
+    public SqlBuilder params(@NotNull Object... values) throws IllegalArgumentException {
+        for (int i = 0, max = values.length; i < max; i++) {
+            if (i > 0) {
+                this.sql.add(",");
+            }
+            param(values[i]);
+        }
+        return this;
+    }
+
     public SqlBuilder param(@NotNull Object value, @NotNull SQLType jdbcType, int range) throws IllegalArgumentException {
         this.assertNotNull(value, "Argument", "value", "is required");
         this.sql.add(new SqlValue(value, jdbcType, range));
@@ -153,7 +166,7 @@ public class SqlBuilder {
     protected Object convertValue(@NotNull Object value) {
         final Object result = convertValueInternal(value);
         if (result != value) {
-            LOGGER.log(Level.WARNING, () ->
+            logger.log(Level.WARNING, () ->
                     String.format("The original value of '%s' has been converted to '%s'.", value, result));
         }
         return result;
@@ -199,9 +212,13 @@ public class SqlBuilder {
         return value.toString();
     }
 
-    protected boolean isNewLine() {
-        final int length = sql.size();
-        return length == 0 || sql.get(length - 1).equals(NEW_LINE);
+    protected boolean beginningLine() {
+        if (sql.isEmpty()) {
+            return true;
+        } else {
+            final CharSequence lastItem = sql.get(sql.size() - 1);
+            return lastItem instanceof SqlBuilder ? false : (lastItem.charAt(lastItem.length() - 1) == newLineCh);
+        }
     }
 
     public String getQuery() {
@@ -229,7 +246,7 @@ public class SqlBuilder {
         for (int i = 0, max = sql.size(); i < max; i++) {
             final CharSequence item = sql.get(i);
             if (item instanceof SqlValue) {
-                statement.append(PARAM_MARK);
+                statement.append(paramMark);
                 params.add((SqlValue) item);
             } else {
                 statement.append(item);
@@ -251,7 +268,7 @@ public class SqlBuilder {
         for (CharSequence item : sql) {
             if (item instanceof SqlValue) {
                 final String val = String.valueOf(((SqlValue) item).value);
-                result.append('[').append(val.length() > max ? val.substring(max) + '…' : val).append(']');
+                result.append(" [").append(val.length() > max ? val.substring(max) + '…' : val).append(']');
             } else {
                 result.append(item);
             }
