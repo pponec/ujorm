@@ -25,8 +25,7 @@ import java.sql.SQLException;
  */
 public abstract class AbstractJdbcConnector {
 
-
-    /** Crete a new DB connection */
+    /** Create a new DB connection */
     protected Connection createDbConnection() throws ClassNotFoundException, SQLException {
         Class.forName(org.h2.Driver.class.getName());
         Connection result = DriverManager.getConnection("jdbc:h2:mem:test", "", "");

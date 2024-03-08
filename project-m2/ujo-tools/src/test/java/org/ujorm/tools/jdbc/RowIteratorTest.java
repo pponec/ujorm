@@ -63,7 +63,7 @@ public class RowIteratorTest extends AbstractJdbcConnector {
         assertEquals(1, counter[0]);
     }
 
-    /** Crete new DB connection */
+    /** Create new DB connection */
     private Connection createTestConnection() throws ClassNotFoundException, SQLException {
         Connection result = super.createDbConnection();
         JdbcBuilderTest builder = new JdbcBuilderTest();

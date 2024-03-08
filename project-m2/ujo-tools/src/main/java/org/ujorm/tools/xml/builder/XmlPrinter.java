@@ -138,14 +138,14 @@ public class XmlPrinter extends AbstractWriter {
 
     // ------- STATIC METHODS -------
 
-    /** Crete a new instance including a XML_HEADER.
+    /** Create a new instance including a XML_HEADER.
      * The result provides a method {@link #toString() }
      */
     public static XmlPrinter forXml() {
         return forXml(null, XmlConfig.ofDefault());
     }
 
-    /** Crete a new instance with a formatted output.
+    /** Create a new instance with a formatted output.
      * The result provides a method {@link #toString() }
      * @return New instance of the XmlPrinter
      */
@@ -168,20 +168,20 @@ public class XmlPrinter extends AbstractWriter {
 
     // --- HTML ---
 
-    /** Crete a new instance including a DOCTYPE.
+    /** Create a new instance including a DOCTYPE.
      * The result provides a method {@link #toString() }
      */
     public static XmlPrinter forHtml() {
         return forXml(null, HtmlConfig.ofDefault());
     }
 
-    /** Crete a new instance including a DOCTYPE */
+    /** Create a new instance including a DOCTYPE */
     public static XmlPrinter forHtml(final Appendable out) {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
         return forXml(out, config);
     }
 
-    /** Crete a new instance including a DOCTYPE */
+    /** Create a new instance including a DOCTYPE */
     public static XmlPrinter forNiceHtml(final Appendable out) {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();

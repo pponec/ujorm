@@ -64,7 +64,7 @@ public class SqlBuilder {
             final CharSequence item = items[i];
             if (item == null) {
                 throw new IllegalArgumentException(String.format("Item[%s] is required", i));
-            } else if (item instanceof SqlValue || item.length() > 0) {
+            } else if (item instanceof SqlParam || item.length() > 0) {
                 if (item != newLine && !beginningLine()) {
                     sql.add(" ");
                 }
@@ -141,7 +141,7 @@ public class SqlBuilder {
     @NotNull
     public SqlBuilder param(@NotNull Object value) throws IllegalArgumentException {
         this.assertNotNull(value, "Argument", "value", "is required");
-        this.sql.add(new SqlValue(value));
+        this.sql.add(new SqlParam(value));
         return this;
     }
 
@@ -158,7 +158,7 @@ public class SqlBuilder {
 
     public SqlBuilder param(@NotNull Object value, @NotNull SQLType jdbcType, int range) throws IllegalArgumentException {
         this.assertNotNull(value, "Argument", "value", "is required");
-        this.sql.add(new SqlValue(value, jdbcType, range));
+        this.sql.add(new SqlParam(value, jdbcType, range));
         return this;
     }
 
@@ -242,19 +242,19 @@ public class SqlBuilder {
     @NotNull
     public PreparedStatement prepareStatement(@NotNull final Connection connection) throws SQLException {
         final StringBuilder statement = new StringBuilder();
-        final ArrayList<SqlValue> params = new ArrayList<>();
+        final ArrayList<SqlParam> params = new ArrayList<>();
         for (int i = 0, max = sql.size(); i < max; i++) {
             final CharSequence item = sql.get(i);
-            if (item instanceof SqlValue) {
+            if (item instanceof SqlParam) {
                 statement.append(paramMark);
-                params.add((SqlValue) item);
+                params.add((SqlParam) item);
             } else {
                 statement.append(item);
             }
         }
         final PreparedStatement result = connection.prepareStatement(statement.toString());
         for (int i = 0, max = params.size(); i < max; ++i) {
-            final SqlValue value = params.get(i);
+            final SqlParam value = params.get(i);
             result.setObject(i + 1, value.value, value.jdbcType, value.scaleOrLength);
         }
         return result;
@@ -266,8 +266,8 @@ public class SqlBuilder {
         final StringBuilder result = new StringBuilder(256);
         final int max = 20;
         for (CharSequence item : sql) {
-            if (item instanceof SqlValue) {
-                final String val = String.valueOf(((SqlValue) item).value);
+            if (item instanceof SqlParam) {
+                final String val = String.valueOf(((SqlParam) item).value);
                 result.append(" [").append(val.length() > max ? val.substring(max) + '…' : val).append(']');
             } else {
                 result.append(item);
@@ -282,7 +282,7 @@ public class SqlBuilder {
         void accept(T builder) throws IllegalArgumentException;
     }
 
-    public static class SqlValue implements CharSequence {
+    public static class SqlParam implements CharSequence {
         public static int DEFAULT_SCALE = -1;
 
         private final Object value;
@@ -291,17 +291,17 @@ public class SqlBuilder {
 
         private final int scaleOrLength;
 
-        public SqlValue(@Nullable Object value, @Nullable SQLType jdbcType, int scaleOrLength) {
+        public SqlParam(@Nullable Object value, @Nullable SQLType jdbcType, int scaleOrLength) {
             this.value = value;
             this.jdbcType = jdbcType != null ? jdbcType : findJdbc(value);
             this.scaleOrLength = scaleOrLength;
         }
 
-        public SqlValue(@Nullable Object value, @Nullable SQLType jdbcType) {
+        public SqlParam(@Nullable Object value, @Nullable SQLType jdbcType) {
             this(value, jdbcType, DEFAULT_SCALE);
         }
 
-        public SqlValue(@Nullable Object value) {
+        public SqlParam(@Nullable Object value) {
             this(value, null);
         }
 

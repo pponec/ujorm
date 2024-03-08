@@ -29,16 +29,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class SqlBuilderTest extends AbstractJdbcConnector {
 
-    /** DB table name @{code employee} */
-    String employee = "employee";
-
     /** Some testing date */
     private final LocalDate someDate = LocalDate.parse("2018-09-12");
 
     @Test
     public void testShowUsage() throws ClassNotFoundException, SQLException {
         try (Connection dbConnection = createTable(createDbConnection()))  {
-            //showInsert_1(dbConnection);
+            showInsert_1(dbConnection);
             showSelect_2(dbConnection);
         }
     }
@@ -47,33 +44,36 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
     public void showInsert_1(Connection connection) throws SQLException {
         System.out.println("INSERT");
         SqlBuilder sql = new SqlBuilder()
-                .line("INSERT INTO", employee)
-                .line( "( id, name, created) VALUES ")
-                .line("(").params(  10, "A name", LocalDate.parse("2018-09-12")).add(")");
+                .line("INSERT INTO employee")
+                .line("( id, name, created) VALUES ")
+                .line("(", param(10),
+                        param("T"),
+                        param(LocalDate.parse("2018-09-12")))
+                .add(")");
 
         String toString = sql.toString();
         String expected = String.join("\n",
                 "INSERT INTO employee",
                 "( id, name, created ) VALUES ",
-                "( [10], [A name], [2018-09-12] )");
+                "( [10], [T], [2018-09-12] )");
         Assertions.assertEquals(expected, toString);
     }
 
     public void showSelect_2(Connection connection) throws SQLException {
         System.out.println("SELECT");
-        SqlBuilder.SqlValue codeValue = param("T");
+        SqlBuilder.SqlParam codeValue = param("T");
         SqlBuilder sql = new SqlBuilder()
-                .line("SELECT t.id, t.name FROM", employee, "t")
+                .line("SELECT t.id, t.name FROM  employee t")
                 .line("WHERE t.code =").param(codeValue)
                 .line("ORDER BY t.id");
 
-//        for (ResultSet rs : sql.executeSelect(connection)) {
-//            int id = rs.getInt(1);
-//            String name = rs.getString(2);
-//
-//            assertEquals(10, id);
-//            assertEquals("A name", name);
-//        }
+        for (ResultSet rs : sql.executeSelect(connection)) {
+            int id = rs.getInt(1);
+            String name = rs.getString(2);
+
+            assertEquals(10, id);
+            assertEquals("A name", name);
+        }
 
         String toString = sql.toString();
         String expected = String.join("\n",
@@ -84,20 +84,20 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
     }
 
     /** Create new Parameter */
-    public SqlBuilder.SqlValue param(Object param) {
-        return new SqlBuilder.SqlValue(param);
+    public SqlBuilder.SqlParam param(Object param) {
+        return new SqlBuilder.SqlParam(param);
     }
 
     // --- UTILS ---
 
-    /** Crete new DB connection */
+    /** Create new DB connection */
     Connection createTable(Connection dbConnection) throws ClassNotFoundException, SQLException {
-        String sql = "CREATE TABLE " + employee
-                + "\n( id INTEGER PRIMARY KEY"
-                + "\n, name VARCHAR(256)"
-                + "\n, code VARCHAR(1)"
-                + "\n, created TIMESTAMP"
-                + "\n)";
+        String sql = String.join("\n", "CREATE TABLE employee"
+                + "( id INTEGER PRIMARY KEY"
+                + ", name VARCHAR(256)"
+                + ", code VARCHAR(1)"
+                + ", created TIMESTAMP"
+                + ")");
 
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.execute();
