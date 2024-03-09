@@ -43,17 +43,16 @@ import java.util.stream.Collectors;
 public class SqlBuilder {
     private final static Logger logger = Logger.getLogger(SqlBuilder.class.getName());
 
-    protected char paramMark = '?';
-    protected String newLine = "\n";
-    protected char newLineCh = newLine.charAt(0);
-    protected final String space = "\t";
-    protected final List<CharSequence> sql;
+    private static final char paramMark = '?';
+    private static final String newLine = "\n";
+    private static final char newLineCh = newLine.charAt(0);
+    private final SqlList sql;
 
     public SqlBuilder() {
-        this(new ArrayList<>(), 0);
+        this(new SqlList(), 0);
     }
 
-    private SqlBuilder(List<CharSequence> sql, int offset) {
+    private SqlBuilder(SqlList sql, int offset) {
         this.sql = sql;
     }
 
@@ -64,8 +63,11 @@ public class SqlBuilder {
             final CharSequence item = items[i];
             if (item == null) {
                 throw new IllegalArgumentException(String.format("Item[%s] is required", i));
-            } else if (item instanceof SqlParam || item.length() > 0) {
-                if (item != newLine && !beginningLine()) {
+            }
+            final boolean isParam = item instanceof SqlParam;
+            final CharSequence last = sql.getLastOrNewLine();
+            if (item instanceof SqlParam) {
+                if (!sql.beginningLine()) {
                     sql.add(" ");
                 }
                 sql.add(item);
@@ -212,15 +214,6 @@ public class SqlBuilder {
         return value.toString();
     }
 
-    protected boolean beginningLine() {
-        if (sql.isEmpty()) {
-            return true;
-        } else {
-            final CharSequence lastItem = sql.get(sql.size() - 1);
-            return lastItem instanceof SqlBuilder ? false : (lastItem.charAt(lastItem.length() - 1) == newLineCh);
-        }
-    }
-
     public String getQuery() {
         return sql.stream().collect(Collectors.joining());
     }
@@ -275,6 +268,29 @@ public class SqlBuilder {
         }
         return result.toString();
     }
+
+    static class SqlList extends ArrayList<CharSequence> {
+
+
+        /** Get Last or the new Line */
+        public CharSequence getLastOrNewLine() {
+            return isEmpty() ? newLine : get(size() - 1);
+        }
+
+        public Optional<CharSequence> getLast() {
+            return Optional.ofNullable(isEmpty() ? null : get(size() - 1));
+        }
+
+        public Optional<CharSequence> getFirst() {
+            return isEmpty() ? getLast() : Optional.empty();
+        }
+
+        protected boolean beginningLine() {
+            final CharSequence lastItem = getLast().orElse(newLine);
+            return lastItem == newLine || lastItem instanceof SqlBuilder;
+        }
+    }
+
 
 
     @FunctionalInterface
