@@ -327,7 +327,7 @@ public class JdbcBuilderTest extends AbstractJdbcConnector {
         assertEquals(1, count);
     }
 
-    /** Crete new DB connection */
+    /** Create new DB connection */
     Connection createTable(Connection dbConnection) throws ClassNotFoundException, SQLException {
         String sql = "CREATE TABLE employee"
             + "\n( id INTEGER PRIMARY KEY"

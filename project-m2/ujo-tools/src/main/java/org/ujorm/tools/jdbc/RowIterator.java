@@ -66,11 +66,7 @@ public class RowIterator implements LoopingIterator<ResultSet> {
             }
             hasNext = rs.next();
             if (!hasNext) {
-                try {
-                    close();
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
-                }
+               close();
             }
             cursorReady = true;
         } catch (SQLException e) {
@@ -90,7 +86,7 @@ public class RowIterator implements LoopingIterator<ResultSet> {
 
     /** Close all resources */
     @Override
-    public void close() throws IOException {
+    public void close() {
         if (rs != null) {
             try (PreparedStatement tempPs = ps; ResultSet tempRs = rs) {
                 cursorReady = true;
