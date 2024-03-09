@@ -17,8 +17,9 @@
 package org.ujorm.tools.jdbc;
 
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.tools.set.LoopingIterator;
-
+import org.jetbrains.annotations.Nullable;
+import java.io.Closeable;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,8 +66,8 @@ public class SqlBuilder implements AutoCloseable {
     }
 
     @NotNull
-    public LoopingIterator<ResultSet> executeSelect() throws IllegalStateException, SQLException {
-        return new RowIterator(prepareStatement());
+    public PreparedStatementWrapper executeSelect() throws IllegalStateException, SQLException {
+        return new PreparedStatementWrapper(prepareStatement());
     }
 
     @NotNull
@@ -132,10 +133,80 @@ public class SqlBuilder implements AutoCloseable {
         return this;
     }
 
-
     @Override
     @NotNull
     public String toString() {
         return buildSql(new ArrayList<>(), true);
     }
+
+    /** Based on the @{link RowIterator} class */
+    public static class PreparedStatementWrapper implements Iterable<ResultSet>, Iterator<ResultSet>, Closeable {
+
+        /** Prepared Statement */
+        @NotNull
+        private final PreparedStatement ps;
+        /** ResultSet */
+        @Nullable
+        private ResultSet rs;
+        /** It the cursor ready for reading? After a row reading the value will be set to false */
+        private boolean cursorReady = false;
+        /** Has a resultset a next row? */
+        private boolean hasNext = false;
+
+        public PreparedStatementWrapper(@NotNull final PreparedStatement ps) {
+            this.ps = ps;
+        }
+
+        @NotNull
+        @Override
+        public Iterator<ResultSet> iterator() {
+            return this;
+        }
+
+        @Override
+        public Spliterator<ResultSet> spliterator() {
+            throw new UnsupportedOperationException("todo");
+        }
+
+        /** The last checking closes all resources. */
+        @Override
+        public boolean hasNext() throws IllegalStateException {
+            if (!cursorReady) try {
+                if (rs == null) {
+                    rs = ps.executeQuery();
+                }
+                hasNext = rs.next();
+                if (!hasNext) {
+                    close();
+                }
+                cursorReady = true;
+            } catch (SQLException | IOException e) {
+                throw new IllegalStateException(e);
+            }
+            return hasNext;
+        }
+
+        @Override
+        public ResultSet next() {
+            if (hasNext()) {
+                cursorReady = false;
+                return rs;
+            }
+            throw new NoSuchElementException();
+        }
+
+        /** Close all resources */
+        @Override
+        public void close() throws IOException {
+            if (rs != null) {
+                try (ResultSet tempRs = rs) {
+                    cursorReady = true;
+                    hasNext = false;
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+    }
+
 }

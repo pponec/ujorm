@@ -66,14 +66,10 @@ public class RowIterator implements LoopingIterator<ResultSet> {
             }
             hasNext = rs.next();
             if (!hasNext) {
-                try {
-                    close();
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
-                }
+               close();
             }
             cursorReady = true;
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             throw new IllegalStateException(e);
         }
         return hasNext;
