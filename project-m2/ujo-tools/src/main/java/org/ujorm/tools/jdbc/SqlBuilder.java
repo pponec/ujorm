@@ -19,7 +19,6 @@ package org.ujorm.tools.jdbc;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.io.Closeable;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -49,8 +48,10 @@ public class SqlBuilder implements AutoCloseable {
     protected final Map<String, Object> params;
     @NotNull
     protected final Connection connection;
-
-     private PreparedStatement preparedStatement = null;
+    @Nullable
+    private PreparedStatement preparedStatement = null;
+    @Nullable
+    private ResultSetWrapper rsWrapper = null;
 
     public SqlBuilder(
             @NotNull CharSequence sqlTemplate,
@@ -66,8 +67,12 @@ public class SqlBuilder implements AutoCloseable {
     }
 
     @NotNull
-    public PreparedStatementWrapper executeSelect() throws IllegalStateException, SQLException {
-        return new PreparedStatementWrapper(prepareStatement());
+    public Iterable<ResultSet> executeSelect() throws IllegalStateException, SQLException {
+        if (rsWrapper != null) {
+            rsWrapper.close();
+        }
+        rsWrapper = new ResultSetWrapper(prepareStatement().executeQuery());
+        return rsWrapper;
     }
 
     @NotNull
@@ -82,10 +87,14 @@ public class SqlBuilder implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-       if (preparedStatement != null) {
-           preparedStatement.close();
-           preparedStatement = null;
-       }
+        if (rsWrapper != null) {
+            rsWrapper.close();
+            rsWrapper = null;
+        }
+        if (preparedStatement != null) {
+            preparedStatement.close();
+            preparedStatement = null;
+        }
     }
 
     /**
@@ -139,22 +148,17 @@ public class SqlBuilder implements AutoCloseable {
         return buildSql(new ArrayList<>(), true);
     }
 
-    /** Based on the @{link RowIterator} class */
-    public static class PreparedStatementWrapper implements Iterable<ResultSet>, Iterator<ResultSet>, Closeable {
-
-        /** Prepared Statement */
+    /** Based on the {@code RowIterator} class of Ujorm framework. */
+    static final class ResultSetWrapper implements Iterable<ResultSet>, Iterator<ResultSet>, Closeable {
         @NotNull
-        private final PreparedStatement ps;
-        /** ResultSet */
-        @Nullable
-        private ResultSet rs;
+        private ResultSet resultSet;
         /** It the cursor ready for reading? After a row reading the value will be set to false */
         private boolean cursorReady = false;
         /** Has a resultset a next row? */
         private boolean hasNext = false;
 
-        public PreparedStatementWrapper(@NotNull final PreparedStatement ps) {
-            this.ps = ps;
+        public ResultSetWrapper(@NotNull final ResultSet resultSet) {
+            this.resultSet = resultSet;
         }
 
         @NotNull
@@ -165,22 +169,19 @@ public class SqlBuilder implements AutoCloseable {
 
         @Override
         public Spliterator<ResultSet> spliterator() {
-            throw new UnsupportedOperationException("todo");
+            throw new UnsupportedOperationException("Unsupported");
         }
 
         /** The last checking closes all resources. */
         @Override
         public boolean hasNext() throws IllegalStateException {
             if (!cursorReady) try {
-                if (rs == null) {
-                    rs = ps.executeQuery();
-                }
-                hasNext = rs.next();
+                hasNext = resultSet.next();
                 if (!hasNext) {
                     close();
                 }
                 cursorReady = true;
-            } catch (SQLException | IOException e) {
+            } catch (SQLException e) {
                 throw new IllegalStateException(e);
             }
             return hasNext;
@@ -190,21 +191,19 @@ public class SqlBuilder implements AutoCloseable {
         public ResultSet next() {
             if (hasNext()) {
                 cursorReady = false;
-                return rs;
+                return resultSet;
             }
             throw new NoSuchElementException();
         }
 
         /** Close all resources */
         @Override
-        public void close() throws IOException {
-            if (rs != null) {
-                try (ResultSet tempRs = rs) {
-                    cursorReady = true;
-                    hasNext = false;
-                } catch (SQLException e) {
-                    throw new IllegalStateException(e);
-                }
+        public void close() {
+            try (ResultSet rs = resultSet) {
+                cursorReady = true;
+                hasNext = false;
+            } catch (SQLException e) {
+                throw new IllegalStateException(e);
             }
         }
     }
