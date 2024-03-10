@@ -19,6 +19,7 @@ package org.ujorm.tools.jdbc;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.io.Closeable;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,9 +39,9 @@ import java.util.regex.Pattern;
  *
  * @author Pavel Ponec
  */
-public class SqlParamBuilder implements AutoCloseable {
+public class SqlParamBuilder implements Closeable {
 
-    /** SQL mark type of {@code :param} */
+    /** SQL parameter mark type of {@code :param} */
     private static final Pattern SQL_MARK = Pattern.compile(":(\\w+)(?=[\\s,;\\]\\)]|$)");
 
     @NotNull
@@ -69,8 +70,9 @@ public class SqlParamBuilder implements AutoCloseable {
 
     @NotNull
     public Iterable<ResultSet> executeSelect() throws IllegalStateException, SQLException {
-        if (rsWrapper != null) {
-            rsWrapper.close();
+        try (Closeable rs = rsWrapper) {
+        } catch (IOException e) {
+            throw new IllegalStateException("Closing fails", e);
         }
         rsWrapper = new ResultSetWrapper(prepareStatement().executeQuery());
         return rsWrapper;
@@ -86,13 +88,12 @@ public class SqlParamBuilder implements AutoCloseable {
         return connection;
     }
 
+    /** The method closes a PreparedStatement object with related objects, not the database connection. */
     @Override
     public void close() {
-        try {
-            if (rsWrapper != null) rsWrapper.close();
-            if (preparedStatement != null) preparedStatement.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        try (Closeable c1 = rsWrapper; PreparedStatement c2 = preparedStatement) {
+        } catch (Exception e) {
+            throw new IllegalStateException("Closing fails", e);
         } finally {
             rsWrapper = null;
             preparedStatement = null;

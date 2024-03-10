@@ -50,7 +50,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     }
 
     /** Example of SQL statement INSERT. */
-    public void runSingleInsert(Connection connection) throws Exception {
+    public void runSingleInsert(Connection dbConnection) throws Exception {
         System.out.println("SINGLE INSERT");
         String sql = String.join(newLine,
                 "INSERT INTO employee",
@@ -62,7 +62,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             put("created", LocalDate.parse("2018-09-12"));
         }};
 
-        try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, connection)) {
+        try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, dbConnection)) {
             int count = builder.execute();
             Assertions.assertEquals(1, count);
 
@@ -76,7 +76,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     }
 
     /** Example of SQL statement INSERT. */
-    public void runMultipleInsert(Connection connection) throws Exception {
+    public void runMultipleInsert(Connection dbConnection) throws Exception {
         System.out.println("MULTIPLE INSERT");
         String sql = String.join(newLine,
                 "INSERT INTO employee",
@@ -91,7 +91,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             put("created", LocalDate.parse("2018-09-12"));
         }};
 
-        try(SqlParamBuilder builder = new SqlParamBuilder(sql, params, connection)) {
+        try(SqlParamBuilder builder = new SqlParamBuilder(sql, params, dbConnection)) {
             int count = builder.execute();
             Assertions.assertEquals(2, count);
 
@@ -105,7 +105,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         }
     }
 
-    public void runSelect(Connection connection) throws SQLException {
+    public void runSelect(Connection dbConnection) throws SQLException {
         System.out.println("SELECT");
         String sql = String.join(newLine,
                 "SELECT t.id, t.name",
@@ -118,7 +118,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             put("code", Arrays.asList("T", "V"));
         }};
 
-        try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, connection)) {
+        try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, dbConnection)) {
             AtomicInteger counter = new AtomicInteger();
             for (ResultSet rs : builder.executeSelect()) {
                 int id = rs.getInt(1);
@@ -141,7 +141,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         }
     }
 
-    public void runUpdate(Connection connection) throws Exception {
+    public void runUpdate(Connection dbConnection) throws Exception {
         System.out.println("UPDATE");
         String sql = String.join(newLine, "UPDATE employee t",
                 "SET name = :name",
@@ -151,11 +151,11 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             put("name", "TEST");
         }};
 
-        try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, connection)) {
+        try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, dbConnection)) {
             int count = builder.execute();
             assertEquals(2, count);
 
-            // Modify arguments:
+            // Modify SQL arguments:
             builder.set("id", 100).set("name", "TEXT");
             count = builder.execute();
             assertEquals(3, count);
@@ -163,7 +163,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     }
 
 
-    public void missingParam(Connection connection) throws SQLException {
+    public void missingParam(Connection dbConnection) throws SQLException {
         System.out.println("MISSING PARAMS");
         String sql = String.join(newLine,
                 "SELECT t.id, t.name",
@@ -172,7 +172,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                 "  AND t.code = :code",
                 "ORDER BY t.id");
 
-        try (SqlParamBuilder builder = new SqlParamBuilder(sql, connection)) {
+        try (SqlParamBuilder builder = new SqlParamBuilder(sql, dbConnection)) {
             Assertions.assertEquals(sql, builder.toString());
 
             IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -181,6 +181,13 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                 }
             });
             assertEquals("Missing value of the keys: [code, id]", ex.getMessage());
+        }
+    }
+
+    /** Check that autoclosing works correctly also on NULL objects. */
+    @Test
+    public void autoCloseTest() {
+        try (SqlParamBuilder builder = null) {
         }
     }
 
