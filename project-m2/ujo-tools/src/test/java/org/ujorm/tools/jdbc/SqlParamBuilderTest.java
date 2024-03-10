@@ -27,10 +27,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Testing the SqlBuilder class
+ * Testing the SqlParamBuilder class
  * @author Pavel Ponec
  */
-public class SqlBuilderTest extends AbstractJdbcConnector {
+public class SqlParamBuilderTest extends AbstractJdbcConnector {
 
     private final String newLine = "\n";
 
@@ -61,7 +61,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
             put("created", LocalDate.parse("2018-09-12"));
         }};
 
-        try (SqlBuilder builder = new SqlBuilder(sql, params, connection)) {
+        try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, connection)) {
             int count = builder.execute();
             Assertions.assertEquals(1, count);
 
@@ -90,7 +90,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
             put("created", LocalDate.parse("2018-09-12"));
         }};
 
-        try(SqlBuilder builder = new SqlBuilder(sql, params, connection)) {
+        try(SqlParamBuilder builder = new SqlParamBuilder(sql, params, connection)) {
             int count = builder.execute();
             Assertions.assertEquals(2, count);
 
@@ -117,7 +117,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
             put("code", "T");
         }};
 
-        try (SqlBuilder builder = new SqlBuilder(sql, params, connection)) {
+        try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, connection)) {
             AtomicInteger counter = new AtomicInteger();
             for (ResultSet rs : builder.executeSelect()) {
                 int id = rs.getInt(1);
@@ -150,7 +150,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
             put("name", "TEST");
         }};
 
-        try (SqlBuilder builder = new SqlBuilder(sql, params, connection)) {
+        try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, connection)) {
             int count = builder.execute();
             assertEquals(2, count);
 
@@ -171,7 +171,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
                 "  AND t.code = ${code}", // TODO: IN
                 "ORDER BY t.id");
 
-        try (SqlBuilder builder = new SqlBuilder(sql, connection)) {
+        try (SqlParamBuilder builder = new SqlParamBuilder(sql, connection)) {
             Assertions.assertEquals(sql, builder.toString());
 
             IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {

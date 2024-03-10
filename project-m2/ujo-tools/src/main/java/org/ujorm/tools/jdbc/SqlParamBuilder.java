@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  *
  * @author Pavel Ponec
  */
-public class SqlBuilder implements AutoCloseable {
+public class SqlParamBuilder implements AutoCloseable {
 
     private static final Pattern PATTERN = Pattern.compile("\\$\\{([^\\}]+)\\}");
 
@@ -53,7 +53,7 @@ public class SqlBuilder implements AutoCloseable {
     @Nullable
     private ResultSetWrapper rsWrapper = null;
 
-    public SqlBuilder(
+    public SqlParamBuilder(
             @NotNull CharSequence sqlTemplate,
             @NotNull Map<String, Object> params,
             @NotNull Connection connection) {
@@ -62,7 +62,7 @@ public class SqlBuilder implements AutoCloseable {
         this.connection = connection;
     }
 
-    public SqlBuilder(@NotNull CharSequence sqlTemplate, @NotNull Connection connection) {
+    public SqlParamBuilder(@NotNull CharSequence sqlTemplate, @NotNull Connection connection) {
         this(sqlTemplate, new HashMap<>(), connection);
     }
 
@@ -142,7 +142,7 @@ public class SqlBuilder implements AutoCloseable {
     }
 
     /** Set a SQL parameter */
-    public SqlBuilder set(String key, Object value) {
+    public SqlParamBuilder set(String key, Object value) {
         this.params.put(key, value);
         return this;
     }
