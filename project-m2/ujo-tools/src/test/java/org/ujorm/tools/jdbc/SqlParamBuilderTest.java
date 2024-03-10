@@ -53,8 +53,8 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         System.out.println("SINGLE INSERT");
         String sql = String.join(newLine,
                 "INSERT INTO employee",
-                "( id, code, created ) VALUES ",
-                "( ${id}, ${code}, ${created} )");
+                "( id, code, created ) VALUES",
+                "( :id, :code, :created )");
         Map<String, Object> params = new HashMap<String, Object>() {{
             put("id", 11);
             put("code", "T");
@@ -68,7 +68,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             String toString = builder.toString();
             String expected = String.join(newLine,
                     "INSERT INTO employee",
-                    "( id, code, created ) VALUES ",
+                    "( id, code, created ) VALUES",
                     "( [11], [T], [2018-09-12] )");
             Assertions.assertEquals(expected, toString);
         }
@@ -79,9 +79,9 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         System.out.println("MULTIPLE INSERT");
         String sql = String.join(newLine,
                 "INSERT INTO employee",
-                "( id, code, created ) VALUES ",
-                "( ${id1}, ${code}, ${created} ),",
-                "( ${id2}, ${code}, ${created} )"
+                "(id,code,created) VALUES",
+                "(:id1,:code,:created),",
+                "(:id2,:code,:created)"
         );
         Map<String, Object> params = new HashMap<String, Object>() {{
             put("id1", 1);
@@ -97,9 +97,9 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             String toString = builder.toString();
             String expected = String.join(newLine,
                     "INSERT INTO employee",
-                    "( id, code, created ) VALUES ",
-                    "( [1], [T], [2018-09-12] ),",
-                    "( [2], [T], [2018-09-12] )");
+                    "(id,code,created) VALUES",
+                    "([1],[T],[2018-09-12]),",
+                    "([2],[T],[2018-09-12])");
             Assertions.assertEquals(expected, toString);
         }
     }
@@ -109,8 +109,8 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         String sql = String.join(newLine,
                 "SELECT t.id, t.name",
                 "FROM employee t",
-                "WHERE t.id > ${id}",
-                "  AND t.code = ${code}", // TODO: IN
+                "WHERE t.id > :id",
+                "  AND t.code = :code", // TODO: IN
                 "ORDER BY t.id");
         Map<String, Object> params = new HashMap<String, Object>() {{
             put("id", 10);
@@ -143,8 +143,8 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     public void runUpdate(Connection connection) throws Exception {
         System.out.println("UPDATE");
         String sql = String.join(newLine, "UPDATE employee t",
-                "SET name = ${name}",
-                "WHERE t.id < ${id}");
+                "SET name = :name",
+                "WHERE t.id < :id");
         Map<String, Object> params = new HashMap<String, Object>() {{
             put("id", 10);
             put("name", "TEST");
@@ -167,8 +167,8 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         String sql = String.join(newLine,
                 "SELECT t.id, t.name",
                 "FROM employee t",
-                "WHERE t.id > ${id}",
-                "  AND t.code = ${code}", // TODO: IN
+                "WHERE t.id > :id",
+                "  AND t.code = :code", // TODO: IN
                 "ORDER BY t.id");
 
         try (SqlParamBuilder builder = new SqlParamBuilder(sql, connection)) {

@@ -40,7 +40,8 @@ import java.util.regex.Pattern;
  */
 public class SqlParamBuilder implements AutoCloseable {
 
-    private static final Pattern PATTERN = Pattern.compile("\\$\\{([^\\}]+)\\}");
+    /** SQL mark type of {@code :param} */
+    private static final Pattern SQL_MARK = Pattern.compile(":(\\w+)(?=[\\s,;\\]\\)]|$)");
 
     @NotNull
     protected final String sqlTemplate;
@@ -119,7 +120,7 @@ public class SqlParamBuilder implements AutoCloseable {
     }
 
     protected String buildSql(@NotNull List<Object> sqlValues, boolean toLog) {
-        final Matcher matcher = PATTERN.matcher(sqlTemplate);
+        final Matcher matcher = SQL_MARK.matcher(sqlTemplate);
         final Set<String> missingKeys = new HashSet<>();
         final StringBuffer result = new StringBuffer();
         while (matcher.find()) {
@@ -130,7 +131,7 @@ public class SqlParamBuilder implements AutoCloseable {
                 result.append(Matcher.quoteReplacement(toLog ? "[" + value + "]" : "?"));
                 sqlValues.add(value);
             } else {
-                matcher.appendReplacement(result, Matcher.quoteReplacement("${" + key + "}"));
+                matcher.appendReplacement(result, Matcher.quoteReplacement(":" + key));
                 missingKeys.add(key);
             }
         }
