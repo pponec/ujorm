@@ -57,10 +57,10 @@ public class SqlParamBuilder implements Closeable {
 
     public SqlParamBuilder(
             @NotNull CharSequence sqlTemplate,
-            @NotNull Map<String, Object> params,
+            @NotNull Map<String, ?> params,
             @NotNull Connection connection) {
         this.sqlTemplate = sqlTemplate.toString();
-        this.params = params;
+        this.params = new HashMap<>(params);
         this.connection = connection;
     }
 
@@ -117,18 +117,18 @@ public class SqlParamBuilder implements Closeable {
     }
 
     protected String buildSql(@NotNull List<Object> sqlValues, boolean toLog) {
+        final StringBuffer result = new StringBuffer(256);
         final Matcher matcher = SQL_MARK.matcher(sqlTemplate);
         final Set<String> missingKeys = new HashSet<>();
-        final StringBuffer result = new StringBuffer();
-        final Object[] singleItem = new Object[1];
+        final Object[] singleValue = new Object[1];
         while (matcher.find()) {
             final String key = matcher.group(1);
             final Object value = params.get(key);
             if (value != null) {
                 matcher.appendReplacement(result, "");
-                singleItem[0] = value;
-                final Object[] values = value instanceof List ? ((List<?>) value).toArray() : singleItem;
-                for (int i = 0, max = values.length; i < max; i++) {
+                singleValue[0] = value;
+                final Object[] values = value instanceof List ? ((List<?>) value).toArray() : singleValue;
+                for (int i = 0; i < values.length; i++) {
                     if (i > 0) result.append(',');
                     result.append(Matcher.quoteReplacement(toLog ? "[" + values[i] + "]" : "?"));
                     sqlValues.add(values[i]);
@@ -145,8 +145,8 @@ public class SqlParamBuilder implements Closeable {
         return result.toString();
     }
 
-    /** Set a SQL parameter */
-    public SqlParamBuilder set(String key, Object value) {
+    /** Set a SQL parameter value */
+    public SqlParamBuilder setParam(String key, Object value) {
         this.params.put(key, value);
         return this;
     }
@@ -205,7 +205,6 @@ public class SqlParamBuilder implements Closeable {
             throw new NoSuchElementException();
         }
 
-        /** Close all resources */
         @Override
         public void close() {
             try (ResultSet rs = resultSet) {
@@ -216,5 +215,4 @@ public class SqlParamBuilder implements Closeable {
             }
         }
     }
-
 }

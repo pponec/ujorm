@@ -155,13 +155,12 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             int count = builder.execute();
             assertEquals(2, count);
 
-            // Modify SQL arguments:
-            builder.set("id", 100).set("name", "TEXT");
+            // Modify SQL parameters:
+            builder.setParam("id", 100).setParam("name", "TEXT");
             count = builder.execute();
             assertEquals(3, count);
         }
     }
-
 
     public void missingParam(Connection dbConnection) throws SQLException {
         System.out.println("MISSING PARAMS");
@@ -200,7 +199,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                 + "( id INTEGER PRIMARY KEY"
                 + ", name VARCHAR(256) DEFAULT 'test'"
                 + ", code VARCHAR(1)"
-                + ", created TIMESTAMP"
+                + ", created DATE NOT NULL"
                 + ")");
 
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
