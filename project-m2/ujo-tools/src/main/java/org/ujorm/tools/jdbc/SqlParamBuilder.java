@@ -89,12 +89,8 @@ public class SqlParamBuilder implements AutoCloseable {
     @Override
     public void close() {
         try {
-            if (rsWrapper != null) {
-                rsWrapper.close();
-            }
-            if (preparedStatement != null) {
-                preparedStatement.close();
-            }
+            if (rsWrapper != null) rsWrapper.close();
+            if (preparedStatement != null) preparedStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -123,13 +119,19 @@ public class SqlParamBuilder implements AutoCloseable {
         final Matcher matcher = SQL_MARK.matcher(sqlTemplate);
         final Set<String> missingKeys = new HashSet<>();
         final StringBuffer result = new StringBuffer();
+        final Object[] singleItem = new Object[1];
         while (matcher.find()) {
             final String key = matcher.group(1);
             final Object value = params.get(key);
             if (value != null) {
                 matcher.appendReplacement(result, "");
-                result.append(Matcher.quoteReplacement(toLog ? "[" + value + "]" : "?"));
-                sqlValues.add(value);
+                singleItem[0] = value;
+                final Object[] values = value instanceof List ? ((List<?>) value).toArray() : singleItem;
+                for (int i = 0, max = values.length; i < max; i++) {
+                    if (i > 0) result.append(',');
+                    result.append(Matcher.quoteReplacement(toLog ? "[" + values[i] + "]" : "?"));
+                    sqlValues.add(values[i]);
+                }
             } else {
                 matcher.appendReplacement(result, Matcher.quoteReplacement(":" + key));
                 missingKeys.add(key);

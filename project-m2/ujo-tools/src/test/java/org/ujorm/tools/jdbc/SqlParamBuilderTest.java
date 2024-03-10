@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -110,11 +111,11 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                 "SELECT t.id, t.name",
                 "FROM employee t",
                 "WHERE t.id > :id",
-                "  AND t.code = :code", // TODO: IN
+                "  AND t.code IN (:code)",
                 "ORDER BY t.id");
         Map<String, Object> params = new HashMap<String, Object>() {{
             put("id", 10);
-            put("code", "T");
+            put("code", Arrays.asList("T", "V"));
         }};
 
         try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, connection)) {
@@ -133,7 +134,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                     "SELECT t.id, t.name",
                     "FROM employee t",
                     "WHERE t.id > [10]",
-                    "  AND t.code = [T]",
+                    "  AND t.code IN ([T],[V])",
                     "ORDER BY t.id");
             Assertions.assertEquals(expected, toString);
             Assertions.assertEquals(1, counter.get());
@@ -168,7 +169,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                 "SELECT t.id, t.name",
                 "FROM employee t",
                 "WHERE t.id > :id",
-                "  AND t.code = :code", // TODO: IN
+                "  AND t.code = :code",
                 "ORDER BY t.id");
 
         try (SqlParamBuilder builder = new SqlParamBuilder(sql, connection)) {
