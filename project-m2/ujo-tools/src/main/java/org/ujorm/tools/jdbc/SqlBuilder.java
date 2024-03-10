@@ -86,13 +86,18 @@ public class SqlBuilder implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
-        if (rsWrapper != null) {
-            rsWrapper.close();
+    public void close() {
+        try {
+            if (rsWrapper != null) {
+                rsWrapper.close();
+            }
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
             rsWrapper = null;
-        }
-        if (preparedStatement != null) {
-            preparedStatement.close();
             preparedStatement = null;
         }
     }

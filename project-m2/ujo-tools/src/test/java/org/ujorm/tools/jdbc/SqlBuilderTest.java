@@ -90,7 +90,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
             put("created", LocalDate.parse("2018-09-12"));
         }};
 
-        try( SqlBuilder builder = new SqlBuilder(sql, params, connection)) {
+        try(SqlBuilder builder = new SqlBuilder(sql, params, connection)) {
             int count = builder.execute();
             Assertions.assertEquals(2, count);
 
@@ -117,26 +117,27 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
             put("code", "T");
         }};
 
-        SqlBuilder builder = new SqlBuilder(sql, params, connection);
-        AtomicInteger counter = new AtomicInteger();
-        for (ResultSet rs : builder.executeSelect()) {
-            int id = rs.getInt(1);
-            String name = rs.getString(2);
+        try (SqlBuilder builder = new SqlBuilder(sql, params, connection)) {
+            AtomicInteger counter = new AtomicInteger();
+            for (ResultSet rs : builder.executeSelect()) {
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
 
-            assertEquals(11, id);
-            assertEquals("test", name);
-            counter.incrementAndGet();
+                assertEquals(11, id);
+                assertEquals("test", name);
+                counter.incrementAndGet();
+            }
+
+            String toString = builder.toString();
+            String expected = String.join(newLine,
+                    "SELECT t.id, t.name",
+                    "FROM employee t",
+                    "WHERE t.id > [10]",
+                    "  AND t.code = [T]",
+                    "ORDER BY t.id");
+            Assertions.assertEquals(expected, toString);
+            Assertions.assertEquals(1, counter.get());
         }
-
-        String toString = builder.toString();
-        String expected = String.join(newLine,
-                "SELECT t.id, t.name",
-                "FROM employee t",
-                "WHERE t.id > [10]",
-                "  AND t.code = [T]",
-                "ORDER BY t.id");
-        Assertions.assertEquals(expected, toString);
-        Assertions.assertEquals(1, counter.get());
     }
 
     public void runUpdate(Connection connection) throws Exception {
@@ -170,15 +171,16 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
                 "  AND t.code = ${code}", // TODO: IN
                 "ORDER BY t.id");
 
-        SqlBuilder builder = new SqlBuilder(sql, connection);
-        Assertions.assertEquals(sql, builder.toString());
+        try (SqlBuilder builder = new SqlBuilder(sql, connection)) {
+            Assertions.assertEquals(sql, builder.toString());
 
-        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            for (ResultSet rs : builder.executeSelect()) {
-                int id = rs.getInt(1);
-            }
-        });
-        assertEquals("Missing value of the keys: [code, id]", ex.getMessage());
+            IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+                for (ResultSet rs : builder.executeSelect()) {
+                    int id = rs.getInt(1);
+                }
+            });
+            assertEquals("Missing value of the keys: [code, id]", ex.getMessage());
+        }
     }
 
     // --- UTILS ---
