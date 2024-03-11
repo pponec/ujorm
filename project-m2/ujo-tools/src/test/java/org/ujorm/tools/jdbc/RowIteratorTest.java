@@ -17,6 +17,7 @@ package org.ujorm.tools.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

@@ -19,11 +19,10 @@ package org.ujorm.tools.jdbc;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -129,8 +128,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             Assertions.assertEquals(builder.sqlTemplate(), builder.toString());
 
             IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-                for (ResultSet rs : builder.executeSelect()) {
-                }
+                builder.streamMap(t -> t).count();
             });
             assertEquals("Missing value of the keys: [code, id]", ex.getMessage());
 

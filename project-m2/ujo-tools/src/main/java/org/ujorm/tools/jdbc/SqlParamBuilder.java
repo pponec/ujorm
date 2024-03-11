@@ -44,7 +44,7 @@ import java.util.stream.StreamSupport;
 public class SqlParamBuilder implements Closeable {
 
     /** SQL parameter mark type of {@code :param} */
-    private static final Pattern SQL_MARK = Pattern.compile(":(\\w+)(?=[\\s,;\\]\\)]|$)");
+    private static final Pattern SQL_MARK = Pattern.compile(":(\\w+)");
 
     @NotNull
     protected final Connection dbConnection;
@@ -55,7 +55,7 @@ public class SqlParamBuilder implements Closeable {
     @Nullable
     private PreparedStatement preparedStatement = null;
     @Nullable
-    private ResultSetWrapper rsWrapper = null;
+    private ResultSet resultSet = null;
 
     public SqlParamBuilder(@NotNull Connection dbConnection) {
         this.dbConnection = dbConnection;
@@ -84,66 +84,88 @@ public class SqlParamBuilder implements Closeable {
         return bind (key, Arrays.asList(value));
     }
 
-    /** Execute: INSERT, UPDATE, DELETE, DDL statements */
-    @NotNull
     public int execute() throws IllegalStateException, SQLException {
         return prepareStatement().executeUpdate();
     }
 
+    /** Execute: INSERT, UPDATE, DELETE, DDL statements */
     @NotNull
-    public Iterable<ResultSet> executeSelect() throws IllegalStateException, SQLException {
-        try (Closeable rs = rsWrapper) {
-        } catch (IOException e) {
+    private ResultSet executeSelect() throws IllegalStateException {
+        try (AutoCloseable rs = resultSet) {
+        } catch (Exception e) {
             throw new IllegalStateException("Closing fails", e);
         }
-        rsWrapper = new ResultSetWrapper(prepareStatement().executeQuery());
-        return rsWrapper;
+        try {
+            resultSet = prepareStatement().executeQuery();
+            return resultSet;
+        } catch (Exception ex) {
+            throw (ex instanceof RuntimeException) ? (RuntimeException) ex : new IllegalStateException(ex);
+        }
+    }
+
+    /** Use the  {@link #streamMap(SqlFunction)} or {@link #forEach(SqlConsumer)} methods rather */
+    @NotNull
+    private Stream<ResultSet> stream() {
+        final ResultSet resultSet = executeSelect();
+        final Iterator<ResultSet> iterator = new Iterator<ResultSet>() {
+            @Override
+            public boolean hasNext() {
+                try {
+                    return resultSet.next();
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+            @Override
+            public ResultSet next() {
+                return resultSet;
+            }
+        };
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false);
     }
 
     /** Iterate executed select */
-    public void forEach(SqlConsumer consumer) throws IllegalStateException, SQLException  {
-        for (ResultSet rs : executeSelect()) {
-            consumer.accept(rs);
-        }
-    }
-
-    public <R> Stream<R> streamMap(SqlFunction<ResultSet, ? extends R> mapper ) throws SQLException {
-        return StreamSupport.stream(executeSelect().spliterator(), false).map(mapper);
+    public void forEach(@NotNull SqlConsumer consumer) throws IllegalStateException, SQLException  {
+        stream().forEach(consumer);
     }
 
     @NotNull
-    public Connection getDbConnection() {
+    public <R> Stream<R> streamMap(SqlFunction<ResultSet, ? extends R> mapper ) {
+        return stream().map(mapper);
+    }
+
+    public Connection getConnection() {
         return dbConnection;
     }
 
     /** The method closes a PreparedStatement object with related objects, not the database connection. */
     @Override
     public void close() {
-        try (Closeable c1 = rsWrapper; PreparedStatement c2 = preparedStatement) {
+        try (AutoCloseable c1 = resultSet; PreparedStatement c2 = preparedStatement) {
         } catch (Exception e) {
             throw new IllegalStateException("Closing fails", e);
         } finally {
-            rsWrapper = null;
+            resultSet = null;
             preparedStatement = null;
         }
     }
 
-    /**
-     * Build (or reuse) a PreparedStatement object with SQL arguments
-     */
+    /** Build (or reuse) a PreparedStatement object with SQL arguments */
     @NotNull
     public PreparedStatement prepareStatement() throws SQLException {
-        final List<Object> sqlValues = new ArrayList<>();
+        final ArrayList<Object> sqlValues = new ArrayList<>(params.size());
         final String sql = buildSql(sqlValues, false);
-        if (preparedStatement == null) {
-            preparedStatement = dbConnection.prepareStatement(sql);
-        }
+        final PreparedStatement result = preparedStatement != null
+                ? preparedStatement
+                : dbConnection.prepareStatement(sql);
         for (int i = 0, max = sqlValues.size(); i < max; i++) {
-            preparedStatement.setObject(i + 1, sqlValues.get(i));
+            result.setObject(i + 1, sqlValues.get(i));
         }
-        return preparedStatement;
+        this.preparedStatement = result;
+        return result;
     }
 
+    @NotNull
     protected String buildSql(@NotNull List<Object> sqlValues, boolean toLog) {
         final StringBuffer result = new StringBuffer(256);
         final Matcher matcher = SQL_MARK.matcher(sqlTemplate);
@@ -174,6 +196,7 @@ public class SqlParamBuilder implements Closeable {
     }
 
     /** Set a SQL parameter value */
+    @NotNull
     public SqlParamBuilder setParam(String key, Object value) {
         this.params.put(key, value);
         return this;
@@ -184,63 +207,9 @@ public class SqlParamBuilder implements Closeable {
         return sqlTemplate;
     }
 
-    @Override
     @NotNull
+    @Override
     public String toString() {
         return buildSql(new ArrayList<>(), true);
-    }
-
-    /** Based on the {@code RowIterator} class of Ujorm framework. */
-    static final class ResultSetWrapper implements Iterable<ResultSet>, Iterator<ResultSet>, Closeable {
-        @NotNull
-        private ResultSet resultSet;
-        /** It the cursor ready for reading? After a row reading the value will be set to false */
-        private boolean cursorReady = false;
-        /** Has a resultset a next row? */
-        private boolean hasNext = false;
-
-        public ResultSetWrapper(@NotNull final ResultSet resultSet) {
-            this.resultSet = resultSet;
-        }
-
-        @NotNull
-        @Override
-        public Iterator<ResultSet> iterator() {
-            return this;
-        }
-
-        /** The last checking closes all resources. */
-        @Override
-        public boolean hasNext() throws IllegalStateException {
-            if (!cursorReady) try {
-                hasNext = resultSet.next();
-                if (!hasNext) {
-                    close();
-                }
-                cursorReady = true;
-            } catch (SQLException e) {
-                throw new IllegalStateException(e);
-            }
-            return hasNext;
-        }
-
-        @Override
-        public ResultSet next() {
-            if (hasNext()) {
-                cursorReady = false;
-                return resultSet;
-            }
-            throw new NoSuchElementException();
-        }
-
-        @Override
-        public void close() {
-            try (ResultSet rs = resultSet) {
-                cursorReady = true;
-                hasNext = false;
-            } catch (SQLException e) {
-                throw new IllegalStateException(e);
-            }
-        }
     }
 }
