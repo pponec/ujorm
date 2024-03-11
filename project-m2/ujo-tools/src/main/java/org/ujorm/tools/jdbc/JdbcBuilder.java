@@ -364,7 +364,7 @@ public class JdbcBuilder implements Serializable {
 
     /** Create a new result list */
     @NotNull
-    public <T> List<T> executeSelect(@NotNull final Connection connection, JdbcFunction<T> function) throws SQLException {
+    public <T> List<T> executeSelect(@NotNull final Connection connection, JdbcFunction<ResultSet, T> function) throws SQLException {
         final ArrayList<T> result = new ArrayList<>(128);
         try (PreparedStatement ps = prepareStatement(connection); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {

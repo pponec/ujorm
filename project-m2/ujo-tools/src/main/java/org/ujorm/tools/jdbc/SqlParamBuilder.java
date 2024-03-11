@@ -27,6 +27,8 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * A tool for building an SQL query with parameters.
@@ -49,7 +51,7 @@ public class SqlParamBuilder implements Closeable {
     @NotNull
     protected final Map<String, Object> params;
     @NotNull
-    protected final Connection connection;
+    protected final Connection dbConnection;
     @Nullable
     private PreparedStatement preparedStatement = null;
     @Nullable
@@ -58,14 +60,14 @@ public class SqlParamBuilder implements Closeable {
     public SqlParamBuilder(
             @NotNull CharSequence sqlTemplate,
             @NotNull Map<String, ?> params,
-            @NotNull Connection connection) {
+            @NotNull Connection dbConnection) {
         this.sqlTemplate = sqlTemplate.toString();
         this.params = new HashMap<>(params);
-        this.connection = connection;
+        this.dbConnection = dbConnection;
     }
 
-    public SqlParamBuilder(@NotNull CharSequence sqlTemplate, @NotNull Connection connection) {
-        this(sqlTemplate, new HashMap<>(), connection);
+    public SqlParamBuilder(@NotNull CharSequence sqlTemplate, @NotNull Connection dbConnection) {
+        this(sqlTemplate, new HashMap<>(), dbConnection);
     }
 
     @NotNull
@@ -78,14 +80,25 @@ public class SqlParamBuilder implements Closeable {
         return rsWrapper;
     }
 
+    /** Iterate select */
+    public void forEach(RsConsumer consumer) throws IllegalStateException, SQLException  {
+        for (ResultSet rs : executeSelect()) {
+            consumer.accept(rs);
+        }
+    }
+
+    public <R> Stream<R> streamMap(JdbcFunction<ResultSet, ? extends R> mapper ) throws SQLException {
+        return StreamSupport.stream(executeSelect().spliterator(), false).map(mapper);
+    }
+
     @NotNull
     public int execute() throws IllegalStateException, SQLException {
         return prepareStatement().executeUpdate();
     }
 
     @NotNull
-    public Connection getConnection() {
-        return connection;
+    public Connection getDbConnection() {
+        return dbConnection;
     }
 
     /** The method closes a PreparedStatement object with related objects, not the database connection. */
@@ -108,7 +121,7 @@ public class SqlParamBuilder implements Closeable {
         final List<Object> sqlValues = new ArrayList<>();
         final String sql = buildSql(sqlValues, false);
         if (preparedStatement == null) {
-            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement = dbConnection.prepareStatement(sql);
         }
         for (int i = 0, max = sqlValues.size(); i < max; i++) {
             preparedStatement.setObject(i + 1, sqlValues.get(i));
@@ -174,11 +187,6 @@ public class SqlParamBuilder implements Closeable {
         @Override
         public Iterator<ResultSet> iterator() {
             return this;
-        }
-
-        @Override
-        public Spliterator<ResultSet> spliterator() {
-            throw new UnsupportedOperationException("Unsupported");
         }
 
         /** The last checking closes all resources. */

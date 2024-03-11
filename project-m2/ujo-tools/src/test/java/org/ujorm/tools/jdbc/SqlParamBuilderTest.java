@@ -118,16 +118,16 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             put("code", Arrays.asList("T", "V"));
         }};
 
+        AtomicInteger counter = new AtomicInteger();
         try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, dbConnection)) {
-            AtomicInteger counter = new AtomicInteger();
-            for (ResultSet rs : builder.executeSelect()) {
+            builder.forEach(rs -> {
                 int id = rs.getInt(1);
                 String name = rs.getString(2);
 
                 assertEquals(11, id);
                 assertEquals("test", name);
                 counter.incrementAndGet();
-            }
+            });
 
             String toString = builder.toString();
             String expected = String.join(newLine,
@@ -137,8 +137,8 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                     "  AND t.code IN ([T],[V])",
                     "ORDER BY t.id");
             Assertions.assertEquals(expected, toString);
-            Assertions.assertEquals(1, counter.get());
         }
+        Assertions.assertEquals(1, counter.get());
     }
 
     public void runUpdate(Connection dbConnection) throws Exception {
