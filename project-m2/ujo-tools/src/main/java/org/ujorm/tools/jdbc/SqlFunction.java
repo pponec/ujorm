@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Pavel Ponec
+ * Copyright 2024-2024 Pavel Ponec
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/jdbc/JdbcFunction.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,24 +16,31 @@
  */
 package org.ujorm.tools.jdbc;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.Function;
 
 /**
  * A functional interface
- * @see JdbcBuilder#executeSelect(java.sql.Connection, org.ujorm.tools.jdbc.JdbcFunction)
  * @since 1.90
  */
 @FunctionalInterface
-public interface JdbcFunction<R> {
+public interface SqlFunction<T, R> extends Function<T, R> {
 
     /**
      * Applies this function to the given argument.
      *
      * @param rs ResultSet
      * @return the function result
-     * @throws java.sql.SQLException An SQL exception
+     * @throws SQLException An SQL exception
      */
-    R apply(ResultSet rs) throws SQLException;
+    @Override
+    default R apply(T rs) {
+        try {
+            return applyRs(rs);
+        } catch (SQLException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
 
+    R applyRs(T rs) throws SQLException;
 }

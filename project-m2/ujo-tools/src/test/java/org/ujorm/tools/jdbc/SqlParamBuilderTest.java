@@ -18,12 +18,13 @@ package org.ujorm.tools.jdbc;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -40,146 +41,121 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
 
     @Test
     public void testShowUsage() throws Exception {
-        try (Connection dbConnection = createTable(createDbConnection()))  {
-            runSingleInsert(dbConnection);
-            runMultipleInsert(dbConnection);
-            runSelect(dbConnection);
-            runUpdate(dbConnection);
-            missingParam(dbConnection);
+        try (Connection dbConnection = createDbConnection())  {
+            runSqlStatements(dbConnection);
         }
     }
 
     /** Example of SQL statement INSERT. */
-    public void runSingleInsert(Connection dbConnection) throws Exception {
-        System.out.println("SINGLE INSERT");
-        String sql = String.join(newLine,
-                "INSERT INTO employee",
-                "( id, code, created ) VALUES",
-                "( :id, :code, :created )");
-        Map<String, Object> params = new HashMap<String, Object>() {{
-            put("id", 11);
-            put("code", "T");
-            put("created", LocalDate.parse("2018-09-12"));
-        }};
+    public void runSqlStatements(Connection dbConnection) throws SQLException {
 
-        try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, dbConnection)) {
-            int count = builder.execute();
-            Assertions.assertEquals(1, count);
+        try (SqlParamBuilder builder = new SqlParamBuilder(dbConnection)) {
+            System.out.println("CREATE TABLE");
+            builder.sql("CREATE TABLE employee",
+                            "( id INTEGER PRIMARY KEY",
+                            ", name VARCHAR(256) DEFAULT 'test'",
+                            ", code VARCHAR(1)",
+                            ", created DATE NOT NULL",
+                            ")")
+                    .execute();
 
-            String toString = builder.toString();
-            String expected = String.join(newLine,
-                    "INSERT INTO employee",
-                    "( id, code, created ) VALUES",
-                    "( [11], [T], [2018-09-12] )");
-            Assertions.assertEquals(expected, toString);
+            System.out.println("SINGLE INSERT");
+            builder.sql(String.join(newLine,
+                            "INSERT INTO employee",
+                            "( id, code, created ) VALUES",
+                            "( :id, :code, :created )"))
+                    .bind("id", 1)
+                    .bind("code", "T")
+                    .bind("created", someDate)
+                    .execute();
+
+            System.out.println("MULTI INSERT");
+            builder.sql("INSERT INTO employee",
+                            "(id,code,created) VALUES",
+                            "(:id1,:code,:created),",
+                            "(:id2,:code,:created)")
+                    .bind("id1", 2)
+                    .bind("id2", 3)
+                    .bind("code", "T")
+                    .bind("created", someDate.plusDays(1))
+                    .execute();
+            System.out.println("Previous statement with modified parameters");
+            builder.bind("id1", 11)
+                    .bind("id2", 12)
+                    .bind("code", "V")
+                    .execute();
+
+            System.out.println("SELECT 1");
+            List<Employee> employees = builder.sql("SELECT t.id, t.name, t.created",
+                            "FROM employee t",
+                            "WHERE t.id < :id",
+                            "  AND t.code IN (:code)",
+                            "ORDER BY t.id")
+                    .bind("id", 10)
+                    .bind("code", "T", "V")
+                    .streamMap(rs -> new Employee(
+                            rs.getInt(1),
+                            rs.getString(2),
+                            rs.getObject(3, LocalDate.class)))
+                    .collect(Collectors.toList());
+            Assertions.assertEquals(3, employees.size());
+            Assertions.assertEquals(1, employees.get(0).id);
+            Assertions.assertEquals("test", employees.get(0).name);
+            Assertions.assertEquals(someDate, employees.get(0).created);
+
+            System.out.println("SELECT 2 (reuse the previous SELECT)");
+            List<Employee> employees2 = builder
+                    .bind("id", 100)
+                    .streamMap(rs -> new Employee(
+                            rs.getInt(1),
+                            rs.getString(2),
+                            rs.getObject(3, LocalDate.class)))
+                    .collect(Collectors.toList());
+            Assertions.assertEquals(5, employees2.size());
         }
     }
 
-    /** Example of SQL statement INSERT. */
-    public void runMultipleInsert(Connection dbConnection) throws Exception {
-        System.out.println("MULTIPLE INSERT");
-        String sql = String.join(newLine,
-                "INSERT INTO employee",
-                "(id,code,created) VALUES",
-                "(:id1,:code,:created),",
-                "(:id2,:code,:created)"
-        );
-        Map<String, Object> params = new HashMap<String, Object>() {{
-            put("id1", 1);
-            put("id2", 2);
-            put("code", "T");
-            put("created", LocalDate.parse("2018-09-12"));
-        }};
+    @Test
+    public void loggingSql() throws SQLException {
+        final Connection dbConnection = Mockito.mock(Connection.class);
+        try (SqlParamBuilder builder = new SqlParamBuilder(dbConnection)) {
 
-        try(SqlParamBuilder builder = new SqlParamBuilder(sql, params, dbConnection)) {
-            int count = builder.execute();
-            Assertions.assertEquals(2, count);
+            System.out.println("MISSING PARAMS");
+            builder.sql("SELECT t.id, t.name",
+                    "FROM employee t",
+                    "WHERE t.id > :id",
+                    "  AND t.code = :code",
+                    "ORDER BY t.id");
+            Assertions.assertEquals(builder.sqlTemplate(), builder.toString());
 
-            String toString = builder.toString();
-            String expected = String.join(newLine,
-                    "INSERT INTO employee",
-                    "(id,code,created) VALUES",
-                    "([1],[T],[2018-09-12]),",
-                    "([2],[T],[2018-09-12])");
-            Assertions.assertEquals(expected, toString);
-        }
-    }
-
-    public void runSelect(Connection dbConnection) throws SQLException {
-        System.out.println("SELECT");
-        String sql = String.join(newLine,
-                "SELECT t.id, t.name",
-                "FROM employee t",
-                "WHERE t.id > :id",
-                "  AND t.code IN (:code)",
-                "ORDER BY t.id");
-        Map<String, Object> params = new HashMap<String, Object>() {{
-            put("id", 10);
-            put("code", Arrays.asList("T", "V"));
-        }};
-
-        AtomicInteger counter = new AtomicInteger();
-        try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, dbConnection)) {
-            builder.forEach(rs -> {
-                int id = rs.getInt(1);
-                String name = rs.getString(2);
-
-                assertEquals(11, id);
-                assertEquals("test", name);
-                counter.incrementAndGet();
+            IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+                for (ResultSet rs : builder.executeSelect()) {
+                }
             });
+            assertEquals("Missing value of the keys: [code, id]", ex.getMessage());
 
-            String toString = builder.toString();
+            System.out.println("ASSIGNED PARAMS");
+            builder.bind("id", 10);
+            builder.bind("code", "w");
             String expected = String.join(newLine,
                     "SELECT t.id, t.name",
                     "FROM employee t",
                     "WHERE t.id > [10]",
-                    "  AND t.code IN ([T],[V])",
+                    "  AND t.code = [w]",
                     "ORDER BY t.id");
-            Assertions.assertEquals(expected, toString);
-        }
-        Assertions.assertEquals(1, counter.get());
-    }
-
-    public void runUpdate(Connection dbConnection) throws Exception {
-        System.out.println("UPDATE");
-        String sql = String.join(newLine, "UPDATE employee t",
-                "SET name = :name",
-                "WHERE t.id < :id");
-        Map<String, Object> params = new HashMap<String, Object>() {{
-            put("id", 10);
-            put("name", "TEST");
-        }};
-
-        try (SqlParamBuilder builder = new SqlParamBuilder(sql, params, dbConnection)) {
-            int count = builder.execute();
-            assertEquals(2, count);
-
-            // Modify SQL parameters:
-            builder.setParam("id", 100).setParam("name", "TEXT");
-            count = builder.execute();
-            assertEquals(3, count);
+            assertEquals(expected, builder.toString());
         }
     }
 
-    public void missingParam(Connection dbConnection) throws SQLException {
-        System.out.println("MISSING PARAMS");
-        String sql = String.join(newLine,
-                "SELECT t.id, t.name",
-                "FROM employee t",
-                "WHERE t.id > :id",
-                "  AND t.code = :code",
-                "ORDER BY t.id");
+    public class Employee {
+        final int id;
+        final String name;
+        final LocalDate created;
 
-        try (SqlParamBuilder builder = new SqlParamBuilder(sql, dbConnection)) {
-            Assertions.assertEquals(sql, builder.toString());
-
-            IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-                for (ResultSet rs : builder.executeSelect()) {
-                    int id = rs.getInt(1);
-                }
-            });
-            assertEquals("Missing value of the keys: [code, id]", ex.getMessage());
+        public Employee(int id, String name, LocalDate created) {
+            this.id = id;
+            this.name = name;
+            this.created = created;
         }
     }
 
@@ -188,25 +164,6 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     public void autoCloseTest() {
         try (SqlParamBuilder builder = null) {
         }
-    }
-
-    // --- UTILS ---
-
-    /** Create new DB connection */
-    Connection createTable(Connection dbConnection) throws ClassNotFoundException, SQLException {
-        String sql = String.join(newLine,
-                "CREATE TABLE employee"
-                + "( id INTEGER PRIMARY KEY"
-                + ", name VARCHAR(256) DEFAULT 'test'"
-                + ", code VARCHAR(1)"
-                + ", created DATE NOT NULL"
-                + ")");
-
-        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            ps.execute();
-            dbConnection.commit();
-        }
-        return dbConnection;
     }
 
 }

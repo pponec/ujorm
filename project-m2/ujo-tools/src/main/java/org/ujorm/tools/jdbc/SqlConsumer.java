@@ -26,7 +26,7 @@ import java.util.function.Consumer;
  * @author Pavel Ponec
  */
 @FunctionalInterface
-public interface RsConsumer extends Consumer<ResultSet> {
+public interface SqlConsumer extends Consumer<ResultSet> {
 
     @Override
     default void accept(final ResultSet t) {
@@ -38,5 +38,4 @@ public interface RsConsumer extends Consumer<ResultSet> {
     }
 
     void acceptResultset(ResultSet t) throws SQLException;
-
 }

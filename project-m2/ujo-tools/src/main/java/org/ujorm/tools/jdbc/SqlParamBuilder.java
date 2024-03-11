@@ -47,27 +47,47 @@ public class SqlParamBuilder implements Closeable {
     private static final Pattern SQL_MARK = Pattern.compile(":(\\w+)(?=[\\s,;\\]\\)]|$)");
 
     @NotNull
-    protected final String sqlTemplate;
-    @NotNull
-    protected final Map<String, Object> params;
-    @NotNull
     protected final Connection dbConnection;
+    @Nullable
+    protected String sqlTemplate;
+    @NotNull
+    protected final Map<String, Object> params = new HashMap<>();
     @Nullable
     private PreparedStatement preparedStatement = null;
     @Nullable
     private ResultSetWrapper rsWrapper = null;
 
-    public SqlParamBuilder(
-            @NotNull CharSequence sqlTemplate,
-            @NotNull Map<String, ?> params,
-            @NotNull Connection dbConnection) {
-        this.sqlTemplate = sqlTemplate.toString();
-        this.params = new HashMap<>(params);
+    public SqlParamBuilder(@NotNull Connection dbConnection) {
         this.dbConnection = dbConnection;
     }
 
-    public SqlParamBuilder(@NotNull CharSequence sqlTemplate, @NotNull Connection dbConnection) {
-        this(sqlTemplate, new HashMap<>(), dbConnection);
+    /** Close statement (if any) and set a new SQL template */
+    public SqlParamBuilder sql(@NotNull String sqlTemplate) {
+        close();
+        this.sqlTemplate = sqlTemplate;
+        return this;
+    }
+
+    /** Close an old statement (if any) and assign the new SQL template */
+    public SqlParamBuilder sql(@NotNull String... sqlLines) {
+        return sql(String.join("\n", sqlLines));
+    }
+
+    /** Assign a SQL value */
+    public SqlParamBuilder bind(@NotNull String key, @NotNull Object value) {
+        this.params.put(key, value);
+        return this;
+    }
+
+    /** Assign more SQL values, separated by comma {@code ,} */
+    public SqlParamBuilder bind(@NotNull String key, @NotNull Object... value) {
+        return bind (key, Arrays.asList(value));
+    }
+
+    /** Execute: INSERT, UPDATE, DELETE, DDL statements */
+    @NotNull
+    public int execute() throws IllegalStateException, SQLException {
+        return prepareStatement().executeUpdate();
     }
 
     @NotNull
@@ -80,20 +100,15 @@ public class SqlParamBuilder implements Closeable {
         return rsWrapper;
     }
 
-    /** Iterate select */
-    public void forEach(RsConsumer consumer) throws IllegalStateException, SQLException  {
+    /** Iterate executed select */
+    public void forEach(SqlConsumer consumer) throws IllegalStateException, SQLException  {
         for (ResultSet rs : executeSelect()) {
             consumer.accept(rs);
         }
     }
 
-    public <R> Stream<R> streamMap(JdbcFunction<ResultSet, ? extends R> mapper ) throws SQLException {
+    public <R> Stream<R> streamMap(SqlFunction<ResultSet, ? extends R> mapper ) throws SQLException {
         return StreamSupport.stream(executeSelect().spliterator(), false).map(mapper);
-    }
-
-    @NotNull
-    public int execute() throws IllegalStateException, SQLException {
-        return prepareStatement().executeUpdate();
     }
 
     @NotNull
@@ -162,6 +177,11 @@ public class SqlParamBuilder implements Closeable {
     public SqlParamBuilder setParam(String key, Object value) {
         this.params.put(key, value);
         return this;
+    }
+
+    @NotNull
+    public String sqlTemplate() {
+        return sqlTemplate;
     }
 
     @Override

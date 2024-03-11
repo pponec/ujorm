@@ -35,7 +35,7 @@ public class RowIteratorTest extends AbstractJdbcConnector {
         final int[] counter = {0};
         try (Connection dbConnection = createTestConnection()) {
             try (PreparedStatement ps = dbConnection.prepareStatement("SELECT * FROM employee")) {
-                new RowIterator(ps).toStream().forEach((RsConsumer)(resultSet) -> {
+                new RowIterator(ps).toStream().forEach((SqlConsumer)(resultSet) -> {
                     int value = resultSet.getInt(1);
                     System.out.println(" value: " + value);
                     counter[0]++;
@@ -53,7 +53,7 @@ public class RowIteratorTest extends AbstractJdbcConnector {
         final int[] counter = {0};
         try (Connection dbConnection = createTestConnection()) {
             try (PreparedStatement ps = dbConnection.prepareStatement("SELECT * FROM employee")) {
-                new RowIterator(ps).forEach((RsConsumer)(resultSet) -> {
+                new RowIterator(ps).forEach((SqlConsumer)(resultSet) -> {
                     int value = resultSet.getInt(1);
                     System.out.println(" value: " + value);
                     counter[0]++;
