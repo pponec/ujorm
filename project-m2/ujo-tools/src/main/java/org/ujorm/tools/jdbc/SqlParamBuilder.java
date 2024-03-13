@@ -61,16 +61,11 @@ public class SqlParamBuilder implements Closeable {
         this.dbConnection = dbConnection;
     }
 
-    /** Close statement (if any) and set a new SQL template */
-    public SqlParamBuilder sql(@NotNull String sqlTemplate) {
-        close();
-        this.sqlTemplate = sqlTemplate;
-        return this;
-    }
-
     /** Close an old statement (if any) and assign the new SQL template */
     public SqlParamBuilder sql(@NotNull String... sqlLines) {
-        return sql(String.join("\n", sqlLines));
+        close();
+        this.sqlTemplate = String.join("\n", sqlLines);
+        return this;
     }
 
     /** Assign a SQL value */
