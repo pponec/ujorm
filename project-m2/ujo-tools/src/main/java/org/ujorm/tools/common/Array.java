@@ -46,7 +46,7 @@ public class Array<T> implements Serializable {
     }
 
     @NotNull
-    public Array<T> clone() {
+    public final Array<T> clone() {
         return new Array<>(toArray());
     }
 
@@ -97,9 +97,11 @@ public class Array<T> implements Serializable {
         return new Array<>(result);
     }
 
+    /** @param from Negative value is supported */
     @NotNull
     public Array<T> subArray(final int from) {
-        final T[] result = Arrays.copyOfRange(array, from, array.length);
+        final int from2 = from < 0 ? array.length - from : from;
+        final T[] result = Arrays.copyOfRange(array, Math.min(from2, array.length), array.length);
         return new Array<>(result);
     }
 
@@ -132,9 +134,7 @@ public class Array<T> implements Serializable {
 
     @Override
     public boolean equals(@NotNull final Object obj) {
-        return (obj instanceof Array)
-                ? Arrays.equals(array, ((Array) obj).array)
-                : false;
+        return (obj instanceof Array) && Arrays.equals(array, ((Array) obj).array);
     }
 
     @NotNull

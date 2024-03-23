@@ -19,7 +19,6 @@ package org.ujorm.tools.jdbc;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.io.Closeable;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -54,8 +53,6 @@ public class SqlParamBuilder implements Closeable {
     protected final Map<String, Object> params = new HashMap<>();
     @Nullable
     private PreparedStatement preparedStatement = null;
-    @Nullable
-    private ResultSet resultSet = null;
 
     public SqlParamBuilder(@NotNull Connection dbConnection) {
         this.dbConnection = dbConnection;
@@ -64,7 +61,8 @@ public class SqlParamBuilder implements Closeable {
     /** Close an old statement (if any) and assign the new SQL template */
     public SqlParamBuilder sql(@NotNull String... sqlLines) {
         close();
-        this.sqlTemplate = String.join("\n", sqlLines);
+        this.params.clear();
+        this.sqlTemplate = sqlLines.length == 1 ? sqlLines[0] : String.join("\n", sqlLines);
         return this;
     }
 
@@ -86,13 +84,8 @@ public class SqlParamBuilder implements Closeable {
     /** Execute: INSERT, UPDATE, DELETE, DDL statements */
     @NotNull
     private ResultSet executeSelect() throws IllegalStateException {
-        try (AutoCloseable rs = resultSet) {
-        } catch (Exception e) {
-            throw new IllegalStateException("Closing fails", e);
-        }
         try {
-            resultSet = prepareStatement().executeQuery();
-            return resultSet;
+            return prepareStatement().executeQuery();
         } catch (Exception ex) {
             throw (ex instanceof RuntimeException) ? (RuntimeException) ex : new IllegalStateException(ex);
         }
@@ -136,11 +129,10 @@ public class SqlParamBuilder implements Closeable {
     /** The method closes a PreparedStatement object with related objects, not the database connection. */
     @Override
     public void close() {
-        try (AutoCloseable c1 = resultSet; PreparedStatement c2 = preparedStatement) {
+        try (PreparedStatement c2 = preparedStatement) {
         } catch (Exception e) {
             throw new IllegalStateException("Closing fails", e);
         } finally {
-            resultSet = null;
             preparedStatement = null;
         }
     }
