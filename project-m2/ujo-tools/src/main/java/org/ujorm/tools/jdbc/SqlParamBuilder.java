@@ -40,7 +40,7 @@ import java.util.stream.StreamSupport;
  *
  * @author Pavel Ponec
  */
-public class SqlParamBuilder implements Closeable {
+public class SqlParamBuilder implements AutoCloseable {
 
     /** SQL parameter mark type of {@code :param} */
     private static final Pattern SQL_MARK = Pattern.compile(":(\\w+)");
