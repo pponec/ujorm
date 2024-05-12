@@ -136,8 +136,8 @@ public class HttpParameterTest {
 
     // --- Helper methods ---
 
-    private ServletRequest request() {
-        ServletRequest result = new ServletRequest();
+    private UServletRequest request() {
+        UServletRequest result = new UServletRequest();
         result.setParameter(Param.TEXT.name(), "abc");
         result.setParameter(Param.BOOLEAN.name(), Boolean.TRUE.toString());
         result.setParameter(Param.CHAR.name(), "A");

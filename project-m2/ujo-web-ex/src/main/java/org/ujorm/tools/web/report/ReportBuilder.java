@@ -25,8 +25,8 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.ujorm.tools.web.ao.ServletRequest;
-import org.ujorm.tools.web.ao.ServletResponse;
+import org.ujorm.tools.web.ao.UServletRequest;
+import org.ujorm.tools.web.ao.UServletResponse;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
@@ -262,16 +262,16 @@ public class ReportBuilder<D> {
 
     /** Build the HTML page including a table */
     public void build(
-            @NotNull final ServletRequest input,
-            @NotNull final ServletResponse output,
+            @NotNull final UServletRequest input,
+            @NotNull final UServletResponse output,
             @NotNull final Stream<D> resource) {
         build(input, output, tableBuilder -> resource);
     }
 
     /** Build the HTML page including a table */
     public void build(
-            @NotNull final ServletRequest input,
-            @NotNull final ServletResponse output,
+            @NotNull final UServletRequest input,
+            @NotNull final UServletResponse output,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource) {
         try {
             setSort(ColumnModel.ofCode(config.getSortRequestParam().of(input)));
@@ -301,7 +301,7 @@ public class ReportBuilder<D> {
     }
 
     protected void printHtmlBody(
-            @NotNull final ServletRequest input,
+            @NotNull final UServletRequest input,
             @NotNull final HtmlElement html,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
@@ -349,7 +349,7 @@ public class ReportBuilder<D> {
     }
 
     /** The hidden field contains an index of the last sorted column */
-    protected void printSortedField(Element parent, final ServletRequest input) {
+    protected void printSortedField(Element parent, final UServletRequest input) {
         final int index = config.getSortRequestParam().of(input, -1);
         parent.addInput().setAttribute(Html.A_TYPE, Html.V_HIDDEN)
                 .setNameValue(config.getSortRequestParam(), index);
@@ -357,7 +357,7 @@ public class ReportBuilder<D> {
 
     protected void printTableBody(
             @NotNull final Element table,
-            @NotNull final ServletRequest input,
+            @NotNull final UServletRequest input,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
         final ColumnModel sortedColumn = ColumnModel.ofCode(config.getSortRequestParam().of(input));
@@ -371,7 +371,7 @@ public class ReportBuilder<D> {
      * @throws IOException if an I/O error occurs
      */
     protected void doAjax(
-            @NotNull final ServletRequest input,
+            @NotNull final UServletRequest input,
             @NotNull final JsonBuilder output,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) throws IOException {

@@ -21,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.ObjectProvider;
-import org.ujorm.tools.web.ao.ServletRequest;
-import org.ujorm.tools.web.ao.ServletResponse;
+import org.ujorm.tools.web.ao.UServletRequest;
+import org.ujorm.tools.web.ao.UServletResponse;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
@@ -280,8 +280,8 @@ public class JsonBuilder implements Closeable {
     /** An object factory */
     @NotNull
     public static final JsonBuilder of(
-            @NotNull final ServletRequest request,
-            @NotNull final ServletResponse response) throws IllegalStateException, IOException {
+            @NotNull final UServletRequest request,
+            @NotNull final UServletResponse response) throws IllegalStateException, IOException {
         return of(HtmlConfig.ofEmptyElement(), request, response);
     }
 
@@ -289,7 +289,7 @@ public class JsonBuilder implements Closeable {
     @NotNull
     public static final JsonBuilder of(
             @NotNull final HtmlConfig config,
-            @NotNull final ServletResponse response)
+            @NotNull final UServletResponse response)
             throws IllegalStateException, IOException {
         return of(config, null, response);
     }
@@ -298,8 +298,8 @@ public class JsonBuilder implements Closeable {
     @NotNull
     public static final JsonBuilder of(
             @NotNull final HtmlConfig config,
-            @Nullable final ServletRequest request,
-            @NotNull final ServletResponse response)
+            @Nullable final UServletRequest request,
+            @NotNull final UServletResponse response)
             throws IllegalStateException, IOException {
         if (config.isHtmlHeaderRequest()) {
             response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1

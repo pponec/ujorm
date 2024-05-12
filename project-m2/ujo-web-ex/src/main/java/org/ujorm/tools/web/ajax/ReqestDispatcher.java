@@ -16,13 +16,12 @@
 package org.ujorm.tools.web.ajax;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 
-import org.ujorm.tools.web.ao.ServletRequest;
-import org.ujorm.tools.web.ao.ServletResponse;
+import org.ujorm.tools.web.ao.UServletRequest;
+import org.ujorm.tools.web.ao.UServletResponse;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
@@ -44,10 +43,10 @@ public class ReqestDispatcher {
     private static final Logger LOGGER = Logger.getLogger(ReqestDispatcher.class.getName());
 
     @NotNull
-    private final ServletRequest input;
+    private final UServletRequest input;
 
     @NotNull
-    private final ServletResponse output;
+    private final UServletResponse output;
 
     @NotNull
     private final HtmlConfig htmlConfig;
@@ -60,23 +59,23 @@ public class ReqestDispatcher {
     private final boolean noCache = true;
 
     public ReqestDispatcher(
-            @NotNull ServletRequest input,
-            @NotNull ServletResponse output) {
+            @NotNull UServletRequest input,
+            @NotNull UServletResponse output) {
         this("Info", input, output);
     }
 
     public ReqestDispatcher(
             @NotNull CharSequence title,
-            @NotNull ServletRequest input,
-            @NotNull ServletResponse output) {
+            @NotNull UServletRequest input,
+            @NotNull UServletResponse output) {
         this(input, output, HtmlConfig.ofDefault()
                 .setTitle(title)
                 .setNiceFormat());
     }
 
     public ReqestDispatcher(
-            @NotNull ServletRequest input,
-            @NotNull ServletResponse output,
+            @NotNull UServletRequest input,
+            @NotNull UServletResponse output,
             @NotNull HtmlConfig htmlConfig
     ) {
         this.input = input;

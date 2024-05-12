@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.ao.Column;
-import org.ujorm.tools.web.ao.ServletResponse;
+import org.ujorm.tools.web.ao.UServletResponse;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.junit.jupiter.api.Assertions.*;
@@ -222,7 +222,7 @@ public class ElementTest {
     @Test
     public void testAddTable() {
         System.out.println("addTable");
-        ServletResponse response = new ServletResponse();
+        UServletResponse response = new UServletResponse();
 
         CharSequence[] cssClasses = {"table"};
         CharSequence[] titles = {"Id", "Name", "Enabled"};
@@ -242,7 +242,7 @@ public class ElementTest {
     @Test
     public void testAddTableExtended() {
         System.out.println("addTableExtended");
-        ServletResponse response = new ServletResponse();
+        UServletResponse response = new UServletResponse();
 
         CharSequence[] cssClasses = {"table"};
         CharSequence[] titles = {"Id", "Name", "Enabled",
@@ -266,7 +266,7 @@ public class ElementTest {
      */
     @Test
     public void testNext() {
-        ServletResponse response = new ServletResponse();
+        UServletResponse response = new UServletResponse();
         HtmlElement.niceOf(response).next(html -> html
             .getBody().next(body -> body
                 .addHeading(html.getTitle()))

@@ -16,7 +16,7 @@
 package org.ujorm.tools.web;
 
 import org.junit.jupiter.api.Test;
-import org.ujorm.tools.web.ao.ServletResponse;
+import org.ujorm.tools.web.ao.UServletResponse;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
@@ -33,7 +33,7 @@ public class HtmlElementTest {
      */
     @Test
     public void sample() {
-        ServletResponse response = new ServletResponse();
+        UServletResponse response = new UServletResponse();
         try (HtmlElement html = HtmlElement.of(response)) {
             html.addBody().addHeading("Hello!");
         }

@@ -3,20 +3,20 @@ package org.ujorm.tools.web.ao;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServletRequest extends HashMap<String, String> {
+public class UServletRequest extends HashMap<String, String> {
 
-    public ServletRequest(int initialCapacity, float loadFactor) {
+    public UServletRequest(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
     }
 
-    public ServletRequest(int initialCapacity) {
+    public UServletRequest(int initialCapacity) {
         super(initialCapacity);
     }
 
-    public ServletRequest() {
+    public UServletRequest() {
     }
 
-    public ServletRequest(Map<? extends String, ? extends String> m) {
+    public UServletRequest(Map<? extends String, ? extends String> m) {
         super(m);
     }
 
