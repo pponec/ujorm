@@ -21,7 +21,7 @@ import net.ponec.x2j.model.Message;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 import org.ujorm.tools.web.ao.MockServletResponse;
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @RestController
 public class ConverterController {
 
@@ -29,6 +29,10 @@ public class ConverterController {
      * A service
      */
     private final ConverterService service;
+
+    public ConverterController(ConverterService service) {
+        this.service = service;
+    }
 
     @RequestMapping(path = {"/converter", ""}, method = {GET, POST}, produces = MediaType.TEXT_HTML_VALUE)
     public String converter(
