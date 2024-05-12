@@ -100,8 +100,7 @@ public class UjoElementBenchmarkStock extends HttpServlet {
                         .setAttribute(Html.A_MEDIA, "all");
                 head.addElement(Html.SCRIPT)
                         .setAttribute(Html.A_TYPE, "text/javascript")
-                        .setAttribute(Html.A_SRC, "/js/util.js")
-                        .addText("");
+                        .setAttribute(Html.A_SRC, "/js/util.js");
                 head.addElement(Html.STYLE)
                         .setAttribute(Html.A_TYPE, "text/css")
                         .addRawText(STOCKS_CSS);

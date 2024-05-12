@@ -139,8 +139,7 @@ public class HtmlElementOrig extends XmlModel {
         return (T) head.addElement(Html.SCRIPT)
                 .setAttribute(Html.A_SRC, javascriptLink)
                 .setAttribute(Html.A_TYPE, "text/javascript")
-                .setAttribute("defer", defer ? "defer" : null)
-                .addText("");
+                .setAttribute("defer", defer ? "defer" : null);
     }
 
     /** Create a new Javascript element and return it
