@@ -259,6 +259,11 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
             : Collections.emptyList();
     }
 
+    @Override
+    public boolean hasChild() {
+        return children != null && !children.isEmpty();
+    }
+
     /** An empty method */
     @Override
     public final void close() {

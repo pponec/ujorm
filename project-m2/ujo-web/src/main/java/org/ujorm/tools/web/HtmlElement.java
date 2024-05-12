@@ -285,7 +285,15 @@ public class HtmlElement implements ApiElement<Element>, Html {
     }
 
     @Override
+    public boolean hasChild() {
+        return root.hasChild();
+    }
+
+    @Override
     public void close() throws IllegalStateException {
+        if (!hasChild() && !config.getUnpairElements().contains(getName())) {
+            addText(""); // Enforce the pair HTML element
+        }
         root.close();
         if (root.internalElement instanceof XmlModel) {
             final XmlModel xmlElement = (XmlModel) root.internalElement;

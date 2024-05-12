@@ -17,6 +17,7 @@
 package org.ujorm.tools.xml.config;
 
 import java.util.Optional;
+import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
@@ -63,6 +64,9 @@ public interface HtmlConfig extends XmlConfig {
     /** A name of root element */
     @NotNull
     String getRootElementName();
+
+    @NotNull
+    Set<String> getUnpairElements();
 
     /** Clone the config for an AJAX processing */
     default DefaultHtmlConfig cloneForAjax() {

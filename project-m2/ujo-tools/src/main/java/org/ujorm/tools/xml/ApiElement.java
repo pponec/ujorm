@@ -106,6 +106,9 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
     @NotNull
     E addCDATA(@Nullable CharSequence charData);
 
+    /** Has the element any child? */
+    boolean hasChild();
+
     /** Close the element */
     @Override
     void close();

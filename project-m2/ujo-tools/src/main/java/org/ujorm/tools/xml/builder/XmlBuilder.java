@@ -276,6 +276,11 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
         throw new UnsupportedOperationException();
     }
 
+    /** Has the element any child? */
+    public boolean hasChild() {
+        return this.lastChild != null;
+    }
+
     /** Close the Node */
     @Override
     public final void close() {
