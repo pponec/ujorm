@@ -5,12 +5,12 @@
     <parent>
        <groupId>org.ujorm</groupId>
         <artifactId>main</artifactId>
-        <version>2.25-SNAPSHOT</version>
+        <version>2.25</version>
     </parent>
 
     <groupId>org.ujorm</groupId>
     <artifactId>benchmark</artifactId>
-    <version>2.25-SNAPSHOT</version>
+    <version>2.25</version>
     <name>Module UJO</name>
     <packaging>pom</packaging>
     <description>Ujorm common project</description>

@@ -6,7 +6,7 @@
 
 set -e
 export JAVA_HOME=/opt/java/default.8
-alias mvn='/opt/maven/default/bin/mvn'
+alias mvn="sh $PWD/mvnw"
 mvn -version || exit
 
 # Required Release (example: RELEASE=1.30):

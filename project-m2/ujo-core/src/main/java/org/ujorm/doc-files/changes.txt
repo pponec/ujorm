@@ -3,7 +3,14 @@ The Ujorm release notes
 *******************************
 
 
-release 2.25-SNAPSHOT (yyyy-mm-dd)
+release 2.25 (2024-05-13)
++ WEB: Closing HTML element by the pair element is suppoted.
++ TOOLS: SqlParamBuilder for simple JDBC support.
++ TOOLS: RowIterator code cleaning.
++ TOOLS: ArrayUtils class for common use.
++ CORE: jUnit 5 is supported
++ CORE: Code cleaning
++ CORE: Maven Wrapper is included
 
 release 2.24 (2022-05-11)
 + WEB: New method: JavaScriptWriter.setIdleDelay().
