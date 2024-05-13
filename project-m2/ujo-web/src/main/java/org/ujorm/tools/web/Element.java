@@ -291,11 +291,6 @@ public final class Element implements ApiElement<Element>, Html {
         return this;
     }
 
-    @Override
-    public boolean hasChild() {
-        return internalElement.hasChild();
-    }
-
     @NotNull
     @Override
     public void close() throws IllegalStateException {

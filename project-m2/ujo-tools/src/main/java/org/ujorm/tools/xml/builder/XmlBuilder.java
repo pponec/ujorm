@@ -91,7 +91,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     /** The node is closed to writing */
     private boolean closed;
 
-    /** An attribsute mode */
+    /** An attribute mode */
     private boolean attributeMode = true;
 
     /** The new element constructor
@@ -274,11 +274,6 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     @Override @NotNull @Deprecated
     public final XmlBuilder addCDATA(@Nullable final CharSequence charData) {
         throw new UnsupportedOperationException();
-    }
-
-    /** Has the element any child? */
-    public boolean hasChild() {
-        return this.lastChild != null;
     }
 
     /** Close the Node */

@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.*;
 
@@ -67,6 +68,11 @@ public interface HtmlConfig extends XmlConfig {
 
     @NotNull
     Set<String> getUnpairElements();
+
+    @Override
+    default boolean pairElement(@NotNull final ApiElement element) {
+        return !getUnpairElements().contains(element.getName());
+    }
 
     /** Clone the config for an AJAX processing */
     default DefaultHtmlConfig cloneForAjax() {
