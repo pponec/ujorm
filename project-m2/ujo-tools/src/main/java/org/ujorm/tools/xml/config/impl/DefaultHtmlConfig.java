@@ -69,12 +69,22 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** Unpair HTML element names */
     private Set<String> unpairElements = new HashSet<String>() {{
-        add("img");
+        add("area");
+        add("base");
         add("br");
+        add("col");
+        add("embed");
         add("hr");
+        add("img");
         add("input");
-        add("meta");
+        add("keygen");
         add("link");
+        add("meta");
+        add("param");
+        add("script");
+        add("source");
+        add("style");
+        add("track");
     }};
 
     public DefaultHtmlConfig() {
