@@ -64,6 +64,7 @@ public class UServletResponse implements Appendable {
         for (int i = start; i < end; i++) {
             write(csq.charAt(i));
         }
+        return writer;
     }
 
     @Override
@@ -76,5 +77,16 @@ public class UServletResponse implements Appendable {
     @Override
     public String toString() {
         return this.out.toString();
+    }
+
+    public void setCharacterEncoding(String charset) {
+        throw new UnsupportedOperationException("TODO");
+    }
+
+    @Override
+    public Appendable append(char c) throws IOException {
+        writer.append(c);
+        writer.flush();
+        return writer;
     }
 }

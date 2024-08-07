@@ -83,11 +83,6 @@
     </licenses>
 
     <dependencies>
-        <dependency>
-            <groupId>org.ujorm</groupId>
-            <artifactId>ujo-tools</artifactId>
-            <version>${revision}</version>
-        </dependency>
 
 <!--        <dependency>-->
 <!--            <groupId>org.ujorm</groupId>-->
