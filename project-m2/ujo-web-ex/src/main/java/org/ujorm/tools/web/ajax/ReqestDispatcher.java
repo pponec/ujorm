@@ -22,14 +22,12 @@ import org.jetbrains.annotations.NotNull;
 
 import org.ujorm.tools.web.ao.UServletRequest;
 import org.ujorm.tools.web.ao.UServletResponse;
-import org.ujorm.tools.Assert;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
 import org.ujorm.tools.web.ao.IOConsumer;
 import org.ujorm.tools.web.ao.IOElement;
 import org.ujorm.tools.web.ao.IORunnable;
-import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
  * A Reqest Dispatcher
@@ -49,7 +47,7 @@ public class ReqestDispatcher {
     private final UServletResponse output;
 
     @NotNull
-    private final HtmlConfig htmlConfig;
+    private final HtmlConfiguration htmlConfig;
 
     private boolean done = false;
 

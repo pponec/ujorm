@@ -5,26 +5,27 @@ import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class UServletResponse implements Appendable {
 
     private Charset charset;
-
     private final OutputStream out;
+    private final OutputStreamWriter writer;
 
 
-    public UServletResponse(@NotNull OutputStream out, @NotNull String charsetName) throws UnsupportedEncodingException {
-        this.charset = Charset.forName(charsetName);
-        this.out = out;
+    public UServletResponse(@NotNull OutputStream out, @NotNull String charsetName) {
+         this(out, Charset.forName(charsetName));
     }
 
     public UServletResponse(@NotNull OutputStream out) {
-        this.out = out;
+        this(out, StandardCharsets.UTF_8);
     }
 
     public UServletResponse(@NotNull OutputStream out, @NotNull Charset charset) {
         this.charset = charset;
         this.out = out;
+        this.writer = new OutputStreamWriter(out, charset);
     }
 
     public UServletResponse() {
@@ -44,20 +45,18 @@ public class UServletResponse implements Appendable {
     }
 
     public void write(int c) throws IOException {
-        String charStr = Character.valueOf((char)c).toString();
-        out.write(this.charset.encode(charStr));
+        writer.write(c);
+        writer.flush();
     }
 
     public void write(@NotNull char[] cbuf, int off, int len) throws IOException {
-        for (int i = off, max = off + len; i < max; i++) {
-            write(cbuf[i]);
-        }
+        writer.write(cbuf, off, len);
+        writer.flush();
     }
 
     public void write(@NotNull String str, int off, int len) throws IOException {
-        for (int i = off, max = off + len; i < max; i++) {
-            write(str.charAt(i));
-        }
+        writer.write(str, off, len);
+        writer.flush();
     }
 
     @Override
@@ -69,7 +68,9 @@ public class UServletResponse implements Appendable {
 
     @Override
     public Writer append(CharSequence csq) throws IOException {
-        return out.write(csq.toString().getBytes(charset));
+        writer.append(csq);
+        writer.flush();
+        return writer;
     }
 
     @Override
