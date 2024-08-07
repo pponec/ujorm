@@ -188,8 +188,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
         return getHead().addElement(Html.SCRIPT)
                 .setAttribute(Html.A_SRC, javascriptLink)
-                .setAttribute("defer", defer ? "defer" : null)
-                .addText("");
+                .setAttribute("defer", defer ? "defer" : null);
     }
 
     /** Create a new Javascript element and return it.

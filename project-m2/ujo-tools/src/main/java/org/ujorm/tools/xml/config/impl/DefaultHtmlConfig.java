@@ -16,7 +16,9 @@
  */
 package org.ujorm.tools.xml.config.impl;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
@@ -64,6 +66,26 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** A name of root element */
     private String rootElementName = XmlBuilder.HTML;
+
+    /** Unpair HTML element names */
+    private Set<String> unpairElements = new HashSet<String>() {{
+        add("area");
+        add("base");
+        add("br");
+        add("col");
+        add("embed");
+        add("hr");
+        add("img");
+        add("input");
+        add("keygen");
+        add("link");
+        add("meta");
+        add("param");
+        add("script");
+        add("source");
+        add("style");
+        add("track");
+    }};
 
     public DefaultHtmlConfig() {
     }
@@ -142,6 +164,10 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         return rootElementName;
     }
 
+    public Set<String> getUnpairElements() {
+        return unpairElements;
+    }
+
     // --- SETTERS ---
 
     /** Title is a required element by HTML 5 */
@@ -185,7 +211,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         return this;
     }
 
-    /**The element name must not be special HTML characters.
+    /** The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      */
     public DefaultHtmlConfig setRootElementName(@Nullable String rootElementName) {
@@ -193,6 +219,11 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
                 ? rootElementName
                 : XmlBuilder.HIDDEN_NAME;
         return this;
+    }
+
+    /** Set Unpair element names */
+    public void setUnpairElements(@NotNull Set<String> unpairElements) {
+        this.unpairElements = Assert.notNull(unpairElements, REQUIRED_MSG, "unpairElements");
     }
 
     /**

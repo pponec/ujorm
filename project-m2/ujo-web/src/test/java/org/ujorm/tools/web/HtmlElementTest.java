@@ -21,7 +21,6 @@ import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.junit.jupiter.api.Assertions.*;
-import org.ujorm.tools.xml.ApiElement;
 
 /**
  *
@@ -124,5 +123,46 @@ public class HtmlElementTest {
             html.original().addHeading("Hello!");
         }
         assertEquals("<h1>Hello!</h1>", writer.toString());
+    }
+
+    /**
+     * Test of getName method, of class HtmlElement.
+     */
+    @Test
+    public void sample_3_unpairElements() {
+        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setNiceFormat();
+        StringBuilder writer = new StringBuilder();
+
+        try (HtmlElement html = HtmlElement.of(config, writer)) {
+            html.addCssLink("/css/lyrics.css");
+
+            try (Element body = html.addBody()) {
+                body.addDiv("button");
+                body.addHeading("Title");
+                body.addElement(Html.HR);
+                body.addImage("http://image.png", "my image");
+                body.addDiv("body");
+            }
+        }
+
+        String value = writer.toString().replace('"', '\'');
+        String expected = String.join("\n",
+                "<!DOCTYPE html>",
+                "<html lang='en'>",
+                "	<head>",
+                "		<meta charset='UTF-8'/>",
+                "		<title>Demo</title>",
+                "		<link href='/css/lyrics.css' rel='stylesheet'/>",
+                "	</head>",
+                "	<body>",
+                "		<div class='button'></div>",
+                "		<h1>Title</h1>",
+                "		<hr/>",
+                "		<img alt='my image' src='http://image.png'/>",
+                "		<div class='body'></div>",
+                "	</body>",
+                "</html>");
+        assertEquals(expected, value);
     }
 }

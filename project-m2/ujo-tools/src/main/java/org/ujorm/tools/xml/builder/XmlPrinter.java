@@ -104,11 +104,17 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Close the Node */
     void writeEnd(XmlBuilder element) throws IOException {
-        final CharSequence name = element.getName();
+        final String name = element.getName();
+        final boolean pairElement = config.pairElement(element);
+        final boolean filled = element.isFilled();
         if (name != XmlBuilder.HIDDEN_NAME) {
-            if (element.isFilled()) {
+            if (filled || pairElement) {
                 if (indentationEnabled && !element.isLastText()) {
-                    writeNewLine(element.getLevel());
+                    if (pairElement && !filled) {
+                        out.append(XML_GT);
+                    } else {
+                        writeNewLine(element.getLevel());
+                    }
                 }
                 out.append(XML_LT);
                 out.append(FORWARD_SLASH);

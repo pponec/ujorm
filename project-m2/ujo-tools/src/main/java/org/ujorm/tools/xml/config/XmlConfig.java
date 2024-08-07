@@ -19,6 +19,7 @@ package org.ujorm.tools.xml.config;
 import java.nio.charset.Charset;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 
 /**
@@ -69,6 +70,11 @@ public interface XmlConfig {
      */
     @NotNull
     Formatter getFormatter();
+
+    /** The pair element for termination is required. */
+    default boolean pairElement(@NotNull ApiElement element) {
+        return false;
+    }
 
     /**
      * Create a new default config

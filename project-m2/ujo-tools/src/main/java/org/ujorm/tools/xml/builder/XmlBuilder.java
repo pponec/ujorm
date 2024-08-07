@@ -91,7 +91,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     /** The node is closed to writing */
     private boolean closed;
 
-    /** An attribsute mode */
+    /** An attribute mode */
     private boolean attributeMode = true;
 
     /** The new element constructor
