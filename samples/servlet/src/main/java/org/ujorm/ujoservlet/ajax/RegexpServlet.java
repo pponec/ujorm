@@ -68,7 +68,7 @@ public class RegexpServlet extends HttpServlet {
     @Override
     protected void doGet(
             final HttpServletRequest input,
-            final HttpServletResponse output) throws ServletException, IOException {
+            final HttpServletResponse output) throws IOException {
 
         try (HtmlElement html = HtmlElement.of(input, output, getConfig("Regular expression tester"))) {
             //html.addJavascriptLink(false, JQUERY_JS); // For jQuery implementation only
@@ -104,7 +104,7 @@ public class RegexpServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws IOException {
         if (AJAX.of(input, false)) {
             doAjax(input, JsonBuilder.of(input, output, getConfig("?"))).close();
         } else {

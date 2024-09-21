@@ -55,7 +55,7 @@ public class MenuServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws IOException {
         final String title = "List of samples (dom)";
         final HtmlElementOrig html = new HtmlElementOrig(title, StandardCharsets.UTF_8, "css/userForm.css");
         html.addElementToBody(Html.H1)
@@ -102,7 +102,7 @@ public class MenuServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws IOException {
         doGet(input, output);
     }
 }

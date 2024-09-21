@@ -60,7 +60,7 @@ public class UjoElementBenchmarkStock extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws IOException {
         try {
             stock(output);
         } catch (Throwable e) {
@@ -178,7 +178,7 @@ public class UjoElementBenchmarkStock extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws IOException {
         doGet(input, output);
     }
 }

@@ -382,7 +382,7 @@ public class ReportBuilder<D> {
             @NotNull final HttpServletRequest input,
             @NotNull final JsonBuilder output,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
-    ) throws ServletException, IOException {
+    ) throws IOException {
         output.writeClass(config.getTableSelector(), e -> printTableBody(e, input, resource));
         output.writeClass(config.getSubtitleCss(), config.getAjaxReadyMessage());
         if (gridBuilder.isSortable()) {

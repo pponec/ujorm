@@ -58,7 +58,7 @@ public class FormServlet extends HttpServlet {
      * @throws ServletException If a servlet-specific error occurs
      * @throws IOException If an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest input, HttpServletResponse output) throws IOException {
         input.setCharacterEncoding(charset.toString());
 
         HtmlElementOrig html = createHtmlElement("Simple user form", "css/userForm.css");
@@ -167,7 +167,7 @@ public class FormServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws IOException {
         postMethod = false;
         processRequest(input, output);
     }
@@ -180,7 +180,7 @@ public class FormServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws IOException {
         postMethod = true;
         processRequest(input, output);
     }

@@ -125,7 +125,7 @@ public class ReqestDispatcher {
     /**
      * The process writes to an element
      */
-    public void onDefaultToElement(@NotNull final IOElement defaultProcessor) throws ServletException, IOException {
+    public void onDefaultToElement(@NotNull final IOElement defaultProcessor) throws IOException {
         if (!done) {
             try (HtmlElement html = HtmlElement.of(htmlConfig, output.getWriter())) {
                 defaultProcessor.run(html);
@@ -136,7 +136,7 @@ public class ReqestDispatcher {
     /**
      * Process the request
      */
-    public void onDefault(@NotNull final IORunnable defaultProcessor) throws ServletException, IOException {
+    public void onDefault(@NotNull final IORunnable defaultProcessor) throws IOException {
         if (!done) {
             defaultProcessor.run();
         }

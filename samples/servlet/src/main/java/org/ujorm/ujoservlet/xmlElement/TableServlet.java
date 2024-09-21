@@ -50,7 +50,7 @@ public class TableServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws IOException {
         final HtmlElementOrig html = new HtmlElementOrig(getClass().getSimpleName(), StandardCharsets.UTF_8, "css/tableForm.css");
         html.addElementToBody(Html.H1)
                 .addText("Show table");
@@ -86,7 +86,7 @@ public class TableServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws IOException {
         doGet(input, output);
     }
 }

@@ -57,7 +57,7 @@ public class Dom4jServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest input, HttpServletResponse output, boolean postMethod) throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest input, HttpServletResponse output, boolean postMethod) throws IOException {
         input.setCharacterEncoding(charset.toString());
 
         final String title = "Simple user form using a Dom4j library";
@@ -184,7 +184,7 @@ public class Dom4jServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws IOException {
         processRequest(input, output, false);
     }
 
@@ -196,7 +196,7 @@ public class Dom4jServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws IOException {
         processRequest(input, output, true);
     }
 }

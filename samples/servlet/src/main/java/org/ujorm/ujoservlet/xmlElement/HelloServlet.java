@@ -48,7 +48,7 @@ public class HelloServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest input, HttpServletResponse output) throws IOException {
         final HtmlElementOrig html = new HtmlElementOrig("Demo", StandardCharsets.UTF_8, "css/userForm.css");
         html.addElementToBody(Html.H1)
                 .addText("Hello, World!");
@@ -58,7 +58,7 @@ public class HelloServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws IOException {
         doGet(input, output);
     }
 }

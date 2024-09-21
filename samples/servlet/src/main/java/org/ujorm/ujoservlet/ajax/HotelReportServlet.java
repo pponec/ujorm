@@ -60,7 +60,7 @@ public class HotelReportServlet extends HttpServlet {
     @Override
     protected void doGet(
             final HttpServletRequest input,
-            final HttpServletResponse output) throws ServletException, IOException {
+            final HttpServletResponse output) throws IOException {
 
         new ReportBuilder<Hotel>("Hotel Report")
                 .addOrder("Ord")
@@ -151,7 +151,7 @@ public class HotelReportServlet extends HttpServlet {
     @Override
     protected void doPost(
             final HttpServletRequest input,
-            final HttpServletResponse output) throws ServletException, IOException {
+            final HttpServletResponse output) throws IOException {
         doGet(input, output);
     }
 }

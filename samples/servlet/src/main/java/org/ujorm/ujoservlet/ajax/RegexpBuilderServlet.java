@@ -67,7 +67,7 @@ public class RegexpBuilderServlet extends HttpServlet {
     @Override
     protected void doGet(
             final HttpServletRequest input,
-            final HttpServletResponse output) throws ServletException, IOException {
+            final HttpServletResponse output) throws IOException {
 
         HtmlElement.of(input, output, getConfig("Regular expression tester by a builder")).next(html -> {
             html.addCssLink(BOOTSTRAP_CSS);
@@ -101,7 +101,7 @@ public class RegexpBuilderServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest input, HttpServletResponse output) throws IOException {
         if (AJAX.of(input, false)) {
             doAjax(input, JsonBuilder.of(input, output, getConfig("?"))).close();
         } else {
