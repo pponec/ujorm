@@ -116,9 +116,9 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -165,7 +165,7 @@
                     <additionalparam>-Xdoclint:none</additionalparam>
                     <failOnError>false</failOnError>
                     <encoding>UTF-8</encoding>
-                    <author>Pavel Ponec</author>
+                    <author>true</author>
                     <bottom><![CDATA[Copyright 2015, <a target="_blank" href="http://ujorm.org/">Pavel Ponec<a>]]></bottom>
                     <doctitle>Ujorm ${project.version} (${project.name})</doctitle>
                     <windowtitle>Ujorm ${project.version} - ${project.name}</windowtitle>
