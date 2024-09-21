@@ -16,8 +16,8 @@
 package org.ujorm.tools.web.ao;
 
 import org.jetbrains.annotations.NotNull;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import org.ujorm.tools.Check;
 import java.util.stream.Stream;
 

@@ -23,10 +23,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.ujorm.tools.common.ObjectUtils;
 import static java.nio.charset.StandardCharsets.UTF_8;
 

@@ -12,7 +12,7 @@ import java.util.jar.Manifest;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import java.util.jar.Attributes;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

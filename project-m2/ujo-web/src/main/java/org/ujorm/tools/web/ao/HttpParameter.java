@@ -20,7 +20,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 import org.ujorm.tools.Check;
 
 /**

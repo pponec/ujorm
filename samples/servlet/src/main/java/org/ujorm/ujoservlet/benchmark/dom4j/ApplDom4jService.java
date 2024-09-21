@@ -15,7 +15,7 @@
  */
 package org.ujorm.ujoservlet.benchmark.dom4j;
 
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServlet;
 import org.dom4j.Element;
 import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.web.Html;

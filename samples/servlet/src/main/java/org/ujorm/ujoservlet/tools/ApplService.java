@@ -18,7 +18,7 @@ package org.ujorm.ujoservlet.tools;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServlet;
 import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.ApiElement;

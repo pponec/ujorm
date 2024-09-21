@@ -16,7 +16,7 @@
 package org.ujorm.tools.web.ao;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 import org.ujorm.tools.web.HtmlElement;
 
 /**
