@@ -235,7 +235,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
+            <version>6.1.12</version>
         </dependency>
 
         <!--
