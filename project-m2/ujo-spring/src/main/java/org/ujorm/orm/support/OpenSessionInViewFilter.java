@@ -35,7 +35,7 @@ public class OpenSessionInViewFilter implements Filter {
     private UjoSessionFactoryFilter ujoSessionFactoryFilter;
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
         ServletContext sc = filterConfig.getServletContext();
         WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(sc);
         ujoSessionFactoryFilter = (UjoSessionFactoryFilter) wac.getBean("ujoSessionFactory");

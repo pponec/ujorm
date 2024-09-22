@@ -117,8 +117,7 @@ public class RegexpBuilderServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @NotNull
-    protected JsonBuilder doAjax(HttpServletRequest input, JsonBuilder output)
-            throws ServletException, IOException {
+    protected JsonBuilder doAjax(HttpServletRequest input, JsonBuilder output) throws IOException {
             final Message msg = highlight(input);
             output.writeClass(OUTPUT_CSS, e -> e.addElementIf(msg.isError(), Html.SPAN, "error")
                     .addRawText(msg));

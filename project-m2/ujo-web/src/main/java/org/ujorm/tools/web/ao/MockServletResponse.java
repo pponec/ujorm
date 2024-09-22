@@ -75,18 +75,6 @@ public class MockServletResponse implements HttpServletResponse {
 
     @Deprecated
     @Override
-    public String encodeUrl(String string) {
-        throw getException();
-    }
-
-    @Deprecated
-    @Override
-    public String encodeRedirectUrl(String string) {
-        throw getException();
-    }
-
-    @Deprecated
-    @Override
     public void sendError(int i, String string) throws IOException {
         throw getException();
     }
@@ -136,11 +124,6 @@ public class MockServletResponse implements HttpServletResponse {
     @Deprecated
     @Override
     public void setStatus(int i) {
-    }
-
-    @Deprecated
-    @Override
-    public void setStatus(int i, String string) {
     }
 
     @Override

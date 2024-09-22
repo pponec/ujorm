@@ -20,6 +20,7 @@ import static net.ponec.x2j.controller.ConverterController.Constants.*;
 import net.ponec.x2j.model.Message;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 import org.ujorm.tools.web.ao.MockServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
 @RestController
@@ -43,7 +44,8 @@ public class ConverterController {
         Message message = service.toJavaCode(text);
 
         final MockServletResponse response = new MockServletResponse();
-        try ( HtmlElement html = HtmlElement.of(getConfig("Convert XML file to Java code on-line"), response)) {
+        final DefaultHtmlConfig config = getConfig("Convert XML file to Java code on-line");
+        try ( HtmlElement html = HtmlElement.of(config, response) ) {
             html.addCssLink(CSS_STYLE);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             try ( Element body = html.getBody()) {

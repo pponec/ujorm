@@ -22,7 +22,7 @@
         <module>ujorm</module>
         <module>inheritance</module>
         <module>binding</module>
-        <module>wicket</module>
+<!--    <module>wicket</module>  -->
         <module>servlet</module>
         <module>generated</module>
         <module>x2j-converter</module>

@@ -20,12 +20,12 @@ import jakarta.servlet.ServletException;
 
 /**
  * Input/Output Runnable Interface
- * 
+ *
  * @author Pavel Ponec
  */
 @FunctionalInterface
 public interface IORunnable {
 
-    void run() throws ServletException, IOException;
-    
+    void run() throws IOException;
+
 }

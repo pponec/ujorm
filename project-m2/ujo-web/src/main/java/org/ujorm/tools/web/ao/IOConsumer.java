@@ -24,6 +24,6 @@ import jakarta.servlet.ServletException;
  */
 public interface IOConsumer<T> {
 
-    void accept(T t) throws ServletException, IOException;
+    void accept(T t) throws IOException;
 
 }
