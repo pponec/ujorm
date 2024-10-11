@@ -83,10 +83,6 @@ public class ReqestDispatcher {
         this.htmlConfig = htmlConfig ;
 
         try {
-            final String charset = htmlConfig.getCharset().toString();
-            input.setCharacterEncoding(charset);
-            output.setCharacterEncoding(charset);
-
             if (noCache) {
                 output.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
                 output.setHeader("Pragma", "no-cache");

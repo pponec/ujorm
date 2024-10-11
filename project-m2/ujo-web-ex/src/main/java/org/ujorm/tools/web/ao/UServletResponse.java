@@ -3,13 +3,12 @@ package org.ujorm.tools.web.ao;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+/** TODO: response.setCharacterEncoding(charset); */
 public class UServletResponse implements Appendable {
 
-    private Charset charset;
     private final OutputStream out;
     private final OutputStreamWriter writer;
 
@@ -22,8 +21,13 @@ public class UServletResponse implements Appendable {
         this(out, StandardCharsets.UTF_8);
     }
 
+    public UServletResponse(@NotNull Writer writer) {
+        out = null;
+        writer = null;
+        throw new UnsupportedOperationException("TODO");
+    }
+
     public UServletResponse(@NotNull OutputStream out, @NotNull Charset charset) {
-        this.charset = charset;
         this.out = out;
         this.writer = new OutputStreamWriter(out, charset);
     }

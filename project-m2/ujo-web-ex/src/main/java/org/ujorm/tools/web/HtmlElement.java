@@ -409,7 +409,6 @@ public class HtmlElement implements ApiElement<Element>, Html {
             @NotNull final UServletRequest request,
             @NotNull final UServletResponse response,
             @NotNull final HtmlConfig config) throws IllegalStateException, UnsupportedEncodingException {
-        request.setCharacterEncoding(config.getCharset().toString());
         return of(config, response);
     }
 

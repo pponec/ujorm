@@ -308,9 +308,6 @@ public class JsonBuilder implements Closeable {
         }
         final String charset = config.getCharset().toString();
         response.setCharacterEncoding(charset);
-        if (request != null) {
-            request.setCharacterEncoding(charset);
-        }
         return new JsonBuilder(response, config);
     }
 
