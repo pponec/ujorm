@@ -26,7 +26,7 @@ import org.ujorm.tools.Assert;
  * The XmlElement class implements the {@link Closeable} implementation
  * for an optional highlighting the tree structure in the source code.
  *
- * @see HtmlElement
+ * @see org.ujorm.tools.web.HtmlElement
  * @since 1.86
  * @author Pavel Ponec
  * @deprecated Use the interface {@link ApiElement} rather.
