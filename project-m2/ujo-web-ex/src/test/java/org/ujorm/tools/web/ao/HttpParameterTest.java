@@ -111,7 +111,7 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_Enum() {
         Month defaultValue = DECEMBER;
-        UServletRequest dummyRequest = request();
+        URequest dummyRequest = request();
         Month result = Param.MONTH_ENUM.of(dummyRequest, defaultValue);
         assertEquals(JANUARY, result);
 
@@ -137,8 +137,8 @@ public class HttpParameterTest {
 
     // --- Helper methods ---
 
-    private UServletRequest request() {
-        UServletRequest result = new UServletRequest();
+    private URequest request() {
+        URequest result = new URequest();
         result.setParameter(Param.TEXT.name(), "abc");
         result.setParameter(Param.BOOLEAN.name(), Boolean.TRUE.toString());
         result.setParameter(Param.CHAR.name(), "A");

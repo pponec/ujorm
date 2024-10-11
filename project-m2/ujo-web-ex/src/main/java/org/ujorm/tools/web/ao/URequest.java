@@ -5,18 +5,18 @@ import java.io.Reader;
 import java.util.*;
 
 /** TODO: request.setCharacterEncoding(charset); */
-public final class UServletRequest {
+public final class URequest {
 
     private final ManyMap map ;
 
     private final Reader reader;
 
-    public UServletRequest(ManyMap map, Reader reader ) {
+    public URequest(ManyMap map, Reader reader ) {
         this.map = map;
         this.reader = reader;
     }
 
-    public UServletRequest() {
+    public URequest() {
         this(new ManyMap(), new CharArrayReader(new char[0]));
     }
 
@@ -54,8 +54,8 @@ public final class UServletRequest {
         }
 
         /** Create new Servlet request */
-        public UServletRequest toRequest(Reader reader) {
-            return new UServletRequest(this, reader);
+        public URequest toRequest(Reader reader) {
+            return new URequest(this, reader);
         }
     }
 

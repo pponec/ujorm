@@ -21,8 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.web.ao.UServletRequest;
-import org.ujorm.tools.web.ao.UServletResponse;
+import org.ujorm.tools.web.ao.URequest;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
@@ -43,10 +42,10 @@ public class ReqestDispatcher {
     private static final Logger LOGGER = Logger.getLogger(ReqestDispatcher.class.getName());
 
     @NotNull
-    private final UServletRequest input;
+    private final URequest input;
 
     @NotNull
-    private final UServletResponse output;
+    private final Appendable output;
 
     @NotNull
     private final HtmlConfig htmlConfig;
@@ -59,23 +58,23 @@ public class ReqestDispatcher {
     private final boolean noCache = true;
 
     public ReqestDispatcher(
-            @NotNull UServletRequest input,
-            @NotNull UServletResponse output) {
+            @NotNull URequest input,
+            @NotNull Appendable output) {
         this("Info", input, output);
     }
 
     public ReqestDispatcher(
             @NotNull CharSequence title,
-            @NotNull UServletRequest input,
-            @NotNull UServletResponse output) {
+            @NotNull URequest input,
+            @NotNull Appendable output) {
         this(input, output, HtmlConfig.ofDefault()
                 .setTitle(title)
                 .setNiceFormat());
     }
 
     public ReqestDispatcher(
-            @NotNull UServletRequest input,
-            @NotNull UServletResponse output,
+            @NotNull URequest input,
+            @NotNull Appendable output,
             @NotNull HtmlConfig htmlConfig
     ) {
         this.input = input;
@@ -84,9 +83,10 @@ public class ReqestDispatcher {
 
         try {
             if (noCache) {
-                output.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-                output.setHeader("Pragma", "no-cache");
-                output.setHeader("Expires", "0");
+//                // TODO: pop
+//                output.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+//                output.setHeader("Pragma", "no-cache");
+//                output.setHeader("Expires", "0");
             }
         } catch (Exception e) {
             throw new IllegalArgumentException(e);

@@ -1,6 +1,5 @@
 package org.ujorm.tools.web.ao;
 
-import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,7 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UServletRequestTest {
+class URequestTest {
 
     /**
      * aused by: java.lang.reflect.InaccessibleObjectException:
@@ -22,11 +21,11 @@ class UServletRequestTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         BufferedReader reader = request.getReader();
 
-        UServletRequest.ManyMap map = UServletRequest.createMap();
+        URequest.ManyMap map = URequest.createMap();
         map.put("p1", "v1");
         map.put("p2", "v2a");
         map.put("p2", "v2b");
-        UServletRequest uRequest = map.toRequest(reader);
+        URequest uRequest = map.toRequest(reader);
 
         assertEquals(1, map.get("p1").length);
         assertEquals(2, map.get("p2").length);
