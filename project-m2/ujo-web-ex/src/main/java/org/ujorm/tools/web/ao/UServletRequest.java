@@ -20,8 +20,9 @@ public class UServletRequest extends HashMap<String, String> {
         super(m);
     }
 
-    public String[] getParameterValues(String string) {
-        return super.values().toArray(new String[0]);
+    public String[] getParameterValues(final String key) {
+        final String result = get(key);
+        return result != null ? new String[] { result } : new String[0];
     }
 
     public void setCharacterEncoding(String charset) {

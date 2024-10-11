@@ -106,12 +106,13 @@ public class HttpParameterTest {
     }
 
     /**
-     * Test of of method, of class HttpParameter.
+     * Test of method, of class HttpParameter.
      */
     @Test
     public void testOf_ServletRequest_Enum() {
         Month defaultValue = DECEMBER;
-        Month result = Param.MONTH_ENUM.of(request(), defaultValue);
+        UServletRequest dummyRequest = request();
+        Month result = Param.MONTH_ENUM.of(dummyRequest, defaultValue);
         assertEquals(JANUARY, result);
 
         result = Param.UNDEFINED.of(request(), defaultValue);
