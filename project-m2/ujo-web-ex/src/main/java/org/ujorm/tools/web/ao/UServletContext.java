@@ -10,6 +10,14 @@ public final class UServletContext {
         this.servletResponse = servletResponse;
     }
 
+    public UServletContext(UServletRequest servletRequest) {
+        this(servletRequest, new UServletResponse());
+    }
+
+    public UServletContext() {
+        this(new UServletRequest(), new UServletResponse());
+    }
+
     public UServletRequest request() {
         return servletRequest;
     }
