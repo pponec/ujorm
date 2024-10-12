@@ -1,5 +1,6 @@
 package org.ujorm.tools.web.context;
 
+
 import org.mockito.Mockito;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,17 +22,17 @@ class URequestTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         BufferedReader reader = request.getReader();
 
-        URequest.ManyMap map = URequest.createMap();
+        ManyMap map = URequest.createMap();
         map.put("p1", "v1");
         map.put("p2", "v2a");
         map.put("p2", "v2b");
         URequest uRequest = map.toRequest(reader);
 
-        Assertions.assertEquals(1, map.get("p1").length);
-        Assertions.assertEquals(2, map.get("p2").length);
+        assertEquals(1, map.get("p1").length);
+        assertEquals(2, map.get("p2").length);
 
-        Assertions.assertEquals("v1", map.get("p1")[0]);
-        Assertions.assertEquals("v2", map.get("p2b")[1]);
+        assertEquals("v1", map.get("p1")[0]);
+        assertEquals("v2", map.get("p2b")[1]);
 
 
     }
