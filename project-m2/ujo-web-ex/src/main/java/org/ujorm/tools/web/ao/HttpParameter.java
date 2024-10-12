@@ -21,6 +21,7 @@ import java.util.function.Function;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.web.context.URequest;
 
 /**
  * An interface for bulding HTML parameters by an Enumerator.

@@ -1,4 +1,4 @@
-package org.ujorm.tools.web.ao;
+package org.ujorm.tools.web.context;
 
 import org.mockito.Mockito;
 
@@ -27,11 +27,11 @@ class URequestTest {
         map.put("p2", "v2b");
         URequest uRequest = map.toRequest(reader);
 
-        assertEquals(1, map.get("p1").length);
-        assertEquals(2, map.get("p2").length);
+        Assertions.assertEquals(1, map.get("p1").length);
+        Assertions.assertEquals(2, map.get("p2").length);
 
-        assertEquals("v1", map.get("p1")[0]);
-        assertEquals("v2", map.get("p2b")[1]);
+        Assertions.assertEquals("v1", map.get("p1")[0]);
+        Assertions.assertEquals("v2", map.get("p2b")[1]);
 
 
     }

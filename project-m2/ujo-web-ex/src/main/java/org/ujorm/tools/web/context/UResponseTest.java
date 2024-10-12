@@ -1,4 +1,4 @@
-package org.ujorm.tools.web.ao;
+package org.ujorm.tools.web.context;
 
 import org.mockito.Mockito;
 
@@ -18,7 +18,7 @@ class UResponseTest {
     public void compilationTest() throws IOException {
         HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
         Writer writer = response.getWriter();
-        assertTrue(writer != null);
+        Assertions.assertTrue(writer != null);
     }
 
 }
