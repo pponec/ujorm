@@ -1,6 +1,7 @@
 package org.ujorm.tools.web.request;
 
 
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,12 +29,12 @@ class URequestTest {
         map.put("p2", "v2b");
         URequest uRequest = map.toRequest(reader);
 
+        assertEquals(0, map.get("p0").length);
         assertEquals(1, map.get("p1").length);
         assertEquals(2, map.get("p2").length);
 
         assertEquals("v1", map.get("p1")[0]);
         assertEquals("v2", map.get("p2b")[1]);
-
 
     }
 
