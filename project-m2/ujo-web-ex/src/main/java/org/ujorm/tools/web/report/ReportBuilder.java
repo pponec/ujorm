@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.ujorm.tools.web.context.URequest;
+import org.ujorm.tools.web.request.URequest;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
