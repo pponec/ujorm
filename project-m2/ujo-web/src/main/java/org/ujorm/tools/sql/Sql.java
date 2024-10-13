@@ -16,7 +16,7 @@
 
 package org.ujorm.tools.sql;
 
-/** Some SQL keyw0rods. */
+/** Some SQL keywords. */
 public interface Sql {
 
     // --- Statements ---

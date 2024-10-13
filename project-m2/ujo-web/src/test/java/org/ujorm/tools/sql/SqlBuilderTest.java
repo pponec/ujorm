@@ -29,7 +29,7 @@ import org.ujorm.tools.jdbc.AbstractJdbcConnector;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Testing the SqlBuillder class
+ * Testing the SqlBuilder class
  * @author Pavel Ponec
  */
 public class SqlBuilderTest extends AbstractJdbcConnector {
