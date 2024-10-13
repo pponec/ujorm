@@ -16,7 +16,7 @@
 package org.ujorm.tools.web.ao;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
+
 
 /**
  * Input/Output Runnable Interface
@@ -26,6 +26,6 @@ import javax.servlet.ServletException;
 @FunctionalInterface
 public interface IORunnable {
 
-    void run() throws ServletException, IOException;
+    void run() throws IOException;
     
 }

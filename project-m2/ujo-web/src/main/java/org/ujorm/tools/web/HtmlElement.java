@@ -22,11 +22,9 @@ import java.nio.charset.Charset;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.ujorm.tools.web.request.URequest;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.web.ao.MockServletResponse;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
@@ -41,7 +39,7 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  * <h3>Usage</h3>
  *
  * <pre class="pre">
- *    MockServletResponse response = new MockServletResponse();
+ *    ServletResponse response = new ServletResponse();
  *    try (HtmlElement html = HtmlElement.of(response)) {
  *        html.addBody().addHeading("Hello!");
  *    }
@@ -71,15 +69,15 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Config */
     @NotNull
-    private final Appendable writer;
+    private final java.lang.Appendable writer;
 
     /** Create new instance with empty html headers */
-    public HtmlElement(@NotNull final HtmlConfig config, @NotNull final Appendable writer) {
+    public HtmlElement(@NotNull final HtmlConfig config, @NotNull final java.lang.Appendable writer) {
         this(new XmlModel(Html.HTML), config, writer);
     }
 
     /** Create new instance with empty html headers */
-    public HtmlElement(@NotNull final ApiElement root, @NotNull final HtmlConfig config, @NotNull final Appendable writer) {
+    public HtmlElement(@NotNull final ApiElement root, @NotNull final HtmlConfig config, @NotNull final java.lang.Appendable writer) {
         this.root = new Element(root);
         this.config = config;
         this.writer = writer;
@@ -118,7 +116,6 @@ public class HtmlElement implements ApiElement<Element>, Html {
         return root.addComment(comment);
     }
 
-    @Deprecated
     @Override
     public Element addCDATA(CharSequence charData) {
         return root.addCDATA(charData);
@@ -191,12 +188,6 @@ public class HtmlElement implements ApiElement<Element>, Html {
         return getHead().addElement(Html.SCRIPT)
                 .setAttribute(Html.A_SRC, javascriptLink)
                 .setAttribute("defer", defer ? "defer" : null);
-    }
-
-    /** User the method {@link #addJavascriptBody(java.lang.CharSequence...) } rather */
-    @Deprecated
-    public Element addJavascriptContents(@NotNull final CharSequence javascript) {
-        return addJavascriptBody(javascript);
     }
 
     /** Create a new Javascript element and return it.
@@ -316,10 +307,10 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see Appendable
      */
     @NotNull
-    public static HtmlElement of(@NotNull final HttpServletResponse response, @NotNull final CharSequence... cssLinks) {
+    public static HtmlElement of(@NotNull final Appendable response, @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setCssLinks(cssLinks);
         return of(config, response);
@@ -327,22 +318,10 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see Appendable
      */
     @NotNull
-    public static HtmlElement of(@NotNull final CharSequence title, @NotNull final HttpServletResponse response, @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setTitle(title);
-        config.setCssLinks(cssLinks);
-        return of(config, response);
-    }
-
-    /** Create new instance with empty html headers
-     * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
-     */
-    @NotNull
-    public static HtmlElement of(@NotNull final CharSequence title, @NotNull final HttpServletResponse response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
+    public static HtmlElement of(@NotNull final CharSequence title, @NotNull final Appendable response, @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
@@ -351,10 +330,22 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see Appendable
      */
     @NotNull
-    public static HtmlElement niceOf(@NotNull final CharSequence title, @NotNull final HttpServletResponse response, @NotNull final CharSequence... cssLinks) {
+    public static HtmlElement of(@NotNull final CharSequence title, @NotNull final Appendable response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setTitle(title);
+        config.setCssLinks(cssLinks);
+        return of(config, response);
+    }
+
+    /** Create new instance with empty html headers
+     * @throws IllegalStateException IO exceptions
+     * @see Appendable
+     */
+    @NotNull
+    public static HtmlElement niceOf(@NotNull final CharSequence title, @NotNull final Appendable response, @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setTitle(title);
@@ -364,10 +355,10 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see Appendable
      */
     @NotNull
-    public static HtmlElement niceOf(@NotNull final CharSequence title, @NotNull final HttpServletResponse response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
+    public static HtmlElement niceOf(@NotNull final CharSequence title, @NotNull final Appendable response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setTitle(title);
@@ -378,11 +369,11 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see Appendable
      */
     @NotNull
     public static HtmlElement niceOf(
-            @NotNull final HttpServletResponse response,
+            @NotNull final Appendable response,
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
@@ -395,12 +386,12 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @param response HttpResponse to write a result
      * @return An instance of the HtmlPage
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see Appendable
      */
     @NotNull
     public static HtmlElement of(
-            @NotNull final HttpServletRequest request,
-            @NotNull final HttpServletResponse response) throws IllegalStateException, UnsupportedEncodingException {
+            @NotNull final URequest request,
+            @NotNull final Appendable response) throws IllegalStateException, UnsupportedEncodingException {
         return of(request, response, HtmlConfig.ofDefault());
     }
 
@@ -410,52 +401,14 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @param config Html configuration
      * @return An instance of the HtmlPage
      * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
+     * @see Appendable
      */
     @NotNull
     public static HtmlElement of(
-            @NotNull final HttpServletRequest request,
-            @NotNull final HttpServletResponse response,
+            @NotNull final URequest request,
+            @NotNull final Appendable response,
             @NotNull final HtmlConfig config) throws IllegalStateException, UnsupportedEncodingException {
-        request.setCharacterEncoding(config.getCharset().toString());
         return of(config, response);
-    }
-
-    /** A base method to create new instance with empty html headers
-     * @param response HttpResponse to write a result
-     * @param config Html configuration
-     * @return An instance of the HtmlPage
-     * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
-     * @deprecated Use the method {@link #of(org.ujorm.tools.xml.config.HtmlConfig, javax.servlet.http.HttpServletResponse) } rather.
-     */
-    @Deprecated
-    @NotNull
-    public static HtmlElement of(
-            @NotNull final HttpServletResponse response,
-            @NotNull final HtmlConfig config) throws IllegalStateException {
-        return of(config, response);
-    }
-
-    /** A base method to create new instance with empty html headers
-     * @param response HttpResponse to write a result
-     * @param config Html configuration
-     * @return An instance of the HtmlPage
-     * @throws IllegalStateException IO exceptions
-     * @see MockServletResponse
-     */
-    @NotNull
-    public static HtmlElement of(
-            @NotNull final HtmlConfig config,
-            @NotNull final HttpServletResponse response
-            ) throws IllegalStateException {
-        response.setCharacterEncoding(config.getCharset().toString());
-        response.setContentType(config.getContentType());
-        try {
-            return of(config, response.getWriter());
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
     }
 
     /** Create new instance with empty html headers
@@ -471,7 +424,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     /** Create root element for a required element name */
     public static HtmlElement of(
             @NotNull final HtmlConfig config,
-            @NotNull final Appendable writer
+            @NotNull final java.lang.Appendable writer
     ) throws IllegalStateException {
         final ApiElement root = config.isDocumentObjectModel()
                 ? new XmlModel(config.getRootElementName())
@@ -498,7 +451,6 @@ public class HtmlElement implements ApiElement<Element>, Html {
      *
      * @deprecated Use the method {@link #next(Consumer)} rather.
      */
-    @Deprecated
     @NotNull
     public final ExceptionProvider then(@NotNull final Consumer<HtmlElement> builder) {
         return next(builder);

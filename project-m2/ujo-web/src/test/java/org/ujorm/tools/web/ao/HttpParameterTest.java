@@ -2,8 +2,9 @@ package org.ujorm.tools.web.ao;
 
 import java.time.Month;
 import static java.time.Month.JANUARY;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.junit.jupiter.api.Test;
+import org.ujorm.tools.web.request.URequest;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static java.time.Month.*;
 
@@ -55,7 +56,7 @@ public class HttpParameterTest {
     }
 
     /**
-     * Test of of method, of class HttpParameter.
+     * Test of method, of class HttpParameter.
      */
     @Test
     public void testOf_ServletRequest_int() {
@@ -107,12 +108,13 @@ public class HttpParameterTest {
     }
 
     /**
-     * Test of of method, of class HttpParameter.
+     * Test of method, of class HttpParameter.
      */
     @Test
     public void testOf_ServletRequest_Enum() {
         Month defaultValue = DECEMBER;
-        Month result = Param.MONTH_ENUM.of(request(), defaultValue);
+        URequest dummyRequest = request();
+        Month result = Param.MONTH_ENUM.of(dummyRequest, defaultValue);
         assertEquals(JANUARY, result);
 
         result = Param.UNDEFINED.of(request(), defaultValue);
@@ -137,8 +139,8 @@ public class HttpParameterTest {
 
     // --- Helper methods ---
 
-    private MockHttpServletRequest request() {
-        MockHttpServletRequest result = new MockHttpServletRequest();
+    private URequest request() {
+        URequest result = new URequest();
         result.setParameter(Param.TEXT.name(), "abc");
         result.setParameter(Param.BOOLEAN.name(), Boolean.TRUE.toString());
         result.setParameter(Param.CHAR.name(), "A");

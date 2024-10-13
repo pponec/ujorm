@@ -38,27 +38,6 @@ public final class ExceptionProvider {
     }
 
     /**
-     * Re-throw any exception.
-     *
-     * @deprecated Use the method {@link #catchEx(Class, Consumer)} rather
-     */
-    @Deprecated
-    public void catchEx() {
-        catchEx(IllegalStateException.class, e -> {throw e;});
-    }
-
-    /**
-     * Apply consumer if the exception is a required type (or not null).
-     *
-     * @deprecated Use the method {@link #catchEx(Class, Consumer)} rather
-     */
-    @Deprecated
-    public void catche(@NotNull final Consumer<Throwable> exceptionConsumer) {
-        catchEx(Throwable.class, exceptionConsumer);
-    }
-
-
-    /**
      * Apply consumer if the exception is a required type (or not null).
      */
     public void catchEx(@NotNull final Consumer<Throwable> exceptionConsumer) {

@@ -19,10 +19,9 @@ import java.io.Closeable;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.ObjectProvider;
+import org.ujorm.tools.web.request.URequest;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
@@ -36,7 +35,7 @@ public class JsonBuilder implements Closeable {
 
     /** An original writer */
     @NotNull
-    private final Appendable writer;
+    private final java.lang.Appendable writer;
     /** JSON writer with character escaping */
     @NotNull
     private final JsonWriter jsonWriter;
@@ -48,12 +47,12 @@ public class JsonBuilder implements Closeable {
     private final String JAVACRIPT_DUMMY_SELECTOR = "";
 
     /** Constructor with a default HTML config */
-    protected JsonBuilder(@NotNull final Appendable writer) {
+    protected JsonBuilder(@NotNull final java.lang.Appendable writer) {
         this(writer, HtmlConfig.ofEmptyElement());
     }
 
     /** Common constructor */
-    protected JsonBuilder(@NotNull final Appendable writer, HtmlConfig config) {
+    protected JsonBuilder(@NotNull final java.lang.Appendable writer, HtmlConfig config) {
         this.writer = writer;
         this.jsonWriter = new JsonWriter(writer);
         this.config = config;
@@ -273,15 +272,15 @@ public class JsonBuilder implements Closeable {
 
     /** An object factory */
     @NotNull
-    public static final JsonBuilder of(@NotNull final Appendable writer) {
+    public static final JsonBuilder of(@NotNull final java.lang.Appendable writer) {
         return new JsonBuilder(writer);
     }
 
     /** An object factory */
     @NotNull
     public static final JsonBuilder of(
-            @NotNull final HttpServletRequest request,
-            @NotNull final HttpServletResponse response) throws IllegalStateException, IOException {
+            @NotNull final URequest request,
+            @NotNull final Appendable response) throws IllegalStateException, IOException {
         return of(HtmlConfig.ofEmptyElement(), request, response);
     }
 
@@ -289,39 +288,26 @@ public class JsonBuilder implements Closeable {
     @NotNull
     public static final JsonBuilder of(
             @NotNull final HtmlConfig config,
-            @NotNull final HttpServletResponse response)
+            @NotNull final Appendable response)
             throws IllegalStateException, IOException {
-        return of(null, response, config);
-    }
-
-    /** An object factory */
-    @Deprecated
-    @NotNull
-    public static final JsonBuilder of(
-            @Nullable final HttpServletRequest request,
-            @NotNull final HttpServletResponse response,
-            @NotNull final HtmlConfig config) throws IllegalStateException, IOException {
-        return of(config, request, response);
+        return of(config, null, response);
     }
 
     /** An object factory */
     @NotNull
     public static final JsonBuilder of(
             @NotNull final HtmlConfig config,
-            @Nullable final HttpServletRequest request,
-            @NotNull final HttpServletResponse response)
+            @Nullable final URequest request,
+            @NotNull final Appendable response)
             throws IllegalStateException, IOException {
         if (config.isHtmlHeaderRequest()) {
-            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
-            response.addHeader("Pragma", "no-cache"); // HTTP 1.0
-            response.addHeader("Expires", "0"); // Proxies
+//            TODO.pop
+//            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+//            response.addHeader("Pragma", "no-cache"); // HTTP 1.0
+//            response.addHeader("Expires", "0"); // Proxies
         }
         final String charset = config.getCharset().toString();
-        response.setCharacterEncoding(charset);
-        if (request != null) {
-            request.setCharacterEncoding(charset);
-        }
-        return new JsonBuilder(response.getWriter(), config);
+        return new JsonBuilder(response, config);
     }
 
     /** CSS selector types */

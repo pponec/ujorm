@@ -85,7 +85,7 @@
         <!-- Tools of Ujorm -->
         <dependency>
             <groupId>org.ujorm</groupId>
-            <artifactId>ujo-tools</artifactId>
+            <artifactId>ujo-web</artifactId>
             <version>${revision}</version>
         </dependency>
 

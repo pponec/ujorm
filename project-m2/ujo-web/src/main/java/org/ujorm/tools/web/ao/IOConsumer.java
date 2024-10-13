@@ -16,7 +16,7 @@
 package org.ujorm.tools.web.ao;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
+
 
 /**
  *
@@ -24,6 +24,6 @@ import javax.servlet.ServletException;
  */
 public interface IOConsumer<T> {
 
-    void accept(T t) throws ServletException, IOException;
+    void accept(T t) throws IOException;
 
 }
