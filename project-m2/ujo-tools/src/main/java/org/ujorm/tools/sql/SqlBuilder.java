@@ -21,6 +21,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.jdbc.JdbcBuilder;
+import org.ujorm.tools.jdbc.SqlParamBuilder;
 
 /**
  * PrepareStatement builder support
@@ -66,6 +67,7 @@ import org.ujorm.tools.jdbc.JdbcBuilder;
  * For more information see a <a target="_blank"
  * href="https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/test/java/org/ujorm/tools/jdbc/SqlBuilderTest.java#L33">jUnit</a> test.
  * @author Pavel Ponec
+ * @deprecated Use the {@link SqlParamBuilder} class rather from the release 2.26.
  */
 public class SqlBuilder extends JdbcBuilder {
 
