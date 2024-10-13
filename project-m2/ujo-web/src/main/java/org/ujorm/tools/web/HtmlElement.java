@@ -376,6 +376,20 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @see Appendable
      */
     @NotNull
+    public static HtmlElement of(
+            @NotNull final HttpServletResponse response,
+            @NotNull final CharSequence... cssLinks) {
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        //config.setNiceFormat();
+        config.setCssLinks(cssLinks);
+        return of(config, UContext.ofServlet(null, response).response());
+    }
+
+    /** Create new instance with empty html headers
+     * @throws IllegalStateException IO exceptions
+     * @see Appendable
+     */
+    @NotNull
     public static HtmlElement niceOf(
             @NotNull final HttpServletResponse response,
             @NotNull final CharSequence... cssLinks) {
