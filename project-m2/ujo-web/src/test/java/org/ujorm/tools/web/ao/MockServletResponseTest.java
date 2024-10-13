@@ -28,28 +28,24 @@ public class MockServletResponseTest {
      */
     @Test
     public void testGetContent_2() {
-        // TODO.ponec
-
-//        System.out.println("getContent");
-//        MockServletResponse instance = new MockServletResponse();
-//
-//        try (HtmlElement html = HtmlElement.niceOf(instance)) {
-//            html.getBody().addHeading("ABC:ČÁŠ", "cssType");
-//        }
-//        String result = instance.toString();
-//        String expected = String.join("\n"
-//                , "<!DOCTYPE html>"
-//                , "<html lang=\"en\">"
-//                , "\t<head>"
-//                , "\t\t<meta charset=\"UTF-8\"/>"
-//                , "\t\t<title>Demo</title>"
-//                , "\t</head>"
-//                , "\t<body>"
-//                , "\t\t<h1 class=\"cssType\">ABC:ČÁŠ</h1>"
-//                , "\t</body>"
-//                , "</html>");
-//        assertEquals(expected, result);
-
+        System.out.println("getContent");
+        MockServletResponse response = new MockServletResponse();
+        try (HtmlElement html = HtmlElement.niceOf(response)) {
+            html.getBody().addHeading("ABC:ČÁŠ", "cssType");
+        }
+        String result = response.toString();
+        String expected = String.join("\n"
+                , "<!DOCTYPE html>"
+                , "<html lang=\"en\">"
+                , "\t<head>"
+                , "\t\t<meta charset=\"UTF-8\"/>"
+                , "\t\t<title>Demo</title>"
+                , "\t</head>"
+                , "\t<body>"
+                , "\t\t<h1 class=\"cssType\">ABC:ČÁŠ</h1>"
+                , "\t</body>"
+                , "</html>");
+        assertEquals(expected, result);
     }
 
 }

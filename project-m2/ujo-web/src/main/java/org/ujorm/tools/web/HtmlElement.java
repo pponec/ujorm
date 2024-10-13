@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.web.request.UContext;
 import org.ujorm.tools.web.request.URequest;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
@@ -32,6 +33,9 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.model.XmlModel;
 import org.ujorm.tools.xml.model.XmlWriter;
+
+import javax.servlet.http.HttpServletResponse;
+
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /** The root of HTML elements
@@ -365,6 +369,34 @@ public class HtmlElement implements ApiElement<Element>, Html {
         config.setCharset(charset);
         config.setCssLinks(cssLinks);
         return of(config, response);
+    }
+
+    /** Create new instance with empty html headers
+     * @throws IllegalStateException IO exceptions
+     * @see Appendable
+     */
+    @NotNull
+    public static HtmlElement niceOf(
+            @NotNull final HttpServletResponse response,
+            @NotNull final CharSequence... cssLinks) {
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setNiceFormat();
+        config.setCssLinks(cssLinks);
+        return of(config, UContext.ofServlet(null, response).response());
+    }
+
+    /** Create new instance with empty html headers
+     * @throws IllegalStateException IO exceptions
+     * @see Appendable
+     */
+    @NotNull
+    public static HtmlElement niceOf(
+            @NotNull final UContext ucontext,
+            @NotNull final CharSequence... cssLinks) {
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setNiceFormat();
+        config.setCssLinks(cssLinks);
+        return of(config, ucontext.response());
     }
 
     /** Create new instance with empty html headers

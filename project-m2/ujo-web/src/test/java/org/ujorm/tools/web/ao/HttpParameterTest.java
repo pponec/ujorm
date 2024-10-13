@@ -4,6 +4,7 @@ import java.time.Month;
 import static java.time.Month.JANUARY;
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.request.URequest;
+import org.ujorm.tools.web.request.URequestImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static java.time.Month.*;
@@ -140,7 +141,7 @@ public class HttpParameterTest {
     // --- Helper methods ---
 
     private URequest request() {
-        URequest result = new URequest();
+        URequestImpl result = new URequestImpl();
         result.setParameter(Param.TEXT.name(), "abc");
         result.setParameter(Param.BOOLEAN.name(), Boolean.TRUE.toString());
         result.setParameter(Param.CHAR.name(), "A");

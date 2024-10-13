@@ -9,8 +9,10 @@ public class ManyMap {
     private final Map<String, List<String>> map = new HashMap<>();
 
     /** Method to add a value to the specified key */
-    public void put(String key, String value) {
-        map.computeIfAbsent(key, k -> new ArrayList<>(2)).add(value);
+    public void put(String key, String... values) {
+        for (String value: values) {
+            map.computeIfAbsent(key, k -> new ArrayList<>(2)).add(value);
+        }
     }
 
     /** Method to retrieve the list of values for a specified key
@@ -27,6 +29,12 @@ public class ManyMap {
 
     /** Create new Servlet request */
     public URequest toRequest(Reader reader) {
-        return new URequest(this, reader);
+        return new URequestImpl(this, reader);
+    }
+
+    public static final ManyMap of(Map<String, String> map) {
+        ManyMap result = new ManyMap();
+        map.forEach((key, value) -> result.put(key, value));
+        return result;
     }
 }
