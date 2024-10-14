@@ -309,6 +309,61 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     // ------- Static methods ----------
 
+    /** Create root element for a required element name. The MAIN factory method. */
+    @NotNull
+    public static HtmlElement of(
+            @NotNull final java.lang.Appendable writer,
+            @NotNull final HtmlConfig myConfig
+    ) throws IllegalStateException {
+        HtmlConfig config = myConfig != null ? myConfig : new DefaultHtmlConfig();
+        //config.setNiceFormat();
+        //config.setCssLinks(cssLinks);
+
+        final ApiElement root = config.isDocumentObjectModel()
+                ? new XmlModel(config.getRootElementName())
+                : new XmlBuilder(config.getRootElementName(), new XmlPrinter(writer, config), config.getFirstLevel());
+        final HtmlElement result = new HtmlElement(root, config, writer);
+        if (config.isHtmlHeaderRequest()) {
+            config.getLanguage().ifPresent(lang -> result.setAttribute(A_LANG, lang));
+            result.getHead().addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
+            result.getHead().addElement(Html.TITLE).addText(config.getTitle());
+            result.addCssLinks(config.getCssLinks());
+            config.getHeaderInjector().write(result.getHead());
+
+            // A deprecated solution:
+            final CharSequence rawHeaderText = config.getRawHeaderText();
+            if (Check.hasLength(rawHeaderText)) {
+                result.getHead().addRawText(config.getNewLine());
+                result.getHead().addRawText(rawHeaderText);
+            }
+        }
+        return result;
+    }
+
+    /** Create new instance with empty html headers, The MAIN servlet factory method.
+     * @throws IllegalStateException IO exceptions
+     * @see Appendable
+     */
+    @NotNull
+    public static HtmlElement commonOf(
+            @NotNull final HttpServletResponse response,
+            @Nullable final DefaultHtmlConfig config) {
+        return of(UContext.ofServlet(null, response).response(), config);
+    }
+
+    /** Create new instance with empty html headers
+     * @throws IllegalStateException IO exceptions
+     * @see Appendable
+     */
+    @NotNull
+    public static HtmlElement of(
+            @NotNull final HttpServletResponse response,
+            @NotNull final CharSequence... cssLinks) {
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setCssLinks(cssLinks);
+        return of(UContext.ofServlet(null, response).response(), config);
+    }
+
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
      * @see Appendable
@@ -317,7 +372,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     public static HtmlElement of(@NotNull final Appendable response, @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setCssLinks(cssLinks);
-        return of(config, response);
+        return of(response, config);
     }
 
     /** Create new instance with empty html headers
@@ -329,7 +384,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(config, response);
+        return of(response, config);
     }
 
     /** Create new instance with empty html headers
@@ -341,7 +396,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(config, response);
+        return of(response, config);
     }
 
     /** Create new instance with empty html headers
@@ -354,7 +409,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         config.setNiceFormat();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(config, response);
+        return of(response, config);
     }
 
     /** Create new instance with empty html headers
@@ -368,22 +423,10 @@ public class HtmlElement implements ApiElement<Element>, Html {
         config.setTitle(title);
         config.setCharset(charset);
         config.setCssLinks(cssLinks);
-        return of(config, response);
+        return of(response, config);
     }
 
-    /** Create new instance with empty html headers
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
-     */
-    @NotNull
-    public static HtmlElement of(
-            @NotNull final HttpServletResponse response,
-            @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        //config.setNiceFormat();
-        config.setCssLinks(cssLinks);
-        return of(config, UContext.ofServlet(null, response).response());
-    }
+
 
     /** Create new instance with empty html headers
      * @throws IllegalStateException IO exceptions
@@ -396,7 +439,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
-        return of(config, UContext.ofServlet(null, response).response());
+        return of(UContext.ofServlet(null, response).response(), config);
     }
 
     /** Create new instance with empty html headers
@@ -410,7 +453,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
-        return of(config, ucontext.response());
+        return of(ucontext.response(), config);
     }
 
     /** Create new instance with empty html headers
@@ -424,7 +467,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
-        return of(config, response);
+        return of(response, config);
     }
 
     /** A base method to create new instance
@@ -454,7 +497,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
             @NotNull final URequest request,
             @NotNull final Appendable response,
             @NotNull final HtmlConfig config) throws IllegalStateException, UnsupportedEncodingException {
-        return of(config, response);
+        return of(response, config);
     }
 
     /** Create new instance with empty html headers
@@ -464,33 +507,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement of(@Nullable final HtmlConfig config) throws IllegalStateException {
-        return of(config != null ? config : HtmlConfig.ofDefault(), new StringBuilder(256));
-    }
-
-    /** Create root element for a required element name */
-    public static HtmlElement of(
-            @NotNull final HtmlConfig config,
-            @NotNull final java.lang.Appendable writer
-    ) throws IllegalStateException {
-        final ApiElement root = config.isDocumentObjectModel()
-                ? new XmlModel(config.getRootElementName())
-                : new XmlBuilder(config.getRootElementName(), new XmlPrinter(writer, config), config.getFirstLevel());
-        final HtmlElement result = new HtmlElement(root, config, writer);
-        if (config.isHtmlHeaderRequest()) {
-            config.getLanguage().ifPresent(lang -> result.setAttribute(A_LANG, lang));
-            result.getHead().addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
-            result.getHead().addElement(Html.TITLE).addText(config.getTitle());
-            result.addCssLinks(config.getCssLinks());
-            config.getHeaderInjector().write(result.getHead());
-
-            // A deprecated solution:
-            final CharSequence rawHeaderText = config.getRawHeaderText();
-            if (Check.hasLength(rawHeaderText)) {
-                result.getHead().addRawText(config.getNewLine());
-                result.getHead().addRawText(rawHeaderText);
-            }
-        }
-        return result;
+        return of(new StringBuilder(256), config);
     }
 
     /** Apply body of element by a lambda expression.

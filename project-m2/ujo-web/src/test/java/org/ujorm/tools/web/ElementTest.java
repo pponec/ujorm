@@ -153,13 +153,12 @@ public class ElementTest {
     @Test
     public void testAddTestTemplated() {
         System.out.println("addTestTemplated");
-        CharSequence[] cssClasses = null;
-        HtmlElement resInstance = HtmlElement.of(null);
+        Appendable result = new StringBuilder();
+        HtmlElement resInstance = HtmlElement.of(result);
         try (HtmlElement instance = resInstance) {
             instance.getBody().addTextTemplated("Test <{}.{}{}", 1, 2, ">");
         }
 
-        String result = resInstance.toString();
         String expectedResult = String.join("\n",
                 "<!DOCTYPE html>",
                 "<html lang=\"en\">",
@@ -167,7 +166,7 @@ public class ElementTest {
                 "<meta charset=\"UTF-8\"/>",
                 "<title>Demo</title></head>",
                 "<body>Test &lt;1.2&gt;</body></html>");
-        assertEquals(expectedResult, result);
+        assertEquals(expectedResult, result.toString());
     }
 
     /**
@@ -176,14 +175,13 @@ public class ElementTest {
     @Test
     public void testAddFieldset() {
         System.out.println("addFieldset");
-        CharSequence[] cssClasses = null;
-        HtmlElement resInstance = HtmlElement.of(null);
+        StringBuilder result = new StringBuilder();
+        HtmlElement resInstance = HtmlElement.of(result);
         try (HtmlElement instance = resInstance) {
             Element body = instance.getBody();
             body.addFieldset("MyTitle", "myCssClass").addText("Lorem ipsum ...");
         }
 
-        String result = resInstance.toString();
         String expectedResult = "<!DOCTYPE html>\n"
                 + "<html lang=\"en\">\n"
                 + "<head>\n"
@@ -196,7 +194,7 @@ public class ElementTest {
                 + "</fieldset>"
                 + "</body>"
                 + "</html>";
-        assertEquals(expectedResult, result);
+        assertEquals(expectedResult, result.toString());
     }
 
     /**
@@ -208,7 +206,7 @@ public class ElementTest {
         DefaultHtmlConfig config = HtmlConfig.ofElementName(Html.DIV);
         config.setNewLine("");
 
-        try (HtmlElement html = HtmlElement.of(config, writer)) {
+        try (HtmlElement html = HtmlElement.of(writer, config)) {
             html.addElement(Html.SPAN).addText("test");
         }
         String expected = "<div><span>test</span></div>";

@@ -194,7 +194,7 @@ public class JsonBuilder implements Closeable {
 
         writeKey(keyPrefix, key);
         writer.append(DOUBLE_QUOTE);
-        try (HtmlElement root = HtmlElement.of(config, jsonWriter)) {
+        try (HtmlElement root = HtmlElement.of(jsonWriter, config)) {
             valueProvider.accept(root.original());
         }
         writer.append(DOUBLE_QUOTE);

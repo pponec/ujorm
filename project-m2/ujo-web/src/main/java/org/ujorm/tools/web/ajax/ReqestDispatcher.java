@@ -122,7 +122,7 @@ public class ReqestDispatcher {
      */
     public void onDefaultToElement(@NotNull final IOElement defaultProcessor) throws IOException {
         if (!done) {
-            try (HtmlElement html = HtmlElement.of(htmlConfig, output)) {
+            try (HtmlElement html = HtmlElement.of(output, htmlConfig)) {
                 defaultProcessor.run(html);
             }
         }

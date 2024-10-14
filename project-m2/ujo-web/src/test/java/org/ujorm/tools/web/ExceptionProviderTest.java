@@ -44,7 +44,7 @@ public class ExceptionProviderTest {
         DefaultHtmlConfig config = HtmlConfig.ofDefault()
                 .setTitle("Element-try-catche");
 
-        HtmlElement.of(config, writer).addBody()
+        HtmlElement.of(writer, config).addBody()
                 .next(body -> {
                     body.addHeading(config.getTitle());
                 })
@@ -65,7 +65,7 @@ public class ExceptionProviderTest {
                 .setTitle("Element-try-catche");
 
         String[] result = {""};
-        HtmlElement.of(config, writer).addBody().then(body -> {
+        HtmlElement.of(writer, config).addBody().then(body -> {
                     throw new IllegalArgumentException("test");
                 })
                 .catchEx(e -> {
@@ -86,7 +86,7 @@ public class ExceptionProviderTest {
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             String[] result = {""};
-            HtmlElement.of(config, writer).addBody()
+            HtmlElement.of(writer, config).addBody()
                     .next(body -> {
                         throw new IllegalArgumentException("test");
                     })
@@ -108,7 +108,7 @@ public class ExceptionProviderTest {
                 .setTitle("Element-try-catche");
 
         String[] result = {""};
-        HtmlElement.of(config, writer).addBody()
+        HtmlElement.of(writer, config).addBody()
                 .then(body -> {
                     throw new NullPointerException("test");
                 })
@@ -130,7 +130,7 @@ public class ExceptionProviderTest {
                     .setTitle("Element-try-catche");
 
             String[] result = {""};
-            HtmlElement.of(config, writer).addBody()
+            HtmlElement.of(writer, config).addBody()
                     .then(body -> {
                         throw new OutOfMemoryError("test");
                     })
@@ -152,7 +152,7 @@ public class ExceptionProviderTest {
                 .setTitle("Element-try-catche");
 
         String[] result = {""};
-        HtmlElement.of(config, writer).addBody()
+        HtmlElement.of(writer, config).addBody()
                 .next(body -> {
                     throw new OutOfMemoryError("test");
                 })
