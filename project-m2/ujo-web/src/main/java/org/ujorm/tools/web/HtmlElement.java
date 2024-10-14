@@ -340,6 +340,15 @@ public class HtmlElement implements ApiElement<Element>, Html {
         return result;
     }
 
+    /** Create root element for a required element name. The MAIN factory method. */
+    @NotNull
+    public static HtmlElement of(
+            @NotNull final UContext uContext,
+            @NotNull final HtmlConfig myConfig) {
+        return of(uContext.response(), myConfig);
+    }
+
+
     /** Create new instance with empty html headers, The MAIN servlet factory method.
      * @throws IllegalStateException IO exceptions
      * @see Appendable

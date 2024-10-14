@@ -57,4 +57,9 @@ public class UContext {
     public static UContext of(ManyMap map) {
         return new UContext(URequestImpl.ofMap(map), new StringBuilder());
     }
+
+    /** UContext from a map */
+    public static UContext of() {
+        return of (new ManyMap());
+    }
 }
