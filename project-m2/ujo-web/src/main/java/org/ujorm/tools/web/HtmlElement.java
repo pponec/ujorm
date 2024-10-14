@@ -345,9 +345,9 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @see Appendable
      */
     @NotNull
-    public static HtmlElement commonOf(
+    public static HtmlElement of(
             @NotNull final HttpServletResponse response,
-            @Nullable final DefaultHtmlConfig config) {
+            @Nullable final HtmlConfig config) {
         return of(UContext.ofServlet(null, response).response(), config);
     }
 

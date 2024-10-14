@@ -11,9 +11,6 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 
 import org.jetbrains.annotations.NotNull;
-import java.io.IOException;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.web.bind.annotation.RequestParam;
 import net.ponec.x2j.service.ConverterService;
 import static net.ponec.x2j.controller.ConverterController.Constants.*;
@@ -38,16 +35,15 @@ public class ConverterController {
     public String converter(
             @RequestParam(defaultValue = "") String text,
             @RequestParam(defaultValue = "") String submit
-    ) throws IOException {
+    ) {
 
         if (DEMO.equals(submit)) {
             text = service.getDemoXml();
         }
 
-        Message message = service.toJavaCode(text);
-
+        final Message message = service.toJavaCode(text);
         final MockServletResponse response = new MockServletResponse();
-        try ( HtmlElement html = HtmlElement.of(getConfig("Convert XML file to Java code on-line"), response)) {
+        try ( HtmlElement html = HtmlElement.of(response, getConfig("Convert XML file to Java code on-line"))) {
             html.addCssLink(CSS_STYLE);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             try ( Element body = html.getBody()) {

@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.ujorm.tools.web.request.UContext;
 import org.ujorm.tools.web.request.URequest;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
@@ -261,20 +262,19 @@ public class ReportBuilder<D> {
 
     /** Build the HTML page including a table */
     public void build(
-            @NotNull final URequest input,
-            @NotNull final Appendable output,
+            @NotNull final UContext ucontext,
             @NotNull final Stream<D> resource) {
-        build(input, output, tableBuilder -> resource);
+        build(ucontext, tableBuilder -> resource);
     }
 
     /** Build the HTML page including a table */
     public void build(
-            @NotNull final URequest input,
-            @NotNull final Appendable output,
+            @NotNull final UContext ucontext,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource) {
         try {
+            final URequest input = ucontext.request();
             setSort(ColumnModel.ofCode(config.getSortRequestParam().of(input)));
-            new ReqestDispatcher(input, output, config.getConfig())
+            new ReqestDispatcher(input, ucontext.response(), config.getConfig())
                     .onParam(config.getAjaxRequestParam(), jsonBuilder -> doAjax(input, jsonBuilder, resource))
                     .onDefaultToElement(element -> printHtmlBody(input, element, resource));
         } catch (Exception e) {

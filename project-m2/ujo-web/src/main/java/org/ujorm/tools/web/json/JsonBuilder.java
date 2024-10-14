@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.ObjectProvider;
-import org.ujorm.tools.web.request.URequest;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
@@ -279,35 +278,10 @@ public class JsonBuilder implements Closeable {
     /** An object factory */
     @NotNull
     public static final JsonBuilder of(
-            @NotNull final URequest request,
-            @NotNull final Appendable response) throws IllegalStateException, IOException {
-        return of(HtmlConfig.ofEmptyElement(), request, response);
-    }
-
-    /** An object factory */
-    @NotNull
-    public static final JsonBuilder of(
-            @NotNull final HtmlConfig config,
-            @NotNull final Appendable response)
+            @NotNull final Appendable writer,
+            @NotNull final HtmlConfig config)
             throws IllegalStateException, IOException {
-        return of(config, null, response);
-    }
-
-    /** An object factory */
-    @NotNull
-    public static final JsonBuilder of(
-            @NotNull final HtmlConfig config,
-            @Nullable final URequest request,
-            @NotNull final Appendable response)
-            throws IllegalStateException, IOException {
-        if (config.isHtmlHeaderRequest()) {
-//            TODO.pop
-//            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
-//            response.addHeader("Pragma", "no-cache"); // HTTP 1.0
-//            response.addHeader("Expires", "0"); // Proxies
-        }
-        final String charset = config.getCharset().toString();
-        return new JsonBuilder(response, config);
+        return new JsonBuilder(writer, config);
     }
 
     /** CSS selector types */

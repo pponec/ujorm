@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class UContext {
+    public static final Charset CHARSET = StandardCharsets.UTF_8;
 
     private final URequest servletRequest;
     private final Appendable servletResponse;
@@ -40,35 +41,9 @@ public class UContext {
     /** HTTP Servlet Factory */
     public static UContext ofServlet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            final Charset charset = StandardCharsets.UTF_8;
-            if (req != null) {
-                req.setCharacterEncoding(charset.name());
-            }
-            final Reader reader = req != null  ? req.getReader() : new CharArrayReader(new char[0]);
+            resp.setCharacterEncoding(CHARSET.name());
             final PrintWriter writer = resp.getWriter();
-
-            resp.setCharacterEncoding(charset.name());
-            resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-            resp.setHeader("Pragma", "no-cache");
-            resp.setHeader("Expires", "0");
-
-            final URequest ureq = new URequest() {
-                @Override
-                public Reader getReader() {
-                    return reader;
-                }
-
-                @Override
-                public String[] getParameterValues(String key) {
-                    if (req != null) {
-                        final String[] result = req.getParameterValues(key);
-                        return result != null ? result : URequestImpl.emptyTexts;
-
-                    } else {
-                        return URequestImpl.emptyTexts;
-                    }
-                }
-            };
+            final URequest ureq = req != null ? URequest.of(req) : new URequestImpl();
             return new UContext(ureq, writer);
         } catch (IOException e) {
             throw new IllegalStateException(e);
