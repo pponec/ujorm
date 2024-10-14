@@ -19,9 +19,8 @@ import java.io.IOException;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
-
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.web.request.URequest;
+import org.ujorm.tools.web.request.UContext;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
@@ -42,10 +41,7 @@ public class ReqestDispatcher {
     private static final Logger LOGGER = Logger.getLogger(ReqestDispatcher.class.getName());
 
     @NotNull
-    private final URequest input;
-
-    @NotNull
-    private final Appendable output;
+    private final UContext uContext;
 
     @NotNull
     private final HtmlConfig htmlConfig;
@@ -58,39 +54,24 @@ public class ReqestDispatcher {
     private final boolean noCache = true;
 
     public ReqestDispatcher(
-            @NotNull URequest input,
-            @NotNull Appendable output) {
-        this("Info", input, output);
+            @NotNull UContext uContext) {
+        this("Info", uContext);
     }
 
     public ReqestDispatcher(
             @NotNull CharSequence title,
-            @NotNull URequest input,
-            @NotNull Appendable output) {
-        this(input, output, HtmlConfig.ofDefault()
+            @NotNull UContext uContext) {
+        this(uContext, HtmlConfig.ofDefault()
                 .setTitle(title)
                 .setNiceFormat());
     }
 
     public ReqestDispatcher(
-            @NotNull URequest input,
-            @NotNull Appendable output,
+            @NotNull UContext ucontext,
             @NotNull HtmlConfig htmlConfig
     ) {
-        this.input = input;
-        this.output = output;
-        this.htmlConfig = htmlConfig ;
-
-        try {
-            if (noCache) {
-//                // TODO: pop
-//                output.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-//                output.setHeader("Pragma", "no-cache");
-//                output.setHeader("Expires", "0");
-            }
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+        this.uContext = ucontext;
+        this.htmlConfig = htmlConfig;
     }
 
     @NotNull
@@ -101,14 +82,14 @@ public class ReqestDispatcher {
     /**
      * Registre new processor.
      *
-     * @param key An key type of HttpParameter
+     * @param key A key type of HttpParameter
      * @param processor processor
      * @return
      */
     public ReqestDispatcher onParam(@NotNull final HttpParameter key, @NotNull final IOConsumer<JsonBuilder> processor) throws IOException {
         Assert.notNull(key, "Parameter {} is required", "key");
-        if (!done && key.of(input, false)) {
-            try (JsonBuilder builder = JsonBuilder.of(output, getAjaxConfig())) {
+        if (!done && key.of(uContext, false)) {
+            try (JsonBuilder builder = JsonBuilder.of(uContext.response(), getAjaxConfig())) {
                 done = true;
                 processor.accept(builder);
             }
@@ -121,7 +102,7 @@ public class ReqestDispatcher {
      */
     public void onDefaultToElement(@NotNull final IOElement defaultProcessor) throws IOException {
         if (!done) {
-            try (HtmlElement html = HtmlElement.of(output, htmlConfig)) {
+            try (HtmlElement html = HtmlElement.of(uContext.response(), htmlConfig)) {
                 defaultProcessor.run(html);
             }
         }

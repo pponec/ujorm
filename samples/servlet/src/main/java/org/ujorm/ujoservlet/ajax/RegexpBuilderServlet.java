@@ -105,7 +105,7 @@ public class RegexpBuilderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         final UContext uContext = UContext.ofServlet(input, output);
-        if (AJAX.of(uContext.request(), false)) {
+        if (AJAX.of(uContext, false)) {
             doAjax(uContext.request(), JsonBuilder.of(uContext.response(), getConfig("?"))).close();
         } else {
             doGet(input, output);

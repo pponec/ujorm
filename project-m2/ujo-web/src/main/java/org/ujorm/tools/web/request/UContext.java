@@ -1,5 +1,8 @@
 package org.ujorm.tools.web.request;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -22,7 +25,7 @@ public class UContext {
     }
 
     public UContext() {
-        this(new URequestImpl(), new StringBuilder());
+        this(URequestImpl.of(), new StringBuilder());
     }
 
     public URequest request() {
@@ -39,15 +42,19 @@ public class UContext {
     }
 
     /** HTTP Servlet Factory */
-    public static UContext ofServlet(HttpServletRequest req, HttpServletResponse resp) {
+    public static UContext ofServlet(@Nullable HttpServletRequest req, @NotNull HttpServletResponse resp) {
         try {
             resp.setCharacterEncoding(CHARSET.name());
-            final PrintWriter writer = resp.getWriter();
-            final URequest ureq = req != null ? URequest.of(req) : new URequestImpl();
+            final Appendable writer = resp.getWriter();
+            final URequest ureq = req != null ? URequest.of(req) : URequestImpl.of();
             return new UContext(ureq, writer);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
 
+    /** UContext from a map */
+    public static UContext of(ManyMap map) {
+        return new UContext(URequestImpl.ofMap(map), new StringBuilder());
     }
 }

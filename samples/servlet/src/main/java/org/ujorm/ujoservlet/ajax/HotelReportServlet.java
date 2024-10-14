@@ -75,11 +75,11 @@ public class HotelReportServlet extends HttpServlet {
                 .addColumn(
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
-                .setFormItem(e -> e.addTextInp(LIMIT, LIMIT.of(ucontext.request()), "Limit", CSS_INPUT, LIMIT))
+                .setFormItem(e -> e.addTextInp(LIMIT, LIMIT.of(ucontext), "Limit", CSS_INPUT, LIMIT))
                 .setFooter(e -> printFooter(e))
                 .setAjaxEnabled(true)
                 .build(ucontext, builder -> service.findHotels(builder,
-                                LIMIT.of(ucontext.request(), DEFAULT_ROW_LIMIT),
+                                LIMIT.of(ucontext, DEFAULT_ROW_LIMIT),
                                 NAME.of(ucontext.request()),
                                 CITY.of(ucontext.request())));
     }

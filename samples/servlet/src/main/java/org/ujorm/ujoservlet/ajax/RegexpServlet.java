@@ -87,13 +87,13 @@ public class RegexpServlet extends HttpServlet {
                     form.addInput(CONTROL_CSS)
                             .setId(REGEXP)
                             .setName(REGEXP)
-                            .setValue(REGEXP.of(uContext.request()))
+                            .setValue(REGEXP.of(uContext))
                             .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
                     form.addTextArea(CONTROL_CSS)
                             .setId(TEXT)
                             .setName(TEXT)
                             .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
-                            .addText(TEXT.of(uContext.request()));
+                            .addText(TEXT.of(uContext));
                     form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
                     form.addDiv(CONTROL_CSS, OUTPUT_CSS).addRawText(msg);
                 }
@@ -109,7 +109,7 @@ public class RegexpServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         final UContext uContext = UContext.ofServlet(input, output);
-        if (AJAX.of(uContext.request(), false)) {
+        if (AJAX.of(uContext, false)) {
             doAjax(uContext.request(), JsonBuilder.of(uContext.response(), getConfig("?"))).close();
         } else {
             doGet(input, output);

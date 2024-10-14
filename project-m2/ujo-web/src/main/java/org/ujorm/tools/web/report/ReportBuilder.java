@@ -272,11 +272,10 @@ public class ReportBuilder<D> {
             @NotNull final UContext ucontext,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource) {
         try {
-            final URequest input = ucontext.request();
-            setSort(ColumnModel.ofCode(config.getSortRequestParam().of(input)));
-            new ReqestDispatcher(input, ucontext.response(), config.getConfig())
-                    .onParam(config.getAjaxRequestParam(), jsonBuilder -> doAjax(input, jsonBuilder, resource))
-                    .onDefaultToElement(element -> printHtmlBody(input, element, resource));
+            setSort(ColumnModel.ofCode(config.getSortRequestParam().of(ucontext)));
+            new ReqestDispatcher(ucontext, config.getConfig())
+                    .onParam(config.getAjaxRequestParam(), jsonBuilder -> doAjax(ucontext, jsonBuilder, resource))
+                    .onDefaultToElement(element -> printHtmlBody(ucontext, element, resource));
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Internal server error", e);
             throw new IllegalStateException("500"); // TODO.pop
@@ -300,11 +299,11 @@ public class ReportBuilder<D> {
     }
 
     protected void printHtmlBody(
-            @NotNull final URequest input,
+            @NotNull final UContext uContext,
             @NotNull final HtmlElement html,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
-        Assert.notNull(input, "input");
+        Assert.notNull(uContext, "uContext");
         Assert.notNull(html, "html");
         Assert.notNull(resource, "resource");
 
@@ -327,7 +326,7 @@ public class ReportBuilder<D> {
                         final HttpParameter param = column.getParam(UNDEFINED_PARAM);
                         form.addTextInp(
                                 param,
-                                param.of(input),
+                                param.of(uContext),
                                 column.getTitle(),
                                 config.getControlCss(),
                                 column.getParam(UNDEFINED_PARAM));
@@ -336,48 +335,48 @@ public class ReportBuilder<D> {
                 // Hidden submit button is important if a javascript is disabled:
                 form.addInput().setType(Html.V_SUBMIT).setAttribute(Html.V_HIDDEN);
                 if (gridBuilder.isSortable()) {
-                    printSortedField(form.addSpan().setId(config.getSortRequestParam()), input);
+                    printSortedField(form.addSpan().setId(config.getSortRequestParam()), uContext);
                 }
                 formAdditions.write(form);
                 // Add the table:
                 final List<CharSequence> tableCss = config.getTableCssClass();
-                printTableBody(form.addTable(tableCss.toArray(new CharSequence[tableCss.size()])), input, resource);
+                printTableBody(form.addTable(tableCss.toArray(new CharSequence[tableCss.size()])), uContext, resource);
             }
             footer.write(body);
         }
     }
 
     /** The hidden field contains an index of the last sorted column */
-    protected void printSortedField(Element parent, final URequest input) {
-        final int index = config.getSortRequestParam().of(input, -1);
+    protected void printSortedField(Element parent, final UContext uContext) {
+        final int index = config.getSortRequestParam().of(uContext, -1);
         parent.addInput().setAttribute(Html.A_TYPE, Html.V_HIDDEN)
                 .setNameValue(config.getSortRequestParam(), index);
     }
 
     protected void printTableBody(
             @NotNull final Element table,
-            @NotNull final URequest input,
+            @NotNull final UContext uContext,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
-        final ColumnModel sortedColumn = ColumnModel.ofCode(config.getSortRequestParam().of(input));
+        final ColumnModel sortedColumn = ColumnModel.ofCode(config.getSortRequestParam().of(uContext));
         this.gridBuilder.build(table, sortedColumn, resource);
     }
 
     /**
      * Return lighlited text in HTML format according a regular expression
-     * @param input servlet request
+     * @param uContext servlet context
      * @param output A JSON writer
      * @throws IOException if an I/O error occurs
      */
     protected void doAjax(
-            @NotNull final URequest input,
+            @NotNull final UContext uContext,
             @NotNull final JsonBuilder output,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) throws IOException {
-        output.writeClass(config.getTableSelector(), e -> printTableBody(e, input, resource));
+        output.writeClass(config.getTableSelector(), e -> printTableBody(e, uContext, resource));
         output.writeClass(config.getSubtitleCss(), config.getAjaxReadyMessage());
         if (gridBuilder.isSortable()) {
-           output.writeId(config.getSortRequestParam(), e -> printSortedField(e, input));
+           output.writeId(config.getSortRequestParam(), e -> printSortedField(e, uContext));
         }
     }
 

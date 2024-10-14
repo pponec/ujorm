@@ -12,14 +12,11 @@ public final class URequestImpl implements URequest{
 
     private final Reader reader;
 
-    public URequestImpl(ManyMap map, Reader reader ) {
+    public URequestImpl(@NotNull ManyMap map, @NotNull Reader reader ) {
         this.map = map;
         this.reader = reader;
     }
 
-    public URequestImpl() {
-        this(new ManyMap(), new CharArrayReader(new char[0]));
-    }
 
     @NotNull
     public Reader getReader() {
@@ -32,7 +29,15 @@ public final class URequestImpl implements URequest{
         return result != null ? result : emptyTexts;
     }
 
-    public void setParameter(String name, String value) {
+    public void setParameter(@NotNull String name, @NotNull String value) {
         map.put(name, value);
+    }
+
+    public static URequestImpl ofMap(@NotNull ManyMap map) {
+        return new URequestImpl(map, new CharArrayReader(new char[0]));
+    }
+
+    public static URequestImpl of() {
+        return new URequestImpl(new ManyMap(), new CharArrayReader(new char[0]));
     }
 }
