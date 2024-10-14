@@ -21,7 +21,6 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.jdbc.JdbcBuilder;
-import org.ujorm.tools.jdbc.SqlParamBuilder;
 
 /**
  * PrepareStatement builder support

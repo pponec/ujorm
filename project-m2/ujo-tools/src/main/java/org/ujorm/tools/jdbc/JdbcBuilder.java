@@ -30,6 +30,7 @@ import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.msg.ValuePrinter;
 import org.ujorm.tools.set.LoopingIterator;
+import org.ujorm.tools.sql.SqlParamBuilder;
 
 /**
  * PrepareStatement builder support

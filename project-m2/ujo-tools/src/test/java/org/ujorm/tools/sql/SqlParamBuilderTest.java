@@ -14,11 +14,12 @@
  *  limitations under the License.
  */
 
-package org.ujorm.tools.jdbc;
+package org.ujorm.tools.sql;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.ujorm.tools.jdbc.AbstractJdbcConnector;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;

@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools.jdbc;
+package org.ujorm.tools.sql;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.io.Closeable;
+import org.ujorm.tools.jdbc.SqlConsumer;
+import org.ujorm.tools.jdbc.SqlFunction;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,15 +31,11 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * A tool for building an SQL query with parameters.
- * Inspired by the original class {@link JdbcBuilder}.
- *
- * <h3>Usage:</h3>
- * <pre>
- *     TODO...
- * <pre/>
- *
- * @author Pavel Ponec
+ * Less than 170 lines long class to simplify work with JDBC.
+ * Original source: <a href="https://github.com/pponec/PPScriptsForJava/blob/development/src/main/java/net/ponec/script/SqlExecutor.java">GitHub</a>
+ * Licence: Apache License, Version 2.0
+ * @author Pavel Ponec, https://github.com/pponec
+ * @since 2.26
  */
 public class SqlParamBuilder implements AutoCloseable {
 
