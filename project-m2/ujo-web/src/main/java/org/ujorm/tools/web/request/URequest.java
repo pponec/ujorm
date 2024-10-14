@@ -17,7 +17,7 @@ public interface URequest {
     String[] getParameterValues(final String key);
 
     /** Convert the HttpServletRequest to the URequest */
-    static URequest of (@NotNull HttpServletRequest req) {
+    static URequest ofRequest(@NotNull HttpServletRequest req) {
         try {
             final Reader reader = req.getReader();
             req.setCharacterEncoding(UContext.CHARSET.name());

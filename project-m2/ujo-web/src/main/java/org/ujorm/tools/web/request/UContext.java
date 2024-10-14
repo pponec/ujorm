@@ -37,16 +37,16 @@ public class UContext {
     }
 
     /** HTTP Servlet Factory */
-    public static UContext ofServlet(HttpServletResponse resp) {
-        return ofServlet(null, resp);
+    public static UContext ofResponse(HttpServletResponse httpServletResponse) {
+        return ofResponse(null, httpServletResponse);
     }
 
     /** HTTP Servlet Factory */
-    public static UContext ofServlet(@Nullable HttpServletRequest req, @NotNull HttpServletResponse resp) {
+    public static UContext ofResponse(@Nullable HttpServletRequest httpServletRequest, @NotNull HttpServletResponse httpServletResponse) {
         try {
-            resp.setCharacterEncoding(CHARSET.name());
-            final Appendable writer = resp.getWriter();
-            final URequest ureq = req != null ? URequest.of(req) : URequestImpl.of();
+            httpServletResponse.setCharacterEncoding(CHARSET.name());
+            final Appendable writer = httpServletResponse.getWriter();
+            final URequest ureq = httpServletRequest != null ? URequest.ofRequest(httpServletRequest) : URequestImpl.of();
             return new UContext(ureq, writer);
         } catch (IOException e) {
             throw new IllegalStateException(e);

@@ -345,10 +345,10 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @see Appendable
      */
     @NotNull
-    public static HtmlElement of(
-            @NotNull final HttpServletResponse response,
+    public static HtmlElement ofResponse(
+            @NotNull final HttpServletResponse htmlServletResponse,
             @Nullable final HtmlConfig config) {
-        return of(UContext.ofServlet(null, response).response(), config);
+        return of(UContext.ofResponse(null, htmlServletResponse).response(), config);
     }
 
     /** Create new instance with empty html headers
@@ -356,12 +356,12 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @see Appendable
      */
     @NotNull
-    public static HtmlElement of(
+    public static HtmlElement ofResponse(
             @NotNull final HttpServletResponse response,
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setCssLinks(cssLinks);
-        return of(UContext.ofServlet(null, response).response(), config);
+        return of(UContext.ofResponse(null, response).response(), config);
     }
 
     /** Create new instance with empty html headers
@@ -433,13 +433,13 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @see Appendable
      */
     @NotNull
-    public static HtmlElement niceOf(
+    public static HtmlElement niceOfResponse(
             @NotNull final HttpServletResponse response,
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
-        return of(UContext.ofServlet(null, response).response(), config);
+        return of(UContext.ofResponse(null, response).response(), config);
     }
 
     /** Create new instance with empty html headers

@@ -22,7 +22,7 @@ class URequestTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setParameter("p1", "v1");
         request.setParameter("p2", "v2a", "v2b");
-        URequest uRequest = UContext.ofServlet(request, new MockHttpServletResponse()).request();
+        URequest uRequest = UContext.ofResponse(request, new MockHttpServletResponse()).request();
 
         assertEquals(0, uRequest.getParameterValues("p0").length);
         assertEquals(1, uRequest.getParameterValues("p1").length);

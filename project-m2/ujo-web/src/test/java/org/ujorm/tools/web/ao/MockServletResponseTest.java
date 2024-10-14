@@ -30,7 +30,7 @@ public class MockServletResponseTest {
     public void testGetContent_2() {
         System.out.println("getContent");
         MockServletResponse response = new MockServletResponse();
-        try (HtmlElement html = HtmlElement.niceOf(response)) {
+        try (HtmlElement html = HtmlElement.niceOfResponse(response)) {
             html.getBody().addHeading("ABC:ČÁŠ", "cssType");
         }
         String result = response.toString();

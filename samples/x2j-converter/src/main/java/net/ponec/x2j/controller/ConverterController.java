@@ -43,7 +43,7 @@ public class ConverterController {
 
         final Message message = service.toJavaCode(text);
         final MockServletResponse response = new MockServletResponse();
-        try ( HtmlElement html = HtmlElement.of(response, getConfig("Convert XML file to Java code on-line"))) {
+        try ( HtmlElement html = HtmlElement.ofResponse(response, getConfig("Convert XML file to Java code on-line"))) {
             html.addCssLink(CSS_STYLE);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             try ( Element body = html.getBody()) {
