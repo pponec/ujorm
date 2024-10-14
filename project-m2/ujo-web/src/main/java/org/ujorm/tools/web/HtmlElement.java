@@ -73,15 +73,15 @@ public class HtmlElement implements ApiElement<Element>, Html {
 
     /** Config */
     @NotNull
-    private final java.lang.Appendable writer;
+    private final Appendable writer;
 
     /** Create new instance with empty html headers */
-    public HtmlElement(@NotNull final HtmlConfig config, @NotNull final java.lang.Appendable writer) {
+    public HtmlElement(@NotNull final HtmlConfig config, @NotNull final Appendable writer) {
         this(new XmlModel(Html.HTML), config, writer);
     }
 
     /** Create new instance with empty html headers */
-    public HtmlElement(@NotNull final ApiElement root, @NotNull final HtmlConfig config, @NotNull final java.lang.Appendable writer) {
+    public HtmlElement(@NotNull final ApiElement root, @NotNull final HtmlConfig config, @NotNull final Appendable writer) {
         this.root = new Element(root);
         this.config = config;
         this.writer = writer;
@@ -312,7 +312,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     /** Create root element for a required element name. The MAIN factory method. */
     @NotNull
     public static HtmlElement of(
-            @NotNull final java.lang.Appendable writer,
+            @NotNull final Appendable writer,
             @NotNull final HtmlConfig myConfig
     ) throws IllegalStateException {
         HtmlConfig config = myConfig != null ? myConfig : new DefaultHtmlConfig();

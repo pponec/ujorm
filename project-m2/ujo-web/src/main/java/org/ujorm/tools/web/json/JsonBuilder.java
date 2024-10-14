@@ -34,7 +34,7 @@ public class JsonBuilder implements Closeable {
 
     /** An original writer */
     @NotNull
-    private final java.lang.Appendable writer;
+    private final Appendable writer;
     /** JSON writer with character escaping */
     @NotNull
     private final JsonWriter jsonWriter;
@@ -46,12 +46,12 @@ public class JsonBuilder implements Closeable {
     private final String JAVACRIPT_DUMMY_SELECTOR = "";
 
     /** Constructor with a default HTML config */
-    protected JsonBuilder(@NotNull final java.lang.Appendable writer) {
+    protected JsonBuilder(@NotNull final Appendable writer) {
         this(writer, HtmlConfig.ofEmptyElement());
     }
 
     /** Common constructor */
-    protected JsonBuilder(@NotNull final java.lang.Appendable writer, HtmlConfig config) {
+    protected JsonBuilder(@NotNull final Appendable writer, HtmlConfig config) {
         this.writer = writer;
         this.jsonWriter = new JsonWriter(writer);
         this.config = config;
@@ -271,7 +271,7 @@ public class JsonBuilder implements Closeable {
 
     /** An object factory */
     @NotNull
-    public static final JsonBuilder of(@NotNull final java.lang.Appendable writer) {
+    public static final JsonBuilder of(@NotNull final Appendable writer) {
         return new JsonBuilder(writer);
     }
 

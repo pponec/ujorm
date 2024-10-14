@@ -474,7 +474,7 @@ abstract public class SqlDialect {
     /** Is supported the
      * <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29#Multirow_inserts">Multirow inserts</a> ?
      * Default value is true
-     * @see #printInsert(java.util.List, int, int, java.lang.Appendable) Multi row insert
+     * @see #printInsert(java.util.List, int, int, Appendable) Multi row insert
      */
     public boolean isMultiRowInsertSupported() {
         return true;
