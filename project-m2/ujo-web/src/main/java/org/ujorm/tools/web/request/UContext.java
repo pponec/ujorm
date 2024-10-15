@@ -2,10 +2,8 @@ package org.ujorm.tools.web.request;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.web.ao.Reflections;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -37,20 +35,16 @@ public class UContext {
     }
 
     /** HTTP Servlet Factory */
-    public static UContext ofResponse(HttpServletResponse httpServletResponse) {
+    public static UContext ofResponse(Object httpServletResponse) {
         return ofResponse(null, httpServletResponse);
     }
 
     /** HTTP Servlet Factory */
-    public static UContext ofResponse(@Nullable HttpServletRequest httpServletRequest, @NotNull HttpServletResponse httpServletResponse) {
-        try {
-            httpServletResponse.setCharacterEncoding(CHARSET.name());
-            final Appendable writer = httpServletResponse.getWriter();
-            final URequest ureq = httpServletRequest != null ? URequest.ofRequest(httpServletRequest) : URequestImpl.of();
-            return new UContext(ureq, writer);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+    public static UContext ofResponse(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
+        Reflections.setCharacterEncoding(httpServletResponse, CHARSET.name());
+        final Appendable writer = Reflections.getServletWriter(httpServletResponse);
+        final URequest ureq = httpServletRequest != null ? URequest.ofRequest(httpServletRequest) : URequestImpl.of();
+        return new UContext(ureq, writer);
     }
 
     /** UContext from a map */

@@ -34,8 +34,6 @@ import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.tools.xml.model.XmlModel;
 import org.ujorm.tools.xml.model.XmlWriter;
 
-import javax.servlet.http.HttpServletResponse;
-
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /** The root of HTML elements
@@ -355,7 +353,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement ofResponse(
-            @NotNull final HttpServletResponse htmlServletResponse,
+            @NotNull final Object htmlServletResponse,
             @Nullable final HtmlConfig config) {
         return of(UContext.ofResponse(null, htmlServletResponse).response(), config);
     }
@@ -366,7 +364,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement ofResponse(
-            @NotNull final HttpServletResponse response,
+            @NotNull final Object response,
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setCssLinks(cssLinks);
@@ -443,12 +441,12 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement niceOfResponse(
-            @NotNull final HttpServletResponse response,
+            @NotNull final Object httpServletResponse,
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
-        return of(UContext.ofResponse(null, response).response(), config);
+        return of(UContext.ofResponse(null, httpServletResponse).response(), config);
     }
 
     /** Create new instance with empty html headers
