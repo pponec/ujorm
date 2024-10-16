@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.ao.Column;
-import org.ujorm.tools.web.ao.MockServletResponse;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.junit.jupiter.api.Assertions.*;
@@ -154,13 +153,12 @@ public class ElementTest {
     @Test
     public void testAddTestTemplated() {
         System.out.println("addTestTemplated");
-        CharSequence[] cssClasses = null;
-        HtmlElement resInstance = HtmlElement.of(null);
+        Appendable result = new StringBuilder();
+        HtmlElement resInstance = HtmlElement.of(result);
         try (HtmlElement instance = resInstance) {
             instance.getBody().addTextTemplated("Test <{}.{}{}", 1, 2, ">");
         }
 
-        String result = resInstance.toString();
         String expectedResult = String.join("\n",
                 "<!DOCTYPE html>",
                 "<html lang=\"en\">",
@@ -168,7 +166,7 @@ public class ElementTest {
                 "<meta charset=\"UTF-8\"/>",
                 "<title>Demo</title></head>",
                 "<body>Test &lt;1.2&gt;</body></html>");
-        assertEquals(expectedResult, result);
+        assertEquals(expectedResult, result.toString());
     }
 
     /**
@@ -177,14 +175,13 @@ public class ElementTest {
     @Test
     public void testAddFieldset() {
         System.out.println("addFieldset");
-        CharSequence[] cssClasses = null;
-        HtmlElement resInstance = HtmlElement.of(null);
+        StringBuilder result = new StringBuilder();
+        HtmlElement resInstance = HtmlElement.of(result);
         try (HtmlElement instance = resInstance) {
             Element body = instance.getBody();
             body.addFieldset("MyTitle", "myCssClass").addText("Lorem ipsum ...");
         }
 
-        String result = resInstance.toString();
         String expectedResult = "<!DOCTYPE html>\n"
                 + "<html lang=\"en\">\n"
                 + "<head>\n"
@@ -197,7 +194,7 @@ public class ElementTest {
                 + "</fieldset>"
                 + "</body>"
                 + "</html>";
-        assertEquals(expectedResult, result);
+        assertEquals(expectedResult, result.toString());
     }
 
     /**
@@ -209,7 +206,7 @@ public class ElementTest {
         DefaultHtmlConfig config = HtmlConfig.ofElementName(Html.DIV);
         config.setNewLine("");
 
-        try (HtmlElement html = HtmlElement.of(config, writer)) {
+        try (HtmlElement html = HtmlElement.of(writer, config)) {
             html.addElement(Html.SPAN).addText("test");
         }
         String expected = "<div><span>test</span></div>";
@@ -222,7 +219,7 @@ public class ElementTest {
     @Test
     public void testAddTable() {
         System.out.println("addTable");
-        MockServletResponse response = new MockServletResponse();
+        Appendable response = new StringBuilder();
 
         CharSequence[] cssClasses = {"table"};
         CharSequence[] titles = {"Id", "Name", "Enabled"};
@@ -242,7 +239,7 @@ public class ElementTest {
     @Test
     public void testAddTableExtended() {
         System.out.println("addTableExtended");
-        MockServletResponse response = new MockServletResponse();
+        Appendable response = new StringBuilder();
 
         CharSequence[] cssClasses = {"table"};
         CharSequence[] titles = {"Id", "Name", "Enabled",
@@ -266,7 +263,7 @@ public class ElementTest {
      */
     @Test
     public void testNext() {
-        MockServletResponse response = new MockServletResponse();
+        Appendable response = new StringBuilder();
         HtmlElement.niceOf(response).next(html -> html
             .getBody().next(body -> body
                 .addHeading(html.getTitle()))

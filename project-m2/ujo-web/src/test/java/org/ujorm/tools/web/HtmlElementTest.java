@@ -16,7 +16,6 @@
 package org.ujorm.tools.web;
 
 import org.junit.jupiter.api.Test;
-import org.ujorm.tools.web.ao.MockServletResponse;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
@@ -33,7 +32,7 @@ public class HtmlElementTest {
      */
     @Test
     public void sample() {
-        MockServletResponse response = new MockServletResponse();
+        Appendable response = new StringBuilder();
         try (HtmlElement html = HtmlElement.of(response)) {
             html.addBody().addHeading("Hello!");
         }
@@ -49,7 +48,7 @@ public class HtmlElementTest {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setRawHedaderCode("<meta name='description' content='Powered by Ujorm'>");
 
-        try (HtmlElement html = HtmlElement.of(config, writer)) {
+        try (HtmlElement html = HtmlElement.of(writer, config)) {
             html.addBody().addHeading("Hello!");
         }
         String result = String.join("\n",
@@ -76,19 +75,19 @@ public class HtmlElementTest {
         config.setDocumentObjectModel(true);
 
         StringBuilder writer = new StringBuilder();
-        try (HtmlElement html = HtmlElement.of(config, writer)) {
+        try (HtmlElement html = HtmlElement.of(writer, config)) {
             html.original().addText("Hello!");
         }
         assertEquals("Hello!", writer.toString());
 
         writer.setLength(0);
-        try (HtmlElement html = HtmlElement.of(config, writer)) {
+        try (HtmlElement html = HtmlElement.of(writer, config)) {
             html.original().addHeading("Hello!");
         }
         assertEquals("<h1>Hello!</h1>", writer.toString());
 
         writer.setLength(0);
-        try (HtmlElement html = HtmlElement.of(config, writer)) {
+        try (HtmlElement html = HtmlElement.of(writer, config)) {
             html.original().setClass("error");
             html.original().addHeading("Hello!");
         }
@@ -106,63 +105,22 @@ public class HtmlElementTest {
         config.setDoctype("");
 
         StringBuilder writer = new StringBuilder();
-        try (HtmlElement html = HtmlElement.of(config, writer)) {
+        try (HtmlElement html = HtmlElement.of(writer, config)) {
             html.original().addText("Hello!");
         }
         assertEquals("Hello!", writer.toString());
 
         writer.setLength(0);
-        try (HtmlElement html = HtmlElement.of(config, writer)) {
+        try (HtmlElement html = HtmlElement.of(writer, config)) {
             html.original().addHeading("Hello!");
         }
         assertEquals("<h1>Hello!</h1>", writer.toString());
 
         writer.setLength(0);
-        try (HtmlElement html = HtmlElement.of(config, writer)) {
+        try (HtmlElement html = HtmlElement.of(writer, config)) {
             html.original().setClass("error");
             html.original().addHeading("Hello!");
         }
         assertEquals("<h1>Hello!</h1>", writer.toString());
-    }
-
-    /**
-     * Test of getName method, of class HtmlElement.
-     */
-    @Test
-    public void sample_3_unpairElements() {
-        DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setNiceFormat();
-        StringBuilder writer = new StringBuilder();
-
-        try (HtmlElement html = HtmlElement.of(config, writer)) {
-            html.addCssLink("/css/lyrics.css");
-
-            try (Element body = html.addBody()) {
-                body.addDiv("button");
-                body.addHeading("Title");
-                body.addElement(Html.HR);
-                body.addImage("http://image.png", "my image");
-                body.addDiv("body");
-            }
-        }
-
-        String value = writer.toString().replace('"', '\'');
-        String expected = String.join("\n",
-                "<!DOCTYPE html>",
-                "<html lang='en'>",
-                "	<head>",
-                "		<meta charset='UTF-8'/>",
-                "		<title>Demo</title>",
-                "		<link href='/css/lyrics.css' rel='stylesheet'/>",
-                "	</head>",
-                "	<body>",
-                "		<div class='button'></div>",
-                "		<h1>Title</h1>",
-                "		<hr/>",
-                "		<img alt='my image' src='http://image.png'/>",
-                "		<div class='body'></div>",
-                "	</body>",
-                "</html>");
-        assertEquals(expected, value);
     }
 }

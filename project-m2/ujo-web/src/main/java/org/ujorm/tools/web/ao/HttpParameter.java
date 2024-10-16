@@ -17,11 +17,12 @@ package org.ujorm.tools.web.ao;
 
 import java.util.Locale;
 import java.util.function.Function;
-import java.util.function.Supplier;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javax.servlet.ServletRequest;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.web.request.UContext;
+import org.ujorm.tools.web.request.URequest;
 
 /**
  * An interface for bulding HTML parameters by an Enumerator.
@@ -29,7 +30,7 @@ import org.ujorm.tools.Check;
  * <h3>Usage</h3>
  * <pre class="pre">
  * {
- *    String value = Param.text(httpServletRequest, "my default value");
+ *    String value = Param.text(ServletRequest, "my default value");
  * }
  * enum Param implements HttpParam {
  *     REGEXP,
@@ -91,23 +92,35 @@ public interface HttpParameter extends CharSequence {
         }
     }
 
-    /** Default value is an empty String */
+    /** Returns the last parameter value of the request or a default value. The MAIN method */
     @NotNull
-    default String of(@NotNull final ServletRequest request) {
-        return of(request, defaultValue());
-    }
-
-    /** Returns the last parameter value of the request or a default value */
-    @NotNull
-    default String of(@NotNull final ServletRequest request, @NotNull final String defaultValue) {
+    default String of(@NotNull final URequest request, @NotNull final String defaultValue) {
         final String[] results = request.getParameterValues(toString());
         final String result = Check.hasLength(results) ? results[results.length - 1] : defaultValue;
         return result != null ? result : defaultValue;
     }
 
+    /** Returns the last parameter value of the request or a default value */
+    @NotNull
+    default String of(@NotNull final UContext uContext, @NotNull final String defaultValue) {
+        return of(uContext.request(), defaultValue);
+    }
+
+    /** Default value is an empty String */
+    @NotNull
+    default String of(@NotNull final UContext uContext) {
+        return of(uContext.request(), defaultValue());
+    }
+
+    /** Default value is an empty String */
+    @NotNull
+    default String of(@NotNull final URequest request) {
+        return of(request, defaultValue());
+    }
+
     /** Returns a parameter of the request or the default value */
-    default boolean of(@NotNull final ServletRequest request, @Nullable final boolean defaultValue) {
-        switch (of(request)) {
+    default boolean of(@NotNull final UContext uContext, @Nullable final boolean defaultValue) {
+        switch (of(uContext)) {
             case "true":
                 return true;
             case "false":
@@ -118,14 +131,14 @@ public interface HttpParameter extends CharSequence {
     }
 
     /** Returns a parameter of the request or the default value */
-    default char of(@NotNull final ServletRequest request, @Nullable final char defaultValue) {
-        final String value = of(request);
+    default char of(@NotNull final UContext uContext, @Nullable final char defaultValue) {
+        final String value = of(uContext);
         return value.isEmpty() ? defaultValue : value.charAt(0);
     }
 
     /** Returns a parameter of the request or the default value */
-    default short of(@NotNull final ServletRequest request, @Nullable final short defaultValue) {
-        final String value = of(request, EMPTY_VALUE);
+    default short of(@NotNull final UContext uContext, @Nullable final short defaultValue) {
+        final String value = of(uContext, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -136,8 +149,8 @@ public interface HttpParameter extends CharSequence {
     }
 
     /** Returns a parameter of the request or the default value */
-    default int of(@NotNull final ServletRequest request, @Nullable final int defaultValue) {
-        final String value = of(request, EMPTY_VALUE);
+    default int of(@NotNull final UContext uContext, @Nullable final int defaultValue) {
+        final String value = of(uContext, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -148,8 +161,8 @@ public interface HttpParameter extends CharSequence {
     }
 
     /** Returns a parameter of the request or the default value */
-    default long of(@NotNull final ServletRequest request, @Nullable final long defaultValue) {
-        final String value = of(request, EMPTY_VALUE);
+    default long of(@NotNull final UContext uContext, @Nullable final long defaultValue) {
+        final String value = of(uContext, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -160,8 +173,8 @@ public interface HttpParameter extends CharSequence {
     }
 
     /** Returns a parameter of the request or the default value */
-    default float of(@NotNull final ServletRequest request, @Nullable final float defaultValue) {
-        final String value = of(request, EMPTY_VALUE);
+    default float of(@NotNull final UContext uContext, @Nullable final float defaultValue) {
+        final String value = of(uContext, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -172,8 +185,8 @@ public interface HttpParameter extends CharSequence {
     }
 
     /** Returns a parameter of the request or the default value */
-    default double of(@NotNull final ServletRequest request, @Nullable final double defaultValue) {
-        final String value = of(request, EMPTY_VALUE);
+    default double of(@NotNull final UContext uContext, @Nullable final double defaultValue) {
+        final String value = of(uContext, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -185,15 +198,15 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the Enum class */
     @NotNull
-    default <V extends Enum<V>> V of(@NotNull final ServletRequest request, @NotNull final V defaultValue) {
-        final V result = of(request, (Class<V>) defaultValue.getClass());
+    default <V extends Enum<V>> V of(@NotNull final UContext uContext, @NotNull final V defaultValue) {
+        final V result = of(uContext, (Class<V>) defaultValue.getClass());
         return result != null ? result : defaultValue;
     }
 
     /** Returns a parameter of the request or the default value */
     @Nullable
-    default <V extends Enum<V>> V of(@NotNull final ServletRequest request, @NotNull final Class<V> clazz) {
-        final String value = of(request);
+    default <V extends Enum<V>> V of(@NotNull final UContext uContext, @NotNull final Class<V> clazz) {
+        final String value = of(uContext);
         for (Enum item : clazz.getEnumConstants()) {
             if (item.name().equals(value)) {
                 return (V) item;
@@ -203,8 +216,8 @@ public interface HttpParameter extends CharSequence {
     }
 
     /** Returns a parameter of the request or the default value */
-    default <V> V of(@NotNull final ServletRequest request, @NotNull final V defaultValue, @NotNull final Function<String, V> decoder) {
-        final String value = of(request, EMPTY_VALUE);
+    default <V> V of(@NotNull final UContext uContext, @NotNull final V defaultValue, @NotNull final Function<String, V> decoder) {
+        final String value = of(uContext, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {

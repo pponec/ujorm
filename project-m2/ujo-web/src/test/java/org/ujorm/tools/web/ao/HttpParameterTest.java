@@ -2,8 +2,11 @@ package org.ujorm.tools.web.ao;
 
 import java.time.Month;
 import static java.time.Month.JANUARY;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.junit.jupiter.api.Test;
+import org.ujorm.tools.web.request.ManyMap;
+import org.ujorm.tools.web.request.UContext;
+import org.ujorm.tools.web.request.URequest;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static java.time.Month.*;
 
@@ -21,10 +24,10 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_String() {
         String defaultValue = "x";
-        String result = Param.TEXT.of(request(), defaultValue);
+        String result = Param.TEXT.of(ucontext(), defaultValue);
         assertEquals("abc", result);
 
-        result = Param.UNDEFINED.of(request(), defaultValue);
+        result = Param.UNDEFINED.of(ucontext(), defaultValue);
         assertEquals(defaultValue, result);
     }
 
@@ -34,10 +37,10 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_boolean() {
         boolean defaultValue = true;
-        Boolean result = Param.BOOLEAN.of(request(), false);
+        Boolean result = Param.BOOLEAN.of(ucontext(), false);
         assertEquals(true, result);
 
-        result = Param.UNDEFINED.of(request(), defaultValue);
+        result = Param.UNDEFINED.of(ucontext(), defaultValue);
         assertEquals(defaultValue, result);
     }
 
@@ -47,23 +50,23 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_char() {
         char defaultValue = 'Z';
-        char result = Param.CHAR.of(request(), defaultValue);
+        char result = Param.CHAR.of(ucontext(), defaultValue);
         assertEquals('A', result);
 
-        result = Param.UNDEFINED.of(request(), defaultValue);
+        result = Param.UNDEFINED.of(ucontext(), defaultValue);
         assertEquals(defaultValue, result);
     }
 
     /**
-     * Test of of method, of class HttpParameter.
+     * Test of method, of class HttpParameter.
      */
     @Test
     public void testOf_ServletRequest_int() {
         int defaultValue = 9;
-        int result = Param.INT.of(request(), defaultValue);
+        int result = Param.INT.of(ucontext(), defaultValue);
         assertEquals(1, result);
 
-        result = Param.UNDEFINED.of(request(), defaultValue);
+        result = Param.UNDEFINED.of(ucontext(), defaultValue);
         assertEquals(defaultValue, result);
     }
 
@@ -73,10 +76,10 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_long() {
         long defaultValue = 9L;
-        long result = Param.LONG.of(request(), defaultValue);
+        long result = Param.LONG.of(ucontext(), defaultValue);
         assertEquals(2L, result);
 
-        result = Param.UNDEFINED.of(request(), defaultValue);
+        result = Param.UNDEFINED.of(ucontext(), defaultValue);
         assertEquals(defaultValue, result);
     }
 
@@ -86,10 +89,10 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_float() {
         float defaultValue = 9F;
-        float result = Param.FLOAT.of(request(), defaultValue);
+        float result = Param.FLOAT.of(ucontext(), defaultValue);
         assertEquals(3F, result, DELTA);
 
-        result = Param.UNDEFINED.of(request(), defaultValue);
+        result = Param.UNDEFINED.of(ucontext(), defaultValue);
         assertEquals(defaultValue, result, DELTA);
     }
 
@@ -99,23 +102,24 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_double() {
         double defaultValue = 9D;
-        double result = Param.DOUBLE.of(request(), defaultValue);
+        double result = Param.DOUBLE.of(ucontext(), defaultValue);
         assertEquals(4D, result, DELTA);
 
-        result = Param.UNDEFINED.of(request(), defaultValue);
+        result = Param.UNDEFINED.of(ucontext(), defaultValue);
         assertEquals(defaultValue, result, DELTA);
     }
 
     /**
-     * Test of of method, of class HttpParameter.
+     * Test of method, of class HttpParameter.
      */
     @Test
     public void testOf_ServletRequest_Enum() {
         Month defaultValue = DECEMBER;
-        Month result = Param.MONTH_ENUM.of(request(), defaultValue);
+        UContext dummyContext = ucontext();
+        Month result = Param.MONTH_ENUM.of(dummyContext, defaultValue);
         assertEquals(JANUARY, result);
 
-        result = Param.UNDEFINED.of(request(), defaultValue);
+        result = Param.UNDEFINED.of(ucontext(), defaultValue);
         assertEquals(defaultValue, result);
     }
 
@@ -137,19 +141,19 @@ public class HttpParameterTest {
 
     // --- Helper methods ---
 
-    private MockHttpServletRequest request() {
-        MockHttpServletRequest result = new MockHttpServletRequest();
-        result.setParameter(Param.TEXT.name(), "abc");
-        result.setParameter(Param.BOOLEAN.name(), Boolean.TRUE.toString());
-        result.setParameter(Param.CHAR.name(), "A");
-        result.setParameter(Param.INT.name(), String.valueOf(1));
-        result.setParameter(Param.LONG.name(), String.valueOf(2L));
-        result.setParameter(Param.FLOAT.name(), String.valueOf(3F));
-        result.setParameter(Param.DOUBLE.name(), String.valueOf(4D));
-        result.setParameter(Param.MONTH_ENUM.name(), JANUARY.name());
-        result.setParameter(Param.UNDEFINED.name(), (String) null);
+    private UContext ucontext() {
+        ManyMap map = new ManyMap();
+        map.put(Param.TEXT.name(), "abc");
+        map.put(Param.BOOLEAN.name(), Boolean.TRUE.toString());
+        map.put(Param.CHAR.name(), "A");
+        map.put(Param.INT.name(), String.valueOf(1));
+        map.put(Param.LONG.name(), String.valueOf(2L));
+        map.put(Param.FLOAT.name(), String.valueOf(3F));
+        map.put(Param.DOUBLE.name(), String.valueOf(4D));
+        map.put(Param.MONTH_ENUM.name(), JANUARY.name());
+        map.put(Param.UNDEFINED.name(), (String) null);
 
-        return result;
+        return UContext.of(map);
     }
 
     /** Parameter */

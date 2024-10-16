@@ -30,6 +30,7 @@ import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.msg.ValuePrinter;
 import org.ujorm.tools.set.LoopingIterator;
+import org.ujorm.tools.sql.SqlParamBuilder;
 
 /**
  * PrepareStatement builder support
@@ -75,6 +76,7 @@ import org.ujorm.tools.set.LoopingIterator;
  * For more information see a <a target="_blank"
  * href="https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/test/java/org/ujorm/tools/jdbc/JdbcBuilderTest.java#L33">jUnit</a> test.
  * @author Pavel Ponec
+ * @deprecated Use the {@link SqlParamBuilder} class rather from the release 2.26.
  */
 public class JdbcBuilder implements Serializable {
 

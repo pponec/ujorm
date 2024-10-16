@@ -15,7 +15,6 @@
  */
 package org.ujorm.ujoservlet.benchmark.element;
 
-import org.ujorm.ujoservlet.benchmark.dom4j.*;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -33,7 +32,7 @@ import org.ujorm.ujoservlet.benchmark.StockService;
 /**
  * A live example of the HtmlElement inside a servlet.
  *
- * @see https://dzone.com/articles/modern-type-safe-template-engines-part-2
+ * @see <a href="https://dzone.com/articles/modern-type-safe-template-engines-part-2">...</a>
  * @author Pavel Ponec
  */
 @WebServlet(UjoElementBenchmarkStock.URL_PATTERN)
@@ -80,7 +79,7 @@ public class UjoElementBenchmarkStock extends HttpServlet {
      */
     public void stock(HttpServletResponse output) throws IOException, IllegalArgumentException {
 
-        try (HtmlElement html = HtmlElement.of(output, CONFIG)) {
+        try (HtmlElement html = HtmlElement.ofResponse(output, CONFIG)) {
             try (Element head = html.getHead()) {
                 head.addElement(Html.META)
                         .setAttribute("http-equiv", "Content-Type")

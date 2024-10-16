@@ -7,19 +7,17 @@ import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
+import org.ujorm.tools.web.request.ManyMap;
+import org.ujorm.tools.web.request.UContext;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 
 import org.jetbrains.annotations.NotNull;
-import java.io.IOException;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.web.bind.annotation.RequestParam;
 import net.ponec.x2j.service.ConverterService;
 import static net.ponec.x2j.controller.ConverterController.Constants.*;
 import net.ponec.x2j.model.Message;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
-import org.ujorm.tools.web.ao.MockServletResponse;
 
 //@RequiredArgsConstructor
 @RestController
@@ -38,16 +36,15 @@ public class ConverterController {
     public String converter(
             @RequestParam(defaultValue = "") String text,
             @RequestParam(defaultValue = "") String submit
-    ) throws IOException {
+    ) {
 
         if (DEMO.equals(submit)) {
             text = service.getDemoXml();
         }
 
-        Message message = service.toJavaCode(text);
-
-        final MockServletResponse response = new MockServletResponse();
-        try ( HtmlElement html = HtmlElement.of(getConfig("Convert XML file to Java code on-line"), response)) {
+        final Message message = service.toJavaCode(text);
+        final UContext uContext = UContext.of();
+        try (HtmlElement html = HtmlElement.of(uContext, getConfig("Convert XML file to Java code on-line"))) {
             html.addCssLink(CSS_STYLE);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             try ( Element body = html.getBody()) {
@@ -75,7 +72,7 @@ public class ConverterController {
                 }
             }
         }
-        return response.toString();
+        return uContext.response().toString();
     }
 
     /**
