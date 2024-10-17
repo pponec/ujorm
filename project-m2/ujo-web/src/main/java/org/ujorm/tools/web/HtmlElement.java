@@ -352,7 +352,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @see Appendable
      */
     @NotNull
-    public static HtmlElement ofResponse(
+    public static HtmlElement ofServlet(
             @NotNull final Object htmlServletResponse,
             @Nullable final HtmlConfig config) {
         return of(UContext.ofResponse(null, htmlServletResponse).response(), config);
@@ -363,12 +363,12 @@ public class HtmlElement implements ApiElement<Element>, Html {
      * @see Appendable
      */
     @NotNull
-    public static HtmlElement ofResponse(
-            @NotNull final Object response,
+    public static HtmlElement ofServlet(
+            @NotNull final Object htmlServletResponse,
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setCssLinks(cssLinks);
-        return of(UContext.ofResponse(null, response).response(), config);
+        return of(UContext.ofResponse(null, htmlServletResponse).response(), config);
     }
 
     /** Create new instance with empty html headers

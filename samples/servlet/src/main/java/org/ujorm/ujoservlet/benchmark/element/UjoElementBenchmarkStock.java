@@ -79,7 +79,7 @@ public class UjoElementBenchmarkStock extends HttpServlet {
      */
     public void stock(HttpServletResponse output) throws IOException, IllegalArgumentException {
 
-        try (HtmlElement html = HtmlElement.ofResponse(output, CONFIG)) {
+        try (HtmlElement html = HtmlElement.ofServlet(output, CONFIG)) {
             try (Element head = html.getHead()) {
                 head.addElement(Html.META)
                         .setAttribute("http-equiv", "Content-Type")
