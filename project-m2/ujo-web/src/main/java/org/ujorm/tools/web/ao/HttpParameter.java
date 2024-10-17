@@ -95,7 +95,7 @@ public interface HttpParameter extends CharSequence {
     /** Returns the last parameter value of the request or a default value. The MAIN method */
     @NotNull
     default String of(@NotNull final URequest request, @NotNull final String defaultValue) {
-        final String[] results = request.getParameterValues(toString());
+        final String[] results = request.getParameters(toString());
         final String result = Check.hasLength(results) ? results[results.length - 1] : defaultValue;
         return result != null ? result : defaultValue;
     }

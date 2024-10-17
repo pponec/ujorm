@@ -1,5 +1,8 @@
 package org.ujorm.tools.web.ao;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
@@ -43,8 +46,8 @@ public final class Reflections {
         }
     }
 
-    public static void setCharacterEncoding(Object httpServletRequest, String charset) {
-        try {
+    public static void setCharacterEncoding(@Nullable Object httpServletRequest, @NotNull String charset) {
+        if (httpServletRequest != null) try {
             final Class<?> requestClass = httpServletRequest.getClass();
             final Method setCharsetEncoding = requestClass.getMethod("setCharacterEncoding", String.class);;
             setCharsetEncoding.invoke(httpServletRequest, charset);

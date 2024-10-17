@@ -154,7 +154,7 @@ public class ElementTest {
     public void testAddTestTemplated() {
         System.out.println("addTestTemplated");
         Appendable result = new StringBuilder();
-        HtmlElement resInstance = HtmlElement.of(result);
+        HtmlElement resInstance = HtmlElement.of("Demo", result);
         try (HtmlElement instance = resInstance) {
             instance.getBody().addTextTemplated("Test <{}.{}{}", 1, 2, ">");
         }
@@ -176,7 +176,7 @@ public class ElementTest {
     public void testAddFieldset() {
         System.out.println("addFieldset");
         StringBuilder result = new StringBuilder();
-        HtmlElement resInstance = HtmlElement.of(result);
+        HtmlElement resInstance = HtmlElement.of("Demo", result);
         try (HtmlElement instance = resInstance) {
             Element body = instance.getBody();
             body.addFieldset("MyTitle", "myCssClass").addText("Lorem ipsum ...");
@@ -223,7 +223,7 @@ public class ElementTest {
 
         CharSequence[] cssClasses = {"table"};
         CharSequence[] titles = {"Id", "Name", "Enabled"};
-        try (HtmlElement html = HtmlElement.of(response, BOOTSTRAP_CSS)) {
+        try (HtmlElement html = HtmlElement.of("Demo", response, BOOTSTRAP_CSS)) {
             html.addBody().addHeading("Cars");
             html.addBody().addTable(getCars().stream(), cssClasses, titles,
                     Car::getId,
@@ -244,7 +244,7 @@ public class ElementTest {
         CharSequence[] cssClasses = {"table"};
         CharSequence[] titles = {"Id", "Name", "Enabled",
                     (Injector) td -> td.addSpan("red").addText("Home page")};
-        try (HtmlElement html = HtmlElement.of(response, BOOTSTRAP_CSS)) {
+        try (HtmlElement html = HtmlElement.of("Demo", response, BOOTSTRAP_CSS)) {
             html.addBody().addHeading("Cars");
             html.addBody().addTable(getCars().stream(), cssClasses, titles,
                     Car::getId,
@@ -264,7 +264,7 @@ public class ElementTest {
     @Test
     public void testNext() {
         Appendable response = new StringBuilder();
-        HtmlElement.niceOf(response).next(html -> html
+        HtmlElement.niceOf("Demo", response).next(html -> html
             .getBody().next(body -> body
                 .addHeading(html.getTitle()))
         ).catchEx(e -> {

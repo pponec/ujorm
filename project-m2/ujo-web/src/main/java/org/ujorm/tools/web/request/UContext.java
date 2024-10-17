@@ -10,16 +10,16 @@ import java.nio.charset.StandardCharsets;
 public class UContext {
     public static final Charset CHARSET = StandardCharsets.UTF_8;
 
-    private final URequest servletRequest;
-    private final Appendable servletResponse;
+    private final URequest uRequest;
+    private final Appendable writer;
 
-    public UContext(URequest servletRequest, Appendable servletResponse) {
-        this.servletRequest = servletRequest;
-        this.servletResponse = servletResponse;
+    public UContext(URequest uRequest, Appendable writer) {
+        this.uRequest = uRequest;
+        this.writer = writer;
     }
 
-    public UContext(URequest servletRequest) {
-        this(servletRequest, new StringBuilder());
+    public UContext(URequest uRequest) {
+        this(uRequest, new StringBuilder());
     }
 
     public UContext() {
@@ -27,15 +27,30 @@ public class UContext {
     }
 
     public URequest request() {
-        return servletRequest;
+        return uRequest;
     }
 
-    public Appendable response() {
-        return servletResponse;
+    public Appendable writer() {
+        return writer;
+    }
+
+    /** Returns the last parameter */
+    public String getParameter(@NotNull String key) {
+        return getParameter(key, null);
+    }
+
+    /** Returns the last parameter */
+    public String getParameter(@NotNull String key, String defaultValue) {
+        final URequest uRequest = request();
+        if (uRequest != null) {
+            String[] params = uRequest.getParameters(key);
+            return params.length > 0 ? params[params.length - 1] : defaultValue;
+        }
+        return defaultValue;
     }
 
     /** HTTP Servlet Factory */
-    public static UContext ofServlet(Object httpServletResponse) {
+    public static UContext ofServletResponse(Object httpServletResponse) {
         return ofServlet(null, httpServletResponse);
     }
 

@@ -33,7 +33,7 @@ public class HtmlElementTest {
     @Test
     public void sample() {
         Appendable response = new StringBuilder();
-        try (HtmlElement html = HtmlElement.of(response)) {
+        try (HtmlElement html = HtmlElement.of("Title", response)) {
             html.addBody().addHeading("Hello!");
         }
         assertTrue(response.toString().contains("<h1>Hello!</h1>"));

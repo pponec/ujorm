@@ -1,6 +1,7 @@
 package org.ujorm.tools.web.request;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.web.ao.Reflections;
 
 import java.io.Reader;
@@ -9,29 +10,29 @@ import java.util.Map;
 public interface URequest {
 
     /** Request Reader */
-    @NotNull
     Reader getReader();
 
     /** Parametr provider */
     @NotNull
-    String[] getParameterValues(final String key);
+    String[] getParameters(final String key);
 
     /** Convert the HttpServletRequest to the URequest */
-    static URequest ofRequest(@NotNull final Object httpServletRequest) {
-        final Reader reader = Reflections.getServletReader(httpServletRequest);
+    static URequest ofRequest(@Nullable final Object httpServletRequest) {
         Reflections.setCharacterEncoding(httpServletRequest, UContext.CHARSET.name());
-
-        final URequest result = new URequest() {
-            final Map<String, String[]> paramMap = Reflections.getParameterMap(httpServletRequest);
+        return new URequest() {
+            Map<String, String[]> paramMap = null;
 
             @Override
             public Reader getReader() {
-                return reader;
+                return Reflections.getServletReader(httpServletRequest);
             }
 
             @Override
-            public String[] getParameterValues(String key) {
+            public String[] getParameters(String key) {
                 if (httpServletRequest != null) {
+                    if (paramMap == null) {
+                        paramMap = Reflections.getParameterMap(httpServletRequest);
+                    }
                     final String[] result = paramMap.get(key);
                     return result != null ? result : URequestImpl.emptyTexts;
 
@@ -40,7 +41,6 @@ public interface URequest {
                 }
             }
         };
-        return result;
     }
 
 }

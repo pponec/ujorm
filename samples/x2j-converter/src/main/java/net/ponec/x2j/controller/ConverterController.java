@@ -7,7 +7,6 @@ import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
-import org.ujorm.tools.web.request.ManyMap;
 import org.ujorm.tools.web.request.UContext;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
@@ -72,7 +71,7 @@ public class ConverterController {
                 }
             }
         }
-        return uContext.response().toString();
+        return uContext.writer().toString();
     }
 
     /**

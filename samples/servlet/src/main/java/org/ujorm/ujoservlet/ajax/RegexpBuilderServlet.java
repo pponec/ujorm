@@ -71,7 +71,7 @@ public class RegexpBuilderServlet extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
         UContext ucontext = UContext.ofServlet(input, output);
-        HtmlElement.of(ucontext.response(), getConfig("Regular expression tester by a builder")).next(html -> {
+        HtmlElement.of(ucontext.writer(), getConfig("Regular expression tester by a builder")).next(html -> {
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             writeJavaScript(html, AJAX_ENABLED);
@@ -106,7 +106,7 @@ public class RegexpBuilderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
         final UContext uContext = UContext.ofServlet(input, output);
         if (AJAX.of(uContext, false)) {
-            doAjax(uContext.request(), JsonBuilder.of(uContext.response(), getConfig("?"))).close();
+            doAjax(uContext.request(), JsonBuilder.of(uContext.writer(), getConfig("?"))).close();
         } else {
             doGet(input, output);
         }

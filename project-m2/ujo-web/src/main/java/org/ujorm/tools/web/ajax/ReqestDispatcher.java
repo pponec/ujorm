@@ -89,7 +89,7 @@ public class ReqestDispatcher {
     public ReqestDispatcher onParam(@NotNull final HttpParameter key, @NotNull final IOConsumer<JsonBuilder> processor) throws IOException {
         Assert.notNull(key, "Parameter {} is required", "key");
         if (!done && key.of(uContext, false)) {
-            try (JsonBuilder builder = JsonBuilder.of(uContext.response(), getAjaxConfig())) {
+            try (JsonBuilder builder = JsonBuilder.of(uContext.writer(), getAjaxConfig())) {
                 done = true;
                 processor.accept(builder);
             }
@@ -102,7 +102,7 @@ public class ReqestDispatcher {
      */
     public void onDefaultToElement(@NotNull final IOElement defaultProcessor) throws IOException {
         if (!done) {
-            try (HtmlElement html = HtmlElement.of(uContext.response(), htmlConfig)) {
+            try (HtmlElement html = HtmlElement.of(uContext.writer(), htmlConfig)) {
                 defaultProcessor.run(html);
             }
         }

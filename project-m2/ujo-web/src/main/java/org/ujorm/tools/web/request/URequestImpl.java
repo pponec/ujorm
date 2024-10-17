@@ -24,7 +24,7 @@ public final class URequestImpl implements URequest{
     }
 
     @NotNull
-    public String[] getParameterValues(final String key) {
+    public String[] getParameters(final String key) {
         final String[] result = map.get(key);
         return result != null ? result : emptyTexts;
     }
