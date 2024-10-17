@@ -62,7 +62,7 @@ public class HotelReportServlet extends HttpServlet {
     protected void doGet(
             final HttpServletRequest request,
             final HttpServletResponse response) throws ServletException, IOException {
-        final UContext ucontext = UContext.ofResponse(request, response);
+        final UContext ucontext = UContext.ofServlet(request, response);
         new ReportBuilder<Hotel>("Hotel Report")
                 .addOrder("Ord")
                 .add(Hotel::getName, "Hotel", NAME).sortable(true)

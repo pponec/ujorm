@@ -35,12 +35,12 @@ public class UContext {
     }
 
     /** HTTP Servlet Factory */
-    public static UContext ofResponse(Object httpServletResponse) {
-        return ofResponse(null, httpServletResponse);
+    public static UContext ofServlet(Object httpServletResponse) {
+        return ofServlet(null, httpServletResponse);
     }
 
     /** HTTP Servlet Factory */
-    public static UContext ofResponse(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
+    public static UContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
         Reflections.setCharacterEncoding(httpServletResponse, CHARSET.name());
         final Appendable writer = Reflections.getServletWriter(httpServletResponse);
         final URequest ureq = httpServletRequest != null ? URequest.ofRequest(httpServletRequest) : URequestImpl.of();

@@ -72,7 +72,7 @@ public class RegexpServlet extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
 
-        final UContext uContext = UContext.ofResponse(input, output);
+        final UContext uContext = UContext.ofServlet(input, output);
         try (HtmlElement html = HtmlElement.of(uContext.response(), getConfig("Regular expression tester"))) {
             //html.addJavascriptLink(false, JQUERY_JS); // For jQuery implementation only
             html.addCssLink(BOOTSTRAP_CSS);
@@ -108,7 +108,7 @@ public class RegexpServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        final UContext uContext = UContext.ofResponse(input, output);
+        final UContext uContext = UContext.ofServlet(input, output);
         if (AJAX.of(uContext, false)) {
             doAjax(uContext.request(), JsonBuilder.of(uContext.response(), getConfig("?"))).close();
         } else {

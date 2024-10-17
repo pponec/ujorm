@@ -355,7 +355,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     public static HtmlElement ofServlet(
             @NotNull final Object htmlServletResponse,
             @Nullable final HtmlConfig config) {
-        return of(UContext.ofResponse(null, htmlServletResponse).response(), config);
+        return of(UContext.ofServlet(null, htmlServletResponse).response(), config);
     }
 
     /** Create new instance with empty html headers
@@ -368,7 +368,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setCssLinks(cssLinks);
-        return of(UContext.ofResponse(null, htmlServletResponse).response(), config);
+        return of(UContext.ofServlet(null, htmlServletResponse).response(), config);
     }
 
     /** Create new instance with empty html headers
@@ -446,7 +446,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
-        return of(UContext.ofResponse(null, httpServletResponse).response(), config);
+        return of(UContext.ofServlet(null, httpServletResponse).response(), config);
     }
 
     /** Create new instance with empty html headers
