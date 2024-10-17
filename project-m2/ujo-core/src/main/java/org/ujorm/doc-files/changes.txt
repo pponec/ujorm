@@ -2,6 +2,10 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 2.26 (2024-10-17)
++ WEB: here is removed dependency on javax.servlet-api from ujo-web module. The goal was to make the module compatible with all versions in the range: servlet 3 to servlet 5.
++ WEB: unpairElement list is extended according to HTML 5
++ TOOLS: Package `org.ujorm.tools/xml` is moved to the `ujo-web` module.
 
 release 2.25 (2024-05-13)
 + WEB: Closing HTML element by the pair element is suppoted.
