@@ -23,6 +23,7 @@ import java.nio.charset.Charset;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.XmlConfig;
@@ -242,39 +243,6 @@ public class HtmlElementOrig extends XmlModel {
      */
     public XmlWriter toWriter(@NotNull final XmlWriter xmlWriter) throws IOException, IllegalArgumentException {
             return toWriter(0, xmlWriter);
-    }
-
-    /** Some HTML constants */
-    @Deprecated
-    public interface Html {
-
-        // --- Element names ---
-
-        /** Body element */
-        String HTML = "html";
-        /** Head element */
-        String HEAD = "head";
-        /** Meta element */
-        String META = "meta";
-        /** Body element */
-        String BODY = "body";
-        /** Title element */
-        String TITLE = "title";
-        /** Link element */
-        String LINK = "link";
-        /** Style element */
-        String STYLE = "style";
-        /** Javascript element */
-        String SCRIPT = "script";
-
-        // --- Attribute names ---
-
-        String A_CHARSET = "charset";
-        String A_HREF = "href";
-        String A_REL = "rel";
-        String A_TYPE = "type";
-        String A_SRC = "src";
-        String A_LANGUAGE = "language";
     }
 
 }
