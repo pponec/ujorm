@@ -18,8 +18,8 @@ package org.ujorm.tools.xml.model;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.msg.MsgFormatter;
+import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.AbstractWriter;
-import org.ujorm.tools.xml.Html;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.ujorm.tools.xml.AbstractWriter.*;
 

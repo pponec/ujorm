@@ -13,46 +13,40 @@ import java.util.Map;
 public final class Reflections {
 
     public static Reader getServletReader(Object httpServletRequest) {
-        try {
-            final Class<?> requestClass = httpServletRequest.getClass();
-            final Method getReaderMethod = requestClass.getMethod("getReader");
-            final Reader result = (Reader) getReaderMethod.invoke(httpServletRequest);
-            return result;
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        return (Reader) getAttribute(httpServletRequest, "getReader");
     }
 
     public static Writer getServletWriter(Object httpServletResponse) {
-        try {
-            final Class<?> responseClass = httpServletResponse.getClass();
-            final Method getWriterMethod = responseClass.getMethod("getWriter");
-            final Writer result = (Writer) getWriterMethod.invoke(httpServletResponse);
-            return result;
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        return (Writer) getAttribute(httpServletResponse,  "getWriter");
     }
 
     public static Map<String, String[]> getParameterMap(Object httpServletRequest) {
-        try {
+        return (Map<String, String[]>) getAttribute(httpServletRequest,  "getParameterMap");
+    }
+
+    public static void setCharacterEncoding(
+            @Nullable Object httpServletRequest,
+            @NotNull String charset) {
+        final String methodName = "setCharacterEncoding";
+        if (httpServletRequest != null) try {
             final Class<?> requestClass = httpServletRequest.getClass();
-            final Method getParameterMapMethod = requestClass.getMethod("getParameterMap");
-            final Map<String, String[]> result = (Map<String, String[]>)
-                    getParameterMapMethod.invoke(httpServletRequest);
-            return result;
+            final Method setCharsetEncoding = requestClass.getMethod(methodName, String.class);;
+            setCharsetEncoding.invoke(httpServletRequest, charset);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+            final String msg = String.format("Method does not exists: %s.%s()",
+                    httpServletRequest.getClass().getSimpleName(), methodName);
+            throw new RuntimeException(msg, e);
         }
     }
 
-    public static void setCharacterEncoding(@Nullable Object httpServletRequest, @NotNull String charset) {
-        if (httpServletRequest != null) try {
-            final Class<?> requestClass = httpServletRequest.getClass();
-            final Method setCharsetEncoding = requestClass.getMethod("setCharacterEncoding", String.class);;
-            setCharsetEncoding.invoke(httpServletRequest, charset);
+    private static Object getAttribute(Object servletRequest, String methodName) {
+        try {
+            final Method getReaderMethod = servletRequest.getClass().getMethod(methodName);
+            return getReaderMethod.invoke(servletRequest);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+            final String msg = String.format("Method does not exists: %s.%s()",
+                    servletRequest.getClass().getSimpleName(), methodName);
+            throw new RuntimeException(msg, e);
         }
     }
 }

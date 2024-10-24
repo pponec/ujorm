@@ -22,6 +22,7 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.web.Html;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.config.ApiInjector;
@@ -71,19 +72,19 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     private Set<String> unpairElements = new HashSet<String>() {{
         add("area");
         add("base");
-        add("br");
+        add(Html.BR);
         add("col");
         add("embed");
-        add("hr");
-        add("img");
-        add("input");
+        add(Html.HR);
+        add(Html.IMAGE);
+        add(Html.INPUT);
         add("keygen");
-        add("link");
-        add("meta");
+        add(Html.LINK);
+        add(Html.META);
         add("param");
-        add("script");
+        // add(Html.SCRIPT); The script is umpair elemnt commonly
         add("source");
-        add("style");
+        add(Html.STYLE);
         add("track");
     }};
 

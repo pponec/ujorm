@@ -27,11 +27,11 @@ import org.ujorm.tools.xml.config.XmlConfig;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * Configuraion of HtmlPage
+ * Configuration of HtmlPage
  * @author Pavel Ponec
  */
 public class DefaultXmlConfig implements XmlConfig {
-    
+
     /** Default intendation per level */
     public static final String DEFAULT_INTENDATION = "\t";
 

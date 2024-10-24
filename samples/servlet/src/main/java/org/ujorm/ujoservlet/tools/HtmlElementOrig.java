@@ -245,6 +245,7 @@ public class HtmlElementOrig extends XmlModel {
     }
 
     /** Some HTML constants */
+    @Deprecated
     public interface Html {
 
         // --- Element names ---

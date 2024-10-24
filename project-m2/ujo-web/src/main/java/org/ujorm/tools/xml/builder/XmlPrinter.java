@@ -115,6 +115,8 @@ public class XmlPrinter extends AbstractWriter {
                     } else {
                         writeNewLine(element.getLevel());
                     }
+                } else if (!filled) {
+                    out.append(XML_GT);
                 }
                 out.append(XML_LT);
                 out.append(FORWARD_SLASH);
