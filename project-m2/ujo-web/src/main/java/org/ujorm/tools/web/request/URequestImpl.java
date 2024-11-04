@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.CharArrayReader;
 import java.io.Reader;
+import java.util.Set;
 
 public final class URequestImpl implements URequest{
     static final String[] emptyTexts = new String[0];
@@ -27,6 +28,11 @@ public final class URequestImpl implements URequest{
     public String[] getParameters(final String key) {
         final String[] result = map.get(key);
         return result != null ? result : emptyTexts;
+    }
+
+    @Override
+    public @NotNull Set<String> getParameterNames() {
+        return map.keySet();
     }
 
     public void setParameter(@NotNull String name, @NotNull String value) {

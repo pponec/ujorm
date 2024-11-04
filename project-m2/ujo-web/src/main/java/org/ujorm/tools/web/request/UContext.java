@@ -6,6 +6,7 @@ import org.ujorm.tools.web.ao.Reflections;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 public class UContext {
     public static final Charset CHARSET = StandardCharsets.UTF_8;
@@ -34,9 +35,14 @@ public class UContext {
         return writer;
     }
 
-    /** Returns the last parameter */
+    /** Returns the last parameter, or the null value. */
     public String getParameter(@NotNull String key) {
         return getParameter(key, null);
+    }
+
+    /** Returns the parameter names */
+    public Set<String> getParameterNames() {
+        return uRequest.getParameterNames();
     }
 
     /** Returns the last parameter */

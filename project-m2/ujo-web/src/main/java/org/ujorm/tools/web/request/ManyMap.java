@@ -27,6 +27,11 @@ public class ManyMap {
         return getList(key).toArray(new String[0]);
     }
 
+    /** Returns a key set */
+    public Set<String> keySet() {
+        return map.keySet();
+    }
+
     /** Create new Servlet request */
     public URequest toRequest(Reader reader) {
         return new URequestImpl(this, reader);
