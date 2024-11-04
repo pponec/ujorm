@@ -27,7 +27,7 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.report.ReportBuilder;
-import org.ujorm.tools.web.request.UContext;
+import org.ujorm.tools.web.request.RContext;
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
 import org.ujorm.ujoservlet.ajax.ao.HotelResourceService;
 import static org.ujorm.ujoservlet.ajax.HotelReportServlet.Attrib.*;
@@ -62,7 +62,7 @@ public class HotelReportServlet extends HttpServlet {
     protected void doGet(
             final HttpServletRequest request,
             final HttpServletResponse response) throws ServletException, IOException {
-        final UContext ucontext = UContext.ofServlet(request, response);
+        final RContext context = RContext.ofServlet(request, response);
         new ReportBuilder<Hotel>("Hotel Report")
                 .addOrder("Ord")
                 .add(Hotel::getName, "Hotel", NAME).sortable(true)
@@ -75,13 +75,13 @@ public class HotelReportServlet extends HttpServlet {
                 .addColumn(
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
-                .setFormItem(e -> e.addTextInp(LIMIT, LIMIT.of(ucontext), "Limit", CSS_INPUT, LIMIT))
+                .setFormItem(e -> e.addTextInp(LIMIT, LIMIT.of(context), "Limit", CSS_INPUT, LIMIT))
                 .setFooter(e -> printFooter(e))
                 .setAjaxEnabled(true)
-                .build(ucontext, builder -> service.findHotels(builder,
-                                LIMIT.of(ucontext, DEFAULT_ROW_LIMIT),
-                                NAME.of(ucontext.request()),
-                                CITY.of(ucontext.request())));
+                .build(context, builder -> service.findHotels(builder,
+                                LIMIT.of(context, DEFAULT_ROW_LIMIT),
+                                NAME.of(context.request()),
+                                CITY.of(context.request())));
     }
 
     /** Create a stars Column */

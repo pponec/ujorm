@@ -8,22 +8,23 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
-public class UContext {
+/** Servlet request context */
+public class RContext {
     public static final Charset CHARSET = StandardCharsets.UTF_8;
 
     private final URequest uRequest;
     private final Appendable writer;
 
-    public UContext(URequest uRequest, Appendable writer) {
+    public RContext(URequest uRequest, Appendable writer) {
         this.uRequest = uRequest;
         this.writer = writer;
     }
 
-    public UContext(URequest uRequest) {
+    public RContext(URequest uRequest) {
         this(uRequest, new StringBuilder());
     }
 
-    public UContext() {
+    public RContext() {
         this(URequestImpl.of(), new StringBuilder());
     }
 
@@ -56,25 +57,25 @@ public class UContext {
     }
 
     /** HTTP Servlet Factory */
-    public static UContext ofServletResponse(Object httpServletResponse) {
+    public static RContext ofServletResponse(Object httpServletResponse) {
         return ofServlet(null, httpServletResponse);
     }
 
     /** HTTP Servlet Factory */
-    public static UContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
+    public static RContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
         Reflections.setCharacterEncoding(httpServletResponse, CHARSET.name());
         final Appendable writer = Reflections.getServletWriter(httpServletResponse);
         final URequest ureq = httpServletRequest != null ? URequest.ofRequest(httpServletRequest) : URequestImpl.of();
-        return new UContext(ureq, writer);
+        return new RContext(ureq, writer);
     }
 
     /** UContext from a map */
-    public static UContext of(ManyMap map) {
-        return new UContext(URequestImpl.ofMap(map), new StringBuilder());
+    public static RContext of(ManyMap map) {
+        return new RContext(URequestImpl.ofMap(map), new StringBuilder());
     }
 
     /** UContext from a map */
-    public static UContext of() {
+    public static RContext of() {
         return of (new ManyMap());
     }
 }

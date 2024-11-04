@@ -7,7 +7,7 @@ import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
-import org.ujorm.tools.web.request.UContext;
+import org.ujorm.tools.web.request.RContext;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 
@@ -42,8 +42,8 @@ public class ConverterController {
         }
 
         final Message message = service.toJavaCode(text);
-        final UContext uContext = UContext.of();
-        try (HtmlElement html = HtmlElement.of(uContext, getConfig("Convert XML file to Java code on-line"))) {
+        final RContext context = RContext.of();
+        try (HtmlElement html = HtmlElement.of(context, getConfig("Convert XML file to Java code on-line"))) {
             html.addCssLink(CSS_STYLE);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             try ( Element body = html.getBody()) {
@@ -71,7 +71,7 @@ public class ConverterController {
                 }
             }
         }
-        return uContext.writer().toString();
+        return context.writer().toString();
     }
 
     /**

@@ -30,7 +30,7 @@ import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
-import org.ujorm.tools.web.request.UContext;
+import org.ujorm.tools.web.request.RContext;
 import org.ujorm.tools.web.request.URequest;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
@@ -72,13 +72,13 @@ public class RegexpServlet extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
 
-        final UContext uContext = UContext.ofServlet(input, output);
-        try (HtmlElement html = HtmlElement.of(uContext.writer(), getConfig("Regular expression tester"))) {
+        final RContext context = RContext.ofServlet(input, output);
+        try (HtmlElement html = HtmlElement.of(context.writer(), getConfig("Regular expression tester"))) {
             //html.addJavascriptLink(false, JQUERY_JS); // For jQuery implementation only
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             writeJavaScript(html, AJAX_ENABLED);
-            Message msg = highlight(uContext.request());
+            Message msg = highlight(context.request());
             try (Element body = html.addBody()) {
                 body.addHeading(html.getTitle());
                 body.addDiv(SUBTITLE_CSS).addText(AJAX_ENABLED ? AJAX_READY_MSG : "");
@@ -87,13 +87,13 @@ public class RegexpServlet extends HttpServlet {
                     form.addInput(CONTROL_CSS)
                             .setId(REGEXP)
                             .setName(REGEXP)
-                            .setValue(REGEXP.of(uContext))
+                            .setValue(REGEXP.of(context))
                             .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
                     form.addTextArea(CONTROL_CSS)
                             .setId(TEXT)
                             .setName(TEXT)
                             .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
-                            .addText(TEXT.of(uContext));
+                            .addText(TEXT.of(context));
                     form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
                     form.addDiv(CONTROL_CSS, OUTPUT_CSS).addRawText(msg);
                 }
@@ -108,9 +108,9 @@ public class RegexpServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        final UContext uContext = UContext.ofServlet(input, output);
-        if (AJAX.of(uContext, false)) {
-            doAjax(uContext.request(), JsonBuilder.of(uContext.writer(), getConfig("?"))).close();
+        final RContext context = RContext.ofServlet(input, output);
+        if (AJAX.of(context, false)) {
+            doAjax(context.request(), JsonBuilder.of(context.writer(), getConfig("?"))).close();
         } else {
             doGet(input, output);
         }
