@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo-samples</artifactId>
-        <version>2.26-SNAPSHOT</version>
+        <version>2.27-SNAPSHOT</version>
     </parent>
 
     <groupId>org.ujorm</groupId>
     <artifactId>sample-binding</artifactId>
     <packaging>jar</packaging>
-    <version>2.26-SNAPSHOT</version>
+    <version>2.27-SNAPSHOT</version>
     <name>sample-binding</name>
     <url>http://ujorm.org</url>
 
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>2.26-SNAPSHOT</version>
+            <version>2.27-SNAPSHOT</version>
         </dependency>
 
         <dependency>
