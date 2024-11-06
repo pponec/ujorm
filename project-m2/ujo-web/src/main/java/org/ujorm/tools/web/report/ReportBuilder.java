@@ -302,7 +302,7 @@ public class ReportBuilder<D> {
             @NotNull final HtmlElement html,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
-        Assert.notNull(context, "uContext");
+        Assert.notNull(context, "context");
         Assert.notNull(html, "html");
         Assert.notNull(resource, "resource");
 
