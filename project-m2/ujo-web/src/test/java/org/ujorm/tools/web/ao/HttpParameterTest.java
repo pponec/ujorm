@@ -4,8 +4,7 @@ import java.time.Month;
 import static java.time.Month.JANUARY;
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.request.ManyMap;
-import org.ujorm.tools.web.request.UContext;
-import org.ujorm.tools.web.request.URequest;
+import org.ujorm.tools.web.request.RContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static java.time.Month.*;
@@ -24,10 +23,10 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_String() {
         String defaultValue = "x";
-        String result = Param.TEXT.of(ucontext(), defaultValue);
+        String result = Param.TEXT.of(context(), defaultValue);
         assertEquals("abc", result);
 
-        result = Param.UNDEFINED.of(ucontext(), defaultValue);
+        result = Param.UNDEFINED.of(context(), defaultValue);
         assertEquals(defaultValue, result);
     }
 
@@ -37,10 +36,10 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_boolean() {
         boolean defaultValue = true;
-        Boolean result = Param.BOOLEAN.of(ucontext(), false);
+        Boolean result = Param.BOOLEAN.of(context(), false);
         assertEquals(true, result);
 
-        result = Param.UNDEFINED.of(ucontext(), defaultValue);
+        result = Param.UNDEFINED.of(context(), defaultValue);
         assertEquals(defaultValue, result);
     }
 
@@ -50,10 +49,10 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_char() {
         char defaultValue = 'Z';
-        char result = Param.CHAR.of(ucontext(), defaultValue);
+        char result = Param.CHAR.of(context(), defaultValue);
         assertEquals('A', result);
 
-        result = Param.UNDEFINED.of(ucontext(), defaultValue);
+        result = Param.UNDEFINED.of(context(), defaultValue);
         assertEquals(defaultValue, result);
     }
 
@@ -63,10 +62,10 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_int() {
         int defaultValue = 9;
-        int result = Param.INT.of(ucontext(), defaultValue);
+        int result = Param.INT.of(context(), defaultValue);
         assertEquals(1, result);
 
-        result = Param.UNDEFINED.of(ucontext(), defaultValue);
+        result = Param.UNDEFINED.of(context(), defaultValue);
         assertEquals(defaultValue, result);
     }
 
@@ -76,10 +75,10 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_long() {
         long defaultValue = 9L;
-        long result = Param.LONG.of(ucontext(), defaultValue);
+        long result = Param.LONG.of(context(), defaultValue);
         assertEquals(2L, result);
 
-        result = Param.UNDEFINED.of(ucontext(), defaultValue);
+        result = Param.UNDEFINED.of(context(), defaultValue);
         assertEquals(defaultValue, result);
     }
 
@@ -89,10 +88,10 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_float() {
         float defaultValue = 9F;
-        float result = Param.FLOAT.of(ucontext(), defaultValue);
+        float result = Param.FLOAT.of(context(), defaultValue);
         assertEquals(3F, result, DELTA);
 
-        result = Param.UNDEFINED.of(ucontext(), defaultValue);
+        result = Param.UNDEFINED.of(context(), defaultValue);
         assertEquals(defaultValue, result, DELTA);
     }
 
@@ -102,10 +101,10 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_double() {
         double defaultValue = 9D;
-        double result = Param.DOUBLE.of(ucontext(), defaultValue);
+        double result = Param.DOUBLE.of(context(), defaultValue);
         assertEquals(4D, result, DELTA);
 
-        result = Param.UNDEFINED.of(ucontext(), defaultValue);
+        result = Param.UNDEFINED.of(context(), defaultValue);
         assertEquals(defaultValue, result, DELTA);
     }
 
@@ -115,11 +114,11 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_Enum() {
         Month defaultValue = DECEMBER;
-        UContext dummyContext = ucontext();
+        RContext dummyContext = context();
         Month result = Param.MONTH_ENUM.of(dummyContext, defaultValue);
         assertEquals(JANUARY, result);
 
-        result = Param.UNDEFINED.of(ucontext(), defaultValue);
+        result = Param.UNDEFINED.of(context(), defaultValue);
         assertEquals(defaultValue, result);
     }
 
@@ -141,7 +140,7 @@ public class HttpParameterTest {
 
     // --- Helper methods ---
 
-    private UContext ucontext() {
+    private RContext context() {
         ManyMap map = new ManyMap();
         map.put(Param.TEXT.name(), "abc");
         map.put(Param.BOOLEAN.name(), Boolean.TRUE.toString());
@@ -153,7 +152,7 @@ public class HttpParameterTest {
         map.put(Param.MONTH_ENUM.name(), JANUARY.name());
         map.put(Param.UNDEFINED.name(), (String) null);
 
-        return UContext.of(map);
+        return RContext.of(map);
     }
 
     /** Parameter */

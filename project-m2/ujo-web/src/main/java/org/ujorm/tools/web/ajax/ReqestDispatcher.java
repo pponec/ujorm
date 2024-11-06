@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.web.request.UContext;
+import org.ujorm.tools.web.request.RContext;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
@@ -41,7 +41,7 @@ public class ReqestDispatcher {
     private static final Logger LOGGER = Logger.getLogger(ReqestDispatcher.class.getName());
 
     @NotNull
-    private final UContext uContext;
+    private final RContext context;
 
     @NotNull
     private final HtmlConfig htmlConfig;
@@ -54,23 +54,23 @@ public class ReqestDispatcher {
     private final boolean noCache = true;
 
     public ReqestDispatcher(
-            @NotNull UContext uContext) {
-        this("Info", uContext);
+            @NotNull RContext context) {
+        this("Info", context);
     }
 
     public ReqestDispatcher(
             @NotNull CharSequence title,
-            @NotNull UContext uContext) {
-        this(uContext, HtmlConfig.ofDefault()
+            @NotNull RContext context) {
+        this(context, HtmlConfig.ofDefault()
                 .setTitle(title)
                 .setNiceFormat());
     }
 
     public ReqestDispatcher(
-            @NotNull UContext ucontext,
+            @NotNull RContext context,
             @NotNull HtmlConfig htmlConfig
     ) {
-        this.uContext = ucontext;
+        this.context = context;
         this.htmlConfig = htmlConfig;
     }
 
@@ -88,8 +88,8 @@ public class ReqestDispatcher {
      */
     public ReqestDispatcher onParam(@NotNull final HttpParameter key, @NotNull final IOConsumer<JsonBuilder> processor) throws IOException {
         Assert.notNull(key, "Parameter {} is required", "key");
-        if (!done && key.of(uContext, false)) {
-            try (JsonBuilder builder = JsonBuilder.of(uContext.response(), getAjaxConfig())) {
+        if (!done && key.of(context, false)) {
+            try (JsonBuilder builder = JsonBuilder.of(context.writer(), getAjaxConfig())) {
                 done = true;
                 processor.accept(builder);
             }
@@ -102,7 +102,7 @@ public class ReqestDispatcher {
      */
     public void onDefaultToElement(@NotNull final IOElement defaultProcessor) throws IOException {
         if (!done) {
-            try (HtmlElement html = HtmlElement.of(uContext.response(), htmlConfig)) {
+            try (HtmlElement html = HtmlElement.of(context.writer(), htmlConfig)) {
                 defaultProcessor.run(html);
             }
         }

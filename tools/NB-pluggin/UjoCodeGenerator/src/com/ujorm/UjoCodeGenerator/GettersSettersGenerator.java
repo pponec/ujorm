@@ -42,7 +42,7 @@ public class GettersSettersGenerator implements CodeGenerator {
     /**
      *
      * @param context containing JTextComponent and possibly other items
-     * registered by {@link CodeGeneratorContextProvider}
+     * registered by {@link CodeGeneratocontextProvider}
      */
     public GettersSettersGenerator(Lookup context) { // Good practice is not to save Lookup outside ctor
         textComp = context.lookup(JTextComponent.class);

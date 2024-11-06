@@ -17,13 +17,11 @@
 package org.ujorm.tools.web;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.tools.web.request.UContext;
-import org.ujorm.tools.web.request.URequest;
+import org.ujorm.tools.web.request.RContext;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.ApiElement;
@@ -341,9 +339,9 @@ public class HtmlElement implements ApiElement<Element>, Html {
     /** Create root element for a required element name. The MAIN factory method. */
     @NotNull
     public static HtmlElement of(
-            @NotNull final UContext uContext,
+            @NotNull final RContext context,
             @NotNull final HtmlConfig myConfig) {
-        return of(uContext.response(), myConfig);
+        return of(context.writer(), myConfig);
     }
 
 
@@ -355,7 +353,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     public static HtmlElement ofServlet(
             @NotNull final Object htmlServletResponse,
             @Nullable final HtmlConfig config) {
-        return of(UContext.ofServlet(null, htmlServletResponse).response(), config);
+        return of(RContext.ofServlet(null, htmlServletResponse).writer(), config);
     }
 
     /** Create new instance with empty html headers
@@ -364,22 +362,13 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement ofServlet(
+            @NotNull final String title,
             @NotNull final Object htmlServletResponse,
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(UContext.ofServlet(null, htmlServletResponse).response(), config);
-    }
-
-    /** Create new instance with empty html headers
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
-     */
-    @NotNull
-    public static HtmlElement of(@NotNull final Appendable response, @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setCssLinks(cssLinks);
-        return of(response, config);
+        return of(RContext.ofServlet(null, htmlServletResponse).writer(), config);
     }
 
     /** Create new instance with empty html headers
@@ -441,12 +430,28 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement niceOfResponse(
+            @NotNull final String title,
+            @NotNull final Object httpServletResponse,
+            @NotNull final CharSequence... cssLinks) {
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setNiceFormat();
+        config.setTitle(title);
+        config.setCssLinks(cssLinks);
+        return of(RContext.ofServlet(null, httpServletResponse).writer(), config);
+    }
+
+    /** Create new instance with empty html headers
+     * @throws IllegalStateException IO exceptions
+     * @see Appendable
+     */
+    @NotNull
+    public static HtmlElement niceOfResponse(
             @NotNull final Object httpServletResponse,
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
-        return of(UContext.ofServlet(null, httpServletResponse).response(), config);
+        return of(RContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
     /** Create new instance with empty html headers
@@ -455,12 +460,14 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement niceOf(
-            @NotNull final UContext ucontext,
+            @NotNull final String title,
+            @NotNull final RContext context,
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
+        config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(ucontext.response(), config);
+        return of(context.writer(), config);
     }
 
     /** Create new instance with empty html headers
@@ -469,41 +476,13 @@ public class HtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement niceOf(
+            @NotNull final String title,
             @NotNull final Appendable response,
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
+        config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(response, config);
-    }
-
-    /** A base method to create new instance
-     * @param request The HttpRequest gets the code page from the context only.
-     * @param response HttpResponse to write a result
-     * @return An instance of the HtmlPage
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
-     */
-    @NotNull
-    public static HtmlElement of(
-            @NotNull final URequest request,
-            @NotNull final Appendable response) throws IllegalStateException, UnsupportedEncodingException {
-        return of(request, response, HtmlConfig.ofDefault());
-    }
-
-    /** A base method to create new instance
-     * @param request The HttpRequest gets the code page from the context only.
-     * @param response HttpResponse to write a result
-     * @param config Html configuration
-     * @return An instance of the HtmlPage
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
-     */
-    @NotNull
-    public static HtmlElement of(
-            @NotNull final URequest request,
-            @NotNull final Appendable response,
-            @NotNull final HtmlConfig config) throws IllegalStateException, UnsupportedEncodingException {
         return of(response, config);
     }
 
