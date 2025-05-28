@@ -144,4 +144,18 @@ class UnicodeCharacterTest {
 
         assertEquals(s2.substring(0, 5), writer.toString()); // !
     }
+
+    @Test
+    void compareTo() {
+        var char0 = UnicodeCharacter.charAt(0, s2);
+        var char1 = UnicodeCharacter.charAt(1, s2);
+        var char2 = UnicodeCharacter.charAt(2, s2);
+        var char3 = UnicodeCharacter.charAt(3, s2);
+        var char4 = UnicodeCharacter.charAt(4, s2);
+
+        assertEquals(1, char0.compareTo(char1));
+        assertEquals(0, char0.compareTo(char2));
+        assertEquals(0, char1.compareTo(char3));
+        assertEquals(-1, char4.compareTo(char2));
+    }
 }

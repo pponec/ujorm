@@ -1,6 +1,7 @@
 package org.ujorm.tools.common;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.stream.Stream;
 
@@ -8,7 +9,8 @@ import java.util.stream.Stream;
  * Represents one valid Unicode character (code point).
  * Immutable and type-safe alternative to the primitive `int` code point.
  */
-public final class UnicodeCharacter {
+public final class UnicodeCharacter
+        implements Comparable<UnicodeCharacter>, Serializable {
 
     /** A character number */
     private final int codePoint;
@@ -99,6 +101,11 @@ public final class UnicodeCharacter {
 
     public static int length(String text) {
         return text.codePointCount(0, text.length());
+    }
+
+    /** Compare two objects */
+    public int compareTo(UnicodeCharacter other) {
+        return Integer.compare(this.codePoint, other.codePoint);
     }
 }
 
