@@ -40,42 +40,42 @@ class UnicodeCharacterTest {
 
     @Test
     void isSupplementary() {
-        var character = UnicodeCharacter.of(s1,0);
+        var character = UnicodeCharacter.of(s1, 0);
         assertTrue(character.isSupplementary());
     }
 
     @Test
     void isEmoji() {
-        var character = UnicodeCharacter.of(s2,0);
+        var character = UnicodeCharacter.of(s2, 0);
         assertTrue(character.isEmoji());
 
-        character = UnicodeCharacter.of(s2,1);
+        character = UnicodeCharacter.of(s2, 1);
         assertFalse(character.isEmoji());
     }
 
     @Test
     void isLetter() {
-        var character = UnicodeCharacter.of(s2,4);
+        var character = UnicodeCharacter.of(s2, 4);
         assertTrue(character.equals('A'));
         assertTrue(character.isLetter());
 
-        character = UnicodeCharacter.of(s2,5);
+        character = UnicodeCharacter.of(s2, 5);
         assertTrue(character.equals('1'));
         assertFalse(character.isLetter());
 
-        character = UnicodeCharacter.of(s1,0);
+        character = UnicodeCharacter.of(s1, 0);
         assertFalse(character.isLetter());
     }
 
     @Test
     void isDigit() {
-        var character = UnicodeCharacter.of(s2,4);
+        var character = UnicodeCharacter.of(s2, 4);
         assertFalse(character.isDigit());
 
-        character = UnicodeCharacter.of(s2,5);
+        character = UnicodeCharacter.of(s2, 5);
         assertTrue(character.isDigit());
 
-        character = UnicodeCharacter.of(s1,0);
+        character = UnicodeCharacter.of(s1, 0);
         assertFalse(character.isDigit());
     }
 
