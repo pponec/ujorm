@@ -81,8 +81,7 @@ final public class RingBuffer implements CharSequence {
     /** The method tests if the current object equals to an argument. */
     @Override
     public boolean equals(final Object s) {
-        if (s instanceof RingBuffer) {
-            final RingBuffer r = (RingBuffer)s;
+        if (s instanceof RingBuffer r) {
             return r.length()==this.length
                 && equalsInternal(r);
         }

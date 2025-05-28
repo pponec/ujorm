@@ -185,7 +185,7 @@ public class CriterionTest extends AbstractTest {
         assertSame(expected.getOperator(), result.getOperator());
         assertEquals(expected.getRightNode(), result.getRightNode());
         assertEquals(expected.toString(), result.toString());
-        assertTrue(result.getRightNode() instanceof Key);
+        assertInstanceOf(Key.class, result.getRightNode());
         //
         final Person person = new Person();
         person.init();
@@ -205,8 +205,8 @@ public class CriterionTest extends AbstractTest {
         assertSame  (expected.getOperator(), result.getOperator());
         assertEquals(expected.getRightNode().toString(), result.getRightNode().toString());
         assertEquals(expected.toString(), result.toString());
-        assertTrue(result.getLeftNode() instanceof Criterion);
-        assertTrue(result.getRightNode() instanceof Criterion);
+        assertInstanceOf(Criterion.class, result.getLeftNode());
+        assertInstanceOf(Criterion.class, result.getRightNode());
         //
         final Person person = new Person();
         person.init();

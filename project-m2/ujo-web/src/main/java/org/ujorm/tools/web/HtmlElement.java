@@ -277,8 +277,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     @Override
     public void close() throws IllegalStateException {
         root.close();
-        if (root.internalElement instanceof XmlModel) {
-            final XmlModel xmlElement = (XmlModel) root.internalElement;
+        if (root.internalElement instanceof XmlModel xmlElement) {
             try {
                 final CharSequence doctype = config.getDoctype();
                 final XmlWriter xmlWriter = new XmlWriter(writer

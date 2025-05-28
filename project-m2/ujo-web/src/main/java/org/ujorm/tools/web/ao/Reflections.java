@@ -30,7 +30,7 @@ public final class Reflections {
         final String methodName = "setCharacterEncoding";
         if (httpServletRequest != null) try {
             final Class<?> requestClass = httpServletRequest.getClass();
-            final Method setCharsetEncoding = requestClass.getMethod(methodName, String.class);;
+            final Method setCharsetEncoding = requestClass.getMethod(methodName, String.class);
             setCharsetEncoding.invoke(httpServletRequest, charset);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             final String msg = String.format("Method does not exists: %s.%s()",

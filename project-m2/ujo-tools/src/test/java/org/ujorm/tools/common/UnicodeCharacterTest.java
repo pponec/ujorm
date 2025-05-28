@@ -43,20 +43,20 @@ class UnicodeCharacterTest {
     void isLetter() {
         var character = UnicodeCharacter.of(s2,4);
         assertTrue(character.equals('A'));
-        assertEquals(true, character.isLetter());
+        assertTrue(character.isLetter());
 
         character = UnicodeCharacter.of(s2,5);
         assertTrue(character.equals('1'));
-        assertEquals(false, character.isLetter());
+        assertFalse(character.isLetter());
     }
 
     @Test
     void isDigit() {
         var character = UnicodeCharacter.of(s2,4);
-        assertEquals(false, character.isDigit());
+        assertFalse(character.isDigit());
 
         character = UnicodeCharacter.of(s2,5);
-        assertEquals(true, character.isDigit());
+        assertTrue(character.isDigit());
     }
 
     @Test

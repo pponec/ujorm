@@ -106,8 +106,7 @@ public class ColumnWrapperImpl implements ColumnWrapper {
      * with the same table alias. */
     @Override
     public boolean equals(@Nullable final Object relation) {
-        if (relation instanceof ColumnWrapper) {
-            final ColumnWrapper relColumn = (ColumnWrapper) relation;
+        if (relation instanceof ColumnWrapper relColumn) {
             final Key argKey = relColumn.getKey();
             final Key localKey = getKey();
             final boolean result = localKey.getName().equals(argKey.getName())

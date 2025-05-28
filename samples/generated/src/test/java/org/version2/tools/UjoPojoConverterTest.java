@@ -19,8 +19,8 @@ public class UjoPojoConverterTest extends org.junit.jupiter.api.Assertions {
         Account v = new Account();
         DefaultUjoConverter<$Account> instance = new DefaultUjoConverter<$Account>();
         Object result = instance.marshal(v);
-        assertTrue(result instanceof Account);
-        assertTrue(result instanceof $Account);
+        assertInstanceOf(Account.class, result);
+        assertInstanceOf($Account.class, result);
         //
         Integer expected = 10;
         v.setId(expected);
@@ -36,8 +36,8 @@ public class UjoPojoConverterTest extends org.junit.jupiter.api.Assertions {
         Address v = new Address();
         DefaultUjoConverter<$Address> instance = new DefaultUjoConverter<$Address>();
         Object result = instance.marshal(v);
-        assertTrue(result instanceof Address);
-        assertTrue(result instanceof $Address);
+        assertInstanceOf(Address.class, result);
+        assertInstanceOf($Address.class, result);
         //
         Integer expected = 10;
         v.setId(expected);
@@ -53,7 +53,7 @@ public class UjoPojoConverterTest extends org.junit.jupiter.api.Assertions {
         $Account v = new $Account(new Account());
         DefaultUjoConverter<$Account> instance = new DefaultUjoConverter<$Account>();
         Object result = instance.unmarshal(v);
-        assertTrue(result instanceof Account);
+        assertInstanceOf(Account.class, result);
         assertFalse(result instanceof $Account);
         //
         Integer expected = 10;
@@ -70,7 +70,7 @@ public class UjoPojoConverterTest extends org.junit.jupiter.api.Assertions {
         $Address v = new $Address(new Address());
         DefaultUjoConverter<$Address> instance = new DefaultUjoConverter<$Address>();
         Object result = instance.unmarshal(v);
-        assertTrue(result instanceof Address);
+        assertInstanceOf(Address.class, result);
         assertFalse(result instanceof $Address);
         //
         Integer expected = 10;

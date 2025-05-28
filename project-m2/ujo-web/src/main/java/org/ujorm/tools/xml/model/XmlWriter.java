@@ -106,8 +106,7 @@ public class XmlWriter extends AbstractWriter {
             }
             boolean writeNewLine = validName;
             for (Object child : children) {
-                if (child instanceof XmlModel) {
-                    final XmlModel xmlChild = (XmlModel) child;
+                if (child instanceof XmlModel xmlChild) {
                     if (writeNewLine && xmlChild.name != XmlBuilder.HIDDEN_NAME) {
                         writeNewLine(level);
                     } else {

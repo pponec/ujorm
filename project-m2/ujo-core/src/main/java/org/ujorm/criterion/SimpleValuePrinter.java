@@ -85,8 +85,7 @@ public class SimpleValuePrinter extends ValuePrinter {
                out.append(null);
             } else if (value instanceof Key) {
                 out.append((Key) value);
-            } else if (value instanceof Ujo) {
-                final Ujo ujo = (Ujo) value;
+            } else if (value instanceof Ujo ujo) {
                 final Key firstProperty = ujo.readKeys().get(0);
                 final Object firstValue = firstProperty.of(ujo);
 

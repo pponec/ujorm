@@ -186,9 +186,9 @@ public class UnsignedShortTest {
         assertEquals(v1.hashCode(), v1x.hashCode());
         assertEquals(v2.hashCode(), v2x.hashCode());
         assertEquals(v3.hashCode(), v3x.hashCode());
-        assertFalse(v1.hashCode() == v2x.hashCode());
-        assertFalse(v2.hashCode() == v3x.hashCode());
-        assertFalse(v3.hashCode() == v1x.hashCode());
+        assertNotEquals(v1.hashCode(), v2x.hashCode());
+        assertNotEquals(v2.hashCode(), v3x.hashCode());
+        assertNotEquals(v3.hashCode(), v1x.hashCode());
 
         assertEquals(0, v1.compareTo(v1x));
         assertEquals(0, v2.compareTo(v2x));

@@ -273,8 +273,7 @@ public abstract class Criterion<U extends Ujo> implements Predicate<U>, Serializ
      */
     @Override
     public final boolean equals(@Nullable Object value) {
-        if (value instanceof Criterion) {
-            final Criterion crn = (Criterion) value;
+        if (value instanceof Criterion crn) {
             return Objects.equals(getOperator(), crn.getOperator())
                 && Objects.equals(getLeftNode(), crn.getLeftNode())
                 && Objects.equals(getRightNode(), crn.getRightNode());

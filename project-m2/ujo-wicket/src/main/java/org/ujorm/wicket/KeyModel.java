@@ -120,8 +120,7 @@ public class KeyModel<U extends Ujo, T> implements IModel<T> {
      */
     @SuppressWarnings("unchecked")
     public static <T> IModel<T> of(Object bo, String key) throws IllegalArgumentException {
-        if (bo instanceof Ujo) {
-            final Ujo ubo = (Ujo) bo;
+        if (bo instanceof Ujo ubo) {
             final Key k = ubo.readKeys().find(key);
             return (IModel<T>) KeyModel.of(ubo, k);
         } else {

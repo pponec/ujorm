@@ -404,7 +404,7 @@ public class AssertTest {
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals(expResult, e.getMessage());
-            assertTrue(e.getCause() instanceof NullPointerException);
+            assertInstanceOf(NullPointerException.class, e.getCause());
         }
 
         try {
@@ -430,7 +430,7 @@ public class AssertTest {
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals(expResult, e.getMessage());
-            assertTrue(e.getCause() instanceof NullPointerException);
+            assertInstanceOf(NullPointerException.class, e.getCause());
         }
     }
 

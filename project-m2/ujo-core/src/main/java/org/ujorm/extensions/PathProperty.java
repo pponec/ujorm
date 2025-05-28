@@ -407,8 +407,7 @@ public class PathProperty<U extends Ujo, VALUE> implements CompositeKey<U, VALUE
      */
     @Override
     public boolean equals(@Nullable final Object key) {
-        if (key instanceof CompositeKey) {
-            final CompositeKey items = (CompositeKey) key;
+        if (key instanceof CompositeKey items) {
             if (keys.length != items.getKeyCount()) {
                 return false;
             }

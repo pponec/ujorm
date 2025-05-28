@@ -43,7 +43,7 @@ public class IndexTest extends org.junit.jupiter.api.Assertions {
         } catch (IllegalUjormException ex) {
             Throwable cause = ex.getCause();
             assertNotNull(cause);
-            assertTrue(cause instanceof SQLException);
+            assertInstanceOf(SQLException.class, cause);
 
             SQLException sql = (SQLException) cause;
             assertEquals("23505", sql.getSQLState());

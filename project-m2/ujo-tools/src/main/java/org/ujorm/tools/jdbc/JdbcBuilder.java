@@ -418,8 +418,7 @@ public class JdbcBuilder implements Serializable {
         try {
         for (int i = 0, max = sql.size(); i < max; i++) {
             final CharSequence item = sql.get(i);
-            if (item instanceof SqlEnvelope) {
-                final SqlEnvelope env = (SqlEnvelope) item;
+            if (item instanceof SqlEnvelope env) {
                 if (env.isColumn()) {
                     if (env.getColumnOrder() > 0) {
                         result.append(ITEM_SEPARATOR);
