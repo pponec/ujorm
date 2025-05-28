@@ -90,7 +90,7 @@ public final class UnicodeCharacter {
     }
 
     /** Get a Unicode character at the index */
-    public static UnicodeCharacter of(final CharSequence text, final int index) {
+    public static UnicodeCharacter charAt(final int index, final CharSequence text) {
         if (text == null) throw new IllegalArgumentException("text is required");
         final var offset = Character.offsetByCodePoints(text, 0, index);
         final var codePoint = Character.codePointAt(text, offset);

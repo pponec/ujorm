@@ -25,72 +25,72 @@ class UnicodeCharacterTest {
 
     @Test
     void codePoint() {
-        var character = UnicodeCharacter.of(s1, 0);
+        var character = UnicodeCharacter.charAt(0, s1);
         var point = character.codePoint();
         assertEquals(128522, point);
 
-        character = UnicodeCharacter.of(s2, 4);
+        character = UnicodeCharacter.charAt(4, s2);
         point = character.codePoint();
         assertEquals('A', point);
 
-        character = UnicodeCharacter.of(s3, 0);
+        character = UnicodeCharacter.charAt(0, s3);
         point = character.codePoint();
         assertEquals('H', point);
     }
 
     @Test
     void isSupplementary() {
-        var character = UnicodeCharacter.of(s1, 0);
+        var character = UnicodeCharacter.charAt(0, s1);
         assertTrue(character.isSupplementary());
     }
 
     @Test
     void isEmoji() {
-        var character = UnicodeCharacter.of(s2, 0);
+        var character = UnicodeCharacter.charAt(0, s2);
         assertTrue(character.isEmoji());
 
-        character = UnicodeCharacter.of(s2, 1);
+        character = UnicodeCharacter.charAt(1, s2);
         assertFalse(character.isEmoji());
     }
 
     @Test
     void isLetter() {
-        var character = UnicodeCharacter.of(s2, 4);
+        var character = UnicodeCharacter.charAt(4, s2);
         assertTrue(character.equals('A'));
         assertTrue(character.isLetter());
 
-        character = UnicodeCharacter.of(s2, 5);
+        character = UnicodeCharacter.charAt(5, s2);
         assertTrue(character.equals('1'));
         assertFalse(character.isLetter());
 
-        character = UnicodeCharacter.of(s1, 0);
+        character = UnicodeCharacter.charAt(0, s1);
         assertFalse(character.isLetter());
     }
 
     @Test
     void isDigit() {
-        var character = UnicodeCharacter.of(s2, 4);
+        var character = UnicodeCharacter.charAt(4, s2);
         assertFalse(character.isDigit());
 
-        character = UnicodeCharacter.of(s2, 5);
+        character = UnicodeCharacter.charAt(5, s2);
         assertTrue(character.isDigit());
 
-        character = UnicodeCharacter.of(s1, 0);
+        character = UnicodeCharacter.charAt(0, s1);
         assertFalse(character.isDigit());
     }
 
     @Test
     void testToString() {
-        var character = UnicodeCharacter.of(s1, 0);
+        var character = UnicodeCharacter.charAt(0, s1);
         var text = character.toString();
         assertEquals(s1, text);
     }
 
     @Test
     void testEquals() {
-        var char0 = UnicodeCharacter.of(s2, 0);
-        var char1 = UnicodeCharacter.of(s2, 1);
-        var char2 = UnicodeCharacter.of(s2, 2);
+        var char0 = UnicodeCharacter.charAt(0, s2);
+        var char1 = UnicodeCharacter.charAt(1, s2);
+        var char2 = UnicodeCharacter.charAt(2, s2);
 
         assertTrue(char0.equals(char0));
         assertTrue(char0.equals(char2));
@@ -100,12 +100,12 @@ class UnicodeCharacterTest {
 
     @Test
     void testEqualsChar() {
-        var char0 = UnicodeCharacter.of(s2, 0);
-        var char1 = UnicodeCharacter.of(s2, 1);
-        var char2 = UnicodeCharacter.of(s2, 2);
+        var char0 = UnicodeCharacter.charAt(0, s2);
+        var char1 = UnicodeCharacter.charAt(1, s2);
+        var char2 = UnicodeCharacter.charAt(2, s2);
 
         assertFalse(char0.equals('-'));
-        assertTrue (char1.equals('-'));
+        assertTrue(char1.equals('-'));
         assertFalse(char2.equals('-'));
     }
 
@@ -115,16 +115,16 @@ class UnicodeCharacterTest {
         var char1 = UnicodeCharacter.stream(s2).skip(1).findFirst().get();
         var char2 = UnicodeCharacter.stream(s2).skip(2).findFirst().get();
 
-        assertEquals(UnicodeCharacter.of(s2, 0), char0);
-        assertEquals(UnicodeCharacter.of(s2, 1), char1);
-        assertEquals(UnicodeCharacter.of(s2, 2), char2);
+        assertEquals(UnicodeCharacter.charAt(0, s2), char0);
+        assertEquals(UnicodeCharacter.charAt(1, s2), char1);
+        assertEquals(UnicodeCharacter.charAt(2, s2), char2);
     }
 
     @Test
     void testIsEmoji() {
-        var char0 = UnicodeCharacter.of(s2, 0);
-        var char1 = UnicodeCharacter.of(s2, 1);
-        var char2 = UnicodeCharacter.of(s2, 2);
+        var char0 = UnicodeCharacter.charAt(0, s2);
+        var char1 = UnicodeCharacter.charAt(1, s2);
+        var char2 = UnicodeCharacter.charAt(2, s2);
 
         assertTrue(char0.isEmoji());
         assertFalse(char1.isEmoji());
@@ -133,9 +133,9 @@ class UnicodeCharacterTest {
 
     @Test
     void writeTo() throws IOException {
-        var char0 = UnicodeCharacter.of(s2, 0);
-        var char1 = UnicodeCharacter.of(s2, 1);
-        var char2 = UnicodeCharacter.of(s2, 2);
+        var char0 = UnicodeCharacter.charAt(0, s2);
+        var char1 = UnicodeCharacter.charAt(1, s2);
+        var char2 = UnicodeCharacter.charAt(2, s2);
 
         var writer = new StringWriter();
         char0.writeTo(writer);
