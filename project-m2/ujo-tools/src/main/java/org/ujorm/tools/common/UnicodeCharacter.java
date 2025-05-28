@@ -92,20 +92,13 @@ public final class UnicodeCharacter {
     /** Get a Unicode character at the index */
     public static UnicodeCharacter of(final CharSequence text, final int index) {
         if (text == null) throw new IllegalArgumentException("text is required");
-        final var length = text.length();
-        var i = 0;
-        var codePointIndex = 0;
+        final var offset = Character.offsetByCodePoints(text, 0, index);
+        final var codePoint = Character.codePointAt(text, offset);
+        return new UnicodeCharacter(codePoint);
+    }
 
-        while (i < length) {
-            final var codePoint = Character.codePointAt(text, i);
-            if (codePointIndex == index) {
-                return new UnicodeCharacter(codePoint);
-            }
-            i += Character.charCount(codePoint);
-            codePointIndex++;
-        }
-
-        throw new IndexOutOfBoundsException("" + index);
+    public static int length(String text) {
+        return text.codePointCount(0, text.length());
     }
 }
 

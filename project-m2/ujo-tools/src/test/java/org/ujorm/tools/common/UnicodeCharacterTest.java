@@ -135,4 +135,12 @@ class UnicodeCharacterTest {
         assertEquals(s2.substring(0, 5), writer.toString()); // !
     }
 
+    @Test
+    void lenhth() {
+        assertEquals(1, UnicodeCharacter.length(s1));
+        assertEquals(6, UnicodeCharacter.length(s2));
+        assertEquals(8, UnicodeCharacter.length(s3));
+
+    }
+
 }
