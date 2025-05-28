@@ -9,9 +9,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UnicodeCharacterTest {
 
+    /** Text 1 character long including 1 emoticon. */
     private static final String s1 = "\uD83D\uDE0A";
+    /** Text 6 characters long including 2 emoticons. */
     private static final String s2 = s1 + "-" + s1 + "-A1";
+    /** Text 8 characters long including 1 emoticon. */
     private static final String s3 = "Hello \uD83C\uDF0D!";
+
+    @Test
+    void lenhth() {
+        assertEquals(1, UnicodeCharacter.length(s1));
+        assertEquals(6, UnicodeCharacter.length(s2));
+        assertEquals(8, UnicodeCharacter.length(s3));
+    }
 
     @Test
     void codePoint() {
@@ -134,13 +144,4 @@ class UnicodeCharacterTest {
 
         assertEquals(s2.substring(0, 5), writer.toString()); // !
     }
-
-    @Test
-    void lenhth() {
-        assertEquals(1, UnicodeCharacter.length(s1));
-        assertEquals(6, UnicodeCharacter.length(s2));
-        assertEquals(8, UnicodeCharacter.length(s3));
-
-    }
-
 }
