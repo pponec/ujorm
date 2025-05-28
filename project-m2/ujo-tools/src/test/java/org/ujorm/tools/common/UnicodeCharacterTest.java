@@ -15,11 +15,15 @@ class UnicodeCharacterTest {
 
     @Test
     void codePoint() {
-        var character = UnicodeCharacter.of(s1,0);
+        var character = UnicodeCharacter.of(s1, 0);
         var point = character.codePoint();
         assertEquals(128522, point);
 
-        character = UnicodeCharacter.of(s3,0);
+        character = UnicodeCharacter.of(s2, 4);
+        point = character.codePoint();
+        assertEquals('A', point);
+
+        character = UnicodeCharacter.of(s3, 0);
         point = character.codePoint();
         assertEquals('H', point);
     }
@@ -48,6 +52,9 @@ class UnicodeCharacterTest {
         character = UnicodeCharacter.of(s2,5);
         assertTrue(character.equals('1'));
         assertFalse(character.isLetter());
+
+        character = UnicodeCharacter.of(s1,0);
+        assertFalse(character.isLetter());
     }
 
     @Test
@@ -57,6 +64,9 @@ class UnicodeCharacterTest {
 
         character = UnicodeCharacter.of(s2,5);
         assertTrue(character.isDigit());
+
+        character = UnicodeCharacter.of(s1,0);
+        assertFalse(character.isDigit());
     }
 
     @Test
