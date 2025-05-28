@@ -2,6 +2,10 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 2.27 (TODO)
++ UnicodeCharacter class
++ Java 17 is required
+
 release 2.26 (2024-11-06)
 + WEB: here is removed dependency on javax.servlet-api from ujo-web module. The goal was to make the module compatible with all versions in the range: servlet 3 to servlet 5.
 + WEB: unpairElement list is extended according to HTML 5
