@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -167,5 +168,22 @@ class UnicodeCharacterTest {
         assertEquals(0, char0.compareTo(char2));
         assertEquals(0, char1.compareTo(char3));
         assertEquals(-1, char4.compareTo(char2));
+    }
+
+    @Test
+    void compareToByStream() {
+        var sortedList = UnicodeCharacter.stream(s2).sorted().toList();
+        var prev = 0;
+
+        for(var c : sortedList) {
+            assertTrue(prev <= c.codePoint());
+            prev = c.codePoint();
+        }
+
+        var begin = sortedList.stream()
+                .limit(4)
+                .map(Object::toString)
+                .collect(Collectors.joining());
+        assertEquals("--1A", begin);
     }
 }
