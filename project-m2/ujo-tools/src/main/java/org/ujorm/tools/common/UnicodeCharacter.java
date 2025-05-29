@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 /**
  * Represents one valid Unicode character (code point).
  * Immutable and type-safe alternative to the primitive `int` code point.
+ * @author Pavel Ponec, https://github.com/pponec/
  */
 public final class UnicodeCharacter
         implements Comparable<UnicodeCharacter>, Serializable {
@@ -91,15 +92,22 @@ public final class UnicodeCharacter
         return new UnicodeCharacter(codePoint);
     }
 
-    /** Get a Unicode character at the index */
+    /** Get a Unicode character at the index
+     *
+     * @param index Index of the character in the text, negative value takes characters from the end.
+     * @param text Text resource.
+     * @return Unicode character object.
+     */
     public static UnicodeCharacter charAt(final int index, final CharSequence text) {
         if (text == null) throw new IllegalArgumentException("text is required");
-        final var offset = Character.offsetByCodePoints(text, 0, index);
+        final var idx = index < 0 ? charCount(text.toString()) + index : index;
+        final var offset = Character.offsetByCodePoints(text, 0, idx);
         final var codePoint = Character.codePointAt(text, offset);
         return new UnicodeCharacter(codePoint);
     }
 
-    public static int length(String text) {
+    /** Returns count of the Unicode characters of the text */
+    public static int charCount(String text) {
         return text.codePointCount(0, text.length());
     }
 

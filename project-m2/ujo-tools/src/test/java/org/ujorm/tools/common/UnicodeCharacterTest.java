@@ -7,6 +7,9 @@ import java.io.StringWriter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author Pavel Ponec, https://github.com/pponec/
+ */
 class UnicodeCharacterTest {
 
     /** Text 1 character long including 1 emoticon. */
@@ -18,9 +21,9 @@ class UnicodeCharacterTest {
 
     @Test
     void lenhth() {
-        assertEquals(1, UnicodeCharacter.length(s1));
-        assertEquals(6, UnicodeCharacter.length(s2));
-        assertEquals(8, UnicodeCharacter.length(s3));
+        assertEquals(1, UnicodeCharacter.charCount(s1));
+        assertEquals(6, UnicodeCharacter.charCount(s2));
+        assertEquals(8, UnicodeCharacter.charCount(s3));
     }
 
     @Test
@@ -99,14 +102,16 @@ class UnicodeCharacterTest {
     }
 
     @Test
-    void testEqualsChar() {
+    void testCharAt_EqualsChar() {
         var char0 = UnicodeCharacter.charAt(0, s2);
         var char1 = UnicodeCharacter.charAt(1, s2);
         var char2 = UnicodeCharacter.charAt(2, s2);
+        var char3 = UnicodeCharacter.charAt(-1, s3);
 
         assertFalse(char0.equals('-'));
         assertTrue(char1.equals('-'));
         assertFalse(char2.equals('-'));
+        assertTrue(char3.equals('!'));
     }
 
     @Test
