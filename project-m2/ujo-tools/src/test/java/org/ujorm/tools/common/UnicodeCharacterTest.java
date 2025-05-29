@@ -117,8 +117,6 @@ class UnicodeCharacterTest {
         assertFalse(char1.equals('-'));
         assertFalse(char2.equals('-'));
         assertFalse(char3.equals('-'));
-
-
     }
 
     @Test
