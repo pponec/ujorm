@@ -97,6 +97,7 @@ public final class UnicodeCharacter
      * @param index Index of the character in the text, negative value takes characters from the end.
      * @param text Text resource.
      * @return Unicode character object.
+     * @see #charCount(String) returns a limit of the index.
      */
     public static UnicodeCharacter charAt(final int index, final CharSequence text) {
         if (text == null) throw new IllegalArgumentException("text is required");
