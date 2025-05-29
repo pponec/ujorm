@@ -103,15 +103,22 @@ class UnicodeCharacterTest {
 
     @Test
     void charAt_equalsChar() {
-        var char0 = UnicodeCharacter.charAt(0, s2);
-        var char1 = UnicodeCharacter.charAt(1, s2);
-        var char2 = UnicodeCharacter.charAt(2, s2);
-        var char3 = UnicodeCharacter.charAt(-1, s2);
+        var char0 = UnicodeCharacter.charAt(0, s3);
+        var char1 = UnicodeCharacter.charAt(1, s3);
+        var char2 = UnicodeCharacter.charAt(7, s3);
+        var char3 = UnicodeCharacter.charAt(-1, s3);
+
+        assertTrue(char0.equals('H'));
+        assertTrue(char1.equals('e'));
+        assertTrue(char2.equals('!'));
+        assertTrue(char3.equals('!'));
 
         assertFalse(char0.equals('-'));
-        assertTrue(char1.equals('-'));
+        assertFalse(char1.equals('-'));
         assertFalse(char2.equals('-'));
-        assertTrue(char3.equals('1'));
+        assertFalse(char3.equals('-'));
+
+
     }
 
     @Test
