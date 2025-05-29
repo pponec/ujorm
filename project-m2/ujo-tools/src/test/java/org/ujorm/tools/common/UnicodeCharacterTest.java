@@ -20,7 +20,7 @@ class UnicodeCharacterTest {
     private static final String s3 = "Hello \uD83C\uDF0D!";
 
     @Test
-    void lenhth() {
+    void charCount() {
         assertEquals(1, UnicodeCharacter.charCount(s1));
         assertEquals(6, UnicodeCharacter.charCount(s2));
         assertEquals(8, UnicodeCharacter.charCount(s3));
@@ -102,16 +102,16 @@ class UnicodeCharacterTest {
     }
 
     @Test
-    void testCharAt_EqualsChar() {
+    void charAt_equalsChar() {
         var char0 = UnicodeCharacter.charAt(0, s2);
         var char1 = UnicodeCharacter.charAt(1, s2);
         var char2 = UnicodeCharacter.charAt(2, s2);
-        var char3 = UnicodeCharacter.charAt(-1, s3);
+        var char3 = UnicodeCharacter.charAt(-1, s2);
 
         assertFalse(char0.equals('-'));
         assertTrue(char1.equals('-'));
         assertFalse(char2.equals('-'));
-        assertTrue(char3.equals('!'));
+        assertTrue(char3.equals('1'));
     }
 
     @Test
