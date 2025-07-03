@@ -2,9 +2,7 @@ package org.ujorm.tools.common;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -91,11 +89,48 @@ public final class UnicodeCharacter
     }
 
     /** Create a Stream of the UnicodeCharacter objects */
-    public static Stream<UnicodeCharacter> stream(final InputStream inputStream, Charset charset) {
-        final var reader = new BufferedReader(new InputStreamReader(inputStream, charset));
-        final var result = reader.lines()
-                .flatMapToInt(String::codePoints)
-                .mapToObj(UnicodeCharacter::of);
+    public static Stream<UnicodeCharacter> stream(InputStream inputStream, Charset charset) {
+        final var reader = new InputStreamReader(inputStream, charset);
+        final var iterator = new PrimitiveIterator.OfInt() {
+            int next = -1;
+            boolean done = false;
+
+            @Override
+            public boolean hasNext() {
+                if (done) return false;
+                if (next != -1) return true;
+                try {
+                    next = reader.read();
+                    if (next == -1) {
+                        done = true;
+                        return false;
+                    }
+                    if (Character.isHighSurrogate((char) next)) {
+                        int low = reader.read();
+                        if (low == -1) {
+                            throw new IllegalArgumentException("Unpaired high surrogate at end of stream");
+                        }
+                        next = Character.toCodePoint((char) next, (char) low);
+                    }
+                    return true;
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+
+            @Override
+            public int nextInt() {
+                if (!hasNext()) throw new NoSuchElementException();
+                int result = next;
+                next = -1;
+                return result;
+            }
+        };
+
+        var result = StreamSupport.stream(
+                        Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED | Spliterator.NONNULL),
+                        false)
+                .map(UnicodeCharacter::of);
 
         return result.onClose(() -> {
             try {
