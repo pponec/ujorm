@@ -2,8 +2,10 @@ package org.ujorm.tools.common;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -121,7 +123,7 @@ class UnicodeCharacterTest {
     }
 
     @Test
-    void stream() {
+    void stream_ofString() {
         var char0 = UnicodeCharacter.stream(s2).skip(0).findFirst().get();
         var char1 = UnicodeCharacter.stream(s2).skip(1).findFirst().get();
         var char2 = UnicodeCharacter.stream(s2).skip(2).findFirst().get();
@@ -129,6 +131,26 @@ class UnicodeCharacterTest {
         assertEquals(UnicodeCharacter.charAt(0, s2), char0);
         assertEquals(UnicodeCharacter.charAt(1, s2), char1);
         assertEquals(UnicodeCharacter.charAt(2, s2), char2);
+    }
+
+
+    @Test
+    void stream_ofInputStream() throws IOException {
+        var charSet = StandardCharsets.UTF_8;
+        var is = new ByteArrayInputStream(s2.getBytes(charSet));
+
+        var char0 = UnicodeCharacter.charAt(0, s2);
+        var char1 = UnicodeCharacter.charAt(1, s2);
+        var char2 = UnicodeCharacter.charAt(2, s2);
+        var char3 = UnicodeCharacter.charAt(3, s2);
+        var chars = UnicodeCharacter.stream(is, charSet).toList();
+
+        assertEquals(6, chars.size());
+        assertEquals(char0, chars.get(0));
+        assertEquals(char1, chars.get(1));
+        assertEquals(char2, chars.get(2));
+        assertEquals(char3, chars.get(3));
+        assertEquals(s2, chars.stream().map(Object::toString).collect(Collectors.joining()));
     }
 
     @Test

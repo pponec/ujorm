@@ -1,9 +1,12 @@
 package org.ujorm.tools.common;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.io.Writer;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Represents one valid Unicode character (code point).
@@ -85,6 +88,22 @@ public final class UnicodeCharacter
     public static Stream<UnicodeCharacter> stream(final CharSequence text) {
         if (text == null) throw new IllegalArgumentException("text is required");
         return text.codePoints().mapToObj(c -> of(c));
+    }
+
+    /** Create a Stream of the UnicodeCharacter objects */
+    public static Stream<UnicodeCharacter> stream(final InputStream inputStream, Charset charset) {
+        final var reader = new BufferedReader(new InputStreamReader(inputStream, charset));
+        final var result = reader.lines()
+                .flatMapToInt(String::codePoints)
+                .mapToObj(UnicodeCharacter::of);
+
+        return result.onClose(() -> {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        });
     }
 
     /** The factory method allows to generate different implementations in the future according to the parameter. */
