@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.web.request.RContext;
+import org.ujorm.tools.web.request.HttpContext;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
@@ -41,7 +41,7 @@ public class ReqestDispatcher {
     private static final Logger LOGGER = Logger.getLogger(ReqestDispatcher.class.getName());
 
     @NotNull
-    private final RContext context;
+    private final HttpContext context;
 
     @NotNull
     private final HtmlConfig htmlConfig;
@@ -54,20 +54,20 @@ public class ReqestDispatcher {
     private final boolean noCache = true;
 
     public ReqestDispatcher(
-            @NotNull RContext context) {
+            @NotNull HttpContext context) {
         this("Info", context);
     }
 
     public ReqestDispatcher(
             @NotNull CharSequence title,
-            @NotNull RContext context) {
+            @NotNull HttpContext context) {
         this(context, HtmlConfig.ofDefault()
                 .setTitle(title)
                 .setNiceFormat());
     }
 
     public ReqestDispatcher(
-            @NotNull RContext context,
+            @NotNull HttpContext context,
             @NotNull HtmlConfig htmlConfig
     ) {
         this.context = context;

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.ObjectProvider;
-import org.ujorm.tools.web.request.RContext;
+import org.ujorm.tools.web.request.HttpContext;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
@@ -273,14 +273,14 @@ public class JsonBuilder implements Closeable {
     /** An object factory */
     @NotNull
     public static final JsonBuilder of(
-            @NotNull final RContext context,
+            @NotNull final HttpContext context,
             @NotNull final HtmlConfig config) {
         return of(context.writer(), config);
     }
 
     /** An object factory */
     @NotNull
-    public static final JsonBuilder of(@NotNull final RContext context) {
+    public static final JsonBuilder of(@NotNull final HttpContext context) {
         return of(context.writer());
     }
 

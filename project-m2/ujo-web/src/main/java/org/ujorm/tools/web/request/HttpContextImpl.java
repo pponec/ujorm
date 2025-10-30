@@ -8,35 +8,39 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
-/** Servlet request context */
-public class RContext {
+/** A default implementation of the HTTP servlet request context */
+public class HttpContextImpl implements HttpContext{
+
     public static final Charset CHARSET = StandardCharsets.UTF_8;
 
     private final URequest uRequest;
     private final Appendable writer;
 
-    public RContext(URequest uRequest, Appendable writer) {
+    public HttpContextImpl(URequest uRequest, Appendable writer) {
         this.uRequest = uRequest;
         this.writer = writer;
     }
 
-    public RContext(URequest uRequest) {
+    public HttpContextImpl(URequest uRequest) {
         this(uRequest, new StringBuilder());
     }
 
-    public RContext() {
+    public HttpContextImpl() {
         this(URequestImpl.of(), new StringBuilder());
     }
 
+    /** An abstract API of the HTTP request */
     public URequest request() {
         return uRequest;
     }
 
+    /** Returns a writer of the HTTP response*/
+    @Override
     public Appendable writer() {
         return writer;
     }
 
-    /** Returns the last parameter, or the null value. */
+    /** Returns the last parameter or the null value. */
     public String getParameter(@NotNull String key) {
         return getParameter(key, null);
     }
@@ -47,6 +51,7 @@ public class RContext {
     }
 
     /** Returns the last parameter */
+    @Override
     public String getParameter(@NotNull String key, String defaultValue) {
         final URequest uRequest = request();
         if (uRequest != null) {
@@ -56,26 +61,29 @@ public class RContext {
         return defaultValue;
     }
 
-    /** HTTP Servlet Factory */
-    public static RContext ofServletResponse(Object httpServletResponse) {
-        return ofServlet(null, httpServletResponse);
-    }
-
-    /** HTTP Servlet Factory */
-    public static RContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
+    /** Create a default HTTP Context */
+    public static HttpContext ofServlet(
+            @Nullable final Object httpServletRequest,
+            @NotNull final Object httpServletResponse) {
+        verifyClass(httpServletRequest, "HttpServletRequest");
+        verifyClass(httpServletResponse, "HttpServletResponse");
         Reflections.setCharacterEncoding(httpServletResponse, CHARSET.name());
         final Appendable writer = Reflections.getServletWriter(httpServletResponse);
         final URequest ureq = httpServletRequest != null ? URequest.ofRequest(httpServletRequest) : URequestImpl.of();
-        return new RContext(ureq, writer);
+        return new HttpContextImpl(ureq, writer);
     }
 
-    /** UContext from a map */
-    public static RContext of(ManyMap map) {
-        return new RContext(URequestImpl.ofMap(map), new StringBuilder());
-    }
-
-    /** UContext from a map */
-    public static RContext of() {
-        return of (new ManyMap());
+    /**
+     * Verifies that the given instance has the expected simple class name.
+     *
+     * @param instance         the object to verify, may be {@code null}
+     * @param simpleClassName  the expected simple class name
+     * @throws IllegalArgumentException if the instance is not {@code null} and its class name does not match the expected name
+     */
+    private static void verifyClass(@Nullable Object instance, @NotNull String simpleClassName) {
+        if (instance != null && !instance.getClass().getSimpleName().contains(simpleClassName)) {
+            throw new IllegalArgumentException("Expected class name '%s' but received '%s'."
+                    .formatted(simpleClassName, instance.getClass().getSimpleName()));
+        }
     }
 }

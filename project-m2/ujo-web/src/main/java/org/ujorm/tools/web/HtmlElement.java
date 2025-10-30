@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.tools.web.request.RContext;
+import org.ujorm.tools.web.request.HttpContext;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.ApiElement;
@@ -338,7 +338,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     /** Create root element for a required element name. The MAIN factory method. */
     @NotNull
     public static HtmlElement of(
-            @NotNull final RContext context,
+            @NotNull final HttpContext context,
             @NotNull final HtmlConfig myConfig) {
         return of(context.writer(), myConfig);
     }
@@ -352,7 +352,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     public static HtmlElement ofServlet(
             @NotNull final Object htmlServletResponse,
             @Nullable final HtmlConfig config) {
-        return of(RContext.ofServlet(null, htmlServletResponse).writer(), config);
+        return of(HttpContext.ofServlet(null, htmlServletResponse).writer(), config);
     }
 
     /** Create new instance with empty html headers
@@ -367,7 +367,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(RContext.ofServlet(null, htmlServletResponse).writer(), config);
+        return of(HttpContext.ofServlet(null, htmlServletResponse).writer(), config);
     }
 
     /** Create new instance with empty html headers
@@ -436,7 +436,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         config.setNiceFormat();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(RContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
     /** Create new instance with empty html headers
@@ -450,7 +450,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
-        return of(RContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
     /** Create new instance with empty html headers
@@ -460,7 +460,7 @@ public class HtmlElement implements ApiElement<Element>, Html {
     @NotNull
     public static HtmlElement niceOf(
             @NotNull final String title,
-            @NotNull final RContext context,
+            @NotNull final HttpContext context,
             @NotNull final CharSequence... cssLinks) {
         final DefaultHtmlConfig config = HtmlConfig.ofDefault();
         config.setNiceFormat();

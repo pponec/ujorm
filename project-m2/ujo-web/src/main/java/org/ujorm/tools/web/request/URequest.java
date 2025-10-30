@@ -24,7 +24,7 @@ public interface URequest {
 
     /** Convert the HttpServletRequest to the URequest */
     static URequest ofRequest(@Nullable final Object httpServletRequest) {
-        Reflections.setCharacterEncoding(httpServletRequest, RContext.CHARSET.name());
+        Reflections.setCharacterEncoding(httpServletRequest, HttpContextImpl.CHARSET.name());
         return new URequest() {
             Map<String, String[]> paramMap = null;
 

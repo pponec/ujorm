@@ -30,7 +30,7 @@ import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
-import org.ujorm.tools.web.request.RContext;
+import org.ujorm.tools.web.request.HttpContext;
 import org.ujorm.tools.web.request.URequest;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
@@ -72,7 +72,7 @@ public class RegexpServlet extends HttpServlet {
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
 
-        final RContext context = RContext.ofServlet(input, output);
+        final HttpContext context = HttpContext.ofServlet(input, output);
         try (HtmlElement html = HtmlElement.of(context.writer(), getConfig("Regular expression tester"))) {
             //html.addJavascriptLink(false, JQUERY_JS); // For jQuery implementation only
             html.addCssLink(BOOTSTRAP_CSS);
@@ -108,7 +108,7 @@ public class RegexpServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        final RContext context = RContext.ofServlet(input, output);
+        final HttpContext context = HttpContext.ofServlet(input, output);
         if (AJAX.of(context, false)) {
             doAjax(context.request(), JsonBuilder.of(context.writer(), getConfig("?"))).close();
         } else {

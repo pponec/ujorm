@@ -4,7 +4,7 @@ import java.time.Month;
 import static java.time.Month.JANUARY;
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.request.ManyMap;
-import org.ujorm.tools.web.request.RContext;
+import org.ujorm.tools.web.request.HttpContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static java.time.Month.*;
@@ -114,7 +114,7 @@ public class HttpParameterTest {
     @Test
     public void testOf_ServletRequest_Enum() {
         Month defaultValue = DECEMBER;
-        RContext dummyContext = context();
+        HttpContext dummyContext = context();
         Month result = Param.MONTH_ENUM.of(dummyContext, defaultValue);
         assertEquals(JANUARY, result);
 
@@ -140,7 +140,7 @@ public class HttpParameterTest {
 
     // --- Helper methods ---
 
-    private RContext context() {
+    private HttpContext context() {
         ManyMap map = new ManyMap();
         map.put(Param.TEXT.name(), "abc");
         map.put(Param.BOOLEAN.name(), Boolean.TRUE.toString());
@@ -152,7 +152,7 @@ public class HttpParameterTest {
         map.put(Param.MONTH_ENUM.name(), JANUARY.name());
         map.put(Param.UNDEFINED.name(), (String) null);
 
-        return RContext.of(map);
+        return HttpContext.of(map);
     }
 
     /** Parameter */

@@ -27,7 +27,7 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.report.ReportBuilder;
-import org.ujorm.tools.web.request.RContext;
+import org.ujorm.tools.web.request.HttpContext;
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
 import org.ujorm.ujoservlet.ajax.ao.HotelResourceService;
 import static org.ujorm.ujoservlet.ajax.HotelReportServlet.Attrib.*;
@@ -62,7 +62,7 @@ public class HotelReportServlet extends HttpServlet {
     protected void doGet(
             final HttpServletRequest request,
             final HttpServletResponse response) throws ServletException, IOException {
-        final RContext context = RContext.ofServlet(request, response);
+        final HttpContext context = HttpContext.ofServlet(request, response);
         new ReportBuilder<Hotel>("Hotel Report")
                 .addOrder("Ord")
                 .add(Hotel::getName, "Hotel", NAME).sortable(true)
