@@ -4,8 +4,8 @@ The Ujorm release notes
 
 release 2.27 (TODO)
 + Java 17+ is required
-+ UnicodeCharacter class
-+ A class RContext is renamed to the HttpContext
++ WEB: A class RContext is renamed to the HttpContext
++ TOOLS: UnicodeCharacter class
 
 release 2.26 (2024-11-06)
 + WEB: here is removed dependency on javax.servlet-api from ujo-web module. The goal was to make the module compatible with all versions in the range: servlet 3 to servlet 5.
