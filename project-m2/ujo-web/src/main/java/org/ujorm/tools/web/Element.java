@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.sql.rowset.spi.XmlWriter;
+import org.ujorm.tools.xml.model.XmlWriter;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.ao.Column;
@@ -85,7 +85,7 @@ public final class Element implements ApiElement<Element>, Html {
      * Set an attribute
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.model.XmlModel, java.lang.String, java.io.Writer) }
+     *   {@link XmlWriter#writeValue(Object, ApiElement, String)}
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
@@ -100,7 +100,7 @@ public final class Element implements ApiElement<Element>, Html {
      * Set an attribute
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.model.XmlModel, java.lang.String, java.io.Writer) }
+     *   {@link XmlWriter#writeValue(Object, ApiElement, String)}
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
@@ -140,7 +140,7 @@ public final class Element implements ApiElement<Element>, Html {
      * A shortcut for the method {@link #setAttribute(java.lang.String, java.lang.Object) }.
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.model.XmlModel, java.lang.String, java.io.Writer) }
+     *   {@link {@link XmlWriter#writeValue(Object, ApiElement, String)}
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
@@ -152,7 +152,7 @@ public final class Element implements ApiElement<Element>, Html {
     /** Add simple text
      * @param data Text item
      * @return A parent element.
-     * @see #addAnchoredText(java.lang.String, java.lang.Object...)
+     * @see #addAnchor(String, CharSequence...)
      */
     @NotNull
     @Override
@@ -165,7 +165,7 @@ public final class Element implements ApiElement<Element>, Html {
      * Add many texts with <strong>no separator</strong>
      * @param data Text items
      * @return A parent element.
-     * @see #addAnchoredText(java.lang.String, java.lang.Object...)
+     * @see #addAnchor(String, CharSequence...)
      */
     @NotNull
     public Element addText(@NotNull final Object... data) throws IllegalStateException {
