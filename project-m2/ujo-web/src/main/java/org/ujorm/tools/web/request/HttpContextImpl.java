@@ -65,8 +65,8 @@ public class HttpContextImpl implements HttpContext{
     public static HttpContext ofServlet(
             @Nullable final Object httpServletRequest,
             @NotNull final Object httpServletResponse) {
-        verifyClass(httpServletRequest, "HttpServletRequest");
-        verifyClass(httpServletResponse, "HttpServletResponse");
+        verifyClass(httpServletRequest, "Request");
+        verifyClass(httpServletResponse, "Response");
         Reflections.setCharacterEncoding(httpServletResponse, CHARSET.name());
         final Appendable writer = Reflections.getServletWriter(httpServletResponse);
         final URequest ureq = httpServletRequest != null ? URequest.ofRequest(httpServletRequest) : URequestImpl.of();
