@@ -22,9 +22,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.ujorm.tools.web.Element;
+import org.ujorm.tools.web.AbstractHtmlElement;
 import org.ujorm.tools.web.Html;
-import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.ujoservlet.benchmark.Stock;
 import org.ujorm.ujoservlet.benchmark.StockService;
@@ -79,8 +78,8 @@ public class UjoElementBenchmarkStock extends HttpServlet {
      */
     public void stock(HttpServletResponse output) throws IOException, IllegalArgumentException {
 
-        try (HtmlElement html = HtmlElement.ofServlet(output, CONFIG)) {
-            try (Element head = html.getHead()) {
+        try (var html = AbstractHtmlElement.ofServlet(output, CONFIG)) {
+            try (var head = html.getHead()) {
                 head.addElement(Html.META)
                         .setAttribute("http-equiv", "Content-Type")
                         .setAttribute(Html.A_CONTENT, "text/html; charset=UTF-8");
@@ -104,11 +103,11 @@ public class UjoElementBenchmarkStock extends HttpServlet {
                         .setAttribute(Html.A_TYPE, "text/css")
                         .addRawText(STOCKS_CSS);
             }
-            try (Element body = html.getBody()) {
+            try (var body = html.getBody()) {
                 body.addElement(Html.H1).addText("Stock Prices");
-                Element table = body.addElement(Html.TABLE);
+                var table = body.addElement(Html.TABLE);
                 {
-                    Element thead = table.addElement(Html.THEAD);
+                    var thead = table.addElement(Html.THEAD);
                     {
                         thead.addElement(Html.TH).addText("#");
                         thead.addElement(Html.TH).addText("symbol");
@@ -118,10 +117,10 @@ public class UjoElementBenchmarkStock extends HttpServlet {
                         thead.addElement(Html.TH).addText("ratio");
                     }
 
-                    final List<Stock> stocks = dummyItems();
+                    final var stocks = dummyItems();
                     for (int itemIndex = 0, max = stocks.size(); itemIndex < max; itemIndex++) {
-                        Stock stock = stocks.get(itemIndex);
-                        Element row = table.addElement(Html.TR).setAttribute(Html.A_CLASS, itemIndex % 2 == 0 ? "odd" : "even");
+                        var stock = stocks.get(itemIndex);
+                        var row = table.addElement(Html.TR).setAttribute(Html.A_CLASS, itemIndex % 2 == 0 ? "odd" : "even");
                         {
                             row.addElement(Html.TD).addText(String.valueOf(itemIndex + 1));
                             row.addElement(Html.TD).addElement(Html.A).setAttribute(Html.A_HREF, "/stocks/" + stock.getSymbol())

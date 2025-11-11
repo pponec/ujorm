@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
+import org.ujorm.tools.web.AbstractHtmlElement;
 import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
@@ -135,13 +136,13 @@ public class RegexpBuilderServlet extends HttpServlet {
                 TEXT.of(input, ""));
     }
 
-    /** Write a Javascript to a header */
-    protected void writeJavaScript(@NotNull final HtmlElement html, final boolean enabled) {
+    /** Write a JavaScript to a header */
+    protected void writeJavaScript(@NotNull final AbstractHtmlElement html, final boolean enabled) {
         writeJavaScript(html, enabled, false);
     }
 
-    /** Write a Javascript to a header */
-    protected void writeJavaScript(@NotNull final HtmlElement html,
+    /** Write a JavaScript to a header */
+    protected void writeJavaScript(@NotNull final AbstractHtmlElement html,
             final boolean enabled,
             final boolean isSortable) {
         if (enabled) {
