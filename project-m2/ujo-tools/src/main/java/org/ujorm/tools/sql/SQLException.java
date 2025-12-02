@@ -11,7 +11,7 @@ public class SQLException extends IllegalStateException {
         super(cause);
     }
 
-    public SQLException(String message, Throwable cause) {
+    public SQLException(Throwable cause, String message) {
         super(message, cause);
     }
 
