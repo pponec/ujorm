@@ -69,7 +69,7 @@ public class HtmlElement extends AbstractHtmlElement {
         return of(context.writer(), myConfig);
     }
 
-    /** Create a new instance with empty html headers, The MAIN servlet factory method.
+    /** Create a new instance with empty HTML headers, The MAIN servlet factory method.
      * @throws IllegalStateException IO exceptions
      * @see Appendable
      */
@@ -80,7 +80,7 @@ public class HtmlElement extends AbstractHtmlElement {
         return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
-    /** Create new instance with empty html headers
+    /** Create new instance with empty HTML headers
      * @throws IllegalStateException IO exceptions
      * @see Appendable
      */
@@ -95,7 +95,7 @@ public class HtmlElement extends AbstractHtmlElement {
         return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
-    /** Create new instance with empty html headers
+    /** Create new instance with empty HTML headers
      * @throws IllegalStateException IO exceptions
      * @see Appendable
      */
@@ -107,7 +107,7 @@ public class HtmlElement extends AbstractHtmlElement {
         return of(response, config);
     }
 
-    /** Create new instance with empty html headers
+    /** Create new instance with empty HTML headers
      * @throws IllegalStateException IO exceptions
      * @see Appendable
      */
@@ -119,7 +119,7 @@ public class HtmlElement extends AbstractHtmlElement {
         return of(response, config);
     }
 
-    /** Create new instance with empty html headers
+    /** Create new instance with empty HTML headers
      * @throws IllegalStateException IO exceptions
      * @see Appendable
      */
@@ -132,7 +132,7 @@ public class HtmlElement extends AbstractHtmlElement {
         return of(response, config);
     }
 
-    /** Create new instance with empty html headers
+    /** Create new instance with empty HTML headers
      * @throws IllegalStateException IO exceptions
      * @see Appendable
      */
@@ -162,7 +162,7 @@ public class HtmlElement extends AbstractHtmlElement {
         return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
-    /** Create new instance with empty html headers
+    /** Create new instance with empty HTML headers
      * @throws IllegalStateException IO exceptions
      * @see Appendable
      */
@@ -176,7 +176,7 @@ public class HtmlElement extends AbstractHtmlElement {
         return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
-    /** Create new instance with empty html headers
+    /** Create new instance with empty HTML headers
      * @throws IllegalStateException IO exceptions
      * @see Appendable
      */
@@ -192,7 +192,21 @@ public class HtmlElement extends AbstractHtmlElement {
         return of(context.writer(), config);
     }
 
-    /** Create new instance with empty html headers
+    /** Create new instance with empty HTML headers
+     * @throws IllegalStateException IO exceptions
+     * @see Appendable
+     */
+    @NotNull
+    public static HtmlElement niceOf(
+            @NotNull final HttpContext context,
+            @NotNull final CharSequence... cssLinks) {
+        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        config.setNiceFormat();
+        config.setCssLinks(cssLinks);
+        return of(context.writer(), config);
+    }
+
+    /** Create new instance with empty HTML headers
      * @throws IllegalStateException IO exceptions
      * @see Appendable
      */
@@ -208,7 +222,7 @@ public class HtmlElement extends AbstractHtmlElement {
         return of(response, config);
     }
 
-    /** Create new instance with empty html headers
+    /** Create new instance with empty HTML headers
      * @param config Html configuration
      * @return An instance of the HtmlPage
      * @throws IllegalStateException IO exceptions
