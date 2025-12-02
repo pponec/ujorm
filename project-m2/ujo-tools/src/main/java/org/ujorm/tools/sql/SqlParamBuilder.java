@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2024 Pavel Ponec
+ * Copyright 2024-2025 Pavel Ponec
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/jdbc/SqlBuilder.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * Less than 170 lines long class to simplify work with JDBC.
+ * Less than 230 lines long class to simplify work with JDBC.
  * Original source: <a href="https://github.com/pponec/PPScriptsForJava/blob/development/src/main/java/net/ponec/script/SqlExecutor.java">GitHub</a>
  * Licence: Apache License, Version 2.0
  * @author Pavel Ponec, https://github.com/pponec
@@ -41,11 +41,11 @@ public class SqlParamBuilder implements AutoCloseable {
     private static final Pattern SQL_MARK = Pattern.compile(":(\\w+)");
 
     @NotNull
-    protected final Connection dbConnection;
+    private final Connection dbConnection;
     @Nullable
-    protected String sqlTemplate;
+    protected String sqlTemplate = "";
     @NotNull
-    protected final Map<String, Object> params = new HashMap<>();
+    private final Map<String, Object[]> params = new HashMap<>();
     @Nullable
     private PreparedStatement preparedStatement = null;
 
@@ -56,20 +56,15 @@ public class SqlParamBuilder implements AutoCloseable {
     /** Close an old statement (if any) and assign the new SQL template */
     public SqlParamBuilder sql(@NotNull String... sqlLines) {
         close();
-        this.params.clear();
-        this.sqlTemplate = sqlLines.length == 1 ? sqlLines[0] : String.join("\n", sqlLines);
+        params.clear();
+        sqlTemplate = sqlLines.length == 1 ? sqlLines[0] : String.join("\n", sqlLines);
         return this;
     }
 
-    /** Assign a SQL value */
-    public SqlParamBuilder bind(@NotNull String key, @NotNull Object value) {
-        this.params.put(key, value);
+    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
+    public SqlParamBuilder bind(@NotNull String key, Object... values) {
+        params.put(key, values.length > 0 ? values : new Object[]{null});
         return this;
-    }
-
-    /** Assign more SQL values, separated by comma {@code ,} */
-    public SqlParamBuilder bind(@NotNull String key, @NotNull Object... value) {
-        return bind (key, Arrays.asList(value));
     }
 
     public int execute() throws IllegalStateException, SQLException {
@@ -81,7 +76,9 @@ public class SqlParamBuilder implements AutoCloseable {
         return prepareStatement(Statement.RETURN_GENERATED_KEYS).executeUpdate();
     }
 
-    /** Execute: INSERT, UPDATE, DELETE, DDL statements */
+    /** Execute: INSERT, UPDATE, DELETE, DDL statements.
+     * The ResultSet object is automatically closed when the Statement object that generated it is closed,
+     * re-executed, or used to retrieve the next result from a sequence of multiple results. */
     @NotNull
     private ResultSet executeSelect() throws IllegalStateException {
         try {
@@ -112,6 +109,8 @@ public class SqlParamBuilder implements AutoCloseable {
                 return resultSet;
             }
         };
+        // NOTE: The last ResultSet from a PreparedStatement is closed automatically when the statement is closed.
+        // For multiple ResultSets or other creation methods, must be closed explicitly.
         final var spliterator = Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED);
         return StreamSupport.stream(spliterator, false).onClose(() -> {
             try {
@@ -132,18 +131,15 @@ public class SqlParamBuilder implements AutoCloseable {
         return stream(executeSelect()).map(mapper);
     }
 
-    public Connection getConnection() {
-        return dbConnection;
-    }
-
     /** The method closes a PreparedStatement object with related objects, not the database connection. */
     @Override
     public void close() {
-        try (PreparedStatement c2 = preparedStatement) {
+        try (AutoCloseable c2 = preparedStatement) {
         } catch (Exception e) {
             throw new IllegalStateException("Closing fails", e);
         } finally {
             preparedStatement = null;
+            params.clear();
         }
     }
 
@@ -161,12 +157,12 @@ public class SqlParamBuilder implements AutoCloseable {
         for (int i = 0, max = sqlValues.size(); i < max; i++) {
             result.setObject(i + 1, sqlValues.get(i));
         }
-        this.preparedStatement = result;
+        preparedStatement = result;
         return result;
     }
 
     @Nullable
-    protected ResultSet generatedKeys() {
+    protected ResultSet generatedKeysRs() {
         try {
             return preparedStatement != null ? preparedStatement.getGeneratedKeys() : null;
         } catch (SQLException e) {
@@ -174,39 +170,37 @@ public class SqlParamBuilder implements AutoCloseable {
         }
     }
 
-    /** Method for retrieving the primary keys of an INSERT statement. Only one call per INSERT is allowed. */
+    /** Method for retrieving the primary keys of an INSERT statement. Only one call per INSERT is allowed. <br>
+     * Usage: {@code builder.generatedKeys(rs -> rs.getInt(1)).findFirst()} */
     @NotNull
-    public <R> Stream<R> streamGeneratedKeys(SqlFunction<ResultSet, ? extends R> mapper ) {
-        final var generatedKeysRs = generatedKeys();
+    public <R> Stream<R> generatedKeys(SqlFunction<ResultSet, ? extends R> mapper) {
+        final var generatedKeysRs = generatedKeysRs();
         return generatedKeysRs != null
                 ? stream(generatedKeysRs).map(mapper)
                 : Stream.of();
     }
 
     @NotNull
-    protected String buildSql(@NotNull List<Object> sqlValues, boolean toLog) {
+    protected String buildSql(List<Object> sqlValues, boolean toLog) {
         final var result = new StringBuffer(256);
         final var matcher = SQL_MARK.matcher(sqlTemplate);
         final var missingKeys = new HashSet<>();
-        final var singleValue = new Object[1];
         while (matcher.find()) {
             final var key = matcher.group(1);
-            final var value = params.get(key);
-            if (value != null) {
+            final var values = params.get(key);
+            if (values != null) {
                 matcher.appendReplacement(result, "");
-                singleValue[0] = value;
-                final var values = value instanceof List ? ((List<?>) value).toArray() : singleValue;
-                for (var i = 0; i < values.length; i++) {
+                for (int i = 0; i < values.length; i++) {
                     if (i > 0) result.append(',');
-                    result.append(Matcher.quoteReplacement(toLog ? "[" + values[i] + "]" : "?"));
+                    result.append(toLog ? "[" + values[i] + "]" : "?");
                     sqlValues.add(values[i]);
                 }
             } else {
-                matcher.appendReplacement(result, Matcher.quoteReplacement(":" + key));
+                matcher.appendReplacement(result, Matcher.quoteReplacement(matcher.group()));
                 missingKeys.add(key);
             }
         }
-        if (! toLog && !missingKeys.isEmpty()) {
+        if (!toLog && !missingKeys.isEmpty()) {
             throw new IllegalArgumentException("Missing value of the keys: " + missingKeys);
         }
         matcher.appendTail(result);
@@ -216,7 +210,7 @@ public class SqlParamBuilder implements AutoCloseable {
     /** Set a SQL parameter value */
     @NotNull
     public SqlParamBuilder setParam(String key, Object value) {
-        this.params.put(key, value);
+        this.params.put(key, new Object[]{value});
         return this;
     }
 
@@ -229,5 +223,9 @@ public class SqlParamBuilder implements AutoCloseable {
     @Override
     public String toString() {
         return buildSql(new ArrayList<>(), true);
+    }
+
+    public String toStringLine() {
+        return toString().replaceAll("\\s*\\R+\\s*", " ");
     }
 }

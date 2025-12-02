@@ -5,6 +5,8 @@ The Ujorm release notes
 release 2.27 (TODO)
 + Java 17+ is required
 + WEB: A class RContext is renamed to the HttpContext
++ TOOLS: New method SqlParamBuilder.stream() closes the internal ResultSet.
++ TOOLS: New method SqlParamBuilder.streamGeneratedKeys() for retrieving the primary keys of an INSERT statement.
 + TOOLS: UnicodeCharacter class
 
 release 2.26 (2024-11-06)

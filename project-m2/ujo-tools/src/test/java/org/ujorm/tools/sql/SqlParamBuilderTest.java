@@ -74,8 +74,8 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
 //                System.out.println("Vygenerované ID: " + id);
 //            }
 
-            var id = builder.streamGeneratedKeys(rs -> rs.getInt(1)).findFirst();
-            var id2 = builder.streamGeneratedKeys(rs -> rs.getInt(1)).findFirst();
+            var id = builder.generatedKeys(rs -> rs.getInt(1)).findFirst();
+            var id2 = builder.generatedKeys(rs -> rs.getInt(1)).findFirst();
             //Assertions.assertEquals(1, id.get());
 
             System.out.println("MULTI INSERT");
