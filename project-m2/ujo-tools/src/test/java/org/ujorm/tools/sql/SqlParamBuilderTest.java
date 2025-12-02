@@ -52,7 +52,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         try (SqlParamBuilder builder = new SqlParamBuilder(dbConnection)) {
             System.out.println("CREATE TABLE");
             builder.sql("CREATE TABLE employee",
-                            "( id INTEGER PRIMARY KEY",
+                            "( id INTEGER PRIMARY KEY AUTO_INCREMENT",
                             ", name VARCHAR(256) DEFAULT 'test'",
                             ", code VARCHAR(1)",
                             ", created DATE NOT NULL",
@@ -62,27 +62,32 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             System.out.println("SINGLE INSERT");
             builder.sql(String.join(newLine,
                             "INSERT INTO employee",
-                            "( id, code, created ) VALUES",
-                            "( :id, :code, :created )"))
-                    .bind("id", 1)
+                            "( code, created ) VALUES",
+                            "( :code, :created )"))
                     .bind("code", "T")
                     .bind("created", someDate)
-                    .execute();
+                    .executeInsert();
+
+//            var generatedKeys = builder.generatedKeys();
+//            if (generatedKeys.next()) {
+//                long id = generatedKeys.getLong(1);
+//                System.out.println("Vygenerované ID: " + id);
+//            }
+
+            var id = builder.streamGeneratedKeys(rs -> rs.getInt(1)).findFirst();
+            var id2 = builder.streamGeneratedKeys(rs -> rs.getInt(1)).findFirst();
+            //Assertions.assertEquals(1, id.get());
 
             System.out.println("MULTI INSERT");
             builder.sql("INSERT INTO employee",
-                            "(id,code,created) VALUES",
-                            "(:id1,:code,:created),",
-                            "(:id2,:code,:created)")
-                    .bind("id1", 2)
-                    .bind("id2", 3)
-                    .bind("code", "T")
+                            "(code,created) VALUES",
+                            "(:code,:created),",
+                            "(:code,:created)")
+                    .bind("code", "M")
                     .bind("created", someDate.plusDays(1))
-                    .execute();
-            System.out.println("Previous statement with modified parameters");
-            builder.bind("id1", 11)
-                    .bind("id2", 12)
-                    .bind("code", "V")
+                    .executeInsert();
+            System.out.println("Previous statement with modified parameter(s)");
+            builder.bind("code", "X")
                     .execute();
 
             System.out.println("SELECT 1");
@@ -92,12 +97,13 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                             "  AND t.code IN (:code)",
                             "ORDER BY t.id")
                     .bind("id", 10)
-                    .bind("code", "T", "V")
+                    .bind("code", "T", "M")
                     .streamMap(rs -> new Employee(
-                            rs.getInt(1),
-                            rs.getString(2),
-                            rs.getObject(3, LocalDate.class)))
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getObject("created", LocalDate.class)))
                     .collect(Collectors.toList());
+            employees.stream().forEach(e -> System.out.println("> " + e));
             Assertions.assertEquals(3, employees.size());
             Assertions.assertEquals(1, employees.get(0).id);
             Assertions.assertEquals("test", employees.get(0).name);
@@ -107,11 +113,11 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             List<Employee> employees2 = builder
                     .bind("id", 100)
                     .streamMap(rs -> new Employee(
-                            rs.getInt(1),
-                            rs.getString(2),
-                            rs.getObject(3, LocalDate.class)))
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getObject("created", LocalDate.class)))
                     .collect(Collectors.toList());
-            Assertions.assertEquals(5, employees2.size());
+            Assertions.assertEquals(3, employees2.size());
         }
     }
 
@@ -146,17 +152,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         }
     }
 
-    public class Employee {
-        final int id;
-        final String name;
-        final LocalDate created;
-
-        public Employee(int id, String name, LocalDate created) {
-            this.id = id;
-            this.name = name;
-            this.created = created;
-        }
-    }
+    public record Employee (int id, String name, LocalDate created) {};
 
     /** Check that autoclosing works correctly also on NULL objects. */
     @Test
