@@ -137,7 +137,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 builder.streamMap(t -> t).count();
             });
-            assertEquals("Missing value of the keys: [code, id]", ex.getMessage());
+            assertEquals("Missing SQL parameter: [code, id]", ex.getMessage());
 
             System.out.println("ASSIGNED PARAMS");
             builder.bind("id", 10);

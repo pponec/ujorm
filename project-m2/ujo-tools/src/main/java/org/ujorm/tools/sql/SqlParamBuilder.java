@@ -214,7 +214,7 @@ public class SqlParamBuilder implements AutoCloseable {
             }
         }
         if (!toLog && !missingKeys.isEmpty()) {
-            throw new IllegalArgumentException("Missing value of the keys: " + missingKeys);
+            throw new IllegalArgumentException("Missing SQL parameter: " + missingKeys);
         }
         matcher.appendTail(result);
         return result.toString();
