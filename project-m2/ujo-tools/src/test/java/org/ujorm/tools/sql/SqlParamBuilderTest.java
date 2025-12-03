@@ -195,9 +195,9 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         employees = builder.sql("SELECT t.id, t.name, t.created",
                         "FROM employee t",
                         "WHERE t.id = :id",
-                        "  AND t.name LIKE :name%")
+                        "  AND t.name LIKE :name")
                 .bind("id", 1)
-                .bind("name", "t")
+                .bind("name", "t%")
                 .streamMap(rs -> new Employee(
                         rs.getInt("id"),
                         rs.getString("name"),
