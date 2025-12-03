@@ -24,6 +24,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,6 +46,63 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         try (Connection dbConnection = createDbConnection())  {
             runSqlStatements(dbConnection);
         }
+    }
+
+    @Test
+    public void testRegexMatches() {
+        Pattern SQL_MARK = Pattern.compile(":(\\w+)");
+
+        // Test pro :hello
+        Matcher matcher = SQL_MARK.matcher(":hello");
+        matcher.find();
+        assertEquals("hello", matcher.group(1));
+
+        // Test pro :abc123
+        matcher = SQL_MARK.matcher(":abc123");
+        matcher.find();
+        assertEquals("abc123", matcher.group(1));
+
+        // Test pro :test_
+        matcher = SQL_MARK.matcher(":test_");
+        matcher.find();
+        assertEquals("test_", matcher.group(1));
+
+        // Test pro text bez shody
+        matcher = SQL_MARK.matcher("hello");
+        matcher.find();
+        assertEquals(false, matcher.find());
+
+        // Test pro text s dvojtečkou, ale bez \w+
+        matcher = SQL_MARK.matcher(":");
+        matcher.find();
+        assertEquals(false, matcher.find());
+    }
+
+    @Test
+    public void regexpTest() {
+        // Test pro :hello
+        Matcher matcher = SqlParamBuilder.SQL_MARK.matcher(":hello");
+        assertEquals("hello", matcher.find() ? matcher.group(1) : "");
+
+        // Test pro :abc123
+        matcher = SqlParamBuilder.SQL_MARK.matcher(":abc123");
+        assertEquals("abc123", matcher.find() ? matcher.group(1) : "");
+
+        // Test pro :test_
+        matcher = SqlParamBuilder.SQL_MARK.matcher(":test_");
+        assertEquals("test_", matcher.find() ? matcher.group(1) : "");
+
+        // Test pro :test%
+        matcher = SqlParamBuilder.SQL_MARK.matcher(":test%");
+        assertEquals("test", matcher.find() ? matcher.group(1) : "");
+
+        // Test pro text bez shody
+        matcher = SqlParamBuilder.SQL_MARK.matcher("hello");
+        assertEquals("", matcher.find() ? matcher.group(1) : "");
+
+        // Test pro text s dvojtečkou, ale bez \w+
+        matcher = SqlParamBuilder.SQL_MARK.matcher(":");
+        assertEquals("", matcher.find() ? matcher.group(1) : "");
     }
 
     /** Example of SQL statement INSERT. */
