@@ -68,12 +68,6 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                     .bind("created", someDate)
                     .executeInsert();
 
-//            var generatedKeys = builder.generatedKeys();
-//            if (generatedKeys.next()) {
-//                long id = generatedKeys.getLong(1);
-//                System.out.println("Vygenerované ID: " + id);
-//            }
-
             var id = builder.generatedKeys(rs -> rs.getInt(1)).findFirst();
             var id2 = builder.generatedKeys(rs -> rs.getInt(1)).findFirst();
             //Assertions.assertEquals(1, id.get());
@@ -118,7 +112,40 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                             rs.getObject("created", LocalDate.class)))
                     .collect(Collectors.toList());
             Assertions.assertEquals(3, employees2.size());
+            runSqlStatementsLike(builder);
         }
+    }
+
+    private void runSqlStatementsLike(SqlParamBuilder builder) {
+        System.out.println("SELECT 3a");
+        List<Employee> employees = builder.sql("SELECT t.id, t.name, t.created",
+                        "FROM employee t",
+                        "WHERE t.id = :id",
+                        "  AND t.name LIKE :name") // AND t.name LIKE :name%
+                .bind("id", 1)
+                .bind("name", "test")
+                .streamMap(rs -> new Employee(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getObject("created", LocalDate.class)))
+                .collect(Collectors.toList());
+        employees.stream().forEach(e -> System.out.println("> " + e));
+        Assertions.assertEquals(1, employees.size());
+
+        System.out.println("SELECT 3b");
+        employees = builder.sql("SELECT t.id, t.name, t.created",
+                        "FROM employee t",
+                        "WHERE t.id = :id",
+                        "  AND t.name LIKE :name%")
+                .bind("id", 1)
+                .bind("name", "t")
+                .streamMap(rs -> new Employee(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getObject("created", LocalDate.class)))
+                .collect(Collectors.toList());
+        employees.stream().forEach(e -> System.out.println("> " + e));
+        Assertions.assertEquals(1, employees.size());
     }
 
     @Test
