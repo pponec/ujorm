@@ -63,8 +63,15 @@ public class SqlParamBuilder implements AutoCloseable {
     }
 
     /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
-    public SqlParamBuilder bind(@NotNull String key, Object... values) {
-        params.put(key, values.length > 0 ? values : new Object[]{null});
+    public SqlParamBuilder bind(@NotNull final String key, final Object... values) {
+        return bind(true, key, values);
+    }
+
+    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Object... values) {
+        if (enabled) {
+            params.put(key, values.length > 0 ? values : new Object[]{null});
+        }
         return this;
     }
 
