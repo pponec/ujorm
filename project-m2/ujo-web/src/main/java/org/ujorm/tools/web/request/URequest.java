@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 public interface URequest {
 
@@ -17,6 +18,20 @@ public interface URequest {
     /** Parameter provider */
     @NotNull
     String[] getParameters(final String key);
+
+    /** Returns the last parameter */
+    default String getParameter(@NotNull String key, @Nullable String defaultValue) {
+        return getParameter(key, defaultValue, Function.identity());
+    }
+
+    /** Returns the last parameter */
+    default <T> T getParameter(@NotNull String key, @NotNull T defaultValue, @NotNull Function<String, T> converter) {
+        final var params = getParameters(key);
+        if (params.length > 0) try {
+                return converter.apply(params[params.length - 1]);
+        } catch (Exception e) { /* continue */ }
+        return defaultValue;
+    }
 
     /** Parameter provider */
     @NotNull

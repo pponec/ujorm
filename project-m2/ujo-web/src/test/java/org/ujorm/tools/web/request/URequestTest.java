@@ -11,14 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class URequestTest {
 
-    /**
-     * aused by: java.lang.reflect.InaccessibleObjectException:
-     * Unable to make protected final java.lang.Class
-     * java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain) throws java.lang.ClassFormatError accessible:
-     * module java.base does not "opens java.lang" to unnamed module @1554909b
-     * */
     @Test
-    public void compileTest() throws IOException {
+    public void getParameters() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setParameter("p1", "v1");
         request.setParameter("p2", "v2a", "v2b");
@@ -30,6 +24,35 @@ class URequestTest {
 
         assertEquals("v1", uRequest.getParameters("p1")[0]);
         assertEquals("v2b", uRequest.getParameters("p2")[1]);
+    }
+
+
+    @Test
+    public void getStringParameter() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("p1", "1");
+        request.setParameter("p2", "3", "2");
+        request.setParameter("p3", "X");
+        URequest uRequest = HttpContext.ofServlet(request, new MockHttpServletResponse()).request();
+
+        assertEquals("0", uRequest.getParameter("p0", "0"));
+        assertEquals("1", uRequest.getParameter("p1", "0"));
+        assertEquals("2", uRequest.getParameter("p2", "0"));
+        assertEquals("X", uRequest.getParameter("p3", "3"));
+    }
+
+    @Test
+    public void getGenericParameter() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("p1", "1");
+        request.setParameter("p2", "3", "2");
+        request.setParameter("p3", "X");
+        URequest uRequest = HttpContext.ofServlet(request, new MockHttpServletResponse()).request();
+
+        assertEquals(0, uRequest.getParameter("p0", 0, Integer::parseInt));
+        assertEquals(1, uRequest.getParameter("p1", 0, Integer::parseInt));
+        assertEquals(2, uRequest.getParameter("p2", 0, Integer::parseInt));
+        assertEquals(3, uRequest.getParameter("p3", 3, Integer::parseInt));
     }
 
 }

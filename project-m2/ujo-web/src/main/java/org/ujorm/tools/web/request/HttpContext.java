@@ -3,6 +3,7 @@ package org.ujorm.tools.web.request;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Set;
+import java.util.function.Function;
 
 /** HTTP servlet request context */
 public interface HttpContext {
@@ -20,6 +21,9 @@ public interface HttpContext {
 
     /** Returns the last parameter */
     String getParameter(@NotNull String key, String defaultValue);
+
+    /** Returns the type safe last parameter or the default value. */
+    <T> T getParameter(@NotNull String key, @NotNull T defaultValue, @NotNull Function<String, T> converter);
 
     /** HTTP Servlet Factory */
     public static HttpContext ofServletResponse(Object httpServletResponse) {

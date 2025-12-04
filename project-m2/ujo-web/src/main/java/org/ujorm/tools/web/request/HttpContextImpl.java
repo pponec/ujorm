@@ -7,6 +7,7 @@ import org.ujorm.tools.web.ao.Reflections;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
+import java.util.function.Function;
 
 /** A default implementation of the HTTP servlet request context */
 public class HttpContextImpl implements HttpContext{
@@ -53,12 +54,16 @@ public class HttpContextImpl implements HttpContext{
     /** Returns the last parameter */
     @Override
     public String getParameter(@NotNull String key, String defaultValue) {
-        final URequest uRequest = request();
-        if (uRequest != null) {
-            String[] params = uRequest.getParameters(key);
-            return params.length > 0 ? params[params.length - 1] : defaultValue;
-        }
-        return defaultValue;
+        return getParameter(key, defaultValue, Function.identity());
+    }
+
+    /** Returns the last parameter */
+    @Override
+    public <T> T getParameter(@NotNull String key, @NotNull T defaultValue, @NotNull Function<String, T> converter) {
+        final var uRequest = request();
+        return uRequest != null
+                ? uRequest.getParameter(key, defaultValue, converter)
+                : defaultValue;
     }
 
     /** Create a default HTTP Context */
