@@ -11,13 +11,13 @@
     <!--<parent>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo</artifactId>
-        <version>2.27-SNAPSHOT</version>
+        <version>2.27</version>
     </parent>-->
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-orm</artifactId>
     <packaging>jar</packaging>
-    <version>2.27-SNAPSHOT</version>
+    <version>2.27</version>
     <url>http://ujorm.org</url>
     <name>ujo-orm</name>
     <description>The Ujorm is designed for rapid Java development with great performance
@@ -34,7 +34,7 @@
     </contributors>
 
     <properties>
-        <revision>2.27-SNAPSHOT</revision>
+        <revision>2.27</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>

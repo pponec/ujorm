@@ -6,13 +6,13 @@
     <parent>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo-samples</artifactId>
-        <version>2.27-SNAPSHOT</version>
+        <version>2.27</version>
     </parent>
 
     <groupId>org.ujorm.wicket.sample</groupId>
     <artifactId>demo-hotels</artifactId>
     <name>sample-wicket-hotels</name>
-    <version>2.27-SNAPSHOT</version>
+    <version>2.27</version>
     <packaging>war</packaging>
     <description>A sample application based on the Ujorm, Wicket and Spring frameworks</description>
 
@@ -30,7 +30,7 @@
 
     <properties>
         <project.war.name>demo-hotels</project.war.name>
-        <ujorm.version>2.27-SNAPSHOT</ujorm.version>
+        <ujorm.version>2.27</ujorm.version>
         <wicket.version>7.18.0</wicket.version>
         <jetty.version>9.4.14.v20181114</jetty.version>
         <spring.version>5.3.15</spring.version>
