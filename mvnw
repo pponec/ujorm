@@ -32,6 +32,7 @@
 #       set MAVEN_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
 #   MAVEN_SKIP_RC - flag to disable loading of mavenrc files
 # ----------------------------------------------------------------------------
+export JAVA_HOME=/opt/java/java17
 
 if [ -z "$MAVEN_SKIP_RC" ] ; then
 

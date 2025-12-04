@@ -5,7 +5,6 @@
 ###################################################################
 
 set -e
-export JAVA_HOME=/opt/java/default.8
 alias mvn="sh $PWD/mvnw"
 mvn -version || exit
 
