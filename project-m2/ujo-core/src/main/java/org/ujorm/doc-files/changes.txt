@@ -2,12 +2,14 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 2.27 (TODO)
+release 2.27 (2025-12-04)
 + Java 17+ is required
-+ WEB: A class RContext is renamed to the HttpContext
-+ TOOLS: New method SqlParamBuilder.stream() closes the internal ResultSet.
++ TOOLS: New method SqlParamBuilder.stream() closes the internal ResultSet for special cases.
 + TOOLS: New method SqlParamBuilder.streamGeneratedKeys() for retrieving the primary keys of an INSERT statement.
-+ TOOLS: UnicodeCharacter class
++ TOOLS: New method SqlParamBuilder.bind(enabled, ...)
++ TOOLS: New method HttpContext.getParameter() to get a type safe result object.
++ TOOLS: UnicodeCharacter class for supporting all Unicode characters.
++ WEB: A class RContext is renamed to the HttpContext
 
 release 2.26 (2024-11-06)
 + WEB: here is removed dependency on javax.servlet-api from ujo-web module. The goal was to make the module compatible with all versions in the range: servlet 3 to servlet 5.
