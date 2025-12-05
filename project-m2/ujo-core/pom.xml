@@ -45,33 +45,6 @@
         <url>https://github.com/pponec/ujorm/blob/master/project-m2/ujo-core/</url>
     </scm>
 
-    <!-- Back support for Maven 3.0.5 from NetBeans 8.2 -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
