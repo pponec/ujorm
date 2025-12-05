@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <!--<parent>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo</artifactId>
@@ -25,10 +29,15 @@
     <developers>
         <developer>
             <id>pponec</id>
-            <name>Pavel Ponec</name>
+            <name>PPonec</name>
             <email>pponec@gmail.com</email>
         </developer>
     </developers>
+    <scm>
+        <url>https://github.com/pponec/ujorm.git</url>
+        <connection>scm:git:git@github.com/pponec/ujorm.git</connection>
+        <developerConnection>scm:git:git@github.com/pponec/ujorm.git</developerConnection>
+    </scm>
 
     <properties>
         <revision>2.27</revision>
@@ -42,6 +51,14 @@
     </properties>
 
     <dependencies>
+        <!-- Static analyzer support -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>21.0.1</version>
+            <optional>true</optional>
+        </dependency>
+
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
@@ -52,16 +69,8 @@
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
             <type>test-jar</type>
-            <version>2.27</version>
+            <version>${revision}</version>
             <scope>test</scope>
-        </dependency>
-
-        <!-- Static analyzer support -->
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>21.0.1</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -135,7 +144,7 @@
                     <additionalparam>-Xdoclint:none</additionalparam>
                     <failOnError>false</failOnError>
                     <encoding>UTF-8</encoding>
-                    <author>Pavel Ponec</author>
+                    <author>PPonec</author>
                     <bottom><![CDATA[Copyright 2015, <a target="_blank" href="http://ujorm.org/">Pavel Ponec<a>]]></bottom>
                     <doctitle>Ujorm ${project.version} (${project.name})</doctitle>
                     <windowtitle>Ujorm ${project.version} - ${project.name}</windowtitle>
@@ -166,7 +175,7 @@
 
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.1</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -176,11 +185,11 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.2</version>
+                <version>3.2.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <filters></filters>
                 </configuration>
             </plugin>
 
@@ -203,6 +212,7 @@
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
                 <version>0.9.0</version>
+                <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central</publishingServerId>
                     <autoPublish>true</autoPublish>
@@ -221,6 +231,32 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version> <executions>
+                <execution>
+                    <id>attach-sources</id>
+                    <goals>
+                        <goal>jar-no-fork</goal>
+                    </goals>
+                </execution>
+            </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version> <executions>
+                <execution>
+                    <id>attach-javadocs</id>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                </execution>
+            </executions>
             </plugin>
         </plugins>
     </build>
@@ -248,7 +284,6 @@
             <id>deployment</id>
             <build>
                 <plugins>
-                    <!-- Needs the GnuPg: -->
                 </plugins>
             </build>
         </profile>
