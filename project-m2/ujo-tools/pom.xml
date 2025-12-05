@@ -33,6 +33,11 @@
             <email>pponec@gmail.com</email>
         </developer>
     </developers>
+    <scm>
+        <url>https://github.com/pponec/ujorm.git</url>
+        <connection>scm:git:git@github.com/pponec/ujorm.git</connection>
+        <developerConnection>scm:git:git@github.com/pponec/ujorm.git</developerConnection>
+    </scm>
 
     <properties>
         <revision>2.27</revision>
