@@ -246,13 +246,6 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>deploy</id>
-            <build>
-                <plugins>
-                </plugins>
-            </build>
-        </profile>
     </profiles>
 
 </project>
