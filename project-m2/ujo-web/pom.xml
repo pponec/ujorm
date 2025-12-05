@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
     <!--<parent>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo</artifactId>
@@ -17,16 +11,24 @@
     <artifactId>ujo-web</artifactId>
     <version>2.27</version>
     <packaging>jar</packaging>
-    <url>http://ujorm.org</url>
     <name>ujo-web</name>
     <description>Ujorm-web module for a common use</description>
-    <contributors>
-        <contributor>
+    <url>https://ujorm.org/</url> <!-- home page -->
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>pponec</id>
             <name>Pavel Ponec</name>
-            <url>http://ponec.net/</url>
-            <timezone>+1</timezone>
-        </contributor>
-    </contributors>
+            <email>pponec@gmail.com</email>
+        </developer>
+    </developers>
 
     <properties>
         <revision>2.27</revision>
@@ -38,19 +40,6 @@
         <spring.version>5.3.15</spring.version>
         <junit.version>5.10.2</junit.version>
     </properties>
-
-    <scm>
-        <url>https://github.com/pponec/ujorm/blob/master/project-m2/ujo-core/</url>
-        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-core</connection>
-    </scm>
-
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
 
     <dependencies>
         <dependency>
@@ -209,6 +198,30 @@
                 </configuration>
             </plugin>
 
+            <!-- Deployment (Needs the GnuPg) -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.9.0</version>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.2.8</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -232,23 +245,10 @@
             </build>
         </profile>
         <profile>
-            <id>sign</id>
+            <id>deployment</id>
             <build>
                 <plugins>
                     <!-- Needs the GnuPg: -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
                 </plugins>
             </build>
         </profile>
