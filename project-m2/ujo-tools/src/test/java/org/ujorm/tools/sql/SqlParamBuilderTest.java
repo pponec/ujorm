@@ -171,6 +171,13 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                             rs.getObject("created", LocalDate.class)))
                     .collect(Collectors.toList());
             Assertions.assertEquals(3, employees2.size());
+
+            System.out.println("SELECT 2 (forEach");
+            builder.bind("id", 1000).forEach(rs -> {
+                        var idValue = rs.getInt(1);
+                        System.out.printf("\tid = %s%n", idValue);
+                    });
+            Assertions.assertEquals(3, employees2.size());
             runSqlStatementsLike(builder);
         }
     }
