@@ -10,13 +10,13 @@
     <!--<parent>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo</artifactId>
-        <version>2.27</version>
+        <version>2.28-SNAPSHOT</version>
     </parent>-->
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-xsd</artifactId>
     <packaging>jar</packaging>
-    <version>2.27</version>
+    <version>2.28-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-xsd</name>
     <description>XSD generator according the Ujo
@@ -38,7 +38,7 @@
     </licenses>
 
     <properties>
-        <revision>2.27</revision>
+        <revision>2.28-SNAPSHOT</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
