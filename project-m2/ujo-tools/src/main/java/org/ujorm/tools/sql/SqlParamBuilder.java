@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * Less than 230 lines long class to simplify work with JDBC.
+ * Less than 320 lines long class to simplify work with JDBC.
  * Original source: <a href="https://github.com/pponec/PPScriptsForJava/blob/development/src/main/java/net/ponec/script/SqlExecutor.java">GitHub</a>
  * Licence: Apache License, Version 2.0
  * @author Pavel Ponec, https://github.com/pponec
@@ -64,55 +64,75 @@ public class SqlParamBuilder implements AutoCloseable {
         return this;
     }
 
-    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
     public SqlParamBuilder bind(@NotNull final String key, final Boolean... values) {
-        return bindValue(true, key, JDBCType.BOOLEAN, values);
+        return bind(true, key, values);
+    }
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Boolean... values) {
+        return bindObject(enabled, key, JDBCType.BOOLEAN, values);
     }
 
-    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
+    /** Bind Bytes */
     public SqlParamBuilder bind(@NotNull final String key, final Byte... values) {
-        return bindValue(true, key, JDBCType.TINYINT, values);
+        return bind(true, key, values);
+    }
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Byte... values) {
+        return bindObject(enabled, key, JDBCType.TINYINT, values);
     }
 
-    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
+    /** Bind Shorts */
     public SqlParamBuilder bind(@NotNull final String key, final Short... values) {
-        return bindValue(true, key, JDBCType.SMALLINT, values);
+        return bind(true, key, values);
+    }
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Short... values) {
+        return bindObject(enabled, key, JDBCType.SMALLINT, values);
     }
 
-    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
+    /** Bind Ingegers */
     public SqlParamBuilder bind(@NotNull final String key, final Integer... values) {
-        return bindValue(true, key, JDBCType.INTEGER, values);
+        return bind(true, key, values);
+    }
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Integer... values) {
+        return bindObject(enabled, key, JDBCType.BIGINT, values);
     }
 
-    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
+    /** Bind Longs */
     public SqlParamBuilder bind(@NotNull final String key, final Long... values) {
-        return bindValue(true, key,JDBCType.BIGINT, values);
+        return bind(true, key, values);
+    }
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Long... values) {
+        return bindObject(enabled, key, JDBCType.BIGINT, values);
     }
 
-    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
+    /** Bind String */
     public SqlParamBuilder bind(@NotNull final String key, final String... values) {
-        return bindValue(true, key, JDBCType.VARCHAR, values);
+        return bind(true, key, values);
+    }
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final String... values) {
+        return bindObject(enabled, key, JDBCType.VARCHAR, values);
     }
 
-
-    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
+    /** Bind LocalDates */
     public SqlParamBuilder bind(@NotNull final String key, final LocalDate... values) {
-        return bindValue(true, key, JDBCType.DATE, values);
+        return bind(true, key, values);
+    }
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final LocalDate... values) {
+        return bindObject(enabled, key, JDBCType.DATE, values);
     }
 
-    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
+    /** Bind LocalDateTimes */
     public SqlParamBuilder bind(@NotNull final String key, final LocalDateTime... values) {
-        return bindValue(true, key, JDBCType.TIMESTAMP, values);
+        return bind(true, key, values);
+    }
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final LocalDateTime... values) {
+        return bindObject(enabled, key, JDBCType.TIMESTAMP, values);
     }
 
-
-    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
+    /** Bind Objects */
     public SqlParamBuilder bindObject(@NotNull final String key, final Object... values) {
-        return bindValue(true, key, JDBCType.OTHER, values);
+        return bindObject(true, key, JDBCType.OTHER, values);
     }
-
     /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
-    public SqlParamBuilder bindValue(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, final Object... values) {
+    public SqlParamBuilder bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, final Object... values) {
         if (enabled) {
             params.put(key, new ParamValue(jdbcType, values));
         }
@@ -182,12 +202,12 @@ public class SqlParamBuilder implements AutoCloseable {
     }
 
     /** Iterate executed select */
-    public void forEach(@NotNull SqlConsumer consumer) throws IllegalStateException, SQLException  {
+    public void forEach(@NotNull SqlConsumer consumer) throws IllegalStateException, SQLException {
         stream(executeSelect()).forEach(consumer);
     }
 
     @NotNull
-    public <R> Stream<R> streamMap(SqlFunction<ResultSet, ? extends R> mapper ) {
+    public <R> Stream<R> streamMap(SqlFunction<ResultSet, ? extends R> mapper) {
         return stream(executeSelect()).map(mapper);
     }
 
