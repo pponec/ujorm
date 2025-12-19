@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.jdbc.SqlConsumer;
 import org.ujorm.tools.jdbc.SqlFunction;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -101,6 +102,14 @@ public class SqlParamBuilder implements AutoCloseable {
     }
     public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Long... values) {
         return bindObject(enabled, key, JDBCType.BIGINT, values);
+    }
+
+    /** Bind BigDecimal */
+    public SqlParamBuilder bind(@NotNull final String key, final BigDecimal... values) {
+        return bind(true, key, values);
+    }
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final BigDecimal... values) {
+        return bindObject(enabled, key, JDBCType.NUMERIC, values);
     }
 
     /** Bind String */
