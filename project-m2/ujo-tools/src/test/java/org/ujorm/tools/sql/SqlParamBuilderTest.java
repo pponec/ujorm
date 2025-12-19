@@ -227,7 +227,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                     "ORDER BY t.id");
             Assertions.assertEquals(builder.sqlTemplate(), builder.toString());
 
-            IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            var ex = Assertions.assertThrows(org.ujorm.tools.sql.SQLException.class, () -> {
                 builder.streamMap(t -> t).count();
             });
             assertEquals("Missing SQL parameter: [code, id]", ex.getMessage());
