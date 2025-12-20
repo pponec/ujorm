@@ -16,6 +16,8 @@
 package org.ujorm.tools.web.ajax;
 
 import java.time.Duration;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
@@ -130,7 +132,7 @@ public class JavaScriptWriter implements Injector {
         this.ajaxTimeout = Assert.notNull(ajaxTimeout, "ajaxTimeout");
         return this;
     }
-    
+
     /** An AJAX delay to the input request */
     public JavaScriptWriter setIdleDelay(@NotNull Duration idleDelay) {
         this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
@@ -172,12 +174,15 @@ public class JavaScriptWriter implements Injector {
         return isAjax;
     }
 
-    /**
-     * Generate a Javascript
-     */
     @Override
     public void write(@NotNull final Element parent) {
-        final String inpSelectors = Check.hasLength(inputCssSelectors)
+        write (parent, Map.of());
+    }
+
+    /** Write Javascript body for the AJAX support. */
+    public void write(@NotNull final Element parent, Map<String, String> functionMap) {
+        final var mapName = "funMap";
+        final var inpSelectors = Check.hasLength(inputCssSelectors)
         ? Stream.of(inputCssSelectors).collect(Collectors.joining(", "))
         : "#!@";
         try (Element js = parent.addElement(Html.SCRIPT)) {
@@ -185,12 +190,14 @@ public class JavaScriptWriter implements Injector {
             if (isAjax) {
                 js.addRawText(newLine, "const f", fceOrder, "={");
                 js.addRawTexts(newLine, ""
-                    , "ajaxRun:false, submitReq:false, delayMs:" + idleDelay.toMillis() + ", timeout:null,"
+                    , "ajaxRun:false, submitReq:false, delayMs:" + idleDelay.toMillis() + ", timeout:null,");
+                writeMap(js, mapName, functionMap);
+                js.addRawTexts(newLine, ""
                     , "init(e){"
                     , " document.querySelector('" + formSelector + "').addEventListener('submit',this.process,false);"
                     , " document.querySelectorAll('" + inpSelectors + "').forEach(i=>{"
                     , "  i.addEventListener('keyup',e=>this.timeEvent(e),false);"
-                    , " });},"    
+                    , " });},"
                 );
                 js.addRawTexts(newLine, ""
                     , "timeEvent(e){"
@@ -215,7 +222,7 @@ public class JavaScriptWriter implements Injector {
                     , " .then(response=>response.json())"
                     , " .then(data=>{"
                     , "   for(const key of Object.keys(data))"
-                    , "    if(key=='')eval(data[key]);"
+                    , "    if(key==='') f" + fceOrder + "." + mapName + "[data[key]]();"
                     , "    else document.querySelectorAll(key).forEach(i=>{i.innerHTML=data[key];});"
                     , "   if(this.submitReq){this.submitReq=false;this.process(e);}" // Next submit the form
                     , "   else{this.ajaxRun=false;}"
@@ -232,5 +239,16 @@ public class JavaScriptWriter implements Injector {
                 }
             }
         }
+    }
+
+    /** Generate map */
+    private void writeMap(Element js, String funMap, Map<String, String> functionMap) {
+        final var i = new AtomicInteger();
+        js.addRawText(newLine, funMap, ":{");
+        functionMap.forEach((key, value) -> {
+            js.addRawText(i.getAndIncrement() == 0 ? " " : ", ");
+            js.addRawText(key, "(){", value, "}");
+        });
+        js.addRawText("},");
     }
 }

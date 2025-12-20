@@ -121,12 +121,12 @@ public class JsonBuilder implements Closeable {
         return this;
     }
 
-    /** Write a Javascript to a call.
+    /** Write a key to a call a script from the function map.
      * The response can contain only one Javascript code,
      * so this method can be called only once per request.
      */
-    public JsonBuilder writeJs(@Nullable final CharSequence... javascript) throws IOException {
-        return write(JAVACRIPT_DUMMY_SELECTOR, javascript);
+    public JsonBuilder writeJsKey(@Nullable final CharSequence javascriptKey) throws IOException {
+        return write(JAVACRIPT_DUMMY_SELECTOR, javascriptKey);
     }
 
     /** Write a JSON property */
