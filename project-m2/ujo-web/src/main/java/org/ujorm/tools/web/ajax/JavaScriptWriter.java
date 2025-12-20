@@ -244,7 +244,7 @@ public class JavaScriptWriter implements Injector {
     /** Generate map */
     private void writeMap(Element js, String funMap, Map<String, String> functionMap) {
         final var i = new AtomicInteger();
-        js.addRawText(newLine, funMap, ":{");
+        js.addRawText(functionMap.isEmpty() ? " " : newLine, funMap, ":{");
         functionMap.forEach((key, value) -> {
             js.addRawText(i.getAndIncrement() == 0 ? " " : ", ");
             js.addRawText(key, "(){", value, "}");
