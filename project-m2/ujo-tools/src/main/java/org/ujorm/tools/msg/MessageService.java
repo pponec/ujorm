@@ -194,17 +194,48 @@ public class MessageService {
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
      * @return The result message of an empty string of writter is available.
      * @see Formatter
+     * @deprecated Use the {@link #formatMsg(String, Map, Appendable)} rather.
      */
+    @Deprecated
     public final String format(
             @Nullable final Appendable writer,
             @Nullable final String msg,
             @Nullable final Map<String, Object> args,
-            @Nullable Locale locale) throws IOException  {
+            @Nullable Locale locale) throws IOException {
         if (msg == null || args == null) {
             return String.valueOf(msg);
         }
         final int max = msg.length();
         final Appendable result = writer != null ? writer : new StringBuilder(Math.max(32, max + (max >> 1)));
+        format(msg, args, locale, result);
+        return writer == null ? result.toString() : "";
+    }
+
+    /**
+     * Format a template message using named variables.
+     * Each variable must be surrounded by two marks "${" and "}".
+     * The first mark is forbidden in a common text and can be replaced by the variable #{MARK}.
+     * @param msg Template message, see the simple example:
+     * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%F}"</pre>
+     * or
+     * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"</pre>
+     * The format expression is separated by the character (,) a and it is not mandatory.
+     * @param args Key-value map arguments where arguments type of {@link Supplier} ares supported.
+     * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
+     * @param writer A required writer.
+     * @return The result message of an empty string of writter is available.
+     * @see Formatter
+     */
+    public final void format(
+            @Nullable final String msg,
+            @Nullable final Map<String, Object> args,
+            @Nullable Locale locale,
+            @NotNull final Appendable writer
+    ) throws IOException  {
+        if (msg == null || args == null) {
+            writer.append(String.valueOf(msg));
+        }
+        final int max = msg.length();
         int i, last = 0;
         while ((i = msg.indexOf(begTag, last)) >= 0) {
             final int end = msg.indexOf(endTag, i);
@@ -216,21 +247,20 @@ public class MessageService {
                 ? ((Supplier)value).get()
                 : value;
             if (val != null) {
-                result.append(msg, last, i);
+                writer.append(msg, last, i);
                 if (formatIndex > 0) {
-                    new Formatter(result, locale != null ? locale : defaultLocale).format
+                    new Formatter(writer, locale != null ? locale : defaultLocale).format
                           ( expr.substring(1 + formatIndex)
                           , val, val, val, val, val, val); // Simplify Date format
                 } else {
-                    writeValue(val, result, locale);
+                    writeValue(val, writer, locale);
                 }
             } else {
-                result.append(msg, last, end + 1);
+                writer.append(msg, last, end + 1);
             }
             last = end + 1;
         }
-        result.append(msg, last, max);
-        return writer != null ? "" : result.toString();
+        writer.append(msg, last, max);
     }
 
      /** Convert value.
@@ -273,6 +303,15 @@ public class MessageService {
             @Nullable final Object value,
             @NotNull final Object... keyValuePairs) {
         return new MessageService().format(template, null, key, value, keyValuePairs);
+    }
+
+    /** Format a target message by a template with arguments */
+    public static final void formatMsg(@Nullable final String template, @Nullable final Map<String, Object> args, @NotNull Appendable writer) {
+        try {
+            new MessageService().format(template, args, Locale.ENGLISH, writer);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }
