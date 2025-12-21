@@ -49,7 +49,7 @@ import org.ujorm.tools.web.ao.Injector;
 /**
  * A HTML Element implements some methods for frequently used elements and attributes
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
  *    ServletResponse response = new ServletResponse();
@@ -140,7 +140,7 @@ public final class Element implements ApiElement<Element>, Html {
      * A shortcut for the method {@link #setAttribute(java.lang.String, java.lang.Object) }.
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link {@link XmlWriter#writeValue(Object, ApiElement, String)}
+     *   {@link XmlWriter#writeValue(Object, ApiElement, String)}
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
@@ -175,7 +175,8 @@ public final class Element implements ApiElement<Element>, Html {
     /**
      * Add a template based text with parameters with hight performance.
      *
-     * @param template A message template with an ENGLISH locale. See {@link String#format(java.lang.String, java.lang.Object...) for more parameters.
+     * @param template A message template with an ENGLISH locale.
+     *   See {@link String#format(String, Object...)}) for more parameters.
      * @param values A template parameters
      * @return A parent element.
      */
@@ -332,7 +333,7 @@ public final class Element implements ApiElement<Element>, Html {
 
     /** Create a HTML table according to data
      *
-     * <h3>Usage</h3>
+     * <h4>Usage</h4>
      * <pre>
      * element.addTable(getCars(), cssClasses, titles,
      *         Car::getId,
@@ -851,7 +852,7 @@ public final class Element implements ApiElement<Element>, Html {
 
     /** Add nested elements to the element.
      *
-     * <h3>Usage</h3>
+     * <h4>Usage</h4>
      *
      * <pre class="pre">
      *  HtmlElement.of(config, writer).addBody()

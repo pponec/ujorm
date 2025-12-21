@@ -31,7 +31,6 @@ public interface SqlFunction<T, R> extends Function<T, R> {
      *
      * @param rs ResultSet
      * @return the function result
-     * @throws SQLException An SQL exception
      */
     @Override
     default R apply(T rs) {

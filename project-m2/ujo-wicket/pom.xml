@@ -174,7 +174,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.4</version>
                 <configuration>
-                    <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile>
+                    <!-- <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile> -->
                     <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
                     <docfilessubdirs>true</docfilessubdirs>
                     <additionalparam>-Xdoclint:none</additionalparam>

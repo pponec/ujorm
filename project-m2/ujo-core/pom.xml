@@ -137,14 +137,13 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.4</version>
                 <configuration>
-                    <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile>
+                    <!-- <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile> -->
                     <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
                     <docfilessubdirs>true</docfilessubdirs>
                     <additionalparam>-Xdoclint:none</additionalparam>
                     <failOnError>false</failOnError>
                     <encoding>UTF-8</encoding>
-                    <author>Pavel Ponec</author>
-                    <bottom><![CDATA[Copyright 2015, <a target="_blank" href="http://ujorm.org/">Pavel Ponec<a>]]></bottom>
+                    <bottom><![CDATA[Copyright 2025, <a target="_blank" href="http://ujorm.org/">Pavel Ponec<a>]]></bottom>
                     <doctitle>Ujorm ${project.version} (${project.name})</doctitle>
                     <windowtitle>Ujorm ${project.version} - ${project.name}</windowtitle>
                     <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="http://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>

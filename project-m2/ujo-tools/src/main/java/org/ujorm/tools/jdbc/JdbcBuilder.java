@@ -35,7 +35,7 @@ import org.ujorm.tools.sql.SqlParamBuilder;
 /**
  * PrepareStatement builder support
  *
- * <h3>How to use a SELECT</h3>
+ * <h4>How to use a SELECT</h4>
  * <pre class="pre">
  * JdbcBuilder sql = <strong>new</strong> JdbcBuilder()
  *     .write("SELECT")
@@ -50,7 +50,7 @@ import org.ujorm.tools.sql.SqlParamBuilder;
  * }
  * </pre>
  *
- * <h3>How to use a INSERT</h3>
+ * <h4>How to use a INSERT</h4>
  * <pre class="pre">
  * JdbcBuilder sql = <strong>new</strong> JdbcBuilder()
  *     .write("INSERT INTO testTable (")
@@ -61,7 +61,7 @@ import org.ujorm.tools.sql.SqlParamBuilder;
  * sql.executeUpdate(dbConnection);
  * </pre>
  *
- * <h3>How to use a UPDATE</h3>
+ * <h4>How to use a UPDATE</h4>
  * <pre class="pre">
  * JdbcBuilder sql = <strong>new</strong> JdbcBuilder()
  *     .write("UPDATE testTable SET")
@@ -173,7 +173,7 @@ public class JdbcBuilder implements Serializable {
         return this;
     }
 
-    /** Set new value to column by template {@code name = ? */
+    /** Set new value to column by template {@code name = ?} */
     @NotNull
     public JdbcBuilder columnUpdate(@NotNull final CharSequence column, @NotNull final Object value) {
         Assert.state(!insertMode, "An insertion mode has been started.");
@@ -184,7 +184,7 @@ public class JdbcBuilder implements Serializable {
         return this;
     }
 
-    /** Set new value to column by template {@code name = ? */
+    /** Set new value to column by template {@code name = ?} */
     @NotNull
     public JdbcBuilder columnInsert(@NotNull final CharSequence column, @NotNull final Object value) {
         insertMode = true;
@@ -376,7 +376,7 @@ public class JdbcBuilder implements Serializable {
         return result;
     }
 
-    /** Create statement and call {@link PreparedStatement.executeUpdate() }.
+    /** Create statement and call {@link PreparedStatement#executeUpdate()} .
      * Supported SQL statements are: INSERT, UPDATE, DELETE .
      */
     public int executeUpdate(@NotNull final Connection connection) throws IllegalStateException {

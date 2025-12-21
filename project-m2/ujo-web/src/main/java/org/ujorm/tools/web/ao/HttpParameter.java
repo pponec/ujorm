@@ -27,7 +27,7 @@ import org.ujorm.tools.web.request.URequest;
 /**
  * An interface for bulding HTML parameters by an Enumerator.
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  * <pre class="pre">
  * {
  *    String value = Param.text(ServletRequest, "my default value");

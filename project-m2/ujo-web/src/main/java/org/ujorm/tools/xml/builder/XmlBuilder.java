@@ -34,7 +34,7 @@ import org.ujorm.tools.xml.ApiElement;
  *     <li>creating XML components by a subclass is possible</li>
  *     <li>great performance and small memory footprint</li>
  * </ul>
- * <h3>How to use the class:</h3>
+ * <h4>How to use the class:</h4>
  * <pre class="pre">
  *  XmlPriter writer = XmlPriter.forXml();
  *  try (XmlBuilder html = new XmlBuilder(Html.HTML, writer)) {

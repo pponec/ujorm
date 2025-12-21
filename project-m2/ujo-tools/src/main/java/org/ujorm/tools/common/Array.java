@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 /**
  * Methods to manage object arrays.
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  * <pre class="pre">
  *   Array<Character> array = Array.of('A', 'B', 'C', 'D', 'E');
  *   array.getFirst().orElse(undef);

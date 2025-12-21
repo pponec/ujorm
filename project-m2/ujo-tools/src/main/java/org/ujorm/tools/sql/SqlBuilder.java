@@ -25,7 +25,7 @@ import org.ujorm.tools.jdbc.JdbcBuilder;
 /**
  * PrepareStatement builder support
  *
- * <h3>How to use a SELECT</h3>
+ * <h4>How to use a SELECT</h4>
  * <pre class="pre">
  * SqlBuilder sql = <strong>new</strong> SqlBuilder()
  *     .select("t.id", "t.name")
@@ -39,7 +39,7 @@ import org.ujorm.tools.jdbc.JdbcBuilder;
  * }
  * </pre>
  *
- * <h3>How to use a INSERT</h3>
+ * <h4>How to use a INSERT</h4>
  * <pre class="pre">
  * SqlBuilder sql = <strong>new</strong> SqlBuilder()
  *     .insert("testTable")
@@ -51,7 +51,7 @@ import org.ujorm.tools.jdbc.JdbcBuilder;
  * sql.executeUpdate(dbConnection);
  * </pre>
  *
- * <h3>How to use a UPDATE</h3>
+ * <h4>How to use a UPDATE</h4>
  * <pre class="pre">
  * SqlBuilder sql = <strong>new</strong> SqlBuilder()
  *     .update("testTable")

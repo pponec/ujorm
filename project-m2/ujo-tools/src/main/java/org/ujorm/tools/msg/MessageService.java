@@ -223,7 +223,6 @@ public class MessageService {
      * @param args Key-value map arguments where arguments type of {@link Supplier} ares supported.
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
      * @param writer A required writer.
-     * @return The result message of an empty string of writter is available.
      * @see Formatter
      */
     public final void format(

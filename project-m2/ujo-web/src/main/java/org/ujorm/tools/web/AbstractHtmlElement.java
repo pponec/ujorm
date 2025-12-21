@@ -37,7 +37,7 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
 /** The root of HTML elements is <b>independent</b> on the Servlet API
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
  *    ServletResponse response = new ServletResponse();
@@ -315,7 +315,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
 
     /** Add nested elements to the element.
      *
-     * <h3>Usage</h3>
+     * <h4>Usage</h4>
      *
      * <pre class="pre">
      *  HtmlElement.of(config, writer).addBody()

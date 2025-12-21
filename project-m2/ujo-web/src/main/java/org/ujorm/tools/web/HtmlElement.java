@@ -28,7 +28,7 @@ import java.nio.charset.Charset;
 
 /** The root of HTML elements
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
  *    ServletResponse response = new ServletResponse();

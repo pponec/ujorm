@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * An interface for bulding HTML parameters by an Enumerator.
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  * <pre class="pre">
  * {
  * String value = Param.TEXT(ServletRequest, "my default value"); } enum Param implements HttpParam { REGEXP, TEXT;

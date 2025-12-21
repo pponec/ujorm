@@ -28,7 +28,7 @@ import org.ujorm.tools.set.LoopingIterator;
 /**
  * An Iterator for the ResultSet items.
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  * <pre class="pre">
  *     new RowIterator(ps).toStream().forEach((RsConsumer)(resultSet) -> {
  *         int value = resultSet.getInt(1);

@@ -31,7 +31,7 @@ import org.ujorm.tools.Assert;
 /**
  * Methods to reading an text resource to the {@code String}.
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  * <pre class="pre">
  * try (Stream&lt;String&gt; stream = StringUtils.readLines(StringUtils.class,  "text", "dummy.txt")) {
  *     String[] result = stream.toArray(String[]::new);

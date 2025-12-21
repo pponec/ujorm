@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface SafelyEqualable<T> {
 
-    /** Type-safe equivalent of the {@link #equals(java.lang.Object) } method. */
+    /** Type-safe equivalent of the {@link Object#equals(Object)} method. */
     default boolean equalsSafely(@Nullable final T value) {
         return equals(value);
     }

@@ -28,7 +28,7 @@ import org.ujorm.tools.xml.model.*;
  *     <li>creating XML components by a subclass is possible</li>
  *     <li>great performance and small memory footprint</li>
  * </ul>¨
- * <h3>How to use the class:</h3>
+ * <h4>How to use the class:</h4>
  * <pre class="pre">
  *  XmlElement root = new XmlElement("root");
  *  root.addElement("childA")
@@ -37,13 +37,13 @@ import org.ujorm.tools.xml.model.*;
  *  root.addElement("childB")
  *          .setAttrib("x", 3)
  *          .setAttrib("y", 4)
- *          .addText("A text message &lt;&\"&gt;");
+ *          .addText("A text message.");
  *  root.addRawText("\n&lt;rawXml/&gt;\n");
- *  root.addCDATA("A character data &lt;&\"&gt;");
+ *  root.addCDATA("A character data &lt;rawXml/&gt;");
  *  String result = root.toString();
  * </pre>
  *
- * @see HtmlElement
+ * @see org.ujorm.tools.web.HtmlElement
  * @since 1.86
  * @author Pavel Ponec
  * @deprecated Use the {@link XmlModel} rather.

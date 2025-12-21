@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-/** Reflection methods for the Servlet Request & Response classes */
+/** Reflection methods for the Servlet Request and Response classes */
 public final class Reflections {
 
     public static Reader getServletReader(Object httpServletRequest) {

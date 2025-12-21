@@ -30,7 +30,7 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 /**
  * A HTML page builder for table based an AJAX.
  *
- * <h3>Usage<h3>
+ * <h4>Usage<h4>
  *
  * <pre class="pre">
  *  TableBuilder.of("Hotel Report")
