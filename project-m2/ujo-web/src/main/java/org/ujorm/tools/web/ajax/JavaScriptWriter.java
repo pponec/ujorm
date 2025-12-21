@@ -46,8 +46,8 @@ public class JavaScriptWriter implements Injector {
     public static final Duration DEFAULT_DELAY = Duration.ofMillis(250);
     /** Default timeou */
     public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
-
-    private static final CharSequence[] DEFAULT_INPUT_SELECTORS = {"input", "textarea", "select", "button"};
+    /** All input elements except buttons */
+    private static final CharSequence[] DEFAULT_INPUT_SELECTORS = {"input:not([type='button'])", "textarea", "select"};
 
     /** Javascript ajax request parameter */
     protected final HttpParameter ajaxRequestParam;
@@ -189,11 +189,11 @@ public class JavaScriptWriter implements Injector {
                 const ${jsVar}={
                 ajaxRun:false, submitReq:false, delayMs:${delayMs}, timeout:null, ${fceSpace}fceMap:{${fceMap}},
                 init(){
-                  document.querySelectorAll('${formSelector}').forEach(form=>{
-                    form.addEventListener('submit',e=>this.process(e,form));
-                    form.querySelectorAll('${inputSelector}').forEach(input=>{
-                      input.addEventListener('keyup',()=>this.timeEvent(form));
-                      input.addEventListener('change',()=>this.timeEvent(form));
+                  document.querySelectorAll("${formSelector}").forEach(form=>{
+                    form.addEventListener("submit",e=>this.process(e,form));
+                    form.querySelectorAll("${inputSelector}").forEach(input=>{
+                      input.addEventListener("keyup",()=>this.timeEvent(form));
+                      input.addEventListener("change",()=>this.timeEvent(form));
                     });});},
                 timeEvent(form) {
                   clearTimeout(this.timeout);
@@ -207,15 +207,15 @@ public class JavaScriptWriter implements Injector {
                   [this.ajaxRun, this.submitReq]=[true, false];
                   const fd=new FormData(form);
                   if(e?.submitter?.name) fd.append(e.submitter.name,e.submitter.value);
-                  try{const res=await fetch('?_ajax=true',{
-                      method:'POST',
+                  try{const res=await fetch("?_ajax=true",{
+                      method:"POST",
                       body:new URLSearchParams(fd),
-                      headers:{'X-Requested-With':'XMLHttpRequest'}
+                      headers:{"X-Requested-With":"XMLHttpRequest"}
                     });
                     if(!res.ok) throw new Error(res.status);
                     const data=await res.json();
                     Object.entries(data).forEach(([sel,val])=>{
-                      if(sel==='') return this.fceMap[val]();
+                      if(sel==="") return this.fceMap[val]();
                       document.querySelectorAll(sel).forEach(el=>el.innerHTML=val);
                     });
                   }catch(err){console.error(err)}
@@ -223,7 +223,7 @@ public class JavaScriptWriter implements Injector {
                     this.ajaxRun=false;
                     if(this.submitReq) this.process(null, form);
                   }}};
-                document.addEventListener('DOMContentLoaded',()=>${jsVar}.init());${onLoadSubmit}
+                document.addEventListener("DOMContentLoaded",()=>${jsVar}.init());${onLoadSubmit}
                 """;
     }
 
@@ -238,7 +238,7 @@ public class JavaScriptWriter implements Injector {
     /** Write Javascript body for the AJAX support. */
     public void write(@NotNull final Element parent, Map<String, String> functionMap) {
         var params = new HashMap<String, Object>();
-        {   params.put("jsVar", "f" + fceOrder);
+        {   params.put("jsVar", "ujorm" + fceOrder);
             params.put("delayMs", idleDelay.toMillis());
             params.put("fceSpace", functionMap.isEmpty() ? "" : (newLine + "  "));
             params.put("fceMap", bulidFunctionMap(functionMap));
