@@ -43,8 +43,8 @@ public class JsonBuilder implements Closeable {
     private final HtmlConfig config;
     /** Parameter counter */
     private int paramCounter = 0;
-    /** Dummy selector to run a JavaScript */
-    private final String JAVACRIPT_DUMMY_SELECTOR = "";
+    /** Dummy selector to run a JavaScript by the key */
+    private final String JAVACRIPT_KEY_SELECTOR = "";
 
     /** Constructor with a default HTML config */
     protected JsonBuilder(@NotNull final Appendable writer) {
@@ -121,12 +121,12 @@ public class JsonBuilder implements Closeable {
         return this;
     }
 
-    /** Write a key to a call a script from the function map.
+    /** Write a key to a call a javacroptscript from the function map of the script.
      * The response can contain only one Javascript code,
      * so this method can be called only once per request.
      */
     public JsonBuilder writeJsKey(@Nullable final CharSequence javascriptKey) throws IOException {
-        return write(JAVACRIPT_DUMMY_SELECTOR, javascriptKey);
+        return write(JAVACRIPT_KEY_SELECTOR, javascriptKey);
     }
 
     /** Write a JSON property */
