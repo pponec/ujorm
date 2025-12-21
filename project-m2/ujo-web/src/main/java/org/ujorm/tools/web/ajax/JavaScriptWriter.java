@@ -187,42 +187,42 @@ public class JavaScriptWriter implements Injector {
         return """
                 /* Script of ujorm.org *//* jshint esversion:6 */
                 const ${jsVar}={
-                  ajaxRun:false, submitReq:false, delayMs:${delayMs}, timeout:null, ${fceSpace}fceMap:{${fceMap}},
-                  init(){
-                    document.querySelectorAll('${formSelector}').forEach(form=>{
-                      form.addEventListener('submit',e=>this.process(e,form));
-                      form.querySelectorAll('${inputSelector}').forEach(input=>{
-                        input.addEventListener('keyup',()=>this.timeEvent(form));
-                        input.addEventListener('change',()=>this.timeEvent(form));
-                      });});},
-                  timeEvent(form) {
-                    clearTimeout(this.timeout);
-                    this.timeout=setTimeout(()=>{
-                      this.timeout=null;
-                      this.ajaxRun?(this.submitReq=true):this.process(null,form);
-                    },this.delayMs);},
-                  async process(e,form) {
-                    if(!form) return;
-                    if(e) e.preventDefault();
-                    [this.ajaxRun, this.submitReq]=[true, false];
-                    const fd=new FormData(form);
-                    if(e?.submitter?.name) fd.append(e.submitter.name,e.submitter.value);
-                    try{const res=await fetch('?_ajax=true',{
-                        method:'POST',
-                        body:new URLSearchParams(fd),
-                        headers:{'X-Requested-With':'XMLHttpRequest'}
-                      });
-                      if(!res.ok) throw new Error(res.status);
-                      const data=await res.json();
-                      Object.entries(data).forEach(([sel,val])=>{
-                        if(sel==='') return this.fceMap[val]();
-                        document.querySelectorAll(sel).forEach(el=>el.innerHTML=val);
-                      });
-                    }catch(err){console.error(err)}
-                    finally{
-                      this.ajaxRun=false;
-                      if(this.submitReq) this.process(null, form);
-                    }}};
+                ajaxRun:false, submitReq:false, delayMs:${delayMs}, timeout:null, ${fceSpace}fceMap:{${fceMap}},
+                init(){
+                  document.querySelectorAll('${formSelector}').forEach(form=>{
+                    form.addEventListener('submit',e=>this.process(e,form));
+                    form.querySelectorAll('${inputSelector}').forEach(input=>{
+                      input.addEventListener('keyup',()=>this.timeEvent(form));
+                      input.addEventListener('change',()=>this.timeEvent(form));
+                    });});},
+                timeEvent(form) {
+                  clearTimeout(this.timeout);
+                  this.timeout=setTimeout(()=>{
+                    this.timeout=null;
+                    this.ajaxRun?(this.submitReq=true):this.process(null,form);
+                  },this.delayMs);},
+                async process(e,form) {
+                  if(!form) return;
+                  if(e) e.preventDefault();
+                  [this.ajaxRun, this.submitReq]=[true, false];
+                  const fd=new FormData(form);
+                  if(e?.submitter?.name) fd.append(e.submitter.name,e.submitter.value);
+                  try{const res=await fetch('?_ajax=true',{
+                      method:'POST',
+                      body:new URLSearchParams(fd),
+                      headers:{'X-Requested-With':'XMLHttpRequest'}
+                    });
+                    if(!res.ok) throw new Error(res.status);
+                    const data=await res.json();
+                    Object.entries(data).forEach(([sel,val])=>{
+                      if(sel==='') return this.fceMap[val]();
+                      document.querySelectorAll(sel).forEach(el=>el.innerHTML=val);
+                    });
+                  }catch(err){console.error(err)}
+                  finally{
+                    this.ajaxRun=false;
+                    if(this.submitReq) this.process(null, form);
+                  }}};
                 document.addEventListener('DOMContentLoaded',()=>${jsVar}.init());${onLoadSubmit}
                 """;
     }
@@ -240,7 +240,7 @@ public class JavaScriptWriter implements Injector {
         var params = new HashMap<String, Object>();
         {   params.put("jsVar", "f" + fceOrder);
             params.put("delayMs", idleDelay.toMillis());
-            params.put("fceSpace", functionMap.isEmpty() ? "" : newLine);
+            params.put("fceSpace", functionMap.isEmpty() ? "" : (newLine + "  "));
             params.put("fceMap", bulidFunctionMap(functionMap));
             params.put("formSelector", formCssSelector);
             params.put("inputSelector", inputCssSelector());
