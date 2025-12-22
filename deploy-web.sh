@@ -16,7 +16,7 @@ echo RELEASE=${RELEASE}
 URL=https://oss.sonatype.org/service/local/staging/deploy/maven2/
 
 # Create the build:
-mvn clean install javadoc:jar source:jar -Pproduction
+mvn clean install
 cd "project-m2"
 
 # For all artefact SIGN and DEPLOY:
