@@ -33,9 +33,28 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * Less than 320 lines long class to simplify work with JDBC.
+ * Very light class to simplify work with JDBC.
  * Original source: <a href="https://github.com/pponec/PPScriptsForJava/blob/development/src/main/java/net/ponec/script/SqlExecutor.java">GitHub</a>
  * Licence: Apache License, Version 2.0
+ * <h4>Sample of usage</h4>
+ * <pre>
+ * try (var builder = new SqlParamBuilder(dbConnection)) {
+      List&lt;Employee&gt; employees = builder.sql("""
+                SELECT t.id, t.name, t.created
+                FROM employee t
+                WHERE t.id < :id
+                  AND t.code IN (:code)
+                ORDER BY t.id
+                """)
+        .bind("id", 10)
+        .bind("code", "T", "V")
+        .streamMap(rs -> new Employee(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getObject("created", LocalDate.class)))
+        .toList();
+ * }
+ * </pre>
  * @author Pavel Ponec, https://github.com/pponec
  * @since 2.26
  */
