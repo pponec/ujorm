@@ -2,7 +2,7 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 2.27 (2025-12-22)
+release 2.28 (2025-12-22)
 + JavaDoc is fixed
 + WEB: AJAX support is refactored and the eval() function is removed.
 + TOOLS: SQL input paremeters of the SqlParamBuilder supports JDBC types.
