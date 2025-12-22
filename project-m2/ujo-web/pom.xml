@@ -197,7 +197,7 @@
                     <docfilessubdirs>true</docfilessubdirs>
                     <failOnError>false</failOnError>
                     <encoding>UTF-8</encoding>
-                    <bottom><![CDATA[Copyright 2025, <a target="_blank" href="https://ujorm.org/">PPonec<a>]]></bottom>
+                    <bottom><![CDATA[Copyright 2025, <a target="_blank" href="https://ujorm.org/">PPonec</a>]]></bottom>
                     <doctitle>Ujorm ${revision} (${project.name})</doctitle>
                     <windowtitle>Ujorm ${revision} - ${project.name}</windowtitle>
                     <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="https://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>

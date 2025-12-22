@@ -42,13 +42,13 @@ import java.util.stream.StreamSupport;
       List&lt;Employee&gt; employees = builder.sql("""
                 SELECT t.id, t.name, t.created
                 FROM employee t
-                WHERE t.id < :id
+                WHERE t.id &gt; :id
                   AND t.code IN (:code)
                 ORDER BY t.id
                 """)
         .bind("id", 10)
         .bind("code", "T", "V")
-        .streamMap(rs -> new Employee(
+        .streamMap(rs -&gt; new Employee(
                 rs.getInt("id"),
                 rs.getString("name"),
                 rs.getObject("created", LocalDate.class)))
