@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.ujorm</groupId>
         <artifactId>main</artifactId>
-        <version>2.29-SNAPSHOT</version>
+        <version>2.30-SNAPSHOT</version>
     </parent>
 
     <!--<scm>
@@ -16,7 +16,7 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-samples</artifactId>
-    <version>2.29-SNAPSHOT</version>
+    <version>2.30-SNAPSHOT</version>
     <name>Main UJO Samples</name>
     <packaging>pom</packaging>
     <description>Ujorm Sample Projects</description>

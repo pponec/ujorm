@@ -10,13 +10,13 @@
     <!--<parent>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo</artifactId>
-        <version>2.29-SNAPSHOT</version>
+        <version>2.30-SNAPSHOT</version>
     </parent>-->
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-core</artifactId>
     <packaging>jar</packaging>
-    <version>2.29-SNAPSHOT</version>
+    <version>2.30-SNAPSHOT</version>
 
     <url>http://ujorm.org</url>
     <name>ujo-core</name>
@@ -32,7 +32,7 @@
     </contributors>
 
     <properties>
-        <revision>2.29-SNAPSHOT</revision>
+        <revision>2.30-SNAPSHOT</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
