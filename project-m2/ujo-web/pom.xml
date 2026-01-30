@@ -34,7 +34,7 @@
     </scm>
 
     <properties>
-        <revision>2.29-SNAPSHOT</revision>
+        <revision>2.29</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
