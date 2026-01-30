@@ -33,9 +33,9 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * Very light class to simplify work with JDBC.
- * Original source: <a href="https://github.com/pponec/PPScriptsForJava/blob/development/src/main/java/net/ponec/script/SqlExecutor.java">GitHub</a>
- * Licence: Apache License, Version 2.0
+ * A fluent wrapper over {@link PreparedStatement}
+ * that manages named parameters and ensures automatic resource cleanup
+ * of both statements and result sets.
  * <h4>Sample of usage</h4>
  * <pre>
  * try (var builder = new SqlParamBuilder(dbConnection)) {
@@ -55,6 +55,8 @@ import java.util.stream.StreamSupport;
         .toList();
  * }
  * </pre>
+ * Licence: Apache License, Version 2.0
+ * Original source: <a href="https://github.com/pponec/PPScriptsForJava/blob/development/src/main/java/net/ponec/script/SqlExecutor.java">GitHub</a>
  * @author Pavel Ponec, https://github.com/pponec
  * @since 2.26
  */
@@ -71,12 +73,15 @@ public class SqlParamBuilder implements AutoCloseable {
     private final Map<String, ParamValue> params = new HashMap<>();
     @Nullable
     private PreparedStatement preparedStatement = null;
+    @Nullable
+    private ResultSet resultSet = null;
 
     public SqlParamBuilder(@NotNull Connection dbConnection) {
         this.dbConnection = dbConnection;
     }
 
-    /** Close an old statement (if any) and assign the new SQL template */
+    /** Sets a new SQL template and resets current parameters.
+     * Any existing resources are closed. */
     public SqlParamBuilder sql(@NotNull String... sqlLines) {
         close();
         params.clear();
@@ -107,7 +112,7 @@ public class SqlParamBuilder implements AutoCloseable {
         return bindObject(enabled, key, JDBCType.SMALLINT, values);
     }
 
-    /** Bind Ingegers */
+    /** Bind Integers */
     public SqlParamBuilder bind(@NotNull final String key, final Integer... values) {
         return bind(true, key, values);
     }
@@ -175,7 +180,7 @@ public class SqlParamBuilder implements AutoCloseable {
         }
     }
 
-    /** For INSERT operations used before calling method {@code #generatedKeysRs}. */
+    /** Executes an INSERT statement with the ability to retrieve generated keys. */
     public int executeInsert() {
         try {
             return prepareStatement(Statement.RETURN_GENERATED_KEYS).executeUpdate();
@@ -184,9 +189,7 @@ public class SqlParamBuilder implements AutoCloseable {
         }
     }
 
-    /** Execute: INSERT, UPDATE, DELETE, DDL statements.
-     * The ResultSet object is automatically closed when the Statement object that generated it is closed,
-     * re-executed, or used to retrieve the next result from a sequence of multiple results. */
+    /** Internal execution of a SELECT query. */
     private ResultSet executeSelect() {
         try {
             return prepareStatement(Statement.NO_GENERATED_KEYS).executeQuery();
@@ -195,13 +198,10 @@ public class SqlParamBuilder implements AutoCloseable {
         }
     }
 
-    /**
-     * Returns a Stream over the given ResultSet. Closing the Stream also closes the ResultSet.
-     * Prefer {@link #streamMap(SqlFunction)} or {@link #forEach(SqlConsumer)}.
-     * @param resultSet the ResultSet to stream over
-     */
+    /** Creates a Stream from the ResultSet. The Stream ensures the ResultSet is closed when finished. */
     @NotNull
-    private Stream<ResultSet> stream(final ResultSet resultSet) {
+    private Stream<ResultSet> stream(final ResultSet rs) {
+        switchResultSet(rs);
         final var iterator = new Iterator<ResultSet>() {
             @Override
             public boolean hasNext() {
@@ -213,45 +213,48 @@ public class SqlParamBuilder implements AutoCloseable {
             }
             @Override
             public ResultSet next() {
-                return resultSet;
+                return rs;
             }
         };
-        // NOTE: The last ResultSet from a PreparedStatement is closed automatically when the statement is closed.
-        // For multiple ResultSets or other creation methods, must be closed explicitly.
         final var spliterator = Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED);
-        return StreamSupport.stream(spliterator, false).onClose(() -> {
-            try {
-                resultSet.close();
-            } catch (SQLException e) {
-                sqlException(e);
-            }
-        });
+        return StreamSupport.stream(spliterator, false).onClose(() -> switchResultSet(null));
     }
 
-    /** Iterate executed select */
+    /** Safely closes the current ResultSet and starts tracking the new one. */
+    private void switchResultSet(@Nullable final ResultSet rs) {
+        try (var oldResultSet = this.resultSet) {
+        } catch (SQLException e) {
+            sqlException(e);
+        }
+        this.resultSet = rs;
+    }
+
+    /** Executes the query and processes each row using the provided consumer. */
     public void forEach(@NotNull SqlConsumer consumer) throws SQLException {
         stream(executeSelect()).forEach(consumer);
     }
 
+    /** Executes the query and returns a Stream of mapped results. */
     @NotNull
     public <R> Stream<R> streamMap(SqlFunction<ResultSet, ? extends R> mapper) {
         return stream(executeSelect()).map(mapper);
     }
 
-    /** The method closes a PreparedStatement object with related objects, not the database connection. */
+    /** Closes the PreparedStatement and any active ResultSet.
+     * The database connection remains open. */
     @Override
     public void close() {
-        try (AutoCloseable c2 = preparedStatement) {
+        try (var ps = preparedStatement; var rs = resultSet) {
         } catch (Exception e) {
-            throw sqlException("Closing fails", e);
+            throw sqlException(e, "Closing resources failed");
         } finally {
+            resultSet = null;
             preparedStatement = null;
             params.clear();
         }
     }
 
-    /** Build (or reuse) a PreparedStatement object with SQL arguments
-     * @param autoGeneratedKeys For example: {@code Statement.RETURN_GENERATED_KEYS} */
+    /** Builds or reuses a PreparedStatement and binds current parameters. */
     @NotNull
     public PreparedStatement prepareStatement(int autoGeneratedKeys) {
         try {
@@ -266,17 +269,18 @@ public class SqlParamBuilder implements AutoCloseable {
             }
             preparedStatement = result;
             return result;
-        } catch (SQLException ex) {
-            throw sqlException(ex);
+        } catch (SQLException e) {
+            throw sqlException(e);
         }
     }
 
+    /** Returns the ResultSet containing generated keys from the last insert. */
     @Nullable
     protected ResultSet generatedKeysRs() {
         try {
-            return preparedStatement != null ? preparedStatement.getGeneratedKeys() : null;
+            return (preparedStatement != null) ? preparedStatement.getGeneratedKeys() : null;
         } catch (SQLException e) {
-            throw org.ujorm.tools.sql.SQLException.of(e);
+            throw sqlException(e);
         }
     }
 
@@ -288,6 +292,18 @@ public class SqlParamBuilder implements AutoCloseable {
         return generatedKeysRs != null
                 ? stream(generatedKeysRs).map(mapper)
                 : Stream.of();
+    }
+
+    /** Method returns the last inserted key of the last INSERT statement.
+     * Only one call per INSERT is allowed. <br>
+     * Usage: {@code builder.LastKey(rs -> rs.getInt(1))}
+     * @throws NoSuchElementException If no key found */
+    @NotNull
+    public <R> R generatedLastKey(SqlFunction<ResultSet, ? extends R> mapper) throws NoSuchElementException {
+        try (var stream = generatedKeys(mapper)) {
+            return stream.reduce((first, second) -> second)
+                    .orElseThrow(() -> new NoSuchElementException("No keys"));
+        }
     }
 
     @NotNull
@@ -311,7 +327,7 @@ public class SqlParamBuilder implements AutoCloseable {
             }
         }
         if (!toLog && !missingKeys.isEmpty()) {
-            throw sqlException("Missing SQL parameter: " + missingKeys, null);
+            throw sqlException(null, "Missing SQL parameter: " + missingKeys);
         }
         matcher.appendTail(result);
         return result.toString();
@@ -322,12 +338,9 @@ public class SqlParamBuilder implements AutoCloseable {
         return sqlTemplate;
     }
 
-    protected static org.ujorm.tools.sql.SQLException sqlException(@Nullable final SQLException ex) {
-        return new org.ujorm.tools.sql.SQLException(ex);
-    }
-
-    protected static org.ujorm.tools.sql.SQLException sqlException(@NotNull String messages, @Nullable final Exception ex) {
-        return new org.ujorm.tools.sql.SQLException(ex, messages);
+    protected static org.ujorm.tools.sql.SQLException sqlException(@Nullable final Exception ex, @NotNull String... messages) {
+        var msg = (messages.length > 0 || ex == null) ? String.join(" ", messages) : ex.getMessage();
+        return new org.ujorm.tools.sql.SQLException(ex, msg);
     }
 
     record ParamValue(JDBCType jdbcType, Object... values) {

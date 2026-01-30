@@ -127,9 +127,8 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                     .bind("created", someDate)
                     .executeInsert();
 
-            var id = builder.generatedKeys(rs -> rs.getInt(1)).findFirst();
-            var id2 = builder.generatedKeys(rs -> rs.getInt(1)).findFirst();
-            //Assertions.assertEquals(1, id.get());
+            var id1 = builder.generatedLastKey(rs -> rs.getInt(1));
+            Assertions.assertEquals(id1, 1);
 
             System.out.println("MULTI INSERT");
             builder.sql("INSERT INTO employee",
@@ -142,6 +141,8 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             System.out.println("Previous statement with modified parameter(s)");
             builder.bind("code", "X")
                     .execute();
+            var id5 = builder.generatedLastKey(rs -> rs.getInt(1));
+            Assertions.assertEquals(id5, 5);
 
             System.out.println("SELECT 1");
             List<Employee> employees = builder.sql("SELECT t.id, t.name, t.created",
