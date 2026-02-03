@@ -26,7 +26,7 @@ import org.ujorm.tools.Assert;
 /**
  * The wrapper implements a common {@code hash()}, {@code equals()} and {@code compareTo()} methods
  *
- * <h3>Usage:</h3>
+ * <h4>Usage:</h4>
  * <pre class="pre">
  *   Person p1 = new Person(1, "A");
  *   Person p2 = new Person(1, "B");

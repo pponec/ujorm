@@ -127,25 +127,21 @@ public class UjoCoder {
             result = ((StringWrapper) value).exportToString();
         } else if (value instanceof Enum) {
             result = ((Enum) value).name();
-        } else if (value instanceof Rectangle) {
-            Rectangle r = (Rectangle) value;
-            result = new StringBuilder(32)
-                .append(r.x)
-                .append(',')
-                .append(r.y)
-                .append(',')
-                .append(r.width)
-                .append(',')
-                .append(r.height)
-                .toString()
+        } else if (value instanceof Rectangle r) {
+            result = String.valueOf(r.x) +
+                    ',' +
+                    r.y +
+                    ',' +
+                    r.width +
+                    ',' +
+                    r.height
                 ;
         } else if (value instanceof Class) {
             result = ((Class) value).getName();
         } else if (value instanceof Charset) {
             result = ((Charset) value).name();
-        } else if (value instanceof List) {
+        } else if (value instanceof List lvalue) {
             StringBuilder lresult = new StringBuilder(64);
-            List lvalue = (List) value;
             char separator = getSeparator();
             int size = lvalue.size();
             for (int i=0; i<size; i++) {
@@ -179,12 +175,11 @@ public class UjoCoder {
             @NotNull final Key<?,T> key,
             @Nullable final String value,
             @Nullable final Class type) throws IllegalArgumentException {
-        if (key instanceof ListKey) {
+        if (key instanceof ListKey propertyList) {
             if (Check.isEmpty(value)) {
                 return null;
             }
             List result = new ArrayList();
-            ListKey propertyList = (ListKey) key;
             String separator = String.valueOf(getSeparator());
             StringTokenizer st = new StringTokenizer(value, separator);
             while (st.hasMoreTokens()) {

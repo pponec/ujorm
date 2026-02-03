@@ -492,8 +492,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     protected Field<?> findFirstField() {
         for (int i = 0, max = repeatingView.size(); i < max; i++) {
             final Component component = repeatingView.get(i);
-            if (component instanceof Field ) {
-                final Field<?> result = (Field<?>) component;
+            if (component instanceof Field<?> result) {
                 if (result.isVisibilityAllowed()
                 &&  result.getInput().isEnabled()
                 &&  result.getKey() != null) {

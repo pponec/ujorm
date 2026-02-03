@@ -474,7 +474,7 @@ abstract public class SqlDialect {
     /** Is supported the
      * <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29#Multirow_inserts">Multirow inserts</a> ?
      * Default value is true
-     * @see #printInsert(java.util.List, int, int, java.lang.Appendable) Multi row insert
+     * @see #printInsert(java.util.List, int, int, Appendable) Multi row insert
      */
     public boolean isMultiRowInsertSupported() {
         return true;
@@ -725,16 +725,14 @@ abstract public class SqlDialect {
         , @NotNull final ValueCriterion crit
         , @NotNull final Appendable out) throws IOException {
         final Object right = crit.getRightNode();
-        if (right instanceof Key) {
-            final Key rightProperty = (Key) right;
+        if (right instanceof Key rightProperty) {
             final ColumnWrapper col2 = AliasKey.getLastKey(rightProperty).getColumn(ormHandler);
 
             if (col2.getModel().isForeignKey()) {
                 throw new UnsupportedOperationException("Foreign key is not supported yet");
             }
             out.append(MessageFormat.format(template, getAliasColumnName(column), getAliasColumnName(col2)));
-        } else if (right instanceof Object[]) {
-            final Object[] os = (Object[]) right;
+        } else if (right instanceof Object[] os) {
             final StringBuilder sb = new StringBuilder(2 * os.length);
             for (int i = 0; i < os.length; i++) {
                 sb.append(i > 0 ? ",?" : "?");

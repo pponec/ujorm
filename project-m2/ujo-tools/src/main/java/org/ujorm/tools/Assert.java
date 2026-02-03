@@ -27,8 +27,8 @@ import static org.ujorm.tools.msg.MsgFormatter.format;
 
 /**
  * Assertion utils, where all method can throw the {@code IllegalArgumentException} exception only.
- * For a message format see the {@link MsgFormatter#format(T)} method description.
- * <h3>See the next correct asserts</h3>
+ * For a message format see the {@link MsgFormatter#format(Object[])}} method description.
+ * <h4>See the next correct asserts</h4>
  * <pre class="pre">
  *  Assert.isTrue(true, "TEST:{}{}", "A", "B");
  *  Assert.isTrue(30, (x) -> x > 20, "Wrong No");
@@ -49,9 +49,9 @@ import static org.ujorm.tools.msg.MsgFormatter.format;
  *  Assert.isTrue(true, m -> m.format ("TEST:{}{}", "A", "B"));
  *  Assert.isTrue(true, m -> m.sformat("TEST:%s%s", "A", "B"));
  * </pre>
- * @see https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html
- * @see https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/org/apache/commons/lang3/Validate.html
- * @see https://google.github.io/guava/releases/19.0/api/docs/com/google/common/base/Preconditions.html
+ * @see <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html">...</a>
+ * @see <a href="https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/org/apache/commons/lang3/Validate.html">...</a>
+ * @see <a href="https://google.github.io/guava/releases/19.0/api/docs/com/google/common/base/Preconditions.html">...</a>
  * @author Pavel Ponec
  * @since 1.73
  */

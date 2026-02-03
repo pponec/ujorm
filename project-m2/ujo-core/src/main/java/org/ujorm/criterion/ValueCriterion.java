@@ -248,7 +248,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
         switch (operator) {
             case XFIXED:
                 return Boolean.FALSE.equals(getRightNode())
-                     ? Collections.<U>emptyList()
+                     ? Collections.emptyList()
                      : ujoList instanceof List
                      ? (List) ujoList
                      : ujoList instanceof Collection
@@ -267,7 +267,7 @@ public class ValueCriterion<U extends Ujo> extends Criterion<U> implements Seria
         switch (operator) {
             case XFIXED:
                 return Boolean.FALSE.equals(value)
-                     ? Collections.<U>emptyList()
+                     ? Collections.emptyList()
                      : Arrays.asList(ujoList);
             default:
                 return super.evaluate(ujoList);

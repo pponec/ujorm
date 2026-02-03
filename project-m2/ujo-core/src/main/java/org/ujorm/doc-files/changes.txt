@@ -2,8 +2,41 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 2.30-SNAPSHOT
++
 
-release 2.25-SNAPSHOT (yyyy-mm-dd)
+release 2.29 (2025-12-30)
++ TOOLS: Implemented explicit ResultSet cleanup in SqlParamBuilder.close(). This prevents resource leaks caused by JDBC drivers that do not honor the contract of automatically closing the ResultSet when the PreparedStatement is closed.
++ TOOLS: New method is available to get a generated id by SQL INSERT: SqlParamBuilder.generatedLastKey()
+
+release 2.28 (2025-12-22)
++ JavaDoc is fixed
++ WEB: AJAX support is refactored and the eval() function is removed.
++ TOOLS: SQL input paremeters of the SqlParamBuilder supports JDBC types.
++ TOOLS: MessageService is textended.
+
+release 2.27 (2025-12-04)
++ Java 17+ is required
++ TOOLS: New method SqlParamBuilder.stream() closes the internal ResultSet for special cases.
++ TOOLS: New method SqlParamBuilder.streamGeneratedKeys() for retrieving the primary keys of an INSERT statement.
++ TOOLS: New method SqlParamBuilder.bind(enabled, ...)
++ TOOLS: New method HttpContext.getParameter() to get a type safe result object.
++ TOOLS: UnicodeCharacter class for supporting all Unicode characters.
++ WEB: A class RContext is renamed to the HttpContext
+
+release 2.26 (2024-11-06)
++ WEB: here is removed dependency on javax.servlet-api from ujo-web module. The goal was to make the module compatible with all versions in the range: servlet 3 to servlet 5.
++ WEB: unpairElement list is extended according to HTML 5
++ TOOLS: Package `org.ujorm.tools/xml` is moved to the `ujo-web` module.
+
+release 2.25 (2024-05-13)
++ WEB: Closing HTML element by the pair element is suppoted.
++ TOOLS: SqlParamBuilder for simple JDBC support.
++ TOOLS: RowIterator code cleaning.
++ TOOLS: ArrayUtils class for common use.
++ CORE: jUnit 5 is supported
++ CORE: Code cleaning
++ CORE: Maven Wrapper is included
 
 release 2.24 (2022-05-11)
 + WEB: New method: JavaScriptWriter.setIdleDelay().

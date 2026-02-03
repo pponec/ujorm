@@ -27,6 +27,7 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.report.ReportBuilder;
+import org.ujorm.tools.web.request.HttpContext;
 import org.ujorm.ujoservlet.ajax.ao.Hotel;
 import org.ujorm.ujoservlet.ajax.ao.HotelResourceService;
 import static org.ujorm.ujoservlet.ajax.HotelReportServlet.Attrib.*;
@@ -52,16 +53,16 @@ public class HotelReportServlet extends HttpServlet {
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param input servlet request
-     * @param output servlet response
+     * @param request Http servlet request
+     * @param response Http servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doGet(
-            final HttpServletRequest input,
-            final HttpServletResponse output) throws ServletException, IOException {
-
+            final HttpServletRequest request,
+            final HttpServletResponse response) throws ServletException, IOException {
+        final HttpContext context = HttpContext.ofServlet(request, response);
         new ReportBuilder<Hotel>("Hotel Report")
                 .addOrder("Ord")
                 .add(Hotel::getName, "Hotel", NAME).sortable(true)
@@ -74,13 +75,13 @@ public class HotelReportServlet extends HttpServlet {
                 .addColumn(
                         (e, v) -> e.addLinkedText(v.getHomePage(), "link"), // Column
                         (e) -> e.addText("Home page", " ").addImage(Url.HELP_IMG, "Help")) // Title
-                .setFormItem(e -> e.addTextInp(LIMIT, LIMIT.of(input), "Limit", CSS_INPUT, LIMIT))
+                .setFormItem(e -> e.addTextInp(LIMIT, LIMIT.of(context), "Limit", CSS_INPUT, LIMIT))
                 .setFooter(e -> printFooter(e))
                 .setAjaxEnabled(true)
-                .build(input, output, builder -> service.findHotels(builder,
-                                LIMIT.of(input, DEFAULT_ROW_LIMIT),
-                                NAME.of(input),
-                                CITY.of(input)));
+                .build(context, builder -> service.findHotels(builder,
+                                LIMIT.of(context, DEFAULT_ROW_LIMIT),
+                                NAME.of(context.request()),
+                                CITY.of(context.request())));
     }
 
     /** Create a stars Column */

@@ -7,21 +7,18 @@ import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
+import org.ujorm.tools.web.request.HttpContext;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 
 import org.jetbrains.annotations.NotNull;
-import java.io.IOException;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.web.bind.annotation.RequestParam;
 import net.ponec.x2j.service.ConverterService;
 import static net.ponec.x2j.controller.ConverterController.Constants.*;
 import net.ponec.x2j.model.Message;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
-import org.ujorm.tools.web.ao.MockServletResponse;
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @RestController
 public class ConverterController {
 
@@ -30,20 +27,23 @@ public class ConverterController {
      */
     private final ConverterService service;
 
+    public ConverterController(ConverterService service) {
+        this.service = service;
+    }
+
     @RequestMapping(path = {"/converter", ""}, method = {GET, POST}, produces = MediaType.TEXT_HTML_VALUE)
     public String converter(
             @RequestParam(defaultValue = "") String text,
             @RequestParam(defaultValue = "") String submit
-    ) throws IOException {
+    ) {
 
         if (DEMO.equals(submit)) {
             text = service.getDemoXml();
         }
 
-        Message message = service.toJavaCode(text);
-
-        final MockServletResponse response = new MockServletResponse();
-        try ( HtmlElement html = HtmlElement.of(getConfig("Convert XML file to Java code on-line"), response)) {
+        final Message message = service.toJavaCode(text);
+        final HttpContext context = HttpContext.of();
+        try (HtmlElement html = HtmlElement.of(context, getConfig("Convert XML file to Java code on-line"))) {
             html.addCssLink(CSS_STYLE);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             try ( Element body = html.getBody()) {
@@ -71,7 +71,7 @@ public class ConverterController {
                 }
             }
         }
-        return response.toString();
+        return context.writer().toString();
     }
 
     /**

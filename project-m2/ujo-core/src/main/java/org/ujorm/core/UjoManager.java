@@ -158,8 +158,7 @@ public class UjoManager extends UjoTools implements Comparator<Key> {
                                 if (ujoProp.getDomainType() == null) {
                                     PropertyModifier.setDomainType(KeyFactory.getGenericClass(field, false), (Property) ujoProp);
                                 }
-                                if (ujoProp instanceof AbstractCollectionProperty) {
-                                    final AbstractCollectionProperty lp = (AbstractCollectionProperty) ujoProp;
+                                if (ujoProp instanceof AbstractCollectionProperty lp) {
                                     if (lp.getItemType() == null) {
                                         PropertyModifier.setItemType(KeyFactory.getGenericClass(field, true), lp);
                                     }

@@ -30,11 +30,12 @@ import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.msg.ValuePrinter;
 import org.ujorm.tools.set.LoopingIterator;
+import org.ujorm.tools.sql.SqlParamBuilder;
 
 /**
  * PrepareStatement builder support
  *
- * <h3>How to use a SELECT</h3>
+ * <h4>How to use a SELECT</h4>
  * <pre class="pre">
  * JdbcBuilder sql = <strong>new</strong> JdbcBuilder()
  *     .write("SELECT")
@@ -49,7 +50,7 @@ import org.ujorm.tools.set.LoopingIterator;
  * }
  * </pre>
  *
- * <h3>How to use a INSERT</h3>
+ * <h4>How to use a INSERT</h4>
  * <pre class="pre">
  * JdbcBuilder sql = <strong>new</strong> JdbcBuilder()
  *     .write("INSERT INTO testTable (")
@@ -60,7 +61,7 @@ import org.ujorm.tools.set.LoopingIterator;
  * sql.executeUpdate(dbConnection);
  * </pre>
  *
- * <h3>How to use a UPDATE</h3>
+ * <h4>How to use a UPDATE</h4>
  * <pre class="pre">
  * JdbcBuilder sql = <strong>new</strong> JdbcBuilder()
  *     .write("UPDATE testTable SET")
@@ -75,6 +76,7 @@ import org.ujorm.tools.set.LoopingIterator;
  * For more information see a <a target="_blank"
  * href="https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/test/java/org/ujorm/tools/jdbc/JdbcBuilderTest.java#L33">jUnit</a> test.
  * @author Pavel Ponec
+ * @deprecated Use the {@link SqlParamBuilder} class rather from the release 2.26.
  */
 public class JdbcBuilder implements Serializable {
 
@@ -171,7 +173,7 @@ public class JdbcBuilder implements Serializable {
         return this;
     }
 
-    /** Set new value to column by template {@code name = ? */
+    /** Set new value to column by template {@code name = ?} */
     @NotNull
     public JdbcBuilder columnUpdate(@NotNull final CharSequence column, @NotNull final Object value) {
         Assert.state(!insertMode, "An insertion mode has been started.");
@@ -182,7 +184,7 @@ public class JdbcBuilder implements Serializable {
         return this;
     }
 
-    /** Set new value to column by template {@code name = ? */
+    /** Set new value to column by template {@code name = ?} */
     @NotNull
     public JdbcBuilder columnInsert(@NotNull final CharSequence column, @NotNull final Object value) {
         insertMode = true;
@@ -364,7 +366,7 @@ public class JdbcBuilder implements Serializable {
 
     /** Create a new result list */
     @NotNull
-    public <T> List<T> executeSelect(@NotNull final Connection connection, JdbcFunction<T> function) throws SQLException {
+    public <T> List<T> executeSelect(@NotNull final Connection connection, SqlFunction<ResultSet, T> function) throws SQLException {
         final ArrayList<T> result = new ArrayList<>(128);
         try (PreparedStatement ps = prepareStatement(connection); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
@@ -374,7 +376,7 @@ public class JdbcBuilder implements Serializable {
         return result;
     }
 
-    /** Create statement and call {@link PreparedStatement.executeUpdate() }.
+    /** Create statement and call {@link PreparedStatement#executeUpdate()} .
      * Supported SQL statements are: INSERT, UPDATE, DELETE .
      */
     public int executeUpdate(@NotNull final Connection connection) throws IllegalStateException {
@@ -416,8 +418,7 @@ public class JdbcBuilder implements Serializable {
         try {
         for (int i = 0, max = sql.size(); i < max; i++) {
             final CharSequence item = sql.get(i);
-            if (item instanceof SqlEnvelope) {
-                final SqlEnvelope env = (SqlEnvelope) item;
+            if (item instanceof SqlEnvelope env) {
                 if (env.isColumn()) {
                     if (env.getColumnOrder() > 0) {
                         result.append(ITEM_SEPARATOR);

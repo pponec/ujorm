@@ -67,8 +67,7 @@ public final class ValidatorUtils {
     @SuppressWarnings("unchecked")
     private static boolean findValidators(Validator validator, Class<? extends Validator> requiredType, List<? extends Validator> validators) {
         boolean and = true;
-        if (validator instanceof CompositeValidator) {
-            CompositeValidator cv = (CompositeValidator) validator;
+        if (validator instanceof CompositeValidator cv) {
             and = cv.getOperator() == BinaryOperator.AND;
             and = and && findValidators(cv.getLeftValidator(), requiredType, validators);
             and = and && findValidators(cv.getRightValidator(), requiredType, validators);

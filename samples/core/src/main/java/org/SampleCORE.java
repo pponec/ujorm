@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -317,7 +318,7 @@ public class SampleCORE {
      * 3;Kamil;50}</pre>
      */
     public void importCSV() throws Exception {
-        Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
+        Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), StandardCharsets.UTF_8);
         UjoManagerCSV<Employee> manager = UjoManagerCSV.of
                 ( Employee.ID
                 , Employee.NAME

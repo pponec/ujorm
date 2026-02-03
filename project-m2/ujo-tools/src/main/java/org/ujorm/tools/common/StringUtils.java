@@ -16,13 +16,12 @@
  */
 package org.ujorm.tools.common;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +31,7 @@ import org.ujorm.tools.Assert;
 /**
  * Methods to reading an text resource to the {@code String}.
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  * <pre class="pre">
  * try (Stream&lt;String&gt; stream = StringUtils.readLines(StringUtils.class,  "text", "dummy.txt")) {
  *     String[] result = stream.toArray(String[]::new);
@@ -73,7 +72,7 @@ public class StringUtils {
     }
 
     /** Read a content of the resource encoded by UTF-8.
-     * A line separator can be modifed in the result.
+     * A line separator can be modified in the result.
      */
     @NotNull
     public String readBody(@NotNull final String... resource) {
@@ -81,7 +80,7 @@ public class StringUtils {
     }
 
     /** Read a content of the resource encoded by UTF-8.
-     * A line separator can be modifed in the result.
+     * A line separator can be modified in the result.
      */
     @NotNull
     public String readBody(@NotNull final Class<?> basePackage, @NotNull final String... resourcePath) {
@@ -94,7 +93,7 @@ public class StringUtils {
     }
 
     /** Read a content of the resource encoded by UTF-8.
-     * A line separator can be modifed in the result.
+     * A line separator can be modified in the result.
      */
     @NotNull
     public String readBody(@NotNull final InputStream is) {
@@ -104,7 +103,7 @@ public class StringUtils {
     }
 
     /** Read a content of the resource encoded by UTF-8.
-     * A line separator can be modifed in the result.
+     * A line separator can be modified in the result.
      * @return The result must be closed.
      */
     @NotNull
@@ -118,7 +117,7 @@ public class StringUtils {
     }
 
     /** Read a closeable line stream of the URL.
-     * A line separator can be modifed in the result.
+     * A line separator can be modified in the result.
      * @return The result must be closed.
      */
     @NotNull
@@ -136,12 +135,27 @@ public class StringUtils {
     }
 
     /** Read a closeable line stream of the URL.
-     * A line separator can be modifed in the result
+     * A line separator can be modified in the result
      * @return The result must be closed.
      */
     @NotNull
     public Stream<String> readRows(@NotNull final InputStream is) throws IOException {
         return new BufferedReader(new InputStreamReader(is, charset)).lines();
+    }
+
+    /** Read a closeable line stream of the File.
+     *   <br/>
+     * In Java 17, the following code can be used with a similar result: <br/>
+     * {@code Files.lines(Path.of("File.txt"), StandardCharsets.UTF_8)} */
+    @NotNull
+    public Stream<String> readRows(@NotNull final Path file) throws IOException {
+        return readRows(Files.newInputStream(file));
+    }
+
+    /** Read a closeable line stream of the File. */
+    @NotNull
+    public Stream<String> readRows(@NotNull final File file) throws IOException {
+        return readRows(new FileInputStream(file));
     }
 
     /** Build a resource */
@@ -158,7 +172,7 @@ public class StringUtils {
     // --- STATIC METHODS ---
 
     /** Read a content of the resource encoded by UTF-8.
-     * A line separator can be modifed in the result.
+     * A line separator can be modified in the result.
      */
     @NotNull
     public static String read(@NotNull final Class<?> basePackage, @NotNull final String... resourcePath) {
@@ -166,7 +180,7 @@ public class StringUtils {
     }
 
     /** Read a content of the resource encoded by UTF-8.
-     * A line separator can be modifed in the result.
+     * A line separator can be modified in the result.
      */
     @NotNull
     public static String read(@NotNull final InputStream is) {
@@ -174,7 +188,7 @@ public class StringUtils {
     }
 
     /** Read a closeable line stream of the URL.
-     * A line separator can be modifed in the result.
+     * A line separator can be modified in the result.
      * @return The result must be closed.
      */
     @NotNull
@@ -183,7 +197,7 @@ public class StringUtils {
     }
 
     /** Read a content of the resource encoded by UTF-8.
-     * A line separator can be modifed in the result.
+     * A line separator can be modified in the result.
      * @return The result must be closed.
      */
     @NotNull
@@ -192,7 +206,7 @@ public class StringUtils {
     }
 
     /** Read a content of the resource encoded by UTF-8.
-     * A line separator can be modifed in the result.
+     * A line separator can be modified in the result.
      * @return The result must be closed.
      */
     @NotNull

@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -35,8 +34,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javax.servlet.http.HttpServletRequest;
-import javax.sql.rowset.spi.XmlWriter;
+
+import org.ujorm.tools.xml.model.XmlWriter;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.ao.Column;
@@ -50,10 +49,10 @@ import org.ujorm.tools.web.ao.Injector;
 /**
  * A HTML Element implements some methods for frequently used elements and attributes
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
- *    MockServletResponse response = new MockServletResponse();
+ *    ServletResponse response = new ServletResponse();
  *    try (HtmlElement html = HtmlElement.of(response)) {
  *        try (Element body = html.getBody()) {
  *            body.addHeading("Hello!");
@@ -86,7 +85,7 @@ public final class Element implements ApiElement<Element>, Html {
      * Set an attribute
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.model.XmlModel, java.lang.String, java.io.Writer) }
+     *   {@link XmlWriter#writeValue(Object, ApiElement, String)}
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
@@ -101,7 +100,7 @@ public final class Element implements ApiElement<Element>, Html {
      * Set an attribute
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.model.XmlModel, java.lang.String, java.io.Writer) }
+     *   {@link XmlWriter#writeValue(Object, ApiElement, String)}
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
@@ -136,18 +135,12 @@ public final class Element implements ApiElement<Element>, Html {
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
-    @Deprecated
-    @NotNull
-    @Override
-    public Element setAttrib(@NotNull final String name, @Nullable final Object value) {
-        return setAttribute(name, value);
-    }
 
     /**
      * A shortcut for the method {@link #setAttribute(java.lang.String, java.lang.Object) }.
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.model.XmlModel, java.lang.String, java.io.Writer) }
+     *   {@link XmlWriter#writeValue(Object, ApiElement, String)}
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
@@ -159,7 +152,7 @@ public final class Element implements ApiElement<Element>, Html {
     /** Add simple text
      * @param data Text item
      * @return A parent element.
-     * @see #addAnchoredText(java.lang.String, java.lang.Object...)
+     * @see #addAnchor(String, CharSequence...)
      */
     @NotNull
     @Override
@@ -172,7 +165,7 @@ public final class Element implements ApiElement<Element>, Html {
      * Add many texts with <strong>no separator</strong>
      * @param data Text items
      * @return A parent element.
-     * @see #addAnchoredText(java.lang.String, java.lang.Object...)
+     * @see #addAnchor(String, CharSequence...)
      */
     @NotNull
     public Element addText(@NotNull final Object... data) throws IllegalStateException {
@@ -180,23 +173,10 @@ public final class Element implements ApiElement<Element>, Html {
     }
 
     /**
-     * Use the method {@link  #addTextTemplated(java.lang.String, java.lang.Object...) } raher.
-     *
-     * @param template A message template with an ENGLISH locale. See {@link String#format(java.lang.String, java.lang.Object...) for more parameters.
-     * @param data A template parameters
-     * @return A parent element.
-     */
-    @Deprecated
-    @NotNull
-    public Element addTemplate(@NotNull final String template, @NotNull final Object... data)
-            throws IllegalStateException {
-        return addText(String.format(Locale.ENGLISH, template, data));
-    }
-
-    /**
      * Add a template based text with parameters with hight performance.
      *
-     * @param template A message template with an ENGLISH locale. See {@link String#format(java.lang.String, java.lang.Object...) for more parameters.
+     * @param template A message template with an ENGLISH locale.
+     *   See {@link String#format(String, Object...)}) for more parameters.
      * @param values A template parameters
      * @return A parent element.
      */
@@ -205,21 +185,6 @@ public final class Element implements ApiElement<Element>, Html {
     public Element addTextTemplated(CharSequence template, Object... values) {
         internalElement.addTextTemplated(template, values);
         return this;
-    }
-
-    /**
-     * Use the the method {@link #addTexts(java.lang.CharSequence, java.lang.Object...) } rather;
-     * @param separator The delimiter must contain no special HTML character.
-     * @param data Data to print
-     * @return The current element
-     * @throws IllegalStateException
-     */
-    @Deprecated
-    public Element addTextSeparted(
-            @NotNull final CharSequence separator,
-            @NotNull final Object... data)
-            throws IllegalStateException {
-        return addTexts(separator, data);
     }
 
     /**
@@ -341,17 +306,6 @@ public final class Element implements ApiElement<Element>, Html {
         return addElement(TABLE, cssClasses);
     }
 
-    /** Add new Table with cellpadding a cellspacing values to zero.
-     * @deprecated Use a CSS style rather.
-     */
-    @Deprecated
-    @NotNull
-    public Element addTableNoSpaces(@NotNull final CharSequence... cssClasses) {
-        return addTable(cssClasses)
-                .setAttribute(Element.A_CELLPADDING, 0)
-                .setAttribute(Element.A_CELLSPACING, 0);
-    }
-
     /** Create a HTML table according to data */
     @NotNull
     public Element addTable(
@@ -379,7 +333,7 @@ public final class Element implements ApiElement<Element>, Html {
 
     /** Create a HTML table according to data
      *
-     * <h3>Usage</h3>
+     * <h4>Usage</h4>
      * <pre>
      * element.addTable(getCars(), cssClasses, titles,
      *         Car::getId,
@@ -609,24 +563,6 @@ public final class Element implements ApiElement<Element>, Html {
         return addInput(cssClasses).setType(V_TEXT);
     }
 
-    /** Add new input element type of text including attributes: name, value, placeholder and title
-     *
-     * @deprecated Use the method of the same name with an explicit value.
-     */
-    @Deprecated
-    @NotNull
-    public Element addTextInput(
-            @NotNull HttpServletRequest req,
-            @NotNull HttpParameter param,
-            @NotNull CharSequence title,
-            @NotNull final CharSequence... cssClasses) {
-        return addTextInput(cssClasses)
-                .setName(param)
-                .setValue(param.of(req))
-                .setAttribute(Html.A_PLACEHOLDER, title)
-                .setAttribute(Html.A_TITLE, title);
-    }
-
     /** Add new input element type of text including attributes: name, value, placeholder and title */
     @NotNull
     public <V> Element addTextInp(
@@ -716,13 +652,6 @@ public final class Element implements ApiElement<Element>, Html {
         return result.setHref(url);
     }
 
-    /** Use the method {@link #addLinkedText(java.lang.String, java.lang.Object...) rather. */
-    @Deprecated
-    @NotNull
-    public Element addAnchoredText(@NotNull final String url, @NotNull final Object... text) {
-        return addLinkedText(url, text);
-    }
-
     /**
      * Add a
      * @param url
@@ -777,24 +706,6 @@ public final class Element implements ApiElement<Element>, Html {
     @NotNull
     public Element addBreak(@NotNull final CharSequence... cssClasses) {
         return addElement(BR, cssClasses);
-    }
-
-    // ----- An attributes ----------
-
-    /** Set a CSS class attribute rather */
-    @Deprecated
-    @NotNull
-    public Element setCellPadding(final int value) {
-        setAttribute(A_CELLPADDING, value);
-        return this;
-    }
-
-    /** Set a CSS class attribute rather */
-    @Deprecated
-    @NotNull
-    public Element setCellSpacing(final int value) {
-        setAttribute(A_CELLSPACING, value);
-        return this;
     }
 
     // ---- Static methods ----
@@ -934,7 +845,6 @@ public final class Element implements ApiElement<Element>, Html {
      *
      * @deprecated Use the method {@link #next(Consumer)} rather.
      */
-    @Deprecated
     @NotNull
     public ExceptionProvider then(@NotNull final Consumer<Element> builder) {
         return next(builder);
@@ -942,7 +852,7 @@ public final class Element implements ApiElement<Element>, Html {
 
     /** Add nested elements to the element.
      *
-     * <h3>Usage</h3>
+     * <h4>Usage</h4>
      *
      * <pre class="pre">
      *  HtmlElement.of(config, writer).addBody()

@@ -22,7 +22,7 @@ import org.ujorm.orm.annot.Comment;
 /**
  * Policy for assigning a comment form {@link Comment} annotation to database.
  * @see Comment
- * @see org.ujorm.orm.dialect.MySqlDialect#printComment(org.ujorm.orm.metaModel.MetaColumn, java.lang.Appendable) MySqlDialect column implementation
+ * @see org.ujorm.orm.dialect.MySqlDialect#printComment(org.ujorm.orm.metaModel.MetaColumn, Appendable) MySqlDialect column implementation
  * @author Pavel Ponec
  */
 @Comment

@@ -47,7 +47,7 @@ public class DataLoader implements InitializationBatch {
 
     /** Get hotels from CSV file */
     public List<City> getCities() {
-        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCity.csv"), UTF_8.name());
+        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCity.csv"), UTF_8);
         while (!scanner.nextLine().isEmpty()){}
 
         UjoManagerCSV<City> manager = UjoManagerCSV.of
@@ -63,7 +63,7 @@ public class DataLoader implements InitializationBatch {
 
     /** Get hotels from CSV file */
     public List<Hotel> getHotels() {
-        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceHotel.csv"), UTF_8.name());
+        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceHotel.csv"), UTF_8);
         while (!scanner.nextLine().isEmpty()){}
 
         UjoManagerCSV<Hotel> manager = UjoManagerCSV.of
@@ -88,7 +88,7 @@ public class DataLoader implements InitializationBatch {
 
     /** Get hotels from CSV file */
     public List<Customer> getCustomers() {
-        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCustomer.csv"), UTF_8.name());
+        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCustomer.csv"), UTF_8);
         UjoManagerCSV<Customer> manager = UjoManagerCSV.of
                 ( Customer.LOGIN
                 , Customer.PASSWORD

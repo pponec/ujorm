@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A joinable function
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  * <pre>
  *  Function&lt;Person, String&gt; nameProvider = Joinable
  *     .of (Person::getBoss)

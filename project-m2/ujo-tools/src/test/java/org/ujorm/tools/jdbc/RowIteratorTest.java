@@ -17,6 +17,7 @@ package org.ujorm.tools.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,8 +35,8 @@ public class RowIteratorTest extends AbstractJdbcConnector {
     public void testShowUsage() throws ClassNotFoundException, SQLException {
         final int[] counter = {0};
         try (Connection dbConnection = createTestConnection()) {
-            try (PreparedStatement ps = dbConnection.prepareStatement("SELECT * FROM testTable")) {
-                new RowIterator(ps).toStream().forEach((RsConsumer)(resultSet) -> {
+            try (PreparedStatement ps = dbConnection.prepareStatement("SELECT * FROM employee")) {
+                new RowIterator(ps).toStream().forEach((SqlConsumer)(resultSet) -> {
                     int value = resultSet.getInt(1);
                     System.out.println(" value: " + value);
                     counter[0]++;
@@ -52,8 +53,8 @@ public class RowIteratorTest extends AbstractJdbcConnector {
     public void testNoStreamIteration() throws ClassNotFoundException, SQLException {
         final int[] counter = {0};
         try (Connection dbConnection = createTestConnection()) {
-            try (PreparedStatement ps = dbConnection.prepareStatement("SELECT * FROM testTable")) {
-                new RowIterator(ps).forEach((RsConsumer)(resultSet) -> {
+            try (PreparedStatement ps = dbConnection.prepareStatement("SELECT * FROM employee")) {
+                new RowIterator(ps).forEach((SqlConsumer)(resultSet) -> {
                     int value = resultSet.getInt(1);
                     System.out.println(" value: " + value);
                     counter[0]++;
@@ -63,7 +64,7 @@ public class RowIteratorTest extends AbstractJdbcConnector {
         assertEquals(1, counter[0]);
     }
 
-    /** Crete new DB connection */
+    /** Create new DB connection */
     private Connection createTestConnection() throws ClassNotFoundException, SQLException {
         Connection result = super.createDbConnection();
         JdbcBuilderTest builder = new JdbcBuilderTest();

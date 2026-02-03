@@ -201,8 +201,7 @@ public class JdbcStatement /*implements Closeable*/ {
             if (column.isForeignKey()) {
                 List<MetaColumn> fc = column.getForeignColumns();
 
-                if (value instanceof Object[]) {
-                    final Object[] ujoValues = (Object[]) value;
+                if (value instanceof Object[] ujoValues) {
                     final Object[] rValues = new Object[ujoValues.length];
                     final MetaColumn rColumn = fc.get(0); // only one PK is supported
                     final boolean isUjo = ujoValues.length > 0
@@ -222,8 +221,7 @@ public class JdbcStatement /*implements Closeable*/ {
                     }
                     assignValue(rColumn, rValues, null);
 
-                } else if (value instanceof OrmUjo) {
-                    final OrmUjo bo = (OrmUjo) value;
+                } else if (value instanceof OrmUjo bo) {
                     for (MetaColumn rColumn : fc) {
                         Object rValue = rColumn.getValue(bo);
                         assignValue(rColumn, rValue, bo);

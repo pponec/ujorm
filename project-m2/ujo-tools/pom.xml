@@ -5,62 +5,43 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
-    <!--<parent>
-        <groupId>org.ujorm</groupId>
-        <artifactId>ujo</artifactId>
-        <version>2.25-SNAPSHOT</version>
-    </parent>-->
-
-
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-tools</artifactId>
-    <version>2.25-SNAPSHOT</version>
+    <version>2.30-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ujo-tools</name>
     <description>Ujorm-tools module is a basic library tools for common use</description>
+    <url>https://ujorm.org/www/web/index.html</url> <!-- home page -->
 
-    <contributors>
-        <contributor>
-            <name>Pavel Ponec</name>
-            <url>http://ponec.net/</url>
-            <timezone>+1</timezone>
-        </contributor>
-    </contributors>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>pponec</id>
+            <name>PPonec</name>
+            <email>pponec@gmail.com</email>
+        </developer>
+    </developers>
+    <scm>
+        <url>https://github.com/pponec/ujorm.git</url>
+        <connection>scm:git:git@github.com/pponec/ujorm.git</connection>
+        <developerConnection>scm:git:git@github.com/pponec/ujorm.git</developerConnection>
+    </scm>
 
     <properties>
-        <revision>2.25-SNAPSHOT</revision>
-        <java.version>1.8</java.version>
+        <revision>2.30-SNAPSHOT</revision>
+        <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.8.0</junit.version>
+        <junit.version>5.10.2</junit.version>
     </properties>
-
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <dependencies>
         <!-- Static analyzer support -->
@@ -109,16 +90,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>5.3.5</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.1.214</version>
+            <version>2.4.240</version>
             <scope>test</scope>
         </dependency>
 
@@ -126,52 +100,13 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.9</version>
+            <version>1.5.20</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
-                <configuration>
-                    <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile>
-                    <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
-                    <docfilessubdirs>true</docfilessubdirs>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                    <failOnError>false</failOnError>
-                    <encoding>UTF-8</encoding>
-                    <bottom><![CDATA[Copyright 2015, <a target="_blank" href="http://ujorm.org/">Pavel Ponec<a>]]></bottom>
-                    <doctitle>Ujorm ${project.version} (${project.name})</doctitle>
-                    <windowtitle>Ujorm ${project.version} - ${project.name}</windowtitle>
-                    <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="http://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
-
-                    <!-- Doclet (yWorks UML Doclet)
-                    <doclet>ydoc.doclets.YStandard</doclet>
-                    <docletPath>${yworks.uml.path}/lib/ydoc.jar:${yworks.uml.path}/lib/class2svg.jar:${yworks.uml.path}/resources</docletPath>
-                    <additionalparam>-link http://docs.oracle.com/javase/6/docs/api/ -umlautogen</additionalparam>
-                    -->
-
-                    <!-- Doclet (sudo apt-get install graphviz) -.->
-                    <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-                    <docletArtifact>
-                        <groupId>org.umlgraph</groupId>
-                        <artifactId>umlgraph</artifactId>
-                        <version>5.6</version>
-                    </docletArtifact>
-                    <additionalparam>
-                        -inferrel -quiet -hide java.*
-                        -collpackages java.util.* -qualify
-                        -postfixpackage -nodefontsize 9
-                        -nodefontpackagesize 7
-                    </additionalparam>
-                    -->
-                </configuration>
-            </plugin>
-
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
@@ -212,50 +147,73 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Deployment (Needs the GnuPg) -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.9.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.2.8</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <!-- <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile> -->
+                    <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
+                    <docfilessubdirs>true</docfilessubdirs>
+                    <failOnError>false</failOnError>
+                    <encoding>UTF-8</encoding>
+                    <bottom><![CDATA[Copyright 2025, <a target="_blank" href="https://ujorm.org/">PPonec</a>]]></bottom>
+                    <doctitle>Ujorm ${revision} (${project.name})</doctitle>
+                    <windowtitle>Ujorm ${revision} - ${project.name}</windowtitle>
+                    <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="https://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
+                    <doclint>none</doclint><!-- Disables Javadoc warnings -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
-    <!-- PROFILE(S) -->
-
-    <profiles>
-        <profile>
-            <id>production</id>
-            <build>
-                <plugins>
-                    <!-- code optimization: -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <debug>true</debug>
-                            <optimize>true</optimize>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>sign</id>
-            <build>
-                <plugins>
-                    <!-- Needs the GnuPg: -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 </project>
-

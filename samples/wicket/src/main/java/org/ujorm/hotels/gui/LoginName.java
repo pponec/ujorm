@@ -69,8 +69,7 @@ public class LoginName extends Panel {
     /** Manage events */
     @Override
     public void onEvent(IEvent<?> argEvent) {
-        if (argEvent.getPayload() instanceof UjoEvent) {
-            final UjoEvent event = (UjoEvent) argEvent.getPayload();
+        if (argEvent.getPayload() instanceof UjoEvent event) {
             if (event.isAction(LOGIN_CHANGED)) {
                 event.addTarget(this);
             }

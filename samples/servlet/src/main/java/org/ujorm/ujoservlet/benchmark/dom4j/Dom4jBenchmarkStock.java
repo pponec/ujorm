@@ -102,8 +102,7 @@ public class Dom4jBenchmarkStock extends HttpServlet {
                     .addAttribute(Html.A_MEDIA, "all");
             head.addElement(Html.SCRIPT)
                     .addAttribute(Html.A_TYPE, "text/javascript")
-                    .addAttribute(Html.A_SRC, "/js/util.js")
-                    .addText("");
+                    .addAttribute(Html.A_SRC, "/js/util.js");
             head.addElement(Html.STYLE)
                     .addAttribute(Html.A_TYPE, "text/css")
                     .add(new FlyweightText(STOCKS_CSS));
@@ -165,7 +164,7 @@ public class Dom4jBenchmarkStock extends HttpServlet {
         writer.write(document);
         writer.flush();
     }
-    
+
     public static List<Stock> dummyItems() {
         return StockService.INSTANCE.getStocks();
     }

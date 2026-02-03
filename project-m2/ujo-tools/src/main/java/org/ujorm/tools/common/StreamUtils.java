@@ -99,7 +99,7 @@ public abstract class StreamUtils {
 
     /** Create a joinable function
      *
-     * <h3>Usage</h3>
+     * <h4>Usage</h4>Assert.java:54
      * <pre>
      *  Function&lt;Person, String&gt; nameProvider = Joinable
      *     .of (Person::getBoss)

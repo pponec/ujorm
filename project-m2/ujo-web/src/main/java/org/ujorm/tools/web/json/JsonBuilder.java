@@ -19,10 +19,9 @@ import java.io.Closeable;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.ObjectProvider;
+import org.ujorm.tools.web.request.HttpContext;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
@@ -44,8 +43,8 @@ public class JsonBuilder implements Closeable {
     private final HtmlConfig config;
     /** Parameter counter */
     private int paramCounter = 0;
-    /** Dummy selector to run a JavaScript */
-    private final String JAVACRIPT_DUMMY_SELECTOR = "";
+    /** Dummy selector to run a JavaScript by the key */
+    private final String JAVACRIPT_KEY_SELECTOR = "";
 
     /** Constructor with a default HTML config */
     protected JsonBuilder(@NotNull final Appendable writer) {
@@ -122,12 +121,12 @@ public class JsonBuilder implements Closeable {
         return this;
     }
 
-    /** Write a Javascript to a call.
+    /** Write a key to a call a javacroptscript from the function map of the script.
      * The response can contain only one Javascript code,
      * so this method can be called only once per request.
      */
-    public JsonBuilder writeJs(@Nullable final CharSequence... javascript) throws IOException {
-        return write(JAVACRIPT_DUMMY_SELECTOR, javascript);
+    public JsonBuilder writeJsKey(@Nullable final CharSequence javascriptKey) throws IOException {
+        return write(JAVACRIPT_KEY_SELECTOR, javascriptKey);
     }
 
     /** Write a JSON property */
@@ -195,7 +194,7 @@ public class JsonBuilder implements Closeable {
 
         writeKey(keyPrefix, key);
         writer.append(DOUBLE_QUOTE);
-        try (HtmlElement root = HtmlElement.of(config, jsonWriter)) {
+        try (HtmlElement root = HtmlElement.of(jsonWriter, config)) {
             valueProvider.accept(root.original());
         }
         writer.append(DOUBLE_QUOTE);
@@ -273,55 +272,30 @@ public class JsonBuilder implements Closeable {
 
     /** An object factory */
     @NotNull
+    public static final JsonBuilder of(
+            @NotNull final HttpContext context,
+            @NotNull final HtmlConfig config) {
+        return of(context.writer(), config);
+    }
+
+    /** An object factory */
+    @NotNull
+    public static final JsonBuilder of(@NotNull final HttpContext context) {
+        return of(context.writer());
+    }
+
+    /** An object factory */
+    @NotNull
     public static final JsonBuilder of(@NotNull final Appendable writer) {
         return new JsonBuilder(writer);
     }
 
-    /** An object factory */
+    /** An object factory. The MAIN factory method. */
     @NotNull
     public static final JsonBuilder of(
-            @NotNull final HttpServletRequest request,
-            @NotNull final HttpServletResponse response) throws IllegalStateException, IOException {
-        return of(HtmlConfig.ofEmptyElement(), request, response);
-    }
-
-    /** An object factory */
-    @NotNull
-    public static final JsonBuilder of(
-            @NotNull final HtmlConfig config,
-            @NotNull final HttpServletResponse response)
-            throws IllegalStateException, IOException {
-        return of(null, response, config);
-    }
-
-    /** An object factory */
-    @Deprecated
-    @NotNull
-    public static final JsonBuilder of(
-            @Nullable final HttpServletRequest request,
-            @NotNull final HttpServletResponse response,
-            @NotNull final HtmlConfig config) throws IllegalStateException, IOException {
-        return of(config, request, response);
-    }
-
-    /** An object factory */
-    @NotNull
-    public static final JsonBuilder of(
-            @NotNull final HtmlConfig config,
-            @Nullable final HttpServletRequest request,
-            @NotNull final HttpServletResponse response)
-            throws IllegalStateException, IOException {
-        if (config.isHtmlHeaderRequest()) {
-            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
-            response.addHeader("Pragma", "no-cache"); // HTTP 1.0
-            response.addHeader("Expires", "0"); // Proxies
-        }
-        final String charset = config.getCharset().toString();
-        response.setCharacterEncoding(charset);
-        if (request != null) {
-            request.setCharacterEncoding(charset);
-        }
-        return new JsonBuilder(response.getWriter(), config);
+            @NotNull final Appendable writer,
+            @NotNull final HtmlConfig config) {
+        return new JsonBuilder(writer, config);
     }
 
     /** CSS selector types */

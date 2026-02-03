@@ -43,12 +43,12 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
             .write("SELECT")
             .column("t.id")
             .column("t.name")
-            .write("FROM testTable t WHERE")
+            .write("FROM employee t WHERE")
             .andCondition("t.name", "=", "Test")
             .andCondition("t.created", ">=", someDate)
             ;
-        String expResult1 = "SELECT t.id, t.name FROM testTable t WHERE t.name = ? AND t.created >= ?";
-        String expResult2 = "SELECT t.id, t.name FROM testTable t WHERE t.name = 'Test' AND t.created >= 2018-09-12";
+        String expResult1 = "SELECT t.id, t.name FROM employee t WHERE t.name = ? AND t.created >= ?";
+        String expResult2 = "SELECT t.id, t.name FROM employee t WHERE t.name = 'Test' AND t.created >= 2018-09-12";
 
         assertEquals(expResult1, sql.getSql());
         assertEquals(expResult2, sql.toString());
@@ -61,14 +61,14 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
     public void testInsert() {
         System.out.println("INSERT");
         JdbcBuilder sql = new JdbcBuilder()
-            .write("INSERT INTO testTable (")
+            .write("INSERT INTO employee (")
             .columnInsert("id", 10)
             .columnInsert("name", "A name")
             .columnInsert("created", someDate)
             .write(")")
             ;
-        String expResult1 = "INSERT INTO testTable ( id, name, created ) VALUES ( ?, ?, ? )";
-        String expResult2 = "INSERT INTO testTable ( id, name, created ) VALUES ( 10, 'A name', 2018-09-12 )";
+        String expResult1 = "INSERT INTO employee ( id, name, created ) VALUES ( ?, ?, ? )";
+        String expResult2 = "INSERT INTO employee ( id, name, created ) VALUES ( 10, 'A name', 2018-09-12 )";
 
         assertEquals(expResult1, sql.getSql());
         assertEquals(expResult2, sql.toString());
@@ -85,19 +85,19 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
             .column("t.id + 100")
             .column("t.name")
             .column("t.created")
-            .write("FROM testTable t WHERE")
+            .write("FROM employee t WHERE")
             .andCondition("t.id", Sql.LT, 100)
             ;
         JdbcBuilder sql = new JdbcBuilder()
-            .write("INSERT INTO testTable (")
+            .write("INSERT INTO employee (")
             .column("id")
             .column("name")
             .column("created")
             .write(")")
             .write(select)
             ;
-        String expResult1 = "INSERT INTO testTable ( id, name, created ) SELECT t.id + 100, t.name, t.created FROM testTable t WHERE t.id < ?";
-        String expResult2 = "INSERT INTO testTable ( id, name, created ) SELECT t.id + 100, t.name, t.created FROM testTable t WHERE t.id < 100";
+        String expResult1 = "INSERT INTO employee ( id, name, created ) SELECT t.id + 100, t.name, t.created FROM employee t WHERE t.id < ?";
+        String expResult2 = "INSERT INTO employee ( id, name, created ) SELECT t.id + 100, t.name, t.created FROM employee t WHERE t.id < 100";
 
         assertEquals(expResult1, sql.getSql());
         assertEquals(expResult2, sql.toString());
@@ -109,7 +109,7 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
     public void testInsertRaw() {
         System.out.println("INSERT");
         JdbcBuilder sql = new JdbcBuilder()
-            .write("INSERT INTO testTable (")
+            .write("INSERT INTO employee (")
             .column("id")
             .column("name")
             .column("created")
@@ -118,8 +118,8 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
             .value("A test")
             .value(someDate)
             .write(")");
-        String expResult1 = "INSERT INTO testTable ( id, name, created ) VALUES ( ?, ?, ? )";
-        String expResult2 = "INSERT INTO testTable ( id, name, created ) VALUES ( 10, 'A test', 2018-09-12 )";
+        String expResult1 = "INSERT INTO employee ( id, name, created ) VALUES ( ?, ?, ? )";
+        String expResult2 = "INSERT INTO employee ( id, name, created ) VALUES ( 10, 'A test', 2018-09-12 )";
 
         assertEquals(expResult1, sql.getSql());
         assertEquals(expResult2, sql.toString());
@@ -132,7 +132,7 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
     public void testUpdate() {
         System.out.println("UPDATE");
         JdbcBuilder sql = new JdbcBuilder()
-            .write("UPDATE testTable SET")
+            .write("UPDATE employee SET")
             .columnUpdate("name", "Test")
             .columnUpdate("created", someDate)
             .write("WHERE")
@@ -140,13 +140,13 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
             .andCondition("created BETWEEN ? AND ?", null, someDate, someDate.plusMonths(1))
             .andCondition("name", "IS NOT NULL")
             ;
-        String expResult1 = "UPDATE testTable"
+        String expResult1 = "UPDATE employee"
                 + " SET name = ?"
                 +    ", created = ?"
                 + " WHERE id IN ( ?, ?, ? )"
                 + " AND created BETWEEN ? AND ?"
                 + " AND name IS NOT NULL";
-        String expResult2 = "UPDATE testTable"
+        String expResult2 = "UPDATE employee"
                 + " SET name = 'Test'"
                 +    ", created = 2018-09-12"
                 + " WHERE id IN ( 10, 20, 30 )"
@@ -170,11 +170,11 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
         JdbcBuilder select = new JdbcBuilder()
             .write("SELECT")
             .column("t.id")
-            .write("FROM testTable t WHERE")
+            .write("FROM employee t WHERE")
             .andCondition("t.created", Sql.GE, someDate)
             ;
         JdbcBuilder sql = new JdbcBuilder()
-            .write("UPDATE testTable SET")
+            .write("UPDATE employee SET")
             .columnUpdate("name", "Test")
             .columnUpdate("created", someDate.plusDays(11))
             .write("WHERE")
@@ -183,18 +183,18 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
             .write(")")
             ;
 
-        String expResult1 = "UPDATE testTable"
+        String expResult1 = "UPDATE employee"
                 + " SET name = ?"
                 +    ", created = ?"
                 + " WHERE id IN ("
-                + " SELECT t.id FROM testTable t WHERE t.created >= ?"
+                + " SELECT t.id FROM employee t WHERE t.created >= ?"
                 + " )"
                 ;
-        String expResult2 = "UPDATE testTable"
+        String expResult2 = "UPDATE employee"
                 + " SET name = 'Test'"
                 +    ", created = 2018-09-23"
                 + " WHERE id IN ("
-                + " SELECT t.id FROM testTable t WHERE t.created >= 2018-09-12"
+                + " SELECT t.id FROM employee t WHERE t.created >= 2018-09-12"
                 + " )"
                 ;
         assertEquals(expResult1, sql.getSql());
@@ -216,7 +216,7 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
     public void showInsert(@NotNull Connection dbConnection) throws SQLException {
         System.out.println("Show INSERT");
         JdbcBuilder sql = new JdbcBuilder()
-            .write("INSERT INTO testTable (")
+            .write("INSERT INTO employee (")
             .columnInsert("id", 10)
             .columnInsert("name", "A name")
             .columnInsert("created", someDate)
@@ -235,7 +235,7 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
             .write("SELECT")
             .column("t.id")
             .column("t.name")
-            .write("FROM testTable t WHERE")
+            .write("FROM employee t WHERE")
             .andCondition("t.name", "=", "A name")
             .andCondition("t.created", ">=", someDate)
             ;
@@ -258,7 +258,7 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
         JdbcBuilder sql = new JdbcBuilder()
             .write("SELECT")
             .column("t.name")
-            .write("FROM testTable t WHERE")
+            .write("FROM employee t WHERE")
             .andCondition("t.id", "=", 10)
             ;
         String name = sql.uniqueValue(String.class, dbConnection);
@@ -269,7 +269,7 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
     public void showUpdate(@NotNull Connection dbConnection) {
         System.out.println("Show UPDATE");
         JdbcBuilder sql = new JdbcBuilder()
-            .write("UPDATE testTable SET")
+            .write("UPDATE employee SET")
             .columnUpdate("created", someDate.plusDays(1))
             .write("WHERE")
             .andCondition("id", "IN", 10, 20, 30)
@@ -280,12 +280,12 @@ public class JdbcBuilderOriginalTest extends AbstractJdbcConnector {
         assertEquals(1, count);
     }
 
-    /** Crete new DB connection */
+    /** Create new DB connection */
     private Connection createTable(Connection dbConnection) throws ClassNotFoundException, SQLException {
-        String sql = "CREATE TABLE testTable"
+        String sql = "CREATE TABLE employee"
             + "\n( id INTEGER PRIMARY KEY"
             + "\n, name VARCHAR(256)"
-            + "\n, xxx VARCHAR(1)" // An unused column
+            + "\n, state VARCHAR(1)" // An unused column
             + "\n, created TIMESTAMP"
             + "\n)";
 

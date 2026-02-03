@@ -391,8 +391,7 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Find a base table model with a correct alias by the last direct key. */
     @NotNull
     public final TableWrapper findTableModel(final Key key) throws IllegalStateException {
-        if (key instanceof CompositeKey) {
-            final CompositeKey compositeKey = (CompositeKey) key;
+        if (key instanceof CompositeKey compositeKey) {
             final Key<OrmUjo,?> lastKey = compositeKey.getLastKey();
             final String alias = compositeKey.getAlias(compositeKey.getKeyCount() - 1);
             return findTableModel(lastKey.getDomainType()).addAlias(alias);

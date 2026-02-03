@@ -26,9 +26,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
+import org.ujorm.tools.web.AbstractHtmlElement;
 import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
+import org.ujorm.tools.web.request.HttpContext;
+import org.ujorm.tools.web.request.URequest;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import org.ujorm.ujoservlet.ajax.ao.Message;
@@ -68,12 +71,12 @@ public class RegexpBuilderServlet extends HttpServlet {
     protected void doGet(
             final HttpServletRequest input,
             final HttpServletResponse output) throws ServletException, IOException {
-
-        HtmlElement.of(input, output, getConfig("Regular expression tester by a builder")).next(html -> {
+        HttpContext context = HttpContext.ofServlet(input, output);
+        HtmlElement.of(context.writer(), getConfig("Regular expression tester by a builder")).next(html -> {
             html.addCssLink(BOOTSTRAP_CSS);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             writeJavaScript(html, AJAX_ENABLED);
-            Message msg = highlight(input);
+            Message msg = highlight(context.request());
             html.addBody().next(body -> {
                 body.addHeading(html.getTitle());
                 body.addDiv(SUBTITLE_CSS).addText(AJAX_ENABLED ? AJAX_READY_MSG : "");
@@ -81,13 +84,13 @@ public class RegexpBuilderServlet extends HttpServlet {
                     form.setMethod(Html.V_POST).setAction("?");
                     form.addInput(CONTROL_CSS)
                             .setName(REGEXP)
-                            .setValue(REGEXP.of(input))
+                            .setValue(REGEXP.of(context.request()))
                             .setAttribute(Html.A_PLACEHOLDER, "Regular expression");
                     form.addTextArea(CONTROL_CSS)
                             .setId(TEXT)
                             .setName(TEXT)
                             .setAttribute(Html.A_PLACEHOLDER, "Plain Text")
-                            .addText(TEXT.of(input));
+                            .addText(TEXT.of(context.request()));
                     form.addDiv().addButton("btn", "btn-primary").addText("Evaluate");
                     form.addDiv(CONTROL_CSS, OUTPUT_CSS).addRawText(msg);
                 });
@@ -102,8 +105,9 @@ public class RegexpBuilderServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest input, HttpServletResponse output) throws ServletException, IOException {
-        if (AJAX.of(input, false)) {
-            doAjax(input, JsonBuilder.of(input, output, getConfig("?"))).close();
+        final HttpContext context = HttpContext.ofServlet(input, output);
+        if (AJAX.of(context, false)) {
+            doAjax(context.request(), JsonBuilder.of(context.writer(), getConfig("?"))).close();
         } else {
             doGet(input, output);
         }
@@ -117,8 +121,7 @@ public class RegexpBuilderServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @NotNull
-    protected JsonBuilder doAjax(HttpServletRequest input, JsonBuilder output)
-            throws ServletException, IOException {
+    protected JsonBuilder doAjax(URequest input, JsonBuilder output) throws IOException {
             final Message msg = highlight(input);
             output.writeClass(OUTPUT_CSS, e -> e.addElementIf(msg.isError(), Html.SPAN, "error")
                     .addRawText(msg));
@@ -127,19 +130,19 @@ public class RegexpBuilderServlet extends HttpServlet {
     }
 
     /** Build a HTML result */
-    protected Message highlight(HttpServletRequest input) {
+    protected Message highlight(URequest input) {
         return service.highlight(
                 REGEXP.of(input, ""),
                 TEXT.of(input, ""));
     }
 
-    /** Write a Javascript to a header */
-    protected void writeJavaScript(@NotNull final HtmlElement html, final boolean enabled) {
+    /** Write a JavaScript to a header */
+    protected void writeJavaScript(@NotNull final AbstractHtmlElement html, final boolean enabled) {
         writeJavaScript(html, enabled, false);
     }
 
-    /** Write a Javascript to a header */
-    protected void writeJavaScript(@NotNull final HtmlElement html,
+    /** Write a JavaScript to a header */
+    protected void writeJavaScript(@NotNull final AbstractHtmlElement html,
             final boolean enabled,
             final boolean isSortable) {
         if (enabled) {

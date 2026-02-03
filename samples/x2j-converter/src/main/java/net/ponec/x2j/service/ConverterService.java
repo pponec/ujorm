@@ -14,10 +14,14 @@ import org.ujorm.tools.common.StringUtils;
  * @author Pavel Ponec
  */
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class ConverterService {
 
     private final XmlParserService parserService;
+
+    public ConverterService(XmlParserService parserService) {
+        this.parserService = parserService;
+    }
 
     /** XML demo data */
     private static final String DEMO_FILE = "/data/sample.html";

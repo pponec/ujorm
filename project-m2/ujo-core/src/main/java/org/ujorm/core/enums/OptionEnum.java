@@ -34,6 +34,6 @@ public enum OptionEnum {
     /** The choice is an equivalence empty value,
      * the default behavior is described on the used method.
      */
-    DEFAULT;
+    DEFAULT
 
 }

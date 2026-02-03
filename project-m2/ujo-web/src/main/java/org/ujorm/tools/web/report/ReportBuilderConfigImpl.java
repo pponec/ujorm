@@ -33,14 +33,14 @@ import static org.ujorm.tools.web.report.ReportBuilderConfigImpl.Constants.*;
 /**
  * A HTML page builder for table based an AJAX.
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
  *  TableBuilder.of("Hotel Report")
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")
- *          .build(httpServletRequest, httpServletResponse, resource);
+ *          .build(ServletRequest, ServletResponse, resource);
  * </pre>
  *
  * @author Pavel Ponec

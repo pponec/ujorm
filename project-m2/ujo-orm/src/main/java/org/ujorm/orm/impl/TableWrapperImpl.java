@@ -72,10 +72,9 @@ public class TableWrapperImpl implements TableWrapper {
     /** Table model and alias must be the same */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof TableWrapperImpl)) {
+        if (!(obj instanceof TableWrapperImpl other)) {
             return false;
         }
-        final TableWrapperImpl other = (TableWrapperImpl) obj;
         if (this.table != other.table) {
             return false;
         }

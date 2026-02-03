@@ -850,7 +850,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Pessimistic lock request. A default value is false.
-     * @see org.ujorm.orm.dialect.HsqldbDialect#printLockForSelect(org.ujorm.orm.Query, java.lang.Appendable) HsqldbDialect
+     * @see org.ujorm.orm.dialect.HsqldbDialect#printLockForSelect(org.ujorm.orm.Query, Appendable) HsqldbDialect
      */
     @NotNull
     public Query<UJO> setLockRequest(final boolean lockRequest) {
@@ -860,7 +860,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Set pessimistic lock request. A default value is false.
-     * @see org.ujorm.orm.dialect.HsqldbDialect#printLockForSelect(org.ujorm.orm.Query, java.lang.Appendable) HsqldbDialect
+     * @see org.ujorm.orm.dialect.HsqldbDialect#printLockForSelect(org.ujorm.orm.Query, Appendable) HsqldbDialect
      */
     public Query<UJO> setLockRequest() {
         return setLockRequest(true);

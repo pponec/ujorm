@@ -5,49 +5,24 @@
     <parent>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo-samples</artifactId>
-        <version>2.25-SNAPSHOT</version>
+        <version>2.30-SNAPSHOT</version>
     </parent>
 
     <groupId>org.ujorm</groupId>
     <artifactId>sample-parameters</artifactId>
     <packaging>jar</packaging>
-    <version>2.25-SNAPSHOT</version>
+    <version>2.30-SNAPSHOT</version>
     <name>sample-parameters</name>
     <description>The project learns to you how to create a persistent parameter manager easy on the desktop .
 See the more info: http://ujorm.org/sample/parameters.htm .</description>
     <url>http://ujorm.org</url>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>2.25-SNAPSHOT</version>
+            <version>2.30-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -63,8 +38,8 @@ See the more info: http://ujorm.org/sample/parameters.htm .</description>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>

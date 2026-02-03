@@ -15,13 +15,17 @@
  */
 package org.ujorm.tools.web.ajax;
 
+import java.io.IOException;
 import java.time.Duration;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.msg.MessageService;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ao.HttpParameter;
@@ -42,6 +46,8 @@ public class JavaScriptWriter implements Injector {
     public static final Duration DEFAULT_DELAY = Duration.ofMillis(250);
     /** Default timeou */
     public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
+    /** All input elements except buttons */
+    private static final CharSequence[] DEFAULT_INPUT_SELECTORS = {"input:not([type='button'])", "textarea", "select"};
 
     /** Javascript ajax request parameter */
     protected final HttpParameter ajaxRequestParam;
@@ -56,19 +62,19 @@ public class JavaScriptWriter implements Injector {
     @NotNull
     protected Duration ajaxTimeout = DEFAULT_TIMEOUT;
     /** Form selector */
-    protected String formSelector = Html.FORM;
+    protected String formCssSelector = Html.FORM;
     /** On load submit request */
     protected boolean onLoadSubmit = false;
     /** New line characters */
     protected CharSequence newLine = "\n";
-    /** A subtitle selector */
+    /** An error message selector */
     @Nullable
-    protected CharSequence subtitleSelector="?";
+    protected CharSequence errorSelector ="?";
     /** A subtitle selector */
     @NotNull
     protected CharSequence errorMessage = "AJAX fails due";
-    /** JavaScript version */
-    protected int version = 1;
+    /** JavaScript version number */
+    protected int version = 3;
     /** Javascript ajax request parameter */
     protected String ajaxRequestPath = "_ajax";
     /** Function order of name */
@@ -77,7 +83,7 @@ public class JavaScriptWriter implements Injector {
     protected boolean isAjax = true;
 
     public JavaScriptWriter() {
-        this("form input:not([type=\"button\"])");
+        this(DEFAULT_INPUT_SELECTORS);
     }
 
     public JavaScriptWriter(@NotNull CharSequence... inputSelectors) {
@@ -99,7 +105,7 @@ public class JavaScriptWriter implements Injector {
     }
 
     public JavaScriptWriter setFormSelector(String formSelector) {
-        this.formSelector = Assert.notNull(formSelector, "formSelector");
+        this.formCssSelector = Assert.notNull(formSelector, "formSelector");
         return this;
     }
 
@@ -113,9 +119,9 @@ public class JavaScriptWriter implements Injector {
         return this;
     }
 
-    /** Assign a subtitle CSS selector */
-    public JavaScriptWriter setSubtitleSelector(CharSequence subtitleSelector) {
-        this.subtitleSelector = subtitleSelector;
+    /** Assign error message CSS selector */
+    public JavaScriptWriter setSubtitleSelector(CharSequence errorSelector) {
+        this.errorSelector = errorSelector;
         return this;
     }
 
@@ -130,7 +136,7 @@ public class JavaScriptWriter implements Injector {
         this.ajaxTimeout = Assert.notNull(ajaxTimeout, "ajaxTimeout");
         return this;
     }
-    
+
     /** An AJAX delay to the input request */
     public JavaScriptWriter setIdleDelay(@NotNull Duration idleDelay) {
         this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
@@ -172,65 +178,112 @@ public class JavaScriptWriter implements Injector {
         return isAjax;
     }
 
-    /**
-     * Generate a Javascript
-     */
     @Override
     public void write(@NotNull final Element parent) {
-        final String inpSelectors = Check.hasLength(inputCssSelectors)
-        ? Stream.of(inputCssSelectors).collect(Collectors.joining(", "))
-        : "#!@";
-        try (Element js = parent.addElement(Html.SCRIPT)) {
-            js.addRawText(newLine, "/* Script of ujorm.org *//* jshint esversion:6 */");
-            if (isAjax) {
-                js.addRawText(newLine, "const f", fceOrder, "={");
-                js.addRawTexts(newLine, ""
-                    , "ajaxRun:false, submitReq:false, delayMs:" + idleDelay.toMillis() + ", timeout:null,"
-                    , "init(e){"
-                    , " document.querySelector('" + formSelector + "').addEventListener('submit',this.process,false);"
-                    , " document.querySelectorAll('" + inpSelectors + "').forEach(i=>{"
-                    , "  i.addEventListener('keyup',e=>this.timeEvent(e),false);"
-                    , " });},"    
-                );
-                js.addRawTexts(newLine, ""
-                    , "timeEvent(e){"
-                    , " if(this.timeout)clearTimeout(this.timeout);"
-                    , " this.timeout=setTimeout(()=>{"
-                    , "  this.timeout=null;"
-                    , "  if(this.ajaxRun)this.submitReq=true;"
-                    , "  else this.process(null);"
-                    , " },this.delayMs);},"
-                );
-                js.addRawTexts(newLine, ""
-                    , "process(e){"
-                    , " let pars=new URLSearchParams(new FormData(document.querySelector('" + formSelector + "')));"
-                    , " if(e!==null){e.preventDefault();pars.append(e.submitter.name,e.submitter.value);}"
-                    , " fetch('" + (version == 2
-                            ? ajaxRequestPath
-                            : ("?" + ajaxRequestPath + "=true")) + "', {"
-                    , "   method:'POST',"
-                    , "   body:pars,"
-                    , "   headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},"
-                    , " })"
-                    , " .then(response=>response.json())"
-                    , " .then(data=>{"
-                    , "   for(const key of Object.keys(data))"
-                    , "    if(key=='')eval(data[key]);"
-                    , "    else document.querySelectorAll(key).forEach(i=>{i.innerHTML=data[key];});"
-                    , "   if(this.submitReq){this.submitReq=false;this.process(e);}" // Next submit the form
-                    , "   else{this.ajaxRun=false;}"
-                    , " }).catch(err=>{"
-                    , "   this.ajaxRun=false;"
-                    , "    document.querySelector('" + subtitleSelector + "').innerHTML='" + errorMessage + ": ' + err;"
-                    , " });"
-                    , "}"
-                );
-                js.addRawTexts(newLine, "};");
-                js.addRawText(newLine, "document.addEventListener('DOMContentLoaded',e=>f", fceOrder, ".init(e));");
-                if (onLoadSubmit) {
-                    js.addRawText(newLine, "f", fceOrder, ".process(null);");
-                }
-            }
+        write(parent, Map.of());
+    }
+
+    protected String scriptTemplate() {
+        return """
+                /* Script of ujorm.org *//* jshint esversion:6 */
+                const ${jsVar}={
+                ajaxRun:false, submitReq:false, delayMs:${delayMs}, timeout:null, ${fceSpace}fceMap:{${fceMap}},
+                init(){
+                  document.querySelectorAll("${formSelector}").forEach(form=>{
+                    form.addEventListener("submit",e=>this.process(e,form));
+                    form.querySelectorAll("${inputSelector}").forEach(input=>{
+                      input.addEventListener("keyup",()=>this.timeEvent(form));
+                      input.addEventListener("change",()=>this.timeEvent(form));
+                    });});},
+                timeEvent(form) {
+                  clearTimeout(this.timeout);
+                  this.timeout=setTimeout(()=>{
+                    this.timeout=null;
+                    this.ajaxRun?(this.submitReq=true):this.process(null,form);
+                  },this.delayMs);},
+                async process(e,form) {
+                  if(!form) return;
+                  if(e) e.preventDefault();
+                  [this.ajaxRun, this.submitReq]=[true, false];
+                  const fd=new FormData(form);
+                  if(e?.submitter?.name) fd.append(e.submitter.name,e.submitter.value);
+                  try{const res=await fetch("?_ajax=true",{
+                      method:"POST",
+                      body:new URLSearchParams(fd),
+                      headers:{"X-Requested-With":"XMLHttpRequest"}
+                    });
+                    if(!res.ok) throw new Error(res.status);
+                    const data=await res.json();
+                    Object.entries(data).forEach(([sel,val])=>{
+                      if(sel==="") return this.fceMap[val]();
+                      document.querySelectorAll(sel).forEach(el=>el.innerHTML=val);
+                    });
+                  }catch(err){console.error(err)}
+                  finally{
+                    this.ajaxRun=false;
+                    if(this.submitReq) this.process(null, form);
+                  }}};
+                document.addEventListener("DOMContentLoaded",()=>${jsVar}.init());${onLoadSubmit}
+                """;
+    }
+
+    private String onLoadSubmit(Map<String, Object> params) {
+        if (!onLoadSubmit) return "";
+        return "%sdocument.querySelectorAll('%s').forEach(form=>{%s.process(null,form)});".formatted(
+                newLine,
+                params.get("formSelector"),
+                params.get("jsVar"));
+    }
+
+    /** Write Javascript body for the AJAX support. */
+    public void write(@NotNull final Element parent, Map<String, String> functionMap) {
+        var params = new HashMap<String, Object>();
+        {   params.put("jsVar", "ujorm" + fceOrder);
+            params.put("delayMs", idleDelay.toMillis());
+            params.put("fceSpace", functionMap.isEmpty() ? "" : (newLine + "  "));
+            params.put("fceMap", bulidFunctionMap(functionMap));
+            params.put("formSelector", formCssSelector);
+            params.put("inputSelector", inputCssSelector());
+            params.put("onLoadSubmit", onLoadSubmit(params));
         }
+        try (Element js = parent.addElement(Html.SCRIPT)) {
+            MessageService.formatMsg(scriptTemplate(), params, appendable(js));
+        }
+    }
+
+    private @NotNull String inputCssSelector() {
+        return Check.hasLength(inputCssSelectors)
+                ? String.join(",", inputCssSelectors)
+                : "#!@_"; // No selection
+    }
+
+    /** Generate a map of JS functions */
+    private String bulidFunctionMap(Map<String, String> functionMap) {
+        if (functionMap.isEmpty()) return "";
+        final var result = new StringBuilder(64);
+        final var i = new AtomicInteger();
+        functionMap.forEach((key, value) -> {
+            result.append(i.getAndIncrement() == 0 ? " " : ", ");
+            result.append(key).append("(){").append(value).append("}");
+        });
+        return result.toString();
+    }
+
+    private Appendable appendable(@NotNull final Element parent) {
+        return new Appendable() {
+            @Override
+            public Appendable append(final CharSequence csq) throws IOException {
+                parent.addRawText(csq);
+                return this;
+            }
+            @Override
+            public Appendable append(final CharSequence csq, final int start, final int end) throws IOException {
+                return append(csq.subSequence(start, end));
+            }
+            @Override
+            public Appendable append(final char c) throws IOException {
+                return append(String.valueOf(c));
+            }
+        };
     }
 }

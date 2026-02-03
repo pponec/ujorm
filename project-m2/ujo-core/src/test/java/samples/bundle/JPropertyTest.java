@@ -11,6 +11,7 @@ package samples.bundle;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 /**
@@ -39,12 +40,12 @@ public class JPropertyTest extends org.junit.jupiter.api.Assertions {
         }
 
         ByteArrayOutputStream os = new ByteArrayOutputStream(128);
-        props.storeToXML(os, "Commnent", "UTF-8");
-        System.err.println(":>>\n" + new String(os.toByteArray(), "UTF-8"));
+        props.storeToXML(os, "Commnent", StandardCharsets.UTF_8);
+        System.err.println(":>>\n" + new String(os.toByteArray(), StandardCharsets.UTF_8));
 
         os = new ByteArrayOutputStream(128);
         props.store(os, "HEADER is not mandatory");
-        System.err.println(":>>\n" + new String(os.toByteArray(), "UTF-8"));
+        System.err.println(":>>\n" + new String(os.toByteArray(), StandardCharsets.UTF_8));
     }
 
 }

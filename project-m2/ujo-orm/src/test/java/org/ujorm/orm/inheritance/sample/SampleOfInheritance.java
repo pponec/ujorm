@@ -121,7 +121,7 @@ public class SampleOfInheritance extends org.junit.jupiter.api.Assertions {
             customer.readSession().clearCache();
             customer.writeValue(USER, new ForeignKey(origUser.getId()));
             Object primaryKey = customer.readValue(USER);
-            assertTrue(primaryKey instanceof ForeignKey);
+            assertInstanceOf(ForeignKey.class, primaryKey);
             User lazyUser = customer.get(USER);
             assertNotNull(lazyUser);
         }

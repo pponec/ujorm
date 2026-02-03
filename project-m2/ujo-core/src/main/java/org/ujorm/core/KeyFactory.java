@@ -131,8 +131,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         Iterable<? extends Key<?,?>> superKeys = tmpStore.superKeys;
         if (superKeys == null) {
             superKeys = getSuperKeys(this.tmpStore.holder);
-        } else if (superKeys instanceof KeyList) {
-            final KeyList<?> keyList = (KeyList<?>) superKeys;
+        } else if (superKeys instanceof KeyList<?> keyList) {
             assert keyList.getType().isAssignableFrom(tmpStore.holder)
                     : "Type parameters is not child of the SuperProperites type: " + keyList.getTypeName();
         }
@@ -263,8 +262,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             final List<Field> fields = tmpStore.getFields();
             for (Key<UJO, ?> p : tmpStore.getKeys()) {
                 result.add(p);
-                if (p instanceof Property) {
-                    final Property pr = (Property) p;
+                if (p instanceof Property pr) {
                     if (PropertyModifier.isLock(pr)) {
                         continue;
                     }
@@ -328,8 +326,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         // The case for a composite fields:
         for (Field field : fields) {
             final Object fk = field.get(null);
-            if (fk instanceof CompositeKey) {
-                final CompositeKey ck = (CompositeKey) fk;
+            if (fk instanceof CompositeKey ck) {
                 if (ck.getKeyCount() == 1
                 &&  ck.getKey(0) == p) {
                     return field;

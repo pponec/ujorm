@@ -80,8 +80,7 @@ final public class UjoStatement extends UnsupportedOperationException implements
     public Object getDatabaseValue(final MetaColumn column, Object value) {
         assert value==null || column.getType().isInstance(value) : "Wrong value type: " + value;
         try {
-            if (value instanceof OrmUjo) {
-                final OrmUjo tableValue = (OrmUjo) value;
+            if (value instanceof OrmUjo tableValue) {
                 final MetaTable mt = column.getHandler().findTableModel(tableValue.getClass());
                 value = mt.getFirstPK().getKey().of(tableValue);
             }

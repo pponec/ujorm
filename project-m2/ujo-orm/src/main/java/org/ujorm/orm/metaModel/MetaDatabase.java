@@ -199,8 +199,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             if (tableProperty.isTypeOf(ColumnSet.class)) {
                 continue; // TODO: include a set of tables?
             }
-            if (tableProperty instanceof RelationToMany) {
-                RelationToMany tProperty = (RelationToMany) tableProperty;
+            if (tableProperty instanceof RelationToMany tProperty) {
                 MetaTable par   = param!=null ? param.findTable(tProperty.getName()) : null;
                 MetaTable table = new MetaTable(this, tProperty, par);
                 TABLES.addItem(this, table);
@@ -509,8 +508,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** Equals */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof MetaDatabase) {
-            MetaDatabase db = (MetaDatabase) obj;
+        if (obj instanceof MetaDatabase db) {
 
             final int i1 = MetaDatabase.ORDER.of(this);
             final int i2 = MetaDatabase.ORDER.of(db);

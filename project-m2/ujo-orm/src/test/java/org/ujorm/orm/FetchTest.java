@@ -50,8 +50,8 @@ public class FetchTest extends org.junit.jupiter.api.Assertions {
         int count = 0;
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
-            assertTrue(orderFk instanceof ForeignKey, "Order must be a foreign key");
-            assertTrue(item.get(XItem.ORDER) instanceof XOrder);
+            assertInstanceOf(ForeignKey.class, orderFk, "Order must be a foreign key");
+            assertInstanceOf(XOrder.class, item.get(XItem.ORDER));
             assertNotNull(item.get(XItem.ID));
             assertNotNull(item.get(XItem.NOTE));
             assertNotNull(item.get(XItem.$ORDER_NOTE));
@@ -97,7 +97,7 @@ public class FetchTest extends org.junit.jupiter.api.Assertions {
         query.setColumn(fetchColumn);
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
-            assertTrue(orderFk instanceof XOrder, "Order instance");
+            assertInstanceOf(XOrder.class, orderFk, "Order instance");
             assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
@@ -116,7 +116,7 @@ public class FetchTest extends org.junit.jupiter.api.Assertions {
         query.setColumns(true, fetchColumn);
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
-            assertTrue(orderFk instanceof XOrder, "Order instance");
+            assertInstanceOf(XOrder.class, orderFk, "Order instance");
             assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNotNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
@@ -137,10 +137,10 @@ public class FetchTest extends org.junit.jupiter.api.Assertions {
         query.getColumns();
         for (XItem item : query) {
             Object objectFk = item.readValue(XItem.ORDER);
-            assertTrue(objectFk instanceof XOrder, "Order instance");
+            assertInstanceOf(XOrder.class, objectFk, "Order instance");
             XOrder order = item.get(XItem.ORDER);
             objectFk = order.readValue(XOrder.CUSTOMER);
-            assertTrue(objectFk instanceof ForeignKey, "Order instance");
+            assertInstanceOf(ForeignKey.class, objectFk, "Order instance");
             assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNotNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
@@ -162,9 +162,9 @@ public class FetchTest extends org.junit.jupiter.api.Assertions {
         query.setColumn(fetchColumn);
         for (XItem item : query) {
             Object objectFk = item.readValue(XItem.ORDER);
-            assertTrue(objectFk instanceof XOrder, "Order instance");
+            assertInstanceOf(XOrder.class, objectFk, "Order instance");
             objectFk = item.getOrder().readValue(XOrder.CUSTOMER);
-            assertTrue(objectFk instanceof XCustomer, "Order instance");
+            assertInstanceOf(XCustomer.class, objectFk, "Order instance");
             assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
@@ -186,9 +186,9 @@ public class FetchTest extends org.junit.jupiter.api.Assertions {
         query.setColumn(fetchColumn);
         for (XItem item : query) {
             Object objectFk = item.readValue(XItem.ORDER);
-            assertTrue(objectFk instanceof XOrder, "Order instance");
+            assertInstanceOf(XOrder.class, objectFk, "Order instance");
             objectFk = item.getOrder().readValue(XOrder.CUSTOMER);
-            assertTrue(objectFk instanceof XCustomer, "Order instance");
+            assertInstanceOf(XCustomer.class, objectFk, "Order instance");
             assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
@@ -230,7 +230,7 @@ public class FetchTest extends org.junit.jupiter.api.Assertions {
         query.addColumn(fetchColumn);
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
-            assertTrue(orderFk instanceof XOrder, "Order instance");
+            assertInstanceOf(XOrder.class, orderFk, "Order instance");
             assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNotNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
