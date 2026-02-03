@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Pavel Ponec
+ * Copyright 2017-2026 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import org.ujorm.KeyList;
 import org.ujorm.UjoDecorator;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.transaction.config.DatabaseModel;
-import org.ujorm.transaction.domains.Aaa;
+import org.ujorm.transaction.domains.AnyTable;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -38,7 +38,7 @@ public class PackageDbConfigTest {
         KeyList result = instance.getKeys();
         assertEquals(3, result.size());
         assertEquals(dbModelClass, result.getFirstKey().getDomainType());
-        assertEquals(Aaa.class, ((RelationToMany)instance.getKeys().getFirstKey()).getItemType());
+        assertEquals(AnyTable.class, ((RelationToMany)instance.getKeys().getFirstKey()).getItemType());
 
     }
 

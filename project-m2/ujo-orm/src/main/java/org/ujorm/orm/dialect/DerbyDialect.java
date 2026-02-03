@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020-2022 Pavel Ponec
+ *  Copyright 2020-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -65,5 +65,5 @@ public class DerbyDialect extends SqlDialect {
     public Appendable printComment(MetaColumn table, Appendable out) throws IOException {
         return out;
     }
-    
+
 }

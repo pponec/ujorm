@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2022 Pavel Ponec
+ *  Copyright 2007-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,29 +25,29 @@ import org.ujorm.extensions.ValueAgent;
  * @author Pavel Ponec
  */
 public class Person extends FieldUjo {
-    
+
     private Long cash;
     private List<Person> children;
-    
+
     public static FieldProperty<Person,Long> CASH = newKey("CASH"
         , new ValueAgent<Person,Long>() {
         public void writeValue(
-            Person ujo, Long value) { 
-               ujo.cash = value; 
+            Person ujo, Long value) {
+               ujo.cash = value;
             }
-        public Long readValue (Person ujo) { 
-            return ujo.cash;  
+        public Long readValue (Person ujo) {
+            return ujo.cash;
         }
-    });    
-    
-    public static FieldPropertyList<Person,Person> CHILDREN 
+    });
+
+    public static FieldPropertyList<Person,Person> CHILDREN
         = newListKey("CHILDREN"
         , new ValueAgent<Person,List<Person>>() {
         public void writeValue(Person ujo, List<Person> value) {
-            ujo.children = value; 
+            ujo.children = value;
         }
         public List<Person> readValue(Person ujo) {
-            return ujo.children; 
+            return ujo.children;
         }
     });
 }

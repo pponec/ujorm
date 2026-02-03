@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020-2022 Pavel Ponec
+ *  Copyright 2020-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,15 +20,15 @@ import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 
-/** 
+/**
  * Use the annotation to mark a Key static field like XML Attribute.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.TYPE)
 public @interface Db {
 
-    /** Default name of table schema is copied into table models if thay are empty. 
-     * @see Table#schema() 
+    /** Default name of table schema is copied into table models if thay are empty.
+     * @see Table#schema()
      */
     String schema() default "";
     /** SQL dialect by a DB Vendor. */
@@ -36,7 +36,7 @@ public @interface Db {
     /** The <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
      * (java naming and directory interface) connection string.
      * <br>A typical use on the Tomcat can be:<br> jndi = {"java:comp/env/jdbc/TestDB"}
-     * <br>See the 
+     * <br>See the
      * <a href="http://www.mkyong.com/tomcat/how-to-configure-mysql-datasource-in-tomcat-6/" target="_blank">link</a> or
      * <a href="http://tomcat.apache.org/tomcat-6.0-doc/jndi-datasource-examples-howto.html" target="_blank">link</a>
      * for more information about JNDI on the Tomcat.
@@ -57,7 +57,7 @@ public @interface Db {
     Class<? extends UjoSequencer> sequencer() default org.ujorm.orm.UjoSequencer.class;
     /** Default read-only state for all database tables.
      * The parameter value is evaluated in the execution SQL commands type of INSERT, UPDATE, and DELETE.
-     * <br>Note, that only the default value FALSE can be overwritten by a table annotation or by a XML config. 
+     * <br>Note, that only the default value FALSE can be overwritten by a table annotation or by a XML config.
      * @see Table#readOnly()
      */
     boolean readOnly() default false;

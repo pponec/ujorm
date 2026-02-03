@@ -35,7 +35,7 @@ import org.ujorm.wicket.component.grid.OrmDataProvider;
 import org.ujorm.wicket.component.grid.OrmDataProviderCached;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;

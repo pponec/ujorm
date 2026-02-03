@@ -29,7 +29,7 @@ import org.ujorm.hotels.service.SessionService;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.hotels.service.CommonService;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Common database service implementations

@@ -3,6 +3,7 @@ package net.ponec.x2j.controller;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.ujorm.tools.web.AbstractHtmlElement;
 import org.ujorm.tools.web.Element;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
@@ -43,7 +44,7 @@ public class ConverterController {
 
         final Message message = service.toJavaCode(text);
         final HttpContext context = HttpContext.of();
-        try (HtmlElement html = HtmlElement.of(context, getConfig("Convert XML file to Java code on-line"))) {
+        try (HtmlElement html = AbstractHtmlElement.of(context, getConfig("Convert XML file to Java code on-line"))) {
             html.addCssLink(CSS_STYLE);
             html.addCssBodies(html.getConfig().getNewLine(), service.getCss());
             try ( Element body = html.getBody()) {

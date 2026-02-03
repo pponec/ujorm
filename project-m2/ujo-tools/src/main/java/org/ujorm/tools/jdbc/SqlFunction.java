@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2024 Pavel Ponec
+ * Copyright 2024-2026 Pavel Ponec
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/jdbc/JdbcFunction.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

@@ -1,12 +1,12 @@
 /*
- * Copyright 2018-2022 Pavel Ponec,
+ * Copyright 2018-2026 Pavel Ponec,
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/XmlElement.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,9 +36,9 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
     @NotNull
     String getName();
 
-    /** Create a new {@link ApiElement} for a required name and add it to children.
-     * @param name A name of the new XmlElement is required.
-     * @return The new XmlElement!
+    /** Create a new {@link ApiElement} for a required name and add it to children
+     * @param name A name of the new element is required
+     * @return The new element
      */
     @NotNull
     E addElement(@NotNull String name);
@@ -76,13 +76,13 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      * Message template
      *
      * @param template Message template where parameters are marked by the {@code {}} symbol
-     * @param values argument values
+     * @param values Argument values
      * @return The original builder
      */
     @NotNull
     E addTextTemplated(@Nullable final CharSequence template, @NotNull final Object... values);
 
-    /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
+    /** Add native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */
     @NotNull
@@ -98,7 +98,7 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
     E addComment(@Nullable CharSequence comment);
 
     /**
-     * Add a <strong>character data</strong> in {@code CDATA} format to XML only.
+     * Add <strong>character data</strong> in {@code CDATA} format to XML only.
      * The CDATA structure isn't really for HTML at all.
      * @param charData A text including the final DATA sequence. An empty argument is ignored.
      * @return This instance

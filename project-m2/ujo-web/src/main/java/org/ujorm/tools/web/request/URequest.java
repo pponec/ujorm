@@ -17,15 +17,15 @@ public interface URequest {
 
     /** Parameter provider */
     @NotNull
-    String[] getParameters(final String key);
+    String[] getParameters(final CharSequence key);
 
     /** Returns the last parameter */
-    default String getParameter(@NotNull String key, @Nullable String defaultValue) {
+    default String getParameter(@NotNull CharSequence key, @Nullable String defaultValue) {
         return getParameter(key, defaultValue, Function.identity());
     }
 
     /** Returns the last parameter */
-    default <T> T getParameter(@NotNull String key, @NotNull T defaultValue, @NotNull Function<String, T> converter) {
+    default <T> T getParameter(@NotNull CharSequence key, @NotNull T defaultValue, @NotNull Function<String, T> converter) {
         final var params = getParameters(key);
         if (params.length > 0) try {
                 return converter.apply(params[params.length - 1]);
@@ -49,12 +49,11 @@ public interface URequest {
             }
 
             @Override
-            public String[] getParameters(String key) {
+            public String[] getParameters(final CharSequence key) {
                 if (httpServletRequest != null) {
                     final Map<String, String[]> paramMap = getMap(httpServletRequest);
-                    final String[] result = paramMap.get(key);
+                    final String[] result = paramMap.get(key.toString());
                     return result != null ? result : URequestImpl.emptyTexts;
-
                 } else {
                     return URequestImpl.emptyTexts;
                 }

@@ -3,7 +3,14 @@ The Ujorm release notes
 *******************************
 
 release 2.30-SNAPSHOT
-+
+WEB: New class HtmlToJavaConverter to convert HTML code to Java code using Element classes.
+WEB: JsonWriter class fixed for some specific characters.
+WEB: Some Javadoc comments extended.
+WEB: New method to join with text: HttpParameter.concat(String)
+WEB: Method HttpContext.getParameter() now accepts an argument of type CharSequence.
+WEB: Element class has direct support for CheckBox HTML components.
+WEB: Method HtmlElement.niceNumberOf() provides a root element for formatting numbers using an underscore as a thousands separator.
+TOOLS: Method StringUtils.numberFormatter() added to format numbers using an underscore as a thousands separator.
 
 release 2.29 (2025-12-30)
 + TOOLS: Implemented explicit ResultSet cleanup in SqlParamBuilder.close(). This prevents resource leaks caused by JDBC drivers that do not honor the contract of automatically closing the ResultSet when the PreparedStatement is closed.

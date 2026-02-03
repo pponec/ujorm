@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Pavel Ponec,
+ * Copyright 2018-2026 Pavel Ponec,
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/XmlWriter.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.xml.config.Formatter;
 import org.ujorm.tools.xml.config.XmlConfig;
@@ -52,7 +53,9 @@ public abstract class AbstractWriter {
     /** A special XML character */
     public static final char SPACE = ' ';
     /** Non-breaking space character */
-    public static final char NBSP = '\u00A0';
+    public static final char NBSP = StringUtils.NBSP;
+    /** Narrow Non-breaking space character (for numbers) */
+    public static final char NARROW_NBSP = StringUtils.NARROW_NBSP;
     /** A forward slash character */
     public static final char FORWARD_SLASH = '/';
     /** A CDATA beg markup sequence */
@@ -147,17 +150,17 @@ public abstract class AbstractWriter {
     private void write(final char c, final boolean attribute) throws IOException {
         switch (c) {
             case XML_LT:
-                out.append(XML_AMPERSAND).append("lt;");
+                out.append(XML_AMPERSAND + "lt;");
                 break;
             case XML_GT:
-                out.append(XML_AMPERSAND).append("gt;");
+                out.append(XML_AMPERSAND + "gt;");
                 break;
             case XML_AMPERSAND:
-                out.append(XML_AMPERSAND).append("amp;");
+                out.append(XML_AMPERSAND + "amp;");
                 break;
             case XML_2QUOT:
                 if (attribute) {
-                    out.append(XML_AMPERSAND).append("quot;");
+                    out.append(XML_AMPERSAND + "quot;");
                 } else {
                     out.append(c);
                 }
@@ -166,20 +169,23 @@ public abstract class AbstractWriter {
                 if (true) {
                     out.append(c);
                 } else {
-                    out.append(XML_AMPERSAND).append("apos;");
+                    out.append(XML_AMPERSAND + "apos;");
                 }
                 break;
             case SPACE:
                 out.append(c);
                 break;
             case NBSP:
-                out.append(XML_AMPERSAND).append("#160;");
+                out.append(XML_AMPERSAND + "#160;");
+                break;
+            case NARROW_NBSP:
+                out.append(XML_AMPERSAND + "#8239;");
                 break;
             default: {
                 if (c > 32) {
                     out.append(c);
                 } else {
-                    out.append(XML_AMPERSAND).append("#");
+                    out.append(XML_AMPERSAND + "#");
                     out.append(Integer.toString(c));
                     out.append(";");
                 }

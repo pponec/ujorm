@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.ujorm.tools.web.request.URequest;
 
 /**
  * An interface for bulding HTML parameters by an Enumerator.
+ * The implementation the method {@link Object#toString()} is required!
  *
  * <h4>Usage</h4>
  * <pre class="pre">
@@ -80,7 +81,7 @@ public interface HttpParameter extends CharSequence {
         return name != null ? name : originalName().toLowerCase(Locale.ENGLISH).replace('_', '-');
     }
 
-    /** Get a raw name of the HTTP parameter.
+    /** Method for an internal use: get a raw name of the HTTP parameter.
      * The method can be called from the {@link #buildParameterName(java.lang.String)} method.
      * NOTE: The method was renamed from obsolete {@code name()} due a Kotlin compatibility. */
     @NotNull
@@ -90,6 +91,14 @@ public interface HttpParameter extends CharSequence {
         } catch (ReflectiveOperationException | SecurityException e) {
             throw new IllegalStateException("Method 'name()' is not available", e);
         }
+    }
+
+    /** Join the parameter name with another non-null text */
+    default String concat(@NotNull String text) {
+        if (text.isEmpty()) {
+            return this.toString();
+        }
+        return this + text;
     }
 
     /** Returns the last parameter value of the request or a default value. The MAIN method */

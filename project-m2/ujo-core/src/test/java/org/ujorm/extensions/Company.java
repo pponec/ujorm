@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2022 Pavel Ponec
+ *  Copyright 2007-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ import org.ujorm.implementation.quick.QuickUjo;
  * @author Pavel Ponec
  */
 public class Company extends QuickUjo {
-    
+
     public static final Key<Company, PersonExt> DIRECTOR = newKey("director");
-    
+
     static {
         init(Company.class);
     }
-    
+
 }

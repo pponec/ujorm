@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.ujorm.ujoservlet.benchmark.dom4j;
 
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServlet;
 import org.dom4j.Element;
 import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.web.Html;

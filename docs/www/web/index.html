@@ -4,7 +4,7 @@
     Design by Free CSS Templates
     http://www.freecsstemplates.org
     Released for free under a Creative Commons Attribution 2.5 License
-    
+
     Design Name: Firming
     Description: A two-column, fixed-width design suitable for small websites and blogs.
     Version    : 1.0
@@ -24,7 +24,7 @@
             <link type="text/css" rel="stylesheet" href="../orm/SyntaxHighlighter/Styles/SyntaxHighlighter.css"/>
             <script type="text/javascript" src="../orm/SyntaxHighlighter/Scripts/shCore.js"></script>
             <script type="text/javascript" src="../orm/SyntaxHighlighter/Scripts/shBrushJava.js"></script>
-            <script type="text/javascript" src="../orm/SyntaxHighlighter/Scripts/shBrushXml.js"></script>    
+            <script type="text/javascript" src="../orm/SyntaxHighlighter/Scripts/shBrushXml.js"></script>
             <script type="text/javascript">
                 window.onload = function () {
                     dp.SyntaxHighlighter.ClipboardSwf = '../orm/SyntaxHighlighter/Scripts/clipboard.swf';
@@ -55,8 +55,8 @@
 
                         <div class="post">
                             <div class="entry">
-                                If you're not a fan of text templates to create HTML pages and 
-                                you are looking for a simple low-level solution with AJAX support, 
+                                If you're not a fan of text templates to create HTML pages and
+                                you are looking for a simple low-level solution with AJAX support,
                                 you might appreciate this library.
                             </div><p class="meta">&nbsp;</p>
                         </div><!-- post -->
@@ -66,10 +66,10 @@
                             <h2 class="title"><a href="#">Features</a></h2>
                             <div class="entry">
                                 <div style="margin-top: 28px;">
-                                    An objects of the 
-                                    <a href="https://ujorm.org/javadoc/2.05/ujo-web/org/ujorm/tools/web/Element.html">Element</a> class are used instead of long HTML strings in ǰava code. 
-                                    What makes this solution interesting? The simple API is worth mentioning.  
-                                    Because once we get the root element of the model, we only need to know <strong>three</strong> 
+                                    An objects of the
+                                    <a href="https://ujorm.org/javadoc/2.05/ujo-web/org/ujorm/tools/web/Element.html">Element</a> class are used instead of long HTML strings in ǰava code.
+                                    What makes this solution interesting? The simple API is worth mentioning.
+                                    Because once we get the root element of the model, we only need to know <strong>three</strong>
                                     of its methods to build the rest of the HTML page:
 
                                     <ol>
@@ -81,10 +81,10 @@
                                         </li>
                                     </ol>
 
-                                    Using these methods, it is possible to create virtually any HTML page with properly enclosed tags 
-                                    - without the user having to pay much attention to HTML header creation and other formalities. 
-                                    After the object model is built, the close() method is called on the root element to send the content 
-                                    to the PrintWriter. Since the Element class implements the Closeable interface from the standard Java library, 
+                                    Using these methods, it is possible to create virtually any HTML page with properly enclosed tags
+                                    - without the user having to pay much attention to HTML header creation and other formalities.
+                                    After the object model is built, the close() method is called on the root element to send the content
+                                    to the PrintWriter. Since the Element class implements the Closeable interface from the standard Java library,
                                     you just need to wrap it with a try() block.
                                     What are the other benefits of the Element class?
 
@@ -94,7 +94,7 @@
                                         </li><li>The internal elements of the resulting HTML code are automatically indented with spaces.
                                         </li><li>Most typos are detected by the compiler, but the validity of the HTML elements used remains the responsibility of the developer.
                                         </li><li>While closing internal elements is not mandatory, closing them with try-with-resources leads to a Java source code structure that resembles formatted HTML/XML.
-                                        </li>    
+                                        </li>
                                     </ol>
 
                                 </div>
@@ -105,9 +105,9 @@
                                 <img src="../images/milky-60.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
                                 <h2 class="title"><a href="#">Some other features</a></h2>
                                 <div class="entry">
-                                    
+
                                 <div style="margin-top: 28px;">
-                                    Let's look at other interesting features. 
+                                    Let's look at other interesting features.
                                 </div>
 
                                     <ol>
@@ -118,7 +118,7 @@
                                         </li><li>However, the Element class can also find its use outside of servlets - for example, in a REST implementation with output of type: "text/html".
                                         </li><li>PrintWriter class and so all text written to Element is sent directly to the writer. The close() method then closes the open tags and empties the buffer. The advantage of such a solution is good performance and minimal memory consumption when building bulky pages.
                                         </li><li>However, if we need a full memory model, it can be activated by changing the configuration when building the root element. This may make sense in cases where we are going to add some additional (backwards) elements to the model. The build of the original elements remains unchanged.
-                                        </li><li>The configuration can also be used to change the indentation characters for nested elements, line wrapping, setting the national page environment, character set and several other properties. 
+                                        </li><li>The configuration can also be used to change the indentation characters for nested elements, line wrapping, setting the national page environment, character set and several other properties.
                                             Custom formatting of data types is supported; the default implementation uses the toString() method.
                                         </li><li>When the root element is built, it sets (among other things) the necessary PrintWriter properties such as the response header code or browser cache suppression.
                                         </li><li>However, the Element class can also find its use outside of servlets - for example, in a REST implementation with output of type: "text/html".
@@ -138,16 +138,16 @@
                             <img src="../images/milky-10.png" width="48" height="48" alt="sample" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
                             <h2 class="title" id="sample"><a href="#">Quick start:</a></h2>
                             <div class="entry">
-                                How do you <strong>write your first</strong> HTML page based on Element object?	
+                                How do you <strong>write your first</strong> HTML page based on Element object?
                                 See a body the method <i>HttpServlet.doGet()</i>:
 
                                 <pre name="code" class="java">
 try (HtmlElement html = HtmlElement.niceOf(response) {
   html.addBody().addHeading("Hello, World!");
 }</pre>
-                
+
 A more complex example demonstrates the use of a simple web form.
-                                
+
 <pre name="code" class="java">
 try (HtmlElement html = HtmlElement.niceOf(
       response, "/style.css")) {
@@ -178,7 +178,7 @@ enum Attrib implements HttpParameter {
                             </p>
 
                             Some more sample code can be found in this <a href="https://github.com/pponec/demo-ajax">Maven project</a>.
-                            
+
                             </div>
                             <p class="meta"> <a href="https://dzone.com/articles/a-simple-ajax-website-in-java" class="permalink">Learn more</a> </p>
                         </div><!-- post -->
@@ -192,7 +192,7 @@ enum Attrib implements HttpParameter {
                                 <br />
 
                                 <div class="pre apache" style="padding-left: 10px"><code>
-Copyright 2020-2022 Pavel Ponec, ujorm.org
+Copyright 2020-2026 Pavel Ponec, ujorm.org
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -236,7 +236,7 @@ git clone <strong>https://github.com/pponec/ujorm.git</strong></pre>
                             <div class="entry">
                                 Here are links to some other Java projects with similar concerns:
                                 <ul>
-                                    <li>A lot of interesting information can be found on this blog.: 
+                                    <li>A lot of interesting information can be found on this blog.:
                                         <a href="https://dzone.com/articles/modern-type-safe-template-engines">Modern Type-Safe Template Engines</a>
                                         a's abilities (interfaces, annotations, generics etc.) to create a more powerful, extensible and object oriented system to expose component state.</li>
                                     <li><a href="https://dom4j.github.io/">dom4j</a> - an open-source Java library for working with XML, XPath and XSLT.</li>
@@ -244,7 +244,7 @@ git clone <strong>https://github.com/pponec/ujorm.git</strong></pre>
                             </div>
                             <p class="meta">&nbsp;</p>
                         </div><!-- post -->
-                        
+
                         <div class="post">
                             <img src="../images/milky-02.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
                             <h2 class="title" id="links"><a href="#">External links</a></h2>
@@ -260,7 +260,7 @@ git clone <strong>https://github.com/pponec/ujorm.git</strong></pre>
                             </div>
                             <p class="meta">&nbsp;</p>
                         </div><!-- post -->
-                        
+
                         <div class="post">
                             <img src="../images/milky-06.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
                             <h2 class="title"  id="support"><a href="#">Support:</a></h2>

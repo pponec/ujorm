@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020-2022 Pavel Ponec
+ *  Copyright 2020-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package org.ujorm.orm.annot;
 import java.lang.annotation.*;
 
-/** 
+/**
  * A parameter annotation of the stored procedure.
  * The first key/parameter has always the output type and it provides a result of the stored procedure. If prcedure does not have a return value, the key type must be Void.
  * The next keys/parameters have an input type by default, there is possible to change this type by this annotations.
@@ -31,5 +31,5 @@ public @interface Parameter {
     boolean input() default false;
     /** An output parameter of the stored procedure. */
     boolean output() default false;
-    
+
 }

@@ -18,15 +18,14 @@ public final class URequestImpl implements URequest{
         this.reader = reader;
     }
 
-
     @NotNull
     public Reader getReader() {
         return reader;
     }
 
     @NotNull
-    public String[] getParameters(final String key) {
-        final String[] result = map.get(key);
+    public String[] getParameters(final CharSequence key) {
+        final String[] result = map.get(key.toString());
         return result != null ? result : emptyTexts;
     }
 

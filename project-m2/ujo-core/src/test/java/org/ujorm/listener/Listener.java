@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2022 Pavel Ponec
+ *  Copyright 2007-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * @author Pavel Ponec
  */
 public class Listener implements UjoPropertyChangeListener {
-    
+
     private final ArrayList<UjoPropertyChangeEvent> list = new ArrayList<>();
 
     @Override
@@ -34,11 +34,11 @@ public class Listener implements UjoPropertyChangeListener {
     public Object getOldValue(int i) {
         return list.get(i).getOldValue();
     }
-    
+
     public Object getNewValue(int i) {
         return list.get(i).getNewValue();
     }
-    
+
     public Object getLastOldValue() {
         return list.get(list.size()-1).getOldValue();
     }
@@ -50,15 +50,15 @@ public class Listener implements UjoPropertyChangeListener {
     public Object getLast2OldValue() {
         return list.get(list.size()-2).getOldValue();
     }
-    
-    
+
+
     public Object getLast2NewValue() {
         return list.get(list.size()-2).getNewValue();
     }
-    
-    
+
+
     public int size() {
         return list.size();
     }
-    
+
 }

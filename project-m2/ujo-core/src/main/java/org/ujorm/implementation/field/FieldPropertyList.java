@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2022 Pavel Ponec
+ *  Copyright 2008-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
+ */
 
 package org.ujorm.implementation.field;
 
@@ -28,16 +28,16 @@ import static org.ujorm.extensions.PropertyModifier.*;
  * Property List implementation. There is used an List collection.
  * @see BeanProperty
  * @since ujo-tool
- * @author Pavel Ponec  
+ * @author Pavel Ponec
  */
-public class FieldPropertyList<UJO extends Ujo, ITEM> 
+public class FieldPropertyList<UJO extends Ujo, ITEM>
     extends ListProperty<UJO, ITEM>
     implements ValueAgent<UJO,  List<ITEM>>, ListKey<UJO, ITEM>
 {
-    
+
     /** Bean Manager instance */
     private final ValueAgent<UJO, List<ITEM>> agent;
-    
+
     /** Constructor */
     @SuppressWarnings("unchecked")
     public FieldPropertyList(String name, Class<ITEM> itemType, int index, ValueAgent<UJO, List<ITEM>> agent) {
@@ -47,7 +47,7 @@ public class FieldPropertyList<UJO extends Ujo, ITEM>
         init(TYPE, List.class);
         this.agent = agent;
     }
-    
+
     /** WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.
      * <br>A direct call can bypass a important actions implemented in the writeProperty(method).
      */
@@ -61,5 +61,5 @@ public class FieldPropertyList<UJO extends Ujo, ITEM>
     public List<ITEM> readValue(UJO ujo) throws IllegalArgumentException {
         return agent.readValue(ujo);
     }
-    
+
 }

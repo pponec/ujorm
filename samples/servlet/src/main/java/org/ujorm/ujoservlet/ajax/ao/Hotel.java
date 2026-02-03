@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class Hotel {
     private String currency;
     /** Is active */
     private Boolean active;
-    
+
     public String getCityName() {
         final City city = getCity();
         return city != null ? city.getName() : null;

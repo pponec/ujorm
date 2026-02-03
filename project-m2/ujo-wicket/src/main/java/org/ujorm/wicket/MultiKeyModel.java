@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013-2022 Pavel Ponec
+ *  Copyright 2013-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class MultiKeyModel<U extends Ujo> implements IModel<CharSequence> {
     public String toString() {
         return getObject().toString();
     }
-    
+
     /** Return Key */
     @SuppressWarnings("unchecked")
     public final Key<U, ?> getKeyRing() {
@@ -66,17 +66,17 @@ public class MultiKeyModel<U extends Ujo> implements IModel<CharSequence> {
     public CharSequence getObject() {
         final StringBuilder result = new StringBuilder();
         final U domain = domainModel.getObject();
-        
+
         for (int i = 0, max = keyRing.size(); i < max; ++i) {
             if (i > 0) {
                 result.append(separator);
             }
-            result.append(format(keyRing.getValue(domain, i)));            
+            result.append(format(keyRing.getValue(domain, i)));
         }
-        
+
         return result;
     }
-    
+
     /** Format the result value */
     @NotNull
     protected String format(@NotNull final Object value) {

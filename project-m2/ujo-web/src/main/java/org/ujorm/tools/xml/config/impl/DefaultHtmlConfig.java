@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2026 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -72,7 +72,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     private Set<String> unpairElements = new HashSet<String>() {{
         add("area");
         add("base");
-        add(Html.BR);
+        add(Html.BREAK);
         add("col");
         add("embed");
         add(Html.HR);
@@ -102,6 +102,8 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         this.rawHeaderText = htmlConfig.getRawHeaderText();
         this.headerInjector = htmlConfig.getHeaderInjector();
         this.rootElementName = htmlConfig.getRootElementName();
+        this.htmlHeaderRequest = htmlConfig.isHtmlHeaderRequest();
+        this.unpairElements = htmlConfig.getUnpairElements();
     }
 
     @Override

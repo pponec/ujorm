@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2026 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.Formatter;
 import org.ujorm.tools.xml.config.XmlConfig;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -246,4 +248,25 @@ public class DefaultXmlConfig implements XmlConfig {
         return this;
     }
 
+    /**
+     * Format number using NBSP as a thousand separator.
+     * <br>Examples:
+     * <br> 10000 -> "10 000"
+     * <br> 1234.56 -> "1 234.56"
+     * <br> 100 (Integer) -> "100"
+     * <br> null -> "null"
+     */
+    public DefaultXmlConfig setIsoFormatter() {
+        Formatter formatter = new Formatter() {
+            @Override
+            public @NotNull CharSequence format(@Nullable Object value, @NotNull ApiElement element, @Nullable String attributeName) {
+                return (value == null)
+                    ? EMPTY
+                    : (attributeName == null && value instanceof Number number)
+                    ? StringUtils.formatSeparator(number)
+                    : value.toString();
+            }
+        };
+        return setFormatter(formatter);
+    }
 }

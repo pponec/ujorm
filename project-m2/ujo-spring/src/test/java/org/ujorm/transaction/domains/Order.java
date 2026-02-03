@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020-2022 Pavel Ponec
+ *  Copyright 2020-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public final class Order extends OrmTable<Order> {
 
     /** Lock the factory */
     static { f.lock(); }
-    
+
     // --- Constructors ---
 
     public Order() {

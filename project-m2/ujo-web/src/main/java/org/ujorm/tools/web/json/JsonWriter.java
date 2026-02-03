@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.ujorm.tools.web.json;
 
 import java.io.IOException;
+import java.util.HexFormat;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.Assert;
 
@@ -26,8 +27,9 @@ import org.ujorm.tools.Assert;
  */
 public final class JsonWriter implements Appendable {
 
-    private static final char BACKSLASH = '\\';
+    static final char BACKSLASH = '\\';
     static final char DOUBLE_QUOTE = '"';
+    static final HexFormat HEX_FORMAT = HexFormat.of().withUpperCase();
 
     private final Appendable writer;
 
@@ -54,38 +56,44 @@ public final class JsonWriter implements Appendable {
 
     @Override
     public Appendable append(final char c) throws IOException {
-            switch (c) {
-                case BACKSLASH:
-                    writer.append(BACKSLASH);
-                    writer.append(BACKSLASH);
-                    break;
-                case DOUBLE_QUOTE:
-                    writer.append(BACKSLASH);
-                    writer.append(DOUBLE_QUOTE);
-                    break;
-                case '\b':
-                    writer.append(BACKSLASH);
-                    writer.append('b');
-                    break;
-                case '\f':
-                    writer.append(BACKSLASH);
-                    writer.append('f');
-                    break;
-                case '\n':
-                    writer.append(BACKSLASH);
-                    writer.append('n');
-                    break;
-                case '\r':
-                    writer.append(BACKSLASH);
-                    writer.append('r');
-                    break;
-                case '\t':
-                    writer.append(BACKSLASH);
-                    writer.append('t');
-                    break;
-                default:
-                    writer.append(c);
+        switch (c) {
+            case BACKSLASH -> {
+                writer.append(BACKSLASH);
+                writer.append(BACKSLASH);
             }
+            case DOUBLE_QUOTE -> {
+                writer.append(BACKSLASH);
+                writer.append(DOUBLE_QUOTE);
+            }
+            case '\b' -> {
+                writer.append(BACKSLASH);
+                writer.append('b');
+            }
+            case '\f' -> {
+                writer.append(BACKSLASH);
+                writer.append('f');
+            }
+            case '\n' -> {
+                writer.append(BACKSLASH);
+                writer.append('n');
+            }
+            case '\r' -> {
+                writer.append(BACKSLASH);
+                writer.append('r');
+            }
+            case '\t' -> {
+                writer.append(BACKSLASH);
+                writer.append('t');
+            }
+            default -> {
+                if (c < ' ' || c == '\u2028' || c == '\u2029') {
+                    writer.append("\\u");
+                    writer.append(HEX_FORMAT.toHexDigits(c, 4));
+                } else {
+                    writer.append(c);
+                }
+            }
+        }
         return this;
     }
 

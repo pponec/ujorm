@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022 Pavel Ponec <help.ujorm@gmail.com> */
+/* Copyright (c) 2018-2026 Pavel Ponec <help.ujorm@gmail.com> */
 package org.ujorm.wicket.component.grid;
 
 import java.time.Duration;

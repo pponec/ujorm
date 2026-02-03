@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2022 Pavel Ponec
+ *  Copyright 2007-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.ujorm.extensions.StringWrapper;
  * @author Pavel Ponec
  */
 public class SampleNumberWrapper implements StringWrapper {
-    
+
     /** NonNull value */
     final BigDecimal number;
 
@@ -35,10 +35,10 @@ public class SampleNumberWrapper implements StringWrapper {
     public BigDecimal getNumber() {
         return number;
     }
-    
+
     @Override
     public String exportToString() {
         return number.toString();
     }
-    
+
 }

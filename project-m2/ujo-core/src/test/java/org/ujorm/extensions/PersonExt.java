@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2022 Pavel Ponec
+ *  Copyright 2007-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,15 +26,15 @@ import org.ujorm.implementation.map.MapUjoExt;
  * @author Pavel Ponec
  */
 public class PersonExt extends MapUjoExt<PersonExt> {
-    
+
     public static final Key<PersonExt, Integer> ID = newKey("id");
     public static final Key<PersonExt, PersonExt> SUPERIOR = newKey("superior");
     public static final ListKey<PersonExt, PersonExt> PERS = newListKey("person");
-    
+
     static {
         init(PersonExt.class);
     }
-    
+
     public PersonExt(Integer id) {
         ID.setValue(this, id);
     }

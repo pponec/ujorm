@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Pavel Ponec
+ * Copyright 2021-2026 Pavel Ponec
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/jdbc/JdbcBuilder.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,15 @@
 package org.ujorm.tools.common;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
@@ -46,8 +50,33 @@ public class StringUtils {
      /** File separator (one character is required) */
      public static final String SEPARATOR = "/";
 
+    /**
+     * Non-breaking space used as a thousands separator.
+     * <p>
+     * This character is defined by the <b>ISO 80000-1</b> standard for
+     * separating groups of three digits. It ensures that large numbers
+     * remain on a single line while maintaining professional typographic
+     * spacing.
+     * </p> */
+    public static final char NARROW_NBSP = '\u202F';
+
+     /** Standard Non-breaking space (NBSP). */
+     public static final char NBSP = '\u00A0';
+
     /** A messge template: "Resource is not available: {}"  */
     private static final String NO_RESOURCE_MSG = "Resource is not available: ";
+
+    /** Number formatter using underscore as a thousand separator. */
+    public static final DecimalFormat INT_FORMAT = numberFormatter(false);
+
+    /** Number formatter using underscore as a thousand separator. */
+    public static final DecimalFormat DECIMAL_FORMAT = numberFormatter(true);
+
+    /**
+     * Technical Locale optimized for logging (Format: {@code 1 234.56}).
+     * Uses a dot for decimals and a space for grouping.
+     */
+    public static final Locale TECHNICAL_LOCALE = Locale.CANADA_FRENCH;
 
     /** Charset of the resource */
     @NotNull
@@ -212,6 +241,40 @@ public class StringUtils {
     @NotNull
     public static Stream<String> readLines(@NotNull final String... resourcePath) {
         return readLines(StringUtils.class, resourcePath);
+    }
+
+    /**
+     * Format number using THIN_NBSP for the thousand separator.
+     * <br>Examples:
+     * <br> 10000 -> "10 000"
+     * <br> 1234.56 -> "1 234.56"
+     * <br> 100 (Integer) -> "100"
+     * <br> null -> ""
+     */
+    @NotNull
+    public static String formatSeparator(@Nullable Number number) {
+        if (number == null) return "";
+        if (number instanceof Float) {
+            number = new BigDecimal(number.toString());
+        }
+        final var isDecimal = number instanceof Double || number instanceof BigDecimal;
+        final var formatter = isDecimal ? DECIMAL_FORMAT : INT_FORMAT;
+        return formatter.format(number);
+    }
+
+    /** Crete a number formatter using underscore as a thousand separator. */
+    public static final DecimalFormat numberFormatter(boolean isDecimal) {
+        final var pattern = isDecimal
+                ? "#,##0.################"
+                : "#,##0";
+        return numberFormatter(pattern);
+    }
+
+    /** Crete a number formatter using underscore as a thousand separator. */
+    public static final DecimalFormat numberFormatter(String pattern) {
+        final var symbols = new DecimalFormatSymbols(Locale.ROOT);
+        symbols.setGroupingSeparator(NARROW_NBSP);
+        return new DecimalFormat(pattern, symbols);
     }
 
 }

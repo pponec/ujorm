@@ -20,10 +20,10 @@ public interface HttpContext {
     Set<String> getParameterNames();
 
     /** Returns the last parameter */
-    String getParameter(@NotNull String key, String defaultValue);
+    String getParameter(@NotNull CharSequence key, String defaultValue);
 
     /** Returns the type safe last parameter or the default value. */
-    <T> T getParameter(@NotNull String key, @NotNull T defaultValue, @NotNull Function<String, T> converter);
+    <T> T getParameter(@NotNull CharSequence key, @NotNull T defaultValue, @NotNull Function<String, T> converter);
 
     /** HTTP Servlet Factory */
     public static HttpContext ofServletResponse(Object httpServletResponse) {

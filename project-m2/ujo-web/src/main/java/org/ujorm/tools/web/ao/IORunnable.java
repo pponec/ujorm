@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ import java.io.IOException;
 
 /**
  * Input/Output Runnable Interface
- * 
+ *
  * @author Pavel Ponec
  */
 @FunctionalInterface
 public interface IORunnable {
 
     void run() throws IOException;
-    
+
 }

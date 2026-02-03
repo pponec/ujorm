@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2022 Pavel Ponec
+ *  Copyright 2007-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
+ */
 
 package org.ujorm.implementation.bean;
 
@@ -26,16 +26,16 @@ import static org.ujorm.extensions.PropertyModifier.*;
 /**
  * Property List implementation. There is used an List collection.
  * @see BeanProperty
- * @author Pavel Ponec  
+ * @author Pavel Ponec
  */
-public class BeanPropertyList<UJO extends Ujo, ITEM> 
+public class BeanPropertyList<UJO extends Ujo, ITEM>
 extends ListProperty<UJO, ITEM>
 implements ValueAgent<Object,Object>, ListKey<UJO, ITEM>
 {
 
     /** Bean Manager instance */
     private final BeanManager<Object,Object> beanManager;
-    
+
     /** Constructor */
     @SuppressWarnings("unchecked")
     public BeanPropertyList(String name, Class<ITEM> itemType, int index) {
@@ -44,7 +44,7 @@ implements ValueAgent<Object,Object>, ListKey<UJO, ITEM>
         init(NAME, name);
         beanManager = BeanManager.getInstance(this);
     }
-    
+
     /** WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.
      * <br>A direct call can bypass a important actions implemented in the writeProperty(method).
      */

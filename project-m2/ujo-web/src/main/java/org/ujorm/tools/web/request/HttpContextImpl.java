@@ -53,17 +53,23 @@ public class HttpContextImpl implements HttpContext{
 
     /** Returns the last parameter */
     @Override
-    public String getParameter(@NotNull String key, String defaultValue) {
+    public String getParameter(@NotNull CharSequence key, String defaultValue) {
         return getParameter(key, defaultValue, Function.identity());
     }
 
     /** Returns the last parameter */
     @Override
-    public <T> T getParameter(@NotNull String key, @NotNull T defaultValue, @NotNull Function<String, T> converter) {
+    public <T> T getParameter(@NotNull CharSequence key, @NotNull T defaultValue, @NotNull Function<String, T> converter) {
         final var uRequest = request();
         return uRequest != null
                 ? uRequest.getParameter(key, defaultValue, converter)
                 : defaultValue;
+    }
+
+    /** Return a text of the {@code writer} object */
+    @Override
+    public String toString() {
+        return writer.toString();
     }
 
     /** Create a default HTTP Context */

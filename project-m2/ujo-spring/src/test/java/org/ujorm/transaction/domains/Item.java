@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020-2022 Pavel Ponec
+ *  Copyright 2020-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public final class Item extends OrmTable<Item> {
     public static final Key<Item,Order> ORDER = f.newKey();
     /** A composed (or indirect) key provides a 'CREATED' attribute of the Order */
     public static final Key<Item,Date> $ORDER_CREATED = Item.ORDER.add(Order.CREATED);
-    
+
     /** Lock the factory */
     static { f.lock(); }
 

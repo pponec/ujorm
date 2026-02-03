@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2022 Pavel Ponec
+ *  Copyright 2007-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.ujorm.implementation.registrar.*;
  * @author Pavel Ponec
  */
 public class Person extends RegistrarUjoExt<Person> {
-    
+
     public static final Key<Person,Integer> ID  = newKey("id", 0);
     public static final Key<Person,String> NAME = newKey("name", "");
     public static final Key<Person,Double> CASH = newKey("cash", 0.0);

@@ -9,13 +9,13 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>main</artifactId>
-    <version>2.30-SNAPSHOT</version>
+    <version>2.30</version>
     <name>Main UJO</name>
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
 
     <properties>
-        <revision>2.30-SNAPSHOT</revision>
+        <revision>2.30</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -33,6 +33,11 @@
             <dependency>
                 <groupId>org.ujorm</groupId>
                 <artifactId>ujo-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ujorm</groupId>
+                <artifactId>ujo-converter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

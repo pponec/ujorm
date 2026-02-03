@@ -141,9 +141,24 @@ public interface HtmlConfig extends XmlConfig {
      * Create a new configuration with a nice format by an HTML title.
      * @param title If the title is null then create an EMPTY element.
      */
-    static DefaultHtmlConfig ofTitle(@NotNull String title) {
+    static DefaultHtmlConfig ofTitle(@NotNull String title, @NotNull final CharSequence... cssLinks) {
         return ofDefault()
-                    .setTitle(title)
-                    .setNiceFormat();
+                .setTitle(title)
+                .setCssLinks(cssLinks)
+                .setNiceFormat();
     }
+
+    /**
+     * Create a new configuration with an ISO number formatter.
+     * <p>
+     * The numbers are formatted with a <strong>dot</strong> as the decimal separator
+     * and a <strong>non-breaking space</strong> ({@code \u00A0}) as the thousands separator.
+     * @param title The HTML title. If the value is {@code null}, a headerless element is created.
+     * @param cssLinks Optional CSS links.
+     * @return A new configuration instance.
+     */
+    static DefaultHtmlConfig ofIsoFormatter(@NotNull String title, @NotNull final CharSequence... cssLinks) {
+        return (DefaultHtmlConfig) ofTitle(title, cssLinks).setIsoFormatter();
+    }
+
 }

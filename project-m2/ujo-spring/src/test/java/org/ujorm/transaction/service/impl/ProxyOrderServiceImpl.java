@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013-2022 Pavel Ponec
+ *  Copyright 2013-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.ujorm.transaction.service.OrderService;
 /** An Order service implementation */
 @Service("proxyOrderService")
 public class ProxyOrderServiceImpl implements OrderService {
-    
+
     @Autowired()
     @Qualifier("orderService")
     private OrderService orderService;
@@ -50,7 +50,7 @@ public class ProxyOrderServiceImpl implements OrderService {
     @Override
     public void delete(Order order) {
         orderService.delete(order);
-    }    
+    }
 
     /** Načte měnu podle ID */
     @Transactional

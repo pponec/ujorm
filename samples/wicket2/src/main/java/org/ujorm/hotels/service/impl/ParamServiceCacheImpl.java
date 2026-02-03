@@ -34,8 +34,8 @@ import org.ujorm.hotels.service.ModuleParams;
 import org.ujorm.hotels.service.ParamService;
 import org.ujorm.hotels.service.param.annot.PersonalParam;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Common Parameter service provider including a cache

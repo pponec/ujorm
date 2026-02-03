@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020-2022 Pavel Ponec
+ *  Copyright 2020-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class OrderSample extends OrmTable<OrderSample> implements Serializable {
     public static final Key<OrderSample,String> NOTE = newKey("description");
     /** Date of creation */
     public static final Key<OrderSample,Date> CREATED = newKey("created");
-    
+
 
     // --- An optional implementation of commonly used setters and getters ---
 

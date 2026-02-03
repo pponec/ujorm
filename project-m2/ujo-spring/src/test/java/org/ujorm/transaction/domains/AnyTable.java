@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020-2022 Pavel Ponec
+ *  Copyright 2020-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,13 +28,13 @@ import org.ujorm.orm.annot.Comment;
  * @Table=bo_item
  */
 @Comment("test table")
-public final class Aaa extends OrmTable<Aaa> {
-    private static final KeyFactory<Aaa> f = newCamelFactory(Aaa.class);
+public final class AnyTable extends OrmTable<AnyTable> {
+    private static final KeyFactory<AnyTable> f = newCamelFactory(AnyTable.class);
 
     /** Unique key */
     @Column(pk = true)
-    public static final Key<Aaa,Long> ID = f.newKey();
- 
+    public static final Key<AnyTable,Long> ID = f.newKey();
+
     /** Lock the factory */
     static { f.lock(); }
 

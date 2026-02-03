@@ -1,11 +1,11 @@
 /*
- * Copyright 2018-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,16 +35,17 @@ import java.util.function.Consumer;
 
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
-/** The root of HTML elements is <b>independent</b> on the Servlet API
+/**
+ * The root of HTML elements is <b>independent</b> on the Servlet API
  *
  * <h4>Usage</h4>
  *
  * <pre class="pre">
- *    ServletResponse response = new ServletResponse();
- *    try (HtmlElement html = HtmlElement.of(response)) {
- *        html.addBody().addHeading("Hello!");
- *    }
- *    assertTrue(response.toString().contains("&lt;h1&gt;Hello!&lt;/h1&gt;"));
+ * ServletResponse response = new ServletResponse();
+ * try (HtmlElement html = HtmlElement.of(response)) {
+ * html.addBody().addHeading("Hello!");
+ * }
+ * assertTrue(response.toString().contains("&lt;h1&gt;Hello!&lt;/h1&gt;"));
  * </pre>
  *
  * For more information, see the
@@ -52,32 +53,49 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  */
 public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
 
-    /** Head element */
+    /** No CSS styles */
+    private static final String[] NO_CSS = Element.NO_CSS;
+
+    /** Root element (usually &lt;html&gt;) */
     @NotNull
-    private final Element root;
+    protected final Element root;
 
     /** Head element */
-    @NotNull
+    @Nullable
     private Element head;
 
     /** Body element */
-    @NotNull
+    @Nullable
     private Element body;
 
-    /** Config */
+    /** Configuration */
     @NotNull
     private final HtmlConfig config;
 
-    /** Config */
+    /** Writer */
     @NotNull
     private final Appendable writer;
 
-    /** Create new instance with empty HTML headers */
+    /** Assigned html lang */
+    @NotNull
+    private CharSequence lang = "";
+
+    /** Flag to indicate if the header is already initialized */
+    private boolean headerInitialized = false;
+
+    /** Create new instance with empty HTML headers
+     * @param config Configuration
+     * @param writer Writer
+     */
     public AbstractHtmlElement(@NotNull final HtmlConfig config, @NotNull final Appendable writer) {
         this(new XmlModel(Html.HTML), config, writer);
     }
 
-    /** Create new instance with empty HTML headers */
+    /** Create new instance with explicit root
+     * @param root Root element
+     * @param config Configuration
+     * @param writer Writer
+     */
     public AbstractHtmlElement(@NotNull final ApiElement root, @NotNull final HtmlConfig config, @NotNull final Appendable writer) {
         this.root = new Element(root);
         this.config = config;
@@ -91,7 +109,10 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
     }
 
     @Override
-    public Element setAttribute(String name, Object value) {
+    public Element setAttribute(@NotNull String name, @Nullable Object value) {
+        if (Html.A_LANG.equals(name)) {
+            this.lang = value != null ? value.toString() : "";
+        }
         return root.setAttribute(name, value);
     }
 
@@ -126,63 +147,115 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      * Create new Element
      * @param name The element name
      * @return New instance of the Element
-     * @throws IllegalStateException An envelope for IO exceptions
      */
     @Override @NotNull
-    public final Element addElement(@NotNull final String name)
-            throws IllegalStateException {
-        switch (name) {
-            case Html.HEAD:
-                return getHead();
-            case Html.BODY:
-                return getBody();
-            default:
-                return root.addElement(name);
-        }
+    public final Element addElement(@NotNull final String name) {
+        return addElement(name, NO_CSS);
     }
 
-    /** Returns a head element */
-    public Element getHead() {
+    /**
+     * Create new Element
+     * @param name The element name
+     * @param css CSS classes
+     * @return New instance of the Element
+     */
+    public final Element addElement(@NotNull final String name, @NotNull final CharSequence... css) {
+        return switch (name) {
+            case Html.HEAD -> addHead(css);
+            case Html.BODY -> addBody(css);
+            default -> {
+                initHeader();
+                yield root.addElement(name, css);
+            }
+        };
+    }
+
+    /** Returns or creates a head element
+     * @param css CSS classes
+     * @return Head element
+     */
+    public Element addHead(@NotNull final CharSequence... css) {
         if (head == null) {
-            head = root.addElement(Html.HEAD);
+            initHeader();
+            if (head == null) {
+                head = root.addElement(Html.HEAD, css);
+            }
         }
         return head;
     }
 
-    /** Returns a head element */
-    public Element addHead() {
-        return getHead();
+    /** Returns a head element
+     * @return Head element
+     */
+    public final Element getHead() {
+        return addHead();
     }
 
-    /** Returns a body element */
+    /** Returns or creates a body element
+     * @param css CSS classes
+     * @return Body element
+     */
     @NotNull
-    public Element getBody() {
+    public Element addBody(@NotNull final CharSequence... css) {
         if (body == null) {
-            body = root.addElement(Html.BODY);
+            initHeader();
+            body = root.addElement(Html.BODY, css);
         }
         return body;
     }
 
-    /** Returns a body element */
+    /** Returns a body element
+     * @return Body element
+     */
     @NotNull
-    public Element addBody() {
-        return getBody();
+    public final Element getBody() {
+        return addBody();
     }
 
-    /** Create a new Javascript element and return it
-     * @param javascriptLinks URL list to Javascript
+    /** Lazy initialize the HTML header if requested and not yet initialized */
+    protected void initHeader() {
+        if (!headerInitialized && config.isHtmlHeaderRequest()) {
+            headerInitialized = true;
+
+            // 1. First set root attributes BEFORE adding any child element
+            if (lang.isEmpty()) {
+                config.getLanguage().ifPresent(
+                        lang -> root.setAttribute(A_LANG, lang));
+            }
+
+            // 2. Then create or use head element
+            final Element headElement = head != null ? head : root.addElement(Html.HEAD);
+            if (head == null) {
+                head = headElement;
+            }
+
+            // 3. Populate head
+            headElement.addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
+            headElement.addElement(Html.TITLE).addText(config.getTitle());
+            addCssLinks(config.getCssLinks());
+            config.getHeaderInjector().write(headElement);
+
+            final var rawHeaderText = config.getRawHeaderText();
+            if (Check.hasLength(rawHeaderText)) {
+                headElement.addRawText(config.getNewLine());
+                headElement.addRawText(rawHeaderText);
+            }
+        }
+    }
+
+    /** Create new Javascript links
      * @param defer A script that will not run until after the page has loaded
-     */
-    public void addJavascriptLinks(final boolean defer, @NotNull final CharSequence ... javascriptLinks) {
-        for (CharSequence js : javascriptLinks) {
+     * @param javascriptLinks URL list to Javascript */
+    public void addJavascriptLinks(final boolean defer, @NotNull final CharSequence... javascriptLinks) {
+        for (var js : javascriptLinks) {
             addJavascriptLink(defer, js);
         }
     }
 
     /** Create a new Javascript element and return it
-     * @param javascriptLink URL to Javascript
      * @param defer A script that will not run until after the page has loaded
-     * @return
+     * @param javascriptLink URL to Javascript
+     * @return New script element
      */
     public Element addJavascriptLink(final boolean defer, @NotNull final CharSequence javascriptLink) {
         Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
@@ -192,36 +265,32 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
     }
 
     /** Create a new Javascript element and return it.
-     * Each item is separated by a new line.
      * @param javascript Add a javascriptLink link
-     * @return New CSS element
+     * @return New script element
      */
     public Element addJavascriptBody(@Nullable final CharSequence... javascript) {
         if (Check.hasLength(javascript)) {
-            final Element result = getHead().addElement(Html.SCRIPT)
+            final var result = getHead().addElement(Html.SCRIPT)
                     .setAttribute(Html.A_LANGUAGE, "javascript")
                     .setAttribute(Html.A_TYPE, "text/javascript");
-            for (int i = 0, max = javascript.length; i < max; i++) {
-                if (i > 0) {
-                    result.addRawText("\n");
-                }
+            for (int i = 0; i < javascript.length; i++) {
+                if (i > 0) result.addRawText("\n");
                 result.addRawText(javascript[i]);
             }
             return result;
         }
-        return head;
+        return getHead();
     }
 
-    /** Create a new CSS element and return it
-     * @param css Add a CSS link
-     */
+    /** Create new CSS links
+     * @param css Add a CSS links */
     public void addCssLinks(@NotNull final CharSequence... css) {
-        for (CharSequence cssLink : css) {
+        for (var cssLink : css) {
             addCssLink(cssLink);
         }
     }
 
-    /** Create a new CSS element and return it
+    /** Create a new CSS link
      * @param css Add a CSS link
      * @return New CSS element
      */
@@ -238,12 +307,10 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      */
     public Element addCssBody(@NotNull final CharSequence css) {
         Assert.notNull(css, REQUIRED_MSG, "css");
-        return getHead().addElement(Html.STYLE)
-                .addRawText(css);
+        return getHead().addElement(Html.STYLE).addRawText(css);
     }
 
     /** Create a new CSS element and return it.
-     * Each item is separated by a new line.
      * @param lineSeparator Row separator
      * @param css CSS content rows
      * @return New CSS element
@@ -252,39 +319,39 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
             @NotNull final CharSequence lineSeparator,
             @NotNull final CharSequence... css) {
         Assert.hasLength(css, REQUIRED_MSG, "css");
-        final Element result = getHead().addElement(Html.STYLE);
-        for (int i = 0, max = css.length; i < max; i++) {
-            if (i > 0) {
-                result.addRawText(lineSeparator);
-            }
+        final var result = getHead().addElement(Html.STYLE);
+        for (int i = 0; i < css.length; i++) {
+            if (i > 0) result.addRawText(lineSeparator);
             result.addRawText(css[i]);
-
         }
         return result;
     }
 
-    /** Get an original root element */
+    /** Get an original root element
+     * @return Original element
+     */
     @NotNull
     public Element original() {
         return root;
     }
 
-    /** Returns an Render the HTML code including header. Call the close() method before view */
+    /** Returns an Render the HTML code including header.
+     * @return HTML code
+     */
     @Override @NotNull
-    public String toString() throws IllegalStateException {
+    public String toString() {
         return writer.toString();
     }
 
     @Override
     public void close() throws IllegalStateException {
+        initHeader();
         root.close();
         if (root.internalElement instanceof XmlModel xmlElement) {
             try {
-                final CharSequence doctype = config.getDoctype();
-                final XmlWriter xmlWriter = new XmlWriter(writer
-                        .append(doctype)
-                        .append(doctype.length() == 0 ? "" : config.getNewLine())
-                        , config.getIndentation());
+                final var doctype = config.getDoctype();
+                final var separator = doctype.isEmpty() ? "" : config.getNewLine();
+                final var xmlWriter = new XmlWriter(writer.append(doctype).append(separator), config.getIndentation());
                 xmlElement.toWriter(config.getFirstLevel() + 1, xmlWriter);
             } catch (IOException e) {
                 throw new IllegalStateException(e);
@@ -292,40 +359,35 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
         }
     }
 
-    /** Get config */
+    /** Get config
+     * @return Configuration
+     */
     @NotNull
     public HtmlConfig getConfig() {
         return config;
     }
 
-    /** Get title of configuration */
+    /** Get title of configuration
+     * @return Title
+     */
     public CharSequence getTitle() {
         return getConfig().getTitle();
     }
 
-
     /** Apply body of element by a lambda expression.
-     *
+     * @param builder Builder
+     * @return Exception provider
      * @deprecated Use the method {@link #next(Consumer)} rather.
      */
+    @Deprecated
     @NotNull
     public final ExceptionProvider then(@NotNull final Consumer<AbstractHtmlElement> builder) {
         return next(builder);
     }
 
     /** Add nested elements to the element.
-     *
-     * <h4>Usage</h4>
-     *
-     * <pre class="pre">
-     *  HtmlElement.of(config, writer).addBody()
-     *      .next(body -> {
-     *         body.addHeading(config.getTitle());
-     *      })
-     *      .catche(e -> {
-     *          logger.log(Level.SEVERE, "An error", e);
-     *      });
-     * </pre>
+     * @param builder Lambda expression
+     * @return Exception provider
      */
     @NotNull
     public ExceptionProvider next(@NotNull final Consumer<AbstractHtmlElement> builder) {
@@ -339,117 +401,111 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
         }
     }
 
-    // ------- Static methods ----------
+    // ------- Static factory methods ----------
 
-    /** Create a root element for a required element name. The MAIN factory method. */
+    /** Create a root element
+     * @param writer Writer
+     * @param myConfig Configuration
+     * @return HtmlElement instance
+     */
     @NotNull
-    public static HtmlElement of(
-            @NotNull final Appendable writer,
-            @NotNull final HtmlConfig myConfig
-    ) throws IllegalStateException {
-        HtmlConfig config = myConfig != null ? myConfig : new DefaultHtmlConfig();
-        //config.setNiceFormat();
-        //config.setCssLinks(cssLinks);
-
-        final ApiElement root = config.isDocumentObjectModel()
+    public static HtmlElement of(@NotNull final Appendable writer, @Nullable final HtmlConfig myConfig) {
+        final var config = myConfig != null ? myConfig : new DefaultHtmlConfig();
+        final ApiElement rootElement = config.isDocumentObjectModel()
                 ? new XmlModel(config.getRootElementName())
                 : new XmlBuilder(config.getRootElementName(), new XmlPrinter(writer, config), config.getFirstLevel());
-        final HtmlElement result = new HtmlElement(root, config, writer);
-        if (config.isHtmlHeaderRequest()) {
-            config.getLanguage().ifPresent(lang -> result.setAttribute(A_LANG, lang));
-            result.getHead().addElement(Html.META).setAttribute(A_CHARSET, config.getCharset());
-            result.getHead().addElement(Html.TITLE).addText(config.getTitle());
-            result.addCssLinks(config.getCssLinks());
-            config.getHeaderInjector().write(result.getHead());
 
-            // A deprecated solution:
-            final CharSequence rawHeaderText = config.getRawHeaderText();
-            if (Check.hasLength(rawHeaderText)) {
-                result.getHead().addRawText(config.getNewLine());
-                result.getHead().addRawText(rawHeaderText);
-            }
-        }
-        return result;
+        return new HtmlElement(rootElement, config, writer);
     }
 
-    /** Create root element for a required element name. The MAIN factory method. */
+    /** Create root element
+     * @param context Context
+     * @param myConfig Configuration
+     * @return HtmlElement instance
+     */
     @NotNull
-    public static HtmlElement of(
-            @NotNull final HttpContext context,
-            @NotNull final HtmlConfig myConfig) {
+    public static HtmlElement of(@NotNull final HttpContext context, @Nullable final HtmlConfig myConfig) {
         return of(context.writer(), myConfig);
     }
 
-    /** Create a new instance with empty HTML headers. The MAIN servlet factory method.
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
+    /** Create root element for servlet
+     * @param httpServletResponse Response
+     * @param config Configuration
+     * @return HtmlElement instance
      */
     @NotNull
-    public static HtmlElement ofServlet(
-            @NotNull final Object httpServletResponse,
-            @Nullable final HtmlConfig config) {
+    public static HtmlElement ofServlet(@NotNull final Object httpServletResponse, @Nullable final HtmlConfig config) {
         return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
-    /** Create new instance with empty HTML headers
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
+    /** Create new instance
+     * @param config Configuration
+     * @return HtmlElement instance
      */
     @NotNull
-    public static HtmlElement ofServlet(
-            @NotNull final String title,
-            @NotNull final Object httpServletResponse,
-            @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setTitle(title);
-        config.setCssLinks(cssLinks);
-        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
+    public static HtmlElement of(@Nullable final HtmlConfig config) {
+        return of(new StringBuilder(256), config);
     }
 
-    /** Create new instance with empty HTML headers
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
+    // --- Convenience Factory Methods (Pairs of: of / niceOf) ---
+
+    // 1. Appendable variants
+
+    /** Create new instance
+     * @param title Title
+     * @param response Response
+     * @param cssLinks CSS links
+     * @return HtmlElement instance
      */
     @NotNull
     public static HtmlElement of(@NotNull final CharSequence title, @NotNull final Appendable response, @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        final var config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
         return of(response, config);
     }
 
-    /** Create new instance with empty HTML headers
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
-     */
-    @NotNull
-    public static HtmlElement of(@NotNull final CharSequence title, @NotNull final Appendable response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setTitle(title);
-        config.setCssLinks(cssLinks);
-        return of(response, config);
-    }
-
-    /** Create new instance with empty HTML headers
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
+    /** Create new instance with nice format
+     * @param title Title
+     * @param response Response
+     * @param cssLinks CSS links
+     * @return HtmlElement instance
      */
     @NotNull
     public static HtmlElement niceOf(@NotNull final CharSequence title, @NotNull final Appendable response, @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        final var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
         return of(response, config);
     }
 
-    /** Create new instance with empty HTML headers
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
+    /** Create new instance with charset
+     * @param title Title
+     * @param response Response
+     * @param charset Charset
+     * @param cssLinks CSS links
+     * @return HtmlElement instance
+     */
+    @NotNull
+    public static HtmlElement of(@NotNull final CharSequence title, @NotNull final Appendable response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
+        final var config = HtmlConfig.ofDefault();
+        config.setTitle(title);
+        config.setCharset(charset);
+        config.setCssLinks(cssLinks);
+        return of(response, config);
+    }
+
+    /** Create new instance with nice format and charset
+     * @param title Title
+     * @param response Response
+     * @param charset Charset
+     * @param cssLinks CSS links
+     * @return HtmlElement instance
      */
     @NotNull
     public static HtmlElement niceOf(@NotNull final CharSequence title, @NotNull final Appendable response, @NotNull final Charset charset, @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        final var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setTitle(title);
         config.setCharset(charset);
@@ -457,77 +513,101 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
         return of(response, config);
     }
 
+    // 2. HttpContext variants
 
-
-    /** Create new instance with empty HTML headers
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
+    /** Create new instance
+     * @param title Title
+     * @param context Context
+     * @param cssLinks CSS links
+     * @return HtmlElement instance
      */
     @NotNull
-    public static HtmlElement niceOfResponse(
+    public static HtmlElement of(
             @NotNull final String title,
-            @NotNull final Object httpServletResponse,
+            @NotNull final HttpContext context,
             @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setNiceFormat();
+        final var config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(context.writer(), config);
     }
 
-    /** Create new instance with empty HTML headers
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
-     */
-    @NotNull
-    public static HtmlElement niceOfResponse(
-            @NotNull final Object httpServletResponse,
-            @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setNiceFormat();
-        config.setCssLinks(cssLinks);
-        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
-    }
-
-    /** Create new instance with empty HTML headers
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
+    /** Create new instance with nice format
+     * @param title Title
+     * @param context Context
+     * @param cssLinks CSS links
+     * @return HtmlElement instance
      */
     @NotNull
     public static HtmlElement niceOf(
             @NotNull final String title,
             @NotNull final HttpContext context,
             @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        final var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
         return of(context.writer(), config);
     }
 
-    /** Create new instance with empty HTML headers
-     * @throws IllegalStateException IO exceptions
-     * @see Appendable
+    // 3. Servlet/Response variants
+
+    /** Create new instance for servlet response
+     * @param title Title
+     * @param httpServletResponse Response
+     * @param cssLinks CSS links
+     * @return HtmlElement instance
      */
     @NotNull
-    public static HtmlElement niceOf(
-            @NotNull final String title,
-            @NotNull final Appendable response,
-            @NotNull final CharSequence... cssLinks) {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+    public static HtmlElement ofServlet(@NotNull final String title, @NotNull final Object httpServletResponse, @NotNull final CharSequence... cssLinks) {
+        final var config = HtmlConfig.ofDefault();
+        config.setTitle(title);
+        config.setCssLinks(cssLinks);
+        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
+    }
+
+    /** Create new instance with nice format for servlet response
+     * @param title Title
+     * @param httpServletResponse Response
+     * @param cssLinks CSS links
+     * @return HtmlElement instance
+     */
+    @NotNull
+    public static HtmlElement niceOfResponse(@NotNull final String title, @NotNull final Object httpServletResponse, @NotNull final CharSequence... cssLinks) {
+        final var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(response, config);
+        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
-    /** Create new instance with empty HTML headers
-     * @param config Html configuration
-     * @return An instance of the HtmlPage
-     * @throws IllegalStateException IO exceptions
+    /** Create new instance for servlet response
+     * @param httpServletResponse Response
+     * @param cssLinks CSS links
+     * @return HtmlElement instance
      */
     @NotNull
-    public static HtmlElement of(@Nullable final HtmlConfig config) throws IllegalStateException {
-        return of(new StringBuilder(256), config);
+    public static HtmlElement ofServlet(
+            @NotNull final Object httpServletResponse,
+            @NotNull final CharSequence... cssLinks) {
+        final var config = HtmlConfig.ofDefault();
+        config.setCssLinks(cssLinks);
+        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
     }
+
+    /** Create new instance with nice format for servlet response
+     * @param httpServletResponse Response
+     * @param cssLinks CSS links
+     * @return HtmlElement instance
+     */
+    @NotNull
+    public static HtmlElement niceOfResponse(
+            @NotNull final Object httpServletResponse,
+            @NotNull final CharSequence... cssLinks) {
+        final var config = HtmlConfig.ofDefault();
+        config.setNiceFormat();
+        config.setCssLinks(cssLinks);
+        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
+    }
+
 }
