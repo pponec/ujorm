@@ -42,8 +42,8 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  *
  * <pre class="pre">
  * ServletResponse response = new ServletResponse();
- * try (HtmlElement html = HtmlElement.of(response)) {
- * html.addBody().addHeading("Hello!");
+ * try (HtmlElement html = AbstractHtmlElement.of(response)) {
+ *   html.addBody().addHeading("Hello!");
  * }
  * assertTrue(response.toString().contains("&lt;h1&gt;Hello!&lt;/h1&gt;"));
  * </pre>

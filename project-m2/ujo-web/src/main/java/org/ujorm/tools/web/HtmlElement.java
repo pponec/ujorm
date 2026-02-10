@@ -30,7 +30,7 @@ import java.nio.charset.Charset;
  * <h4>Usage</h4>
  * <pre class="pre">
  *    ServletResponse response = new ServletResponse();
- *    try (HtmlElement html = HtmlElement.of(response)) {
+ *    try (HtmlElement html = AbstractHtmlElement.of(response)) {
  *        try (Element body = html.getBody()) {
  *            body.addHeading("Hello!");
  *            body.addLabel().addText("Active:")
