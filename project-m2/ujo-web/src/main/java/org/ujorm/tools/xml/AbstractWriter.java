@@ -78,12 +78,17 @@ public abstract class AbstractWriter {
     @NotNull
     protected final XmlConfig config;
 
+    /** New line sequences */
+    @NotNull
+    protected final String newLine;
+
+    /** An indentation request */
+    protected final boolean indentationEnabled;
+
     /** Value formatter */
     @NotNull
     private final Formatter formatter;
 
-    /** An indentation request */
-    protected final boolean indentationEnabled;
 
     @NotNull
     private final Appendable writerEscaped = new Appendable() {
@@ -119,8 +124,9 @@ public abstract class AbstractWriter {
     public AbstractWriter(@NotNull final Appendable out, @NotNull final XmlConfig config) {
         this.out = Assert.notNull(out, "out");
         this.config = Assert.notNull(config, "config");
-        this.indentationEnabled = Check.hasLength(config.getIndentation());
         this.formatter = config.getFormatter();
+        this.newLine = config.getNewLine().toString();
+        this.indentationEnabled = Check.hasLength(config.getIndentation());
     }
 
     /** Write escaped value to the output
@@ -217,7 +223,9 @@ public abstract class AbstractWriter {
 
     /** Write a new line with an offset by the current level */
     public void writeNewLine(final int level) throws IOException {
-        out.append(config.getNewLine());
+        if (!newLine.isEmpty()) {
+            out.append(newLine);
+        }
         if (indentationEnabled) {
             for (int i = level; i > 0; i--) {
                 out.append(config.getIndentation());

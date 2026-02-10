@@ -115,6 +115,19 @@
             <version>1.2.9</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- FOR A BENCHMARK -->
+        <dependency>
+            <groupId>com.j2html</groupId>
+            <artifactId>j2html</artifactId>
+            <version>1.6.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xmlet</groupId>
+            <artifactId>htmlflow</artifactId>
+            <version>5.0.3</version>
+        </dependency>
     </dependencies>
 
     <build>

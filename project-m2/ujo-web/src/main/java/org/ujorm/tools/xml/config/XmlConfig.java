@@ -46,9 +46,10 @@ public interface XmlConfig {
     int getFirstLevel();
 
     /**
-     * New line
+     * New line sequence
      * @return the newLine
      */
+    @NotNull
     CharSequence getIndentation();
 
     /** A replacement text instead of the {@code null} value */
