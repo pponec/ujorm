@@ -39,11 +39,14 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  * The root of HTML elements is <b>independent</b> on the Servlet API
  *
  * <h4>Usage</h4>
- *
  * <pre class="pre">
- * ServletResponse response = new ServletResponse();
- * try (HtmlElement html = AbstractHtmlElement.of(response)) {
- *   html.addBody().addHeading("Hello!");
+ * var response = HttpContext.of();
+ * try (var html = AbstractHtmlElement.of(response)) {
+ *     try (var body = html.getBody()) {
+ *         body.addHeading("Hello!");
+ *         body.addLabel().addText("Active:")
+ *             .addCheckBox("active").setCheckBoxValue(true);
+ *     }
  * }
  * assertTrue(response.toString().contains("&lt;h1&gt;Hello!&lt;/h1&gt;"));
  * </pre>

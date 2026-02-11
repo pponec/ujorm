@@ -51,15 +51,15 @@ import org.ujorm.tools.web.ao.Injector;
  *
  * <h4>Usage</h4>
  * <pre class="pre">
- *    ServletResponse response = new ServletResponse();
- *    try (HtmlElement html = AbstractHtmlElement.of(response)) {
- *        try (Element body = html.getBody()) {
- *            body.addHeading("Hello!");
- *            body.addLabel().addText("Active:")
- *                .addCheckBox("active").setCheckBoxValue(true);
- *        }
- *    }
- *    assertTrue(response.toString().contains("&lt;h1&gt;Hello!&lt;/h1&gt;"));
+ * var response = HttpContext.of();
+ * try (var html = AbstractHtmlElement.of(response)) {
+ *     try (var body = html.getBody()) {
+ *         body.addHeading("Hello!");
+ *         body.addLabel().addText("Active:")
+ *             .addCheckBox("active").setCheckBoxValue(true);
+ *     }
+ * }
+ * assertTrue(response.toString().contains("&lt;h1&gt;Hello!&lt;/h1&gt;"));
  * </pre>
  *
  * @see HtmlElement#of(org.ujorm.tools.xml.config.HtmlConfig)
