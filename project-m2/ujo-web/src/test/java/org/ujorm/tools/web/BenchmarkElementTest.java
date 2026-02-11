@@ -18,81 +18,80 @@
 package org.ujorm.tools.web;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.web.request.HttpContext;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import htmlflow.HtmlFlow;
+import java.util.function.Supplier;
+
 import static j2html.TagCreator.*;
 
 /**
  * @author Pavel Ponec
  */
 public class BenchmarkElementTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BenchmarkElementTest.class);
 
     private static final boolean RUN_BENCHMARK = false;
 
     @Test
     public void runBenchmark() {
-        var rows = RUN_BENCHMARK ? 100_000 : 1;
-        var cols = 50;
-        System.out.println("Starting benchmark for " + rows + " rows...");
+        final var config = RUN_BENCHMARK
+                ? Params.ofManyRows()
+                : Params.ofUnitTest();
+        final var configTest = Params.ofUnitTest();
+        LOGGER.info("Starting benchmark for " + config);
 
-        // 1. WARM-UP PHASE
-        warmUp();
+        // 1. Warm-up phase
+        run("Warming", Params.ofWarming(), () -> warmUp(configTest));
 
         // 2. Ujorm Element Benchmark
-        System.gc();
-        var startUjorm = System.currentTimeMillis();
-        var ujormHtml = runUjorm(rows, cols);
-        var endUjorm = System.currentTimeMillis();
-        System.out.println("Ujorm Element: " + format(endUjorm - startUjorm) + " ms (Length: " + format(ujormHtml.toString().length()) + ")");
+        run("Ujorm", config, ()->runUjorm(config));
 
         // 3. j2html Benchmark
-        System.gc();
-        var startJ2 = System.currentTimeMillis();
-        var j2Html = runJ2Html(rows, cols);
-        var endJ2 = System.currentTimeMillis();
-        System.out.println("j2html: " + format(endJ2 - startJ2) + " ms (Length: " + format(j2Html.length()) + ")");
+        run("J2Html", config, ()->runJ2Html(config));
 
         // 4. HtmlFow Benchmark
-        System.gc();
-        var startHF = System.currentTimeMillis();
-        var htmlHF = runHtmlFlow(rows, cols);
-        var endHF = System.currentTimeMillis();
-        System.out.println("htmlFlow: " + format(endHF - startHF) + " ms (Length: " + format(htmlHF.length()) + ")");
+        var niceCode = true; // Nice code has a better performance.
+        if (niceCode) {
+            run("HtmlFlow", config, ()->runHtmlFlowNiceCode(config));
+        } else {
+            run("HtmlFlow", config, ()->runHtmlFlowShortCode(config));
+        }
     }
 
     /** Run Element of the Ujorm framework */
-    private static HttpContext runUjorm(int rowCount, int colCount) {
+    private static String runUjorm(final Params params) {
+        final var htmlConf = (HtmlConfig) HtmlConfig.ofDefault().setCompressedFormat();
         var response = HttpContext.of();
-        var config = HtmlConfig.ofDefault();
-        config.setCompressedFormat();
-        try (var html = AbstractHtmlElement.of(response, config)) {
+        try (var html = AbstractHtmlElement.of(response, htmlConf)) {
             try (var body = html.getBody()) {
                 try (var table = body.addTable()) {
-                    for (int i = 0; i < rowCount; i++) {
+                    for (int i = 0; i < params.rows; i++) {
                         var tr = table.addElement("tr");
-                        for (int j = 0; j < colCount; j++) {
+                        for (int j = 0; j < params.cols; j++) {
                             tr.addElement("td").addText("Data " + i + ":" + j);
                         }
                     }
                 }
             }
         }
-        return response;
+        return response.toString();
     }
 
     /** Run J2Html framework */
-    private static String runJ2Html(int rowCount, int colCount) {
+    private static String runJ2Html(final Params params) {
         var table = table();
         var body = body(h1("Simple user form"), table);
         var head = head(
                 title("Demo"),
                 meta().withCharset("UTF-8")
         );
-        for (int i = 0; i < rowCount; i++) {
+        for (int i = 0; i < params.rows; i++) {
             var tr = tr();
-            for (int j = 0; j < colCount; j++) {
+            for (int j = 0; j < params.cols; j++) {
                 tr.with(td("Data " + i + ":" + j));
             }
             table.with(tr);
@@ -100,21 +99,13 @@ public class BenchmarkElementTest {
         return document(html(head, body));
     }
 
-    /** Run HtmlFlow framework */
-    private static String runHtmlFlow(int rowCount, int colCount) {
-        var niceCode = true; // Nice code has a better performance.
-        return niceCode
-                ? runHtmlFlowNiceCode(rowCount, colCount)
-                : runHtmlFlowShortCode(rowCount, colCount);
-    }
-
     /** Run HtmlFlow framework with Short Code */
-    private static String runHtmlFlowShortCode(int rowCount, int colCount) {
+    private static String runHtmlFlowShortCode(final Params params) {
         var view = HtmlFlow.view(v -> {
             var table = v.html().body().table();
-            for (int i = 0; i < rowCount; i++) {
+            for (int i = 0; i < params.rows; i++) {
                 var tr = table.tr();
-                for (int j = 0; j < colCount; j++) {
+                for (int j = 0; j < params.cols; j++) {
                     tr.td().text("Data " + i + ":" + j).__();
                 }
                 tr.__(); // tr
@@ -124,12 +115,12 @@ public class BenchmarkElementTest {
     }
 
     /** Run HtmlFlow framework with a indented code */
-    private static String runHtmlFlowNiceCode(int rowCount, int colCount) {
+    private static String runHtmlFlowNiceCode(final Params params) {
         var view = HtmlFlow.view(v -> {
             var table = v.html().body().table();
-            for (int i = 0; i < rowCount; i++) {
+            for (int i = 0; i < params.rows; i++) {
                 var tr = table.tr();
-                for (int j = 0; j < colCount; j++) {
+                for (int j = 0; j < params.cols; j++) {
                     tr.td().text("Data " + i + ":" + j).__();
                 }
                 tr.__();
@@ -139,19 +130,46 @@ public class BenchmarkElementTest {
     }
 
     /** Worm Up Phase */
-    private static void warmUp() {
-        int rows = RUN_BENCHMARK ? 100_000 : 1;
-        int cols = 50;
-        for (int i = 0; i < 5; i++) {
-            runUjorm(rows, cols);
-            runJ2Html(rows, cols);
-            runHtmlFlow(rows, cols);
+    private String warmUp(Params params) {
+        runUjorm(params);
+        runJ2Html(params);
+        runHtmlFlowNiceCode(params);
+        return "";
+    }
+
+    /** Run the benchmark */
+    private static void run(final String title, final Params params, final Supplier<String> supplier) {
+        System.gc();
+        var result = "";
+        var startUjorm = System.currentTimeMillis();
+        for (int c = 0; c < params.loops; c++) {
+            result = supplier.get();
         }
+        var endUjorm = System.currentTimeMillis();
+        LOGGER.info("%-8s: %s ms (Length: %s)".formatted(
+                title,  format(endUjorm - startUjorm), format(result.length())));
     }
 
     /** Format number using THIN_NBSP for the thousand separator. */
     private static  String format(long number) {
         return StringUtils.formatSeparator(number);
+    }
+
+    record Params(int cols, int rows, int loops) {
+        static Params ofManyLoops() {
+            return new Params(15, 50, 100_000);
+        }
+        static Params ofManyRows() {
+            return new Params(15, 250_000, 20);
+        }
+        static Params ofUnitTest() {
+            return new Params(15, 1, 1);
+        }
+        static Params ofWarming() {
+            return RUN_BENCHMARK
+                    ? ofManyLoops()
+                    : new Params(15, 3 , 1);
+        }
     }
 
 }

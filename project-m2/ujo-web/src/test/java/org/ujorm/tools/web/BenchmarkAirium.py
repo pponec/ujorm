@@ -36,8 +36,8 @@ def format_number(number: int) -> str:
 
 def main() -> None:
     run_benchmark: bool = True
-    rows: int = 100_000 if run_benchmark else 1
-    cols: int = 50
+    rows: int = 2_500 if run_benchmark else 1
+    cols: int = 15
 
     print(f"Starting benchmark for {format_number(rows)} rows...")
 
