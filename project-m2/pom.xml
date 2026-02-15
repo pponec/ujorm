@@ -26,9 +26,8 @@
                 <module>ujo-tools</module>
                 <module>ujo-core</module>
                 <module>ujo-converter</module>
+                <module>ujo-mapper</module>
                 <module>ujo-orm</module>
-                <module>ujo-spring</module>
-                <module>ujo-wicket</module>
                 <module>ujo-xsd</module>
                 <module>ujo-web</module>
                 <module>ujo-arangodb</module>
