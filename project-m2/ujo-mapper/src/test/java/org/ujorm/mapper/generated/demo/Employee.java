@@ -24,6 +24,7 @@ public class Employee {
     private City city;
     @Column(name = "contract_day")
     private LocalDate contractDay;
-
+    @Column(name = "is_active")
+    private boolean active;
 
 }

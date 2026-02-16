@@ -23,7 +23,8 @@ import java.lang.annotation.Target;
 import java.sql.JDBCType;
 
 /**
- * Use the annotation to mark a Key static field like XML Attribute.
+ * Database column annotation.
+ * @deprecated Annotation is not implemented yet.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.FIELD)

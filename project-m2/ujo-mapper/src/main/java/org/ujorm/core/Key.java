@@ -48,21 +48,30 @@ public interface Key <UJO extends Object,VALUE> extends CharSequence, Comparable
     @NotNull Class<VALUE> getType();
 
     /** Is the value type primitive? */
-    default boolean isPrimitiveType() {
+    default boolean primitiveType() {
         return getType().isPrimitive();
     }
 
     /** Returns a class of the domain Ujo object. */
     @NotNull Class<UJO> getDomainType();
 
+    /** Name of database column */
+    @NotNull String columnName();
+
+    /** Is the database column required? */
+    boolean required();
+
+    /** Is the column primary key ? */
+    boolean primaryKey();
+
     /**
      * It is a basic method for setting an appropriate type safe value to an Ujo object.
      * <br>The method calls a method
-     * {@link Ujo#writeValue(Key, Object)}
+     * {@link Ujo#setValue(Key, Object)}
      * always.
      * @param bean Related Ujo object
      * @param value A value to assign.
-     * @see Ujo#writeValue(Key, Object)
+     * @see Ujo#setValue(Key, Object)
      */
     void setValue(@NotNull UJO bean, @Nullable VALUE value) throws UnsupportedOperationException;
 
@@ -70,7 +79,7 @@ public interface Key <UJO extends Object,VALUE> extends CharSequence, Comparable
      * It is a basic method for getting an appropriate type safe value from an Ujo object.
      * @param bean If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the ujo object.
-     * @see Ujo#readValue(Key)
+     * @see Ujo#getValue(Key)
      * @see #getValue(UJO)
      */
     VALUE getValue(@NotNull UJO bean);
@@ -90,7 +99,7 @@ public interface Key <UJO extends Object,VALUE> extends CharSequence, Comparable
 
     /** Method returns a default value for substitution of the <code>null</code> value for the current key.
      * The feature is purposeful only if the default value is not <code>null</code> and a propert value is <code>null</code> .
-     * @see Ujo#readValue(Key)
+     * @see Ujo#getValue(Key)
      */
     @Nullable
     default VALUE getDefault() {

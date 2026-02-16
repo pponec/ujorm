@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 
 /**
  * Use the annotation to mark a Key static field like XML Attribute.
+ * @deprecated Annotation is not implemented yet.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
@@ -36,7 +37,6 @@ public @interface Table {
     String name() default NULL;
 
     /** Name of schema. If the value is empty than a default database schema is used.
-     * @see Db#schema()
      */
     String schema() default NULL;
 }

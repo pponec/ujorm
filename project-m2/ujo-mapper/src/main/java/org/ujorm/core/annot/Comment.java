@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * Use the annotation to comment a database table or column.<br>
- * In case you are using the database MySQL, please see more information about the column {@link org.ujorm.orm.dialect.MySqlDialect#printComment(org.ujorm.orm.metaModel.MetaColumn, Appendable) implementation }
+ * @deprecated Annotation is not implemented now.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})

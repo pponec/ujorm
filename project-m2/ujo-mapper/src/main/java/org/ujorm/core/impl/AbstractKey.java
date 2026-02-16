@@ -15,6 +15,13 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
     final String name;
     @NonNull
     final Class<V> type;
+    /** Name of database column */
+    @NotNull
+    final String columnName;
+    /** Is the column primary key ? */
+    final boolean isPrimaryKey;
+    /** Is the database column required? */
+    final boolean required;
 
     public final int getIndex() {
         return order;
@@ -36,8 +43,23 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
     }
 
     @Override
-    public final boolean isPrimitiveType() {
+    public final boolean primitiveType() {
         return getType().isPrimitive();
+    }
+
+    @Override
+    public @NotNull String columnName() {
+        return columnName;
+    }
+
+    @Override
+    public boolean primaryKey() {
+        return isPrimaryKey;
+    }
+
+    @Override
+    public boolean required() {
+        return required;
     }
 
     @Override

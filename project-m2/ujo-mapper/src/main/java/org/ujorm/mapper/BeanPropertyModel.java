@@ -1,10 +1,16 @@
 package org.ujorm.mapper;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public record BeanPropertyModel(
@@ -16,114 +22,140 @@ public record BeanPropertyModel(
         String getter,
         /** Missing setter has the NULL value */
         @Nullable
-        String setter
+        String setter,
+        /** Name of database column */
+        String dbColumName,
+        /** Non-null column feature by the JPA annotation */
+        boolean required,
+        /** Database primary key */
+        boolean primaryKey
 ) {
-
-    public boolean isPrimitive() {
-        return propertyType.isPrimitive();
-    }
 
     /**
      * Creates a list of BeanPropertyModel for the given class (Bean or Record).
+     * Parses JPA annotations to populate database column names, primary keys, and nullability.
      *
      * @param beanOrRecord The class to inspect.
      * @return List of property models describing the class attributes.
      */
     @NotNull
     public static List<BeanPropertyModel> of(@NotNull Class<?> beanOrRecord) {
-        var result = new ArrayList<BeanPropertyModel>();
-
         if (beanOrRecord.isRecord()) {
-            for (var component : beanOrRecord.getRecordComponents()) {
-                result.add(new BeanPropertyModel(
-                        component.getName(),
-                        component.getType(),
-                        component.getName(), // Getter name in Record is the component name
-                        null // Records are immutable, so setter is null
-                ));
+            return Arrays.stream(beanOrRecord.getRecordComponents())
+                    .map(c -> {
+                        var field = findField(beanOrRecord, c.getName());
+                        var element = field != null ? field : c;
+                        return createModel(c.getName(), c.getType(), c.getName(), null, element);
+                    })
+                    .toList();
+        }
+
+        var result = new ArrayList<BeanPropertyModel>();
+        for (var field : beanOrRecord.getDeclaredFields()) {
+            if (Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
+                continue;
             }
-        } else {
-            for (var field : beanOrRecord.getDeclaredFields()) {
-                if (Modifier.isStatic(field.getModifiers())) {
-                    continue;
-                }
+            var suffix = capitalize(field.getName());
+            var getter = findGetter(beanOrRecord, field.getType(), suffix);
 
-                var fieldName = field.getName();
-                var fieldType = field.getType();
-                var methodSuffix = capitalize(fieldName);
-
-                // Resolve getter based on boolean logic preference
-                var getterName = resolveGetter(beanOrRecord, fieldType, methodSuffix);
-
-                // Resolve setter
-                var setterName = resolveSetter(beanOrRecord, fieldType, methodSuffix);
-
-                // Only add properties where a getter exists (as getter field is not nullable)
-                if (getterName != null) {
-                    result.add(new BeanPropertyModel(fieldName, fieldType, getterName, setterName));
-                }
+            if (getter != null) {
+                var setter = findMethod(beanOrRecord, "set" + suffix, field.getType());
+                result.add(createModel(field.getName(), field.getType(), getter, setter, field));
             }
+        }
+        if (FieldOrderInspector.revertedOrder()) {
+            Collections.reverse(result);
         }
         return result;
     }
 
     /**
-     * Resolves the getter name with preference for "is" prefix on primitive booleans.
+     * Helper to create the model and extract values from JPA annotations.
      */
-    private static String resolveGetter(Class<?> clazz, Class<?> type, String suffix) {
-        var prefixGet = "get" + suffix;
-        var prefixIs = "is" + suffix;
+    private static BeanPropertyModel createModel(String name, Class<?> type, String getter, String setter, AnnotatedElement element) {
+        var isId = element.isAnnotationPresent(Id.class);
+        var column = element.getAnnotation(Column.class);
+        var joinColumn = element.getAnnotation(JoinColumn.class);
 
-        var hasGet = hasMethod(clazz, prefixGet);
-        var hasIs = hasMethod(clazz, prefixIs);
+        var dbColName = name;
+        var isNonNull = type.isPrimitive() || isId;
 
-        if (type == boolean.class) {
-            // For primitive boolean: prefer "is" if both exist (or if only "is" exists)
-            if (hasIs) {
-                return prefixIs;
-            }
-            return hasGet ? prefixGet : null;
-        } else if (type == Boolean.class) {
-            // For Object Boolean: check both.
-            // Standard convention prefers "get", but we support "is".
-            // If both exist, we stick to standard "get" unless only "is" is found.
-            if (hasGet) {
-                return prefixGet;
-            }
-            return hasIs ? prefixIs : null;
-        } else {
-            // Non-boolean types
-            return hasGet ? prefixGet : null;
+        if (column != null) {
+            if (!column.name().isEmpty()) dbColName = column.name();
+            if (!column.nullable()) isNonNull = true;
+        } else if (joinColumn != null) {
+            if (!joinColumn.name().isEmpty()) dbColName = joinColumn.name();
+            if (!joinColumn.nullable()) isNonNull = true;
         }
+
+        for (var annotation : element.getAnnotations()) {
+            var annotName = annotation.annotationType().getSimpleName();
+            if ("NotNull".equals(annotName) || "NonNull".equals(annotName)) {
+                isNonNull = true;
+            } else if ("Nullable".equals(annotName)) {
+                isNonNull = false;
+            }
+        }
+
+        return new BeanPropertyModel(name, type, getter, setter, dbColName, isNonNull, isId);
     }
 
-    /**
-     * Resolves the setter name.
-     */
-    private static String resolveSetter(Class<?> clazz, Class<?> type, String suffix) {
-        var setterName = "set" + suffix;
-        return hasMethod(clazz, setterName, type) ? setterName : null;
+    private static String findGetter(Class<?> clazz, Class<?> type, String suffix) {
+        var is = "is" + suffix;
+        var get = "get" + suffix;
+        var hasIs = findMethod(clazz, is, (Class<?>[]) null) != null;
+        var hasGet = findMethod(clazz, get, (Class<?>[]) null) != null;
+
+        if (type == boolean.class && hasIs) return is;
+        if (hasGet) return get;
+        return hasIs ? is : null;
     }
 
-    /**
-     * Helper to check if a method exists.
-     */
-    private static boolean hasMethod(Class<?> clazz, String name, Class<?>... parameterTypes) {
+    private static String findMethod(Class<?> clazz, String name, Class<?>... params) {
         try {
-            clazz.getMethod(name, parameterTypes);
-            return true;
+            return clazz.getMethod(name, params).getName();
         } catch (NoSuchMethodException e) {
-            return false;
+            return null;
         }
     }
 
     /**
-     * Helper to capitalize the first letter.
+     * Safely finds a declared field by name.
      */
-    private static String capitalize(String str) {
-        if (str == null || str.isEmpty()) {
-            return str;
+    private static java.lang.reflect.Field findField(Class<?> clazz, String name) {
+        try {
+            return clazz.getDeclaredField(name);
+        } catch (NoSuchFieldException e) {
+            return null;
         }
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    private static String capitalize(String str) {
+        return (str != null && !str.isEmpty())
+                ? Character.toUpperCase(str.charAt(0)) + str.substring(1)
+                : str;
+    }
+
+    public boolean isPrimitive() {
+        return propertyType.isPrimitive();
+    }
+
+    /**
+     * Helper class to detect if the JVM returns fields in reversed order.
+     */
+    public static class FieldOrderInspector {
+        @SuppressWarnings("unused")
+        private int firstField = 1;
+        @SuppressWarnings("unused")
+        private int secondField = 2;
+
+        /** Check if JVM returns fields in reversed order to fixing. */
+         public static boolean revertedOrder() {
+            try {
+                return "secondField".equals(FieldOrderInspector.class.getDeclaredFields()[0].getName());
+            } catch (SecurityException | ArrayIndexOutOfBoundsException ex) {
+                return false;
+            }
+        }
     }
 }

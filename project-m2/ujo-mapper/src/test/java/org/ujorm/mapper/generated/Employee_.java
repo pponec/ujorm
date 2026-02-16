@@ -30,11 +30,11 @@ public class Employee_ extends AbstractMetaModel<Employee> {
         return domainType;
     }
 
-    /** ID key */
+    /** Key id */
     static final class Key_id extends AbstractKey<Employee, Long> {
 
         public Key_id(int order) {
-            super(order, "id", Long.class);
+            super(order, "id", Long.class, "id", true, true);
         }
         @Override
         public void setValue(@NotNull final Employee bean, @Nullable final Long value) {
@@ -50,10 +50,10 @@ public class Employee_ extends AbstractMetaModel<Employee> {
         }
     }
 
-    /** ID key */
+    /** Key name */
     static final class Key_name extends AbstractKey<Employee, String> {
         public Key_name(final int order) {
-            super(order, "name", String.class);
+            super(order, "name", String.class, "name", false, true);
         }
         @Override
         public void setValue(@NotNull final Employee bean, @Nullable final String name) {
@@ -72,7 +72,7 @@ public class Employee_ extends AbstractMetaModel<Employee> {
     /** ID key */
     static final class Key_superior extends AbstractKey<Employee, Employee> {
         public Key_superior(final int order) {
-            super(order, "superior", Employee.class);
+            super(order, "superior", Employee.class, "name", false, false);
         }
 
         @Override
@@ -89,10 +89,10 @@ public class Employee_ extends AbstractMetaModel<Employee> {
         }
     }
 
-    /** ID key */
+    /** ID city */
     static final class Key_city extends AbstractKey<Employee, City> {
         public Key_city(final int order) {
-            super(order, "city", City.class);
+            super(order, "city", City.class, "name", false, true);
         }
         @Override
         public void setValue(@NotNull final  Employee bean, @Nullable final City value) {
@@ -111,7 +111,7 @@ public class Employee_ extends AbstractMetaModel<Employee> {
     /** ID key */
     static final class Key_contractDay extends AbstractKey<Employee, LocalDate> {
         public Key_contractDay(final int order) {
-            super(order, "contractDay", LocalDate.class);
+            super(order, "contractDay", LocalDate.class, "name", false, true);
         }
 
         @Override

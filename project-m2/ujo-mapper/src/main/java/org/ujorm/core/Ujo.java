@@ -27,25 +27,23 @@ import org.jetbrains.annotations.Nullable;
 public interface Ujo<UJO extends Object> {
 
 
-    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
+    /** Common method to reading object value.
      *
      * to external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
      * <br>NOTE: A reaction on an incorrect key depends on the implementation.
      *
-     * @param key The Key must be a direct type only!
      * @return Property value
-     * @see Key#getValue(UJO)
      */
-    Object readValue(@NotNull Key<UJO,?> key);
+    <V> Object getValue(@NotNull Key<UJO,V> key);
 
 
-    /** The Unified Java Object.
+    /** Commit method to assign object value.
      *
      * @param key Property must be a direct type only!
      * @param value Value
      */
-    void writeValue(@NotNull Key<UJO,?> key, @Nullable Object value);
+    <V> void setValue(@NotNull Key<UJO,V> key, @Nullable V value);
 
     /** Returns all direct keys.
      * There is recommended to be a "name" of each key is unique (but it is NOT a necessary condition).

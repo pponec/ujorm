@@ -33,7 +33,7 @@ public class City_ extends AbstractMetaModel<City> {
     static final class Key_id extends AbstractKey<City, Long> {
 
         public Key_id(int order) {
-            super(order, "id", Long.class);
+            super(order, "id", Long.class, "id", true, true);
         }
         @Override
         public void setValue(@NotNull final City bean, @Nullable final Long value) {
@@ -49,10 +49,10 @@ public class City_ extends AbstractMetaModel<City> {
         }
     }
 
-    /** ID key */
+    /** name */
     static final class Key_name extends AbstractKey<City, String> {
         public Key_name(final int order) {
-            super(order, "name", String.class);
+            super(order, "name", String.class, "name", false, true);
         }
         @Override
         public void setValue(@NotNull final City bean, @Nullable final String name) {
@@ -68,10 +68,10 @@ public class City_ extends AbstractMetaModel<City> {
         }
     }
 
-    /** ID key */
+    /** countryCode */
     static final class Key_countryCode extends AbstractKey<City, String> {
         public Key_countryCode(final int order) {
-            super(order, "countryCode", String.class);
+            super(order, "countryCode", String.class, "name", false, true);
         }
 
         @Override
@@ -91,7 +91,7 @@ public class City_ extends AbstractMetaModel<City> {
     /** ID key */
     static final class Key_latitude extends AbstractKey<City, Double> {
         public Key_latitude(final int order) {
-            super(order, "city", Double.class);
+            super(order, "city", Double.class, "name", false, true);
         }
         @Override
         public void setValue(@NotNull final  City bean, @Nullable final Double value) {
@@ -110,7 +110,7 @@ public class City_ extends AbstractMetaModel<City> {
     /** ID key */
     static final class Key_longitude extends AbstractKey<City, Double> {
         public Key_longitude(final int order) {
-            super(order, "longitude", Double.class);
+            super(order, "longitude", Double.class, "name", false, true);
         }
         @Override
         public void setValue(@NotNull final  City bean, @Nullable final Double value) {
