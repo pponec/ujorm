@@ -29,7 +29,7 @@ public enum Operator implements AbstractOperator {
     GT,
     /** Great or equals the value */
     GE,
-    /** Less then the value */
+    /** Less than the value */
     LT,
     /** Less or equals the value */
     LE,
@@ -58,7 +58,6 @@ public enum Operator implements AbstractOperator {
     /** This operator can have their own SQL condition by a SqlDialect solution.
      * <br>If you need to use more operators, I recommend to implement your own class
      * by the interface AbstractOperator and adjust the appropriate SqlDialect.
-     * @see org.ujorm.orm.SqlDialect#getCriterionTemplate(org.ujorm.criterion.ValueCriterion)
      */
     USER,
     /** The operator for an internal use only where a result is

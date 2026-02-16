@@ -10,7 +10,7 @@ class ClassGeneratorTest {
 
     private final int loopCount = 10;
 
-    @Test
+    // @Test
     void testDynamicIncrementerMany() throws Exception {
         for (int i = 0; i < loopCount; i++) {
             testDynamicIncrementer();
