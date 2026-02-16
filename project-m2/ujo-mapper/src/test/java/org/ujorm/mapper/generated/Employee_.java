@@ -108,18 +108,17 @@ public class Employee_ extends AbstractMetaModel<Employee> {
         }
     }
 
-    /** ID key */
     static final class Key_contractDay extends AbstractKey<Employee, LocalDate> {
         public Key_contractDay(final int order) {
-            super(order, "contractDay", LocalDate.class, "name", false, true);
+            super(order, "contractDay", LocalDate.class, "contractDay", false, true);
         }
 
         @Override
-        public void setValue(@NotNull final Employee bean, @Nullable final LocalDate value) {
+        public void setValue(@NotNull Employee bean, @Nullable LocalDate value) {
             bean.setContractDay(value);
         }
         @Override
-        public LocalDate getValue(@NotNull final Employee bean) {
+        public LocalDate getValue(@NotNull Employee bean) {
             return bean.getContractDay();
         }
         @Override

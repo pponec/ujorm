@@ -9,13 +9,16 @@ import org.ujorm.core.Key;
 @RequiredArgsConstructor
 abstract public class AbstractKey<D, V> implements Key<D, V> {
 
+    /** Order of the key with starting at zero. */
     @NonNull
     final int order;
+    /** Simple name of the key */
     @NonNull
     final String name;
+    /** Java type of the key */
     @NonNull
     final Class<V> type;
-    /** Name of database column */
+    /** Database column name */
     @NotNull
     final String columnName;
     /** Is the column primary key ? */

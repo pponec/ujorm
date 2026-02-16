@@ -1,45 +1,60 @@
 package org.ujorm.mapper;
 
 import jakarta.persistence.Table;
-
 import java.util.List;
+import java.util.function.Function;
 
 public record BeanModel(
         /** Class of the beam */
         Class<?> beanClass,
-        /** Type of property from the class field. */
+        /** Name of the database table. */
         String databaseTable,
         /** (Optional) The schema of the table. */
         String databaseSchema,
         /** (Optional) The catalog of the table. */
         String databaseCatalog,
-        /** Name of the getter method */
+        /** List of properties */
         List<BeanPropertyModel> properties
 ) {
+
+    /**
+     * Factory method to create a BeanModel instance.
+     *
+     * @param beanClass The class to inspect.
+     * @return result - The populated BeanModel.
+     */
     public static BeanModel of(Class<?> beanClass) {
-        return new BeanModel (beanClass, getDatabaseTable(beanClass), BeanPropertyModel.of(beanClass));
+        var tableAnnotation = beanClass.getAnnotation(Table.class);
+        var table = getFromTable(tableAnnotation, Table::name,
+                toSnakeCase(beanClass.getSimpleName()));
+        var schema = getFromTable(tableAnnotation, Table::schema, null);
+        var catalog = getFromTable(tableAnnotation, Table::catalog, null);
+        var properties = BeanPropertyModel.of(beanClass);
+        return new BeanModel(beanClass, table, schema, catalog, properties);
     }
 
     /**
-     * Resolves the database table name.
-     * Uses @Table(name="...") if present, otherwise converts the class name to snake_case.
+     * Extracts a value from the Table annotation using the provided extractor.
      *
-     * @param beanClass The class to inspect.
-     * @return The table name.
+     * @param table     The Table annotation (can be null).
+     * @param extractor The function to extract the string value (e.g., Table::name).
+     * @param defaultValue The value to return if the annotation is null or the extracted value is empty.
+     * @return result - The resolved string value.
      */
-    static String getDatabaseTable(Class<?> beanClass) {
-        var table = beanClass.getAnnotation(Table.class);
-        return (table != null && !table.name().isEmpty())
-                ? table.name()
-                : toSnakeCase(beanClass.getSimpleName());
+    private static String getFromTable(Table table, Function<Table, String> extractor, String defaultValue) {
+        var result = (table != null) ? extractor.apply(table) : "";
+        return result.isEmpty()
+            ? defaultValue
+            : result;
     }
 
     /**
      * Converts CamelCase string to snake_case using Regex.
-     * Example: "UserProfile" -> "user_profile"
+     *
+     * @param text The text to convert.
+     * @return result - The converted string.
      */
     static String toSnakeCase(String text) {
         return text.replaceAll("(?<!^)(?=[A-Z])", "_").toLowerCase();
     }
-
 }
