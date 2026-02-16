@@ -56,11 +56,7 @@ import org.ujorm.core.annot.XmlElementBody;
 public interface Ujo {
 
 
-    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
-     * {@link Key#getValue(org.ujorm.Ujo)}
-     * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
-     * <br>NOTE: A reaction on an incorrect key depends on the implementation.
+    /** Write a value from the Ujo.
      *
      * @param key The Key must be a direct type only!
      * @return Property value
@@ -70,11 +66,7 @@ public interface Ujo {
     Object readValue(@NotNull Key<?,?> key);
 
 
-    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
-     * {@link Key#setValue(Ujo,Object)}
-     * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
-     * <br>NOTE: A reaction on an incorrect key depends on the implementation.
+    /** Read a value from the Java Bean.
      *
      * @param key Property must be a direct type only!
      * @param value Value

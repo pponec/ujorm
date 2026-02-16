@@ -58,7 +58,6 @@ public @interface Db {
     /** Default read-only state for all database tables.
      * The parameter value is evaluated in the execution SQL commands type of INSERT, UPDATE, and DELETE.
      * <br>Note, that only the default value FALSE can be overwritten by a table annotation or by a XML config.
-     * @see Table#readOnly()
      */
     boolean readOnly() default false;
     /** Parameter to control how the DLL (Data Definition Language) statements will be used

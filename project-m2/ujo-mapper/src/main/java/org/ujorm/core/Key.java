@@ -47,65 +47,42 @@ public interface Key <UJO extends Object,VALUE> extends CharSequence, Comparable
     /** Returns a class of the current key. */
     @NotNull Class<VALUE> getType();
 
+    /** Is the value type primitive? */
+    default boolean isPrimitiveType() {
+        return getType().isPrimitive();
+    }
+
     /** Returns a class of the domain Ujo object. */
     @NotNull Class<UJO> getDomainType();
 
-    /** Returns a container of the Key field. */
-    // public Class<?> getContainerType(); // TODO (?)
-
     /**
      * It is a basic method for setting an appropriate type safe value to an Ujo object.
      * <br>The method calls a method
      * {@link Ujo#writeValue(Key, Object)}
      * always.
-     * @param ujo Related Ujo object
+     * @param bean Related Ujo object
      * @param value A value to assign.
      * @see Ujo#writeValue(Key, Object)
      */
-    void setValue(@NotNull UJO ujo, @Nullable VALUE value);
-
-    /**
-     * TODO: Is it really the good idea to extend the interface with this method ?
-     * It is a basic method for setting an appropriate type safe value to an Ujo object.
-     * <br>The method calls a method
-     * {@link Ujo#writeValue(Key, Object)}
-     * always.
-     * @param ujo Related Ujo object
-     * @param value A value to assign.
-     * @param createRelations create related UJO objects in case of the composite key
-     * @throws ValidationException can be throwed from an assigned input validator{@link Validator};
-     * @see Ujo#writeValue(Key, Object)
-     */
-//    public void setValue(UJO ujo, VALUE value, boolean createRelations) throws ValidationException;
-
-    /**
-     * A shortcut for the method {@link #of(UJO)}.
-     */
-    VALUE getValue(@NotNull UJO ujo);
+    void setValue(@NotNull UJO bean, @Nullable VALUE value) throws UnsupportedOperationException;
 
     /**
      * It is a basic method for getting an appropriate type safe value from an Ujo object.
-     * <br>The method calls a method
-     * {@link Ujo#writeValue(Key, Object)}
-     * always.
-     * <br>Note: this method replaces the value of <strong>null</strong> by default
-     * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
+     * @param bean If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the ujo object.
      * @see Ujo#readValue(Key)
      * @see #getValue(UJO)
      */
-    VALUE of(@NotNull UJO ujo);
+    VALUE getValue(@NotNull UJO bean);
 
+    /**
+     * An alias for the method {@link #of(UJO)}.
+     */
+    default VALUE of(@NotNull final UJO ujo) {
+        return getValue(ujo);
+    };
 
-//    /**
-//     * Similar function like getValue(UJO), however in case a null parameter is used so the result value is null and no NullPointerExeption is throwed.
-//     * @param ujo If a null parameter is used then the null value is returned.
-//     * @return Returns a type safe value from the ujo object.
-//     * @see #getValue(Ujo)
-//     */
-//    public VALUE takeFrom(UJO ujo);
-
-    /** Returns a key index or value -1 if the key index is not defined.
+    /** Returns a key index .
      * <br>The index is reasonable for an implementation an <code>ArrayUjo</code> class and the value is used is used
      * <br>for a sorting of Keys in a method <code>UjoManager.readProperties(Class type)</code> .
      */
@@ -115,82 +92,41 @@ public interface Key <UJO extends Object,VALUE> extends CharSequence, Comparable
      * The feature is purposeful only if the default value is not <code>null</code> and a propert value is <code>null</code> .
      * @see Ujo#readValue(Key)
      */
-    @Nullable VALUE getDefault();
-
-
-    /** Indicates whether a parameter value of the ujo "equal to" this key default value. */
-    boolean isDefault(@NotNull UJO ujo);
-
-    /**
-     * Returns the {@code true}:
-     * <ul>
-     *   <li>For adirect Key: if argument is the same.</li>
-     *   <li>For a composite Key: if all items are the same.</li>
-     * </ul>
-     * Note: Any Alias names are ignored, there is necessary to use another comparator for it.
-     * @param key A checked {@link CompositeKey} implementation
-     */
-    @Override
-    boolean equals(final Object key);
-
-    /**
-     * Returns true, if the key value equals to a parameter value. The key value can be null.
-     *
-     * @param ujo A basic Ujo.
-     * @param value Null value is supported.
-     * @return Accordance
-     */
-    boolean equals(@NotNull UJO ujo, @Nullable VALUE value);
-
-    /**
-     * Returns true, if the key name equals to the parameter value.
-     * @param name The name of a key
-     */
-    boolean equalsName(@Nullable CharSequence name);
-
-    /**
-     * The composite key is an instance of CompositeKey.
-     * It this key is the a direct key of a related UJO class then this method returns the TRUE value.
-     * All composite keys are excluded from from list {@link Ujo#readKeys()} by default
-     * <br>
-     * Note:
-     * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
-     * @see CompositeKey
-     * @since 1.36
-     */
-    boolean isComposite();
+    @Nullable
+    default VALUE getDefault() {
+        return null;
+    }
 
     /** Returns true if the key type is a type or subtype of the parameter class. */
-    boolean isTypeOf(@NotNull Class type);
+    default boolean isTypeOf(@NotNull final Class type) {
+        return getType().isAssignableFrom(type);
+    }
 
     /** Returns true if the domain type is a type or subtype of the parameter class. */
-    boolean isDomainOf(@NotNull Class type);
+    default boolean isDomainOf(@NotNull final Class type) {
+        return getDomainType().isAssignableFrom(type);
+    }
 
-    /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
-    void copy(@NotNull UJO from, @NotNull UJO to);
-
-    /** Compare to another Key object by the index and name of the Key.
-     * @since 1.20
-     */
     @Override
-    int compareTo(@NotNull Key p);
+    default int length() {
+        return getName().length();
+    }
 
-    /** Returns the name of the Key without domain class.<br>
-     * If an implementation provides the attribute called 'alias', so the alias name name
-     * is showed after the name separated by the slash pattern along the pattern: {@code RELATION[aliasName] }.
     @Override
-    public String toString();
+    default char charAt(final int index) {
+        return getName().charAt(index);
+    }
 
-    /** Returns the full name of the Key including a simple domain class and aliases.
-     * <br>Example: Person.ID */
-    @NotNull String toStringFull();
+    @Override
+    @NotNull
+    default CharSequence subSequence(final int start, final int end) {
+        return getName().subSequence(start, end);
+    }
 
-    /**
-     * Returns the full name of the Key including all attributes.
-     * <br>Example: Person.id {index=0, ascending=false, ...}
-     * @param extended arguments false calls the method {@link #getFullName()} only.
-     * @return the full name of the Key including all attributes.
-     */
-    String toStringFull(boolean extended);
-
+    @Override
+    default int compareTo(@NotNull final Key o) {
+        final var i1 = this.getIndex();
+        final var i2 = o.getIndex();
+        return i1 < i2 ? -1 : i1 == i2 ? 0 : 1;
+    }
 }

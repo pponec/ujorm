@@ -89,8 +89,4 @@ public interface ListKey<UJO extends Object, ITEM> extends Key<UJO,List<ITEM>> {
      */
     boolean removeItem(@NotNull UJO ujo, @NotNull ITEM value);
 
-    /** Indicates whether a list of items is null or empty. */
-    @Override
-    boolean isDefault(@NotNull UJO ujo);
-
 }
