@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.function.Function;
 
 public record DomainModel(
-        /** Class of the beam */
-        Class<?> beanClass,
+        /** Data class of the bean or record. */
+        Class<?> domainClass,
         /** Name of the database table. */
         String databaseTable,
         /** (Optional) The schema of the table. */

@@ -11,11 +11,12 @@ public class JavaSourceGenerator {
 
     public String getSourceCode(DomainModel meta) {
         var writer = new StringWriter(256);
+        var record = meta.domainClass().isRecord();
         var params = new HashMap<String, Object>();
         {
-            params.put("package", PACKAGE_PREFIX + meta.beanClass().getPackageName());
-            params.put("generatedClass", meta.beanClass().getSimpleName() + "_");
-            params.put("domainType", meta.beanClass().getName());
+            params.put("package", PACKAGE_PREFIX + meta.domainClass().getPackageName());
+            params.put("generatedClass", meta.domainClass().getSimpleName() + "_");
+            params.put("domainType", meta.domainClass().getName());
             params.put("generatorClass", getClass().getSimpleName());
             params.put("generatorPackage", getClass().getPackageName());
         }
@@ -111,7 +112,7 @@ public class JavaSourceGenerator {
                 params.put("required", prop.required());
                 params.put("column", prop.dbColumName());
 
-                params.put("domainType", meta.beanClass().getName());
+                params.put("domainType", meta.domainClass().getName());
             }
             MessageService.formatMsg(template, params, writer);
         }
