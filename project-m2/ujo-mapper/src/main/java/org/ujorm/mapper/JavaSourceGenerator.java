@@ -38,7 +38,7 @@ public class JavaSourceGenerator {
                      );
                 }
                 @Override
-                public ${domainType} newDomain(@NotNull final Object... values) {
+                public ${domainType} newDomain(@NotNull Object... values) {
                 """;
         var templateBeg3bean = """
                 final var result = new ${domainType}();
@@ -125,13 +125,14 @@ public class JavaSourceGenerator {
 
     private void buildRecordConstructorMaker(DomainModel meta, StringWriter writer) {
         var offset = " ".repeat(4);
+        var domainClass = meta.domainClass().getName();
         writer.append(offset).append("values = normalizePrimitives(values);\n");
         for(int i = 0, max = meta.properties().size(); i < max; ++i) {
             var row = (i == 0)
-                    ? "return new City( (%s) values[%s]"
+                    ? "return new " + domainClass + "( (%s) values[%s]"
                     : "               , (%s) values[%s]";
             writer.append(offset)
-                    .append(row.formatted(meta.properties().get(i).propertyObjectType(), i))
+                    .append(row.formatted(meta.properties().get(i).propertyObjectType().getName(), i))
                     .append("\n");
         }
     }
