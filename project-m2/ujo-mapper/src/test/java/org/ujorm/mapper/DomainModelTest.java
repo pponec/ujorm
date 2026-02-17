@@ -4,7 +4,7 @@ import jakarta.persistence.Table;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class BeanModelTest {
+class DomainModelTest {
 
     /**
      * Test resolving all attributes from the @Table annotation.
@@ -12,19 +12,19 @@ class BeanModelTest {
     @Test
     void testTableAnnotationAttributes() {
         // Case 1: Fully annotated entity
-        var model = BeanModel.of(FullAnnotatedEntity.class);
+        var model = DomainModel.of(FullAnnotatedEntity.class);
         assertEquals("custom_table", model.databaseTable());
         assertEquals("my_schema", model.databaseSchema());
         assertEquals("my_catalog", model.databaseCatalog());
 
         // Case 2: Partially annotated (only name)
-        var partialModel = BeanModel.of(PartialAnnotatedEntity.class);
+        var partialModel = DomainModel.of(PartialAnnotatedEntity.class);
         assertEquals("only_name", partialModel.databaseTable());
         assertNull(partialModel.databaseSchema(), "Schema should be null if not provided");
         assertNull(partialModel.databaseCatalog(), "Catalog should be null if not provided");
 
         // Case 3: Annotation present but empty strings (JPA default)
-        var emptyModel = BeanModel.of(EmptyAnnotatedEntity.class);
+        var emptyModel = DomainModel.of(EmptyAnnotatedEntity.class);
         assertEquals("empty_annotated_entity", emptyModel.databaseTable(), "Should fallback to snake_case");
         assertNull(emptyModel.databaseSchema());
         assertNull(emptyModel.databaseCatalog());
@@ -36,15 +36,15 @@ class BeanModelTest {
     @Test
     void getDatabaseTable() {
         // Case 1: Class with explicit @Table annotation
-        var modelWithAnnotation = BeanModel.of(AnnotatedEntity.class);
+        var modelWithAnnotation = DomainModel.of(AnnotatedEntity.class);
         assertEquals("my_custom_table", modelWithAnnotation.databaseTable());
 
         // Case 2: Class without annotation (fallback to snake_case)
-        var modelWithoutAnnotation = BeanModel.of(UserProfile.class);
+        var modelWithoutAnnotation = DomainModel.of(UserProfile.class);
         assertEquals("user_profile", modelWithoutAnnotation.databaseTable());
 
         // Case 3: Record without annotation
-        var recordModel = BeanModel.of(SimpleRecord.class);
+        var recordModel = DomainModel.of(SimpleRecord.class);
         assertEquals("simple_record", recordModel.databaseTable());
     }
 
@@ -53,7 +53,7 @@ class BeanModelTest {
      */
     @Test
     void toSnakeCase() throws Exception {
-        var toSnakeCase = BeanModel.class.getDeclaredMethod("toSnakeCase", String.class);
+        var toSnakeCase = DomainModel.class.getDeclaredMethod("toSnakeCase", String.class);
         toSnakeCase.setAccessible(true);
 
         assertEquals("user_profile", toSnakeCase.invoke(null, "UserProfile"));

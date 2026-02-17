@@ -4,7 +4,7 @@ import jakarta.persistence.Table;
 import java.util.List;
 import java.util.function.Function;
 
-public record BeanModel(
+public record DomainModel(
         /** Class of the beam */
         Class<?> beanClass,
         /** Name of the database table. */
@@ -14,7 +14,7 @@ public record BeanModel(
         /** (Optional) The catalog of the table. */
         String databaseCatalog,
         /** List of properties */
-        List<BeanPropertyModel> properties
+        List<DomainPropertyModel> properties
 ) {
 
     /**
@@ -23,14 +23,14 @@ public record BeanModel(
      * @param beanClass The class to inspect.
      * @return result - The populated BeanModel.
      */
-    public static BeanModel of(Class<?> beanClass) {
+    public static DomainModel of(Class<?> beanClass) {
         var tableAnnotation = beanClass.getAnnotation(Table.class);
         var table = getFromTable(tableAnnotation, Table::name,
                 toSnakeCase(beanClass.getSimpleName()));
         var schema = getFromTable(tableAnnotation, Table::schema, null);
         var catalog = getFromTable(tableAnnotation, Table::catalog, null);
-        var properties = BeanPropertyModel.of(beanClass);
-        return new BeanModel(beanClass, table, schema, catalog, properties);
+        var properties = DomainPropertyModel.of(beanClass);
+        return new DomainModel(beanClass, table, schema, catalog, properties);
     }
 
     /**

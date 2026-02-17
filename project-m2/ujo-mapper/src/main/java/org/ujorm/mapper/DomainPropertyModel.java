@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public record BeanPropertyModel(
+public record DomainPropertyModel(
         /** Name of property from the class field. */
         String propertyName,
         /** Type of property from the class field. */
@@ -39,7 +39,7 @@ public record BeanPropertyModel(
      * @return List of property models describing the class attributes.
      */
     @NotNull
-    public static List<BeanPropertyModel> of(@NotNull Class<?> beanOrRecord) {
+    public static List<DomainPropertyModel> of(@NotNull Class<?> beanOrRecord) {
         if (beanOrRecord.isRecord()) {
             return Arrays.stream(beanOrRecord.getRecordComponents())
                     .map(c -> {
@@ -50,7 +50,7 @@ public record BeanPropertyModel(
                     .toList();
         }
 
-        var result = new ArrayList<BeanPropertyModel>();
+        var result = new ArrayList<DomainPropertyModel>();
         for (var field : beanOrRecord.getDeclaredFields()) {
             if (Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
                 continue;
@@ -72,7 +72,7 @@ public record BeanPropertyModel(
     /**
      * Helper to create the model and extract values from JPA annotations.
      */
-    private static BeanPropertyModel createModel(String name, Class<?> type, String getter, String setter, AnnotatedElement element) {
+    private static DomainPropertyModel createModel(String name, Class<?> type, String getter, String setter, AnnotatedElement element) {
         var isId = element.isAnnotationPresent(Id.class);
         var column = element.getAnnotation(Column.class);
         var joinColumn = element.getAnnotation(JoinColumn.class);
@@ -97,7 +97,7 @@ public record BeanPropertyModel(
             }
         }
 
-        return new BeanPropertyModel(name, type, getter, setter, dbColName, isNonNull, isId);
+        return new DomainPropertyModel(name, type, getter, setter, dbColName, isNonNull, isId);
     }
 
     private static String findGetter(Class<?> clazz, Class<?> type, String suffix) {

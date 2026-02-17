@@ -10,14 +10,14 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BeanPropertyModelTest {
+class DomainPropertyModelTest {
 
     /**
      * Test mapping for a standard Java Bean with JPA annotations.
      */
     @Test
     void ofBean() {
-        var properties = BeanPropertyModel.of(Employee.class);
+        var properties = DomainPropertyModel.of(Employee.class);
 
         // Check total count of properties
         assertEquals(6, properties.size());
@@ -70,7 +70,7 @@ class BeanPropertyModelTest {
      */
     @Test
     void ofRecord() {
-        var properties = BeanPropertyModel.of(City.class);
+        var properties = DomainPropertyModel.of(City.class);
 
         // Check total count of components
         assertEquals(5, properties.size());
@@ -111,7 +111,7 @@ class BeanPropertyModelTest {
      * @return The found BeanPropertyModel.
      * @throws NoSuchElementException if the property is not found.
      */
-    private BeanPropertyModel findProperty(List<BeanPropertyModel> properties, String name) {
+    private DomainPropertyModel findProperty(List<DomainPropertyModel> properties, String name) {
         return properties.stream()
                 .filter(p -> p.propertyName().equals(name))
                 .findFirst()
