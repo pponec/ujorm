@@ -39,20 +39,23 @@ public class JavaSourceGenerator {
                 }
                 @Override
                 public ${domainType} newDomain(@NotNull final Object... values) {
-                    final var result = new ${domainType}();
-                    for (int i = 0, max = Math.min(values.length, keyList.size()); i < max; i++) {
-                        final var key = (Key<${domainType}, Object>) keyList.get(i);
-                        key.setValue(result, values[i]);
-                    }
-                    return result;
+                """;
+        var templateBeg3bean = """
+                final var result = new ${domainType}();
+                for (int i = 0, max = Math.min(values.length, keyList.size()); i < max; i++) {
+                    final var key = (Key<${domainType}, Object>) keyList.get(i);
+                    key.setValue(result, values[i]);
+                }
+                return result;
+                """.indent(4);
+        var templateBeg4 = """
                 }
                 @NotNull
                 public Class<${domainType}> getDomainType() {
                     return domainType;
                 }
                 """;
-
-        var templateMid = """           
+        var templateKey = """           
                 /** Key ${propName} */
                 static final class Key_${propName} extends AbstractKey<${domainType}, ${propObjectType}> {
                     public Key_${propName}(final int order) {
@@ -77,7 +80,9 @@ public class JavaSourceGenerator {
         MessageService.formatMsg(templateBeg1, params, writer);
         buildConstructor(meta, writer);
         MessageService.formatMsg(templateBeg2, params, writer);
-        buildInnerKeys(templateMid, meta, writer);
+        MessageService.formatMsg(templateBeg3bean, params, writer);
+        MessageService.formatMsg(templateBeg4, params, writer);
+        buildInnerKeys(templateKey, meta, writer);
         MessageService.formatMsg(templateEnd, params, writer);
         return writer.toString();
     }

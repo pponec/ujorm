@@ -23,7 +23,6 @@ public class City_ extends AbstractMetaModel<City> {
 
     }
 
-
     @Override
     public City newDomain(@NotNull Object... values) {
         values = normalizePrimitives(values);
