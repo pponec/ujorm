@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.ujorm.mapper.demo.Employee;
 
-class JavaSourceGeneratorTest {
+class JavaSourceGeneratorBeanTest {
 
     private final boolean printResult = false;
 
