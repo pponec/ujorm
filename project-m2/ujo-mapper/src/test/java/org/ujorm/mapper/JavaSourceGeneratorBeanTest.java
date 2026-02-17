@@ -18,6 +18,12 @@ class JavaSourceGeneratorBeanTest {
         assertContains("public class Employee_ extends AbstractMetaModel<org.ujorm.mapper.demo.Employee> {", src);
         assertContains("super( new Key_id(0)", src);
         assertContains(", new Key_name(1)", src);
+
+        assertContains("public org.ujorm.mapper.demo.Employee newDomain(@NotNull Object... values) {", src);
+        assertContains("final var result = new org.ujorm.mapper.demo.Employee();", src);
+        assertContains("for (int i = 0, max = Math.min(values.length, keyList.size()); i < max; i++) {", src);
+        assertContains("final var key = (Key<org.ujorm.mapper.demo.Employee, Object>) keyList.get(i);", src);
+
         assertContains("static final class Key_id extends AbstractKey<org.ujorm.mapper.demo.Employee, java.lang.Long> {", src);
         assertContains("super(order, \"id\", java.lang.Long.class, \"id\", true, true);", src);
         assertContains("public void setValue(@NotNull final org.ujorm.mapper.demo.Employee bean, @Nullable final java.lang.Long value) {", src);
