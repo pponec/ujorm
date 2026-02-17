@@ -27,8 +27,8 @@ class DomainPropertyModelTest {
         assertEquals(Long.class, idProp.propertyType());
         assertEquals("getId", idProp.getter());
         assertEquals("setId", idProp.setter());
-        assertFalse(idProp.isPrimitive());
         assertEquals("id", idProp.dbColumName());
+        assertFalse(idProp.isPrimitive());
         assertTrue(idProp.primaryKey());
         assertTrue(idProp.required());
         assertSame(idProp, properties.get(0), "The first field is expected on the first position");
@@ -38,6 +38,7 @@ class DomainPropertyModelTest {
         assertEquals(String.class, nameProp.propertyType());
         assertEquals("name", nameProp.dbColumName());
         assertFalse(nameProp.primaryKey());
+        assertTrue(nameProp.required());
 
         // Test "superior" property (Object relation, JoinColumn, Nullable)
         var superiorProp = findProperty(properties, "superior");
@@ -56,12 +57,13 @@ class DomainPropertyModelTest {
         assertEquals("setContractDay", dateProp.setter());
         assertEquals("contract_day", dateProp.dbColumName()); // Value from @Column
         assertFalse(dateProp.primaryKey());
-
+        assertTrue(dateProp.required());
 
         // Test "active" property (CamelCase field, snake_case DB column via Annotation)
         var activeProp = findProperty(properties, "active");
         assertEquals("isActive", activeProp.getter());
         assertEquals("setActive", activeProp.setter());
+        assertTrue(activeProp.required());
         assertSame(activeProp, properties.get(properties.size() - 1), "The first field is expected on the first position");
     }
 
@@ -88,11 +90,13 @@ class DomainPropertyModelTest {
         assertEquals("name", nameProp.getter());
         assertNull(nameProp.setter());
         assertEquals("name", nameProp.dbColumName());
+        assertTrue(nameProp.required());
 
         // Test "countryCode" component (Explicit @Column name)
         var codeProp = findProperty(properties, "countryCode");
         assertEquals("country_code", codeProp.dbColumName());
         assertEquals("countryCode", codeProp.getter());
+        assertTrue(codeProp.required());
 
         // Test "latitude" component (No annotation -> fallback to field name)
         var latProp = findProperty(properties, "latitude");
@@ -100,7 +104,7 @@ class DomainPropertyModelTest {
         assertFalse(latProp.primaryKey());
         assertTrue(latProp.required()); // Double wrapper is not nullable
         assertNull(latProp.setter());
-
+        assertTrue(latProp.required());
     }
 
     /**
