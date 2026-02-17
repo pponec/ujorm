@@ -7,7 +7,7 @@ import org.ujorm.mapper.demo.Employee;
 
 class JavaSourceGeneratorRecordTest {
 
-    private final boolean printResult = true;
+    private final boolean printResult = false;
 
     @Test
     void getSourceCode() {
@@ -15,20 +15,22 @@ class JavaSourceGeneratorRecordTest {
         var src = new JavaSourceGenerator().getSourceCode(meta);
 
         if (printResult) System.out.println(src);
-//        assertContains("package org.ujorm.gen_.org.ujorm.mapper.demo;", src);
-//        assertContains("public class Employee_ extends AbstractMetaModel<org.ujorm.mapper.demo.Employee> {", src);
-//        assertContains("super( new Key_id(0)", src);
-//        assertContains(", new Key_name(1)", src);
-//        assertContains("static final class Key_id extends AbstractKey<org.ujorm.mapper.demo.Employee, java.lang.Long> {", src);
-//        assertContains("super(order, \"id\", java.lang.Long.class, \"id\", true, true);", src);
-//        assertContains("public void setValue(@NotNull final org.ujorm.mapper.demo.Employee bean, @Nullable final java.lang.Long value) {", src);
-//        assertContains("bean.setId(value != null ? value : defaultValue);", src);
-//        assertContains("public java.lang.Long getValue(@NotNull final org.ujorm.mapper.demo.Employee bean) {", src);
-//        assertContains("return bean.getId();", src);
-//        assertContains("public @NotNull Class<org.ujorm.mapper.demo.Employee> getDomainType() {", src);
+        assertContains("package org.ujorm.gen_.org.ujorm.mapper.demo", src);
+        assertContains("public class City_ extends AbstractMetaModel<org.ujorm.mapper.demo.City> {", src);
+        assertContains("super( new Key_id(0)", src);
+        assertContains(", new Key_countryCode(2)", src);
 
-//        var clazz = new ClassGenerator().createClass(src);
-//        Assertions.assertNotNull(clazz);
+        assertContains("public org.ujorm.mapper.demo.City newDomain(@NotNull Object... values) {", src);
+        assertContains("values = normalizePrimitives(values);", src);
+        assertContains("return new org.ujorm.mapper.demo.City", src);
+        assertContains(", (java.lang.String) values[1]", src);
+
+        assertContains("static final class Key_id extends AbstractKey<org.ujorm.mapper.demo.City, java.lang.Long> {", src);
+        assertContains("super(order, \"id\", java.lang.Long.class, \"id\", true, true);", src);
+        assertContains("throw unsupportedSetter(this);", src);
+
+        var clazz = new ClassGenerator().createClass(src);
+        Assertions.assertNotNull(clazz);
     }
 
     private void assertContains(String code, String src) {
