@@ -7,9 +7,10 @@ class JavaSourceGeneratorTest {
 
     @Test
     void getSourceCode() {
+        var meta = DomainModel.of(Employee.class);
+        var src = new JavaSourceGenerator().getSourceCode(meta);
 
-        DomainModel.of(Employee.class);
-        var meta = "";
+        System.out.println(src);
 
     }
 }

@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class JavaSourceGenerator {
 
-    private final String PACKAGE_PREFIX = "org.ujorm.gen.";
+    private final String PACKAGE_PREFIX = "org.ujorm.gen_.";
 
     public String getSourceCode(DomainModel meta) {
         var writer = new StringWriter(256);
@@ -85,7 +85,7 @@ public class JavaSourceGenerator {
                     ? "super( new Key_%s(%s)"
                     : "     , new Key_%s(%s)";
             writer.append("        ")
-                  .append(row.formatted(meta.properties().get(i), i))
+                  .append(row.formatted(meta.properties().get(i).propertyName(), i))
                   .append("\n");
         }
     }
