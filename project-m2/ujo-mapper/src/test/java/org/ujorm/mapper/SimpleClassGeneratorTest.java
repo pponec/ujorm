@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 
-class ClassGeneratorTest {
+class SimpleClassGeneratorTest {
 
     private final int loopCount = 10;
 
