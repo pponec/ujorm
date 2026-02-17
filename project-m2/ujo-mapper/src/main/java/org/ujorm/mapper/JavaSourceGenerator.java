@@ -124,16 +124,17 @@ public class JavaSourceGenerator {
     }
 
     private void buildRecordConstructorMaker(DomainModel meta, StringWriter writer) {
-        var offset = " ".repeat(4);
+        var offset1 = " ".repeat(4);
+        var offset2 = " ".repeat(9);
         var domainClass = meta.domainClass().getName();
-        writer.append(offset).append("values = normalizePrimitives(values);\n");
+        writer.append(offset1).append("values = normalizePrimitives(values);\n");
+        writer.append(offset1).append("return new ").append(domainClass).append("\n");
         for(int i = 0, max = meta.properties().size(); i < max; ++i) {
-            var row = (i == 0)
-                    ? "return new " + domainClass + "( (%s) values[%s]"
-                    : "               , (%s) values[%s]";
-            writer.append(offset)
-                    .append(row.formatted(meta.properties().get(i).propertyObjectType().getName(), i))
-                    .append("\n");
+            var sep = (i == 0) ? '(' : ',';
+            var type = meta.properties().get(i).propertyObjectType().getName();
+            var row = "%s (%s) values[%s]\n".formatted(sep, type, i);
+            writer.append(offset2).append(row);
         }
+        writer.append(offset2).append(");\n");
     }
 }
