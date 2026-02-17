@@ -102,8 +102,8 @@ public class JavaSourceGenerator {
                 params.put("propObjectType", prop.propertyObjectType().getName());
                 params.put("getter", prop.getter());
                 params.put("setter", prop.setter());
-                params.put("primaryKey", prop.primaryKey()); // todo: rename
-                params.put("required", prop.required()); // todo: rename
+                params.put("primaryKey", prop.primaryKey());
+                params.put("required", prop.required());
                 params.put("column", prop.dbColumName());
 
                 params.put("domainType", meta.beanClass().getName());
