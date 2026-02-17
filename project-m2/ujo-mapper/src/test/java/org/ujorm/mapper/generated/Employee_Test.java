@@ -3,8 +3,8 @@ package org.ujorm.mapper.generated;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.Key;
-import org.ujorm.mapper.generated.demo.City;
-import org.ujorm.mapper.generated.demo.Employee;
+import org.ujorm.mapper.demo.City;
+import org.ujorm.mapper.demo.Employee;
 import java.time.LocalDate;
 
 class Employee_Test {

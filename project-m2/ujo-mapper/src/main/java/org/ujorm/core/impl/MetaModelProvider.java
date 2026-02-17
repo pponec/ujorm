@@ -3,7 +3,6 @@ package org.ujorm.core.impl;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.mapper.ClassGenerator;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MetaModelProvider {

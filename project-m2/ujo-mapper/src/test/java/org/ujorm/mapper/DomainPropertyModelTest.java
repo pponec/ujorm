@@ -1,8 +1,8 @@
 package org.ujorm.mapper;
 
 import org.junit.jupiter.api.Test;
-import org.ujorm.mapper.generated.demo.City;
-import org.ujorm.mapper.generated.demo.Employee;
+import org.ujorm.mapper.demo.City;
+import org.ujorm.mapper.demo.Employee;
 
 import java.time.LocalDate;
 import java.util.List;

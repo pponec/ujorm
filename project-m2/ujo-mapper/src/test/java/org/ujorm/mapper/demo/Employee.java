@@ -1,4 +1,4 @@
-package org.ujorm.mapper.generated.demo;
+package org.ujorm.mapper.demo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;

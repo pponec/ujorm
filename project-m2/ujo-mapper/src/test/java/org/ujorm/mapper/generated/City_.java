@@ -2,15 +2,9 @@ package org.ujorm.mapper.generated;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.Key;
 import org.ujorm.core.impl.AbstractKey;
 import org.ujorm.core.impl.AbstractMetaModel;
-import org.ujorm.mapper.generated.demo.City;
-import org.ujorm.mapper.generated.demo.Employee;
-import tools.Assert;
-
-import java.time.LocalDate;
-import java.util.List;
+import org.ujorm.mapper.demo.City;
 
 /** In generated class use a real package derived from the City class:
  * `org.ujorm._.org.ujorm.mapper.generated.demo`

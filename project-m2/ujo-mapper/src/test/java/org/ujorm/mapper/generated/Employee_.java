@@ -5,8 +5,8 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.core.impl.AbstractKey;
 import org.ujorm.core.impl.AbstractMetaModel;
-import org.ujorm.mapper.generated.demo.City;
-import org.ujorm.mapper.generated.demo.Employee;
+import org.ujorm.mapper.demo.City;
+import org.ujorm.mapper.demo.Employee;
 
 import java.time.LocalDate;
 
