@@ -53,15 +53,15 @@ public class JavaSourceGenerator {
                 /** Key ${propName} */
                 static final class Key_${propName} extends AbstractKey<${domainType}, ${propType}> {
                     public Key_${propName}(int order) {
-                        super(order, "${propName}", ${propType}, "${propName}", true, true);
+                        super(order, "${propName}", ${propType}, "${column}", ${primaryKey}, ${required});
                     }
                     @Override
-                    public vo${propName} setValue(@NotNull final ${domainType} bean, @Nullable final ${propType} value) {
-                        bean.set${propName}(value != null ? value : defaultValue);
+                    public void setValue(@NotNull final ${domainType} bean, @Nullable final ${propType} value) {
+                        bean.${setter}(value != null ? value : defaultValue);
                     }
                     @Override
                     public ${propType} getValue(@NotNull final ${domainType} bean) {
-                        return bean.get${propName}();
+                        return bean.${getter}();
                     }
                     @Override
                     public @NotNull Class<${domainType}> getDomainType() {
@@ -95,7 +95,13 @@ public class JavaSourceGenerator {
         for (var prop: meta.properties()) {
             {
                 params.put("propName", prop.propertyName());
-                params.put("propType", prop.propertyType());
+                params.put("propType", prop.propertyType().getName());
+                params.put("getter", prop.getter());
+                params.put("setter", prop.setter());
+                params.put("primaryKey", prop.primaryKey()); // todo: rename
+                params.put("required", prop.required()); // todo: rename
+                params.put("column", prop.dbColumName());
+
                 params.put("domainType", meta.beanClass().getName());
             }
             MessageService.formatMsg(template, params, writer);
