@@ -53,11 +53,6 @@
             <artifactId>ujo-tools</artifactId>
             <version>3.0.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.ujorm</groupId>
-            <artifactId>ujo-web</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
-        </dependency>
 
         <!-- Html5 Parser -->
         <dependency>

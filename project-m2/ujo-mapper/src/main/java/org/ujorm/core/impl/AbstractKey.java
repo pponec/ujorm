@@ -41,7 +41,7 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
     protected final V defaultValue;
 
     public AbstractKey(
-            @NonNull final int order,
+            final int order,
             @NonNull final String name,
             @NonNull final Class<V> type,
             @NotNull final String columnName,
