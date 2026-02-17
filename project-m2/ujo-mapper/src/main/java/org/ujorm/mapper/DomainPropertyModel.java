@@ -8,10 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public record DomainPropertyModel(
         /** Name of property from the class field. */
@@ -30,6 +27,25 @@ public record DomainPropertyModel(
         /** Database primary key */
         boolean primaryKey
 ) {
+
+    /** Map primitive types to the object one. */
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER = Map.of(
+            boolean.class, Boolean.class,
+            char.class,    Character.class,
+            byte.class,    Byte.class,
+            short.class,   Short.class,
+            int.class,     Integer.class,
+            long.class,    Long.class,
+            float.class,   Float.class,
+            double.class,  Double.class,
+            void.class,    Void.class
+    );
+
+    /** Returns an Object Class */
+    @NotNull
+    public Class<?> propertyObjectType() {
+        return PRIMITIVE_TO_WRAPPER.getOrDefault(propertyType, propertyType);
+    }
 
     /**
      * Creates a list of BeanPropertyModel for the given class (Bean or Record).

@@ -54,16 +54,16 @@ public class JavaSourceGenerator {
 
         var templateMid = """           
                 /** Key ${propName} */
-                static final class Key_${propName} extends AbstractKey<${domainType}, ${propType}> {
+                static final class Key_${propName} extends AbstractKey<${domainType}, ${propObjectType}> {
                     public Key_${propName}(final int order) {
                         super(order, "${propName}", ${propType}.class, "${column}", ${primaryKey}, ${required});
                     }
                     @Override
-                    public void setValue(@NotNull final ${domainType} bean, @Nullable final ${propType} value) {
+                    public void setValue(@NotNull final ${domainType} bean, @Nullable final ${propObjectType} value) {
                         bean.${setter}(value != null ? value : defaultValue);
                     }
                     @Override
-                    public ${propType} getValue(@NotNull final ${domainType} bean) {
+                    public ${propObjectType} getValue(@NotNull final ${domainType} bean) {
                         return bean.${getter}();
                     }
                     @Override
@@ -99,6 +99,7 @@ public class JavaSourceGenerator {
             {
                 params.put("propName", prop.propertyName());
                 params.put("propType", prop.propertyType().getName());
+                params.put("propObjectType", prop.propertyObjectType().getName());
                 params.put("getter", prop.getter());
                 params.put("setter", prop.setter());
                 params.put("primaryKey", prop.primaryKey()); // todo: rename
@@ -110,6 +111,4 @@ public class JavaSourceGenerator {
             MessageService.formatMsg(template, params, writer);
         }
     }
-
-
 }
