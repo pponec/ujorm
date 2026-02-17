@@ -53,7 +53,7 @@ public class JavaSourceGenerator {
                 /** Key ${propName} */
                 static final class Key_${propName} extends AbstractKey<${domainType}, ${propType}> {
                     public Key_${propName}(int order) {
-                        super(order, "${propName}", ${propType}, "${column}", ${primaryKey}, ${required});
+                        super(order, "${propName}", ${propType}.class, "${column}", ${primaryKey}, ${required});
                     }
                     @Override
                     public void setValue(@NotNull final ${domainType} bean, @Nullable final ${propType} value) {
