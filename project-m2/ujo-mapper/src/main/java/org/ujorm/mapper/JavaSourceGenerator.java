@@ -11,7 +11,6 @@ public class JavaSourceGenerator {
 
     public String getSourceCode(DomainModel meta) {
         var writer = new StringWriter(256);
-        var record = meta.domainClass().isRecord();
         var params = new HashMap<String, Object>();
         {
             params.put("package", PACKAGE_PREFIX + meta.domainClass().getPackageName());
@@ -64,7 +63,7 @@ public class JavaSourceGenerator {
                     }
                     @Override
                     public void setValue(@NotNull final ${domainType} bean, @Nullable final ${propObjectType} value) {
-                        bean.${setter}(value != null ? value : defaultValue);
+                        %s;
                     }
                     @Override
                     public ${propObjectType} getValue(@NotNull final ${domainType} bean) {
@@ -75,13 +74,15 @@ public class JavaSourceGenerator {
                         return domainType;
                     }
                 }
-                """;
+                """.formatted(meta.isRecord()
+                    ? "throw unsupportedSetter(this)"
+                    : "bean.${setter}(value != null ? value : defaultValue)");
         var templateEnd = "}";
 
         MessageService.formatMsg(templateBeg1, params, writer);
         buildConstructor(meta, writer);
         MessageService.formatMsg(templateBeg2, params, writer);
-        if (record) {
+        if (meta.isRecord()) {
             buildRecordConstructorMaker(meta, writer);
         } else {
             MessageService.formatMsg(templateBeg3bean, params, writer);

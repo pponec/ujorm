@@ -17,6 +17,11 @@ public record DomainModel(
         List<DomainPropertyModel> properties
 ) {
 
+    /** Is the domain object the Record ?*/
+    public boolean isRecord() {
+        return domainClass.isRecord();
+    }
+
     /**
      * Factory method to create a BeanModel instance.
      *
