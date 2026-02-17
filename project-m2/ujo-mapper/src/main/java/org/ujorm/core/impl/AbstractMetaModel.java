@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -20,12 +18,48 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public abstract class AbstractMetaModel<D> {
 
-    private final List<Key<D, ?>> keyList;
-    private final Map<String, Key<D, ?>> keyMap;
+    /** List of the keys */
+    protected final List<Key<D, ?>> keyList;
+    /** Mapping of the keys */
+    protected final Map<String, Key<D, ?>> keyMap;
+    /** Does the domain have any primitive attribute? */
+    private final boolean hasPrimitives;
+
 
     protected AbstractMetaModel(@NotNull Key<D, ?>... keyList) {
         this.keyList = List.of(keyList);
         this.keyMap = Stream.of(keyList).collect(Collectors.toUnmodifiableMap(Key::getName, Function.identity()));
+        this.hasPrimitives = hasPrimitives(keyList);
+    }
+
+    /** Does the domain have a primitive attribute? */
+    static boolean hasPrimitives(final Key<?, ?>[] keyList) {
+        for (var key : keyList) {
+            if (key.getDomainType().isPrimitive()) return true;
+        }
+        return false;
+    }
+
+    /** For Record: replace all null values for primitive types with default values. */
+    protected @NotNull Object[] normalizePrimitives(@NotNull Object[] values) {
+        if (keyList.size() != values.length) {
+            var msg = "Constructor requires %s arguments, but %s were provided."
+                    .formatted(keyList.size(), values.length);
+            throw new IllegalArgumentException(msg);
+        }
+        if (hasPrimitives) {
+            values = values.clone();
+            for (var key : keyList) {
+                if (key.getType().isPrimitive()) {
+                    var idx = key.getIndex();
+                    var value = values[idx];
+                    if (value == null) {
+                        values[idx] = key.getDefaultValue();
+                    }
+                }
+            }
+        }
+        return values;
     }
 
     @NotNull
@@ -64,12 +98,6 @@ public abstract class AbstractMetaModel<D> {
         return keyList.size();
     }
 
-    /** Create a new domain object */
-    public D newDomain() {
-        try {
-            return getDomainType().getConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException  | InvocationTargetException | NoSuchMethodException ex) {
-            throw new IllegalStateException("Cant create domain object. " + getDomainType(), ex);
-        }
-    }
+    /** Create a new domain object and assign values */
+    public abstract D newDomain(Object[] values);
 }

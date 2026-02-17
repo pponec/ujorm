@@ -2,6 +2,7 @@ package org.ujorm.mapper.generated;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.core.Key;
 import org.ujorm.core.impl.AbstractKey;
 import org.ujorm.core.impl.AbstractMetaModel;
 import org.ujorm.mapper.generated.demo.City;
@@ -24,6 +25,16 @@ public class Employee_ extends AbstractMetaModel<Employee> {
              , new Key_contractDay(4)
              , new Key_active(5)
              );
+    }
+
+    @Override
+    public Employee newDomain(@NotNull final Object... values) {
+        final var result = new Employee();
+        for (int i = 0, max = Math.min(values.length, keyList.size()); i < max; i++) {
+            final var key = (Key<Employee, Object>) keyList.get(i);
+            key.setValue(result, values[i]);
+        }
+        return result;
     }
 
     @NotNull

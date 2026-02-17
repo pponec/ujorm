@@ -2,11 +2,15 @@ package org.ujorm.mapper.generated;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.core.Key;
 import org.ujorm.core.impl.AbstractKey;
 import org.ujorm.core.impl.AbstractMetaModel;
 import org.ujorm.mapper.generated.demo.City;
+import org.ujorm.mapper.generated.demo.Employee;
+import tools.Assert;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /** In generated class use a real package derived from the City class:
  * `org.ujorm._.org.ujorm.mapper.generated.demo`
@@ -22,6 +26,23 @@ public class City_ extends AbstractMetaModel<City> {
              , new Key_latitude(3)
              , new Key_longitude(4)
              );
+
+    }
+
+
+    @Override
+    public City newDomain(@NotNull Object... values) {
+        values = normalizePrimitives(values);
+        return new City( (Long) values[0]
+                       , (String) values[1]
+                       , (String) values[2]
+                       , (Double) values[3]
+                       , (Double) values[4]
+                       );
+    }
+
+    public static Object value(Key<Employee,Object> key, final Object value) {
+        return value != null ? value : key.getDefaultValue();
     }
 
     @NotNull
