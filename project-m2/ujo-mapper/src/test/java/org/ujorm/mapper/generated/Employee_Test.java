@@ -18,7 +18,7 @@ class Employee_Test {
         var employee = instance.newDomain();
         EmplyeeUjo.keyId.setValue(employee, 10L);
         EmplyeeUjo.keyName.setValue(employee, "Joe");
-        EmplyeeUjo.keyCity.setValue(employee, City.of(9L, "Ottawa"));
+        EmplyeeUjo.keyCity.setValue(employee, City.of(9L, "California"));
         EmplyeeUjo.keyActive.setValue(employee, true);
 
         Assertions.assertEquals(10, employee.getId());
@@ -45,7 +45,7 @@ class Employee_Test {
         e.setValue(EmplyeeUjo.keyId, 10L);
         e.setValue(EmplyeeUjo.keyName, "Test");
         e.setValue(EmplyeeUjo.keySuperior, null);
-        e.setValue(EmplyeeUjo.keyCity, City.of(1L, "Ottawa"));
+        e.setValue(EmplyeeUjo.keyCity, City.of(1L, "California"));
         e.setValue(EmplyeeUjo.keyContractDay, LocalDate.of(2026, 02, 17));
         e.setValue(EmplyeeUjo.keyActive, true);
         var employee = e.newInstance();
@@ -53,7 +53,7 @@ class Employee_Test {
         Assertions.assertEquals(10, employee.getId());
         Assertions.assertEquals("Test", employee.getName());
         Assertions.assertEquals(null, employee.getSuperior());
-        Assertions.assertEquals("Ottawa", employee.getCity().name());
+        Assertions.assertEquals("California", employee.getCity().name());
         Assertions.assertEquals(2026, employee.getContractDay().getYear());
         Assertions.assertEquals(true, employee.isActive());
     }
