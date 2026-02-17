@@ -81,7 +81,11 @@ public class JavaSourceGenerator {
         MessageService.formatMsg(templateBeg1, params, writer);
         buildConstructor(meta, writer);
         MessageService.formatMsg(templateBeg2, params, writer);
-        MessageService.formatMsg(templateBeg3bean, params, writer);
+        if (record) {
+            buildRecordConstructorMaker(meta, writer);
+        } else {
+            MessageService.formatMsg(templateBeg3bean, params, writer);
+        }
         MessageService.formatMsg(templateBeg4, params, writer);
         buildInnerKeys(templateKey, meta, writer);
         MessageService.formatMsg(templateEnd, params, writer);
@@ -115,6 +119,19 @@ public class JavaSourceGenerator {
                 params.put("domainType", meta.domainClass().getName());
             }
             MessageService.formatMsg(template, params, writer);
+        }
+    }
+
+    private void buildRecordConstructorMaker(DomainModel meta, StringWriter writer) {
+        var offset = " ".repeat(4);
+        writer.append(offset).append("values = normalizePrimitives(values);\n");
+        for(int i = 0, max = meta.properties().size(); i < max; ++i) {
+            var row = (i == 0)
+                    ? "return new City( (%s) values[%s]"
+                    : "               , (%s) values[%s]";
+            writer.append(offset)
+                    .append(row.formatted(meta.properties().get(i).propertyObjectType(), i))
+                    .append("\n");
         }
     }
 }
