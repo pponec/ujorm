@@ -26,7 +26,8 @@ class JavaSourceGeneratorTest {
         assertContains("return bean.getId();", src);
         assertContains("public @NotNull Class<org.ujorm.mapper.demo.Employee> getDomainType() {", src);
 
-        Class clazz = new ClassGenerator().createClass(src);
+        var clazz = new ClassGenerator().createClass(src);
+        Assertions.assertNotNull(clazz);
     }
 
     private void assertContains(String code, String src) {
