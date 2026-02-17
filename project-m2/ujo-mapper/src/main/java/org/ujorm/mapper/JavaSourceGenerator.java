@@ -9,18 +9,13 @@ public class JavaSourceGenerator {
 
     private final String PACKAGE_PREFIX = "org.ujorm.gen.";
 
-    public String getSourceClass() {
-        return "";
-    }
-
-    private String body(DomainModel meta) {
+    public String getSourceCode(DomainModel meta) {
         var writer = new StringWriter(256);
         var params = new HashMap<String, Object>();
         {
             params.put("package", PACKAGE_PREFIX + meta.beanClass().getPackageName());
             params.put("generatedClass", meta.beanClass().getSimpleName() + "_");
-            params.put("domainClass", meta.beanClass().getName());
-            params.put("keys", "");
+            params.put("domainType", meta.beanClass().getName());
         }
         var templateBeg1 = """
             package ${package};
@@ -30,47 +25,46 @@ public class JavaSourceGenerator {
             import org.ujorm.core.impl.AbstractKey;
             import org.ujorm.core.impl.AbstractMetaModel;
             
-            public class ${generatedClass} extends AbstractMetaModel<${domainClass}> {
-                private static final Class<${domainClass}> domainType = ${domainClass}.class;
+            public class ${generatedClass} extends AbstractMetaModel<${domainType}> {
+                private static final Class<${domainType}> domainType = ${domainType}.class;
                 public ${generatedClass}() {
-                """;
+            """;
 //                    super( new Key_id(0)
 //                         , new Key_name(1)
-             var templateBeg2 = """
+        var templateBeg2 = """
                          );
                 }
                 @Override
-                public ${domainClass} newDomain(@NotNull final Object... values) {
-                    final var result = new ${domainClass}();
+                public ${domainType} newDomain(@NotNull final Object... values) {
+                    final var result = new ${domainType}();
                     for (int i = 0, max = Math.min(values.length, keyList.size()); i < max; i++) {
-                        final var key = (Key<${domainClass}, Object>) keyList.get(i);
+                        final var key = (Key<${domainType}, Object>) keyList.get(i);
                         key.setValue(result, values[i]);
                     }
                     return result;
                 }
-            
                 @NotNull
-                public Class<${domainClass}> getDomainType() {
+                public Class<${domainType}> getDomainType() {
                     return domainType;
                 }
                 """;
 
         var templateMid = """           
-                /** Key id */
-                static final class Key_id extends AbstractKey<${domainClass}, Long> {
-                    public Key_id(int order) {
-                        super(order, "id", Long.class, "id", true, true);
+                /** Key ${propName} */
+                static final class Key_${propName} extends AbstractKey<${domainType}, ${propType}> {
+                    public Key_${propName}(int order) {
+                        super(order, "${propName}", ${propType}, "${propName}", true, true);
                     }
                     @Override
-                    public void setValue(@NotNull final ${domainClass} bean, @Nullable final Long value) {
-                        bean.setId(value != null ? value : defaultValue);
+                    public vo${propName} setValue(@NotNull final ${domainType} bean, @Nullable final ${propType} value) {
+                        bean.set${propName}(value != null ? value : defaultValue);
                     }
                     @Override
-                    public Long getValue(@NotNull final ${domainClass} bean) {
-                        return bean.getId();
+                    public ${propType} getValue(@NotNull final ${domainType} bean) {
+                        return bean.get${propName}();
                     }
                     @Override
-                    public @NotNull Class<${domainClass}> getDomainType() {
+                    public @NotNull Class<${domainType}> getDomainType() {
                         return domainType;
                     }
                 }
@@ -87,13 +81,12 @@ public class JavaSourceGenerator {
 
     private void buildConstructor(DomainModel meta, StringWriter writer) {
         for(int i = 0, max = meta.properties().size(); i < max; ++i) {
-            var row = i == 0
+            var row = (i == 0)
                     ? "super( new Key_%s(%s)"
                     : "     , new Key_%s(%s)";
             writer.append("        ")
-                    .append(row.formatted(meta.properties().get(i), i))
-                    .write("\n");
-
+                  .append(row.formatted(meta.properties().get(i), i))
+                  .append("\n");
         }
     }
 
@@ -102,9 +95,8 @@ public class JavaSourceGenerator {
         for (var prop: meta.properties()) {
             {
                 params.put("propName", prop.propertyName());
-                params.put("columnName", prop.dbColumName());
-                params.put("type", prop.propertyType());
-                params.put("domainClass", meta.beanClass().getName());
+                params.put("propType", prop.propertyType());
+                params.put("domainType", meta.beanClass().getName());
             }
             MessageService.formatMsg(template, params, writer);
         }
