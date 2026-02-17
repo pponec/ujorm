@@ -83,7 +83,7 @@ public class JavaSourceGenerator {
         buildConstructor(meta, writer);
         MessageService.formatMsg(templateBeg2, params, writer);
         if (meta.isRecord()) {
-            buildRecordConstructorMaker(meta, writer);
+            buildRecordConstructorBuilder(meta, writer);
         } else {
             MessageService.formatMsg(templateBeg3bean, params, writer);
         }
@@ -123,17 +123,17 @@ public class JavaSourceGenerator {
         }
     }
 
-    private void buildRecordConstructorMaker(DomainModel meta, StringWriter writer) {
+    private void buildRecordConstructorBuilder(DomainModel meta, StringWriter writer) {
         var offset1 = " ".repeat(4);
         var offset2 = " ".repeat(9);
         var domainClass = meta.domainClass().getName();
         writer.append(offset1).append("values = normalizePrimitives(values);\n");
         writer.append(offset1).append("return new ").append(domainClass).append("\n");
         for(int i = 0, max = meta.properties().size(); i < max; ++i) {
-            var sep = (i == 0) ? '(' : ',';
+            var sep = (i == 0) ? "(" : ",";
             var type = meta.properties().get(i).propertyObjectType().getName();
-            var row = "%s (%s) values[%s]\n".formatted(sep, type, i);
-            writer.append(offset2).append(row);
+            var row = "(%s) values[%s]\n".formatted(type, i);
+            writer.append(offset2).append(sep).append(" ").append(row);
         }
         writer.append(offset2).append(");\n");
     }
