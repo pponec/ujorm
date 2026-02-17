@@ -27,12 +27,11 @@ public class City_ extends AbstractMetaModel<City> {
     @Override
     public City newDomain(@NotNull Object... values) {
         values = normalizePrimitives(values);
-        var i = -1;
-        return new City( (Long)   values[++i]
-                       , (String) values[++i]
-                       , (String) values[++i]
-                       , (Double) values[++i]
-                       , (Double) values[++i]
+        return new City( (Long)   values[0]
+                       , (String) values[1]
+                       , (String) values[2]
+                       , (Double) values[3]
+                       , (Double) values[4]
                        );
     }
 
