@@ -15,14 +15,14 @@ public class Employee {
 
     @Column(name = "id") @Id
     private Long id;
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
     @Nullable
     @JoinColumn(name = "superior_id")
     private Employee superior;
-    @JoinColumn(name = "city")
+    @JoinColumn(name = "city", nullable = false)
     private City city;
-    @Column(name = "contract_day")
+    @Column(name = "contract_day", nullable = false)
     private LocalDate contractDay;
     @Column(name = "is_active")
     private boolean active;
