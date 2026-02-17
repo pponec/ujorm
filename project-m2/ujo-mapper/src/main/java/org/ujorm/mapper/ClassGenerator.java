@@ -8,10 +8,41 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.tools.*;
 
 public class ClassGenerator {
+
+    /**
+     * Compiles the given source code in-memory and loads the resulting class.
+     * <p>
+     * The method uses the current thread's context class loader as the parent,
+     * ensuring the dynamic class can see interfaces and classes from the main application.
+     *
+     * @param sourceCode         The Java source code.
+     * @return The compiled and loaded Class object.
+     * @throws RuntimeException if compilation fails (includes compiler error messages).
+     */
+    public Class<?> createClass(String sourceCode) {
+        var canonicalClassName = getCanonicalClassName(sourceCode);
+        return createClass(sourceCode, canonicalClassName);
+    }
+
+    /**
+     * Extracts the canonical class name using a more concise approach.
+     */
+    protected String getCanonicalClassName(String sourceCode) throws IllegalStateException {
+        var pkgMatcher = Pattern.compile("package\\s+([\\w.]+)\\s*;").matcher(sourceCode);
+        if (!pkgMatcher.find()) {
+            throw new IllegalStateException("Source code does not contain a package declaration.");
+        }
+        var classMatcher = Pattern.compile("\\bclass\\s+([a-zA-Z_$][a-zA-Z\\d_$]*)").matcher(sourceCode);
+        if (!classMatcher.find()) {
+            throw new IllegalStateException("Source code does not contain a class declaration.");
+        }
+        return pkgMatcher.group(1) + "." + classMatcher.group(1);
+    }
 
     /**
      * Compiles the given source code in-memory and loads the resulting class.

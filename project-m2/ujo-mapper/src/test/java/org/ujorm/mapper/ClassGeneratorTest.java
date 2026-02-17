@@ -1,0 +1,118 @@
+package org.ujorm.mapper;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.function.Function;
+import org.junit.jupiter.api.Test;
+
+class ClassGeneratorTest {
+
+    private final int loopCount = 10;
+
+    // @Test
+    void testDynamicIncrementerMany() throws Exception {
+        for (int i = 0; i < loopCount; i++) {
+            testDynamicIncrementer();
+        }
+    }
+
+    @Test
+    void testDynamicIncrementer() throws Exception {
+        // 1. Define class metadata to avoid duplication in the template
+        var packageName = "com.example.dynamic";
+        var simpleName = "Incrementer";
+        var canonicalName = packageName + "." + simpleName;
+
+        // 2. Prepare source code using text block formatting
+        var sourceCode = """
+            package %s;
+            import java.util.function.Function;
+
+            public class %s implements Function<Integer, Integer> {
+                @Override
+                public Integer apply(Integer i) {
+                    if (i < 0) throw new IllegalArgumentException("Input cannot be negative");
+                    return i + 1;
+                }
+            }
+            """.formatted(packageName, simpleName);
+
+        // 3. Compile and load the class in-memory
+        var provider = new ClassGenerator();
+        var dynamicClass = provider.createClass(sourceCode, canonicalName);
+
+        // 4. Instantiate and cast to the known interface
+        // We use getDeclaredConstructor().newInstance() as Class.newInstance() is deprecated.
+        @SuppressWarnings("unchecked")
+        var incrementer = (Function<Integer, Integer>) dynamicClass.getDeclaredConstructor().newInstance();
+
+        // 5. Verify successful execution
+        assertEquals(11, incrementer.apply(10));
+
+        // 6. Verify exception handling
+        assertThrows(IllegalArgumentException.class, () -> incrementer.apply(-1));
+    }
+
+
+    /**
+     * Verifies that a standard class with a package is parsed correctly.
+     */
+    @Test
+    void getCanonicalClassName_validSource_returnsCanonicalName() {
+        var sourceCode = """
+                package com.example.project;
+                import java.util.List;
+                public class UserController {
+                    // content
+                }
+                """;
+
+        var result = new ClassGenerator().getCanonicalClassName(sourceCode);
+        assertEquals("com.example.project.UserController", result);
+    }
+
+    /**
+     * Verifies that the parser handles irregular whitespace in package and class declarations.
+     */
+    @Test
+    void getCanonicalClassName_messyFormatting_returnsCanonicalName() {
+        var sourceCode = "  package   cz.test.utils  ;  public  class  StringHelper {} ";
+        var result = new ClassGenerator().getCanonicalClassName(sourceCode);
+        assertEquals("cz.test.utils.StringHelper", result);
+    }
+
+    /**
+     * Verifies that an IllegalStateException is thrown when the package declaration is missing.
+     */
+    @Test
+    void getCanonicalClassName_missingPackage_throwsException() {
+        var sourceCode = "public class NoPackageClass {}";
+        var exception = assertThrows(IllegalStateException.class, () -> {
+            new ClassGenerator().getCanonicalClassName(sourceCode);
+        });
+
+        assertEquals("Source code does not contain a package declaration.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that an IllegalStateException is thrown when the class declaration is missing
+     * (e.g., only imports or an interface if the regex strictly targets 'class').
+     */
+    @Test
+    void getCanonicalClassName_missingClassKeyword_throwsException() {
+        var sourceCode = """
+                package com.types;
+                public interface MyInterface {
+                    // Regex looks for 'class', so this should fail
+                }
+                """;
+
+        var exception = assertThrows(IllegalStateException.class, () -> {
+            new ClassGenerator().getCanonicalClassName(sourceCode);
+        });
+
+        assertEquals("Source code does not contain a class declaration.", exception.getMessage());
+    }
+}
+
