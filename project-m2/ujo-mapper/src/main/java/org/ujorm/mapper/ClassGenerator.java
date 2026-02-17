@@ -32,14 +32,14 @@ public class ClassGenerator {
     /**
      * Extracts the canonical class name using a more concise approach.
      */
-    protected String getCanonicalClassName(String sourceCode) throws IllegalStateException {
+    protected String getCanonicalClassName(String sourceCode) {
         var pkgMatcher = Pattern.compile("package\\s+([\\w.]+)\\s*;").matcher(sourceCode);
         if (!pkgMatcher.find()) {
             throw new IllegalStateException("Source code does not contain a package declaration.");
         }
-        var classMatcher = Pattern.compile("\\bclass\\s+([a-zA-Z_$][a-zA-Z\\d_$]*)").matcher(sourceCode);
+        var classMatcher = Pattern.compile("public\\s+.*?class\\s+([a-zA-Z_$][a-zA-Z\\d_$]*)").matcher(sourceCode);
         if (!classMatcher.find()) {
-            throw new IllegalStateException("Source code does not contain a class declaration.");
+            throw new IllegalStateException("Source code does not contain a public class declaration.");
         }
         return pkgMatcher.group(1) + "." + classMatcher.group(1);
     }
