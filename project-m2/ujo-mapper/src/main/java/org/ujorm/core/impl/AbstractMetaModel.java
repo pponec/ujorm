@@ -8,6 +8,7 @@ import org.ujorm.core.Key;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,10 +40,24 @@ public abstract class AbstractMetaModel<D> {
         return keyList;
     }
 
-    @Nullable
+    /**
+     * Find key in metamodel.
+     * @param name Property name.
+     * @param type Only for safe result type
+     * @return Key object.
+     * @param <V> Value
+     * @throws NoSuchElementException If not such element was found
+     */
+    @NotNull
     @SuppressWarnings("unchecked")
-    public final <V> Key<D, V> getKey(@Nullable String name, Class<V> type) {
-        return (Key<D, V>) keyMap.get(name);
+    public final <V> Key<D, V> getKey(@Nullable final String name, final Class<V> type)
+            throws NoSuchElementException {
+        var result = keyMap.get(name);
+        if (result == null) {
+            throw new NoSuchElementException("Key not found: %s.%s"
+                    .formatted(getDomainType().getSimpleName(), name));
+        }
+        return (Key<D, V>) result;
     }
 
     public final int count() {

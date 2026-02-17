@@ -1,13 +1,25 @@
 package org.ujorm.core.impl;
 
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
+import java.util.Map;
+import java.util.Objects;
 
-@RequiredArgsConstructor
 abstract public class AbstractKey<D, V> implements Key<D, V> {
+
+    /** Default primitive values */
+    private static final Map<Class<?>, Object> DEFAULT_VALUES = Map.of(
+            boolean.class, false,
+            char.class, '\0',
+            byte.class, (byte) 0,
+            short.class, (short) 0,
+            int.class, 0,
+            long.class, 0L,
+            float.class, 0.0f,
+            double.class, 0.0d
+    );
 
     /** Order of the key with starting at zero. */
     @NonNull
@@ -25,6 +37,24 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
     final boolean isPrimaryKey;
     /** Is the database column required? */
     final boolean required;
+    /** Default value */
+    protected final V defaultValue;
+
+    public AbstractKey(
+            @NonNull final int order,
+            @NonNull final String name,
+            @NonNull final Class<V> type,
+            @NotNull final String columnName,
+            final boolean isPrimaryKey,
+            final boolean required) {
+        this.order = order;
+        this.name = name;
+        this.type = type;
+        this.columnName = columnName;
+        this.isPrimaryKey = isPrimaryKey;
+        this.required = required;
+        this.defaultValue = getDefaultValue(type);
+    }
 
     public final int getIndex() {
         return order;
@@ -107,6 +137,31 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
         final var i1 = this.getIndex();
         final var i2 = o.getIndex();
         return i1 < i2 ? -1 : i1 == i2 ? 0 : 1;
+    }
+
+    @Override
+    public boolean isDefault(@NotNull final D bean) {
+        final V value = getValue(bean);
+        return Objects.equals(value, defaultValue);
+    }
+
+    @Override
+    public @Nullable V getDefaultValue() {
+        return defaultValue;
+    }
+
+    /**
+     * Returns the default value for the given class.
+     *
+     * @param clazz the class to get the default value for
+     * @param <T>   the type of the class
+     * @return the default value or null
+     */
+    @SuppressWarnings("unchecked")
+    static <T> T getDefaultValue(Class<T> clazz) {
+        return (clazz != null && clazz.isPrimitive() && clazz != void.class)
+                ? (T) DEFAULT_VALUES.get(clazz)
+                : null;
     }
 
     /** Create new exception */

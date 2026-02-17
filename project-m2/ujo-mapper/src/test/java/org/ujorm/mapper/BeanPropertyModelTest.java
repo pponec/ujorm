@@ -98,7 +98,7 @@ class BeanPropertyModelTest {
         var latProp = findProperty(properties, "latitude");
         assertEquals("latitude", latProp.dbColumName());
         assertFalse(latProp.primaryKey());
-        assertFalse(latProp.required()); // Double wrapper is nullable
+        assertTrue(latProp.required()); // Double wrapper is not nullable
         assertNull(latProp.setter());
 
     }

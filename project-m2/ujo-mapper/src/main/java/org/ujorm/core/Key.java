@@ -84,6 +84,14 @@ public interface Key <UJO extends Object,VALUE> extends CharSequence, Comparable
      */
     VALUE getValue(@NotNull UJO bean);
 
+    /** Method returns a default value for substitution of the <code>null</code> value for the current key.
+     * The feature is purposeful only if the default value is not <code>null</code> and a propert value is <code>null</code> .
+     */
+    @Nullable VALUE getDefaultValue();
+
+    /** Indicates whether a parameter value of the ujo "equal to" this key default value. */
+    boolean isDefault(@NotNull UJO ujo);
+
     /**
      * An alias for the method {@link #of(UJO)}.
      */
@@ -98,7 +106,7 @@ public interface Key <UJO extends Object,VALUE> extends CharSequence, Comparable
     int getIndex();
 
     /** Method returns a default value for substitution of the <code>null</code> value for the current key.
-     * The feature is purposeful only if the default value is not <code>null</code> and a propert value is <code>null</code> .
+     * The feature is purposeful only if the default value is not <code>null</code> and a property value is <code>null</code> .
      * @see Ujo#getValue(Key)
      */
     @Nullable

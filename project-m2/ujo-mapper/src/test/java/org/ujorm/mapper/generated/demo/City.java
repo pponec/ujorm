@@ -12,8 +12,8 @@ public record City (
     String name,
     @Column(name = "country_code", nullable = false)
     String countryCode,
-    Double latitude,
-    Double longitude
+    double latitude,
+    double longitude
 ) {
     public static final City of(Long id, String name) {
         return new City(id, name, "", 0.0, 0.0);

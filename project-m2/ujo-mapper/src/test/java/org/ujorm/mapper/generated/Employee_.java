@@ -22,6 +22,7 @@ public class Employee_ extends AbstractMetaModel<Employee> {
              , new Key_city(2)
              , new Key_superior(3)
              , new Key_contractDay(4)
+             , new Key_active(5)
              );
     }
 
@@ -38,7 +39,7 @@ public class Employee_ extends AbstractMetaModel<Employee> {
         }
         @Override
         public void setValue(@NotNull final Employee bean, @Nullable final Long value) {
-            bean.setId(value);
+            bean.setId(value != null ? value : defaultValue);
         }
         @Override
         public Long getValue(@NotNull final Employee bean) {
@@ -120,6 +121,25 @@ public class Employee_ extends AbstractMetaModel<Employee> {
         @Override
         public LocalDate getValue(@NotNull Employee bean) {
             return bean.getContractDay();
+        }
+        @Override
+        public @NotNull Class<Employee> getDomainType() {
+            return domainType;
+        }
+    }
+
+    static final class Key_active extends AbstractKey<Employee, Boolean> {
+        public Key_active(final int order) {
+            super(order, "active", boolean.class, "contractDay", false, true);
+        }
+
+        @Override
+        public void setValue(@NotNull final Employee bean, @Nullable final Boolean value) {
+            bean.setActive(value != null ? value : defaultValue);
+        }
+        @Override
+        public Boolean getValue(@NotNull final Employee bean) {
+            return bean.isActive();
         }
         @Override
         public @NotNull Class<Employee> getDomainType() {
