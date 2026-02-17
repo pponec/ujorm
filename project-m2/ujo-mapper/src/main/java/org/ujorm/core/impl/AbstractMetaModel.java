@@ -35,7 +35,7 @@ public abstract class AbstractMetaModel<D> {
     /** Does the domain have a primitive attribute? */
     static boolean hasPrimitives(final Key<?, ?>[] keyList) {
         for (var key : keyList) {
-            if (key.getDomainType().isPrimitive()) return true;
+            if (key.getType().isPrimitive()) return true;
         }
         return false;
     }

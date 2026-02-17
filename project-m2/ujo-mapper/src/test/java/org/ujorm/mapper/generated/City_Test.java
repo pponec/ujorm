@@ -24,8 +24,8 @@ class City_Test {
         Assertions.assertEquals(10, city.id());
         Assertions.assertEquals("Ottawa", city.name());
         Assertions.assertEquals("CA", city.countryCode());
-        Assertions.assertEquals(45.4215, city.longitude(), DELTA);
-        Assertions.assertEquals(-75.6972, city.latitude(), DELTA);
+        Assertions.assertEquals(45.4215, city.latitude(), DELTA);
+        Assertions.assertEquals(-75.6972, city.longitude(), DELTA);
     }
 
     /** Create new instance */

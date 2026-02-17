@@ -33,16 +33,13 @@ public class City_ extends AbstractMetaModel<City> {
     @Override
     public City newDomain(@NotNull Object... values) {
         values = normalizePrimitives(values);
-        return new City( (Long) values[0]
-                       , (String) values[1]
-                       , (String) values[2]
-                       , (Double) values[3]
-                       , (Double) values[4]
+        var i = -1;
+        return new City( (Long)   values[++i]
+                       , (String) values[++i]
+                       , (String) values[++i]
+                       , (Double) values[++i]
+                       , (Double) values[++i]
                        );
-    }
-
-    public static Object value(Key<Employee,Object> key, final Object value) {
-        return value != null ? value : key.getDefaultValue();
     }
 
     @NotNull
@@ -109,10 +106,10 @@ public class City_ extends AbstractMetaModel<City> {
         }
     }
 
-    /** ID key */
+    /** latitude */
     static final class Key_latitude extends AbstractKey<City, Double> {
         public Key_latitude(final int order) {
-            super(order, "city", Double.class, "name", false, true);
+            super(order, "latitude", double.class, "name", false, true);
         }
         @Override
         public void setValue(@NotNull final  City bean, @Nullable final Double value) {
@@ -128,10 +125,10 @@ public class City_ extends AbstractMetaModel<City> {
         }
     }
 
-    /** ID key */
+    /** longitude */
     static final class Key_longitude extends AbstractKey<City, Double> {
         public Key_longitude(final int order) {
-            super(order, "longitude", Double.class, "name", false, true);
+            super(order, "longitude", double.class, "name", false, true);
         }
         @Override
         public void setValue(@NotNull final  City bean, @Nullable final Double value) {
