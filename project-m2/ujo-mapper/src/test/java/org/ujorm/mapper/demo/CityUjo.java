@@ -24,7 +24,7 @@ public class CityUjo {
     public static final Key<City, String> keyCountryCode = meta.getKey("countryCode", String.class);
     public static final Key<City, Double> keyLatitude = meta.getKey("latitude", Double.class);
     public static final Key<City, Double> keyLongitude = meta.getKey("longitude", Double.class);
-    public final Object[] array = new Object[meta.count()];
+    private final Object[] array = new Object[meta.count()];
 
     /** Access by a key index */
     public <V> void setValue(Key<City,V> key, V value) {
@@ -38,6 +38,11 @@ public class CityUjo {
 
     public City newInstance() {
         return meta.newDomain(array);
+    }
+
+    /** Clone array for tests */
+    public Object[] array() {
+        return array.clone();
     }
 
 }

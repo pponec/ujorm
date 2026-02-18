@@ -26,7 +26,7 @@ public class EmployeeUjo {
     public static final Key<Employee, City> keyCity = meta.getKey("city", City.class);
     public static final Key<Employee, LocalDate> keyContractDay = meta.getKey("contractDay", LocalDate.class);
     public static final Key<Employee, Boolean> keyActive = meta.getKey("active", boolean.class);
-    final Object[] array = new Object[meta.count()];
+    private final Object[] array = new Object[meta.count()];
 
     /** Access by a key index */
     public <V> void setValue(Key<Employee,V> key, V value) {
@@ -40,5 +40,11 @@ public class EmployeeUjo {
 
     public Employee newInstance() {
         return meta.newDomain(array);
+    }
+
+    /** Clone array for tests */
+    @Deprecated
+    public Object[] array() {
+        return array.clone();
     }
 }

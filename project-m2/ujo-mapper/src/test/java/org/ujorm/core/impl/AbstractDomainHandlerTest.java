@@ -19,7 +19,7 @@ class AbstractDomainHandlerTest {
         var domainHandler = createDomainHandler(true);
         var city = new CityUjo();
         var keyLat = CityUjo.keyLatitude;
-        var inputArray = city.array.clone(); // Create new Array
+        var inputArray = city.array(); // Create new Array
         inputArray[keyLat.getIndex()] = null;// Ensure the NULL value
 
         var resultArray = domainHandler.normalizePrimitives(inputArray);
@@ -43,7 +43,7 @@ class AbstractDomainHandlerTest {
         var domainHandler = createDomainHandler(false);
         var city = new CityUjo();
         var keyLat = CityUjo.keyLatitude;
-        var inputArray = city.array.clone(); // Create new Array
+        var inputArray = city.array(); // Create new Array
         inputArray[keyLat.getIndex()] = null; // Ensure the NULL value
 
         var resultArray = domainHandler.normalizePrimitives(inputArray);
