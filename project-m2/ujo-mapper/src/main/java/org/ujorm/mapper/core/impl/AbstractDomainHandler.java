@@ -106,7 +106,4 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
     public final int count() {
         return keyList.size();
     }
-
-    /** Create a new domain object and assign values */
-    public abstract D newDomain(Object[] values);
 }

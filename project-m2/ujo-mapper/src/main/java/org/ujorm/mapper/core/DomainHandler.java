@@ -24,5 +24,12 @@ public interface DomainHandler<D> {
     <V> Key<D, V> getKey(@Nullable String name, Class<V> type)
             throws NoSuchElementException;
 
-    int count();
+    /** Return total count of the properties. */
+    default int count() {
+        return getKeyList().size();
+    }
+
+    /** Create a new domain object and assign values from the argument array. */
+    D newDomain(Object... values);
+
 }

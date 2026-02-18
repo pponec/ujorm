@@ -73,7 +73,7 @@ class AbstractDomainHandlerTest {
                 return null;
             }
             @Override
-            public Object newDomain(Object[] values) {
+            public Object newDomain(Object... values) {
                 return null;
             }
         };

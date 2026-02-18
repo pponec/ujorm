@@ -17,7 +17,7 @@ class City_Test {
         e.setValue(CityUjo.keyCountryCode, "CA");
         e.setValue(CityUjo.keyLatitude, 45.4215);
         e.setValue(CityUjo.keyLongitude, -75.6972);
-        var city = e.newInstance();
+        var city = e.newDomain();
 
         Assertions.assertEquals(10, city.id());
         Assertions.assertEquals("Ottawa", city.name());
@@ -30,7 +30,7 @@ class City_Test {
     @Test
     void testNewInstance_null() {
         var e = new CityUjo();
-        var city = e.newInstance();
+        var city = e.newDomain();
 
         Assertions.assertNull(city.id());
         Assertions.assertNull(city.name());

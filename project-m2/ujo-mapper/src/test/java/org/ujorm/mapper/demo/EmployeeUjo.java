@@ -21,7 +21,7 @@ import java.time.LocalDate;
  */
 public class EmployeeUjo implements Ujo<Employee> {
 
-    public static final Employee_ meta = new Employee_();
+    public static final DomainHandler<Employee> meta = new Employee_();
     public static final Key<Employee, Long> keyId = meta.getKey("id", Long.class);
     public static final Key<Employee, String> keyName = meta.getKey("name", String.class);
     public static final Key<Employee, Employee> keySuperior = meta.getKey("superior", Employee.class);
@@ -47,7 +47,7 @@ public class EmployeeUjo implements Ujo<Employee> {
         return meta;
     }
 
-    public Employee newInstance() {
+    public Employee newDomain() {
         return meta.newDomain(array);
     }
 

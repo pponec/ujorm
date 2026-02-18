@@ -48,7 +48,7 @@ class Employee_Test {
         e.setValue(EmployeeUjo.keyCity, City.of(1L, "California"));
         e.setValue(EmployeeUjo.keyContractDay, LocalDate.of(2026, 02, 17));
         e.setValue(EmployeeUjo.keyActive, true);
-        var employee = e.newInstance();
+        var employee = e.newDomain();
 
         Assertions.assertEquals(10, employee.getId());
         Assertions.assertEquals("Test", employee.getName());
@@ -62,7 +62,7 @@ class Employee_Test {
     @Test
     void testNewInstance_null() {
         var e = new EmployeeUjo();
-        var employee = e.newInstance();
+        var employee = e.newDomain();
 
         Assertions.assertNull(employee.getId());
         Assertions.assertNull(employee.getName());

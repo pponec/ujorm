@@ -20,7 +20,7 @@ import org.ujorm.mapper.demo.generated.City_;
  */
 public class CityUjo implements Ujo<City>  {
 
-    public static final City_ meta = new City_();
+    public static final DomainHandler<City> meta = new City_();
     public static final Key<City, Long> keyId = meta.getKey("id", Long.class);
     public static final Key<City, String> keyName = meta.getKey("name", String.class);
     public static final Key<City, String> keyCountryCode = meta.getKey("countryCode", String.class);
@@ -40,7 +40,7 @@ public class CityUjo implements Ujo<City>  {
         return (V) array[key.getIndex()];
     }
 
-    public City newInstance() {
+    public City newDomain() {
         return meta.newDomain(array);
     }
 
