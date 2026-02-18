@@ -1,67 +1,39 @@
 package org.ujorm.mapper;
 
-import org.jetbrains.annotations.Nullable;
-import org.ujorm.mapper.generator.ClassGenerator;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.mapper.core.DomainHandler;
 
-import java.util.concurrent.ConcurrentHashMap;
+/**
+ * Singleton to provide Domain handlers.
+ * This implementation is thread-safe using the Initialization-on-demand holder idiom.
+ */
+public final class DomainHandlerProvider {
 
-/** Provides meta models of domain objects */
-public class DomainHandlerProvider {
-
-    public static final String PACKAGE_PREFIX = "org.ujorm.gen_.";
-
-    private final ConcurrentHashMap<Class<?>, DomainHandler> map = new ConcurrentHashMap<>();
-    private final ClassGenerator classGenerator = new ClassGenerator();
-
-    public DomainHandler getHandler(Class<?> domainModel) {
-        var result = map.get(domainModel);
-        if (result == null) {
-            result = createModel(domainModel);
-            map.put(domainModel, result);
-        }
-        return result;
+    /** Private constructor to prevent instantiation. */
+    private DomainHandlerProvider() {
     }
 
-    private DomainHandler createModel(Class<?> domainModel) {
-        var packageName = getModelImplPath(domainModel);
-        var simpleClassName = domainModel.getSimpleName() + '_';
-        var fullClassName = packageName + '.' + simpleClassName;
-        var clazz = loadClassName(fullClassName);
-        if (clazz == null) {
-            synchronized (domainModel) {
-                clazz = loadClassName(fullClassName);
-                if (clazz == null) {
-                    try {
-                        clazz = classGenerator.createClass(createClassTemplate(fullClassName), fullClassName);
-                    } catch (Exception ex) {
-                        throw new IllegalStateException("Cant create %s class for the domain: %s".formatted(fullClassName, domainModel));
-                    }
-                }
-            }
-        }
-        try {
-            return (DomainHandler) clazz.getConstructor().newInstance();
-        } catch (Throwable ex) {
-            throw new IllegalStateException("Cant create instance for the meta-model class: " + clazz.getName());
-        }
+    /**
+     * Holder class for lazy-loading the singleton instance.
+     */
+    private static final class Holder {
+        private static final DomainHandlerService INSTANCE = new DomainHandlerService();
     }
 
-    @Nullable
-    private Class<?> loadClassName(String fullClassName) {
-        try {
-            return Class.forName(fullClassName);
-        } catch (ClassNotFoundException ex) {
-            return null;
-        }
+    /**
+     * Provides the DomainHandlerProvider instance.
+     * @return DomainHandlerProvider
+     */
+    public static DomainHandlerService provider() {
+        return Holder.INSTANCE;
     }
 
-    private String createClassTemplate(String domainModel) {
-        return ""; // TODO
+    /**
+     * Gets a handler for the specified class.
+     * @param clazz Domain class
+     * @return DomainHandler
+     */
+    public static DomainHandler get(@NotNull Class<?> clazz) {
+        return provider().getHandler(clazz);
     }
-
-    private String getModelImplPath(Class<?> domainModel) {
-        return PACKAGE_PREFIX + domainModel.getPackageName();
-    }
-
 }

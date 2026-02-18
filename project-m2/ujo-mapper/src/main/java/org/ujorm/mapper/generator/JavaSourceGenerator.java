@@ -2,7 +2,7 @@ package org.ujorm.mapper.generator;
 
 import org.ujorm.mapper.core.impl.AbstractDomainHandler;
 import org.ujorm.mapper.core.impl.AbstractKey;
-import org.ujorm.mapper.DomainHandlerProvider;
+import org.ujorm.mapper.DomainHandlerService;
 import org.ujorm.tools.msg.MessageService;
 
 import java.io.StringWriter;
@@ -16,7 +16,7 @@ import java.util.HashMap;
  */
 public class JavaSourceGenerator {
 
-    private static final String PACKAGE_PREFIX = DomainHandlerProvider.PACKAGE_PREFIX;
+    private static final String PACKAGE_PREFIX = DomainHandlerService.PACKAGE_PREFIX;
 
     public String getSourceCode(DomainModel meta) {
         final var writer = new StringWriter(5_000);

@@ -1,6 +1,6 @@
 package org.ujorm.mapper.demo;
 
-import org.ujorm.mapper.DomainHandlerSingleton;
+import org.ujorm.mapper.DomainHandlerProvider;
 import org.ujorm.mapper.core.DomainHandler;
 import org.ujorm.mapper.core.Key;
 import org.ujorm.mapper.core.Ujo;
@@ -22,7 +22,7 @@ import java.time.LocalDate;
  */
 public class EmployeeUjo implements Ujo<Employee> {
     /** Meta model */
-    public static final DomainHandler<Employee> meta = DomainHandlerSingleton.get(Employee.class);
+    public static final DomainHandler<Employee> meta = DomainHandlerProvider.get(Employee.class);
     public static final Key<Employee, Long> keyId = meta.getKey("id", Long.class);
     public static final Key<Employee, String> keyName = meta.getKey("name", String.class);
     public static final Key<Employee, Employee> keySuperior = meta.getKey("superior", Employee.class);
