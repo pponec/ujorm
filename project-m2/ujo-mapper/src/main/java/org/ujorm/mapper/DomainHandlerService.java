@@ -26,7 +26,7 @@ public class DomainHandlerService {
 
     @NotNull
     private <D> DomainHandler<D> createHandler(Class<D> domainModel) {
-        var handlerClassName = ClassName.forHandler(domainModel);
+        var handlerClassName = ClassName.forGenerated(domainModel);
         var handlerClass = handlerClassName.classForName();
         if (handlerClass == null) {
             synchronized (domainModel) {

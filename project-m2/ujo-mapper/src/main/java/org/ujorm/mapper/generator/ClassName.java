@@ -13,17 +13,19 @@ public record ClassName(String packageName, String className) {
         return packageName + "." + className;
     }
 
-    public static ClassName forHandler(Class<?> domain){
+    /** Factory method for a generatedClass. */
+    public static ClassName forGenerated(Class<?> domain){
         return new ClassName(
                 PACKAGE_PREFIX + domain.getPackageName(),
                 domain.getSimpleName() + "_");
     }
 
-    public static ClassName forHandler(DomainModel domainModel) {
-        return forHandler(domainModel.domainClass());
+    /** Factory method for a generatedClass. */
+    public static ClassName forGenerated(DomainModel domainModel) {
+        return forGenerated(domainModel.domainClass());
     }
 
-    /** Try load a class for this. */
+    /** Try to load a class for this name. */
     @Nullable
     public Class<?> classForName() {
         try {
