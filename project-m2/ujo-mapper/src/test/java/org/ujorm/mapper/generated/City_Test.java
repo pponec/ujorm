@@ -2,13 +2,11 @@ package org.ujorm.mapper.generated;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.ujorm.core.Key;
-import org.ujorm.mapper.demo.City;
+import org.ujorm.mapper.demo.CityUjo;
 
 class City_Test {
 
     private static double DELTA = 0.00_000_000_001;
-
 
     /** Create new instance */
     @Test
@@ -41,21 +39,4 @@ class City_Test {
         Assertions.assertEquals(0.0, city.latitude(), DELTA);
     }
 
-    public class CityUjo {
-        static final City_ meta = new City_();
-        static final Key<City, Long> keyId = meta.getKey("id", Long.class);
-        static final Key<City, String> keyName = meta.getKey("name", String.class);
-        static final Key<City, String> keyCountryCode = meta.getKey("countryCode", String.class);
-        static final Key<City, Double> keyLatitude = meta.getKey("latitude", Double.class);
-        static final Key<City, Double> keyLongitude = meta.getKey("longitude", Double.class);
-        final Object[] array = new Object[meta.count()];
-
-        public <V> void setValue(Key<City,V> key, V value) {
-            array[key.getIndex()] = value;
-        }
-
-        public City newInstance() {
-            return meta.newDomain(array);
-        }
-    }
 }
