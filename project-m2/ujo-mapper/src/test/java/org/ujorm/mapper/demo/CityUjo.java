@@ -4,6 +4,7 @@ import org.ujorm.mapper.DomainHandlerProvider;
 import org.ujorm.mapper.core.DomainHandler;
 import org.ujorm.mapper.core.Key;
 import org.ujorm.mapper.core.Ujo;
+import org.ujorm.mapper.demo.generated.City_;
 
 /**
  * Example demonstration of a type-safe attribute container based on the Object array.
@@ -19,9 +20,11 @@ import org.ujorm.mapper.core.Ujo;
  * @see Key
  */
 public class CityUjo implements Ujo<City>  {
+    /** For implementation see the {@link City_} class. */
+    public static final DomainHandler<City> meta = false
+            ? DomainHandlerProvider.getHandler(City.class)
+            : new City_();
 
-    /** For implementation see the {@link org.ujorm.mapper.demo.generated.City_} class. */
-    public static final DomainHandler<City> meta = DomainHandlerProvider.getHandler(City.class);
     public static final Key<City, Long> keyId = meta.getKey("id", Long.class);
     public static final Key<City, String> keyName = meta.getKey("name", String.class);
     public static final Key<City, String> keyCountryCode = meta.getKey("countryCode", String.class);
