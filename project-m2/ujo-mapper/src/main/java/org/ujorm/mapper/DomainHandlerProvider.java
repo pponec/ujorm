@@ -30,10 +30,10 @@ public final class DomainHandlerProvider {
 
     /**
      * Gets a handler for the specified class.
-     * @param clazz Domain class
+     * @param clazz An original domain class
      * @return DomainHandler
      */
-    public static DomainHandler get(@NotNull Class<?> clazz) {
+    public static DomainHandler getHandler(@NotNull Class<?> clazz) {
         return provider().getHandler(clazz);
     }
 }

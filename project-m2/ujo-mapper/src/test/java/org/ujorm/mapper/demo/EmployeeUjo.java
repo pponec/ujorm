@@ -22,7 +22,7 @@ import java.time.LocalDate;
  */
 public class EmployeeUjo implements Ujo<Employee> {
     /** For implementation see the {@link org.ujorm.mapper.demo.generated.Employee_} class. */
-    public static final DomainHandler<Employee> meta = DomainHandlerProvider.get(Employee.class);
+    public static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
     public static final Key<Employee, Long> keyId = meta.getKey("id", Long.class);
     public static final Key<Employee, String> keyName = meta.getKey("name", String.class);
     public static final Key<Employee, Employee> keySuperior = meta.getKey("superior", Employee.class);
