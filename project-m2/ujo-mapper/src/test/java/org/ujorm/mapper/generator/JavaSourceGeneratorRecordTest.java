@@ -11,7 +11,8 @@ class JavaSourceGeneratorRecordTest {
     @Test
     void getSourceCode() {
         var meta = DomainModel.of(City.class);
-        var src = new JavaSourceGenerator().getSourceCode(meta);
+        var className = ClassName.forHandler(meta);
+        var src = new JavaSourceGenerator().getSourceCode(meta, className);
 
         if (printResult) System.out.println(src);
         assertContains("package org.ujorm.gen_.org.ujorm.mapper.demo", src);
@@ -28,7 +29,7 @@ class JavaSourceGeneratorRecordTest {
         assertContains("super(order, \"id\", java.lang.Long.class, \"id\", true, true);", src);
         assertContains("throw unsupportedSetter(this);", src);
 
-        var clazz = new ClassGenerator().createClass(src);
+        var clazz = new ClassGenerator().createClass(src, className);
         Assertions.assertNotNull(clazz);
     }
 

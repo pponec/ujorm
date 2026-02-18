@@ -1,67 +1,58 @@
 package org.ujorm.mapper;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.mapper.generator.ClassGenerator;
 import org.ujorm.mapper.core.DomainHandler;
+import org.ujorm.mapper.generator.ClassName;
+import org.ujorm.mapper.generator.DomainModel;
+import org.ujorm.mapper.generator.JavaSourceGenerator;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 /** Service provides meta models of domain objects */
 public class DomainHandlerService {
-
-    public static final String PACKAGE_PREFIX = "org.ujorm.gen_.";
-
+    /** A mapping a domain class to the domain handler object. */
     private final ConcurrentHashMap<Class<?>, DomainHandler> map = new ConcurrentHashMap<>();
-    private final ClassGenerator classGenerator = new ClassGenerator();
 
-    public <D> DomainHandler<D> getHandler(Class<D> domainModel) {
-        var result = map.get(domainModel);
+    @NotNull
+    public <D> DomainHandler<D> getHandler(Class<D> domainClass) {
+        var result = (DomainHandler<D>) map.get(domainClass);
         if (result == null) {
-            result = createModel(domainModel);
-            map.put(domainModel, result);
+            result = createHandler(domainClass);
+            map.put(domainClass, result);
         }
         return result;
     }
 
-    private DomainHandler createModel(Class<?> domainModel) {
-        var packageName = getModelImplPath(domainModel);
-        var simpleClassName = domainModel.getSimpleName() + '_';
-        var fullClassName = packageName + '.' + simpleClassName;
-        var clazz = loadClassName(fullClassName);
-        if (clazz == null) {
+    @NotNull
+    private <D> DomainHandler<D> createHandler(Class<D> domainModel) {
+        var handlerClassName = ClassName.forHandler(domainModel);
+        var handlerClass = handlerClassName.classForName();
+        if (handlerClass == null) {
             synchronized (domainModel) {
-                clazz = loadClassName(fullClassName);
-                if (clazz == null) {
+                handlerClass = handlerClassName.classForName();
+                if (handlerClass == null) {
                     try {
-                        clazz = classGenerator.createClass(createClassTemplate(fullClassName), fullClassName);
+                        handlerClass = createClass(domainModel, handlerClassName);
                     } catch (Exception ex) {
-                        throw new IllegalStateException("Cant create %s class for the domain: %s".formatted(fullClassName, domainModel));
+                        var msg = "Cant create %s class for the domain: %s".formatted(handlerClassName, domainModel);
+                        throw new IllegalStateException(msg, ex);
                     }
                 }
             }
         }
         try {
-            return (DomainHandler) clazz.getConstructor().newInstance();
+            return (DomainHandler<D>) handlerClass.getConstructor().newInstance();
         } catch (Throwable ex) {
-            throw new IllegalStateException("Cant create instance for the meta-model class: " + clazz.getName());
+            throw new IllegalStateException("Cant create instance for the meta-model class: " + handlerClass.getName());
         }
     }
 
-    @Nullable
-    private Class<?> loadClassName(String fullClassName) {
-        try {
-            return Class.forName(fullClassName);
-        } catch (ClassNotFoundException ex) {
-            return null;
-        }
-    }
-
-    private String createClassTemplate(String domainModel) {
-        return ""; // TODO
-    }
-
-    private String getModelImplPath(Class<?> domainModel) {
-        return PACKAGE_PREFIX + domainModel.getPackageName();
+    private <D> Class<D> createClass(Class<D> domainModel, ClassName targetClassName) {
+        var meta = DomainModel.of(domainModel);
+        var src = new JavaSourceGenerator().getSourceCode(meta, targetClassName);
+        var result = new ClassGenerator().createClass(src, targetClassName);
+        return (Class<D>) result;
     }
 
 }

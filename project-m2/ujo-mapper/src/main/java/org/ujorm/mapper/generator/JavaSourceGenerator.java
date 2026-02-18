@@ -16,14 +16,12 @@ import java.util.HashMap;
  */
 public class JavaSourceGenerator {
 
-    private static final String PACKAGE_PREFIX = DomainHandlerService.PACKAGE_PREFIX;
-
-    public String getSourceCode(DomainModel meta) {
+    public String getSourceCode(DomainModel meta, ClassName className) {
         final var writer = new StringWriter(5_000);
         final var params = new HashMap<String, Object>(20);
         {
-            params.put("package", PACKAGE_PREFIX + meta.domainClass().getPackageName());
-            params.put("generatedClass", meta.domainClass().getSimpleName() + "_");
+            params.put("package", className.packageName());
+            params.put("generatedClass", className.className());
             params.put("domainClass", meta.domainClass().getSimpleName());
             params.put("domainClassFull", meta.domainClass().getName());
             params.put("baseClass", AbstractDomainHandler.class.getSimpleName());

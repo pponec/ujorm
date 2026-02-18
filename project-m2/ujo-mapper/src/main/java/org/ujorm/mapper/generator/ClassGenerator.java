@@ -21,41 +21,11 @@ public class ClassGenerator {
      * ensuring the dynamic class can see interfaces and classes from the main application.
      *
      * @param sourceCode         The Java source code.
-     * @return The compiled and loaded Class object.
-     * @throws RuntimeException if compilation fails (includes compiler error messages).
-     */
-    public Class<?> createClass(String sourceCode) {
-        var canonicalClassName = getCanonicalClassName(sourceCode);
-        return createClass(sourceCode, canonicalClassName);
-    }
-
-    /**
-     * Extracts the canonical class name using a more concise approach.
-     */
-    protected String getCanonicalClassName(String sourceCode) {
-        var pkgMatcher = Pattern.compile("package\\s+([\\w.]+)\\s*;").matcher(sourceCode);
-        if (!pkgMatcher.find()) {
-            throw new IllegalStateException("Source code does not contain a package declaration.");
-        }
-        var classMatcher = Pattern.compile("public\\s+.*?class\\s+([a-zA-Z_$][a-zA-Z\\d_$]*)").matcher(sourceCode);
-        if (!classMatcher.find()) {
-            throw new IllegalStateException("Source code does not contain a public class declaration.");
-        }
-        return pkgMatcher.group(1) + "." + classMatcher.group(1);
-    }
-
-    /**
-     * Compiles the given source code in-memory and loads the resulting class.
-     * <p>
-     * The method uses the current thread's context class loader as the parent,
-     * ensuring the dynamic class can see interfaces and classes from the main application.
-     *
-     * @param sourceCode         The Java source code.
      * @param canonicalClassName The fully qualified name of the class (e.g., "com.example.MyClass").
      * @return The compiled and loaded Class object.
      * @throws RuntimeException if compilation fails (includes compiler error messages).
      */
-    public Class<?> createClass(String sourceCode, String canonicalClassName) {
+    public Class<?> createClass(String sourceCode, ClassName canonicalClassName) {
         var compiler = ToolProvider.getSystemJavaCompiler();
         if (compiler == null) {
             throw new IllegalStateException("Java Compiler unavailable. Ensure you are running with a JDK.");
@@ -101,11 +71,16 @@ public class ClassGenerator {
     /**
      * Executes the compilation task. Throws RuntimeException with detailed diagnostics on failure.
      */
-    private void compile(JavaCompiler compiler, JavaFileManager fileManager,
+    private void compile(JavaCompiler compiler,
+                         JavaFileManager fileManager,
                          DiagnosticCollector<JavaFileObject> diagnostics,
-                         String sourceCode, String canonicalClassName) {
+                         String sourceCode,
+                         ClassName canonicalClassName) {
 
-        var sourceObject = new SimpleJavaFileObject(URI.create("string:///" + canonicalClassName.replace('.', '/') + JavaFileObject.Kind.SOURCE.extension), JavaFileObject.Kind.SOURCE) {
+        var uri = URI.create("string:///"
+                + canonicalClassName.toString().replace('.', '/')
+                + JavaFileObject.Kind.SOURCE.extension);
+        var sourceObject = new SimpleJavaFileObject(uri, JavaFileObject.Kind.SOURCE) {
             @Override
             public CharSequence getCharContent(boolean ignoreEncodingErrors) {
                 return sourceCode;
@@ -125,7 +100,7 @@ public class ClassGenerator {
     /**
      * Loads the class from the bytecode map using a dedicated ephemeral ClassLoader.
      */
-    private Class<?> loadClass(Map<String, byte[]> classBytes, String canonicalClassName) throws ClassNotFoundException {
+    private Class<?> loadClass(Map<String, byte[]> classBytes, ClassName canonicalClassName) throws ClassNotFoundException {
         var loader = new ClassLoader(Thread.currentThread().getContextClassLoader()) {
             @Override
             protected Class<?> findClass(String name) throws ClassNotFoundException {
@@ -136,7 +111,7 @@ public class ClassGenerator {
                 return defineClass(name, bytes, 0, bytes.length);
             }
         };
-        return loader.loadClass(canonicalClassName);
+        return loader.loadClass(canonicalClassName.toString());
     }
 }
 

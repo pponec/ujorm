@@ -11,7 +11,8 @@ class JavaSourceGeneratorBeanTest {
     @Test
     void getSourceCode() {
         var meta = DomainModel.of(Employee.class);
-        var src = new JavaSourceGenerator().getSourceCode(meta);
+        var className = ClassName.forHandler(meta);
+        var src = new JavaSourceGenerator().getSourceCode(meta, className);
 
         if (printResult) System.out.println(src);
         assertContains("package org.ujorm.gen_.org.ujorm.mapper.demo;", src);
@@ -31,7 +32,7 @@ class JavaSourceGeneratorBeanTest {
         assertContains("return bean.getId();", src);
         assertContains("public @NotNull Class<Employee> getDomainClass() {", src);
 
-        var clazz = new ClassGenerator().createClass(src);
+        var clazz = new ClassGenerator().createClass(src, className);
         Assertions.assertNotNull(clazz);
     }
 
