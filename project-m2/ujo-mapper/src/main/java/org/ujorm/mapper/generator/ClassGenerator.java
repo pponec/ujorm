@@ -1,4 +1,4 @@
-package org.ujorm.mapper;
+package org.ujorm.mapper.generator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

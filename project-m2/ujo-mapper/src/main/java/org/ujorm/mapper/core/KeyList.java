@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.core;
+package org.ujorm.mapper.core;
 
 import java.util.Iterator;
 

@@ -1,4 +1,4 @@
-package org.ujorm.core.impl;
+package org.ujorm.mapper.core.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;

@@ -1,4 +1,4 @@
-package org.ujorm.mapper.generated;
+package org.ujorm.mapper.demo.generated;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

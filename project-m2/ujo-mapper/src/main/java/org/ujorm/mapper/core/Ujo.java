@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.core;
+package org.ujorm.mapper.core;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
  * @author Pavel Ponec
  */
 public interface Ujo<UJO extends Object> {
-
 
     /** Common method to reading object value.
      *
@@ -45,11 +44,7 @@ public interface Ujo<UJO extends Object> {
      */
     <V> void setValue(@NotNull Key<UJO,V> key, @Nullable V value);
 
-    /** Returns all direct keys.
-     * There is recommended to be a "name" of each key is unique (but it is NOT a necessary condition).
-     *
-     * <br>An index key in the array UJO must be unique a continuous, an order of key array depends on an implementation of UJO object.
-     */
-    <U extends Ujo> KeyList<U> readKeys();
+    /** Returns a domain handler */
+    DomainHandler<UJO> domainHandler();
 
 }

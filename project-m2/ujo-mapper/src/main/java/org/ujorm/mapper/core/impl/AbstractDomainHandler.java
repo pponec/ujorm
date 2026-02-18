@@ -1,9 +1,10 @@
-package org.ujorm.core.impl;
+package org.ujorm.mapper.core.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.Key;
+import org.ujorm.mapper.core.DomainHandler;
+import org.ujorm.mapper.core.Key;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -16,7 +17,7 @@ import java.util.stream.Stream;
  * @param <D> The Domain class type (e.g. Employee)
  */
 @RequiredArgsConstructor
-public abstract class AbstractDomainHandler<D> {
+public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
 
     /** List of the keys */
     protected final List<Key<D, ?>> keyList;
@@ -80,29 +81,18 @@ public abstract class AbstractDomainHandler<D> {
         return values;
     }
 
-    @NotNull
-    public abstract Class<D> getDomainClass();
-
     public boolean isRecord() {
         return getDomainClass().isRecord();
     }
 
-    @NotNull
-    public final List<Key<D, ?>> getKeyList() {
+    @Override
+    public final @NotNull List<Key<D, ?>> getKeyList() {
         return keyList;
     }
 
-    /**
-     * Find key in metamodel.
-     * @param name Property name.
-     * @param type Only for safe result type
-     * @return Key object.
-     * @param <V> Value
-     * @throws NoSuchElementException If not such element was found
-     */
-    @NotNull
     @SuppressWarnings("unchecked")
-    public final <V> Key<D, V> getKey(@Nullable final String name, final Class<V> type)
+    @Override
+    public final @NotNull <V> Key<D, V> getKey(@Nullable final String name, final Class<V> type)
             throws NoSuchElementException {
         var result = keyMap.get(name);
         if (result == null) {
@@ -112,6 +102,7 @@ public abstract class AbstractDomainHandler<D> {
         return (Key<D, V>) result;
     }
 
+    @Override
     public final int count() {
         return keyList.size();
     }

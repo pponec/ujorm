@@ -1,4 +1,4 @@
-package org.ujorm.mapper;
+package org.ujorm.mapper.generator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

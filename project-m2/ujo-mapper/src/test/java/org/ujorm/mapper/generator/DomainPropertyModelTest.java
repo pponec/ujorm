@@ -1,4 +1,4 @@
-package org.ujorm.mapper;
+package org.ujorm.mapper.generator;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.mapper.demo.City;

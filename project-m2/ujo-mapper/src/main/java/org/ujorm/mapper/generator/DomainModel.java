@@ -1,4 +1,4 @@
-package org.ujorm.mapper;
+package org.ujorm.mapper.generator;
 
 import jakarta.persistence.Table;
 import java.util.List;

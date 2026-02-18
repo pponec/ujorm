@@ -1,9 +1,9 @@
-package org.ujorm.core.impl;
+package org.ujorm.mapper.core.impl;
 
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.Key;
+import org.ujorm.mapper.core.Key;
 import java.util.Map;
 import java.util.Objects;
 

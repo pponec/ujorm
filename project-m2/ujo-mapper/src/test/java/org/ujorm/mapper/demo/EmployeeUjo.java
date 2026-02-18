@@ -1,7 +1,9 @@
 package org.ujorm.mapper.demo;
 
-import org.ujorm.core.Key;
-import org.ujorm.mapper.generated.Employee_;
+import org.ujorm.mapper.core.DomainHandler;
+import org.ujorm.mapper.core.Key;
+import org.ujorm.mapper.core.Ujo;
+import org.ujorm.mapper.demo.generated.Employee_;
 import java.time.LocalDate;
 
 /**
@@ -17,7 +19,7 @@ import java.time.LocalDate;
  *
  * @see Key
  */
-public class EmployeeUjo {
+public class EmployeeUjo implements Ujo<Employee> {
 
     public static final Employee_ meta = new Employee_();
     public static final Key<Employee, Long> keyId = meta.getKey("id", Long.class);
@@ -29,13 +31,20 @@ public class EmployeeUjo {
     private final Object[] array = new Object[meta.count()];
 
     /** Access by a key index */
+    @Override
     public <V> void setValue(Key<Employee,V> key, V value) {
         array[key.getIndex()] = value;
     }
 
     /** Access by a key index */
+    @Override
     public <V> V getValue(Key<Employee,V> key) {
         return (V) array[key.getIndex()];
+    }
+
+    @Override
+    public DomainHandler<Employee> domainHandler() {
+        return meta;
     }
 
     public Employee newInstance() {

@@ -1,7 +1,8 @@
-package org.ujorm.mapper;
+package org.ujorm.mapper.generator;
 
 import jakarta.persistence.Table;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DomainModelTest {

@@ -1,17 +1,20 @@
-package org.ujorm.core.impl;
+package org.ujorm.mapper;
 
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.mapper.ClassGenerator;
+import org.ujorm.mapper.generator.ClassGenerator;
+import org.ujorm.mapper.core.DomainHandler;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 /** Provides meta models of domain objects */
 public class DomainHandlerProvider {
 
-    private final ConcurrentHashMap<Class<?>, AbstractDomainHandler> map = new ConcurrentHashMap<>();
+    public static final String PACKAGE_PREFIX = "org.ujorm.gen_.";
+
+    private final ConcurrentHashMap<Class<?>, DomainHandler> map = new ConcurrentHashMap<>();
     private final ClassGenerator classGenerator = new ClassGenerator();
 
-    public AbstractDomainHandler getModel(Class<?> domainModel) {
+    public DomainHandler getModel(Class<?> domainModel) {
         var result = map.get(domainModel);
         if (result == null) {
             result = createModel(domainModel);
@@ -20,7 +23,7 @@ public class DomainHandlerProvider {
         return result;
     }
 
-    private AbstractDomainHandler createModel(Class<?> domainModel) {
+    private DomainHandler createModel(Class<?> domainModel) {
         var packageName = getModelImplPath(domainModel);
         var simpleClassName = domainModel.getSimpleName() + '_';
         var fullClassName = packageName + '.' + simpleClassName;
@@ -38,7 +41,7 @@ public class DomainHandlerProvider {
             }
         }
         try {
-            return (AbstractDomainHandler) clazz.getConstructor().newInstance();
+            return (DomainHandler) clazz.getConstructor().newInstance();
         } catch (Throwable ex) {
             throw new IllegalStateException("Cant create instance for the meta-model class: " + clazz.getName());
         }
@@ -58,7 +61,7 @@ public class DomainHandlerProvider {
     }
 
     private String getModelImplPath(Class<?> domainModel) {
-        return "ujorm." + domainModel.getPackageName();
+        return PACKAGE_PREFIX + domainModel.getPackageName();
     }
 
 }
