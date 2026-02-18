@@ -24,12 +24,28 @@ public abstract class AbstractDomainHandler<D> {
     protected final Map<String, Key<D, ?>> keyMap;
     /** Does the domain have any primitive attribute? */
     private final boolean hasPrimitives;
+    /** Enable direct modification of the array elements */
+    private final boolean enableArrayMutation;
 
-
+    /**
+     * Constructs a new instance with {@code enableArrayMutation} set to {@code true} by default.
+     * @param keyList List of the all Ujorm Keys per domain object.
+     */
     protected AbstractDomainHandler(@NotNull Key<D, ?>... keyList) {
+        this(true, keyList);
+    }
+
+    /**
+     * Constructs a new instance.
+     * @param enableArrayMutation {@code true} to permit direct modification of the array elements;
+     *  * {@code false} to enforce immutability by defensive copying or preventing setter access.
+     * @param keyList List of the all Ujorm Keys per domain object.
+     */
+    protected AbstractDomainHandler(boolean enableArrayMutation, @NotNull Key<D, ?>... keyList) {
         this.keyList = List.of(keyList);
         this.keyMap = Stream.of(keyList).collect(Collectors.toUnmodifiableMap(Key::getName, Function.identity()));
         this.hasPrimitives = hasPrimitives(keyList);
+        this.enableArrayMutation = enableArrayMutation;
     }
 
     /** Does the domain have a primitive attribute? */
@@ -48,11 +64,13 @@ public abstract class AbstractDomainHandler<D> {
             throw new IllegalArgumentException(msg);
         }
         if (hasPrimitives) {
-            values = values.clone();
+            if (!enableArrayMutation) {
+                values = values.clone();
+            }
             for (var key : keyList) {
                 if (key.getType().isPrimitive()) {
-                    var idx = key.getIndex();
-                    var value = values[idx];
+                    final var idx = key.getIndex();
+                    final var value = values[idx];
                     if (value == null) {
                         values[idx] = key.getDefaultValue();
                     }
