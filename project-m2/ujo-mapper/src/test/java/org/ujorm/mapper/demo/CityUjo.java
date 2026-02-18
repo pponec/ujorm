@@ -4,7 +4,7 @@ import org.ujorm.core.Key;
 import org.ujorm.mapper.generated.City_;
 
 /**
- * Example demonstration of a type-safe attribute container.
+ * Example demonstration of a type-safe attribute container based on the Object array.
  *
  * <p>This implementation guarantees <b>type-safe write and read operations</b> at compile time.
  * By using {@link Key} as a descriptor, it ensures that the type of the value being stored
@@ -26,12 +26,12 @@ public class CityUjo {
     public static final Key<City, Double> keyLongitude = meta.getKey("longitude", Double.class);
     public final Object[] array = new Object[meta.count()];
 
-    /** Direct access by an index */
+    /** Access by a key index */
     public <V> void setValue(Key<City,V> key, V value) {
         array[key.getIndex()] = value;
     }
 
-    /** Direct access by an index */
+    /** Access by a key index */
     public <V> V getValue(Key<City,V> key) {
         return (V) array[key.getIndex()];
     }

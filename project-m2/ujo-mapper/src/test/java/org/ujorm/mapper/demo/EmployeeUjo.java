@@ -5,7 +5,7 @@ import org.ujorm.mapper.generated.Employee_;
 import java.time.LocalDate;
 
 /**
- * Example demonstration of a type-safe attribute container.
+ * Example demonstration of a type-safe attribute container based on the Object array.
  *
  * <p>This implementation guarantees <b>type-safe write and read operations</b> at compile time.
  * By using {@link Key} as a descriptor, it ensures that the type of the value being stored
@@ -28,12 +28,12 @@ public class EmployeeUjo {
     public static final Key<Employee, Boolean> keyActive = meta.getKey("active", boolean.class);
     final Object[] array = new Object[meta.count()];
 
-    /** Direct access by an index */
+    /** Access by a key index */
     public <V> void setValue(Key<Employee,V> key, V value) {
         array[key.getIndex()] = value;
     }
 
-    /** Direct access by an index */
+    /** Access by a key index */
     public <V> V getValue(Key<Employee,V> key) {
         return (V) array[key.getIndex()];
     }
