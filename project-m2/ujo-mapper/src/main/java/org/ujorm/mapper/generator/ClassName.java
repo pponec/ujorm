@@ -14,15 +14,15 @@ public record ClassName(String packageName, String className) {
     }
 
     /** Factory method for a generatedClass. */
-    public static ClassName forGenerated(Class<?> domain){
+    public static ClassName ofGenerated(Class<?> domain){
         return new ClassName(
                 PACKAGE_PREFIX + domain.getPackageName(),
                 domain.getSimpleName() + "_");
     }
 
     /** Factory method for a generatedClass. */
-    public static ClassName forGenerated(DomainModel domainModel) {
-        return forGenerated(domainModel.domainClass());
+    public static ClassName ofGenerated(DomainModel domainModel) {
+        return ofGenerated(domainModel.domainClass());
     }
 
     /** Try to load a class for this name. */

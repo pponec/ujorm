@@ -11,7 +11,7 @@ class JavaSourceGeneratorRecordTest {
     @Test
     void getSourceCode() {
         var meta = DomainModel.of(City.class);
-        var className = ClassName.forGenerated(meta);
+        var className = ClassName.ofGenerated(meta);
         var src = new JavaSourceGenerator().getSourceCode(meta, className);
 
         if (printResult) System.out.println(src);
