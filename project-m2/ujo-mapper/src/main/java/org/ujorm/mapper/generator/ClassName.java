@@ -13,14 +13,23 @@ public record ClassName(String packageName, String className) {
         return packageName + "." + className;
     }
 
-    /** Factory method for a generatedClass. */
-    public static ClassName ofGenerated(Class<?> domain){
+    /** Factory method for a generated class.
+     * Creates a new ClassName instance derived from the domain class
+     * with a modified package and name suffix.
+     *
+     * @param domain The source domain class
+     * @return New instance of ClassName
+     */
+    public static ClassName ofGenerated(Class<?> domain) {
         return new ClassName(
                 PACKAGE_PREFIX + domain.getPackageName(),
                 domain.getSimpleName() + "_");
     }
 
-    /** Factory method for a generatedClass. */
+    /** Factory method for a generated class from DomainModel.
+     * * @param domainModel The source domain model
+     * @return New instance of ClassName
+     */
     public static ClassName ofGenerated(DomainModel domainModel) {
         return ofGenerated(domainModel.domainClass());
     }
