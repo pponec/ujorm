@@ -21,7 +21,7 @@ import java.time.LocalDate;
  * @see Key
  */
 public class EmployeeUjo implements Ujo<Employee> {
-    /** Meta model */
+    /** For implementation see the {@link org.ujorm.mapper.demo.generated.Employee_} class. */
     public static final DomainHandler<Employee> meta = DomainHandlerProvider.get(Employee.class);
     public static final Key<Employee, Long> keyId = meta.getKey("id", Long.class);
     public static final Key<Employee, String> keyName = meta.getKey("name", String.class);

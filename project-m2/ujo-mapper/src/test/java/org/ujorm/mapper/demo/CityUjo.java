@@ -20,6 +20,7 @@ import org.ujorm.mapper.core.Ujo;
  */
 public class CityUjo implements Ujo<City>  {
 
+    /** For implementation see the {@link org.ujorm.mapper.demo.generated.City_} class. */
     public static final DomainHandler<City> meta = DomainHandlerProvider.get(City.class);
     public static final Key<City, Long> keyId = meta.getKey("id", Long.class);
     public static final Key<City, String> keyName = meta.getKey("name", String.class);
