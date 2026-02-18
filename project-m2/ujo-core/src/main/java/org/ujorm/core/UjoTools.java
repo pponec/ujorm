@@ -40,7 +40,7 @@ import org.ujorm.validator.ValidatorUtils;
  * @author Pavel Ponec
 
  */
-public abstract class UjoTools implements Comparator<Key<?,?>> {
+public abstract class UjoTools implements Comparator<Key> {
 
     /** Simple space */
     public static final char SPACE = ' ';
@@ -61,6 +61,40 @@ public abstract class UjoTools implements Comparator<Key<?,?>> {
     protected boolean isAbstract(Class type) {
         final boolean result = Modifier.isAbstract(type.getModifiers() );
         return result;
+    }
+
+    /** Calculate a Hash Code. */
+    public int getHash(Ujo ujo) {
+        return getHash(ujo, ujo.readKeys());
+    }
+
+    /** Calculate a Hash Code. */
+    @SuppressWarnings("unchecked")
+    public int getHash(Ujo ujo, KeyList<?> keys) {
+        int result = 7;
+        if (ujo != null) {
+            for (Key key : keys) {
+                final Object value = key.of(ujo);
+                result = 11 * result + (value != null ? value.hashCode() : 0);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Test if Object o1 equalsUjo o2.
+     *
+     * @param o1 First parameter
+     * @param o2 Second parameter
+     * @return Returns true, if objects are the same.
+     */
+    public static boolean equals(Object o1, Object o2)  {
+        if (o1==o2) { return true; }
+        if (o1==null || o2==null) { return false; }
+        if (o1.getClass().isArray()) {
+            return equalsArray(o1, o2);
+        }
+        return o1.equals(o2);
     }
 
     /**
