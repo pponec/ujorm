@@ -53,7 +53,7 @@ public interface Key <UJO extends Object,VALUE> extends CharSequence, Comparable
     }
 
     /** Returns a class of the domain Ujo object. */
-    @NotNull Class<UJO> getDomainType();
+    @NotNull Class<UJO> getDomainClass();
 
     /** Name of database column */
     @NotNull String columnName();
@@ -121,7 +121,7 @@ public interface Key <UJO extends Object,VALUE> extends CharSequence, Comparable
 
     /** Returns true if the domain type is a type or subtype of the parameter class. */
     default boolean isDomainOf(@NotNull final Class type) {
-        return getDomainType().isAssignableFrom(type);
+        return getDomainClass().isAssignableFrom(type);
     }
 
     @Override

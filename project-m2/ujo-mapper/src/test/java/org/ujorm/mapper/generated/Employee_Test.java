@@ -12,7 +12,7 @@ class Employee_Test {
     @Test
     void managementTest() {
         final var instance = new Employee_();
-        Assertions.assertEquals(Employee.class, instance.getDomainType());
+        Assertions.assertEquals(Employee.class, instance.getDomainClass());
         Assertions.assertEquals(6, instance.count());
 
         var employee = instance.newDomain();

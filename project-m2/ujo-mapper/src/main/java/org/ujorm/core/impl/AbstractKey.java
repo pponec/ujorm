@@ -113,7 +113,7 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
 
     @Override
     public final boolean isDomainOf(@NotNull final Class type) {
-        return getDomainType().isAssignableFrom(type);
+        return getDomainClass().isAssignableFrom(type);
     }
 
     @Override

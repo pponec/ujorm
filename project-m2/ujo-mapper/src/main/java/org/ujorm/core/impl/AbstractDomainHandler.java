@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Common ancestor for generated MetaModels.
+ * Common ancestor for domain handler with generated metamodel.
  * @param <D> The Domain class type (e.g. Employee)
  */
 @RequiredArgsConstructor
-public abstract class AbstractMetaModel<D> {
+public abstract class AbstractDomainHandler<D> {
 
     /** List of the keys */
     protected final List<Key<D, ?>> keyList;
@@ -26,7 +26,7 @@ public abstract class AbstractMetaModel<D> {
     private final boolean hasPrimitives;
 
 
-    protected AbstractMetaModel(@NotNull Key<D, ?>... keyList) {
+    protected AbstractDomainHandler(@NotNull Key<D, ?>... keyList) {
         this.keyList = List.of(keyList);
         this.keyMap = Stream.of(keyList).collect(Collectors.toUnmodifiableMap(Key::getName, Function.identity()));
         this.hasPrimitives = hasPrimitives(keyList);
@@ -63,10 +63,10 @@ public abstract class AbstractMetaModel<D> {
     }
 
     @NotNull
-    public abstract Class<D> getDomainType();
+    public abstract Class<D> getDomainClass();
 
     public boolean isRecord() {
-        return getDomainType().isRecord();
+        return getDomainClass().isRecord();
     }
 
     @NotNull
@@ -89,7 +89,7 @@ public abstract class AbstractMetaModel<D> {
         var result = keyMap.get(name);
         if (result == null) {
             throw new NoSuchElementException("Key not found: %s.%s"
-                    .formatted(getDomainType().getSimpleName(), name));
+                    .formatted(getDomainClass().getSimpleName(), name));
         }
         return (Key<D, V>) result;
     }

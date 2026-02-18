@@ -15,22 +15,21 @@ class JavaSourceGeneratorBeanTest {
 
         if (printResult) System.out.println(src);
         assertContains("package org.ujorm.gen_.org.ujorm.mapper.demo;", src);
-        assertContains("public class Employee_ extends AbstractMetaModel<org.ujorm.mapper.demo.Employee> {", src);
+        assertContains("public final class Employee_ extends AbstractDomainHandler<Employee> {", src);
         assertContains("super( new Key_id(0)", src);
         assertContains(", new Key_name(1)", src);
 
-        assertContains("public org.ujorm.mapper.demo.Employee newDomain(@NotNull Object... values) {", src);
-        assertContains("final var result = new org.ujorm.mapper.demo.Employee();", src);
-        assertContains("for (int i = 0, max = Math.min(values.length, keyList.size()); i < max; i++) {", src);
-        assertContains("final var key = (Key<org.ujorm.mapper.demo.Employee, Object>) keyList.get(i);", src);
+        assertContains("public Employee newDomain(@NotNull Object... values) {", src);
+        assertContains("final var result = new Employee();", src);
+        assertContains("final var key = (AbstractKey<Employee, Object>) keyList.get(i)", src);
 
-        assertContains("static final class Key_id extends AbstractKey<org.ujorm.mapper.demo.Employee, java.lang.Long> {", src);
+        assertContains("static final class Key_id extends", src);
         assertContains("super(order, \"id\", java.lang.Long.class, \"id\", true, true);", src);
-        assertContains("public void setValue(@NotNull final org.ujorm.mapper.demo.Employee bean, @Nullable final java.lang.Long value) {", src);
+        assertContains("public void setValue(@NotNull final Employee bean, @Nullable final java.lang.Long value) {", src);
         assertContains("bean.setId(value != null ? value : defaultValue);", src);
-        assertContains("public java.lang.Long getValue(@NotNull final org.ujorm.mapper.demo.Employee bean) {", src);
+        assertContains("public java.lang.Long getValue(@NotNull final Employee bean) {", src);
         assertContains("return bean.getId();", src);
-        assertContains("public @NotNull Class<org.ujorm.mapper.demo.Employee> getDomainType() {", src);
+        assertContains("public @NotNull Class<Employee> getDomainClass() {", src);
 
         var clazz = new ClassGenerator().createClass(src);
         Assertions.assertNotNull(clazz);

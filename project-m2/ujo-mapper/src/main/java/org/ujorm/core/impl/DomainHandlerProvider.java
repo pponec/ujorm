@@ -5,12 +5,13 @@ import org.ujorm.mapper.ClassGenerator;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MetaModelProvider {
+/** Provides meta models of domain objects */
+public class DomainHandlerProvider {
 
-    private final ConcurrentHashMap<Class<?>, AbstractMetaModel> map = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Class<?>, AbstractDomainHandler> map = new ConcurrentHashMap<>();
     private final ClassGenerator classGenerator = new ClassGenerator();
 
-    public AbstractMetaModel getModel(Class<?> domainModel) {
+    public AbstractDomainHandler getModel(Class<?> domainModel) {
         var result = map.get(domainModel);
         if (result == null) {
             result = createModel(domainModel);
@@ -19,7 +20,7 @@ public class MetaModelProvider {
         return result;
     }
 
-    private AbstractMetaModel createModel(Class<?> domainModel) {
+    private AbstractDomainHandler createModel(Class<?> domainModel) {
         var packageName = getModelImplPath(domainModel);
         var simpleClassName = domainModel.getSimpleName() + '_';
         var fullClassName = packageName + '.' + simpleClassName;
@@ -37,9 +38,9 @@ public class MetaModelProvider {
             }
         }
         try {
-            return (AbstractMetaModel) clazz.getConstructor().newInstance();
+            return (AbstractDomainHandler) clazz.getConstructor().newInstance();
         } catch (Throwable ex) {
-            throw new IllegalStateException("Cant create instnce for the meta-model class: " + clazz.getName());
+            throw new IllegalStateException("Cant create instance for the meta-model class: " + clazz.getName());
         }
     }
 
