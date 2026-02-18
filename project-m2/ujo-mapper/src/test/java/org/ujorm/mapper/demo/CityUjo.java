@@ -40,16 +40,17 @@ public class CityUjo implements Ujo<City>  {
         return (V) array[key.getIndex()];
     }
 
-    public City newDomain() {
-        return meta.newDomain(array);
-    }
-
     @Override
     public DomainHandler<City> domainHandler() {
         return meta;
     }
 
-    /** Clone array for tests */
+    /** Create new domain object for the current values */
+    public City newDomain() {
+        return meta.newDomain(array);
+    }
+
+    /** Clone internal array for tests */
     public Object[] array() {
         return array.clone();
     }

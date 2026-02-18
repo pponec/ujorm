@@ -48,12 +48,12 @@ public class EmployeeUjo implements Ujo<Employee> {
         return meta;
     }
 
+    /** Create a new domain object for the current values */
     public Employee newDomain() {
         return meta.newDomain(array);
     }
 
-    /** Clone array for tests */
-    @Deprecated
+    /** Clone internal array for tests */
     public Object[] array() {
         return array.clone();
     }
