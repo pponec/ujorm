@@ -1,21 +1,39 @@
 package org.ujorm.mapper;
 
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.mapper.core.DomainHandler;
 
-/** Singleton to provide Domain handlers */
-public class DomainHandlerSingleton {
+/**
+ * Singleton to provide Domain handlers.
+ * This implementation is thread-safe using the Initialization-on-demand holder idiom.
+ */
+public final class DomainHandlerSingleton {
 
-    private static DomainHandlerProvider provider = null;
-
-    public static DomainHandlerProvider provider() {
-        if (provider == null) {
-            provider = new DomainHandlerProvider();
-        }
-        return provider;
+    /** Private constructor to prevent instantiation. */
+    private DomainHandlerSingleton() {
     }
 
-    public static DomainHandler getHandler(Class<?> clazz) {
+    /**
+     * Holder class for lazy-loading the singleton instance.
+     */
+    private static final class Holder {
+        private static final DomainHandlerProvider INSTANCE = new DomainHandlerProvider();
+    }
+
+    /**
+     * Provides the DomainHandlerProvider instance.
+     * @return DomainHandlerProvider
+     */
+    public static DomainHandlerProvider provider() {
+        return Holder.INSTANCE;
+    }
+
+    /**
+     * Gets a handler for the specified class.
+     * @param clazz Domain class
+     * @return DomainHandler
+     */
+    public static DomainHandler get(@NotNull Class<?> clazz) {
         return provider().getHandler(clazz);
     }
-
 }

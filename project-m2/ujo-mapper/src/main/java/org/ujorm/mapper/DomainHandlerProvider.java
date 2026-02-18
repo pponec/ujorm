@@ -14,7 +14,7 @@ public class DomainHandlerProvider {
     private final ConcurrentHashMap<Class<?>, DomainHandler> map = new ConcurrentHashMap<>();
     private final ClassGenerator classGenerator = new ClassGenerator();
 
-    public DomainHandler getModel(Class<?> domainModel) {
+    public DomainHandler getHandler(Class<?> domainModel) {
         var result = map.get(domainModel);
         if (result == null) {
             result = createModel(domainModel);

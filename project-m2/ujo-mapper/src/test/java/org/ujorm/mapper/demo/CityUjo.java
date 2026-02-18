@@ -1,5 +1,6 @@
 package org.ujorm.mapper.demo;
 
+import org.ujorm.mapper.DomainHandlerSingleton;
 import org.ujorm.mapper.core.DomainHandler;
 import org.ujorm.mapper.core.Key;
 import org.ujorm.mapper.core.Ujo;
@@ -20,7 +21,7 @@ import org.ujorm.mapper.demo.generated.City_;
  */
 public class CityUjo implements Ujo<City>  {
 
-    public static final DomainHandler<City> meta = new City_();
+    public static final DomainHandler<City> meta = DomainHandlerSingleton.get(City.class);
     public static final Key<City, Long> keyId = meta.getKey("id", Long.class);
     public static final Key<City, String> keyName = meta.getKey("name", String.class);
     public static final Key<City, String> keyCountryCode = meta.getKey("countryCode", String.class);
