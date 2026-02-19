@@ -1,4 +1,4 @@
-package org.ujorm.tools.sql;
+package org.ujorm.tools.jdbc;
 
 /** Unchecked SQL exception */
 public class SQLException extends IllegalStateException {

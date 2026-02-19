@@ -14,12 +14,12 @@
  *  limitations under the License.
  */
 
-package org.ujorm.tools.sql;
+package org.ujorm.tools.jdbc;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.ujorm.tools.jdbc.AbstractJdbcConnector;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -228,7 +228,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                     "ORDER BY t.id");
             Assertions.assertEquals(builder.sqlTemplate(), builder.toString());
 
-            var ex = Assertions.assertThrows(org.ujorm.tools.sql.SQLException.class, () -> {
+            var ex = Assertions.assertThrows(org.ujorm.tools.jdbc.SQLException.class, () -> {
                 builder.streamMap(t -> t).count();
             });
             assertEquals("Missing SQL parameter: [code, id]", ex.getMessage());
