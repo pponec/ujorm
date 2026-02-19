@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.ujorm</groupId>
-    <artifactId>ujo-mapper</artifactId>
+    <artifactId>ujo-jdbc-mapper</artifactId>
     <version>3.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ujo-mapper</name>
