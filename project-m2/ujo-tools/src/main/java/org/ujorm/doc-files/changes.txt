@@ -2,7 +2,11 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 2.30-SNAPSHOT
+release 3.0.0-SNAPSHOT
++ New module ujo-mapper.
++ Obsolete module are removed.
+
+release 2.30 (2026-02-11)
 WEB: New class HtmlToJavaConverter to convert HTML code to Java code using Element classes.
 WEB: JsonWriter class fixed for some specific characters.
 WEB: Some Javadoc comments extended.
