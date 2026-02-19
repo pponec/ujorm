@@ -6,7 +6,6 @@ import org.jsoup.nodes.*;
 import org.ujorm.tools.web.Html;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -116,7 +115,7 @@ public final class HtmlToJavaConverter {
 
     /** Convert a HTML code to the Java code with Element classes. */
     public String convertHtmlToJavaElements(String htmlContent, boolean blockStyle) throws IOException {
-        Appendable writer = new StringWriter();
+        Appendable writer = new StringBuilder();
         convertHtmlToJavaElements(htmlContent, blockStyle, writer);
         return writer.toString();
     }
