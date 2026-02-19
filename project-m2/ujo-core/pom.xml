@@ -40,7 +40,6 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>5.3.15</spring.version>
         <junit.version>5.10.2</junit.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
         <lombok.version>1.18.42</lombok.version>
@@ -52,13 +51,6 @@
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
             <version>3.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <!-- Html5 Parser -->
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.17.2</version>
         </dependency>
 
         <!-- Static analyzer support -->
@@ -84,13 +76,6 @@
         </dependency>
 
         <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
             <version>${jakarta.persistence.version}</version>
@@ -103,21 +88,6 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>2.4.240</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>

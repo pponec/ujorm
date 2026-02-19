@@ -1,6 +1,7 @@
 package org.ujorm.mapper;
 
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerService;
 
 /**
@@ -33,7 +34,7 @@ public final class MapperProvider {
      * @param clazz An original domain class
      * @return DomainHandler
      */
-    public static DomainHandler getHandler(@NotNull Class<?> clazz) {
+    public static <D>DomainHandler getHandler(@NotNull Class<D> clazz) {
         return provider().getHandler(clazz);
     }
 }
