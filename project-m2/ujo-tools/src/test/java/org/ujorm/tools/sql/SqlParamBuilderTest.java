@@ -175,9 +175,9 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
 
             System.out.println("SELECT 2 (forEach");
             builder.bind("id", 1000).forEach(rs -> {
-                        var idValue = rs.getInt(1);
-                        System.out.printf("\tid = %s%n", idValue);
-                    });
+                var idValue = rs.getInt(1);
+                System.out.printf("\tid = %s%n", idValue);
+            });
             Assertions.assertEquals(3, employees2.size());
             runSqlStatementsLike(builder);
         }
