@@ -10,4 +10,5 @@ class JdbcMapperImplTest {
     void map() {
         // TODO
     }
+
 }
