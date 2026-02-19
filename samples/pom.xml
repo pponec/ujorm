@@ -22,13 +22,13 @@
     <description>Ujorm Sample Projects</description>
 
     <modules>
-        <module>core</module>
-        <module>parameters</module>
-        <module>ujorm</module>
-        <module>inheritance</module>
-        <module>binding</module>
         <module>servlet</module>
-        <module>generated</module>
+<!--        <module>core</module>-->
+<!--        <module>parameters</module>-->
+<!--        <module>ujorm</module>-->
+<!--        <module>inheritance</module>-->
+<!--        <module>binding</module>-->
+<!--        <module>generated</module>-->
     </modules>
 
     <!-- DEPENDENCES -->
