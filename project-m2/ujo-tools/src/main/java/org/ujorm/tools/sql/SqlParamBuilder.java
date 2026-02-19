@@ -66,6 +66,7 @@ public class SqlParamBuilder implements AutoCloseable {
 
     /** SQL parameter mark type of {@code :param} */
     static final Pattern SQL_MARK = Pattern.compile(":(\\w+)");
+
     @NotNull
     private final Connection dbConnection;
     @Nullable
@@ -232,7 +233,7 @@ public class SqlParamBuilder implements AutoCloseable {
     }
 
     /** Executes the query and processes each row using the provided consumer. */
-    public void forEach(@NotNull SqlConsumer<ResultSet> consumer) throws SqlException {
+    public void forEach(@NotNull SqlConsumer<ResultSet> consumer) throws SQLException {
         stream(executeSelect()).forEach(consumer);
     }
 
@@ -364,7 +365,7 @@ public class SqlParamBuilder implements AutoCloseable {
                 throw (ex instanceof RuntimeException re) ? re : new IllegalStateException(ex);
             }
         }
-        R applyRs(T resultSet) throws SqlException;
+        R applyRs(T resultSet) throws SQLException;
     }
 
     @FunctionalInterface
