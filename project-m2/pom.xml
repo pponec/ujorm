@@ -24,6 +24,7 @@
             </activation>
             <modules>
                 <module>ujo-tools</module>
+                <module>ujo-core</module>
                 <module>ujo-converter</module>
                 <module>ujo-mapper</module>
                 <module>ujo-web</module>
@@ -35,6 +36,7 @@
             <id>production</id>
             <modules>
                 <module>ujo-tools</module>
+                <module>ujo-core</module>
                 <module>ujo-web</module>
                 <module>ujo-mapper</module>
                 <module>ujo-converter</module>
