@@ -18,8 +18,6 @@ package org.ujorm.tools.sql;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.tools.jdbc.SqlConsumer;
-import org.ujorm.tools.jdbc.SqlFunction;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -27,6 +25,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -64,7 +64,6 @@ public class SqlParamBuilder implements AutoCloseable {
 
     /** SQL parameter mark type of {@code :param} */
     static final Pattern SQL_MARK = Pattern.compile(":(\\w+)");
-
     @NotNull
     private final Connection dbConnection;
     @Nullable
@@ -176,7 +175,7 @@ public class SqlParamBuilder implements AutoCloseable {
         try {
             return prepareStatement(Statement.NO_GENERATED_KEYS).executeUpdate();
         } catch (SQLException e) {
-            throw sqlException(e);
+            throw new SqlException(e);
         }
     }
 
@@ -185,7 +184,7 @@ public class SqlParamBuilder implements AutoCloseable {
         try {
             return prepareStatement(Statement.RETURN_GENERATED_KEYS).executeUpdate();
         } catch (SQLException e) {
-            throw sqlException(e);
+            throw new SqlException(e);
         }
     }
 
@@ -194,7 +193,7 @@ public class SqlParamBuilder implements AutoCloseable {
         try {
             return prepareStatement(Statement.NO_GENERATED_KEYS).executeQuery();
         } catch (SQLException e) {
-            throw sqlException(e);
+            throw new SqlException(e);
         }
     }
 
@@ -208,7 +207,7 @@ public class SqlParamBuilder implements AutoCloseable {
                 try {
                     return resultSet.next();
                 } catch (SQLException e) {
-                    throw sqlException(e);
+                    throw new SqlException(e);
                 }
             }
             @Override
@@ -224,13 +223,13 @@ public class SqlParamBuilder implements AutoCloseable {
     private void switchResultSet(@Nullable final ResultSet rs) {
         try (var oldResultSet = this.resultSet) {
         } catch (SQLException e) {
-            sqlException(e);
+            new SqlException(e);
         }
         this.resultSet = rs;
     }
 
     /** Executes the query and processes each row using the provided consumer. */
-    public void forEach(@NotNull SqlConsumer consumer) throws SQLException {
+    public void forEach(@NotNull SqlConsumer<ResultSet> consumer) throws SqlException {
         stream(executeSelect()).forEach(consumer);
     }
 
@@ -246,7 +245,7 @@ public class SqlParamBuilder implements AutoCloseable {
     public void close() {
         try (var ps = preparedStatement; var rs = resultSet) {
         } catch (Exception e) {
-            throw sqlException(e, "Closing resources failed");
+            throw new SqlException(e, "Closing resources failed");
         } finally {
             resultSet = null;
             preparedStatement = null;
@@ -270,7 +269,7 @@ public class SqlParamBuilder implements AutoCloseable {
             preparedStatement = result;
             return result;
         } catch (SQLException e) {
-            throw sqlException(e);
+            throw new SqlException(e);
         }
     }
 
@@ -280,7 +279,7 @@ public class SqlParamBuilder implements AutoCloseable {
         try {
             return (preparedStatement != null) ? preparedStatement.getGeneratedKeys() : null;
         } catch (SQLException e) {
-            throw sqlException(e);
+            throw new SqlException(e);
         }
     }
 
@@ -300,10 +299,8 @@ public class SqlParamBuilder implements AutoCloseable {
      * @throws NoSuchElementException If no key found */
     @NotNull
     public <R> R generatedLastKey(SqlFunction<ResultSet, ? extends R> mapper) throws NoSuchElementException {
-        try (var stream = generatedKeys(mapper)) {
-            return stream.reduce((first, second) -> second)
-                    .orElseThrow(() -> new NoSuchElementException("No keys"));
-        }
+        return generatedKeys(mapper).reduce((first, second) -> second)
+                .orElseThrow(() -> new NoSuchElementException("No keys"));
     }
 
     @NotNull
@@ -327,7 +324,7 @@ public class SqlParamBuilder implements AutoCloseable {
             }
         }
         if (!toLog && !missingKeys.isEmpty()) {
-            throw sqlException(null, "Missing SQL parameter: " + missingKeys);
+            throw new SqlException(null, "Missing SQL parameter: " + missingKeys);
         }
         matcher.appendTail(result);
         return result.toString();
@@ -336,11 +333,6 @@ public class SqlParamBuilder implements AutoCloseable {
     @NotNull
     public String sqlTemplate() {
         return sqlTemplate;
-    }
-
-    protected static org.ujorm.tools.sql.SQLException sqlException(@Nullable final Exception ex, @NotNull String... messages) {
-        var msg = (messages.length > 0 || ex == null) ? String.join(" ", messages) : ex.getMessage();
-        return new org.ujorm.tools.sql.SQLException(ex, msg);
     }
 
     record ParamValue(JDBCType jdbcType, Object... values) {
@@ -357,5 +349,36 @@ public class SqlParamBuilder implements AutoCloseable {
 
     public String toStringLine() {
         return toString().replaceAll("\\s*\\R+\\s*", " ");
+    }
+
+    @FunctionalInterface
+    public interface SqlFunction<T, R> extends Function<T, R> {
+        default R apply(T resultSet) {
+            try {
+                return applyRs(resultSet);
+            } catch (Exception ex) {
+                throw (ex instanceof RuntimeException re) ? re : new IllegalStateException(ex);
+            }
+        }
+        R applyRs(T resultSet) throws SqlException;
+    }
+
+    @FunctionalInterface
+    public interface SqlConsumer<T> extends Consumer<T> {
+        @Override
+        default void accept(final T t) {
+            try {
+                acceptResultSet(t);
+            } catch (Exception ex) {
+                throw (ex instanceof RuntimeException re) ? re : new IllegalStateException(ex);
+            }
+        }
+        void acceptResultSet(T t) throws Exception;
+    }
+
+    public static final class SqlException extends org.ujorm.tools.sql.SQLException {
+        private SqlException(Throwable cause, String... messages) {
+            super("");
+        }
     }
 }

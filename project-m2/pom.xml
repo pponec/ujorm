@@ -11,7 +11,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo</artifactId>
     <version>3.0.0-SNAPSHOT</version>
-    <name>Module UJO</name>
+    <name>Module UJO Projects</name>
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
 
@@ -27,8 +27,6 @@
                 <module>ujo-core</module>
                 <module>ujo-converter</module>
                 <module>ujo-mapper</module>
-                <module>ujo-orm</module>
-                <module>ujo-xsd</module>
                 <module>ujo-web</module>
                 <module>ujo-arangodb</module>
             </modules>
@@ -38,10 +36,9 @@
             <id>production</id>
             <modules>
                 <module>ujo-tools</module>
-                <module>ujo-core</module>
-                <module>ujo-orm</module>
-                <module>ujo-xsd</module>
                 <module>ujo-web</module>
+                <module>ujo-mapper</module>
+                <module>ujo-converter</module>
             </modules>
         </profile>
     </profiles>

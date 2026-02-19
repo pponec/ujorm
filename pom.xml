@@ -32,12 +32,7 @@
             </dependency>
             <dependency>
                 <groupId>org.ujorm</groupId>
-                <artifactId>ujo-core</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ujorm</groupId>
-                <artifactId>ujo-converter</artifactId>
+                <artifactId>ujo-web</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -47,19 +42,10 @@
             </dependency>
             <dependency>
                 <groupId>org.ujorm</groupId>
-                <artifactId>ujo-orm</artifactId>
+                <artifactId>ujo-converter</artifactId>
                 <version>${revision}</version>
             </dependency>
-            <dependency>
-                <groupId>org.ujorm</groupId>
-                <artifactId>ujo-spring</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ujorm</groupId>
-                <artifactId>ujo-web</artifactId>
-                <version>${revision}</version>
-            </dependency>
+
             <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>

@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.tools.jdbc.RowIterator;
 
 /**
  * An exteded {@link Iterator} is suitable for use in the  {@code for ( ; ; )} statement.
