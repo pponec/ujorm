@@ -1,16 +1,16 @@
 package org.ujorm.mapper;
 
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.mapper.core.DomainHandler;
+import org.ujorm.core.DomainHandlerService;
 
 /**
  * Singleton to provide Domain handlers.
  * This implementation is thread-safe using the Initialization-on-demand holder idiom.
  */
-public final class DomainHandlerProvider {
+public final class MapperProvider {
 
     /** Private constructor to prevent instantiation. */
-    private DomainHandlerProvider() {
+    private MapperProvider() {
     }
 
     /**

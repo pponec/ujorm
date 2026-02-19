@@ -10,7 +10,7 @@
     <version>3.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ujo-mapper</name>
-    <description>Map JDBC ResultSet to POJO</description>
+    <description>Map JDBC ResultSet to Java</description>
     <url>https://ujorm.org/</url> <!-- home page -->
 
     <licenses>
@@ -51,6 +51,11 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-core</artifactId>
             <version>3.0.0-SNAPSHOT</version>
         </dependency>
 

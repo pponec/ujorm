@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujorm.mapper.core.annot;
+package org.ujorm.mapper.annot;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
