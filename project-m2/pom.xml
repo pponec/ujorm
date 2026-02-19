@@ -26,7 +26,7 @@
                 <module>ujo-tools</module>
                 <module>ujo-core</module>
                 <module>ujo-converter</module>
-                <module>ujo-mapper</module>
+                <module>ujo-jdbc-mapper</module>
                 <module>ujo-web</module>
                 <module>ujo-arangodb</module>
             </modules>
@@ -38,7 +38,7 @@
                 <module>ujo-tools</module>
                 <module>ujo-core</module>
                 <module>ujo-web</module>
-                <module>ujo-mapper</module>
+                <module>ujo-jdbc-mapper</module>
                 <module>ujo-converter</module>
             </modules>
         </profile>

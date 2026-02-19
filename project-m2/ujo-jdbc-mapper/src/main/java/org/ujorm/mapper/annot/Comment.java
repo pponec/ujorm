@@ -16,27 +16,22 @@
 
 package org.ujorm.mapper.annot;
 
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use the annotation to mark a Key static field like XML Attribute.
- * @deprecated Annotation is not implemented yet.
+ * Use the annotation to comment a database database or column.<br>
+ * @deprecated Annotation is not implemented now.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
-public @interface Table {
+public @interface Comment {
 
     /** A String for the NULL value. */
     String NULL = "";
 
-    /** A named parameter for the table name. Default value is taken from a related key name. */
-    String name() default NULL;
+    String value() default NULL;
 
-    /** Name of schema. If the value is empty than a default database schema is used.
-     */
-    String schema() default NULL;
 }

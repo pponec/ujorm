@@ -4,7 +4,6 @@ import org.ujorm.core.impl.AbstractDomainHandler;
 import org.ujorm.core.impl.AbstractKey;
 import org.ujorm.tools.msg.MessageService;
 
-import java.io.StringWriter;
 import java.util.HashMap;
 
 /**
@@ -16,7 +15,7 @@ import java.util.HashMap;
 public class JavaSourceGenerator {
 
     public String getSourceCode(DomainModel meta, ClassName className) {
-        final var writer = new StringWriter(5_000);
+        final var writer = new StringBuilder(5_000);
         final var params = new HashMap<String, Object>(20);
         {
             params.put("package", className.packageName());
@@ -104,7 +103,7 @@ public class JavaSourceGenerator {
         return writer.toString();
     }
 
-    private void buildConstructor(DomainModel meta, StringWriter writer) {
+    private void buildConstructor(DomainModel meta, StringBuilder writer) {
         for(int i = 0, max = meta.properties().size(); i < max; ++i) {
             var row = (i == 0)
                     ? "super( new Key_%s(%s)"
@@ -115,7 +114,7 @@ public class JavaSourceGenerator {
         }
     }
 
-    private void buildInnerKeys(String template, DomainModel meta, StringWriter writer, HashMap<String, Object> params) {
+    private void buildInnerKeys(String template, DomainModel meta, StringBuilder writer, HashMap<String, Object> params) {
         for (var prop: meta.properties()) {
             {
                 params.put("propName", prop.propertyName());
@@ -131,7 +130,7 @@ public class JavaSourceGenerator {
         }
     }
 
-    private void buildRecordConstructorBuilder(DomainModel meta, Object domainClass, StringWriter writer) {
+    private void buildRecordConstructorBuilder(DomainModel meta, Object domainClass, StringBuilder writer) {
         var offset1 = " ".repeat(4);
         var offset2 = " ".repeat(9);
         writer.append(offset1).append("values = normalizePrimitives(values);\n");

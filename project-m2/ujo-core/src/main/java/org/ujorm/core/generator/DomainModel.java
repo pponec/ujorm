@@ -7,12 +7,8 @@ import java.util.function.Function;
 public record DomainModel(
         /** Data class of the bean or record. */
         Class<?> domainClass,
-        /** Name of the database table. */
-        String databaseTable,
-        /** (Optional) The schema of the table. */
-        String databaseSchema,
-        /** (Optional) The catalog of the table. */
-        String databaseCatalog,
+        /** Database table attribues */
+        DatabaseModel database,
         /** List of properties */
         List<DomainPropertyModel> properties
 ) {
@@ -25,17 +21,13 @@ public record DomainModel(
     /**
      * Factory method to create a BeanModel instance.
      *
-     * @param beanClass The class to inspect.
+     * @param domainClass The class to inspect.
      * @return result - The populated BeanModel.
      */
-    public static DomainModel of(Class<?> beanClass) {
-        var tableAnnotation = beanClass.getAnnotation(Table.class);
-        var table = getFromTable(tableAnnotation, Table::name,
-                toSnakeCase(beanClass.getSimpleName()));
-        var schema = getFromTable(tableAnnotation, Table::schema, null);
-        var catalog = getFromTable(tableAnnotation, Table::catalog, null);
-        var properties = DomainPropertyModel.of(beanClass);
-        return new DomainModel(beanClass, table, schema, catalog, properties);
+    public static DomainModel of(Class<?> domainClass) {
+        var properties = DomainPropertyModel.of(domainClass);
+        var database = tableModel(domainClass);
+        return new DomainModel(domainClass, database, properties);
     }
 
     /**
@@ -61,5 +53,15 @@ public record DomainModel(
      */
     static String toSnakeCase(String text) {
         return text.replaceAll("(?<!^)(?=[A-Z])", "_").toLowerCase();
+    }
+
+    /** Get data from annotation */
+    public static DatabaseModel tableModel(Class<?> beanClass) {
+        var tableAnnotation = beanClass.getAnnotation(Table.class);
+        var table = getFromTable(tableAnnotation, Table::name,
+                toSnakeCase(beanClass.getSimpleName()));
+        var schema = getFromTable(tableAnnotation, Table::schema, null);
+        var catalog = getFromTable(tableAnnotation, Table::catalog, null);
+        return new DatabaseModel(table, schema, catalog);
     }
 }
