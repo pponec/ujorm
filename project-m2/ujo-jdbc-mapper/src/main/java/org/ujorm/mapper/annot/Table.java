@@ -33,7 +33,7 @@ public @interface Table {
     /** A String for the NULL value. */
     String NULL = "";
 
-    /** A named parameter for the table name. Default value is taken from a related key name. */
+    /** A named parameter for the database name. Default value is taken from a related key name. */
     String name() default NULL;
 
     /** Name of schema. If the value is empty than a default database schema is used.

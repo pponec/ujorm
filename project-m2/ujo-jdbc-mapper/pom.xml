@@ -9,7 +9,7 @@
     <artifactId>ujo-jdbc-mapper</artifactId>
     <version>3.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>ujo-mapper</name>
+    <name>ujo-jdbc-mapper</name>
     <description>Map JDBC ResultSet to Java</description>
     <url>https://ujorm.org/</url> <!-- home page -->
 

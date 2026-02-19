@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use the annotation to comment a database table or column.<br>
+ * Use the annotation to comment a database database or column.<br>
  * @deprecated Annotation is not implemented now.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
