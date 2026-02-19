@@ -3,24 +3,27 @@ package org.ujorm.mapper.core;
 import lombok.RequiredArgsConstructor;
 import org.ujorm.core.DomainHandler;
 
+import java.sql.Connection;
+
 @RequiredArgsConstructor
 public class CrudService<D,V> {
 
+    private final Connection connection;
     private final DomainHandler<D> domainHandler;
 
-    /** Create : multi insert*/
+    /** Create : multi insert */
     public void insert(D... domain) {
-
+        throw new UnsupportedOperationException("TODO");
     }
 
     /** Create */
     public void insert(D domain) {
-
+        throw new UnsupportedOperationException("TODO");
     }
 
     /** Read */
     public D read(V id) {
-
+       throw new UnsupportedOperationException("TODO");
     }
 
     /**
@@ -30,7 +33,7 @@ public class CrudService<D,V> {
      * @return
      */
     public long update(D domain, String... properties) {
-        return 0;
+        throw new UnsupportedOperationException("TODO");
     }
 
     /**
@@ -39,7 +42,7 @@ public class CrudService<D,V> {
      * @return
      */
     public long delete(D domain) {
-        return 0L;
+        throw new UnsupportedOperationException("TODO");
     }
 
     /**
@@ -48,7 +51,7 @@ public class CrudService<D,V> {
      * @return
      */
     public long deleteById(V id) {
-        return 0;
+        throw new UnsupportedOperationException("TODO");
     }
 
 }
