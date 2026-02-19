@@ -8,7 +8,9 @@ import java.util.NoSuchElementException;
 
 public interface DomainHandler<D> {
     @NotNull Class<D> getDomainClass();
-
+    @NotNull String getDatabaseTable();
+    @NotNull String getDatabaseSchema();
+    @NotNull String getDatabaseCatalog();
     @NotNull List<Key<D, ?>> getKeyList();
 
     /**

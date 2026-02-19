@@ -9,7 +9,7 @@
     <artifactId>ujo-core</artifactId>
     <version>3.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>ujo-mapper</name>
+    <name>ujo-core</name>
     <description>Map JDBC ResultSet to POJO</description>
     <url>https://ujorm.org/</url> <!-- home page -->
 
