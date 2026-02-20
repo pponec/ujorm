@@ -11,7 +11,7 @@ public record Context (
         /** Handler commonService */
         DomainHandlerService domainService,
         /** Common commonService */
-        CommonService commonService;
+        CommonService commonService
 ) {
 
 
