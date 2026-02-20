@@ -1,4 +1,4 @@
-package org.ujorm.mapper.impl.dao;
+package org.ujorm.mapper.core;
 
 import lombok.RequiredArgsConstructor;
 import org.ujorm.tools.sql.SqlParamBuilder;
@@ -20,35 +20,24 @@ public class CommonDao {
             return;
         }
         var sqlStatements = """
-                CREATE TABLE country
-                   ( id BIGINT AUTO_INCREMENT PRIMARY KEY
-                   , name VARCHAR(50) NOT NULL
-                   );
                 CREATE TABLE city
                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
                    , name VARCHAR(50) NOT NULL
                    , country_id BIGINT NOT NULL
-                   , CONSTRAINT fk_city_country_id__id FOREIGN KEY (country_id) REFERENCES COUNTRY(id) ON DELETE RESTRICT ON UPDATE RESTRICT
-                   );
-                CREATE TABLE department
-                   ( id BIGINT AUTO_INCREMENT PRIMARY KEY
-                   , name VARCHAR(50) NOT NULL
+                   , latitude DECIMAL(10, 8) NOT NULL
+                   , longitude DECIMAL(11, 8) NOT NULL
                    );
                 CREATE TABLE employee
                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
                    , name VARCHAR(50) NOT NULL
                    , superior_id BIGINT NULL
-                   , department_id BIGINT NOT NULL
                    , city_id BIGINT NOT NULL
                    , contract_day DATE NULL
+                   , is_active BOOLEAN DEFAULT true
                    );
                 ALTER TABLE employee ADD CONSTRAINT fk_employee_superior_id__id
                       FOREIGN KEY (superior_id)
                       REFERENCES employee(id)
-                      ON DELETE RESTRICT ON UPDATE RESTRICT;
-                ALTER TABLE employee ADD CONSTRAINT fk_employee_department_id__id
-                      FOREIGN KEY (department_id)
-                      REFERENCES department(id)
                       ON DELETE RESTRICT ON UPDATE RESTRICT;
                 ALTER TABLE employee ADD CONSTRAINT fk_employee_city_id__id
                       FOREIGN KEY (city_id)
@@ -73,7 +62,7 @@ public class CommonDao {
                 return resultSet.next();
             }
         } catch (SQLException ex) {
-            throw new org.ujorm.tools.sql.SQLException(ex);
+            throw new org.ujorm.tools.jdbc.SQLException(ex);
         }
     }
 

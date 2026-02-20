@@ -1,6 +1,5 @@
 package org.ujorm.mapper.model;
 
-import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.mapper.impl.Context;
 
@@ -16,6 +15,16 @@ public record AttributeModel<D>(
     /** Column Name */
     public String column() {
         return key.columnName();
+    }
+
+    /** Column index */
+    public int index() {
+        return key.getIndex();
+    }
+
+    /** Column value */
+    public <T> T valueOf(D domain) {
+        return (T) key.getValue(domain);
     }
 
     /** Is it a Primary Key? */

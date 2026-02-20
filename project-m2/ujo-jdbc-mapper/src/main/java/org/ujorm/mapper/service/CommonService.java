@@ -6,6 +6,9 @@ import org.ujorm.core.Key;
 import org.ujorm.mapper.impl.Context;
 
 import java.sql.JDBCType;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public class CommonService {
 
@@ -27,6 +30,25 @@ public class CommonService {
     @Nullable
     public JDBCType findJdbcType(@NotNull Class<?> clazz) throws IllegalArgumentException {
         return JdbcTypeProvider.findJdbcType(clazz);
+    }
+
+    /** Compare all values and get result; */
+    public <D> Set<String> compareValues(@NotNull D domain1, @NotNull D domain2, @NotNull Context ctx) {
+        if (domain1 == null || domain2 == null || ctx == null) {
+            throw new IllegalArgumentException("All arguments are required.");
+        }
+        if (domain1.getClass() != domain2.getClass()) {
+            throw new IllegalArgumentException("The data objects must be of the same type.");
+        }
+        var handler = ctx.domainService().getHandler(domain1.getClass());
+        var result = new HashSet<String>(handler.count());
+        for (var key : handler.getKeyList()) {
+            var keyObject = (Key<D,Object>) key;
+            if (!Objects.equals(keyObject.getValue(domain1), keyObject.getValue(domain2))) {
+                result.add(keyObject.getName());
+            }
+        }
+        return result;
     }
 
 }
