@@ -7,8 +7,9 @@ import lombok.ToString;
 
 /** TODO:pop: create interface from this class */
 @Setter @Getter @ToString
-public class MapperContext /*implements MapperContext*/ {
+public class Config /*implements MapperContext*/ {
 
+    /** The first key in the sequence represents the primary key. */
     boolean firstPropertyIsIdentifier = true;
 
 

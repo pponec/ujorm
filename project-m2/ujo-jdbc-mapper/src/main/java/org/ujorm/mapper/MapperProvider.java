@@ -30,7 +30,7 @@ public final class MapperProvider {
     }
 
     /**
-     * Gets a handler for the specified class.
+     * Gets a domainService for the specified class.
      * @param clazz An original domain class
      * @return DomainHandler
      */

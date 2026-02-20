@@ -60,8 +60,8 @@ public record DomainModel(
         var tableAnnotation = beanClass.getAnnotation(Table.class);
         var table = getFromTable(tableAnnotation, Table::name,
                 toSnakeCase(beanClass.getSimpleName()));
-        var schema = getFromTable(tableAnnotation, Table::schema, null);
-        var catalog = getFromTable(tableAnnotation, Table::catalog, null);
+        var schema = getFromTable(tableAnnotation, Table::schema, "");
+        var catalog = getFromTable(tableAnnotation, Table::catalog, "");
         return new DatabaseModel(table, schema, catalog);
     }
 }

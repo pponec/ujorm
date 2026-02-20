@@ -30,8 +30,8 @@ public record ClassName(String packageName, String className) {
      * * @param domainModel The source domain model
      * @return New instance of ClassName
      */
-    public static ClassName ofGenerated(DomainModel domainModel) {
-        return ofGenerated(domainModel.domainClass());
+    public static ClassName ofGenerated(DomainModel meta) {
+        return ofGenerated(meta.domainClass());
     }
 
     /** Try to load a class for this name. */

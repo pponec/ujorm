@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
-import org.ujorm.core.generator.DatabaseModel;
 import org.ujorm.core.generator.DomainModel;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +28,8 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
     private final boolean hasPrimitives;
     /** Enable direct modification of the array elements */
     private final boolean enableArrayMutation;
-    /** Database attribute */
-    private final DatabaseModel tableModel;
+    /** Database table qualified name */
+    private final String tableName;
 
     /**
      * Constructs a new instance with {@code enableArrayMutation} set to {@code true} by default.
@@ -51,20 +50,12 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
         this.keyMap = Stream.of(keyList).collect(Collectors.toUnmodifiableMap(Key::getName, Function.identity()));
         this.hasPrimitives = hasPrimitives(keyList);
         this.enableArrayMutation = enableArrayMutation;
-        this.tableModel = DomainModel.tableModel(keyList[0].getDomainClass());
+        this.tableName = DomainModel.tableModel(keyList[0].getDomainClass()).getQualifiedName();
     }
 
     @Override
     public String getDatabaseTable() {
-        return tableModel.table();
-    }
-
-    public String getDatabaseSchema() {
-        return tableModel.schema();
-    }
-
-    public String getDatabaseCatalog() {
-        return tableModel.catalog();
+        return tableName;
     }
 
     /** Does the domain have a primitive attribute? */
@@ -110,7 +101,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public final @NotNull <V> Key<D, V> getKey(@Nullable final String name, final Class<V> type)
+    public final @NotNull <V> Key<D, V> getKey(@Nullable final String name, @Nullable final Class<V> type)
             throws NoSuchElementException {
         var result = keyMap.get(name);
         if (result == null) {

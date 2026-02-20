@@ -1,6 +1,7 @@
-package org.ujorm.mapper.impl;
+package org.ujorm.mapper.service;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.sql.JDBCType;
@@ -12,9 +13,13 @@ import java.util.Map;
 import java.util.UUID;
 
 /** JDBC provider */
-public class JdbcTypeProvider {
+public abstract class JdbcTypeProvider {
 
     private static final Map<Class<?>, JDBCType> TYPE_MAP = createTypeMap();
+
+    /** Static methods only */
+    private JdbcTypeProvider() {
+    }
 
     private static Map<Class<?>, JDBCType> createTypeMap() {
         var result = new HashMap<Class<?>, JDBCType>();
@@ -72,18 +77,12 @@ public class JdbcTypeProvider {
         return Map.copyOf(result); // make map immutable
     }
 
-    @NotNull
-    public static JDBCType findJdbcType(Class<?> clazz) throws IllegalArgumentException {
+    /** Package private access */
+    @Nullable
+    static JDBCType findJdbcType(@NotNull Class<?> clazz) throws IllegalArgumentException {
         if (clazz == null) {
-            throw new IllegalArgumentException("clazz must not be null");
+            throw new IllegalArgumentException("class must not be null");
         }
-
-        var result = TYPE_MAP.get(clazz);
-
-        if (result == null) {
-            throw new IllegalArgumentException("Unsupported Java type: " + clazz.getName());
-        }
-
-        return result;
+        return TYPE_MAP.get(clazz);
     }
 }
