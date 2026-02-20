@@ -12,14 +12,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class CrudServiceTest extends AbstractDaoTest {
 
     @Test
-    void insert() {
+    void crud() {
         try (var builder =  sqlBuilder()) {
-            var cityDao = new CrudService<City, Long>(City.class, builder, Context.ofDefault());
-            var emplDao = new CrudService<Employee, Long>(Employee.class, builder, Context.ofDefault());
+            var cityDao = new CrudService<City, Long>(City.class, builder);
+            var emplDao = new CrudService<Employee, Long>(Employee.class, builder);
 
             var city = new City(null, "California", "US",  36.7783, -119.4179);
             var city2 = cityDao.insert(city);
-            Assertions.assertNotNull(city.id());
+            Assertions.assertNotNull(city2.id());
 
 
             var employee = new Employee();
@@ -30,7 +30,6 @@ class CrudServiceTest extends AbstractDaoTest {
             var employee2 = emplDao.insert(employee);
             Assertions.assertNotNull(employee2.getId());
         }
-
 
     }
 }
