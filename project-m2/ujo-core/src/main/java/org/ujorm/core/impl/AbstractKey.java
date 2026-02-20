@@ -158,7 +158,7 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
      * @return the default value or null
      */
     @SuppressWarnings("unchecked")
-    static <T> T getDefaultValue(Class<T> clazz) {
+    static <T> T getDefaultValue(final Class<T> clazz) {
         return (clazz != null && clazz.isPrimitive() && clazz != void.class)
                 ? (T) DEFAULT_VALUES.get(clazz)
                 : null;
