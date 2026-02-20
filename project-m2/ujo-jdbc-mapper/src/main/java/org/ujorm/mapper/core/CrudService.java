@@ -29,9 +29,9 @@ public class CrudService<D,V> {
     private final AttributeModel<D> pkModel;
     private final Key<D,V> pk;
 
-    public CrudService(SqlParamBuilder sqlBuilder, DomainHandler<D> domainHandler, Context context) {
+    public CrudService(Class<D> domainClass, SqlParamBuilder sqlBuilder, Context context) {
         this.sqlBuilder = sqlBuilder;
-        this.domainHandler = domainHandler;
+        this.domainHandler = context.domainService().getHandler(domainClass);
         this.context = context;
         this.entityModel = EntityModel.of(domainHandler, context);
         this.pkModel = entityModel.pk();

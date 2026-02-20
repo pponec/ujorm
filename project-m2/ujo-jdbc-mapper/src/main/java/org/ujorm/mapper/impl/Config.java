@@ -13,7 +13,4 @@ public class Config /*implements MapperContext*/ {
     boolean firstPropertyIsIdentifier = true;
 
 
-
-
-
 }

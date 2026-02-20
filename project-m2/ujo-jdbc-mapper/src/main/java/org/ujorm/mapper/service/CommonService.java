@@ -33,7 +33,7 @@ public class CommonService {
     }
 
     /** Compare all values and get result; */
-    public <D> Set<String> compareContent(@NotNull D domain1, @NotNull D domain2, @NotNull Context ctx) {
+    public <D> Set<String> compareValues(@NotNull D domain1, @NotNull D domain2, @NotNull Context ctx) {
         if (domain1 == null || domain2 == null || ctx == null) {
             throw new IllegalArgumentException("All arguments are required.");
         }
