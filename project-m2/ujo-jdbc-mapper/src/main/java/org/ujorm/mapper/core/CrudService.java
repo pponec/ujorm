@@ -74,7 +74,7 @@ public class CrudService<D,V> {
             return domain;
         } else {
             sqlBuilder.executeInsert();
-            V id = (V) sqlBuilder.generatedLastKey(rs -> rs.getLong(1)); // TODO:pop
+            V id = (V) sqlBuilder.generatedLastKey(rs -> rs.getObject(1, pk.getType()));
             var ujo = AbstractUjo.of(domain, domainHandler);
             ujo.setValue(pk, id);
             return ujo.toDomainObject();
