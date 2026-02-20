@@ -38,9 +38,13 @@ public class CrudService<D,V> {
         this.pk = (Key<D,V>) pkModel.key();
     }
 
-    /** Create : multi insert */
-    public void insert(D... domain) {
-        throw new UnsupportedOperationException("TODO");
+    /** Create : multi insert
+     * TODO: implement a multi-insert with the batch limit.
+     * */
+    public void insert(int batchSize, D... domains) {
+        for (var domain : domains) {
+            insert(domain);
+        }
     }
 
     /** Create */
