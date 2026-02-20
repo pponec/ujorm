@@ -1,6 +1,5 @@
 package org.ujorm.mapper.core;
 
-import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.mapper.impl.JdbcTypeProvider;

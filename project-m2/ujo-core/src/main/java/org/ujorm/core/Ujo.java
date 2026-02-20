@@ -21,10 +21,10 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * The Unified Java Object.
- *
+ * @param <D> Domain object type
  * @author Pavel Ponec
  */
-public interface Ujo<UJO extends Object> {
+public interface Ujo<D extends Object> {
 
     /** Common method to reading object value.
      *
@@ -34,17 +34,17 @@ public interface Ujo<UJO extends Object> {
      *
      * @return Property value
      */
-    <V> Object getValue(@NotNull Key<UJO,V> key);
+    <V> Object getValue(@NotNull Key<D,V> key);
 
 
-    /** Commit method to assign object value.
+    /** Common method to assign object value.
      *
      * @param key Property must be a direct type only!
      * @param value Value
      */
-    <V> void setValue(@NotNull Key<UJO,V> key, @Nullable V value);
+    <V> void setValue(@NotNull Key<D,V> key, @Nullable V value);
 
     /** Returns a domain handler */
-    DomainHandler<UJO> domainHandler();
+    DomainHandler<D> domainHandler();
 
 }

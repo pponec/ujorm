@@ -24,7 +24,7 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
     /** Order of the key with starting at zero. */
     @NonNull
     final int order;
-    /** Simple name of the key */
+    /** Simple name of the key has a canonical instance. */
     @NonNull
     final String name;
     /** Java type of the key */
@@ -48,7 +48,7 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
             final boolean isPrimaryKey,
             final boolean required) {
         this.order = order;
-        this.name = name;
+        this.name = name.intern();
         this.type = type;
         this.columnName = columnName;
         this.isPrimaryKey = isPrimaryKey;
@@ -162,6 +162,18 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
         return (clazz != null && clazz.isPrimitive() && clazz != void.class)
                 ? (T) DEFAULT_VALUES.get(clazz)
                 : null;
+    }
+
+    /** The object should be a singleton within its working context. */
+    @Override
+    public final boolean equals(final Object object) {
+        return this == object;
+    }
+
+    /** The object should be a singleton within its working context. */
+    @Override
+    public final int hashCode() {
+        return System.identityHashCode(this);
     }
 
     /** Create new exception */

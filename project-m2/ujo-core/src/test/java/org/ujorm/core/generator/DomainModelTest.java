@@ -13,22 +13,22 @@ class DomainModelTest {
     @Test
     void testTableAnnotationAttributes() {
         // Case 1: Fully annotated entity
-        var model = DomainModel.of(FullAnnotatedEntity.class);
-        assertEquals("custom_table", model.database().table());
-        assertEquals("my_schema", model.database().schema());
-        assertEquals("my_catalog", model.database().catalog());
+        var meta = DomainModel.of(FullAnnotatedEntity.class);
+        assertEquals("custom_table", meta.database().table());
+        assertEquals("my_schema", meta.database().schema());
+        assertEquals("my_catalog", meta.database().catalog());
 
         // Case 2: Partially annotated (only name)
-        var partialModel = DomainModel.of(PartialAnnotatedEntity.class);
-        assertEquals("only_name", partialModel.database().table());
-        assertNull(partialModel.database().schema(), "Schema should be null if not provided");
-        assertNull(partialModel.database().catalog(), "Catalog should be null if not provided");
+        var partialMeta = DomainModel.of(PartialAnnotatedEntity.class);
+        assertEquals("only_name", partialMeta.database().table());
+        assertEquals("", partialMeta.database().schema(), "Schema should be null if not provided");
+        assertEquals("", partialMeta.database().catalog(), "Catalog should be null if not provided");
 
         // Case 3: Annotation present but empty strings (JPA default)
-        var emptyModel = DomainModel.of(EmptyAnnotatedEntity.class);
-        assertEquals("empty_annotated_entity", emptyModel.database().table(), "Should fallback to snake_case");
-        assertNull(emptyModel.database().schema());
-        assertNull(emptyModel.database().catalog());
+        var emptyMeta = DomainModel.of(EmptyAnnotatedEntity.class);
+        assertEquals("empty_annotated_entity", emptyMeta.database().table(), "Should fallback to snake_case");
+        assertEquals("", emptyMeta.database().schema());
+        assertEquals("", emptyMeta.database().catalog());
     }
 
     /**

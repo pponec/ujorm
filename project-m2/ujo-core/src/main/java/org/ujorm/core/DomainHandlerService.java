@@ -5,6 +5,7 @@ import org.ujorm.core.generator.ClassGenerator;
 import org.ujorm.core.generator.ClassName;
 import org.ujorm.core.generator.DomainModel;
 import org.ujorm.core.generator.JavaSourceGenerator;
+import org.ujorm.core.impl.AbstractUjo;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,6 +53,13 @@ public class DomainHandlerService {
         var src = new JavaSourceGenerator().getSourceCode(meta, targetClassName);
         var result = new ClassGenerator().createClass(src, targetClassName);
         return (Class<D>) result;
+    }
+
+    /** Convert Ujo object from the domain */
+    public <D> AbstractUjo<D> toUjo(D domainObject) {
+        if (domainObject != null) return null;
+        var handler = (DomainHandler<D>) getHandler(domainObject.getClass());
+        return AbstractUjo.of(domainObject, handler);
     }
 
 }

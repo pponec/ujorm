@@ -9,8 +9,6 @@ import java.util.NoSuchElementException;
 public interface DomainHandler<D> {
     @NotNull Class<D> getDomainClass();
     @NotNull String getDatabaseTable();
-    @NotNull String getDatabaseSchema();
-    @NotNull String getDatabaseCatalog();
     @NotNull List<Key<D, ?>> getKeyList();
 
     /**
@@ -23,8 +21,20 @@ public interface DomainHandler<D> {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    <V> Key<D, V> getKey(@Nullable String name, Class<V> type)
+    <V> Key<D, V> getKey(@Nullable String name, @Nullable Class<V> type)
             throws NoSuchElementException;
+
+    /**
+     * Find key in metamodel.
+     * @param name Property name.
+     * @return Key object.
+     * @throws NoSuchElementException If not such element was found
+     */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    default Key<D, Object> getKey(@Nullable String name) {
+        return getKey(name, Object.class);
+    }
 
     /** Return total count of the properties. */
     default int count() {
@@ -33,5 +43,4 @@ public interface DomainHandler<D> {
 
     /** Create a new domain object and assign values from the argument array. */
     D newDomain(Object... values);
-
 }
