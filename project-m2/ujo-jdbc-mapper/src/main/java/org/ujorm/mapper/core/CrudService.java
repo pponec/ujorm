@@ -1,7 +1,9 @@
 package org.ujorm.mapper.core;
 
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
+import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.mapper.impl.JdbcTypeProvider;
 import org.ujorm.mapper.impl.MapperContext;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
@@ -72,10 +74,19 @@ public class CrudService<D,V> {
         for(var key : domainHandler.getKeyList()) {
             sqlBuilder.bindObject(key.getName(), key.getValue(domain), jdbcType(key));
         }
-        sqlBuilder.executeInsert();
-        V id = (V) sqlBuilder.generatedLastKey(rs -> rs.getLong(1)); // TODO
-        keyId.setValue(domain, id);
-        return domain;
+
+        // Assign PK to the domain
+        var filledPK = getPrimaryKeyValue(domain) != null;
+        if (filledPK) {
+            sqlBuilder.execute();
+            return domain;
+        } else {
+            sqlBuilder.executeInsert();
+            V id = (V) sqlBuilder.generatedLastKey(rs -> rs.getLong(1)); // TODO
+            var ujo = AbstractUjo.of(domain, domainHandler);
+            ujo.setValue(keyId, id);
+            return ujo.toDomainObject();
+        }
     }
 
     /** Read */
@@ -113,6 +124,11 @@ public class CrudService<D,V> {
         return sqlBuilder.sql(sql)
                 .bindObject("id", jdbcTypeId, id)
                 .execute();
+    }
+
+    /** Return a value of the Primary Key */
+    private V getPrimaryKeyValue(@NotNull D domain) {
+        return this.keyId.getValue(domain);
     }
 
     private static JDBCType jdbcType(Key<?,?> key) {
