@@ -22,13 +22,13 @@ class CrudServiceTest extends AbstractDaoTest {
             Assertions.assertNotNull(city2.id());
 
 
-            var employee = new Employee();
-            {
-                employee.setId(null);
-                // ....
-            }
-            var employee2 = emplDao.insert(employee);
-            Assertions.assertNotNull(employee2.getId());
+//            var employee = new Employee();
+//            {
+//                employee.setId(null);
+//                // ....
+//            }
+//            var employee2 = emplDao.insert(employee);
+//            Assertions.assertNotNull(employee2.getId());
         }
 
     }

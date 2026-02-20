@@ -29,6 +29,10 @@ public class CrudService<D,V> {
     private final AttributeModel<D> pkModel;
     private final Key<D,V> pk;
 
+    public CrudService(Class<D> domainClass, SqlParamBuilder sqlBuilder) {
+        this(domainClass, sqlBuilder, Context.ofDefault());
+    }
+
     public CrudService(Class<D> domainClass, SqlParamBuilder sqlBuilder, Context context) {
         this.sqlBuilder = sqlBuilder;
         this.domainHandler = context.domainService().getHandler(domainClass);
