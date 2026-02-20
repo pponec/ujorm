@@ -68,8 +68,8 @@ public class CrudService<D,V> {
         }
 
         // Assign PK to the domain
-        var filledPK = getPrimaryKeyValue(domain) != null;
-        if (filledPK) {
+        var pkOriginalValue = getPrimaryKeyValue(domain);
+        if (pkOriginalValue != null) {
             sqlBuilder.execute();
             return domain;
         } else {
@@ -114,7 +114,7 @@ public class CrudService<D,V> {
         var sql = "DELETE FROM %s WHERE id = :id"
                 .formatted(domainHandler.getDatabaseTable());
         return sqlBuilder.sql(sql)
-                .bindObject("id", pk, id)
+                .bindObject(pk.getName(), id)
                 .execute();
     }
 
