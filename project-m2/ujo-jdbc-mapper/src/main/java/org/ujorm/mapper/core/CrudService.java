@@ -1,15 +1,16 @@
 package org.ujorm.mapper.core;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.core.impl.AbstractUjo;
-import org.ujorm.mapper.impl.JdbcTypeProvider;
-import org.ujorm.mapper.impl.MapperContext;
+import org.ujorm.mapper.impl.Context;
+import org.ujorm.mapper.model.AttributeModel;
+import org.ujorm.mapper.model.EntityModel;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
 import java.sql.JDBCType;
-import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
@@ -23,30 +24,18 @@ public class CrudService<D,V> {
 
     private final SqlParamBuilder sqlBuilder;
     private final DomainHandler<D> domainHandler;
-    private final MapperContext mapperContext;
-    private final Key<D,V> keyId;
-    private final JDBCType jdbcTypeId;
+    private final Context context;
+    private final EntityModel<D> entityModel;
+    private final AttributeModel<D> pkModel;
+    private final Key<D,V> pk;
 
-    public CrudService(SqlParamBuilder sqlBuilder, DomainHandler<D> domainHandler, MapperContext mapperContext) {
+    public CrudService(SqlParamBuilder sqlBuilder, DomainHandler<D> domainHandler, Context context) {
         this.sqlBuilder = sqlBuilder;
         this.domainHandler = domainHandler;
-        this.mapperContext = mapperContext;
-        this.keyId = findId();
-        this.jdbcTypeId = jdbcType(keyId);
-    }
-
-    /** Find the id key */
-    private Key<D,V> findId() {
-        for (var id : domainHandler.getKeyList()) {
-            if (id.primaryKey()) {
-                return (Key<D,V>) id;
-            }
-        }
-        if (mapperContext.isFirstPropertyIsIdentifier()) {
-            return (Key<D,V>) domainHandler.getKeyList().get(0);
-        } else {
-            throw new NoSuchElementException("No primary key was found in the class: "  + domainHandler.getDomainClass());
-        }
+        this.context = context;
+        this.entityModel = EntityModel.of(domainHandler, context);
+        this.pkModel = entityModel.pk();
+        this.pk = (Key<D,V>) pkModel.key();
     }
 
     /** Create : multi insert */
@@ -87,7 +76,7 @@ public class CrudService<D,V> {
             sqlBuilder.executeInsert();
             V id = (V) sqlBuilder.generatedLastKey(rs -> rs.getLong(1)); // TODO:pop
             var ujo = AbstractUjo.of(domain, domainHandler);
-            ujo.setValue(keyId, id);
+            ujo.setValue(pk, id);
             return ujo.toDomainObject();
         }
     }
@@ -113,7 +102,7 @@ public class CrudService<D,V> {
      * @return
      */
     public long delete(D domain) {
-        return deleteById(keyId.getValue(domain));
+        return deleteById(getPrimaryKeyValue(domain));
     }
 
     /**
@@ -125,17 +114,19 @@ public class CrudService<D,V> {
         var sql = "DELETE FROM %s WHERE id = :id"
                 .formatted(domainHandler.getDatabaseTable());
         return sqlBuilder.sql(sql)
-                .bindObject("id", jdbcTypeId, id)
+                .bindObject("id", pk, id)
                 .execute();
     }
 
     /** Return a value of the Primary Key */
     private V getPrimaryKeyValue(@NotNull D domain) {
-        return this.keyId.getValue(domain);
+        return this.pk.getValue(domain);
     }
 
-    private static JDBCType jdbcType(Key<?,?> key) {
-        return JdbcTypeProvider.findJdbcType(key.getType());
+    @Deprecated
+    @Nullable
+    private JDBCType jdbcType(Key<?,?> key) {
+        return context.commonService().findJdbcType(key.getType());
     }
 
 
