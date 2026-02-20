@@ -11,6 +11,7 @@ import org.ujorm.tools.jdbc.SqlParamBuilder;
 import java.sql.JDBCType;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @param <V> Primary key class
  */
 public class CrudService<D,V> {
+    private static final Logger LOGGER = Logger.getLogger(CrudService.class.getName());
 
     private final SqlParamBuilder sqlBuilder;
     private final DomainHandler<D> domainHandler;
@@ -71,6 +73,7 @@ public class CrudService<D,V> {
         }
         sql.append(" )");
         sqlBuilder.sql(sql.toString());
+        LOGGER.info(() -> sqlBuilder.toString());
         for(var key : domainHandler.getKeyList()) {
             sqlBuilder.bindObject(key.getName(), key.getValue(domain), jdbcType(key));
         }
