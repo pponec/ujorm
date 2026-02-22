@@ -28,6 +28,7 @@ public record AttributeModel<D>(
     }
 
     /** Column value */
+    @SuppressWarnings("unchecked")
     public <T> T valueOf(D domain) {
         return (T) key.getValue(domain);
     }
@@ -35,6 +36,12 @@ public record AttributeModel<D>(
     /** Is it a Primary Key? */
     public boolean pk() {
         return key.primaryKey();
+    }
+
+    /** Return a domain Key for a common value type. */
+    @SuppressWarnings("unchecked")
+    public Key<D,Object> getKeyObject() {
+        return (Key<D,Object>) key;
     }
 
     public static <D> AttributeModel<D> of(Key<D,?> key, Context ctx) {
@@ -45,7 +52,7 @@ public record AttributeModel<D>(
             var foreighKey = ctx.commonService().findPrimaryKey(foreignHandler.getDomainClass(), ctx);
             jdbcType = ctx.commonService().findJdbcType(foreighKey.getType());
         }
-        return new AttributeModel<D>(key, jdbcType, relation);
+        return new AttributeModel<>(key, jdbcType, relation);
     }
 
 }
