@@ -15,7 +15,7 @@ public class CommonDao {
     final Connection dbConnection;
 
     /** Create database tables */
-    public void initTables() throws SQLException {
+    public void initTables() {
         if (hasTables()) {
             return;
         }
@@ -23,7 +23,7 @@ public class CommonDao {
                 CREATE TABLE city
                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
                    , name VARCHAR(50) NOT NULL
-                   , country_id BIGINT NOT NULL
+                   , country_code VARCHAR(2) NOT NULL
                    , latitude DECIMAL(10, 8) NOT NULL
                    , longitude DECIMAL(11, 8) NOT NULL
                    );
@@ -48,10 +48,17 @@ public class CommonDao {
             Stream.of(sqlStatements.split(";"))
                     .filter(sql -> !sql.trim().isEmpty())
                     .forEach(sql -> {
-                builder.sql(sql).execute();
-            });
+                        builder.sql(sql).execute();
+                    });
+            dbConnection.commit();
+        } catch (SQLException ex) {
+            try {
+                dbConnection.rollback();
+            } catch (SQLException ex2) {
+                throw org.ujorm.tools.jdbc.SQLException.of(ex2);
+            }
+            throw org.ujorm.tools.jdbc.SQLException.of(ex);
         }
-        dbConnection.commit();
     }
 
     public boolean hasTables() {

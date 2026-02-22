@@ -4,15 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
 
 @Getter @Setter @ToString @EqualsAndHashCode
+@AllArgsConstructor @NoArgsConstructor
 @Table(name = "employee")
 public class Employee {
 
@@ -23,7 +21,7 @@ public class Employee {
     @Nullable
     @JoinColumn(name = "superior_id")
     private Employee superior;
-    @JoinColumn(name = "city", nullable = false)
+    @JoinColumn(name = "city_id", nullable = false)
     private City city;
     @Column(name = "contract_day", nullable = false)
     private LocalDate contractDay;

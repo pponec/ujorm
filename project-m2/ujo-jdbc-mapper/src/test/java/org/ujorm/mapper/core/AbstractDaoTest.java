@@ -17,6 +17,7 @@ abstract public class AbstractDaoTest {
     @BeforeEach
     void setUp() throws SQLException {
         this.dbConnection = getDbConnection();
+        this.initTables();
     }
 
     /** Rollback the transaction and close the connection after each test.
@@ -32,8 +33,13 @@ abstract public class AbstractDaoTest {
         }
     }
 
+    /** Create DB tables */
+    protected void initTables() {
+        new CommonDao(dbConnection).initTables();
+    }
 
-    protected void loadDemoData() throws SQLException {
+    /** Create demo data */
+    protected void initDemoData() throws SQLException {
         throw new IllegalStateException("TODO");
     }
 
@@ -54,7 +60,6 @@ abstract public class AbstractDaoTest {
         var databasePassword = "";
         var result = DriverManager.getConnection(jdbcUrl, databaseUser, databasePassword);
         result.setAutoCommit(false);
-        new CommonDao(result).initTables();
         return result;
     }
 }
