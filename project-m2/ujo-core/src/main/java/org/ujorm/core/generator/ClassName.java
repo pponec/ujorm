@@ -19,15 +19,27 @@ public record ClassName(String packageName, String className) {
      *
      * @param domain The source domain class
      * @return New instance of ClassName
+     * @throws IllegalArgumentException if the domain class does not have a canonical name
      */
     public static ClassName ofGenerated(Class<?> domain) {
+        var canonicalName = domain.getCanonicalName();
+        if (canonicalName == null) {
+            var msg = "Missing canonical name for class: " + domain.getName();
+            throw new IllegalArgumentException(msg);
+        }
+        var separatorIndex = canonicalName.lastIndexOf('.');
+        var packageName = separatorIndex > 0
+                ? canonicalName.substring(0, separatorIndex)
+                : "";
         return new ClassName(
-                PACKAGE_PREFIX + domain.getPackageName(),
-                domain.getSimpleName() + "_");
+                PACKAGE_PREFIX + packageName,
+                domain.getSimpleName() + "_"
+        );
     }
 
     /** Factory method for a generated class from DomainModel.
-     * * @param domainModel The source domain model
+     *
+     * @param meta The source domain model
      * @return New instance of ClassName
      */
     public static ClassName ofGenerated(DomainModel meta) {

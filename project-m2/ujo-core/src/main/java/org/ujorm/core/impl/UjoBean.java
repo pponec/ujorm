@@ -8,11 +8,12 @@ import org.ujorm.core.Key;
 /** Ujo implementation for classes type of the Java Bean */
 public final class UjoBean<D> extends AbstractUjo<D> {
 
+    @NotNull
     private final D values;
 
-    public UjoBean(D values, DomainHandler<D> domainHandler) {
+    public UjoBean(@Nullable D values, @NotNull DomainHandler<D> domainHandler) {
         super(domainHandler);
-        this.values = values;
+        this.values = values != null ? values : domainHandler.newDomain();
     }
 
     @Override

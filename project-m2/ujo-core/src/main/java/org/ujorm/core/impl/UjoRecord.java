@@ -10,14 +10,15 @@ public final class UjoRecord<D> extends AbstractUjo<D> {
 
     private final Object[] values;
 
-    public UjoRecord(D domain, DomainHandler<D> domainHandler) {
+    public UjoRecord(@Nullable D domain, @NotNull DomainHandler<D> domainHandler) {
         super(domainHandler);
         this.values = new Object[domainHandler.count()];
         init(domain);
     }
 
     /** Init data */
-    private void init(final D domain) {
+    private void init(@Nullable final D domain) {
+        if (domain == null) return;
         for (var key : domainHandler.getKeyList()) {
             values[key.getIndex()] = key.getValue(domain);
         }

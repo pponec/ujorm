@@ -21,7 +21,7 @@ public class JavaSourceGenerator {
             params.put("package", className.packageName());
             params.put("generatedClass", className.className());
             params.put("domainClass", meta.domainClass().getSimpleName());
-            params.put("domainClassFull", meta.domainClass().getName());
+            params.put("domainClassFull", meta.domainClass().getCanonicalName());
             params.put("baseClass", AbstractDomainHandler.class.getSimpleName());
             params.put("baseClassFull", AbstractDomainHandler.class.getName());
             params.put("baseKeyClass", AbstractKey.class.getSimpleName());

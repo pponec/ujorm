@@ -36,9 +36,14 @@ public abstract class AbstractUjo<D> implements Ujo<D> {
 
     public abstract D toDomainObject();
 
+    /** Create a logical empty instance of the UJO */
+    public static <D> AbstractUjo<D> of(@NotNull DomainHandler<D> handler) {
+        return of(null, handler);
+    }
+
     /** Create new instance of the UJO */
-    public static <D> AbstractUjo<D> of(@NotNull D domainObject, @NotNull DomainHandler<D> handler) {
-        return (handler.getDomainClass().isRecord())
+    public static <D> AbstractUjo<D> of(@Nullable D domainObject, @NotNull DomainHandler<D> handler) {
+        return handler.getDomainClass().isRecord()
                 ? new UjoRecord(domainObject, handler)
                 : new UjoBean(domainObject, handler);
     }
