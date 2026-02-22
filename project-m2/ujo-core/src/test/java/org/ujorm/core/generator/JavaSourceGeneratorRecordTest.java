@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.demo.City;
 
-class JavaSourceGeneratorRecordTest {
+public class JavaSourceGeneratorRecordTest {
 
-    private final boolean printResult = false;
+    private final boolean printResult = !false;
 
     @Test
     void getSourceCode() {
@@ -33,8 +33,25 @@ class JavaSourceGeneratorRecordTest {
         Assertions.assertNotNull(clazz);
     }
 
+    @Test
+    void getSourceCodeForInnerClass() {
+        var meta = DomainModel.of(CityInner.class);
+        var className = ClassName.ofGenerated(meta);
+        var src = new JavaSourceGenerator().getSourceCode(meta, className);
+
+        if (printResult) System.out.println(src);
+        assertContains("org.ujorm.gen_.org.ujorm.core.generator.JavaSourceGeneratorRecordTest", src);
+
+
+        var clazz = new ClassGenerator().createClass(src, className);
+        Assertions.assertNotNull(clazz);
+    }
+
+
     private void assertContains(String code, String src) {
         Assertions.assertTrue(src.contains(code), "Expected: " + code);
     }
+
+    public record CityInner(String name) {};
 
 }

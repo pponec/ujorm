@@ -17,6 +17,11 @@ public record AttributeModel<D>(
         return key.columnName();
     }
 
+    /** Property Name */
+    public String name() {
+        return key.getName();
+    }
+
     /** Column index */
     public int index() {
         return key.getIndex();

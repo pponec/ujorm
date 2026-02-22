@@ -7,9 +7,15 @@ import org.ujorm.core.Key;
 import java.util.Map;
 import java.util.Objects;
 
-abstract public class AbstractKey<D, V> implements Key<D, V> {
+/**
+ * Abstract implementation of the {@link Key} interface.
+ *
+ * @param <D> Domain type
+ * @param <V> Value type
+ */
+public abstract class AbstractKey<D, V> implements Key<D, V> {
 
-    /** Default primitive values */
+    /** Default values for primitive types. */
     private static final Map<Class<?>, Object> DEFAULT_VALUES = Map.of(
             boolean.class, false,
             char.class, '\0',
@@ -21,29 +27,28 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
             double.class, 0.0d
     );
 
-    /** Order of the key with starting at zero. */
-    @NonNull
+    /** Order of the key, starting at zero. */
     final int order;
     /** Simple name of the key has a canonical instance. */
     @NonNull
     final String name;
-    /** Java type of the key */
-    @NonNull
+    /** Java type of the key value. */
+    @NotNull
     final Class<V> type;
-    /** Database column name */
+    /** Database column name. */
     @NotNull
     final String columnName;
-    /** Is the column primary key ? */
+    /** Indicates if the column is a primary key. */
     final boolean isPrimaryKey;
-    /** Is the database column required? */
+    /** Indicates if the database column is required. */
     final boolean required;
-    /** Default value */
+    /** Default value of the key. */
     protected final V defaultValue;
 
     public AbstractKey(
             final int order,
-            @NonNull final String name,
-            @NonNull final Class<V> type,
+            @NotNull final String name,
+            @NotNull final Class<V> type,
             @NotNull final String columnName,
             final boolean isPrimaryKey,
             final boolean required) {
@@ -56,6 +61,7 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
         this.defaultValue = getDefaultValue(type);
     }
 
+    @Override
     public final int getIndex() {
         return order;
     }
@@ -107,12 +113,12 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
     }
 
     @Override
-    public final boolean isTypeOf(@NotNull final Class type) {
+    public final boolean isTypeOf(@NotNull final Class<?> type) {
         return getType().isAssignableFrom(type);
     }
 
     @Override
-    public final boolean isDomainOf(@NotNull final Class type) {
+    public final boolean isDomainOf(@NotNull final Class<?> type) {
         return getDomainClass().isAssignableFrom(type);
     }
 
@@ -134,14 +140,12 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
 
     @Override
     public final int compareTo(@NotNull final Key o) {
-        final var i1 = this.getIndex();
-        final var i2 = o.getIndex();
-        return i1 < i2 ? -1 : i1 == i2 ? 0 : 1;
+        return Integer.compare(this.getIndex(), o.getIndex());
     }
 
     @Override
     public boolean isDefault(@NotNull final D bean) {
-        final V value = getValue(bean);
+        final var value = getValue(bean);
         return Objects.equals(value, defaultValue);
     }
 
@@ -153,9 +157,9 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
     /**
      * Returns the default value for the given class.
      *
-     * @param clazz the class to get the default value for
-     * @param <T>   the type of the class
-     * @return the default value or null
+     * @param clazz The class to get the default value for.
+     * @param <T>   The type of the class.
+     * @return The default value or null.
      */
     @SuppressWarnings("unchecked")
     static <T> T getDefaultValue(final Class<T> clazz) {
@@ -176,9 +180,9 @@ abstract public class AbstractKey<D, V> implements Key<D, V> {
         return System.identityHashCode(this);
     }
 
-    /** Create new exception */
-    protected UnsupportedOperationException unsupportedSetter(Key<?,?> key) {
-        var msg = "Setter is missing for: " + key.getFullName();
+    /** Creates a new exception for missing setters. */
+    protected UnsupportedOperationException unsupportedSetter(@NotNull Key<?, ?> key) {
+        final var msg = "Setter is missing for: " + key.getFullName();
         return new UnsupportedOperationException(msg);
     }
 }

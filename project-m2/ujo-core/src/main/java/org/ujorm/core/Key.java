@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,106 +21,107 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 /**
- * This interface is a descriptor of the {@link Ujo} attribute. The Key contains only meta-data
- * and therefore the Property implementation never contains business data. 
- * Each instance of the Key must be located in the {@code public static final} field of some Ujo implementation.
- * The Key can't have a serializable feature never, because its instance is the unique for a related java field.
- * An appropriate solution solution for serialization is to use a decorator class KeyRing.
- * <br>See a <a href="package-summary.html#UJO">general information</a> about current framework or see some implementations.
+ * This interface is a descriptor of the {@link Ujo} attribute. The Key contains only meta-data;
+ * therefore, the implementation never contains business data.
+ * Each instance of the Key must be located in a {@code public static final} field of a Ujo implementation.
+ * The Key is not intended to be serializable because each instance is unique to its related Java field.
+ * An appropriate solution for serialization is to use a decorator class, such as {@code KeyRing}.
+ * <br>See <a href="package-summary.html#UJO">general information</a> about the framework or explore existing implementations.
  *
  * @author Pavel Ponec
  * @see Ujo
- * @opt attributes
- * @opt operations
  */
 @Unmodifiable
 @SuppressWarnings("deprecation")
-public interface Key <UJO extends Object,VALUE> extends CharSequence, Comparable<Key> {
+public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
 
-    /** Returns a name of the Key. */
+    /** Returns the name of the Key (e.g., "name"). */
     @NotNull String getName();
 
-    /** Returns a name of the Key including  a simple class name (without package)
-     * separated by the dot (.) character. */
+    /** Returns the full name of the Key, including the simple name of the
+     * domain class separated by a dot (e.g., "Employee.name").
+     */
     @NotNull String getFullName();
 
-    /** Returns a class of the current key. */
+    /** Returns the type of the value associated with this key. */
     @NotNull Class<VALUE> getType();
 
-    /** Is the value type primitive? */
+    /** Checks if the value type is a primitive. */
     default boolean primitiveType() {
         return getType().isPrimitive();
     }
 
-    /** Returns a class of the domain Ujo object. */
+    /** Returns the class of the domain Ujo object. */
     @NotNull Class<UJO> getDomainClass();
 
-    /** Name of database column */
+    /** Returns the name of the database column. */
     @NotNull String columnName();
 
-    /** Is the database column required? */
+    /** Indicates whether the database column is required. */
     boolean required();
 
-    /** Is the column primary key ? */
+    /** Indicates whether the column is a primary key. */
     boolean primaryKey();
 
     /**
-     * It is a basic method for setting an appropriate type safe value to an Ujo object.
-     * <br>The method calls a method
-     * {@link Ujo#setValue(Key, Object)}
-     * always.
-     * @param bean Related Ujo object
-     * @param value A value to assign.
+     * Sets a type-safe value to the specified Ujo object.
+     * This method always calls {@link Ujo#setValue(Key, Object)}.
+     *
+     * @param bean The target Ujo object.
+     * @param value The value to assign.
+     * @throws UnsupportedOperationException If the key is read-only.
      * @see Ujo#setValue(Key, Object)
      */
     void setValue(@NotNull UJO bean, @Nullable VALUE value) throws UnsupportedOperationException;
 
     /**
-     * It is a basic method for getting an appropriate type safe value from an Ujo object.
-     * @param bean If a NULL parameter is used then an exception NullPointerException is throwed.
-     * @return Returns a type safe value from the ujo object.
+     * Gets a type-safe value from the specified Ujo object.
+     *
+     * @param bean The source Ujo object. Must not be null.
+     * @return The type-safe value from the Ujo object.
+     * @throws NullPointerException If the bean is null.
      * @see Ujo#getValue(Key)
-     * @see #getValue(UJO)
+     * @see #of(Object)
      */
     VALUE getValue(@NotNull UJO bean);
 
-    /** Method returns a default value for substitution of the <code>null</code> value for the current key.
-     * The feature is purposeful only if the default value is not <code>null</code> and a propert value is <code>null</code> .
+    /** * Returns a default value used when the current property value is null.
+     * This feature is only relevant if the default value is not null.
      */
     @Nullable VALUE getDefaultValue();
 
-    /** Indicates whether a parameter value of the ujo "equal to" this key default value. */
+    /** Indicates whether the property value of the given Ujo is equal to the default value of this key. */
     boolean isDefault(@NotNull UJO ujo);
 
     /**
-     * An alias for the method {@link #of(UJO)}.
+     * An alias for the method {@link #getValue(Object)}.
      */
     default VALUE of(@NotNull final UJO ujo) {
         return getValue(ujo);
-    };
+    }
 
-    /** Returns a key index .
-     * <br>The index is reasonable for an implementation an <code>ArrayUjo</code> class and the value is used is used
-     * <br>for a sorting of Keys in a method <code>UjoManager.readProperties(Class type)</code> .
+    /** * Returns the index of the key.
+     * The index is useful for {@code ArrayUjo} implementations and for sorting
+     * keys in {@code UjoManager.readProperties(Class)}.
      */
     int getIndex();
 
-    /** Method returns a default value for substitution of the <code>null</code> value for the current key.
-     * The feature is purposeful only if the default value is not <code>null</code> and a property value is <code>null</code> .
-     * @see Ujo#getValue(Key)
+    /** * Returns a default value for substitution.
+     * Defaults to {@code null} unless overridden.
+     * @see #getDefaultValue()
      */
     @Nullable
     default VALUE getDefault() {
         return null;
     }
 
-    /** Returns true if the key type is a type or subtype of the parameter class. */
-    default boolean isTypeOf(@NotNull final Class type) {
+    /** Returns true if the key type is a subtype of, or equal to, the specified class. */
+    default boolean isTypeOf(@NotNull final Class<?> type) {
         return getType().isAssignableFrom(type);
     }
 
-    /** Returns true if the domain type is a type or subtype of the parameter class. */
-    default boolean isDomainOf(@NotNull final Class type) {
+    /** Returns true if the domain type is a subtype of, or equal to, the specified class. */
+    default boolean isDomainOf(@NotNull final Class<?> type) {
         return getDomainClass().isAssignableFrom(type);
     }
 
@@ -144,6 +145,6 @@ public interface Key <UJO extends Object,VALUE> extends CharSequence, Comparable
     default int compareTo(@NotNull final Key o) {
         final var i1 = this.getIndex();
         final var i2 = o.getIndex();
-        return i1 < i2 ? -1 : i1 == i2 ? 0 : 1;
+        return Integer.compare(i1, i2);
     }
 }
