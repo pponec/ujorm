@@ -6,11 +6,10 @@ import org.ujorm.mapper.impl.Context;
 
 import java.util.List;
 
-public record EntityModel<D>(
-
+public record TableModel<D>(
         DomainHandler<D> hander,
-        AttributeModel<D> pk,
-        List<AttributeModel<D>> attributes
+        ColumnModel<D,?> pk,
+        List<ColumnModel<D,Object>> attributes
 ) {
 
     /** Full database name */
@@ -23,16 +22,15 @@ public record EntityModel<D>(
         return pk.key();
     }
 
-    public static <D> EntityModel<D> of(DomainHandler<D> handler, Context ctx) {
+    public static <D> TableModel<D> of(DomainHandler<D> handler, Context ctx) {
         var attribs = handler.getKeyList().stream()
-                .map(key -> AttributeModel.of(key, ctx))
+                .map(key -> ColumnModel.of(key, ctx))
                 .toList();
         var pk = findPk(attribs, ctx);
-        return new EntityModel(handler, pk, attribs);
-
+        return new TableModel(handler, pk, attribs);
     }
 
-    private static <D> AttributeModel<D> findPk(List<AttributeModel<D>> columns, Context ctx) {
+    private static <D> ColumnModel<D,?> findPk(List<? extends ColumnModel<D,?>> columns, Context ctx) {
         for (var col : columns) {
             if (col.pk()) return col;
         }

@@ -73,7 +73,7 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
 
     @Override
     public String getFullName() {
-        return getType().getSimpleName() + '.' + name;
+        return getDomainClass().getSimpleName() + '.' + name;
     }
 
     @Override

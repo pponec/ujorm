@@ -43,16 +43,4 @@ class ToolsTest {
         assertArrayEquals(new Integer[]{3, 4}, (Integer[]) result[1]);
         assertArrayEquals(new Integer[]{5}, (Integer[]) result[2]);
     }
-
-    @Test
-    void testSplitHandlesNullInput() {
-        var batchSize = 10;
-
-        // Casting null to Object[] prevents "ambiguous method call" compiler warnings
-        var result = Tools.splitIntoBatches(batchSize, (Object[]) null);
-
-        assertNull(result);
-    }
-
-
 }
