@@ -1,9 +1,6 @@
 package org.ujorm.mapper.demo;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,6 +9,7 @@ import java.time.LocalDate;
 @Getter @Setter @ToString @EqualsAndHashCode
 @AllArgsConstructor @NoArgsConstructor
 @Table(name = "employee")
+@Entity
 public class Employee {
 
     @Column(name = "id") @Id

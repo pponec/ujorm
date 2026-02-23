@@ -15,12 +15,12 @@ public record ColumnModel<D,V>(
 ) {
 
     /** Column Name */
-    public String column() {
+    public String name() {
         return key.columnName();
     }
 
-    /** Property Name */
-    public String name() {
+    /** Java Property Name */
+    public String property() {
         return key.getName();
     }
 

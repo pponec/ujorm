@@ -1,7 +1,6 @@
 package org.ujorm.mapper.core;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.core.impl.AbstractUjo;
@@ -9,52 +8,53 @@ import org.ujorm.mapper.impl.Context;
 import org.ujorm.mapper.model.ColumnModel;
 import org.ujorm.mapper.model.TableModel;
 
-import java.sql.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * The CRUD Manager for the JDBC API.
+ * The Entity Manager for the JDBC API.
  * Each method may throw an unchecked {@link org.ujorm.tools.jdbc.SQLException}.
  *
  * @param <D> Domain class
  * @param <V> Primary key class
  */
-public class CrudManager<D, V> {
-    private static final Logger LOGGER = Logger.getLogger(CrudManager.class.getName());
+public class EntityManager<D, V> {
+    private static final Logger LOGGER = Logger.getLogger(EntityManager.class.getName());
 
     private final Connection connection;
     private final DomainHandler<D> domainHandler;
-    /** Remove it ? */
-    @Deprecated
+    /** TODO: Get from a local thread */
     private final Context context;
     private final TableModel<D> tableModel;
-    private final ColumnModel<D, V> pkModel;
+    private final ColumnModel<D, V> pkColumn;
     private final Key<D, V> pk;
-    /** Inserted columns */
-    private ColumnModel<D, Object>[] insertedColumns = null;
 
     /** Size of batch for multi-insert and delete.
      * Note: This attribute is not fully implemented yet. */
     @Deprecated
     private final int batchSize;
 
-    public CrudManager(@NotNull Class<D> domainClass, @NotNull Connection connection) {
+    public EntityManager(@NotNull Class<D> domainClass, @NotNull Connection connection) {
         this(domainClass, connection, Context.ofDefault());
     }
 
-    public CrudManager(@NotNull Class<D> domainClass, @NotNull Connection connection, @NotNull Context context) {
+    public EntityManager(@NotNull Class<D> domainClass, @NotNull Connection connection, @NotNull Context context) {
         this(domainClass, connection, context, 500);
     }
 
     @SuppressWarnings("unchecked")
-    public CrudManager(@NotNull Class<D> domainClass, @NotNull Connection connection, @NotNull Context context, int batchSize) {
+    public EntityManager(@NotNull Class<D> domainClass, @NotNull Connection connection, @NotNull Context context, int batchSize) {
         this.connection = connection;
         this.domainHandler = context.domainService().getHandler(domainClass);
         this.context = context;
         this.tableModel = TableModel.of(domainHandler, context);
-        this.pkModel = (ColumnModel<D, V>) tableModel.pk();
-        this.pk = pkModel.key();
+        this.pkColumn = (ColumnModel<D, V>) tableModel.pk();
+        this.pk = pkColumn.key();
         this.batchSize = batchSize;
     }
 
@@ -67,36 +67,33 @@ public class CrudManager<D, V> {
         }
     }
 
-    /** Inserts a domain object into the database. */
+    /**
+     * Inserts a domain object into the database.
+     *
+     * @param domain The domain object to be inserted (either a bean or a record)
+     * @return The object with an assigned identifier.
+     * Whenever possible, it returns the same instance provided as a parameter.
+     */
     public D insert(@NotNull D domain) {
         var pkOriginalValue = getPrimaryKeyValue(domain);
-        var columns = createInsertedColumns(pkOriginalValue);
+        var columns = tableModel.createInsertedColumns(pkOriginalValue);
         var sql = new StringBuilder(256)
                 .append("INSERT INTO ")
                 .append(domainHandler.getDatabaseTable())
                 .append(" (");
-        for (int i = 0; i < columns.length; i++) {
-            var key = columns[i];
-            sql.append(i == 0 ? "" : ", ").append(key.column());
+        for (int i = 0; i < columns.size(); i++) {
+            var column = columns.get(i);
+            sql.append(i == 0 ? "" : ", ").append(column.name());
         }
 
         sql.append(") VALUES (?");
-        for (int j = columns.length - 1; j > 0; j--) {
+        for (int j = columns.size() - 1; j > 0; j--) {
             sql.append(",?");
         }
         sql.append(")");
 
         return run(sql, ps -> {
-            for (int i = 0; i < columns.length; i++) {
-                var column = columns[i];
-                var value = column.valueOf(domain);
-                if (column.relation()) {
-                    if (value != null) {
-                        value = column.foreignKey().getValue(value);
-                    }
-                }
-                ps.setObject(i + 1, value, column.jdbcType());
-            }
+            setValuesToStatement(domain, columns, ps);
             if (pkOriginalValue != null) {
                 ps.executeUpdate();
                 return domain;
@@ -118,13 +115,32 @@ public class CrudManager<D, V> {
         });
     }
 
-    /** Reads a domain object by its identifier. */
+    /** Set values to the Prepared Statement */
+    protected void setValuesToStatement(D domain, List<ColumnModel<D,Object>> columns, PreparedStatement ps) throws SQLException {
+        for (int i = 0; i < columns.size(); i++) {
+            var column = columns.get(i);
+            var value = column.valueOf(domain);
+            if (column.relation()) {
+                if (value != null) {
+                    value = column.foreignKey().getValue(value);
+                }
+            }
+            ps.setObject(i + 1, value, column.jdbcType());
+        }
+    }
+
+    /** Set values to the Prepared Staement */
+    protected final void setPkToStatement(final D domain, final int index, final PreparedStatement ps) throws SQLException {
+        ps.setObject(index, getPrimaryKeyValue(domain), pkColumn.jdbcType());
+    }
+
+        /** Reads a domain object by its identifier. */
     public D read(@NotNull V id) {
         var sql = new StringBuilder(128)
                 .append("SELECT \n");  // "*"
-        for (var attrib : this.tableModel.attributes()) {
-            sql.append(attrib.index() > 0 ? ", ": "  ");
-            sql.append(attrib.column()).append(" AS ").append(attrib.name()).append("\n");
+        for (var column : this.tableModel.columns()) {
+            sql.append(column.index() > 0 ? ", ": "  ");
+            sql.append(column.name()).append(" AS ").append(column.property()).append("\n");
         }
         sql.append(" FROM ")
                 .append(domainHandler.getDatabaseTable())
@@ -137,9 +153,9 @@ public class CrudManager<D, V> {
             try (var rs = ps.executeQuery()) {
                 if (rs.next()) {
                     var ujo = AbstractUjo.of(domainHandler);
-                    for (var attrib : tableModel.attributes()) {
-                        var value = rs.getObject(attrib.column(), attrib.key().getType());
-                        ujo.setValue(attrib.keyObject(), value);
+                    for (var column : tableModel.columns()) {
+                        var value = rs.getObject(column.name(), column.key().getType());
+                        ujo.setValue(column.keyObject(), value);
                     }
                     return ujo.toDomainObject();
                 }
@@ -151,33 +167,38 @@ public class CrudManager<D, V> {
     /**
      * Updates a domain object.
      * @param domain Domain object to update.
-     * @param properties Optional list of property names to update. If empty, all properties are updated.
+     * @param properties Optional list of property names to update. If empty, all properties are updated (excluding id).
      * @return The number of affected rows.
      */
     public long update(@NotNull D domain, String... properties) {
+        var columns = properties.length > 0
+                ? new ArrayList<ColumnModel<D,Object>>(properties.length)
+                : tableModel.insertedColumns();
+        for (var prop : properties) {
+            columns.add(tableModel.getColumn(prop));
+        }
+        return update(domain, columns);
+    }
+
+    /**
+     * Updates a domain object.
+     * @param domain Domain object to update.
+     * @param columns Optional list of property names to update. If empty, all properties are updated (excluding id).
+     * @return The number of affected rows.
+     */
+    protected long update(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
         var sql = new StringBuilder(256)
                 .append("UPDATE ")
-                .append(domainHandler.getDatabaseTable())
-                .append(" SET ");
-
-        var attributes = tableModel.attributes();
-        var i = new AtomicInteger();
-        for (var attrib : attributes) {
-            if (!attrib.key().equals(pk)) {
-                sql.append(i.getAndIncrement() == 0 ? "" : ", ")
-                        .append(attrib.column()).append(" = ?");
-            }
+                .append(domainHandler.getDatabaseTable());
+        for (int i = 0; i < columns.size(); i++) {
+            var column = columns.get(i);
+            sql.append(i == 0 ? " SET ": ", ");
+            sql.append(column.name()).append(" = ?");
         }
-        sql.append(" WHERE ").append(pk.columnName()).append(" = ?");
-
+        sql.append(" WHERE ").append(pkColumn.name()).append(" = ").append("?");
         return run(sql, ps -> {
-            var idx = 1;
-            for (var attrib : attributes) {
-                if (!attrib.key().equals(pk)) {
-                    ps.setObject(idx++, attrib.valueOf(domain), attrib.jdbcType());
-                }
-            }
-            ps.setObject(idx, getPrimaryKeyValue(domain));
+            setValuesToStatement(domain, columns, ps);
+            setPkToStatement(domain, columns.size() + 1, ps);
             return (long) ps.executeUpdate();
         });
     }
@@ -199,23 +220,6 @@ public class CrudManager<D, V> {
     /** Returns the value of the primary key. */
     private V getPrimaryKeyValue(@NotNull final D domain) {
         return this.pk.getValue(domain);
-    }
-
-    /** Exclude PK according to the PK value. */
-    @NotNull
-    protected ColumnModel<D,Object>[] createInsertedColumns(@Nullable V pkValue) {
-        var columns = this.tableModel.attributes();
-        if (pkValue != null) {
-            return columns.toArray(ColumnModel[]::new);
-        }
-        if (this.insertedColumns == null) {
-            insertedColumns = new ColumnModel[columns.size() - 1];
-            int i = 0;
-            for (var attrib : this.tableModel.attributes()) {
-                if (attrib != pkModel) insertedColumns[i++] = attrib;
-            }
-        }
-        return this.insertedColumns;
     }
 
     /** Logs and executes the SQL statement. */

@@ -2,6 +2,8 @@ package org.ujorm.mapper.utils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 public class Tools {
@@ -30,5 +32,14 @@ public class Tools {
             result[i] = Arrays.copyOfRange(ids, start, end);
         }
         return result;
+    }
+
+    /** Quote Identifier of the current database */
+    public String getQuoteIdentifier(Connection connection) {
+        try {
+            return connection.getMetaData().getIdentifierQuoteString();
+        } catch (SQLException ex) {
+            throw org.ujorm.tools.jdbc.SQLException.of(ex);
+        }
     }
 }
