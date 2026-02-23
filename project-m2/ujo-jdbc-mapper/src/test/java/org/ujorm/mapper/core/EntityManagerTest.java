@@ -49,6 +49,10 @@ class EntityManagerTest extends AbstractDaoTest {
         employeeOut.setName("EmplC");
         count = emplDao.update(employeeOut, "city", "name");
         Assertions.assertEquals(1, count);
+
+        // Delete the last employee
+        count = emplDao.delete(employeeOut);
+        Assertions.assertEquals(1, count);
     }
 
     public Employee createEmployee(String name, City city) {
