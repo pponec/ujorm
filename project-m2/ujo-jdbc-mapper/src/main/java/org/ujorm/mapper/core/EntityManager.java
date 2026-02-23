@@ -7,6 +7,7 @@ import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.mapper.impl.Context;
 import org.ujorm.mapper.model.ColumnModel;
 import org.ujorm.mapper.model.TableModel;
+import org.ujorm.mapper.utils.Tools;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,6 +34,7 @@ public class EntityManager<D, V> {
     private final TableModel<D> tableModel;
     private final ColumnModel<D, V> pkColumn;
     private final Key<D, V> pk;
+    private final String quote;
 
     /** Size of batch for multi-insert and delete.
      * Note: This attribute is not fully implemented yet. */
@@ -56,6 +58,7 @@ public class EntityManager<D, V> {
         this.pkColumn = (ColumnModel<D, V>) tableModel.pk();
         this.pk = pkColumn.key();
         this.batchSize = batchSize;
+        this.quote = Tools.getQuoteIdentifier(connection);
     }
 
     /** Inserts multiple domain objects using a loop.
@@ -81,11 +84,7 @@ public class EntityManager<D, V> {
                 .append("INSERT INTO ")
                 .append(domainHandler.getDatabaseTable())
                 .append(" (");
-        for (int i = 0; i < columns.size(); i++) {
-            var column = columns.get(i);
-            sql.append(i == 0 ? "" : ", ").append(column.name());
-        }
-
+        write(sql, columns, ", ");
         sql.append(") VALUES (?");
         for (int j = columns.size() - 1; j > 0; j--) {
             sql.append(",?");
@@ -229,6 +228,18 @@ public class EntityManager<D, V> {
             return fun.applyValue(ps);
         } catch (Exception ex) {
             throw (ex instanceof RuntimeException re) ? re : new IllegalStateException(ex);
+        }
+    }
+
+    /** Write column name and quote it. */
+    protected void write(final StringBuilder writer, final List<ColumnModel<D,Object>> columns, final String separator) {
+        for (int i = 0, max = columns.size(); i < max; i++) {
+            if (i > 0) {
+                writer.append(separator);
+            }
+            final var column = columns.get(i);
+            final var name = column.name();
+            writer.append(name.charAt(0) == '`' ? name.replace("`", quote) : name);
         }
     }
 
