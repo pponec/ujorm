@@ -35,7 +35,7 @@ public class Tools {
     }
 
     /** Quote Identifier of the current database */
-    public String getQuoteIdentifier(Connection connection) {
+    public static String getQuoteIdentifier(Connection connection) {
         try {
             return connection.getMetaData().getIdentifierQuoteString();
         } catch (SQLException ex) {
