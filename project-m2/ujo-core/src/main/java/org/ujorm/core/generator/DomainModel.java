@@ -20,8 +20,8 @@ import java.util.List;
 public record DomainModel(
         /** Data class of the bean or record. */
         Class<?> domainClass,
-        /** Database table attribues */
-        TableIdentifier database,
+        /** Database table identifiers */
+        TableIdentifier tableIdentifier,
         /** List of properties */
         List<DomainPropertyModel> properties
 ) {
