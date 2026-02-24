@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2012 Pavel Ponec
+ * Copyright 2012-2026 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package org.ujorm.tools.common;
 
-import java.io.BufferedReader;
-import java.io.CharArrayReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -29,65 +27,60 @@ import java.util.stream.StreamSupport;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Static methods
+ * Static methods for Stream processing
  * @author Pavel Ponec
  */
-public abstract class StreamUtils {
+public final class StreamUtils {
 
-        static final Set<Collector.Characteristics> CH_ID
-            = Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH));
+    /** Default characteristics for identity collectors */
+    static final Set<Collector.Characteristics> CH_ID = Set.of(Collector.Characteristics.IDENTITY_FINISH);
 
+    /**  Prevent instantiation */
     private StreamUtils() {
     }
 
-        /** Read a String.
-     * A line separator can be modifed in the result
+    /** Read a text by line.
      * @return The result must be closed.
      */
     @NotNull
-    public Stream<String> rows(@NotNull final String text) {
-        return new BufferedReader(new CharArrayReader(text.toCharArray())).lines();
+    public static Stream<String> rows(@NotNull final String text) {
+        return text.lines();
     }
 
-    /** Returns a stream of lines form URL resource
+    /** Returns a stream of lines from URL resource
      *
      * @param url An URL link to a resource
      * @return The customer is responsible for closing the stream.
-     *         During closing, an IllegalStateException may occur due to an IOException.
+     * During closing, an IllegalStateException may occur due to an IOException.
      */
     public static Stream<String> rowsOfUrl(@NotNull final URL url) throws IOException {
         return StringUtils.readLines(url);
     }
 
     /**
-     * Convert an interator to a Stream
+     * Convert an iterator to a Stream
      * @param <T> An item type
      * @param iterator Source iterator
-     * @return
+     * @return A sequential stream
      */
     public static <T> Stream<T> toStream(@NotNull final Iterator<T> iterator) {
         return toStream(iterator, false);
     }
 
     /**
-     * Convert an interator to a Stream
-     * @param <T> An item type
+     * Converts an iterator to a Stream using Spliterators for better performance.
+     *
+     * @param <T>      An item type
      * @param iterator Source iterator
-     * @param parallel Parrallell processing is enabled
-     * @return
+     * @param parallel Parallel processing is enabled
+     * @return A stream wrapping the iterator
      */
     public static <T> Stream<T> toStream(@NotNull final Iterator<T> iterator, final boolean parallel) {
-        final Iterable<T> iterable = () -> iterator;
-        return StreamSupport.stream(iterable.spliterator(), parallel);
-
-        // # For Java 9:
-        //
-        //Stream.generate(() -> null)
-        //    .takeWhile(x -> iterator.hasNext())
-        //    .map(n -> iterator.next());
+        var spliterator = Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED);
+        return StreamSupport.stream(spliterator, parallel);
     }
 
-    /** A stream collecetor to a ArrayDeque type */
+    /** A stream collector to a ArrayDeque type */
     @NotNull
     public static <T> Collector<T, ?, ArrayDeque<T>> collectToDequeue() {
         return Collectors.toCollection(ArrayDeque::new);
@@ -124,7 +117,7 @@ public abstract class StreamUtils {
      * @return An unmodifiable Map containing the mapped items.
      * @throws IllegalStateException If the key mapping function resolves to duplicate keys.
      */
-    public static <D,V> Map<V,D> map(@NotNull final Function<D,V> key, @NotNull final Collection<D> values) {
+    public static <D, V> Map<V, D> map(@NotNull final Function<D, V> key, @NotNull final Collection<D> values) {
         return map(key, values.stream());
     }
 
@@ -138,7 +131,8 @@ public abstract class StreamUtils {
      * @return An unmodifiable Map containing the mapped items.
      * @throws IllegalStateException If the key mapping function resolves to duplicate keys.
      */
-    public static <D,V> Map<V,D> map(@NotNull final Function<D,V> key, @NotNull final D... values) {
+    @SafeVarargs
+    public static <D, V> Map<V, D> map(@NotNull final Function<D, V> key, @NotNull final D... values) {
         return map(key, Stream.of(values));
     }
 
@@ -152,7 +146,7 @@ public abstract class StreamUtils {
      * @return An unmodifiable Map containing the mapped items.
      * @throws IllegalStateException If the key mapping function resolves to duplicate keys.
      */
-    public static <D,V> Map<V,D> map(@NotNull final Function<D,V> key, @NotNull final Stream<D> values) {
+    public static <D, V> Map<V, D> map(@NotNull final Function<D, V> key, @NotNull final Stream<D> values) {
         return values.collect(Collectors.toUnmodifiableMap(key, Function.identity()));
     }
 }
