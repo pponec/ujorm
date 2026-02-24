@@ -6,7 +6,7 @@ import org.ujorm.core.demo.City;
 
 public class JavaSourceGeneratorRecordTest {
 
-    private final boolean printResult = !false;
+    private final boolean printResult = false;
 
     @Test
     void getSourceCode() {
