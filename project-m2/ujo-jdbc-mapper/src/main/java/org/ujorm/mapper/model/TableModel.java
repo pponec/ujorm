@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
-import org.ujorm.core.generator.DatabaseModel;
+import org.ujorm.core.generator.TableIdentifier;
 
 import java.util.*;
 
@@ -29,7 +29,7 @@ public record TableModel<D>(
         ColumnModel<D,Object> pk,
         List<ColumnModel<D,Object>> columns,
         Map<String, ColumnModel<D,Object>> propertyMap,
-        DatabaseModel databaseModel,
+        TableIdentifier tableIdentifier,
         /** Inserted columns without PK. */
         List<ColumnModel<D, Object>> insertedColumns
 ) {

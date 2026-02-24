@@ -21,7 +21,7 @@ public record DomainModel(
         /** Data class of the bean or record. */
         Class<?> domainClass,
         /** Database table attribues */
-        DatabaseModel database,
+        TableIdentifier database,
         /** List of properties */
         List<DomainPropertyModel> properties
 ) {
@@ -39,7 +39,7 @@ public record DomainModel(
      */
     public static DomainModel of(Class<?> domainClass) {
         var properties = DomainPropertyModel.of(domainClass);
-        var database = DatabaseModel.of(domainClass);
+        var database = TableIdentifier.of(domainClass);
         return new DomainModel(domainClass, database, properties);
     }
 

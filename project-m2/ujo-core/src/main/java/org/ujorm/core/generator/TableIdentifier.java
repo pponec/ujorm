@@ -22,8 +22,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/** Database table model */
-public record DatabaseModel(
+/** Database table model identifiers  */
+public record TableIdentifier(
         /** Name of the database table. */
         @NotNull
         String table,
@@ -70,13 +70,13 @@ public record DatabaseModel(
     }
 
     /** Get data from annotation */
-    public static <D> DatabaseModel of(Class<D> beanClass) {
+    public static <D> TableIdentifier of(Class<D> beanClass) {
         var tableAnnotation = beanClass.getAnnotation(Table.class);
         var table = getFromTable(tableAnnotation, Table::name,
                 toSnakeCase(beanClass.getSimpleName()));
         var schema = getFromTable(tableAnnotation, Table::schema, "");
         var catalog = getFromTable(tableAnnotation, Table::catalog, "");
-        return new DatabaseModel(table, schema, catalog);
+        return new TableIdentifier(table, schema, catalog);
     }
 
 }
