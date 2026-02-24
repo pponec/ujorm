@@ -48,8 +48,9 @@ public record DomainPropertyModel(
     }
 
     /**
-     * Creates a list of BeanPropertyModel for the given class (Bean or Record).
+     * Creates a list of DomainPropertyModel for the given class (Bean or Record).
      * Parses JPA annotations to populate database column names, primary keys, and nullability.
+     * Traverses the class hierarchy to include inherited properties.
      *
      * @param beanOrRecord The class to inspect.
      * @return List of property models describing the class attributes.
@@ -67,20 +68,28 @@ public record DomainPropertyModel(
         }
 
         var result = new ArrayList<DomainPropertyModel>();
-        for (var field : beanOrRecord.getDeclaredFields()) {
-            if (Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
-                continue;
-            }
-            var suffix = capitalize(field.getName());
-            var getter = findGetter(beanOrRecord, field.getType(), suffix);
+        var currentClass = beanOrRecord;
+        while (currentClass != null && currentClass != Object.class) {
+            var classProperties = new ArrayList<DomainPropertyModel>();
+            for (var field : currentClass.getDeclaredFields()) {
+                if (Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
+                    continue;
+                }
+                var suffix = capitalize(field.getName());
+                var getter = findGetter(beanOrRecord, field.getType(), suffix);
 
-            if (getter != null) {
-                var setter = findMethod(beanOrRecord, "set" + suffix, field.getType());
-                result.add(createModel(field.getName(), field.getType(), getter, setter, field));
+                if (getter != null) {
+                    var setter = findMethod(beanOrRecord, "set" + suffix, field.getType());
+                    classProperties.add(createModel(field.getName(), field.getType(), getter, setter, field));
+                }
             }
-        }
-        if (FieldOrderInspector.revertedOrder()) {
-            Collections.reverse(result);
+
+            if (FieldOrderInspector.revertedOrder()) {
+                Collections.reverse(classProperties);
+            }
+            // Add inherited properties before the subclass properties
+            result.addAll(0, classProperties);
+            currentClass = currentClass.getSuperclass();
         }
         return result;
     }
@@ -166,7 +175,7 @@ public record DomainPropertyModel(
         private int secondField = 2;
 
         /** Check if JVM returns fields in reversed order to fixing. */
-         public static boolean revertedOrder() {
+        public static boolean revertedOrder() {
             try {
                 return "secondField".equals(FieldOrderInspector.class.getDeclaredFields()[0].getName());
             } catch (SecurityException | ArrayIndexOutOfBoundsException ex) {
