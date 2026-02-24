@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.mapper.impl.Context;
+import org.ujorm.tools.common.StreamUtils;
 
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /** Table Model Builder */
 @RequiredArgsConstructor
@@ -20,8 +19,7 @@ public class TableModelBuilder<D> {
                 .map(key -> column(key))
                 .toList();
         var pk = findPk(columns);
-        var propertyMap = columns.stream().collect(
-                Collectors.toUnmodifiableMap(ColumnModel::property, Function.identity()));
+        var propertyMap = StreamUtils.map(ColumnModel::property, columns);
         var insertedColumns = columns.stream()
                 .filter(c -> c != pk)
                 .toList();

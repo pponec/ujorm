@@ -20,11 +20,7 @@ import java.io.BufferedReader;
 import java.io.CharArrayReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -118,4 +114,45 @@ public abstract class StreamUtils {
         return Joinable.of(fce);
     }
 
+    /**
+     * Builds an unmodifiable Map from a given collection.
+     *
+     * @param key  The function to extract the key from each value.
+     * @param values The collection of items to be mapped.
+     * @param <D>  The type of the items in the collection (values in the map).
+     * @param <V>  The type of the extracted keys.
+     * @return An unmodifiable Map containing the mapped items.
+     * @throws IllegalStateException If the key mapping function resolves to duplicate keys.
+     */
+    public static <D,V> Map<V,D> map(@NotNull final Function<D,V> key, @NotNull final Collection<D> values) {
+        return map(key, values.stream());
+    }
+
+    /**
+     * Builds an unmodifiable Map from a given array.
+     *
+     * @param key  The function to extract the key from each value.
+     * @param values The collection of items to be mapped.
+     * @param <D>  The type of the items in the collection (values in the map).
+     * @param <V>  The type of the extracted keys.
+     * @return An unmodifiable Map containing the mapped items.
+     * @throws IllegalStateException If the key mapping function resolves to duplicate keys.
+     */
+    public static <D,V> Map<V,D> map(@NotNull final Function<D,V> key, @NotNull final D... values) {
+        return map(key, Stream.of(values));
+    }
+
+    /**
+     * Builds an unmodifiable Map from a given stream.
+     *
+     * @param key  The function to extract the key from each value.
+     * @param values The collection of items to be mapped.
+     * @param <D>  The type of the items in the collection (values in the map).
+     * @param <V>  The type of the extracted keys.
+     * @return An unmodifiable Map containing the mapped items.
+     * @throws IllegalStateException If the key mapping function resolves to duplicate keys.
+     */
+    public static <D,V> Map<V,D> map(@NotNull final Function<D,V> key, @NotNull final Stream<D> values) {
+        return values.collect(Collectors.toUnmodifiableMap(key, Function.identity()));
+    }
 }

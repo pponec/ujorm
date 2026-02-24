@@ -6,12 +6,10 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.core.generator.DomainModel;
+import org.ujorm.tools.common.StreamUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Common ancestor for domain handler with generated metamodel.
@@ -47,7 +45,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
      */
     protected AbstractDomainHandler(boolean enableArrayMutation, @NotNull Key<D, ?>... keyList) {
         this.keyList = List.of(keyList);
-        this.keyMap = Stream.of(keyList).collect(Collectors.toUnmodifiableMap(Key::getName, Function.identity()));
+        this.keyMap = StreamUtils.map(Key::getName, keyList);
         this.hasPrimitives = hasPrimitives(keyList);
         this.enableArrayMutation = enableArrayMutation;
         this.tableName = DomainModel.tableModel(keyList[0].getDomainClass()).getQualifiedName();

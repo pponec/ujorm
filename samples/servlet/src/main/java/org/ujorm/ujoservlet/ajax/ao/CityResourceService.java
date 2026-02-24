@@ -45,8 +45,7 @@ public class CityResourceService {
         if (cityMap == null) {
             synchronized (this) {
                 try (Stream<City> cityStream =  loadCityStream()) {
-                    cityMap = cityStream.collect(Collectors.toMap(City::getId, Function.identity()));
-                    Object a = "x";
+                    cityMap = StreamUtils.map(City::getId, cityStream);
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "City reading fails", e);
                     return Collections.emptyMap();
