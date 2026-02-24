@@ -15,8 +15,8 @@
  */
 package org.ujorm.mapper;
 
-@Deprecated // TODO:pop: remove it ?
-public class MapperContext {
+
+public interface MapperContext {
 
 }
 
