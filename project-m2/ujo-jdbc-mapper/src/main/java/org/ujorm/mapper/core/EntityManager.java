@@ -7,6 +7,7 @@ import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.mapper.impl.Context;
 import org.ujorm.mapper.model.ColumnModel;
 import org.ujorm.mapper.model.TableModel;
+import org.ujorm.mapper.model.TableModelBuilder;
 import org.ujorm.mapper.utils.Tools;
 
 import java.sql.Connection;
@@ -54,7 +55,7 @@ public class EntityManager<D, V> {
         this.connection = connection;
         this.domainHandler = context.domainService().getHandler(domainClass);
         this.context = context;
-        this.tableModel = TableModel.of(domainHandler, context);
+        this.tableModel = TableModelBuilder.build(domainHandler, context);
         this.pkColumn = (ColumnModel<D, V>) tableModel.pk();
         this.pk = pkColumn.key();
         this.batchSize = batchSize;
