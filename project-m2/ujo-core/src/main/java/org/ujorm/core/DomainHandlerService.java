@@ -59,10 +59,10 @@ public class DomainHandlerService {
 
     /** Verify the class is a record or has a non-argument constructor */
     private void verifyClass(Class<?> domainClass) throws IllegalArgumentException {
-        var correctConstructor = domainClass.isRecord() || Arrays
+        final var beanConstructor = Arrays
                 .stream(domainClass.getConstructors())
                 .anyMatch(c -> c.getParameterCount() == 0);
-        if (!correctConstructor) {
+        if (!domainClass.isRecord() && !beanConstructor) {
             throw new IllegalArgumentException("Only Bean and Record domain objects are supported");
         }
     }

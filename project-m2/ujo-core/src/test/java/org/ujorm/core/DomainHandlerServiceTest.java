@@ -2,14 +2,16 @@ package org.ujorm.core;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.demo.City;
 import org.ujorm.core.demo.Employee;
 
 public class DomainHandlerServiceTest {
 
-    @Test
+    @Test @Order(100)
     void getHandler() {
         var service = new DomainHandlerService();
         var handler = service.getHandler(Employee.class);
@@ -23,7 +25,7 @@ public class DomainHandlerServiceTest {
         Assertions.assertEquals(Employee.class, keySuperior.getType());
     }
 
-    @Test
+    @Test @Order(200)
     void getHandlerOfInnerClass() {
         var service = new DomainHandlerService();
         var handler = service.getHandler(CityInner.class);
@@ -31,7 +33,28 @@ public class DomainHandlerServiceTest {
         Assertions.assertNotNull(key);
     }
 
+    /** Test the Parent Bean. */
+    @Test @Order(300)
+    void getHandler_parent() {
+        var domainClass = Parent.class;
+        var service = new DomainHandlerService();
+        var handler = service.getHandler(domainClass);
+        var keyId = handler.getKey("id", Long.class);
+        Assertions.assertNotNull(keyId);
+    }
+
+    /** Test the Child Bean. */
+    @Test  @Order(400)
+    void getHandler_child() {
+        var domainClass = Child.class;
+        var service = new DomainHandlerService();
+        var handler = service.getHandler(domainClass);
+        var keyId = handler.getKey("id", Long.class);
+        Assertions.assertNotNull(keyId);
+    }
+
     /** Test case for verifying exception handling during handler creation. */
+    @Order(500)
     @Test
     void getHandler_fail() {
         var service = new DomainHandlerService();
@@ -59,7 +82,17 @@ public class DomainHandlerServiceTest {
     public record CityInner(String name) {}
 
     @RequiredArgsConstructor @Getter
-    public class NoBean {
+    public static class NoBean {
         private final Integer id;
+    }
+
+    @Getter @Setter
+    public static class Parent {
+        private long id;
+    }
+
+    @Getter @Setter
+    public static class Child extends Parent {
+        private String name;
     }
 }
