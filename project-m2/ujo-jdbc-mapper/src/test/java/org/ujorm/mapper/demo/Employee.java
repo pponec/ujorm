@@ -19,6 +19,9 @@ public class Employee extends User {
     @JoinColumn(name = "superior_id")
     private User superior;
 
+    @Transient
+    private String nonPersistent;
+
     /** Static builder */
     public static Employee of(Long id, String name, Employee superior, City city, LocalDate contractDay, boolean active) {
         var result = new Employee();
