@@ -15,11 +15,14 @@
  */
 package org.ujorm.core.generator;
 
+import jakarta.persistence.Table;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/** Database table model */
 public record DatabaseModel(
         /** Name of the database table. */
         @NotNull
@@ -31,6 +34,7 @@ public record DatabaseModel(
         @Nullable
         String catalog
 ) {
+    /** Get Table name in the full format: {@code catalog.schema.table} . */
     public String getQualifiedName() {
         return Stream.of(
                         catalog,
@@ -38,6 +42,41 @@ public record DatabaseModel(
                         table)
                 .filter(s -> s != null && !s.isEmpty())
                 .collect(Collectors.joining("."));
+    }
+
+    /**
+     * Converts CamelCase string to snake_case using Regex.
+     *
+     * @param text The text to convert.
+     * @return result - The converted string.
+     */
+    static String toSnakeCase(String text) {
+        return text.replaceAll("(?<!^)(?=[A-Z])", "_").toLowerCase();
+    }
+
+    /**
+     * Extracts a value from the Table annotation using the provided extractor.
+     *
+     * @param table     The Table annotation (can be null).
+     * @param extractor The function to extract the string value (e.g., Table::name).
+     * @param defaultValue The value to return if the annotation is null or the extracted value is empty.
+     * @return result - The resolved string value.
+     */
+    static String getFromTable(Table table, Function<Table, String> extractor, String defaultValue) {
+        var result = (table != null) ? extractor.apply(table) : "";
+        return result.isEmpty()
+                ? defaultValue
+                : result;
+    }
+
+    /** Get data from annotation */
+    public static <D> DatabaseModel of(Class<D> beanClass) {
+        var tableAnnotation = beanClass.getAnnotation(Table.class);
+        var table = getFromTable(tableAnnotation, Table::name,
+                toSnakeCase(beanClass.getSimpleName()));
+        var schema = getFromTable(tableAnnotation, Table::schema, "");
+        var catalog = getFromTable(tableAnnotation, Table::catalog, "");
+        return new DatabaseModel(table, schema, catalog);
     }
 
 }

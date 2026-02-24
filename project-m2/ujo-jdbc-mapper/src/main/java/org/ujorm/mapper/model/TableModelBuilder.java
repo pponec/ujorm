@@ -18,10 +18,13 @@ package org.ujorm.mapper.model;
 import lombok.RequiredArgsConstructor;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
+import org.ujorm.core.generator.DatabaseModel;
 import org.ujorm.mapper.impl.Context;
 import org.ujorm.tools.common.StreamUtils;
 
+import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 /** Table Model Builder */
 @RequiredArgsConstructor
@@ -29,7 +32,8 @@ public class TableModelBuilder<D> {
     private final DomainHandler<D> handler;
     private final Context ctx;
 
-    public TableModel<D> build() {
+    public TableModel<D> build(Connection initConnection) {
+        var dbModel = DatabaseModel.of(handler.getDomainClass());
         var columns = handler.getKeyList().stream()
                 .map(key -> column(key))
                 .toList();
@@ -38,10 +42,15 @@ public class TableModelBuilder<D> {
         var insertedColumns = columns.stream()
                 .filter(c -> c != pk)
                 .toList();
-        return new TableModel(handler, pk, columns, propertyMap, insertedColumns);
+        return new TableModel(handler, pk, columns, propertyMap, dbModel, insertedColumns);
     }
 
-    public <V> ColumnModel<D,V> column(Key<D,V> key) {
+    /** Map a lower case column name to the original column name. */
+    protected static Map<String, String> jdbcColumnMap(DatabaseModel dbModel, Connection initConnection) {
+        throw new UnsupportedOperationException("TODO");
+    }
+
+    protected <V> ColumnModel<D,V> column(Key<D,V> key) {
         var jdbcType = ctx.commonService().findJdbcType(key.getType());
         var relation = jdbcType == null;
         var foreignKey = (Key<V,?>) null;
@@ -53,7 +62,7 @@ public class TableModelBuilder<D> {
         return new ColumnModel<>(key, jdbcType, foreignKey);
     }
 
-    private ColumnModel<D,?> findPk(List<? extends ColumnModel<D,?>> columns) {
+    protected ColumnModel<D,?> findPk(List<? extends ColumnModel<D,?>> columns) {
         for (var col : columns) {
             if (col.pk()) return col;
         }
@@ -67,7 +76,7 @@ public class TableModelBuilder<D> {
     }
 
     /** Static builder */
-    public static <D> TableModel<D> build(DomainHandler<D> handler, Context ctx) {
-        return new TableModelBuilder<D>(handler, ctx).build();
+    public static <D> TableModel<D> build(DomainHandler<D> handler, Context ctx, Connection initConnection) {
+        return new TableModelBuilder<D>(handler, ctx).build(initConnection);
     }
 }

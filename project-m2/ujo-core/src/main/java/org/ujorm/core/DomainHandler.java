@@ -23,6 +23,7 @@ import java.util.NoSuchElementException;
 
 public interface DomainHandler<D> {
     @NotNull Class<D> getDomainClass();
+    /** Full database name from Java annotations. */
     @NotNull String getDatabaseTable();
     @NotNull List<Key<D, ?>> getKeyList();
 

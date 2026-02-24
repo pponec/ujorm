@@ -70,7 +70,7 @@ public class EntityManager<D, V> {
         this.connection = connection;
         this.domainHandler = context.domainService().getHandler(domainClass);
         this.context = context;
-        this.tableModel = TableModelBuilder.build(domainHandler, context);
+        this.tableModel = TableModelBuilder.build(domainHandler, context, connection);
         this.pkColumn = (ColumnModel<D, V>) tableModel.pk();
         this.pk = pkColumn.key();
         this.batchSize = batchSize;

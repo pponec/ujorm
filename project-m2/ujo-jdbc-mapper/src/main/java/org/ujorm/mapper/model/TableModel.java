@@ -19,13 +19,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
+import org.ujorm.core.generator.DatabaseModel;
+
 import java.util.*;
 
+/** Temporary Model */
 public record TableModel<D>(
         DomainHandler<D> hander,
         ColumnModel<D,Object> pk,
         List<ColumnModel<D,Object>> columns,
         Map<String, ColumnModel<D,Object>> propertyMap,
+        DatabaseModel databaseModel,
         /** Inserted columns without PK. */
         List<ColumnModel<D, Object>> insertedColumns
 ) {

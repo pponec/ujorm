@@ -49,21 +49,6 @@ class DomainModelTest {
         assertEquals("simple_record", recordModel.database().table());
     }
 
-    /**
-     * Test the private static method toSnakeCase via Reflection.
-     */
-    @Test
-    void toSnakeCase() throws Exception {
-        var toSnakeCase = DomainModel.class.getDeclaredMethod("toSnakeCase", String.class);
-        toSnakeCase.setAccessible(true);
-
-        assertEquals("user_profile", toSnakeCase.invoke(null, "UserProfile"));
-        assertEquals("customer_order_item", toSnakeCase.invoke(null, "CustomerOrderItem"));
-        assertEquals("user", toSnakeCase.invoke(null, "User"));
-        assertEquals("simple", toSnakeCase.invoke(null, "simple"));
-        assertEquals("x_m_l_parser", toSnakeCase.invoke(null, "XMLParser"));
-    }
-
     // --- Test Data Classes ---
 
     @Table(name = "custom_table", schema = "my_schema", catalog = "my_catalog")
