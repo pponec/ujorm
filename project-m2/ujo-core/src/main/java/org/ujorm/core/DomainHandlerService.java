@@ -7,6 +7,7 @@ import org.ujorm.core.generator.DomainModel;
 import org.ujorm.core.generator.JavaSourceGenerator;
 import org.ujorm.core.impl.AbstractUjo;
 
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** Service provides meta models of domain objects */
@@ -49,10 +50,21 @@ public class DomainHandlerService {
     }
 
     private <D> Class<D> createClass(Class<D> domainModel, ClassName targetClassName) {
+        verifyClass(domainModel);
         var meta = DomainModel.of(domainModel);
         var src = new JavaSourceGenerator().getSourceCode(meta, targetClassName);
         var result = new ClassGenerator().createClass(src, targetClassName);
         return (Class<D>) result;
+    }
+
+    /** Verify the class is a record or has a non-argument constructor */
+    private void verifyClass(Class<?> domainClass) throws IllegalArgumentException {
+        var correctConstructor = domainClass.isRecord() || Arrays
+                .stream(domainClass.getConstructors())
+                .anyMatch(c -> c.getParameterCount() == 0);
+        if (!correctConstructor) {
+            throw new IllegalArgumentException("Only Bean and Record domain objects are supported");
+        }
     }
 
     /** Convert Ujo object from the domain */
