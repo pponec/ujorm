@@ -14,21 +14,21 @@ class DomainModelTest {
     void testTableAnnotationAttributes() {
         // Case 1: Fully annotated entity
         var meta = DomainModel.of(FullAnnotatedEntity.class);
-        assertEquals("custom_table", meta.database().table());
-        assertEquals("my_schema", meta.database().schema());
-        assertEquals("my_catalog", meta.database().catalog());
+        assertEquals("custom_table", meta.tableIdentifier().table());
+        assertEquals("my_schema", meta.tableIdentifier().schema());
+        assertEquals("my_catalog", meta.tableIdentifier().catalog());
 
         // Case 2: Partially annotated (only name)
         var partialMeta = DomainModel.of(PartialAnnotatedEntity.class);
-        assertEquals("only_name", partialMeta.database().table());
-        assertEquals("", partialMeta.database().schema(), "Schema should be null if not provided");
-        assertEquals("", partialMeta.database().catalog(), "Catalog should be null if not provided");
+        assertEquals("only_name", partialMeta.tableIdentifier().table());
+        assertEquals("", partialMeta.tableIdentifier().schema(), "Schema should be null if not provided");
+        assertEquals("", partialMeta.tableIdentifier().catalog(), "Catalog should be null if not provided");
 
         // Case 3: Annotation present but empty strings (JPA default)
         var emptyMeta = DomainModel.of(EmptyAnnotatedEntity.class);
-        assertEquals("empty_annotated_entity", emptyMeta.database().table(), "Should fallback to snake_case");
-        assertEquals("", emptyMeta.database().schema());
-        assertEquals("", emptyMeta.database().catalog());
+        assertEquals("empty_annotated_entity", emptyMeta.tableIdentifier().table(), "Should fallback to snake_case");
+        assertEquals("", emptyMeta.tableIdentifier().schema());
+        assertEquals("", emptyMeta.tableIdentifier().catalog());
     }
 
     /**
@@ -38,15 +38,15 @@ class DomainModelTest {
     void getDatabaseTable() {
         // Case 1: Class with explicit @Table annotation
         var modelWithAnnotation = DomainModel.of(AnnotatedEntity.class);
-        assertEquals("my_custom_table", modelWithAnnotation.database().table());
+        assertEquals("my_custom_table", modelWithAnnotation.tableIdentifier().table());
 
         // Case 2: Class without annotation (fallback to snake_case)
         var modelWithoutAnnotation = DomainModel.of(UserProfile.class);
-        assertEquals("user_profile", modelWithoutAnnotation.database().table());
+        assertEquals("user_profile", modelWithoutAnnotation.tableIdentifier().table());
 
         // Case 3: Record without annotation
         var recordModel = DomainModel.of(SimpleRecord.class);
-        assertEquals("simple_record", recordModel.database().table());
+        assertEquals("simple_record", recordModel.tableIdentifier().table());
     }
 
     // --- Test Data Classes ---
