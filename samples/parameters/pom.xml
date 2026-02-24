@@ -29,6 +29,7 @@ See the more info: http://ujorm.org/sample/parameters.htm .</description>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.8.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
