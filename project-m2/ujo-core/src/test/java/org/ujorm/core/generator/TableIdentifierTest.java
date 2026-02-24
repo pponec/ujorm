@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.ujorm.core.generator.DatabaseModel.toSnakeCase;
+import static org.ujorm.core.generator.TableIdentifier.toSnakeCase;
 
-class DatabaseModelTest {
+class TableIdentifierTest {
 
     /** Test the private static method toSnakeCase via Reflection. */
     @Test

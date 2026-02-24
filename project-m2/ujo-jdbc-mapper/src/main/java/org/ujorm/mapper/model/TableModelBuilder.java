@@ -18,7 +18,7 @@ package org.ujorm.mapper.model;
 import lombok.RequiredArgsConstructor;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
-import org.ujorm.core.generator.DatabaseModel;
+import org.ujorm.core.generator.TableIdentifier;
 import org.ujorm.mapper.impl.Context;
 import org.ujorm.tools.common.StreamUtils;
 
@@ -33,7 +33,7 @@ public class TableModelBuilder<D> {
     private final Context ctx;
 
     public TableModel<D> build(Connection initConnection) {
-        var dbModel = DatabaseModel.of(handler.getDomainClass());
+        var dbModel = TableIdentifier.of(handler.getDomainClass());
         var columns = handler.getKeyList().stream()
                 .map(key -> column(key))
                 .toList();
@@ -46,7 +46,7 @@ public class TableModelBuilder<D> {
     }
 
     /** Map a lower case column name to the original column name. */
-    protected static Map<String, String> jdbcColumnMap(DatabaseModel dbModel, Connection initConnection) {
+    protected static Map<String, String> jdbcColumnMap(TableIdentifier dbModel, Connection initConnection) {
         throw new UnsupportedOperationException("TODO");
     }
 

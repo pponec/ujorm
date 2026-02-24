@@ -5,8 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
-import org.ujorm.core.generator.DatabaseModel;
-import org.ujorm.core.generator.DomainModel;
+import org.ujorm.core.generator.TableIdentifier;
 import org.ujorm.tools.common.StreamUtils;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +48,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
         this.keyMap = StreamUtils.map(Key::getName, keyList);
         this.hasPrimitives = hasPrimitives(keyList);
         this.enableArrayMutation = enableArrayMutation;
-        this.tableName = DatabaseModel.of(keyList[0].getDomainClass()).getQualifiedName();
+        this.tableName = TableIdentifier.of(keyList[0].getDomainClass()).getQualifiedName();
     }
 
     @Override
