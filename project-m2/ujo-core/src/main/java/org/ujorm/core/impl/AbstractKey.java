@@ -112,9 +112,10 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public final boolean isTypeOf(@NotNull final Class<?> type) {
-        return getType().isAssignableFrom(type);
+    public boolean isTypeOf(@NotNull final Class<?> type) {
+        return this.type.isAssignableFrom(type);
     }
 
     @Override
