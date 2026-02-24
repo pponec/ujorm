@@ -60,6 +60,6 @@ class EntityManagerTest extends AbstractDaoTest {
     }
 
     public Employee createEmployee(Long id, String name, City city) {
-        return new Employee(id, name, null , city, LocalDate.of(2020,1,1), true);
+        return Employee.of(id, name, null , city, LocalDate.of(2020,1,1), true);
     }
 }

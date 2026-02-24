@@ -56,16 +56,4 @@ public record ColumnModel<D,V>(
         return key.getFullName();
     }
 
-    public static <D,V> ColumnModel<D,V> of(Key<D,V> key, Context ctx) {
-        var jdbcType = ctx.commonService().findJdbcType(key.getType());
-        var relation = jdbcType == null;
-        var foreignKey = (Key<V,?>) null;
-        if (relation) {
-            var foreignHandler = ctx.domainService().getHandler(key.getType());
-            foreignKey = (Key<V,?>) ctx.commonService().findPrimaryKey(foreignHandler.getDomainClass(), ctx);
-            jdbcType = ctx.commonService().findJdbcType(foreignKey.getType());
-        }
-        return new ColumnModel<>(key, jdbcType, foreignKey);
-    }
-
 }

@@ -1,9 +1,12 @@
 package org.ujorm.mapper.demo;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/** Represents the entity class type.
+ * Note that the {@link Entity} annotation is not required in this library. */
 @Table(name = "city")
 public record City (
     @Column(name = "id") @Id
@@ -18,5 +21,4 @@ public record City (
     public static final City of(Long id, String name) {
         return new City(id, name, "", 0.0, 0.0);
     }
-
-};
+}

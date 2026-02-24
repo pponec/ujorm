@@ -6,24 +6,29 @@ import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
 
-@Getter @Setter @ToString @EqualsAndHashCode
-@AllArgsConstructor @NoArgsConstructor
+@Getter @Setter
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "employee")
-@Entity
-public class Employee {
+public class Employee extends User {
 
-    @Column(name = "id") @Id
-    private Long id;
-    @Column(name = "name", nullable = false)
-    private String name;
-    @Nullable
-    @JoinColumn(name = "superior_id")
-    private Employee superior;
-    @JoinColumn(name = "city_id", nullable = false)
-    private City city;
     @Column(name = "contract_day", nullable = false)
     private LocalDate contractDay;
-    @Column(name = "is_active")
-    private boolean active;
+
+    @Nullable
+    @JoinColumn(name = "superior_id")
+    private User superior;
+
+    /** Static builder */
+    public static Employee of(Long id, String name, Employee superior, City city, LocalDate contractDay, boolean active) {
+        var result = new Employee();
+        result.setId(id);
+        result.setName(name);
+        result.setSuperior(superior);
+        result.setCity(city);
+        result.setContractDay(contractDay);
+        result.setActive(active);
+        return result;
+    }
 
 }
