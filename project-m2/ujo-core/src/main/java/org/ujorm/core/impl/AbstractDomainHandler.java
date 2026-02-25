@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.core.generator.TableIdentifier;
+import org.ujorm.tools.common.Primitive;
 import org.ujorm.tools.common.StreamUtils;
 import java.util.List;
 import java.util.Map;
@@ -99,12 +100,20 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public final @NotNull <V> Key<D, V> getKey(@Nullable final String name, @Nullable final Class<V> type)
+    public final @NotNull <V> Key<D, V> getKey(@Nullable final String name, @Nullable final Class<V> genericType)
             throws NoSuchElementException {
         var result = keyMap.get(name);
         if (result == null) {
             throw new NoSuchElementException("Key not found: %s.%s"
                     .formatted(getDomainClass().getSimpleName(), name));
+        }
+        if (genericType != null && genericType != Primitive.wrapPrimitive(result.getType())) {
+            var msg = "Property %s.%s has wrong type %s, expected is %s.".formatted(
+                    getDomainClass().getSimpleName(),
+                    name,
+                    genericType.getSimpleName(),
+                    result.getType().getSimpleName());
+            throw new IllegalArgumentException(msg);
         }
         return (Key<D, V>) result;
     }

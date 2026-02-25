@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,8 +18,10 @@ package org.ujorm.core.generator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Transient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.common.Primitive;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Modifier;
@@ -43,23 +45,8 @@ public record DomainPropertyModel(
         boolean primaryKey
 ) {
 
-    /** Map primitive types to the object one. */
-    private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER = Map.of(
-            boolean.class, Boolean.class,
-            char.class,    Character.class,
-            byte.class,    Byte.class,
-            short.class,   Short.class,
-            int.class,     Integer.class,
-            long.class,    Long.class,
-            float.class,   Float.class,
-            double.class,  Double.class,
-            void.class,    Void.class
-    );
-
-    /** Returns an Object Class */
-    @NotNull
     public Class<?> propertyObjectType() {
-        return PRIMITIVE_TO_WRAPPER.getOrDefault(propertyType, propertyType);
+        return Primitive.wrapPrimitive(propertyType);
     }
 
     /**
@@ -76,9 +63,10 @@ public record DomainPropertyModel(
             return Arrays.stream(beanOrRecord.getRecordComponents())
                     .map(c -> {
                         var field = findField(beanOrRecord, c.getName());
-                        var element = field != null ? field : c;
-                        return createModel(c.getName(), c.getType(), c.getName(), null, element);
+                        if (field == null || Modifier.isTransient(field.getModifiers())) return null;
+                        return createModel(c.getName(), c.getType(), c.getName(), null, field);
                     })
+                    .filter(Objects::nonNull)
                     .toList();
         }
 
@@ -87,7 +75,11 @@ public record DomainPropertyModel(
         while (currentClass != null && currentClass != Object.class) {
             var classProperties = new ArrayList<DomainPropertyModel>();
             for (var field : currentClass.getDeclaredFields()) {
-                if (Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
+                // Ignore static, synthetic, transient fields and JPA @Transient annotations
+                if (Modifier.isStatic(field.getModifiers())
+                        || field.isSynthetic()
+                        || Modifier.isTransient(field.getModifiers())
+                        || field.isAnnotationPresent(Transient.class)) {
                     continue;
                 }
                 var suffix = capitalize(field.getName());
@@ -116,30 +108,19 @@ public record DomainPropertyModel(
         var isId = element.isAnnotationPresent(Id.class);
         var column = element.getAnnotation(Column.class);
         var joinColumn = element.getAnnotation(JoinColumn.class);
-
         var dbColName = name;
-        var isNonNull = type.isPrimitive() || isId;
+        var required = type.isPrimitive() || isId;
 
         if (column != null) {
             if (!column.name().isEmpty()) dbColName = column.name();
-            if (!column.nullable()) isNonNull = true;
+            if (!column.nullable()) required = true;
         } else if (joinColumn != null) {
             if (!joinColumn.name().isEmpty()) dbColName = joinColumn.name();
-            if (!joinColumn.nullable()) isNonNull = true;
+            if (!joinColumn.nullable()) required = true;
         }
 
-        for (var annotation : element.getAnnotations()) {
-            var annotName = annotation.annotationType().getSimpleName();
-            if ("NotNull".equals(annotName) || "NonNull".equals(annotName)) {
-                isNonNull = true;
-            } else if ("Nullable".equals(annotName)) {
-                isNonNull = false;
-            }
-        }
-
-        return new DomainPropertyModel(name, type, getter, setter, dbColName, isNonNull, isId);
+        return new DomainPropertyModel(name, type, getter, setter, dbColName, required, isId);
     }
-
     private static String findGetter(Class<?> clazz, Class<?> type, String suffix) {
         var is = "is" + suffix;
         var get = "get" + suffix;

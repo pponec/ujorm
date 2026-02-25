@@ -11,16 +11,30 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CsvManagerTest {
 
+    private Stream<String> source() {
+        return """
+                id|active|age|rank|salary|rating|bonus|gender|firstName|lastName|balance|createdAt
+                0|true|25|1|50000|4.5|1000.0|M|James|Smith|1500.50|2026-01-01T10:00:00
+                1|false|30|2|60000|3.8|500.0|F|Mary|Johnson|2500.75|2026-01-02T11:15:00
+                2|true|22|3|45000|4.2|1200.0|M|Robert|Williams|3000.00|2026-01-03T12:30:00
+                3|true|45|1|85000|5.0|2000.0|F|Patricia|Brown|4200.20|2026-01-04T08:45:00
+                4|false|28|4|52000|3.5|0.0|M|"Michael"|"Lee|Jones(""2"")"|1100.10|2026-01-05T09:00:00
+                5|true|35|2|70000|4.8|1500.0|F|Jennifer|Garcia|5500.00|2026-01-06T14:20:00
+                6|true|50|1|95000|4.9|3000.0|M|William|Miller|8900.50|2026-01-07T16:10:00
+                7
+                8||||||||||||||||||||||||||||||
+                """.lines().skip(1);
+    }
+
     @Test
     void convertToBeanByOrder() {
         var csvManager = CsvManager.of(UserBean.class);
         var result = csvManager.convertByOrder(source()).toList();
 
         assertNotNull(result);
-        assertEquals(10, result.size());
-        assertEquals(10, result.size());
+        assertEquals(9, result.size());
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < result.size(); i++) {
             var user = result.get(i);
             assertEquals(i, user.getId());
             switch (i) {
@@ -31,7 +45,14 @@ public class CsvManagerTest {
                     assertEquals(50000, user.salary);
                     assertEquals(new BigDecimal("1500.50"), user.balance);
                 }
-                case 9 -> {
+                case 7 -> {
+                    assertFalse(user.active);
+                    assertNull(user.firstName);
+                    assertNull(user.lastName);
+                    assertEquals(0, user.salary);
+                    assertNull(user.balance);
+                }
+                case 8 -> {
                     assertFalse(user.active);
                     assertEquals("", user.firstName);
                     assertEquals("", user.lastName);
@@ -49,10 +70,9 @@ public class CsvManagerTest {
         var result = csvManager.convertByOrder(source()).toList();
 
         assertNotNull(result);
-        assertEquals(10, result.size());
-        assertEquals(10, result.size());
+        assertEquals(9, result.size());
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < result.size(); i++) {
             var user = result.get(i);
             assertEquals(i, user.id());
             switch (i) {
@@ -63,6 +83,13 @@ public class CsvManagerTest {
                     assertEquals(50000, user.salary);
                     assertEquals(new BigDecimal("1500.50"), user.balance);
                 }
+                case 4 -> {
+                    assertFalse(user.active);
+                    assertEquals("Michael", user.firstName);
+                    assertEquals("Lee|Jones(\"2\")", user.lastName);
+                    assertEquals(52000, user.salary);
+                    assertEquals(new BigDecimal("1100.10"), user.balance);
+                }
                 case 9 -> {
                     assertFalse(user.active);
                     assertEquals("", user.firstName);
@@ -72,22 +99,6 @@ public class CsvManagerTest {
                 }
             }
         }
-    }
-
-    private Stream<String> source() {
-        return """
-                0;true;25;1;50000;4.5;1000.0;M;James;Smith;1500.50;2026-01-01T10:00:00
-                1;false;30;2;60000;3.8;500.0;F;Mary;Johnson;2500.75;2026-01-02T11:15:00
-                2;true;22;3;45000;4.2;1200.0;M;Robert;Williams;3000.00;2026-01-03T12:30:00
-                3;true;45;1;85000;5.0;2000.0;F;Patricia;Brown;4200.20;2026-01-04T08:45:00
-                4;false;28;4;52000;3.5;0.0;M;Michael;Jones;1100.10;2026-01-05T09:00:00
-                5;true;35;2;70000;4.8;1500.0;F;Jennifer;Garcia;5500.00;2026-01-06T14:20:00
-                6;true;50;1;95000;4.9;3000.0;M;William;Miller;8900.50;2026-01-07T16:10:00
-                7;false;19;5;30000;2.1;100.0;F;Linda;Davis;500.25;2026-01-08T17:55:00
-                8;true;42;2;78000;4.4;1800.0;M;David;Rodriguez;6700.80;2026-01-09T20:00:00
-                9;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                """
-                .lines();
     }
 
     @Getter
