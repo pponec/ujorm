@@ -4,8 +4,11 @@ import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
+import org.ujorm.tools.common.Primitive;
+
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Abstract implementation of the {@link Key} interface.
@@ -16,15 +19,9 @@ import java.util.Objects;
 public abstract class AbstractKey<D, V> implements Key<D, V> {
 
     /** Default values for primitive types. */
-    private static final Map<Class<?>, Object> DEFAULT_VALUES = Map.of(
-            boolean.class, false,
-            char.class, '\0',
-            byte.class, (byte) 0,
-            short.class, (short) 0,
-            int.class, 0,
-            long.class, 0L,
-            float.class, 0.0f,
-            double.class, 0.0d
+    private static final Map<Class<?>, Object> DEFAULT_VALUES = Primitive.ofAllToMap(
+            Primitive::primitiveClass,
+            Primitive::defaultValue
     );
 
     /** Order of the key, starting at zero. */

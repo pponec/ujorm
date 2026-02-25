@@ -3,8 +3,10 @@ package org.ujorm.core.impl;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.ujorm.core.Key;
+import org.ujorm.core.demo.City;
 import org.ujorm.core.demo.CityUjo;
-
+import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AbstractDomainHandlerTest {
@@ -30,7 +32,6 @@ class AbstractDomainHandlerTest {
         resultArray = domainHandler.normalizePrimitives(inputArray);
         assertSame(inputArray, resultArray, "Should return the exact same array instance");
         assertEquals(9.0, resultArray[keyLat.getIndex()], "Null should be replaced by primitive default (0)");
-
     }
 
     /**
@@ -56,24 +57,47 @@ class AbstractDomainHandlerTest {
         assertEquals(9.0, resultArray[keyLat.getIndex()], "Null should be replaced by primitive default (0)");
     }
 
+   @Test
+    void getKey() {
+        var domainHandler = createDomainHandler(false);
+        var emptyType = (Class<Long>) null;
+        var filledType = Long.class;
+        var wrongType = BigDecimal.class;
+        var cityId = (Key<City, Long>) null;
+
+        // Tests:
+        cityId = domainHandler.getKey("id", emptyType);
+        assertEquals(filledType, cityId.getType());
+        cityId = domainHandler.getKey("id", filledType);
+        assertEquals(filledType, cityId.getType());
+        // Wrong type:
+        var expectedMessage = "Property City.id has wrong type BigDecimal, expected is Long.";
+        var ex = assertThrows(IllegalArgumentException.class, () -> {
+            var wrongId = domainHandler.getKey("id", wrongType);
+            System.out.println(wrongId.getType());
+        });
+        assertEquals(expectedMessage, ex.getMessage());
+    }
+
+
     /**
      * Helper method to instantiate the class under test.
      * @param enableMutation Configuration for array handling.
      * @return A configured instance of the normalizer.
      */
-    private AbstractDomainHandler createDomainHandler(boolean enableMutation) {
-        return new AbstractDomainHandler(enableMutation,
+    private AbstractDomainHandler<City> createDomainHandler(boolean enableMutation) {
+        return new AbstractDomainHandler<>(enableMutation,
                 CityUjo.keyId,
                 CityUjo.keyName,
                 CityUjo.keyCountryCode,
                 CityUjo.keyLatitude,
                 CityUjo.keyLongitude) {
             @Override
-            public @NotNull Class getDomainClass() {
-                return null;
+            public @NotNull Class<City> getDomainClass() {
+                return City.class;
             }
             @Override
-            public Object newDomain(Object... values) {
+            public City newDomain(Object... values) {
                 return null;
             }
         };

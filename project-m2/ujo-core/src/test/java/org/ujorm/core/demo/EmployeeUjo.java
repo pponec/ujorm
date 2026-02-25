@@ -29,7 +29,7 @@ public class EmployeeUjo implements Ujo<Employee> {
     public static final Key<Employee, Employee> keySuperior = meta.getKey("superior", Employee.class);
     public static final Key<Employee, City> keyCity = meta.getKey("city", City.class);
     public static final Key<Employee, LocalDate> keyContractDay = meta.getKey("contractDay", LocalDate.class);
-    public static final Key<Employee, Boolean> keyActive = meta.getKey("active", boolean.class);
+    public static final Key<Employee, Boolean> keyActive = meta.getKey("active", Boolean.class);
     private final Object[] array = new Object[meta.count()];
 
     /** Access by a key index */
