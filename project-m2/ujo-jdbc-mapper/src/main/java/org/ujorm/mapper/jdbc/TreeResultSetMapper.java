@@ -2,6 +2,7 @@ package org.ujorm.mapper.jdbc;
 
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.Key;
@@ -10,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Maps a database ResultSet to a hierarchical Bean structure using a pre-compiled mapping tree.
@@ -19,43 +21,65 @@ import java.util.List;
 public class TreeResultSetMapper<D> {
 
     @NonNull
+    private final Class<D> domainClass;
+    @NonNull
     private final DomainHandlerService service;
     @NonNull
     private final DomainHandler<D> rootHandler;
-    @NotNull
-    private final MappingNode<D> rootNode;
-    @NotNull
-    private final String[] columnAliases;
+    @Nullable
+    private MappingNode<D> rootNode;
 
     /**
-     * Constructs the mapper and initializes the mapping tree.
+     * Constructs the mapper. The mapping tree is initialized lazily.
      *
      * @param domainClass the class of the root domain object
      * @param service the domain handler service for instance creation
-     * @param columnAliases the array of database column aliases
      */
     protected TreeResultSetMapper(
             @NonNull Class<D> domainClass,
-            @NonNull DomainHandlerService service,
-            @NonNull String... columnAliases
+            @NonNull DomainHandlerService service
     ) {
+        this.domainClass = domainClass;
         this.service = service;
         this.rootHandler = service.getHandler(domainClass);
-        this.columnAliases = columnAliases;
-        this.rootNode = buildMappingTree(domainClass);
     }
 
     /**
-     * Converts the current row of the given ResultSet into a domain object.
+     * Converts the given ResultSet into a stream of domain objects.
      *
-     * @param rs the ResultSet pointing to the current row
-     * @return the populated domain object
+     * @param rs the ResultSet to process
+     * @param columns optional explicitly defined column aliases
+     * @return a stream of populated domain objects
      * @throws SQLException if a database error occurs
+     * @throws IllegalArgumentException if explicit columns don't match the ResultSet metadata
      */
-    public D convert(ResultSet rs) throws SQLException {
-        var result = rootHandler.newDomain();
-        populateNode(rootNode, result, rs);
-        return result;
+    @NotNull
+    public Stream<D> convert(@NotNull ResultSet rs, @Nullable String... columns) throws SQLException {
+        if (!rs.next()) {
+            return Stream.empty();
+        }
+
+        if (this.rootNode == null) {
+            var actualColumns = columns;
+            if (actualColumns == null || actualColumns.length == 0) {
+                actualColumns = getAliasColumns(rs);
+            } else {
+                var metaCount = rs.getMetaData().getColumnCount();
+                if (actualColumns.length != metaCount) {
+                    throw new IllegalArgumentException("Column count mismatch between aliases and ResultSet.");
+                }
+            }
+            this.rootNode = buildMappingTree(this.domainClass, actualColumns);
+        }
+
+        var result = new ArrayList<D>();
+        do {
+            var item = rootHandler.newDomain();
+            populateNode(this.rootNode, item, rs);
+            result.add(item);
+        } while (rs.next());
+
+        return result.stream();
     }
 
     /**
@@ -68,18 +92,15 @@ public class TreeResultSetMapper<D> {
      * @throws SQLException if a database error occurs
      */
     private <T> void populateNode(MappingNode<T> node, T target, ResultSet rs) throws SQLException {
-        // Map direct properties (leaf nodes)
         for (var mapping : node.directMappings()) {
             var value = extractValue(rs, mapping);
             mapping.key().setValue(target, value);
         }
 
-        // Process child relations
         for (var relation : node.relations()) {
             var childKey = relation.childKey();
             var childNode = relation.childNode();
 
-            // Check if the relation object already exists
             var childInstance = childKey.getValue(target);
             if (childInstance == null) {
                 childInstance = createInstance(childKey.getType());
@@ -91,7 +112,7 @@ public class TreeResultSetMapper<D> {
     }
 
     /**
-     * Extracts a value from the ResultSet based on the mapping definition.
+     * Extracts a value from the ResultSet based on the mapping definition using column index.
      *
      * @param rs the result set
      * @param mapping the direct mapping containing the column index and key
@@ -99,7 +120,6 @@ public class TreeResultSetMapper<D> {
      * @return the extracted value
      * @throws SQLException if a database error occurs
      */
-    @SuppressWarnings("unchecked")
     private <V> V extractValue(ResultSet rs, DirectMapping<?, V> mapping) throws SQLException {
         return rs.getObject(mapping.columnIndex(), mapping.key().getType());
     }
@@ -119,18 +139,18 @@ public class TreeResultSetMapper<D> {
      * Builds the internal tree structure from the flat column definitions.
      *
      * @param rootClass the root domain class
+     * @param columnAliases the column aliases
      * @return the root mapping node
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private MappingNode<D> buildMappingTree(Class<D> rootClass) {
-        var result = new MappingNode<D>(new ArrayList<>(), new ArrayList<>());
+    private MappingNode<D> buildMappingTree(@NonNull Class<D> rootClass, @NotNull String... columnAliases) {
+        var result = new MappingNode<D>();
 
-        for (var idx = 0; idx < columnAliases.length; idx++) {
-            var alias = columnAliases[idx];
-            var jdbcIndex = idx + 1; // JDBC column index starts at 1
+        for (var colIndex = 0; colIndex < columnAliases.length; colIndex++) {
+            var alias = columnAliases[colIndex];
             var parts = alias.split("\\.");
-            var currentNode = result;
-            var currentClass = (Class) rootClass;
+            var currentNode = (MappingNode) result;
+            var currentClass = (Class<?>) rootClass;
 
             for (var i = 0; i < parts.length; i++) {
                 var part = parts[i];
@@ -138,12 +158,13 @@ public class TreeResultSetMapper<D> {
                 var key = findKey(currentClass, part);
 
                 if (isLast) {
-                    currentNode.directMappings().add(new DirectMapping(key, jdbcIndex));
+                    currentNode.directMappings().add(new DirectMapping<>(key, colIndex + 1));
                 } else {
-                    RelationMapping existingRelation = null;
+                    var existingRelation = (RelationMapping) null;
                     for (var relObj : currentNode.relations()) {
-                        if (relObj.childKey().getName().equals(key.getName())) {
-                            existingRelation = relObj;
+                        var rel = (RelationMapping) relObj;
+                        if (rel.childKey().getName().equals(key.getName())) {
+                            existingRelation = rel;
                             break;
                         }
                     }
@@ -151,8 +172,8 @@ public class TreeResultSetMapper<D> {
                     if (existingRelation != null) {
                         currentNode = existingRelation.childNode();
                     } else {
-                        var childNode = new MappingNode(new ArrayList<>(), new ArrayList<>());
-                        currentNode.relations().add(new RelationMapping(key, childNode));
+                        var childNode = new MappingNode<>();
+                        currentNode.relations().add(new RelationMapping<>(key, childNode));
                         currentNode = childNode;
                     }
                     currentClass = key.getType();
@@ -178,64 +199,36 @@ public class TreeResultSetMapper<D> {
 
     // --- Internal structures to represent the tree ---
 
-    /**
-     * Represents a node in the mapping tree structure.
-     */
+    /** Represents a node in the mapping tree structure. */
     private record MappingNode<T>(
             List<DirectMapping<T, Object>> directMappings,
             List<RelationMapping<T, Object>> relations
-    ) {}
+    ) {
+        public MappingNode() {
+            this(new ArrayList<>(), new ArrayList<>());
+        }
+    }
 
-    /**
-     * Represents a direct mapping from a ResultSet column index to a Bean property.
-     */
-    private record DirectMapping<T, V>(
-            Key<T, V> key,
-            int columnIndex
-    ) {}
+    /** Represents a direct mapping from a ResultSet column to a Bean property. */
+    private record DirectMapping<T, V>(Key<T, V> key, int columnIndex) {}
 
-    /**
-     * Represents a relation mapping to a child Bean.
-     */
-    private record RelationMapping<PARENT, CHILD>(
-            Key<PARENT, CHILD> childKey,
-            MappingNode<CHILD> childNode
-    ) {}
+    /** Represents a relation mapping to a child Bean. */
+    private record RelationMapping<PARENT, CHILD>(Key<PARENT, CHILD> childKey, MappingNode<CHILD> childNode) {}
 
-    // --- Factory Method(s) ---
+    // --- Factory Method(s) & Statics ---
 
     /**
      * Factory method to create a new instance.
      *
      * @param domainClass the root domain class
      * @param service the domain handler service
-     * @param columnAliases the database result set metadata source
      * @param <D> the root domain type
      * @return a new instance of TreeResultSetMapper
-     * @throws SQLException if a database access error occurs
      */
     public static <D> TreeResultSetMapper<D> of(
             @NonNull Class<D> domainClass,
-            @NonNull DomainHandlerService service,
-            @NonNull String... columnAliases) throws SQLException {
-        return new TreeResultSetMapper<>(domainClass, service, columnAliases);
-    }
-
-    /**
-     * Factory method to create a new instance by extracting aliases directly from a ResultSet.
-     *
-     * @param domainClass the root domain class
-     * @param service the domain handler service
-     * @param rs the database result set metadata source
-     * @param <D> the root domain type
-     * @return a new instance of TreeResultSetMapper
-     * @throws SQLException if a database access error occurs
-     */
-    public static <D> TreeResultSetMapper<D> of(
-            @NonNull Class<D> domainClass,
-            @NonNull DomainHandlerService service,
-            @NonNull ResultSet rs) throws SQLException {
-        return of(domainClass, service, getAliasColumns(rs));
+            @NonNull DomainHandlerService service) {
+        return new TreeResultSetMapper<>(domainClass, service);
     }
 
     /**

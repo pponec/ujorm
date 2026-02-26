@@ -12,6 +12,8 @@ import org.ujorm.core.generator.JavaSourceGenerator;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -34,35 +36,27 @@ public class TreeResultSetMapperTest {
     @Test @Order(200)
     void testConvertResultSetToDomain() throws SQLException {
 
-        // 1. Prepare the mock ResultSet
+        // 1. Prepare the mock ResultSet and the Columns helper
         var rs = Mockito.mock(ResultSet.class);
-        when(rs.getObject("id", Integer.class)).thenReturn(10);
-        when(rs.getObject("name", String.class)).thenReturn("Jan Novak");
-        when(rs.getObject("city.id", Integer.class)).thenReturn(100);
-        when(rs.getObject("city.name", String.class)).thenReturn("Prague");
-        when(rs.getObject("city.country.id", Integer.class)).thenReturn(1000);
-        when(rs.getObject("city.country.name", String.class)).thenReturn("Czechia");
-        when(rs.getObject("boss.id", Integer.class)).thenReturn(20);
-        when(rs.getObject("boss.name", String.class)).thenReturn("Petr Boss");
-        when(rs.getObject("boss.boss.id", Integer.class)).thenReturn(null);
-        when(rs.getObject("boss.boss.name", String.class)).thenReturn(null);
+        var c = new Columns();
+
+        // Setup mock responses and record column aliases transparently on one line
+        when(rs.getObject(c.add("id"), Integer.class)).thenReturn(10);
+        when(rs.getObject(c.add("name"), String.class)).thenReturn("Jan Novak");
+        when(rs.getObject(c.add("city.id"), Integer.class)).thenReturn(100);
+        when(rs.getObject(c.add("city.name"), String.class)).thenReturn("Prague");
+        when(rs.getObject(c.add("city.country.id"), Integer.class)).thenReturn(1000);
+        when(rs.getObject(c.add("city.country.name"), String.class)).thenReturn("Czechia");
+        when(rs.getObject(c.add("boss.id"), Integer.class)).thenReturn(20);
+        when(rs.getObject(c.add("boss.name"), String.class)).thenReturn("Petr Boss");
+        when(rs.getObject(c.add("boss.boss.id"), Integer.class)).thenReturn(null);
+        when(rs.getObject(c.add("boss.boss.name"), String.class)).thenReturn(null);
 
         // 2. Prepare the DomainHandlerService
         var service = DomainHandlerProvider.provider();
 
-        // 3. Define the column aliases we expect from the SQL SELECT
-        var aliases = new String[]{
-                "id",
-                "name",
-                "city.id",
-                "city.name",
-                "city.country.id",
-                "city.country.name",
-                "boss.id",
-                "boss.name",
-                "boss.boss.id",
-                "boss.boss.name"
-        };
+        // 3. Retrieve the synchronized column aliases
+        var aliases = c.toArray();
 
         // 4. Initialize the mapper using the requested factory method of()
         var mapper = TreeResultSetMapper.of(Employee.class, service, aliases);
@@ -92,8 +86,25 @@ public class TreeResultSetMapperTest {
         assertNull(result.getBoss().getBoss().getName());
     }
 
-    // --- Domain Classes ---
+    // --- HELP classes ---
 
+    /** Helper class for managing column aliases */
+    private static class Columns {
+        private final List<String> names = new ArrayList<>();
+
+        /** Adds a column name and returns its 1-based index */
+        public int add(String name) {
+            names.add(name);
+            return names.size();
+        }
+
+        /** Returns the accumulated column aliases as an array */
+        public String[] toArray() {
+            return names.toArray(new String[0]);
+        }
+    }
+
+    // --- Domain Classes & Helpers ---
 
     /** Represents an employee entity */
     @Getter
@@ -105,7 +116,6 @@ public class TreeResultSetMapperTest {
         private Employee boss;
     }
 
-
     /** Represents a city entity */
     @Getter
     @Setter
@@ -115,7 +125,6 @@ public class TreeResultSetMapperTest {
         private Country country;
     }
 
-
     /** Represents a country entity */
     @Getter
     @Setter
@@ -123,5 +132,4 @@ public class TreeResultSetMapperTest {
         private Integer id;
         private String name;
     }
-
 }
