@@ -1,7 +1,7 @@
 package org.ujorm.mapper.jdbc;
 
 import lombok.NonNull;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.Key;
@@ -22,13 +22,16 @@ public class TreeResultSetMapper<D> {
     DomainHandlerService service;
     @NonNull
     private final DomainHandler<D> rootHandler;
-    @Nullable
+    @NotNull
     private final MappingNode<D> rootNode;
+    @NotNull
+    private final String[] columnAliases;
 
-    public TreeResultSetMapper(@NonNull Class<D> domainClass, @NonNull DomainHandlerService service) {
+    public TreeResultSetMapper(@NonNull Class<D> domainClass, @NonNull DomainHandlerService service, @NonNull String... columnAliases) {
         this.service = service;
-        rootHandler = service.getHandler(domainClass);
-        rootNode = buildMappingTree();
+        this.rootHandler = service.getHandler(domainClass);
+        this.rootNode = buildMappingTree();
+        this.columnAliases = columnAliases;
     }
 
     /**
