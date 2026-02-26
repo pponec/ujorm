@@ -15,6 +15,7 @@
  */
 package org.ujorm.core;
 
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +38,7 @@ public interface DomainHandler<D> {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    <V> Key<D, V> getKey(@Nullable String name, @Nullable Class<V> genericType)
+    <V> Key<D, V> getKey(@NonNull String name, @NotNull Class<V> genericType)
             throws NoSuchElementException;
 
     /**

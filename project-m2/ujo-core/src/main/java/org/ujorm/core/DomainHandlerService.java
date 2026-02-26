@@ -74,4 +74,12 @@ public class DomainHandlerService {
         return AbstractUjo.of(domainObject, handler);
     }
 
+    /**
+     * Generates and compiles a new handler class.
+     * Then, using its instance, creates the required domain object.
+     */
+    public <D> D createInstance(@NotNull Class<D> type, Object... values) {
+        return getHandler(type).newDomain(values);
+    }
+
 }

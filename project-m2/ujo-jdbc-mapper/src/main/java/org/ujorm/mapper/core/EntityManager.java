@@ -107,9 +107,10 @@ public class EntityManager<D, V> {
         }
         sql.append(")");
 
-        return run(sql, ps -> {
+        var returnGeneratedKeys = pkOriginalValue == null;
+        return run(sql, returnGeneratedKeys, ps -> {
             setValuesToStatement(domain, columns, ps);
-            if (pkOriginalValue != null) {
+            if (!returnGeneratedKeys) {
                 ps.executeUpdate();
                 return domain;
             } else {
@@ -163,7 +164,7 @@ public class EntityManager<D, V> {
                 .append(pk.columnName())
                 .append(" = ?");
 
-        return run(sql, ps -> {
+        return run(sql, false, ps -> {
             ps.setObject(1, id);
             try (var rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -211,7 +212,7 @@ public class EntityManager<D, V> {
             sql.append(column.name()).append(" = ?");
         }
         sql.append(" WHERE ").append(pkColumn.name()).append(" = ").append("?");
-        return run(sql, ps -> {
+        return run(sql, false, ps -> {
             setValuesToStatement(domain, columns, ps);
             setPkToStatement(domain, columns.size() + 1, ps);
             return (long) ps.executeUpdate();
@@ -226,7 +227,7 @@ public class EntityManager<D, V> {
     /** Deletes a domain object by its identifier. */
     public int deleteById(@NotNull V id) {
         var sql = "DELETE FROM " + domainHandler.getDatabaseTable() + " WHERE " + pk.columnName() + " = ?";
-        return run(sql, ps -> {
+        return run(sql, false, ps -> {
             ps.setObject(1, id);
             return ps.executeUpdate();
         });
@@ -238,8 +239,13 @@ public class EntityManager<D, V> {
     }
 
     /** Logs and executes the SQL statement. */
-    protected <R> R run(final CharSequence sql, final SqlFunction<PreparedStatement, R> fun) {
-        try (var ps = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)) {
+    protected <R> R run(final CharSequence sql, final boolean returnGeneratedKeys, final SqlFunction<PreparedStatement, R> fun) {
+        try (var ps = !returnGeneratedKeys
+            ? connection.prepareStatement(sql.toString())
+            : tableModel.isOracleDb()
+            ? connection.prepareStatement(sql.toString(), new String[]{pkColumn.name()})
+            : connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)
+        ) {
             LOGGER.info(sql::toString);
             return fun.applyValue(ps);
         } catch (Exception ex) {
