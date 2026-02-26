@@ -11,6 +11,7 @@ import org.ujorm.core.generator.DomainModel;
 import org.ujorm.core.generator.JavaSourceGenerator;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,16 +30,21 @@ public class ResultSetTreeMapperTest {
         var src = new JavaSourceGenerator().getSourceCode(meta, className);
         if (printResult) System.out.println(src);
 
-        assertTrue(src.contains("static final class Key_city extends AbstractKey<Employee, org.ujorm.mapper.jdbc.TreeResultSetMapperTest.City> {"));
-        assertTrue(src.contains("public org.ujorm.mapper.jdbc.TreeResultSetMapperTest.City getValue(@NotNull final Employee bean) {"));
+        assertTrue(src.contains("static final class Key_city extends AbstractKey<Employee, org.ujorm.mapper.jdbc.ResultSetTreeMapperTest.City> {"));
+        assertTrue(src.contains("public org.ujorm.mapper.jdbc.ResultSetTreeMapperTest.City getValue(@NotNull final Employee bean) {"));
     }
 
     @Test @Order(200)
     void testConvertResultSetToDomain() throws SQLException {
 
-        // 1. Prepare the mock ResultSet and the Columns helper
+        // 1. Prepare the mock ResultSet, MetaData and the Columns helper
         var rs = Mockito.mock(ResultSet.class);
+        var metaData = Mockito.mock(ResultSetMetaData.class);
         var c = new Columns();
+
+        // Setup the mock to return exactly one row and provide metadata
+        when(rs.next()).thenReturn(true, false);
+        when(rs.getMetaData()).thenReturn(metaData);
 
         // Setup mock responses and record column aliases transparently on one line
         when(rs.getObject(c.add("id"), Integer.class)).thenReturn(10);
@@ -52,11 +58,12 @@ public class ResultSetTreeMapperTest {
         when(rs.getObject(c.add("boss.boss.id"), Integer.class)).thenReturn(null);
         when(rs.getObject(c.add("boss.boss.name"), String.class)).thenReturn(null);
 
-        // 2. Prepare the DomainHandlerService
-        var service = DomainHandlerProvider.provider();
-
-        // 3. Retrieve the synchronized column aliases
+        // 2. Retrieve the synchronized column aliases and mock column count
         var aliases = c.toArray();
+        when(metaData.getColumnCount()).thenReturn(aliases.length);
+
+        // 3. Prepare the DomainHandlerService
+        var service = DomainHandlerProvider.provider();
 
         // 4. Initialize the mapper using the requested factory method of()
         var mapper = ResultSetTreeMapper.of(Employee.class, service);
