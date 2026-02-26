@@ -8,7 +8,7 @@ class CsvLineSplitterTest {
 
     @Test
     void ofQuoted_4() {
-        var splitter = CsvLineSplitter.ofQuoted('|');
+        var splitter = CsvLineSplitter.ofQuoted('|', '"');
         var line = """
                 4|false|28|4|52000|Lee|Jones(""2"")|0.0|M|"Michael"|"Lee|Jones(""2"")"|1100.10|2026-01-05T09:00:00
                 """.trim();
@@ -22,7 +22,7 @@ class CsvLineSplitterTest {
 
     @Test
     void ofQuoted_7() {
-        var splitter = CsvLineSplitter.ofQuoted('|');
+        var splitter = CsvLineSplitter.ofQuoted('|', '"');
         var line = "7";
         var count = 12;
         var cells = splitter.split(line, count);
@@ -32,7 +32,7 @@ class CsvLineSplitterTest {
 
     @Test
     void ofQuoted_8() {
-        var splitter = CsvLineSplitter.ofQuoted('|');
+        var splitter = CsvLineSplitter.ofQuoted('|', '"');
         var line = """
                 8||||||||||||||||||||||||||||||
                 """.trim();

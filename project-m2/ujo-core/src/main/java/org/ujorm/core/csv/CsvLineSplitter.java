@@ -48,16 +48,19 @@ public interface CsvLineSplitter {
     }
 
     /**
-     * Fast CSV line splitter supporting optional quotes around fields.
+     * Fast CSV line splitter supporting optional quotes around fields and quote character.
      * Properly ignores delimiters enclosed within double quotes and
      * unescapes inner double quotes ("" to ").
      * Optimized by avoiding regex and iterating characters sequentially.
      *
      * @param delimiter The character used to separate fields.
+     * @param quoteChar The character used to quote fields.
      * @return A CsvLineSplitter instance.
      */
     @NotNull
-    static CsvLineSplitter ofQuoted(final char delimiter) {
+    static CsvLineSplitter ofQuoted(final char delimiter, final char quoteChar) {
+        final var quoteStr = String.valueOf(quoteChar);
+        final var doubleQuoteStr = quoteStr + quoteStr;
         return (text, maxFields) -> {
             if (text == null || text.isEmpty()) return new String[0];
 
@@ -71,16 +74,16 @@ public interface CsvLineSplitter {
             for (var i = 0; i <= len && count < maxFields; i++) {
                 var isEnd = (i == len);
                 var c = isEnd ? '\0' : text.charAt(i);
-                if (c == '"') {
+                if (c == quoteChar) {
                     inQuotes = !inQuotes;
                 } else if ((c == delimiter && !inQuotes) || isEnd) {
                     var s = start;
                     var e = i;
                     // Strip surrounding quotes if present and unescape internal quotes
-                    if (e > s && text.charAt(s) == '"' && text.charAt(e - 1) == '"') {
+                    if (e > s && text.charAt(s) == quoteChar && text.charAt(e - 1) == quoteChar) {
                         s++;
                         e--;
-                        result[count++] = text.substring(s, e).replace("\"\"", "\"");
+                        result[count++] = text.substring(s, e).replace(doubleQuoteStr, quoteStr);
                     } else {
                         result[count++] = text.substring(s, e);
                     }

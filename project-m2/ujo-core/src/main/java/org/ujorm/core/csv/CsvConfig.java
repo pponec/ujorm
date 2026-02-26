@@ -24,9 +24,10 @@ public record CsvConfig(
         CsvLineSplitter splitter
 ) {
 
-    /** Default delimiter is a pipe {@code '|'}*/
+    /** The default delimiter is a pipe {@code '|'}
+     * and the quote character is a double quote {@code '"'}. */
     public static CsvConfig ofDefault() {
-        return of('|', "");
+        return of('|', '"', "");
     }
 
     /**
@@ -35,8 +36,8 @@ public record CsvConfig(
      * @param header Optional CSV header is not implemented yet.
      * @return
      */
-    public static CsvConfig of(char delimiter, @Nullable String header) {
-        return new CsvConfig(header, initConverterMap(), CsvLineSplitter.ofQuoted(delimiter));
+    public static CsvConfig of(char delimiter, char quoteChar, @Nullable String header) {
+        return new CsvConfig(header, initConverterMap(), CsvLineSplitter.ofQuoted(delimiter, quoteChar));
     }
 
     public static Map<Class<?>, Function<String, ?>> initConverterMap() {
