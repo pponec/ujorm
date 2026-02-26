@@ -69,15 +69,15 @@ public class TreeResultSetMapper<D> {
      */
     private <T> void populateNode(MappingNode<T> node, T target, ResultSet rs) throws SQLException {
         // Map direct properties (leaf nodes)
-        for (var mapping : node.getDirectMappings()) {
+        for (var mapping : node.directMappings()) {
             var value = extractValue(rs, mapping);
-            mapping.getKey().setValue(target, value);
+            mapping.key().setValue(target, value);
         }
 
         // Process child relations
-        for (var relation : node.getRelations()) {
-            var childKey = relation.getChildKey();
-            var childNode = relation.getChildNode();
+        for (var relation : node.relations()) {
+            var childKey = relation.childKey();
+            var childNode = relation.childNode();
 
             // Check if the relation object already exists
             var childInstance = childKey.getValue(target);
@@ -86,7 +86,6 @@ public class TreeResultSetMapper<D> {
                 childKey.setValue(target, childInstance);
             }
 
-            // Recursively populate the child
             populateNode(childNode, childInstance, rs);
         }
     }
@@ -95,14 +94,14 @@ public class TreeResultSetMapper<D> {
      * Extracts a value from the ResultSet based on the mapping definition.
      *
      * @param rs the result set
-     * @param mapping the direct mapping containing the column alias and key
+     * @param mapping the direct mapping containing the column index and key
      * @param <V> the type of the value
      * @return the extracted value
      * @throws SQLException if a database error occurs
      */
     @SuppressWarnings("unchecked")
     private <V> V extractValue(ResultSet rs, DirectMapping<?, V> mapping) throws SQLException {
-        return (V) rs.getObject(mapping.getColumnAlias(), mapping.getKey().getType());
+        return rs.getObject(mapping.columnIndex(), mapping.key().getType());
     }
 
     /**
@@ -124,12 +123,14 @@ public class TreeResultSetMapper<D> {
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     private MappingNode<D> buildMappingTree(Class<D> rootClass) {
-        var result = new MappingNode<D>();
+        var result = new MappingNode<D>(new ArrayList<>(), new ArrayList<>());
 
-        for (var alias : columnAliases) {
+        for (var idx = 0; idx < columnAliases.length; idx++) {
+            var alias = columnAliases[idx];
+            var jdbcIndex = idx + 1; // JDBC column index starts at 1
             var parts = alias.split("\\.");
-            MappingNode currentNode = result;
-            Class<?> currentClass = rootClass;
+            var currentNode = result;
+            var currentClass = (Class) rootClass;
 
             for (var i = 0; i < parts.length; i++) {
                 var part = parts[i];
@@ -137,25 +138,23 @@ public class TreeResultSetMapper<D> {
                 var key = findKey(currentClass, part);
 
                 if (isLast) {
-                    currentNode.getDirectMappings().add(new DirectMapping<>(key, alias));
+                    currentNode.directMappings().add(new DirectMapping(key, jdbcIndex));
                 } else {
                     RelationMapping existingRelation = null;
-                    for (var relObj : currentNode.getRelations()) {
-                        var rel = (RelationMapping) relObj;
-                        if (rel.getChildKey().getName().equals(key.getName())) {
-                            existingRelation = rel;
+                    for (var relObj : currentNode.relations()) {
+                        if (relObj.childKey().getName().equals(key.getName())) {
+                            existingRelation = relObj;
                             break;
                         }
                     }
 
                     if (existingRelation != null) {
-                        currentNode = existingRelation.getChildNode();
+                        currentNode = existingRelation.childNode();
                     } else {
-                        var childNode = new MappingNode<>();
-                        currentNode.getRelations().add(new RelationMapping<>(key, childNode));
+                        var childNode = new MappingNode(new ArrayList<>(), new ArrayList<>());
+                        currentNode.relations().add(new RelationMapping(key, childNode));
                         currentNode = childNode;
                     }
-
                     currentClass = key.getType();
                 }
             }
@@ -182,60 +181,26 @@ public class TreeResultSetMapper<D> {
     /**
      * Represents a node in the mapping tree structure.
      */
-    private static class MappingNode<T> {
-        private final List<DirectMapping<T, Object>> directMappings = new ArrayList<>();
-        private final List<RelationMapping<T, Object>> relations = new ArrayList<>();
-
-        public List<DirectMapping<T, Object>> getDirectMappings() {
-            return directMappings;
-        }
-
-        public List<RelationMapping<T, Object>> getRelations() {
-            return relations;
-        }
-    }
+    private record MappingNode<T>(
+            List<DirectMapping<T, Object>> directMappings,
+            List<RelationMapping<T, Object>> relations
+    ) {}
 
     /**
-     * Represents a direct mapping from a ResultSet column to a Bean property.
+     * Represents a direct mapping from a ResultSet column index to a Bean property.
      */
-    private static class DirectMapping<T, V> {
-        private final Key<T, V> key;
-        private final String columnAlias;
-
-        public DirectMapping(Key<T, V> key, String columnAlias) {
-            this.key = key;
-            this.columnAlias = columnAlias;
-        }
-
-        public Key<T, V> getKey() {
-            return key;
-        }
-
-        public String getColumnAlias() {
-            return columnAlias;
-        }
-    }
+    private record DirectMapping<T, V>(
+            Key<T, V> key,
+            int columnIndex
+    ) {}
 
     /**
      * Represents a relation mapping to a child Bean.
      */
-    private static class RelationMapping<PARENT, CHILD> {
-        private final Key<PARENT, CHILD> childKey;
-        private final MappingNode<CHILD> childNode;
-
-        public RelationMapping(Key<PARENT, CHILD> childKey, MappingNode<CHILD> childNode) {
-            this.childKey = childKey;
-            this.childNode = childNode;
-        }
-
-        public Key<PARENT, CHILD> getChildKey() {
-            return childKey;
-        }
-
-        public MappingNode<CHILD> getChildNode() {
-            return childNode;
-        }
-    }
+    private record RelationMapping<PARENT, CHILD>(
+            Key<PARENT, CHILD> childKey,
+            MappingNode<CHILD> childNode
+    ) {}
 
     // --- Factory Method(s) ---
 
