@@ -23,12 +23,16 @@ import org.ujorm.mapper.impl.Context;
 import org.ujorm.tools.common.StreamUtils;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** Table Model Builder */
 @RequiredArgsConstructor
 public class TableModelBuilder<D> {
+    private static final Logger LOGGER = Logger.getLogger(TableModelBuilder.class.getName());
     private final DomainHandler<D> handler;
     private final Context ctx;
 
@@ -42,7 +46,28 @@ public class TableModelBuilder<D> {
         var insertedColumns = columns.stream()
                 .filter(c -> c != pk)
                 .toList();
-        return new TableModel(handler, pk, columns, propertyMap, dbModel, insertedColumns);
+        var isOracleDb = isOracle(initConnection);
+        return new TableModel(handler, pk, columns, propertyMap, dbModel, insertedColumns, isOracleDb);
+    }
+
+    /**
+     * Determines if the provided connection is directed to an Oracle database.
+     *
+     * @param connection The database connection to check.
+     * @return true if the database product name contains "oracle", false otherwise.
+     */
+    protected boolean isOracle(Connection connection) {
+        var result = false;
+        try {
+            var metaData = connection.getMetaData();
+            var productName = metaData.getDatabaseProductName();
+            if (productName != null && productName.toLowerCase().contains("oracle")) {
+                result = true;
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Oracle test faild", ex);
+        }
+        return result;
     }
 
     /** Map a lower case column name to the original column name. */
