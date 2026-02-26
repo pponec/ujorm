@@ -5,7 +5,9 @@ import lombok.Setter;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
+import org.ujorm.core.Key;
 import org.ujorm.core.generator.ClassName;
 import org.ujorm.core.generator.DomainModel;
 import org.ujorm.core.generator.JavaSourceGenerator;
@@ -13,6 +15,7 @@ import org.ujorm.core.generator.JavaSourceGenerator;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -36,7 +39,7 @@ public class ResultSetTreeMapperTest {
     }
 
     @Test @Order(200)
-    void testConvertResultSetToDomain() throws SQLException {
+    void testConvertResultSetToDomain_1() throws SQLException {
 
         // 1. Prepare the mock ResultSet, MetaData and the Columns helper
         var rs = Mockito.mock(ResultSet.class);
@@ -92,6 +95,46 @@ public class ResultSetTreeMapperTest {
         assertNotNull(result.getBoss().getBoss());
         assertNull(result.getBoss().getBoss().getId());
         assertNull(result.getBoss().getBoss().getName());
+    }
+
+    /** Aliases by the Key object */
+    @Test @Order(201)
+    void testConvertResultSetToDomain_2() throws SQLException {
+
+        // 1. Prepare the mock ResultSet, MetaData and the Columns helper
+        var rs = Mockito.mock(ResultSet.class);
+        var metaData = Mockito.mock(ResultSetMetaData.class);
+        var c = new Columns();
+
+        // Setup the mock to return exactly one row and provide metadata
+        when(rs.next()).thenReturn(true, false);
+        when(rs.getMetaData()).thenReturn(metaData);
+
+        // Setup mock responses and record column aliases transparently on one line
+        when(rs.getObject(c.add("id"), Integer.class)).thenReturn(10);
+        when(rs.getObject(c.add("name"), String.class)).thenReturn("Jan Novak");
+
+        // 2. Retrieve the synchronized column aliases and mock column count
+        var aliases = c.toArray();
+        when(metaData.getColumnCount()).thenReturn(aliases.length);
+
+        // 3. Prepare the DomainHandlerService
+        var service = DomainHandlerProvider.provider();
+
+        // 4. Initialize the mapper using the requested factory method of()
+        var mapper = ResultSetTreeMapper.of(Employee.class, service);
+
+        // 5. Execute the mapping by the key (!)
+        var keyId = Employee.keyId;
+        var keyName = Employee.keyName;
+        assertEquals("id", keyId.toString());
+        assertEquals("name", keyName.toString());
+        var result = mapper.convert(rs, keyId, keyName).findFirst().get();
+
+        // 6. Verify the mapped values
+        assertNotNull(result);
+        assertEquals(10, result.getId());
+        assertEquals("Jan Novak", result.getName());
     }
 
     @Test @Order(300)
@@ -213,6 +256,13 @@ public class ResultSetTreeMapperTest {
         private String name;
         private City city;
         private Employee boss;
+
+        // Optional keys:
+        static final DomainHandler<Employee> dh = DomainHandlerProvider.getHandler(Employee.class);
+        public static final Key<Employee, Integer> keyId = dh.getKey("id", Integer.class);
+        public static final Key<Employee, String> keyName = dh.getKey("name", String.class);
+        public static final Key<Employee, City> keyCity = dh.getKey("city", City.class);
+        public static final Key<Employee, Employee> keyBoss = dh.getKey("boss", Employee.class);
     }
 
     /** Represents a city entity */
@@ -222,6 +272,12 @@ public class ResultSetTreeMapperTest {
         private Integer id;
         private String name;
         private Country country;
+
+        // Optional keys:
+        static final DomainHandler<City> dh = DomainHandlerProvider.getHandler(City.class);
+        public static final Key<City, Integer> keyId = dh.getKey("id", Integer.class);
+        public static final Key<City, String> keyName = dh.getKey("name", String.class);
+        public static final Key<City, Country> keyCountry = dh.getKey("country", Country.class);
     }
 
     /** Represents a country entity */
@@ -230,5 +286,10 @@ public class ResultSetTreeMapperTest {
     public static class Country {
         private Integer id;
         private String name;
+
+        // Optional keys:
+        static final DomainHandler<Country> dh = DomainHandlerProvider.getHandler(Country.class);
+        public static final Key<Country, Integer> keyId = dh.getKey("id", Integer.class);
+        public static final Key<Country, String> keyName = dh.getKey("name", String.class);
     }
 }
