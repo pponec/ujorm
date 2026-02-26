@@ -44,6 +44,8 @@ public class TreeResultSetMapperTest {
         when(rs.getObject("city.country.name", String.class)).thenReturn("Czechia");
         when(rs.getObject("boss.id", Integer.class)).thenReturn(20);
         when(rs.getObject("boss.name", String.class)).thenReturn("Petr Boss");
+        when(rs.getObject("boss.boss.id", Integer.class)).thenReturn(null);
+        when(rs.getObject("boss.boss.name", String.class)).thenReturn(null);
 
         // 2. Prepare the DomainHandlerService
         var service = DomainHandlerProvider.provider();
@@ -57,7 +59,9 @@ public class TreeResultSetMapperTest {
                 "city.country.id",
                 "city.country.name",
                 "boss.id",
-                "boss.name"
+                "boss.name",
+                "boss.boss.id",
+                "boss.boss.name"
         };
 
         // 4. Initialize the mapper using the requested factory method of()
@@ -82,6 +86,10 @@ public class TreeResultSetMapperTest {
         assertNotNull(result.getBoss());
         assertEquals(20, result.getBoss().getId());
         assertEquals("Petr Boss", result.getBoss().getName());
+
+        assertNotNull(result.getBoss().getBoss());
+        assertNull(result.getBoss().getBoss().getId());
+        assertNull(result.getBoss().getBoss().getName());
     }
 
     // --- Domain Classes ---
