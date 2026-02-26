@@ -122,9 +122,11 @@ class HtmlToJavaConverterTest {
         String fullClassCode = wrapMethodInClass(javaClassName, methodBody);
 
         // Debug: Output to check what we are compiling
-        System.out.println("--- START Compiling Code (%s) ---".formatted(blockStyle ? "block style" : "fluent"));
-        System.out.println(fullClassCode);
-        System.out.println("--- END Compiling Code (%s) -----".formatted(blockStyle ? "block style" : "fluent"));
+        if (printHtmlResult) {
+            System.out.println("--- START Compiling Code (%s) ---".formatted(blockStyle ? "block style" : "fluent"));
+            System.out.println(fullClassCode);
+            System.out.println("--- END Compiling Code (%s) -----".formatted(blockStyle ? "block style" : "fluent"));
+        }
 
         // 5. Dynamic compilation and execution
         String htmlResult = compileAndRun(fullClassCode, javaClassName, "htmlGenerator");

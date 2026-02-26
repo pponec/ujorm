@@ -31,7 +31,8 @@ public record TableModel<D>(
         Map<String, ColumnModel<D,Object>> propertyMap,
         TableIdentifier tableIdentifier,
         /** Inserted columns without PK. */
-        List<ColumnModel<D, Object>> insertedColumns
+        List<ColumnModel<D, Object>> insertedColumns,
+        boolean isOracleDb
 ) {
 
     /** Find a column model for the property name */

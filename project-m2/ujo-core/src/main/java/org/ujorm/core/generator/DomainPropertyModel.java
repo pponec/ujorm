@@ -63,7 +63,7 @@ public record DomainPropertyModel(
             return Arrays.stream(beanOrRecord.getRecordComponents())
                     .map(c -> {
                         var field = findField(beanOrRecord, c.getName());
-                        if (field == null || Modifier.isTransient(field.getModifiers())) return null;
+                        if (field == null || field.isAnnotationPresent(Transient.class)) return null;
                         return createModel(c.getName(), c.getType(), c.getName(), null, field);
                     })
                     .filter(Objects::nonNull)
@@ -75,10 +75,10 @@ public record DomainPropertyModel(
         while (currentClass != null && currentClass != Object.class) {
             var classProperties = new ArrayList<DomainPropertyModel>();
             for (var field : currentClass.getDeclaredFields()) {
-                // Ignore static, synthetic, transient fields and JPA @Transient annotations
-                if (Modifier.isStatic(field.getModifiers())
+                var mods = field.getModifiers();
+                if (Modifier.isStatic(mods)
                         || field.isSynthetic()
-                        || Modifier.isTransient(field.getModifiers())
+                        || Modifier.isTransient(mods)
                         || field.isAnnotationPresent(Transient.class)) {
                     continue;
                 }
@@ -103,6 +103,13 @@ public record DomainPropertyModel(
 
     /**
      * Helper to create the model and extract values from JPA annotations.
+     *
+     * @param name Name of the property.
+     * @param type Type of the property.
+     * @param getter Name of the getter method.
+     * @param setter Name of the setter method.
+     * @param element Annotated element (Field or RecordComponent) to inspect.
+     * @return A populated DomainPropertyModel instance.
      */
     private static DomainPropertyModel createModel(String name, Class<?> type, String getter, String setter, AnnotatedElement element) {
         var isId = element.isAnnotationPresent(Id.class);
@@ -112,26 +119,43 @@ public record DomainPropertyModel(
         var required = type.isPrimitive() || isId;
 
         if (column != null) {
-            if (!column.name().isEmpty()) dbColName = column.name();
-            if (!column.nullable()) required = true;
+            dbColName = column.name().isEmpty() ? name : column.name();
+            required = required || !column.nullable();
         } else if (joinColumn != null) {
-            if (!joinColumn.name().isEmpty()) dbColName = joinColumn.name();
-            if (!joinColumn.nullable()) required = true;
+            dbColName = joinColumn.name().isEmpty() ? name : joinColumn.name();
+            required = required || !joinColumn.nullable();
         }
 
         return new DomainPropertyModel(name, type, getter, setter, dbColName, required, isId);
     }
-    private static String findGetter(Class<?> clazz, Class<?> type, String suffix) {
-        var is = "is" + suffix;
-        var get = "get" + suffix;
-        var hasIs = findMethod(clazz, is, (Class<?>[]) null) != null;
-        var hasGet = findMethod(clazz, get, (Class<?>[]) null) != null;
 
-        if (type == boolean.class && hasIs) return is;
-        if (hasGet) return get;
-        return hasIs ? is : null;
+    /**
+     * Resolves the appropriate getter method name.
+     *
+     * @param clazz The class to inspect.
+     * @param type The property type.
+     * @param suffix The capitalized property name.
+     * @return The getter method name, or null if none is found.
+     */
+    private static String findGetter(Class<?> clazz, Class<?> type, String suffix) {
+        var isMethod = "is" + suffix;
+        var getMethod = "get" + suffix;
+        var hasIs = findMethod(clazz, isMethod, (Class<?>[]) null) != null;
+        var hasGet = findMethod(clazz, getMethod, (Class<?>[]) null) != null;
+
+        if (type == boolean.class && hasIs) return isMethod;
+        if (hasGet) return getMethod;
+        return hasIs ? isMethod : null;
     }
 
+    /**
+     * Safely finds a method by name and parameters.
+     *
+     * @param clazz The class to inspect.
+     * @param name The method name.
+     * @param params Method parameter types.
+     * @return The method name if found, null otherwise.
+     */
     private static String findMethod(Class<?> clazz, String name, Class<?>... params) {
         try {
             return clazz.getMethod(name, params).getName();
@@ -151,10 +175,16 @@ public record DomainPropertyModel(
         }
     }
 
+    /**
+     * Capitalizes the first letter of a string.
+     *
+     * @param str The string to capitalize.
+     * @return Capitalized string.
+     */
     private static String capitalize(String str) {
-        return (str != null && !str.isEmpty())
-                ? Character.toUpperCase(str.charAt(0)) + str.substring(1)
-                : str;
+        return (str == null || str.isEmpty())
+                ? str
+                : Character.toUpperCase(str.charAt(0)) + str.substring(1);
     }
 
     public boolean isPrimitive() {
@@ -170,7 +200,9 @@ public record DomainPropertyModel(
         @SuppressWarnings("unused")
         private int secondField = 2;
 
-        /** Check if JVM returns fields in reversed order to fixing. */
+        /** Checks if JVM returns fields in reversed order.
+         * @return True if fields are reversed, false otherwise.
+         */
         public static boolean revertedOrder() {
             try {
                 return "secondField".equals(FieldOrderInspector.class.getDeclaredFields()[0].getName());
