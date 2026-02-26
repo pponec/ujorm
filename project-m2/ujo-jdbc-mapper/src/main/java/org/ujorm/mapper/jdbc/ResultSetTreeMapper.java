@@ -57,7 +57,7 @@ public class ResultSetTreeMapper<D> {
      * @throws IllegalArgumentException if explicit columns don't match the ResultSet metadata
      */
     @NotNull
-    public Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable String... columns) throws SQLException {
+    public Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columns) throws SQLException {
         return rs.map(row -> {
             try {
                 if (this.rootNode == null) {
@@ -92,7 +92,7 @@ public class ResultSetTreeMapper<D> {
      * @throws IllegalArgumentException if explicit columns don't match the ResultSet metadata
      */
     @NotNull
-    public Stream<D> convert(@NotNull ResultSet rs, @Nullable String... columns) throws SQLException {
+    public Stream<D> convert(@NotNull ResultSet rs, @Nullable CharSequence... columns) throws SQLException {
         return convert(JdbcUtils.stream(rs), columns);
     }
 
@@ -157,11 +157,11 @@ public class ResultSetTreeMapper<D> {
      * @return the root mapping node
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private MappingNode<D> buildMappingTree(@NonNull Class<D> rootClass, @NotNull String... columnAliases) {
+    private MappingNode<D> buildMappingTree(@NonNull Class<D> rootClass, @NotNull CharSequence... columnAliases) {
         var result = new MappingNode<D>();
 
         for (var colIndex = 0; colIndex < columnAliases.length; colIndex++) {
-            var alias = columnAliases[colIndex];
+            var alias = columnAliases[colIndex].toString();
             var parts = alias.split("\\.");
             var currentNode = (MappingNode) result;
             var currentClass = (Class<?>) rootClass;

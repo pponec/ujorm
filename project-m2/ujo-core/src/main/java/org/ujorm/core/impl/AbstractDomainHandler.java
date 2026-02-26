@@ -114,7 +114,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
                     name,
                     genericType.getSimpleName(),
                     result.getType().getSimpleName());
-            throw new IllegalArgumentException(msg);
+                    throw new IllegalArgumentException(msg);
         }
         return (Key<D, V>) result;
     }
