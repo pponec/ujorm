@@ -107,9 +107,10 @@ public class EntityManager<D, V> {
         }
         sql.append(")");
 
-        return run(sql, true, ps -> {
+        var returnGeneratedKeys = pkOriginalValue == null;
+        return run(sql, returnGeneratedKeys, ps -> {
             setValuesToStatement(domain, columns, ps);
-            if (pkOriginalValue != null) {
+            if (!returnGeneratedKeys) {
                 ps.executeUpdate();
                 return domain;
             } else {
@@ -238,12 +239,12 @@ public class EntityManager<D, V> {
     }
 
     /** Logs and executes the SQL statement. */
-    protected <R> R run(final CharSequence sql, final boolean isInsert, final SqlFunction<PreparedStatement, R> fun) {
-        try (var ps = !isInsert
-             ? connection.prepareStatement(sql.toString())
-             : tableModel.isOracleDb()
-             ? connection.prepareStatement(sql.toString(), new String[]{pkColumn.name()})
-             : connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)
+    protected <R> R run(final CharSequence sql, final boolean returnGeneratedKeys, final SqlFunction<PreparedStatement, R> fun) {
+        try (var ps = !returnGeneratedKeys
+            ? connection.prepareStatement(sql.toString())
+            : tableModel.isOracleDb()
+            ? connection.prepareStatement(sql.toString(), new String[]{pkColumn.name()})
+            : connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)
         ) {
             LOGGER.info(sql::toString);
             return fun.applyValue(ps);
