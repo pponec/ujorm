@@ -1,8 +1,8 @@
 package org.ujorm.core.impl;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.core.generator.TableIdentifier;
@@ -100,14 +100,14 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public final @NotNull <V> Key<D, V> getKey(@Nullable final String name, @Nullable final Class<V> genericType)
+    public final @NotNull <V> Key<D, V> getKey(@NonNull final String name, @NonNull final Class<V> genericType)
             throws NoSuchElementException {
         var result = keyMap.get(name);
         if (result == null) {
             throw new NoSuchElementException("Key not found: %s.%s"
                     .formatted(getDomainClass().getSimpleName(), name));
         }
-        if (genericType != null && genericType != Primitive.wrapPrimitive(result.getType())) {
+        if (genericType != Object.class  && genericType != Primitive.wrapPrimitive(result.getType())) {
             var msg = "Property %s.%s has wrong type %s, expected is %s.".formatted(
                     getDomainClass().getSimpleName(),
                     name,
