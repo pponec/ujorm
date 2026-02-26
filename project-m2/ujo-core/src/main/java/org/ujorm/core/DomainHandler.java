@@ -50,7 +50,7 @@ public interface DomainHandler<D> {
     @NotNull
     @SuppressWarnings("unchecked")
     default Key<D, Object> getKey(@Nullable String name) {
-        return getKey(name, Object.class);
+        return getKey(name, null);
     }
 
     /** Return total count of the properties. */
