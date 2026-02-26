@@ -34,7 +34,7 @@ public class TreeResultSetMapper<D> {
      * @param service the domain handler service for instance creation
      * @param columnAliases the array of database column aliases
      */
-    public TreeResultSetMapper(
+    protected TreeResultSetMapper(
             @NonNull Class<D> domainClass,
             @NonNull DomainHandlerService service,
             @NonNull String... columnAliases
@@ -42,7 +42,7 @@ public class TreeResultSetMapper<D> {
         this.service = service;
         this.rootHandler = service.getHandler(domainClass);
         this.columnAliases = columnAliases;
-        this.rootNode = buildMappingTree();
+        this.rootNode = buildMappingTree(domainClass);
     }
 
     /**
@@ -100,6 +100,7 @@ public class TreeResultSetMapper<D> {
      * @return the extracted value
      * @throws SQLException if a database error occurs
      */
+    @SuppressWarnings("unchecked")
     private <V> V extractValue(ResultSet rs, DirectMapping<?, V> mapping) throws SQLException {
         return (V) rs.getObject(mapping.getColumnAlias(), mapping.getKey().getType());
     }
@@ -118,30 +119,62 @@ public class TreeResultSetMapper<D> {
     /**
      * Builds the internal tree structure from the flat column definitions.
      *
+     * @param rootClass the root domain class
      * @return the root mapping node
      */
-    private MappingNode<D> buildMappingTree() {
-        throw new UnsupportedOperationException("TODO: Implement mapping tree initialization from columnAliases.");
-    }
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private MappingNode<D> buildMappingTree(Class<D> rootClass) {
+        var result = new MappingNode<D>();
 
-    /**
-     * Extracts column aliases from the ResultSet metadata.
-     *
-     * @param rs the database result set
-     * @return an array of column aliases
-     * @throws SQLException if a database error occurs
-     */
-    public static String[] extractColumnAliases(ResultSet rs) throws SQLException {
-        var metaData = rs.getMetaData();
-        var columnCount = metaData.getColumnCount();
-        var result = new String[columnCount];
+        for (var alias : columnAliases) {
+            var parts = alias.split("\\.");
+            MappingNode currentNode = result;
+            Class<?> currentClass = rootClass;
 
-        for (var i = 1; i <= columnCount; i++) {
-            // JDBC indexes are 1-based
-            result[i - 1] = metaData.getColumnLabel(i);
+            for (var i = 0; i < parts.length; i++) {
+                var part = parts[i];
+                var isLast = (i == parts.length - 1);
+                var key = findKey(currentClass, part);
+
+                if (isLast) {
+                    currentNode.getDirectMappings().add(new DirectMapping<>(key, alias));
+                } else {
+                    RelationMapping existingRelation = null;
+                    for (var relObj : currentNode.getRelations()) {
+                        var rel = (RelationMapping) relObj;
+                        if (rel.getChildKey().getName().equals(key.getName())) {
+                            existingRelation = rel;
+                            break;
+                        }
+                    }
+
+                    if (existingRelation != null) {
+                        currentNode = existingRelation.getChildNode();
+                    } else {
+                        var childNode = new MappingNode<>();
+                        currentNode.getRelations().add(new RelationMapping<>(key, childNode));
+                        currentNode = childNode;
+                    }
+
+                    currentClass = key.getType();
+                }
+            }
         }
 
         return result;
+    }
+
+    /**
+     * Finds a property Key by its name within the given domain class.
+     *
+     * @param domainType the domain class to inspect
+     * @param keyName the name of the property
+     * @param <T> the type of the domain class
+     * @return the property Key
+     * @throws IllegalArgumentException if the key is not found
+     */
+    private <T> Key<T, Object> findKey(Class<T> domainType, String keyName) {
+        return service.getHandler(domainType).getKey(keyName);
     }
 
     // --- Internal structures to represent the tree ---
@@ -204,13 +237,48 @@ public class TreeResultSetMapper<D> {
         }
     }
 
-    public static <D> TreeResultSetMapper of(
+    // --- Factory Method(s) ---
+
+    /**
+     * Factory method to create a new instance.
+     *
+     * @param domainClass the root domain class
+     * @param service the domain handler service
+     * @param columnAliases the database result set metadata source
+     * @param <D> the root domain type
+     * @return a new instance of TreeResultSetMapper
+     * @throws SQLException if a database access error occurs
+     */
+    public static <D> TreeResultSetMapper<D> of(
+            @NonNull Class<D> domainClass,
+            @NonNull DomainHandlerService service,
+            @NonNull String... columnAliases) throws SQLException {
+        return new TreeResultSetMapper<>(domainClass, service, columnAliases);
+    }
+
+    /**
+     * Factory method to create a new instance by extracting aliases directly from a ResultSet.
+     *
+     * @param domainClass the root domain class
+     * @param service the domain handler service
+     * @param rs the database result set metadata source
+     * @param <D> the root domain type
+     * @return a new instance of TreeResultSetMapper
+     * @throws SQLException if a database access error occurs
+     */
+    public static <D> TreeResultSetMapper<D> of(
             @NonNull Class<D> domainClass,
             @NonNull DomainHandlerService service,
             @NonNull ResultSet rs) throws SQLException {
-        return new TreeResultSetMapper(domainClass, service, getAliasColumns(rs));
+        return of(domainClass, service, getAliasColumns(rs));
     }
 
+    /**
+     * Extracts column aliases from the ResultSet metadata.
+     *
+     * @param rs the database result set
+     * @return an array of column aliases
+     */
     private static String[] getAliasColumns(ResultSet rs) {
         try {
             var metaData = rs.getMetaData();
@@ -221,7 +289,7 @@ public class TreeResultSetMapper<D> {
             }
             return result;
         } catch (SQLException ex) {
-            throw new org.ujorm.tools.jdbc.SQLException(ex);
+            throw new RuntimeException("Failed to extract column metadata", ex);
         }
     }
 }
