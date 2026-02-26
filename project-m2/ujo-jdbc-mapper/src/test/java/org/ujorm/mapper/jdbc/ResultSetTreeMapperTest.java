@@ -154,6 +154,37 @@ public class ResultSetTreeMapperTest {
         assertEquals("Property not found: City.invalidProperty", ex.getMessage());
     }
 
+    /** Tests automatic extraction of column aliases from ResultSetMetaData. */
+    @Test @Order(600)
+    void testExtractAliasesFromMetaData() throws SQLException {
+        var rs = Mockito.mock(ResultSet.class);
+        var metaData = Mockito.mock(ResultSetMetaData.class);
+        var c = new Columns();
+
+        when(rs.next()).thenReturn(true, false);
+        when(rs.getMetaData()).thenReturn(metaData);
+        when(rs.getObject(c.add("id"), Integer.class)).thenReturn(10);
+        when(rs.getObject(c.add("city.name"), String.class)).thenReturn("Prague");
+        when(rs.getObject(c.add("boss.boss.name"), String.class)).thenReturn(null);
+
+        // Mock metadata to provide column labels automatically
+        var aliases = c.toArray();
+        when(metaData.getColumnCount()).thenReturn(aliases.length);
+        for (var i = 0; i < aliases.length; i++) {
+            when(metaData.getColumnLabel(i + 1)).thenReturn(aliases[i]);
+        }
+
+        var service = DomainHandlerProvider.provider();
+        var mapper = ResultSetTreeMapper.of(Employee.class, service);
+        var result = mapper.convert(rs).findFirst().get();
+        assertEquals(10, result.getId());
+        assertNotNull(result.getCity());
+        assertEquals("Prague", result.getCity().getName());
+        assertNotNull(result.getBoss());
+        assertNotNull(result.getBoss().getBoss());
+        assertNull(result.getBoss().getBoss().getName());
+    }
+
     // --- HELP classes ---
 
     /** Helper class for managing column aliases */
