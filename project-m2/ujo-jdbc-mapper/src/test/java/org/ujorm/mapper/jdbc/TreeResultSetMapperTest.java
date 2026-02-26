@@ -18,7 +18,6 @@ public class TreeResultSetMapperTest {
     @Test
     void testConvertResultSetToDomain() throws SQLException {
 
-
         // 1. Prepare the mock ResultSet
         var rs = Mockito.mock(ResultSet.class);
         when(rs.getObject("id", Integer.class)).thenReturn(10);
