@@ -154,14 +154,14 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
 
     // ---- Join methods ---
 
-    /** Join all key names by the dot delimiter */
-    default <VALUE,V2> String join(
+    /** Joins all key names using a dot delimiter. */
+    default <V2> String join(
             @NotNull final Key<VALUE,V2> key2) {
         return getName() + '.' + key2.getName();
     }
 
-    /** Join all key names by the dot delimiter */
-    default <VALUE,V2,V3> String join(
+    /** Joins all key names using a dot delimiter. */
+    default <V2,V3> String join(
             @NotNull final Key<VALUE,V2> key2,
             @NotNull final Key<V2, V3> key3) {
         return getName() +
@@ -169,8 +169,8 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
                 '.' + key3.getName();
     }
 
-    /** Join all key names by the dot delimiter */
-    default <VALUE,V2,V3,V4> String join(
+    /** Joins all key names using a dot delimiter. */
+    default <V2,V3,V4> String join(
             @NotNull final Key<VALUE,V2> key2,
             @NotNull final Key<V2, V3> key3,
             @NotNull final Key<V3, V4> key4,
