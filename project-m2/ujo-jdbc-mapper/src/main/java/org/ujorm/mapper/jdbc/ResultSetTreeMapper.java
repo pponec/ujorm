@@ -21,7 +21,7 @@ import java.util.stream.Stream;
  *
  * @param <D> the root domain type
  */
-public class TreeResultSetMapper<D> {
+public class ResultSetTreeMapper<D> {
 
     @NonNull
     private final Class<D> domainClass;
@@ -38,7 +38,7 @@ public class TreeResultSetMapper<D> {
      * @param domainClass the class of the root domain object
      * @param service the domain handler service for instance creation
      */
-    protected TreeResultSetMapper(
+    protected ResultSetTreeMapper(
             @NonNull Class<D> domainClass,
             @NonNull DomainHandlerService service
     ) {
@@ -239,10 +239,10 @@ public class TreeResultSetMapper<D> {
      * @param <D> the root domain type
      * @return a new instance of TreeResultSetMapper
      */
-    public static <D> TreeResultSetMapper<D> of(
+    public static <D> ResultSetTreeMapper<D> of(
             @NonNull Class<D> domainClass,
             @NonNull DomainHandlerService service) {
-        return new TreeResultSetMapper<>(domainClass, service);
+        return new ResultSetTreeMapper<>(domainClass, service);
     }
 
     /**
@@ -252,8 +252,8 @@ public class TreeResultSetMapper<D> {
      * @param <D> the root domain type
      * @return a new instance of TreeResultSetMapper
      */
-    public static <D> TreeResultSetMapper<D> of(@NonNull Class<D> domainClass) {
-        return new TreeResultSetMapper<>(domainClass, DomainHandlerProvider.provider());
+    public static <D> ResultSetTreeMapper<D> of(@NonNull Class<D> domainClass) {
+        return new ResultSetTreeMapper<>(domainClass, DomainHandlerProvider.provider());
     }
 
     /**

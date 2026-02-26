@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-public class TreeResultSetMapperTest {
+public class ResultSetTreeMapperTest {
 
     private final boolean printResult = false;
 
@@ -59,7 +59,7 @@ public class TreeResultSetMapperTest {
         var aliases = c.toArray();
 
         // 4. Initialize the mapper using the requested factory method of()
-        var mapper = TreeResultSetMapper.of(Employee.class, service);
+        var mapper = ResultSetTreeMapper.of(Employee.class, service);
 
         // 5. Execute the mapping
         var result = mapper.convert(rs, aliases).findFirst().get();
