@@ -97,6 +97,20 @@ public class ResultSetTreeMapper<D> {
     }
 
     /**
+     * Converts the given Stream of ResultSets into a stream of domain objects.
+     *
+     * @param rs the Stream of ResultSets to process
+     * @param key explicitly defined column aliases
+     * @return a stream of populated domain objects
+     * @throws SQLException if a database error occurs
+     * @throws IllegalArgumentException if explicit columns don't match the ResultSet metadata
+     */
+    @NotNull
+    public <V1> Stream<D> convert(@NotNull Stream<ResultSet> rs, @NotNull Key<D,V1> key) throws SQLException {
+        return convert(rs, new CharSequence[] {key});
+    }
+
+    /**
      * Recursively populates the target bean and its relations.
      *
      * @param node the current mapping node
