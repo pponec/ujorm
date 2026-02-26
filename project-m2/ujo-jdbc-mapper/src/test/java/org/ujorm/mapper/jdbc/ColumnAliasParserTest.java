@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-class SqlParserTest {
+class ColumnAliasParserTest {
 
-    private final SqlParser parser = new SqlParser();
+    private final ColumnAliasParser parser = new ColumnAliasParser();
 
     @Test
     void testStandardAliases() {

@@ -59,10 +59,10 @@ public class TreeResultSetMapperTest {
         var aliases = c.toArray();
 
         // 4. Initialize the mapper using the requested factory method of()
-        var mapper = TreeResultSetMapper.of(Employee.class, service, aliases);
+        var mapper = TreeResultSetMapper.of(Employee.class, service);
 
         // 5. Execute the mapping
-        var result = mapper.convert(rs);
+        var result = mapper.convert(rs, aliases).findFirst().get();
 
         // 6. Verify the mapped values
         assertNotNull(result);

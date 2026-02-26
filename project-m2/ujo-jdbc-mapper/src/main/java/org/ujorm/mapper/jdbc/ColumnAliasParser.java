@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SqlParser {
+public class ColumnAliasParser {
 
     /** Parses column aliases from the SELECT clause using Java 17+ features. */
     public List<String> parseSql(String sql) {

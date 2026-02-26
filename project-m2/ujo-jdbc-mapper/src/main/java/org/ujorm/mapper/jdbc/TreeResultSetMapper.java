@@ -4,8 +4,11 @@ import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
+import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.Key;
+import org.ujorm.tools.jdbc.JdbcUtils;
+import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,6 +48,41 @@ public class TreeResultSetMapper<D> {
     }
 
     /**
+     * Converts the given Stream of ResultSets into a stream of domain objects.
+     *
+     * @param rs the Stream of ResultSets to process
+     * @param columns optional explicitly defined column aliases
+     * @return a stream of populated domain objects
+     * @throws SQLException if a database error occurs
+     * @throws IllegalArgumentException if explicit columns don't match the ResultSet metadata
+     */
+    @NotNull
+    public Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable String... columns) throws SQLException {
+        return rs.map(row -> {
+            try {
+                if (this.rootNode == null) {
+                    var actualColumns = columns;
+                    if (actualColumns == null || actualColumns.length == 0) {
+                        actualColumns = getAliasColumns(row);
+                    } else {
+                        var metaCount = row.getMetaData().getColumnCount();
+                        if (actualColumns.length != metaCount) {
+                            throw new IllegalArgumentException("Column count mismatch between aliases and ResultSet.");
+                        }
+                    }
+                    this.rootNode = buildMappingTree(this.domainClass, actualColumns);
+                }
+
+                var result = rootHandler.newDomain();
+                populateNode(this.rootNode, result, row);
+                return result;
+            } catch (SQLException ex) {
+                throw SQLExceptionBuilder.build("Failed to map ResultSet row to domain object", ex);
+            }
+        });
+    }
+
+    /**
      * Converts the given ResultSet into a stream of domain objects.
      *
      * @param rs the ResultSet to process
@@ -55,31 +93,7 @@ public class TreeResultSetMapper<D> {
      */
     @NotNull
     public Stream<D> convert(@NotNull ResultSet rs, @Nullable String... columns) throws SQLException {
-        if (!rs.next()) {
-            return Stream.empty();
-        }
-
-        if (this.rootNode == null) {
-            var actualColumns = columns;
-            if (actualColumns == null || actualColumns.length == 0) {
-                actualColumns = getAliasColumns(rs);
-            } else {
-                var metaCount = rs.getMetaData().getColumnCount();
-                if (actualColumns.length != metaCount) {
-                    throw new IllegalArgumentException("Column count mismatch between aliases and ResultSet.");
-                }
-            }
-            this.rootNode = buildMappingTree(this.domainClass, actualColumns);
-        }
-
-        var result = new ArrayList<D>();
-        do {
-            var item = rootHandler.newDomain();
-            populateNode(this.rootNode, item, rs);
-            result.add(item);
-        } while (rs.next());
-
-        return result.stream();
+        return convert(JdbcUtils.stream(rs), columns);
     }
 
     /**
@@ -229,6 +243,17 @@ public class TreeResultSetMapper<D> {
             @NonNull Class<D> domainClass,
             @NonNull DomainHandlerService service) {
         return new TreeResultSetMapper<>(domainClass, service);
+    }
+
+    /**
+     * Factory method to create a new instance.
+     *
+     * @param domainClass the root domain class
+     * @param <D> the root domain type
+     * @return a new instance of TreeResultSetMapper
+     */
+    public static <D> TreeResultSetMapper<D> of(@NonNull Class<D> domainClass) {
+        return new TreeResultSetMapper<>(domainClass, DomainHandlerProvider.provider());
     }
 
     /**
