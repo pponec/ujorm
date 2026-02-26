@@ -151,4 +151,38 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
         final var i2 = o.getIndex();
         return Integer.compare(i1, i2);
     }
+
+    // ---- Join methods ---
+
+    /** Join all key names by the dot delimiter */
+    default <VALUE,V2> String join(
+            @NotNull final Key<VALUE,V2> key2) {
+        return getName() + '.' + key2.getName();
+    }
+
+    /** Join all key names by the dot delimiter */
+    default <VALUE,V2,V3> String join(
+            @NotNull final Key<VALUE,V2> key2,
+            @NotNull final Key<V2, V3> key3) {
+        return getName() +
+                '.' + key2.getName() +
+                '.' + key3.getName();
+    }
+
+    /** Join all key names by the dot delimiter */
+    default <VALUE,V2,V3,V4> String join(
+            @NotNull final Key<VALUE,V2> key2,
+            @NotNull final Key<V2, V3> key3,
+            @NotNull final Key<V3, V4> key4,
+            @NotNull final Key<?, ?>... keys) {
+        var result = new StringBuilder(64).append(getName())
+                .append('.').append(key2.getName())
+                .append('.').append(key3.getName())
+                .append('.').append(key4.getName());
+            for (var key : keys) {
+                result.append('.').append(key);
+            }
+            return result.toString();
+    }
+
 }
