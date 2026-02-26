@@ -178,6 +178,11 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
         return System.identityHashCode(this);
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     /** Creates a new exception for missing setters. */
     protected UnsupportedOperationException unsupportedSetter(@NotNull Key<?, ?> key) {
         final var msg = "Setter is missing for: " + key.getFullName();
