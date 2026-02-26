@@ -86,12 +86,13 @@ public class TreeResultSetMapper<D> {
                 childKey.setValue(target, childInstance);
             }
 
+            // Recursively populate the child
             populateNode(childNode, childInstance, rs);
         }
     }
 
     /**
-     * Extracts a value from the ResultSet based on the mapping definition.
+     * Extracts a value from the ResultSet based on the mapping definition using column index.
      *
      * @param rs the result set
      * @param mapping the direct mapping containing the column index and key
@@ -123,14 +124,13 @@ public class TreeResultSetMapper<D> {
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     private MappingNode<D> buildMappingTree(Class<D> rootClass) {
-        var result = new MappingNode<D>(new ArrayList<>(), new ArrayList<>());
+        var result = new MappingNode<D>();
 
-        for (var idx = 0; idx < columnAliases.length; idx++) {
-            var alias = columnAliases[idx];
-            var jdbcIndex = idx + 1; // JDBC column index starts at 1
+        for (var colIndex = 0; colIndex < columnAliases.length; colIndex++) {
+            var alias = columnAliases[colIndex];
             var parts = alias.split("\\.");
-            var currentNode = result;
-            var currentClass = (Class) rootClass;
+            var currentNode = (MappingNode) result;
+            var currentClass = (Class<?>) rootClass;
 
             for (var i = 0; i < parts.length; i++) {
                 var part = parts[i];
@@ -138,12 +138,13 @@ public class TreeResultSetMapper<D> {
                 var key = findKey(currentClass, part);
 
                 if (isLast) {
-                    currentNode.directMappings().add(new DirectMapping(key, jdbcIndex));
+                    currentNode.directMappings().add(new DirectMapping<>(key, colIndex + 1));
                 } else {
-                    RelationMapping existingRelation = null;
+                    var existingRelation = (RelationMapping) null;
                     for (var relObj : currentNode.relations()) {
-                        if (relObj.childKey().getName().equals(key.getName())) {
-                            existingRelation = relObj;
+                        var rel = (RelationMapping) relObj;
+                        if (rel.childKey().getName().equals(key.getName())) {
+                            existingRelation = rel;
                             break;
                         }
                     }
@@ -151,8 +152,8 @@ public class TreeResultSetMapper<D> {
                     if (existingRelation != null) {
                         currentNode = existingRelation.childNode();
                     } else {
-                        var childNode = new MappingNode(new ArrayList<>(), new ArrayList<>());
-                        currentNode.relations().add(new RelationMapping(key, childNode));
+                        var childNode = new MappingNode<>();
+                        currentNode.relations().add(new RelationMapping<>(key, childNode));
                         currentNode = childNode;
                     }
                     currentClass = key.getType();
@@ -176,33 +177,7 @@ public class TreeResultSetMapper<D> {
         return service.getHandler(domainType).getKey(keyName);
     }
 
-    // --- Internal structures to represent the tree ---
-
-    /**
-     * Represents a node in the mapping tree structure.
-     */
-    private record MappingNode<T>(
-            List<DirectMapping<T, Object>> directMappings,
-            List<RelationMapping<T, Object>> relations
-    ) {}
-
-    /**
-     * Represents a direct mapping from a ResultSet column index to a Bean property.
-     */
-    private record DirectMapping<T, V>(
-            Key<T, V> key,
-            int columnIndex
-    ) {}
-
-    /**
-     * Represents a relation mapping to a child Bean.
-     */
-    private record RelationMapping<PARENT, CHILD>(
-            Key<PARENT, CHILD> childKey,
-            MappingNode<CHILD> childNode
-    ) {}
-
-    // --- Factory Method(s) ---
+    // --- Factory Method(s) & Statics ---
 
     /**
      * Factory method to create a new instance.
@@ -257,4 +232,22 @@ public class TreeResultSetMapper<D> {
             throw new RuntimeException("Failed to extract column metadata", ex);
         }
     }
+
+    // --- Internal structures to represent the tree ---
+
+    /** Represents a node in the mapping tree structure. */
+    private record MappingNode<T>(
+            List<DirectMapping<T, Object>> directMappings,
+            List<RelationMapping<T, Object>> relations
+    ) {
+        public MappingNode() {
+            this(new ArrayList<>(), new ArrayList<>());
+        }
+    }
+
+    /** Represents a direct mapping from a ResultSet column to a Bean property. */
+    private record DirectMapping<T, V>(Key<T, V> key, int columnIndex) {}
+
+    /** Represents a relation mapping to a child Bean. */
+    private record RelationMapping<PARENT, CHILD>(Key<PARENT, CHILD> childKey, MappingNode<CHILD> childNode) {}
 }
