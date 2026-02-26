@@ -18,8 +18,4 @@ public class SQLException extends IllegalStateException {
     public SQLException(String message, Throwable cause) {
         super(message, cause);
     }
-
-    public static SQLException of(java.sql.SQLException ex) {
-        throw new SQLException(ex);
-    }
 }

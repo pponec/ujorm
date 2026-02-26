@@ -105,7 +105,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
             throws NoSuchElementException {
         var result = keyMap.get(name);
         if (result == null) {
-            throw new NoSuchElementException("Key not found: %s.%s"
+            throw new NoSuchElementException("Property not found: %s.%s"
                     .formatted(getDomainClass().getSimpleName(), name));
         }
         if (genericType != null && genericType != Primitive.wrapPrimitive(result.getType())) {
@@ -114,7 +114,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
                     name,
                     genericType.getSimpleName(),
                     result.getType().getSimpleName());
-            throw new IllegalArgumentException(msg);
+                    throw new IllegalArgumentException(msg);
         }
         return (Key<D, V>) result;
     }

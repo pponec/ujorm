@@ -1,6 +1,7 @@
 package org.ujorm.mapper.core;
 
 import lombok.RequiredArgsConstructor;
+import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 import org.ujorm.tools.sql.SqlParamBuilder;
 
 import java.sql.Connection;
@@ -51,13 +52,13 @@ public class CommonDao {
                         builder.sql(sql).execute();
                     });
             dbConnection.commit();
-        } catch (SQLException ex) {
+        } catch (SQLException ex1) {
             try {
                 dbConnection.rollback();
             } catch (SQLException ex2) {
-                throw org.ujorm.tools.jdbc.SQLException.of(ex2);
+                throw SQLExceptionBuilder.build(ex2);
             }
-            throw org.ujorm.tools.jdbc.SQLException.of(ex);
+            throw SQLExceptionBuilder.build(ex1);
         }
     }
 

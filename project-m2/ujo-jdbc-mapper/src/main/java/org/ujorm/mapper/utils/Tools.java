@@ -16,6 +16,7 @@
 package org.ujorm.mapper.utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -54,7 +55,7 @@ public class Tools {
         try {
             return connection.getMetaData().getIdentifierQuoteString();
         } catch (SQLException ex) {
-            throw org.ujorm.tools.jdbc.SQLException.of(ex);
+            throw SQLExceptionBuilder.build(ex);
         }
     }
 }

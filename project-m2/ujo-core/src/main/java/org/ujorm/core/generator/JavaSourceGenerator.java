@@ -62,7 +62,7 @@ public class JavaSourceGenerator {
         var templateBeg2 = """
                      );
                 }
-                @Override
+                @Override @SuppressWarnings("unchecked")
                 public ${domainClass} newDomain(@NotNull Object... values) {
                 """;
         var templateBeg3bean = """
