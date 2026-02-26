@@ -42,6 +42,7 @@ public record TableModel<D>(
         if (result == null) {
             var msg = "Property not found: %s.%s".formatted(hander.getDomainClass().getSimpleName(), property);
             throw new NoSuchElementException(msg);
+            throw new UnsupportedOperationException()
         }
         return result;
     }
