@@ -100,7 +100,6 @@ public class TreeResultSetMapper<D> {
      * @return the extracted value
      * @throws SQLException if a database error occurs
      */
-    @SuppressWarnings("unchecked")
     private <V> V extractValue(ResultSet rs, DirectMapping<?, V> mapping) throws SQLException {
         return rs.getObject(mapping.columnIndex(), mapping.key().getType());
     }
@@ -177,6 +176,24 @@ public class TreeResultSetMapper<D> {
         return service.getHandler(domainType).getKey(keyName);
     }
 
+    // --- Internal structures to represent the tree ---
+
+    /** Represents a node in the mapping tree structure. */
+    private record MappingNode<T>(
+            List<DirectMapping<T, Object>> directMappings,
+            List<RelationMapping<T, Object>> relations
+    ) {
+        public MappingNode() {
+            this(new ArrayList<>(), new ArrayList<>());
+        }
+    }
+
+    /** Represents a direct mapping from a ResultSet column to a Bean property. */
+    private record DirectMapping<T, V>(Key<T, V> key, int columnIndex) {}
+
+    /** Represents a relation mapping to a child Bean. */
+    private record RelationMapping<PARENT, CHILD>(Key<PARENT, CHILD> childKey, MappingNode<CHILD> childNode) {}
+
     // --- Factory Method(s) & Statics ---
 
     /**
@@ -232,22 +249,4 @@ public class TreeResultSetMapper<D> {
             throw new RuntimeException("Failed to extract column metadata", ex);
         }
     }
-
-    // --- Internal structures to represent the tree ---
-
-    /** Represents a node in the mapping tree structure. */
-    private record MappingNode<T>(
-            List<DirectMapping<T, Object>> directMappings,
-            List<RelationMapping<T, Object>> relations
-    ) {
-        public MappingNode() {
-            this(new ArrayList<>(), new ArrayList<>());
-        }
-    }
-
-    /** Represents a direct mapping from a ResultSet column to a Bean property. */
-    private record DirectMapping<T, V>(Key<T, V> key, int columnIndex) {}
-
-    /** Represents a relation mapping to a child Bean. */
-    private record RelationMapping<PARENT, CHILD>(Key<PARENT, CHILD> childKey, MappingNode<CHILD> childNode) {}
 }
