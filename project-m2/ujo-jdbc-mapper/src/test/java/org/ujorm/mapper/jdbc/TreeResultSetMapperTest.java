@@ -4,14 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.ujorm.core.DomainHandler;
-import org.ujorm.core.DomainHandlerService;
-import org.ujorm.core.Key;
+import org.ujorm.core.DomainHandlerProvider;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -21,19 +17,21 @@ public class TreeResultSetMapperTest {
 
     @Test
     void testConvertResultSetToDomain() throws SQLException {
+
+
         // 1. Prepare the mock ResultSet
         var rs = Mockito.mock(ResultSet.class);
         when(rs.getObject("id", Integer.class)).thenReturn(10);
         when(rs.getObject("name", String.class)).thenReturn("Jan Novak");
         when(rs.getObject("city.id", Integer.class)).thenReturn(100);
-        when(rs.getObject("city.name", String.class)).thenReturn("Brno");
+        when(rs.getObject("city.name", String.class)).thenReturn("Prague");
         when(rs.getObject("city.country.id", Integer.class)).thenReturn(1000);
         when(rs.getObject("city.country.name", String.class)).thenReturn("Czechia");
         when(rs.getObject("boss.id", Integer.class)).thenReturn(20);
         when(rs.getObject("boss.name", String.class)).thenReturn("Petr Boss");
 
-        // 2. Prepare the DomainHandlerService stub
-        var service = new StubDomainHandlerService();
+        // 2. Prepare the DomainHandlerService
+        var service = DomainHandlerProvider.provider();
 
         // 3. Define the column aliases we expect from the SQL SELECT
         var aliases = new String[]{
@@ -60,7 +58,7 @@ public class TreeResultSetMapperTest {
 
         assertNotNull(result.getCity());
         assertEquals(100, result.getCity().getId());
-        assertEquals("Brno", result.getCity().getName());
+        assertEquals("Prague", result.getCity().getName());
 
         assertNotNull(result.getCity().getCountry());
         assertEquals(1000, result.getCity().getCountry().getId());
@@ -70,33 +68,6 @@ public class TreeResultSetMapperTest {
         assertEquals(20, result.getBoss().getId());
         assertEquals("Petr Boss", result.getBoss().getName());
     }
-
-    // --- Stubs for internal framework interfaces ---
-
-    /**
-     * Stub implementation of the DomainHandlerService for testing purposes.
-     */
-    static class StubDomainHandlerService implements DomainHandlerService {
-        @Override
-        public <T> DomainHandler<T> getHandler(Class<T> domainType) {
-            return new DomainHandler<T>() {
-                @Override
-                public T newDomain() {
-                    return createInstance(domainType);
-                }
-            };
-        }
-
-        @Override
-        public <T> T createInstance(Class<T> type) {
-            try {
-                return type.getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
-                throw new RuntimeException("Cannot instantiate " + type.getSimpleName(), e);
-            }
-        }
-    }
-
 
     // --- Domain Classes ---
 
