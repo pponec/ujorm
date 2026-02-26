@@ -2,20 +2,36 @@ package org.ujorm.mapper.jdbc;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.ujorm.core.DomainHandlerProvider;
+import org.ujorm.core.generator.ClassName;
+import org.ujorm.core.generator.DomainModel;
+import org.ujorm.core.generator.JavaSourceGenerator;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 public class TreeResultSetMapperTest {
 
-    @Test
+    private final boolean printResult = false;
+
+    @Test @Order(100)
+    void codeGen() {
+        var meta = DomainModel.of(Employee.class);
+        var className = ClassName.ofGenerated(meta);
+        var src = new JavaSourceGenerator().getSourceCode(meta, className);
+        if (printResult) System.out.println(src);
+
+        assertTrue(src.contains("static final class Key_city extends AbstractKey<Employee, org.ujorm.mapper.jdbc.TreeResultSetMapperTest.City> {"));
+        assertTrue(src.contains("public org.ujorm.mapper.jdbc.TreeResultSetMapperTest.City getValue(@NotNull final Employee bean) {"));
+    }
+
+    @Test @Order(200)
     void testConvertResultSetToDomain() throws SQLException {
 
         // 1. Prepare the mock ResultSet

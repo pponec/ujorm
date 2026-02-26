@@ -133,8 +133,8 @@ public class JavaSourceGenerator {
         for (var prop: meta.properties()) {
             {
                 params.put("propName", prop.propertyName());
-                params.put("propType", prop.propertyType().getName());
-                params.put("propObjectType", prop.propertyObjectType().getName());
+                params.put("propType", prop.propertyType().getCanonicalName());
+                params.put("propObjectType", prop.propertyObjectType().getCanonicalName());
                 params.put("getter", prop.getter());
                 params.put("setter", prop.setter());
                 params.put("primaryKey", prop.primaryKey());
