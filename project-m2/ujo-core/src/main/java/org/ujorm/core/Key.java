@@ -106,6 +106,10 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
      */
     int getIndex();
 
+    /** Returns a name of the key. */
+    @Override
+    String toString();
+
     /** * Returns a default value for substitution.
      * Defaults to {@code null} unless overridden.
      * @see #getDefaultValue()
