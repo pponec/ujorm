@@ -24,8 +24,6 @@ public class TreeResultSetMapper<D> {
     private final DomainHandler<D> rootHandler;
     @NotNull
     private final MappingNode<D> rootNode;
-    @NotNull
-    private final String[] columnAliases;
 
     /**
      * Constructs the mapper and initializes the mapping tree.
@@ -41,7 +39,6 @@ public class TreeResultSetMapper<D> {
     ) {
         this.service = service;
         this.rootHandler = service.getHandler(domainClass);
-        this.columnAliases = columnAliases;
         this.rootNode = buildMappingTree(domainClass);
     }
 
@@ -52,7 +49,8 @@ public class TreeResultSetMapper<D> {
      * @return the populated domain object
      * @throws SQLException if a database error occurs
      */
-    public D convert(ResultSet rs) throws SQLException {
+    @NotNull
+    public D convert(@NotNull ResultSet rs) throws SQLException {
         var result = rootHandler.newDomain();
         populateNode(rootNode, result, rs);
         return result;
@@ -122,7 +120,7 @@ public class TreeResultSetMapper<D> {
      * @return the root mapping node
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private MappingNode<D> buildMappingTree(Class<D> rootClass) {
+    private MappingNode<D> buildMappingTree(@NonNull Class<D> rootClass, @NotNull String... columnAliases) {
         var result = new MappingNode<D>();
 
         for (var colIndex = 0; colIndex < columnAliases.length; colIndex++) {
