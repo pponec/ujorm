@@ -129,7 +129,6 @@ public class ResultSetTreeMapperTest {
         var service = DomainHandlerProvider.provider();
         var mapper = ResultSetTreeMapper.of(Employee.class, service);
         var invalidAliases = new String[]{"id", "invalid_column", "another_invalid"};
-
         var result = mapper.convert(rs, invalidAliases);
 
         assertEquals(0, result.count());
