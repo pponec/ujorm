@@ -19,7 +19,7 @@ import java.util.List;
 public class TreeResultSetMapper<D> {
 
     @NonNull
-    DomainHandlerService service;
+    private final DomainHandlerService service;
     @NonNull
     private final DomainHandler<D> rootHandler;
     @NotNull
@@ -27,11 +27,22 @@ public class TreeResultSetMapper<D> {
     @NotNull
     private final String[] columnAliases;
 
-    public TreeResultSetMapper(@NonNull Class<D> domainClass, @NonNull DomainHandlerService service, @NonNull String... columnAliases) {
+    /**
+     * Constructs the mapper and initializes the mapping tree.
+     *
+     * @param domainClass the class of the root domain object
+     * @param service the domain handler service for instance creation
+     * @param columnAliases the array of database column aliases
+     */
+    public TreeResultSetMapper(
+            @NonNull Class<D> domainClass,
+            @NonNull DomainHandlerService service,
+            @NonNull String... columnAliases
+    ) {
         this.service = service;
         this.rootHandler = service.getHandler(domainClass);
-        this.rootNode = buildMappingTree();
         this.columnAliases = columnAliases;
+        this.rootNode = buildMappingTree();
     }
 
     /**
@@ -59,7 +70,7 @@ public class TreeResultSetMapper<D> {
     private <T> void populateNode(MappingNode<T> node, T target, ResultSet rs) throws SQLException {
         // Map direct properties (leaf nodes)
         for (var mapping : node.getDirectMappings()) {
-            var value = extractValue(rs, mapping.getKey());
+            var value = extractValue(rs, mapping);
             mapping.getKey().setValue(target, value);
         }
 
@@ -81,15 +92,16 @@ public class TreeResultSetMapper<D> {
     }
 
     /**
-     * Extracts a value from the ResultSet based on the key's requirements.
+     * Extracts a value from the ResultSet based on the mapping definition.
      *
      * @param rs the result set
-     * @param key the property key
+     * @param mapping the direct mapping containing the column alias and key
      * @param <V> the type of the value
      * @return the extracted value
+     * @throws SQLException if a database error occurs
      */
-    private <V> V extractValue(ResultSet rs, Key<?, V> key) throws SQLException {
-        return rs.getObject(key.getName(), key.getType());
+    private <V> V extractValue(ResultSet rs, DirectMapping<?, V> mapping) throws SQLException {
+        return (V) rs.getObject(mapping.getColumnAlias(), mapping.getKey().getType());
     }
 
     /**
@@ -109,7 +121,27 @@ public class TreeResultSetMapper<D> {
      * @return the root mapping node
      */
     private MappingNode<D> buildMappingTree() {
-        throw new UnsupportedOperationException("TODO: Implement mapping tree initialization from column aliases.");
+        throw new UnsupportedOperationException("TODO: Implement mapping tree initialization from columnAliases.");
+    }
+
+    /**
+     * Extracts column aliases from the ResultSet metadata.
+     *
+     * @param rs the database result set
+     * @return an array of column aliases
+     * @throws SQLException if a database error occurs
+     */
+    public static String[] extractColumnAliases(ResultSet rs) throws SQLException {
+        var metaData = rs.getMetaData();
+        var columnCount = metaData.getColumnCount();
+        var result = new String[columnCount];
+
+        for (var i = 1; i <= columnCount; i++) {
+            // JDBC indexes are 1-based
+            result[i - 1] = metaData.getColumnLabel(i);
+        }
+
+        return result;
     }
 
     // --- Internal structures to represent the tree ---
@@ -135,13 +167,19 @@ public class TreeResultSetMapper<D> {
      */
     private static class DirectMapping<T, V> {
         private final Key<T, V> key;
+        private final String columnAlias;
 
-        public DirectMapping(Key<T, V> key) {
+        public DirectMapping(Key<T, V> key, String columnAlias) {
             this.key = key;
+            this.columnAlias = columnAlias;
         }
 
         public Key<T, V> getKey() {
             return key;
+        }
+
+        public String getColumnAlias() {
+            return columnAlias;
         }
     }
 
@@ -163,6 +201,27 @@ public class TreeResultSetMapper<D> {
 
         public MappingNode<CHILD> getChildNode() {
             return childNode;
+        }
+    }
+
+    public static <D> TreeResultSetMapper of(
+            @NonNull Class<D> domainClass,
+            @NonNull DomainHandlerService service,
+            @NonNull ResultSet rs) throws SQLException {
+        return new TreeResultSetMapper(domainClass, service, getAliasColumns(rs));
+    }
+
+    private static String[] getAliasColumns(ResultSet rs) {
+        try {
+            var metaData = rs.getMetaData();
+            var columnCount = metaData.getColumnCount();
+            var result = new String[columnCount];
+            for (var i = 1; i <= columnCount; i++) {
+                result[i - 1] = metaData.getColumnLabel(i);
+            }
+            return result;
+        } catch (SQLException ex) {
+            throw new org.ujorm.tools.jdbc.SQLException(ex);
         }
     }
 }
