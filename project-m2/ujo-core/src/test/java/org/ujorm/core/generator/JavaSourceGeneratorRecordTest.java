@@ -26,7 +26,7 @@ public class JavaSourceGeneratorRecordTest {
         assertContains(", (java.lang.String) values[1]", src);
 
         assertContains("static final class Key_id extends AbstractKey<City, java.lang.Long> {", src);
-        assertContains("super(order, \"id\", java.lang.Long.class, \"id\", true, true);", src);
+        assertContains("super(order, \"id\", java.lang.Long.class, \"db_id\", true, true);", src);
         assertContains("throw unsupportedSetter(this);", src);
 
         var clazz = new ClassGenerator().createClass(src, className);

@@ -49,9 +49,21 @@ public interface DomainHandler<D> {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Key<D, Object> getKey(@Nullable String name) {
+    default Key<D, Object> getKey(@Nullable String name)
+            throws NoSuchElementException {
         return getKey(name, null);
     }
+
+    /**
+     * Finds a key by a case-insensitive column name.
+     * @param columnName  The case-insensitive name of the column.
+     * @param required    Set to true if the result is required (usually throws an exception if not found).
+     * @param genericType The expected target type of the value.
+     * @param <V>         The type of the value.
+     * @return An instance of the Key, or null if not found and not required.
+     */
+    @Nullable
+    <V> Key<D, V> getKeyByColumn(@NonNull final String columnName, boolean required, @Nullable final Class<V> genericType);
 
     /** Return total count of the properties. */
     default int count() {

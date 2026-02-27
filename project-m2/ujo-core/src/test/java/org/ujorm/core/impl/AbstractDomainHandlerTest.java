@@ -80,6 +80,30 @@ class AbstractDomainHandlerTest {
     }
 
 
+    @Test
+    void getColumnKey() {
+        var domainHandler = createDomainHandler(false);
+        var emptyType = (Class<Long>) null;
+        var filledType = Long.class;
+        var wrongType = BigDecimal.class;
+        var cityId = (Key<City, Long>) null;
+
+        // Tests:
+        cityId = domainHandler.getKey("id", emptyType);
+        assertEquals(filledType, cityId.type());
+        cityId = domainHandler.getKey("id", filledType);
+        assertEquals(filledType, cityId.type());
+        // Wrong type:
+        var expectedMessage = "Property City.id has wrong type BigDecimal, expected is Long.";
+        var ex = assertThrows(IllegalArgumentException.class, () -> {
+            var wrongId = domainHandler.getKey("id", wrongType);
+            System.out.println(wrongId.type());
+        });
+        assertEquals(expectedMessage, ex.getMessage());
+    }
+
+
+
     /**
      * Helper method to instantiate the class under test.
      * @param enableMutation Configuration for array handling.

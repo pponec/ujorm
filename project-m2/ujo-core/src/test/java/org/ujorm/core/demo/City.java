@@ -6,11 +6,11 @@ import jakarta.persistence.Table;
 
 @Table(name = "city")
 public record City (
-    @Column(name = "id") @Id
+    @Column(name = "db_id") @Id
     Long id,
-    @Column(name = "name", nullable = false)
+    @Column(name = "db_name", nullable = false)
     String name,
-    @Column(name = "country_code", nullable = false)
+    @Column(nullable = false)
     String countryCode,
     double latitude,
     double longitude
