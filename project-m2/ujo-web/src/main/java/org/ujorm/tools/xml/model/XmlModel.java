@@ -31,7 +31,6 @@ import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.XmlConfig;
-import org.ujorm.tools.xml.model.XmlModel.RawEnvelope;
 import static org.ujorm.tools.xml.AbstractWriter.*;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
 
@@ -43,7 +42,7 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  *     <li>a simple API built on a single XmlElement class</li>
  *     <li>creating XML components by a subclass is possible</li>
  *     <li>great performance and small memory footprint</li>
- * </ul>¨
+ * </ul>
  * <h4>How to use the class:</h4>
  * <pre class="pre">
  *  XmlElement root = new XmlElement("root");
@@ -55,7 +54,7 @@ import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.REQUIRED_MSG;
  *          .setAttrib("y", 4)
  *          .addText("A text message.");
  *  root.addRawText("\n&lt;rawXml/&gt;\n");
- *  root.addCDATA("A character data &lt;&\"&gt;");
+ *  root.addCDATA("A character data &lt;&amp;\"&gt;");
  *  String result = root.toString();
  * </pre>
  *
@@ -76,7 +75,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     @Nullable
     protected List<Object> children;
 
-     /**
+    /**
      * @param name The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      */
@@ -137,7 +136,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      * Set one attribute
      * @param name Required element name
      * @param value The {@code null} value is ignored. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
+     *   {@link AbstractWriter#writeValue(Object, ApiElement, String)} }
      *   method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
@@ -156,8 +155,8 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     /**
      * Add a text and escape special character
      * @param value The {@code null} value is allowed. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.dom.XmlElement, java.lang.String, java.io.Writer) }
-     *   method, where the default implementation calls a {@code toString()} only.
+     * {@link AbstractWriter#writeValue(Object, ApiElement, String)}
+     * method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @Override @NotNull
     public final XmlModel addText(@Nullable final Object value) {
@@ -181,9 +180,6 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
         }
     }
 
-
-
-
     /** Add an native text with no escaped characters, for example: XML code, JavaScript, CSS styles
      * @param value The {@code null} value is ignored.
      * @return This instance */
@@ -205,8 +201,8 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     public final XmlModel addComment(@Nullable final CharSequence comment) {
         if (Check.hasLength(comment)) {
             Assert.isTrue(!comment.toString().contains(COMMENT_END), "The text contains a forbidden string: " + COMMENT_END);
-            StringBuilder msg = new StringBuilder
-                     ( COMMENT_BEG.length()
+            var msg = new StringBuilder
+                    ( COMMENT_BEG.length()
                      + COMMENT_END.length()
                      + comment.length() + 2);
             addRawText(msg.append(COMMENT_BEG)
@@ -228,8 +224,9 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     public final XmlModel addCDATA(@Nullable final CharSequence charData) {
         if (Check.hasLength(charData)) {
             addRawText(CDATA_BEG);
-            final String text = charData.toString();
-            int i = 0, j;
+            var text = charData.toString();
+            var i = 0;
+            int j;
             while ((j = text.indexOf(CDATA_END, i)) >= 0) {
                 j += CDATA_END.length();
                 addRawText(text.subSequence(i, j));
@@ -269,11 +266,12 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
     @Override
     public String toString() {
         try {
-            final XmlConfig config = XmlConfig.ofDefault();
-            final XmlWriter writer = new XmlWriter(new StringBuilder(512)
+            var config = XmlConfig.ofDefault();
+            var writer = new XmlWriter(new StringBuilder(512)
                     .append(AbstractWriter.XML_HEADER)
                     .append(config.getNewLine()));
-            return toWriter(0, writer).toString();
+            var result = toWriter(0, writer).toString();
+            return result;
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -285,7 +283,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
         return out.write(level, this);
     }
 
-    // -------- Inner class --------
+    // -------- Inner classes --------
 
     /** Raw XML code envelope */
     protected static final class RawEnvelope {

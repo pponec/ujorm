@@ -25,6 +25,7 @@ import java.lang.annotation.Target;
  * Use the annotation to comment a database name or column.<br>
  * @deprecated Annotation is not implemented now.
  */
+@Deprecated
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
 public @interface Comment {

@@ -26,6 +26,7 @@ import java.sql.JDBCType;
  * Database column annotation.
  * @deprecated Annotation is not implemented yet.
  */
+@Deprecated
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.FIELD)
 public @interface Column {

@@ -11,6 +11,7 @@ import org.ujorm.core.Key;
 import org.ujorm.core.generator.ClassName;
 import org.ujorm.core.generator.DomainModel;
 import org.ujorm.core.generator.JavaSourceGenerator;
+import org.ujorm.tools.jdbc.JdbcUtils;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -124,12 +125,11 @@ public class ResultSetTreeMapperTest {
         // 4. Initialize the mapper using the requested factory method of()
         var mapper = ResultSetTreeMapper.of(Employee.class, service);
 
-        // 5. Execute the mapping by the key (!)
-        var keyId = Employee.keyId;
-        var keyName = Employee.keyName;
-        assertEquals("id", keyId.toString());
-        assertEquals("name", keyName.toString());
-        var result = mapper.convert(rs, keyId, keyName).findFirst().get();
+        // 5. Execute the mapping by the keys
+        var result = mapper.convertFlat(JdbcUtils.stream(rs)
+                , Employee.keyId
+                , Employee.keyName)
+                .findFirst().get();
 
         // 6. Verify the mapped values
         assertNotNull(result);
@@ -138,7 +138,7 @@ public class ResultSetTreeMapperTest {
     }
 
     @Test @Order(300)
-    void testColumnCountMismatchThrowsException() throws SQLException {
+    void testColumnCountMismatch_throwsException() throws SQLException {
         // 1. Prepare the mock ResultSet and MetaData
         var rs = Mockito.mock(ResultSet.class);
         var metaData = Mockito.mock(ResultSetMetaData.class);
@@ -165,7 +165,7 @@ public class ResultSetTreeMapperTest {
 
     /** Tests that an empty ResultSet skips metadata validation and returns an empty Stream. */
     @Test @Order(400)
-    void testEmptyResultSetWithInvalidAliases() throws SQLException {
+    void testEmptyResultSet_withInvalidAliases() throws SQLException {
         var rs = Mockito.mock(ResultSet.class);
         when(rs.next()).thenReturn(false);
 
@@ -179,7 +179,7 @@ public class ResultSetTreeMapperTest {
 
     /** Tests that an invalid property name in the alias hierarchy throws an exception. */
     @Test @Order(500)
-    void testInvalidPropertyNameInAliasThrowsException() throws SQLException {
+    void testInvalidPropertyNameInAlias_throwsException() throws SQLException {
         var rs = Mockito.mock(ResultSet.class);
         var metaData = Mockito.mock(ResultSetMetaData.class);
 
@@ -199,7 +199,7 @@ public class ResultSetTreeMapperTest {
 
     /** Tests automatic extraction of column aliases from ResultSetMetaData. */
     @Test @Order(600)
-    void testExtractAliasesFromMetaData() throws SQLException {
+    void testExtractAliases_fromMetaData() throws SQLException {
         var rs = Mockito.mock(ResultSet.class);
         var metaData = Mockito.mock(ResultSetMetaData.class);
         var c = new Columns();
