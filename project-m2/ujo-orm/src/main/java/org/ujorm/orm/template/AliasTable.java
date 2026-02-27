@@ -113,14 +113,14 @@ public class AliasTable<UJO extends OrmUjo> {
 
     /** Returns one column including the <strong>required</strong> alias name after the 'AS' phrase.
      * @param key Related key
-     * @param columnAlias an alias String or a Key instance for the key Name, the {@code null} value use an Key name.
+     * @param columnLabel an alias String or a Key instance for the key Name, the {@code null} value use an Key name.
      * @return  Returns one column including the <strong>required</strong> alias name after the 'AS' phrase.
      * @throws IllegalStateException
      */
-    public <T> String columnAs(Key<UJO, T> key, CharSequence columnAlias) throws IllegalStateException {
+    public <T> String columnAs(Key<UJO, T> key, CharSequence columnLabel) throws IllegalStateException {
         return printColumn
                 ( findColumnModel(key)
-                , columnAlias != null ? columnAlias : key.getName()
+                , columnLabel != null ? columnLabel : key.getName()
                 , new StringBuilder(64)).toString();
     }
 
@@ -154,15 +154,15 @@ public class AliasTable<UJO extends OrmUjo> {
 
     /** Returns one column including an default special alias after the 'AS' phrase.
      * @param column Related key
-     * @param columnAlias an alias name or a Key instance, the {@code null} value use an Key name.
+     * @param columnLabel an alias name or a Key instance, the {@code null} value use an Key name.
      * @return Returns one column including an default special alias.
      * @throws IllegalStateException
      */
-    protected StringBuilder printColumn(MetaColumn column, final CharSequence columnAlias, StringBuilder out) throws IllegalUjormException {
+    protected StringBuilder printColumn(MetaColumn column, final CharSequence columnLabel, StringBuilder out) throws IllegalUjormException {
         try {
             getDialect().printColumnAlias(ColumnWrapper.forAlias(column, table.getAlias()), out);
-            if (columnAlias != null) {
-                out.append(" AS ").append(columnAlias);
+            if (columnLabel != null) {
+                out.append(" AS ").append(columnLabel);
             }
             return out;
         } catch (IOException e) {

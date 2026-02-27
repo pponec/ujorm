@@ -54,8 +54,8 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
     /** Returns the class of the domain Ujo object. */
     @NotNull Class<UJO> domainClass();
 
-    /** Returns the name of the database column. */
-    @NotNull String columnName();
+    /** Returns the name of the database column label. */
+    @NotNull String columnLabel();
 
     /** Indicates whether the database column is required. */
     boolean required();

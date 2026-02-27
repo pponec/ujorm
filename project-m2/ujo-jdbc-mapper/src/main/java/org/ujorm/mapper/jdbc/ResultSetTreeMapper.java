@@ -57,7 +57,7 @@ public class ResultSetTreeMapper<D> {
      * Converts the given Stream of ResultSets into a stream of domain objects.
      *
      * @param rs the Stream of ResultSets to process
-     * @param columns optional explicitly defined column aliases
+     * @param columns optional explicitly defined column labels
      * @return a stream of populated domain objects
      * @throws NoSuchElementException if explicit columns don't match the ResultSet metadata
      */
@@ -73,12 +73,12 @@ public class ResultSetTreeMapper<D> {
 
                             if (actualColumns == null || actualColumns.length == 0) {
                                 var extracted = getAliasColumns(row);
-                                actualColumns = extracted.aliases();
+                                actualColumns = extracted.labels();
                                 byColumnFlags = extracted.flags();
                             } else {
                                 var metaCount = row.getMetaData().getColumnCount();
                                 if (actualColumns.length != metaCount) {
-                                    throw new IllegalArgumentException("Column count mismatch between aliases and ResultSet.");
+                                    throw new IllegalArgumentException("Column count mismatch between labels and ResultSet.");
                                 }
                             }
                             this.rootNode = buildMappingTree(this.domainClass, byColumnFlags, actualColumns);
@@ -99,7 +99,7 @@ public class ResultSetTreeMapper<D> {
      * Converts the given ResultSet into a stream of domain objects.
      *
      * @param rs the ResultSet to process
-     * @param columns optional explicitly defined column aliases
+     * @param columns optional explicitly defined column labels
      * @return a stream of populated domain objects
      * @throws NoSuchElementException if explicit columns don't match the ResultSet metadata
      */
@@ -112,7 +112,7 @@ public class ResultSetTreeMapper<D> {
      * Type-safe mapping using Keys for a selection without relations.
      *
      * @param rs A stream of ResultSets to process
-     * @param columns Explicitly defined column keys (aliases)
+     * @param columns Explicitly defined column keys (labels)
      * @return A stream of populated domain objects
      * @throws NoSuchElementException If explicit columns do not match the ResultSet metadata
      */
@@ -169,16 +169,16 @@ public class ResultSetTreeMapper<D> {
      *
      * @param rootClass the root domain class
      * @param byColumnFlags array of boolean flags indicating if mapping should use byColumn strategy
-     * @param columnAliases the column aliases
+     * @param columnLabeles the column labels
      * @return the root mapping node
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private MappingNode<D> buildMappingTree(@NonNull Class<D> rootClass, @Nullable boolean[] byColumnFlags, @NotNull CharSequence... columnAliases) {
+    private MappingNode<D> buildMappingTree(@NonNull Class<D> rootClass, @Nullable boolean[] byColumnFlags, @NotNull CharSequence... columnLabeles) {
         var result = new MappingNode<D>();
 
-        for (var colIndex = 0; colIndex < columnAliases.length; colIndex++) {
-            var alias = columnAliases[colIndex].toString();
-            var parts = SPLITTER.split(alias, SPLITTER_INIT_CAPACITY);
+        for (var colIndex = 0; colIndex < columnLabeles.length; colIndex++) {
+            var label = columnLabeles[colIndex].toString();
+            var parts = SPLITTER.split(label, SPLITTER_INIT_CAPACITY);
             var currentNode = (MappingNode) result;
             var currentClass = (Class<?>) rootClass;
             var byColumn = byColumnFlags != null && byColumnFlags[colIndex];
@@ -254,13 +254,13 @@ public class ResultSetTreeMapper<D> {
     /** Represents a relation mapping to a child Bean. */
     private record RelationMapping<PARENT, CHILD>(Key<PARENT, CHILD> childKey, MappingNode<CHILD> childNode) {}
 
-    /** Holds extracted column aliases and their byColumn flags. */
-    private record ExtractedColumns(String[] aliases, boolean[] flags) {}
+    /** Holds extracted column labels and their byColumn flags. */
+    private record ExtractedColumns(String[] labels, boolean[] flags) {}
 
     // --- Statics ---
 
     /**
-     * Extracts column aliases and their flags from the ResultSet metadata.
+     * Extracts column labels and their flags from the ResultSet metadata.
      *
      * @param rs the database result set
      * @return the extracted columns payload
@@ -269,16 +269,16 @@ public class ResultSetTreeMapper<D> {
         try {
             var metaData = rs.getMetaData();
             var columnCount = metaData.getColumnCount();
-            var aliases = new String[columnCount];
+            var labels = new String[columnCount];
             var flags = new boolean[columnCount];
 
             for (var i = 1; i <= columnCount; i++) {
                 var label = metaData.getColumnLabel(i);
                 var name = metaData.getColumnName(i);
-                aliases[i - 1] = label;
+                labels[i - 1] = label;
                 flags[i - 1] = label != null && label.equalsIgnoreCase(name);
             }
-            return new ExtractedColumns(aliases, flags);
+            return new ExtractedColumns(labels, flags);
         } catch (SQLException ex) {
             throw new RuntimeException("Failed to extract column metadata", ex);
         }

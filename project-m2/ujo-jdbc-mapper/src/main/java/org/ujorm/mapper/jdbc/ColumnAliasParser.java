@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class ColumnAliasParser {
 
-    /** Parses column aliases from the SELECT clause using Java 17+ features. */
+    /** Parses column labels from the SELECT clause using Java 17+ features. */
     public List<String> parseSql(String sql) {
         var result = new ArrayList<String>();
 
@@ -18,13 +18,13 @@ public class ColumnAliasParser {
         if (selectMatcher.find()) {
             var selectContent = selectMatcher.group(1);
 
-            // Comprehensive pattern for aliases with various quote types
+            // Comprehensive pattern for column labels with various quote types
             // Group 1: '...' | Group 2: "..." | Group 3: `...` | Group 4: [...] | Group 5: plain word
-            var aliasPattern = Pattern.compile("(?i)\\bAS\\s+(?:'([^']+)'|\"([^\"]+)\"|`([^`]+)`|\\[([^\\]]+)\\]|(\\w+))");
-            var aliasMatcher = aliasPattern.matcher(selectContent);
+            var labelPattern = Pattern.compile("(?i)\\bAS\\s+(?:'([^']+)'|\"([^\"]+)\"|`([^`]+)`|\\[([^\\]]+)\\]|(\\w+))");
+            var labelMatcher = labelPattern.matcher(selectContent);
 
-            while (aliasMatcher.find()) {
-                result.add(extractMatchedGroup(aliasMatcher));
+            while (labelMatcher.find()) {
+                result.add(extractMatchedGroup(labelMatcher));
             }
         }
 

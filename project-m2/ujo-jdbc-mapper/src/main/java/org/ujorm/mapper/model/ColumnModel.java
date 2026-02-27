@@ -30,7 +30,7 @@ public record ColumnModel<D,V>(
 
     /** Column Name */
     public String name() {
-        return key.columnName();
+        return key.columnLabel();
     }
 
     /** Java Property Name */
