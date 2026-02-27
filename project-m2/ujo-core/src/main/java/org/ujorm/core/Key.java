@@ -36,23 +36,23 @@ import org.jetbrains.annotations.Unmodifiable;
 public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
 
     /** Returns the name of the Key (e.g., "name"). */
-    @NotNull String getName();
+    @NotNull String name();
 
     /** Returns the full name of the Key, including the simple name of the
      * domain class separated by a dot (e.g., "Employee.name").
      */
-    @NotNull String getFullName();
+    @NotNull String fullName();
 
     /** Returns the type of the value associated with this key. */
-    @NotNull Class<VALUE> getType();
+    @NotNull Class<VALUE> type();
 
     /** Checks if the value type is a primitive. */
     default boolean primitiveType() {
-        return getType().isPrimitive();
+        return type().isPrimitive();
     }
 
     /** Returns the class of the domain Ujo object. */
-    @NotNull Class<UJO> getDomainClass();
+    @NotNull Class<UJO> domainClass();
 
     /** Returns the name of the database column. */
     @NotNull String columnName();
@@ -104,7 +104,7 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
      * The index is useful for {@code ArrayUjo} implementations and for sorting
      * keys in {@code UjoManager.readProperties(Class)}.
      */
-    int getIndex();
+    int index();
 
     /** Returns a name of the key. */
     @Override
@@ -121,34 +121,34 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
 
     /** Returns true if the key type is a subtype of, or equal to, the specified class. */
     default boolean isTypeOf(@NotNull final Class<?> type) {
-        return getType().isAssignableFrom(type);
+        return type().isAssignableFrom(type);
     }
 
     /** Returns true if the domain type is a subtype of, or equal to, the specified class. */
     default boolean isDomainOf(@NotNull final Class<?> type) {
-        return getDomainClass().isAssignableFrom(type);
+        return domainClass().isAssignableFrom(type);
     }
 
     @Override
     default int length() {
-        return getName().length();
+        return name().length();
     }
 
     @Override
     default char charAt(final int index) {
-        return getName().charAt(index);
+        return name().charAt(index);
     }
 
     @Override
     @NotNull
     default CharSequence subSequence(final int start, final int end) {
-        return getName().subSequence(start, end);
+        return name().subSequence(start, end);
     }
 
     @Override
     default int compareTo(@NotNull final Key o) {
-        final var i1 = this.getIndex();
-        final var i2 = o.getIndex();
+        final var i1 = this.index();
+        final var i2 = o.index();
         return Integer.compare(i1, i2);
     }
 
@@ -157,16 +157,16 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
     /** Joins all key names using a dot delimiter. */
     default <V2> String join(
             @NotNull final Key<VALUE,V2> key2) {
-        return getName() + '.' + key2.getName();
+        return name() + '.' + key2.name();
     }
 
     /** Joins all key names using a dot delimiter. */
     default <V2,V3> String join(
             @NotNull final Key<VALUE,V2> key2,
             @NotNull final Key<V2, V3> key3) {
-        return getName() +
-                '.' + key2.getName() +
-                '.' + key3.getName();
+        return name() +
+                '.' + key2.name() +
+                '.' + key3.name();
     }
 
     /** Joins all key names using a dot delimiter. */
@@ -175,10 +175,10 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
             @NotNull final Key<V2, V3> key3,
             @NotNull final Key<V3, V4> key4,
             @NotNull final Key<?, ?>... keys) {
-        var result = new StringBuilder(64).append(getName())
-                .append('.').append(key2.getName())
-                .append('.').append(key3.getName())
-                .append('.').append(key4.getName());
+        var result = new StringBuilder(64).append(name())
+                .append('.').append(key2.name())
+                .append('.').append(key3.name())
+                .append('.').append(key4.name());
             for (var key : keys) {
                 result.append('.').append(key);
             }

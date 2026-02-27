@@ -20,9 +20,9 @@ public class DomainHandlerServiceTest {
         var keySuperior = handler.getKey("superior", Employee.class);
 
         Assertions.assertNotNull(keyId);
-        Assertions.assertEquals(Long.class, keyId.getType());
-        Assertions.assertEquals(City.class, keyCity.getType());
-        Assertions.assertEquals(Employee.class, keySuperior.getType());
+        Assertions.assertEquals(Long.class, keyId.type());
+        Assertions.assertEquals(City.class, keyCity.type());
+        Assertions.assertEquals(Employee.class, keySuperior.type());
     }
 
     @Test @Order(200)

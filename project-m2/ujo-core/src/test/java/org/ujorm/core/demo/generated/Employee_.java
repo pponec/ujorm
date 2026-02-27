@@ -46,7 +46,7 @@ static final class Key_id extends AbstractKey<Employee, java.lang.Long> {
         return bean.getId();
     }
     @Override
-    public @NotNull Class<Employee> getDomainClass() {
+    public @NotNull Class<Employee> domainClass() {
         return domainClass;
     }
 }
@@ -64,7 +64,7 @@ static final class Key_name extends AbstractKey<Employee, java.lang.String> {
         return bean.getName();
     }
     @Override
-    public @NotNull Class<Employee> getDomainClass() {
+    public @NotNull Class<Employee> domainClass() {
         return domainClass;
     }
 }
@@ -82,7 +82,7 @@ static final class Key_superior extends AbstractKey<Employee, Employee> {
         return bean.getSuperior();
     }
     @Override
-    public @NotNull Class<Employee> getDomainClass() {
+    public @NotNull Class<Employee> domainClass() {
         return domainClass;
     }
 }
@@ -100,7 +100,7 @@ static final class Key_city extends AbstractKey<Employee, City> {
         return bean.getCity();
     }
     @Override
-    public @NotNull Class<Employee> getDomainClass() {
+    public @NotNull Class<Employee> domainClass() {
         return domainClass;
     }
 }
@@ -118,7 +118,7 @@ static final class Key_contractDay extends AbstractKey<Employee, java.time.Local
         return bean.getContractDay();
     }
     @Override
-    public @NotNull Class<Employee> getDomainClass() {
+    public @NotNull Class<Employee> domainClass() {
         return domainClass;
     }
 }
@@ -136,7 +136,7 @@ static final class Key_active extends AbstractKey<Employee, java.lang.Boolean> {
         return bean.isActive();
     }
     @Override
-    public @NotNull Class<Employee> getDomainClass() {
+    public @NotNull Class<Employee> domainClass() {
         return domainClass;
     }
 }

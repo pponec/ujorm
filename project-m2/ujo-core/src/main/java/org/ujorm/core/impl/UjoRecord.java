@@ -20,18 +20,18 @@ public final class UjoRecord<D> extends AbstractUjo<D> {
     private void init(@Nullable final D domain) {
         if (domain == null) return;
         for (var key : domainHandler.getKeyList()) {
-            values[key.getIndex()] = key.getValue(domain);
+            values[key.index()] = key.getValue(domain);
         }
     }
 
     @Override
     public <V> Object getValue(@NotNull Key<D, V> key) {
-        return (V) values[key.getIndex()];
+        return (V) values[key.index()];
     }
 
     @Override
     public <V> void setValue(@NotNull Key<D, V> key, @Nullable V value) {
-        values[key.getIndex()] = value;
+        values[key.index()] = value;
     }
 
     @Override

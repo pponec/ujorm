@@ -118,7 +118,7 @@ public class EntityManager<D, V> {
                 V id = null;
                 try (var rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
-                        id = rs.getObject(1, pk.getType());
+                        id = rs.getObject(1, pk.type());
                     }
                 }
                 if (id == null) {
@@ -170,7 +170,7 @@ public class EntityManager<D, V> {
                 if (rs.next()) {
                     var ujo = AbstractUjo.of(domainHandler);
                     for (var column : tableModel.columns()) {
-                        var value = rs.getObject(column.name(), column.key().getType());
+                        var value = rs.getObject(column.name(), column.key().type());
                         ujo.setValue(column.keyObject(), value);
                     }
                     return ujo.toDomainObject();

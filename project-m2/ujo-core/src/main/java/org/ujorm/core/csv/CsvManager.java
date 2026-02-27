@@ -23,7 +23,7 @@ public class CsvManager<D> {
     public CsvManager(DomainHandler<D> domainHandler, CsvConfig csvConfig) {
         this.domainHandler = domainHandler;
         this.config = csvConfig;
-        this.keyMap = StreamUtils.map(Key::getName, domainHandler.getKeyList());
+        this.keyMap = StreamUtils.map(Key::name, domainHandler.getKeyList());
         this.maxFields = domainHandler.count();
         this.keyFuns = new KeyFun[domainHandler.count()];
         this.splitter = csvConfig.splitter();
@@ -33,14 +33,14 @@ public class CsvManager<D> {
     /** Init key functions */
     private void init() {
         for (var key : domainHandler.getKeyList()) {
-            var type = Primitive.wrapPrimitive(key.getType());
+            var type = Primitive.wrapPrimitive(key.type());
             var fun = this.config.converterMap().get(type);
 
             if (fun == null) {
-                var msg = "Property %s type of %s has no converter".formatted(key.getFullName(), key.getType().getSimpleName());
+                var msg = "Property %s type of %s has no converter".formatted(key.fullName(), key.type().getSimpleName());
                 throw new IllegalArgumentException(msg);
             }
-            keyFuns[key.getIndex()] = new KeyFun(key, fun);
+            keyFuns[key.index()] = new KeyFun(key, fun);
         }
     }
 
@@ -53,7 +53,7 @@ public class CsvManager<D> {
                 var text = texts[i];
                 var keyFun = keyFuns[i];
                 var key = (Key<D, Object>) keyFun.key;
-                var value = (!text.isEmpty() || key.getType().equals(String.class))
+                var value = (!text.isEmpty() || key.type().equals(String.class))
                         ? keyFun.fun.apply(text)
                         : null;
                 result.setValue(key, value);

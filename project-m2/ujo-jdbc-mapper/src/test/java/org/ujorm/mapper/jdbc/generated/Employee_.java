@@ -45,7 +45,7 @@ static final class Key_id extends AbstractKey<Employee, java.lang.Integer> {
         return bean.getId();
     }
     @Override
-    public @NotNull Class<Employee> getDomainClass() {
+    public @NotNull Class<Employee> domainClass() {
         return domainClass;
     }
 }
@@ -63,7 +63,7 @@ static final class Key_name extends AbstractKey<Employee, java.lang.String> {
         return bean.getName();
     }
     @Override
-    public @NotNull Class<Employee> getDomainClass() {
+    public @NotNull Class<Employee> domainClass() {
         return domainClass;
     }
 }
@@ -81,7 +81,7 @@ static final class Key_city extends AbstractKey<Employee, org.ujorm.mapper.jdbc.
         return bean.getCity();
     }
     @Override
-    public @NotNull Class<Employee> getDomainClass() {
+    public @NotNull Class<Employee> domainClass() {
         return domainClass;
     }
 }
@@ -99,7 +99,7 @@ static final class Key_boss extends AbstractKey<Employee, org.ujorm.mapper.jdbc.
         return bean.getBoss();
     }
     @Override
-    public @NotNull Class<Employee> getDomainClass() {
+    public @NotNull Class<Employee> domainClass() {
         return domainClass;
     }
 }

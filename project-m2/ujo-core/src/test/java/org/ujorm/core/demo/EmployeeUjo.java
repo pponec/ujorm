@@ -35,13 +35,13 @@ public class EmployeeUjo implements Ujo<Employee> {
     /** Access by a key index */
     @Override
     public <V> void setValue(Key<Employee,V> key, V value) {
-        array[key.getIndex()] = value;
+        array[key.index()] = value;
     }
 
     /** Access by a key index */
     @Override
     public <V> V getValue(Key<Employee,V> key) {
-        return (V) array[key.getIndex()];
+        return (V) array[key.index()];
     }
 
     @Override

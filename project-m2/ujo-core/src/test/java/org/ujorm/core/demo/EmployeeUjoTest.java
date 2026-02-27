@@ -14,10 +14,10 @@ class EmployeeUjoTest {
         employee.setValue(EmployeeUjo.keyId, 1L);
         var id = employee.getValue(EmployeeUjo.keyId);
 
-        Assertions.assertEquals("id", keyId.getName());
+        Assertions.assertEquals("id", keyId.name());
         Assertions.assertEquals("id", keyId.toString());
-        Assertions.assertEquals(Long.class, keyId.getType());
-        Assertions.assertEquals(Employee.class, keyId.getDomainClass());
+        Assertions.assertEquals(Long.class, keyId.type());
+        Assertions.assertEquals(Employee.class, keyId.domainClass());
         Assertions.assertEquals(1L, id);
         Assertions.assertEquals(1L, employee.array()[0]);
     }
@@ -30,7 +30,7 @@ class EmployeeUjoTest {
         Key<City, String> cityCountry = CityUjo.keyCountryCode;
         Key<City, Double> cityLatitude = CityUjo.keyLatitude;
 
-        Assertions.assertEquals("name", userName.getName());
+        Assertions.assertEquals("name", userName.name());
         Assertions.assertEquals("superior.name", userBoss.join(userName));
         Assertions.assertEquals("superior.city", userBoss.join(userCity));
         Assertions.assertEquals("superior.city.countryCode", userBoss.join(userCity, cityCountry));

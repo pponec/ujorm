@@ -47,10 +47,10 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
      */
     protected AbstractDomainHandler(boolean enableArrayMutation, @NotNull Key<D, ?>... keyList) {
         this.keyList = List.of(keyList);
-        this.keyMap = StreamUtils.map(Key::getName, keyList);
+        this.keyMap = StreamUtils.map(Key::name, keyList);
         this.hasPrimitives = hasPrimitives(keyList);
         this.enableArrayMutation = enableArrayMutation;
-        this.tableName = TableIdentifier.of(keyList[0].getDomainClass()).getQualifiedName();
+        this.tableName = TableIdentifier.of(keyList[0].domainClass()).getQualifiedName();
     }
 
     @Override
@@ -61,7 +61,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
     /** Does the domain have a primitive attribute? */
     static boolean hasPrimitives(final Key<?, ?>[] keyList) {
         for (var key : keyList) {
-            if (key.getType().isPrimitive()) return true;
+            if (key.type().isPrimitive()) return true;
         }
         return false;
     }
@@ -78,8 +78,8 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
                 values = values.clone();
             }
             for (var key : keyList) {
-                if (key.getType().isPrimitive()) {
-                    final var idx = key.getIndex();
+                if (key.type().isPrimitive()) {
+                    final var idx = key.index();
                     final var value = values[idx];
                     if (value == null) {
                         values[idx] = key.getDefaultValue();
@@ -108,12 +108,12 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
             throw new NoSuchElementException("Property not found: %s.%s"
                     .formatted(getDomainClass().getSimpleName(), name));
         }
-        if (genericType != null && genericType != Primitive.wrapPrimitive(result.getType())) {
+        if (genericType != null && genericType != Primitive.wrapPrimitive(result.type())) {
             var msg = "Property %s.%s has wrong type %s, expected is %s.".formatted(
                     getDomainClass().getSimpleName(),
                     name,
                     genericType.getSimpleName(),
-                    result.getType().getSimpleName());
+                    result.type().getSimpleName());
                     throw new IllegalArgumentException(msg);
         }
         return (Key<D, V>) result;
