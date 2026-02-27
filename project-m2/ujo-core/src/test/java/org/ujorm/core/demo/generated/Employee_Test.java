@@ -44,7 +44,7 @@ class Employee_Test {
         var e = new EmployeeUjo();
         e.setValue(EmployeeUjo.keyId, 10L);
         e.setValue(EmployeeUjo.keyName, "Test");
-        e.setValue(EmployeeUjo.keySuperior, null);
+        e.setValue(EmployeeUjo.keyBoss, null);
         e.setValue(EmployeeUjo.keyCity, City.of(1L, "California"));
         e.setValue(EmployeeUjo.keyContractDay, LocalDate.of(2026, 02, 17));
         e.setValue(EmployeeUjo.keyActive, true);
@@ -52,7 +52,7 @@ class Employee_Test {
 
         Assertions.assertEquals(10, employee.getId());
         Assertions.assertEquals("Test", employee.getName());
-        Assertions.assertEquals(null, employee.getSuperior());
+        Assertions.assertEquals(null, employee.getBoss());
         Assertions.assertEquals("California", employee.getCity().name());
         Assertions.assertEquals(2026, employee.getContractDay().getYear());
         Assertions.assertEquals(true, employee.isActive());
@@ -67,7 +67,7 @@ class Employee_Test {
         Assertions.assertNull(employee.getId());
         Assertions.assertNull(employee.getName());
         Assertions.assertNull(employee.getCity());
-        Assertions.assertNull(employee.getSuperior());
+        Assertions.assertNull(employee.getBoss());
         Assertions.assertNull(employee.getContractDay());
         Assertions.assertEquals(false, employee.isActive());
     }

@@ -18,8 +18,8 @@ public class Employee {
     @Column(name = "name", nullable = false)
     private String name;
     @Nullable
-    @JoinColumn(name = "superior_id")
-    private Employee superior;
+    @JoinColumn(name = "boss_id")
+    private Employee boss;
     @JoinColumn(name = "city", nullable = false)
     private City city;
     @Column(name = "contract_day", nullable = false)

@@ -26,7 +26,7 @@ public class EmployeeUjo implements Ujo<Employee> {
     static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
     public static final Key<Employee, Long> keyId = meta.getKey("id", Long.class);
     public static final Key<Employee, String> keyName = meta.getKey("name", String.class);
-    public static final Key<Employee, Employee> keySuperior = meta.getKey("superior", Employee.class);
+    public static final Key<Employee, Employee> keyBoss = meta.getKey("boss", Employee.class);
     public static final Key<Employee, City> keyCity = meta.getKey("city", City.class);
     public static final Key<Employee, LocalDate> keyContractDay = meta.getKey("contractDay", LocalDate.class);
     public static final Key<Employee, Boolean> keyActive = meta.getKey("active", Boolean.class);

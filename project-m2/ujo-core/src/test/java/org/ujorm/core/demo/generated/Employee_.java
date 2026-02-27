@@ -75,11 +75,11 @@ static final class Key_superior extends AbstractKey<Employee, Employee> {
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final Employee value) {
-        bean.setSuperior(value != null ? value : defaultValue);
+        bean.setBoss(value != null ? value : defaultValue);
     }
     @Override
     public Employee getValue(@NotNull final Employee bean) {
-        return bean.getSuperior();
+        return bean.getBoss();
     }
     @Override
     public @NotNull Class<Employee> domainClass() {
