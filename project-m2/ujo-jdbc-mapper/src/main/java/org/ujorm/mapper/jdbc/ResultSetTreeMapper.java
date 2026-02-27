@@ -36,7 +36,7 @@ public class ResultSetTreeMapper<D> {
     @NonNull
     private final DomainHandler<D> rootHandler;
     @Nullable
-    private MappingNode<D> rootNode;
+    private volatile MappingNode<D> rootNode;
 
     /**
      * Constructs the mapper. The mapping tree is initialized lazily.
@@ -66,20 +66,24 @@ public class ResultSetTreeMapper<D> {
         return rs.map(row -> {
             try {
                 if (this.rootNode == null) {
-                    var actualColumns = columns;
-                    var byColumnFlags = (boolean[]) null;
+                    synchronized (this) {
+                        if (this.rootNode == null) {
+                            var actualColumns = columns;
+                            var byColumnFlags = (boolean[]) null;
 
-                    if (actualColumns == null || actualColumns.length == 0) {
-                        var extracted = getAliasColumns(row);
-                        actualColumns = extracted.aliases();
-                        byColumnFlags = extracted.flags();
-                    } else {
-                        var metaCount = row.getMetaData().getColumnCount();
-                        if (actualColumns.length != metaCount) {
-                            throw new IllegalArgumentException("Column count mismatch between aliases and ResultSet.");
+                            if (actualColumns == null || actualColumns.length == 0) {
+                                var extracted = getAliasColumns(row);
+                                actualColumns = extracted.aliases();
+                                byColumnFlags = extracted.flags();
+                            } else {
+                                var metaCount = row.getMetaData().getColumnCount();
+                                if (actualColumns.length != metaCount) {
+                                    throw new IllegalArgumentException("Column count mismatch between aliases and ResultSet.");
+                                }
+                            }
+                            this.rootNode = buildMappingTree(this.domainClass, byColumnFlags, actualColumns);
                         }
                     }
-                    this.rootNode = buildMappingTree(this.domainClass, byColumnFlags, actualColumns);
                 }
 
                 var result = rootHandler.newDomain();
@@ -112,9 +116,10 @@ public class ResultSetTreeMapper<D> {
      * @return A stream of populated domain objects
      * @throws NoSuchElementException If explicit columns do not match the ResultSet metadata
      */
+    @SafeVarargs
     @NotNull
-    public Stream<D> convertFlat(@NotNull Stream<ResultSet> rs, @NotNull Key<D,?>... columns) {
-        return convert(rs, columns);
+    public final Stream<D> convertFlat(@NotNull Stream<ResultSet> rs, @NotNull Key<D,?>... columns) {
+        return convert(rs, (CharSequence[]) columns);
     }
 
     /**
@@ -220,18 +225,18 @@ public class ResultSetTreeMapper<D> {
      * @return the property Key
      * @throws IllegalArgumentException if the key is not found
      */
+    @SuppressWarnings("unchecked")
     private <T> Key<T, Object> findKey(Class<T> domainType, String keyName, boolean byColumn) {
-        var result = (Key<T, Object>) null;
         if (byColumn) {
-            result = service.getHandler(domainType).getKeyByColumn(keyName, false, null);
-            if (result != null) {
-                return result;
+            var columnKey = service.getHandler(domainType).getKeyByColumn(keyName, false, null);
+            if (columnKey != null) {
+                return (Key<T, Object>) columnKey;
             }
         }
-        return service.getHandler(domainType).getKey(keyName);
+        return (Key<T, Object>) service.getHandler(domainType).getKey(keyName);
     }
 
-    // --- Internal structures to represent the tree ---
+    // --- Inner structures ---
 
     /** Represents a node in the mapping tree structure. */
     private record MappingNode<T>(
