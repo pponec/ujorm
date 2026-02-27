@@ -31,8 +31,8 @@ public class ResultSetTreeMapperColumnTest {
         when(rs.getMetaData()).thenReturn(metaData);
         when(metaData.getColumnCount()).thenReturn(2);
 
-        setupColumn(rs, metaData, 1, "db_id", "id", 10, Integer.class);
-        setupColumn(rs, metaData, 2, "db_name", "name", "Jan", String.class);
+        setupColumn(rs, metaData, 1, "x1", "id", 10, Integer.class);
+        setupColumn(rs, metaData, 2, "x2", "name", "Jan", String.class);
 
         var service = DomainHandlerProvider.provider();
         var mapper = ResultSetTreeMapper.of(Employee.class, service);
@@ -43,7 +43,7 @@ public class ResultSetTreeMapperColumnTest {
         assertEquals("Jan", result.getName());
     }
 
-    /** Tests mapping by DB column name when label and name match. */
+    /** Tests mapping by DB column name when label and name match with annotations. */
     @Test @Order(200)
     void testLabelEqualsName_mapsByDbColumn() throws SQLException {
         var rs = Mockito.mock(ResultSet.class);
@@ -58,7 +58,6 @@ public class ResultSetTreeMapperColumnTest {
 
         var service = DomainHandlerProvider.provider();
         var mapper = ResultSetTreeMapper.of(Employee.class, service);
-
         var result = mapper.convert(rs).findFirst().get();
 
         assertNotNull(result);
@@ -81,7 +80,6 @@ public class ResultSetTreeMapperColumnTest {
 
         var service = DomainHandlerProvider.provider();
         var mapper = ResultSetTreeMapper.of(Employee.class, service);
-
         var result = mapper.convert(rs).findFirst().get();
 
         assertNotNull(result);
@@ -99,12 +97,11 @@ public class ResultSetTreeMapperColumnTest {
         when(rs.getMetaData()).thenReturn(metaData);
         when(metaData.getColumnCount()).thenReturn(2);
 
-        setupColumn(rs, metaData, 1, "db_id", "random_lbl_1", 40, Integer.class);
-        setupColumn(rs, metaData, 2, "db_name", "random_lbl_2", "Eva", String.class);
+        setupColumn(rs, metaData, 1, "db_id", "x1", 40, Integer.class);
+        setupColumn(rs, metaData, 2, "db_name", "x2", "Eva", String.class);
 
         var service = DomainHandlerProvider.provider();
         var mapper = ResultSetTreeMapper.of(Employee.class, service);
-
         var result = mapper.convert(rs, "id", "name").findFirst().get();
 
         assertNotNull(result);
