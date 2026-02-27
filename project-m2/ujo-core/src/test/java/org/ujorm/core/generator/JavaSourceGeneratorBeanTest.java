@@ -30,7 +30,7 @@ class JavaSourceGeneratorBeanTest {
         assertContains("bean.setId(value != null ? value : defaultValue);", src);
         assertContains("public java.lang.Long getValue(@NotNull final Employee bean) {", src);
         assertContains("return bean.getId();", src);
-        assertContains("public @NotNull Class<Employee> getDomainClass() {", src);
+        assertContains("public @NotNull Class<Employee> domainClass() {", src);
 
         var clazz = new ClassGenerator().createClass(src, className);
         Assertions.assertNotNull(clazz);

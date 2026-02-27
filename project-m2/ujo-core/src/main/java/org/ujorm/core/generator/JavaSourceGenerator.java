@@ -95,7 +95,7 @@ public class JavaSourceGenerator {
                         return bean.${getter}();
                     }
                     @Override
-                    public @NotNull Class<${domainClass}> getDomainClass() {
+                    public @NotNull Class<${domainClass}> domainClass() {
                         return domainClass;
                     }
                 }

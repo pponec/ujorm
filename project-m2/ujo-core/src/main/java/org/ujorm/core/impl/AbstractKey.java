@@ -8,7 +8,6 @@ import org.ujorm.tools.common.Primitive;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Abstract implementation of the {@link Key} interface.
@@ -59,28 +58,28 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     }
 
     @Override
-    public final int getIndex() {
+    public final int index() {
         return order;
     }
 
     @Override
-    public final @NotNull String getName() {
+    public final @NotNull String name() {
         return name;
     }
 
     @Override
-    public String getFullName() {
-        return getDomainClass().getSimpleName() + '.' + name;
+    public String fullName() {
+        return domainClass().getSimpleName() + '.' + name;
     }
 
     @Override
-    public final @NotNull Class<V> getType() {
+    public final @NotNull Class<V> type() {
         return type;
     }
 
     @Override
     public final boolean primitiveType() {
-        return getType().isPrimitive();
+        return type().isPrimitive();
     }
 
     @Override
@@ -117,28 +116,28 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
 
     @Override
     public final boolean isDomainOf(@NotNull final Class<?> type) {
-        return getDomainClass().isAssignableFrom(type);
+        return domainClass().isAssignableFrom(type);
     }
 
     @Override
     public final int length() {
-        return getName().length();
+        return name().length();
     }
 
     @Override
     public final char charAt(final int index) {
-        return getName().charAt(index);
+        return name().charAt(index);
     }
 
     @Override
     @NotNull
     public final CharSequence subSequence(final int start, final int end) {
-        return getName().subSequence(start, end);
+        return name().subSequence(start, end);
     }
 
     @Override
     public final int compareTo(@NotNull final Key o) {
-        return Integer.compare(this.getIndex(), o.getIndex());
+        return Integer.compare(this.index(), o.index());
     }
 
     @Override
@@ -185,7 +184,7 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
 
     /** Creates a new exception for missing setters. */
     protected UnsupportedOperationException unsupportedSetter(@NotNull Key<?, ?> key) {
-        final var msg = "Setter is missing for: " + key.getFullName();
+        final var msg = "Setter is missing for: " + key.fullName();
         return new UnsupportedOperationException(msg);
     }
 }

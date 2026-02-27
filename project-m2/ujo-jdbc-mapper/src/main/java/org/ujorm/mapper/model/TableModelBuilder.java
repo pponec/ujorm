@@ -76,13 +76,13 @@ public class TableModelBuilder<D> {
     }
 
     protected <V> ColumnModel<D,V> column(Key<D,V> key) {
-        var jdbcType = ctx.commonService().findJdbcType(key.getType());
+        var jdbcType = ctx.commonService().findJdbcType(key.type());
         var relation = jdbcType == null;
         var foreignKey = (Key<V,?>) null;
         if (relation) {
-            var foreignHandler = ctx.domainService().getHandler(key.getType());
+            var foreignHandler = ctx.domainService().getHandler(key.type());
             foreignKey = (Key<V,?>) ctx.commonService().findPrimaryKey(foreignHandler.getDomainClass(), ctx);
-            jdbcType = ctx.commonService().findJdbcType(foreignKey.getType());
+            jdbcType = ctx.commonService().findJdbcType(foreignKey.type());
         }
         return new ColumnModel<>(key, jdbcType, foreignKey);
     }
@@ -95,7 +95,7 @@ public class TableModelBuilder<D> {
         if (ctx.config().isFirstPropertyIsIdentifier()) {
             return firstColumn;
         } else {
-            var msg = "No primary key was found by to annotation in " + firstColumn.key().getDomainClass();
+            var msg = "No primary key was found by to annotation in " + firstColumn.key().domainClass();
             throw new IllegalStateException(msg);
         }
     }

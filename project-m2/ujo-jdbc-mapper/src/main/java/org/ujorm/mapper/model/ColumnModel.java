@@ -17,7 +17,6 @@ package org.ujorm.mapper.model;
 
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
-import org.ujorm.mapper.impl.Context;
 
 import java.sql.JDBCType;
 
@@ -36,12 +35,12 @@ public record ColumnModel<D,V>(
 
     /** Java Property Name */
     public String property() {
-        return key.getName();
+        return key.name();
     }
 
     /** Column index */
     public int index() {
-        return key.getIndex();
+        return key.index();
     }
 
     /** Column value */
@@ -68,7 +67,7 @@ public record ColumnModel<D,V>(
     /** Returns a full name */
     @Override
     public String toString() {
-        return key.getFullName();
+        return key.fullName();
     }
 
 }

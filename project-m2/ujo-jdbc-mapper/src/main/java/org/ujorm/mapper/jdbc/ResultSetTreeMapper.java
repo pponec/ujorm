@@ -131,7 +131,7 @@ public class ResultSetTreeMapper<D> {
 
             var childInstance = childKey.getValue(target);
             if (childInstance == null) {
-                childInstance = createInstance(childKey.getType());
+                childInstance = createInstance(childKey.type());
                 childKey.setValue(target, childInstance);
             }
 
@@ -149,7 +149,7 @@ public class ResultSetTreeMapper<D> {
      * @throws SQLException if a database error occurs
      */
     private <V> V extractValue(ResultSet rs, DirectMapping<?, V> mapping) throws SQLException {
-        return rs.getObject(mapping.columnIndex(), mapping.key().getType());
+        return rs.getObject(mapping.columnIndex(), mapping.key().type());
     }
 
     /**
@@ -191,7 +191,7 @@ public class ResultSetTreeMapper<D> {
                     var existingRelation = (RelationMapping) null;
                     for (var relObj : currentNode.relations()) {
                         var rel = (RelationMapping) relObj;
-                        if (rel.childKey().getName().equals(key.getName())) {
+                        if (rel.childKey().name().equals(key.name())) {
                             existingRelation = rel;
                             break;
                         }
@@ -204,7 +204,7 @@ public class ResultSetTreeMapper<D> {
                         currentNode.relations().add(new RelationMapping<>(key, childNode));
                         currentNode = childNode;
                     }
-                    currentClass = key.getType();
+                    currentClass = key.type();
                 }
             }
         }

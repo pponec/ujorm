@@ -46,7 +46,7 @@ static final class Key_id extends AbstractKey<City, java.lang.Long> {
         return bean.id();
     }
     @Override
-    public @NotNull Class<City> getDomainClass() {
+    public @NotNull Class<City> domainClass() {
         return domainClass;
     }
 }
@@ -64,7 +64,7 @@ static final class Key_name extends AbstractKey<City, java.lang.String> {
         return bean.name();
     }
     @Override
-    public @NotNull Class<City> getDomainClass() {
+    public @NotNull Class<City> domainClass() {
         return domainClass;
     }
 }
@@ -82,7 +82,7 @@ static final class Key_countryCode extends AbstractKey<City, java.lang.String> {
         return bean.countryCode();
     }
     @Override
-    public @NotNull Class<City> getDomainClass() {
+    public @NotNull Class<City> domainClass() {
         return domainClass;
     }
 }
@@ -100,7 +100,7 @@ static final class Key_latitude extends AbstractKey<City, java.lang.Double> {
         return bean.latitude();
     }
     @Override
-    public @NotNull Class<City> getDomainClass() {
+    public @NotNull Class<City> domainClass() {
         return domainClass;
     }
 }
@@ -118,7 +118,7 @@ static final class Key_longitude extends AbstractKey<City, java.lang.Double> {
         return bean.longitude();
     }
     @Override
-    public @NotNull Class<City> getDomainClass() {
+    public @NotNull Class<City> domainClass() {
         return domainClass;
     }
 }

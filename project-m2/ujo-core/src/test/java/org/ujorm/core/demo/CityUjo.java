@@ -32,13 +32,13 @@ public class CityUjo implements Ujo<City>  {
     /** Access by a key index */
     @Override
     public <V> void setValue(Key<City,V> key, V value) {
-        array[key.getIndex()] = value;
+        array[key.index()] = value;
     }
 
     /** Access by a key index */
     @Override
     public <V> V getValue(Key<City,V> key) {
-        return (V) array[key.getIndex()];
+        return (V) array[key.index()];
     }
 
     @Override

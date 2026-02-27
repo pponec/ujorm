@@ -22,16 +22,16 @@ class AbstractDomainHandlerTest {
         var city = new CityUjo();
         var keyLat = CityUjo.keyLatitude;
         var inputArray = city.array(); // Create new Array
-        inputArray[keyLat.getIndex()] = null;// Ensure the NULL value
+        inputArray[keyLat.index()] = null;// Ensure the NULL value
 
         var resultArray = domainHandler.normalizePrimitives(inputArray);
         assertSame(inputArray, resultArray, "Should return the exact same array instance");
-        assertEquals(0.0, resultArray[keyLat.getIndex()], "Null should be replaced by primitive default (0)");
+        assertEquals(0.0, resultArray[keyLat.index()], "Null should be replaced by primitive default (0)");
 
-        inputArray[keyLat.getIndex()] = 9.0; // Assign 9
+        inputArray[keyLat.index()] = 9.0; // Assign 9
         resultArray = domainHandler.normalizePrimitives(inputArray);
         assertSame(inputArray, resultArray, "Should return the exact same array instance");
-        assertEquals(9.0, resultArray[keyLat.getIndex()], "Null should be replaced by primitive default (0)");
+        assertEquals(9.0, resultArray[keyLat.index()], "Null should be replaced by primitive default (0)");
     }
 
     /**
@@ -45,16 +45,16 @@ class AbstractDomainHandlerTest {
         var city = new CityUjo();
         var keyLat = CityUjo.keyLatitude;
         var inputArray = city.array(); // Create new Array
-        inputArray[keyLat.getIndex()] = null; // Ensure the NULL value
+        inputArray[keyLat.index()] = null; // Ensure the NULL value
 
         var resultArray = domainHandler.normalizePrimitives(inputArray);
         assertNotSame(inputArray, resultArray, "Should return the exact same array instance");
-        assertEquals(0.0, resultArray[keyLat.getIndex()], "Null should be replaced by primitive default (0)");
+        assertEquals(0.0, resultArray[keyLat.index()], "Null should be replaced by primitive default (0)");
 
-        inputArray[keyLat.getIndex()] = 9.0; // Assign 9
+        inputArray[keyLat.index()] = 9.0; // Assign 9
         resultArray = domainHandler.normalizePrimitives(inputArray);
         assertNotSame(inputArray, resultArray, "Should return the exact same array instance");
-        assertEquals(9.0, resultArray[keyLat.getIndex()], "Null should be replaced by primitive default (0)");
+        assertEquals(9.0, resultArray[keyLat.index()], "Null should be replaced by primitive default (0)");
     }
 
    @Test
@@ -67,14 +67,14 @@ class AbstractDomainHandlerTest {
 
         // Tests:
         cityId = domainHandler.getKey("id", emptyType);
-        assertEquals(filledType, cityId.getType());
+        assertEquals(filledType, cityId.type());
         cityId = domainHandler.getKey("id", filledType);
-        assertEquals(filledType, cityId.getType());
+        assertEquals(filledType, cityId.type());
         // Wrong type:
         var expectedMessage = "Property City.id has wrong type BigDecimal, expected is Long.";
         var ex = assertThrows(IllegalArgumentException.class, () -> {
             var wrongId = domainHandler.getKey("id", wrongType);
-            System.out.println(wrongId.getType());
+            System.out.println(wrongId.type());
         });
         assertEquals(expectedMessage, ex.getMessage());
     }

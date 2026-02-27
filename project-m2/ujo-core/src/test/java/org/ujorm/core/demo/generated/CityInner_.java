@@ -38,7 +38,7 @@ static final class Key_name extends AbstractKey<CityInner, java.lang.String> {
         return bean.name();
     }
     @Override
-    public @NotNull Class<CityInner> getDomainClass() {
+    public @NotNull Class<CityInner> domainClass() {
         return domainClass;
     }
 }

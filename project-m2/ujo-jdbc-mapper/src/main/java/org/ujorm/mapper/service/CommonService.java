@@ -60,7 +60,7 @@ public class CommonService {
         for (var key : handler.getKeyList()) {
             var keyObject = (Key<D,Object>) key;
             if (!Objects.equals(keyObject.getValue(domain1), keyObject.getValue(domain2))) {
-                result.add(keyObject.getName());
+                result.add(keyObject.name());
             }
         }
         return result;
