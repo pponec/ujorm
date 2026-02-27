@@ -41,11 +41,11 @@ class DomainPropertyModelTest {
         assertTrue(nameProp.required());
 
         // Test "superior" property (Object relation, JoinColumn, Nullable)
-        var superiorProp = findProperty(properties, "superior");
+        var superiorProp = findProperty(properties, "boss");
         assertEquals(Employee.class, superiorProp.propertyType());
-        assertEquals("getSuperior", superiorProp.getter());
-        assertEquals("setSuperior", superiorProp.setter());
-        assertEquals("superior_id", superiorProp.dbColumName()); // Value from @JoinColumn
+        assertEquals("getBoss", superiorProp.getter());
+        assertEquals("setBoss", superiorProp.setter());
+        assertEquals("boss_id", superiorProp.dbColumName()); // Value from @JoinColumn
         assertFalse(superiorProp.primaryKey());
         assertFalse(superiorProp.required()); // Explicit @Nullable annotation overrides
 

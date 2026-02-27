@@ -24,25 +24,28 @@ class EmployeeUjoTest {
 
     @Test
     void joinKeys() {
-        Key<Employee, City> userCity = EmployeeUjo.keyCity;
-        Key<Employee, String> userName = EmployeeUjo.keyName;
-        Key<Employee, Employee> userBoss = EmployeeUjo.keySuperior;
-        Key<City, String> cityCountry = CityUjo.keyCountryCode;
-        Key<City, Double> cityLatitude = CityUjo.keyLatitude;
+        Key<Employee, City> user_city = EmployeeUjo.keyCity;
+        Key<Employee, String> user_name = EmployeeUjo.keyName;
+        Key<Employee, Employee> user_boss = EmployeeUjo.keyBoss;
+        Key<City, String> city_country = CityUjo.keyCountryCode;
+        Key<City, Double> city_latitude = CityUjo.keyLatitude;
 
-        Assertions.assertEquals("name", userName.name());
-        Assertions.assertEquals("superior.name", userBoss.join(userName));
-        Assertions.assertEquals("superior.city", userBoss.join(userCity));
-        Assertions.assertEquals("superior.city.countryCode", userBoss.join(userCity, cityCountry));
-        Assertions.assertEquals("countryCode", cityCountry.toString());
-        Assertions.assertEquals("latitude", cityLatitude.toString());
+        Assertions.assertEquals("name", user_name.name());
+        Assertions.assertEquals("boss.name", user_boss.join(user_name));
+        Assertions.assertEquals("boss.city", user_boss.join(user_city));
+        Assertions.assertEquals("boss.city.countryCode", user_boss.join(user_city, city_country));
+        Assertions.assertEquals("countryCode", city_country.toString());
+        Assertions.assertEquals("latitude", city_latitude.toString());
         // Non type safe method:
-        Assertions.assertEquals("superior.superior.superior.name.latitude", userBoss.join(userBoss, userBoss, userName, cityLatitude));
+        Assertions.assertEquals("boss.boss.boss.name.latitude", user_boss.join(user_boss, user_boss, user_name, city_latitude));
 
-        /* Wrong compilation!
-        Assertions.assertEquals("superior.latitude", userBoss.join(cityLatitude));
-        Assertions.assertEquals("country.name", cityCountry.join(userName));
+        // Compilation error is expected (!)
+        /*
+        Assertions.assertEquals("boss.latitude", user_boss.join(city_latitude));
+        Assertions.assertEquals("country.name", city_country.join(user_name));
         */
+
+
     }
 
 }

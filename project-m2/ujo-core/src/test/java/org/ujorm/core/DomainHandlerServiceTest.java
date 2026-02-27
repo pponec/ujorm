@@ -17,7 +17,7 @@ public class DomainHandlerServiceTest {
         var handler = service.getHandler(Employee.class);
         var keyId = handler.getKey("id", Long.class);
         var keyCity = handler.getKey("city", City.class);
-        var keySuperior = handler.getKey("superior", Employee.class);
+        var keySuperior = handler.getKey("boss", Employee.class);
 
         Assertions.assertNotNull(keyId);
         Assertions.assertEquals(Long.class, keyId.type());
