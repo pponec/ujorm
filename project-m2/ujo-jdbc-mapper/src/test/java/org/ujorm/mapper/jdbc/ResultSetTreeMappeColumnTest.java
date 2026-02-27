@@ -16,7 +16,6 @@ import org.ujorm.tools.jdbc.JdbcUtils;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -24,20 +23,9 @@ import java.util.NoSuchElementException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-public class ResultSetTreeMapperTest {
+public class ResultSetTreeMappeColumnTest {
 
     private final boolean printResult = false;
-
-    @Test @Order(100)
-    void codeGen() {
-        var meta = DomainModel.of(Employee.class);
-        var className = ClassName.ofGenerated(meta);
-        var src = new JavaSourceGenerator().getSourceCode(meta, className);
-        if (printResult) System.out.println(src);
-
-        assertTrue(src.contains("static final class Key_city extends AbstractKey<Employee, org.ujorm.mapper.jdbc.ResultSetTreeMapperTest.City> {"));
-        assertTrue(src.contains("public org.ujorm.mapper.jdbc.ResultSetTreeMapperTest.City getValue(@NotNull final Employee bean) {"));
-    }
 
     @Test @Order(200)
     void testConvertResultSetToDomain_1() throws SQLException {
@@ -137,96 +125,6 @@ public class ResultSetTreeMapperTest {
         assertEquals("Jan Novak", result.getName());
     }
 
-    @Test @Order(300)
-    void testColumnCountMismatch_throwsException() throws SQLException {
-        // 1. Prepare the mock ResultSet and MetaData
-        var rs = Mockito.mock(ResultSet.class);
-        var metaData = Mockito.mock(ResultSetMetaData.class);
-
-        // Simulate that the ResultSet has data and reports 5 columns
-        when(rs.next()).thenReturn(true);
-        when(rs.getMetaData()).thenReturn(metaData);
-        when(metaData.getColumnCount()).thenReturn(5);
-
-        // 2. Prepare the DomainHandlerService and initialize the mapper
-        var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetTreeMapper.of(Employee.class, service);
-
-        // 3. Provide an explicitly invalid number of aliases (e.g., only 2)
-        var invalidAliases = new String[]{"id", "name"};
-
-        // 4. Execute and verify the exception
-        var exception = assertThrows(IllegalArgumentException.class, () -> {
-            mapper.convert(rs, invalidAliases).findFirst();
-        });
-
-        assertEquals("Column count mismatch between aliases and ResultSet.", exception.getMessage());
-    }
-
-    /** Tests that an empty ResultSet skips metadata validation and returns an empty Stream. */
-    @Test @Order(400)
-    void testEmptyResultSet_withInvalidAliases() throws SQLException {
-        var rs = Mockito.mock(ResultSet.class);
-        when(rs.next()).thenReturn(false);
-
-        var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetTreeMapper.of(Employee.class, service);
-        var invalidAliases = new String[]{"id", "invalid_column", "another_invalid"};
-        var result = mapper.convert(rs, invalidAliases);
-
-        assertEquals(0, result.count());
-    }
-
-    /** Tests that an invalid property name in the alias hierarchy throws an exception. */
-    @Test @Order(500)
-    void testInvalidPropertyNameInAlias_throwsException() throws SQLException {
-        var rs = Mockito.mock(ResultSet.class);
-        var metaData = Mockito.mock(ResultSetMetaData.class);
-
-        when(rs.next()).thenReturn(true);
-        when(rs.getMetaData()).thenReturn(metaData);
-        when(metaData.getColumnCount()).thenReturn(1);
-
-        var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetTreeMapper.of(Employee.class, service);
-        var invalidAliases = new String[]{"city.invalidProperty"};
-
-        var ex = assertThrows(NoSuchElementException.class, () -> {
-            mapper.convert(rs, invalidAliases).findFirst();
-        });
-        assertEquals("Property not found: City.invalidProperty", ex.getMessage());
-    }
-
-    /** Tests automatic extraction of column aliases from ResultSetMetaData. */
-    @Test @Order(600)
-    void testExtractAliases_fromMetaData() throws SQLException {
-        var rs = Mockito.mock(ResultSet.class);
-        var metaData = Mockito.mock(ResultSetMetaData.class);
-        var c = new Columns();
-
-        when(rs.next()).thenReturn(true, false);
-        when(rs.getMetaData()).thenReturn(metaData);
-        when(rs.getObject(c.add("id"), Integer.class)).thenReturn(10);
-        when(rs.getObject(c.add("city.name"), String.class)).thenReturn("Prague");
-        when(rs.getObject(c.add("boss.boss.name"), String.class)).thenReturn(null);
-
-        // Mock metadata to provide column labels automatically
-        var aliases = c.toArray();
-        when(metaData.getColumnCount()).thenReturn(aliases.length);
-        for (var i = 0; i < aliases.length; i++) {
-            when(metaData.getColumnLabel(i + 1)).thenReturn(aliases[i]);
-        }
-
-        var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetTreeMapper.of(Employee.class, service);
-        var result = mapper.convert(rs).findFirst().get();
-        assertEquals(10, result.getId());
-        assertNotNull(result.getCity());
-        assertEquals("Prague", result.getCity().getName());
-        assertNotNull(result.getBoss());
-        assertNotNull(result.getBoss().getBoss());
-        assertNull(result.getBoss().getBoss().getName());
-    }
 
     // --- HELP classes ---
 
