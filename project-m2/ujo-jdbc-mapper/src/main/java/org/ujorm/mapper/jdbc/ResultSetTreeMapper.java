@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 /**
@@ -58,7 +59,7 @@ public class ResultSetTreeMapper<D> {
      * @param rs the Stream of ResultSets to process
      * @param columns optional explicitly defined column aliases
      * @return a stream of populated domain objects
-     * @throws IllegalArgumentException if explicit columns don't match the ResultSet metadata
+     * @throws NoSuchElementException if explicit columns don't match the ResultSet metadata
      */
     @NotNull
     public Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columns) {
@@ -96,7 +97,7 @@ public class ResultSetTreeMapper<D> {
      * @param rs the ResultSet to process
      * @param columns optional explicitly defined column aliases
      * @return a stream of populated domain objects
-     * @throws IllegalArgumentException if explicit columns don't match the ResultSet metadata
+     * @throws NoSuchElementException if explicit columns don't match the ResultSet metadata
      */
     @NotNull
     public Stream<D> convert(@NotNull ResultSet rs, @Nullable CharSequence... columns) {
@@ -109,7 +110,7 @@ public class ResultSetTreeMapper<D> {
      * @param rs A stream of ResultSets to process
      * @param columns Explicitly defined column keys (aliases)
      * @return A stream of populated domain objects
-     * @throws IllegalArgumentException If explicit columns do not match the ResultSet metadata
+     * @throws NoSuchElementException If explicit columns do not match the ResultSet metadata
      */
     @NotNull
     public Stream<D> convertFlat(@NotNull Stream<ResultSet> rs, @NotNull Key<D,?>... columns) {

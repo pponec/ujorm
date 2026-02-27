@@ -13,6 +13,7 @@ import org.ujorm.core.Key;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -125,7 +126,7 @@ public class ResultSetTreeMapperColumnTest {
         var service = DomainHandlerProvider.provider();
         var mapper = ResultSetTreeMapper.of(Employee.class, service);
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NoSuchElementException.class, () -> {
             mapper.convert(rs).findFirst();
         });
     }
