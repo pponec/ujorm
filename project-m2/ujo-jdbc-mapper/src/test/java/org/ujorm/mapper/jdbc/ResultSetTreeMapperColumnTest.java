@@ -113,10 +113,15 @@ public class ResultSetTreeMapperColumnTest {
     }
 
     /** Helper to easily mock ResultSet metadata and values */
-    <T> void setupColumn(ResultSet rs, ResultSetMetaData meta, int index, String label, String name, T value, Class<T> type) throws SQLException {
-        when(meta.getColumnLabel(index)).thenReturn(label);
-        when(meta.getColumnName(index)).thenReturn(name);
-        when(rs.getObject(index, type)).thenReturn(value);
+    <T> void setupColumn(ResultSet rs
+            , ResultSetMetaData meta
+            , int index, String columnLabel
+            , String columnName
+            , T columnValue
+            , Class<T> type) throws SQLException {
+        when(meta.getColumnLabel(index)).thenReturn(columnLabel);
+        when(meta.getColumnName(index)).thenReturn(columnName);
+        when(rs.getObject(index, type)).thenReturn(columnValue);
     }
 
     /** Represents a simplified employee entity with explicitly defined DB columns */
