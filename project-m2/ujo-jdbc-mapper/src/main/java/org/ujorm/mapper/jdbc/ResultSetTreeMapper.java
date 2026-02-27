@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
@@ -27,6 +29,7 @@ import java.util.stream.Stream;
  * @param <D> the root domain type
  */
 public class ResultSetTreeMapper<D> {
+    private static final Logger LOGGER = Logger.getLogger(ResultSetTreeMapper.class.getName());
 
     /** The very fast dot splitter */
     private static final CsvLineSplitter SPLITTER = CsvLineSplitter.ofFast('.');
@@ -78,6 +81,12 @@ public class ResultSetTreeMapper<D> {
                 var key = new CacheKey(extracted.labels(), extracted.flags());
 
                 if (cache.size() >= maxCacheSize) {
+                    var msg = String.join(" "
+                            , "Mapping cache exceeded the limit of %d."
+                            , "Clearing it may impact performance."
+                            , "Consider increasing 'ujorm.mapper.cache.size'."
+                    ).formatted(maxCacheSize);
+                    LOGGER.log(Level.WARNING, msg);
                     cache.clear();
                 }
 
