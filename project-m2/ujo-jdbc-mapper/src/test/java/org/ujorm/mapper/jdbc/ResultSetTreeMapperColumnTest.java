@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 /** Tests a logic of column aliases processing in ResultSetTreeMapper */
 public class ResultSetTreeMapperColumnTest {
 
+    /** Tests mapping by property name when label and name differ. */
     @Test @Order(100)
     void testLabelDiffersFromName_mapsByProperty() throws SQLException {
         var rs = Mockito.mock(ResultSet.class);
@@ -42,6 +43,7 @@ public class ResultSetTreeMapperColumnTest {
         assertEquals("Jan", result.getName());
     }
 
+    /** Tests mapping by DB column name when label and name match. */
     @Test @Order(200)
     void testLabelEqualsName_mapsByDbColumn() throws SQLException {
         var rs = Mockito.mock(ResultSet.class);
@@ -64,6 +66,7 @@ public class ResultSetTreeMapperColumnTest {
         assertEquals("Petr", result.getName());
     }
 
+    /** Tests fallback to property mapping if DB column match fails. */
     @Test @Order(300)
     void testLabelEqualsName_fallbackToProperty() throws SQLException {
         var rs = Mockito.mock(ResultSet.class);
@@ -86,6 +89,7 @@ public class ResultSetTreeMapperColumnTest {
         assertEquals("Karel", result.getName());
     }
 
+    /** Tests that explicit aliases bypass ResultSet metadata logic. */
     @Test @Order(400)
     void testExplicitAliases_behaviorUnchanged() throws SQLException {
         var rs = Mockito.mock(ResultSet.class);
