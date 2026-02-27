@@ -66,15 +66,19 @@ public class ResultSetTreeMapper<D> {
             try {
                 if (this.rootNode == null) {
                     var actualColumns = columns;
+                    var byColumnFlags = (boolean[]) null;
+
                     if (actualColumns == null || actualColumns.length == 0) {
-                        actualColumns = getAliasColumns(row);
+                        var extracted = getAliasColumns(row);
+                        actualColumns = extracted.aliases();
+                        byColumnFlags = extracted.flags();
                     } else {
                         var metaCount = row.getMetaData().getColumnCount();
                         if (actualColumns.length != metaCount) {
                             throw new IllegalArgumentException("Column count mismatch between aliases and ResultSet.");
                         }
                     }
-                    this.rootNode = buildMappingTree(this.domainClass, actualColumns);
+                    this.rootNode = buildMappingTree(this.domainClass, byColumnFlags, actualColumns);
                 }
 
                 var result = rootHandler.newDomain();
@@ -158,11 +162,12 @@ public class ResultSetTreeMapper<D> {
      * Builds the internal tree structure from the flat column definitions.
      *
      * @param rootClass the root domain class
+     * @param byColumnFlags array of boolean flags indicating if mapping should use byColumn strategy
      * @param columnAliases the column aliases
      * @return the root mapping node
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private MappingNode<D> buildMappingTree(@NonNull Class<D> rootClass, @NotNull CharSequence... columnAliases) {
+    private MappingNode<D> buildMappingTree(@NonNull Class<D> rootClass, @Nullable boolean[] byColumnFlags, @NotNull CharSequence... columnAliases) {
         var result = new MappingNode<D>();
 
         for (var colIndex = 0; colIndex < columnAliases.length; colIndex++) {
@@ -170,11 +175,12 @@ public class ResultSetTreeMapper<D> {
             var parts = SPLITTER.split(alias, SPLITTER_INIT_CAPACITY);
             var currentNode = (MappingNode) result;
             var currentClass = (Class<?>) rootClass;
+            var byColumn = byColumnFlags != null && byColumnFlags[colIndex];
 
             for (var i = 0; i < parts.length; i++) {
                 var part = parts[i];
                 var isLast = (i == parts.length - 1);
-                var key = findKey(currentClass, part, false); // TODO:
+                var key = findKey(currentClass, part, byColumn);
 
                 if (isLast) {
                     currentNode.directMappings().add(new DirectMapping<>(key, colIndex + 1));
@@ -208,6 +214,7 @@ public class ResultSetTreeMapper<D> {
      *
      * @param domainType the domain class to inspect
      * @param keyName the name of the property
+     * @param byColumn if true, attempts to search by DB column name first
      * @param <T> the type of the domain class
      * @return the property Key
      * @throws IllegalArgumentException if the key is not found
@@ -241,7 +248,35 @@ public class ResultSetTreeMapper<D> {
     /** Represents a relation mapping to a child Bean. */
     private record RelationMapping<PARENT, CHILD>(Key<PARENT, CHILD> childKey, MappingNode<CHILD> childNode) {}
 
-    // --- Factory Method(s) & Statics ---
+    /** Holds extracted column aliases and their byColumn flags. */
+    private record ExtractedColumns(String[] aliases, boolean[] flags) {}
+
+    // --- Statics ---
+
+    /**
+     * Extracts column aliases and their flags from the ResultSet metadata.
+     *
+     * @param rs the database result set
+     * @return the extracted columns payload
+     */
+    private static ExtractedColumns getAliasColumns(ResultSet rs) {
+        try {
+            var metaData = rs.getMetaData();
+            var columnCount = metaData.getColumnCount();
+            var aliases = new String[columnCount];
+            var flags = new boolean[columnCount];
+
+            for (var i = 1; i <= columnCount; i++) {
+                var label = metaData.getColumnLabel(i);
+                var name = metaData.getColumnName(i);
+                aliases[i - 1] = label;
+                flags[i - 1] = label != null && label.equalsIgnoreCase(name);
+            }
+            return new ExtractedColumns(aliases, flags);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Failed to extract column metadata", ex);
+        }
+    }
 
     /**
      * Factory method to create a new instance.
@@ -266,25 +301,5 @@ public class ResultSetTreeMapper<D> {
      */
     public static <D> ResultSetTreeMapper<D> of(@NonNull Class<D> domainClass) {
         return new ResultSetTreeMapper<>(domainClass, DomainHandlerProvider.provider());
-    }
-
-    /**
-     * Extracts column aliases from the ResultSet metadata.
-     *
-     * @param rs the database result set
-     * @return an array of column aliases
-     */
-    private static String[] getAliasColumns(ResultSet rs) {
-        try {
-            var metaData = rs.getMetaData();
-            var columnCount = metaData.getColumnCount();
-            var result = new String[columnCount];
-            for (var i = 1; i <= columnCount; i++) {
-                result[i - 1] = metaData.getColumnLabel(i);
-            }
-            return result;
-        } catch (SQLException ex) {
-            throw new RuntimeException("Failed to extract column metadata", ex);
-        }
     }
 }
