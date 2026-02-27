@@ -227,6 +227,52 @@ public class ResultSetTreeMapperKeyTest {
         assertNull(result.getBoss().getBoss().getName());
     }
 
+    /** Tests whether the cacheCleared timestamp is updated when the cache size limit is reached. */
+    @Test @Order(700)
+    void testCacheClearedTimestampUpdatesWhenLimitExceeded() throws SQLException, InterruptedException {
+        // 0. Prepare the DomainHandlerService and initialize the mapper with a small cache limit
+        var maxCacheSize = 2;
+        var service = DomainHandlerProvider.provider();
+        var mapper = ResultSetTreeMapper.of(Employee.class, service, maxCacheSize);
+
+        var initialTimestamp = mapper.getCacheCleared();
+
+        // 1. Query 1: Fill 1st cache slot
+        var rs1 = Mockito.mock(ResultSet.class);
+        var meta1 = Mockito.mock(ResultSetMetaData.class);
+        when(rs1.next()).thenReturn(true, false);
+        when(rs1.getMetaData()).thenReturn(meta1);
+        when(meta1.getColumnCount()).thenReturn(1);
+        mapper.convert(rs1, "id").count();
+
+        // 2. Query 2: Fill 2nd cache slot
+        var rs2 = Mockito.mock(ResultSet.class);
+        var meta2 = Mockito.mock(ResultSetMetaData.class);
+        when(rs2.next()).thenReturn(true, false);
+        when(rs2.getMetaData()).thenReturn(meta2);
+        when(meta2.getColumnCount()).thenReturn(1);
+        mapper.convert(rs2, "name").count();
+
+        // 3. Verify the timestamp hasn't changed yet
+        var timestampAfterFill = mapper.getCacheCleared();
+        assertEquals(initialTimestamp, timestampAfterFill, "Timestamp should not change before exceeding the limit.");
+
+        // Ensure the system clock advances to see the difference in Instant
+        Thread.sleep(15);
+
+        // 4. Query 3: Exceed the limit, trigger cache clear
+        var rs3 = Mockito.mock(ResultSet.class);
+        var meta3 = Mockito.mock(ResultSetMetaData.class);
+        when(rs3.next()).thenReturn(true, false);
+        when(rs3.getMetaData()).thenReturn(meta3);
+        when(meta3.getColumnCount()).thenReturn(2);
+        mapper.convert(rs3, "id", "name").count();
+
+        // 5. Verify the timestamp was updated
+        var timestampAfterClear = mapper.getCacheCleared();
+        assertTrue(timestampAfterClear.isAfter(initialTimestamp), "The cacheCleared timestamp must be updated after the cache is cleared.");
+    }
+
     // --- HELP classes ---
 
     /** Helper class for managing column aliases */
