@@ -104,12 +104,11 @@ public class ResultSetTreeMapper<D> {
      *
      * @param rs A stream of ResultSets to process
      * @param columns Explicitly defined column keys (aliases)
-     * @param <V> The type of the value (if applicable)
      * @return A stream of populated domain objects
      * @throws IllegalArgumentException If explicit columns do not match the ResultSet metadata
      */
     @NotNull
-    public <V> Stream<D> convertFlat(@NotNull Stream<ResultSet> rs, @NotNull Key<D,?>... columns) {
+    public Stream<D> convertFlat(@NotNull Stream<ResultSet> rs, @NotNull Key<D,?>... columns) {
         return convert(rs, columns);
     }
 
@@ -175,7 +174,7 @@ public class ResultSetTreeMapper<D> {
             for (var i = 0; i < parts.length; i++) {
                 var part = parts[i];
                 var isLast = (i == parts.length - 1);
-                var key = findKey(currentClass, part);
+                var key = findKey(currentClass, part, false); // TODO:
 
                 if (isLast) {
                     currentNode.directMappings().add(new DirectMapping<>(key, colIndex + 1));
@@ -213,7 +212,14 @@ public class ResultSetTreeMapper<D> {
      * @return the property Key
      * @throws IllegalArgumentException if the key is not found
      */
-    private <T> Key<T, Object> findKey(Class<T> domainType, String keyName) {
+    private <T> Key<T, Object> findKey(Class<T> domainType, String keyName, boolean byColumn) {
+        var result = (Key<T, Object>) null;
+        if (byColumn) {
+            result = service.getHandler(domainType).getKeyByColumn(keyName, false, null);
+            if (result != null) {
+                return result;
+            }
+        }
         return service.getHandler(domainType).getKey(keyName);
     }
 
