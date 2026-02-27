@@ -16,7 +16,6 @@ import org.ujorm.tools.jdbc.JdbcUtils;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -24,7 +23,7 @@ import java.util.NoSuchElementException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-public class ResultSetTreeMapperTest {
+public class ResultSetTreeMapperKeyTest {
 
     private final boolean printResult = false;
 
@@ -127,8 +126,8 @@ public class ResultSetTreeMapperTest {
 
         // 5. Execute the mapping by the keys
         var result = mapper.convertFlat(JdbcUtils.stream(rs)
-                , Employee.keyId
-                , Employee.keyName)
+                , Employee.employee_id
+                , Employee.employee_name)
                 .findFirst().get();
 
         // 6. Verify the mapped values
@@ -259,10 +258,10 @@ public class ResultSetTreeMapperTest {
 
         // Optional keys:
         static final DomainHandler<Employee> dh = DomainHandlerProvider.getHandler(Employee.class);
-        public static final Key<Employee, Integer> keyId = dh.getKey("id", Integer.class);
-        public static final Key<Employee, String> keyName = dh.getKey("name", String.class);
-        public static final Key<Employee, City> keyCity = dh.getKey("city", City.class);
-        public static final Key<Employee, Employee> keyBoss = dh.getKey("boss", Employee.class);
+        public static final Key<Employee, Integer> employee_id = dh.getKey("id", Integer.class);
+        public static final Key<Employee, String> employee_name = dh.getKey("name", String.class);
+        public static final Key<Employee, City> employee_city = dh.getKey("city", City.class);
+        public static final Key<Employee, Employee> employee_boss = dh.getKey("boss", Employee.class);
     }
 
     /** Represents a city entity */
@@ -275,9 +274,9 @@ public class ResultSetTreeMapperTest {
 
         // Optional keys:
         static final DomainHandler<City> dh = DomainHandlerProvider.getHandler(City.class);
-        public static final Key<City, Integer> keyId = dh.getKey("id", Integer.class);
-        public static final Key<City, String> keyName = dh.getKey("name", String.class);
-        public static final Key<City, Country> keyCountry = dh.getKey("country", Country.class);
+        public static final Key<City, Integer> city_id = dh.getKey("id", Integer.class);
+        public static final Key<City, String> city_name = dh.getKey("name", String.class);
+        public static final Key<City, Country> city_country = dh.getKey("country", Country.class);
     }
 
     /** Represents a country entity */
@@ -289,7 +288,7 @@ public class ResultSetTreeMapperTest {
 
         // Optional keys:
         static final DomainHandler<Country> dh = DomainHandlerProvider.getHandler(Country.class);
-        public static final Key<Country, Integer> keyId = dh.getKey("id", Integer.class);
-        public static final Key<Country, String> keyName = dh.getKey("name", String.class);
+        public static final Key<Country, Integer> country_id = dh.getKey("id", Integer.class);
+        public static final Key<Country, String> country_name = dh.getKey("name", String.class);
     }
 }
