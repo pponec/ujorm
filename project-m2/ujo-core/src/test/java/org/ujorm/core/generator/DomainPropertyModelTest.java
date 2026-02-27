@@ -79,27 +79,31 @@ class DomainPropertyModelTest {
 
         // Test "id" component (PK)
         var idProp = findProperty(properties, "id");
-        assertEquals("id", idProp.dbColumName());
+        assertEquals("id", idProp.propertyName());
+        assertEquals("db_id", idProp.dbColumName());
         assertTrue(idProp.primaryKey());
         assertTrue(idProp.required());
         assertSame(idProp, properties.get(0), "The first field is expected on the first position");
 
         // Test "name" component (Standard string)
         var nameProp = findProperty(properties, "name");
+        assertEquals("name", nameProp.propertyName());
+        assertEquals("db_name", nameProp.dbColumName());
         assertEquals(String.class, nameProp.propertyType());
         assertEquals("name", nameProp.getter());
         assertNull(nameProp.setter());
-        assertEquals("name", nameProp.dbColumName());
         assertTrue(nameProp.required());
 
         // Test "countryCode" component (Explicit @Column name)
         var codeProp = findProperty(properties, "countryCode");
-        assertEquals("country_code", codeProp.dbColumName());
+        assertEquals("countryCode", codeProp.propertyName());
+        assertEquals("countryCode", codeProp.dbColumName()); // TODO:pop ?
         assertEquals("countryCode", codeProp.getter());
         assertTrue(codeProp.required());
 
         // Test "latitude" component (No annotation -> fallback to field name)
         var latProp = findProperty(properties, "latitude");
+        assertEquals("latitude", latProp.propertyName());
         assertEquals("latitude", latProp.dbColumName());
         assertFalse(latProp.primaryKey());
         assertTrue(latProp.required()); // Double wrapper is not nullable
