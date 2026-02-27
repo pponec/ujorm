@@ -38,9 +38,7 @@ public record DomainModel(
      * @return result - The populated BeanModel.
      */
     public static DomainModel of(Class<?> domainClass) {
-        var properties = DomainPropertyModel.of(domainClass);
-        var database = TableIdentifier.of(domainClass);
-        return new DomainModel(domainClass, database, properties);
+        return new DomainModelBuilder().build(domainClass);
     }
 
 }

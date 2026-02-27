@@ -1,10 +1,7 @@
 package org.ujorm.core;
 
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.core.generator.ClassGenerator;
-import org.ujorm.core.generator.ClassName;
-import org.ujorm.core.generator.DomainModel;
-import org.ujorm.core.generator.JavaSourceGenerator;
+import org.ujorm.core.generator.*;
 import org.ujorm.core.impl.AbstractUjo;
 
 import java.util.Arrays;
