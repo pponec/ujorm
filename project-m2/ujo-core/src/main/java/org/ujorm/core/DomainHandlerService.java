@@ -3,40 +3,40 @@ package org.ujorm.core;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.generator.*;
 import org.ujorm.core.impl.AbstractUjo;
-
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** Service provides meta models of domain objects */
 public class DomainHandlerService {
     /** A mapping a domain class to the domain handler object. */
-    private final ConcurrentHashMap<Class<?>, DomainHandler> map = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Class<?>, DomainHandler<?>> map = new ConcurrentHashMap<>();
 
     @NotNull
+    @SuppressWarnings("unchecked")
     public <D> DomainHandler<D> getHandler(Class<D> domainClass) {
         var result = (DomainHandler<D>) map.get(domainClass);
         if (result == null) {
-            result = createHandler(domainClass);
-            map.put(domainClass, result);
+            synchronized (domainClass) {
+                result = (DomainHandler<D>) map.get(domainClass);
+                if (result == null) {
+                    result = createHandler(domainClass);
+                    map.put(domainClass, result);
+                }
+            }
         }
         return result;
     }
 
     @NotNull
-    private <D> DomainHandler<D> createHandler(Class<D> domainModel) {
-        var handlerClassName = ClassName.ofGenerated(domainModel);
+    private <D> DomainHandler<D> createHandler(Class<D> domainClass) {
+        var handlerClassName = ClassName.ofGenerated(domainClass);
         var handlerClass = handlerClassName.classForName();
         if (handlerClass == null) {
-            synchronized (domainModel) {
-                handlerClass = handlerClassName.classForName();
-                if (handlerClass == null) {
-                    try {
-                        handlerClass = createClass(domainModel, handlerClassName);
-                    } catch (Exception ex) {
-                        var msg = "Cant create %s class for the domain: %s".formatted(handlerClassName, domainModel);
-                        throw new IllegalStateException(msg, ex);
-                    }
-                }
+            try {
+                handlerClass = createClass(domainClass, handlerClassName);
+            } catch (Exception ex) {
+                var msg = "Cant create %s class for the domain: %s".formatted(handlerClassName, domainClass);
+                throw new IllegalStateException(msg, ex);
             }
         }
         try {
@@ -66,7 +66,7 @@ public class DomainHandlerService {
 
     /** Convert Ujo object from the domain */
     public <D> AbstractUjo<D> toUjo(D domainObject) {
-        if (domainObject != null) return null;
+        if (domainObject == null) return null;
         var handler = (DomainHandler<D>) getHandler(domainObject.getClass());
         return AbstractUjo.of(domainObject, handler);
     }
