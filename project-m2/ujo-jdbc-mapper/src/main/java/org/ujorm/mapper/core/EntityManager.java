@@ -161,7 +161,7 @@ public class EntityManager<D, V> {
         sql.append(" FROM ")
                 .append(domainHandler.getDatabaseTable())
                 .append(" WHERE ")
-                .append(pk.columnName())
+                .append(pk.columnLabel())
                 .append(" = ?");
 
         return run(sql, false, ps -> {
@@ -226,7 +226,7 @@ public class EntityManager<D, V> {
 
     /** Deletes a domain object by its identifier. */
     public int deleteById(@NotNull V id) {
-        var sql = "DELETE FROM " + domainHandler.getDatabaseTable() + " WHERE " + pk.columnName() + " = ?";
+        var sql = "DELETE FROM " + domainHandler.getDatabaseTable() + " WHERE " + pk.columnLabel() + " = ?";
         return run(sql, false, ps -> {
             ps.setObject(1, id);
             return ps.executeUpdate();

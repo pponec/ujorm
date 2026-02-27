@@ -159,7 +159,7 @@ public class ResultSetTreeMapperKeyTest {
             mapper.convert(rs, invalidAliases).findFirst();
         });
 
-        assertEquals("Column count mismatch between aliases and ResultSet.", exception.getMessage());
+        assertEquals("Column count mismatch between labels and ResultSet.", exception.getMessage());
     }
 
     /** Tests that an empty ResultSet skips metadata validation and returns an empty Stream. */

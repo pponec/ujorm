@@ -25,7 +25,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
     protected final List<Key<D, ?>> keyList;
     /** A mapping of the keys by name. */
     protected final Map<String, Key<D, ?>> keyMap;
-    /** A mapping of database column names in upper-case to their corresponding keys. */
+    /** Maps uppercase database column names to their corresponding keys. */
     protected final Map<String, Key<D, ?>> columnMap;
     /** Does the domain have any primitive attribute? */
     private final boolean hasPrimitives;
@@ -51,7 +51,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
     protected AbstractDomainHandler(boolean enableArrayMutation, @NotNull Key<D, ?>... keyList) {
         this.keyList = List.of(keyList);
         this.keyMap = StreamUtils.map(Key::name, keyList);
-        this.columnMap = StreamUtils.map(key -> key.columnName().toUpperCase(Locale.ENGLISH).intern(), keyList);
+        this.columnMap = StreamUtils.map(key -> key.columnLabel().toUpperCase(Locale.ENGLISH).intern(), keyList);
         this.hasPrimitives = hasPrimitives(keyList);
         this.enableArrayMutation = enableArrayMutation;
         this.tableName = TableIdentifier.of(keyList[0].domainClass()).getQualifiedName();
