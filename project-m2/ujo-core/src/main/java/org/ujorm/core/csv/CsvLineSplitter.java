@@ -28,7 +28,7 @@ public interface CsvLineSplitter {
      * @return A fast implementation of the CSV line splitter.
      */
     @NotNull
-    static CsvLineSplitter ofSimple(final char delimiter) {
+    static CsvLineSplitter ofFast(final char delimiter) {
         return (text, maxFields) -> {
             if (text == null || text.isEmpty()) return new String[0];
 
