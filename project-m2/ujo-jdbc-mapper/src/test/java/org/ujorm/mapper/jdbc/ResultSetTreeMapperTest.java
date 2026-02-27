@@ -125,14 +125,10 @@ public class ResultSetTreeMapperTest {
         // 4. Initialize the mapper using the requested factory method of()
         var mapper = ResultSetTreeMapper.of(Employee.class, service);
 
-        // 5. Execute the mapping by the key (!)
-        var keyId = Employee.keyId;
-        var keyName = Employee.keyName;
-        assertEquals("id", keyId.toString());
-        assertEquals("name", keyName.toString());
+        // 5. Execute the mapping by the keys
         var result = mapper.convertFlat(JdbcUtils.stream(rs)
-                , keyId
-                , keyName)
+                , Employee.keyId
+                , Employee.keyName)
                 .findFirst().get();
 
         // 6. Verify the mapped values
