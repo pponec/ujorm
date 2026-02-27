@@ -51,7 +51,7 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
         this.order = order;
         this.name = name.intern();
         this.type = type;
-        this.columnName = columnName;
+        this.columnName = columnName.intern();
         this.isPrimaryKey = isPrimaryKey;
         this.required = required;
         this.defaultValue = getDefaultValue(type);
