@@ -19,7 +19,14 @@ public interface CsvLineSplitter {
     @NotNull
     String[] split(String text, int maxFields);
 
-    /** Very fast simple splitter dynamically resizing array if the capacity is exceeded. */
+    /**
+     * A highly optimized, simplified CSV splitter designed purely for maximum speed and efficient memory handling.
+     * To achieve this performance, the implementation intentionally omits support for text enclosed in quotes
+     * or escaping of the delimiter character.
+     *
+     * @param delimiter The character used to separate values.
+     * @return A fast implementation of the CSV line splitter.
+     */
     @NotNull
     static CsvLineSplitter ofSimple(final char delimiter) {
         return (text, maxFields) -> {
@@ -43,14 +50,14 @@ public interface CsvLineSplitter {
     }
 
     /**
-     * Fast CSV line splitter supporting optional quotes around fields and quote character.
-     * Properly ignores delimiters enclosed within double quotes and
-     * unescapes inner double quotes ("" to ").
-     * Optimized by avoiding regex and iterating characters sequentially.
+     * A highly optimized, simplified CSV splitter designed purely for maximum speed and efficient memory handling.
+     * The array is dynamically reallocated if the number of parsed items exceeds the {@code maxFields} parameter,
+     * which is interpreted merely as a recommended initial capacity.
+     * To achieve this performance, the implementation intentionally omits support for text enclosed in quotes
+     * or escaping of the delimiter character.
      *
-     * @param delimiter The character used to separate fields.
-     * @param quoteChar The character used to quote fields.
-     * @return A CsvLineSplitter instance.
+     * @param delimiter The character used to separate values.
+     * @return A fast implementation of the CSV line splitter.
      */
     @NotNull
     static CsvLineSplitter ofQuoted(final char delimiter, final char quoteChar) {
