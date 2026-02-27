@@ -25,7 +25,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
     protected final List<Key<D, ?>> keyList;
     /** A mapping of the keys by name. */
     protected final Map<String, Key<D, ?>> keyMap;
-    /** A mapping of database column names in upper-case to their corresponding keys. */
+    /** Maps uppercase database column names to their corresponding keys. */
     protected final Map<String, Key<D, ?>> columnMap;
     /** Does the domain have any primitive attribute? */
     private final boolean hasPrimitives;
