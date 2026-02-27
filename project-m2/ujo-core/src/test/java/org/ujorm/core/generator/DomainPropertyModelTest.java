@@ -97,7 +97,7 @@ class DomainPropertyModelTest {
         // Test "countryCode" component (Explicit @Column name)
         var codeProp = findProperty(properties, "countryCode");
         assertEquals("countryCode", codeProp.propertyName());
-        assertEquals("countryCode", codeProp.dbColumName()); // TODO:pop ?
+        assertEquals("country_code", codeProp.dbColumName());
         assertEquals("countryCode", codeProp.getter());
         assertTrue(codeProp.required());
 

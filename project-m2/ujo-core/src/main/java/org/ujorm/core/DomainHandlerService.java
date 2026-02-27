@@ -49,9 +49,9 @@ public class DomainHandlerService {
         }
     }
 
-    private <D> Class<D> createClass(Class<D> domainModel, ClassName targetClassName) {
-        verifyClass(domainModel);
-        var meta = DomainModel.of(domainModel);
+    private <D> Class<D> createClass(Class<D> domainClass, ClassName targetClassName) {
+        verifyClass(domainClass);
+        var meta = DomainModel.of(domainClass);
         var src = new JavaSourceGenerator().getSourceCode(meta, targetClassName);
         var result = new ClassGenerator().createClass(src, targetClassName);
         return (Class<D>) result;
