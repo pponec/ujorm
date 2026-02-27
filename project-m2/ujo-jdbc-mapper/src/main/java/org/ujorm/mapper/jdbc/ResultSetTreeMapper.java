@@ -13,6 +13,7 @@ import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +47,7 @@ public class ResultSetTreeMapper<D> {
 
     private final int maxCacheSize;
     private final ConcurrentMap<CacheKey, MappingNode<D>> cache;
+    private volatile Instant cacheCleared = Instant.now();
 
     /**
      * Constructs the mapper.
@@ -88,6 +90,7 @@ public class ResultSetTreeMapper<D> {
                     ).formatted(maxCacheSize, MAPPER_CACHE_SIZE);
                     LOGGER.log(Level.WARNING, msg);
                     cache.clear();
+                    cacheCleared = Instant.now();
                 }
 
                 var node = cache.computeIfAbsent(key, k ->
@@ -126,6 +129,11 @@ public class ResultSetTreeMapper<D> {
     @NotNull
     public final Stream<D> convertFlat(@NotNull Stream<ResultSet> rs, @NotNull Key<D, ?>... columnLabels) {
         return convert(rs, (CharSequence[]) columnLabels);
+    }
+
+    /** Get the last timestamp of the cache clearing */
+    public Instant getCacheCleared() {
+        return cacheCleared;
     }
 
     /**
