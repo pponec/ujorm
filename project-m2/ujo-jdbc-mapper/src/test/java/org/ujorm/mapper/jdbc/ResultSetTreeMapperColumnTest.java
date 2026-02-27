@@ -16,6 +16,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 /** Tests a logic of column aliases processing in ResultSetTreeMapper */
@@ -107,6 +108,26 @@ public class ResultSetTreeMapperColumnTest {
         assertNotNull(result);
         assertEquals(40, result.getId());
         assertEquals("Eva", result.getName());
+    }
+
+    /** Tests failure when column matches neither DB annotation nor property name. */
+    @Test @Order(500)
+    void testUnknownColumn_throwsException() throws SQLException {
+        var rs = Mockito.mock(ResultSet.class);
+        var metaData = Mockito.mock(ResultSetMetaData.class);
+
+        when(rs.next()).thenReturn(true, false);
+        when(rs.getMetaData()).thenReturn(metaData);
+        when(metaData.getColumnCount()).thenReturn(1);
+
+        setupColumn(rs, metaData, 1, "xx1", "yy1", 50, Integer.class);
+
+        var service = DomainHandlerProvider.provider();
+        var mapper = ResultSetTreeMapper.of(Employee.class, service);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            mapper.convert(rs).findFirst();
+        });
     }
 
     /** Helper to easily mock ResultSet metadata and values */
