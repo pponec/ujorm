@@ -31,8 +31,8 @@ public class ResultSetTreeMapperColumnTest {
         when(rs.getMetaData()).thenReturn(metaData);
         when(metaData.getColumnCount()).thenReturn(2);
 
-        setupColumn(rs, metaData, 1, "id", "db_id", 10, Integer.class);
-        setupColumn(rs, metaData, 2, "name", "db_name", "Jan", String.class);
+        setupColumn(rs, metaData, 1, "db_id", "id", 10, Integer.class);
+        setupColumn(rs, metaData, 2, "db_name", "name", "Jan", String.class);
 
         var service = DomainHandlerProvider.provider();
         var mapper = ResultSetTreeMapper.of(Employee.class, service);
@@ -99,8 +99,8 @@ public class ResultSetTreeMapperColumnTest {
         when(rs.getMetaData()).thenReturn(metaData);
         when(metaData.getColumnCount()).thenReturn(2);
 
-        setupColumn(rs, metaData, 1, "random_lbl_1", "db_id", 40, Integer.class);
-        setupColumn(rs, metaData, 2, "random_lbl_2", "db_name", "Eva", String.class);
+        setupColumn(rs, metaData, 1, "db_id", "random_lbl_1", 40, Integer.class);
+        setupColumn(rs, metaData, 2, "db_name", "random_lbl_2", "Eva", String.class);
 
         var service = DomainHandlerProvider.provider();
         var mapper = ResultSetTreeMapper.of(Employee.class, service);
@@ -115,8 +115,9 @@ public class ResultSetTreeMapperColumnTest {
     /** Helper to easily mock ResultSet metadata and values */
     <T> void setupColumn(ResultSet rs
             , ResultSetMetaData meta
-            , int index, String columnLabel
+            , int index
             , String columnName
+            , String columnLabel
             , T columnValue
             , Class<T> type) throws SQLException {
         when(meta.getColumnLabel(index)).thenReturn(columnLabel);
