@@ -83,7 +83,7 @@ public class ResultSetTreeMapper<D> {
 
                 if (cache.size() >= maxCacheSize) {
                     var msg = String.join(" ",
-                            "Mapping cache limit (%s) reached, clearing.",
+                            "Mapping cache exceeded the limit of %d, clearing.",
                             "Consider increasing '%s' to avoid performance degradation."
                     ).formatted(maxCacheSize, MAPPER_CACHE_SIZE);
                     LOGGER.log(Level.WARNING, msg);
