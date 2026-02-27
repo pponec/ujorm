@@ -18,8 +18,6 @@ package tools.sql;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tools.jdbc.SqlConsumer;
-import tools.jdbc.SqlFunction;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -27,6 +25,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -52,13 +52,15 @@ public class SqlParamBuilder implements AutoCloseable {
     private final Map<String, ParamValue> params = new HashMap<>();
     @Nullable
     private PreparedStatement preparedStatement = null;
+    @Nullable
+    private ResultSet resultSet = null;
 
     public SqlParamBuilder(@NotNull Connection dbConnection) {
         this.dbConnection = dbConnection;
     }
 
     /** Close an old statement (if any) and assign the new SQL template */
-    public SqlParamBuilder sql(@NotNull String... sqlLines) {
+    public SqlParamBuilder sql(String... sqlLines) {
         close();
         params.clear();
         sqlTemplate = sqlLines.length == 1 ? sqlLines[0] : String.join("\n", sqlLines);
@@ -136,10 +138,6 @@ public class SqlParamBuilder implements AutoCloseable {
         return bindObject(enabled, key, JDBCType.TIMESTAMP, values);
     }
 
-    /** Bind Objects */
-    public SqlParamBuilder bindObject(@NotNull final String key, final Object... values) {
-        return bindObject(true, key, JDBCType.OTHER, values);
-    }
     /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
     public SqlParamBuilder bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, final Object... values) {
         if (enabled) {
@@ -152,16 +150,16 @@ public class SqlParamBuilder implements AutoCloseable {
         try {
             return prepareStatement(Statement.NO_GENERATED_KEYS).executeUpdate();
         } catch (SQLException e) {
-            throw sqlException(e);
+            throw new SqlException(e);
         }
     }
 
-    /** For INSERT operations used before calling method {@code #generatedKeysRs}. */
+    /** Executes an INSERT statement with the ability to retrieve generated keys. */
     public int executeInsert() {
         try {
             return prepareStatement(Statement.RETURN_GENERATED_KEYS).executeUpdate();
         } catch (SQLException e) {
-            throw sqlException(e);
+            throw new SqlException(e);
         }
     }
 
@@ -172,66 +170,71 @@ public class SqlParamBuilder implements AutoCloseable {
         try {
             return prepareStatement(Statement.NO_GENERATED_KEYS).executeQuery();
         } catch (SQLException e) {
-            throw sqlException(e);
+            throw new SqlException(e);
         }
     }
 
     /**
      * Returns a Stream over the given ResultSet. Closing the Stream also closes the ResultSet.
      * Prefer {@link #streamMap(SqlFunction)} or {@link #forEach(SqlConsumer)}.
-     * @param resultSet the ResultSet to stream over
+     * @param rs the ResultSet to stream over
      */
     @NotNull
-    private Stream<ResultSet> stream(final ResultSet resultSet) {
+    private Stream<ResultSet> stream(final ResultSet rs) {
+        switchResultSet(rs);
         final var iterator = new Iterator<ResultSet>() {
             @Override
             public boolean hasNext() {
                 try {
                     return resultSet.next();
                 } catch (SQLException e) {
-                    throw sqlException(e);
+                    throw new SqlException(e);
                 }
             }
             @Override
             public ResultSet next() {
-                return resultSet;
+                return rs;
             }
         };
         // NOTE: The last ResultSet from a PreparedStatement is closed automatically when the statement is closed.
         // For multiple ResultSets or other creation methods, must be closed explicitly.
         final var spliterator = Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED);
-        return StreamSupport.stream(spliterator, false).onClose(() -> {
-            try {
-                resultSet.close();
-            } catch (SQLException e) {
-                sqlException(e);
-            }
-        });
+        return StreamSupport.stream(spliterator, false).onClose(() -> switchResultSet(null));
     }
 
-    /** Iterate executed select */
-    public void forEach(@NotNull SqlConsumer consumer) throws SQLException {
+    /** Safely closes the current ResultSet and starts tracking the new one. */
+    private void switchResultSet(final ResultSet rs) {
+        try (var oldResultSet = this.resultSet) {
+        } catch (SQLException e) {
+            throw new SqlException(e);
+        }
+        this.resultSet = rs;
+    }
+
+    /** Executes the query and processes each row using the provided consumer. */
+    public void forEach(SqlConsumer<ResultSet> consumer) throws SQLException {
         stream(executeSelect()).forEach(consumer);
     }
 
-    @NotNull
+    /** Executes the query and returns a Stream of mapped results. */
     public <R> Stream<R> streamMap(SqlFunction<ResultSet, ? extends R> mapper) {
         return stream(executeSelect()).map(mapper);
     }
 
-    /** The method closes a PreparedStatement object with related objects, not the database connection. */
+    /** Closes the PreparedStatement and any active ResultSet. The database connection remains open. */
     @Override
     public void close() {
-        try (AutoCloseable c2 = preparedStatement) {
+        try (var ps = preparedStatement; var rs = resultSet) {
         } catch (Exception e) {
-            throw sqlException("Closing fails", e);
+            throw new SqlException(e, "Closing resources failed");
         } finally {
+            resultSet = null;
             preparedStatement = null;
             params.clear();
         }
     }
 
-    /** Build (or reuse) a PreparedStatement object with SQL arguments
+    /** Builds or reuses a PreparedStatement and binds current parameters.
      * @param autoGeneratedKeys For example: {@code Statement.RETURN_GENERATED_KEYS} */
     @NotNull
     public PreparedStatement prepareStatement(int autoGeneratedKeys) {
@@ -247,8 +250,8 @@ public class SqlParamBuilder implements AutoCloseable {
             }
             preparedStatement = result;
             return result;
-        } catch (SQLException ex) {
-            throw sqlException(ex);
+        } catch (SQLException e) {
+            throw new SqlException(e, "prepareStatement()");
         }
     }
 
@@ -257,7 +260,7 @@ public class SqlParamBuilder implements AutoCloseable {
         try {
             return preparedStatement != null ? preparedStatement.getGeneratedKeys() : null;
         } catch (SQLException e) {
-            throw tools.sql.SQLException.of(e);
+            throw new SqlException(e, "generatedKeysRs()");
         }
     }
 
@@ -269,6 +272,13 @@ public class SqlParamBuilder implements AutoCloseable {
         return generatedKeysRs != null
                 ? stream(generatedKeysRs).map(mapper)
                 : Stream.of();
+    }
+
+    /** Method returns the last inserted key of the last INSERT statement.
+     * @throws NoSuchElementException If no key found */
+    public <R> R generatedLastKey(SqlFunction<ResultSet, ? extends R> mapper) throws NoSuchElementException {
+        return generatedKeys(mapper).reduce((first, second) -> second)
+                .orElseThrow(() -> new NoSuchElementException("No keys"));
     }
 
     @NotNull
@@ -292,7 +302,7 @@ public class SqlParamBuilder implements AutoCloseable {
             }
         }
         if (!toLog && !missingKeys.isEmpty()) {
-            throw sqlException("Missing SQL parameter: " + missingKeys, null);
+            throw new SqlException(null, "Missing SQL parameter: " + missingKeys);
         }
         matcher.appendTail(result);
         return result.toString();
@@ -303,21 +313,12 @@ public class SqlParamBuilder implements AutoCloseable {
         return sqlTemplate;
     }
 
-    protected static tools.sql.SQLException sqlException(@Nullable final SQLException ex) {
-        return new tools.sql.SQLException(ex);
-    }
-
-    protected static tools.sql.SQLException sqlException(@NotNull String messages, @Nullable final Exception ex) {
-        return new tools.sql.SQLException(ex, messages);
-    }
-
     record ParamValue(JDBCType jdbcType, Object... values) {
         public Object first() {
             return values.length > 0 ? values[0] : null;
         }
     }
 
-    @NotNull
     @Override
     public String toString() {
         return buildSql(new ArrayList<>(), true);
@@ -325,5 +326,38 @@ public class SqlParamBuilder implements AutoCloseable {
 
     public String toStringLine() {
         return toString().replaceAll("\\s*\\R+\\s*", " ");
+    }
+
+    @FunctionalInterface
+    public interface SqlFunction<T, R> extends Function<T, R> {
+        default R apply(T resultSet) {
+            try {
+                return applyRs(resultSet);
+            } catch (Exception ex) {
+                throw (ex instanceof RuntimeException re) ? re : new IllegalStateException(ex);
+            }
+        }
+        R applyRs(T resultSet) throws SQLException;
+    }
+
+    @FunctionalInterface
+    public interface SqlConsumer<T> extends Consumer<T> {
+        @Override
+        default void accept(final T t) {
+            try {
+                acceptResultSet(t);
+            } catch (Exception ex) {
+                throw (ex instanceof RuntimeException re) ? re : new IllegalStateException(ex);
+            }
+        }
+        void acceptResultSet(T t) throws Exception;
+    }
+
+    public static final class SqlException extends org.ujorm.tools.jdbc.SQLException {
+        private SqlException(Throwable cause, String... messages) {
+            super((messages.length > 0 || cause == null)
+                    ? String.join(" ", messages)
+                    : cause.getMessage(), cause);
+        }
     }
 }
