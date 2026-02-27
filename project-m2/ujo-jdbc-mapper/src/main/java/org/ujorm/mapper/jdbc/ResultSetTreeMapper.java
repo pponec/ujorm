@@ -7,6 +7,7 @@ import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.Key;
+import org.ujorm.core.csv.CsvLineSplitter;
 import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
@@ -22,6 +23,10 @@ import java.util.stream.Stream;
  * @param <D> the root domain type
  */
 public class ResultSetTreeMapper<D> {
+
+    /** A fast dot splitter */
+    private static final CsvLineSplitter SPLITTER = CsvLineSplitter.ofFast('.');
+    private static final int SPLITTER_INIT_CAPACITY = 8;
 
     @NonNull
     private final Class<D> domainClass;
@@ -176,7 +181,7 @@ public class ResultSetTreeMapper<D> {
 
         for (var colIndex = 0; colIndex < columnAliases.length; colIndex++) {
             var alias = columnAliases[colIndex].toString();
-            var parts = alias.split("\\.");
+            var parts = SPLITTER.split(alias, SPLITTER_INIT_CAPACITY);
             var currentNode = (MappingNode) result;
             var currentClass = (Class<?>) rootClass;
 

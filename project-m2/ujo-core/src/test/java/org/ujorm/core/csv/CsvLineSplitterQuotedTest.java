@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CsvLineSplitterTest {
+class CsvLineSplitterQuotedTest {
 
     @Test
     void ofQuoted_4() {

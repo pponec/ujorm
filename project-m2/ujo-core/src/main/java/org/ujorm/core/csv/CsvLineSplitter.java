@@ -19,14 +19,16 @@ public interface CsvLineSplitter {
     @NotNull
     String[] split(String text, int maxFields);
 
-    /** Very fast simple splitter where the delimiter must be a unique character in the parsed text.
-     * Splits a string by a specific character delimiter into an array without using regex.
-     * Highly optimized by pre-allocating the array with a known maximum size.
-     * If the string contains more values than expected (maxFields), the extra
-     * values are ignored.
+    /**
+     * A highly optimized, simplified CSV splitter designed purely for maximum speed and efficient memory handling.
+     * To achieve this performance, the implementation intentionally omits support for text enclosed in quotes
+     * or escaping of the delimiter character.
+     *
+     * @param delimiter The character used to separate values.
+     * @return A fast implementation of the CSV line splitter.
      */
     @NotNull
-    static CsvLineSplitter ofSimple(final char delimiter) {
+    static CsvLineSplitter ofFast(final char delimiter) {
         return (text, maxFields) -> {
             if (text == null || text.isEmpty()) return new String[0];
 
@@ -34,28 +36,28 @@ public interface CsvLineSplitter {
             var count = 0;
             var start = 0;
 
-            while (count < maxFields) {
+            while (true) {
+                if (count == result.length) result = Arrays.copyOf(result, 2 + (count << 1));
                 var end = text.indexOf(delimiter, start);
-                if (end == -1) {
-                    result[count++] = text.substring(start);
-                    break;
-                }
-                result[count++] = text.substring(start, end);
+
+                result[count++] = end < 0 ? text.substring(start) : text.substring(start, end);
+                if (end < 0) break;
+
                 start = end + 1;
             }
-            return count == maxFields ? result : Arrays.copyOf(result, count);
+            return count == result.length ? result : Arrays.copyOf(result, count);
         };
     }
 
     /**
-     * Fast CSV line splitter supporting optional quotes around fields and quote character.
-     * Properly ignores delimiters enclosed within double quotes and
-     * unescapes inner double quotes ("" to ").
-     * Optimized by avoiding regex and iterating characters sequentially.
+     * A highly optimized, simplified CSV splitter designed purely for maximum speed and efficient memory handling.
+     * The array is dynamically reallocated if the number of parsed items exceeds the {@code maxFields} parameter,
+     * which is interpreted merely as a recommended initial capacity.
+     * To achieve this performance, the implementation intentionally omits support for text enclosed in quotes
+     * or escaping of the delimiter character.
      *
-     * @param delimiter The character used to separate fields.
-     * @param quoteChar The character used to quote fields.
-     * @return A CsvLineSplitter instance.
+     * @param delimiter The character used to separate values.
+     * @return A fast implementation of the CSV line splitter.
      */
     @NotNull
     static CsvLineSplitter ofQuoted(final char delimiter, final char quoteChar) {
