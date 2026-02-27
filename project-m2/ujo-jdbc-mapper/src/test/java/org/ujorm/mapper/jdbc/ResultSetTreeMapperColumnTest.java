@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
-/** Tests the new logic of column aliases processing in ResultSetTreeMapper */
+/** Tests a logic of column aliases processing in ResultSetTreeMapper */
 public class ResultSetTreeMapperColumnTest {
 
     @Test @Order(100)
@@ -35,7 +35,6 @@ public class ResultSetTreeMapperColumnTest {
 
         var service = DomainHandlerProvider.provider();
         var mapper = ResultSetTreeMapper.of(Employee.class, service);
-
         var result = mapper.convert(rs).findFirst().get();
 
         assertNotNull(result);
@@ -109,6 +108,13 @@ public class ResultSetTreeMapperColumnTest {
         assertEquals("Eva", result.getName());
     }
 
+    /** Helper to easily mock ResultSet metadata and values */
+    <T> void setupColumn(ResultSet rs, ResultSetMetaData meta, int index, String label, String name, T value, Class<T> type) throws SQLException {
+        when(meta.getColumnLabel(index)).thenReturn(label);
+        when(meta.getColumnName(index)).thenReturn(name);
+        when(rs.getObject(index, type)).thenReturn(value);
+    }
+
     /** Represents a simplified employee entity with explicitly defined DB columns */
     @Getter
     @Setter
@@ -123,12 +129,5 @@ public class ResultSetTreeMapperColumnTest {
         static final DomainHandler<Employee> dh = DomainHandlerProvider.getHandler(Employee.class);
         public static final Key<Employee, Integer> employee_id = dh.getKey("id", Integer.class);
         public static final Key<Employee, String> employee_name = dh.getKey("name", String.class);
-    }
-
-    /** Helper to easily mock ResultSet metadata and values */
-    public static <T> void setupColumn(ResultSet rs, ResultSetMetaData meta, int index, String label, String name, T value, Class<T> type) throws SQLException {
-        when(meta.getColumnLabel(index)).thenReturn(label);
-        when(meta.getColumnName(index)).thenReturn(name);
-        when(rs.getObject(index, type)).thenReturn(value);
     }
 }
