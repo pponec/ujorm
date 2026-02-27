@@ -115,18 +115,35 @@ public record DomainPropertyModel(
         var isId = element.isAnnotationPresent(Id.class);
         var column = element.getAnnotation(Column.class);
         var joinColumn = element.getAnnotation(JoinColumn.class);
-        var dbColName = name;
         var required = type.isPrimitive() || isId;
+        var dbColName = "";
 
         if (column != null) {
-            dbColName = column.name().isEmpty() ? name : column.name();
+            dbColName = column.name().isEmpty() ? "" : column.name();
             required = required || !column.nullable();
         } else if (joinColumn != null) {
-            dbColName = joinColumn.name().isEmpty() ? name : joinColumn.name();
+            dbColName = joinColumn.name().isEmpty() ? "" : joinColumn.name();
             required = required || !joinColumn.nullable();
+        }
+        if (dbColName.isEmpty()) {
+           dbColName = buildDbName(name);
         }
 
         return new DomainPropertyModel(name, type, getter, setter, dbColName, required, isId);
+    }
+
+    /** Converts a Java Bean property name to a snake_case database column name. */
+    private static String buildDbName(@NotNull String propertyName) {
+        if (propertyName == null || propertyName.isEmpty()) return propertyName;
+        var resultBuilder = new StringBuilder();
+        for (var i = 0; i < propertyName.length(); i++) {
+            var c = propertyName.charAt(i);
+            if (Character.isUpperCase(c) && i > 0) {
+                resultBuilder.append('_');
+            }
+            resultBuilder.append(Character.toLowerCase(c));
+        }
+        return resultBuilder.toString();
     }
 
     /**
