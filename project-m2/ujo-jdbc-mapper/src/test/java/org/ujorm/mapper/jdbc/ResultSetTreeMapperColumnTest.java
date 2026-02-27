@@ -67,6 +67,28 @@ public class ResultSetTreeMapperColumnTest {
         assertEquals("Petr", result.getName());
     }
 
+    /** Tests case-insensitive mapping by DB column name when label and name match. */
+    @Test @Order(210)
+    void testLabelEqualsName_mapsByDbColumnCaseInsensitive() throws SQLException {
+        var rs = Mockito.mock(ResultSet.class);
+        var metaData = Mockito.mock(ResultSetMetaData.class);
+
+        when(rs.next()).thenReturn(true, false);
+        when(rs.getMetaData()).thenReturn(metaData);
+        when(metaData.getColumnCount()).thenReturn(2);
+
+        setupColumn(rs, metaData, 1, "DB_ID", "DB_ID", 25, Integer.class);
+        setupColumn(rs, metaData, 2, "Db_NaMe", "Db_NaMe", "Lucie", String.class);
+
+        var service = DomainHandlerProvider.provider();
+        var mapper = ResultSetTreeMapper.of(Employee.class, service);
+        var result = mapper.convert(rs).findFirst().get();
+
+        assertNotNull(result);
+        assertEquals(25, result.getId());
+        assertEquals("Lucie", result.getName());
+    }
+
     /** Tests fallback to property mapping if DB column match fails. */
     @Test @Order(300)
     void testLabelEqualsName_fallbackToProperty() throws SQLException {
