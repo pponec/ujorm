@@ -34,7 +34,8 @@ public class ResultSetTreeMapper<D> {
     /** The very fast dot splitter */
     private static final CsvLineSplitter SPLITTER = CsvLineSplitter.ofFast('.');
     private static final int SPLITTER_INIT_CAPACITY = 8;
-    private static final int DEFAULT_CACHE_SIZE = Integer.getInteger("ujorm.mapper.cache.size", 512);
+    private static final String MAPPER_CACHE_SIZE = "ujorm.mapper.cache.size";
+    private static final int DEFAULT_CACHE_SIZE = Integer.getInteger(MAPPER_CACHE_SIZE, 512);
 
     @NonNull
     private final Class<D> domainClass;
@@ -81,11 +82,11 @@ public class ResultSetTreeMapper<D> {
                 var key = new CacheKey(extracted.labels(), extracted.flags());
 
                 if (cache.size() >= maxCacheSize) {
-                    var msg = String.join(" "
-                            , "Mapping cache exceeded the limit of %d."
-                            , "Clearing it may impact performance."
-                            , "Consider increasing 'ujorm.mapper.cache.size'."
-                    ).formatted(maxCacheSize);
+                    var msg = String.join(" ",
+                            "Mapping cache limit (%s) reached, clearing.",
+                            "Consider increasing '%s'",
+                            "to avoid performance impact."
+                    ).formatted(maxCacheSize, MAPPER_CACHE_SIZE);
                     LOGGER.log(Level.WARNING, msg);
                     cache.clear();
                 }
