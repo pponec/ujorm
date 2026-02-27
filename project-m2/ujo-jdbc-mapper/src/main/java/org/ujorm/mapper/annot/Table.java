@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
  * Use the annotation to mark a Key static field like XML Attribute.
  * @deprecated Annotation is not implemented yet.
  */
+@Deprecated
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
 public @interface Table {

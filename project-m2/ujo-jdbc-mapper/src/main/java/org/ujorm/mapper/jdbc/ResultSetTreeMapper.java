@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  */
 public class ResultSetTreeMapper<D> {
 
-    /** A fast dot splitter */
+    /** The very fast dot splitter */
     private static final CsvLineSplitter SPLITTER = CsvLineSplitter.ofFast('.');
     private static final int SPLITTER_INIT_CAPACITY = 8;
 
@@ -58,11 +58,10 @@ public class ResultSetTreeMapper<D> {
      * @param rs the Stream of ResultSets to process
      * @param columns optional explicitly defined column aliases
      * @return a stream of populated domain objects
-     * @throws SQLException if a database error occurs
      * @throws IllegalArgumentException if explicit columns don't match the ResultSet metadata
      */
     @NotNull
-    public Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columns) throws SQLException {
+    public Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columns) {
         return rs.map(row -> {
             try {
                 if (this.rootNode == null) {
@@ -93,11 +92,10 @@ public class ResultSetTreeMapper<D> {
      * @param rs the ResultSet to process
      * @param columns optional explicitly defined column aliases
      * @return a stream of populated domain objects
-     * @throws SQLException if a database error occurs
      * @throws IllegalArgumentException if explicit columns don't match the ResultSet metadata
      */
     @NotNull
-    public Stream<D> convert(@NotNull ResultSet rs, @Nullable CharSequence... columns) throws SQLException {
+    public Stream<D> convert(@NotNull ResultSet rs, @Nullable CharSequence... columns) {
         return convert(JdbcUtils.stream(rs), columns);
     }
 
@@ -107,11 +105,10 @@ public class ResultSetTreeMapper<D> {
      * @param rs the Stream of ResultSets to process
      * @param key explicitly defined column aliases
      * @return a stream of populated domain objects
-     * @throws SQLException if a database error occurs
      * @throws IllegalArgumentException if explicit columns don't match the ResultSet metadata
      */
     @NotNull
-    public <V1> Stream<D> convert(@NotNull Stream<ResultSet> rs, @NotNull Key<D,V1> key) throws SQLException {
+    public <V> Stream<D> convert(@NotNull Stream<ResultSet> rs, @NotNull Key<D,V> key) {
         return convert(rs, new CharSequence[] {key});
     }
 
@@ -136,7 +133,7 @@ public class ResultSetTreeMapper<D> {
 
             var childInstance = childKey.getValue(target);
             if (childInstance == null) {
-                childInstance = createInstance(childKey.type());
+                childInstance = service.createInstance(childKey.type());
                 childKey.setValue(target, childInstance);
             }
 
@@ -155,17 +152,6 @@ public class ResultSetTreeMapper<D> {
      */
     private <V> V extractValue(ResultSet rs, DirectMapping<?, V> mapping) throws SQLException {
         return rs.getObject(mapping.columnIndex(), mapping.key().type());
-    }
-
-    /**
-     * Creates a new instance for a related bean.
-     *
-     * @param type the class of the related bean
-     * @param <T> the type of the related bean
-     * @return a new instance of the related bean
-     */
-    private <T> T createInstance(Class<T> type) {
-        return service.createInstance(type);
     }
 
     /**

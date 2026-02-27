@@ -138,7 +138,7 @@ public class ResultSetTreeMapperTest {
     }
 
     @Test @Order(300)
-    void testColumnCountMismatchThrowsException() throws SQLException {
+    void testColumnCountMismatch_throwsException() throws SQLException {
         // 1. Prepare the mock ResultSet and MetaData
         var rs = Mockito.mock(ResultSet.class);
         var metaData = Mockito.mock(ResultSetMetaData.class);
@@ -165,7 +165,7 @@ public class ResultSetTreeMapperTest {
 
     /** Tests that an empty ResultSet skips metadata validation and returns an empty Stream. */
     @Test @Order(400)
-    void testEmptyResultSetWithInvalidAliases() throws SQLException {
+    void testEmptyResultSet_withInvalidAliases() throws SQLException {
         var rs = Mockito.mock(ResultSet.class);
         when(rs.next()).thenReturn(false);
 
@@ -179,7 +179,7 @@ public class ResultSetTreeMapperTest {
 
     /** Tests that an invalid property name in the alias hierarchy throws an exception. */
     @Test @Order(500)
-    void testInvalidPropertyNameInAliasThrowsException() throws SQLException {
+    void testInvalidPropertyNameInAlias_throwsException() throws SQLException {
         var rs = Mockito.mock(ResultSet.class);
         var metaData = Mockito.mock(ResultSetMetaData.class);
 
@@ -199,7 +199,7 @@ public class ResultSetTreeMapperTest {
 
     /** Tests automatic extraction of column aliases from ResultSetMetaData. */
     @Test @Order(600)
-    void testExtractAliasesFromMetaData() throws SQLException {
+    void testExtractAliases_fromMetaData() throws SQLException {
         var rs = Mockito.mock(ResultSet.class);
         var metaData = Mockito.mock(ResultSetMetaData.class);
         var c = new Columns();
