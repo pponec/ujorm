@@ -11,6 +11,7 @@ import org.ujorm.core.Key;
 import org.ujorm.core.generator.ClassName;
 import org.ujorm.core.generator.DomainModel;
 import org.ujorm.core.generator.JavaSourceGenerator;
+import org.ujorm.tools.jdbc.JdbcUtils;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -129,7 +130,10 @@ public class ResultSetTreeMapperTest {
         var keyName = Employee.keyName;
         assertEquals("id", keyId.toString());
         assertEquals("name", keyName.toString());
-        var result = mapper.convert(rs, keyId, keyName).findFirst().get();
+        var result = mapper.convertFlat(JdbcUtils.stream(rs)
+                , keyId
+                , keyName)
+                .findFirst().get();
 
         // 6. Verify the mapped values
         assertNotNull(result);

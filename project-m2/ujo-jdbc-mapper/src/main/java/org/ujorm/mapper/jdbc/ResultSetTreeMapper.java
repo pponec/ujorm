@@ -100,16 +100,17 @@ public class ResultSetTreeMapper<D> {
     }
 
     /**
-     * Converts the given Stream of ResultSets into a stream of domain objects.
+     * Type-safe mapping using Keys for a selection without relations.
      *
-     * @param rs the Stream of ResultSets to process
-     * @param key explicitly defined column aliases
-     * @return a stream of populated domain objects
-     * @throws IllegalArgumentException if explicit columns don't match the ResultSet metadata
+     * @param rs A stream of ResultSets to process
+     * @param columns Explicitly defined column keys (aliases)
+     * @param <V> The type of the value (if applicable)
+     * @return A stream of populated domain objects
+     * @throws IllegalArgumentException If explicit columns do not match the ResultSet metadata
      */
     @NotNull
-    public <V> Stream<D> convert(@NotNull Stream<ResultSet> rs, @NotNull Key<D,V> key) {
-        return convert(rs, new CharSequence[] {key});
+    public <V> Stream<D> convertFlat(@NotNull Stream<ResultSet> rs, @NotNull Key<D,?>... columns) {
+        return convert(rs, columns);
     }
 
     /**
