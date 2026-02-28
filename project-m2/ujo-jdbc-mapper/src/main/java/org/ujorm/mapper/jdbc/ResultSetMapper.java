@@ -29,8 +29,8 @@ import java.util.stream.Stream;
  *
  * @param <D> the root domain type
  */
-public class ResultSetTreeMapper<D> {
-    private static final Logger LOGGER = Logger.getLogger(ResultSetTreeMapper.class.getName());
+public class ResultSetMapper<D> {
+    private static final Logger LOGGER = Logger.getLogger(ResultSetMapper.class.getName());
 
     /** The very fast dot splitter */
     private static final CsvLineSplitter SPLITTER = CsvLineSplitter.ofFast('.');
@@ -56,7 +56,7 @@ public class ResultSetTreeMapper<D> {
      * @param service the domain handler service for instance creation
      * @param maxCacheSize the maximum number of cached mapping trees
      */
-    protected ResultSetTreeMapper(
+    protected ResultSetMapper(
             @NonNull Class<D> domainClass,
             @NonNull DomainHandlerService service,
             int maxCacheSize
@@ -157,7 +157,7 @@ public class ResultSetTreeMapper<D> {
 
             var childInstance = childKey.getValue(target);
             if (childInstance == null) {
-                childInstance = service.createInstance(childKey.type());
+                childInstance = service.createDomainInstance(childKey.type());
                 childKey.setValue(target, childInstance);
             }
 
@@ -337,11 +337,11 @@ public class ResultSetTreeMapper<D> {
      * @param <D> the root domain type
      * @return a new instance of ResultSetTreeMapper
      */
-    public static <D> ResultSetTreeMapper<D> of(
+    public static <D> ResultSetMapper<D> of(
             @NonNull Class<D> domainClass,
             @NonNull DomainHandlerService service,
             int maxCacheSize) {
-        return new ResultSetTreeMapper<>(domainClass, service, maxCacheSize);
+        return new ResultSetMapper<>(domainClass, service, maxCacheSize);
     }
 
     /**
@@ -352,7 +352,7 @@ public class ResultSetTreeMapper<D> {
      * @param <D> the root domain type
      * @return a new instance of ResultSetTreeMapper
      */
-    public static <D> ResultSetTreeMapper<D> of(
+    public static <D> ResultSetMapper<D> of(
             @NonNull Class<D> domainClass,
             @NonNull DomainHandlerService service) {
         return of(domainClass, service, DEFAULT_CACHE_SIZE);
@@ -365,7 +365,7 @@ public class ResultSetTreeMapper<D> {
      * @param <D> the root domain type
      * @return a new instance of ResultSetTreeMapper
      */
-    public static <D> ResultSetTreeMapper<D> of(@NonNull Class<D> domainClass) {
+    public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass) {
         return of(domainClass, DomainHandlerProvider.provider(), DEFAULT_CACHE_SIZE);
     }
 }

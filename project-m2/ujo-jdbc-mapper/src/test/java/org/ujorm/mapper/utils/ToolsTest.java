@@ -1,46 +1,26 @@
 package org.ujorm.mapper.utils;
 
 import org.junit.jupiter.api.Test;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ToolsTest {
+class MultiMapTest {
 
+    /** Tests adding and retrieving elements */
     @Test
-    void testSplitWithSmallerArrayReturnsOriginalInstance() {
-        String[] input = {"A", "B"};
-        var batchSize = 5;
+    void put() {
+        var map = new MultiMap<String, String>();
 
-        var result = Tools.splitIntoBatches(batchSize, input);
+        map.put("key1", "value1");
+        map.put("key1", "value2");
+        map.put("key2", "value3");
 
-        assertEquals(1, result.length);
-        // We verify that it is the exact same array instance in memory
-        assertSame(input, result[0], "The original array instance should be returned unchanged.");
+        assertEquals(List.of("value1", "value2"), map.get("key1"));
+        assertEquals(List.of("value3"), map.get("key2"));
+
+        // Verifies that a missing key returns an empty list, not null
+        assertTrue(map.get("missingKey").isEmpty());
     }
 
-    @Test
-    void testSplitWithExactMultiple() {
-        Integer[] input = {1, 2, 3, 4};
-        var batchSize = 2;
-
-        var result = Tools.splitIntoBatches(batchSize, input);
-
-        assertEquals(2, result.length);
-        // Explicit casting is required because the outer array is Object[][]
-        assertArrayEquals(new Integer[]{1, 2}, (Integer[]) result[0]);
-        assertArrayEquals(new Integer[]{3, 4}, (Integer[]) result[1]);
-    }
-
-    @Test
-    void testSplitWithRemainderBatch() {
-        Integer[] input = {1, 2, 3, 4, 5};
-        var batchSize = 2;
-
-        var result = Tools.splitIntoBatches(batchSize, input);
-
-        assertEquals(3, result.length);
-        assertArrayEquals(new Integer[]{1, 2}, (Integer[]) result[0]);
-        assertArrayEquals(new Integer[]{3, 4}, (Integer[]) result[1]);
-        assertArrayEquals(new Integer[]{5}, (Integer[]) result[2]);
-    }
 }

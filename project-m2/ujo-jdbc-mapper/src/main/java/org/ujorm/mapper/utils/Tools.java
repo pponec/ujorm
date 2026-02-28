@@ -16,11 +16,16 @@
 package org.ujorm.mapper.utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.core.DomainHandler;
+import org.ujorm.core.Key;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class Tools {
 
@@ -57,5 +62,27 @@ public class Tools {
         } catch (SQLException ex) {
             throw SQLExceptionBuilder.build(ex);
         }
+    }
+
+    /** Build a property change list */
+    @NotNull
+    public static <D> List<Key<D,?>> findChanges(@NotNull D domain, @NotNull D snapshot, @NotNull DomainHandler<D> handler) {
+        if (domain == null || snapshot == null) {
+            var msg = "The %s object type of %s is required".formatted(
+                    domain == null ? "domain" : "snapshot",
+                    handler.getDomainClass().getSimpleName());
+            throw new IllegalStateException(msg);
+        }
+
+        var keys = handler.getKeyList();
+        var result = new ArrayList<Key<D,?>>(keys.size());
+        for (var key : handler.getKeyList()) {
+            var v1 = key.getValue(domain);
+            var v2 = key.getValue(snapshot);
+            if (!Objects.equals(v1, v2)) {
+                result.add(key);
+            }
+        }
+        return result;
     }
 }
