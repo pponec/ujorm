@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 /** Tests a logic of column aliases processing in ResultSetTreeMapper */
-public class ResultSetTreeMapperColumnTest {
+public class ResultSetMapperColumnTest {
 
     /** Tests mapping by property name when label and name differ. */
     @Test @Order(100)
@@ -37,7 +37,7 @@ public class ResultSetTreeMapperColumnTest {
         setupColumn(rs, metaData, 2, "x2", "name", "Jan", String.class);
 
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetTreeMapper.of(Employee.class, service);
+        var mapper = ResultSetMapper.of(Employee.class, service);
         var result = mapper.convert(rs).findFirst().get();
 
         assertNotNull(result);
@@ -59,7 +59,7 @@ public class ResultSetTreeMapperColumnTest {
         setupColumn(rs, metaData, 2, "db_name", "db_name", "Petr", String.class);
 
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetTreeMapper.of(Employee.class, service);
+        var mapper = ResultSetMapper.of(Employee.class, service);
         var result = mapper.convert(rs).findFirst().get();
 
         assertNotNull(result);
@@ -81,7 +81,7 @@ public class ResultSetTreeMapperColumnTest {
         setupColumn(rs, metaData, 2, "Db_NaMe", "Db_NaMe", "Lucie", String.class);
 
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetTreeMapper.of(Employee.class, service);
+        var mapper = ResultSetMapper.of(Employee.class, service);
         var result = mapper.convert(rs).findFirst().get();
 
         assertNotNull(result);
@@ -103,7 +103,7 @@ public class ResultSetTreeMapperColumnTest {
         setupColumn(rs, metaData, 2, "name", "name", "Karel", String.class);
 
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetTreeMapper.of(Employee.class, service);
+        var mapper = ResultSetMapper.of(Employee.class, service);
         var result = mapper.convert(rs).findFirst().get();
 
         assertNotNull(result);
@@ -125,7 +125,7 @@ public class ResultSetTreeMapperColumnTest {
         setupColumn(rs, metaData, 2, "db_name", "x2", "Eva", String.class);
 
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetTreeMapper.of(Employee.class, service);
+        var mapper = ResultSetMapper.of(Employee.class, service);
         var result = mapper.convert(rs, "id", "name").findFirst().get();
 
         assertNotNull(result);
@@ -146,7 +146,7 @@ public class ResultSetTreeMapperColumnTest {
         setupColumn(rs, metaData, 1, "xx1", "yy1", 50, Integer.class);
 
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetTreeMapper.of(Employee.class, service);
+        var mapper = ResultSetMapper.of(Employee.class, service);
 
         assertThrows(NoSuchElementException.class, () -> {
             mapper.convert(rs).findFirst();

@@ -18,11 +18,13 @@ package org.ujorm.mapper.core;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
+import org.ujorm.core.SnapshotProvider;
 import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.mapper.impl.Context;
 import org.ujorm.mapper.model.ColumnModel;
 import org.ujorm.mapper.model.TableModel;
 import org.ujorm.mapper.model.TableModelBuilder;
+import org.ujorm.mapper.utils.MultiMap;
 import org.ujorm.mapper.utils.Tools;
 
 import java.sql.Connection;
@@ -194,6 +196,34 @@ public class EntityManager<D, V> {
             columns.add(tableModel.getColumn(prop));
         }
         return update(domain, columns);
+    }
+
+    /**
+     * Updates a domain object.
+     * @param domains Domain objects to update.
+     * @return The number of affected rows.
+     */
+    public <D2 extends SnapshotProvider> long update(@NotNull D2... domains) {
+        var keyMap =  new MultiMap<List<Key<D,?>>, D>(domainHandler.count());
+        for (D2 domain_ : domains) {
+            if (this.domainHandler.getDomainClass().isInstance(domain_)) {
+                D domain1 = (D) domain_;
+                D domain2 = (D) domain_.readSnapshot();
+                var changes = Tools.findChanges(domain1, domain2, domainHandler);
+                keyMap.put(changes, domain1);
+            } else {
+                var msg = domain_ == null
+                        ? "Null values are not supported."
+                        : "Only domains type of %s are supported: "
+                        .formatted(domainHandler.getDomainClass().getSimpleName());
+                throw new IllegalArgumentException(msg);
+            }
+        }
+        var result = 0L;
+        for (var keys : keyMap.keySet()) {
+            // update(keys, keyMap.get(keys)); TODO
+        }
+        return 0L;
     }
 
     /**
