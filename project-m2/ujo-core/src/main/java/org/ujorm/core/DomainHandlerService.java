@@ -28,6 +28,7 @@ public class DomainHandlerService {
     }
 
     @NotNull
+    @SuppressWarnings("unchecked")
     private <D> DomainHandler<D> createHandler(Class<D> domainClass) {
         var handlerClassName = ClassName.ofGenerated(domainClass);
         var handlerClass = handlerClassName.classForName();
@@ -46,6 +47,7 @@ public class DomainHandlerService {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private <D> Class<D> createClass(Class<D> domainClass, ClassName targetClassName) {
         verifyClass(domainClass);
         var meta = DomainModel.of(domainClass);
@@ -56,7 +58,7 @@ public class DomainHandlerService {
 
     /** Verify the class is a record or has a non-argument constructor */
     private void verifyClass(Class<?> domainClass) throws IllegalArgumentException {
-        final var beanConstructor = Arrays
+        var beanConstructor = Arrays
                 .stream(domainClass.getConstructors())
                 .anyMatch(c -> c.getParameterCount() == 0);
         if (!domainClass.isRecord() && !beanConstructor) {
@@ -65,26 +67,22 @@ public class DomainHandlerService {
     }
 
     /** Convert Ujo object from the domain */
+    @SuppressWarnings("unchecked")
     public <D> AbstractUjo<D> toUjo(D domainObject) {
-        if (domainObject == null) return null;
-        var handler = (DomainHandler<D>) getHandler(domainObject.getClass());
+        if (domainObject == null) {
+            return null;
+        }
+        var handler = getHandler((Class<D>) domainObject.getClass());
         return AbstractUjo.of(domainObject, handler);
     }
 
-    /**
-     * Create new domain class and set values if any.
-     * Then, using its instance, creates the required domain object.
-     */
+    /** Create new domain object and set values if any. */
     public <D> D createDomainInstance(@NotNull Class<D> type, Object... values) {
         return getHandler(type).newDomain(values);
     }
 
-    /**
-     * Create new domain class and set values if any.
-     * Then, using its instance, creates the required domain object.
-     */
+    /** Create new domain object type of the AbstractUjo. */
     public <D> AbstractUjo<D> createUjoInstance(@NotNull Class<D> type) {
         return AbstractUjo.of(getHandler(type));
     }
-
 }
