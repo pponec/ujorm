@@ -2,6 +2,7 @@ package org.ujorm.mapper.jdbc;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.generator.ClassName;
 import org.ujorm.mapper.impl.Config;
@@ -34,6 +35,10 @@ public class ResultSetMapperService {
     @NotNull
     private <D> ResultSetMapper<D> createMapper(Class<D> domainModel) {
        throw new UnsupportedOperationException("TODO");
+    }
+
+    public static final ResultSetMapperService of() {
+        return new ResultSetMapperService(DomainHandlerProvider.provider(), new Config());
     }
 
 }
