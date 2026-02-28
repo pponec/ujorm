@@ -27,6 +27,9 @@ public class Config implements MapperContext {
 
     private Map<Class<?>, Function<String,?>> converterMap = DEFAULT_CONVERTER_MAP;
 
+    /** Maximu size of the cache in the ResultSet Mapper */
+    private int maxCacheSize = 512;
+
     @NotNull
     static final Map<Class<?>, Function<String,?>> initConverterMap() {
         var result = new MapBuilder();
