@@ -16,23 +16,15 @@ public final class ResultSetMapperProvider {
      * Holder class for lazy-loading the singleton instance.
      */
     private static final class Holder {
-        private static final ResultSetMapper INSTANCE = new ResultSetMapper();
+        private static final ResultSetMapperService INSTANCE = ResultSetMapperService.of();
     }
 
     /**
      * Provides the DomainHandlerProvider instance.
      * @return DomainHandlerProvider
      */
-    public static ResultSetMapper provider() {
+    public static ResultSetMapperService provider() {
         return Holder.INSTANCE;
     }
 
-    /**
-     * Gets a handler for the specified class.
-     * @param clazz An original domain class
-     * @return DomainHandler
-     */
-    public static <D> ResultSetMapper<D> getHandler(@NotNull Class<D> clazz) {
-        return provider().getHandler(clazz);
-    }
 }
