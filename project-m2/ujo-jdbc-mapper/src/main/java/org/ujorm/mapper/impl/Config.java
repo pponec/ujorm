@@ -30,6 +30,8 @@ public class Config implements MapperContext {
     /** Maximu size of the cache in the ResultSet Mapper */
     private int maxCacheSize = 512;
 
+    private boolean printSql = true;
+
     @NotNull
     static final Map<Class<?>, Function<String,?>> initConverterMap() {
         var result = new MapBuilder();

@@ -21,6 +21,7 @@ class DomainPropertyModelTest {
 
         // Check total count of properties
         assertEquals(6, properties.size());
+        assertNotEquals("_snapshot", properties.get(properties.size() - 1).propertyName());
 
         // Test "id" property (PK, NotNull)
         var idProp = findProperty(properties, "id");

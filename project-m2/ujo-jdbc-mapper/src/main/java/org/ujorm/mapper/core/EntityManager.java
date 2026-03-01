@@ -24,7 +24,6 @@ import org.ujorm.mapper.impl.Context;
 import org.ujorm.mapper.model.ColumnModel;
 import org.ujorm.mapper.model.TableModel;
 import org.ujorm.mapper.model.TableModelBuilder;
-import org.ujorm.mapper.utils.BitSet;
 import org.ujorm.mapper.utils.StatementCache;
 import org.ujorm.mapper.utils.Tools;
 
@@ -33,7 +32,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -54,7 +52,7 @@ public class EntityManager<D, V> {
     private final TableModel<D> tableModel;
     private final ColumnModel<D, V> pkColumn;
     private final Key<D, V> pk;
-    private final String quote;
+    private final char quote;
 
     /** Size of batch for multi-insert and delete.
      * Note: This attribute is not fully implemented yet. */
@@ -78,7 +76,7 @@ public class EntityManager<D, V> {
         this.pkColumn = (ColumnModel<D, V>) tableModel.pk();
         this.pk = pkColumn.key();
         this.batchSize = batchSize;
-        this.quote = Tools.getQuoteIdentifier(connection);
+        this.quote = tableModel.jdbc().quoteChar();
     }
 
     /** Inserts multiple domain objects using a loop.
@@ -154,13 +152,16 @@ public class EntityManager<D, V> {
         ps.setObject(index, getPrimaryKeyValue(domain), pkColumn.jdbcType());
     }
 
-        /** Reads a domain object by its identifier. */
+    /** Reads a domain object by its identifier. */
     public D read(@NotNull V id) {
         var sql = new StringBuilder(128)
                 .append("SELECT \n");  // "*"
         for (var column : this.tableModel.columns()) {
             sql.append(column.index() > 0 ? ", ": "  ");
-            sql.append(column.name()).append(" AS ").append(column.property()).append("\n");
+            sql.append(column.name())
+                    .append(" AS ")
+                    .append(quote).append(column.property()).append(quote)
+                    .append("\n");
         }
         sql.append(" FROM ")
                 .append(domainHandler.getDatabaseTable())
@@ -202,34 +203,36 @@ public class EntityManager<D, V> {
 
     /** Updates multiple domain objects using batching and collision detection. */
     @SafeVarargs
-    public final <D2 extends SnapshotProvider> long update(@NotNull D2... domains) {
+    public final <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull D2... domains) {
         if (domains == null || domains.length == 0) {
             return 0L;
         }
-
         var result = 0L;
         var activeIds = new java.util.HashSet<V>();
 
         try (var cache = new StatementCache()) {
-            for (var domain_ : domains) {
+            for (var j = 0; j < domains.length; j++) {
+                var domain_ = domains[j];
                 if (!this.domainHandler.getDomainClass().isInstance(domain_)) {
                     var msg = domain_ == null
-                            ? "Null values are not supported."
-                            : "Only domains type of %s are supported: "
-                            .formatted(domainHandler.getDomainClass().getSimpleName());
+                            ? "The entity at index %s must not be null.".formatted(j)
+                            : "The entity at index %s must be of type %s.".formatted(j,
+                            domainHandler.getDomainClass().getSimpleName());
                     throw new IllegalArgumentException(msg);
                 }
-
-                var domain1 = (D) domain_;
-                var domain2 = (D) domain_.readSnapshot();
-                var changes = Tools.findChanges(domain1, domain2, domainHandler);
+                var domain = (D) domain_;
+                var snapshot = (D) domain_.readSnapshot();
+                if (snapshot == null) {
+                    throw new IllegalStateException(("Missing snapshot for entity at index %s. " +
+                            "Call saveSnapshot() before update.").formatted(j));
+                }
+                var changes = Tools.findChanges(domain, snapshot, domainHandler);
                 var modifiedIdx = changes.getActive();
 
                 if (modifiedIdx.length == 0) {
                     continue;
                 }
-
-                var id = getPrimaryKeyValue(domain1);
+                var id = getPrimaryKeyValue(domain);
 
                 // Flush on ID collision to prevent DB deadlocks and preserve update order
                 if (activeIds.contains(id)) {
@@ -241,29 +244,26 @@ public class EntityManager<D, V> {
                 for (int i = 0; i < modifiedIdx.length; i++) {
                     modifiedKeys[i] = domainHandler.getKey(modifiedIdx[i]);
                 }
-
                 var statement = cache.get(changes);
                 if (statement == null) {
                     var sql = buildUpdateSql(modifiedKeys);
+                    if (context.config().isPrintSql()) {
+                        LOGGER.info(sql);
+                    }
                     statement = connection.prepareStatement(sql);
                     result += cache.put(changes, statement);
 
                     if (cache.size() == 1) {
-                        // The cache was flushed due to capacity limits
-                        activeIds.clear();
+                        activeIds.clear(); // The cache was flushed due to capacity limits
                     }
                 }
-
-                result += updateInternal(statement, domain1, modifiedKeys);
+                result += updateInternal(statement, domain, modifiedKeys);
                 activeIds.add(id);
             }
-
-            // Flush any remaining statements before the AutoCloseable block finishes
-            result += cache.flush();
+            result += cache.flush(); // Flush any remaining statements before the AutoCloseable block finishes
         } catch (SQLException e) {
             throw new IllegalStateException("Batch update failed", e);
         }
-
         return result;
     }
 
@@ -292,10 +292,10 @@ public class EntityManager<D, V> {
                 .append(domainHandler.getDatabaseTable());
 
         for (int i = 0; i < keys.length; i++) {
-            var column = tableModel.getColumn(keys[i].name());
+            var column = tableModel.getColumn(keys[i].index());
             var name = column.name();
             sql.append(i == 0 ? " SET " : ", ");
-            sql.append(name.charAt(0) == '`' ? name.replace("`", quote) : name).append(" = ?");
+            sql.append(name).append(" = ?");
         }
 
         sql.append(" WHERE ").append(pkColumn.name()).append(" = ?");
@@ -348,26 +348,27 @@ public class EntityManager<D, V> {
     protected <R> R run(final CharSequence sql, final boolean returnGeneratedKeys, final SqlFunction<PreparedStatement, R> fun) {
         try (var ps = !returnGeneratedKeys
             ? connection.prepareStatement(sql.toString())
-            : tableModel.isOracleDb()
+            : tableModel.jdbc().isOracleDb()
             ? connection.prepareStatement(sql.toString(), new String[]{pkColumn.name()})
             : connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)
         ) {
-            LOGGER.info(sql::toString);
+            if (context.config().isPrintSql()) {
+                LOGGER.info(sql::toString);
+            }
             return fun.applyValue(ps);
         } catch (Exception ex) {
             throw (ex instanceof RuntimeException re) ? re : new IllegalStateException(ex);
         }
     }
 
-    /** Write column name and quote it. */
+    /** Write column name. TODO.pop: Quote it? */
     protected void write(final StringBuilder writer, final List<ColumnModel<D,Object>> columns, final String separator) {
         for (int i = 0, max = columns.size(); i < max; i++) {
             if (i > 0) {
                 writer.append(separator);
             }
             final var column = columns.get(i);
-            final var name = column.name();
-            writer.append(name.charAt(0) == '`' ? name.replace("`", quote) : name);
+            writer.append(column.name());
         }
     }
 

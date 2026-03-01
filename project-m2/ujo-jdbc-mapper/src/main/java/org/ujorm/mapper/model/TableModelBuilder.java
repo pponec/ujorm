@@ -20,7 +20,7 @@ import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.core.generator.TableIdentifier;
 import org.ujorm.mapper.impl.Context;
-import org.ujorm.tools.common.StreamUtils;
+import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,12 +42,13 @@ public class TableModelBuilder<D> {
                 .map(key -> column(key))
                 .toList();
         var pk = findPk(columns);
-        var propertyMap = StreamUtils.map(ColumnModel::property, columns);
         var insertedColumns = columns.stream()
                 .filter(c -> c != pk)
                 .toList();
         var isOracleDb = isOracle(initConnection);
-        return new TableModel(handler, pk, columns, propertyMap, dbModel, insertedColumns, isOracleDb);
+        var quoteChar = getIdentifierQuoteChar(initConnection);
+        var jdbc = new Jdbc(isOracleDb, quoteChar);
+        return new TableModel(handler, pk, columns, dbModel, insertedColumns, jdbc);
     }
 
     /**
@@ -68,6 +69,21 @@ public class TableModelBuilder<D> {
             LOGGER.log(Level.SEVERE, "Oracle test faild", ex);
         }
         return result;
+    }
+
+    /**
+     * Determines if the provided connection is directed to an Oracle database.
+     *
+     * @param connection The database connection to check.
+     * @return true if the database product name contains "oracle", false otherwise.
+     */
+    protected char getIdentifierQuoteChar(Connection connection) {
+        try {
+            var quoteString = connection.getMetaData().getIdentifierQuoteString();
+            return (quoteString != null && !quoteString.isBlank()) ? quoteString.charAt(0) : '"';
+        } catch (SQLException ex) {
+            throw SQLExceptionBuilder.build("Failed to retrieve identifier quote string from metadata", ex);
+        }
     }
 
     /** Map a lower case column name to the original column name. */

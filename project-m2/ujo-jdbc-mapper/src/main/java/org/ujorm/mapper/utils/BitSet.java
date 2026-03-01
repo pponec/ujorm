@@ -1,6 +1,7 @@
 package org.ujorm.mapper.utils;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /** A lightweight, fixed-size bit vector backed by a long array for fast bit manipulations. */
 public final class BitSet {
@@ -82,6 +83,13 @@ public final class BitSet {
     @Override
     public int hashCode() {
         return Arrays.hashCode(this.words);
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.stream(getActive())
+                .mapToObj(String::valueOf)
+                .collect(Collectors.joining(","));
     }
 
     /** Factory method to create a new instance . */
