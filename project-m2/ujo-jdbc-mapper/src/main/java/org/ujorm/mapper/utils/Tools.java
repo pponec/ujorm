@@ -55,15 +55,6 @@ public class Tools {
         return result;
     }
 
-    /** Quote Identifier of the current database */
-    public static String getQuoteIdentifier(Connection connection) {
-        try {
-            return connection.getMetaData().getIdentifierQuoteString();
-        } catch (SQLException ex) {
-            throw SQLExceptionBuilder.build(ex);
-        }
-    }
-
     /** Build a property change set */
     @NotNull
     public static <D> BitSet findChanges(@NotNull D domain, @NotNull D snapshot, @NotNull DomainHandler<D> handler) {
@@ -71,7 +62,7 @@ public class Tools {
             var msg = "The %s object type of %s is required".formatted(
                     domain == null ? "domain" : "snapshot",
                     handler.getDomainClass().getSimpleName());
-            throw new IllegalStateException(msg);
+            throw new IllegalArgumentException(msg);
         }
 
         var keys = handler.getKeyList();

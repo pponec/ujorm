@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Transient;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Modifier;
@@ -125,15 +126,15 @@ class DomainModelBuilder {
     /** Converts a Java Bean property name to a snake_case database column name. */
     private String buildDbName(@NotNull String propertyName) {
         if (propertyName == null || propertyName.isEmpty()) return propertyName;
-        var resultBuilder = new StringBuilder();
+        var result = new StringBuilder();
         for (var i = 0; i < propertyName.length(); i++) {
             var c = propertyName.charAt(i);
             if (Character.isUpperCase(c) && i > 0) {
-                resultBuilder.append('_');
+                result.append('_');
             }
-            resultBuilder.append(Character.toLowerCase(c));
+            result.append(Character.toLowerCase(c));
         }
-        return resultBuilder.toString();
+        return result.toString();
     }
 
     /**
@@ -144,15 +145,14 @@ class DomainModelBuilder {
      * @param suffix The capitalized property name.
      * @return The getter method name, or null if none is found.
      */
+    @Nullable
     private String findGetter(Class<?> clazz, Class<?> type, String suffix) {
-        var isMethod = "is" + suffix;
+        if (type == boolean.class) {
+            var isMethod = "is" + suffix;
+            if (findMethod(clazz, isMethod) != null) return isMethod;
+        }
         var getMethod = "get" + suffix;
-        var hasIs = findMethod(clazz, isMethod, (Class<?>[]) null) != null;
-        var hasGet = findMethod(clazz, getMethod, (Class<?>[]) null) != null;
-
-        if (type == boolean.class && hasIs) return isMethod;
-        if (hasGet) return getMethod;
-        return hasIs ? isMethod : null;
+        return (findMethod(clazz, getMethod) != null) ? getMethod : null;
     }
 
     /**
@@ -171,9 +171,7 @@ class DomainModelBuilder {
         }
     }
 
-    /**
-     * Safely finds a declared field by name.
-     */
+    /** Safely finds a declared field by name. */
     private java.lang.reflect.Field findField(Class<?> clazz, String name) {
         try {
             return clazz.getDeclaredField(name);
@@ -194,17 +192,16 @@ class DomainModelBuilder {
                 : Character.toUpperCase(str.charAt(0)) + str.substring(1);
     }
 
-
-    /**
-     * Helper class to detect if the JVM returns fields in reversed order.
-     */
+    /** Helper class to detect if the JVM returns fields in reversed order. */
     public static class FieldOrderInspector {
         @SuppressWarnings("unused")
         private int firstField = 1;
         @SuppressWarnings("unused")
         private int secondField = 2;
 
-        /** Checks if JVM returns fields in reversed order.
+        /**
+         * Checks if JVM returns fields in reversed order.
+         *
          * @return True if fields are reversed, false otherwise.
          */
         public static boolean revertedOrder() {

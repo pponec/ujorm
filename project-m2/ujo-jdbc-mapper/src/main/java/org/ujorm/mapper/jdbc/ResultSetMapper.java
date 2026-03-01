@@ -15,17 +15,48 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
- * Maps a database ResultSet to a hierarchical Bean structure using a pre-compiled mapping tree.
+ * Maps a database {@link java.sql.ResultSet} to a hierarchical Bean structure using a pre-compiled mapping tree.
+ * <p>
+ * <b>How Mapping Works:</b><br>
+ * The mapper converts each row of a {@code ResultSet} into a domain object of type {@code D}.
+ * It uses column labels (which may contain dot notation, e.g., "address.city") to navigate,
+ * instantiate, and populate the hierarchical relation tree. To ensure high performance, it translates
+ * the flat column definitions into an internal {@code MappingNode} tree structure. This tree is
+ * cached and reused for subsequent result sets that share the exact same column layout.
+ * </p>
+ * <p>
+ * <b>Default Behavior:</b><br>
+ * By default, the mapper dynamically reads {@link java.sql.ResultSetMetaData} to extract column labels
+ * and detect database column markers. The constructed mapping trees are stored in an internal
+ * concurrent cache with a default maximum capacity of 512 entries.
+ * </p>
+ * <p>
+ * <b>Customizing Behavior & Performance Impact:</b><br>
+ * <ul>
+ * <li><b>Explicit Column Labels:</b> You can provide explicit column labels or {@link org.ujorm.core.Key}s
+ * via the {@code convert} methods.
+ * <i>Speed:</i> This completely bypasses the JDBC metadata query. Since extracting metadata can
+ * be a heavy network or processing operation depending on the JDBC driver, providing explicit labels
+ * significantly speeds up the initialization phase.
+ * <i>Memory:</i> Reduces temporary object allocations by avoiding metadata instantiation.</li>
+ * <li><b>Cache Size:</b> The cache size can be adjusted using the {@code ujorm.mapper.cache.size}
+ * system property or the specific factory method {@code of(Class, DomainHandlerService, int)}.
+ * <i>Speed:</i> A properly sized cache prevents the costly repetitive parsing of dot-notation paths
+ * and rebuilding of mapping trees. If the application executes more unique queries than the cache
+ * capacity, the entire cache is cleared, causing a temporary performance degradation.
+ * <i>Memory:</i> Larger caches hold more mapping structures in the heap. Tuning this value allows
+ * you to balance between fast mapping execution and memory consumption.</li>
+ * </ul>
  *
  * @param <D> the root domain type
  */
@@ -44,10 +75,8 @@ public class ResultSetMapper<D> {
     private final DomainHandlerService service;
     @NonNull
     private final DomainHandler<D> rootHandler;
-
-    private final int maxCacheSize;
-    private final ConcurrentMap<CacheKey, MappingNode<D>> cache;
-    private volatile Instant cacheCleared = Instant.now();
+    @NonNull
+    private final MappingCache<D> cache;
 
     /**
      * Constructs the mapper.
@@ -64,8 +93,7 @@ public class ResultSetMapper<D> {
         this.domainClass = domainClass;
         this.service = service;
         this.rootHandler = service.getHandler(domainClass);
-        this.maxCacheSize = maxCacheSize;
-        this.cache = new ConcurrentHashMap<>();
+        this.cache = new MappingCache<>(maxCacheSize);
     }
 
     /**
@@ -78,25 +106,14 @@ public class ResultSetMapper<D> {
      */
     @NotNull
     public Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columnLabels) {
-        return rs.map(row -> {
+        return rs.map(resultSet -> {
             try {
-                var extracted = getAliasColumns(row, columnLabels);
-                var key = new CacheKey(extracted.labels(), extracted.flags());
-
-                if (cache.size() >= maxCacheSize) {
-                    var msg = String.join(" ",
-                            "Mapping cache exceeded the limit of %d, clearing.",
-                            "Consider increasing '%s' to avoid performance degradation."
-                    ).formatted(maxCacheSize, MAPPER_CACHE_SIZE);
-                    LOGGER.log(Level.WARNING, msg);
-                    cache.clear();
-                    cacheCleared = Instant.now();
-                }
-
-                var node = cache.computeIfAbsent(key, k ->
-                        buildMappingTree(this.domainClass, k.flags(), k.labels()));
+                var extracted = getLabelColumns(resultSet, columnLabels);
+                var key = new CacheKey(extracted);
+                var node = cache.getOrCreate(key, k ->
+                        buildMappingTree(k.columns()));
                 var result = rootHandler.newDomain();
-                populateNode(node, result, row);
+                populateNode(node, result, resultSet);
                 return result;
             } catch (SQLException ex) {
                 throw SQLExceptionBuilder.build("Failed to map ResultSet row to domain object", ex);
@@ -110,7 +127,6 @@ public class ResultSetMapper<D> {
      * @param rs the ResultSet to process
      * @param columnLabels optional explicitly defined column labels
      * @return a stream of populated domain objects
-     * @throws NoSuchElementException if explicit columns don't match the ResultSet metadata
      */
     @NotNull
     public Stream<D> convert(@NotNull ResultSet rs, @Nullable CharSequence... columnLabels) {
@@ -123,7 +139,6 @@ public class ResultSetMapper<D> {
      * @param rs A stream of ResultSets to process
      * @param columnLabels Explicitly defined column keys (labels)
      * @return A stream of populated domain objects
-     * @throws NoSuchElementException If explicit columns do not match the ResultSet metadata
      */
     @SafeVarargs
     @NotNull
@@ -133,238 +148,228 @@ public class ResultSetMapper<D> {
 
     /** Get the last timestamp of the cache clearing */
     public Instant getCacheCleared() {
-        return cacheCleared;
+        return cache.getLastCleared();
     }
 
     /**
      * Recursively populates the target bean and its relations.
-     *
-     * @param node the current mapping node
-     * @param target the target bean to populate
-     * @param rs the database result set
-     * @param <T> the type of the target bean
-     * @throws SQLException if a database error occurs
      */
-    private <T> void populateNode(MappingNode<T> node, T target, ResultSet rs) throws SQLException {
+    private <D2> void populateNode(MappingNode<D2> node, D2 target, ResultSet rs) throws SQLException {
         for (var mapping : node.directMappings()) {
-            var value = extractValue(rs, mapping);
+            var value = rs.getObject(mapping.columnIndex(), mapping.key().type());
             mapping.key().setValue(target, value);
         }
 
         for (var relation : node.relations()) {
             var childKey = relation.childKey();
-            var childNode = relation.childNode();
-
             var childInstance = childKey.getValue(target);
             if (childInstance == null) {
                 childInstance = service.createDomainInstance(childKey.type());
                 childKey.setValue(target, childInstance);
             }
-
-            populateNode(childNode, childInstance, rs);
+            populateNode(relation.childNode(), childInstance, rs);
         }
-    }
-
-    /**
-     * Extracts a value from the ResultSet based on the mapping definition using column index.
-     *
-     * @param rs the result set
-     * @param mapping the direct mapping containing the column index and key
-     * @param <V> the type of the value
-     * @return the extracted value
-     * @throws SQLException if a database error occurs
-     */
-    private <V> V extractValue(ResultSet rs, DirectMapping<?, V> mapping) throws SQLException {
-        return rs.getObject(mapping.columnIndex(), mapping.key().type());
     }
 
     /**
      * Builds the internal tree structure from the flat column definitions.
-     *
-     * @param rootClass the root domain class
-     * @param byColumnFlags array of boolean flags indicating if mapping should use byColumn strategy
-     * @param columnLabels the column labels
-     * @return the root mapping node
+     */
+    private MappingNode<D> buildMappingTree(@NotNull List<ColumnMetadata> columns) {
+        var root = new MappingNode<D>();
+        for (var i = 0; i < columns.size(); i++) {
+            var col = columns.get(i);
+            var parts = SPLITTER.split(col.label(), SPLITTER_INIT_CAPACITY);
+            buildPath(root, this.domainClass, parts, i + 1, col.isDbColumn());
+        }
+        return root;
+    }
+
+    /**
+     * Internal method to build a path for a single column.
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private MappingNode<D> buildMappingTree(@NonNull Class<D> rootClass, @Nullable boolean[] byColumnFlags, @NotNull CharSequence... columnLabels) {
-        var result = new MappingNode<D>();
+    private void buildPath(MappingNode node, Class<?> currentClass, String[] parts, int colIdx, boolean byColumn) {
+        var currentNode = node;
+        var clazz = currentClass;
 
-        for (var colIndex = 0; colIndex < columnLabels.length; colIndex++) {
-            var label = columnLabels[colIndex].toString();
-            var parts = SPLITTER.split(label, SPLITTER_INIT_CAPACITY);
-            var currentNode = (MappingNode) result;
-            var currentClass = (Class<?>) rootClass;
-            var byColumn = byColumnFlags != null && byColumnFlags[colIndex];
+        for (var i = 0; i < parts.length; i++) {
+            var isLast = (i == parts.length - 1);
+            var key = findKey(clazz, parts[i], byColumn);
 
-            for (var i = 0; i < parts.length; i++) {
-                var part = parts[i];
-                var isLast = (i == parts.length - 1);
-                var key = findKey(currentClass, part, byColumn);
-
-                if (isLast) {
-                    currentNode.directMappings().add(new DirectMapping<>(key, colIndex + 1));
-                } else {
-                    var existingRelation = (RelationMapping) null;
-                    for (var relObj : currentNode.relations()) {
-                        var rel = (RelationMapping) relObj;
-                        if (rel.childKey().name().equals(key.name())) {
-                            existingRelation = rel;
-                            break;
-                        }
-                    }
-
-                    if (existingRelation != null) {
-                        currentNode = existingRelation.childNode();
-                    } else {
-                        var childNode = new MappingNode<>();
-                        currentNode.relations().add(new RelationMapping<>(key, childNode));
-                        currentNode = childNode;
-                    }
-                    currentClass = key.type();
-                }
+            if (isLast) {
+                currentNode.addMapping(key, colIdx);
+            } else {
+                currentNode = currentNode.getOrCreateRelation(key);
+                clazz = key.type();
             }
         }
-
-        return result;
     }
 
     /**
      * Finds a property Key by its name within the given domain class.
-     *
-     * @param domainType the domain class to inspect
-     * @param keyName the name of the property
-     * @param byColumn if true, attempts to search by DB column name first
-     * @param <T> the type of the domain class
-     * @return the property Key
-     * @throws IllegalArgumentException if the key is not found
      */
     @SuppressWarnings("unchecked")
-    private <T> Key<T, Object> findKey(Class<T> domainType, String keyName, boolean byColumn) {
+    private <D2> Key<D2, Object> findKey(Class<D2> domainType, String keyName, boolean byColumn) {
+        var handler = service.getHandler(domainType);
         if (byColumn) {
-            var columnKey = service.getHandler(domainType).getKeyByColumn(keyName, false, null);
+            var columnKey = handler.getKeyByColumn(keyName, false, null);
             if (columnKey != null) {
-                return (Key<T, Object>) columnKey;
+                return (Key<D2, Object>) columnKey;
             }
         }
-        return (Key<T, Object>) service.getHandler(domainType).getKey(keyName);
+        return (Key<D2, Object>) handler.getKey(keyName);
     }
 
-    // --- Inner structures ---
+    // --- Inner classes ---
 
-    /** Represents a node in the mapping tree structure. */
-    private record MappingNode<T>(
-            List<DirectMapping<T, Object>> directMappings,
-            List<RelationMapping<T, Object>> relations
+    /** Cache manager for mapping trees. */
+    private static final class MappingCache<D> {
+        private final int maxCacheSize;
+        private final ConcurrentMap<CacheKey, MappingNode<D>> data = new ConcurrentHashMap<>();
+        private volatile Instant lastCleared = Instant.now();
+
+        private MappingCache(int maxCacheSize) {
+            this.maxCacheSize = maxCacheSize;
+        }
+
+        /** Returns a cached node or creates a new one. */
+        public MappingNode<D> getOrCreate(CacheKey key, Function<CacheKey, MappingNode<D>> builder) {
+            if (data.size() >= maxCacheSize) {
+                checkAndClear();
+            }
+            return data.computeIfAbsent(key, builder);
+        }
+
+        /** Clears the cache if the limit is exceeded. */
+        private synchronized void checkAndClear() {
+            if (data.size() >= maxCacheSize) {
+                var msg = String.join(" ",
+                        "Mapping cache exceeded the limit of %d, clearing.",
+                        "Consider increasing '%s' to avoid performance degradation."
+                ).formatted(maxCacheSize, MAPPER_CACHE_SIZE);
+                LOGGER.log(Level.WARNING, msg);
+                data.clear();
+                lastCleared = Instant.now();
+            }
+        }
+
+        /** Returns the last clear timestamp. */
+        public Instant getLastCleared() {
+            return lastCleared;
+        }
+    }
+
+    /**
+     * Represents a node in the mapping tree structure.
+     * @param <D2> Domain type
+     */
+    private record MappingNode<D2>(
+            /** List of direct column mappings for the current node. */
+            List<DirectMapping<D2, Object>> directMappings,
+            /** List of relation mappings to child nodes. */
+            List<RelationMapping<D2, Object>> relations
     ) {
         public MappingNode() {
             this(new ArrayList<>(), new ArrayList<>());
         }
-    }
 
-    /** Represents a direct mapping from a ResultSet column to a Bean property. */
-    private record DirectMapping<T, V>(Key<T, V> key, int columnIndex) {}
+        /** Adds a direct mapping to this node. */
+        public void addMapping(Key<D2, Object> key, int columnIndex) {
+            directMappings.add(new DirectMapping<>(key, columnIndex));
+        }
 
-    /** Represents a relation mapping to a child Bean. */
-    private record RelationMapping<PARENT, CHILD>(Key<PARENT, CHILD> childKey, MappingNode<CHILD> childNode) {}
-
-    /** Holds extracted column labels and their byColumn flags. */
-    private record ExtractedColumns(String[] labels, boolean[] flags) {}
-
-    /** Cache key based on column labels and mapping flags. */
-    private record CacheKey(String[] labels, boolean[] flags) {
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o instanceof CacheKey that) {
-                return Arrays.equals(this.labels, that.labels)
-                    && Arrays.equals(this.flags, that.flags);
+        /** Gets an existing relation or creates a new one. */
+        @SuppressWarnings("unchecked")
+        public <C> MappingNode<C> getOrCreateRelation(Key<D2, C> key) {
+            for (var rel : relations) {
+                if (rel.childKey().name().equals(key.name())) {
+                    return (MappingNode<C>) rel.childNode();
+                }
             }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return 31 * Arrays.hashCode(labels) + Arrays.hashCode(flags);
+            var childNode = new MappingNode<C>();
+            relations.add(new RelationMapping(key, childNode));
+            return childNode;
         }
     }
-
-    // --- Statics ---
 
     /**
-     * Extracts column labels and their flags from the ResultSet metadata or uses explicit ones.
+     * Represents a direct mapping from a ResultSet column to a Bean property.
      *
-     * @param rs the database result set
-     * @param explicitLabels explicit labels provided by user, can be null
-     * @return the extracted columns payload
-     * @throws SQLException if a database error occurs
+     * @param <D2> Domain type
+     * @param <V> Value type
      */
-    private static ExtractedColumns getAliasColumns(ResultSet rs, CharSequence[] explicitLabels) throws SQLException {
+    private record DirectMapping<D2, V>(
+            /** Property key */
+            Key<D2, V> key,
+            /** Column index */
+            int columnIndex
+    ) {}
+
+    /**
+     * Represents a relation mapping to a child Bean.
+     *
+     * @param <D2> Domain type
+     * @param <CHILD> Child type
+     */
+    private record RelationMapping<D2, CHILD>(
+            /** Key for the child relation */
+            Key<D2, CHILD> childKey,
+            /** Mapping node for the child */
+            MappingNode<CHILD> childNode
+    ) {}
+
+    /** Metadata for a single column. */
+    private record ColumnMetadata(
+            /** Column label. */
+            String label,
+            /** Is it a database column name? */
+            boolean isDbColumn
+    ) {}
+
+    /** Cache key based on column metadata. */
+    private record CacheKey(
+            /** List of column metadata */
+            List<ColumnMetadata> columns
+    ) {}
+
+    // --- Static methods ---
+
+    /** Extracts column labels and markers from the ResultSet metadata or uses explicit ones. */
+    private static List<ColumnMetadata> getLabelColumns(ResultSet rs, CharSequence... explicitLabels) throws SQLException {
+        var result = new ArrayList<ColumnMetadata>();
         if (explicitLabels != null && explicitLabels.length > 0) {
             var metaCount = rs.getMetaData().getColumnCount();
             if (explicitLabels.length != metaCount) {
                 throw new IllegalArgumentException("Column count mismatch between labels and ResultSet.");
             }
-            var labels = new String[explicitLabels.length];
-            var flags = new boolean[explicitLabels.length];
-            for (var i = 0; i < explicitLabels.length; i++) {
-                labels[i] = explicitLabels[i].toString();
-                flags[i] = false;
+            for (var label : explicitLabels) {
+                result.add(new ColumnMetadata(label.toString(), false));
             }
-            return new ExtractedColumns(labels, flags);
+            return result;
         }
 
         var metaData = rs.getMetaData();
         var columnCount = metaData.getColumnCount();
-        var labels = new String[columnCount];
-        var flags = new boolean[columnCount];
-
         for (var i = 1; i <= columnCount; i++) {
             var label = metaData.getColumnLabel(i);
             var name = metaData.getColumnName(i);
-            labels[i - 1] = label;
-            flags[i - 1] = label != null && label.equalsIgnoreCase(name);
+            var isDb = label != null && label.equalsIgnoreCase(name);
+            result.add(new ColumnMetadata(label, isDb));
         }
-        return new ExtractedColumns(labels, flags);
+        return result;
     }
 
-    /**
-     * Factory method to create a new instance with a custom cache size.
-     *
-     * @param domainClass the root domain class
-     * @param service the domain handler service
-     * @param maxCacheSize the maximum number of mapping trees to cache
-     * @param <D> the root domain type
-     * @return a new instance of ResultSetTreeMapper
-     */
-    public static <D> ResultSetMapper<D> of(
-            @NonNull Class<D> domainClass,
-            @NonNull DomainHandlerService service,
-            int maxCacheSize) {
+    /** Factory method to create a new instance with a custom cache size. */
+    public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass, @NonNull DomainHandlerService service, int maxCacheSize) {
         return new ResultSetMapper<>(domainClass, service, maxCacheSize);
     }
 
-    /**
-     * Factory method to create a new instance with default cache size.
-     *
-     * @param domainClass the root domain class
-     * @param service the domain handler service
-     * @param <D> the root domain type
-     * @return a new instance of ResultSetTreeMapper
-     */
-    public static <D> ResultSetMapper<D> of(
-            @NonNull Class<D> domainClass,
-            @NonNull DomainHandlerService service) {
+    /** Factory method to create a new instance with default cache size. */
+    public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass, @NonNull DomainHandlerService service) {
         return of(domainClass, service, DEFAULT_CACHE_SIZE);
     }
 
-    /**
-     * Factory method to create a new instance with default service and cache size.
-     *
-     * @param domainClass the root domain class
-     * @param <D> the root domain type
-     * @return a new instance of ResultSetTreeMapper
-     */
+    /** Factory method to create a new instance with default service and cache size. */
     public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass) {
         return of(domainClass, DomainHandlerProvider.provider(), DEFAULT_CACHE_SIZE);
     }

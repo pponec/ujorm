@@ -5,8 +5,12 @@ import org.jetbrains.annotations.NotNull;
 /** Interface for cloning and managing object snapshots. */
 public interface Snapshotable<D> extends Cloneable, SnapshotProvider<D> {
 
-    /** Save a shallow copy of the current state internally */
-    void saveSnapshot() throws IllegalStateException;
+    /**
+     * Save a shallow copy of the current state internally.
+     * @return The current instance for method chaining
+     * @throws IllegalStateException If the snapshot cannot be created
+     */
+    D saveSnapshot() throws IllegalStateException;
 
     /**
      * Creates a shallow copy or throws an exception.

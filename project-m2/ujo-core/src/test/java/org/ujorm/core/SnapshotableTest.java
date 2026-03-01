@@ -51,8 +51,9 @@ class SnapshotableTest {
 
         /** Save a shallow copy of the current state internally */
         @Override
-        public void saveSnapshot() {
+        public Employee saveSnapshot() {
             this._snapshot = clone();
+            return this;
         }
 
         /** Get the previously saved snapshot of the object */

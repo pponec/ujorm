@@ -84,4 +84,19 @@ public class BitSetTest {
         assertNotEquals(bitSet1, bitSet3);
         assertEquals(bitSet1.hashCode(), bitSet2.hashCode());
     }
+
+    /** Tests equality and hash code contracts for use in HashMaps. */
+    @Test
+    void testToString() {
+        var bitSet = BitSet.of(10);
+
+        bitSet.setValue(2, true);
+        bitSet.setValue(4, true);
+        assertEquals("2,4", bitSet.toString());
+
+        bitSet.setValue(2, true);
+        bitSet.setValue(4, false);
+        bitSet.setValue(9, true);
+        assertEquals("2,9", bitSet.toString());
+    }
 }

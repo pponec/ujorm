@@ -28,22 +28,22 @@ public record TableModel<D>(
         DomainHandler<D> hander,
         ColumnModel<D,Object> pk,
         List<ColumnModel<D,Object>> columns,
-        Map<String, ColumnModel<D,Object>> propertyMap,
         TableIdentifier tableIdentifier,
         /** Inserted columns without PK. */
         List<ColumnModel<D, Object>> insertedColumns,
-        boolean isOracleDb
+        Jdbc jdbc
 ) {
 
     /** Find a column model for the property name */
     @NotNull
     public ColumnModel<D,Object> getColumn(@NotNull String property) {
-        var result = propertyMap.get(property);
-        if (result == null) {
-            var msg = "Property not found: %s.%s".formatted(hander.getDomainClass().getSimpleName(), property);
-            throw new NoSuchElementException(msg);
-        }
-        return result;
+        return columns.get(hander.getKey(property).index());
+    }
+
+    /** Find a column model by the index */
+    @NotNull
+    public ColumnModel<D,Object> getColumn(@NotNull int index) {
+        return columns.get(index);
     }
 
     /** Exclude PK according to the PK value. */
