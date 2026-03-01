@@ -64,9 +64,9 @@ public class Tools {
         }
     }
 
-    /** Build a property change list */
+    /** Build a property change set */
     @NotNull
-    public static <D> List<Key<D,?>> findChanges(@NotNull D domain, @NotNull D snapshot, @NotNull DomainHandler<D> handler) {
+    public static <D> BitSet findChanges(@NotNull D domain, @NotNull D snapshot, @NotNull DomainHandler<D> handler) {
         if (domain == null || snapshot == null) {
             var msg = "The %s object type of %s is required".formatted(
                     domain == null ? "domain" : "snapshot",
@@ -75,12 +75,12 @@ public class Tools {
         }
 
         var keys = handler.getKeyList();
-        var result = new ArrayList<Key<D,?>>(keys.size());
+        var result = BitSet.of(keys.size());
         for (var key : handler.getKeyList()) {
             var v1 = key.getValue(domain);
             var v2 = key.getValue(snapshot);
             if (!Objects.equals(v1, v2)) {
-                result.add(key);
+                result.setValue(key.index(), true);
             }
         }
         return result;

@@ -24,7 +24,8 @@ import org.ujorm.mapper.impl.Context;
 import org.ujorm.mapper.model.ColumnModel;
 import org.ujorm.mapper.model.TableModel;
 import org.ujorm.mapper.model.TableModelBuilder;
-import org.ujorm.mapper.utils.MultiMap;
+import org.ujorm.mapper.utils.BitSet;
+import org.ujorm.mapper.utils.StatementCache;
 import org.ujorm.mapper.utils.Tools;
 
 import java.sql.Connection;
@@ -32,6 +33,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -198,32 +200,106 @@ public class EntityManager<D, V> {
         return update(domain, columns);
     }
 
-    /**
-     * Updates a domain object.
-     * @param domains Domain objects to update.
-     * @return The number of affected rows.
-     */
-    public <D2 extends SnapshotProvider> long update(@NotNull D2... domains) {
-        var keyMap =  new MultiMap<List<Key<D,?>>, D>(domainHandler.count());
-        for (D2 domain_ : domains) {
-            if (this.domainHandler.getDomainClass().isInstance(domain_)) {
-                D domain1 = (D) domain_;
-                D domain2 = (D) domain_.readSnapshot();
-                var changes = Tools.findChanges(domain1, domain2, domainHandler);
-                keyMap.put(changes, domain1);
-            } else {
-                var msg = domain_ == null
-                        ? "Null values are not supported."
-                        : "Only domains type of %s are supported: "
-                        .formatted(domainHandler.getDomainClass().getSimpleName());
-                throw new IllegalArgumentException(msg);
-            }
+    /** Updates multiple domain objects using batching and collision detection. */
+    @SafeVarargs
+    public final <D2 extends SnapshotProvider> long update(@NotNull D2... domains) {
+        if (domains == null || domains.length == 0) {
+            return 0L;
         }
+
         var result = 0L;
-        for (var keys : keyMap.keySet()) {
-            // update(keys, keyMap.get(keys)); TODO
+        var activeIds = new java.util.HashSet<V>();
+
+        try (var cache = new StatementCache()) {
+            for (var domain_ : domains) {
+                if (!this.domainHandler.getDomainClass().isInstance(domain_)) {
+                    var msg = domain_ == null
+                            ? "Null values are not supported."
+                            : "Only domains type of %s are supported: "
+                            .formatted(domainHandler.getDomainClass().getSimpleName());
+                    throw new IllegalArgumentException(msg);
+                }
+
+                var domain1 = (D) domain_;
+                var domain2 = (D) domain_.readSnapshot();
+                var changes = Tools.findChanges(domain1, domain2, domainHandler);
+                var modifiedIdx = changes.getActive();
+
+                if (modifiedIdx.length == 0) {
+                    continue;
+                }
+
+                var id = getPrimaryKeyValue(domain1);
+
+                // Flush on ID collision to prevent DB deadlocks and preserve update order
+                if (activeIds.contains(id)) {
+                    result += cache.flush();
+                    activeIds.clear();
+                }
+
+                var modifiedKeys = new Key[modifiedIdx.length];
+                for (int i = 0; i < modifiedIdx.length; i++) {
+                    modifiedKeys[i] = domainHandler.getKey(modifiedIdx[i]);
+                }
+
+                var statement = cache.get(changes);
+                if (statement == null) {
+                    var sql = buildUpdateSql(modifiedKeys);
+                    statement = connection.prepareStatement(sql);
+                    result += cache.put(changes, statement);
+
+                    if (cache.size() == 1) {
+                        // The cache was flushed due to capacity limits
+                        activeIds.clear();
+                    }
+                }
+
+                result += updateInternal(statement, domain1, modifiedKeys);
+                activeIds.add(id);
+            }
+
+            // Flush any remaining statements before the AutoCloseable block finishes
+            result += cache.flush();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Batch update failed", e);
         }
+
+        return result;
+    }
+
+    /** Binds values to the PreparedStatement and adds it to the current batch. */
+    @SafeVarargs
+    protected final long updateInternal(PreparedStatement statement, D entity, Key<D,?>... keys) throws SQLException {
+        var index = 1;
+        for (var key : keys) {
+            var column = tableModel.getColumn(key.name());
+            var value = key.getValue(entity);
+            if (column.relation() && value != null) {
+                value = column.foreignKey().getValue(value);
+            }
+            statement.setObject(index++, value, column.jdbcType());
+        }
+
+        setPkToStatement(entity, index, statement);
+        statement.addBatch();
         return 0L;
+    }
+
+    /** Builds an SQL UPDATE statement for the specified keys. */
+    private String buildUpdateSql(Key<D, ?>[] keys) {
+        var sql = new StringBuilder(128)
+                .append("UPDATE ")
+                .append(domainHandler.getDatabaseTable());
+
+        for (int i = 0; i < keys.length; i++) {
+            var column = tableModel.getColumn(keys[i].name());
+            var name = column.name();
+            sql.append(i == 0 ? " SET " : ", ");
+            sql.append(name.charAt(0) == '`' ? name.replace("`", quote) : name).append(" = ?");
+        }
+
+        sql.append(" WHERE ").append(pkColumn.name()).append(" = ?");
+        return sql.toString();
     }
 
     /**

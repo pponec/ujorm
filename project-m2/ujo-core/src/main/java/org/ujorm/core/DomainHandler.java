@@ -55,6 +55,18 @@ public interface DomainHandler<D> {
     }
 
     /**
+     * Find key in metamodel.
+     * @param order Property name.
+     * @return Key object.
+     * @throws IndexOutOfBoundsException If not such element was found
+     */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    default Key<D, Object> getKey(@Nullable int order) {
+        return (Key<D, Object>) this.getKeyList().get(order);
+    }
+
+    /**
      * Finds a key by a case-insensitive column name.
      * @param columnName  The case-insensitive name of the column.
      * @param required    Set to true if the result is required (usually throws an exception if not found).
