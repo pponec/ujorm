@@ -6,7 +6,7 @@ import org.ujorm.core.demo.City;
 
 public class JavaSourceGeneratorRecordTest {
 
-    private final boolean printResult = false;
+    private final boolean printResult = !false;
 
     @Test
     void getSourceCode() {
@@ -26,7 +26,7 @@ public class JavaSourceGeneratorRecordTest {
         assertContains(", (java.lang.String) values[1]", src);
 
         assertContains("static final class Key_id extends AbstractKey<City, java.lang.Long> {", src);
-        assertContains("super(order, \"id\", java.lang.Long.class, \"db_id\", true, true);", src);
+        assertContains("super(order, \"id\", java.lang.Long.class, \"db_id\", true, false, true);", src);
         assertContains("throw unsupportedSetter(this);", src);
 
         var clazz = new ClassGenerator().createClass(src, className);

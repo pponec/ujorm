@@ -35,7 +35,7 @@ public Class<City> getDomainClass() {
 /** Key id */
 static final class Key_id extends AbstractKey<City, java.lang.Long> {
     public Key_id(final int order) {
-        super(order, "id", java.lang.Long.class, "id", true, true);
+        super(order, "id", java.lang.Long.class, "id", true, false,true);
     }
     @Override
     public void setValue(@NotNull final City bean, @Nullable final java.lang.Long value) {
@@ -53,7 +53,7 @@ static final class Key_id extends AbstractKey<City, java.lang.Long> {
 /** Key name */
 static final class Key_name extends AbstractKey<City, java.lang.String> {
     public Key_name(final int order) {
-        super(order, "name", java.lang.String.class, "name", false, true);
+        super(order, "name", java.lang.String.class, "name", false, false, true);
     }
     @Override
     public void setValue(@NotNull final City bean, @Nullable final java.lang.String value) {
@@ -71,7 +71,7 @@ static final class Key_name extends AbstractKey<City, java.lang.String> {
 /** Key countryCode */
 static final class Key_countryCode extends AbstractKey<City, java.lang.String> {
     public Key_countryCode(final int order) {
-        super(order, "countryCode", java.lang.String.class, "country_code", false, true);
+        super(order, "countryCode", java.lang.String.class, "country_code", false, false, true);
     }
     @Override
     public void setValue(@NotNull final City bean, @Nullable final java.lang.String value) {
@@ -89,7 +89,7 @@ static final class Key_countryCode extends AbstractKey<City, java.lang.String> {
 /** Key latitude */
 static final class Key_latitude extends AbstractKey<City, java.lang.Double> {
     public Key_latitude(final int order) {
-        super(order, "latitude", double.class, "latitude", false, true);
+        super(order, "latitude", double.class, "latitude", false, false, true);
     }
     @Override
     public void setValue(@NotNull final City bean, @Nullable final java.lang.Double value) {
@@ -107,7 +107,7 @@ static final class Key_latitude extends AbstractKey<City, java.lang.Double> {
 /** Key longitude */
 static final class Key_longitude extends AbstractKey<City, java.lang.Double> {
     public Key_longitude(final int order) {
-        super(order, "longitude", double.class, "longitude", false, true);
+        super(order, "longitude", double.class, "longitude", false, false, true);
     }
     @Override
     public void setValue(@NotNull final City bean, @Nullable final java.lang.Double value) {

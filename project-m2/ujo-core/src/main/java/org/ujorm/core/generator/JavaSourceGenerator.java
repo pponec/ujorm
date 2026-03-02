@@ -84,7 +84,7 @@ public class JavaSourceGenerator {
                 /** Key ${propName} */
                 static final class Key_${propName} extends ${baseKeyClass}<${domainClass}, ${propObjectType}> {
                     public Key_${propName}(final int order) {
-                        super(order, "${propName}", ${propType}.class, "${column}", ${primaryKey}, ${required});
+                        super(order, "${propName}", ${propType}.class, "${column}", ${primaryKey}, ${foreignKey}, ${required});
                     }
                     @Override
                     public void setValue(@NotNull final ${domainClass} bean, @Nullable final ${propObjectType} value) {
@@ -138,6 +138,7 @@ public class JavaSourceGenerator {
                 params.put("getter", prop.getter());
                 params.put("setter", prop.setter());
                 params.put("primaryKey", prop.primaryKey());
+                params.put("foreignKey", prop.foreignKey());
                 params.put("required", prop.required());
                 params.put("column", prop.dbColumName());
             }

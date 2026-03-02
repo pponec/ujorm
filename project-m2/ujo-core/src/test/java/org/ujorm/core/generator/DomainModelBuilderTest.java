@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DomainModelTest {
+class DomainModelBuilderTest {
 
     /**
      * Test resolving all attributes from the @Table annotation.

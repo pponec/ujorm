@@ -35,7 +35,7 @@ public Class<Employee> getDomainClass() {
 /** Key id */
 static final class Key_id extends AbstractKey<Employee, java.lang.Long> {
     public Key_id(final int order) {
-        super(order, "id", java.lang.Long.class, "id", true, true);
+        super(order, "id", java.lang.Long.class, "id", true, false, true);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final java.lang.Long value) {
@@ -53,7 +53,7 @@ static final class Key_id extends AbstractKey<Employee, java.lang.Long> {
 /** Key name */
 static final class Key_name extends AbstractKey<Employee, java.lang.String> {
     public Key_name(final int order) {
-        super(order, "name", java.lang.String.class, "name", false, true);
+        super(order, "name", java.lang.String.class, "name", false, false, true);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final java.lang.String value) {
@@ -71,7 +71,7 @@ static final class Key_name extends AbstractKey<Employee, java.lang.String> {
 /** Key superior */
 static final class Key_superior extends AbstractKey<Employee, Employee> {
     public Key_superior(final int order) {
-        super(order, "superior", Employee.class, "superior_id", false, false);
+        super(order, "superior", Employee.class, "superior_id", false, true, false);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final Employee value) {
@@ -89,7 +89,7 @@ static final class Key_superior extends AbstractKey<Employee, Employee> {
 /** Key city */
 static final class Key_city extends AbstractKey<Employee, City> {
     public Key_city(final int order) {
-        super(order, "city", City.class, "city", false, true);
+        super(order, "city", City.class, "city", false, true, true);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final City value) {
@@ -107,7 +107,7 @@ static final class Key_city extends AbstractKey<Employee, City> {
 /** Key contractDay */
 static final class Key_contractDay extends AbstractKey<Employee, java.time.LocalDate> {
     public Key_contractDay(final int order) {
-        super(order, "contractDay", java.time.LocalDate.class, "contract_day", false, true);
+        super(order, "contractDay", java.time.LocalDate.class, "contract_day", false, false, true);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final java.time.LocalDate value) {
@@ -125,7 +125,7 @@ static final class Key_contractDay extends AbstractKey<Employee, java.time.Local
 /** Key active */
 static final class Key_active extends AbstractKey<Employee, java.lang.Boolean> {
     public Key_active(final int order) {
-        super(order, "active", boolean.class, "is_active", false, true);
+        super(order, "active", boolean.class, "is_active", false, false, true);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final java.lang.Boolean value) {
