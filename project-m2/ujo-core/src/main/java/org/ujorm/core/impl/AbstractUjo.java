@@ -34,7 +34,8 @@ public abstract class AbstractUjo<D> implements Ujo<D> {
         setValue(domainHandler.getKey(keyName), value);
     }
 
-    public abstract D toDomainObject();
+    /** Provides an original domain object. */
+    public abstract D buildDomain();
 
     /** Create a logical empty instance of the UJO */
     public static <D> AbstractUjo<D> of(@NotNull DomainHandler<D> handler) {
