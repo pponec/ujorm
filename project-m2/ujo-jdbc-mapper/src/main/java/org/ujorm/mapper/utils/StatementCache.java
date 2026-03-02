@@ -2,7 +2,6 @@ package org.ujorm.mapper.utils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.BitSet;
 import java.util.HashMap;
 
 /**

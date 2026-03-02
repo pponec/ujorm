@@ -30,14 +30,30 @@ public record TableModel<D>(
         List<ColumnModel<D,Object>> columns,
         TableIdentifier tableIdentifier,
         /** Inserted columns without PK. */
-        List<ColumnModel<D, Object>> insertedColumns,
+        @NotNull
+        List<ColumnModel<D, Object>> updatableColumns,
         Jdbc jdbc
 ) {
 
     /** Find a column model for the property name */
     @NotNull
-    public ColumnModel<D,Object> getColumn(@NotNull String property) {
-        return columns.get(hander.getKey(property).index());
+    public ColumnModel<D,Object> getColumn(@NotNull CharSequence property) {
+        var index = (property instanceof Key key)
+                ? key.index()
+                : hander.getKey(property.toString()).index();
+        return columns.get(index);
+    }
+
+    /** Find a column model for the property name. If the model is empty, return all updatable columns. */
+    @NotNull
+    public List<ColumnModel<D,Object>> getColumns(@NotNull CharSequence... properties) {
+        var result = properties.length > 0
+                ? new ArrayList<ColumnModel<D,Object>>(properties.length)
+                : updatableColumns();
+        for (var prop : properties) {
+            result.add(getColumn(prop));
+        }
+        return result;
     }
 
     /** Find a column model by the index */
@@ -50,7 +66,7 @@ public record TableModel<D>(
     @NotNull
     public List<ColumnModel<D,Object>> createInsertedColumns(@Nullable Object pkValue) {
         return pkValue == null
-                ? insertedColumns()
+                ? updatableColumns()
                 : columns();
     }
 
