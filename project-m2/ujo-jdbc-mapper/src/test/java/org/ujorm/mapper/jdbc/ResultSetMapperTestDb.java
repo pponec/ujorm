@@ -55,8 +55,8 @@ public class ResultSetMapperTestDb extends AbstractDaoTest {
         var sql = """
             SELECT
               id AS "id"
-            , city_id AS "city.id"
-            , superior_id AS "superior.id"
+            , city_id AS "city"
+            , superior_id AS "superior"
              FROM employee 
              WHERE id = ?
             """;
