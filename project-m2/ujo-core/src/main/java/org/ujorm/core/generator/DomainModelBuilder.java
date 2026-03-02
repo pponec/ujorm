@@ -103,10 +103,10 @@ class DomainModelBuilder {
      * @return A populated DomainPropertyModel instance.
      */
     private DomainPropertyModel createModel(String name, Class<?> type, String getter, String setter, AnnotatedElement element) {
-        var isId = element.isAnnotationPresent(Id.class);
+        var primaryKey = element.isAnnotationPresent(Id.class);
         var column = element.getAnnotation(Column.class);
         var joinColumn = element.getAnnotation(JoinColumn.class);
-        var required = type.isPrimitive() || isId;
+        var required = type.isPrimitive() || primaryKey;
         var dbColName = "";
 
         if (column != null) {
@@ -120,7 +120,9 @@ class DomainModelBuilder {
             dbColName = buildDbName(name);
         }
 
-        return new DomainPropertyModel(name, type, getter, setter, dbColName, required, isId);
+        boolean foreignKey = false; // TODO
+
+        return new DomainPropertyModel(name, type, getter, setter, dbColName, required, primaryKey, foreignKey);
     }
 
     /** Converts a Java Bean property name to a snake_case database column name. */

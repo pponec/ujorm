@@ -1,9 +1,6 @@
 package org.ujorm.core.demo;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +17,7 @@ public class Employee implements Snapshotable<Employee>  {
     @Column(name = "name", nullable = false)
     private String name;
     @Nullable
+    @ManyToOne
     @JoinColumn(name = "boss_id")
     private Employee boss;
     @JoinColumn(name = "city", nullable = false)

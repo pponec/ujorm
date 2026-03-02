@@ -63,6 +63,9 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
     /** Indicates whether the column is a primary key. */
     boolean primaryKey();
 
+    /** Indicates whether the column is a foreign key. */
+    boolean foreignKey();
+
     /**
      * Sets a type-safe value to the specified Ujo object.
      * This method always calls {@link Ujo#setValue(Key, Object)}.

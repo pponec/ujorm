@@ -36,7 +36,9 @@ public record DomainPropertyModel(
         /** Non-null column feature by the JPA annotation */
         boolean required,
         /** Database primary key */
-        boolean primaryKey
+        boolean primaryKey,
+        /** Database foreign key */
+        boolean foreignKey
 ) {
 
     public Class<?> propertyObjectType() {
