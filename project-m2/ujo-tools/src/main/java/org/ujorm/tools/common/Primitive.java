@@ -28,7 +28,7 @@ public record Primitive<T>(
     );
 
     /**
-     * Converts primitive types to their wrapper classes for map lookup.
+     * Converts primitive types to their object wrapper classes.
      *
      * @param type the class type to check
      * @return the wrapper class if primitive, otherwise the original type

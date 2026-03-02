@@ -17,6 +17,7 @@ package org.ujorm.mapper.model;
 
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
+import org.ujorm.tools.common.Primitive;
 
 import java.sql.JDBCType;
 
@@ -27,6 +28,15 @@ public record ColumnModel<D,V>(
         @Nullable
         Key<V,?> foreignKey
 ) {
+
+    /**
+     * Reading values from a JDBC ResultSet requires using object types
+     * instead of primitive types.
+     */
+    public Class<V> objectType() {
+        final var type = key.type();
+        return type.isPrimitive() ? (Class<V>) Primitive.wrapPrimitive(type) : type;
+    }
 
     /** Column Name */
     public String name() {
