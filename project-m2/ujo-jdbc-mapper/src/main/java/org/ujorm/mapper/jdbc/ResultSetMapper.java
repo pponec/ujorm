@@ -43,7 +43,7 @@ import java.util.stream.Stream;
  * provides at least one non-null value for any of the child's mapped properties. If all columns mapped
  * to a specific relation return {@code null}, the property in the parent object will simply remain {@code null}.
  * </p>
- * * <h3>Default Behavior</h3>
+ * <h3>Default Behavior</h3>
  * <p>
  * By default, the mapper dynamically reads {@link java.sql.ResultSetMetaData} to extract column labels
  * and detect database column markers. The constructed mapping trees are stored in an internal
