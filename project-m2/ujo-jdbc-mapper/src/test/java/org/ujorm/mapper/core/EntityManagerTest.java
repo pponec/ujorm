@@ -55,6 +55,20 @@ class EntityManagerTest extends AbstractDaoTest {
         Assertions.assertEquals(1, count);
     }
 
+    @Test
+    void readRecord() {
+        var cityDao = new EntityManager<City, Long>(City.class, dbConnection);
+        var cityInp = new City(null, "California", "US", 36.7783, -119.4179);
+        var cityOut = cityDao.insert(cityInp);
+        Assertions.assertNotNull(cityOut.id());
+        Assertions.assertEquals(1L, cityOut.id());
+
+
+        // Select Record:
+        var cityReloaded = cityDao.read(cityOut.id());
+        Assertions.assertNotNull(cityReloaded);
+    }
+
     public Employee createEmployee(String name, City city) {
         return createEmployee(null, name, city);
     }

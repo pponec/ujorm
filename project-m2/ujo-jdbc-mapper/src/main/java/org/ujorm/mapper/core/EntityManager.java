@@ -175,7 +175,7 @@ public class EntityManager<D, V> {
                 if (rs.next()) {
                     var ujo = AbstractUjo.of(domainHandler);
                     for (var column : tableModel.columns()) {
-                        var value = rs.getObject(column.name(), column.key().type());
+                        var value = rs.getObject(column.name(), column.objectType());
                         ujo.setValue(column.keyObject(), value);
                     }
                     return ujo.toDomainObject();

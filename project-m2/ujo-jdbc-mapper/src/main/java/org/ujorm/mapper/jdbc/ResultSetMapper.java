@@ -8,6 +8,7 @@ import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.Key;
 import org.ujorm.core.csv.CsvLineSplitter;
+import org.ujorm.tools.common.Primitive;
 import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
@@ -156,7 +157,8 @@ public class ResultSetMapper<D> {
      */
     private <D2> void populateNode(MappingNode<D2> node, D2 target, ResultSet rs) throws SQLException {
         for (var mapping : node.directMappings()) {
-            var value = rs.getObject(mapping.columnIndex(), mapping.key().type());
+            var objectType = Primitive.wrapPrimitive(mapping.key().type());
+            var value = rs.getObject(mapping.columnIndex(), objectType);
             mapping.key().setValue(target, value);
         }
 
