@@ -8,10 +8,10 @@ import org.ujorm.mapper.demo.Employee;
 import java.time.LocalDate;
 
 /** Tests for partial updates using SnapshotProvider */
-class EntityManagerSelectTest extends AbstractDaoTest {
+class EntityManagerReadTest extends AbstractDaoTest {
 
     @Test
-    void selectTest() {
+    void readTest() {
         var cityDao = EntityManager.of(City.class, dbConnection, Long.class);
         var city = cityDao.insert(new City(null, "California", "US", 36.7783, -119.4179));
         var emplDao = EntityManager.of(Employee.class, dbConnection, Long.class);
