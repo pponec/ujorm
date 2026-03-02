@@ -15,7 +15,6 @@
  */
 package org.ujorm.mapper.core;
 
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
@@ -49,7 +48,7 @@ import java.util.logging.Logger;
 public class EntityManager<D, V> {
     private static final Logger LOGGER = Logger.getLogger(EntityManager.class.getName());
 
-    private final Connection connection;
+    private final ThreadLocal<Connection> connection = new ThreadLocal<>();
     private final DomainHandler<D> domainHandler;
     private final ResultSetMapper<D> resultSetMapper;
     /** TODO: Get from a local thread */
@@ -71,7 +70,7 @@ public class EntityManager<D, V> {
             @NotNull Connection connection,
             @NotNull Context context,
             @NotNull ResultSetMapper<D> resultSetMapper) {
-        this.connection = connection;
+        this.connection.set(connection);
         this.domainHandler = context.domainService().getHandler(domainClass);
         this.context = context;
         this.tableModel = TableModelBuilder.build(domainHandler, context, connection);
@@ -81,6 +80,25 @@ public class EntityManager<D, V> {
         this.quote = tableModel.jdbc().quoteChar();
         this.resultSetMapper = resultSetMapper;
         this.utilities = new Utilities();
+    }
+
+    /** Sets a connection for the current thread. */
+    public void setConnection(@NotNull Connection connection) {
+        this.connection.set(connection);
+    }
+
+    /** Removes the connection from the current thread to prevent memory leaks. */
+    public void removeConnection() {
+        this.connection.remove();
+    }
+
+    /** Gets the connection for the current thread. */
+    private Connection connection() {
+        var conn = this.connection.get();
+        if (conn == null) {
+            throw new IllegalStateException("DB Connection is not available for the current thread.");
+        }
+        return conn;
     }
 
     /** Inserts multiple domain objects using a loop.
@@ -240,7 +258,7 @@ public class EntityManager<D, V> {
                     if (context.config().isPrintSql()) {
                         LOGGER.info(sql);
                     }
-                    statement = connection.prepareStatement(sql);
+                    statement = connection().prepareStatement(sql);
                     result += cache.put(changes, statement);
                 }
                 result += updateInternal(statement, domain, modifiedKeys);
@@ -334,7 +352,7 @@ public class EntityManager<D, V> {
         /** Set values to the Prepared Statement */
         public void setValuesToStatement(D domain, List<ColumnModel<D, Object>> columns, PreparedStatement ps) throws SQLException {
             for (var i = 0; i < columns.size(); i++) {
-                var column = (ColumnModel<D,Object>) columns.get(i);
+                var column = columns.get(i);
                 var value = column.valueOf(domain);
                 if (column.relation() && value != null) {
                     value = column.foreignKey().getValue(value);
@@ -374,10 +392,10 @@ public class EntityManager<D, V> {
         /** Logs and executes the SQL statement. */
         public <R> R run(final CharSequence sql, final boolean returnGeneratedKeys, final SqlFunction<PreparedStatement, R> fun) {
             try (var ps = !returnGeneratedKeys
-                    ? connection.prepareStatement(sql.toString())
+                    ? connection().prepareStatement(sql.toString())
                     : tableModel.jdbc().isOracleDb()
-                    ? connection.prepareStatement(sql.toString(), new String[]{pkColumn.name()})
-                    : connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)
+                    ? connection().prepareStatement(sql.toString(), new String[]{pkColumn.name()})
+                    : connection().prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)
             ) {
                 if (context.config().isPrintSql()) {
                     LOGGER.info(sql::toString);
