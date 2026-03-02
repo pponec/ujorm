@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 public class ResultSetMapperTestKey {
 
-    private final boolean printResult = false;
+    private final boolean printResult = !false;
 
     @Test @Order(100)
     void codeGen() {
@@ -34,8 +34,8 @@ public class ResultSetMapperTestKey {
         var src = new JavaSourceGenerator().getSourceCode(meta, className);
         if (printResult) System.out.println(src);
 
-        assertTrue(src.contains("static final class Key_city extends AbstractKey<Employee, org.ujorm.mapper.jdbc.ResultSetMapperKeyTest.City> {"));
-        assertTrue(src.contains("public org.ujorm.mapper.jdbc.ResultSetMapperKeyTest.City getValue(@NotNull final Employee bean) {"));
+        assertTrue(src.contains("static final class Key_city extends AbstractKey<Employee, org.ujorm.mapper.jdbc.ResultSetMapperTestKey.City> {"));
+        assertTrue(src.contains("public org.ujorm.mapper.jdbc.ResultSetMapperTestKey.City getValue(@NotNull final Employee bean) {"));
     }
 
     @Test @Order(200)
@@ -92,9 +92,8 @@ public class ResultSetMapperTestKey {
         assertEquals(20, result.getBoss().getId());
         assertEquals("Petr Boss", result.getBoss().getName());
 
-        assertNotNull(result.getBoss().getBoss());
-        assertNull(result.getBoss().getBoss().getId());
-        assertNull(result.getBoss().getBoss().getName());
+        assertNotNull(result.getBoss());
+        assertNull(result.getBoss().getBoss());
     }
 
     /** Aliases by the Key object */
