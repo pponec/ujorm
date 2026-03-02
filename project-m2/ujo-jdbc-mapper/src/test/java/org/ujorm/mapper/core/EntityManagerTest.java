@@ -57,7 +57,7 @@ class EntityManagerTest extends AbstractDaoTest {
         Assertions.assertEquals(1, count);
     }
 
-    // @Test // TODO:pop
+    @Test
     void readRecord() {
         var cityDao = EntityManager.of(City.class, dbConnection, pkType);
         var cityInp = new City(null, "California", "US", 36.7783, -119.4179);

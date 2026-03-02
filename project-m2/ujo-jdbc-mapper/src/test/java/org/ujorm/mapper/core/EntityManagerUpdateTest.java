@@ -11,7 +11,7 @@ import java.time.LocalDate;
 class EntityManagerUpdateTest extends AbstractDaoTest {
 
     /** Test partial updates of one or multiple entities */
-    //@Test // TODO:pop
+    @Test
     void partialUpdate() {
         var cityDao = EntityManager.of(City.class, dbConnection, Long.class);
         var city = cityDao.insert(new City(null, "California", "US", 36.7783, -119.4179));
