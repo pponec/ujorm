@@ -29,7 +29,7 @@ public class ResultSetMapperTestDb extends AbstractDaoTest {
     }
 
     @Test
-    void readEmployeeTest() throws SQLException {
+    void readEmployeeTest_explicitId() throws SQLException {
         var sql = """
             SELECT
               id AS "id"
@@ -37,6 +37,25 @@ public class ResultSetMapperTestDb extends AbstractDaoTest {
             , city_id AS "city.id"
             , is_active AS "active"
             , contract_day AS "contractDay"
+            , superior_id AS "superior.id"
+             FROM employee 
+             WHERE id = ?
+            """;
+        var resultSet = getEmployeeResultSet(sql,1L);
+        var service = DomainHandlerProvider.provider();
+        var mapper = ResultSetMapper.of(Employee.class, service);
+        var employee = mapper.convert(resultSet).findFirst();
+        Assertions.assertTrue(employee.isPresent());
+        Assertions.assertEquals(1L, employee.get().getId());
+        Assertions.assertEquals(2L, employee.get().getCity().id());
+    }
+
+    @Test
+    void readEmployeeTest_implicitId() throws SQLException {
+        var sql = """
+            SELECT
+              id AS "id"
+            , city_id AS "city.id"
             , superior_id AS "superior.id"
              FROM employee 
              WHERE id = ?
