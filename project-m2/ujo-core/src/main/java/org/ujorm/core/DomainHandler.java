@@ -18,6 +18,7 @@ package org.ujorm.core;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.core.impl.AbstractUjo;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -84,4 +85,9 @@ public interface DomainHandler<D> {
 
     /** Create a new domain object and assign values from the argument array. */
     D newDomain(Object... values);
+
+    /** Create a new domain object and assign values from the argument array. */
+    default AbstractUjo<D> newUjoDomain() {
+        return AbstractUjo.of(this);
+    }
 }
