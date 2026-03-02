@@ -28,22 +28,28 @@ import java.util.stream.Stream;
 
 /**
  * Maps a database {@link java.sql.ResultSet} to a hierarchical Bean structure using a pre-compiled mapping tree.
+ * <h3>How Mapping Works</h3>
  * <p>
- * <b>How Mapping Works:</b><br>
  * The mapper converts each row of a {@code ResultSet} into a domain object of type {@code D}.
  * It uses column labels (which may contain dot notation, e.g., "address.city") to navigate,
  * instantiate, and populate the hierarchical relation tree. To ensure high performance, it translates
  * the flat column definitions into an internal {@code MappingNode} tree structure. This tree is
  * cached and reused for subsequent result sets that share the exact same column layout.
  * </p>
+ * <h3>Relation Instantiation</h3>
  * <p>
- * <b>Default Behavior:</b><br>
+ * When mapping hierarchical relations, the mapper evaluates data availability from the bottom up.
+ * A child domain object is instantiated and assigned to its parent if and only if the {@code ResultSet}
+ * provides at least one non-null value for any of the child's mapped properties. If all columns mapped
+ * to a specific relation return {@code null}, the property in the parent object will simply remain {@code null}.
+ * </p>
+ * * <h3>Default Behavior</h3>
+ * <p>
  * By default, the mapper dynamically reads {@link java.sql.ResultSetMetaData} to extract column labels
  * and detect database column markers. The constructed mapping trees are stored in an internal
  * concurrent cache with a default maximum capacity of 512 entries.
  * </p>
- * <p>
- * <b>Customizing Behavior & Performance Impact:</b><br>
+ * <h3>Customizing Behavior & Performance Impact</h3>
  * <ul>
  * <li><b>Explicit Column Labels:</b> You can provide explicit column labels or {@link org.ujorm.core.Key}s
  * via the {@code convert} methods.
