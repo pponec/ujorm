@@ -197,13 +197,19 @@ public class EntityManager<D, V> {
      * @return The number of affected rows.
      */
     public long update(@NotNull D domain, CharSequence... properties) {
-        var columns = properties.length > 0
-                ? new ArrayList<ColumnModel<D,Object>>(properties.length)
-                : tableModel.insertedColumns();
-        for (var prop : properties) {
-            columns.add(tableModel.getColumn(prop));
-        }
+        var columns = tableModel.getColumns(properties);
         return update(domain, columns);
+    }
+
+    /**
+     * Updates a domain object.
+     * @param domains Domain objects to update. If the list is empty, update all columns excluding PK.
+     * @param properties Optional list of property names to update. If empty, all properties are updated (excluding id).
+     * @return The number of affected rows.
+     */
+    public long update(@NotNull List<D> domains, CharSequence... properties) {
+        var columns = tableModel.getColumns(properties);
+        throw new UnsupportedOperationException("TODO");
     }
 
     /** Updates multiple domain objects using batching and collision detection. */
@@ -268,7 +274,7 @@ public class EntityManager<D, V> {
     protected final long updateInternal(PreparedStatement statement, D entity, Key<D,?>... keys) throws SQLException {
         var index = 1;
         for (var key : keys) {
-            var column = tableModel.getColumn(key.name());
+            var column = tableModel.getColumn(key);
             var value = key.getValue(entity);
             if (column.relation() && value != null) {
                 value = column.foreignKey().getValue(value);
