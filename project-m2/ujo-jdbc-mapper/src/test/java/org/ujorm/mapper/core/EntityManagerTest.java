@@ -69,6 +69,8 @@ class EntityManagerTest extends AbstractDaoTest {
         // Select Record:
         var cityReloaded = cityDao.read(cityOut.id());
         Assertions.assertNotNull(cityReloaded);
+        Assertions.assertTrue(cityReloaded.isPresent());
+        Assertions.assertEquals(cityOut.id(), cityReloaded.get().id());
     }
 
     public Employee createEmployee(String name, City city) {
