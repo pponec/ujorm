@@ -58,7 +58,7 @@ public class EntityManager<D, V> {
     private final ColumnModel<D, V> pkColumn;
     private final Key<D, V> pk;
     private final char quote;
-    private final Utilities utilities = new Utilities();
+    private final Utilities utilities;
 
     /** Size of batch for multi-insert and delete.
      * Note: This attribute is not fully implemented yet. */
@@ -80,6 +80,7 @@ public class EntityManager<D, V> {
         this.insertBatchSize = context.config().getInsertBatchSize();
         this.quote = tableModel.jdbc().quoteChar();
         this.resultSetMapper = resultSetMapper;
+        this.utilities = new Utilities();
     }
 
     /** Inserts multiple domain objects using a loop.
