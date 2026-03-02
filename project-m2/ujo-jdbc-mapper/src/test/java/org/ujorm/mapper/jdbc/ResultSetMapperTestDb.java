@@ -15,13 +15,11 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 /** Tests a logic of column aliases processing in ResultSetMapper */
-public class ResultSetMapperTest {
+public class ResultSetMapperTestDb {
 
     /** Tests mapping by property name when label and name differ. */
     @Test @Order(100)
