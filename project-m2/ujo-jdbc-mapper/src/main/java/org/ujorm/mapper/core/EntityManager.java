@@ -196,7 +196,7 @@ public class EntityManager<D, V> {
      * @param properties Optional list of property names to update. If empty, all properties are updated (excluding id).
      * @return The number of affected rows.
      */
-    public long update(@NotNull D domain, String... properties) {
+    public long update(@NotNull D domain, CharSequence... properties) {
         var columns = properties.length > 0
                 ? new ArrayList<ColumnModel<D,Object>>(properties.length)
                 : tableModel.insertedColumns();
