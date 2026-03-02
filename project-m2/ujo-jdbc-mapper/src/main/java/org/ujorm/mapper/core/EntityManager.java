@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -196,7 +196,7 @@ public class EntityManager<D, V> {
      * @param properties Optional list of property names to update. If empty, all properties are updated (excluding id).
      * @return The number of affected rows.
      */
-    public long update(@NotNull D domain, String... properties) {
+    public long update(@NotNull D domain, CharSequence... properties) {
         var columns = properties.length > 0
                 ? new ArrayList<ColumnModel<D,Object>>(properties.length)
                 : tableModel.insertedColumns();
@@ -213,9 +213,7 @@ public class EntityManager<D, V> {
             return 0L;
         }
         var result = 0L;
-        var activeIds = new java.util.HashSet<V>();
-
-        try (var cache = new StatementCache()) {
+        try (var cache = new StatementCache<V>()) {
             for (var j = 0; j < domains.length; j++) {
                 var domain_ = domains[j];
                 if (!this.domainHandler.getDomainClass().isInstance(domain_)) {
@@ -240,10 +238,7 @@ public class EntityManager<D, V> {
                 var id = getPrimaryKeyValue(domain);
 
                 // Flush on ID collision to prevent DB deadlocks and preserve update order
-                if (activeIds.contains(id)) {
-                    result += cache.flush();
-                    activeIds.clear();
-                }
+                result += cache.flushOnCollision(id);
 
                 var modifiedKeys = new Key[modifiedIdx.length];
                 for (int i = 0; i < modifiedIdx.length; i++) {
@@ -257,13 +252,9 @@ public class EntityManager<D, V> {
                     }
                     statement = connection.prepareStatement(sql);
                     result += cache.put(changes, statement);
-
-                    if (cache.size() == 1) {
-                        activeIds.clear(); // The cache was flushed due to capacity limits
-                    }
                 }
                 result += updateInternal(statement, domain, modifiedKeys);
-                activeIds.add(id);
+                cache.addId(id);
             }
             result += cache.flush(); // Flush any remaining statements before the AutoCloseable block finishes
         } catch (SQLException e) {
@@ -352,10 +343,10 @@ public class EntityManager<D, V> {
     /** Logs and executes the SQL statement. */
     protected <R> R run(final CharSequence sql, final boolean returnGeneratedKeys, final SqlFunction<PreparedStatement, R> fun) {
         try (var ps = !returnGeneratedKeys
-            ? connection.prepareStatement(sql.toString())
-            : tableModel.jdbc().isOracleDb()
-            ? connection.prepareStatement(sql.toString(), new String[]{pkColumn.name()})
-            : connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)
+                ? connection.prepareStatement(sql.toString())
+                : tableModel.jdbc().isOracleDb()
+                ? connection.prepareStatement(sql.toString(), new String[]{pkColumn.name()})
+                : connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)
         ) {
             if (context.config().isPrintSql()) {
                 LOGGER.info(sql::toString);
