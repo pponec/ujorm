@@ -33,7 +33,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -105,7 +104,7 @@ public class EntityManager<D, V> {
                 .append(" (");
         write(sql, columns, ", ");
         sql.append(") VALUES (?");
-        for (int j = columns.size() - 1; j > 0; j--) {
+        for (var j = columns.size() - 1; j > 0; j--) {
             sql.append(",?");
         }
         sql.append(")");
@@ -136,7 +135,7 @@ public class EntityManager<D, V> {
 
     /** Set values to the Prepared Statement */
     protected void setValuesToStatement(D domain, List<ColumnModel<D,Object>> columns, PreparedStatement ps) throws SQLException {
-        for (int i = 0; i < columns.size(); i++) {
+        for (var i = 0; i < columns.size(); i++) {
             var column = columns.get(i);
             var value = column.valueOf(domain);
             if (column.relation()) {
@@ -209,7 +208,7 @@ public class EntityManager<D, V> {
      */
     public long update(@NotNull List<D> domains, CharSequence... properties) {
         var columns = tableModel.getColumns(properties);
-        throw new UnsupportedOperationException("TODO");
+        return updateList(domains, columns);
     }
 
     /** Updates multiple domain objects using batching and collision detection. */
@@ -247,7 +246,7 @@ public class EntityManager<D, V> {
                 result += cache.flushOnCollision(id);
 
                 var modifiedKeys = new Key[modifiedIdx.length];
-                for (int i = 0; i < modifiedIdx.length; i++) {
+                for (var i = 0; i < modifiedIdx.length; i++) {
                     modifiedKeys[i] = domainHandler.getKey(modifiedIdx[i]);
                 }
                 var statement = cache.get(changes);
@@ -293,7 +292,7 @@ public class EntityManager<D, V> {
                 .append("UPDATE ")
                 .append(domainHandler.getDatabaseTable());
 
-        for (int i = 0; i < keys.length; i++) {
+        for (var i = 0; i < keys.length; i++) {
             var column = tableModel.getColumn(keys[i].index());
             var name = column.name();
             sql.append(i == 0 ? " SET " : ", ");
@@ -311,21 +310,61 @@ public class EntityManager<D, V> {
      * @return The number of affected rows.
      */
     protected long update(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
-        var sql = new StringBuilder(256)
-                .append("UPDATE ")
-                .append(domainHandler.getDatabaseTable());
-        for (int i = 0; i < columns.size(); i++) {
-            var column = columns.get(i);
-            sql.append(i == 0 ? " SET ": ", ");
-            sql.append(column.name()).append(" = ?");
-        }
-        sql.append(" WHERE ").append(pkColumn.name()).append(" = ").append("?");
+        var sql = buildUpdateSql(columns);
         return run(sql, false, ps -> {
             setValuesToStatement(domain, columns, ps);
             setPkToStatement(domain, columns.size() + 1, ps);
             return (long) ps.executeUpdate();
         });
     }
+
+    /**
+     * Executes a batch update for a given list of domain objects and a specific set of columns.
+     * The method prepares a single SQL statement and utilizes JDBC batching to optimize the update process.
+     *
+     * @param domains A list of domain entities to be updated in the database.
+     * @param columns A list of column models defining which specific attributes should be updated.
+     * @return The total number of rows affected by the batch execution.
+     */
+    protected long updateList(@NotNull List<D> domains, @NotNull List<ColumnModel<D, Object>> columns) {
+        var sql = buildUpdateSql(columns);
+        return run(sql, false, ps -> {
+            for (var domain : domains) {
+                setValuesToStatement(domain, columns, ps);
+                setPkToStatement(domain, columns.size() + 1, ps);
+                ps.addBatch();
+            }
+
+            var result = 0L;
+            var batchResults = ps.executeBatch();
+            for (var rowCount : batchResults) {
+                if (rowCount > 0) {
+                    result += rowCount;
+                }
+            }
+            return result;
+        });
+    }
+
+    /**
+     * Builds an SQL UPDATE statement for a specific list of columns.
+     *
+     * @param columns A list of column models defining the updated attributes
+     * @return The constructed SQL UPDATE statement
+     */
+    protected String buildUpdateSql(@NotNull List<ColumnModel<D, Object>> columns) {
+        var sql = new StringBuilder(256)
+                .append("UPDATE ")
+                .append(domainHandler.getDatabaseTable());
+        for (var i = 0; i < columns.size(); i++) {
+            var column = columns.get(i);
+            sql.append(i == 0 ? " SET " : ", ");
+            sql.append(column.name()).append(" = ?");
+        }
+        sql.append(" WHERE ").append(pkColumn.name()).append(" = ?");
+        return sql.toString();
+    }
+
 
     /** Deletes a domain object. */
     public int delete(@NotNull D domain) {
@@ -365,7 +404,7 @@ public class EntityManager<D, V> {
 
     /** Write column name. TODO.pop: Quote it? */
     protected void write(final StringBuilder writer, final List<ColumnModel<D,Object>> columns, final String separator) {
-        for (int i = 0, max = columns.size(); i < max; i++) {
+        for (var i = 0; i < columns.size(); i++) {
             if (i > 0) {
                 writer.append(separator);
             }

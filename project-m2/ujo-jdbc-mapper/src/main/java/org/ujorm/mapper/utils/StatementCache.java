@@ -4,34 +4,61 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-/** Handles caching, execution and resource cleanup of batched statements. */
+/**
+ * Handles caching, execution and resource cleanup of batched statements.
+ *
+ * @param <V> Type of the primary key
+ */
 public final class StatementCache<V> implements AutoCloseable {
 
-    private final int maxCapacity;
+    /** Maximum capacity of the cached statements */
+    private final int maxStatementCapacity;
+
+    /** Map of currently cached statements */
     private final HashMap<BitSet, PreparedStatement> cache = new HashMap<>();
-    private final java.util.HashSet<V> activeIds = new java.util.HashSet<>();
 
-    /** Creates a cache with a default capacity of 5. */
+    /** Set of active entity identifiers to prevent deadlocks */
+    private final java.util.HashSet<V> activeIds;
+
+    /** Creates a cache with default capacity of 5 statements and 100 identifiers. */
     public StatementCache() {
-        this(5);
+        this(5, 100);
     }
 
-    /** Creates a cache with a specific maximum capacity. */
-    public StatementCache(int maxCapacity) {
-        this.maxCapacity = maxCapacity;
+    /**
+     * Creates a cache with a specific maximum capacity.
+     *
+     * @param maxStatementCapacity Maximum number of cached statements
+     * @param initialIdCapacity Initial capacity for the active IDs set
+     */
+    public StatementCache(int maxStatementCapacity, int initialIdCapacity) {
+        this.maxStatementCapacity = maxStatementCapacity;
+        this.activeIds = new java.util.HashSet<>(initialIdCapacity);
     }
 
-    /** Retrieves an existing statement for the given mask. */
+    /**
+     * Retrieves an existing statement for the given mask.
+     *
+     * @param mask A bitmask representing the updated columns
+     * @return A cached PreparedStatement, or null if not found
+     */
     public PreparedStatement get(BitSet mask) {
         return cache.get(mask);
     }
 
-    /** Caches a statement and flushes if capacity is exceeded. */
+    /**
+     * Caches a statement and flushes if capacity is exceeded.
+     *
+     * @param mask A bitmask representing the updated columns
+     * @param statement The PreparedStatement to cache
+     * @return Number of executed updates if flush occurred, otherwise 0
+     * @throws SQLException If a database access error occurs
+     */
     public long put(BitSet mask, PreparedStatement statement) throws SQLException {
         var result = 0L;
 
         // Flush happens only if the cache is full AND the mask is entirely new
-        if (cache.size() >= maxCapacity && !cache.containsKey(mask)) {
+        if (cache.size() >= maxStatementCapacity && !cache.containsKey(mask)) {
             result = flush();
         }
 
@@ -39,17 +66,32 @@ public final class StatementCache<V> implements AutoCloseable {
         return result;
     }
 
-    /** Checks if a statement for the given mask is already cached. */
+    /**
+     * Checks if a statement for the given mask is already cached.
+     *
+     * @param mask A bitmask representing the updated columns
+     * @return True if the statement is cached, otherwise false
+     */
     public boolean containsKey(BitSet mask) {
         return cache.containsKey(mask);
     }
 
-    /** Returns the number of currently cached statements. */
+    /**
+     * Returns the number of currently cached statements.
+     *
+     * @return The current cache size
+     */
     public int size() {
         return cache.size();
     }
 
-    /** Flushes the cache if the given ID is already active. */
+    /**
+     * Flushes the cache if the given ID is already active.
+     *
+     * @param id The entity identifier to check
+     * @return Number of executed updates if flush occurred, otherwise 0
+     * @throws SQLException If a database access error occurs
+     */
     public long flushOnCollision(V id) throws SQLException {
         if (activeIds.contains(id)) {
             return flush();
@@ -57,12 +99,21 @@ public final class StatementCache<V> implements AutoCloseable {
         return 0L;
     }
 
-    /** Adds an ID to the active set. */
+    /**
+     * Adds an ID to the active set.
+     *
+     * @param id The entity identifier to add
+     */
     public void addId(V id) {
         activeIds.add(id);
     }
 
-    /** Executes and closes all batched statements in the cache. */
+    /**
+     * Executes and closes all batched statements in the cache.
+     *
+     * @return The total number of executed updates
+     * @throws SQLException If a database access error occurs
+     */
     public long flush() throws SQLException {
         if (cache.isEmpty()) {
             return 0L;
@@ -81,7 +132,7 @@ public final class StatementCache<V> implements AutoCloseable {
         return result;
     }
 
-    /** Safe cleanup, but any returned update counts here are lost */
+    /** Safe cleanup, but any returned update counts here are lost. */
     @Override
     public void close() throws SQLException {
         flush();
