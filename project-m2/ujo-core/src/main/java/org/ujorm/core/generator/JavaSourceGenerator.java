@@ -124,7 +124,7 @@ public class JavaSourceGenerator {
                     ? "super( new Key_%s(%s)"
                     : "     , new Key_%s(%s)";
             writer.append("    ")
-                  .append(row.formatted(meta.properties().get(i).propertyName(), i))
+                  .append(row.formatted(meta.properties().get(i).name(), i))
                   .append("\n");
         }
     }
@@ -132,8 +132,8 @@ public class JavaSourceGenerator {
     private void buildInnerKeys(String template, DomainModel meta, StringBuilder writer, HashMap<String, Object> params) {
         for (var prop: meta.properties()) {
             {
-                params.put("propName", prop.propertyName());
-                params.put("propType", prop.propertyType().getCanonicalName());
+                params.put("propName", prop.name());
+                params.put("propType", prop.type().getCanonicalName());
                 params.put("propObjectType", prop.propertyObjectType().getCanonicalName());
                 params.put("getter", prop.getter());
                 params.put("setter", prop.setter());

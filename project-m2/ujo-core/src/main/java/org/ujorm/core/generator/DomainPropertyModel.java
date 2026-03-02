@@ -23,9 +23,9 @@ import java.util.List;
 
 public record DomainPropertyModel(
         /** Name of property from the class field. */
-        String propertyName,
+        String name,
         /** Type of property from the class field. */
-        Class<?> propertyType,
+        Class<?> type,
         /** Name of the getter method */
         String getter,
         /** Missing setter has the NULL value */
@@ -42,11 +42,11 @@ public record DomainPropertyModel(
 ) {
 
     public Class<?> propertyObjectType() {
-        return Primitive.wrapPrimitive(propertyType);
+        return Primitive.wrapPrimitive(type);
     }
 
     public boolean isPrimitive() {
-        return propertyType.isPrimitive();
+        return type.isPrimitive();
     }
 
 

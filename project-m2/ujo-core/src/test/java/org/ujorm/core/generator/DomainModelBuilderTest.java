@@ -59,18 +59,18 @@ class DomainModelBuilderTest {
 
         assertEquals(5, properties.size(), "City should have exactly 5 persisted properties");
 
-        var id = properties.stream().filter(p -> "id".equals(p.propertyName())).findFirst().orElseThrow();
+        var id = properties.stream().filter(p -> "id".equals(p.name())).findFirst().orElseThrow();
         assertTrue(id.primaryKey());
         assertFalse(id.foreignKey());
         assertEquals("db_id", id.dbColumName());
 
-        var name = properties.stream().filter(p -> "name".equals(p.propertyName())).findFirst().orElseThrow();
+        var name = properties.stream().filter(p -> "name".equals(p.name())).findFirst().orElseThrow();
         assertFalse(name.primaryKey());
         assertFalse(name.foreignKey());
         assertEquals("db_name", name.dbColumName());
         assertTrue(name.required(), "Name is explicitly not nullable");
 
-        var latitude = properties.stream().filter(p -> "latitude".equals(p.propertyName())).findFirst().orElseThrow();
+        var latitude = properties.stream().filter(p -> "latitude".equals(p.name())).findFirst().orElseThrow();
         assertTrue(latitude.required(), "Primitive types must be required");
         assertFalse(latitude.foreignKey());
     }
@@ -84,20 +84,20 @@ class DomainModelBuilderTest {
 
         assertEquals(6, properties.size(), "Employee should have exactly 6 persisted properties, transient ignored");
 
-        var snapshot = properties.stream().filter(p -> "_snapshot".equals(p.propertyName())).findFirst();
+        var snapshot = properties.stream().filter(p -> "_snapshot".equals(p.name())).findFirst();
         assertTrue(snapshot.isEmpty(), "Transient field _snapshot must be ignored");
 
-        var id = properties.stream().filter(p -> "id".equals(p.propertyName())).findFirst().orElseThrow();
+        var id = properties.stream().filter(p -> "id".equals(p.name())).findFirst().orElseThrow();
         assertTrue(id.primaryKey());
         assertFalse(id.foreignKey());
 
-        var boss = properties.stream().filter(p -> "boss".equals(p.propertyName())).findFirst().orElseThrow();
+        var boss = properties.stream().filter(p -> "boss".equals(p.name())).findFirst().orElseThrow();
         assertFalse(boss.primaryKey());
         assertTrue(boss.foreignKey(), "Boss must be detected as a foreign key via @ManyToOne and @JoinColumn");
         assertEquals("boss_id", boss.dbColumName());
         assertFalse(boss.required(), "Boss can be null");
 
-        var city = properties.stream().filter(p -> "city".equals(p.propertyName())).findFirst().orElseThrow();
+        var city = properties.stream().filter(p -> "city".equals(p.name())).findFirst().orElseThrow();
         assertTrue(city.foreignKey(), "City must be detected as a foreign key via target @Table and @JoinColumn");
         assertEquals("city", city.dbColumName());
         assertTrue(city.required(), "City is explicitly not nullable in @JoinColumn");
