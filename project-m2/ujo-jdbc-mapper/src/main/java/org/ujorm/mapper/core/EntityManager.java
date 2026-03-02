@@ -16,11 +16,13 @@
 package org.ujorm.mapper.core;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.core.SnapshotProvider;
 import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.mapper.impl.Context;
+import org.ujorm.mapper.jdbc.ResultSetMapper;
 import org.ujorm.mapper.model.ColumnModel;
 import org.ujorm.mapper.model.TableModel;
 import org.ujorm.mapper.model.TableModelBuilder;
@@ -33,6 +35,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
@@ -47,6 +50,7 @@ public class EntityManager<D, V> {
 
     private final Connection connection;
     private final DomainHandler<D> domainHandler;
+    private final ResultSetMapper<D> resultSetMapper;
     /** TODO: Get from a local thread */
     private final Context context;
     private final TableModel<D> tableModel;
@@ -57,26 +61,23 @@ public class EntityManager<D, V> {
     /** Size of batch for multi-insert and delete.
      * Note: This attribute is not fully implemented yet. */
     @Deprecated
-    private final int batchSize;
-
-    public EntityManager(@NotNull Class<D> domainClass, @NotNull Connection connection) {
-        this(domainClass, connection, Context.ofDefault());
-    }
-
-    public EntityManager(@NotNull Class<D> domainClass, @NotNull Connection connection, @NotNull Context context) {
-        this(domainClass, connection, context, 500);
-    }
+    private final int insertBatchSize;
 
     @SuppressWarnings("unchecked")
-    public EntityManager(@NotNull Class<D> domainClass, @NotNull Connection connection, @NotNull Context context, int batchSize) {
+    public EntityManager(
+            @NotNull Class<D> domainClass,
+            @NotNull Connection connection,
+            @NotNull Context context,
+            @NotNull ResultSetMapper<D> resultSetMapper) {
         this.connection = connection;
         this.domainHandler = context.domainService().getHandler(domainClass);
         this.context = context;
         this.tableModel = TableModelBuilder.build(domainHandler, context, connection);
         this.pkColumn = (ColumnModel<D, V>) tableModel.pk();
         this.pk = pkColumn.key();
-        this.batchSize = batchSize;
+        this.insertBatchSize = context.config().getInsertBatchSize();
         this.quote = tableModel.jdbc().quoteChar();
+        this.resultSetMapper = resultSetMapper;
     }
 
     /** Inserts multiple domain objects using a loop.
@@ -153,14 +154,20 @@ public class EntityManager<D, V> {
     }
 
     /** Reads a domain object by its identifier. */
-    public D read(@NotNull V id) {
+    @NotNull
+    public Optional<D> read(@NotNull V id) {
+        var columns = tableModel.columns();
+        var labels = new Key[columns.size()];
         var sql = new StringBuilder(128)
                 .append("SELECT \n");  // "*"
-        for (var column : this.tableModel.columns()) {
+        for (var i = 0; i < columns.size(); i++) {
+            var column = columns.get(i);
+            var label = column.key();
+            labels[i] = label;
             sql.append(column.index() > 0 ? ", ": "  ");
             sql.append(column.name())
                     .append(" AS ")
-                    .append(quote).append(column.property()).append(quote)
+                    .append(quote).append(label.name()).append(quote)
                     .append("\n");
         }
         sql.append(" FROM ")
@@ -172,15 +179,7 @@ public class EntityManager<D, V> {
         return run(sql, false, ps -> {
             ps.setObject(1, id);
             try (var rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    var ujo = AbstractUjo.of(domainHandler);
-                    for (var column : tableModel.columns()) {
-                        var value = rs.getObject(column.name(), column.objectType());
-                        ujo.setValue(column.keyObject(), value);
-                    }
-                    return ujo.toDomainObject();
-                }
-                return null;
+                return resultSetMapper.convert(rs, labels).findFirst();
             }
         });
     }
@@ -375,5 +374,14 @@ public class EntityManager<D, V> {
     @FunctionalInterface
     protected interface SqlFunction<T, R> {
         R applyValue(T ps) throws Exception;
+    }
+
+    // --- STATIC METHOD(s) ---
+
+    /** Factory method */
+    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull Connection connection, @Nullable Class<V> pkObjectType) {
+        var rsMapper = ResultSetMapper.of(domainClass);
+        var context = Context.ofDefault();
+        return new EntityManager<>(domainClass, connection, context, rsMapper);
     }
 }
