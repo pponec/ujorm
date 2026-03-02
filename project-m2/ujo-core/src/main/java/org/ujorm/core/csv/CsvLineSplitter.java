@@ -11,7 +11,7 @@ public interface CsvLineSplitter {
 
     /**
      * Splits a given text into an array of strings based on the implementation's delimiter logic.
-     * * @param text The input string to be split.
+     * @param text The input string to be split.
      * @param maxFields The maximum number of fields (substrings) to extract from the text.
      * Extra fields are typically ignored.
      * @return An array of parsed string values. Never returns null.
