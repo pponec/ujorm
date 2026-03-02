@@ -114,9 +114,7 @@ public class ResultSetMapper<D> {
                 var key = new CacheKey(extracted);
                 var node = cache.getOrCreate(key, k ->
                         buildMappingTree(k.columns()));
-
-                @SuppressWarnings("unchecked")
-                var result = (AbstractUjo<D>) rootHandler.newUjoDomain();
+                var result = rootHandler.newUjoDomain();
                 populateNode(node, result, resultSet);
                 return result.buildDomain();
             } catch (SQLException ex) {
@@ -147,7 +145,7 @@ public class ResultSetMapper<D> {
     @SafeVarargs
     @NotNull
     public final Stream<D> convertFlat(@NotNull Stream<ResultSet> rs, @NotNull Key<D, ?>... columnLabels) {
-        return convert(rs, (CharSequence[]) columnLabels);
+        return convert(rs, columnLabels);
     }
 
     /** Get the last timestamp of the cache clearing */
@@ -158,12 +156,11 @@ public class ResultSetMapper<D> {
     /**
      * Recursively populates the target AbstractUjo wrapper and its relations.
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
     private <D2> void populateNode(MappingNode<D2> node, AbstractUjo<D2> target, ResultSet rs) throws SQLException {
         for (var mapping : node.directMappings()) {
             var objectType = Primitive.wrapPrimitive(mapping.key().type());
             var value = rs.getObject(mapping.columnIndex(), objectType);
-            target.setValue((Key) mapping.key(), value);
+            target.setValue(mapping.key(), value);
         }
 
         for (var relation : node.relations()) {
@@ -171,7 +168,7 @@ public class ResultSetMapper<D> {
             var childHandler = service.getHandler(childKey.type());
             var childTarget = childHandler.newUjoDomain();
             populateNode(relation.childNode(), childTarget, rs);
-            target.setValue((Key) childKey, childTarget.buildDomain());
+            target.setValue(childKey, childTarget.buildDomain());
         }
     }
 
@@ -201,7 +198,14 @@ public class ResultSetMapper<D> {
             var key = findKey(clazz, parts[i], byColumn);
 
             if (isLast) {
-                currentNode.addMapping(key, colIdx);
+                if (key.foreignKey()) {
+                    var relationNode = currentNode.getOrCreateRelation(key);
+                    var targetClass = key.type();
+                    var pkKey = findPrimaryKey(targetClass);
+                    relationNode.addMapping(pkKey, colIdx);
+                } else {
+                    currentNode.addMapping(key, colIdx);
+                }
             } else {
                 currentNode = currentNode.getOrCreateRelation(key);
                 clazz = key.type();
@@ -212,16 +216,34 @@ public class ResultSetMapper<D> {
     /**
      * Finds a property Key by its name within the given domain class.
      */
-    @SuppressWarnings("unchecked")
     private <D2> Key<D2, Object> findKey(Class<D2> domainType, String keyName, boolean byColumn) {
         var handler = service.getHandler(domainType);
         if (byColumn) {
             var columnKey = handler.getKeyByColumn(keyName, false, null);
             if (columnKey != null) {
-                return (Key<D2, Object>) columnKey;
+                return columnKey;
             }
         }
-        return (Key<D2, Object>) handler.getKey(keyName);
+        return handler.getKey(keyName);
+    }
+
+    /**
+     * Finds the primary key for the given domain class.
+     *
+     * @param domainType The domain class to find the primary key for
+     * @param <D2> The domain type
+     * @return The primary key of the domain object
+     * @throws IllegalStateException If the primary key is not found
+     */
+    @SuppressWarnings("unchecked")
+    private <D2> Key<D2, Object> findPrimaryKey(Class<D2> domainType) {
+        var handler = service.getHandler(domainType);
+        for (var key : handler.getKeyList()) {
+            if (key.primaryKey()) {
+                return (Key<D2, Object>) key;
+            }
+        }
+        throw new IllegalStateException("Primary key not found for class: " + domainType.getName());
     }
 
     // --- Inner classes ---
