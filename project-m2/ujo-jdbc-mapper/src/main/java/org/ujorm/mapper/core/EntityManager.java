@@ -154,6 +154,12 @@ public class EntityManager<D, V> {
     }
 
     /** Reads a domain object by its identifier. */
+    @Nullable
+    public D readNullable(@NotNull V id) {
+        return read(id).orElse(null);
+    }
+
+    /** Reads a domain object by its identifier. */
     @NotNull
     public Optional<D> read(@NotNull V id) {
         var columns = tableModel.columns();
