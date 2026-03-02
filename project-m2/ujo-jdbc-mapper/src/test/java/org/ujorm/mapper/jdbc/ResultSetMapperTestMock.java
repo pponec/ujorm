@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 /** Tests a logic of column aliases processing in ResultSetMapper */
-public class ResultSetMapperTest {
+public class ResultSetMapperTestMock {
 
     /** Tests mapping by property name when label and name differ. */
     @Test @Order(100)
