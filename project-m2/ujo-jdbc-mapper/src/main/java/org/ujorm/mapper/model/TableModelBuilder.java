@@ -93,11 +93,10 @@ public class TableModelBuilder<D> {
 
     protected <V> ColumnModel<D,V> column(Key<D,V> key) {
         var jdbcType = ctx.commonService().findJdbcType(key.type());
-        var relation = jdbcType == null;
         var foreignKey = (Key<V,?>) null;
-        if (relation) {
+        if (key.foreignKey()) {
             var foreignHandler = ctx.domainService().getHandler(key.type());
-            foreignKey = (Key<V,?>) ctx.commonService().findPrimaryKey(foreignHandler.getDomainClass(), ctx);
+            foreignKey = ctx.commonService().findPrimaryKey(foreignHandler.getDomainClass(), ctx);
             jdbcType = ctx.commonService().findJdbcType(foreignKey.type());
         }
         return new ColumnModel<>(key, jdbcType, foreignKey);

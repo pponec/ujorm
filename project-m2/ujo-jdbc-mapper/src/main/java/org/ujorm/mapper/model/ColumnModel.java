@@ -29,6 +29,10 @@ public record ColumnModel<D,V>(
         Key<V,?> foreignKey
 ) {
 
+    public boolean relation() {
+        return foreignKey != null;
+    }
+
     /**
      * Reading values from a JDBC ResultSet requires using object types
      * instead of primitive types.
@@ -68,10 +72,6 @@ public record ColumnModel<D,V>(
     @SuppressWarnings("unchecked")
     public Key<D,Object> keyObject() {
         return (Key<D,Object>) key;
-    }
-
-    public boolean relation() {
-        return foreignKey != null;
     }
 
     /** Returns a full name */
