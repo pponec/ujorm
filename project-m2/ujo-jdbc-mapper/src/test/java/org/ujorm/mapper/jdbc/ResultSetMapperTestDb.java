@@ -16,45 +16,49 @@ import java.time.LocalDate;
 /** Tests a logic of column aliases processing in ResultSetMapper */
 public class ResultSetMapperTestDb extends AbstractDaoTest {
 
-        City cityOriginal = null;
-        Employee employeeOriginal = null;
+    City cityOriginal = null;
+    Employee employeeOriginal = null;
 
-        /** Set up the database connection and initialize tables before each test. */
-        @BeforeEach
-        void setUp() throws SQLException {
-            var cityDao = EntityManager.of(City.class, dbConnection, Long.class);
-            var emplDao = EntityManager.of(Employee.class, dbConnection, Long.class);
-            cityOriginal = cityDao.insert(new City(2L, "California", "US", 36.7783, -119.4179));
-            employeeOriginal = emplDao.insert(createEmployee(1L, "EmplA", cityOriginal));
-        }
-
-        @Test
-        void readEmployeeTest() {
-            var resultSet = getEmployeeResultSet();
-            var service = DomainHandlerProvider.provider();
-            var mapper = ResultSetMapper.of(Employee.class, service);
-            var employee = mapper.convert(resultSet).findFirst();
-            Assertions.assertTrue(employee.isPresent());
-            Assertions.assertEquals(1L, employee.get().getId());
-        }
-
-        private ResultSet getEmployeeResultSet() {
-            var sql = """
-                SELECT
-                  id AS "id"
-                , name AS "name"
-                , city_id AS "city"
-                , is_active AS "active"
-                , contract_day AS "contractDay"
-                , superior_id AS "superior"
-                 FROM employee WHERE id = ?
-                """;
-
-            throw new IllegalStateException("TODO");
-        }
-
-        /** Create a new Employee with ID */
-        public Employee createEmployee(Long id, String name, City city) {
-            return Employee.of(id, name, null, city, LocalDate.of(2020, 1, 1), true);
-        }
+    /** Set up the database connection and initialize tables before each test. */
+    @BeforeEach
+    void setUp() throws SQLException {
+        var cityDao = EntityManager.of(City.class, dbConnection, Long.class);
+        var emplDao = EntityManager.of(Employee.class, dbConnection, Long.class);
+        cityOriginal = cityDao.insert(new City(2L, "California", "US", 36.7783, -119.4179));
+        employeeOriginal = emplDao.insert(createEmployee(1L, "EmplA", cityOriginal));
     }
+
+    @Test
+    void readEmployeeTest() throws SQLException {
+        var resultSet = getEmployeeResultSet(1L);
+        var service = DomainHandlerProvider.provider();
+        var mapper = ResultSetMapper.of(Employee.class, service);
+        var employee = mapper.convert(resultSet).findFirst();
+        Assertions.assertTrue(employee.isPresent());
+        Assertions.assertEquals(1L, employee.get().getId());
+    }
+
+    /** Gets the ResultSet for the employee with ID 1 */
+    private ResultSet getEmployeeResultSet(Long id) throws SQLException {
+        var sql = """
+            SELECT
+              id AS "id"
+            , name AS "name"
+            , city_id AS "city.id"
+            , is_active AS "active"
+            , contract_day AS "contractDay"
+            , superior_id AS "superior.id"
+             FROM employee 
+             WHERE id = ?
+            """;
+
+        var statement = dbConnection.prepareStatement(sql);
+        statement.setLong(1, id);
+        return statement.executeQuery();
+    }
+
+    /** Create a new Employee with ID */
+    public Employee createEmployee(Long id, String name, City city) {
+        return Employee.of(id, name, null, city, LocalDate.of(2020, 1, 1), true);
+    }
+}
