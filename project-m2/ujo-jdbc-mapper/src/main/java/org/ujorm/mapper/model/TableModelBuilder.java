@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.core.generator.TableIdentifier;
+import org.ujorm.mapper.impl.Config;
 import org.ujorm.mapper.impl.Context;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
@@ -39,14 +40,14 @@ public class TableModelBuilder<D> {
     public TableModel<D> build(Connection initConnection) {
         var dbModel = TableIdentifier.of(handler.getDomainClass());
         var columns = handler.getKeyList().stream()
-                .map(key -> column(key))
+                .map(this::column)
                 .toList();
         var pk = findPk(columns);
         var insertedColumns = columns.stream()
                 .filter(c -> c != pk)
                 .toList();
         var isOracleDb = isOracle(initConnection);
-        var quoteChar = getIdentifierQuoteChar(initConnection);
+        var quoteChar = getIdentifierQuoteChar(initConnection, ctx.config());
         var jdbc = new Jdbc(isOracleDb, quoteChar);
         return new TableModel(handler, pk, columns, dbModel, insertedColumns, jdbc);
     }
@@ -77,7 +78,10 @@ public class TableModelBuilder<D> {
      * @param connection The database connection to check.
      * @return true if the database product name contains "oracle", false otherwise.
      */
-    protected char getIdentifierQuoteChar(Connection connection) {
+    protected char getIdentifierQuoteChar(Connection connection, Config config) {
+        if (!config.isEnableSqlQuoting()) {
+            return ' ';
+        }
         try {
             var quoteString = connection.getMetaData().getIdentifierQuoteString();
             return (quoteString != null && !quoteString.isBlank()) ? quoteString.charAt(0) : '"';
