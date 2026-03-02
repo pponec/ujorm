@@ -40,7 +40,7 @@ public final class UjoRecord<D> extends AbstractUjo<D> {
     }
 
     @Override
-    public D toDomainObject() {
+    public D buildDomain() {
         return domainHandler.newDomain(values);
     }
 }

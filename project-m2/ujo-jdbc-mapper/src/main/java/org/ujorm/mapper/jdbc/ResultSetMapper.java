@@ -118,7 +118,7 @@ public class ResultSetMapper<D> {
                 @SuppressWarnings("unchecked")
                 var result = (AbstractUjo<D>) rootHandler.newUjoDomain();
                 populateNode(node, result, resultSet);
-                return result.toDomainObject();
+                return result.buildDomain();
             } catch (SQLException ex) {
                 throw SQLExceptionBuilder.build("Failed to map ResultSet row to domain object", ex);
             }
@@ -171,7 +171,7 @@ public class ResultSetMapper<D> {
             var childHandler = service.getHandler(childKey.type());
             var childTarget = childHandler.newUjoDomain();
             populateNode(relation.childNode(), childTarget, rs);
-            target.setValue((Key) childKey, childTarget.toDomainObject());
+            target.setValue((Key) childKey, childTarget.buildDomain());
         }
     }
 

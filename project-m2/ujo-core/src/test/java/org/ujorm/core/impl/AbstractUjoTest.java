@@ -22,7 +22,7 @@ class AbstractUjoTest {
         var handler = handlerProvider.getHandler(Employee.class);
 
         var emptyUjo = AbstractUjo.of(handler);
-        var emptyResult = emptyUjo.toDomainObject();
+        var emptyResult = emptyUjo.buildDomain();
         assertNotNull(emptyResult);
         assertNull(emptyResult.getId());
         assertNull(emptyResult.getName());
@@ -32,7 +32,7 @@ class AbstractUjoTest {
         var employee = new Employee();
         employee.setName("Alice");
         var filledUjo = AbstractUjo.of(employee, handler);
-        var result = filledUjo.toDomainObject();
+        var result = filledUjo.buildDomain();
         assertNotNull(result);
         assertEquals(employee, result);
         assertEquals("Alice", result.getName());
@@ -47,7 +47,7 @@ class AbstractUjoTest {
 
         // Test the empty of(handler) method
         var emptyUjo = AbstractUjo.of(handler);
-        var emptyResult = emptyUjo.toDomainObject();
+        var emptyResult = emptyUjo.buildDomain();
         assertNotNull(emptyResult);
         assertNull(emptyResult.id());
         assertNull(emptyResult.name());
@@ -56,7 +56,7 @@ class AbstractUjoTest {
         // Test the of(domainObject, handler) method
         var city = City.of(1L, "Prague");
         var filledUjo = AbstractUjo.of(city, handler);
-        var result = filledUjo.toDomainObject();
+        var result = filledUjo.buildDomain();
 
         assertNotNull(result);
         assertEquals(city, result);

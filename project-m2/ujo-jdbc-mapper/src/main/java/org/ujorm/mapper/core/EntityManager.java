@@ -129,7 +129,7 @@ public class EntityManager<D, V> {
                 }
                 var ujo = AbstractUjo.of(domain, domainHandler);
                 ujo.setValue(pk, id);
-                return ujo.toDomainObject();
+                return ujo.buildDomain();
             }
         });
     }
