@@ -16,8 +16,11 @@
 package org.ujorm.core.generator;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -120,7 +123,10 @@ class DomainModelBuilder {
             dbColName = buildDbName(name);
         }
 
-        boolean foreignKey = false; // TODO
+        // Check a foreign key:
+        var hasManyToOne = element.isAnnotationPresent(ManyToOne.class);
+        var isTargetEntity = type.isAnnotationPresent(Entity.class) || type.isAnnotationPresent(Table.class);
+        var foreignKey = hasManyToOne || joinColumn != null || isTargetEntity;
 
         return new DomainPropertyModel(name, type, getter, setter, dbColName, required, primaryKey, foreignKey);
     }
