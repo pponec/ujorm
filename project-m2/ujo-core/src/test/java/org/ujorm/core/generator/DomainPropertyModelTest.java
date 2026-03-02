@@ -21,11 +21,11 @@ class DomainPropertyModelTest {
 
         // Check total count of properties
         assertEquals(6, properties.size());
-        assertNotEquals("_snapshot", properties.get(properties.size() - 1).propertyName());
+        assertNotEquals("_snapshot", properties.get(properties.size() - 1).name());
 
         // Test "id" property (PK, NotNull)
         var idProp = findProperty(properties, "id");
-        assertEquals(Long.class, idProp.propertyType());
+        assertEquals(Long.class, idProp.type());
         assertEquals("getId", idProp.getter());
         assertEquals("setId", idProp.setter());
         assertEquals("id", idProp.dbColumName());
@@ -36,14 +36,14 @@ class DomainPropertyModelTest {
 
         // Test "name" property (Basic column)
         var nameProp = findProperty(properties, "name");
-        assertEquals(String.class, nameProp.propertyType());
+        assertEquals(String.class, nameProp.type());
         assertEquals("name", nameProp.dbColumName());
         assertFalse(nameProp.primaryKey());
         assertTrue(nameProp.required());
 
         // Test "superior" property (Object relation, JoinColumn, Nullable)
         var superiorProp = findProperty(properties, "boss");
-        assertEquals(Employee.class, superiorProp.propertyType());
+        assertEquals(Employee.class, superiorProp.type());
         assertEquals("getBoss", superiorProp.getter());
         assertEquals("setBoss", superiorProp.setter());
         assertEquals("boss_id", superiorProp.dbColumName()); // Value from @JoinColumn
@@ -53,7 +53,7 @@ class DomainPropertyModelTest {
 
         // Test "contractDay" property (CamelCase field, snake_case DB column via Annotation)
         var dateProp = findProperty(properties, "contractDay");
-        assertEquals(LocalDate.class, dateProp.propertyType());
+        assertEquals(LocalDate.class, dateProp.type());
         assertEquals("getContractDay", dateProp.getter());
         assertEquals("setContractDay", dateProp.setter());
         assertEquals("contract_day", dateProp.dbColumName()); // Value from @Column
@@ -80,7 +80,7 @@ class DomainPropertyModelTest {
 
         // Test "id" component (PK)
         var idProp = findProperty(properties, "id");
-        assertEquals("id", idProp.propertyName());
+        assertEquals("id", idProp.name());
         assertEquals("db_id", idProp.dbColumName());
         assertTrue(idProp.primaryKey());
         assertTrue(idProp.required());
@@ -88,23 +88,23 @@ class DomainPropertyModelTest {
 
         // Test "name" component (Standard string)
         var nameProp = findProperty(properties, "name");
-        assertEquals("name", nameProp.propertyName());
+        assertEquals("name", nameProp.name());
         assertEquals("db_name", nameProp.dbColumName());
-        assertEquals(String.class, nameProp.propertyType());
+        assertEquals(String.class, nameProp.type());
         assertEquals("name", nameProp.getter());
         assertNull(nameProp.setter());
         assertTrue(nameProp.required());
 
         // Test "countryCode" component (Explicit @Column name)
         var codeProp = findProperty(properties, "countryCode");
-        assertEquals("countryCode", codeProp.propertyName());
+        assertEquals("countryCode", codeProp.name());
         assertEquals("country_code", codeProp.dbColumName());
         assertEquals("countryCode", codeProp.getter());
         assertTrue(codeProp.required());
 
         // Test "latitude" component (No annotation -> fallback to field name)
         var latProp = findProperty(properties, "latitude");
-        assertEquals("latitude", latProp.propertyName());
+        assertEquals("latitude", latProp.name());
         assertEquals("latitude", latProp.dbColumName());
         assertFalse(latProp.primaryKey());
         assertTrue(latProp.required()); // Double wrapper is not nullable
@@ -122,7 +122,7 @@ class DomainPropertyModelTest {
      */
     private DomainPropertyModel findProperty(List<DomainPropertyModel> properties, String name) {
         return properties.stream()
-                .filter(p -> p.propertyName().equals(name))
+                .filter(p -> p.name().equals(name))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("Property not found: " + name));
     }

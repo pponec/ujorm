@@ -35,7 +35,9 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     @NotNull
     final String columnLabel;
     /** Indicates if the column is a primary key. */
-    final boolean isPrimaryKey;
+    final boolean primaryKey;
+    /** Indicates if the column is a foreign key. */
+    final boolean foreignKey;
     /** Indicates if the database column is required. */
     final boolean required;
     /** Default value of the key. */
@@ -46,13 +48,15 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
             @NotNull final String name,
             @NotNull final Class<V> type,
             @NotNull final String columnLabel,
-            final boolean isPrimaryKey,
+            final boolean primaryKey,
+            final boolean foreignKey,
             final boolean required) {
         this.order = order;
         this.name = name.intern();
         this.type = type;
         this.columnLabel = columnLabel.intern();
-        this.isPrimaryKey = isPrimaryKey;
+        this.primaryKey = primaryKey;
+        this.foreignKey = foreignKey;
         this.required = required;
         this.defaultValue = getDefaultValue(type);
     }
@@ -89,7 +93,12 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
 
     @Override
     public boolean primaryKey() {
-        return isPrimaryKey;
+        return primaryKey;
+    }
+
+    @Override
+    public boolean foreignKey() {
+        return foreignKey;
     }
 
     @Override

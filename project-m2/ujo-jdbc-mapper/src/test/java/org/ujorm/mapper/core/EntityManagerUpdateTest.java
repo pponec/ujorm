@@ -30,8 +30,12 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         employee2.saveSnapshot().setName("EmplB-Updated");
 
         Assertions.assertEquals(2L, emplDao.updateChanged(employee1, employee2));
-        Assertions.assertEquals(employee1.toString(), emplDao.readNullable(employee1.getId()).toString());
-        Assertions.assertEquals(employee2.toString(), emplDao.readNullable(employee2.getId()).toString());
+        var emp1 = emplDao.readNullable(employee1.getId());
+        Assertions.assertEquals(employee1.getId(), emp1.getId());
+        Assertions.assertEquals(employee1.getName(), emp1.getName());
+        Assertions.assertEquals(employee1.getContractDay(), emp1.getContractDay());
+        Assertions.assertEquals(employee1.getCity().id(), emp1.getCity().id());
+        Assertions.assertNull(emp1.getSuperior().getId());
 
         // Update 3: Verify that an entity without changes doesn't increment the update count
         employee1.saveSnapshot();

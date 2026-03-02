@@ -16,8 +16,11 @@
 package org.ujorm.core.generator;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -103,10 +106,10 @@ class DomainModelBuilder {
      * @return A populated DomainPropertyModel instance.
      */
     private DomainPropertyModel createModel(String name, Class<?> type, String getter, String setter, AnnotatedElement element) {
-        var isId = element.isAnnotationPresent(Id.class);
+        var primaryKey = element.isAnnotationPresent(Id.class);
         var column = element.getAnnotation(Column.class);
         var joinColumn = element.getAnnotation(JoinColumn.class);
-        var required = type.isPrimitive() || isId;
+        var required = type.isPrimitive() || primaryKey;
         var dbColName = "";
 
         if (column != null) {
@@ -120,7 +123,12 @@ class DomainModelBuilder {
             dbColName = buildDbName(name);
         }
 
-        return new DomainPropertyModel(name, type, getter, setter, dbColName, required, isId);
+        // Check a foreign key:
+        var hasManyToOne = element.isAnnotationPresent(ManyToOne.class);
+        var isTargetEntity = type.isAnnotationPresent(Entity.class) || type.isAnnotationPresent(Table.class);
+        var foreignKey = hasManyToOne || joinColumn != null || isTargetEntity;
+
+        return new DomainPropertyModel(name, type, getter, setter, dbColName, required, primaryKey, foreignKey);
     }
 
     /** Converts a Java Bean property name to a snake_case database column name. */
