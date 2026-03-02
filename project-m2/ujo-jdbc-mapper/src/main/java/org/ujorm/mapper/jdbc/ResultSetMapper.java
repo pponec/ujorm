@@ -155,21 +155,29 @@ public class ResultSetMapper<D> {
 
     /**
      * Recursively populates the target AbstractUjo wrapper and its relations.
+     * @return true if at least one non-null value was set in this node or its children
      */
-    private <D2> void populateNode(MappingNode<D2> node, AbstractUjo<D2> target, ResultSet rs) throws SQLException {
+    private <D2> boolean populateNode(MappingNode<D2> node, AbstractUjo<D2> target, ResultSet rs) throws SQLException {
+        var hasData = false;
         for (var mapping : node.directMappings()) {
             var objectType = Primitive.wrapPrimitive(mapping.key().type());
             var value = rs.getObject(mapping.columnIndex(), objectType);
-            target.setValue(mapping.key(), value);
+            if (value != null) {
+                target.setValue(mapping.key(), value);
+                hasData = true;
+            }
         }
-
         for (var relation : node.relations()) {
             var childKey = relation.childKey();
             var childHandler = service.getHandler(childKey.type());
             var childTarget = childHandler.newUjoDomain();
-            populateNode(relation.childNode(), childTarget, rs);
-            target.setValue(childKey, childTarget.buildDomain());
+
+            if (populateNode(relation.childNode(), childTarget, rs)) {
+                target.setValue(childKey, childTarget.buildDomain());
+                hasData = true;
+            }
         }
+        return hasData;
     }
 
     /**
@@ -327,7 +335,6 @@ public class ResultSetMapper<D> {
      */
     private record DirectMapping<D2, V>(
             /** Gets the property key. */
-
             Key<D2, V> key,
             /** Gets the column index. */
             int columnIndex
