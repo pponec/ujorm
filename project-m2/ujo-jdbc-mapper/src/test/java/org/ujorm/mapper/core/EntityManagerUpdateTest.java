@@ -35,7 +35,7 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         Assertions.assertEquals(employee1.getName(), emp1.getName());
         Assertions.assertEquals(employee1.getContractDay(), emp1.getContractDay());
         Assertions.assertEquals(employee1.getCity().id(), emp1.getCity().id());
-        Assertions.assertNull(emp1.getSuperior().getId());
+        Assertions.assertNull(emp1.getSuperior());
 
         // Update 3: Verify that an entity without changes doesn't increment the update count
         employee1.saveSnapshot();

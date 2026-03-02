@@ -221,9 +221,7 @@ public class ResultSetMapperTestKey {
         assertEquals(10, result.getId());
         assertNotNull(result.getCity());
         assertEquals("Prague", result.getCity().getName());
-        assertNotNull(result.getBoss());
-        assertNotNull(result.getBoss().getBoss());
-        assertNull(result.getBoss().getBoss().getName());
+        assertNull(result.getBoss());
     }
 
     /** Tests whether the cacheCleared timestamp is updated when the cache size limit is reached. */
