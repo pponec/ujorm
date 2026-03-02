@@ -53,38 +53,39 @@ public class EntityManager<D, V> {
     private final ResultSetMapper<D> resultSetMapper;
     /** TODO: Get from a local thread */
     private final Context context;
-    private final TableModel<D> tableModel;
-    private final ColumnModel<D, V> pkColumn;
-    private final Key<D, V> pk;
-    private final char quote;
     private final Utilities utilities;
+
+    /** Lazy initialized TableModel.
+     * Use {@link #tableModel()} method to access it safely. */
+    private volatile TableModel<D> _tableModel;
 
     /** Size of batch for multi-insert and delete.
      * Note: This attribute is not fully implemented yet. */
     @Deprecated
     private final int insertBatchSize;
 
-    @SuppressWarnings("unchecked")
     public EntityManager(
             @NotNull Class<D> domainClass,
-            @NotNull Connection connection,
             @NotNull Context context,
             @NotNull ResultSetMapper<D> resultSetMapper) {
-        this.connection.set(connection);
         this.domainHandler = context.domainService().getHandler(domainClass);
         this.context = context;
-        this.tableModel = TableModelBuilder.build(domainHandler, context, connection);
-        this.pkColumn = (ColumnModel<D, V>) tableModel.pk();
-        this.pk = pkColumn.key();
         this.insertBatchSize = context.config().getInsertBatchSize();
-        this.quote = tableModel.jdbc().quoteChar();
         this.resultSetMapper = resultSetMapper;
         this.utilities = new Utilities();
     }
 
-    /** Sets a connection for the current thread. */
-    public void setConnection(@NotNull Connection connection) {
+    /** Sets a connection for the current thread and initializes the model if necessary. */
+    public EntityManager<D, V> setConnection(@NotNull Connection connection) {
         this.connection.set(connection);
+        if (this._tableModel == null) {
+            synchronized (this) {
+                if (this._tableModel == null) {
+                    this._tableModel = TableModelBuilder.build(domainHandler, context, connection);
+                }
+            }
+        }
+        return this;
     }
 
     /** Removes the connection from the current thread to prevent memory leaks. */
@@ -99,6 +100,30 @@ public class EntityManager<D, V> {
             throw new IllegalStateException("DB Connection is not available for the current thread.");
         }
         return conn;
+    }
+
+    /** Thread-safe access to the TableModel. */
+    @NotNull
+    private TableModel<D> tableModel() {
+        var result = this._tableModel;
+        if (result == null) {
+            throw new IllegalStateException("%s is not initialized. Call setConnection() first.".formatted(
+                    getClass().getSimpleName()));
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private ColumnModel<D, V> pkColumn() {
+        return (ColumnModel<D, V>) tableModel().pk();
+    }
+
+    private Key<D, V> pk() {
+        return pkColumn().key();
+    }
+
+    private char getQuote() {
+        return tableModel().jdbc().quoteChar();
     }
 
     /** Inserts multiple domain objects using a loop.
@@ -119,7 +144,7 @@ public class EntityManager<D, V> {
      */
     public D insert(@NotNull D domain) {
         var pkOriginalValue = utilities.getPrimaryKeyValue(domain);
-        var columns = tableModel.createInsertedColumns(pkOriginalValue);
+        var columns = tableModel().createInsertedColumns(pkOriginalValue);
         var sql = new StringBuilder(256)
                 .append("INSERT INTO ")
                 .append(domainHandler.getDatabaseTable())
@@ -140,6 +165,7 @@ public class EntityManager<D, V> {
             } else {
                 ps.executeUpdate();
                 V id = null;
+                var pk = pk();
                 try (var rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
                         id = rs.getObject(1, pk.type());
@@ -164,8 +190,9 @@ public class EntityManager<D, V> {
     /** Reads a domain object by its identifier. */
     @NotNull
     public Optional<D> read(@NotNull V id) {
-        var columns = tableModel.columns();
+        var columns = tableModel().columns();
         var labels = new Key[columns.size()];
+        var quote = getQuote();
         var sql = new StringBuilder(128)
                 .append("SELECT \n");  // "*"
         for (var i = 0; i < columns.size(); i++) {
@@ -181,7 +208,7 @@ public class EntityManager<D, V> {
         sql.append(" FROM ")
                 .append(domainHandler.getDatabaseTable())
                 .append(" WHERE ")
-                .append(pk.columnLabel())
+                .append(pk().columnLabel())
                 .append(" = ?");
 
         return utilities.run(sql, false, ps -> {
@@ -199,7 +226,7 @@ public class EntityManager<D, V> {
      * @return The number of affected rows.
      */
     public long update(@NotNull D domain, CharSequence... properties) {
-        var columns = tableModel.getColumns(properties);
+        var columns = tableModel().getColumns(properties);
         return update(domain, columns);
     }
 
@@ -210,7 +237,7 @@ public class EntityManager<D, V> {
      * @return The number of affected rows.
      */
     public long update(@NotNull List<D> domains, CharSequence... properties) {
-        var columns = tableModel.getColumns(properties);
+        var columns = tableModel().getColumns(properties);
         return updateList(domains, columns);
     }
 
@@ -274,9 +301,10 @@ public class EntityManager<D, V> {
     /** Binds values to the PreparedStatement and adds it to the current batch. */
     @SafeVarargs
     protected final long updateInternal(PreparedStatement statement, D entity, Key<D,?>... keys) throws SQLException {
+        var model = tableModel();
         var columns = new ArrayList<ColumnModel<D, Object>>(keys.length);
         for (var key : keys) {
-            columns.add(tableModel.getColumn(key.index()));
+            columns.add(model.getColumn(key.index()));
         }
         utilities.setValuesToStatement(entity, columns, statement);
         utilities.setPkToStatement(entity, columns.size() + 1, statement);
@@ -334,7 +362,7 @@ public class EntityManager<D, V> {
 
     /** Deletes a domain object by its identifier. */
     public int deleteById(@NotNull V id) {
-        var sql = "DELETE FROM " + domainHandler.getDatabaseTable() + " WHERE " + pk.columnLabel() + " = ?";
+        var sql = "DELETE FROM " + domainHandler.getDatabaseTable() + " WHERE " + pk().columnLabel() + " = ?";
         return utilities.run(sql, false, ps -> {
             ps.setObject(1, id);
             return ps.executeUpdate();
@@ -346,7 +374,7 @@ public class EntityManager<D, V> {
 
         /** Returns the value of the primary key. */
         public V getPrimaryKeyValue(@NotNull final D domain) {
-            return pk.getValue(domain);
+            return pk().getValue(domain);
         }
 
         /** Set values to the Prepared Statement */
@@ -363,7 +391,7 @@ public class EntityManager<D, V> {
 
         /** Set PK to the Prepared Statement */
         public void setPkToStatement(final D domain, final int index, final PreparedStatement ps) throws SQLException {
-            ps.setObject(index, getPrimaryKeyValue(domain), pkColumn.jdbcType());
+            ps.setObject(index, getPrimaryKeyValue(domain), pkColumn().jdbcType());
         }
 
         /** Builds an SQL UPDATE statement for the specified columns. */
@@ -376,15 +404,16 @@ public class EntityManager<D, V> {
                 sql.append(i == 0 ? " SET " : ", ");
                 sql.append(column.name()).append(" = ?");
             }
-            sql.append(" WHERE ").append(pkColumn.name()).append(" = ?");
+            sql.append(" WHERE ").append(pkColumn().name()).append(" = ?");
             return sql.toString();
         }
 
         /** Builds an SQL UPDATE statement for the specified keys. */
         public String buildUpdateSql(Key<D, ?>[] keys) {
+            var model = tableModel();
             var columns = new java.util.ArrayList<ColumnModel<D, Object>>(keys.length);
             for (var key : keys) {
-                columns.add(tableModel.getColumn(key.index()));
+                columns.add((ColumnModel<D, Object>) model.getColumn(key.index()));
             }
             return buildUpdateSql(columns);
         }
@@ -393,8 +422,8 @@ public class EntityManager<D, V> {
         public <R> R run(final CharSequence sql, final boolean returnGeneratedKeys, final SqlFunction<PreparedStatement, R> fun) {
             try (var ps = !returnGeneratedKeys
                     ? connection().prepareStatement(sql.toString())
-                    : tableModel.jdbc().isOracleDb()
-                    ? connection().prepareStatement(sql.toString(), new String[]{pkColumn.name()})
+                    : tableModel().jdbc().isOracleDb()
+                    ? connection().prepareStatement(sql.toString(), new String[]{pkColumn().name()})
                     : connection().prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)
             ) {
                 if (context.config().isPrintSql()) {
@@ -425,9 +454,19 @@ public class EntityManager<D, V> {
     // --- STATIC METHOD(s) ---
 
     /** Factory method */
-    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull Connection connection, @Nullable Class<V> pkObjectType) {
-        var rsMapper = ResultSetMapper.of(domainClass);
-        var context = Context.ofDefault();
-        return new EntityManager<>(domainClass, connection, context, rsMapper);
+    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @Nullable Class<V> type) {
+        return new EntityManager<>(domainClass, Context.ofDefault(), ResultSetMapper.of(domainClass));
+    }
+
+    /** Factory method */
+    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull Context context, @NotNull ResultSetMapper<D> resultSetMapper) {
+        return new EntityManager<>(domainClass, context, resultSetMapper);
+    }
+
+    /** Factory method with provided connection */
+    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull Connection connection, @NotNull Context context, @NotNull ResultSetMapper<D> resultSetMapper) {
+        var manager = new EntityManager<D, V>(domainClass, context, resultSetMapper);
+        manager.setConnection(connection);
+        return manager;
     }
 }
