@@ -5,10 +5,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /** Handles caching, execution and resource cleanup of batched statements. */
-public final class StatementCache implements AutoCloseable {
+public final class StatementCache<V> implements AutoCloseable {
 
     private final int maxCapacity;
     private final HashMap<BitSet, PreparedStatement> cache = new HashMap<>();
+    private final java.util.HashSet<V> activeIds = new java.util.HashSet<>();
 
     /** Creates a cache with a default capacity of 5. */
     public StatementCache() {
@@ -48,6 +49,19 @@ public final class StatementCache implements AutoCloseable {
         return cache.size();
     }
 
+    /** Flushes the cache if the given ID is already active. */
+    public long flushOnCollision(V id) throws SQLException {
+        if (activeIds.contains(id)) {
+            return flush();
+        }
+        return 0L;
+    }
+
+    /** Adds an ID to the active set. */
+    public void addId(V id) {
+        activeIds.add(id);
+    }
+
     /** Executes and closes all batched statements in the cache. */
     public long flush() throws SQLException {
         if (cache.isEmpty()) {
@@ -63,6 +77,7 @@ public final class StatementCache implements AutoCloseable {
             statement.close();
         }
         cache.clear();
+        activeIds.clear();
         return result;
     }
 
