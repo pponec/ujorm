@@ -129,7 +129,7 @@ public class EntityManager<D, V> {
                 }
                 var ujo = AbstractUjo.of(domain, domainHandler);
                 ujo.setValue(pk, id);
-                return ujo.toDomainObject();
+                return ujo.buildDomain();
             }
         });
     }
@@ -151,6 +151,12 @@ public class EntityManager<D, V> {
     /** Set values to the Prepared Staement */
     protected final void setPkToStatement(final D domain, final int index, final PreparedStatement ps) throws SQLException {
         ps.setObject(index, getPrimaryKeyValue(domain), pkColumn.jdbcType());
+    }
+
+    /** Reads a domain object by its identifier. */
+    @Nullable
+    public D readNullable(@NotNull V id) {
+        return read(id).orElse(null);
     }
 
     /** Reads a domain object by its identifier. */

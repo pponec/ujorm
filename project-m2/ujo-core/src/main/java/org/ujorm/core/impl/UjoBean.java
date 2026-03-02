@@ -32,7 +32,7 @@ public final class UjoBean<D> extends AbstractUjo<D> {
     }
 
     @Override
-    public D toDomainObject() {
+    public D buildDomain() {
         return values;
     }
 }

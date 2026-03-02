@@ -58,7 +58,7 @@ public class CsvManager<D> {
                         : null;
                 result.setValue(key, value);
             }
-            return result.toDomainObject();
+            return result.buildDomain();
         });
     }
 

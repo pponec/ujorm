@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-/** Tests a logic of column aliases processing in ResultSetTreeMapper */
-public class ResultSetMapperColumnTest {
+/** Tests a logic of column aliases processing in ResultSetMapper */
+public class ResultSetMapperTest {
 
     /** Tests mapping by property name when label and name differ. */
     @Test @Order(100)

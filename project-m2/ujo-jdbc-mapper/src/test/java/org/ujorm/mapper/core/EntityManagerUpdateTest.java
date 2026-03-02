@@ -11,7 +11,7 @@ import java.time.LocalDate;
 class EntityManagerUpdateTest extends AbstractDaoTest {
 
     /** Test partial updates of one or multiple entities */
-    //@Test // TODO:pop
+    @Test
     void partialUpdate() {
         var cityDao = EntityManager.of(City.class, dbConnection, Long.class);
         var city = cityDao.insert(new City(null, "California", "US", 36.7783, -119.4179));
@@ -30,8 +30,8 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         employee2.saveSnapshot().setName("EmplB-Updated");
 
         Assertions.assertEquals(2L, emplDao.updateChanged(employee1, employee2));
-        Assertions.assertEquals(employee1.toString(), emplDao.read(employee1.getId()));
-        Assertions.assertEquals(employee2.toString(), emplDao.read(employee2.getId()));
+        Assertions.assertEquals(employee1.toString(), emplDao.readNullable(employee1.getId()).toString());
+        Assertions.assertEquals(employee2.toString(), emplDao.readNullable(employee2.getId()).toString());
 
         // Update 3: Verify that an entity without changes doesn't increment the update count
         employee1.saveSnapshot();
