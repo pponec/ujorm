@@ -13,7 +13,7 @@ class EntityManagerTest extends AbstractDaoTest {
 
     @Test
     void crud() {
-        var cityDao = EntityManager.of(City.class, dbConnection, pkType);
+        var cityDao = EntityManager.of(City.class, pkType).setConnection(dbConnection);
         var cityInp = new City(null, "California", "US", 36.7783, -119.4179);
         var cityOut = cityDao.insert(cityInp);
         Assertions.assertNotNull(cityOut.id());
@@ -28,7 +28,7 @@ class EntityManagerTest extends AbstractDaoTest {
         Assertions.assertSame(cityInp, cityOut);
 
         // Employee A
-        var emplDao = EntityManager.of(Employee.class, dbConnection, pkType);
+        var emplDao = EntityManager.of(Employee.class, pkType).setConnection(dbConnection);
         var employeeInp = createEmployee("EmplA", cityInp);
         var employeeOut = emplDao.insert(employeeInp);
         Assertions.assertNotNull(employeeOut.getId());
@@ -59,7 +59,7 @@ class EntityManagerTest extends AbstractDaoTest {
 
     @Test
     void readRecord() {
-        var cityDao = EntityManager.of(City.class, dbConnection, pkType);
+        var cityDao = EntityManager.of(City.class, pkType).setConnection(dbConnection);
         var cityInp = new City(null, "California", "US", 36.7783, -119.4179);
         var cityOut = cityDao.insert(cityInp);
         Assertions.assertNotNull(cityOut.id());

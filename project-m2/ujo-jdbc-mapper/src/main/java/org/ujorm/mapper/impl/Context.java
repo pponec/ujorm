@@ -6,7 +6,6 @@ import org.ujorm.mapper.service.CommonService;
 //import org.ujorm.mapper.MapperContext;
 
 /** TODO:pop: create interface from this class */
-
 public record Context (
         Config config,
         /** Handler commonService */
@@ -18,5 +17,9 @@ public record Context (
 
     public static Context ofDefault() {
         return new Context(new Config(), DomainHandlerProvider.provider(), COMMON_SERVICE);
+    }
+
+    public static Context of(Config config, DomainHandlerService domainService) {
+        return new Context(config,domainService, COMMON_SERVICE);
     }
 }
