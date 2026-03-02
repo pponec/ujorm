@@ -8,6 +8,7 @@ import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.Key;
 import org.ujorm.core.csv.CsvLineSplitter;
+import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.tools.common.Primitive;
 import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
@@ -113,9 +114,11 @@ public class ResultSetMapper<D> {
                 var key = new CacheKey(extracted);
                 var node = cache.getOrCreate(key, k ->
                         buildMappingTree(k.columns()));
-                var result = rootHandler.newDomain();
+
+                @SuppressWarnings("unchecked")
+                var result = (AbstractUjo<D>) rootHandler.newUjoDomain();
                 populateNode(node, result, resultSet);
-                return result;
+                return result.toDomainObject();
             } catch (SQLException ex) {
                 throw SQLExceptionBuilder.build("Failed to map ResultSet row to domain object", ex);
             }
@@ -153,23 +156,22 @@ public class ResultSetMapper<D> {
     }
 
     /**
-     * Recursively populates the target bean and its relations.
+     * Recursively populates the target AbstractUjo wrapper and its relations.
      */
-    private <D2> void populateNode(MappingNode<D2> node, D2 target, ResultSet rs) throws SQLException {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private <D2> void populateNode(MappingNode<D2> node, AbstractUjo<D2> target, ResultSet rs) throws SQLException {
         for (var mapping : node.directMappings()) {
             var objectType = Primitive.wrapPrimitive(mapping.key().type());
             var value = rs.getObject(mapping.columnIndex(), objectType);
-            mapping.key().setValue(target, value);
+            target.setValue((Key) mapping.key(), value);
         }
 
         for (var relation : node.relations()) {
             var childKey = relation.childKey();
-            var childInstance = childKey.getValue(target);
-            if (childInstance == null) {
-                childInstance = service.createDomainInstance(childKey.type());
-                childKey.setValue(target, childInstance);
-            }
-            populateNode(relation.childNode(), childInstance, rs);
+            var childHandler = service.getHandler(childKey.type());
+            var childTarget = childHandler.newUjoDomain();
+            populateNode(relation.childNode(), childTarget, rs);
+            target.setValue((Key) childKey, childTarget.toDomainObject());
         }
     }
 
@@ -177,13 +179,13 @@ public class ResultSetMapper<D> {
      * Builds the internal tree structure from the flat column definitions.
      */
     private MappingNode<D> buildMappingTree(@NotNull List<ColumnMetadata> columns) {
-        var root = new MappingNode<D>();
+        var result = new MappingNode<D>();
         for (var i = 0; i < columns.size(); i++) {
             var col = columns.get(i);
             var parts = SPLITTER.split(col.label(), SPLITTER_INIT_CAPACITY);
-            buildPath(root, this.domainClass, parts, i + 1, col.isDbColumn());
+            buildPath(result, this.domainClass, parts, i + 1, col.isDbColumn());
         }
-        return root;
+        return result;
     }
 
     /**
@@ -266,9 +268,10 @@ public class ResultSetMapper<D> {
      * @param <D2> Domain type
      */
     private record MappingNode<D2>(
-            /** List of direct column mappings for the current node. */
+            /** Gets the list of direct column mappings for the current node. */
             List<DirectMapping<D2, Object>> directMappings,
-            /** List of relation mappings to child nodes. */
+
+            /** Gets the list of relation mappings to child nodes. */
             List<RelationMapping<D2, Object>> relations
     ) {
         public MappingNode() {
@@ -301,9 +304,10 @@ public class ResultSetMapper<D> {
      * @param <V> Value type
      */
     private record DirectMapping<D2, V>(
-            /** Property key */
+            /** Gets the property key. */
+
             Key<D2, V> key,
-            /** Column index */
+            /** Gets the column index. */
             int columnIndex
     ) {}
 
@@ -314,23 +318,25 @@ public class ResultSetMapper<D> {
      * @param <CHILD> Child type
      */
     private record RelationMapping<D2, CHILD>(
-            /** Key for the child relation */
+            /** Gets the key for the child relation. */
             Key<D2, CHILD> childKey,
-            /** Mapping node for the child */
+
+            /** Gets the mapping node for the child. */
             MappingNode<CHILD> childNode
     ) {}
 
     /** Metadata for a single column. */
     private record ColumnMetadata(
-            /** Column label. */
+            /** Gets the column label. */
             String label,
-            /** Is it a database column name? */
+
+            /** Gets whether it is a database column name. */
             boolean isDbColumn
     ) {}
 
     /** Cache key based on column metadata. */
     private record CacheKey(
-            /** List of column metadata */
+            /** Gets the list of column metadata. */
             List<ColumnMetadata> columns
     ) {}
 
