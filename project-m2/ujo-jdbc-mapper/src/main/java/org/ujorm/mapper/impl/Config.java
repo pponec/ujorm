@@ -27,8 +27,11 @@ public class Config implements MapperContext {
 
     private Map<Class<?>, Function<String,?>> converterMap = DEFAULT_CONVERTER_MAP;
 
-    /** Maximu size of the cache in the ResultSet Mapper */
+    /** Maximum size of the cache in the ResultSet Mapper */
     private int maxCacheSize = 512;
+
+    /** Batch size for the INSERT */
+    private int insertBatchSize = 512;
 
     private boolean printSql = true;
 

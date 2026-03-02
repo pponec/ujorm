@@ -9,9 +9,11 @@ import java.time.LocalDate;
 
 class EntityManagerTest extends AbstractDaoTest {
 
+    private final Class<Long> pkType = Long.class;
+
     @Test
     void crud() {
-        var cityDao = new EntityManager<City, Long>(City.class, dbConnection);
+        var cityDao = EntityManager.of(City.class, dbConnection, pkType);
         var cityInp = new City(null, "California", "US", 36.7783, -119.4179);
         var cityOut = cityDao.insert(cityInp);
         Assertions.assertNotNull(cityOut.id());
@@ -26,7 +28,7 @@ class EntityManagerTest extends AbstractDaoTest {
         Assertions.assertSame(cityInp, cityOut);
 
         // Employee A
-        var emplDao = new EntityManager<Employee, Long>(Employee.class, dbConnection);
+        var emplDao = EntityManager.of(Employee.class, dbConnection, pkType);
         var employeeInp = createEmployee("EmplA", cityInp);
         var employeeOut = emplDao.insert(employeeInp);
         Assertions.assertNotNull(employeeOut.getId());
@@ -57,7 +59,7 @@ class EntityManagerTest extends AbstractDaoTest {
 
     @Test
     void readRecord() {
-        var cityDao = new EntityManager<City, Long>(City.class, dbConnection);
+        var cityDao = EntityManager.of(City.class, dbConnection, pkType);
         var cityInp = new City(null, "California", "US", 36.7783, -119.4179);
         var cityOut = cityDao.insert(cityInp);
         Assertions.assertNotNull(cityOut.id());

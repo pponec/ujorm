@@ -13,10 +13,10 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
     /** Test partial updates of one or multiple entities */
     @Test
     void partialUpdate() {
-        var cityDao = new EntityManager<City, Long>(City.class, dbConnection);
+        var cityDao = EntityManager.of(City.class, dbConnection, Long.class);
         var city = cityDao.insert(new City(null, "California", "US", 36.7783, -119.4179));
 
-        var emplDao = new EntityManager<Employee, Long>(Employee.class, dbConnection);
+        var emplDao = EntityManager.of(Employee.class, dbConnection, Long.class);
         var employee1 = emplDao.insert(createEmployee("EmplA", city));
         var employee2 = emplDao.insert(createEmployee(101L, "EmplB", city));
 
@@ -47,10 +47,10 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
     /** Test error scenarios for partial updates */
     @Test
     void errorScenarios() {
-        var cityDao = new EntityManager<City, Long>(City.class, dbConnection);
+        var cityDao = EntityManager.of(City.class, dbConnection, Long.class);
         var city = cityDao.insert(new City(null, "California", "US", 36.7783, -119.4179));
 
-        var emplDao = new EntityManager<Employee, Long>(Employee.class, dbConnection);
+        var emplDao = EntityManager.of(Employee.class, dbConnection, Long.class);
         var employee = emplDao.insert(createEmployee("EmplA", city));
 
         // Error 1: Missing snapshot (expected IllegalStateException)
