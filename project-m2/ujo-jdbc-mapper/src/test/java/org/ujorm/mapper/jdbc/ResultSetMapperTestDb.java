@@ -30,16 +30,6 @@ public class ResultSetMapperTestDb extends AbstractDaoTest {
 
     @Test
     void readEmployeeTest() throws SQLException {
-        var resultSet = getEmployeeResultSet(1L);
-        var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetMapper.of(Employee.class, service);
-        var employee = mapper.convert(resultSet).findFirst();
-        Assertions.assertTrue(employee.isPresent());
-        Assertions.assertEquals(1L, employee.get().getId());
-    }
-
-    /** Gets the ResultSet for the employee with ID 1 */
-    private ResultSet getEmployeeResultSet(Long id) throws SQLException {
         var sql = """
             SELECT
               id AS "id"
@@ -51,7 +41,17 @@ public class ResultSetMapperTestDb extends AbstractDaoTest {
              FROM employee 
              WHERE id = ?
             """;
+        var resultSet = getEmployeeResultSet(sql,1L);
+        var service = DomainHandlerProvider.provider();
+        var mapper = ResultSetMapper.of(Employee.class, service);
+        var employee = mapper.convert(resultSet).findFirst();
+        Assertions.assertTrue(employee.isPresent());
+        Assertions.assertEquals(1L, employee.get().getId());
+        Assertions.assertEquals(2L, employee.get().getCity().id());
+    }
 
+    /** Gets the ResultSet for the employee with ID 1 */
+    private ResultSet getEmployeeResultSet(String sql, Long id) throws SQLException {
         var statement = dbConnection.prepareStatement(sql);
         statement.setLong(1, id);
         return statement.executeQuery();
