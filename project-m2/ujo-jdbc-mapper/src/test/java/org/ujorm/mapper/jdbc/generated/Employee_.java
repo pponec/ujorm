@@ -35,7 +35,7 @@ public Class<Employee> getDomainClass() {
 /** Key id */
 static final class Key_id extends AbstractKey<Employee, java.lang.Integer> {
     public Key_id(final int order) {
-        super(order, "id", java.lang.Integer.class, "id", false, false);
+        super(order, "id", java.lang.Integer.class, "id", false, false, false);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final java.lang.Integer value) {
@@ -53,7 +53,7 @@ static final class Key_id extends AbstractKey<Employee, java.lang.Integer> {
 /** Key name */
 static final class Key_name extends AbstractKey<Employee, java.lang.String> {
     public Key_name(final int order) {
-        super(order, "name", java.lang.String.class, "name", false, false);
+        super(order, "name", java.lang.String.class, "name", false, false, false);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final java.lang.String value) {
@@ -71,7 +71,7 @@ static final class Key_name extends AbstractKey<Employee, java.lang.String> {
 /** Key city */
 static final class Key_city extends AbstractKey<Employee, ResultSetMapperKeyTest.City> {
     public Key_city(final int order) {
-        super(order, "city", ResultSetMapperKeyTest.City.class, "city", false, false);
+        super(order, "city", ResultSetMapperKeyTest.City.class, "city", false, true, false);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final ResultSetMapperKeyTest.City value) {
@@ -89,7 +89,7 @@ static final class Key_city extends AbstractKey<Employee, ResultSetMapperKeyTest
 /** Key boss */
 static final class Key_boss extends AbstractKey<Employee, ResultSetMapperKeyTest.Employee> {
     public Key_boss(final int order) {
-        super(order, "boss", ResultSetMapperKeyTest.Employee.class, "boss", false, false);
+        super(order, "boss", ResultSetMapperKeyTest.Employee.class, "boss", false, true, false);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final ResultSetMapperKeyTest.Employee value) {
