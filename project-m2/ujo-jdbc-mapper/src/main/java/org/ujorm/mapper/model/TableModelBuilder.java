@@ -118,7 +118,7 @@ public class TableModelBuilder<D> {
      * @return result - List of column names.
      */
     @NotNull
-    private List<String> findDatabaseColumnList(TableIdentifier table, Connection initConnection) {
+    private static List<String> findDatabaseColumnList(TableIdentifier table, Connection initConnection) {
         var result = new ArrayList<String>();
         try {
             var metaData = initConnection.getMetaData();
@@ -136,8 +136,8 @@ public class TableModelBuilder<D> {
         }
 
         if (result.isEmpty()) {
-            var msg = "Entity %s has no column in the table %s.: "
-                    .formatted(handler.getDomainClass().getSimpleName(), table);
+            var msg = "Entity has no column in the table %s.: "
+                    .formatted(table);
             throw new IllegalStateException(msg);
         }
         return result;
@@ -157,7 +157,7 @@ public class TableModelBuilder<D> {
                 return true;
             }
         } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Oracle test faild", ex);
+            LOGGER.log(Level.SEVERE, "Oracle test failed", ex);
         }
         return false;
     }
@@ -182,9 +182,9 @@ public class TableModelBuilder<D> {
     }
 
     /** Find real column name from database. */
-    protected <V> ColumnModel<D,V> column(Key<D,V> key) {
+    protected <V> ColumnModel<D, V> column(Key<D, V> key) {
         var jdbcType = (JDBCType) null;
-        var foreignKey = (Key<V,?>) null;
+        var foreignKey = (Key<V, ?>) null;
         if (key.foreignKey()) {
             var foreignHandler = ctx.domainService().getHandler(key.type());
             foreignKey = ctx.commonService().findPrimaryKey(foreignHandler.getDomainClass(), ctx);
@@ -201,7 +201,7 @@ public class TableModelBuilder<D> {
         return new ColumnModel<>(key, columnName.intern(), jdbcType, foreignKey);
     }
 
-    protected ColumnModel<D,?> findPk(List<? extends ColumnModel<D,?>> columns) {
+    protected ColumnModel<D, ?> findPk(List<? extends ColumnModel<D, ?>> columns) {
         for (var col : columns) {
             if (col.pk()) return col;
         }
@@ -212,11 +212,6 @@ public class TableModelBuilder<D> {
             var msg = "No primary key was found by to annotation in " + firstColumn.key().domainClass();
             throw new IllegalStateException(msg);
         }
-    }
-
-    /** Map a lower case column name to the original column name. */
-    protected static Map<String, String> jdbcColumnMap(TableIdentifier dbModel, Connection initConnection) {
-        throw new UnsupportedOperationException("TODO");
     }
 
     /** Static builder */
