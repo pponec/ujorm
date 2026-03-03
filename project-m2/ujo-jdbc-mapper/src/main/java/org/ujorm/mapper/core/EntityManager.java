@@ -270,45 +270,57 @@ public final class EntityManager<D, V> {
 
         /**
          * Inserts multiple domain objects using batching support.
+         * Returns a list of inserted objects in the exact original order.
          */
         @SafeVarargs
-        public final void insertBatch(@NotNull D... domains) {
+        public final List<D> insertBatch(@NotNull D... domains) {
             if (domains == null || domains.length == 0) {
-                return;
+                return new ArrayList<>();
             }
 
+            var result = new ArrayList<D>(domains.length);
             var withPk = new ArrayList<D>();
             var withoutPk = new ArrayList<D>();
+            var withPkIndices = new ArrayList<Integer>();
+            var withoutPkIndices = new ArrayList<Integer>();
 
-            for (var domain : domains) {
+            for (int i = 0; i < domains.length; i++) {
+                var domain = domains[i];
+                result.add(domain); // Pre-fill result list
                 if (domain == null) {
                     continue;
                 }
                 var pkOriginalValue = utilities.getPrimaryKeyValue(domain);
                 if (utilities.isPkEmpty(pkOriginalValue)) {
                     withoutPk.add(domain);
+                    withoutPkIndices.add(i);
                 } else {
                     withPk.add(domain);
+                    withPkIndices.add(i);
                 }
             }
 
             if (!withPk.isEmpty()) {
-                insertBatch(withPk, false);
+                var updated = insertBatchInternal(withPk, false);
+                for (int i = 0; i < updated.size(); i++) {
+                    result.set(withPkIndices.get(i), updated.get(i));
+                }
             }
             if (!withoutPk.isEmpty()) {
-                insertBatch(withoutPk, true);
+                var updated = insertBatchInternal(withoutPk, true);
+                for (int i = 0; i < updated.size(); i++) {
+                    result.set(withoutPkIndices.get(i), updated.get(i));
+                }
             }
+            return result;
         }
 
         /**
          * Executes a batch insert for a given list of domain objects.
-         *
-         * @param domains The list of domain objects to insert
-         * @param returnGeneratedKeys True if primary keys should be generated and assigned
          */
-        protected void insertBatch(@NotNull List<D> domains, boolean returnGeneratedKeys) {
+        protected List<D> insertBatchInternal(@NotNull List<D> domains, boolean returnGeneratedKeys) {
             if (domains.isEmpty()) {
-                return;
+                return domains;
             }
 
             var pkOriginalValue = returnGeneratedKeys ? null : utilities.getPrimaryKeyValue(domains.get(0));
@@ -316,7 +328,7 @@ public final class EntityManager<D, V> {
             var sql = utilities.buildInsertSql(columns);
             var limit = utilities.getBatchLimit();
 
-            utilities.run(dbconnection, sql, returnGeneratedKeys, ps -> {
+            return utilities.run(dbconnection, sql, returnGeneratedKeys, ps -> {
                 var pk = returnGeneratedKeys ? pk() : null;
                 var batchCount = 0;
 
@@ -344,7 +356,7 @@ public final class EntityManager<D, V> {
                         batchCount = 0; // Reset counter for the next chunk
                     }
                 }
-                return null;
+                return domains;
             });
         }
 
