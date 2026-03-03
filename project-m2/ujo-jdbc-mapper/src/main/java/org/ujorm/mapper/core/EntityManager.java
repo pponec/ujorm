@@ -28,6 +28,7 @@ import org.ujorm.mapper.model.TableModel;
 import org.ujorm.mapper.model.TableModelBuilder;
 import org.ujorm.mapper.utils.StatementCache;
 import org.ujorm.mapper.utils.Tools;
+import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -121,11 +122,16 @@ public final class EntityManager<D, V> {
     }
 
     /** Utilities for EntityManager */
-    class Utilities {
+    final class Utilities {
 
         /** Returns the value of the primary key. */
         public V getPrimaryKeyValue(@NotNull final D domain) {
             return pk().getValue(domain);
+        }
+
+        /** Checks if the primary key is empty (null or zero). */
+        public boolean isPkEmpty(@Nullable final V id) {
+            return id == null || (id instanceof Number n && n.longValue() == 0L);
         }
 
         /** Set values to the Prepared Statement */
@@ -183,6 +189,8 @@ public final class EntityManager<D, V> {
                     LOGGER.info(sql::toString);
                 }
                 return fun.applyValue(ps);
+            } catch (SQLException ex) {
+                throw SQLExceptionBuilder.build(ex);
             } catch (Exception ex) {
                 throw (ex instanceof RuntimeException re) ? re : new IllegalStateException(ex);
             }
@@ -212,10 +220,16 @@ public final class EntityManager<D, V> {
             this.dbconnection = dbconnection;
         }
 
-        /** Inserts multiple domain objects using a loop. TODO: Implement a true multi-insert with batching support. */
+        /**
+         * Inserts multiple domain objects using a loop.
+         * TODO: Implement a true multi-insert with batching support.
+         */
         @SafeVarargs
         public final void insert(int batchSize, @NotNull D... domains) {
             for (var domain : domains) {
+                if (domain == null) {
+                    continue;
+                }
                 insert(domain);
             }
         }
@@ -243,7 +257,7 @@ public final class EntityManager<D, V> {
             }
             sql.append(")");
 
-            var returnGeneratedKeys = pkOriginalValue == null;
+            var returnGeneratedKeys = utilities.isPkEmpty(pkOriginalValue);
             return utilities.run(dbconnection, sql, returnGeneratedKeys, ps -> {
                 utilities.setValuesToStatement(domain, columns, ps);
                 if (!returnGeneratedKeys) {
@@ -320,7 +334,10 @@ public final class EntityManager<D, V> {
             return updateList(domains, columns);
         }
 
-        /** Updates multiple domain objects using batching and collision detection. */
+        /**
+         * Updates multiple domain objects using batching and collision detection.
+         * Note: Requires connection.setAutoCommit(false) for transactional safety.
+         */
         @SafeVarargs
         public final <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull D2... domains) {
             if (domains == null || domains.length == 0) {
@@ -409,6 +426,7 @@ public final class EntityManager<D, V> {
         /**
          * Executes a batch update for a given list of domain objects.
          * Handles drivers returning SUCCESS_NO_INFO (-2).
+         * Note: Requires connection.setAutoCommit(false) for transactional safety.
          *
          * @param domains A list of domain entities to be updated in the database.
          * @param columns A list of column models defining which specific attributes should be updated.
