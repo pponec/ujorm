@@ -12,9 +12,9 @@ class EntityManagerReadTest extends AbstractDaoTest {
 
     @Test
     void readTest() {
-        var cityDao = EntityManager.of(City.class, Long.class).setConnection(dbConnection);
+        var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
         var city = cityDao.insert(new City(null, "California", "US", 36.7783, -119.4179));
-        var emplDao = EntityManager.of(Employee.class, Long.class).setConnection(dbConnection);
+        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
         var employee1 = emplDao.insert(createEmployee("EmplA", city));
 
         var emplReloaded = emplDao.readNullable(employee1.getId());

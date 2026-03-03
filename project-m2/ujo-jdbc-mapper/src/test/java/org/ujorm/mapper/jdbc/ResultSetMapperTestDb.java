@@ -22,8 +22,8 @@ public class ResultSetMapperTestDb extends AbstractDaoTest {
     /** Set up the database connection and initialize tables before each test. */
     @BeforeEach
     void setUp() throws SQLException {
-        var cityDao = EntityManager.of(City.class, Long.class).setConnection(dbConnection);
-        var emplDao = EntityManager.of(Employee.class, Long.class).setConnection(dbConnection);
+        var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
+        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
         cityOriginal = cityDao.insert(new City(2L, "California", "US", 36.7783, -119.4179));
         employeeOriginal = emplDao.insert(createEmployee(1L, "EmplA", cityOriginal));
     }
