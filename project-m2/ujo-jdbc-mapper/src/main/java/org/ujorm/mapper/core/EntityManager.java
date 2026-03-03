@@ -267,12 +267,7 @@ public final class EntityManager<D, V> {
             }
         }
 
-        /**
-         * Executes a batch insert for a given list of domain objects.
-         *
-         * @param domains The list of domain objects to insert
-         * @param returnGeneratedKeys True if primary keys should be generated and assigned
-         */
+        /** Executes a batch insert for a given list of domain objects. */
         protected void insertBatch(@NotNull List<D> domains, boolean returnGeneratedKeys) {
             if (domains.isEmpty()) {
                 return;
@@ -282,35 +277,45 @@ public final class EntityManager<D, V> {
             var columns = tableModel().createInsertedColumns(pkOriginalValue);
             var sql = utilities.buildInsertSql(columns);
 
+            // Fallback for safety if the configuration value is missing or invalid
+            var limit = insertBatchSize > 0 ? insertBatchSize : 500;
+
             utilities.run(dbconnection, sql, returnGeneratedKeys, ps -> {
-                for (var domain : domains) {
-                    utilities.setValuesToStatement(domain, columns, ps);
+                var pk = returnGeneratedKeys ? pk() : null;
+                var batchCount = 0;
+
+                for (var i = 0; i < domains.size(); i++) {
+                    utilities.setValuesToStatement(domains.get(i), columns, ps);
                     ps.addBatch();
-                }
+                    batchCount++;
 
-                ps.executeBatch();
+                    // Execute batch when the limit is reached or it's the last element
+                    if (batchCount == limit || i == domains.size() - 1) {
+                        ps.executeBatch();
 
-                if (returnGeneratedKeys) {
-                    var pk = pk();
-                    try (var rs = ps.getGeneratedKeys()) {
-                        for (var domain : domains) {
-                            if (rs.next()) {
-                                V id = rs.getObject(1, pk.type());
-                                if (id == null) {
-                                    throw new IllegalArgumentException("No ID value was generated.");
+                        if (returnGeneratedKeys) {
+                            try (var rs = ps.getGeneratedKeys()) {
+                                var startIndex = i - batchCount + 1;
+                                for (var j = startIndex; j <= i; j++) {
+                                    if (rs.next()) {
+                                        V id = rs.getObject(1, pk.type());
+                                        if (id == null) {
+                                            throw new IllegalArgumentException("No ID value was generated.");
+                                        }
+                                        var ujo = AbstractUjo.of(domains.get(j), domainHandler);
+                                        ujo.setValue(pk, id);
+                                    } else {
+                                        throw new IllegalStateException("Not enough generated keys returned for the batch.");
+                                    }
                                 }
-                                var ujo = AbstractUjo.of(domain, domainHandler);
-                                ujo.setValue(pk, id);
-                            } else {
-                                throw new IllegalStateException("Not enough generated keys returned for the batch.");
                             }
                         }
+                        batchCount = 0; // Reset counter for the next chunk
                     }
                 }
                 return null;
             });
         }
-
         /**
          * Inserts a domain object into the database.
          *
