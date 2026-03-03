@@ -97,7 +97,7 @@ public final class JdbcTypeProvider {
     }
 
     /** Returns true if the class has a native JDBC support. */
-    public boolean isSupported(@NotNull Class<?> clazz) {
+    public boolean isSupported(@Nullable Class<?> clazz) {
         return clazz != null && findJdbcType(clazz) != null;
     }
 }
