@@ -107,7 +107,7 @@ public class TableModelBuilder<D> {
     @NotNull
     private Map<String, String> findDatabaseColumnMap(TableIdentifier table, Connection initConnection) {
         var columns = findDatabaseColumnList(table, initConnection);
-        return StreamUtils.map(name -> name.toLowerCase(Locale.ENGLISH), columns);
+        return StreamUtils.toMap(name -> name.toLowerCase(Locale.ENGLISH), columns);
     }
 
     /**

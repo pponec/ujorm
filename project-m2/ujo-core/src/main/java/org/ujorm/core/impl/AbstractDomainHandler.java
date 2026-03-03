@@ -50,8 +50,8 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
      */
     protected AbstractDomainHandler(boolean enableArrayMutation, @NotNull Key<D, ?>... keyList) {
         this.keyList = List.of(keyList);
-        this.keyMap = StreamUtils.map(Key::name, keyList);
-        this.columnMap = StreamUtils.map(key -> key.columnLabel().toUpperCase(Locale.ENGLISH).intern(), keyList);
+        this.keyMap = StreamUtils.toMap(Key::name, keyList);
+        this.columnMap = StreamUtils.toMap(key -> key.columnLabel().toUpperCase(Locale.ENGLISH).intern(), keyList);
         this.hasPrimitives = hasPrimitives(keyList);
         this.enableArrayMutation = enableArrayMutation;
         this.tableName = TableIdentifier.of(keyList[0].domainClass()).getQualifiedName();
