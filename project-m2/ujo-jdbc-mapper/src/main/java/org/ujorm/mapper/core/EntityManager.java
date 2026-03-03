@@ -61,8 +61,7 @@ public final class EntityManager<D, V> {
     /** Lazy initialized TableModel. Use {@link #tableModel()} method to access it safely. */
     private volatile TableModel<D> _tableModel;
 
-    /** Size of batch for multi-insert and delete. Note: This attribute is not fully implemented yet. */
-    @Deprecated
+    /** Size of batch for multi-insert and delete. */
     private final int insertBatchSize;
 
     public EntityManager(
@@ -237,7 +236,9 @@ public final class EntityManager<D, V> {
             this.dbconnection = dbconnection;
         }
 
-        /** Inserts multiple domain objects using batching support. */
+        /**
+         * Inserts multiple domain objects using batching support.
+         */
         @SafeVarargs
         public final void insert(@NotNull D... domains) {
             if (domains == null || domains.length == 0) {
@@ -267,7 +268,12 @@ public final class EntityManager<D, V> {
             }
         }
 
-        /** Executes a batch insert for a given list of domain objects. */
+        /**
+         * Executes a batch insert for a given list of domain objects.
+         *
+         * @param domains The list of domain objects to insert
+         * @param returnGeneratedKeys True if primary keys should be generated and assigned
+         */
         protected void insertBatch(@NotNull List<D> domains, boolean returnGeneratedKeys) {
             if (domains.isEmpty()) {
                 return;
@@ -316,6 +322,7 @@ public final class EntityManager<D, V> {
                 return null;
             });
         }
+
         /**
          * Inserts a domain object into the database.
          *
@@ -415,6 +422,9 @@ public final class EntityManager<D, V> {
                 return 0L;
             }
             var result = 0L;
+            var limit = insertBatchSize > 0 ? insertBatchSize : 500;
+            var batchCount = 0;
+
             try (var cache = new StatementCache<V>()) {
                 for (var j = 0; j < domains.length; j++) {
                     var domain_ = domains[j];
@@ -457,6 +467,13 @@ public final class EntityManager<D, V> {
                     }
                     result += updateInternal(statement, domain, modifiedKeys);
                     cache.addId(id);
+                    batchCount++;
+
+                    // Execute batch when the limit is reached across the cache
+                    if (batchCount >= limit) {
+                        result += cache.flush();
+                        batchCount = 0;
+                    }
                 }
                 result += cache.flush(); // Flush any remaining statements before the AutoCloseable block finishes
             } catch (SQLException e) {
@@ -504,21 +521,33 @@ public final class EntityManager<D, V> {
          * @return The total number of rows affected by the batch execution.
          */
         protected long updateList(@NotNull List<D> domains, @NotNull List<ColumnModel<D, Object>> columns) {
+            if (domains.isEmpty()) {
+                return 0L;
+            }
             var sql = utilities.buildUpdateSql(columns);
-            return utilities.run(dbconnection, sql, false, ps -> {
-                for (var domain : domains) {
-                    utilities.setValuesToStatement(domain, columns, ps);
-                    utilities.setPkToStatement(domain, columns.size() + 1, ps);
-                    ps.addBatch();
-                }
+            var limit = insertBatchSize > 0 ? insertBatchSize : 500;
 
+            return utilities.run(dbconnection, sql, false, ps -> {
                 var result = 0L;
-                var batchResults = ps.executeBatch();
-                for (var rowCount : batchResults) {
-                    if (rowCount >= 0) {
-                        result += rowCount;
-                    } else if (rowCount == Statement.SUCCESS_NO_INFO) {
-                        result++; // Fallback for databases like Oracle
+                var batchCount = 0;
+
+                for (var i = 0; i < domains.size(); i++) {
+                    utilities.setValuesToStatement(domains.get(i), columns, ps);
+                    utilities.setPkToStatement(domains.get(i), columns.size() + 1, ps);
+                    ps.addBatch();
+                    batchCount++;
+
+                    // Execute batch when the limit is reached or it's the last element
+                    if (batchCount == limit || i == domains.size() - 1) {
+                        var batchResults = ps.executeBatch();
+                        for (var rowCount : batchResults) {
+                            if (rowCount >= 0) {
+                                result += rowCount;
+                            } else if (rowCount == Statement.SUCCESS_NO_INFO) {
+                                result++; // Fallback for databases like Oracle
+                            }
+                        }
+                        batchCount = 0; // Reset counter for the next chunk
                     }
                 }
                 return result;
