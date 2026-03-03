@@ -1,7 +1,6 @@
 package org.ujorm.mapper.utils;
 
 import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
 import java.sql.JDBCType;
 import java.time.LocalDate;
@@ -51,7 +50,6 @@ class JdbcTypeProviderTest {
         assertEquals(JDBCType.BIGINT, provider.findJdbcType(long.class));
         assertEquals(JDBCType.TIMESTAMP, provider.findJdbcType(java.util.Date.class));
         assertEquals(JDBCType.OTHER, provider.findJdbcType(UUID.class));
-
         assertNull(provider.findJdbcType(Object.class));
     }
 
@@ -59,5 +57,30 @@ class JdbcTypeProviderTest {
     void testNullArgument() {
         var provider = new JdbcTypeProvider();
         assertThrows(IllegalArgumentException.class, () -> provider.findJdbcType(null));
+    }
+
+    @Test
+    void findJdbcTypeWithProvider() {
+        var provider = new JdbcTypeProvider();
+        var result = provider.findJdbcType(String.class, () -> "Error");
+        assertEquals(JDBCType.VARCHAR, result);
+    }
+
+    @Test
+    void findJdbcTypeWithProviderException() {
+        var provider = new JdbcTypeProvider();
+        var msg = "Unsupported type: " + Object.class;
+        var result = assertThrows(IllegalArgumentException.class, () ->
+                provider.findJdbcType(Object.class, () -> msg));
+        assertEquals(msg, result.getMessage());
+    }
+
+    @Test
+    void findJdbcTypeWithNullProvider() {
+        var provider = new JdbcTypeProvider();
+        var clazz = Object.class;
+        var result = assertThrows(IllegalArgumentException.class, () ->
+                provider.findJdbcType(clazz, null));
+        assertTrue(result.getMessage().contains(clazz.getSimpleName()));
     }
 }
