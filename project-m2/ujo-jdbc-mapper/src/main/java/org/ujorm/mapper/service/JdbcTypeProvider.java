@@ -17,12 +17,20 @@ package org.ujorm.mapper.service;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.common.Primitive;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.JDBCType;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -36,57 +44,48 @@ public abstract class JdbcTypeProvider {
     private JdbcTypeProvider() {
     }
 
+    /** Create a map of Java types to JDBC types, excluding primitive types. */
     private static Map<Class<?>, JDBCType> createTypeMap() {
         var result = new HashMap<Class<?>, JDBCType>();
 
-        // String
+        // String & Character
         result.put(String.class, JDBCType.VARCHAR);
+        result.put(Character.class, JDBCType.CHAR);
 
-        // Integer
+        // Numeric types
         result.put(Integer.class, JDBCType.INTEGER);
-        result.put(int.class, JDBCType.INTEGER);
-
-        // Long
         result.put(Long.class, JDBCType.BIGINT);
-        result.put(long.class, JDBCType.BIGINT);
-
-        // Short
         result.put(Short.class, JDBCType.SMALLINT);
-        result.put(short.class, JDBCType.SMALLINT);
-
-        // Byte
         result.put(Byte.class, JDBCType.TINYINT);
-        result.put(byte.class, JDBCType.TINYINT);
+        result.put(Double.class, JDBCType.DOUBLE);
+        result.put(Float.class, JDBCType.REAL);
+        result.put(BigDecimal.class, JDBCType.DECIMAL);
+        result.put(BigInteger.class, JDBCType.NUMERIC);
 
         // Boolean
         result.put(Boolean.class, JDBCType.BOOLEAN);
-        result.put(boolean.class, JDBCType.BOOLEAN);
 
-        // Double
-        result.put(Double.class, JDBCType.DOUBLE);
-        result.put(double.class, JDBCType.DOUBLE);
-
-        // Float
-        result.put(Float.class, JDBCType.FLOAT);
-        result.put(float.class, JDBCType.FLOAT);
-
-        // BigDecimal
-        result.put(BigDecimal.class, JDBCType.DECIMAL);
-
-        // Java Time API
+        // Java Time API (Modern)
         result.put(LocalDate.class, JDBCType.DATE);
         result.put(LocalTime.class, JDBCType.TIME);
         result.put(LocalDateTime.class, JDBCType.TIMESTAMP);
+        result.put(OffsetDateTime.class, JDBCType.TIMESTAMP_WITH_TIMEZONE);
+        result.put(OffsetTime.class, JDBCType.TIME_WITH_TIMEZONE);
+        result.put(ZonedDateTime.class, JDBCType.TIMESTAMP_WITH_TIMEZONE);
+        result.put(Instant.class, JDBCType.TIMESTAMP);
 
-        // java.sql types
+        // Legacy SQL & Util types
         result.put(java.sql.Date.class, JDBCType.DATE);
         result.put(java.sql.Time.class, JDBCType.TIME);
         result.put(java.sql.Timestamp.class, JDBCType.TIMESTAMP);
+        result.put(java.util.Date.class, JDBCType.TIMESTAMP);
 
-        // Binary
+        // Binary & Large Objects
         result.put(byte[].class, JDBCType.BINARY);
+        result.put(Blob.class, JDBCType.BLOB);
+        result.put(Clob.class, JDBCType.CLOB);
 
-        // UUID
+        // Others
         result.put(UUID.class, JDBCType.OTHER);
 
         return Map.copyOf(result); // make map immutable
@@ -98,6 +97,6 @@ public abstract class JdbcTypeProvider {
         if (clazz == null) {
             throw new IllegalArgumentException("class must not be null");
         }
-        return TYPE_MAP.get(clazz);
+        return TYPE_MAP.get(Primitive.wrapPrimitive(clazz));
     }
 }
