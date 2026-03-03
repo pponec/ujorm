@@ -34,6 +34,14 @@ public record TableIdentifier(
         @Nullable
         String catalog
 ) {
+
+    /** Create new soft object with real values */
+    public TableIdentifier merge(@NotNull TableIdentifier real) {
+        return new TableIdentifier(real.table,
+                schema == null ? schema : real.schema,
+                catalog == null ? catalog : real.catalog);
+    }
+
     /** Get Table name in the full format: {@code catalog.schema.table} . */
     public String getQualifiedName() {
         return Stream.of(

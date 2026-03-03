@@ -48,8 +48,9 @@ public class TableModelBuilder<D> {
     private Map<String, String> dbColumMapLowerCase;
 
     public TableModel<D> build(Connection initConnection) {
-        var dbModel = createTableIdentifier(handler.getDomainClass(), initConnection);
-        dbColumMapLowerCase = findDatabaseColumnMap(dbModel, initConnection);
+        var softTableModel =  TableIdentifier.of(handler.getDomainClass());
+        var realTableModel = createTableIdentifier(softTableModel, initConnection);
+        dbColumMapLowerCase = findDatabaseColumnMap(realTableModel, initConnection);
         var columns = handler.getKeyList().stream()
                 .map(this::column)
                 .toList();
@@ -60,18 +61,17 @@ public class TableModelBuilder<D> {
         var isOracleDb = isOracle(initConnection);
         var quoteChar = getIdentifierQuoteChar(initConnection, ctx.config());
         var jdbc = new Jdbc(isOracleDb, quoteChar);
-        return new TableModel(handler, pk, columns, dbModel, insertedColumns, jdbc);
+        return new TableModel(handler, pk, columns, softTableModel.merge(realTableModel), insertedColumns, jdbc);
     }
 
     /**
      * Finds the real table identifier from database metadata.
      *
-     * @param domainClass domainClass
+     * @param table domainClass
      * @param initConnection The database connection.
      * @return result - The real table identifier.
      */
-    protected TableIdentifier createTableIdentifier(Class<D> domainClass, Connection initConnection) {
-        var table = TableIdentifier.of(domainClass);
+    protected TableIdentifier createTableIdentifier(TableIdentifier table, Connection initConnection) {
         var catalog = (table.catalog() != null && !table.catalog().isEmpty()) ? table.catalog() : null;
         var schema = (table.schema() != null && !table.schema().isEmpty()) ? table.schema() : null;
         var tableName = table.table();
