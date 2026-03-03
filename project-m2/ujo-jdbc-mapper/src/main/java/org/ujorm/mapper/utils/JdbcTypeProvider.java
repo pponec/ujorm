@@ -34,6 +34,7 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /** JDBC provider */
 public final class JdbcTypeProvider {
@@ -87,13 +88,26 @@ public final class JdbcTypeProvider {
         return Map.copyOf(result); // make map immutable
     }
 
-    /** Package private access */
+    /** Try tu find JDBC type */
     @Nullable
     public JDBCType findJdbcType(@NotNull Class<?> clazz) throws IllegalArgumentException {
         if (clazz == null) {
             throw new IllegalArgumentException("The class must is required");
         }
         return typeMap.get(Primitive.wrapPrimitive(clazz));
+    }
+
+    /** Try to find JDBC type or throw an exception with a message from the provider. */
+    @NotNull
+    public JDBCType findJdbcType(@NotNull Class<?> clazz, @Nullable Supplier<String> msgProvider) {
+        var result = findJdbcType(clazz);
+        if (result == null) {
+            var msg = msgProvider != null
+                    ? msgProvider.get()
+                    : "Class %s is not supported in JDBC".formatted(clazz);
+            throw new IllegalArgumentException(msg);
+        }
+        return result;
     }
 
     /** Returns true if the class has a native JDBC support. */
