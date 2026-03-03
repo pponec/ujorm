@@ -99,8 +99,8 @@ public class ResultSetMapperTestMock {
         when(rs.getMetaData()).thenReturn(metaData);
         when(metaData.getColumnCount()).thenReturn(2);
 
-        setupColumn(rs, metaData, 1, "id", "id", 30, Integer.class);
-        setupColumn(rs, metaData, 2, "name", "name", "Karel", String.class);
+        setupColumn(rs, metaData, 1, "unknown_id", "id", 30, Integer.class);
+        setupColumn(rs, metaData, 2, "unknown_name", "name", "Karel", String.class);
 
         var service = DomainHandlerProvider.provider();
         var mapper = ResultSetMapper.of(Employee.class, service);
@@ -148,19 +148,12 @@ public class ResultSetMapperTestMock {
         var service = DomainHandlerProvider.provider();
         var mapper = ResultSetMapper.of(Employee.class, service);
 
-        assertThrows(NoSuchElementException.class, () -> {
-            mapper.convert(rs).findFirst();
-        });
+        assertThrows(NoSuchElementException.class, () ->
+                mapper.convert(rs).findFirst().orElseThrow());
     }
 
     /** Helper to easily mock ResultSet metadata and values */
-    <T> void setupColumn(ResultSet rs
-            , ResultSetMetaData meta
-            , int index
-            , String columnName
-            , String columnLabel
-            , T columnValue
-            , Class<T> type) throws SQLException {
+    <T> void setupColumn(ResultSet rs, ResultSetMetaData meta, int index, String columnName, String columnLabel, T columnValue, Class<T> type) throws SQLException {
         when(meta.getColumnLabel(index)).thenReturn(columnLabel);
         when(meta.getColumnName(index)).thenReturn(columnName);
         when(rs.getObject(index, type)).thenReturn(columnValue);
