@@ -23,6 +23,8 @@ import java.sql.JDBCType;
 
 public record ColumnModel<D,V>(
         Key<D,V> key,
+        /** Column name */
+        String name,
         JDBCType jdbcType,
         /** Is foreign key to a relation */
         @Nullable
@@ -40,11 +42,6 @@ public record ColumnModel<D,V>(
     public Class<V> objectType() {
         final var type = key.type();
         return type.isPrimitive() ? (Class<V>) Primitive.wrapPrimitive(type) : type;
-    }
-
-    /** Column Name */
-    public String name() {
-        return key.columnLabel();
     }
 
     /** Java Property Name */

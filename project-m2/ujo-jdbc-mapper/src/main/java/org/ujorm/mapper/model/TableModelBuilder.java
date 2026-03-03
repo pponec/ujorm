@@ -44,9 +44,12 @@ public class TableModelBuilder<D> {
     private final DomainHandler<D> handler;
     private final Context ctx;
     private final JdbcTypeProvider jdbcTypeProvider = new JdbcTypeProvider();
+    /** Map a database columns where the key is lower-case */
+    private Map<String, String> dbColumMapLowerCase;
 
     public TableModel<D> build(Connection initConnection) {
         var dbModel = TableIdentifier.of(handler.getDomainClass());
+        dbColumMapLowerCase = findDatabaseColumnMap(dbModel, initConnection);
         var columns = handler.getKeyList().stream()
                 .map(this::column)
                 .toList();
@@ -70,7 +73,7 @@ public class TableModelBuilder<D> {
     @NotNull
     private Map<String, String> findDatabaseColumnMap(TableIdentifier table, Connection initConnection) {
         var columns = findDatabaseColumnList(table, initConnection);
-        return StreamUtils.map(columns, name -> name.toLowerCase(Locale.ENGLISH));
+        return StreamUtils.map(name -> name.toLowerCase(Locale.ENGLISH), columns);
     }
 
     /**
@@ -143,6 +146,7 @@ public class TableModelBuilder<D> {
         throw new UnsupportedOperationException("TODO");
     }
 
+    /** Find real column name from database. */
     protected <V> ColumnModel<D,V> column(Key<D,V> key) {
         var jdbcType = (JDBCType) null;
         var foreignKey = (Key<V,?>) null;
@@ -153,7 +157,13 @@ public class TableModelBuilder<D> {
         } else {
             jdbcType = jdbcTypeProvider.findJdbcType(key);
         }
-        return new ColumnModel<>(key, jdbcType, foreignKey);
+        var columnName = dbColumMapLowerCase.get(key.name().toLowerCase(Locale.ENGLISH));
+        if (columnName == null || columnName.isEmpty()) {
+            var msg = "Property %s mapped to column '%s' not found in database."
+                    .formatted(key.fullName(), key.columnLabel());
+            throw new IllegalStateException(msg);
+        }
+        return new ColumnModel<>(key, columnName.intern(), jdbcType, foreignKey);
     }
 
     protected ColumnModel<D,?> findPk(List<? extends ColumnModel<D,?>> columns) {
