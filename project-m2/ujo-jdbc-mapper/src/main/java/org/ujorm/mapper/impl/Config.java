@@ -33,9 +33,14 @@ public class Config implements MapperContext {
     /** Batch size for the INSERT */
     private int insertBatchSize = 512;
 
+    /** Printa all SQL tempaltes to the log. */
     private boolean printSql = true;
 
+    /** Enable quoting the SQL columns */
     boolean enableSqlQuoting = false;
+
+    /** Write a warning if the column is not a relation and has no JDBC mapping. */
+    boolean columnMappingWarning = true;
 
     @NotNull
     static final Map<Class<?>, Function<String,?>> initConverterMap() {
