@@ -14,10 +14,10 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
     /** Test partial updates of one or multiple entities */
     @Test
     void partialUpdate() {
-        var cityDao = EntityManager.of(City.class, Long.class).setConnection(dbConnection);
+        var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
         var city = cityDao.insert(new City(null, "California", "US", 36.7783, -119.4179));
 
-        var emplDao = EntityManager.of(Employee.class, Long.class).setConnection(dbConnection);
+        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
         var employee1 = emplDao.insert(createEmployee("EmplA", city));
         var employee2 = emplDao.insert(createEmployee(101L, "EmplB", city));
 
@@ -52,10 +52,10 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
     /** Test batch update for specific properties */
     @Test
     void updateBatchWithProperties() {
-        var cityDao = EntityManager.of(City.class,  Long.class).setConnection(dbConnection);
+        var cityDao = EntityManager.of(City.class,  Long.class).crud(dbConnection);
         var city = cityDao.insert(new City(null, "California", "US", 36.7783, -119.4179));
 
-        var emplDao = EntityManager.of(Employee.class, Long.class).setConnection(dbConnection);
+        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
         var employee1 = emplDao.insert(createEmployee("EmplA", city));
         var employee2 = emplDao.insert(createEmployee(101L, "EmplB", city));
 
@@ -87,10 +87,10 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
     /** Test batch update for all properties */
     @Test
     void updateBatchAllProperties() {
-        var cityDao = EntityManager.of(City.class, Long.class).setConnection(dbConnection);
+        var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
         var city = cityDao.insert(new City(null, "Texas", "US", 31.9686, -99.9018));
 
-        var emplDao = EntityManager.of(Employee.class, Long.class).setConnection(dbConnection);
+        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
         var employee = emplDao.insert(createEmployee("EmplC", city));
 
         employee.setName("EmplC-FullUpdate");
@@ -112,7 +112,7 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
     /** Test batch update with an empty list */
     @Test
     void updateBatchEmpty() {
-        var emplDao = EntityManager.of(Employee.class, Long.class).setConnection(dbConnection);
+        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
         var emptyList = java.util.Collections.<Employee>emptyList();
 
         var result = emplDao.update(emptyList, "name");
@@ -122,10 +122,10 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
     /** Test error scenarios for partial updates */
     @Test
     void errorScenarios() {
-        var cityDao = EntityManager.of(City.class, Long.class).setConnection(dbConnection);
+        var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
         var city = cityDao.insert(new City(null, "California", "US", 36.7783, -119.4179));
 
-        var emplDao = EntityManager.of(Employee.class, Long.class).setConnection(dbConnection);
+        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
         var employee = emplDao.insert(createEmployee("EmplA", city));
 
         // Error 1: Missing snapshot (expected IllegalStateException)
