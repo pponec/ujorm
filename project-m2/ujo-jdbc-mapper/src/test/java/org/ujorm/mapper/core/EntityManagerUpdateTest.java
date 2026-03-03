@@ -70,7 +70,7 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         var list = List.of(employee1, employee2);
 
         // Update only "name" and "active" properties
-        var result = emplDao.update(list, "name", "active");
+        var result = emplDao.updateBatch(list, "name", "active");
         Assertions.assertEquals(2L, result);
 
         // Verify the database state
@@ -100,7 +100,7 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         var list = List.of(employee);
 
         // Update all columns (empty properties)
-        var result = emplDao.update(list);
+        var result = emplDao.updateBatch(list);
         Assertions.assertEquals(1L, result);
 
         var dbEmp = emplDao.read(employee.getId()).orElseThrow();
@@ -115,7 +115,7 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
         var emptyList = java.util.Collections.<Employee>emptyList();
 
-        var result = emplDao.update(emptyList, "name");
+        var result = emplDao.updateBatch(emptyList, "name");
         Assertions.assertEquals(0L, result);
     }
 
