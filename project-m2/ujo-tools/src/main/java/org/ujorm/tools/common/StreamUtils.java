@@ -117,8 +117,8 @@ public final class StreamUtils {
      * @return An unmodifiable Map containing the mapped items.
      * @throws IllegalStateException If the key mapping function resolves to duplicate keys.
      */
-    public static <D, V> Map<V, D> toMap(@NotNull final Function<D, V> key, @NotNull final Collection<D> values) {
-        return toMap(key, values.stream());
+    public static <D, V> Map<V, D> map(@NotNull final Function<D, V> key, @NotNull final Collection<D> values) {
+        return map(key, values.stream());
     }
 
     /**
@@ -132,8 +132,8 @@ public final class StreamUtils {
      * @throws IllegalStateException If the key mapping function resolves to duplicate keys.
      */
     @SafeVarargs
-    public static <D, V> Map<V, D> toMap(@NotNull final Function<D, V> key, @NotNull final D... values) {
-        return toMap(key, Stream.of(values));
+    public static <D, V> Map<V, D> map(@NotNull final Function<D, V> key, @NotNull final D... values) {
+        return map(key, Stream.of(values));
     }
 
     /**
@@ -146,7 +146,7 @@ public final class StreamUtils {
      * @return An unmodifiable Map containing the mapped items.
      * @throws IllegalStateException If the key mapping function resolves to duplicate keys.
      */
-    public static <D, V> Map<V, D> toMap(@NotNull final Function<D, V> key, @NotNull final Stream<D> values) {
+    public static <D, V> Map<V, D> map(@NotNull final Function<D, V> key, @NotNull final Stream<D> values) {
         return values.collect(Collectors.toUnmodifiableMap(key, Function.identity()));
     }
 }
