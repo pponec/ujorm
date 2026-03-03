@@ -36,16 +36,20 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * The Entity Manager for the JDBC API.
  * Each method may throw an unchecked {@link org.ujorm.tools.jdbc.SQLException}.
+ * <p>
+ * It is highly recommended to call the {@link #crud(Connection)} method as part
+ * of the class initialization to pre-build the internal table model safely.
  *
  * @param <D> Domain class
  * @param <V> Primary key class
  */
-public class EntityManager<D, V> {
+public final class EntityManager<D, V> {
     private static final Logger LOGGER = Logger.getLogger(EntityManager.class.getName());
 
     private final DomainHandler<D> domainHandler;
@@ -77,7 +81,11 @@ public class EntityManager<D, V> {
             synchronized (this) {
                 if (this._tableModel == null) {
                     this._tableModel = TableModelBuilder.build(domainHandler, context, connection);
-                    LOGGER.info("Lazy initialization of TableModel triggered. Consider initializing earlier.");
+                    LOGGER.log(Level.INFO, () ->
+                            "Lazy initialization of %s was triggered for the %s entity.".formatted(
+                                    TableModel.class.getSimpleName(),
+                                    EntityManager.this.domainHandler.getDomainClass().getSimpleName()
+                            ));
                 }
             }
         }
