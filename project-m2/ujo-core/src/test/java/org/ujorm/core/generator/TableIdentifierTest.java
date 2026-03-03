@@ -66,8 +66,8 @@ class TableIdentifierTest {
         var result = TableIdentifier.of(EmptyEntity.class);
 
         assertEquals("empty_entity", result.table());
-        assertNull(result.schema());
-        assertNull(result.catalog());
+        assertEquals("", result.schema());
+        assertEquals("", result.catalog());
     }
 
     @Table(name = "my_dummy_table", schema = "my_schema", catalog = "my_catalog")
