@@ -35,6 +35,8 @@ public class Config implements MapperContext {
 
     private boolean printSql = true;
 
+    boolean enableSqlQuoting = false;
+
     @NotNull
     static final Map<Class<?>, Function<String,?>> initConverterMap() {
         var result = new MapBuilder();

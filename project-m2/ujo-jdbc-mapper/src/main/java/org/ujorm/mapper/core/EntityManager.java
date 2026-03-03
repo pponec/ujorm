@@ -219,6 +219,32 @@ public class EntityManager<D, V> {
         });
     }
 
+    /** Reads a domain object by its identifier. */
+    @NotNull
+    public Optional<D> read_new(@NotNull V id) {
+        var columns = tableModel().columns();
+        var labels = new Key[columns.size()];
+        var quote = getQuote();
+        var sql = new StringBuilder(128)
+                .append("SELECT \n");  // "*"
+        for (var i = 0; i < columns.size(); i++) {
+            var column = columns.get(i);
+            labels[i] = column.key();
+            sql.append(column.index() > 0 ? ", ": "  ").append(column.name());
+        }
+        sql.append(" FROM ")
+                .append(domainHandler.getDatabaseTable())
+                .append(" WHERE ")
+                .append(quote).append(pk().columnLabel()).append(quote);
+
+        return utilities.run(sql, false, ps -> {
+            ps.setObject(1, id);
+            try (var rs = ps.executeQuery()) {
+                return resultSetMapper.convert(rs, labels).findFirst();
+            }
+        });
+    }
+
     /**
      * Updates a domain object.
      * @param domain Domain object to update.
