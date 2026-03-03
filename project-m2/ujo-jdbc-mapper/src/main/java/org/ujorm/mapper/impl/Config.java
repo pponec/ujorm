@@ -33,7 +33,7 @@ public class Config implements MapperContext {
     /** Batch size for the INSERT */
     private int insertBatchSize = 512;
 
-    /** Printa all SQL tempaltes to the log. */
+    /** Printa all SQL template to the log. */
     private boolean printSql = true;
 
     /** Enable quoting the SQL columns */
