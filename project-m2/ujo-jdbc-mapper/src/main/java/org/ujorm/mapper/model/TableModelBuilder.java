@@ -118,7 +118,7 @@ public class TableModelBuilder<D> {
      * @return result - List of column names.
      */
     @NotNull
-    private List<String> findDatabaseColumnList(TableIdentifier table, Connection initConnection) {
+    private static List<String> findDatabaseColumnList(TableIdentifier table, Connection initConnection) {
         var result = new ArrayList<String>();
         try {
             var metaData = initConnection.getMetaData();
@@ -131,13 +131,14 @@ public class TableModelBuilder<D> {
                 }
             }
         } catch (SQLException e) {
-            var msg = "Cannot retrieve columns for table: " + table.getQualifiedName();
+            var msg = "Cannot retrieve columns for table: %s"
+                    .formatted(table.getQualifiedName());
             throw SQLExceptionBuilder.build(msg, e);
         }
 
         if (result.isEmpty()) {
-            var msg = "Entity %s has no column in the table %s.: "
-                    .formatted(handler.getDomainClass().getSimpleName(), table);
+            var msg = "Entity has no column in the table %s"
+                    .formatted(table);
             throw new IllegalStateException(msg);
         }
         return result;
@@ -157,7 +158,7 @@ public class TableModelBuilder<D> {
                 return true;
             }
         } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Oracle test faild", ex);
+            LOGGER.log(Level.SEVERE, "Oracle test failed", ex);
         }
         return false;
     }
@@ -212,11 +213,6 @@ public class TableModelBuilder<D> {
             var msg = "No primary key was found by to annotation in " + firstColumn.key().domainClass();
             throw new IllegalStateException(msg);
         }
-    }
-
-    /** Map a lower case column name to the original column name. */
-    protected static Map<String, String> jdbcColumnMap(TableIdentifier dbModel, Connection initConnection) {
-        throw new UnsupportedOperationException("TODO");
     }
 
     /** Static builder */
