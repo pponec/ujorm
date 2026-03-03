@@ -22,7 +22,7 @@ public class Config implements MapperContext {
     private boolean printSql = true;
 
     /** Enable quoting the SQL columns */
-    boolean enableSqlQuoting = false;
+    boolean enableSqlQuoting = true;
 
     /** Write a warning if the column is not a relation and has no JDBC mapping. */
     boolean columnMappingWarning = true;
