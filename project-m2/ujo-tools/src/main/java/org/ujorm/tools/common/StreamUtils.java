@@ -32,9 +32,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class StreamUtils {
 
-    /** Default characteristics for identity collectors */
-    static final Set<Collector.Characteristics> CH_ID = Set.of(Collector.Characteristics.IDENTITY_FINISH);
-
     /**  Prevent instantiation */
     private StreamUtils() {
     }
