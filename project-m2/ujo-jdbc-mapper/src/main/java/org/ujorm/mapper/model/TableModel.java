@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
-import org.ujorm.core.generator.TableIdentifier;
 
 import java.util.*;
 
@@ -28,7 +27,7 @@ public record TableModel<D>(
         DomainHandler<D> hander,
         ColumnModel<D,Object> pk,
         List<ColumnModel<D,Object>> columns,
-        TableIdentifier tableIdentifier,
+        String tableName,
         /** Inserted columns without PK. */
         @NotNull
         List<ColumnModel<D, Object>> updatableColumns,

@@ -144,11 +144,12 @@ public class EntityManager<D, V> {
      */
     public D insert(@NotNull D domain) {
         var q = getQuote();
+        var tableName = tableModel().tableName();
         var pkOriginalValue = utilities.getPrimaryKeyValue(domain);
         var columns = tableModel().createInsertedColumns(pkOriginalValue);
         var sql = new StringBuilder(256)
                 .append("INSERT INTO ")
-                .append(q).append(domainHandler.getDatabaseTable()).append(q)
+                .append(q).append(tableName).append(q)
                 .append(" (");
         utilities.write(sql, columns, ", ", q);
         sql.append(") VALUES (?");
@@ -192,6 +193,7 @@ public class EntityManager<D, V> {
     @NotNull
     public Optional<D> read(@NotNull V id) {
         var q = getQuote();
+        var tableName = tableModel().tableName();
         var columns = tableModel().columns();
         var labels = new Key[columns.size()];
         var sql = new StringBuilder(128).append("SELECT \n"); // "*"
@@ -200,7 +202,7 @@ public class EntityManager<D, V> {
             labels[i] = column.key();
             sql.append(column.index() > 0 ? ", ": "  ").append(q).append(column.name()).append(q);
         }
-        sql.append(" FROM ").append(q).append(domainHandler.getDatabaseTable()).append(q);
+        sql.append(" FROM ").append(q).append(tableName).append(q);
         sql.append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
 
         return utilities.run(sql, false, ps -> {
@@ -392,9 +394,10 @@ public class EntityManager<D, V> {
         /** Builds an SQL UPDATE statement for the specified columns. */
         public String buildUpdateSql(@NotNull List<ColumnModel<D, Object>> columns) {
             var q = getQuote();
+            var tableName = tableModel().tableName();
             var sql = new StringBuilder(256)
                     .append("UPDATE ")
-                    .append(q).append(domainHandler.getDatabaseTable()).append(q);
+                    .append(q).append(tableName).append(q);
             for (var i = 0; i < columns.size(); i++) {
                 var column = columns.get(i);
                 sql.append(i == 0 ? " SET " : ", ");
