@@ -131,12 +131,13 @@ public class TableModelBuilder<D> {
                 }
             }
         } catch (SQLException e) {
-            var msg = "Cannot retrieve columns for table: " + table.getQualifiedName();
+            var msg = "Cannot retrieve columns for table: %s"
+                    .formatted(table.getQualifiedName());
             throw SQLExceptionBuilder.build(msg, e);
         }
 
         if (result.isEmpty()) {
-            var msg = "Entity has no column in the table %s.: "
+            var msg = "Entity has no column in the table %s"
                     .formatted(table);
             throw new IllegalStateException(msg);
         }
@@ -182,9 +183,9 @@ public class TableModelBuilder<D> {
     }
 
     /** Find real column name from database. */
-    protected <V> ColumnModel<D, V> column(Key<D, V> key) {
+    protected <V> ColumnModel<D,V> column(Key<D,V> key) {
         var jdbcType = (JDBCType) null;
-        var foreignKey = (Key<V, ?>) null;
+        var foreignKey = (Key<V,?>) null;
         if (key.foreignKey()) {
             var foreignHandler = ctx.domainService().getHandler(key.type());
             foreignKey = ctx.commonService().findPrimaryKey(foreignHandler.getDomainClass(), ctx);
@@ -201,7 +202,7 @@ public class TableModelBuilder<D> {
         return new ColumnModel<>(key, columnName.intern(), jdbcType, foreignKey);
     }
 
-    protected ColumnModel<D, ?> findPk(List<? extends ColumnModel<D, ?>> columns) {
+    protected ColumnModel<D,?> findPk(List<? extends ColumnModel<D,?>> columns) {
         for (var col : columns) {
             if (col.pk()) return col;
         }
