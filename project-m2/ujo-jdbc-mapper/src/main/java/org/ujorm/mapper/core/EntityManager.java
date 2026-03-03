@@ -221,17 +221,90 @@ public final class EntityManager<D, V> {
         }
 
         /**
-         * Inserts multiple domain objects using a loop.
-         * TODO: Implement a true multi-insert with batching support.
+         * Inserts multiple domain objects using batching support.
          */
         @SafeVarargs
-        public final void insert(int batchSize, @NotNull D... domains) {
+        public final void insert(@NotNull D... domains) {
+            if (domains == null || domains.length == 0) {
+                return;
+            }
+
+            var withPk = new ArrayList<D>();
+            var withoutPk = new ArrayList<D>();
+
             for (var domain : domains) {
                 if (domain == null) {
                     continue;
                 }
-                insert(domain);
+                var pkOriginalValue = utilities.getPrimaryKeyValue(domain);
+                if (utilities.isPkEmpty(pkOriginalValue)) {
+                    withoutPk.add(domain);
+                } else {
+                    withPk.add(domain);
+                }
             }
+
+            if (!withPk.isEmpty()) {
+                insertBatch(withPk, false);
+            }
+            if (!withoutPk.isEmpty()) {
+                insertBatch(withoutPk, true);
+            }
+        }
+
+        /**
+         * Executes a batch insert for a given list of domain objects.
+         *
+         * @param domains The list of domain objects to insert
+         * @param returnGeneratedKeys True if primary keys should be generated and assigned
+         */
+        protected void insertBatch(@NotNull List<D> domains, boolean returnGeneratedKeys) {
+            if (domains.isEmpty()) {
+                return;
+            }
+
+            var q = getQuote();
+            var tableName = tableModel().tableName();
+            var pkOriginalValue = returnGeneratedKeys
+                    ? null
+                    : utilities.getPrimaryKeyValue(domains.get(0));
+            var columns = tableModel().createInsertedColumns(pkOriginalValue);
+            var sql = new StringBuilder(256)
+                    .append("INSERT INTO ")
+                    .append(q).append(tableName).append(q)
+                    .append(" (");
+            utilities.write(sql, columns, ", ", q);
+            sql.append(") VALUES (?");
+            for (var j = columns.size() - 1; j > 0; j--) {
+                sql.append(",?");
+            }
+            sql.append(")");
+
+            utilities.run(dbconnection, sql, returnGeneratedKeys, ps -> {
+                for (var domain : domains) {
+                    utilities.setValuesToStatement(domain, columns, ps);
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+                if (returnGeneratedKeys) {
+                    var pk = pk();
+                    try (var rs = ps.getGeneratedKeys()) {
+                        for (var domain : domains) {
+                            if (rs.next()) {
+                                V id = rs.getObject(1, pk.type());
+                                if (id == null) {
+                                    throw new IllegalArgumentException("No ID value was generated.");
+                                }
+                                var ujo = AbstractUjo.of(domain, domainHandler);
+                                ujo.setValue(pk, id);
+                            } else {
+                                throw new IllegalStateException("Not enough generated keys returned for the batch.");
+                            }
+                        }
+                    }
+                }
+                return null;
+            });
         }
 
         /**
