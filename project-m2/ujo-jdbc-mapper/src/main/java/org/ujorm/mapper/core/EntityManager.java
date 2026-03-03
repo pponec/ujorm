@@ -136,13 +136,14 @@ public final class EntityManager<D, V> {
         }
 
         /** Reads the generated key from ResultSet and assigns it to the domain object. */
-        public void assignGeneratedKey(D domain, java.sql.ResultSet rs, Key<D, V> pk) throws SQLException {
+        public D assignGeneratedKey(D domain, java.sql.ResultSet rs, Key<D, V> pk) throws SQLException {
             V id = rs.getObject(1, pk.type());
             if (id == null) {
                 throw new IllegalArgumentException("No ID value was generated.");
             }
             var ujo = AbstractUjo.of(domain, domainHandler);
             ujo.setValue(pk, id);
+            return ujo.buildDomain();
         }
 
         /** Set values to the Prepared Statement */
@@ -333,7 +334,7 @@ public final class EntityManager<D, V> {
                                 var startIndex = i - batchCount + 1;
                                 for (var j = startIndex; j <= i; j++) {
                                     if (rs.next()) {
-                                        utilities.assignGeneratedKey(domains.get(j), rs, pk);
+                                        domains.set(j, utilities.assignGeneratedKey(domains.get(j), rs, pk));
                                     } else {
                                         throw new IllegalStateException("Not enough generated keys returned for the batch.");
                                     }
@@ -364,18 +365,18 @@ public final class EntityManager<D, V> {
                 utilities.setValuesToStatement(domain, columns, ps);
                 if (!returnGeneratedKeys) {
                     ps.executeUpdate();
+                    return domain;
                 } else {
                     ps.executeUpdate();
                     var pk = pk();
                     try (var rs = ps.getGeneratedKeys()) {
                         if (rs.next()) {
-                            utilities.assignGeneratedKey(domain, rs, pk);
+                            return utilities.assignGeneratedKey(domain, rs, pk);
                         } else {
                             throw new IllegalArgumentException("No ID value was generated.");
                         }
                     }
                 }
-                return domain;
             });
         }
 
