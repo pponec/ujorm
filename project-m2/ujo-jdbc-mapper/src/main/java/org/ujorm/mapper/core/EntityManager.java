@@ -21,7 +21,7 @@ import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.core.SnapshotProvider;
 import org.ujorm.core.impl.AbstractUjo;
-import org.ujorm.mapper.CrudInterface;
+import org.ujorm.mapper.Crud;
 import org.ujorm.mapper.impl.Context;
 import org.ujorm.mapper.jdbc.ResultSetMapper;
 import org.ujorm.mapper.model.ColumnModel;
@@ -89,9 +89,9 @@ public final class EntityManager<D, V> {
     }
 
     /** Creates a new Crud instance to perform database operations. */
-    public Crud crud(@NotNull Connection connection) {
+    public Crud<D,V> crud(@NotNull Connection connection) {
         initModel(connection);
-        return new Crud(connection);
+        return new CrudImpl(connection);
     }
 
     /** Thread-safe access to the TableModel. */
@@ -262,10 +262,10 @@ public final class EntityManager<D, V> {
     }
 
     /** The CRUD operations implementation. */
-    public final class Crud implements CrudInterface<D, V> {
+    public final class CrudImpl implements Crud<D, V> {
         private final Connection dbconnection;
 
-        public Crud(@NotNull Connection dbconnection) {
+        public CrudImpl(@NotNull Connection dbconnection) {
             this.dbconnection = dbconnection;
         }
 

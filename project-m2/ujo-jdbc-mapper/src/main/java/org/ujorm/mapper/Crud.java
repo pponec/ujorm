@@ -26,7 +26,7 @@ import java.util.Optional;
  * @param <D> Domain class
  * @param <V> Primary key class
  */
-public interface CrudInterface<D, V> {
+public interface Crud<D, V> {
 
     /**
      * Inserts multiple domain objects using batching support.
