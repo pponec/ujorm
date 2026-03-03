@@ -272,7 +272,7 @@ public final class EntityManager<D, V> {
          * Inserts multiple domain objects using batching support.
          */
         @SafeVarargs
-        public final void insert(@NotNull D... domains) {
+        public final void insertBatch(@NotNull D... domains) {
             if (domains == null || domains.length == 0) {
                 return;
             }
@@ -418,7 +418,7 @@ public final class EntityManager<D, V> {
          */
         public long update(@NotNull D domain, CharSequence... properties) {
             var columns = tableModel().getColumns(properties);
-            return update(domain, columns);
+            return updateBatch(domain, columns);
         }
 
         /**
@@ -427,7 +427,7 @@ public final class EntityManager<D, V> {
          * @param properties Optional list of property names to update. If empty, all properties are updated (excluding id).
          * @return The number of affected rows.
          */
-        public long update(@NotNull List<D> domains, CharSequence... properties) {
+        public long updateBatch(@NotNull List<D> domains, CharSequence... properties) {
             var columns = tableModel().getColumns(properties);
             return updateList(domains, columns);
         }
@@ -521,7 +521,7 @@ public final class EntityManager<D, V> {
          * @param columns Optional list of property names to update. If empty, all properties are updated (excluding id).
          * @return The number of affected rows.
          */
-        protected long update(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
+        protected long updateBatch(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
             var sql = utilities.buildUpdateSql(columns);
             return utilities.run(dbconnection, sql, false, ps -> {
                 utilities.setValuesAndPkToStatement(domain, columns, ps);
@@ -584,7 +584,7 @@ public final class EntityManager<D, V> {
 
         /** Deletes multiple domain objects using batching support. */
         @SafeVarargs
-        public final int delete(@NotNull D... domains) {
+        public final int deleteBatch(@NotNull D... domains) {
             if (domains == null || domains.length == 0) {
                 return 0;
             }
