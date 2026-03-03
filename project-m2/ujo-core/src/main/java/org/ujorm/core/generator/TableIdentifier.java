@@ -27,10 +27,10 @@ public record TableIdentifier(
         /** Name of the database table. */
         @NotNull
         String table,
-        /** (Optional) The schema of the database. */
+        /** (Optional) The schema of the table. */
         @Nullable
         String schema,
-        /** (Optional) The catalog of the database. */
+        /** (Optional) The catalog of the schema. */
         @Nullable
         String catalog
 ) {
