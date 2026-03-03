@@ -100,6 +100,10 @@ public class TableModelBuilder<D> {
             var msg = "Cannot retrieve columns for table: " + table.getQualifiedName();
             throw SQLExceptionBuilder.build(msg, e);
         }
+        if (result.isEmpty()) {
+            var msg = "No column was found in table: " + table;
+            throw new IllegalStateException(msg);
+        }
         return result;
     }
 
