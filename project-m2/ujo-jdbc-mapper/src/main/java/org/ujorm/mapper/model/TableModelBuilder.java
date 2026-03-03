@@ -61,7 +61,8 @@ public class TableModelBuilder<D> {
         var isOracleDb = isOracle(initConnection);
         var quoteChar = getIdentifierQuoteChar(initConnection, ctx.config());
         var jdbc = new Jdbc(isOracleDb, quoteChar);
-        return new TableModel(handler, pk, columns, softTableModel.merge(realTableModel), insertedColumns, jdbc);
+        var tableName = softTableModel.merge(realTableModel).getQualifiedName();
+        return new TableModel(handler, pk, columns, tableName, insertedColumns, jdbc);
     }
 
     /**
