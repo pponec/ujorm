@@ -57,7 +57,7 @@ public record Primitive<T>(
     /**
      * Creates a list of all primitive types with non-null basic converters.
      * @return A list of primitive type descriptors
-     * @see StreamUtils#toMap(Function, Collection)
+     * @see StreamUtils#map(Function, Collection)
      */
     public static List<Primitive<?>> ofAll() {
         return List.of(

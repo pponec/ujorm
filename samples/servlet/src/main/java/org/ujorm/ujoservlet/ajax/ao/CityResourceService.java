@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.tools.common.StreamUtils;
@@ -43,7 +45,7 @@ public class CityResourceService {
         if (cityMap == null) {
             synchronized (this) {
                 try (Stream<City> cityStream =  loadCityStream()) {
-                    cityMap = StreamUtils.toMap(City::getId, cityStream);
+                    cityMap = StreamUtils.map(City::getId, cityStream);
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "City reading fails", e);
                     return Collections.emptyMap();
