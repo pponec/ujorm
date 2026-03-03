@@ -88,7 +88,7 @@ public class TableModelBuilder<D> {
                         var realCatalog = resultSet.getString("TABLE_CAT");
                         var realSchema = resultSet.getString("TABLE_SCHEM");
                         var realTableName = resultSet.getString("TABLE_NAME");
-                        return new TableIdentifier(realCatalog, realSchema, realTableName);
+                        return new TableIdentifier(realTableName, realSchema, realCatalog);
                     }
                 }
             }
@@ -152,7 +152,8 @@ public class TableModelBuilder<D> {
         }
 
         if (result.isEmpty()) {
-            var msg = "No column was found in table: " + table;
+            var msg = "Entity %s has no column in the table %s.: "
+                    .formatted(handler.getDomainClass().getSimpleName(), table);
             throw new IllegalStateException(msg);
         }
         return result;
