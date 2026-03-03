@@ -39,12 +39,6 @@ public class CommonService {
             var msg = "No primary key was found by to annotation in " + clazz;
             throw new IllegalStateException(msg);
         }
-
-    }
-
-    @Nullable
-    public JDBCType findJdbcType(@NotNull Class<?> clazz) throws IllegalArgumentException {
-        return JdbcTypeProvider.findJdbcType(clazz);
     }
 
     /** Compare all values and get result; */

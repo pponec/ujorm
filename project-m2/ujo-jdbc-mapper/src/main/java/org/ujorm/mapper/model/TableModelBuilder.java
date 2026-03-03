@@ -21,9 +21,11 @@ import org.ujorm.core.Key;
 import org.ujorm.core.generator.TableIdentifier;
 import org.ujorm.mapper.impl.Config;
 import org.ujorm.mapper.impl.Context;
+import org.ujorm.mapper.utils.JdbcTypeProvider;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
+import java.sql.JDBCType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,7 @@ public class TableModelBuilder<D> {
     private static final Logger LOGGER = Logger.getLogger(TableModelBuilder.class.getName());
     private final DomainHandler<D> handler;
     private final Context ctx;
+    private final JdbcTypeProvider jdbcTypeProvider = new JdbcTypeProvider();
 
     public TableModel<D> build(Connection initConnection) {
         var dbModel = TableIdentifier.of(handler.getDomainClass());
@@ -96,12 +99,14 @@ public class TableModelBuilder<D> {
     }
 
     protected <V> ColumnModel<D,V> column(Key<D,V> key) {
-        var jdbcType = ctx.commonService().findJdbcType(key.type());
+        var jdbcType = (JDBCType) null;
         var foreignKey = (Key<V,?>) null;
         if (key.foreignKey()) {
             var foreignHandler = ctx.domainService().getHandler(key.type());
             foreignKey = ctx.commonService().findPrimaryKey(foreignHandler.getDomainClass(), ctx);
-            jdbcType = ctx.commonService().findJdbcType(foreignKey.type());
+            jdbcType = jdbcTypeProvider.findJdbcType(foreignKey.type());
+        } else {
+            jdbcType = jdbcTypeProvider.findJdbcType(key.type());
         }
         return new ColumnModel<>(key, jdbcType, foreignKey);
     }

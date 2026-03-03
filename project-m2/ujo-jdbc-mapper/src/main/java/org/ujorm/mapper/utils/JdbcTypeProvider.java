@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.mapper.service;
+package org.ujorm.mapper.utils;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,13 +36,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /** JDBC provider */
-public abstract class JdbcTypeProvider {
+public final class JdbcTypeProvider {
 
-    private static final Map<Class<?>, JDBCType> TYPE_MAP = createTypeMap();
-
-    /** Static methods only */
-    private JdbcTypeProvider() {
-    }
+    private final Map<Class<?>, JDBCType> typeMap = createTypeMap();
 
     /** Create a map of Java types to JDBC types, excluding primitive types. */
     private static Map<Class<?>, JDBCType> createTypeMap() {
@@ -93,10 +89,15 @@ public abstract class JdbcTypeProvider {
 
     /** Package private access */
     @Nullable
-    static JDBCType findJdbcType(@NotNull Class<?> clazz) throws IllegalArgumentException {
+    public JDBCType findJdbcType(@NotNull Class<?> clazz) throws IllegalArgumentException {
         if (clazz == null) {
-            throw new IllegalArgumentException("class must not be null");
+            throw new IllegalArgumentException("The class must is required");
         }
-        return TYPE_MAP.get(Primitive.wrapPrimitive(clazz));
+        return typeMap.get(Primitive.wrapPrimitive(clazz));
+    }
+
+    /** Returns true if the class has a native JDBC support. */
+    public boolean isSupported(@NotNull Class<?> clazz) {
+        return clazz != null && findJdbcType(clazz) != null;
     }
 }
