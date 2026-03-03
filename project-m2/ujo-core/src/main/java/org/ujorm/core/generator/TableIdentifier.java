@@ -39,7 +39,16 @@ public record TableIdentifier(
         String catalog
 ) {
 
-    /** Create new soft object with real values */
+    /**
+     * Merges the soft (annotation-based) table identifier with the real database metadata.
+     * The schema and catalog are updated from the real database metadata only if they were
+     * explicitly defined in the entity mapping (not null or empty). This logic prevents
+     * hardcoding default database schemas or catalogs into the generated SQL, which ensures
+     * query portability across different database environments.
+     *
+     * @param real The real table identifier obtained from database metadata.
+     * @return result - A new merged TableIdentifier instance.
+     */
     public TableIdentifier merge(@NotNull TableIdentifier real) {
         return new TableIdentifier(
                 real.table,
