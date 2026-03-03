@@ -357,8 +357,9 @@ public class EntityManager<D, V> {
     /** Deletes a domain object by its identifier. */
     public int deleteById(@NotNull V id) {
         var q = getQuote();
+        var tableName = tableModel().tableName();
         var sql = new StringBuilder(64)
-                .append("DELETE FROM ").append(q).append(domainHandler.getDatabaseTable()).append(q)
+                .append("DELETE FROM ").append(q).append(tableName).append(q)
                 .append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
         return utilities.run(sql, false, ps -> {
             ps.setObject(1, id);
