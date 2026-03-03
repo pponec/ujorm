@@ -77,6 +77,7 @@ public class EntityManager<D, V> {
             synchronized (this) {
                 if (this._tableModel == null) {
                     this._tableModel = TableModelBuilder.build(domainHandler, context, connection);
+                    LOGGER.info("Lazy initialization of TableModel triggered. Consider initializing earlier.");
                 }
             }
         }
@@ -398,8 +399,8 @@ public class EntityManager<D, V> {
         }
 
         /**
-         * Executes a batch update for a given list of domain objects and a specific set of columns.
-         * The method prepares a single SQL statement and utilizes JDBC batching to optimize the update process.
+         * Executes a batch update for a given list of domain objects.
+         * Handles drivers returning SUCCESS_NO_INFO (-2).
          *
          * @param domains A list of domain entities to be updated in the database.
          * @param columns A list of column models defining which specific attributes should be updated.
@@ -417,8 +418,10 @@ public class EntityManager<D, V> {
                 var result = 0L;
                 var batchResults = ps.executeBatch();
                 for (var rowCount : batchResults) {
-                    if (rowCount > 0) {
+                    if (rowCount >= 0) {
                         result += rowCount;
+                    } else if (rowCount == Statement.SUCCESS_NO_INFO) {
+                        result++; // Fallback for databases like Oracle
                     }
                 }
                 return result;
