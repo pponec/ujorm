@@ -196,7 +196,7 @@ public class EntityManager<D, V> {
     }
 
     /** The CRUD operations wrapper. */
-    public class Crud implements AutoCloseable {
+    public class Crud {
         private final Connection dbconnection;
 
         public Crud(@NotNull Connection dbconnection) {
