@@ -61,7 +61,7 @@ public class TableModelBuilder<D> {
     }
 
     /**
-     * Finds all database columns for a given table identifier.
+     * Finds all database columns for a given table identifier and create map according the lower-case name.
      *
      * @param table The identifier of the table.
      * @param initConnection The connection to the database.
@@ -70,8 +70,7 @@ public class TableModelBuilder<D> {
     @NotNull
     private Map<String, String> findDatabaseColumnMap(TableIdentifier table, Connection initConnection) {
         var columns = findDatabaseColumnList(table, initConnection);
-        var result = StreamUtils.map((String name) -> name.toLowerCase(Locale.ENGLISH), columns);
-        return result;
+        return StreamUtils.map(columns, name -> name.toLowerCase(Locale.ENGLISH));
     }
 
     /**
@@ -95,8 +94,8 @@ public class TableModelBuilder<D> {
                 }
             }
         } catch (SQLException e) {
-            throw SQLExceptionBuilder.build("Cannot retrieve columns for table: " +
-                    table.getQualifiedName(), e);
+            var msg = "Cannot retrieve columns for table: " + table.getQualifiedName();
+            throw SQLExceptionBuilder.build(msg, e);
         }
         return result;
     }
