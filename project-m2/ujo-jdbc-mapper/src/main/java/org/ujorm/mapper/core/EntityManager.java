@@ -193,49 +193,14 @@ public class EntityManager<D, V> {
         var columns = tableModel().columns();
         var labels = new Key[columns.size()];
         var quote = getQuote();
-        var sql = new StringBuilder(128)
-                .append("SELECT \n");  // "*"
-        for (var i = 0; i < columns.size(); i++) {
-            var column = columns.get(i);
-            var label = column.key();
-            labels[i] = label;
-            sql.append(column.index() > 0 ? ", ": "  ");
-            sql.append(column.name())
-                    .append(" AS ")
-                    .append(quote).append(label.name()).append(quote)
-                    .append("\n");
-        }
-        sql.append(" FROM ")
-                .append(domainHandler.getDatabaseTable())
-                .append(" WHERE ")
-                .append(pk().columnLabel())
-                .append(" = ?");
-
-        return utilities.run(sql, false, ps -> {
-            ps.setObject(1, id);
-            try (var rs = ps.executeQuery()) {
-                return resultSetMapper.convert(rs, labels).findFirst();
-            }
-        });
-    }
-
-    /** Reads a domain object by its identifier. */
-    @NotNull
-    public Optional<D> read_new(@NotNull V id) {
-        var columns = tableModel().columns();
-        var labels = new Key[columns.size()];
-        var quote = getQuote();
-        var sql = new StringBuilder(128)
-                .append("SELECT \n");  // "*"
+        var sql = new StringBuilder(128).append("SELECT \n"); // "*"
         for (var i = 0; i < columns.size(); i++) {
             var column = columns.get(i);
             labels[i] = column.key();
             sql.append(column.index() > 0 ? ", ": "  ").append(column.name());
         }
-        sql.append(" FROM ")
-                .append(domainHandler.getDatabaseTable())
-                .append(" WHERE ")
-                .append(quote).append(pk().columnLabel()).append(quote);
+        sql.append(" FROM ").append(domainHandler.getDatabaseTable());
+        sql.append(" WHERE ").append(pk().columnLabel()).append(" = ?");
 
         return utilities.run(sql, false, ps -> {
             ps.setObject(1, id);
