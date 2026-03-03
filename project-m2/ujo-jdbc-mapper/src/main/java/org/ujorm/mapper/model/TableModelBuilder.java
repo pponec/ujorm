@@ -35,7 +35,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 /** Table Model Builder */
 @RequiredArgsConstructor
@@ -44,12 +43,14 @@ public class TableModelBuilder<D> {
     private final DomainHandler<D> handler;
     private final Context ctx;
     private final JdbcTypeProvider jdbcTypeProvider = new JdbcTypeProvider();
+
     /** Map a database columns where the key is lower-case */
     private Map<String, String> dbColumMapLowerCase;
 
     public TableModel<D> build(Connection initConnection) {
-        var dbModel = TableIdentifier.of(handler.getDomainClass());
-        dbColumMapLowerCase = findDatabaseColumnMap(dbModel, initConnection);
+        var softTableModel =  TableIdentifier.of(handler.getDomainClass());
+        var realTableModel = createTableIdentifier(softTableModel, initConnection);
+        dbColumMapLowerCase = findDatabaseColumnMap(realTableModel, initConnection);
         var columns = handler.getKeyList().stream()
                 .map(this::column)
                 .toList();
@@ -60,7 +61,44 @@ public class TableModelBuilder<D> {
         var isOracleDb = isOracle(initConnection);
         var quoteChar = getIdentifierQuoteChar(initConnection, ctx.config());
         var jdbc = new Jdbc(isOracleDb, quoteChar);
-        return new TableModel(handler, pk, columns, dbModel, insertedColumns, jdbc);
+        return new TableModel(handler, pk, columns, softTableModel.merge(realTableModel), insertedColumns, jdbc);
+    }
+
+    /**
+     * Finds the real table identifier from database metadata.
+     *
+     * @param table domainClass
+     * @param initConnection The database connection.
+     * @return result - The real table identifier.
+     */
+    protected TableIdentifier createTableIdentifier(TableIdentifier table, Connection initConnection) {
+        var catalog = (table.catalog() != null && !table.catalog().isEmpty()) ? table.catalog() : null;
+        var schema = (table.schema() != null && !table.schema().isEmpty()) ? table.schema() : null;
+        var tableName = table.table();
+        var tableNames = new String[] {
+                tableName,
+                tableName.toUpperCase(Locale.ENGLISH),
+                tableName.toLowerCase(Locale.ENGLISH)
+        };
+        try {
+            var metaData = initConnection.getMetaData();
+            for (var name : tableNames) {
+                try (var resultSet = metaData.getTables(catalog, schema, name, new String[]{"TABLE", "VIEW"})) {
+                    if (resultSet.next()) {
+                        var realCatalog = resultSet.getString("TABLE_CAT");
+                        var realSchema = resultSet.getString("TABLE_SCHEM");
+                        var realTableName = resultSet.getString("TABLE_NAME");
+                        return new TableIdentifier(realTableName, realSchema, realCatalog);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            var msg = "Cannot retrieve table metadata for: " + table;
+            throw SQLExceptionBuilder.build(msg, e);
+        }
+
+        var msg = "No table was found in database for: " + table;
+        throw new IllegalStateException(msg);
     }
 
     /**
@@ -75,6 +113,7 @@ public class TableModelBuilder<D> {
         var columns = findDatabaseColumnList(table, initConnection);
         return StreamUtils.map(name -> name.toLowerCase(Locale.ENGLISH), columns);
     }
+
 
     /**
      * Finds all database columns for a given table identifier.
@@ -99,6 +138,12 @@ public class TableModelBuilder<D> {
         } catch (SQLException e) {
             var msg = "Cannot retrieve columns for table: " + table.getQualifiedName();
             throw SQLExceptionBuilder.build(msg, e);
+        }
+
+        if (result.isEmpty()) {
+            var msg = "Entity %s has no column in the table %s.: "
+                    .formatted(handler.getDomainClass().getSimpleName(), table);
+            throw new IllegalStateException(msg);
         }
         return result;
     }
@@ -141,11 +186,6 @@ public class TableModelBuilder<D> {
         }
     }
 
-    /** Map a lower case column name to the original column name. */
-    protected static Map<String, String> jdbcColumnMap(TableIdentifier dbModel, Connection initConnection) {
-        throw new UnsupportedOperationException("TODO");
-    }
-
     /** Find real column name from database. */
     protected <V> ColumnModel<D,V> column(Key<D,V> key) {
         var jdbcType = (JDBCType) null;
@@ -157,7 +197,7 @@ public class TableModelBuilder<D> {
         } else {
             jdbcType = jdbcTypeProvider.findJdbcType(key);
         }
-        var columnName = dbColumMapLowerCase.get(key.name().toLowerCase(Locale.ENGLISH));
+        var columnName = dbColumMapLowerCase.get(key.columnLabel().toLowerCase(Locale.ENGLISH));
         if (columnName == null || columnName.isEmpty()) {
             var msg = "Property %s mapped to column '%s' not found in database."
                     .formatted(key.fullName(), key.columnLabel());
@@ -177,6 +217,11 @@ public class TableModelBuilder<D> {
             var msg = "No primary key was found by to annotation in " + firstColumn.key().domainClass();
             throw new IllegalStateException(msg);
         }
+    }
+
+    /** Map a lower case column name to the original column name. */
+    protected static Map<String, String> jdbcColumnMap(TableIdentifier dbModel, Connection initConnection) {
+        throw new UnsupportedOperationException("TODO");
     }
 
     /** Static builder */
