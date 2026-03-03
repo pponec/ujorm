@@ -17,6 +17,7 @@ package org.ujorm.mapper.utils;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.core.Key;
 import org.ujorm.tools.common.Primitive;
 
 import java.math.BigDecimal;
@@ -97,14 +98,13 @@ public final class JdbcTypeProvider {
         return typeMap.get(Primitive.wrapPrimitive(clazz));
     }
 
-    /** Try to find JDBC type or throw an exception with a message from the provider. */
+    /** Try to find JDBC type for the key or throw an exception */
     @NotNull
-    public JDBCType findJdbcType(@NotNull Class<?> clazz, @Nullable Supplier<String> msgProvider) {
-        var result = findJdbcType(clazz);
+    public JDBCType findJdbcType(@NotNull Key<?, ?> key) {
+        var result = findJdbcType(key.type());
         if (result == null) {
-            var msg = msgProvider != null
-                    ? msgProvider.get()
-                    : "Class %s is not supported in JDBC".formatted(clazz);
+            var msg = "The attribute %s has an unsupported JDBC type: %s"
+                    .formatted(key.fullName(), key.type().getName());
             throw new IllegalArgumentException(msg);
         }
         return result;

@@ -104,9 +104,9 @@ public class TableModelBuilder<D> {
         if (key.foreignKey()) {
             var foreignHandler = ctx.domainService().getHandler(key.type());
             foreignKey = ctx.commonService().findPrimaryKey(foreignHandler.getDomainClass(), ctx);
-            jdbcType = jdbcTypeProvider.findJdbcType(foreignKey.type());
+            jdbcType = jdbcTypeProvider.findJdbcType(foreignKey);
         } else {
-            jdbcType = jdbcTypeProvider.findJdbcType(key.type());
+            jdbcType = jdbcTypeProvider.findJdbcType(key);
         }
         return new ColumnModel<>(key, jdbcType, foreignKey);
     }

@@ -1,6 +1,9 @@
 package org.ujorm.mapper.utils;
 
 import org.junit.jupiter.api.Test;
+import org.ujorm.core.DomainHandler;
+import org.ujorm.core.DomainHandlerProvider;
+import org.ujorm.mapper.demo.Employee;
 import java.math.BigDecimal;
 import java.sql.JDBCType;
 import java.time.LocalDate;
@@ -10,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /** Test of the JdbcTypeProvider class */
 class JdbcTypeProviderTest {
+
+    private static DomainHandler<Employee> handler = DomainHandlerProvider.getHandler(Employee.class);
 
     @Test
     void isSupported() {
@@ -54,33 +59,24 @@ class JdbcTypeProviderTest {
     }
 
     @Test
-    void testNullArgument() {
+    void findJdbcTypeByKey() {
         var provider = new JdbcTypeProvider();
-        assertThrows(IllegalArgumentException.class, () -> provider.findJdbcType(null));
-    }
 
-    @Test
-    void findJdbcTypeWithProvider() {
-        var provider = new JdbcTypeProvider();
-        var result = provider.findJdbcType(String.class, () -> "Error");
-        assertEquals(JDBCType.VARCHAR, result);
-    }
+        // Valid keys
+        assertEquals(JDBCType.BIGINT, provider.findJdbcType(handler.getKey("id")));
+        assertEquals(JDBCType.VARCHAR, provider.findJdbcType(handler.getKey("name")));
 
-    @Test
-    void findJdbcTypeWithProviderException() {
-        var provider = new JdbcTypeProvider();
-        var msg = "Unsupported type: " + Object.class;
-        var result = assertThrows(IllegalArgumentException.class, () ->
-                provider.findJdbcType(Object.class, () -> msg));
-        assertEquals(msg, result.getMessage());
-    }
+        // Keys with unsupported types (relations)
+        var exSuperior = assertThrows(IllegalArgumentException.class, () ->
+                provider.findJdbcType(handler.getKey("superior")));
+        assertTrue(exSuperior.getMessage().contains("Employee.superior"));
+        assertEquals("The attribute Employee.superior has an unsupported JDBC type: org.ujorm.mapper.demo.User",
+                exSuperior.getMessage());
 
-    @Test
-    void findJdbcTypeWithNullProvider() {
-        var provider = new JdbcTypeProvider();
-        var clazz = Object.class;
-        var result = assertThrows(IllegalArgumentException.class, () ->
-                provider.findJdbcType(clazz, null));
-        assertTrue(result.getMessage().contains(clazz.getSimpleName()));
+        var exCity = assertThrows(IllegalArgumentException.class, () ->
+                provider.findJdbcType(handler.getKey("city")));
+        assertTrue(exCity.getMessage().contains("Employee.city"));
+        assertEquals("The attribute Employee.superior has an unsupported JDBC type: org.ujorm.mapper.demo.User",
+                exSuperior.getMessage());
     }
 }
