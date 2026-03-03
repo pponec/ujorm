@@ -35,7 +35,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 /** Table Model Builder */
 @RequiredArgsConstructor
@@ -44,11 +43,12 @@ public class TableModelBuilder<D> {
     private final DomainHandler<D> handler;
     private final Context ctx;
     private final JdbcTypeProvider jdbcTypeProvider = new JdbcTypeProvider();
+
     /** Map a database columns where the key is lower-case */
     private Map<String, String> dbColumMapLowerCase;
 
     public TableModel<D> build(Connection initConnection) {
-        var dbModel = TableIdentifier.of(handler.getDomainClass());
+        var dbModel = createTableIdentifier(handler.getDomainClass(), initConnection);
         dbColumMapLowerCase = findDatabaseColumnMap(dbModel, initConnection);
         var columns = handler.getKeyList().stream()
                 .map(this::column)
@@ -64,6 +64,44 @@ public class TableModelBuilder<D> {
     }
 
     /**
+     * Finds the real table identifier from database metadata.
+     *
+     * @param domainClass domainClass
+     * @param initConnection The database connection.
+     * @return result - The real table identifier.
+     */
+    protected TableIdentifier createTableIdentifier(Class<D> domainClass, Connection initConnection) {
+        var table = TableIdentifier.of(domainClass);
+        var catalog = (table.catalog() != null && !table.catalog().isEmpty()) ? table.catalog() : null;
+        var schema = (table.schema() != null && !table.schema().isEmpty()) ? table.schema() : null;
+        var tableName = table.table();
+        var tableNames = new String[] {
+                tableName,
+                tableName.toUpperCase(Locale.ENGLISH),
+                tableName.toLowerCase(Locale.ENGLISH)
+        };
+        try {
+            var metaData = initConnection.getMetaData();
+            for (var name : tableNames) {
+                try (var resultSet = metaData.getTables(catalog, schema, name, new String[]{"TABLE", "VIEW"})) {
+                    if (resultSet.next()) {
+                        var realCatalog = resultSet.getString("TABLE_CAT");
+                        var realSchema = resultSet.getString("TABLE_SCHEM");
+                        var realTableName = resultSet.getString("TABLE_NAME");
+                        return new TableIdentifier(realCatalog, realSchema, realTableName);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            var msg = "Cannot retrieve table metadata for: " + table;
+            throw SQLExceptionBuilder.build(msg, e);
+        }
+
+        var msg = "No table was found in database for: " + table;
+        throw new IllegalStateException(msg);
+    }
+
+    /**
      * Finds all database columns for a given table identifier and create map according the lower-case name.
      *
      * @param table The identifier of the table.
@@ -75,6 +113,7 @@ public class TableModelBuilder<D> {
         var columns = findDatabaseColumnList(table, initConnection);
         return StreamUtils.map(name -> name.toLowerCase(Locale.ENGLISH), columns);
     }
+
 
     /**
      * Finds all database columns for a given table identifier.
@@ -91,15 +130,27 @@ public class TableModelBuilder<D> {
             var catalog = (table.catalog() != null && !table.catalog().isEmpty()) ? table.catalog() : null;
             var schema = (table.schema() != null && !table.schema().isEmpty()) ? table.schema() : null;
 
-            try (var resultSet = metaData.getColumns(catalog, schema, table.table(), null)) {
-                while (resultSet.next()) {
-                    result.add(resultSet.getString("COLUMN_NAME"));
+            var tableNames = new String[] {
+                    table.table(),
+                    table.table().toUpperCase(Locale.ENGLISH),
+                    table.table().toLowerCase(Locale.ENGLISH)
+            };
+
+            for (var tableName : tableNames) {
+                try (var resultSet = metaData.getColumns(catalog, schema, tableName, null)) {
+                    while (resultSet.next()) {
+                        result.add(resultSet.getString("COLUMN_NAME"));
+                    }
+                }
+                if (!result.isEmpty()) {
+                    break;
                 }
             }
         } catch (SQLException e) {
             var msg = "Cannot retrieve columns for table: " + table.getQualifiedName();
             throw SQLExceptionBuilder.build(msg, e);
         }
+
         if (result.isEmpty()) {
             var msg = "No column was found in table: " + table;
             throw new IllegalStateException(msg);
@@ -145,11 +196,6 @@ public class TableModelBuilder<D> {
         }
     }
 
-    /** Map a lower case column name to the original column name. */
-    protected static Map<String, String> jdbcColumnMap(TableIdentifier dbModel, Connection initConnection) {
-        throw new UnsupportedOperationException("TODO");
-    }
-
     /** Find real column name from database. */
     protected <V> ColumnModel<D,V> column(Key<D,V> key) {
         var jdbcType = (JDBCType) null;
@@ -181,6 +227,11 @@ public class TableModelBuilder<D> {
             var msg = "No primary key was found by to annotation in " + firstColumn.key().domainClass();
             throw new IllegalStateException(msg);
         }
+    }
+
+    /** Map a lower case column name to the original column name. */
+    protected static Map<String, String> jdbcColumnMap(TableIdentifier dbModel, Connection initConnection) {
+        throw new UnsupportedOperationException("TODO");
     }
 
     /** Static builder */
