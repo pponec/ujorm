@@ -135,6 +135,16 @@ public final class EntityManager<D, V> {
             return id == null || (id instanceof Number n && n.longValue() == 0L);
         }
 
+        /** Reads the generated key from ResultSet and assigns it to the domain object. */
+        public void assignGeneratedKey(D domain, java.sql.ResultSet rs, Key<D, V> pk) throws SQLException {
+            V id = rs.getObject(1, pk.type());
+            if (id == null) {
+                throw new IllegalArgumentException("No ID value was generated.");
+            }
+            var ujo = AbstractUjo.of(domain, domainHandler);
+            ujo.setValue(pk, id);
+        }
+
         /** Set values to the Prepared Statement */
         public void setValuesToStatement(D domain, List<ColumnModel<D, Object>> columns, PreparedStatement ps) throws SQLException {
             for (var i = 0; i < columns.size(); i++) {
@@ -150,6 +160,25 @@ public final class EntityManager<D, V> {
         /** Set PK to the Prepared Statement */
         public void setPkToStatement(final D domain, final int index, final PreparedStatement ps) throws SQLException {
             ps.setObject(index, getPrimaryKeyValue(domain), pkColumn().jdbcType());
+        }
+
+        /** Set both column values and PK to the Prepared Statement for UPDATE queries */
+        public void setValuesAndPkToStatement(D domain, List<ColumnModel<D, Object>> columns, PreparedStatement ps) throws SQLException {
+            setValuesToStatement(domain, columns, ps);
+            setPkToStatement(domain, columns.size() + 1, ps);
+        }
+
+        /** Sums the affected rows from a batch execution, handling SUCCESS_NO_INFO. */
+        public long sumBatchRows(int[] batchResults) {
+            var result = 0L;
+            for (var rowCount : batchResults) {
+                if (rowCount >= 0) {
+                    result += rowCount;
+                } else if (rowCount == Statement.SUCCESS_NO_INFO) {
+                    result++; // Fallback for databases like Oracle
+                }
+            }
+            return result;
         }
 
         /** Builds an SQL INSERT statement for the specified columns. */
@@ -304,12 +333,7 @@ public final class EntityManager<D, V> {
                                 var startIndex = i - batchCount + 1;
                                 for (var j = startIndex; j <= i; j++) {
                                     if (rs.next()) {
-                                        V id = rs.getObject(1, pk.type());
-                                        if (id == null) {
-                                            throw new IllegalArgumentException("No ID value was generated.");
-                                        }
-                                        var ujo = AbstractUjo.of(domains.get(j), domainHandler);
-                                        ujo.setValue(pk, id);
+                                        utilities.assignGeneratedKey(domains.get(j), rs, pk);
                                     } else {
                                         throw new IllegalStateException("Not enough generated keys returned for the batch.");
                                     }
@@ -340,23 +364,18 @@ public final class EntityManager<D, V> {
                 utilities.setValuesToStatement(domain, columns, ps);
                 if (!returnGeneratedKeys) {
                     ps.executeUpdate();
-                    return domain;
                 } else {
                     ps.executeUpdate();
-                    V id = null;
                     var pk = pk();
                     try (var rs = ps.getGeneratedKeys()) {
                         if (rs.next()) {
-                            id = rs.getObject(1, pk.type());
+                            utilities.assignGeneratedKey(domain, rs, pk);
+                        } else {
+                            throw new IllegalArgumentException("No ID value was generated.");
                         }
                     }
-                    if (id == null) {
-                        throw new IllegalArgumentException("No ID value was generated.");
-                    }
-                    var ujo = AbstractUjo.of(domain, domainHandler);
-                    ujo.setValue(pk, id);
-                    return ujo.buildDomain();
                 }
+                return domain;
             });
         }
 
@@ -490,8 +509,7 @@ public final class EntityManager<D, V> {
             for (var key : keys) {
                 columns.add(model.getColumn(key.index()));
             }
-            utilities.setValuesToStatement(entity, columns, statement);
-            utilities.setPkToStatement(entity, columns.size() + 1, statement);
+            utilities.setValuesAndPkToStatement(entity, columns, statement);
             statement.addBatch();
             return 0L;
         }
@@ -505,8 +523,7 @@ public final class EntityManager<D, V> {
         protected long update(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
             var sql = utilities.buildUpdateSql(columns);
             return utilities.run(dbconnection, sql, false, ps -> {
-                utilities.setValuesToStatement(domain, columns, ps);
-                utilities.setPkToStatement(domain, columns.size() + 1, ps);
+                utilities.setValuesAndPkToStatement(domain, columns, ps);
                 return (long) ps.executeUpdate();
             });
         }
@@ -532,21 +549,13 @@ public final class EntityManager<D, V> {
                 var batchCount = 0;
 
                 for (var i = 0; i < domains.size(); i++) {
-                    utilities.setValuesToStatement(domains.get(i), columns, ps);
-                    utilities.setPkToStatement(domains.get(i), columns.size() + 1, ps);
+                    utilities.setValuesAndPkToStatement(domains.get(i), columns, ps);
                     ps.addBatch();
                     batchCount++;
 
                     // Execute batch when the limit is reached or it's the last element
                     if (batchCount == limit || i == domains.size() - 1) {
-                        var batchResults = ps.executeBatch();
-                        for (var rowCount : batchResults) {
-                            if (rowCount >= 0) {
-                                result += rowCount;
-                            } else if (rowCount == Statement.SUCCESS_NO_INFO) {
-                                result++; // Fallback for databases like Oracle
-                            }
-                        }
+                        result += utilities.sumBatchRows(ps.executeBatch());
                         batchCount = 0; // Reset counter for the next chunk
                     }
                 }
