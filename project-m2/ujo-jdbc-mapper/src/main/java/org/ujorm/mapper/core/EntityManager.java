@@ -270,85 +270,69 @@ public final class EntityManager<D, V> {
 
         /**
          * Inserts multiple domain objects using batching support.
-         * Returns a list of inserted objects in the exact original order.
+         * The method returns the original array (or a new one created by varargs)
+         * where individual elements are updated with generated identifiers.
+         * <p>
+         * Note: If the domain objects are immutable (e.g., Java Records),
+         * the original references in the array are replaced with new instances.
+         *
+         * @param domains Entities to insert.
+         * @return The same array containing updated entities.
          */
         @SafeVarargs
-        public final List<D> insertBatch(@NotNull D... domains) {
+        public final D[] insertBatch(@NotNull D... domains) {
             if (domains == null || domains.length == 0) {
-                return new ArrayList<>();
-            }
-
-            var result = new ArrayList<D>(domains.length);
-            var withPk = new ArrayList<D>();
-            var withoutPk = new ArrayList<D>();
-            var withPkIndices = new ArrayList<Integer>();
-            var withoutPkIndices = new ArrayList<Integer>();
-
-            for (int i = 0; i < domains.length; i++) {
-                var domain = domains[i];
-                result.add(domain); // Pre-fill result list
-                if (domain == null) {
-                    continue;
-                }
-                var pkOriginalValue = utilities.getPrimaryKeyValue(domain);
-                if (utilities.isPkEmpty(pkOriginalValue)) {
-                    withoutPk.add(domain);
-                    withoutPkIndices.add(i);
-                } else {
-                    withPk.add(domain);
-                    withPkIndices.add(i);
-                }
-            }
-
-            if (!withPk.isEmpty()) {
-                var updated = insertBatchInternal(withPk, false);
-                for (int i = 0; i < updated.size(); i++) {
-                    result.set(withPkIndices.get(i), updated.get(i));
-                }
-            }
-            if (!withoutPk.isEmpty()) {
-                var updated = insertBatchInternal(withoutPk, true);
-                for (int i = 0; i < updated.size(); i++) {
-                    result.set(withoutPkIndices.get(i), updated.get(i));
-                }
-            }
-            return result;
-        }
-
-        /**
-         * Executes a batch insert for a given list of domain objects.
-         */
-        protected List<D> insertBatchInternal(@NotNull List<D> domains, boolean returnGeneratedKeys) {
-            if (domains.isEmpty()) {
                 return domains;
             }
 
-            var pkOriginalValue = returnGeneratedKeys ? null : utilities.getPrimaryKeyValue(domains.get(0));
+            var withPkIdx = new ArrayList<Integer>();
+            var withoutPkIdx = new ArrayList<Integer>();
+
+            for (int i = 0; i < domains.length; i++) {
+                if (domains[i] == null) continue;
+                if (utilities.isPkEmpty(utilities.getPrimaryKeyValue(domains[i]))) {
+                    withoutPkIdx.add(i);
+                } else {
+                    withPkIdx.add(i);
+                }
+            }
+
+            if (!withPkIdx.isEmpty()) insertBatchInternal(domains, withPkIdx, false);
+            if (!withoutPkIdx.isEmpty()) insertBatchInternal(domains, withoutPkIdx, true);
+
+            return domains;
+        }
+
+        /** Internal batch executor running strictly over provided indices. */
+        private void insertBatchInternal(@NotNull D[] domains, @NotNull List<Integer> indices, boolean generateKeys) {
+            var sample = domains[indices.get(0)];
+            var pkOriginalValue = generateKeys ? null : utilities.getPrimaryKeyValue(sample);
             var columns = tableModel().createInsertedColumns(pkOriginalValue);
             var sql = utilities.buildInsertSql(columns);
             var limit = utilities.getBatchLimit();
 
-            return utilities.run(dbconnection, sql, returnGeneratedKeys, ps -> {
-                var pk = returnGeneratedKeys ? pk() : null;
+            utilities.run(dbconnection, sql, generateKeys, ps -> {
+                var pk = generateKeys ? pk() : null;
                 var batchCount = 0;
 
-                for (var i = 0; i < domains.size(); i++) {
-                    utilities.setValuesToStatement(domains.get(i), columns, ps);
+                for (int i = 0; i < indices.size(); i++) {
+                    int originalIdx = indices.get(i);
+                    utilities.setValuesToStatement(domains[originalIdx], columns, ps);
                     ps.addBatch();
                     batchCount++;
 
-                    // Execute batch when the limit is reached or it's the last element
-                    if (batchCount == limit || i == domains.size() - 1) {
+                    if (batchCount == limit || i == indices.size() - 1) {
                         ps.executeBatch();
-
-                        if (returnGeneratedKeys) {
+                        if (generateKeys) {
                             try (var rs = ps.getGeneratedKeys()) {
-                                var startIndex = i - batchCount + 1;
-                                for (var j = startIndex; j <= i; j++) {
+                                int start = i - batchCount + 1;
+                                for (int j = start; j <= i; j++) {
                                     if (rs.next()) {
-                                        domains.set(j, utilities.assignGeneratedKey(domains.get(j), rs, pk));
+                                        int targetIdx = indices.get(j);
+                                        // In-place update pole (funguje pro Beans i Recordy)
+                                        domains[targetIdx] = utilities.assignGeneratedKey(domains[targetIdx], rs, pk);
                                     } else {
-                                        throw new IllegalStateException("Not enough generated keys returned for the batch.");
+                                        throw new IllegalStateException("Missing generated key");
                                     }
                                 }
                             }
@@ -356,7 +340,7 @@ public final class EntityManager<D, V> {
                         batchCount = 0; // Reset counter for the next chunk
                     }
                 }
-                return domains;
+                return null;
             });
         }
 

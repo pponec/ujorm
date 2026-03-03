@@ -24,12 +24,12 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         var city3 = new City(null, "Ostrava", "CZ", 49.8209, 18.2625);
         var city4 = new City(1002L, "Plzen", "CZ", 49.7384, 13.3736);
 
-        // Execute batch insert and fetch the updated instances (IMPORTANT for records)
+        // Execute batch insert and fetch the updated instances (Returns the same array)
         var insertedCities = cityDao.insertBatch(city1, city2, city3, city4);
-        city1 = insertedCities.get(0);
-        city2 = insertedCities.get(1);
-        city3 = insertedCities.get(2);
-        city4 = insertedCities.get(3);
+        city1 = insertedCities[0];
+        city2 = insertedCities[1];
+        city3 = insertedCities[2];
+        city4 = insertedCities[3];
 
         // Verify entities without IDs got them generated
         Assertions.assertNotNull(city1.id());
@@ -58,9 +58,8 @@ class EntityManagerBatchTest extends AbstractDaoTest {
             cities[i] = new City(null, "City-" + i, "XY", 0.0, 0.0);
         }
 
-        // Execute huge batch insert and replace the old array with the updated instances
-        var insertedList = cityDao.insertBatch(cities);
-        cities = insertedList.toArray(new City[0]);
+        // Execute huge batch insert (updates the array in-place)
+        cities = cityDao.insertBatch(cities);
 
         // Verify all entities received an ID
         for (int i = 0; i < totalCities; i++) {
@@ -81,7 +80,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
 
         var emplDao = EntityManager.of(Employee.class, pkType).crud(dbConnection);
 
-        // Prepare employees (Single insert correctly returns the updated instance)
+        // Prepare employees
         var emp1 = emplDao.insert(createEmployee("Emp-A", city));
         var emp2 = emplDao.insert(createEmployee("Emp-B", city));
         var emp3 = emplDao.insert(createEmployee("Emp-C", city));
@@ -97,7 +96,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
 
         // Verify DB state
         Assertions.assertFalse(emplDao.read(emp1.getId()).isPresent());
-        Assertions.assertTrue(emplDao.read(emp2.getId()).isPresent()); // Emp2 should still exist
+        Assertions.assertTrue(emplDao.read(emp2.getId()).isPresent());
         Assertions.assertFalse(emplDao.read(emp3.getId()).isPresent());
     }
 
@@ -114,9 +113,8 @@ class EntityManagerBatchTest extends AbstractDaoTest {
             employees[i] = createEmployee(null, "Emp-" + i, city);
         }
 
-        // Insert them all AND update array with ID-populated instances
-        var insertedEmployees = emplDao.insertBatch(employees);
-        employees = insertedEmployees.toArray(new Employee[0]);
+        // Insert them all
+        employees = emplDao.insertBatch(employees);
 
         // Now delete them all in a batch
         int deletedCount = emplDao.deleteBatch(employees);
@@ -132,13 +130,13 @@ class EntityManagerBatchTest extends AbstractDaoTest {
 
         // Empty array
         var result1 = cityDao.insertBatch(new City[0]);
-        Assertions.assertTrue(result1.isEmpty());
+        Assertions.assertEquals(0, result1.length);
 
         // Explicit nulls
         City nullCity = null;
         var result2 = cityDao.insertBatch(nullCity, nullCity);
-        Assertions.assertEquals(2, result2.size());
-        Assertions.assertNull(result2.get(0));
+        Assertions.assertEquals(2, result2.length);
+        Assertions.assertNull(result2[0]);
 
         // Empty delete
         int deleted = cityDao.deleteBatch(new City[0]);
