@@ -149,7 +149,7 @@ public class ResultSetMapperTestMock {
         var mapper = ResultSetMapper.of(Employee.class, service);
 
         assertThrows(NoSuchElementException.class, () ->
-                mapper.convert(rs).findFirst().orElseThrow());
+                mapper.convert(rs).findFirst());
     }
 
     /** Helper to easily mock ResultSet metadata and values */
