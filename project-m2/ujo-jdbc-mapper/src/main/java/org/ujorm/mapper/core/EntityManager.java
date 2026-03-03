@@ -61,16 +61,12 @@ public final class EntityManager<D, V> {
     /** Lazy initialized TableModel. Use {@link #tableModel()} method to access it safely. */
     private volatile TableModel<D> _tableModel;
 
-    /** Size of batch for multi-insert and delete. */
-    private final int insertBatchSize;
-
     public EntityManager(
             @NotNull Class<D> domainClass,
             @NotNull Context context,
             @NotNull ResultSetMapper<D> resultSetMapper) {
         this.domainHandler = context.domainService().getHandler(domainClass);
         this.context = context;
-        this.insertBatchSize = context.config().getInsertBatchSize();
         this.resultSetMapper = resultSetMapper;
         this.utilities = new Utilities();
     }
@@ -122,6 +118,12 @@ public final class EntityManager<D, V> {
 
     /** Utilities for EntityManager */
     final class Utilities {
+
+        /** Returns a safe limit for batch operations (insert and update). */
+        public int getBatchLimit() {
+            var limit = context.config().getInsertBatchSize();
+            return limit > 0 ? limit : 500;
+        }
 
         /** Returns the value of the primary key. */
         public V getPrimaryKeyValue(@NotNull final D domain) {
@@ -282,9 +284,7 @@ public final class EntityManager<D, V> {
             var pkOriginalValue = returnGeneratedKeys ? null : utilities.getPrimaryKeyValue(domains.get(0));
             var columns = tableModel().createInsertedColumns(pkOriginalValue);
             var sql = utilities.buildInsertSql(columns);
-
-            // Fallback for safety if the configuration value is missing or invalid
-            var limit = insertBatchSize > 0 ? insertBatchSize : 500;
+            var limit = utilities.getBatchLimit();
 
             utilities.run(dbconnection, sql, returnGeneratedKeys, ps -> {
                 var pk = returnGeneratedKeys ? pk() : null;
@@ -422,7 +422,7 @@ public final class EntityManager<D, V> {
                 return 0L;
             }
             var result = 0L;
-            var limit = insertBatchSize > 0 ? insertBatchSize : 500;
+            var limit = utilities.getBatchLimit();
             var batchCount = 0;
 
             try (var cache = new StatementCache<V>()) {
@@ -525,7 +525,7 @@ public final class EntityManager<D, V> {
                 return 0L;
             }
             var sql = utilities.buildUpdateSql(columns);
-            var limit = insertBatchSize > 0 ? insertBatchSize : 500;
+            var limit = utilities.getBatchLimit();
 
             return utilities.run(dbconnection, sql, false, ps -> {
                 var result = 0L;
