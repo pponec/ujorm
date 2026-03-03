@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -48,7 +48,7 @@ public class TableModelBuilder<D> {
     private Map<String, String> dbColumMapLowerCase;
 
     public TableModel<D> build(Connection initConnection) {
-        var softTableModel = TableIdentifier.of(handler.getDomainClass());
+        var softTableModel =  TableIdentifier.of(handler.getDomainClass());
         var realTableModel = createTableIdentifier(softTableModel, initConnection);
         dbColumMapLowerCase = findDatabaseColumnMap(realTableModel, initConnection);
         var columns = handler.getKeyList().stream()
@@ -75,15 +75,19 @@ public class TableModelBuilder<D> {
         var catalog = (table.catalog() != null && !table.catalog().isEmpty()) ? table.catalog() : null;
         var schema = (table.schema() != null && !table.schema().isEmpty()) ? table.schema() : null;
         var tableName = table.table();
-
+        var tableNames = new String[] {
+                tableName,
+                tableName.toUpperCase(Locale.ENGLISH),
+                tableName.toLowerCase(Locale.ENGLISH)
+        };
         try {
             var metaData = initConnection.getMetaData();
-            try (var resultSet = metaData.getTables(catalog, schema, null, new String[]{"TABLE", "VIEW"})) {
-                while (resultSet.next()) {
-                    var realTableName = resultSet.getString("TABLE_NAME");
-                    if (tableName.equalsIgnoreCase(realTableName)) {
+            for (var name : tableNames) {
+                try (var resultSet = metaData.getTables(catalog, schema, name, new String[]{"TABLE", "VIEW"})) {
+                    if (resultSet.next()) {
                         var realCatalog = resultSet.getString("TABLE_CAT");
                         var realSchema = resultSet.getString("TABLE_SCHEM");
+                        var realTableName = resultSet.getString("TABLE_NAME");
                         return new TableIdentifier(realTableName, realSchema, realCatalog);
                     }
                 }
@@ -109,6 +113,7 @@ public class TableModelBuilder<D> {
         var columns = findDatabaseColumnList(table, initConnection);
         return StreamUtils.toMap(name -> name.toLowerCase(Locale.ENGLISH), columns);
     }
+
 
     /**
      * Finds all database columns for a given table identifier.
@@ -150,24 +155,24 @@ public class TableModelBuilder<D> {
      * @return true if the database product name contains "oracle", false otherwise.
      */
     protected boolean isOracle(Connection connection) {
+        var result = false;
         try {
             var metaData = connection.getMetaData();
             var productName = metaData.getDatabaseProductName();
             if (productName != null && productName.toLowerCase().contains("oracle")) {
-                return true;
+                result = true;
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Oracle test faild", ex);
         }
-        return false;
+        return result;
     }
 
     /**
-     * Retrieves the identifier quote character used by the database connection.
+     * Determines if the provided connection is directed to an Oracle database.
      *
      * @param connection The database connection to check.
-     * @param config The current configuration context.
-     * @return The identifier quote char.
+     * @return true if the database product name contains "oracle", false otherwise.
      */
     protected char getIdentifierQuoteChar(Connection connection, Config config) {
         if (!config.isEnableSqlQuoting()) {
@@ -221,6 +226,6 @@ public class TableModelBuilder<D> {
 
     /** Static builder */
     public static <D> TableModel<D> build(DomainHandler<D> handler, Context ctx, Connection initConnection) {
-        return new TableModelBuilder<>(handler, ctx).build(initConnection);
+        return new TableModelBuilder<D>(handler, ctx).build(initConnection);
     }
 }
