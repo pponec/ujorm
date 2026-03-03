@@ -130,20 +130,9 @@ public class TableModelBuilder<D> {
             var catalog = (table.catalog() != null && !table.catalog().isEmpty()) ? table.catalog() : null;
             var schema = (table.schema() != null && !table.schema().isEmpty()) ? table.schema() : null;
 
-            var tableNames = new String[] {
-                    table.table(),
-                    table.table().toUpperCase(Locale.ENGLISH),
-                    table.table().toLowerCase(Locale.ENGLISH)
-            };
-
-            for (var tableName : tableNames) {
-                try (var resultSet = metaData.getColumns(catalog, schema, tableName, null)) {
-                    while (resultSet.next()) {
-                        result.add(resultSet.getString("COLUMN_NAME"));
-                    }
-                }
-                if (!result.isEmpty()) {
-                    break;
+            try (var resultSet = metaData.getColumns(catalog, schema, table.table(), null)) {
+                while (resultSet.next()) {
+                    result.add(resultSet.getString("COLUMN_NAME"));
                 }
             }
         } catch (SQLException e) {
@@ -208,7 +197,7 @@ public class TableModelBuilder<D> {
         } else {
             jdbcType = jdbcTypeProvider.findJdbcType(key);
         }
-        var columnName = dbColumMapLowerCase.get(key.name().toLowerCase(Locale.ENGLISH));
+        var columnName = dbColumMapLowerCase.get(key.columnLabel().toLowerCase(Locale.ENGLISH));
         if (columnName == null || columnName.isEmpty()) {
             var msg = "Property %s mapped to column '%s' not found in database."
                     .formatted(key.fullName(), key.columnLabel());
