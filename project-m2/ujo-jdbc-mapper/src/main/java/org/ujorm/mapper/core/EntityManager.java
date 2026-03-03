@@ -21,6 +21,7 @@ import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.core.SnapshotProvider;
 import org.ujorm.core.impl.AbstractUjo;
+import org.ujorm.mapper.Crud;
 import org.ujorm.mapper.impl.Context;
 import org.ujorm.mapper.jdbc.ResultSetMapper;
 import org.ujorm.mapper.model.ColumnModel;
@@ -88,9 +89,9 @@ public final class EntityManager<D, V> {
     }
 
     /** Creates a new Crud instance to perform database operations. */
-    public Crud crud(@NotNull Connection connection) {
+    public Crud<D,V> crud(@NotNull Connection connection) {
         initModel(connection);
-        return new Crud(connection);
+        return new CrudImpl(connection);
     }
 
     /** Thread-safe access to the TableModel. */
@@ -260,25 +261,15 @@ public final class EntityManager<D, V> {
         }
     }
 
-    /** The CRUD operations wrapper. */
-    public final class Crud {
+    /** The CRUD operations implementation. */
+    public final class CrudImpl implements Crud<D, V> {
         private final Connection dbconnection;
 
-        public Crud(@NotNull Connection dbconnection) {
+        public CrudImpl(@NotNull Connection dbconnection) {
             this.dbconnection = dbconnection;
         }
 
-        /**
-         * Inserts multiple domain objects using batching support.
-         * The method returns the original array (or a new one created by varargs)
-         * where individual elements are updated with generated identifiers.
-         * <p>
-         * Note: If the domain objects are immutable (e.g., Java Records),
-         * the original references in the array are replaced with new instances.
-         *
-         * @param domains Entities to insert.
-         * @return The same array containing updated entities.
-         */
+        @Override
         @SafeVarargs
         public final D[] insertBatch(@NotNull D... domains) {
             if (domains == null || domains.length == 0) {
@@ -344,13 +335,7 @@ public final class EntityManager<D, V> {
             });
         }
 
-        /**
-         * Inserts a domain object into the database.
-         *
-         * @param domain The domain object to be inserted (either a bean or a record)
-         * @return The object with an assigned identifier.
-         * Whenever possible, it returns the same instance provided as a parameter.
-         */
+        @Override
         public D insert(@NotNull D domain) {
             var pkOriginalValue = utilities.getPrimaryKeyValue(domain);
             var columns = tableModel().createInsertedColumns(pkOriginalValue);
@@ -376,13 +361,13 @@ public final class EntityManager<D, V> {
             });
         }
 
-        /** Reads a domain object by its identifier. */
+        @Override
         @Nullable
         public D readNullable(@NotNull V id) {
             return read(id).orElse(null);
         }
 
-        /** Reads a domain object by its identifier. */
+        @Override
         @NotNull
         public Optional<D> read(@NotNull V id) {
             var q = getQuote();
@@ -406,32 +391,19 @@ public final class EntityManager<D, V> {
             });
         }
 
-        /**
-         * Updates a domain object.
-         * @param domain Domain object to update.
-         * @param properties Optional list of property names to update. If empty, all properties are updated (excluding id).
-         * @return The number of affected rows.
-         */
+        @Override
         public long update(@NotNull D domain, CharSequence... properties) {
             var columns = tableModel().getColumns(properties);
-            return updateBatch(domain, columns);
+            return updateBatchInternal(domain, columns);
         }
 
-        /**
-         * Updates a domain object.
-         * @param domains Domain objects to update. If the list is empty, update all columns excluding PK.
-         * @param properties Optional list of property names to update. If empty, all properties are updated (excluding id).
-         * @return The number of affected rows.
-         */
+        @Override
         public long updateBatch(@NotNull List<D> domains, CharSequence... properties) {
             var columns = tableModel().getColumns(properties);
-            return updateList(domains, columns);
+            return updateListInternal(domains, columns);
         }
 
-        /**
-         * Updates multiple domain objects using batching and collision detection.
-         * Note: Requires connection.setAutoCommit(false) for transactional safety.
-         */
+        @Override
         @SafeVarargs
         public final <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull D2... domains) {
             if (domains == null || domains.length == 0) {
@@ -481,7 +453,7 @@ public final class EntityManager<D, V> {
                         statement = dbconnection.prepareStatement(sql);
                         result += cache.put(changes, statement);
                     }
-                    result += updateInternal(statement, domain, modifiedKeys);
+                    result += updateInternalBinding(statement, domain, modifiedKeys);
                     cache.addId(id);
                     batchCount++;
 
@@ -500,7 +472,7 @@ public final class EntityManager<D, V> {
 
         /** Binds values to the PreparedStatement and adds it to the current batch. */
         @SafeVarargs
-        protected final long updateInternal(PreparedStatement statement, D entity, Key<D,?>... keys) throws SQLException {
+        protected final long updateInternalBinding(PreparedStatement statement, D entity, Key<D,?>... keys) throws SQLException {
             var model = tableModel();
             var columns = new ArrayList<ColumnModel<D, Object>>(keys.length);
             for (var key : keys) {
@@ -517,7 +489,7 @@ public final class EntityManager<D, V> {
          * @param columns Optional list of property names to update. If empty, all properties are updated (excluding id).
          * @return The number of affected rows.
          */
-        protected long updateBatch(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
+        protected long updateBatchInternal(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
             var sql = utilities.buildUpdateSql(columns);
             return utilities.run(dbconnection, sql, false, ps -> {
                 utilities.setValuesAndPkToStatement(domain, columns, ps);
@@ -534,7 +506,7 @@ public final class EntityManager<D, V> {
          * @param columns A list of column models defining which specific attributes should be updated.
          * @return The total number of rows affected by the batch execution.
          */
-        protected long updateList(@NotNull List<D> domains, @NotNull List<ColumnModel<D, Object>> columns) {
+        protected long updateListInternal(@NotNull List<D> domains, @NotNull List<ColumnModel<D, Object>> columns) {
             if (domains.isEmpty()) {
                 return 0L;
             }
@@ -560,12 +532,12 @@ public final class EntityManager<D, V> {
             });
         }
 
-        /** Deletes a domain object. */
+        @Override
         public int delete(@NotNull D domain) {
             return deleteById(utilities.getPrimaryKeyValue(domain));
         }
 
-        /** Deletes a domain object by its identifier. */
+        @Override
         public int deleteById(@NotNull V id) {
             var q = getQuote();
             var tableName = tableModel().tableName();
@@ -578,7 +550,7 @@ public final class EntityManager<D, V> {
             });
         }
 
-        /** Deletes multiple domain objects using batching support. */
+        @Override
         @SafeVarargs
         public final int deleteBatch(@NotNull D... domains) {
             if (domains == null || domains.length == 0) {
