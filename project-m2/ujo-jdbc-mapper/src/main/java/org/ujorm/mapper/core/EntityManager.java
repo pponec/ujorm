@@ -580,6 +580,41 @@ public final class EntityManager<D, V> {
                 return ps.executeUpdate();
             });
         }
+
+        /** Deletes multiple domain objects using batching support. */
+        @SafeVarargs
+        public final int delete(@NotNull D... domains) {
+            if (domains == null || domains.length == 0) {
+                return 0;
+            }
+            var q = getQuote();
+            var tableName = tableModel().tableName();
+            var sql = new StringBuilder(64)
+                    .append("DELETE FROM ").append(q).append(tableName).append(q)
+                    .append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
+
+            var limit = utilities.getBatchLimit();
+
+            return utilities.run(dbconnection, sql, false, ps -> {
+                var result = 0L;
+                var batchCount = 0;
+
+                for (var i = 0; i < domains.length; i++) {
+                    var domain = domains[i];
+                    if (domain == null) continue;
+
+                    ps.setObject(1, utilities.getPrimaryKeyValue(domain));
+                    ps.addBatch();
+                    batchCount++;
+
+                    if (batchCount == limit || i == domains.length - 1) {
+                        result += utilities.sumBatchRows(ps.executeBatch());
+                        batchCount = 0;
+                    }
+                }
+                return (int) result;
+            });
+        }
     }
 
     // --- STATIC METHOD(s) ---
