@@ -203,11 +203,6 @@ public class EntityManager<D, V> {
             this.dbconnection = dbconnection;
         }
 
-        @Override
-        public void close() {
-            // Implicitly AutoCloseable for potential transaction boundaries or resource scoping
-        }
-
         /** Inserts multiple domain objects using a loop. TODO: Implement a true multi-insert with batching support. */
         @SafeVarargs
         public final void insert(int batchSize, @NotNull D... domains) {
