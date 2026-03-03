@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,28 +18,45 @@ package org.ujorm.core.generator;
 import jakarta.persistence.Table;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/** Database table model identifiers  */
+/**
+ * Database table model identifiers
+ *
+ * @param table Name of the database table.
+ * @param schema (Optional) The schema of the table.
+ * @param catalog (Optional) The catalog of the schema.
+ */
 public record TableIdentifier(
-        /** Name of the database table. */
         @NotNull
         String table,
-        /** (Optional) The schema of the table. */
         @Nullable
         String schema,
-        /** (Optional) The catalog of the schema. */
         @Nullable
         String catalog
 ) {
 
     /** Create new soft object with real values */
     public TableIdentifier merge(@NotNull TableIdentifier real) {
-        return new TableIdentifier(real.table,
-                schema == null ? schema : real.schema,
-                catalog == null ? catalog : real.catalog);
+        return new TableIdentifier(
+                real.table,
+                mergeValue(this.schema, real.schema),
+                mergeValue(this.catalog, real.catalog)
+        );
+    }
+
+    /**
+     * Helper method to merge a single string value.
+     *
+     * @param original The original value from the annotation.
+     * @param real The real value from the database.
+     * @return The merged value.
+     */
+    private String mergeValue(String original, String real) {
+        return original == null || original.isEmpty() ? null : real;
     }
 
     /** Get Table name in the full format: {@code catalog.schema.table} . */
@@ -71,10 +88,9 @@ public record TableIdentifier(
      * @return result - The resolved string value.
      */
     static String getFromTable(Table table, Function<Table, String> extractor, String defaultValue) {
-        var result = (table != null) ? extractor.apply(table) : "";
-        return result.isEmpty()
-                ? defaultValue
-                : result;
+        if (table == null) return defaultValue;
+        var value = extractor.apply(table);
+        return value.isEmpty() ? defaultValue : value;
     }
 
     /** Get data from annotation */
@@ -86,5 +102,4 @@ public record TableIdentifier(
         var catalog = getFromTable(tableAnnotation, Table::catalog, "");
         return new TableIdentifier(table, schema, catalog);
     }
-
 }
