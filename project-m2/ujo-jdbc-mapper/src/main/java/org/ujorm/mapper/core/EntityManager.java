@@ -151,6 +151,23 @@ public final class EntityManager<D, V> {
             ps.setObject(index, getPrimaryKeyValue(domain), pkColumn().jdbcType());
         }
 
+        /** Builds an SQL INSERT statement for the specified columns. */
+        public String buildInsertSql(@NotNull List<ColumnModel<D, Object>> columns) {
+            var q = getQuote();
+            var tableName = tableModel().tableName();
+            var sql = new StringBuilder(256)
+                    .append("INSERT INTO ")
+                    .append(q).append(tableName).append(q)
+                    .append(" (");
+            write(sql, columns, ", ", q);
+            sql.append(") VALUES (?");
+            for (var j = columns.size() - 1; j > 0; j--) {
+                sql.append(",?");
+            }
+            sql.append(")");
+            return sql.toString();
+        }
+
         /** Builds an SQL UPDATE statement for the specified columns. */
         public String buildUpdateSql(@NotNull List<ColumnModel<D, Object>> columns) {
             var q = getQuote();
@@ -220,9 +237,7 @@ public final class EntityManager<D, V> {
             this.dbconnection = dbconnection;
         }
 
-        /**
-         * Inserts multiple domain objects using batching support.
-         */
+        /** Inserts multiple domain objects using batching support. */
         @SafeVarargs
         public final void insert(@NotNull D... domains) {
             if (domains == null || domains.length == 0) {
@@ -263,29 +278,18 @@ public final class EntityManager<D, V> {
                 return;
             }
 
-            var q = getQuote();
-            var tableName = tableModel().tableName();
-            var pkOriginalValue = returnGeneratedKeys
-                    ? null
-                    : utilities.getPrimaryKeyValue(domains.get(0));
+            var pkOriginalValue = returnGeneratedKeys ? null : utilities.getPrimaryKeyValue(domains.get(0));
             var columns = tableModel().createInsertedColumns(pkOriginalValue);
-            var sql = new StringBuilder(256)
-                    .append("INSERT INTO ")
-                    .append(q).append(tableName).append(q)
-                    .append(" (");
-            utilities.write(sql, columns, ", ", q);
-            sql.append(") VALUES (?");
-            for (var j = columns.size() - 1; j > 0; j--) {
-                sql.append(",?");
-            }
-            sql.append(")");
+            var sql = utilities.buildInsertSql(columns);
 
             utilities.run(dbconnection, sql, returnGeneratedKeys, ps -> {
                 for (var domain : domains) {
                     utilities.setValuesToStatement(domain, columns, ps);
                     ps.addBatch();
                 }
+
                 ps.executeBatch();
+
                 if (returnGeneratedKeys) {
                     var pk = pk();
                     try (var rs = ps.getGeneratedKeys()) {
@@ -315,22 +319,11 @@ public final class EntityManager<D, V> {
          * Whenever possible, it returns the same instance provided as a parameter.
          */
         public D insert(@NotNull D domain) {
-            var q = getQuote();
-            var tableName = tableModel().tableName();
             var pkOriginalValue = utilities.getPrimaryKeyValue(domain);
             var columns = tableModel().createInsertedColumns(pkOriginalValue);
-            var sql = new StringBuilder(256)
-                    .append("INSERT INTO ")
-                    .append(q).append(tableName).append(q)
-                    .append(" (");
-            utilities.write(sql, columns, ", ", q);
-            sql.append(") VALUES (?");
-            for (var j = columns.size() - 1; j > 0; j--) {
-                sql.append(",?");
-            }
-            sql.append(")");
-
+            var sql = utilities.buildInsertSql(columns);
             var returnGeneratedKeys = utilities.isPkEmpty(pkOriginalValue);
+
             return utilities.run(dbconnection, sql, returnGeneratedKeys, ps -> {
                 utilities.setValuesToStatement(domain, columns, ps);
                 if (!returnGeneratedKeys) {
