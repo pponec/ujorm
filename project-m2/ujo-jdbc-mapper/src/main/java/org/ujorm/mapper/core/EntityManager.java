@@ -143,13 +143,14 @@ public class EntityManager<D, V> {
      * Whenever possible, it returns the same instance provided as a parameter.
      */
     public D insert(@NotNull D domain) {
+        var q = getQuote();
         var pkOriginalValue = utilities.getPrimaryKeyValue(domain);
         var columns = tableModel().createInsertedColumns(pkOriginalValue);
         var sql = new StringBuilder(256)
                 .append("INSERT INTO ")
-                .append(domainHandler.getDatabaseTable())
+                .append(q).append(domainHandler.getDatabaseTable()).append(q)
                 .append(" (");
-        utilities.write(sql, columns, ", ");
+        utilities.write(sql, columns, ", ", q);
         sql.append(") VALUES (?");
         for (var j = columns.size() - 1; j > 0; j--) {
             sql.append(",?");
@@ -190,17 +191,17 @@ public class EntityManager<D, V> {
     /** Reads a domain object by its identifier. */
     @NotNull
     public Optional<D> read(@NotNull V id) {
+        var q = getQuote();
         var columns = tableModel().columns();
         var labels = new Key[columns.size()];
-        var quote = getQuote();
         var sql = new StringBuilder(128).append("SELECT \n"); // "*"
         for (var i = 0; i < columns.size(); i++) {
             var column = columns.get(i);
             labels[i] = column.key();
-            sql.append(column.index() > 0 ? ", ": "  ").append(column.name());
+            sql.append(column.index() > 0 ? ", ": "  ").append(q).append(column.name()).append(q);
         }
-        sql.append(" FROM ").append(domainHandler.getDatabaseTable());
-        sql.append(" WHERE ").append(pk().columnLabel()).append(" = ?");
+        sql.append(" FROM ").append(q).append(domainHandler.getDatabaseTable()).append(q);
+        sql.append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
 
         return utilities.run(sql, false, ps -> {
             ps.setObject(1, id);
@@ -353,7 +354,10 @@ public class EntityManager<D, V> {
 
     /** Deletes a domain object by its identifier. */
     public int deleteById(@NotNull V id) {
-        var sql = "DELETE FROM " + domainHandler.getDatabaseTable() + " WHERE " + pk().columnLabel() + " = ?";
+        var q = getQuote();
+        var sql = new StringBuilder(64)
+                .append("DELETE FROM ").append(q).append(domainHandler.getDatabaseTable()).append(q)
+                .append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
         return utilities.run(sql, false, ps -> {
             ps.setObject(1, id);
             return ps.executeUpdate();
@@ -387,15 +391,16 @@ public class EntityManager<D, V> {
 
         /** Builds an SQL UPDATE statement for the specified columns. */
         public String buildUpdateSql(@NotNull List<ColumnModel<D, Object>> columns) {
+            var q = getQuote();
             var sql = new StringBuilder(256)
                     .append("UPDATE ")
-                    .append(domainHandler.getDatabaseTable());
+                    .append(q).append(domainHandler.getDatabaseTable()).append(q);
             for (var i = 0; i < columns.size(); i++) {
                 var column = columns.get(i);
                 sql.append(i == 0 ? " SET " : ", ");
-                sql.append(column.name()).append(" = ?");
+                sql.append(q).append(column.name()).append(q).append(" = ?");
             }
-            sql.append(" WHERE ").append(pkColumn().name()).append(" = ?");
+            sql.append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
             return sql.toString();
         }
 
@@ -426,13 +431,13 @@ public class EntityManager<D, V> {
             }
         }
 
-        /** Write column name. TODO.pop: Quote it? */
-        public void write(final StringBuilder writer, final List<ColumnModel<D,Object>> columns, final String separator) {
+        /** Write column name. */
+        public void write(final StringBuilder writer, final List<ColumnModel<D,Object>> columns, final String separator, final char q) {
             for (var i = 0; i < columns.size(); i++) {
                 if (i > 0) {
                     writer.append(separator);
                 }
-                writer.append(columns.get(i).name());
+                writer.append(q).append(columns.get(i).name()).append(q);
             }
         }
 
