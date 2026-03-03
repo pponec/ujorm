@@ -16,21 +16,26 @@
 package org.ujorm.mapper.model;
 
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.core.generator.TableIdentifier;
 import org.ujorm.mapper.impl.Config;
 import org.ujorm.mapper.impl.Context;
 import org.ujorm.mapper.utils.JdbcTypeProvider;
+import org.ujorm.tools.common.StreamUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
 import java.sql.JDBCType;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /** Table Model Builder */
 @RequiredArgsConstructor
@@ -53,6 +58,47 @@ public class TableModelBuilder<D> {
         var quoteChar = getIdentifierQuoteChar(initConnection, ctx.config());
         var jdbc = new Jdbc(isOracleDb, quoteChar);
         return new TableModel(handler, pk, columns, dbModel, insertedColumns, jdbc);
+    }
+
+    /**
+     * Finds all database columns for a given table identifier.
+     *
+     * @param table The identifier of the table.
+     * @param initConnection The connection to the database.
+     * @return result - List of column names.
+     */
+    @NotNull
+    private Map<String, String> findDatabaseColumnMap(TableIdentifier table, Connection initConnection) {
+        var columns = findDatabaseColumnList(table, initConnection);
+        var result = StreamUtils.map((String name) -> name.toLowerCase(Locale.ENGLISH), columns);
+        return result;
+    }
+
+    /**
+     * Finds all database columns for a given table identifier.
+     *
+     * @param table The identifier of the table.
+     * @param initConnection The connection to the database.
+     * @return result - List of column names.
+     */
+    @NotNull
+    private List<String> findDatabaseColumnList(TableIdentifier table, Connection initConnection) {
+        var result = new ArrayList<String>();
+        try {
+            var metaData = initConnection.getMetaData();
+            var catalog = (table.catalog() != null && !table.catalog().isEmpty()) ? table.catalog() : null;
+            var schema = (table.schema() != null && !table.schema().isEmpty()) ? table.schema() : null;
+
+            try (var resultSet = metaData.getColumns(catalog, schema, table.table(), null)) {
+                while (resultSet.next()) {
+                    result.add(resultSet.getString("COLUMN_NAME"));
+                }
+            }
+        } catch (SQLException e) {
+            throw SQLExceptionBuilder.build("Cannot retrieve columns for table: " +
+                    table.getQualifiedName(), e);
+        }
+        return result;
     }
 
     /**
