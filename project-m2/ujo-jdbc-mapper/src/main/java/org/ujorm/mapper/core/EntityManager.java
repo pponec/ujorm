@@ -120,6 +120,16 @@ public final class EntityManager<D, V> {
     /** Utilities for EntityManager */
     final class Utilities {
 
+        /** Checks autoCommit state and logs a warning once per instance if enabled. */
+        public void checkAutoCommit(@NotNull Connection connection) throws SQLException {
+            if (context.config().isAutoCommitWarned() && connection.getAutoCommit()) {
+                var msg = "Connection has autoCommit=true in the entity '%s'." +
+                        "Batch operations will be significantly slower and lack transactional safety."
+                                .formatted(domainHandler.getDomainClass().getName());
+                LOGGER.warning(msg);
+            }
+        }
+
         /** Returns a safe limit for batch operations (insert and update). */
         public int getBatchLimit() {
             var limit = context.config().getInsertBatchSize();
@@ -227,13 +237,16 @@ public final class EntityManager<D, V> {
         }
 
         /** Logs and executes the SQL statement using the provided connection. */
-        public <R> R run(@NotNull Connection connection, final CharSequence sql, final boolean returnGeneratedKeys, final SqlFunction<PreparedStatement, R> fun) {
+        public <R> R run(boolean batch, @NotNull Connection connection, final CharSequence sql, final boolean returnGeneratedKeys, final SqlFunction<PreparedStatement, R> fun) {
             try (var ps = !returnGeneratedKeys
                     ? connection.prepareStatement(sql.toString())
                     : tableModel().jdbc().isOracleDb()
                     ? connection.prepareStatement(sql.toString(), new String[]{pkColumn().name()})
                     : connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)
             ) {
+                if (batch) {
+                    checkAutoCommit(connection);
+                }
                 if (context.config().isPrintSql()) {
                     LOGGER.info(sql::toString);
                 }
@@ -302,7 +315,7 @@ public final class EntityManager<D, V> {
             var sql = utilities.buildInsertSql(columns);
             var limit = utilities.getBatchLimit();
 
-            utilities.run(dbconnection, sql, generateKeys, ps -> {
+            utilities.run(true, dbconnection, sql, generateKeys, ps -> {
                 var pk = generateKeys ? pk() : null;
                 var batchCount = 0;
 
@@ -320,7 +333,6 @@ public final class EntityManager<D, V> {
                                 for (int j = start; j <= i; j++) {
                                     if (rs.next()) {
                                         int targetIdx = indices.get(j);
-                                        // Update array in-place. If an exception occurs, the array will be left in an inconsistent state.
                                         domains[targetIdx] = utilities.assignGeneratedKey(domains[targetIdx], rs, pk);
                                     } else {
                                         throw new IllegalStateException("Missing generated key");
@@ -342,7 +354,7 @@ public final class EntityManager<D, V> {
             var sql = utilities.buildInsertSql(columns);
             var returnGeneratedKeys = utilities.isPkEmpty(pkOriginalValue);
 
-            return utilities.run(dbconnection, sql, returnGeneratedKeys, ps -> {
+            return utilities.run(false, dbconnection, sql, returnGeneratedKeys, ps -> {
                 utilities.setValuesToStatement(domain, columns, ps);
                 if (!returnGeneratedKeys) {
                     ps.executeUpdate();
@@ -374,7 +386,7 @@ public final class EntityManager<D, V> {
             var tableName = tableModel().tableName();
             var columns = tableModel().columns();
             var labels = new Key[columns.size()];
-            var sql = new StringBuilder(128).append("SELECT \n"); // "*"
+            var sql = new StringBuilder(128).append("SELECT \n");
             for (var i = 0; i < columns.size(); i++) {
                 var column = columns.get(i);
                 labels[i] = column.key();
@@ -383,7 +395,7 @@ public final class EntityManager<D, V> {
             sql.append(" FROM ").append(q).append(tableName).append(q);
             sql.append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
 
-            return utilities.run(dbconnection, sql, false, ps -> {
+            return utilities.run(false, dbconnection, sql, false, ps -> {
                 ps.setObject(1, id);
                 try (var rs = ps.executeQuery()) {
                     return resultSetMapper.convert(rs, labels).findFirst();
@@ -437,7 +449,6 @@ public final class EntityManager<D, V> {
                     }
                     var id = utilities.getPrimaryKeyValue(domain);
 
-                    // Flush on ID collision to prevent DB deadlocks and preserve update order
                     result += cache.flushOnCollision(id);
 
                     var modifiedKeys = new Key[modifiedIdx.length];
@@ -464,7 +475,7 @@ public final class EntityManager<D, V> {
                         batchCount = 0;
                     }
                 }
-                result += cache.flush(); // Flush any remaining statements before the AutoCloseable block finishes
+                result += cache.flush();
             } catch (SQLException e) {
                 throw new IllegalStateException("Batch update failed", e);
             }
@@ -491,7 +502,7 @@ public final class EntityManager<D, V> {
          */
         protected long updateInternal(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
             var sql = utilities.buildUpdateSql(columns);
-            return utilities.run(dbconnection, sql, false, ps -> {
+            return utilities.run(false, dbconnection, sql, false, ps -> {
                 utilities.setValuesAndPkToStatement(domain, columns, ps);
                 return (long) ps.executeUpdate();
             });
@@ -513,7 +524,7 @@ public final class EntityManager<D, V> {
             var sql = utilities.buildUpdateSql(columns);
             var limit = utilities.getBatchLimit();
 
-            return utilities.run(dbconnection, sql, false, ps -> {
+            return utilities.run(true, dbconnection, sql, false, ps -> {
                 var result = 0L;
                 var batchCount = 0;
 
@@ -522,10 +533,9 @@ public final class EntityManager<D, V> {
                     ps.addBatch();
                     batchCount++;
 
-                    // Execute batch when the limit is reached or it's the last element
                     if (batchCount == limit || i == domains.size() - 1) {
                         result += utilities.sumBatchRows(ps.executeBatch());
-                        batchCount = 0; // Reset counter for the next chunk
+                        batchCount = 0;
                     }
                 }
                 return result;
@@ -544,7 +554,7 @@ public final class EntityManager<D, V> {
             var sql = new StringBuilder(64)
                     .append("DELETE FROM ").append(q).append(tableName).append(q)
                     .append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
-            return utilities.run(dbconnection, sql, false, ps -> {
+            return utilities.run(false, dbconnection, sql, false, ps -> {
                 ps.setObject(1, id);
                 return ps.executeUpdate();
             });
@@ -564,7 +574,7 @@ public final class EntityManager<D, V> {
 
             var limit = utilities.getBatchLimit();
 
-            return utilities.run(dbconnection, sql, false, ps -> {
+            return utilities.run(true, dbconnection, sql, false, ps -> {
                 var result = 0L;
                 var batchCount = 0;
 
