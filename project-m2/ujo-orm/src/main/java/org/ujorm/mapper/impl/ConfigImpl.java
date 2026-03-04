@@ -39,10 +39,10 @@ public class ConfigImpl implements Config {
     private boolean printSql = true;
 
     /** Enable quoting the SQL columns */
-    boolean enableSqlQuoting = true;
+    private boolean enableSqlQuoting = true;
 
     /** Write a warning if the column is not a relation and has no JDBC mapping. */
-    boolean columnMappingWarning = true;
+    private boolean columnMappingWarning = true;
 
     /** Print warnings, if Connection autocommit is true in batch operations. */
     private boolean autoCommitWarned = true;

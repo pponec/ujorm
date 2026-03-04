@@ -68,7 +68,7 @@ import java.util.stream.Stream;
  *
  * @param <D> the root domain type
  */
-public class ResultSetMapper<D> {
+public final class ResultSetMapper<D> {
     private static final Logger LOGGER = Logger.getLogger(ResultSetMapper.class.getName());
 
     /** The very fast dot splitter */
@@ -114,19 +114,31 @@ public class ResultSetMapper<D> {
      */
     @NotNull
     public Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columnLabels) {
-        return rs.map(resultSet -> {
-            try {
-                var extracted = getLabelColumns(resultSet, columnLabels);
-                var key = new CacheKey(extracted);
-                var node = cache.getOrCreate(key, k ->
-                        buildMappingTree(k.columns()));
-                var result = rootHandler.newUjoDomain();
-                populateNode(node, result, resultSet);
-                return result.buildDomain();
-            } catch (SQLException ex) {
-                throw SQLExceptionBuilder.build("Failed to map ResultSet row to domain object", ex);
-            }
-        });
+        return rs.map(this::map);
+    }
+
+    /**
+     * Converts the given Stream of ResultSets into a stream of domain objects.
+     *
+     * @param resultSet the Stream of ResultSets to process
+     * @param columnLabels optional explicitly defined column labels
+     * @return a stream of populated domain objects
+     * @throws NoSuchElementException if explicit columns don't match the ResultSet metadata
+     */
+    @NotNull
+    public D map(@NotNull ResultSet resultSet, @Nullable CharSequence... columnLabels) {
+        try {
+            var extracted = getLabelColumns(resultSet, columnLabels);
+            var key = new CacheKey(extracted);
+            var node = cache.getOrCreate(key, k ->
+                    buildMappingTree(k.columns()));
+            var result = rootHandler.newUjoDomain();
+            populateNode(node, result, resultSet);
+            return result.buildDomain();
+        } catch (SQLException ex) {
+            var msg = "Failed to map ResultSet row to %s".formatted(domainClass.getSimpleName());
+            throw SQLExceptionBuilder.build(msg, ex);
+        }
     }
 
     /**
