@@ -207,6 +207,8 @@ public class SqlParamBuilder implements AutoCloseable {
         }
     }
 
+    /** Creates a Stream from the ResultSet. The Stream ensures the ResultSet is closed when finished. <br/>
+     * Prefer {@link #streamMap(SqlFunction)} or {@link #forEach(SqlConsumer)}. */
     /** Creates a Stream from the ResultSet. The Stream ensures the ResultSet is closed when finished. */
     @NotNull
     private Stream<ResultSet> stream(final ResultSet rs) {
@@ -360,13 +362,8 @@ public class SqlParamBuilder implements AutoCloseable {
         return toString().replaceAll("\\s*\\R+\\s*", " ");
     }
 
-    /** SQL parameter value */
-    record ParamValue(
-            /** Gets the JDBC type */
-            JDBCType jdbcType,
-            /** Gets the values */
-            Object... values
-    ) {
+    /** SQL parameter values */
+    record ParamValue(JDBCType jdbcType, Object... values) {
         public Object first() {
             return values.length > 0 ? values[0] : null;
         }
