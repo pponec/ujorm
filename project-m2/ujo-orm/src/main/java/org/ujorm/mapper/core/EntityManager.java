@@ -32,10 +32,7 @@ import org.ujorm.mapper.utils.Tools;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -73,10 +70,9 @@ public final class EntityManager<D, V> {
         this.utilities = new Utilities();
     }
 
-    /** ResultSet Mapper */
-    @NotNull
-    public ResultSetMapper<D> mapper() {
-        return resultSetMapper;
+    /** Map a ResultSet to the Domain object. */
+    public D map(@NotNull ResultSet rs, @Nullable CharSequence... columnLabels) {
+        return resultSetMapper.map(rs, columnLabels);
     }
 
     /** Initializes TableModel if not already done. */
@@ -422,12 +418,11 @@ public final class EntityManager<D, V> {
             var q = getQuote();
             var tableName = tableModel().tableName();
             var columns = tableModel().columns();
-            var labels = new Key[columns.size()];
             var sql = new StringBuilder(128).append("SELECT \n");
             for (var i = 0; i < columns.size(); i++) {
                 var column = columns.get(i);
-                labels[i] = column.key();
                 sql.append(column.index() > 0 ? ", ": "  ").append(q).append(column.name()).append(q);
+                sql.append(" AS ").append(q).append(column.key()).append(q);
             }
             sql.append(" FROM ").append(q).append(tableName).append(q);
             sql.append(" WHERE ");
