@@ -33,7 +33,8 @@ public final class EntityManagerProvider {
      * @param domainClass An original domain class
      * @return Entity
      */
-    public static <D,V> EntityManager<D,V> getService(@NotNull Class<D> domainClass, @Nullable Class<V> value) {
+    public static <D,V> EntityManager<D,V> em(@NotNull Class<D> domainClass, @Nullable Class<V> value) {
         return (EntityManager<D,V>) provider().entityManager(domainClass);
     }
+
 }
