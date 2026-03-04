@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.Snapshotable;
 
 import java.time.LocalDate;
 
@@ -12,14 +11,14 @@ import java.time.LocalDate;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "employee")
-public class Employee extends User implements Snapshotable<Employee> {
+public class Employee extends UserSnapshotable<Employee> {
 
     @Column(name = "contract_day", nullable = false)
     private LocalDate contractDay;
 
     @Nullable
     @JoinColumn(name = "superior_id")
-    private User superior;
+    private UserSnapshotable superior;
 
     /** Non-peristent attribute */
     @Transient
@@ -27,21 +26,6 @@ public class Employee extends User implements Snapshotable<Employee> {
 
     /** Non-peristent attribute */
     transient private String nonPersistentB;
-
-    /** Non-peristent attribute */
-    @Nullable @Getter(AccessLevel.NONE)
-    private transient Employee _snapshot;
-
-    @Override
-    public Employee saveSnapshot() throws IllegalStateException {
-        _snapshot = clone();
-        return this;
-    }
-
-    @Override
-    public @Nullable Employee readSnapshot() {
-        return _snapshot;
-    }
 
     @Override
     public @NotNull Employee clone() throws IllegalStateException {

@@ -1,9 +1,7 @@
 package org.ujorm.core;
 
-import org.jetbrains.annotations.NotNull;
-
 /** Interface for cloning and managing object snapshots. */
-public interface Snapshotable<D> extends Cloneable, SnapshotProvider<D> {
+public interface Snapshotable<D> extends SnapshotProvider<D> {
 
     /**
      * Save a shallow copy of the current state internally.
@@ -11,18 +9,4 @@ public interface Snapshotable<D> extends Cloneable, SnapshotProvider<D> {
      * @throws IllegalStateException If the snapshot cannot be created
      */
     D saveSnapshot() throws IllegalStateException;
-
-    /**
-     * Creates a shallow copy or throws an exception.
-     * Recommended implementation:
-     * <pre>
-     * try {
-     *     return (D) super.clone();
-     * } catch (CloneNotSupportedException e) {
-     *     throw new IllegalStateException(e);
-     * }
-     * </pre>
-     */
-    @NotNull
-    D clone() throws IllegalStateException;
 }

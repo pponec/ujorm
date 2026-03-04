@@ -2,15 +2,14 @@ package org.ujorm.core.demo;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.Snapshotable;
+import org.ujorm.core.AbstractSnapshotable;
 
 import java.time.LocalDate;
 
-@Getter @Setter @ToString @EqualsAndHashCode
+@Getter @Setter @ToString @EqualsAndHashCode(callSuper = false)
 @Table(name = "employee")
-public class Employee implements Snapshotable<Employee>  {
+public class Employee extends AbstractSnapshotable<Employee> {
 
     @Column(name = "id") @Id
     private Long id;
@@ -26,30 +25,5 @@ public class Employee implements Snapshotable<Employee>  {
     private LocalDate contractDay;
     @Column(name = "is_active")
     private boolean active;
-
-    // --- Snapshot implementation ---
-
-    @Nullable
-    private transient Employee _snapshot;
-
-    @Override
-    public Employee saveSnapshot() throws IllegalStateException {
-        _snapshot = clone();
-        return this;
-    }
-
-    @Override
-    public @Nullable Employee readSnapshot() {
-        return _snapshot;
-    }
-
-    @Override
-    public @NotNull Employee clone() throws IllegalStateException {
-        try {
-            return (Employee) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new IllegalStateException(e);
-        }
-    }
 
 }
