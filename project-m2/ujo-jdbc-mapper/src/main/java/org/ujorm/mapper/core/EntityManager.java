@@ -124,8 +124,8 @@ public final class EntityManager<D, V> {
         /** Checks autoCommit state and logs a warning once per instance if enabled. */
         public void checkAutoCommit(@NotNull Connection connection) throws SQLException {
             if (!autoCommitLogged && context.config().isAutoCommitWarned() && connection.getAutoCommit()) {
-                var msg = "Connection has autoCommit=true in the entity '%s'. " +
-                        "Batch operations will be significantly slower and lack transactional safety."
+                var msg = ("Connection has autoCommit=true in the entity '%s'. " +
+                        "Batch operations will be significantly slower and lack transactional safety.")
                         .formatted(domainHandler.getDomainClass().getName());
                 LOGGER.warning(msg);
                 autoCommitLogged = true;
@@ -480,7 +480,7 @@ public final class EntityManager<D, V> {
                 }
                 result += cache.flush();
             } catch (SQLException e) {
-                throw new IllegalStateException("Batch update failed", e);
+                throw SQLExceptionBuilder.build("Batch update failed", e);
             }
             return result;
         }
