@@ -1,33 +1,30 @@
 package org.ujorm.mapper.impl;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.ujorm.mapper.MapperContext;
-
-/** TODO:pop: create interface from this class */
-@Setter @Getter @ToString
-public class Config implements MapperContext {
+/** Configuration parameters */
+public interface Config {
 
     /** The first key in the sequence represents the primary key. */
-    private boolean firstPropertyIsIdentifier = true;
+    boolean isFirstPropertyIsIdentifier();
 
     /** Maximum size of the cache in the ResultSet Mapper */
-    private int maxCacheSize = 512;
+    int getMaxCacheSize();
 
     /** Batch size for the INSERT */
-    private int insertBatchSize = 512;
+    int getInsertBatchSize();
 
-    /** Printa all SQL template to the log. */
-    private boolean printSql = true;
+    /** Prints all SQL templates to the log. */
+    boolean isPrintSql();
 
     /** Enable quoting the SQL columns */
-    boolean enableSqlQuoting = true;
+    boolean isEnableSqlQuoting();
 
     /** Write a warning if the column is not a relation and has no JDBC mapping. */
-    boolean columnMappingWarning = true;
+    boolean isColumnMappingWarning();
 
     /** Print warnings, if Connection autocommit is true in batch operations. */
-    private boolean autoCommitWarned = true;
+    boolean isAutoCommitWarned();
 
+    static Config ofDefault() {
+        return new ConfigImpl();
+    }
 }

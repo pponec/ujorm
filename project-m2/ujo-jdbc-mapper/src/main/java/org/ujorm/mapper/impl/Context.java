@@ -16,7 +16,7 @@ public record Context (
     private static final CommonService COMMON_SERVICE = new CommonService();
 
     public static Context ofDefault() {
-        return new Context(new Config(), DomainHandlerProvider.provider(), COMMON_SERVICE);
+        return new Context(new ConfigImpl(), DomainHandlerProvider.provider(), COMMON_SERVICE);
     }
 
     public static Context of(Config config, DomainHandlerService domainService) {

@@ -15,7 +15,6 @@ public class CsvManager<D> {
 
     private final DomainHandler<D> domainHandler;
     private final CsvConfig config;
-    private final Map<String, Key<D,?>> keyMap;
     private final int maxFields;
     private final CsvLineSplitter splitter;
     private final KeyFun<D, ?>[] keyFuns;
@@ -23,7 +22,6 @@ public class CsvManager<D> {
     public CsvManager(DomainHandler<D> domainHandler, CsvConfig csvConfig) {
         this.domainHandler = domainHandler;
         this.config = csvConfig;
-        this.keyMap = StreamUtils.map(Key::name, domainHandler.getKeyList());
         this.maxFields = domainHandler.count();
         this.keyFuns = new KeyFun[domainHandler.count()];
         this.splitter = csvConfig.splitter();
