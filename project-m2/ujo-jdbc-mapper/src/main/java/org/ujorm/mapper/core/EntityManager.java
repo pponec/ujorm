@@ -320,7 +320,7 @@ public final class EntityManager<D, V> {
                                 for (int j = start; j <= i; j++) {
                                     if (rs.next()) {
                                         int targetIdx = indices.get(j);
-                                        // In-place update pole (funguje pro Beans i Recordy)
+                                        // Update array in-place. If an exception occurs, the array will be left in an inconsistent state.
                                         domains[targetIdx] = utilities.assignGeneratedKey(domains[targetIdx], rs, pk);
                                     } else {
                                         throw new IllegalStateException("Missing generated key");
@@ -328,7 +328,7 @@ public final class EntityManager<D, V> {
                                 }
                             }
                         }
-                        batchCount = 0; // Reset counter for the next chunk
+                        batchCount = 0;
                     }
                 }
                 return null;
@@ -394,7 +394,7 @@ public final class EntityManager<D, V> {
         @Override
         public long update(@NotNull D domain, CharSequence... properties) {
             var columns = tableModel().getColumns(properties);
-            return updateBatchInternal(domain, columns);
+            return updateInternal(domain, columns);
         }
 
         @Override
@@ -416,7 +416,7 @@ public final class EntityManager<D, V> {
             try (var cache = new StatementCache<V>()) {
                 for (var j = 0; j < domains.length; j++) {
                     var domain_ = domains[j];
-                    if (!domainHandler.getDomainClass().isInstance(domain_)) {
+                    if (domain_ == null || !domainHandler.getDomainClass().isInstance(domain_)) {
                         var msg = domain_ == null
                                 ? "The entity at index %s must not be null.".formatted(j)
                                 : "The entity at index %s must be of type %s.".formatted(j,
@@ -453,7 +453,8 @@ public final class EntityManager<D, V> {
                         statement = dbconnection.prepareStatement(sql);
                         result += cache.put(changes, statement);
                     }
-                    result += updateInternalBinding(statement, domain, modifiedKeys);
+
+                    updateInternalBinding(statement, domain, modifiedKeys);
                     cache.addId(id);
                     batchCount++;
 
@@ -472,7 +473,7 @@ public final class EntityManager<D, V> {
 
         /** Binds values to the PreparedStatement and adds it to the current batch. */
         @SafeVarargs
-        protected final long updateInternalBinding(PreparedStatement statement, D entity, Key<D,?>... keys) throws SQLException {
+        protected final void updateInternalBinding(PreparedStatement statement, D entity, Key<D,?>... keys) throws SQLException {
             var model = tableModel();
             var columns = new ArrayList<ColumnModel<D, Object>>(keys.length);
             for (var key : keys) {
@@ -480,16 +481,15 @@ public final class EntityManager<D, V> {
             }
             utilities.setValuesAndPkToStatement(entity, columns, statement);
             statement.addBatch();
-            return 0L;
         }
 
         /**
-         * Updates a domain object.
+         * Updates a single domain object.
          * @param domain Domain object to update.
          * @param columns Optional list of property names to update. If empty, all properties are updated (excluding id).
          * @return The number of affected rows.
          */
-        protected long updateBatchInternal(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
+        protected long updateInternal(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
             var sql = utilities.buildUpdateSql(columns);
             return utilities.run(dbconnection, sql, false, ps -> {
                 utilities.setValuesAndPkToStatement(domain, columns, ps);
