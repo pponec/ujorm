@@ -18,6 +18,8 @@ package org.ujorm.mapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.SnapshotProvider;
+import org.ujorm.tools.jdbc.SqlParamBuilder;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +63,15 @@ public interface Crud<D, V> {
     /** Reads a domain object by its identifier. */
     @NotNull
     Optional<D> read(@NotNull V id);
+
+    /**
+     * Create instance of SqlParamBuilder to bind parmeters and SELECT.
+     * The builder has shared database connection with this object.
+     * @param whereCondition Undefined or empty value returns all records.
+     * @return
+     */
+    @NotNull
+    SqlParamBuilder read(@Nullable String whereCondition);
 
     /**
      * Updates a single domain object.

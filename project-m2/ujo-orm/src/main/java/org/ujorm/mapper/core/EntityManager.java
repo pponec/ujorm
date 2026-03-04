@@ -30,6 +30,7 @@ import org.ujorm.mapper.model.TableModelBuilder;
 import org.ujorm.mapper.utils.StatementCache;
 import org.ujorm.mapper.utils.Tools;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
+import org.ujorm.tools.jdbc.SqlParamBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -411,6 +412,29 @@ public final class EntityManager<D, V> {
             });
         }
 
+        /**
+         * Create instance of SqlParamBuilder to bind parmeters and SELECT.
+         * The builder has shared database connection with this object.
+         * @param whereCondition Undefined or empty value returns all records.
+         */
+        @Override
+        public @NotNull SqlParamBuilder read(@Nullable String whereCondition) {
+            var q = getQuote();
+            var tableName = tableModel().tableName();
+            var columns = tableModel().columns();
+            var labels = new Key[columns.size()];
+            var sql = new StringBuilder(128).append("SELECT \n");
+            for (var i = 0; i < columns.size(); i++) {
+                var column = columns.get(i);
+                labels[i] = column.key();
+                sql.append(column.index() > 0 ? ", ": "  ").append(q).append(column.name()).append(q);
+            }
+            sql.append(" FROM ").append(q).append(tableName).append(q);
+            sql.append(" WHERE ");
+            sql.append(whereCondition == null || whereCondition.isEmpty() ? "1=1" : whereCondition);
+
+            return new SqlParamBuilder(dbconnection).sql(sql.toString());
+        }
         @Override
         public long update(@NotNull D domain, CharSequence... properties) {
             var columns = tableModel().getColumns(properties);
