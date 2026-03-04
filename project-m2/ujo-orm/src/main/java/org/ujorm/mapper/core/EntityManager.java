@@ -72,6 +72,12 @@ public final class EntityManager<D, V> {
         this.utilities = new Utilities();
     }
 
+    /** ResultSet Mapper */
+    @NotNull
+    public ResultSetMapper<D> mapper() {
+        return resultSetMapper;
+    }
+
     /** Initializes TableModel if not already done. */
     private void initModel(@NotNull Connection connection) {
         if (this._tableModel == null) {
