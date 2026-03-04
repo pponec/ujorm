@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
-import org.ujorm.core.generator.ClassName;
 import org.ujorm.mapper.impl.Config;
+import org.ujorm.mapper.impl.ConfigImpl;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -38,7 +38,7 @@ public class ResultSetMapperService {
     }
 
     public static final ResultSetMapperService of() {
-        return new ResultSetMapperService(DomainHandlerProvider.provider(), new Config());
+        return new ResultSetMapperService(DomainHandlerProvider.provider(), new ConfigImpl());
     }
 
 }
