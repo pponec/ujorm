@@ -119,14 +119,16 @@ public final class EntityManager<D, V> {
 
     /** Utilities for EntityManager */
     final class Utilities {
+        private boolean autoCommitLogged = false;
 
         /** Checks autoCommit state and logs a warning once per instance if enabled. */
         public void checkAutoCommit(@NotNull Connection connection) throws SQLException {
-            if (context.config().isAutoCommitWarned() && connection.getAutoCommit()) {
-                var msg = "Connection has autoCommit=true in the entity '%s'." +
+            if (!autoCommitLogged && context.config().isAutoCommitWarned() && connection.getAutoCommit()) {
+                var msg = "Connection has autoCommit=true in the entity '%s'. " +
                         "Batch operations will be significantly slower and lack transactional safety."
-                                .formatted(domainHandler.getDomainClass().getName());
+                        .formatted(domainHandler.getDomainClass().getName());
                 LOGGER.warning(msg);
+                autoCommitLogged = true;
             }
         }
 
@@ -426,6 +428,7 @@ public final class EntityManager<D, V> {
             var batchCount = 0;
 
             try (var cache = new StatementCache<V>()) {
+                utilities.checkAutoCommit(dbconnection);
                 for (var j = 0; j < domains.length; j++) {
                     var domain_ = domains[j];
                     if (domain_ == null || !domainHandler.getDomainClass().isInstance(domain_)) {
