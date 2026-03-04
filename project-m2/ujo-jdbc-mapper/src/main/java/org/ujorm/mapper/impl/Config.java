@@ -27,4 +27,7 @@ public class Config implements MapperContext {
     /** Write a warning if the column is not a relation and has no JDBC mapping. */
     boolean columnMappingWarning = true;
 
+    /** Print warnings, if Connection autocommit is true in batch operations. */
+    private boolean autoCommitWarned = true;
+
 }
