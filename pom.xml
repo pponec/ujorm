@@ -44,7 +44,7 @@
             </dependency>
             <dependency>
                 <groupId>org.ujorm</groupId>
-                <artifactId>ujo-jdbc-mapper</artifactId>
+                <artifactId>ujo-orm</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

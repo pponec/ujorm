@@ -1,82 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
-    <!--<parent>
-        <groupId>org.ujorm</groupId>
-        <artifactId>ujo</artifactId>
-        <version>2.30</version>
-    </parent>-->
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-orm</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <version>2.30</version>
-    <url>http://ujorm.org</url>
     <name>ujo-orm</name>
-    <description>The Ujorm is designed for rapid Java development with great performance
-      and a small footprint. The key features are type safe queries, relation mapping by Java code,
-      no entity states, and a memory overloading protection cache.
-    </description>
+    <description>Map JDBC ResultSet to Java</description>
+    <url>https://ujorm.org/</url> <!-- home page -->
 
-    <contributors>
-        <contributor>
-            <name>Pavel Ponec</name>
-            <url>http://ponec.net/</url>
-            <timezone>+1</timezone>
-        </contributor>
-    </contributors>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>pponec</id>
+            <name>PPonec</name>
+            <email>pponec@gmail.com</email>
+        </developer>
+    </developers>
+    <scm>
+        <url>https://github.com/pponec/ujorm.git</url>
+        <connection>scm:git:git@github.com/pponec/ujorm.git</connection>
+        <developerConnection>scm:git:git@github.com/pponec/ujorm.git</developerConnection>
+    </scm>
 
     <properties>
-        <revision>2.30</revision>
+        <revision>3.0.0-SNAPSHOT</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.12.2</junit.version>
+        <mockito.vession>5.21.0</mockito.vession>
+        <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
+        <lombok.version>1.18.42</lombok.version>
     </properties>
 
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
     <dependencies>
-
-        <!-- UJO Core -->
+        <!-- Ujorm -->
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-tools</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>${revision}</version>
-            <scope>compile</scope>
+            <version>3.0.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- JTA (Java Transacton API) -->
-        <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>jta</artifactId>
-            <version>1.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- LOGGER SLF4J -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.4.0</version>
-            <optional>true</optional>
-        </dependency>
-
+        <!-- Static analyzer support -->
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
@@ -84,72 +67,22 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Database H2 -->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>2.1.214</version>
-            <scope>test</scope>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>${jakarta.persistence.version}</version>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- Database HSQLDB -->
         <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>2.4.0</version>
-            <scope>test</scope>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- Database MySql -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.16</version>
-            <scope>test</scope>
-        </dependency>
 
-        <!-- Database PostgreSql -->
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>8.4-701.jdbc3</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- microsoft -.->
-        <dependency>
-            <groupId>com.microsoft.sqlserver.jdbc</groupId>
-            <artifactId>sqljdbc4</artifactId>
-            <version>4.0</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-        <!-.- end microsoft -->
-
-        <!-- Oracle -.->
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>jdbc</artifactId>
-            <version>10.1.0.3.0</version>
-            <scope>test</scope>
-        </dependency>
-        <!-.- EOOD -->
-
-        <!-- Derby -->
-        <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <version>10.5.3.0_1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Jaybird (the JDBC driver for Firebird) -->
-        <dependency>
-            <groupId>net.sf.squirrel-sql.thirdparty-non-maven</groupId>
-            <artifactId>jaybird</artifactId>
-            <version>2.1.6</version>
-            <scope>test</scope>
-        </dependency>
+        <!-- TESTS -->
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -157,84 +90,62 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.4.240</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.vession}</version> <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.vession}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                    <include>**/*.txt</include>
-                </includes>
-                <directory>src/main/java</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
-        <testResources>
-            <testResource>
-                <directory>src/test/java</directory>
-            </testResource>
-        </testResources>
-
         <plugins>
             <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
-                <configuration>
-                    <!-- <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile> -->
-                    <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
-                    <docfilessubdirs>true</docfilessubdirs>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                    <failOnError>false</failOnError>
-                    <encoding>UTF-8</encoding>
-                    <author>true</author>
-                    <bottom><![CDATA[Copyright 2013, <a target="_blank" href="http://ujorm.org/">Pavel Ponec<a>]]></bottom>
-                    <doctitle>Ujorm ${project.version} (${project.name})</doctitle>
-                    <windowtitle>Ujorm ${project.version} - ${project.name}</windowtitle>
-                    <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="http://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
-
-                    <!-- Doclet (yWorks UML Doclet)
-                    <doclet>ydoc.doclets.YStandard</doclet>
-                    <docletPath>${yworks.uml.path}/lib/ydoc.jar:${yworks.uml.path}/lib/class2svg.jar:${yworks.uml.path}/resources</docletPath>
-                    <additionalparam>-link http://docs.oracle.com/javase/6/docs/api/ -umlautogen</additionalparam>
-                    -->
-
-                    <!-- Doclet (sudo apt-get install graphviz) -.->
-                    <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-                    <docletArtifact>
-                        <groupId>org.umlgraph</groupId>
-                        <artifactId>umlgraph</artifactId>
-                        <version>5.6</version>
-                    </docletArtifact>
-                    <additionalparam>
-                        -inferrel -quiet -hide java.*
-                        -collpackages java.util.* -qualify
-                        -postfixpackage -nodefontsize 9
-                        -nodefontpackagesize 7
-                    </additionalparam>
-                    -->
-                </configuration>
-            </plugin>
-
-            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>UTF-8</encoding>
-                    <debug>true</debug>
-                </configuration>
+                <version>3.14.1</version> <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>${lombok.version}</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.2</version>
+                <version>3.2.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <filters></filters>
                 </configuration>
             </plugin>
 
@@ -245,59 +156,78 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.ujorm.core.UjoManager</mainClass>
-                            <packageName>org.ujorm.core</packageName>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                            <!-- <addClasspath>true</addClasspath> -->
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
 
+            <!-- Deployment (Needs the GnuPg) -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.9.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.2.8</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version> <executions>
+                <execution>
+                    <id>attach-sources</id>
+                    <goals>
+                        <goal>jar-no-fork</goal>
+                    </goals>
+                </execution>
+            </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <!-- <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile> -->
+                    <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
+                    <docfilessubdirs>true</docfilessubdirs>
+                    <failOnError>false</failOnError>
+                    <encoding>UTF-8</encoding>
+                    <bottom><![CDATA[Copyright 2026, <a target="_blank" href="https://ujorm.org/">PPonec</a>]]></bottom>
+                    <doctitle>Ujorm ${revision} (${project.name})</doctitle>
+                    <windowtitle>Ujorm ${revision} - ${project.name}</windowtitle>
+                    <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="https://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
+                    <doclint>none</doclint> <!-- Disables Javadoc warnings -->
+                </configuration>
+                <executions>
+                <execution>
+                    <id>attach-javadocs</id>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                </execution>
+            </executions>
+            </plugin>
         </plugins>
     </build>
 
-    <!-- PROFILE(S) -->
-
-    <profiles>
-        <profile>
-            <id>production</id>
-            <build>
-                <plugins>
-                    <!-- code optimization: -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <debug>false</debug>
-                            <optimize>true</optimize>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>sign</id>
-            <build>
-                <plugins>
-                    <!-- Needs the GnuPg: -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 </project>
+
