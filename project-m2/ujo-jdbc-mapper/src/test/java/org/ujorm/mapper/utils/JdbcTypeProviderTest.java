@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.mapper.demo.Employee;
+import org.ujorm.mapper.demo.UserSnapshotable;
+
 import java.math.BigDecimal;
 import java.sql.JDBCType;
 import java.time.LocalDate;
@@ -70,13 +72,13 @@ class JdbcTypeProviderTest {
         var exSuperior = assertThrows(IllegalArgumentException.class, () ->
                 provider.findJdbcType(handler.getKey("superior")));
         assertTrue(exSuperior.getMessage().contains("Employee.superior"));
-        assertEquals("The attribute Employee.superior has an unsupported JDBC type: org.ujorm.mapper.demo.User",
-                exSuperior.getMessage());
+        assertEquals("The attribute Employee.superior has an unsupported JDBC type: %s"
+                        .formatted(UserSnapshotable.class.getName()), exSuperior.getMessage());
 
         var exCity = assertThrows(IllegalArgumentException.class, () ->
                 provider.findJdbcType(handler.getKey("city")));
         assertTrue(exCity.getMessage().contains("Employee.city"));
-        assertEquals("The attribute Employee.superior has an unsupported JDBC type: org.ujorm.mapper.demo.User",
-                exSuperior.getMessage());
+        assertEquals("The attribute Employee.superior has an unsupported JDBC type: %s"
+                        .formatted(UserSnapshotable.class.getName()), exSuperior.getMessage());
     }
 }
