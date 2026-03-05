@@ -22,13 +22,9 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.tools.*;
 
 public class ClassGenerator {
@@ -130,37 +126,23 @@ public class ClassGenerator {
     }
 
     /** Generates compiler options to explicitly define the classpath from the environment. */
+    /** Generates compiler options to explicitly define the classpath. */
     private List<String> getCompilerOptions() {
-        var result = new ArrayList<String>();
-        var classPath = new StringBuilder();
-        var sysClassPath = System.getProperty("java.class.path");
-
-        if (sysClassPath != null) {
-            classPath.append(sysClassPath);
-        }
-
-        var classLoader = Thread.currentThread().getContextClassLoader();
-        while (classLoader != null) {
-            if (classLoader instanceof URLClassLoader) {
-                for (var url : ((URLClassLoader) classLoader).getURLs()) {
-                    if (classPath.length() > 0) {
-                        classPath.append(File.pathSeparatorChar);
-                    }
-                    try {
-                        classPath.append(new File(url.toURI()).getAbsolutePath());
-                    } catch (URISyntaxException e) {
-                        classPath.append(url.getFile());
-                    }
-                }
-            }
-            classLoader = classLoader.getParent();
-        }
-
-        if (classPath.length() > 0) {
-            result.add("-classpath");
-            result.add(classPath.toString());
-        }
-
-        return result;
+        var classPath = Stream.concat(
+                Stream.of(System.getProperty("java.class.path", "")),
+                Stream.iterate(Thread.currentThread().getContextClassLoader(), c ->
+                                c != null, ClassLoader::getParent)
+                        .filter(URLClassLoader.class::isInstance)
+                        .map(URLClassLoader.class::cast)
+                        .flatMap(c -> Arrays.stream(c.getURLs()))
+                        .map(url -> {
+                            try {
+                                return new File(url.toURI()).getAbsolutePath();
+                            } catch (URISyntaxException e) {
+                                return new File(url.getFile()).getAbsolutePath();
+                            }
+                        })
+        ).filter(p -> !p.isEmpty()).collect(Collectors.joining(File.pathSeparator));
+        return classPath.isEmpty() ? List.of() : List.of("-classpath", classPath);
     }
 }
