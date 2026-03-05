@@ -97,6 +97,11 @@ public final class EntityManager<D, V> {
         return new CrudImpl(connection);
     }
 
+    /** Default batch size */
+    public int defaultBatchSize() {
+        return this.context.config().getBatchSize();
+    }
+
     /** Thread-safe access to the TableModel. */
     @NotNull
     private TableModel<D> tableModel() {
