@@ -1,8 +1,11 @@
 package org.ujorm.mapper;
 
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
+import org.ujorm.mapper.jdbc.ResultSetMapperImpl;
 
 import java.sql.ResultSet;
 import java.time.Instant;
@@ -50,4 +53,9 @@ public interface ResultSetMapper<D> {
 
     /** Get the last timestamp of the cache clearing */
     Instant getCacheCleared();
+
+    /** Factory method to create a new instance with default service and cache size. */
+    static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass) {
+        return ResultSetMapperImpl.of(domainClass);
+    }
 }
