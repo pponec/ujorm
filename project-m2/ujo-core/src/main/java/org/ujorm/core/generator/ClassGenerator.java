@@ -15,20 +15,24 @@
  */
 package org.ujorm.core.generator;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.tools.*;
+import org.jetbrains.annotations.NotNull;
 
 public class ClassGenerator {
 
@@ -132,23 +136,27 @@ public class ClassGenerator {
     private List<String> getCompilerOptions() {
         var paths = Stream.of(System.getProperty("java.class.path", ""));
         var contextClassLoader = Thread.currentThread().getContextClassLoader();
+        var pathSeparator = System.getProperty("path.separator");
         var classLoaders = Stream.iterate(contextClassLoader, c -> c != null, ClassLoader::getParent)
                 .filter(URLClassLoader.class::isInstance)
                 .map(URLClassLoader.class::cast)
                 .flatMap(c -> Arrays.stream(c.getURLs()))
-                .map(url -> toFileName(url));
+                .map(ClassGenerator::toFileName);
         var classPath = Stream.concat(paths, classLoaders)
                 .filter(p -> !p.isEmpty())
-                .collect(Collectors.joining(File.pathSeparator));
+                .collect(Collectors.joining(pathSeparator));
         return classPath.isEmpty() ? List.of() : List.of("-classpath", classPath);
     }
 
-    /** Convert URL to absolute path */
+    /** Converts URL to an absolute path safely using NIO. */
     private static @NotNull String toFileName(@NotNull URL url) {
+        if (!"file".equalsIgnoreCase(url.getProtocol())) {
+            return url.getFile();
+        }
         try {
-            return new File(url.toURI()).getAbsolutePath();
+            return Paths.get(url.toURI()).toAbsolutePath().toString();
         } catch (URISyntaxException e) {
-            return new File(url.getFile()).getAbsolutePath();
+            return Paths.get(url.getPath()).toAbsolutePath().toString();
         }
     }
 }
