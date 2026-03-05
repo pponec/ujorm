@@ -20,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.SnapshotProvider;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Interface for CRUD operations.
@@ -82,22 +82,35 @@ public interface Crud<D, V> {
     long update(@NotNull D domain, CharSequence... properties);
 
     /**
-     * Updates a list of domain objects using batching.
-     * @param domains Domain objects to update. If the list is empty, update all columns excluding PK.
+     * Updates a stream of domain objects using batching.
+     * @param domains Domain objects to update. If the stream is empty, update all columns excluding PK.
      * @param properties Optional list of property names to update. If empty, all properties are updated (excluding id).
      * @return The number of affected rows.
      */
-    long updateBatch(@NotNull List<D> domains, CharSequence... properties);
+    long updateBatch(@NotNull Stream<D> domains, CharSequence... properties);
+
 
     /**
      * Updates multiple domain objects using batching and collision detection.
      * Note: Requires connection.setAutoCommit(false) for transactional safety.
      *
      * @throws IllegalStateException If an entity is missing a saved snapshot.
-     * @throws IllegalArgumentException If any entity in the array is null or of invalid type.
+     * @throws IllegalArgumentException If any entity in the stream is null or of invalid type.
      */
     @SuppressWarnings("unchecked")
-    <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull D2... domains);
+    default <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull D2... domains) {
+        return updateChanged(Stream.of(domains));
+    }
+
+    /**
+     * Updates multiple domain objects using batching and collision detection.
+     * Note: Requires connection.setAutoCommit(false) for transactional safety.
+     *
+     * @throws IllegalStateException If an entity is missing a saved snapshot.
+     * @throws IllegalArgumentException If any entity in the stream is null or of invalid type.
+     */
+    @SuppressWarnings("unchecked")
+    <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull Stream<D2> domains);
 
     /** Deletes a domain object. */
     int delete(@NotNull D domain);
@@ -107,5 +120,11 @@ public interface Crud<D, V> {
 
     /** Deletes multiple domain objects using batching support. */
     @SuppressWarnings("unchecked")
-    int deleteBatch(@NotNull D... domains);
+    default int deleteBatch(@NotNull D... domains) {
+        return deleteBatch(Stream.of(domains));
+    }
+
+    /** Deletes multiple domain objects using batching support. */
+    @SuppressWarnings("unchecked")
+    int deleteBatch(@NotNull Stream<D> domains);
 }

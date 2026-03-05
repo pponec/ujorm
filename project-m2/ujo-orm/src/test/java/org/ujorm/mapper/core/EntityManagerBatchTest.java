@@ -6,6 +6,7 @@ import org.ujorm.mapper.demo.City;
 import org.ujorm.mapper.demo.Employee;
 
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 /**
  * Tests for batch operations (insert, delete) in the EntityManager.
@@ -117,7 +118,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         employees = emplDao.insertBatch(employees);
 
         // Now delete them all in a batch
-        int deletedCount = emplDao.deleteBatch(employees);
+        int deletedCount = emplDao.deleteBatch(Stream.of(employees));
 
         Assertions.assertEquals(totalEmployees, deletedCount);
         Assertions.assertFalse(emplDao.read(employees[0].getId()).isPresent());
@@ -139,7 +140,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         Assertions.assertNull(result2[0]);
 
         // Empty delete
-        int deleted = cityDao.deleteBatch(new City[0]);
+        int deleted = cityDao.deleteBatch(Stream.of(new City[0]));
         Assertions.assertEquals(0, deleted);
     }
 

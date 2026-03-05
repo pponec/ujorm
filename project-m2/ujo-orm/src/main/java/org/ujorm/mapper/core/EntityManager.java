@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  * The Entity Manager for the JDBC API.
@@ -158,7 +159,7 @@ public final class EntityManager<D, V> {
 
         /** Reads the generated key from ResultSet and assigns it to the domain object. */
         public D assignGeneratedKey(D domain, java.sql.ResultSet rs, Key<D, V> pk) throws SQLException {
-            V id = rs.getObject(1, pk.type());
+            var id = rs.getObject(1, pk.type());
             if (id == null) {
                 throw new IllegalArgumentException("No ID value was generated.");
             }
@@ -302,7 +303,7 @@ public final class EntityManager<D, V> {
             var withPkIdx = new ArrayList<Integer>();
             var withoutPkIdx = new ArrayList<Integer>();
 
-            for (int i = 0; i < domains.length; i++) {
+            for (var i = 0; i < domains.length; i++) {
                 if (domains[i] == null) continue;
                 if (utilities.isPkEmpty(utilities.getPrimaryKeyValue(domains[i]))) {
                     withoutPkIdx.add(i);
@@ -329,8 +330,8 @@ public final class EntityManager<D, V> {
                 var pk = generateKeys ? pk() : null;
                 var batchCount = 0;
 
-                for (int i = 0; i < indices.size(); i++) {
-                    int originalIdx = indices.get(i);
+                for (var i = 0; i < indices.size(); i++) {
+                    var originalIdx = indices.get(i);
                     utilities.setValuesToStatement(domains[originalIdx], columns, ps);
                     ps.addBatch();
                     batchCount++;
@@ -339,10 +340,10 @@ public final class EntityManager<D, V> {
                         ps.executeBatch();
                         if (generateKeys) {
                             try (var rs = ps.getGeneratedKeys()) {
-                                int start = i - batchCount + 1;
-                                for (int j = start; j <= i; j++) {
+                                var start = i - batchCount + 1;
+                                for (var j = start; j <= i; j++) {
                                     if (rs.next()) {
-                                        int targetIdx = indices.get(j);
+                                        var targetIdx = indices.get(j);
                                         domains[targetIdx] = utilities.assignGeneratedKey(domains[targetIdx], rs, pk);
                                     } else {
                                         throw new IllegalStateException("Missing generated key");
@@ -435,6 +436,7 @@ public final class EntityManager<D, V> {
 
             return new SqlParamBuilder(dbconnection).sql(sql.toString()).fetchSize(utilities.getBatchLimit());
         }
+
         @Override
         public long update(@NotNull D domain, CharSequence... properties) {
             var columns = tableModel().getColumns(properties);
@@ -442,15 +444,14 @@ public final class EntityManager<D, V> {
         }
 
         @Override
-        public long updateBatch(@NotNull List<D> domains, CharSequence... properties) {
+        public long updateBatch(@NotNull Stream<D> domains, CharSequence... properties) {
             var columns = tableModel().getColumns(properties);
-            return updateListInternal(domains, columns);
+            return updateStreamInternal(domains, columns);
         }
 
         @Override
-        @SafeVarargs
-        public final <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull D2... domains) {
-            if (domains == null || domains.length == 0) {
+        public final <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull Stream<D2> domains) {
+            if (domains == null) {
                 return 0L;
             }
             var result = 0L;
@@ -459,12 +460,15 @@ public final class EntityManager<D, V> {
 
             try (var cache = new StatementCache<V>()) {
                 utilities.checkAutoCommit(dbconnection);
-                for (var j = 0; j < domains.length; j++) {
-                    var domain_ = domains[j];
+                var iterator = domains.iterator();
+                var index = -1;
+                while (iterator.hasNext()) {
+                    index++;
+                    var domain_ = iterator.next();
                     if (domain_ == null || !domainHandler.getDomainClass().isInstance(domain_)) {
                         var msg = domain_ == null
-                                ? "The entity at index %s must not be null.".formatted(j)
-                                : "The entity at index %s must be of type %s.".formatted(j,
+                                ? "The entity at index %s must not be null.".formatted(index)
+                                : "The entity at index %s must be of type %s.".formatted(index,
                                 domainHandler.getDomainClass().getSimpleName());
                         throw new IllegalArgumentException(msg);
                     }
@@ -472,7 +476,7 @@ public final class EntityManager<D, V> {
                     var snapshot = (D) domain_.readSnapshot();
                     if (snapshot == null) {
                         throw new IllegalStateException(("Missing snapshot for entity at index %s. " +
-                                "Call saveSnapshot() before update.").formatted(j));
+                                "Call saveSnapshot() before update.").formatted(index));
                     }
                     var changes = Tools.findChanges(domain, snapshot, domainHandler);
                     var modifiedIdx = changes.getActive();
@@ -542,16 +546,16 @@ public final class EntityManager<D, V> {
         }
 
         /**
-         * Executes a batch update for a given list of domain objects.
+         * Executes a batch update for a given stream of domain objects.
          * Handles drivers returning SUCCESS_NO_INFO (-2).
          * Note: Requires connection.setAutoCommit(false) for transactional safety.
          *
-         * @param domains A list of domain entities to be updated in the database.
+         * @param domains A stream of domain entities to be updated in the database.
          * @param columns A list of column models defining which specific attributes should be updated.
          * @return The total number of rows affected by the batch execution.
          */
-        protected long updateListInternal(@NotNull List<D> domains, @NotNull List<ColumnModel<D, Object>> columns) {
-            if (domains.isEmpty()) {
+        protected long updateStreamInternal(@NotNull Stream<D> domains, @NotNull List<ColumnModel<D, Object>> columns) {
+            if (domains == null) {
                 return 0L;
             }
             var sql = utilities.buildUpdateSql(columns);
@@ -560,13 +564,14 @@ public final class EntityManager<D, V> {
             return utilities.run(true, dbconnection, sql, false, ps -> {
                 var result = 0L;
                 var batchCount = 0;
+                var iterator = domains.iterator();
 
-                for (var i = 0; i < domains.size(); i++) {
-                    utilities.setValuesAndPkToStatement(domains.get(i), columns, ps);
+                while (iterator.hasNext()) {
+                    utilities.setValuesAndPkToStatement(iterator.next(), columns, ps);
                     ps.addBatch();
                     batchCount++;
 
-                    if (batchCount == limit || i == domains.size() - 1) {
+                    if (batchCount == limit || !iterator.hasNext()) {
                         result += utilities.sumBatchRows(ps.executeBatch());
                         batchCount = 0;
                     }
@@ -594,9 +599,8 @@ public final class EntityManager<D, V> {
         }
 
         @Override
-        @SafeVarargs
-        public final int deleteBatch(@NotNull D... domains) {
-            if (domains == null || domains.length == 0) {
+        public final int deleteBatch(@NotNull Stream<D> domains) {
+            if (domains == null) {
                 return 0;
             }
             var q = getQuote();
@@ -610,16 +614,17 @@ public final class EntityManager<D, V> {
             return utilities.run(true, dbconnection, sql, false, ps -> {
                 var result = 0L;
                 var batchCount = 0;
+                var iterator = domains.iterator();
 
-                for (var i = 0; i < domains.length; i++) {
-                    var domain = domains[i];
+                while (iterator.hasNext()) {
+                    var domain = iterator.next();
                     if (domain == null) continue;
 
                     ps.setObject(1, utilities.getPrimaryKeyValue(domain));
                     ps.addBatch();
                     batchCount++;
 
-                    if (batchCount == limit || i == domains.length - 1) {
+                    if (batchCount == limit || !iterator.hasNext()) {
                         result += utilities.sumBatchRows(ps.executeBatch());
                         batchCount = 0;
                     }
