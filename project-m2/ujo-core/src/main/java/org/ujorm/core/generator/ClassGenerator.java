@@ -15,12 +15,15 @@
  */
 package org.ujorm.core.generator;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -126,23 +129,26 @@ public class ClassGenerator {
     }
 
     /** Generates compiler options to explicitly define the classpath from the environment. */
-    /** Generates compiler options to explicitly define the classpath. */
     private List<String> getCompilerOptions() {
-        var classPath = Stream.concat(
-                Stream.of(System.getProperty("java.class.path", "")),
-                Stream.iterate(Thread.currentThread().getContextClassLoader(), c ->
-                                c != null, ClassLoader::getParent)
-                        .filter(URLClassLoader.class::isInstance)
-                        .map(URLClassLoader.class::cast)
-                        .flatMap(c -> Arrays.stream(c.getURLs()))
-                        .map(url -> {
-                            try {
-                                return new File(url.toURI()).getAbsolutePath();
-                            } catch (URISyntaxException e) {
-                                return new File(url.getFile()).getAbsolutePath();
-                            }
-                        })
-        ).filter(p -> !p.isEmpty()).collect(Collectors.joining(File.pathSeparator));
+        var paths = Stream.of(System.getProperty("java.class.path", ""));
+        var contextClassLoader = Thread.currentThread().getContextClassLoader();
+        var classLoaders = Stream.iterate(contextClassLoader, c -> c != null, ClassLoader::getParent)
+                .filter(URLClassLoader.class::isInstance)
+                .map(URLClassLoader.class::cast)
+                .flatMap(c -> Arrays.stream(c.getURLs()))
+                .map(url -> toFileName(url));
+        var classPath = Stream.concat(paths, classLoaders)
+                .filter(p -> !p.isEmpty())
+                .collect(Collectors.joining(File.pathSeparator));
         return classPath.isEmpty() ? List.of() : List.of("-classpath", classPath);
+    }
+
+    /** Convert URL to absolute path */
+    private static @NotNull String toFileName(@NotNull URL url) {
+        try {
+            return new File(url.toURI()).getAbsolutePath();
+        } catch (URISyntaxException e) {
+            return new File(url.getFile()).getAbsolutePath();
+        }
     }
 }
