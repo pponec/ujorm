@@ -10,7 +10,7 @@ public interface Config {
     int getMaxCacheSize();
 
     /** Batch size for the INSERT */
-    int getInsertBatchSize();
+    int getBatchSize();
 
     /** Prints all SQL templates to the log. */
     boolean isPrintSql();
