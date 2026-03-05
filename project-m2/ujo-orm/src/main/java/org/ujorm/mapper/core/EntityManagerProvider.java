@@ -34,7 +34,7 @@ public final class EntityManagerProvider {
      * @return Entity
      */
     public static <D,V> EntityManager<D,V> em(@NotNull Class<D> domainClass, @Nullable Class<V> value) {
-        return (EntityManager<D,V>) provider().entityManager(domainClass);
+        return (EntityManager<D,V>) provider().entityManagerFromSingleton(domainClass);
     }
 
 }

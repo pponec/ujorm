@@ -49,7 +49,7 @@ import java.util.stream.Stream;
  * and detect database column markers. The constructed mapping trees are stored in an internal
  * concurrent cache with a default maximum capacity of 512 entries.
  * </p>
- * <h3>Customizing Behavior & Performance Impact</h3>
+ * <h3>Customizing Behavior &amp; Performance Impact</h3>
  * <ul>
  * <li><b>Explicit Column Labels:</b> You can provide explicit column labels or {@link org.ujorm.core.Key}s
  * via the {@code convert} methods.

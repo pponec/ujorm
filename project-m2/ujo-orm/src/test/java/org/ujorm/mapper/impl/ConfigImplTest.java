@@ -30,10 +30,10 @@ class ConfigImplTest {
 
     @Test
     void testSystemPropertyPriority() {
-        System.setProperty("org.ujorm.insertBatchSize", "2048");
+        System.setProperty("org.ujorm.batchSize", "2048");
         var config = new ConfigImplMock();
 
-        assertEquals(2048, config.getInsertBatchSize());
+        assertEquals(2048, config.getBatchSize());
     }
 
     /** Inner class for mocking properties */

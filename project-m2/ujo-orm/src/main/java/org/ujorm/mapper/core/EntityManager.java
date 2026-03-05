@@ -97,6 +97,11 @@ public final class EntityManager<D, V> {
         return new CrudImpl(connection);
     }
 
+    /** Default batch size */
+    public int defaultBatchSize() {
+        return this.context.config().getBatchSize();
+    }
+
     /** Thread-safe access to the TableModel. */
     @NotNull
     private TableModel<D> tableModel() {
@@ -135,9 +140,9 @@ public final class EntityManager<D, V> {
             }
         }
 
-        /** Returns a safe limit for batch operations (insert and update). */
+        /** Returns a safe limit for batch operations (insert, update, select). */
         public int getBatchLimit() {
-            var limit = context.config().getInsertBatchSize();
+            var limit = context.config().getBatchSize();
             return limit > 0 ? limit : 500;
         }
 
@@ -428,7 +433,7 @@ public final class EntityManager<D, V> {
             sql.append(" WHERE ");
             sql.append(whereCondition == null || whereCondition.isEmpty() ? "1=1" : whereCondition);
 
-            return new SqlParamBuilder(dbconnection).sql(sql.toString());
+            return new SqlParamBuilder(dbconnection).sql(sql.toString()).fetchSize(utilities.getBatchLimit());
         }
         @Override
         public long update(@NotNull D domain, CharSequence... properties) {
