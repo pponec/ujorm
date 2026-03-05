@@ -11,12 +11,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.core.AbstractSnapshotable;
 import org.ujorm.core.csv.CsvConfig;
 import org.ujorm.tools.common.Primitive;
 
 @Setter @Getter @ToString
-public class ConfigImpl implements Config {
-
+public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Config {
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(ConfigImpl.class.getName());
 
@@ -47,6 +47,9 @@ public class ConfigImpl implements Config {
     /** Print warnings, if Connection autocommit is true in batch operations. */
     private boolean autoCommitWarned = true;
 
+    /** Enable or disable the service of the EntityManagerProvider object. */
+    private boolean enabledEntityManagerProvider = true;
+
     /** Only for testing */
     private String testOnly = "";
 
@@ -63,6 +66,7 @@ public class ConfigImpl implements Config {
         enableSqlQuoting = value(enableSqlQuoting, "enableSqlQuoting", properties);
         columnMappingWarning = value(columnMappingWarning, "columnMappingWarning", properties);
         autoCommitWarned = value(autoCommitWarned, "autoCommitWarned", properties);
+        enabledEntityManagerProvider = value(enabledEntityManagerProvider, "enabledEntityManagerProvider", properties);
         testOnly = value(testOnly, "testOnly", properties);
         __funMap = null;
     }
@@ -108,5 +112,19 @@ public class ConfigImpl implements Config {
             return convertValue(result, type);
         }
         return defaultValue;
+    }
+
+
+    /** Clone the configuration in case the argument is type of {@link ConfigImpl}. */
+    @NotNull
+    public static Config copy(@NotNull Config config) {
+        try {
+            return (config instanceof ConfigImpl impl)
+                    ? impl.saveSnapshot().readSnapshot()
+                    : config;
+        } catch (IllegalStateException ex) {
+            LOGGER.warning("Can`t clone the configuration: " + config.getClass().getName());
+            return config;
+        }
     }
 }
