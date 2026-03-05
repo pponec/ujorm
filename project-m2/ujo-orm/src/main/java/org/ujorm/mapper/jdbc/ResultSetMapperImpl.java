@@ -9,6 +9,7 @@ import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.Key;
 import org.ujorm.core.csv.CsvLineSplitter;
 import org.ujorm.core.impl.AbstractUjo;
+import org.ujorm.mapper.ResultSetMapper;
 import org.ujorm.tools.common.Primitive;
 import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
@@ -68,8 +69,8 @@ import java.util.stream.Stream;
  *
  * @param <D> the root domain type
  */
-public final class ResultSetMapper<D> {
-    private static final Logger LOGGER = Logger.getLogger(ResultSetMapper.class.getName());
+public final class ResultSetMapperImpl<D> implements ResultSetMapper<D> {
+    private static final Logger LOGGER = Logger.getLogger(ResultSetMapperImpl.class.getName());
 
     /** The very fast dot splitter */
     private static final CsvLineSplitter SPLITTER = CsvLineSplitter.ofFast('.');
@@ -93,7 +94,7 @@ public final class ResultSetMapper<D> {
      * @param service the domain handler service for instance creation
      * @param maxCacheSize the maximum number of cached mapping trees
      */
-    protected ResultSetMapper(
+    protected ResultSetMapperImpl(
             @NonNull Class<D> domainClass,
             @NonNull DomainHandlerService service,
             int maxCacheSize
@@ -112,8 +113,8 @@ public final class ResultSetMapper<D> {
      * @return a stream of populated domain objects
      * @throws NoSuchElementException if explicit columns don't match the ResultSet metadata
      */
-    @NotNull
-    public Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columnLabels) {
+    @Override
+    public @NotNull Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columnLabels) {
         return rs.map(this::map);
     }
 
@@ -125,8 +126,8 @@ public final class ResultSetMapper<D> {
      * @return a stream of populated domain objects
      * @throws NoSuchElementException if explicit columns don't match the ResultSet metadata
      */
-    @NotNull
-    public D map(@NotNull ResultSet resultSet, @Nullable CharSequence... columnLabels) {
+    @Override
+    public @NotNull D map(@NotNull ResultSet resultSet, @Nullable CharSequence... columnLabels) {
         try {
             var extracted = getLabelColumns(resultSet, columnLabels);
             var key = new CacheKey(extracted);
@@ -148,8 +149,8 @@ public final class ResultSetMapper<D> {
      * @param columnLabels optional explicitly defined column labels
      * @return a stream of populated domain objects
      */
-    @NotNull
-    public Stream<D> convert(@NotNull ResultSet rs, @Nullable CharSequence... columnLabels) {
+    @Override
+    public @NotNull Stream<D> convert(@NotNull ResultSet rs, @Nullable CharSequence... columnLabels) {
         return convert(JdbcUtils.stream(rs), columnLabels);
     }
 
@@ -161,12 +162,13 @@ public final class ResultSetMapper<D> {
      * @return A stream of populated domain objects
      */
     @SafeVarargs
-    @NotNull
-    public final Stream<D> convertFlat(@NotNull Stream<ResultSet> rs, @NotNull Key<D, ?>... columnLabels) {
+    @Override
+    public final @NotNull Stream<D> convertFlat(@NotNull Stream<ResultSet> rs, @NotNull Key<D, ?>... columnLabels) {
         return convert(rs, columnLabels);
     }
 
     /** Get the last timestamp of the cache clearing */
+    @Override
     public Instant getCacheCleared() {
         return cache.getLastCleared();
     }
@@ -416,7 +418,7 @@ public final class ResultSetMapper<D> {
 
     /** Factory method to create a new instance with a custom cache size. */
     public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass, @NonNull DomainHandlerService service, int maxCacheSize) {
-        return new ResultSetMapper<>(domainClass, service, maxCacheSize);
+        return new ResultSetMapperImpl<>(domainClass, service, maxCacheSize);
     }
 
     /** Factory method to create a new instance with default cache size. */

@@ -55,7 +55,6 @@ public record CsvConfig(
         return result.build();
     }
 
-
     /** Build immutable map */
     private static final class MapBuilder {
         private final Map<Class<?>, Function<String, ?>> map = new HashMap<>();

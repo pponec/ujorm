@@ -1,7 +1,9 @@
-package org.ujorm.mapper.core;
+package org.ujorm.mapper;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.mapper.core.EntityManager;
+import org.ujorm.mapper.core.EntityManagerService;
 
 /**
  * Singleton to provide EntityManagers.

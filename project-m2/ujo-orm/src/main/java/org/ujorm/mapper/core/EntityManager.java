@@ -23,7 +23,8 @@ import org.ujorm.core.SnapshotProvider;
 import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.mapper.Crud;
 import org.ujorm.mapper.impl.Context;
-import org.ujorm.mapper.jdbc.ResultSetMapper;
+import org.ujorm.mapper.ResultSetMapper;
+import org.ujorm.mapper.jdbc.ResultSetMapperImpl;
 import org.ujorm.mapper.model.ColumnModel;
 import org.ujorm.mapper.model.TableModel;
 import org.ujorm.mapper.model.TableModelBuilder;
@@ -638,7 +639,7 @@ public final class EntityManager<D, V> {
 
     /** Factory method */
     public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @Nullable Class<V> type) {
-        return new EntityManager<>(domainClass, Context.ofDefault(), ResultSetMapper.of(domainClass));
+        return new EntityManager<>(domainClass, Context.ofDefault(), ResultSetMapperImpl.of(domainClass));
     }
 
     /** Factory method */

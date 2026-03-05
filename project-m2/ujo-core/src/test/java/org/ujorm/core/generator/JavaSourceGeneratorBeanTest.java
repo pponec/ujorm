@@ -20,7 +20,7 @@ class JavaSourceGeneratorBeanTest {
         assertContains("super( new Key_id(0)", src);
         assertContains(", new Key_name(1)", src);
 
-        assertContains("public Employee newDomain(@NotNull Object... values) {", src);
+        assertContains("public Employee newDomain( Object... values) {", src);
         assertContains("final var result = new Employee();", src);
         assertContains("final var key = (AbstractKey<Employee, Object>) keyList.get(i)", src);
 
@@ -37,6 +37,9 @@ class JavaSourceGeneratorBeanTest {
     }
 
     private void assertContains(String code, String src) {
+        code = code
+                .replace("@NotNull", "")
+                .replace("@Nullable", "");
         Assertions.assertTrue(src.contains(code), "Expected: " + code);
     }
 

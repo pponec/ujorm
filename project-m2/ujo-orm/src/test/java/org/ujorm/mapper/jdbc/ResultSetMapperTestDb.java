@@ -43,7 +43,7 @@ public class ResultSetMapperTestDb extends AbstractDaoTest {
             """;
         var resultSet = getEmployeeResultSet(sql,1L);
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetMapper.of(Employee.class, service);
+        var mapper = ResultSetMapperImpl.of(Employee.class, service);
         var employee = mapper.convert(resultSet).findFirst();
         Assertions.assertTrue(employee.isPresent());
         Assertions.assertEquals(1L, employee.get().getId());
@@ -62,7 +62,7 @@ public class ResultSetMapperTestDb extends AbstractDaoTest {
             """;
         var resultSet = getEmployeeResultSet(sql,1L);
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetMapper.of(Employee.class, service);
+        var mapper = ResultSetMapperImpl.of(Employee.class, service);
         var employee = mapper.convert(resultSet).findFirst();
         Assertions.assertTrue(employee.isPresent());
         Assertions.assertEquals(1L, employee.get().getId());

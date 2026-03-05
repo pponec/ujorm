@@ -8,14 +8,13 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.AbstractSnapshotable;
 import org.ujorm.core.csv.CsvConfig;
 import org.ujorm.tools.common.Primitive;
 
-@Setter @Getter @ToString
+@Getter @ToString
 public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Config {
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(ConfigImpl.class.getName());
@@ -53,11 +52,10 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
     /** Only for testing */
     private String testOnly = "";
 
-    /** Helper attributes */
-    private Map<Class<?>, Function<String, ?>> __funMap = null;
+    /** Map  */
+    private static final Map<Class<?>, Function<String, ?>> funMap = Map.copyOf(CsvConfig.initConverterMap());
 
     public ConfigImpl() {
-        __funMap = CsvConfig.initConverterMap();
         var properties = properties();
         firstPropertyIsIdentifier = value(firstPropertyIsIdentifier, "firstPropertyIsIdentifier", properties);
         maxCacheSize = value(maxCacheSize, "maxCacheSize", properties);
@@ -68,7 +66,6 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
         autoCommitWarned = value(autoCommitWarned, "autoCommitWarned", properties);
         enabledEntityManagerProvider = value(enabledEntityManagerProvider, "enabledEntityManagerProvider", properties);
         testOnly = value(testOnly, "testOnly", properties);
-        __funMap = null;
     }
 
     /** Load properties from the {@link #CONFIG_FILE}. */
@@ -89,7 +86,7 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
     /** Converts a string value to the required data type. */
     public <T> T convertValue(@NotNull String value, @NotNull Class<T> type) {
         var clazz = Primitive.wrapPrimitive(type);
-        var fun = __funMap.get(type);
+        var fun = funMap.get(type);
         if (fun == null) {
             var msg ="Can't convert value '%s' to %s".formatted(value, type.getSimpleName());
             throw new IllegalStateException(msg);

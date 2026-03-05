@@ -1,6 +1,6 @@
-package org.ujorm.mapper.jdbc;
+package org.ujorm.mapper;
 
-import org.jetbrains.annotations.NotNull;
+import org.ujorm.mapper.jdbc.ResultSetMapperService;
 
 /**
  * Singleton to provide Domain handlers.
@@ -16,7 +16,7 @@ public final class ResultSetMapperProvider {
      * Holder class for lazy-loading the singleton instance.
      */
     private static final class Holder {
-        private static final ResultSetMapperService INSTANCE = ResultSetMapperService.of();
+        private static final ResultSetMapperService INSTANCE = ResultSetMapperService.ofSingleton();
     }
 
     /**
