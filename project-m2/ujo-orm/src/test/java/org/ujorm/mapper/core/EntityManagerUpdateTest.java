@@ -7,6 +7,7 @@ import org.ujorm.mapper.demo.Employee;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Stream;
 
 /** Tests for partial updates using SnapshotProvider */
 class EntityManagerUpdateTest extends AbstractDaoTest {
@@ -70,7 +71,7 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         var list = List.of(employee1, employee2);
 
         // Update only "name" and "active" properties
-        var result = emplDao.updateBatch(list, "name", "active");
+        var result = emplDao.updateBatch(list.stream(), "name", "active");
         Assertions.assertEquals(2L, result);
 
         // Verify the database state
@@ -97,10 +98,8 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         employee.setActive(false);
         employee.setContractDay(LocalDate.of(2025, 1, 1));
 
-        var list = List.of(employee);
-
         // Update all columns (empty properties)
-        var result = emplDao.updateBatch(list);
+        var result = emplDao.updateBatch(Stream.of(employee));
         Assertions.assertEquals(1L, result);
 
         var dbEmp = emplDao.read(employee.getId()).orElseThrow();
@@ -115,7 +114,7 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
         var emptyList = java.util.Collections.<Employee>emptyList();
 
-        var result = emplDao.updateBatch(emptyList, "name");
+        var result = emplDao.updateBatch(emptyList.stream(), "name");
         Assertions.assertEquals(0L, result);
     }
 

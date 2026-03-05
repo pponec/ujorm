@@ -89,6 +89,19 @@ public interface Crud<D, V> {
      */
     long updateBatch(@NotNull Stream<D> domains, CharSequence... properties);
 
+
+    /**
+     * Updates multiple domain objects using batching and collision detection.
+     * Note: Requires connection.setAutoCommit(false) for transactional safety.
+     *
+     * @throws IllegalStateException If an entity is missing a saved snapshot.
+     * @throws IllegalArgumentException If any entity in the stream is null or of invalid type.
+     */
+    @SuppressWarnings("unchecked")
+    default <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull D2... domains) {
+        return updateChanged(Stream.of(domains));
+    }
+
     /**
      * Updates multiple domain objects using batching and collision detection.
      * Note: Requires connection.setAutoCommit(false) for transactional safety.
@@ -104,6 +117,12 @@ public interface Crud<D, V> {
 
     /** Deletes a domain object by its identifier. */
     int deleteById(@NotNull V id);
+
+    /** Deletes multiple domain objects using batching support. */
+    @SuppressWarnings("unchecked")
+    default int deleteBatch(@NotNull D... domains) {
+        return deleteBatch(Stream.of(domains));
+    }
 
     /** Deletes multiple domain objects using batching support. */
     @SuppressWarnings("unchecked")
