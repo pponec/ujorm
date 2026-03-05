@@ -8,14 +8,13 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.AbstractSnapshotable;
 import org.ujorm.core.csv.CsvConfig;
 import org.ujorm.tools.common.Primitive;
 
-@Setter @Getter @ToString
+@Getter @ToString
 public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Config {
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(ConfigImpl.class.getName());
