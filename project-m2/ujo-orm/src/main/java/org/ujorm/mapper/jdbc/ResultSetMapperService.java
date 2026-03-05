@@ -38,8 +38,20 @@ public class ResultSetMapperService {
        throw new UnsupportedOperationException("TODO");
     }
 
+    public static final ResultSetMapperService of(@NotNull Config config) {
+        return new ResultSetMapperService(DomainHandlerProvider.provider(), config);
+    }
+
     public static final ResultSetMapperService of() {
         return new ResultSetMapperService(DomainHandlerProvider.provider(), new ConfigImpl());
+    }
+
+    public static final ResultSetMapperService ofSingleton() {
+        var config = new ConfigImpl();
+        if (!config.isEnabledEntityManagerProvider()) {
+            throw new UnsupportedOperationException("Access is disabled by configuration");
+        }
+        return of(config);
     }
 
 }
