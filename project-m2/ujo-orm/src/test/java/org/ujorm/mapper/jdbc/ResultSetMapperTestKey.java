@@ -70,7 +70,7 @@ public class ResultSetMapperTestKey {
         var service = DomainHandlerProvider.provider();
 
         // 4. Initialize the mapper using the requested factory method of()
-        var mapper = ResultSetMapper.of(Employee.class, service);
+        var mapper = ResultSetMapperImpl.of(Employee.class, service);
 
         // 5. Execute the mapping
         var result = mapper.convert(rs, aliases).findFirst().get();
@@ -121,7 +121,7 @@ public class ResultSetMapperTestKey {
         var service = DomainHandlerProvider.provider();
 
         // 4. Initialize the mapper using the requested factory method of()
-        var mapper = ResultSetMapper.of(Employee.class, service);
+        var mapper = ResultSetMapperImpl.of(Employee.class, service);
 
         // 5. Execute the mapping by the keys
         var result = mapper.convertFlat(JdbcUtils.stream(rs)
@@ -148,7 +148,7 @@ public class ResultSetMapperTestKey {
 
         // 2. Prepare the DomainHandlerService and initialize the mapper
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetMapper.of(Employee.class, service);
+        var mapper = ResultSetMapperImpl.of(Employee.class, service);
 
         // 3. Provide an explicitly invalid number of aliases (e.g., only 2)
         var invalidAliases = new String[]{"id", "name"};
@@ -168,7 +168,7 @@ public class ResultSetMapperTestKey {
         when(rs.next()).thenReturn(false);
 
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetMapper.of(Employee.class, service);
+        var mapper = ResultSetMapperImpl.of(Employee.class, service);
         var invalidAliases = new String[]{"id", "invalid_column", "another_invalid"};
         var result = mapper.convert(rs, invalidAliases);
 
@@ -186,7 +186,7 @@ public class ResultSetMapperTestKey {
         when(metaData.getColumnCount()).thenReturn(1);
 
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetMapper.of(Employee.class, service);
+        var mapper = ResultSetMapperImpl.of(Employee.class, service);
         var invalidAliases = new String[]{"city.invalidProperty"};
 
         var ex = assertThrows(NoSuchElementException.class, () -> {
@@ -216,7 +216,7 @@ public class ResultSetMapperTestKey {
         }
 
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetMapper.of(Employee.class, service);
+        var mapper = ResultSetMapperImpl.of(Employee.class, service);
         var result = mapper.convert(rs).findFirst().get();
         assertEquals(10, result.getId());
         assertNotNull(result.getCity());
@@ -230,7 +230,7 @@ public class ResultSetMapperTestKey {
         // 0. Prepare the DomainHandlerService and initialize the mapper with a small cache limit
         var maxCacheSize = 2;
         var service = DomainHandlerProvider.provider();
-        var mapper = ResultSetMapper.of(Employee.class, service, maxCacheSize);
+        var mapper = ResultSetMapperImpl.of(Employee.class, service, maxCacheSize);
 
         var initialTimestamp = mapper.getCacheCleared();
 

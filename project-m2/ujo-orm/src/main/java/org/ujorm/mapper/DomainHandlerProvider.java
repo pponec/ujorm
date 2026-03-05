@@ -23,10 +23,10 @@ import org.ujorm.core.DomainHandlerService;
  * Singleton to provide Domain handlers.
  * This implementation is thread-safe using the Initialization-on-demand holder idiom.
  */
-public final class MapperProvider {
+public final class DomainHandlerProvider {
 
     /** Private constructor to prevent instantiation. */
-    private MapperProvider() {
+    private DomainHandlerProvider() {
     }
 
     /**
