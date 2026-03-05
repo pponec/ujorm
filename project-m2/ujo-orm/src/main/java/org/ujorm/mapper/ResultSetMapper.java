@@ -1,4 +1,4 @@
-package org.ujorm.mapper.jdbc;
+package org.ujorm.mapper;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

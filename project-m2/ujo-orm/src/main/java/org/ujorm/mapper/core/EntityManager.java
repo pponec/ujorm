@@ -23,7 +23,7 @@ import org.ujorm.core.SnapshotProvider;
 import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.mapper.Crud;
 import org.ujorm.mapper.impl.Context;
-import org.ujorm.mapper.jdbc.ResultSetMapper;
+import org.ujorm.mapper.ResultSetMapper;
 import org.ujorm.mapper.jdbc.ResultSetMapperImpl;
 import org.ujorm.mapper.model.ColumnModel;
 import org.ujorm.mapper.model.TableModel;
