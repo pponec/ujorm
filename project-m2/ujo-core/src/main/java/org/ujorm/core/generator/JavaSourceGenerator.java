@@ -28,6 +28,11 @@ import java.util.HashMap;
  * supporting both modern immutable structures (records) and traditional mutable patterns (beans).
  */
 public class JavaSourceGenerator {
+    /**
+     * Enable jetbrains annotations.
+     * Value true enforces a runtime dependency on the Jetbrains annotations library.
+     */
+    final boolean enableEnotations = false;
 
     public String getSourceCode(DomainModel meta, ClassName className) {
         final var writer = new StringBuilder(5_000);
@@ -43,11 +48,11 @@ public class JavaSourceGenerator {
             params.put("baseKeyClassFull", AbstractKey.class.getName());
             params.put("generatorClass", getClass().getSimpleName());
             params.put("generatorPackage", getClass().getPackageName());
+            params.put("@NotNull", enableEnotations ? "@org.jetbrains.annotations.NotNull" : "");
+            params.put("@Nullable", enableEnotations ? "@org.jetbrains.annotations.Nullable" : "");
         }
         var templateBeg1 = """
                 package ${package};
-                import org.jetbrains.annotations.NotNull;
-                import org.jetbrains.annotations.Nullable;
                 import ${baseClassFull};
                 import ${baseKeyClassFull};
                 import ${domainClassFull};
@@ -63,7 +68,7 @@ public class JavaSourceGenerator {
                      );
                 }
                 @Override @SuppressWarnings("unchecked")
-                public ${domainClass} newDomain(@NotNull Object... values) {
+                public ${domainClass} newDomain(${@NotNull} Object... values) {
                 """;
         var templateBeg3bean = """
                 final var result = new ${domainClass}();
@@ -75,7 +80,7 @@ public class JavaSourceGenerator {
                 """.indent(4);
         var templateBeg4 = """
                 }
-                @NotNull
+                ${@NotNull}
                 public Class<${domainClass}> getDomainClass() {
                     return domainClass;
                 }
@@ -87,15 +92,15 @@ public class JavaSourceGenerator {
                         super(order, "${propName}", ${propType}.class, "${column}", ${primaryKey}, ${foreignKey}, ${required});
                     }
                     @Override
-                    public void setValue(@NotNull final ${domainClass} bean, @Nullable final ${propObjectType} value) {
+                    public void setValue(${@NotNull} final ${domainClass} bean, ${@Nullable} final ${propObjectType} value) {
                         %s;
                     }
                     @Override
-                    public ${propObjectType} getValue(@NotNull final ${domainClass} bean) {
+                    public ${propObjectType} getValue(${@NotNull} final ${domainClass} bean) {
                         return bean.${getter}();
                     }
                     @Override
-                    public @NotNull Class<${domainClass}> domainClass() {
+                    public ${@NotNull} Class<${domainClass}> domainClass() {
                         return domainClass;
                     }
                 }

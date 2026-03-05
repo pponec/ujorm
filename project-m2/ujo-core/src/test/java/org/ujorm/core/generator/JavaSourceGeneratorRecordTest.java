@@ -49,6 +49,9 @@ public class JavaSourceGeneratorRecordTest {
 
 
     private void assertContains(String code, String src) {
+        code = code
+                .replace("@NotNull", "")
+                .replace("@Nullable", "");
         Assertions.assertTrue(src.contains(code), "Expected: " + code);
     }
 
