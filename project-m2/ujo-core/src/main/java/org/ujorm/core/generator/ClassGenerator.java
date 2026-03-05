@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,11 +16,16 @@
 package org.ujorm.core.generator;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,9 +64,7 @@ public class ClassGenerator {
         }
     }
 
-    /**
-     * Creates a file manager wrapper that intercepts compiled bytecode and stores it in a Map.
-     */
+    /** Creates a file manager wrapper that intercepts compiled bytecode and stores it in a Map. */
     private JavaFileManager createCapturingFileManager(StandardJavaFileManager delegate, Map<String, byte[]> classBytes) {
         return new ForwardingJavaFileManager<>(delegate) {
             @Override
@@ -82,9 +85,7 @@ public class ClassGenerator {
         };
     }
 
-    /**
-     * Executes the compilation task. Throws RuntimeException with detailed diagnostics on failure.
-     */
+    /** Executes the compilation task. Throws RuntimeException with detailed diagnostics on failure. */
     private void compile(JavaCompiler compiler,
                          JavaFileManager fileManager,
                          DiagnosticCollector<JavaFileObject> diagnostics,
@@ -94,6 +95,7 @@ public class ClassGenerator {
         var uri = URI.create("string:///"
                 + canonicalClassName.toString().replace('.', '/')
                 + JavaFileObject.Kind.SOURCE.extension);
+
         var sourceObject = new SimpleJavaFileObject(uri, JavaFileObject.Kind.SOURCE) {
             @Override
             public CharSequence getCharContent(boolean ignoreEncodingErrors) {
@@ -101,7 +103,8 @@ public class ClassGenerator {
             }
         };
 
-        var task = compiler.getTask(null, fileManager, diagnostics, null, null, Collections.singletonList(sourceObject));
+        var options = getCompilerOptions();
+        var task = compiler.getTask(null, fileManager, diagnostics, options, null, Collections.singletonList(sourceObject));
 
         if (!Boolean.TRUE.equals(task.call())) {
             var errorMsg = diagnostics.getDiagnostics().stream()
@@ -111,9 +114,7 @@ public class ClassGenerator {
         }
     }
 
-    /**
-     * Loads the class from the bytecode map using a dedicated ephemeral ClassLoader.
-     */
+    /** Loads the class from the bytecode map using a dedicated ephemeral ClassLoader. */
     private Class<?> loadClass(Map<String, byte[]> classBytes, ClassName canonicalClassName) throws ClassNotFoundException {
         var loader = new ClassLoader(Thread.currentThread().getContextClassLoader()) {
             @Override
@@ -127,6 +128,39 @@ public class ClassGenerator {
         };
         return loader.loadClass(canonicalClassName.toString());
     }
+
+    /** Generates compiler options to explicitly define the classpath from the environment. */
+    private List<String> getCompilerOptions() {
+        var result = new ArrayList<String>();
+        var classPath = new StringBuilder();
+        var sysClassPath = System.getProperty("java.class.path");
+
+        if (sysClassPath != null) {
+            classPath.append(sysClassPath);
+        }
+
+        var classLoader = Thread.currentThread().getContextClassLoader();
+        while (classLoader != null) {
+            if (classLoader instanceof URLClassLoader) {
+                for (var url : ((URLClassLoader) classLoader).getURLs()) {
+                    if (classPath.length() > 0) {
+                        classPath.append(File.pathSeparatorChar);
+                    }
+                    try {
+                        classPath.append(new File(url.toURI()).getAbsolutePath());
+                    } catch (URISyntaxException e) {
+                        classPath.append(url.getFile());
+                    }
+                }
+            }
+            classLoader = classLoader.getParent();
+        }
+
+        if (classPath.length() > 0) {
+            result.add("-classpath");
+            result.add(classPath.toString());
+        }
+
+        return result;
+    }
 }
-
-
