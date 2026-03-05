@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,12 +19,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.tools.*;
+import org.jetbrains.annotations.NotNull;
 
 public class ClassGenerator {
 
@@ -59,9 +67,7 @@ public class ClassGenerator {
         }
     }
 
-    /**
-     * Creates a file manager wrapper that intercepts compiled bytecode and stores it in a Map.
-     */
+    /** Creates a file manager wrapper that intercepts compiled bytecode and stores it in a Map. */
     private JavaFileManager createCapturingFileManager(StandardJavaFileManager delegate, Map<String, byte[]> classBytes) {
         return new ForwardingJavaFileManager<>(delegate) {
             @Override
@@ -82,9 +88,7 @@ public class ClassGenerator {
         };
     }
 
-    /**
-     * Executes the compilation task. Throws RuntimeException with detailed diagnostics on failure.
-     */
+    /** Executes the compilation task. Throws RuntimeException with detailed diagnostics on failure. */
     private void compile(JavaCompiler compiler,
                          JavaFileManager fileManager,
                          DiagnosticCollector<JavaFileObject> diagnostics,
@@ -94,6 +98,7 @@ public class ClassGenerator {
         var uri = URI.create("string:///"
                 + canonicalClassName.toString().replace('.', '/')
                 + JavaFileObject.Kind.SOURCE.extension);
+
         var sourceObject = new SimpleJavaFileObject(uri, JavaFileObject.Kind.SOURCE) {
             @Override
             public CharSequence getCharContent(boolean ignoreEncodingErrors) {
@@ -101,7 +106,8 @@ public class ClassGenerator {
             }
         };
 
-        var task = compiler.getTask(null, fileManager, diagnostics, null, null, Collections.singletonList(sourceObject));
+        var options = getCompilerOptions();
+        var task = compiler.getTask(null, fileManager, diagnostics, options, null, Collections.singletonList(sourceObject));
 
         if (!Boolean.TRUE.equals(task.call())) {
             var errorMsg = diagnostics.getDiagnostics().stream()
@@ -111,9 +117,7 @@ public class ClassGenerator {
         }
     }
 
-    /**
-     * Loads the class from the bytecode map using a dedicated ephemeral ClassLoader.
-     */
+    /** Loads the class from the bytecode map using a dedicated ephemeral ClassLoader. */
     private Class<?> loadClass(Map<String, byte[]> classBytes, ClassName canonicalClassName) throws ClassNotFoundException {
         var loader = new ClassLoader(Thread.currentThread().getContextClassLoader()) {
             @Override
@@ -127,6 +131,32 @@ public class ClassGenerator {
         };
         return loader.loadClass(canonicalClassName.toString());
     }
+
+    /** Generates compiler options to explicitly define the classpath from the environment. */
+    private List<String> getCompilerOptions() {
+        var paths = Stream.of(System.getProperty("java.class.path", ""));
+        var contextClassLoader = Thread.currentThread().getContextClassLoader();
+        var pathSeparator = System.getProperty("path.separator");
+        var classLoaders = Stream.iterate(contextClassLoader, c -> c != null, ClassLoader::getParent)
+                .filter(URLClassLoader.class::isInstance)
+                .map(URLClassLoader.class::cast)
+                .flatMap(c -> Arrays.stream(c.getURLs()))
+                .map(ClassGenerator::toFileName);
+        var classPath = Stream.concat(paths, classLoaders)
+                .filter(p -> !p.isEmpty())
+                .collect(Collectors.joining(pathSeparator));
+        return classPath.isEmpty() ? List.of() : List.of("-classpath", classPath);
+    }
+
+    /** Converts URL to an absolute path safely using NIO. */
+    private static @NotNull String toFileName(@NotNull URL url) {
+        if (!"file".equalsIgnoreCase(url.getProtocol())) {
+            return url.getFile();
+        }
+        try {
+            return Paths.get(url.toURI()).toAbsolutePath().toString();
+        } catch (URISyntaxException e) {
+            return Paths.get(url.getPath()).toAbsolutePath().toString();
+        }
+    }
 }
-
-
