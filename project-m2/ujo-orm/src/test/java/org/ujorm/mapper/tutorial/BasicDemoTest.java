@@ -6,8 +6,7 @@ import org.ujorm.tools.jdbc.SqlParamBuilder;
 
 public class BasicDemoTest extends AbstractDemo {
 
-    @Test
-    @Order(100)
+    @Test @Order(100)
     void createTable() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
@@ -35,7 +34,7 @@ public class BasicDemoTest extends AbstractDemo {
                     ALTER TABLE employee ADD CONSTRAINT fk_employee_city_id__id
                     FOREIGN KEY (city_id)
                     REFERENCES city(id)
-                    ON DELETE RESTRICT ON UPDATE RESTRICT;
+                    ON DELETE CASCADE ON UPDATE RESTRICT;
                     """).execute();
         }
     }
