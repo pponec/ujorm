@@ -42,25 +42,27 @@ public final class UjormServiceProvider {
     /**
      * Gets the Entity Manager for the specified domain class.
      * @param domainClass An original domain class
-     * @param value Optional value class (Note: currently unused in the underlying implementation)
+     * @param idType Optional value class (Note: currently unused in the underlying implementation)
      * @param <D> Domain type
      * @param <V> Value type
      * @return EntityManager instance
      */
     @SuppressWarnings("unchecked")
-    public static <D, V> EntityManager<D, V> em(@NotNull Class<D> domainClass, @Nullable Class<V> value) {
-        return (EntityManager<D, V>) managerService().entityManagerFromSingleton(domainClass);
+    public static <D, V> EntityManager<D, V> em(@NotNull Class<D> domainClass, @Nullable Class<V> idType) {
+        return managerService().entityManagerFromSingleton(domainClass, idType);
     }
 
     /**
      * Creates a Crud operation object for the given domain class.
      * @param domainClass An original domain class
      * @param connection Database connection
+     * @param idType Optional value class (Note: currently unused in the underlying implementation)
      * @param <D> Domain type
+     * @param <V> Value type
      * @return Crud instance
      */
-    public static <D, V> Crud<D, V> crud(@NotNull Class<D> domainClass, @NotNull Connection connection, @Nullable Class<V> pkType) {
-        return em(domainClass, pkType).crud(connection);
+    public static <D, V> Crud<D, V> crud(@NotNull Class<D> domainClass, @NotNull Connection connection, @Nullable Class<V> idType) {
+        return em(domainClass, idType).crud(connection);
     }
 
     //--- ResultSetMapperService ---
