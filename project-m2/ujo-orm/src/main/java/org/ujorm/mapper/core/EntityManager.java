@@ -35,6 +35,7 @@ import org.ujorm.tools.jdbc.SqlParamBuilder;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -285,7 +286,7 @@ public final class EntityManager<D, V> {
         }
     }
 
-    /** The CRUD operations implementation. */
+    /** The CRUD operations' implementation. */
     public final class CrudImpl implements Crud<D, V> {
         private final Connection dbconnection;
 
@@ -360,6 +361,7 @@ public final class EntityManager<D, V> {
 
         @Override
         public D insert(@NotNull D domain) {
+            Objects.requireNonNull(domain, "Domain object must not be null");
             var pkOriginalValue = utilities.getPrimaryKeyValue(domain);
             var columns = tableModel().createInsertedColumns(pkOriginalValue);
             var sql = utilities.buildInsertSql(columns);
@@ -384,15 +386,18 @@ public final class EntityManager<D, V> {
             });
         }
 
+        /** Finds a domain object by its identifier or returns null. */
         @Override
         @Nullable
-        public D readNullable(@NotNull V id) {
-            return read(id).orElse(null);
+        public D findByIdNullable(@NotNull V id) {
+            return findById(id).orElse(null);
         }
 
+        /** Finds a domain object by its identifier. */
         @Override
         @NotNull
-        public Optional<D> read(@NotNull V id) {
+        public Optional<D> findById(@NotNull V id) {
+            Objects.requireNonNull(id, "Identifier must not be null");
             var q = getQuote();
             var tableName = tableModel().tableName();
             var columns = tableModel().columns();
@@ -415,12 +420,14 @@ public final class EntityManager<D, V> {
         }
 
         /**
-         * Create instance of SqlParamBuilder to bind parmeters and SELECT.
-         * The builder has shared database connection with this object.
+         * Creates an instance of SqlParamBuilder to bind parameters and execute SELECT.
+         * The builder shares the database connection with this object.
+         *
          * @param whereCondition Undefined or empty value returns all records.
          */
         @Override
-        public @NotNull SqlParamBuilder read(@Nullable String whereCondition) {
+        @NotNull
+        public SqlParamBuilder select(@Nullable String whereCondition) {
             var q = getQuote();
             var tableName = tableModel().tableName();
             var columns = tableModel().columns();
@@ -439,21 +446,21 @@ public final class EntityManager<D, V> {
 
         @Override
         public long update(@NotNull D domain, CharSequence... properties) {
+            Objects.requireNonNull(domain, "Domain object must not be null");
             var columns = tableModel().getColumns(properties);
             return updateInternal(domain, columns);
         }
 
         @Override
         public long updateBatch(@NotNull Stream<D> domains, CharSequence... properties) {
+            Objects.requireNonNull(domains, "Stream of domains must not be null");
             var columns = tableModel().getColumns(properties);
             return updateStreamInternal(domains, columns);
         }
 
         @Override
         public <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull Stream<D2> domains) {
-            if (domains == null) {
-                return 0L;
-            }
+            Objects.requireNonNull(domains, "Stream of domains must not be null");
             var result = 0L;
             var limit = utilities.getBatchLimit();
             var batchCount = 0;
@@ -555,9 +562,6 @@ public final class EntityManager<D, V> {
          * @return The total number of rows affected by the batch execution.
          */
         private long updateStreamInternal(@NotNull Stream<D> domains, @NotNull List<ColumnModel<D, Object>> columns) {
-            if (domains == null) {
-                return 0L;
-            }
             var sql = utilities.buildUpdateSql(columns);
             var limit = utilities.getBatchLimit();
 
@@ -567,14 +571,21 @@ public final class EntityManager<D, V> {
                 var iterator = domains.iterator();
 
                 while (iterator.hasNext()) {
-                    utilities.setValuesAndPkToStatement(iterator.next(), columns, ps);
+                    var domain = iterator.next();
+                    if (domain == null) continue;
+
+                    utilities.setValuesAndPkToStatement(domain, columns, ps);
                     ps.addBatch();
                     batchCount++;
 
-                    if (batchCount == limit || !iterator.hasNext()) {
+                    if (batchCount >= limit) {
                         result += utilities.sumBatchRows(ps.executeBatch());
                         batchCount = 0;
                     }
+                }
+
+                if (batchCount > 0) {
+                    result += utilities.sumBatchRows(ps.executeBatch());
                 }
                 return result;
             });
@@ -582,11 +593,13 @@ public final class EntityManager<D, V> {
 
         @Override
         public int delete(@NotNull D domain) {
+            Objects.requireNonNull(domain, "Domain object must not be null");
             return deleteById(utilities.getPrimaryKeyValue(domain));
         }
 
         @Override
         public int deleteById(@NotNull V id) {
+            Objects.requireNonNull(id, "Identifier must not be null");
             var q = getQuote();
             var tableName = tableModel().tableName();
             var sql = new StringBuilder(64)
@@ -600,9 +613,7 @@ public final class EntityManager<D, V> {
 
         @Override
         public int deleteBatch(@NotNull Stream<D> domains) {
-            if (domains == null) {
-                return 0;
-            }
+            Objects.requireNonNull(domains, "Stream of domains must not be null");
             var q = getQuote();
             var tableName = tableModel().tableName();
             var sql = new StringBuilder(64)
@@ -624,10 +635,14 @@ public final class EntityManager<D, V> {
                     ps.addBatch();
                     batchCount++;
 
-                    if (batchCount == limit || !iterator.hasNext()) {
+                    if (batchCount >= limit) {
                         result += utilities.sumBatchRows(ps.executeBatch());
                         batchCount = 0;
                     }
+                }
+
+                if (batchCount > 0) {
+                    result += utilities.sumBatchRows(ps.executeBatch());
                 }
                 return (int) result;
             });

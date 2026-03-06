@@ -32,7 +32,7 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         employee2.saveSnapshot().setName("EmplB-Updated");
 
         Assertions.assertEquals(2L, emplDao.updateChanged(employee1, employee2));
-        var emp1 = emplDao.readNullable(employee1.getId());
+        var emp1 = emplDao.findByIdNullable(employee1.getId());
         Assertions.assertEquals(employee1.getId(), emp1.getId());
         Assertions.assertEquals(employee1.getName(), emp1.getName());
         Assertions.assertEquals(employee1.getContractDay(), emp1.getContractDay());
@@ -75,12 +75,12 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         Assertions.assertEquals(2L, result);
 
         // Verify the database state
-        var dbEmp1 = emplDao.read(employee1.getId()).orElseThrow();
+        var dbEmp1 = emplDao.findById(employee1.getId()).orElseThrow();
         Assertions.assertEquals("EmplA-BatchUpdate", dbEmp1.getName());
         Assertions.assertFalse(dbEmp1.isActive());
         Assertions.assertEquals(LocalDate.of(2020, 1, 1), dbEmp1.getContractDay()); // Remained original
 
-        var dbEmp2 = emplDao.read(employee2.getId()).orElseThrow();
+        var dbEmp2 = emplDao.findById(employee2.getId()).orElseThrow();
         Assertions.assertEquals("EmplB-BatchUpdate", dbEmp2.getName());
         Assertions.assertFalse(dbEmp2.isActive());
     }
@@ -102,7 +102,7 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         var result = emplDao.updateBatch(Stream.of(employee));
         Assertions.assertEquals(1L, result);
 
-        var dbEmp = emplDao.read(employee.getId()).orElseThrow();
+        var dbEmp = emplDao.findById(employee.getId()).orElseThrow();
         Assertions.assertEquals("EmplC-FullUpdate", dbEmp.getName());
         Assertions.assertFalse(dbEmp.isActive());
         Assertions.assertEquals(LocalDate.of(2025, 1, 1), dbEmp.getContractDay());

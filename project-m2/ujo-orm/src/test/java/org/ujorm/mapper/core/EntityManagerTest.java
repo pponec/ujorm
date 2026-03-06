@@ -2,10 +2,12 @@ package org.ujorm.mapper.core;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.ujorm.core.SnapshotProvider;
 import org.ujorm.mapper.demo.City;
 import org.ujorm.mapper.demo.Employee;
 
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 class EntityManagerTest extends AbstractDaoTest {
 
@@ -67,7 +69,7 @@ class EntityManagerTest extends AbstractDaoTest {
 
 
         // Select Record:
-        var cityReloaded = cityDao.read(cityOut.id());
+        var cityReloaded = cityDao.findById(cityOut.id());
         Assertions.assertNotNull(cityReloaded);
         Assertions.assertTrue(cityReloaded.isPresent());
         Assertions.assertEquals(cityOut.id(), cityReloaded.get().id());
@@ -79,5 +81,21 @@ class EntityManagerTest extends AbstractDaoTest {
 
     public Employee createEmployee(Long id, String name, City city) {
         return Employee.of(id, name, null , city, LocalDate.of(2020,1,1), true);
+    }
+
+    /** Tests the fail-fast behavior when passing null arguments to Crud methods. */
+    @Test
+    void testFailFastOnNullParameters() {
+        var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
+        var noSnapshost = (Stream<SnapshotProvider>) null;
+
+        Assertions.assertThrows(NullPointerException.class, () -> cityDao.insert(null));
+        Assertions.assertThrows(NullPointerException.class, () -> cityDao.findById(null));
+        Assertions.assertThrows(NullPointerException.class, () -> cityDao.update(null));
+        Assertions.assertThrows(NullPointerException.class, () -> cityDao.updateBatch(null));
+        Assertions.assertThrows(NullPointerException.class, () -> cityDao.updateChanged(noSnapshost));
+        Assertions.assertThrows(NullPointerException.class, () -> cityDao.delete(null));
+        Assertions.assertThrows(NullPointerException.class, () -> cityDao.deleteById(null));
+        Assertions.assertThrows(NullPointerException.class, () -> cityDao.deleteBatch((Stream<City>) null));
     }
 }

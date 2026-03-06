@@ -43,8 +43,8 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         Assertions.assertEquals(1002L, city4.id());
 
         // Verify they are actually in the DB
-        Assertions.assertTrue(cityDao.read(city1.id()).isPresent());
-        Assertions.assertTrue(cityDao.read(city2.id()).isPresent());
+        Assertions.assertTrue(cityDao.findById(city1.id()).isPresent());
+        Assertions.assertTrue(cityDao.findById(city2.id()).isPresent());
     }
 
     @Test
@@ -68,9 +68,9 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         }
 
         // Spot check a few from DB
-        Assertions.assertTrue(cityDao.read(cities[0].id()).isPresent());
-        Assertions.assertTrue(cityDao.read(cities[totalCities / 2].id()).isPresent());
-        Assertions.assertTrue(cityDao.read(cities[totalCities - 1].id()).isPresent());
+        Assertions.assertTrue(cityDao.findById(cities[0].id()).isPresent());
+        Assertions.assertTrue(cityDao.findById(cities[totalCities / 2].id()).isPresent());
+        Assertions.assertTrue(cityDao.findById(cities[totalCities - 1].id()).isPresent());
     }
 
     @Test
@@ -87,18 +87,18 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         var emp3 = emplDao.insert(createEmployee("Emp-C", city));
 
         // Ensure they exist
-        Assertions.assertTrue(emplDao.read(emp1.getId()).isPresent());
-        Assertions.assertTrue(emplDao.read(emp2.getId()).isPresent());
-        Assertions.assertTrue(emplDao.read(emp3.getId()).isPresent());
+        Assertions.assertTrue(emplDao.findById(emp1.getId()).isPresent());
+        Assertions.assertTrue(emplDao.findById(emp2.getId()).isPresent());
+        Assertions.assertTrue(emplDao.findById(emp3.getId()).isPresent());
 
         // Execute batch delete for two of them
-        int deletedCount = emplDao.deleteBatch(emp1, emp3);
+        int deletedCount = emplDao.deleteBatchEntities(emp1, emp3);
         Assertions.assertEquals(2, deletedCount);
 
         // Verify DB state
-        Assertions.assertFalse(emplDao.read(emp1.getId()).isPresent());
-        Assertions.assertTrue(emplDao.read(emp2.getId()).isPresent());
-        Assertions.assertFalse(emplDao.read(emp3.getId()).isPresent());
+        Assertions.assertFalse(emplDao.findById(emp1.getId()).isPresent());
+        Assertions.assertTrue(emplDao.findById(emp2.getId()).isPresent());
+        Assertions.assertFalse(emplDao.findById(emp3.getId()).isPresent());
     }
 
     @Test
@@ -121,8 +121,8 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         int deletedCount = emplDao.deleteBatch(Stream.of(employees));
 
         Assertions.assertEquals(totalEmployees, deletedCount);
-        Assertions.assertFalse(emplDao.read(employees[0].getId()).isPresent());
-        Assertions.assertFalse(emplDao.read(employees[totalEmployees - 1].getId()).isPresent());
+        Assertions.assertFalse(emplDao.findById(employees[0].getId()).isPresent());
+        Assertions.assertFalse(emplDao.findById(employees[totalEmployees - 1].getId()).isPresent());
     }
 
     @Test

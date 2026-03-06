@@ -17,7 +17,7 @@ class EntityManagerReadTest extends AbstractDaoTest {
         var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
         var employee1 = emplDao.insert(createEmployee("EmplA", city));
 
-        var emplReloaded = emplDao.readNullable(employee1.getId());
+        var emplReloaded = emplDao.findByIdNullable(employee1.getId());
         Assertions.assertNotNull(emplReloaded);
     }
 
