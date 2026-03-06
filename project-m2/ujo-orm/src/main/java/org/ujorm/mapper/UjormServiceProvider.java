@@ -59,8 +59,8 @@ public final class UjormServiceProvider {
      * @param <D> Domain type
      * @return Crud instance
      */
-    public static <D> Crud crud(@NotNull Class<D> domainClass, @NotNull Connection connection) {
-        return em(domainClass, null).crud(connection);
+    public static <D, V> Crud<D, V> crud(@NotNull Class<D> domainClass, @NotNull Connection connection, @Nullable Class<V> pkType) {
+        return em(domainClass, pkType).crud(connection);
     }
 
     //--- ResultSetMapperService ---

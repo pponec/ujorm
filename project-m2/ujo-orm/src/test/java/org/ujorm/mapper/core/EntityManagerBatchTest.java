@@ -2,6 +2,7 @@ package org.ujorm.mapper.core;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.ujorm.mapper.UjormServiceProvider;
 import org.ujorm.mapper.demo.City;
 import org.ujorm.mapper.demo.Employee;
 
@@ -190,10 +191,8 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         );
 
         // 4. Initialize managers for both City and Employee
-        var cityManager = EntityManager.of(City.class, dbConnection, customContext, org.ujorm.mapper.jdbc.ResultSetMapper.of(City.class));
-        var cityDao = cityManager.crud(dbConnection);
-        var employeeManager = EntityManager.of(Employee.class, dbConnection, customContext);
-        var employeeDao = employeeManager.crud(dbConnection);
+        var cityDao = UjormServiceProvider.crud(City.class, dbConnection, Long.class);
+        var employeeDao = UjormServiceProvider.crud(Employee.class, dbConnection, Long.class);
 
         // --- Execution ---
 
