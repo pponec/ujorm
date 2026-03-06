@@ -17,16 +17,15 @@ import java.sql.Connection;
  */
 public final class UjormServiceProvider {
 
-    private static final Config config = Config.ofDefault();
-
     /** Private constructor to prevent instantiation. */
     private UjormServiceProvider() {
     }
 
     /** Holder class for lazy-loading the singleton instances. */
     private static final class Holder {
-        private static final EntityManagerService EMS_INSTANCE = EntityManagerService.ofSingleton(config);
-        private static final ResultSetMapperService RSM_INSTANCE = ResultSetMapperService.ofSingleton(config);
+        private static final Config CONFIG = Config.ofDefault();
+        private static final EntityManagerService EMS_INSTANCE = EntityManagerService.ofSingleton(CONFIG);
+        private static final ResultSetMapperService RSM_INSTANCE = ResultSetMapperService.ofSingleton(CONFIG);
     }
 
     //--- EntityManagerService ---
@@ -42,12 +41,11 @@ public final class UjormServiceProvider {
     /**
      * Gets the Entity Manager for the specified domain class.
      * @param domainClass An original domain class
-     * @param idType Optional value class (Note: currently unused in the underlying implementation)
+     * @param idType Optional class representing the entity's primary key (unique identifier)
      * @param <D> Domain type
-     * @param <V> Value type
+     * @param <V> Value type of the entity's primary key
      * @return EntityManager instance
      */
-    @SuppressWarnings("unchecked")
     public static <D, V> EntityManager<D, V> em(@NotNull Class<D> domainClass, @Nullable Class<V> idType) {
         return managerService().entityManagerFromSingleton(domainClass, idType);
     }
@@ -56,9 +54,9 @@ public final class UjormServiceProvider {
      * Creates a Crud operation object for the given domain class.
      * @param domainClass An original domain class
      * @param connection Database connection
-     * @param idType Optional value class (Note: currently unused in the underlying implementation)
+     * @param idType Optional class representing the entity's primary key (unique identifier)
      * @param <D> Domain type
-     * @param <V> Value type
+     * @param <V> Value type of the entity's primary key
      * @return Crud instance
      */
     public static <D, V> Crud<D, V> crud(@NotNull Class<D> domainClass, @NotNull Connection connection, @Nullable Class<V> idType) {
@@ -84,5 +82,4 @@ public final class UjormServiceProvider {
     public static <D> ResultSetMapper<D> map(@NotNull Class<D> domainClass) {
         return mapperService().getMapper(domainClass);
     }
-
 }
