@@ -113,7 +113,7 @@ public final class ResultSetMapper<D> {
      * @throws NoSuchElementException if explicit columns don't match the ResultSet metadata
      */
     public @NotNull Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columnLabels) {
-        return rs.map(this::map);
+        return rs.map(resultSet -> map(resultSet, columnLabels));
     }
 
     /**
