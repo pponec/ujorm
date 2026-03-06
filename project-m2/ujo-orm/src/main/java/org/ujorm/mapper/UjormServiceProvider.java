@@ -13,7 +13,7 @@ import java.sql.Connection;
 /**
  * Object provides unique instances of the {@link EntityManagerService} and {@link ResultSetMapperService} classes.
  * This implementation is thread-safe using the Initialization-on-demand holder idiom.
- * The services provided by this class can be disabled via the 'enabledUjormServiceProvider' configuration parameter.
+ * The services provided by this class can be disabled via the {@link Config#isEnabledUjormServiceProvider()} configuration parameter.
  */
 public final class UjormServiceProvider {
 
