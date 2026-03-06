@@ -1,10 +1,14 @@
 package org.ujorm.mapper.tutorial;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.ujorm.mapper.Crud;
 import org.ujorm.mapper.core.EntityManager;
 import org.ujorm.mapper.tutorial.domains.City;
 import org.ujorm.mapper.tutorial.domains.Employee;
+import org.ujorm.mapper.tutorial.domains.meta.MetaCity;
 import org.ujorm.mapper.tutorial.domains.meta.MetaEmployee;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
@@ -15,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class BasicDemoTest extends AbstractDemo {
+public class ExtendedDemoTest extends AbstractDemo {
 
     private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
     private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
@@ -89,17 +93,21 @@ public class BasicDemoTest extends AbstractDemo {
     void select() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
-                    SELECT e.id
-                    , e.name
-                    , c.name AS "city.name"
-                    , c.country_code AS "city.countryCode"
-                    , b.name AS "boss.name"
+                    SELECT e.id      AS "%s"
+                    , e.name         AS "%s"
+                    , c.name         AS "%s"
+                    , c.country_code AS "%s"
+                    , b.name         AS "%s"
                     FROM employee e
                     JOIN city c ON c.id = e.city_id
                     LEFT JOIN employee b ON b.id = e.boss_id
                     WHERE e.id > :employeeId
                     ORDER BY e.id
-                    """)
+                    """.formatted(MetaEmployee.id,
+                            MetaEmployee.name,
+                            MetaEmployee.city.join(MetaCity.name),
+                            MetaEmployee.city.join(MetaCity.countryCode),
+                            MetaEmployee.boss.join(MetaEmployee.name)))
                     .bind("employeeId", 0L);
             var employees = builder.streamMap(EMPLOYEE_EM::map).toList();
 

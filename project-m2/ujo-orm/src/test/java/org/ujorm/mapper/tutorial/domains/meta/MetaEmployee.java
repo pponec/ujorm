@@ -6,13 +6,13 @@ import org.ujorm.core.Key;
 import org.ujorm.mapper.tutorial.domains.City;
 import org.ujorm.mapper.tutorial.domains.Employee;
 
-/** Metadata for the Employee entity */
+/** Metamodel of the Employee entity */
 public class MetaEmployee {
 
     static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
-    public static final Key<Employee, Long> keyId = meta.getKey("id", Long.class);
-    public static final Key<Employee, String> keyName = meta.getKey("name", String.class);
-    public static final Key<Employee, Employee> keyBoss = meta.getKey("boss", Employee.class);
-    public static final Key<Employee, City> keyCity = meta.getKey("city", City.class);
+    public static final Key<Employee, Long> id = meta.getKey("id", Long.class);
+    public static final Key<Employee, String> name = meta.getKey("name", String.class);
+    public static final Key<Employee, Employee> boss = meta.getKey("boss", Employee.class);
+    public static final Key<Employee, City> city = meta.getKey("city", City.class);
 
 }
