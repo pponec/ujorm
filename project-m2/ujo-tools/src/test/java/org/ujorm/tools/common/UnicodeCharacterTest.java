@@ -98,10 +98,10 @@ class UnicodeCharacterTest {
         var char1 = UnicodeCharacter.charAt(1, s2);
         var char2 = UnicodeCharacter.charAt(2, s2);
 
-        assertTrue(char0.equals(char0));
-        assertTrue(char0.equals(char2));
-        assertFalse(char1.equals(char0));
-        assertFalse(char1.equals(char2));
+        assertEquals(char0, char0);
+        assertEquals(char0, char2);
+        assertNotEquals(char1, char0);
+        assertNotEquals(char1, char2);
     }
 
     @Test

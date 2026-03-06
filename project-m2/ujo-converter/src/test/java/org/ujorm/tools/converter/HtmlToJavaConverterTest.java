@@ -123,9 +123,9 @@ class HtmlToJavaConverterTest {
 
         // Debug: Output to check what we are compiling
         if (printHtmlResult) {
-            System.out.println("--- START Compiling Code (%s) ---".formatted(blockStyle ? "block style" : "fluent"));
+            System.out.printf("--- START Compiling Code (%s) ---%n", blockStyle ? "block style" : "fluent");
             System.out.println(fullClassCode);
-            System.out.println("--- END Compiling Code (%s) -----".formatted(blockStyle ? "block style" : "fluent"));
+            System.out.printf("--- END Compiling Code (%s) -----%n", blockStyle ? "block style" : "fluent");
         }
 
         // 5. Dynamic compilation and execution

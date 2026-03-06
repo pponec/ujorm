@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class AbstractUjoTest {
 
-    private DomainHandlerService handlerProvider = DomainHandlerProvider.provider();
+    private final DomainHandlerService handlerProvider = DomainHandlerProvider.provider();
 
     /**
      * Tests the static of() methods using a standard Java Bean.
@@ -26,7 +26,7 @@ class AbstractUjoTest {
         assertNotNull(emptyResult);
         assertNull(emptyResult.getId());
         assertNull(emptyResult.getName());
-        assertEquals(false, emptyResult.isActive());
+        assertFalse(emptyResult.isActive());
 
         // Test the of(domainObject, handler) method
         var employee = new Employee();

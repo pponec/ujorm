@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /** Test of the JdbcTypeProvider class */
 class JdbcTypeProviderTest {
 
-    private static DomainHandler<Employee> handler = DomainHandlerProvider.getHandler(Employee.class);
+    private static final DomainHandler<Employee> handler = DomainHandlerProvider.getHandler(Employee.class);
 
     @Test
     void isSupported() {

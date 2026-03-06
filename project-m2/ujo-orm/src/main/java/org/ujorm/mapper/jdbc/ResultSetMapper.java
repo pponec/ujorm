@@ -93,7 +93,7 @@ public final class ResultSetMapper<D> {
      * @param service the domain handler service for instance creation
      * @param maxCacheSize the maximum number of cached mapping trees
      */
-    protected ResultSetMapper(
+    private ResultSetMapper(
             @NonNull Class<D> domainClass,
             @NonNull DomainHandlerService service,
             int maxCacheSize

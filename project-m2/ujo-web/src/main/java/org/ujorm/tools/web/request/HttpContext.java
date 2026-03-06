@@ -26,22 +26,22 @@ public interface HttpContext {
     <T> T getParameter(@NotNull CharSequence key, @NotNull T defaultValue, @NotNull Function<String, T> converter);
 
     /** HTTP Servlet Factory */
-    public static HttpContext ofServletResponse(Object httpServletResponse) {
+    static HttpContext ofServletResponse(Object httpServletResponse) {
         return ofServlet(null, httpServletResponse);
     }
 
     /** Create a default HTTP Context */
-    public static HttpContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
+    static HttpContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
         return HttpContextImpl.ofServlet(httpServletRequest, httpServletResponse);
     }
 
     /** Create a default HTTP context from a map */
-    public static HttpContext of(ManyMap map) {
+    static HttpContext of(ManyMap map) {
         return new HttpContextImpl(URequestImpl.ofMap(map), new StringBuilder());
     }
 
     /** UContext from a map */
-    public static HttpContext of() {
+    static HttpContext of() {
         return of (new ManyMap());
     }
 }

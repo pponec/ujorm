@@ -34,9 +34,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing the SqlParamBuilder class
@@ -77,11 +75,11 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
 
         // Test pro text bez shody
         matcher = sqlMark.matcher("hello");
-        assertEquals(false, matcher.find());
+        assertFalse(matcher.find());
 
         // Test pro text s dvojtečkou, ale bez \w+
         matcher = sqlMark.matcher(":");
-        assertEquals(false, matcher.find());
+        assertFalse(matcher.find());
     }
 
     @Test
@@ -288,7 +286,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             assertTrue(logLine.contains(":b11")); // Disabled params should remain unresolved
 
             // Check that multiline template was successfully squashed into a single line
-            assertEquals(false, logLine.contains(newLine));
+            assertFalse(logLine.contains(newLine));
         }
     }
 
@@ -316,7 +314,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         }
     }
 
-    public record Employee (int id, String name, LocalDate created) {};
+    public record Employee (int id, String name, LocalDate created) {}
 
     /** Check that autoclosing works correctly also on NULL objects. */
     @Test

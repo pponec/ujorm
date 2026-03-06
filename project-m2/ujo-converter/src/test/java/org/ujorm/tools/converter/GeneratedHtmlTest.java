@@ -102,11 +102,11 @@ public class GeneratedHtmlTest {
     void testGenerateJavaCode() throws Exception {
         // 1. + 2. Načtení zdrojového HTML
         String test = htmlGenerator();
-        System.out.println("""
+        System.out.printf("""
                 //---- Generated ----
                 %s
                 //----
-                """.formatted(test));
+                %n""", test);
         assertTrue(test.contains("<html lang=\"cs\">"));
         assertTrue(test.contains("<title>Test</title>"));
         assertTrue(test.contains("<div class=\"container main\" id=\"outer\">"));

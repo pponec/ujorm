@@ -59,7 +59,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
 
     /** A name of a hidden element must be a unique instance */
     @Nullable
-    public static String HIDDEN_NAME = new String("");
+    public static String HIDDEN_NAME = "";
 
     /** The HTML tag name */
     public static final String HTML = "html";

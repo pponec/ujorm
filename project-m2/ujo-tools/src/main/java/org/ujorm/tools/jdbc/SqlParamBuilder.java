@@ -172,7 +172,7 @@ public class SqlParamBuilder implements AutoCloseable {
 
     /** Bind Objects */
     public SqlParamBuilder bindObject(@NotNull final String key, final Object... values) {
-        return bindObject(true, key, JDBCType.OTHER, (Object[]) values);
+        return bindObject(true, key, JDBCType.OTHER, values);
     }
 
     /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */

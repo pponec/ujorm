@@ -155,7 +155,7 @@ public class JavaSourceGenerator {
         var offset1 = " ".repeat(4);
         var offset2 = " ".repeat(9);
         writer.append(offset1).append("values = normalizePrimitives(values);\n");
-        writer.append(offset1).append("return new ").append(String.valueOf(domainClass)).append("\n");
+        writer.append(offset1).append("return new ").append(domainClass).append("\n");
         for(int i = 0, max = meta.properties().size(); i < max; ++i) {
             var sep = (i == 0) ? "( " : ", ";
             var type = meta.properties().get(i).propertyObjectType().getName();

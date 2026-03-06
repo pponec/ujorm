@@ -26,7 +26,7 @@ public final class UjoRecord<D> extends AbstractUjo<D> {
 
     @Override
     public <V> Object getValue(@NotNull Key<D, V> key) {
-        return (V) values[key.index()];
+        return values[key.index()];
     }
 
     @Override
