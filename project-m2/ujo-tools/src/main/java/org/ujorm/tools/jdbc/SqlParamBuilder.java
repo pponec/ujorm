@@ -101,8 +101,9 @@ public class SqlParamBuilder implements AutoCloseable {
     public SqlParamBuilder bind(@NotNull final String key, final Boolean... values) {
         return bind(true, key, values);
     }
+
     public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Boolean... values) {
-        return bindObject(enabled, key, JDBCType.BOOLEAN, values);
+        return bindObject(enabled, key, JDBCType.BOOLEAN, (Object[]) values);
     }
 
     /** Bind Bytes */
@@ -110,7 +111,7 @@ public class SqlParamBuilder implements AutoCloseable {
         return bind(true, key, values);
     }
     public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Byte... values) {
-        return bindObject(enabled, key, JDBCType.TINYINT, values);
+        return bindObject(enabled, key, JDBCType.TINYINT, (Object[]) values);
     }
 
     /** Bind Shorts */
@@ -118,7 +119,7 @@ public class SqlParamBuilder implements AutoCloseable {
         return bind(true, key, values);
     }
     public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Short... values) {
-        return bindObject(enabled, key, JDBCType.SMALLINT, values);
+        return bindObject(enabled, key, JDBCType.SMALLINT, (Object[]) values);
     }
 
     /** Bind Integers */
@@ -126,7 +127,7 @@ public class SqlParamBuilder implements AutoCloseable {
         return bind(true, key, values);
     }
     public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Integer... values) {
-        return bindObject(enabled, key, JDBCType.BIGINT, values);
+        return bindObject(enabled, key, JDBCType.BIGINT, (Object[]) values);
     }
 
     /** Bind Longs */
@@ -134,7 +135,7 @@ public class SqlParamBuilder implements AutoCloseable {
         return bind(true, key, values);
     }
     public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Long... values) {
-        return bindObject(enabled, key, JDBCType.BIGINT, values);
+        return bindObject(enabled, key, JDBCType.BIGINT, (Object[]) values);
     }
 
     /** Bind BigDecimal */
@@ -142,7 +143,7 @@ public class SqlParamBuilder implements AutoCloseable {
         return bind(true, key, values);
     }
     public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final BigDecimal... values) {
-        return bindObject(enabled, key, JDBCType.NUMERIC, values);
+        return bindObject(enabled, key, JDBCType.NUMERIC, (Object[]) values);
     }
 
     /** Bind String */
@@ -150,7 +151,7 @@ public class SqlParamBuilder implements AutoCloseable {
         return bind(true, key, values);
     }
     public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final String... values) {
-        return bindObject(enabled, key, JDBCType.VARCHAR, values);
+        return bindObject(enabled, key, JDBCType.VARCHAR, (Object[]) values);
     }
 
     /** Bind LocalDates */
@@ -158,7 +159,7 @@ public class SqlParamBuilder implements AutoCloseable {
         return bind(true, key, values);
     }
     public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final LocalDate... values) {
-        return bindObject(enabled, key, JDBCType.DATE, values);
+        return bindObject(enabled, key, JDBCType.DATE, (Object[]) values);
     }
 
     /** Bind LocalDateTimes */
@@ -166,13 +167,14 @@ public class SqlParamBuilder implements AutoCloseable {
         return bind(true, key, values);
     }
     public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final LocalDateTime... values) {
-        return bindObject(enabled, key, JDBCType.TIMESTAMP, values);
+        return bindObject(enabled, key, JDBCType.TIMESTAMP, (Object[]) values);
     }
 
     /** Bind Objects */
     public SqlParamBuilder bindObject(@NotNull final String key, final Object... values) {
-        return bindObject(true, key, JDBCType.OTHER, values);
+        return bindObject(true, key, JDBCType.OTHER, (Object[]) values);
     }
+
     /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
     public SqlParamBuilder bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, final Object... values) {
         if (enabled) {
