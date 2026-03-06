@@ -7,7 +7,6 @@ import org.ujorm.mapper.tutorial.domains.City;
 import org.ujorm.mapper.tutorial.domains.Employee;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
@@ -68,8 +67,7 @@ public class BasicDemoTest extends AbstractDemo {
                     ON DELETE CASCADE ON UPDATE RESTRICT;
                     """).execute();;
         }
-
-        connectionCommit();
+        superInit();
     }
 
     @Test

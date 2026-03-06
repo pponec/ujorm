@@ -3,6 +3,7 @@ package org.ujorm.mapper.tutorial;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
@@ -10,21 +11,23 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractDemo {
 
     private Connection dbConnection;
+    private boolean checkTables = false;
 
     /** Database connection */
     protected Connection connection() {
         return dbConnection;
     }
 
-    /** Close connectin and call init method. */
-    protected void connectionCommit() {
+    /** Commit connection, set table check flag and call init method. */
+    protected void superInit() {
         if (dbConnection == null) {
             throw new IllegalStateException("No connection available.");
         }
@@ -33,6 +36,7 @@ public abstract class AbstractDemo {
         } catch (SQLException ex) {
             throw SQLExceptionBuilder.build(ex);
         }
+        this.checkTables = true;
         init();
     }
 
@@ -45,12 +49,22 @@ public abstract class AbstractDemo {
         this.dbConnection = getDbConnection();
     }
 
-    /** Commit the transaction after each test method. */
+    /** Verify that at least two tables exist if the check is enabled. */
+    @BeforeEach
+    void checkTablesExist() {
+        if (checkTables) {
+            var tableCount = getAllTables().count();
+            assertTrue(tableCount >= 2, "Expected at least 2 tables, but found: " + tableCount);
+        }
+    }
+
+    /** Commit the transaction after each test method and enable table checks. */
     @AfterEach
     void commitTransaction() throws SQLException {
         if (dbConnection != null && !dbConnection.getAutoCommit()) {
             dbConnection.commit();
         }
+        this.checkTables = true;
     }
 
     /** Close the database connection after all tests have finished. */
@@ -78,7 +92,7 @@ public abstract class AbstractDemo {
         return result;
     }
 
-    /** Prints and returns a list of all database tables. */
+    /** Prints and returns a stream of all database tables. */
     protected Stream<String> getAllTables() {
         var result = new ArrayList<String>();
         var tableTypes = new String[]{"TABLE"};
