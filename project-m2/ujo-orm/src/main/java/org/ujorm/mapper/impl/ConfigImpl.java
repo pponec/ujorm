@@ -46,6 +46,9 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
     /** Print warnings, if Connection autocommit is true in batch operations. */
     private boolean autoCommitWarned = true;
 
+    /** Enable or disable the service of the EntityManagerProvider object. */
+    private boolean enabledEntityManagerProvider = true;
+
     /** Only for testing */
     private String testOnly = "";
 
@@ -61,6 +64,7 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
         enableSqlQuoting = value(enableSqlQuoting, "enableSqlQuoting", properties);
         columnMappingWarning = value(columnMappingWarning, "columnMappingWarning", properties);
         autoCommitWarned = value(autoCommitWarned, "autoCommitWarned", properties);
+        enabledEntityManagerProvider = value(enabledEntityManagerProvider, "enabledEntityManagerProvider", properties);
         testOnly = value(testOnly, "testOnly", properties);
     }
 

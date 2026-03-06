@@ -25,6 +25,16 @@ public class EntityManagerService {
     /** Get Entity Manager */
     @NotNull
     @SuppressWarnings("unchecked")
+    public <D> EntityManager<D,?> entityManagerFromSingleton(@NotNull Class<D> domainClass) throws UnsupportedOperationException{
+        if (!context.config().isEnabledEntityManagerProvider()) {
+            throw new UnsupportedOperationException("Access is disabled by configuration");
+        }
+        return entityManager(domainClass);
+    }
+
+    /** Get Entity Manager */
+    @NotNull
+    @SuppressWarnings("unchecked")
     public <D> EntityManager<D,?> entityManager(@NotNull Class<D> domainClass) {
         var result = (EntityManager<D,?>) map.get(domainClass);
         if (result == null) {
