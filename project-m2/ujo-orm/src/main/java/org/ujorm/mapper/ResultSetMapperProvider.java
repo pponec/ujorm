@@ -5,7 +5,9 @@ import org.ujorm.mapper.jdbc.ResultSetMapperService;
 /**
  * Singleton to provide Domain handlers.
  * This implementation is thread-safe using the Initialization-on-demand holder idiom.
+ * @deprecated I am considering removing this class because it lacks a clear use case.
  */
+@Deprecated
 public final class ResultSetMapperProvider {
 
     /** Private constructor to prevent instantiation. */
