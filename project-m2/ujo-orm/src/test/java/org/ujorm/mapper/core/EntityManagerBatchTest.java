@@ -2,6 +2,7 @@ package org.ujorm.mapper.core;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.ujorm.mapper.UjormServiceProvider;
 import org.ujorm.mapper.demo.City;
 import org.ujorm.mapper.demo.Employee;
 
@@ -43,8 +44,8 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         Assertions.assertEquals(1002L, city4.id());
 
         // Verify they are actually in the DB
-        Assertions.assertTrue(cityDao.read(city1.id()).isPresent());
-        Assertions.assertTrue(cityDao.read(city2.id()).isPresent());
+        Assertions.assertTrue(cityDao.findById(city1.id()).isPresent());
+        Assertions.assertTrue(cityDao.findById(city2.id()).isPresent());
     }
 
     @Test
@@ -68,9 +69,9 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         }
 
         // Spot check a few from DB
-        Assertions.assertTrue(cityDao.read(cities[0].id()).isPresent());
-        Assertions.assertTrue(cityDao.read(cities[totalCities / 2].id()).isPresent());
-        Assertions.assertTrue(cityDao.read(cities[totalCities - 1].id()).isPresent());
+        Assertions.assertTrue(cityDao.findById(cities[0].id()).isPresent());
+        Assertions.assertTrue(cityDao.findById(cities[totalCities / 2].id()).isPresent());
+        Assertions.assertTrue(cityDao.findById(cities[totalCities - 1].id()).isPresent());
     }
 
     @Test
@@ -87,18 +88,18 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         var emp3 = emplDao.insert(createEmployee("Emp-C", city));
 
         // Ensure they exist
-        Assertions.assertTrue(emplDao.read(emp1.getId()).isPresent());
-        Assertions.assertTrue(emplDao.read(emp2.getId()).isPresent());
-        Assertions.assertTrue(emplDao.read(emp3.getId()).isPresent());
+        Assertions.assertTrue(emplDao.findById(emp1.getId()).isPresent());
+        Assertions.assertTrue(emplDao.findById(emp2.getId()).isPresent());
+        Assertions.assertTrue(emplDao.findById(emp3.getId()).isPresent());
 
         // Execute batch delete for two of them
-        int deletedCount = emplDao.deleteBatch(emp1, emp3);
+        int deletedCount = emplDao.deleteBatchEntities(emp1, emp3);
         Assertions.assertEquals(2, deletedCount);
 
         // Verify DB state
-        Assertions.assertFalse(emplDao.read(emp1.getId()).isPresent());
-        Assertions.assertTrue(emplDao.read(emp2.getId()).isPresent());
-        Assertions.assertFalse(emplDao.read(emp3.getId()).isPresent());
+        Assertions.assertFalse(emplDao.findById(emp1.getId()).isPresent());
+        Assertions.assertTrue(emplDao.findById(emp2.getId()).isPresent());
+        Assertions.assertFalse(emplDao.findById(emp3.getId()).isPresent());
     }
 
     @Test
@@ -121,8 +122,8 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         int deletedCount = emplDao.deleteBatch(Stream.of(employees));
 
         Assertions.assertEquals(totalEmployees, deletedCount);
-        Assertions.assertFalse(emplDao.read(employees[0].getId()).isPresent());
-        Assertions.assertFalse(emplDao.read(employees[totalEmployees - 1].getId()).isPresent());
+        Assertions.assertFalse(emplDao.findById(employees[0].getId()).isPresent());
+        Assertions.assertFalse(emplDao.findById(employees[totalEmployees - 1].getId()).isPresent());
     }
 
     @Test
@@ -144,6 +145,22 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         Assertions.assertEquals(0, deleted);
     }
 
+    /** Tests batch delete operation using a stream that ends with a null value. */
+    @Test
+    void testBatchDeleteWithTrailingNull() {
+        var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
+        var city1 = cityDao.insert(new City(null, "Prague", "CZ", 50.0755, 14.4378));
+        var city2 = cityDao.insert(new City(null, "Brno", "CZ", 49.1951, 16.6068));
+
+        // Create a stream that ends with a null element
+        var stream = Stream.of(city1, city2, null);
+        var deletedCount = cityDao.deleteBatch(stream);
+
+        Assertions.assertEquals(2, deletedCount);
+        Assertions.assertFalse(cityDao.findById(city1.id()).isPresent());
+        Assertions.assertFalse(cityDao.findById(city2.id()).isPresent());
+    }
+
     /** Create a new Employee without ID */
     public Employee createEmployee(String name, City city) {
         return createEmployee(null, name, city);
@@ -152,5 +169,55 @@ class EntityManagerBatchTest extends AbstractDaoTest {
     /** Create a new Employee with ID */
     public Employee createEmployee(Long id, String name, City city) {
         return Employee.of(id, name, null, city, LocalDate.of(2020, 1, 1), true);
+    }
+
+    /**
+     * Tests processing of the remaining batch elements with a custom small batch limit.
+     */
+    @Test
+    void testBatchRemainderFlushWithSmallLimit() {
+        // 1. Get the default configuration instance
+        var defaultConfig = org.ujorm.mapper.impl.Config.ofDefault();
+
+        // 2. Create a partial mock (Spy) to override ONLY the batch size
+        var customConfig = org.mockito.Mockito.spy(defaultConfig);
+        org.mockito.Mockito.when(customConfig.getBatchSize()).thenReturn(3);
+
+        // 3. Create a Context with this mocked config
+        var customContext = new org.ujorm.mapper.impl.Context(
+                customConfig,
+                org.ujorm.core.DomainHandlerProvider.provider(),
+                new org.ujorm.mapper.service.CommonService()
+        );
+
+        // 4. Initialize managers for both City and Employee
+        var cityDao = UjormServiceProvider.crud(City.class, dbConnection, Long.class);
+        var employeeDao = UjormServiceProvider.crud(Employee.class, dbConnection, Long.class);
+
+        // --- Execution ---
+
+        // Insert a valid City first to satisfy the foreign key constraint
+        var city = cityDao.insert(new City(null, "Prague", "CZ", 50.0755, 14.4378));
+
+        // Create 8 items (with a limit of 3, this creates chunks: 3, 3, and a remainder of 2)
+        var totalItems = 8;
+        var employees = new Employee[totalItems];
+        for (var i = 0; i < totalItems; i++) {
+            // Use the full builder to pass the newly created, valid city
+            employees[i] = Employee.of(null, "Emp-Batch-" + i, null, city, java.time.LocalDate.now(), true);
+        }
+
+        // Test Insert: Verify that elements from the remainder chunk received an ID
+        employeeDao.insertBatch(employees);
+        Assertions.assertNotNull(employees[totalItems - 1].getId(), "The last element of the remainder chunk did not receive an ID.");
+
+        // Test Update: Verify that the number of updated rows matches exactly
+        var updateStream = java.util.Arrays.stream(employees).peek(e -> e.setName(e.getName() + "-Updated"));
+        var updatedCount = employeeDao.updateBatch(updateStream, "name");
+        Assertions.assertEquals(totalItems, updatedCount);
+
+        // Test Delete: Verify that the number of deleted rows matches exactly
+        var deletedCount = employeeDao.deleteBatch(java.util.Arrays.stream(employees));
+        Assertions.assertEquals(totalItems, deletedCount);
     }
 }

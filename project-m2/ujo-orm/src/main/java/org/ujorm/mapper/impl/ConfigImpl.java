@@ -12,6 +12,7 @@ import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.AbstractSnapshotable;
 import org.ujorm.core.csv.CsvConfig;
+import org.ujorm.mapper.UjormServiceProvider;
 import org.ujorm.tools.common.Primitive;
 
 @Getter @ToString
@@ -46,6 +47,9 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
     /** Print warnings, if Connection autocommit is true in batch operations. */
     private boolean autoCommitWarned = true;
 
+    /** Enable or disable the service of the {@link UjormServiceProvider} object. */
+    private boolean enabledUjormServiceProvider = true;
+
     /** Only for testing */
     private String testOnly = "";
 
@@ -61,6 +65,7 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
         enableSqlQuoting = value(enableSqlQuoting, "enableSqlQuoting", properties);
         columnMappingWarning = value(columnMappingWarning, "columnMappingWarning", properties);
         autoCommitWarned = value(autoCommitWarned, "autoCommitWarned", properties);
+        enabledUjormServiceProvider = value(enabledUjormServiceProvider, "enabledUjormServiceProvider", properties);
         testOnly = value(testOnly, "testOnly", properties);
     }
 

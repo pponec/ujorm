@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.SnapshotProvider;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -58,20 +59,20 @@ public interface Crud<D, V> {
 
     /** Reads a domain object by its identifier. */
     @Nullable
-    D readNullable(@NotNull V id);
+    D findByIdNullable(@NotNull V id);
 
     /** Reads a domain object by its identifier. */
     @NotNull
-    Optional<D> read(@NotNull V id);
+    Optional<D> findById(@NotNull V id);
 
     /**
-     * Create instance of SqlParamBuilder to bind parmeters and SELECT.
+     * Create instance of SqlParamBuilder to bind parameters and SELECT.
      * The builder has shared database connection with this object.
      * @param whereCondition Undefined or empty value returns all records.
-     * @return
+     * @return Query builder
      */
     @NotNull
-    SqlParamBuilder read(@Nullable String whereCondition);
+    SqlParamBuilder select(@Nullable String whereCondition);
 
     /**
      * Updates a single domain object.
@@ -89,27 +90,40 @@ public interface Crud<D, V> {
      */
     long updateBatch(@NotNull Stream<D> domains, CharSequence... properties);
 
+    /**
+     * Updates a single domain object with collision detection.
+     * Note: Requires connection.setAutoCommit(false) for transactional safety.
+     * <br><b>Important:</b> Entities must be of the domain type and implement the {@link SnapshotProvider} interface.
+     *
+     * @throws IllegalStateException If the entity is missing a saved snapshot.
+     */
+    default <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull D2 domain) {
+        Objects.requireNonNull(domain, "Domain object must not be null");
+        return updateChanged(Stream.of(domain));
+    }
 
     /**
      * Updates multiple domain objects using batching and collision detection.
-     * Note: Requires connection.setAutoCommit(false) for transactional safety.
+     * <br><b>Note:</b> Requires {@code connection.setAutoCommit(false)} for transactional safety.
+     * <br><b>Important:</b> Entities must be of the domain type and implement the {@link SnapshotProvider} interface.
      *
      * @throws IllegalStateException If an entity is missing a saved snapshot.
-     * @throws IllegalArgumentException If any entity in the stream is null or of invalid type.
+     * @throws IllegalArgumentException If any entity in the stream is null or of an invalid type.
      */
     @SuppressWarnings("unchecked")
     default <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull D2... domains) {
+        Objects.requireNonNull(domains, "Domains array must not be null");
         return updateChanged(Stream.of(domains));
     }
 
     /**
      * Updates multiple domain objects using batching and collision detection.
-     * Note: Requires connection.setAutoCommit(false) for transactional safety.
+     * <br><b>Note:</b> Requires {@code connection.setAutoCommit(false)} for transactional safety.
+     * <br><b>Important:</b> Entities must be of the domain type and implement the {@link SnapshotProvider} interface.
      *
      * @throws IllegalStateException If an entity is missing a saved snapshot.
-     * @throws IllegalArgumentException If any entity in the stream is null or of invalid type.
+     * @throws IllegalArgumentException If any entity in the stream is null or of an invalid type.
      */
-    @SuppressWarnings("unchecked")
     <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull Stream<D2> domains);
 
     /** Deletes a domain object. */
@@ -120,11 +134,11 @@ public interface Crud<D, V> {
 
     /** Deletes multiple domain objects using batching support. */
     @SuppressWarnings("unchecked")
-    default int deleteBatch(@NotNull D... domains) {
+    default int deleteBatchEntities(@NotNull D... domains) {
+        Objects.requireNonNull(domains, "Domains array must not be null");
         return deleteBatch(Stream.of(domains));
     }
 
     /** Deletes multiple domain objects using batching support. */
-    @SuppressWarnings("unchecked")
     int deleteBatch(@NotNull Stream<D> domains);
 }
