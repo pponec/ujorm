@@ -79,7 +79,8 @@ public class BasicDemoTest extends AbstractDemo {
         var emplDave = Employee.of("Dave", cityOttawa, emplIngird);
         var emplCarol = Employee.of("Carol", cityOttawa, emplIngird);
 
-        employeeCrud.insertBatch(emplIngird, emplDave, emplCarol);
+        employeeCrud.insert(emplIngird);
+        employeeCrud.insertBatch(emplDave, emplCarol);
     }
 
     @Test
@@ -107,9 +108,9 @@ public class BasicDemoTest extends AbstractDemo {
             assertEquals("Carol", employees.get(2).getName());
 
             // Test boss names:
-            assertNull(employees.get(0).getBoss().getName());
-            assertNull("Ingrid", employees.get(1).getBoss().getName());
-            assertNull("Ingrid", employees.get(2).getBoss().getName());
+            assertNull(employees.get(0).getBoss());
+            assertEquals("Ingrid", employees.get(1).getBoss().getName());
+            assertEquals("Ingrid", employees.get(2).getBoss().getName());
 
             // Test ID
             assertEquals(1L, employees.get(0).getId()); // Ingrid
@@ -144,7 +145,7 @@ public class BasicDemoTest extends AbstractDemo {
                 .sorted(Comparator.comparing(e -> e.getBoss() == null)) // The boss is the last
                 .toList();
 
-        assertEquals(3, allEmployees);
+        assertEquals(3, allEmployees.size());
         employeeCrud.deleteBatch(allEmployees.stream());
 
         var count = employeeCrud
