@@ -35,6 +35,7 @@ import org.ujorm.tools.jdbc.SqlParamBuilder;
 
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -299,7 +300,7 @@ public final class EntityManager<D, V> {
             if (domains == null || domains.length == 0) {
                 return domains;
             }
-            var index = new java.util.concurrent.atomic.AtomicInteger(0);
+            var index = new AtomicInteger(0);
             insertBatch(Arrays.stream(domains), newDomain -> {
                 while (index.get() < domains.length && domains[index.get()] == null) {
                     index.incrementAndGet();
@@ -313,6 +314,16 @@ public final class EntityManager<D, V> {
             return domains;
         }
 
+        /**
+         * Inserts a stream of domain objects into the database using JDBC batching.
+         * Evaluates sequentially and eagerly to guarantee proper database execution.
+         * Memory efficient.
+         *
+         * @param domains Stream of entities to be inserted.
+         * @param onInserted Optional callback invoked for each successfully inserted entity.
+         *                   Useful for retrieving assigned generated primary keys.
+         * @return The total number of rows inserted.
+         */
         @Override
         public final long insertBatch(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted) {
             var result = 0L;
@@ -329,6 +340,59 @@ public final class EntityManager<D, V> {
             } catch (SQLException e) {
                 throw SQLExceptionBuilder.build("Batch insert failed", e);
             }
+        }
+
+        /**
+         * Processes a stream of domain objects, deciding whether to insert or update each entity
+         * based on the state of its primary key. If the primary key is empty (null or 0),
+         * an INSERT is performed; otherwise, an UPDATE is performed.
+         * <p>
+         * Evaluates sequentially. Memory efficient: processes records in small batches.
+         *
+         * @param domains Stream of entities to be processed.
+         * @param onInserted Optional callback invoked specifically for entities that were INSERTED.
+         *                   Useful for retrieving assigned generated primary keys.
+         * @param properties Optional list of property names to update for the UPDATE operations.
+         *                   If empty, all properties are updated.
+         * @return The total number of rows affected (inserted + updated).
+         */
+        public final long insertOrUpdate(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted, CharSequence... properties) {
+            var result = 0L;
+            if (domains == null) return result;
+            var safeStream = domains.isParallel() ? domains.sequential() : domains;
+            var limit = utilities.getBatchLimit();
+
+            try (var inserter = new BatchInserter(onInserted)) {
+                utilities.checkAutoCommit(dbconnection);
+                var iterator = safeStream.iterator();
+
+                var updateList = new ArrayList<D>(limit);
+                var updateColumns = tableModel().getColumns(properties);
+
+                while (iterator.hasNext()) {
+                    var domain = iterator.next();
+                    if (domain == null) continue;
+
+                    if (utilities.isPkEmpty(utilities.getPrimaryKeyValue(domain))) {
+                        result += inserter.add(domain);
+                    } else {
+                        updateList.add(domain);
+                        if (updateList.size() >= limit) {
+                            result += updateStreamInternal(updateList.stream(), updateColumns);
+                            updateList.clear();
+                        }
+                    }
+                }
+
+                result += inserter.flush();
+                if (!updateList.isEmpty()) {
+                    result += updateStreamInternal(updateList.stream(), updateColumns);
+                }
+
+            } catch (SQLException e) {
+                throw SQLExceptionBuilder.build("Batch insertOrUpdate failed", e);
+            }
+            return result;
         }
 
         @Override
@@ -634,6 +698,11 @@ public final class EntityManager<D, V> {
             });
         }
 
+        /**
+         * A stateful helper class to manage JDBC batch INSERT operations.
+         * Encapsulates the PreparedStatement lifecycle, handles switching between auto-generated
+         * primary keys and explicitly provided keys, and buffers entities to minimize memory footprint.
+         */
         @RequiredArgsConstructor
         private final class BatchInserter implements AutoCloseable {
             @Nullable
@@ -645,6 +714,15 @@ public final class EntityManager<D, V> {
             private List<ColumnModel<D, Object>> cols = null;
             private Key<D,V> pk = pk();
 
+            /**
+             * Adds a domain entity to the current batch.
+             * If the batch limit is reached, or if the primary key generation strategy changes
+             * for the incoming entity, the current batch is automatically flushed to the database.
+             *
+             * @param domain The entity to be inserted.
+             * @return The number of rows affected if a flush occurred, 0 otherwise.
+             * @throws SQLException If a database access error occurs.
+             */
             public long add(D domain) throws SQLException {
                 var pkVal = utilities.getPrimaryKeyValue(domain);
                 var emptyPk = utilities.isPkEmpty(pkVal);
@@ -653,7 +731,7 @@ public final class EntityManager<D, V> {
                 // Flush and recreate statement if the PK generation strategy changes
                 if (genKeys != null && genKeys != emptyPk) {
                     result += flush();
-                    close(); // Zavře aktuální PS
+                    close(); // Closes the current PreparedStatement
                 }
 
                 if (ps == null) {
@@ -674,6 +752,13 @@ public final class EntityManager<D, V> {
                 return result + (domains.size() >= utilities.getBatchLimit() ? flush() : 0L);
             }
 
+            /**
+             * Executes the currently queued batch of INSERT statements, retrieves generated keys
+             * (if applicable), and invokes the {@code onInserted} Consumer callback.
+             *
+             * @return The number of rows affected by the batch execution.
+             * @throws SQLException If a database access error occurs.
+             */
             public long flush() throws SQLException {
                 if (domains.isEmpty() || ps == null) return 0L;
                 var result = utilities.sumBatchRows(ps.executeBatch());
@@ -693,6 +778,10 @@ public final class EntityManager<D, V> {
                 return result;
             }
 
+            /**
+             * Safely closes the underlying {@link PreparedStatement} if it is open.
+             * @throws SQLException If a database access error occurs.
+             */
             @Override
             public void close() throws SQLException {
                 try (var psOrig = ps) {
