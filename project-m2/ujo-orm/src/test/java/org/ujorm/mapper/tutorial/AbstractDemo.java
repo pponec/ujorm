@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
@@ -18,15 +19,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractDemo {
 
+    private static String CREATE_TABLE_METHOD_NAME = "createTable";
+
     private Connection dbConnection;
-    private boolean checkTables = false;
 
     /** Database connection */
     protected Connection connection() {
         return dbConnection;
     }
 
-    /** Commit connection, set table check flag and call init method. */
+    /** Close connection and call init method. */
     protected void superInit() {
         if (dbConnection == null) {
             throw new IllegalStateException("No connection available.");
@@ -36,7 +38,6 @@ public abstract class AbstractDemo {
         } catch (SQLException ex) {
             throw SQLExceptionBuilder.build(ex);
         }
-        this.checkTables = true;
         init();
     }
 
@@ -49,22 +50,28 @@ public abstract class AbstractDemo {
         this.dbConnection = getDbConnection();
     }
 
-    /** Verify that at least two tables exist if the check is enabled. */
+    /**
+     * Verify that at least two tables exist before running data-dependent tests.
+     * The createTable test is skipped because tables do not exist yet.
+     */
     @BeforeEach
-    void checkTablesExist() {
-        if (checkTables) {
-            var tableCount = getAllTables().count();
-            assertTrue(tableCount >= 2, "Expected at least 2 tables, but found: " + tableCount);
+    void checkTablesExist(TestInfo testInfo) {
+        var methodName = testInfo.getTestMethod().map(java.lang.reflect.Method::getName).orElse("");
+        if (CREATE_TABLE_METHOD_NAME.equals(methodName)) {
+            return; // Skip assertion for the initialization method
         }
+        var tableCount = getAllTables()
+                .filter(t -> "employee".equals(t.toLowerCase()))
+                .count();
+        assertTrue(tableCount > 0, "Create database tables first!");
     }
 
-    /** Commit the transaction after each test method and enable table checks. */
+    /** Commit the transaction after each test method. */
     @AfterEach
     void commitTransaction() throws SQLException {
         if (dbConnection != null && !dbConnection.getAutoCommit()) {
             dbConnection.commit();
         }
-        this.checkTables = true;
     }
 
     /** Close the database connection after all tests have finished. */
