@@ -2,8 +2,10 @@ package org.ujorm.mapper.jdbc;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
@@ -23,6 +25,7 @@ import java.util.NoSuchElementException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ResultSetMapperTestKey {
 
     private final boolean printResult = true;

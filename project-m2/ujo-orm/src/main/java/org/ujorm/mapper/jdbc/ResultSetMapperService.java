@@ -34,7 +34,7 @@ public class ResultSetMapperService {
 
     @NotNull
     private <D> ResultSetMapper<D> createMapper(Class<D> domainModel) {
-       throw new UnsupportedOperationException("TODO");
+       return ResultSetMapper.of(domainModel, configuration);
     }
 
     public static final ResultSetMapperService of(@NotNull Config config) {
