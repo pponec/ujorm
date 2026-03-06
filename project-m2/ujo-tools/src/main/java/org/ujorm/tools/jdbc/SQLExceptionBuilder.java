@@ -7,15 +7,15 @@ public final class SQLExceptionBuilder {
     private SQLExceptionBuilder() {
     }
 
-    public static final SQLException build(String s) {
+    public static SQLException build(String s) {
        return new SQLException(s);
     }
 
-    public static final SQLException build(Throwable cause) {
+    public static SQLException build(Throwable cause) {
         return new SQLException(cause);
     }
 
-    public static final SQLException build(String message, Throwable cause) {
+    public static SQLException build(String message, Throwable cause) {
         return new SQLException(message, cause);
     }
 }

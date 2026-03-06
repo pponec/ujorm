@@ -6,7 +6,7 @@ import org.ujorm.core.demo.CityUjo;
 
 class City_Test {
 
-    private static double DELTA = 0.00_000_000_001;
+    private static final double DELTA = 0.00_000_000_001;
 
     /** Create new instance */
     @Test

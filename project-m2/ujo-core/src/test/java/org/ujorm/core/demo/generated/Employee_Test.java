@@ -52,10 +52,10 @@ class Employee_Test {
 
         Assertions.assertEquals(10, employee.getId());
         Assertions.assertEquals("Test", employee.getName());
-        Assertions.assertEquals(null, employee.getBoss());
+        Assertions.assertNull(employee.getBoss());
         Assertions.assertEquals("California", employee.getCity().name());
         Assertions.assertEquals(2026, employee.getContractDay().getYear());
-        Assertions.assertEquals(true, employee.isActive());
+        Assertions.assertTrue(employee.isActive());
     }
 
     /** Create new instance */
@@ -69,7 +69,7 @@ class Employee_Test {
         Assertions.assertNull(employee.getCity());
         Assertions.assertNull(employee.getBoss());
         Assertions.assertNull(employee.getContractDay());
-        Assertions.assertEquals(false, employee.isActive());
+        Assertions.assertFalse(employee.isActive());
     }
 
 }

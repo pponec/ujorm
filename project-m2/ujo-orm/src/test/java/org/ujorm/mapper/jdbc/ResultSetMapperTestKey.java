@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 public class ResultSetMapperTestKey {
 
-    private final boolean printResult = !false;
+    private final boolean printResult = true;
 
     @Test @Order(100)
     void codeGen() {

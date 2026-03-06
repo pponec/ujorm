@@ -15,8 +15,8 @@ public record City (
     double latitude,
     double longitude
 ) {
-    public static final City of(Long id, String name) {
+    public static City of(Long id, String name) {
         return new City(id, name, "", 0.0, 0.0);
     }
 
-};
+}

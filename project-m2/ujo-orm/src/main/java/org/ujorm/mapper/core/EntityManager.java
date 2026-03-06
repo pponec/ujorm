@@ -242,7 +242,7 @@ public final class EntityManager<D, V> {
             var model = tableModel();
             var columns = new java.util.ArrayList<ColumnModel<D, Object>>(keys.length);
             for (var key : keys) {
-                columns.add((ColumnModel<D, Object>) model.getColumn(key.index()));
+                columns.add(model.getColumn(key.index()));
             }
             return buildUpdateSql(columns);
         }
@@ -450,7 +450,7 @@ public final class EntityManager<D, V> {
         }
 
         @Override
-        public final <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull Stream<D2> domains) {
+        public <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull Stream<D2> domains) {
             if (domains == null) {
                 return 0L;
             }
@@ -521,7 +521,7 @@ public final class EntityManager<D, V> {
 
         /** Binds values to the PreparedStatement and adds it to the current batch. */
         @SafeVarargs
-        protected final void updateInternalBinding(PreparedStatement statement, D entity, Key<D,?>... keys) throws SQLException {
+        private final void updateInternalBinding(PreparedStatement statement, D entity, Key<D, ?>... keys) throws SQLException {
             var model = tableModel();
             var columns = new ArrayList<ColumnModel<D, Object>>(keys.length);
             for (var key : keys) {
@@ -537,7 +537,7 @@ public final class EntityManager<D, V> {
          * @param columns Optional list of property names to update. If empty, all properties are updated (excluding id).
          * @return The number of affected rows.
          */
-        protected long updateInternal(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
+        private long updateInternal(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
             var sql = utilities.buildUpdateSql(columns);
             return utilities.run(false, dbconnection, sql, false, ps -> {
                 utilities.setValuesAndPkToStatement(domain, columns, ps);
@@ -554,7 +554,7 @@ public final class EntityManager<D, V> {
          * @param columns A list of column models defining which specific attributes should be updated.
          * @return The total number of rows affected by the batch execution.
          */
-        protected long updateStreamInternal(@NotNull Stream<D> domains, @NotNull List<ColumnModel<D, Object>> columns) {
+        private long updateStreamInternal(@NotNull Stream<D> domains, @NotNull List<ColumnModel<D, Object>> columns) {
             if (domains == null) {
                 return 0L;
             }
@@ -599,7 +599,7 @@ public final class EntityManager<D, V> {
         }
 
         @Override
-        public final int deleteBatch(@NotNull Stream<D> domains) {
+        public int deleteBatch(@NotNull Stream<D> domains) {
             if (domains == null) {
                 return 0;
             }

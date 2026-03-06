@@ -6,7 +6,7 @@ import org.ujorm.core.demo.City;
 
 public class JavaSourceGeneratorRecordTest {
 
-    private final boolean printResult = !false;
+    private final boolean printResult = false;
 
     @Test
     void getSourceCode() {
@@ -55,6 +55,6 @@ public class JavaSourceGeneratorRecordTest {
         Assertions.assertTrue(src.contains(code), "Expected: " + code);
     }
 
-    public record CityInner(String name) {};
+    public record CityInner(String name) {}
 
 }
