@@ -24,8 +24,8 @@ public interface Config {
     /** Print warnings, if Connection autocommit is true in batch operations. */
     boolean isAutoCommitWarned();
 
-    /** Enable or disable the service of the EntityManagerProvider object. */
-    boolean isEnabledEntityManagerProvider();
+    /** Enable or disable the service of the {@link org.ujorm.mapper.UjormServiceProvider} object. */
+    boolean isEnabledUjormServiceProvider();
 
     static Config ofDefault() {
         return new ConfigImpl();

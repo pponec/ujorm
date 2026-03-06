@@ -24,7 +24,7 @@ public class EntityManagerService {
     @NotNull
     @SuppressWarnings("unchecked")
     public <D> EntityManager<D,?> entityManagerFromSingleton(@NotNull Class<D> domainClass) throws UnsupportedOperationException{
-        if (!context.config().isEnabledEntityManagerProvider()) {
+        if (!context.config().isEnabledUjormServiceProvider()) {
             throw new UnsupportedOperationException("Access is disabled by configuration");
         }
         return entityManager(domainClass);
@@ -56,7 +56,7 @@ public class EntityManagerService {
     }
 
     public static final EntityManagerService ofSingleton(Config config) {
-        if (!config.isEnabledEntityManagerProvider()) {
+        if (!config.isEnabledUjormServiceProvider()) {
             throw new UnsupportedOperationException("Access is disabled by configuration");
         }
         var context = new Context(

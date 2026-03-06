@@ -46,7 +46,7 @@ public class ResultSetMapperService {
     }
 
     public static final ResultSetMapperService ofSingleton(Config config) {
-        if (!config.isEnabledEntityManagerProvider()) {
+        if (!config.isEnabledUjormServiceProvider()) {
             throw new UnsupportedOperationException("Access is disabled by configuration");
         }
         return of(config);
