@@ -5,14 +5,13 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.mapper.core.EntityManager;
 import org.ujorm.mapper.core.EntityManagerService;
 import org.ujorm.mapper.impl.Config;
-import org.ujorm.mapper.impl.ConfigImpl;
 import org.ujorm.mapper.jdbc.ResultSetMapper;
 import org.ujorm.mapper.jdbc.ResultSetMapperService;
 
 import java.sql.Connection;
 
 /**
- * Object provide a unique instnces of the {@link EntityManagerService} and {@ ResultSetMapperService} class.
+ * Object provides unique instances of the {@link EntityManagerService} and {@link ResultSetMapperService} classes.
  * This implementation is thread-safe using the Initialization-on-demand holder idiom.
  * The services provided by this class can be disabled via the 'enabledEntityManagerProvider' configuration parameter.
  */
@@ -25,7 +24,7 @@ public final class UjormProvider {
     }
 
     /**
-     * Holder class for lazy-loading the singleton instance.
+     * Holder class for lazy-loading the singleton instances.
      */
     private static final class Holder {
         private static final EntityManagerService EMS_INSTANCE = EntityManagerService.ofSingleton(config);
@@ -35,7 +34,7 @@ public final class UjormProvider {
     //--- EntityManagerService ---
 
     /**
-     * Provides the same instance every time.
+     * Provides the singleton instance of the EntityManagerService.
      * @return EntityManagerService
      */
     public static EntityManagerService managerService() {
@@ -43,40 +42,47 @@ public final class UjormProvider {
     }
 
     /**
-     * Get the Entity Manager.
+     * Gets the Entity Manager for the specified domain class.
      * @param domainClass An original domain class
-     * @return Entity
+     * @param value Optional value class (Note: currently unused in the underlying implementation)
+     * @param <D> Domain type
+     * @param <V> Value type
+     * @return EntityManager instance
      */
-    public static <D,V> EntityManager<D,V> em(@NotNull Class<D> domainClass, @Nullable Class<V> value) {
-        return (EntityManager<D,V>) managerService().entityManagerFromSingleton(domainClass);
+    @SuppressWarnings("unchecked")
+    public static <D, V> EntityManager<D, V> em(@NotNull Class<D> domainClass, @Nullable Class<V> value) {
+        return (EntityManager<D, V>) managerService().entityManagerFromSingleton(domainClass);
     }
 
-    public <D> Crud crud(Class<D> domainClass, Connection connection) {
+    /**
+     * Creates a Crud operation object for the given domain class.
+     * @param domainClass An original domain class
+     * @param connection Database connection
+     * @param <D> Domain type
+     * @return Crud instance
+     */
+    public static <D> Crud crud(@NotNull Class<D> domainClass, @NotNull Connection connection) {
         return em(domainClass, null).crud(connection);
     }
 
     //--- ResultSetMapperService ---
 
     /**
-     * Provides the same instance every time.
-     * @return EntityManagerService
+     * Provides the singleton instance of the ResultSetMapperService.
+     * @return ResultSetMapperService
      */
     public static ResultSetMapperService mapperService() {
         return Holder.RSM_INSTANCE;
     }
 
     /**
-     * Get the Entity Manager.
+     * Gets the ResultSet Mapper for the specified domain class.
      * @param domainClass An original domain class
-     * @return Entity
+     * @param <D> Domain type
+     * @return ResultSetMapper instance
      */
-    public static <D> ResultSetMapper<D> em2(@NotNull Class<D> domainClass) {
+    public static <D> ResultSetMapper<D> map(@NotNull Class<D> domainClass) {
         return mapperService().getMapper(domainClass);
     }
-
-    public <D> Crud map(Class<D> domainClass, Connection connection) {
-        return em(domainClass, null).crud(connection);
-    }
-
 
 }
