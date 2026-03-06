@@ -3,6 +3,7 @@ package org.ujorm.mapper.impl;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -122,6 +123,7 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
     /** Loads a value from system properties, properties file or returns the default value. */
     @SuppressWarnings("unchecked")
     public <T> T value(@NotNull T defaultValue, @NotNull String key, @NotNull Properties fileProps) {
+        Objects.requireNonNull(defaultValue, "Parameter 'defaultValue' is required.");
         var fullKey = PREFIX + key;
         var result = System.getProperty(fullKey);
 
@@ -130,8 +132,7 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
         }
 
         if (result != null) {
-            var type = (Class<T>) defaultValue.getClass();
-            return convertValue(result, type);
+            return convertValue(result, (Class<T>) defaultValue.getClass());
         }
         return defaultValue;
     }
