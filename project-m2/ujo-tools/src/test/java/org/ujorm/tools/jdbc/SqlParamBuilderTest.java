@@ -20,15 +20,23 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.JDBCType;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.regex.Matcher;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Testing the SqlParamBuilder class
@@ -43,45 +51,43 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
 
     @Test
     public void testShowUsage() throws Exception {
-        try (Connection dbConnection = createDbConnection())  {
+        try (var dbConnection = createDbConnection())  {
             runSqlStatements(dbConnection);
         }
     }
 
     @Test
     public void testRegexMatches() {
-        Pattern SQL_MARK = Pattern.compile(":(\\w+)");
+        var sqlMark = Pattern.compile(":(\\w+)");
 
         // Test pro :hello
-        Matcher matcher = SQL_MARK.matcher(":hello");
+        var matcher = sqlMark.matcher(":hello");
         matcher.find();
         assertEquals("hello", matcher.group(1));
 
         // Test pro :abc123
-        matcher = SQL_MARK.matcher(":abc123");
+        matcher = sqlMark.matcher(":abc123");
         matcher.find();
         assertEquals("abc123", matcher.group(1));
 
         // Test pro :test_
-        matcher = SQL_MARK.matcher(":test_");
+        matcher = sqlMark.matcher(":test_");
         matcher.find();
         assertEquals("test_", matcher.group(1));
 
         // Test pro text bez shody
-        matcher = SQL_MARK.matcher("hello");
-        matcher.find();
+        matcher = sqlMark.matcher("hello");
         assertEquals(false, matcher.find());
 
         // Test pro text s dvojtečkou, ale bez \w+
-        matcher = SQL_MARK.matcher(":");
-        matcher.find();
+        matcher = sqlMark.matcher(":");
         assertEquals(false, matcher.find());
     }
 
     @Test
     public void regexpTest() {
         // Test pro :hello
-        Matcher matcher = SqlParamBuilder.SQL_MARK.matcher(":hello");
+        var matcher = SqlParamBuilder.SQL_MARK.matcher(":hello");
         assertEquals("hello", matcher.find() ? matcher.group(1) : "");
 
         // Test pro :abc123
@@ -108,7 +114,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     /** Example of SQL statement INSERT. */
     public void runSqlStatements(Connection dbConnection) throws SQLException {
 
-        try (SqlParamBuilder builder = new SqlParamBuilder(dbConnection)) {
+        try (var builder = new SqlParamBuilder(dbConnection)) {
             System.out.println("CREATE TABLE");
             builder.sql("CREATE TABLE employee",
                             "( id INTEGER PRIMARY KEY AUTO_INCREMENT",
@@ -145,7 +151,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             Assertions.assertEquals(id5, 5);
 
             System.out.println("SELECT 1");
-            List<Employee> employees = builder.sql("SELECT t.id, t.name, t.created",
+            var employees = builder.sql("SELECT t.id, t.name, t.created",
                             "FROM employee t",
                             "WHERE t.id < :id",
                             "  AND t.code IN (:code)",
@@ -185,7 +191,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
 
     private void runSqlStatementsLike(SqlParamBuilder builder) {
         System.out.println("SELECT 3a");
-        List<Employee> employees = builder.sql("SELECT t.id, t.name, t.created",
+        var employees = builder.sql("SELECT t.id, t.name, t.created",
                         "FROM employee t",
                         "WHERE t.id = :id",
                         "  AND t.name LIKE :name") // AND t.name LIKE :name%
@@ -217,8 +223,8 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
 
     @Test
     public void loggingSql() throws SQLException {
-        final Connection dbConnection = Mockito.mock(Connection.class);
-        try (SqlParamBuilder builder = new SqlParamBuilder(dbConnection)) {
+        var dbConnection = Mockito.mock(Connection.class);
+        try (var builder = new SqlParamBuilder(dbConnection)) {
 
             System.out.println("MISSING PARAMS");
             builder.sql("SELECT t.id, t.name",
@@ -228,7 +234,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
                     "ORDER BY t.id");
             Assertions.assertEquals(builder.sqlTemplate(), builder.toString());
 
-            var ex = Assertions.assertThrows(org.ujorm.tools.jdbc.SQLException.class, () -> {
+            var ex = assertThrows(org.ujorm.tools.jdbc.SQLException.class, () -> {
                 builder.streamMap(t -> t).count();
             });
             assertEquals("Missing SQL parameter: [code, id]", ex.getMessage());
@@ -236,13 +242,77 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             System.out.println("ASSIGNED PARAMS");
             builder.bind("id", 10);
             builder.bind("code", "w");
-            String expected = String.join(newLine,
+            var expected = String.join(newLine,
                     "SELECT t.id, t.name",
                     "FROM employee t",
                     "WHERE t.id > [10]",
                     "  AND t.code = [w]",
                     "ORDER BY t.id");
             assertEquals(expected, builder.toString());
+        }
+    }
+
+    /** Test all data type binds and single-line string formatting */
+    @Test
+    public void testAllBindMethodsAndToStringLine() {
+        var dbConnection = Mockito.mock(Connection.class);
+        try (var builder = new SqlParamBuilder(dbConnection)) {
+            builder.sql(
+                    "SELECT :b1, :b2, :b3, :b4, :b5,",
+                    ":b6, :b7, :b8, :b9, :b10, :b11"
+            );
+
+            builder.bind("b1", true);
+            builder.bind("b2", (byte) 1);
+            builder.bind("b3", (short) 2);
+            builder.bind("b4", 3);
+            builder.bind("b5", 4L);
+            builder.bind("b6", BigDecimal.TEN);
+            builder.bind("b7", "hello");
+            builder.bind("b8", LocalDate.of(2023, 1, 1));
+            builder.bind("b9", LocalDateTime.of(2023, 1, 1, 12, 0));
+            builder.bindObject(true, "b10", JDBCType.OTHER, UUID.randomUUID());
+            builder.bind(false, "b11", "disabled_param");
+
+            var logLine = builder.toStringLine();
+
+            assertTrue(logLine.contains("[true]"));
+            assertTrue(logLine.contains("[1]"));
+            assertTrue(logLine.contains("[2]"));
+            assertTrue(logLine.contains("[3]"));
+            assertTrue(logLine.contains("[4]"));
+            assertTrue(logLine.contains("[10]"));
+            assertTrue(logLine.contains("[hello]"));
+            assertTrue(logLine.contains("[2023-01-01]"));
+            assertTrue(logLine.contains("[2023-01-01T12:00]"));
+            assertTrue(logLine.contains(":b11")); // Disabled params should remain unresolved
+
+            // Check that multiline template was successfully squashed into a single line
+            assertEquals(false, logLine.contains(newLine));
+        }
+    }
+
+    /** Test handling of missing generated keys */
+    @Test
+    public void testGeneratedKeysEmpty() throws SQLException {
+        var dbConnection = Mockito.mock(Connection.class);
+        var preparedStatement = Mockito.mock(PreparedStatement.class);
+
+        Mockito.when(dbConnection.prepareStatement(Mockito.anyString(), Mockito.anyInt()))
+                .thenReturn(preparedStatement);
+        Mockito.when(preparedStatement.getGeneratedKeys())
+                .thenReturn(null);
+
+        try (var builder = new SqlParamBuilder(dbConnection)) {
+            builder.sql("INSERT INTO test (id) VALUES (:id)").bind("id", 1);
+            builder.prepareStatement(Statement.RETURN_GENERATED_KEYS);
+
+            var stream = builder.generatedKeys(rs -> "dummy");
+            assertEquals(0, stream.count());
+
+            assertThrows(NoSuchElementException.class, () -> {
+                builder.generatedLastKey(rs -> "dummy");
+            });
         }
     }
 

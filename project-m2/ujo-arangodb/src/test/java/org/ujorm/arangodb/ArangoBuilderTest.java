@@ -40,8 +40,7 @@ import java.util.stream.Stream;
 public class ArangoBuilderTest extends org.junit.jupiter.api.Assertions {
     private static final boolean DISABLED = true;
 
-    @Disabled
-    @Test
+    @Disabled // @Test
     public void testBulder() throws ArangoDBException {
         if (DISABLED) {
             return;
