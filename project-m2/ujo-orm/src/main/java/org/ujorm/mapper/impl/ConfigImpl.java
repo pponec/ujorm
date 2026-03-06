@@ -7,6 +7,9 @@ import java.util.Properties;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
@@ -15,8 +18,12 @@ import org.ujorm.core.csv.CsvConfig;
 import org.ujorm.mapper.UjormServiceProvider;
 import org.ujorm.tools.common.Primitive;
 
-@Getter @ToString
+@Getter
+@ToString
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Config {
+
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(ConfigImpl.class.getName());
 
@@ -27,30 +34,39 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
     private static final String CONFIG_FILE = "ujorm-config.properties";
 
     /** The first key in the sequence represents the primary key. */
+    @Builder.Default
     private boolean firstPropertyIsIdentifier = true;
 
     /** Maximum size of the cache in the ResultSet Mapper */
+    @Builder.Default
     private int maxCacheSize = 512;
 
     /** Batch size for the INSERT, UPDATE, SELECT */
+    @Builder.Default
     private int batchSize = 512;
 
     /** Prints all SQL templates to the log. */
+    @Builder.Default
     private boolean printSql = true;
 
     /** Enable quoting the SQL columns */
+    @Builder.Default
     private boolean enableSqlQuoting = true;
 
     /** Write a warning if the column is not a relation and has no JDBC mapping. */
+    @Builder.Default
     private boolean columnMappingWarning = true;
 
     /** Print warnings, if Connection autocommit is true in batch operations. */
+    @Builder.Default
     private boolean autoCommitWarned = true;
 
     /** Enable or disable the service of the {@link UjormServiceProvider} object. */
+    @Builder.Default
     private boolean enabledUjormServiceProvider = true;
 
     /** Only for testing */
+    @Builder.Default
     private String testOnly = "";
 
     /** Map  */
@@ -58,15 +74,23 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
 
     public ConfigImpl() {
         var properties = properties();
-        firstPropertyIsIdentifier = value(firstPropertyIsIdentifier, "firstPropertyIsIdentifier", properties);
-        maxCacheSize = value(maxCacheSize, "maxCacheSize", properties);
-        batchSize = value(batchSize, "batchSize", properties);
-        printSql = value(printSql, "printSql", properties);
-        enableSqlQuoting = value(enableSqlQuoting, "enableSqlQuoting", properties);
-        columnMappingWarning = value(columnMappingWarning, "columnMappingWarning", properties);
-        autoCommitWarned = value(autoCommitWarned, "autoCommitWarned", properties);
-        enabledUjormServiceProvider = value(enabledUjormServiceProvider, "enabledUjormServiceProvider", properties);
-        testOnly = value(testOnly, "testOnly", properties);
+        this.firstPropertyIsIdentifier = value(true, "firstPropertyIsIdentifier", properties);
+        this.maxCacheSize = value(512, "maxCacheSize", properties);
+        this.batchSize = value(512, "batchSize", properties);
+        this.printSql = value(true, "printSql", properties);
+        this.enableSqlQuoting = value(true, "enableSqlQuoting", properties);
+        this.columnMappingWarning = value(true, "columnMappingWarning", properties);
+        this.autoCommitWarned = value(true, "autoCommitWarned", properties);
+        this.enabledUjormServiceProvider = value(true, "enabledUjormServiceProvider", properties);
+        this.testOnly = value("", "testOnly", properties);
+    }
+
+    /**
+     * Vytvoří Builder naplněný výchozími hodnotami a hodnotami z konfiguračního souboru.
+     * Ideální pro operativní změnu konfigurace v testech.
+     */
+    public static ConfigImplBuilder builderWithDefaults() {
+        return new ConfigImpl().toBuilder();
     }
 
     /** Load properties from the {@link #CONFIG_FILE}. */
@@ -110,19 +134,5 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
             return convertValue(result, type);
         }
         return defaultValue;
-    }
-
-
-    /** Clone the configuration in case the argument is type of {@link ConfigImpl}. */
-    @NotNull
-    public static Config copy(@NotNull Config config) {
-        try {
-            return (config instanceof ConfigImpl impl)
-                    ? impl.saveSnapshot().readSnapshot()
-                    : config;
-        } catch (IllegalStateException ex) {
-            LOGGER.warning("Can`t clone the configuration: " + config.getClass().getName());
-            return config;
-        }
     }
 }
