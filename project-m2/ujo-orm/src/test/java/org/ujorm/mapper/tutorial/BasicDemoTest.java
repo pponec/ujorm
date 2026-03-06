@@ -1,17 +1,19 @@
 package org.ujorm.mapper.tutorial;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.ujorm.mapper.Crud;
 import org.ujorm.mapper.core.EntityManager;
 import org.ujorm.mapper.tutorial.domains.City;
 import org.ujorm.mapper.tutorial.domains.Employee;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
-import static org.junit.jupiter.api.Assertions.*;
 
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.function.Function;
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class BasicDemoTest extends AbstractDemo {
 
@@ -30,7 +32,7 @@ public class BasicDemoTest extends AbstractDemo {
      * and the shared connection is safely closed once all tests in the class are completed.
      */
     @BeforeAll
-    void init() throws SQLException {
+    void init() {
         employeeCrud = EMPLOYEE_EM.crud(connection());
         cityCrud = CITY_EM.crud(connection());
     }
