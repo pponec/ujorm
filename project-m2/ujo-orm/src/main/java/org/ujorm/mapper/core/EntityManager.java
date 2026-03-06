@@ -35,7 +35,6 @@ import org.ujorm.tools.jdbc.SqlParamBuilder;
 
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -639,7 +638,7 @@ public final class EntityManager<D, V> {
         private final class BatchInserter implements AutoCloseable {
             @Nullable
             private final Consumer<D> onInserted;
-            private final List<D> items = new ArrayList<>(utilities.getBatchLimit());
+            private final List<D> domains = new ArrayList<>(utilities.getBatchLimit());
 
             private PreparedStatement ps = null;
             private Boolean genKeys = null;
@@ -662,7 +661,8 @@ public final class EntityManager<D, V> {
                     cols = tableModel().createInsertedColumns(pkVal);
                     var sql = utilities.buildInsertSql(cols);
                     if (context.config().isPrintSql()) LOGGER.info(sql);
-                    ps = !emptyPk ? dbconnection.prepareStatement(sql)
+                    ps = !emptyPk
+                            ? dbconnection.prepareStatement(sql)
                             : tableModel().jdbc().isOracleDb()
                             ? dbconnection.prepareStatement(sql, new String[]{pkColumn().name()})
                             : dbconnection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -670,26 +670,26 @@ public final class EntityManager<D, V> {
 
                 utilities.setValuesToStatement(domain, cols, ps);
                 ps.addBatch();
-                items.add(domain);
-                return result + (items.size() >= utilities.getBatchLimit() ? flush() : 0L);
+                domains.add(domain);
+                return result + (domains.size() >= utilities.getBatchLimit() ? flush() : 0L);
             }
 
             public long flush() throws SQLException {
-                if (items.isEmpty() || ps == null) return 0L;
+                if (domains.isEmpty() || ps == null) return 0L;
                 var result = utilities.sumBatchRows(ps.executeBatch());
                 if (onInserted != null) {
                     if (Boolean.TRUE.equals(genKeys)) {
                         try (var rs = ps.getGeneratedKeys()) {
-                            for (var domain : items) {
+                            for (var domain : domains) {
                                 if (!rs.next()) throw new IllegalStateException("Missing key");
-                                onInserted.accept(utilities.assignGeneratedKey(domain, rs, pk()));
+                                onInserted.accept(utilities.assignGeneratedKey(domain, rs, pk));
                             }
                         }
                     } else {
-                        items.forEach(onInserted);
+                        domains.forEach(onInserted);
                     }
                 }
-                items.clear();
+                domains.clear();
                 return result;
             }
 
