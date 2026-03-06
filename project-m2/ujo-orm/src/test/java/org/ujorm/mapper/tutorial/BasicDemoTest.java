@@ -1,10 +1,46 @@
 package org.ujorm.mapper.tutorial;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.ujorm.mapper.Crud;
+import org.ujorm.mapper.UjormServiceProvider;
+import org.ujorm.mapper.core.EntityManager;
+import org.ujorm.mapper.tutorial.domains.City;
+import org.ujorm.mapper.tutorial.domains.Employee;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
+import java.sql.SQLException;
+
 public class BasicDemoTest extends AbstractDemo {
+
+    /** ??? */
+    private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
+    private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
+
+    private Crud<Employee, Long> employeeCrud;
+    private Crud<City, Long> cityCrud;
+
+    /**
+     * Initializes the CRUD (Create, Read, Update, Delete) service objects for the City and Employee entities.
+     * These objects are bound to a shared database connection.
+     * <p>
+     * Note that the transaction and connection lifecycles are managed by the parent abstract class:
+     * a database commit is automatically performed after each individual test method finishes,
+     * and the shared connection is safely closed once all tests in the class are completed.
+     */
+    @BeforeAll
+    void init1() throws SQLException {
+        employeeCrud = EMPLOYEE_EM.crud(connection());
+        cityCrud = CITY_EM.crud(connection());
+    }
+    @BeforeAll
+    void init2() throws SQLException {
+        employeeCrud = UjormServiceProvider.crud(Employee.class, connection());
+        cityCrud = UjormServiceProvider.crud(City.class, connection());
+    }
+
 
     @Test @Order(100)
     void createTable() {
@@ -42,6 +78,8 @@ public class BasicDemoTest extends AbstractDemo {
     @Test
     @Order(100)
     void insert() {
+        var city = new City(null, "Ottawa", "CA");
+
 
     }
 
@@ -62,6 +100,5 @@ public class BasicDemoTest extends AbstractDemo {
     void delete() {
 
     }
-
 
 }
