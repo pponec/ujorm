@@ -29,6 +29,6 @@ public class Employee {
         result.setCity(city);
         result.setBoss(boss);
         return result;
-;    }
+    }
 
 }

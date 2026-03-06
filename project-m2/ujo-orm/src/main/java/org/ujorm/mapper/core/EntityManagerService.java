@@ -43,7 +43,7 @@ public class EntityManagerService {
             synchronized (domainClass) {
                 result = (EntityManager<D,V>) map.get(domainClass);
                 if (result == null) {
-                    result = EntityManager.of(domainClass, null);
+                    result = EntityManager.of(domainClass);
                     map.put(domainClass, result);
                 }
             }
