@@ -4,10 +4,14 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
+import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractDemo {
@@ -17,6 +21,22 @@ public abstract class AbstractDemo {
     /** Database connection */
     protected Connection connection() {
         return dbConnection;
+    }
+
+    /** Close connectin and call init method. */
+    protected void connectionCommit() {
+        if (dbConnection == null) {
+            throw new IllegalStateException("No connection available.");
+        }
+        try {
+            dbConnection.commit();
+        } catch (SQLException ex) {
+            throw SQLExceptionBuilder.build(ex);
+        }
+        init();
+    }
+
+    void init() {
     }
 
     /** Set up the database connection before the first test. */
@@ -56,5 +76,19 @@ public abstract class AbstractDemo {
         var result = DriverManager.getConnection(jdbcUrl, databaseUser, databasePassword);
         result.setAutoCommit(false);
         return result;
+    }
+
+    /** Prints and returns a list of all database tables. */
+    protected Stream<String> getAllTables() {
+        var result = new ArrayList<String>();
+        var tableTypes = new String[]{"TABLE"};
+        try (var rs = dbConnection.getMetaData().getTables(null, null, "%", tableTypes)) {
+            while (rs.next()) {
+                result.add(rs.getString("TABLE_NAME"));
+            }
+        } catch (SQLException ex) {
+            throw SQLExceptionBuilder.build(ex);
+        }
+        return result.stream();
     }
 }

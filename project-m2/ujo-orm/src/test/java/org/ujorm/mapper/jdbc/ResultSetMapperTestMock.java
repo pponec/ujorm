@@ -3,8 +3,10 @@ package org.ujorm.mapper.jdbc;
 import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 /** Tests a logic of column aliases processing in ResultSetMapper */
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ResultSetMapperTestMock {
 
     /** Tests mapping by property name when label and name differ. */

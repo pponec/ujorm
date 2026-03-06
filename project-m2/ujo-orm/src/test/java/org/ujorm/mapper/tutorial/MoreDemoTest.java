@@ -1,8 +1,11 @@
 package org.ujorm.mapper.tutorial;
 
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MoreDemoTest {
 
     @Test @Order(0)

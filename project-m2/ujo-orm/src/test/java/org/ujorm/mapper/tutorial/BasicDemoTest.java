@@ -1,20 +1,20 @@
 package org.ujorm.mapper.tutorial;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.ujorm.mapper.Crud;
 import org.ujorm.mapper.core.EntityManager;
 import org.ujorm.mapper.tutorial.domains.City;
 import org.ujorm.mapper.tutorial.domains.Employee;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BasicDemoTest extends AbstractDemo {
 
     private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
@@ -31,13 +31,13 @@ public class BasicDemoTest extends AbstractDemo {
      * a database commit is automatically performed after each individual test method finishes,
      * and the shared connection is safely closed once all tests in the class are completed.
      */
-    @BeforeAll
+    @Override
     void init() {
         employeeCrud = EMPLOYEE_EM.crud(connection());
         cityCrud = CITY_EM.crud(connection());
     }
 
-    @Test @Order(100)
+    @Test @Order(0)
     void createTable() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
@@ -66,8 +66,10 @@ public class BasicDemoTest extends AbstractDemo {
                     FOREIGN KEY (city_id)
                     REFERENCES city(id)
                     ON DELETE CASCADE ON UPDATE RESTRICT;
-                    """).execute();
+                    """).execute();;
         }
+
+        connectionCommit();
     }
 
     @Test
@@ -82,7 +84,7 @@ public class BasicDemoTest extends AbstractDemo {
     }
 
     @Test
-    @Order(100)
+    @Order(200)
     void select() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
@@ -118,7 +120,7 @@ public class BasicDemoTest extends AbstractDemo {
     }
 
     @Test
-    @Order(100)
+    @Order(300)
     void update() {
         var emplIngird = employeeCrud.findByIdNullable(1L);
         var emplDave = employeeCrud.findByIdNullable(2L);
@@ -134,7 +136,7 @@ public class BasicDemoTest extends AbstractDemo {
     }
 
     @Test
-    @Order(100)
+    @Order(400)
     void delete() {
         var allEmployees = employeeCrud
                 .select("id > :id")

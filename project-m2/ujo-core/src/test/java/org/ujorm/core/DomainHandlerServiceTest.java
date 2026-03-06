@@ -3,12 +3,11 @@ package org.ujorm.core;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.ujorm.core.demo.City;
 import org.ujorm.core.demo.Employee;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DomainHandlerServiceTest {
 
     @Test @Order(100)
