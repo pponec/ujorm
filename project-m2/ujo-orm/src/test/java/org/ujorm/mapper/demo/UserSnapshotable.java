@@ -7,7 +7,7 @@ import org.ujorm.core.AbstractSnapshotable;
 /** Represents the entity class type.
  * Note that the {@link Entity} annotation is not required in this library. */
 @Getter @Setter @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper=false)
 public class UserSnapshotable<D> extends AbstractSnapshotable<D> {
     @Column(name = "id") @Id
     private Long id;
