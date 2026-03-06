@@ -33,10 +33,9 @@ import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -294,69 +293,42 @@ public final class EntityManager<D, V> {
             this.dbconnection = dbconnection;
         }
 
+        public final long insertBatch(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted) {
+            var result = 0L;
+            if (domains == null) return result;
+            var safeStream = domains.isParallel() ? domains.sequential() : domains;
+            try (var inserter = new BatchInserter(dbconnection, onInserted)) {
+                utilities.checkAutoCommit(dbconnection);
+
+                var iterator = safeStream.iterator();
+                while (iterator.hasNext()) {
+                    var domain = iterator.next();
+                    if (domain == null) continue;
+                    result += inserter.add(domain);
+                }
+                result += inserter.flush();
+            } catch (SQLException e) {
+                throw SQLExceptionBuilder.build("Batch insert failed", e);
+            }
+            return result;
+        }
+
         @Override
         @SafeVarargs
         public final D[] insertBatch(@NotNull D... domains) {
             if (domains == null || domains.length == 0) {
                 return domains;
             }
-
-            var withPkIdx = new ArrayList<Integer>();
-            var withoutPkIdx = new ArrayList<Integer>();
-
-            for (var i = 0; i < domains.length; i++) {
-                if (domains[i] == null) continue;
-                if (utilities.isPkEmpty(utilities.getPrimaryKeyValue(domains[i]))) {
-                    withoutPkIdx.add(i);
-                } else {
-                    withPkIdx.add(i);
+            var index = new AtomicInteger(0);
+            insertBatch(Arrays.stream(domains), newDomain -> {
+                while (index.get() < domains.length && domains[index.get()] == null) {
+                    index.incrementAndGet();
                 }
-            }
-
-            if (!withPkIdx.isEmpty()) insertBatchInternal(domains, withPkIdx, false);
-            if (!withoutPkIdx.isEmpty()) insertBatchInternal(domains, withoutPkIdx, true);
-
-            return domains;
-        }
-
-        /** Internal batch executor running strictly over provided indices. */
-        private void insertBatchInternal(@NotNull D[] domains, @NotNull List<Integer> indices, boolean generateKeys) {
-            var sample = domains[indices.get(0)];
-            var pkOriginalValue = generateKeys ? null : utilities.getPrimaryKeyValue(sample);
-            var columns = tableModel().createInsertedColumns(pkOriginalValue);
-            var sql = utilities.buildInsertSql(columns);
-            var limit = utilities.getBatchLimit();
-
-            utilities.run(true, dbconnection, sql, generateKeys, ps -> {
-                var pk = generateKeys ? pk() : null;
-                var batchCount = 0;
-
-                for (var i = 0; i < indices.size(); i++) {
-                    var originalIdx = indices.get(i);
-                    utilities.setValuesToStatement(domains[originalIdx], columns, ps);
-                    ps.addBatch();
-                    batchCount++;
-
-                    if (batchCount == limit || i == indices.size() - 1) {
-                        ps.executeBatch();
-                        if (generateKeys) {
-                            try (var rs = ps.getGeneratedKeys()) {
-                                var start = i - batchCount + 1;
-                                for (var j = start; j <= i; j++) {
-                                    if (rs.next()) {
-                                        var targetIdx = indices.get(j);
-                                        domains[targetIdx] = utilities.assignGeneratedKey(domains[targetIdx], rs, pk);
-                                    } else {
-                                        throw new IllegalStateException("Missing generated key");
-                                    }
-                                }
-                            }
-                        }
-                        batchCount = 0;
-                    }
+                if (index.get() < domains.length) {
+                    domains[index.getAndIncrement()] = newDomain;
                 }
-                return null;
             });
+            return domains;
         }
 
         @Override
@@ -660,6 +632,103 @@ public final class EntityManager<D, V> {
                 }
                 return (int) result;
             });
+        }
+    }
+
+    /** Stateful helper to manage JDBC batch inserts and encapsulate execution parameters. */
+    @lombok.RequiredArgsConstructor
+    private final class BatchInserter implements AutoCloseable {
+        private final Connection dbconnection;
+        private final Consumer<D> onInserted;
+
+        private final int limit = utilities.getBatchLimit();
+        private final Key<D, V> pk = pk();
+        private final List<D> batchItems = new java.util.ArrayList<>(limit);
+
+        private PreparedStatement ps;
+        private Boolean generateKeys;
+        private List<ColumnModel<D, Object>> columns;
+        private int batchCount = 0;
+
+        /** Adds a domain object to the batch, executing flush if necessary. */
+        public long add(D domain) throws SQLException {
+            var pkOriginalValue = utilities.getPrimaryKeyValue(domain);
+            var currentDomainGenerateKeys = utilities.isPkEmpty(pkOriginalValue);
+            var result = 0L;
+
+            if (generateKeys != null && generateKeys != currentDomainGenerateKeys) {
+                result += flush();
+                closePreparedStatement();
+            }
+
+            if (ps == null) {
+                generateKeys = currentDomainGenerateKeys;
+                columns = tableModel().createInsertedColumns(pkOriginalValue);
+                var sql = utilities.buildInsertSql(columns);
+
+                if (context.config().isPrintSql()) {
+                    LOGGER.info(sql);
+                }
+
+                ps = !generateKeys
+                        ? dbconnection.prepareStatement(sql)
+                        : tableModel().jdbc().isOracleDb()
+                        ? dbconnection.prepareStatement(sql, new String[]{pkColumn().name()})
+                        : dbconnection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            }
+
+            utilities.setValuesToStatement(domain, columns, ps);
+            ps.addBatch();
+            batchItems.add(domain);
+            batchCount++;
+
+            if (batchCount >= limit) {
+                result += flush();
+            }
+            return result;
+        }
+
+        /** Executes the current batch and triggers the consumer callback. */
+        public long flush() throws SQLException {
+            if (batchCount == 0 || ps == null) {
+                return 0L;
+            }
+
+            var batchResults = ps.executeBatch();
+            var result = utilities.sumBatchRows(batchResults);
+
+            if (Boolean.TRUE.equals(generateKeys) && onInserted != null) {
+                try (var rs = ps.getGeneratedKeys()) {
+                    for (var domain : batchItems) {
+                        if (rs.next()) {
+                            onInserted.accept(utilities.assignGeneratedKey(domain, rs, pk));
+                        } else {
+                            throw new IllegalStateException("Missing generated key");
+                        }
+                    }
+                }
+            } else if (onInserted != null) {
+                for (var domain : batchItems) {
+                    onInserted.accept(domain);
+                }
+            }
+
+            batchCount = 0;
+            batchItems.clear();
+            return result;
+        }
+
+        /** Closes the PreparedStatement safely. */
+        private void closePreparedStatement() throws SQLException {
+            if (ps != null) {
+                ps.close();
+                ps = null;
+            }
+        }
+
+        @Override
+        public void close() throws SQLException {
+            closePreparedStatement();
         }
     }
 
