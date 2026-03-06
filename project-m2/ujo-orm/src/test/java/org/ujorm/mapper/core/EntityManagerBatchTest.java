@@ -169,4 +169,51 @@ class EntityManagerBatchTest extends AbstractDaoTest {
     public Employee createEmployee(Long id, String name, City city) {
         return Employee.of(id, name, null, city, LocalDate.of(2020, 1, 1), true);
     }
+
+    /**
+     * Tests processing of the remaining batch elements with a custom small batch limit.
+     */
+    //@Test
+    void testBatchRemainderFlushWithSmallLimit() {
+        // 1. Get the default configuration instance
+        var defaultConfig = org.ujorm.mapper.impl.Config.ofDefault();
+
+        // 2. Create a partial mock (Spy) to override ONLY the batch size
+        var customConfig = org.mockito.Mockito.spy(defaultConfig);
+        org.mockito.Mockito.when(customConfig.getBatchSize()).thenReturn(3);
+
+        // 3. Create a Context with this mocked config
+        var customContext = new org.ujorm.mapper.impl.Context(
+                customConfig,
+                org.ujorm.core.DomainHandlerProvider.provider(),
+                new org.ujorm.mapper.service.CommonService()
+        );
+
+        // 4. Initialize the manager with the custom context for Employee
+        var manager = EntityManager.of(Employee.class, dbConnection, customContext);
+        var employeeDao = manager.crud(dbConnection);
+
+        // --- Execution ---
+
+        // Create 8 items (with a limit of 3, this creates chunks: 3, 3, and a remainder of 2)
+        var totalItems = 8;
+        var employees = new Employee[totalItems];
+        for (var i = 0; i < totalItems; i++) {
+            // Using the static builder with null ID for generation
+            employees[i] = Employee.of(null, "Emp-Batch-" + i, true);
+        }
+
+        // Test Insert: Verify that elements from the remainder chunk received an ID
+        employeeDao.insertBatch(employees);
+        Assertions.assertNotNull(employees[totalItems - 1].getId(), "The last element of the remainder chunk did not receive an ID.");
+
+        // Test Update: Verify that the number of updated rows matches exactly
+        var updateStream = java.util.Arrays.stream(employees).peek(e -> e.setName(e.getName() + "-Updated"));
+        var updatedCount = employeeDao.updateBatch(updateStream, "name");
+        Assertions.assertEquals(totalItems, updatedCount);
+
+        // Test Delete: Verify that the number of deleted rows matches exactly
+        var deletedCount = employeeDao.deleteBatch(java.util.Arrays.stream(employees));
+        Assertions.assertEquals(totalItems, deletedCount);
+    }
 }
