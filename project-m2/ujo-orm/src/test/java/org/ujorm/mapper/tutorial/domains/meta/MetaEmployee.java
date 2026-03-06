@@ -6,7 +6,7 @@ import org.ujorm.core.Key;
 import org.ujorm.mapper.tutorial.domains.City;
 import org.ujorm.mapper.tutorial.domains.Employee;
 
-/** Metadata for the Employee entity */
+/** Metamodel of the Employee entity */
 public class MetaEmployee {
 
     static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
