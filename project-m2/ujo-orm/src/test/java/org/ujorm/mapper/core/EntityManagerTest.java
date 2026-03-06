@@ -89,12 +89,12 @@ class EntityManagerTest extends AbstractDaoTest {
         var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
         var noSnapshost = (Stream<SnapshotProvider>) null;
 
-        Assertions.assertThrows(RuntimeException.class, () -> cityDao.insert(null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.insert((City) null));
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.findById(null));
-        Assertions.assertThrows(RuntimeException.class, () -> cityDao.update(null));
-        Assertions.assertThrows(RuntimeException.class, () -> cityDao.updateBatch(null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.update((City) null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.updateBatch((Stream<City>) null));
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.updateChanged(noSnapshost));
-        Assertions.assertThrows(RuntimeException.class, () -> cityDao.delete(null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.delete((City) null));
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.deleteById(null));
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.deleteBatch((Stream<City>) null));
     }
