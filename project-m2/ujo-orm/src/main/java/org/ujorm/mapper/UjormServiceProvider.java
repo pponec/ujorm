@@ -13,7 +13,10 @@ import java.sql.Connection;
 /**
  * Object provides unique instances of the {@link EntityManagerService} and {@link ResultSetMapperService} classes.
  * This implementation is thread-safe using the Initialization-on-demand holder idiom.
+ *
  * The services provided by this class can be disabled via the {@link Config#isEnabledUjormServiceProvider()} configuration parameter.
+ * If disabled, an exception (wrapped in an {@link ExceptionInInitializerError}) will be thrown
+ * lazily upon the first attempt to access any of these services.
  */
 public final class UjormServiceProvider {
 
@@ -33,6 +36,7 @@ public final class UjormServiceProvider {
     /**
      * Provides the singleton instance of the EntityManagerService.
      * @return EntityManagerService
+     * @throws ExceptionInInitializerError if the service is disabled in the configuration (thrown upon first access)
      */
     public static EntityManagerService managerService() {
         return Holder.EMS_INSTANCE;
@@ -68,6 +72,7 @@ public final class UjormServiceProvider {
     /**
      * Provides the singleton instance of the ResultSetMapperService.
      * @return ResultSetMapperService
+     * @throws ExceptionInInitializerError if the service is disabled in the configuration (thrown upon first access)
      */
     public static ResultSetMapperService mapperService() {
         return Holder.RSM_INSTANCE;
