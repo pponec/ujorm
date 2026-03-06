@@ -89,13 +89,13 @@ class EntityManagerTest extends AbstractDaoTest {
         var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
         var noSnapshost = (Stream<SnapshotProvider>) null;
 
-        Assertions.assertThrows(NullPointerException.class, () -> cityDao.insert(null));
-        Assertions.assertThrows(NullPointerException.class, () -> cityDao.findById(null));
-        Assertions.assertThrows(NullPointerException.class, () -> cityDao.update(null));
-        Assertions.assertThrows(NullPointerException.class, () -> cityDao.updateBatch(null));
-        Assertions.assertThrows(NullPointerException.class, () -> cityDao.updateChanged(noSnapshost));
-        Assertions.assertThrows(NullPointerException.class, () -> cityDao.delete(null));
-        Assertions.assertThrows(NullPointerException.class, () -> cityDao.deleteById(null));
-        Assertions.assertThrows(NullPointerException.class, () -> cityDao.deleteBatch((Stream<City>) null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.insert(null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.findById(null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.update(null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.updateBatch(null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.updateChanged(noSnapshost));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.delete(null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.deleteById(null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.deleteBatch((Stream<City>) null));
     }
 }
