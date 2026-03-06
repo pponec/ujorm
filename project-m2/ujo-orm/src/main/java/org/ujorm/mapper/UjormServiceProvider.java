@@ -58,6 +58,18 @@ public final class UjormServiceProvider {
      * Creates a Crud operation object for the given domain class.
      * @param domainClass An original domain class
      * @param connection Database connection
+     * @param <D> Domain type
+     * @param <V> Value type of the entity's primary key
+     * @return Crud instance
+     */
+    public static <D, V> Crud<D, V> crud(@NotNull Class<D> domainClass, @NotNull Connection connection) {
+        return crud(domainClass, connection, null);
+    }
+
+    /**
+     * Creates a Crud operation object for the given domain class.
+     * @param domainClass An original domain class
+     * @param connection Database connection
      * @param idType Optional class representing the entity's primary key (unique identifier)
      * @param <D> Domain type
      * @param <V> Value type of the entity's primary key

@@ -793,7 +793,7 @@ public final class EntityManager<D, V> {
     // --- STATIC METHOD(s) ---
 
     /** Factory method */
-    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @Nullable Class<V> type) {
+    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass) {
         var context = Context.ofDefault();
         return new EntityManager<>(domainClass, context, ResultSetMapper.of(domainClass, context.config()));
     }

@@ -3,16 +3,13 @@ package org.ujorm.mapper.tutorial.domains;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.jetbrains.annotations.Nullable;
-
-import java.time.LocalDate;
 
 @Getter @Setter
 @Table(name = "employee")
 public class Employee {
 
-    @Column(name = "id") @Id
+    @Id @Column(name = "id")
     private Long id;
 
     @Column(nullable = false)
@@ -22,7 +19,16 @@ public class Employee {
     private City city;
 
     @Nullable
-    @JoinColumn(name = "superior_id")
-    private Employee superior;
+    @JoinColumn(name = "boss_id")
+    private Employee boss;
+
+    /** Create new instance without ID */
+    public static Employee of(String name, City city, @Nullable Employee boss) {
+        var result = new Employee();
+        result.setName(name);
+        result.setCity(city);
+        result.setBoss(boss);
+        return result;
+;    }
 
 }
