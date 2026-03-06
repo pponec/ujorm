@@ -402,11 +402,12 @@ public final class EntityManager<D, V> {
             var tableName = tableModel().tableName();
             var columns = tableModel().columns();
             var labels = new Key[columns.size()];
-            var sql = new StringBuilder(128).append("SELECT \n");
+            var sql = new StringBuilder(128).append("SELECT ");
             for (var i = 0; i < columns.size(); i++) {
                 var column = columns.get(i);
                 labels[i] = column.key();
-                sql.append(column.index() > 0 ? ", ": "  ").append(q).append(column.name()).append(q);
+                if (column.index() > 0) sql.append(", ");
+                sql.append(q).append(column.name()).append(q);
             }
             sql.append(" FROM ").append(q).append(tableName).append(q);
             sql.append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
@@ -431,10 +432,11 @@ public final class EntityManager<D, V> {
             var q = getQuote();
             var tableName = tableModel().tableName();
             var columns = tableModel().columns();
-            var sql = new StringBuilder(128).append("SELECT \n");
+            var sql = new StringBuilder(128).append("SELECT ");
             for (var i = 0; i < columns.size(); i++) {
                 var column = columns.get(i);
-                sql.append(column.index() > 0 ? ", ": "  ").append(q).append(column.name()).append(q);
+                if (column.index() > 0) sql.append(", ");
+                sql.append(q).append(column.name()).append(q);
                 sql.append(" AS ").append(q).append(column.key()).append(q);
             }
             sql.append(" FROM ").append(q).append(tableName).append(q);

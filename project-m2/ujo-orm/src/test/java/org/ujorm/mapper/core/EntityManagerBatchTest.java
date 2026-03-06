@@ -144,6 +144,22 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         Assertions.assertEquals(0, deleted);
     }
 
+    /** Tests batch delete operation using a stream that ends with a null value. */
+    @Test
+    void testBatchDeleteWithTrailingNull() {
+        var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
+        var city1 = cityDao.insert(new City(null, "Prague", "CZ", 50.0755, 14.4378));
+        var city2 = cityDao.insert(new City(null, "Brno", "CZ", 49.1951, 16.6068));
+
+        // Create a stream that ends with a null element
+        var stream = Stream.of(city1, city2, null);
+        var deletedCount = cityDao.deleteBatch(stream);
+
+        Assertions.assertEquals(2, deletedCount);
+        Assertions.assertFalse(cityDao.findById(city1.id()).isPresent());
+        Assertions.assertFalse(cityDao.findById(city2.id()).isPresent());
+    }
+
     /** Create a new Employee without ID */
     public Employee createEmployee(String name, City city) {
         return createEmployee(null, name, city);

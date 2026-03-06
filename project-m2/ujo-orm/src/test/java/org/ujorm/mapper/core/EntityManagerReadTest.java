@@ -30,4 +30,23 @@ class EntityManagerReadTest extends AbstractDaoTest {
     public Employee createEmployee(Long id, String name, City city) {
         return Employee.of(id, name, null, city, LocalDate.of(2020, 1, 1), true);
     }
+
+    /** Tests the generation of SqlParamBuilder using the select method. */
+    @Test
+    void testSelectBuilder() {
+        var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
+        var builder = cityDao.select("name = 'California'");
+
+        Assertions.assertNotNull(builder);
+
+        var expectedSql = """
+                SELECT "ID" AS "id"
+                , "NAME" AS "name"
+                , "COUNTRY_CODE" AS "countryCode"
+                , "LATITUDE" AS "latitude"
+                , "LONGITUDE" AS "longitude" FROM "CITY" WHERE name = 'California'
+                """.trim();
+        var resultSql = builder.toString().replace(", ", "\n, ");
+        Assertions.assertEquals(expectedSql, resultSql);
+    }
 }
