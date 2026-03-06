@@ -1,10 +1,10 @@
 package org.ujorm.mapper.core;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.mapper.impl.Config;
 import org.ujorm.mapper.impl.Context;
-import org.ujorm.mapper.jdbc.ResultSetMapperService;
 import org.ujorm.mapper.service.CommonService;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,21 +23,25 @@ public class EntityManagerService {
     /** Get Entity Manager */
     @NotNull
     @SuppressWarnings("unchecked")
-    public <D> EntityManager<D,?> entityManagerFromSingleton(@NotNull Class<D> domainClass) throws UnsupportedOperationException{
+    public <D, V> EntityManager<D,V> entityManagerFromSingleton(
+            @NotNull Class<D> domainClass,
+            @Nullable Class<V> idType) throws UnsupportedOperationException{
         if (!context.config().isEnabledUjormServiceProvider()) {
             throw new UnsupportedOperationException("Access is disabled by configuration");
         }
-        return entityManager(domainClass);
+        return entityManager(domainClass, idType);
     }
 
     /** Get Entity Manager */
     @NotNull
     @SuppressWarnings("unchecked")
-    public <D> EntityManager<D,?> entityManager(@NotNull Class<D> domainClass) {
-        var result = (EntityManager<D,?>) map.get(domainClass);
+    public <D, V> EntityManager<D,V> entityManager(
+            @NotNull Class<D> domainClass,
+            @Nullable Class<V> idType) {
+        var result = (EntityManager<D,V>) map.get(domainClass);
         if (result == null) {
             synchronized (domainClass) {
-                result = (EntityManager<D,?>) map.get(domainClass);
+                result = (EntityManager<D,V>) map.get(domainClass);
                 if (result == null) {
                     result = EntityManager.of(domainClass, null);
                     map.put(domainClass, result);
