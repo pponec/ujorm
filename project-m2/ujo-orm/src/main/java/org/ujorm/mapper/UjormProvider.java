@@ -23,9 +23,7 @@ public final class UjormProvider {
     private UjormProvider() {
     }
 
-    /**
-     * Holder class for lazy-loading the singleton instances.
-     */
+    /** Holder class for lazy-loading the singleton instances. */
     private static final class Holder {
         private static final EntityManagerService EMS_INSTANCE = EntityManagerService.ofSingleton(config);
         private static final ResultSetMapperService RSM_INSTANCE = ResultSetMapperService.ofSingleton(config);
