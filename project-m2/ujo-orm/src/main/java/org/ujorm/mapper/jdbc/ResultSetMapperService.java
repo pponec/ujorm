@@ -45,8 +45,7 @@ public class ResultSetMapperService {
         return new ResultSetMapperService(DomainHandlerProvider.provider(), new ConfigImpl());
     }
 
-    public static final ResultSetMapperService ofSingleton() {
-        var config = new ConfigImpl();
+    public static final ResultSetMapperService ofSingleton(Config config) {
         if (!config.isEnabledEntityManagerProvider()) {
             throw new UnsupportedOperationException("Access is disabled by configuration");
         }

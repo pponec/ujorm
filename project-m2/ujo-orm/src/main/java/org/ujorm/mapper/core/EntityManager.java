@@ -681,4 +681,11 @@ public final class EntityManager<D, V> {
         manager.initModel(connection);
         return manager;
     }
+
+    /** Factory method with provided connection */
+    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull Connection connection, @NotNull Context context) {
+        var manager = new EntityManager<D, V>(domainClass, context, ResultSetMapper.of(domainClass));
+        manager.initModel(connection);
+        return manager;
+    }
 }

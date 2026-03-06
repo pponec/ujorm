@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.mapper.impl.Config;
 import org.ujorm.mapper.impl.Context;
+import org.ujorm.mapper.jdbc.ResultSetMapperService;
 import org.ujorm.mapper.service.CommonService;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,12 +15,9 @@ public class EntityManagerService {
     private final ConcurrentHashMap<Class<?>, EntityManager<?,?>> map;
     private final Context context;
 
-    public EntityManagerService() {
+    public EntityManagerService(Context context) {
         this.map = new ConcurrentHashMap<>();
-        this.context = new Context(
-                Config.ofDefault(),
-                DomainHandlerProvider.provider(),
-                new CommonService());
+        this.context = context;
     }
 
     /** Get Entity Manager */
@@ -48,4 +46,25 @@ public class EntityManagerService {
         }
         return result;
     }
+
+    public static final EntityManagerService of() {
+        var context = new Context(
+                Config.ofDefault(),
+                DomainHandlerProvider.provider(),
+                new CommonService());
+        return new EntityManagerService(context);
+    }
+
+    public static final EntityManagerService ofSingleton(Config config) {
+        if (!config.isEnabledEntityManagerProvider()) {
+            throw new UnsupportedOperationException("Access is disabled by configuration");
+        }
+        var context = new Context(
+                config,
+                DomainHandlerProvider.provider(),
+                new CommonService()
+        );
+        return new EntityManagerService(context);
+    }
+
 }
