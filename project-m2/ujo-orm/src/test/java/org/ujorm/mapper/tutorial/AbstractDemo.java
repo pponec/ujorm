@@ -38,6 +38,7 @@ public abstract class AbstractDemo {
     void tearDown() throws SQLException {
         if (dbConnection != null) {
             dbConnection.close();
+            dbConnection = null;
         }
     }
 
