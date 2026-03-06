@@ -36,7 +36,8 @@ public class BasicDemoTest extends AbstractDemo {
         cityCrud = CITY_EM.crud(connection());
     }
 
-    @Test @Order(0)
+    @Test
+    @Order(0)
     void createTable() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
@@ -65,7 +66,7 @@ public class BasicDemoTest extends AbstractDemo {
                     FOREIGN KEY (city_id)
                     REFERENCES city(id)
                     ON DELETE CASCADE ON UPDATE RESTRICT;
-                    """).execute();;
+                    """).execute();
         }
         superInit();
     }
@@ -92,12 +93,12 @@ public class BasicDemoTest extends AbstractDemo {
                     , c.country_code AS "city.countryCode"
                     , b.name AS "boss.name"
                     FROM employee e
-                    JOIN city c ON c.id = e.id
-                    OUTER JOIN boss b ON b.id = e.boss_id
+                    JOIN city c ON c.id = e.city_id
+                    LEFT JOIN employee b ON b.id = e.boss_id
                     WHERE e.id > :employeeId
                     ORDER BY e.id
                     """)
-                    .bind("employeeId", 1L);
+                    .bind("employeeId", 0L);
             var employees = builder.streamMap(EMPLOYEE_EM::map).toList();
 
             // Test employee names
@@ -146,7 +147,7 @@ public class BasicDemoTest extends AbstractDemo {
         assertEquals(3, allEmployees);
         employeeCrud.deleteBatch(allEmployees.stream());
 
-        var count =  employeeCrud
+        var count = employeeCrud
                 .select("1 = 1")
                 .streamMap(e -> e)
                 .count();
