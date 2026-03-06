@@ -398,18 +398,9 @@ public final class EntityManager<D, V> {
         @NotNull
         public Optional<D> findById(@NotNull V id) {
             Objects.requireNonNull(id, "Identifier must not be null");
+            var sql = new StringBuilder(128);
+            var labels = buildSelectSql(false, sql);
             var q = getQuote();
-            var tableName = tableModel().tableName();
-            var columns = tableModel().columns();
-            var labels = new Key[columns.size()];
-            var sql = new StringBuilder(128).append("SELECT ");
-            for (var i = 0; i < columns.size(); i++) {
-                var column = columns.get(i);
-                labels[i] = column.key();
-                if (column.index() > 0) sql.append(", ");
-                sql.append(q).append(column.name()).append(q);
-            }
-            sql.append(" FROM ").append(q).append(tableName).append(q);
             sql.append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
 
             return utilities.run(false, dbconnection, sql, false, ps -> {
@@ -425,25 +416,46 @@ public final class EntityManager<D, V> {
          * The builder shares the database connection with this object.
          *
          * @param whereCondition Undefined or empty value returns all records.
+         * @return Query builder
          */
         @Override
         @NotNull
         public SqlParamBuilder select(@Nullable String whereCondition) {
+            var sql = new StringBuilder(128);
+            buildSelectSql(true, sql);
+            sql.append(" WHERE ");
+            sql.append(whereCondition == null || whereCondition.isEmpty() ? "1=1" : whereCondition);
+            return new SqlParamBuilder(dbconnection).sql(sql.toString()).fetchSize(utilities.getBatchLimit());
+        }
+
+        /**
+         * Builds the common SELECT clause for read operations.
+         *
+         * @param includeAliases If true, column labels are appended using AS alias.
+         * @param sql The StringBuilder to append the SQL to.
+         * @return Array of column keys if includeAliases is false, otherwise an empty array.
+         */
+        @Nullable
+        private Key[] buildSelectSql(boolean includeAliases, @NotNull StringBuilder sql) {
             var q = getQuote();
             var tableName = tableModel().tableName();
             var columns = tableModel().columns();
-            var sql = new StringBuilder(128).append("SELECT ");
+            var labels = includeAliases ? null : new Key[columns.size()];
+
+            sql.append("SELECT ");
             for (var i = 0; i < columns.size(); i++) {
                 var column = columns.get(i);
-                if (column.index() > 0) sql.append(", ");
+                if (i > 0) sql.append(", ");
                 sql.append(q).append(column.name()).append(q);
-                sql.append(" AS ").append(q).append(column.key()).append(q);
+
+                if (includeAliases) {
+                    sql.append(" AS ").append(q).append(column.key()).append(q);
+                } else {
+                    labels[i] = column.key();
+                }
             }
             sql.append(" FROM ").append(q).append(tableName).append(q);
-            sql.append(" WHERE ");
-            sql.append(whereCondition == null || whereCondition.isEmpty() ? "1=1" : whereCondition);
-
-            return new SqlParamBuilder(dbconnection).sql(sql.toString()).fetchSize(utilities.getBatchLimit());
+            return labels;
         }
 
         @Override
