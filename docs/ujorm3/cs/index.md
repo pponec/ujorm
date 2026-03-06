@@ -163,7 +163,7 @@ public class UjormTutorial {
 
 Pokud potřebujete provádět složitější dotazy, které přesahují základní CRUD, využijete `SqlParamBuilder` v kombinaci s `ResultSetMapper`.
 
-import org.ujorm.mapper.ResultSetMapper;
+import org.ujorm.mapper.jdbc.ResultSetMapper;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 import java.sql.Connection;
 import java.util.List;
