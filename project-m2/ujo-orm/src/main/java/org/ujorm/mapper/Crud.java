@@ -22,6 +22,7 @@ import org.ujorm.tools.jdbc.SqlParamBuilder;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -30,6 +31,11 @@ import java.util.stream.Stream;
  * @param <V> Primary key class
  */
 public interface Crud<D, V> {
+
+    /**
+     * Inserts multiple domain objects using batching support.
+     */
+    long insertBatch(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted);
 
     /**
      * Inserts multiple domain objects using batching support.

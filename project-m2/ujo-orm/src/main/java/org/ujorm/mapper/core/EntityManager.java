@@ -313,7 +313,7 @@ public final class EntityManager<D, V> {
             return domains;
         }
 
-        //@Override
+        @Override
         public final long insertBatch(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted) {
             var result = 0L;
             if (domains == null) return result;
