@@ -173,7 +173,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
     /**
      * Tests processing of the remaining batch elements with a custom small batch limit.
      */
-    //@Test
+    @Test
     void testBatchRemainderFlushWithSmallLimit() {
         // 1. Get the default configuration instance
         var defaultConfig = org.ujorm.mapper.impl.Config.ofDefault();
@@ -189,18 +189,23 @@ class EntityManagerBatchTest extends AbstractDaoTest {
                 new org.ujorm.mapper.service.CommonService()
         );
 
-        // 4. Initialize the manager with the custom context for Employee
-        var manager = EntityManager.of(Employee.class, dbConnection, customContext);
-        var employeeDao = manager.crud(dbConnection);
+        // 4. Initialize managers for both City and Employee
+        var cityManager = EntityManager.of(City.class, dbConnection, customContext, org.ujorm.mapper.jdbc.ResultSetMapper.of(City.class));
+        var cityDao = cityManager.crud(dbConnection);
+        var employeeManager = EntityManager.of(Employee.class, dbConnection, customContext);
+        var employeeDao = employeeManager.crud(dbConnection);
 
         // --- Execution ---
+
+        // Insert a valid City first to satisfy the foreign key constraint
+        var city = cityDao.insert(new City(null, "Prague", "CZ", 50.0755, 14.4378));
 
         // Create 8 items (with a limit of 3, this creates chunks: 3, 3, and a remainder of 2)
         var totalItems = 8;
         var employees = new Employee[totalItems];
         for (var i = 0; i < totalItems; i++) {
-            // Using the static builder with null ID for generation
-            employees[i] = Employee.of(null, "Emp-Batch-" + i, true);
+            // Use the full builder to pass the newly created, valid city
+            employees[i] = Employee.of(null, "Emp-Batch-" + i, null, city, java.time.LocalDate.now(), true);
         }
 
         // Test Insert: Verify that elements from the remainder chunk received an ID
