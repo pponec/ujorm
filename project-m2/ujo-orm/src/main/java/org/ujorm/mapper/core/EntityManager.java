@@ -502,7 +502,7 @@ public final class EntityManager<D, V> {
         }
 
         @Override
-        public long updateBatch(@NotNull Stream<D> domains, CharSequence... properties) {
+        public long update(@NotNull Stream<D> domains, CharSequence... properties) {
             Objects.requireNonNull(domains, "Stream of domains must not be null");
             var columns = tableModel().getColumns(properties);
             return updateStreamInternal(domains, columns);
@@ -662,7 +662,7 @@ public final class EntityManager<D, V> {
         }
 
         @Override
-        public int deleteBatch(@NotNull Stream<D> domains) {
+        public int delete(@NotNull Stream<D> domains) {
             Objects.requireNonNull(domains, "Stream of domains must not be null");
             var q = getQuote();
             var tableName = tableModel().tableName();

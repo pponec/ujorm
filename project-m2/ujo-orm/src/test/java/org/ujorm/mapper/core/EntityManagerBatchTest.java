@@ -119,7 +119,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         employees = emplDao.insertBatch(employees);
 
         // Now delete them all in a batch
-        int deletedCount = emplDao.deleteBatch(Stream.of(employees));
+        int deletedCount = emplDao.delete(Stream.of(employees));
 
         Assertions.assertEquals(totalEmployees, deletedCount);
         Assertions.assertFalse(emplDao.findById(employees[0].getId()).isPresent());
@@ -141,7 +141,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         Assertions.assertNull(result2[0]);
 
         // Empty delete
-        int deleted = cityDao.deleteBatch(Stream.of(new City[0]));
+        int deleted = cityDao.delete(Stream.of(new City[0]));
         Assertions.assertEquals(0, deleted);
     }
 
@@ -154,7 +154,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
 
         // Create a stream that ends with a null element
         var stream = Stream.of(city1, city2, null);
-        var deletedCount = cityDao.deleteBatch(stream);
+        var deletedCount = cityDao.delete(stream);
 
         Assertions.assertEquals(2, deletedCount);
         Assertions.assertFalse(cityDao.findById(city1.id()).isPresent());
@@ -213,11 +213,11 @@ class EntityManagerBatchTest extends AbstractDaoTest {
 
         // Test Update: Verify that the number of updated rows matches exactly
         var updateStream = java.util.Arrays.stream(employees).peek(e -> e.setName(e.getName() + "-Updated"));
-        var updatedCount = employeeDao.updateBatch(updateStream, "name");
+        var updatedCount = employeeDao.update(updateStream, "name");
         Assertions.assertEquals(totalItems, updatedCount);
 
         // Test Delete: Verify that the number of deleted rows matches exactly
-        var deletedCount = employeeDao.deleteBatch(java.util.Arrays.stream(employees));
+        var deletedCount = employeeDao.delete(java.util.Arrays.stream(employees));
         Assertions.assertEquals(totalItems, deletedCount);
     }
 }

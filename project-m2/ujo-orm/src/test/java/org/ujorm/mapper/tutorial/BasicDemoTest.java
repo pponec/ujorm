@@ -130,7 +130,7 @@ public class BasicDemoTest extends AbstractDemo {
         emplIngird.setBoss(newBoss);
         emplDave.setBoss(null);
         emplCarol.setBoss(newBoss);
-        employeeCrud.updateBatch(Stream.of(emplIngird, emplDave, emplCarol), "boss");
+        employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol), "boss");
 
         assertNull(employeeCrud.findByIdNullable(2L).getBoss(), "The new boss is Dave");
     }
@@ -146,7 +146,7 @@ public class BasicDemoTest extends AbstractDemo {
                 .toList();
 
         assertEquals(3, allEmployees.size());
-        employeeCrud.deleteBatch(allEmployees.stream());
+        employeeCrud.delete(allEmployees.stream());
 
         var count = employeeCrud
                 .select("1 = 1")

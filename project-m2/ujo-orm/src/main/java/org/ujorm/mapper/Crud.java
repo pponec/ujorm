@@ -149,7 +149,7 @@ public interface Crud<D, V> {
      *                   If empty, all columns (excluding the primary key) are updated.
      * @return The total number of rows affected by the batch update execution.
      */
-    long updateBatch(@NotNull Stream<D> domains, CharSequence... properties);
+    long update(@NotNull Stream<D> domains, CharSequence... properties);
 
     /**
      * Updates a single domain object optimally by detecting actual modifications.
@@ -232,7 +232,7 @@ public interface Crud<D, V> {
     @SuppressWarnings("unchecked")
     default int deleteBatchEntities(@NotNull D... domains) {
         Objects.requireNonNull(domains, "Domains array must not be null");
-        return deleteBatch(Stream.of(domains));
+        return delete(Stream.of(domains));
     }
 
     /**
@@ -242,5 +242,5 @@ public interface Crud<D, V> {
      * @param domains A stream of domain objects to delete.
      * @return The total number of rows successfully deleted.
      */
-    int deleteBatch(@NotNull Stream<D> domains);
+    int delete(@NotNull Stream<D> domains);
 }

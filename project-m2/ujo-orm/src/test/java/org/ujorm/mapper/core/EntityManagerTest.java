@@ -92,10 +92,10 @@ class EntityManagerTest extends AbstractDaoTest {
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.insert((City) null));
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.findById(null));
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.update((City) null));
-        Assertions.assertThrows(RuntimeException.class, () -> cityDao.updateBatch((Stream<City>) null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.update((Stream<City>) null));
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.updateChanged(noSnapshost));
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.delete((City) null));
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.deleteById(null));
-        Assertions.assertThrows(RuntimeException.class, () -> cityDao.deleteBatch((Stream<City>) null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.delete((Stream<City>) null));
     }
 }
