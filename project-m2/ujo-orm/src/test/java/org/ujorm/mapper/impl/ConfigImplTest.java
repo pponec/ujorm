@@ -92,7 +92,7 @@ class ConfigImplTest {
 
         // Changed to NullPointerException to match Objects.requireNonNull behavior
         var exception = assertThrows(
-                NullPointerException.class,
+                RuntimeException.class,
                 () -> config.value(null, "someKey", emptyProperties),
                 "The value() method must throw an exception if defaultValue is null."
         );

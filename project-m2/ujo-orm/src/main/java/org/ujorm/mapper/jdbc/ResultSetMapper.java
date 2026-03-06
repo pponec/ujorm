@@ -9,6 +9,7 @@ import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.Key;
 import org.ujorm.core.csv.CsvLineSplitter;
 import org.ujorm.core.impl.AbstractUjo;
+import org.ujorm.mapper.impl.Config;
 import org.ujorm.tools.common.Primitive;
 import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
@@ -74,8 +75,6 @@ public final class ResultSetMapper<D> {
     /** The very fast dot splitter */
     private static final CsvLineSplitter SPLITTER = CsvLineSplitter.ofFast('.');
     private static final int SPLITTER_INIT_CAPACITY = 8;
-    private static final String MAPPER_CACHE_SIZE = "ujorm.mapper.cache.size";
-    private static final int DEFAULT_CACHE_SIZE = Integer.getInteger(MAPPER_CACHE_SIZE, 512);
 
     @NonNull
     private final Class<D> domainClass;
@@ -292,9 +291,9 @@ public final class ResultSetMapper<D> {
         private synchronized void checkAndClear() {
             if (data.size() >= maxCacheSize) {
                 var msg = String.join(" ",
-                        "Mapping cache exceeded the limit of %d, clearing.",
-                        "Consider increasing '%s' to avoid performance degradation."
-                ).formatted(maxCacheSize, MAPPER_CACHE_SIZE);
+                        "Mapping cache exceeded the limit of %s, clearing.",
+                        "Consider increasing '%s' parameter to avoid performance degradation."
+                ).formatted(maxCacheSize, "maxCacheSize");
                 LOGGER.log(Level.WARNING, msg);
                 data.clear();
                 lastCleared = Instant.now();
@@ -417,11 +416,16 @@ public final class ResultSetMapper<D> {
 
     /** Factory method to create a new instance with default cache size. */
     public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass, @NonNull DomainHandlerService service) {
-        return of(domainClass, service, DEFAULT_CACHE_SIZE);
+        return of(domainClass, service, Config.ofDefault());
+    }
+
+    /** Factory method to create a new instance with default cache size. */
+    public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass, @NonNull DomainHandlerService service, Config config) {
+        return of(domainClass, service, config.getMaxCacheSize());
     }
 
     /** Factory method to create a new instance with default service and cache size. */
-    public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass) {
-        return of(domainClass, DomainHandlerProvider.provider(), DEFAULT_CACHE_SIZE);
+    public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass, Config config) {
+        return of(domainClass, DomainHandlerProvider.provider(), config);
     }
 }

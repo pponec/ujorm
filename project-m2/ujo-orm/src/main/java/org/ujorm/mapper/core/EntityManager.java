@@ -705,7 +705,8 @@ public final class EntityManager<D, V> {
 
     /** Factory method */
     public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @Nullable Class<V> type) {
-        return new EntityManager<>(domainClass, Context.ofDefault(), ResultSetMapper.of(domainClass));
+        var context = Context.ofDefault();
+        return new EntityManager<>(domainClass, context, ResultSetMapper.of(domainClass, context.config()));
     }
 
     /** Factory method */
@@ -722,7 +723,7 @@ public final class EntityManager<D, V> {
 
     /** Factory method with provided connection */
     public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull Connection connection, @NotNull Context context) {
-        var manager = new EntityManager<D, V>(domainClass, context, ResultSetMapper.of(domainClass));
+        var manager = new EntityManager<D, V>(domainClass, context, ResultSetMapper.of(domainClass, context.config()));
         manager.initModel(connection);
         return manager;
     }
