@@ -60,6 +60,11 @@ public interface Ujo<D extends Object> {
         setValue(domainHandler().getKey(keyName), value);
     }
 
+    /** Provides an original domain object. */
+    default D buildDomain() {
+        return domainHandler().newDomain();
+    }
+
     /** Returns a domain handler */
     DomainHandler<D> domainHandler();
 

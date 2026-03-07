@@ -4,11 +4,11 @@ package org.ujorm.mapper.jdbc;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.DomainHandler;
+import org.ujorm.Ujo;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.Key;
 import org.ujorm.core.csv.CsvLineSplitter;
-import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.mapper.impl.Config;
 import org.ujorm.tools.common.Primitive;
 import org.ujorm.tools.jdbc.JdbcUtils;
@@ -167,10 +167,10 @@ public final class ResultSetMapper<D> {
     }
 
     /**
-     * Recursively populates the target AbstractUjo wrapper and its relations.
+     * Recursively populates the target Ujo wrapper and its relations.
      * @return true if at least one non-null value was set in this node or its children
      */
-    private <D2> boolean populateNode(MappingNode<D2> node, AbstractUjo<D2> target, ResultSet rs) throws SQLException {
+    private <D2> boolean populateNode(MappingNode<D2> node, Ujo<D2> target, ResultSet rs) throws SQLException {
         var hasData = false;
         for (var mapping : node.directMappings()) {
             var objectType = Primitive.wrapPrimitive(mapping.key().type());
