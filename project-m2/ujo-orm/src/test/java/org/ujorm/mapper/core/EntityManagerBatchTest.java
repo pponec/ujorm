@@ -2,6 +2,7 @@ package org.ujorm.mapper.core;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.ujorm.mapper.Config;
 import org.ujorm.mapper.UjormServiceProvider;
 import org.ujorm.mapper.demo.City;
 import org.ujorm.mapper.demo.Employee;
@@ -177,7 +178,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
     @Test
     void testBatchRemainderFlushWithSmallLimit() {
         // 1. Get the default configuration instance
-        var defaultConfig = org.ujorm.mapper.impl.Config.ofDefault();
+        var defaultConfig = Config.ofDefault();
 
         // 2. Create a partial mock (Spy) to override ONLY the batch size
         var customConfig = org.mockito.Mockito.spy(defaultConfig);

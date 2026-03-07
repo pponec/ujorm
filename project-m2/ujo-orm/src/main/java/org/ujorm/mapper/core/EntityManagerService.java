@@ -3,7 +3,7 @@ package org.ujorm.mapper.core;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandlerProvider;
-import org.ujorm.mapper.impl.Config;
+import org.ujorm.mapper.Config;
 import org.ujorm.mapper.impl.Context;
 import org.ujorm.mapper.service.CommonService;
 

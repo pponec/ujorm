@@ -7,7 +7,7 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-core</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-BETA</version>
     <packaging>jar</packaging>
     <name>ujo-core</name>
     <description>Map JDBC ResultSet to POJO</description>
@@ -34,7 +34,7 @@
     </scm>
 
     <properties>
-        <revision>3.0.0-SNAPSHOT</revision>
+        <revision>3.0.0-BETA</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.0-BETA</version>
         </dependency>
 
         <!-- Static analyzer support -->

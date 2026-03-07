@@ -1,4 +1,6 @@
-package org.ujorm.mapper.impl;
+package org.ujorm.mapper;
+
+import org.ujorm.mapper.impl.ConfigImpl;
 
 /** Configuration parameters */
 public interface Config {

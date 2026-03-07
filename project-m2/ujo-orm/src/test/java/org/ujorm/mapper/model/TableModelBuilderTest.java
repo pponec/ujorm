@@ -22,7 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.ujorm.DomainHandler;
 import org.ujorm.core.generator.TableIdentifier;
-import org.ujorm.mapper.impl.Config;
+import org.ujorm.mapper.Config;
 import org.ujorm.mapper.impl.Context;
 
 import java.sql.Connection;
