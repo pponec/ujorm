@@ -41,8 +41,9 @@ public abstract class AbstractDemo {
      * The createTable test is skipped because tables do not exist yet.
      */
     @BeforeEach
-    void init(TestInfo testInfo) {
+    void initTables() {
         if (!initialized) {
+            initialized = true;
             init();
         }
     }
