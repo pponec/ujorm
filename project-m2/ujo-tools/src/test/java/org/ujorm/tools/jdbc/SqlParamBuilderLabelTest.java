@@ -24,33 +24,39 @@ class SqlParamBuilderLabelTest {
     @Test
     void testSingleLabel() {
         try (var builder = new SqlParamBuilder(connectionMock)) {
-            builder.sql("SELECT a AS ${col1} FROM table")
-                    .label("col1", mockKey("first_name"));
+            builder.sql("""
+                    SELECT a AS ${col1} FROM table""");
+            builder.label("col1", mockKey("first_name"));
 
-            assertEquals("SELECT a AS \"first_name\" FROM table", builder.toStringLine());
+            assertEquals("""
+                    SELECT a AS "first_name" FROM table""", builder.toStringLine());
         }
     }
 
     @Test
     void testTwoLabels() {
         try (var builder = new SqlParamBuilder(connectionMock)) {
-            builder.sql("SELECT a AS ${col1}, b AS ${col2} FROM table")
-                    .label("col1", mockKey("user"), mockKey("name"))
+            builder.sql("""
+                    SELECT a AS ${col1}, b AS ${col2} FROM table""");
+            builder.label("col1", mockKey("user"), mockKey("name"))
                     .label("col2", mockKey("user"), mockKey("age"));
 
-            assertEquals("SELECT a AS \"user.name\", b AS \"user.age\" FROM table", builder.toStringLine());
+            assertEquals("""
+                    SELECT a AS "user.name", b AS "user.age" FROM table""", builder.toStringLine());
         }
     }
 
     @Test
     void testMultipleLabelsVarargs() {
         try (var builder = new SqlParamBuilder(connectionMock)) {
-            builder.sql("SELECT c AS ${complex_col} FROM table")
-                    .label("complex_col",
-                            mockKey("db"), mockKey("schema"), mockKey("table"),
-                            mockKey("user"), mockKey("address"), mockKey("zip"));
+            builder.sql("""
+                    SELECT c AS ${complex_col} FROM table""");
+            builder.label("complex_col",
+                    mockKey("db"), mockKey("schema"), mockKey("table"),
+                    mockKey("user"), mockKey("address"), mockKey("zip"));
 
-            assertEquals("SELECT c AS \"db.schema.table.user.address.zip\" FROM table", builder.toStringLine());
+            assertEquals("""
+                    SELECT c AS "db.schema.table.user.address.zip" FROM table""", builder.toStringLine());
         }
     }
 
@@ -58,13 +64,18 @@ class SqlParamBuilderLabelTest {
     void testLabelsWithBoundParameters() {
         try (var builder = new SqlParamBuilder(connectionMock)) {
             // Combination of labels and standard parameters
-            builder.sql("SELECT a AS ${lbl} FROM table WHERE id = :id AND status = :status")
-                    .label("lbl", mockKey("employee"), mockKey("id"))
+            // We can now comfortably format the SQL on multiple lines
+            builder.sql("""
+                    SELECT a AS ${lbl}
+                    FROM table
+                    WHERE id = :id AND status = :status""");
+            builder.label("lbl", mockKey("employee"), mockKey("id"))
                     .bind("id", 42)
                     .bind("status", "ACTIVE");
 
-            // The toStringLine() method replaces bind parameters with [value] for logging purposes
-            assertEquals("SELECT a AS \"employee.id\" FROM table WHERE id = [42] AND status = [ACTIVE]", builder.toStringLine());
+            // The toStringLine() method replaces \n with spaces, matching the expected one-liner below
+            assertEquals("""
+                    SELECT a AS "employee.id" FROM table WHERE id = [42] AND status = [ACTIVE]""", builder.toStringLine());
         }
     }
 
