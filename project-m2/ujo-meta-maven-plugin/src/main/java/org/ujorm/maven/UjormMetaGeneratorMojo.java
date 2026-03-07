@@ -40,6 +40,8 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
+        if (prefix == null) prefix = "";
+        if (suffix == null) suffix = "";
         getLog().info("Ujorm3 MetaGenerator is running (testScope=" + testScope + ")...");
 
         // Define output path based on the scope
