@@ -1,140 +1,151 @@
 package org.ujorm.mapper.impl;
 
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.AbstractSnapshotable;
 import org.ujorm.core.csv.CsvConfig;
 import org.ujorm.mapper.Config;
-import org.ujorm.mapper.UjormServiceProvider;
 import org.ujorm.tools.common.Primitive;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-@Getter
-@ToString
-@Builder(toBuilder = true)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Config {
 
-    /** Logger */
     private static final Logger LOGGER = Logger.getLogger(ConfigImpl.class.getName());
-
-    /** Property Prefix */
     private static final String PREFIX = "org.ujorm.";
-
-    /** Configuration file */
     private static final String CONFIG_FILE = "ujorm-config.properties";
-
-    /** The first key in the sequence represents the primary key. */
-    @Builder.Default
-    private boolean firstPropertyIsIdentifier = true;
-
-    /** Maximum size of the cache in the ResultSet Mapper */
-    @Builder.Default
-    private int maxCacheSize = 512;
-
-    /** Batch size for the INSERT, UPDATE, SELECT */
-    @Builder.Default
-    private int batchSize = 512;
-
-    /** Prints all SQL templates to the log. */
-    @Builder.Default
-    private boolean printSql = true;
-
-    /** Enable quoting the SQL columns */
-    @Builder.Default
-    private boolean enableSqlQuoting = true;
-
-    /** Write a warning if the column is not a relation and has no JDBC mapping. */
-    @Builder.Default
-    private boolean columnMappingWarning = true;
-
-    /** Print warnings, if Connection autocommit is true in batch operations. */
-    @Builder.Default
-    private boolean autoCommitWarned = true;
-
-    /** Enable or disable the service of the {@link UjormServiceProvider} object. */
-    @Builder.Default
-    private boolean enabledUjormServiceProvider = true;
-
-    /** Only for testing */
-    @Builder.Default
-    private String testOnly = "";
-
-    /** Map */
     private static final Map<Class<?>, Function<String, ?>> funMap = Map.copyOf(CsvConfig.initConverterMap());
 
+    // --- Key Constants ---
+
+    private static KeyProvider p = new KeyProvider();
+    public static final Key<Boolean> firstPropertyIsIdentifier = p.key("firstPropertyIsIdentifier", true);
+    public static final Key<Integer> maxCacheSize = p.key("maxCacheSize", 512);
+    public static final Key<Integer> batchSize = p.key("batchSize", 512);
+    public static final Key<Boolean> printSql = p.key("printSql", true);
+    public static final Key<Boolean> enableSqlQuoting = p.key("enableSqlQuoting", true);
+    public static final Key<Boolean> columnMappingWarning = p.key("columnMappingWarning", true);
+    public static final Key<Boolean> autoCommitWarned = p.key("autoCommitWarned", true);
+    public static final Key<Boolean> enabledUjormServiceProvider = p.key("enabledUjormServiceProvider", true);
+    public static final Key<String> testOnly = p.key("testOnly", "");
+
+    /** Object state stored in an array */
+    private final Object[] values = new Object[p.keys.size()];
+
+    /** Write lock */
+    private boolean writeLock = false;
+
     public ConfigImpl() {
-        var properties = properties();
-        this.firstPropertyIsIdentifier = value(true, "firstPropertyIsIdentifier", properties);
-        this.maxCacheSize = value(512, "maxCacheSize", properties);
-        this.batchSize = value(512, "batchSize", properties);
-        this.printSql = value(true, "printSql", properties);
-        this.enableSqlQuoting = value(true, "enableSqlQuoting", properties);
-        this.columnMappingWarning = value(true, "columnMappingWarning", properties);
-        this.autoCommitWarned = value(true, "autoCommitWarned", properties);
-        this.enabledUjormServiceProvider = value(true, "enabledUjormServiceProvider", properties);
-        this.testOnly = value("", "testOnly", properties);
+        Properties properties = loadProperties();
+        for(var key : p.keys) {
+            loadKey(key, properties);
+        }
     }
 
-    /** Load properties from the {@link #CONFIG_FILE}. */
-    @NotNull Properties properties() {
-        var result = new Properties();
+    // --- Core Accessors ---
+
+    /** General getter returning value by key index or default value */
+    @SuppressWarnings("unchecked")
+    public <V> V getValue(@NotNull Key<V> key) {
+        V value = (V) values[key.index()];
+        return (value != null) ? value : key.defaultValue();
+    }
+
+    /** General setter with lock check */
+    /** General setter with lock check */
+    public <V> void setValue(@NotNull Key<V> key, V value) {
+        if (writeLock) {
+            throw new IllegalStateException("The configuration is locked.");
+        }
+        key.setValue(value, values);
+    }
+
+    /** Lock the configuration for further writes */
+    public void makeReadOnly() {
+        this.writeLock = true;
+    }
+
+    // --- Interface implementation ---
+
+    @Override public boolean isFirstPropertyIsIdentifier() { return firstPropertyIsIdentifier.getValue(values); }
+    @Override public int getMaxCacheSize() { return getValue(maxCacheSize); }
+    @Override public int getBatchSize() { return getValue(batchSize); }
+    @Override public boolean isPrintSql() { return getValue(printSql); }
+    @Override public boolean isEnableSqlQuoting() { return getValue(enableSqlQuoting); }
+    @Override public boolean isColumnMappingWarning() { return getValue(columnMappingWarning); }
+    @Override public boolean isAutoCommitWarned() { return getValue(autoCommitWarned); }
+    @Override public boolean isEnabledUjormServiceProvider() { return getValue(enabledUjormServiceProvider); }
+
+    // --- Loading and conversion logic ---
+
+    /** Loads value from System properties or file properties */
+    private <V> void loadKey(Key<V> key, Properties props) {
+        String fullKey = PREFIX + key.name();
+        String val = System.getProperty(fullKey);
+        if (val == null) {
+            val = props.getProperty(fullKey);
+        }
+        if (val != null) {
+            setValue(key, convertValue(val, key.defaultValue()));
+        }
+    }
+
+    /** Converts string to the type of the default value */
+    @SuppressWarnings("unchecked")
+    private <T> T convertValue(String value, T defaultValue) {
+        Class<?> type = Primitive.wrapPrimitive(defaultValue.getClass());
+        Function<String, ?> converter = funMap.get(type);
+        if (converter == null) {
+            throw new IllegalStateException("No converter found for type: " + type);
+        }
+        return (T) converter.apply(value);
+    }
+
+    /** Loads properties from the classpath */
+    private Properties loadProperties() {
+        Properties result = new Properties();
         try (var stream = getClass().getResourceAsStream("/" + CONFIG_FILE)) {
             if (stream != null) {
                 result.load(new InputStreamReader(stream, StandardCharsets.UTF_8));
-            } else {
-                LOGGER.log(Level.INFO, "Configuration file {0} not found, using another source.", CONFIG_FILE);
             }
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Failed to load configuration file: " + CONFIG_FILE, e);
+            LOGGER.log(Level.WARNING, "Failed to load " + CONFIG_FILE, e);
         }
         return result;
     }
 
-    /** Converts a string value to the required data type. */
-    public <T> T convertValue(@NotNull String value, @NotNull Class<T> type) {
-        var clazz = Primitive.wrapPrimitive(type);
-        var fun = funMap.get(type);
-        if (fun == null) {
-            var msg = "Can't convert value '%s' to %s".formatted(value, type.getSimpleName());
-            throw new IllegalStateException(msg);
-        }
-        return (T) fun.apply(value);
+    @Override
+    public String toString() {
+        return "ConfigImpl{count=" + p.keys.size() + ", locked=" + writeLock + "}";
     }
 
-    /** Loads a value from system properties, properties file or returns the default value. */
-    @SuppressWarnings("unchecked")
-    public <T> T value(@NotNull T defaultValue, @NotNull String key, @NotNull Properties fileProps) {
-        Objects.requireNonNull(defaultValue, "Parameter 'defaultValue' is required.");
-        var fullKey = PREFIX + key;
-        var result = System.getProperty(fullKey);
-
-        if (result == null) {
-            result = fileProps.getProperty(fullKey);
+    /** Internal Key definition */
+    public record Key<V>(String name, int index, V defaultValue) {
+        public Class<V> getType() {
+            return (Class<V>) defaultValue.getClass();
         }
-
-        if (result != null) {
-            return convertValue(result, (Class<T>) defaultValue.getClass());
+        public V getValue(Object[] objects) {
+            var result = objects[index];
+            return result != null ? (V) result : defaultValue;
         }
-        return defaultValue;
+        public void setValue(V value, Object[] objects) {
+            if (value == null) throw new IllegalArgumentException("Value is required");
+            objects[index] = value;
+        }
     }
 
-    /** Dummy declaration to satisfy the Javadoc tool before Lombok processing. */
-    public static class ConfigImplBuilder {}
-
-    /** Creates a Builder populated with defaults and config file values. Ideal for testing. */
-    public static ConfigImplBuilder builderWithDefaults() {
-        return new ConfigImpl().toBuilder();
+    private static class KeyProvider {
+        List<Key<?>> keys = new ArrayList();
+        <V> Key key(String name, V defaultValue) {
+            var result = new Key<V>(name, keys.size(), defaultValue);
+            keys.add(result);
+            return result;
+        }
     }
 }

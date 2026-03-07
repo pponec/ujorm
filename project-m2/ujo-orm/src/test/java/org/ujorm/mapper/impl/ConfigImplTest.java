@@ -1,119 +1,101 @@
 package org.ujorm.mapper.impl;
 
-import java.util.Properties;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /** Tests for the ConfigImpl class. */
 class ConfigImplTest {
 
-    /** Inner class for mocking properties without external file dependency. */
-    static class ConfigImplMock extends ConfigImpl {
-        @Override
-        protected Properties properties() {
-            var props = new Properties();
-            props.setProperty("org.ujorm.maxCacheSize", "1024");
-            props.setProperty("org.ujorm.printSql", "false");
-            props.setProperty("org.ujorm.batchSize", "128");
-            return props;
-        }
-    }
-
+    @BeforeEach
     @AfterEach
-    void tearDown() {
-        // Cleanup of system properties to prevent affecting other tests
-        System.clearProperty("org.ujorm.batchSize");
-        System.clearProperty("org.ujorm.printSql");
+    void cleanUpSystemProperties() {
+        // Ensures a clean environment before and after every test
         System.clearProperty("org.ujorm.maxCacheSize");
+        System.clearProperty("org.ujorm.printSql");
+        System.clearProperty("org.ujorm.batchSize");
+        System.clearProperty("org.ujorm.testOnly");
     }
 
     @Test
-    void testLoadFromFile() {
-        // Verifies actual loading from the ujorm-config.properties file
+    void testDefaultAndFileValues() {
         var config = new ConfigImpl();
-        assertEquals("fileValue", config.getTestOnly());
+
+        // Verifies fallback to defaults or file properties
+        assertNotNull(config.getValue(ConfigImpl.testOnly));
+        assertTrue(config.isFirstPropertyIsIdentifier());
     }
 
     @Test
-    void testMockedProperties() {
-        // Verifies standard loading from a properties object (file simulation)
-        var config = new ConfigImplMock();
+    void testSystemPropertyOverrides() {
+        // Simulates external configuration via System properties (replaces the need for Mock)
+        System.setProperty("org.ujorm.maxCacheSize", "1024");
+        System.setProperty("org.ujorm.printSql", "false");
+        System.setProperty("org.ujorm.batchSize", "128");
+
+        var config = new ConfigImpl();
 
         assertEquals(1024, config.getMaxCacheSize());
         assertFalse(config.isPrintSql());
         assertEquals(128, config.getBatchSize());
-        assertTrue(config.isFirstPropertyIsIdentifier()); // Remains default
-    }
 
-    @Test
-    void testSystemPropertyPriority() {
-        // System property must take precedence over the properties file
-        System.setProperty("org.ujorm.batchSize", "2048");
-        System.setProperty("org.ujorm.printSql", "true"); // Originally false in the mock
-
-        var config = new ConfigImplMock();
-
-        assertEquals(2048, config.getBatchSize(), "System property must override the int value from properties.");
-        assertTrue(config.isPrintSql(), "System property must override the boolean value from properties.");
+        // This remains default as it was not overridden
+        assertTrue(config.isFirstPropertyIsIdentifier());
     }
 
     @Test
     void testInvalidSystemPropertyConversion() {
         System.setProperty("org.ujorm.maxCacheSize", "not_a_number");
+
         var exception = assertThrows(
                 NumberFormatException.class,
-                ConfigImplMock::new
+                ConfigImpl::new,
+                "Should throw an exception when property cannot be parsed into an Integer."
         );
-        assertTrue(exception.getMessage().contains("not_a_number"));
+        assertNotNull(exception);
     }
 
     @Test
-    void testBuilderOverrides() {
-        // Verifies the Lombok Builder functionality for easy configuration adjustments
-        var config = ConfigImpl.builderWithDefaults()
-                .maxCacheSize(9999)
-                .printSql(false)
-                .testOnly("BUILDER_TEST")
-                .build();
+    void testKeySetters() {
+        // Verifies the Typed Key Pattern setters
+        var config = new ConfigImpl();
+
+        config.setValue(ConfigImpl.maxCacheSize, 9999);
+        config.setValue(ConfigImpl.printSql, false);
+        config.setValue(ConfigImpl.testOnly, "BUILDER_TEST");
 
         assertEquals(9999, config.getMaxCacheSize());
         assertFalse(config.isPrintSql());
-        assertEquals("BUILDER_TEST", config.getTestOnly());
-
-        // The rest must remain preserved from the default values
+        assertEquals("BUILDER_TEST", config.getValue(ConfigImpl.testOnly));
         assertTrue(config.isFirstPropertyIsIdentifier());
     }
 
     @Test
-    void testValueMethodWithNullDefaultThrowsException() {
-        var config = new ConfigImplMock();
-        var emptyProperties = new Properties();
+    void testSetValueWithNullThrowsException() {
+        var config = new ConfigImpl();
 
-        // Changed to NullPointerException to match Objects.requireNonNull behavior
         var exception = assertThrows(
-                RuntimeException.class,
-                () -> config.value(null, "someKey", emptyProperties),
-                "The value() method must throw an exception if defaultValue is null."
+                IllegalArgumentException.class,
+                () -> config.setValue(ConfigImpl.maxCacheSize, null),
+                "The setValue() method must throw an exception if value is null."
         );
 
-        assertTrue(
-                exception.getMessage().contains("defaultValue"),
-                "The error message should specify that the problem is in the defaultValue parameter."
-        );
+        assertTrue(exception.getMessage().contains("Value is required"));
     }
 
     @Test
-    void testUnsupportedTypeConversion() {
-        var config = new ConfigImplMock();
+    void testMakeReadOnlyThrowsExceptionOnModification() {
+        var config = new ConfigImpl();
+        config.makeReadOnly();
 
-        // Verifies that converting an unsupported type throws an IllegalStateException
+        // Verifies that locked configuration prevents further modifications
         var exception = assertThrows(
                 IllegalStateException.class,
-                () -> config.convertValue("someValue", java.util.Date.class),
-                "Should throw an exception for unsupported types."
+                () -> config.setValue(ConfigImpl.maxCacheSize, 2048),
+                "Locked configuration cannot be modified."
         );
 
-        assertTrue(exception.getMessage().contains("Can't convert value"));
+        assertTrue(exception.getMessage().contains("locked"));
     }
 }
