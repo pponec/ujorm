@@ -277,4 +277,9 @@ public class StringUtils {
         return new DecimalFormat(pattern, symbols);
     }
 
+    /** Value is not null and not empty */
+    public static boolean isFilled(@NotNull final String text) {
+        return text != null && !text.isEmpty();
+    }
+
 }

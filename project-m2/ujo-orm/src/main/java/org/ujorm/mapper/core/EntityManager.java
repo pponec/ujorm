@@ -30,6 +30,7 @@ import org.ujorm.mapper.model.TableModel;
 import org.ujorm.mapper.model.TableModelBuilder;
 import org.ujorm.mapper.utils.StatementCache;
 import org.ujorm.mapper.utils.Tools;
+import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
@@ -458,8 +459,9 @@ public final class EntityManager<D, V> {
             var sql = new StringBuilder(256);
             buildSelectSql(true, sql);
             sql.append(" WHERE ");
-            sql.append(whereCondition == null || whereCondition.isEmpty() ? "1=1" : whereCondition);
+            sql.append(StringUtils.isFilled(whereCondition) ? whereCondition : "1=1");
             try (var builder = new SqlParamBuilder(dbconnection)) {
+                builder.sql(sql.toString());
                 return fun.applyFunction(builder);
             } catch (Exception ex) {
                 throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
