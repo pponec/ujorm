@@ -15,6 +15,13 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+/**
+ * A demonstration of the Ujorm 3 ORM library.
+ * <p>
+ * Please note that the individual test methods in this class are interdependent.
+ * They rely on the database state modified by the preceding tests and therefore
+ * must be executed sequentially in the defined order.
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BasicDemoTest extends AbstractDemo {
 
@@ -75,7 +82,7 @@ public class BasicDemoTest extends AbstractDemo {
 
     @Test
     @Order(100)
-    @DisplayName("Vložení nových entit (City a Employee) do databáze")
+    @DisplayName("Inserting new entities (City and Employee) into the database")
     void insert() {
         var cityOttawa = cityCrud.insert(new City(null, "Ottawa", "CA"));
         var emplIngird = Employee.of("Ingrid", cityOttawa, null);
@@ -88,7 +95,7 @@ public class BasicDemoTest extends AbstractDemo {
 
     @Test
     @Order(200)
-    @DisplayName("Základní SELECT s mapováním výsledků do entit")
+    @DisplayName("Basic SELECT mapping results to entities")
     void select() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
@@ -125,7 +132,7 @@ public class BasicDemoTest extends AbstractDemo {
 
     @Test
     @Order(220)
-    @DisplayName("Pokročilý SELECT využívající typově bezpečná (type-safe) zřetězení aliasů")
+    @DisplayName("Advanced SELECT using type-safe alias chaining")
     void select_typeSafeLabels() {
         var sql = """
                  SELECT e.id      AS ${e.id}
@@ -190,7 +197,7 @@ public class BasicDemoTest extends AbstractDemo {
 
     @Test
     @Order(300)
-    @DisplayName("Hromadná aktualizace struktury zaměstnanců a jejich nadřízených")
+    @DisplayName("Bulk update of employee and manager hierarchy")
     void update() {
         var emplIngird = employeeCrud.findByIdNullable(1L);
         var emplDave = employeeCrud.findByIdNullable(2L);
@@ -207,7 +214,7 @@ public class BasicDemoTest extends AbstractDemo {
 
     @Test
     @Order(400)
-    @DisplayName("Smazání entit a ověření prázdné tabulky")
+    @DisplayName("Deleting entities and verifying an empty table")
     void delete() {
         var allEmployees = employeeCrud
                 .selectWhere("id > :id", sqlParamBuilder -> sqlParamBuilder
