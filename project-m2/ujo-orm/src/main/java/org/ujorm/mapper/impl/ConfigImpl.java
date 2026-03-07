@@ -16,6 +16,7 @@ import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.AbstractSnapshotable;
 import org.ujorm.core.csv.CsvConfig;
+import org.ujorm.mapper.Config;
 import org.ujorm.mapper.UjormServiceProvider;
 import org.ujorm.tools.common.Primitive;
 
@@ -70,7 +71,7 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
     @Builder.Default
     private String testOnly = "";
 
-    /** Map  */
+    /** Map */
     private static final Map<Class<?>, Function<String, ?>> funMap = Map.copyOf(CsvConfig.initConverterMap());
 
     public ConfigImpl() {
@@ -84,14 +85,6 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
         this.autoCommitWarned = value(true, "autoCommitWarned", properties);
         this.enabledUjormServiceProvider = value(true, "enabledUjormServiceProvider", properties);
         this.testOnly = value("", "testOnly", properties);
-    }
-
-    /**
-     * Vytvoří Builder naplněný výchozími hodnotami a hodnotami z konfiguračního souboru.
-     * Ideální pro operativní změnu konfigurace v testech.
-     */
-    public static ConfigImplBuilder builderWithDefaults() {
-        return new ConfigImpl().toBuilder();
     }
 
     /** Load properties from the {@link #CONFIG_FILE}. */
@@ -114,7 +107,7 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
         var clazz = Primitive.wrapPrimitive(type);
         var fun = funMap.get(type);
         if (fun == null) {
-            var msg ="Can't convert value '%s' to %s".formatted(value, type.getSimpleName());
+            var msg = "Can't convert value '%s' to %s".formatted(value, type.getSimpleName());
             throw new IllegalStateException(msg);
         }
         return (T) fun.apply(value);
@@ -135,5 +128,13 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
             return convertValue(result, (Class<T>) defaultValue.getClass());
         }
         return defaultValue;
+    }
+
+    /** Dummy declaration to satisfy the Javadoc tool before Lombok processing. */
+    public static class ConfigImplBuilder {}
+
+    /** Creates a Builder populated with defaults and config file values. Ideal for testing. */
+    public static ConfigImplBuilder builderWithDefaults() {
+        return new ConfigImpl().toBuilder();
     }
 }

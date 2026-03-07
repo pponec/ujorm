@@ -5,6 +5,7 @@ import org.ujorm.mapper.Crud;
 import org.ujorm.mapper.core.EntityManager;
 import org.ujorm.mapper.tutorial.domains.City;
 import org.ujorm.mapper.tutorial.domains.Employee;
+import org.ujorm.mapper.tutorial.domains.meta.MetaCity;
 import org.ujorm.mapper.tutorial.domains.meta.MetaEmployee;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
@@ -14,6 +15,13 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+/**
+ * A demonstration of the Ujorm 3 ORM library.
+ * <p>
+ * Please note that the individual test methods in this class are interdependent.
+ * They rely on the database state modified by the preceding tests and therefore
+ * must be executed sequentially in the defined order.
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BasicDemoTest extends AbstractDemo {
 
@@ -39,6 +47,7 @@ public class BasicDemoTest extends AbstractDemo {
         cityCrud = CITY_EM.crud(connection());
     }
 
+    /** Create all database tables */
     void createTables() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
@@ -73,6 +82,7 @@ public class BasicDemoTest extends AbstractDemo {
 
     @Test
     @Order(100)
+    @DisplayName("Inserting new entities (City and Employee) into the database")
     void insert() {
         var cityOttawa = cityCrud.insert(new City(null, "Ottawa", "CA"));
         var emplIngird = Employee.of("Ingrid", cityOttawa, null);
@@ -85,14 +95,15 @@ public class BasicDemoTest extends AbstractDemo {
 
     @Test
     @Order(200)
+    @DisplayName("Basic SELECT mapping results to entities")
     void select() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
                     SELECT e.id
                     , e.name
-                    , c.name AS "city.name"
+                    , c.name         AS "city.name"
                     , c.country_code AS "city.countryCode"
-                    , b.name AS "boss.name"
+                    , b.name         AS "boss.name"
                     FROM employee e
                     JOIN city c ON c.id = e.city_id
                     LEFT JOIN employee b ON b.id = e.boss_id
@@ -120,7 +131,73 @@ public class BasicDemoTest extends AbstractDemo {
     }
 
     @Test
+    @Order(220)
+    @DisplayName("Advanced SELECT using type-safe alias chaining")
+    void select_typeSafeLabels() {
+        var sql = """
+                 SELECT e.id      AS ${e.id}
+                 , e.name         AS ${e.name}
+                 , c.name         AS ${c.name}
+                 , c.country_code AS ${c.country_code}
+                 , b.name         AS ${b.name}
+                 FROM employee e
+                 JOIN city c ON c.id = e.city_id
+                 LEFT JOIN employee b ON b.id = e.boss_id
+                 WHERE e.id > :employeeId
+                 ORDER BY e.id
+                 """;
+        var employees = SqlParamBuilder.run(connection(), builder -> builder
+                .sql(sql)
+                .label("e.id", MetaEmployee.id)
+                .label("e.name", MetaEmployee.name)
+                .label("c.name", MetaEmployee.city, MetaCity.name)
+                .label("c.country_code", MetaEmployee.city, MetaCity.countryCode)
+                .label("b.name", MetaEmployee.boss, MetaEmployee.name)
+                .bind("employeeId", 0L)
+                .streamMap(EMPLOYEE_EM::map)
+                .toList());
+
+        // Test employee names
+        assertEquals("Ingrid", employees.get(0).getName());
+        assertEquals("Dave", employees.get(1).getName());
+        assertEquals("Carol", employees.get(2).getName());
+        // Test boss names:
+        assertNull(employees.get(0).getBoss());
+        assertEquals("Ingrid", employees.get(1).getBoss().getName());
+        assertEquals("Ingrid", employees.get(2).getBoss().getName());
+        // Test ID
+        assertEquals(1L, employees.get(0).getId()); // Ingrid
+        assertEquals(2L, employees.get(1).getId()); // Dave
+        assertEquals(3L, employees.get(2).getId()); // Carol
+
+        var sqlLog = SqlParamBuilder.run(connection(), builder -> builder
+                .sql(sql)
+                .label("e.id", MetaEmployee.id)
+                .label("e.name", MetaEmployee.name)
+                .label("c.name", MetaEmployee.city, MetaCity.name)
+                .label("c.country_code", MetaEmployee.city, MetaCity.countryCode)
+                .label("b.name", MetaEmployee.boss, MetaEmployee.name)
+                .bind("employeeId", 0L)
+                .toString());
+
+        var expectedSQL = """
+                SELECT e.id      AS "id"
+                , e.name         AS "name"
+                , c.name         AS "city.name"
+                , c.country_code AS "city.countryCode"
+                , b.name         AS "boss.name"
+                FROM employee e
+                JOIN city c ON c.id = e.city_id
+                LEFT JOIN employee b ON b.id = e.boss_id
+                WHERE e.id > [0]
+                ORDER BY e.id
+                """;
+        assertEquals(expectedSQL, sqlLog);
+    }
+
+    @Test
     @Order(300)
+    @DisplayName("Bulk update of employee and manager hierarchy")
     void update() {
         var emplIngird = employeeCrud.findByIdNullable(1L);
         var emplDave = employeeCrud.findByIdNullable(2L);
@@ -137,13 +214,14 @@ public class BasicDemoTest extends AbstractDemo {
 
     @Test
     @Order(400)
+    @DisplayName("Deleting entities and verifying an empty table")
     void delete() {
         var allEmployees = employeeCrud
                 .selectWhere("id > :id", sqlParamBuilder -> sqlParamBuilder
-                .bind("id", 0L)
-                .streamMap(EMPLOYEE_EM::map)
-                .sorted(Comparator.comparing(e -> e.getBoss() == null)) // The boss is the last
-                .toList());
+                        .bind("id", 0L)
+                        .streamMap(EMPLOYEE_EM::map)
+                        .sorted(Comparator.comparing(e -> e.getBoss() == null)) // The boss is the last
+                        .toList());
 
         assertEquals(3, allEmployees.size());
         employeeCrud.delete(allEmployees.stream());
@@ -154,5 +232,4 @@ public class BasicDemoTest extends AbstractDemo {
                         .findFirst().orElse(0L));
         assertEquals(0L, count);
     }
-
 }
