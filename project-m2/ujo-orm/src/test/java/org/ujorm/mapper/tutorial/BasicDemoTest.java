@@ -91,9 +91,9 @@ public class BasicDemoTest extends AbstractDemo {
             builder.sql("""
                     SELECT e.id
                     , e.name
-                    , c.name AS "city.name"
+                    , c.name         AS "city.name"
                     , c.country_code AS "city.countryCode"
-                    , b.name AS "boss.name"
+                    , b.name         AS "boss.name"
                     FROM employee e
                     JOIN city c ON c.id = e.city_id
                     LEFT JOIN employee b ON b.id = e.boss_id
