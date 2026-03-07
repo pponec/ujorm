@@ -24,6 +24,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.common.StringUtils;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Modifier;
@@ -133,7 +134,7 @@ class DomainModelBuilder {
 
     /** Converts a Java Bean property name to a snake_case database column name. */
     private String buildDbName(@NotNull String propertyName) {
-        if (propertyName == null || propertyName.isEmpty()) return propertyName;
+        if (StringUtils.isEmpty(propertyName)) return propertyName;
         var result = new StringBuilder();
         for (var i = 0; i < propertyName.length(); i++) {
             var c = propertyName.charAt(i);
@@ -195,7 +196,7 @@ class DomainModelBuilder {
      * @return Capitalized string.
      */
     private String capitalize(String str) {
-        return (str == null || str.isEmpty())
+        return (StringUtils.isEmpty(str))
                 ? str
                 : Character.toUpperCase(str.charAt(0)) + str.substring(1);
     }

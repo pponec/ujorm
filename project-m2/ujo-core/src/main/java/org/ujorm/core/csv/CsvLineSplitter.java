@@ -1,6 +1,7 @@
 package org.ujorm.core.csv;
 
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.tools.common.StringUtils;
 
 import java.util.Arrays;
 
@@ -30,7 +31,7 @@ public interface CsvLineSplitter {
     @NotNull
     static CsvLineSplitter ofFast(final char delimiter) {
         return (text, maxFields) -> {
-            if (text == null || text.isEmpty()) return new String[0];
+            if (StringUtils.isEmpty(text)) return new String[0];
 
             var result = new String[maxFields];
             var count = 0;
@@ -64,7 +65,7 @@ public interface CsvLineSplitter {
         final var quoteStr = String.valueOf(quoteChar);
         final var doubleQuoteStr = quoteStr + quoteStr;
         return (text, maxFields) -> {
-            if (text == null || text.isEmpty()) return new String[0];
+            if (StringUtils.isEmpty(text)) return new String[0];
 
             var result = new String[maxFields];
             var count = 0;

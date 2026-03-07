@@ -282,4 +282,9 @@ public class StringUtils {
         return text != null && !text.isEmpty();
     }
 
+    /** Value is not null and not empty */
+    public static boolean isEmpty(@NotNull final String text) {
+        return !isFilled(text);
+    }
+
 }
