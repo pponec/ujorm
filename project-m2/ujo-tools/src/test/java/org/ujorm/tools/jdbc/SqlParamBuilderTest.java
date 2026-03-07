@@ -48,14 +48,14 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     private final LocalDate someDate = LocalDate.parse("2018-09-12");
 
     @Test
-    public void testShowUsage() throws Exception {
+    void testShowUsage() throws Exception {
         try (var dbConnection = createDbConnection())  {
             runSqlStatements(dbConnection);
         }
     }
 
     @Test
-    public void testRegexMatches() {
+    void testRegexMatches() {
         var sqlMark = Pattern.compile(":(\\w+)");
 
         // Test pro :hello
@@ -83,7 +83,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     }
 
     @Test
-    public void regexpTest() {
+    void regexpTest() {
         // Test pro :hello
         var matcher = SqlParamBuilder.SQL_MARK.matcher(":hello");
         assertEquals("hello", matcher.find() ? matcher.group(1) : "");
@@ -110,7 +110,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     }
 
     /** Example of SQL statement INSERT. */
-    public void runSqlStatements(Connection dbConnection) throws SQLException {
+    void runSqlStatements(Connection dbConnection) throws SQLException {
 
         try (var builder = new SqlParamBuilder(dbConnection)) {
             System.out.println("CREATE TABLE");
@@ -185,6 +185,26 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
             Assertions.assertEquals(3, employees2.size());
             runSqlStatementsLike(builder);
         }
+
+        newDemo(dbConnection);
+    }
+
+    private void newDemo(Connection dbConnection) {
+        List<Employee> employees = SqlParamBuilder.run(dbConnection, build -> build.sql("""
+                SELECT t.id, t.name, t.created
+                FROM employee t
+                WHERE t.id > :id
+                  AND t.code IN (:code)
+                ORDER BY t.id
+                """)
+                .bind("id", 10)
+                .bind("code", "T", "V")
+                .streamMap(rs -> new Employee(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getObject("created", LocalDate.class)))
+                .toList()
+        );
     }
 
     private void runSqlStatementsLike(SqlParamBuilder builder) {
@@ -220,7 +240,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     }
 
     @Test
-    public void loggingSql() throws SQLException {
+    void loggingSql() throws SQLException {
         var dbConnection = Mockito.mock(Connection.class);
         try (var builder = new SqlParamBuilder(dbConnection)) {
 
@@ -252,7 +272,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
 
     /** Test all data type binds and single-line string formatting */
     @Test
-    public void testAllBindMethodsAndToStringLine() {
+    void testAllBindMethodsAndToStringLine() {
         var dbConnection = Mockito.mock(Connection.class);
         try (var builder = new SqlParamBuilder(dbConnection)) {
             builder.sql(
@@ -292,7 +312,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
 
     /** Test handling of missing generated keys */
     @Test
-    public void testGeneratedKeysEmpty() throws SQLException {
+    void testGeneratedKeysEmpty() throws SQLException {
         var dbConnection = Mockito.mock(Connection.class);
         var preparedStatement = Mockito.mock(PreparedStatement.class);
 
@@ -318,7 +338,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
 
     /** Check that autoclosing works correctly also on NULL objects. */
     @Test
-    public void autoCloseTest() {
+    void autoCloseTest() {
         try (SqlParamBuilder builder = null) {
         }
     }
