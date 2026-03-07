@@ -146,11 +146,10 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
 
     // --- Internal helper classes for logic organization ---
 
-    /** Vnitřní třída pro generování samotného zdrojového textu */
+    /** Internal class for generating the source code text */
     private static class SourceGenerator {
 
         static String generate(Class<?> clazz, String prefix, String suffix, String targetPackage) {
-            // Správné ošetření názvu pro vnořené třídy (např. OuterClass$InnerClass -> OuterClass.InnerClass)
             String entityCanonicalName = clazz.getCanonicalName();
             String originalName = clazz.getSimpleName();
             String newClassName = prefix + originalName + suffix;
@@ -159,12 +158,9 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
             StringBuilder sb = new StringBuilder();
             sb.append("package ").append(targetPackage).append(";\n\n");
 
-            // Ošetření importu (pro vnořené třídy musíme importovat vnější třídu)
-            Class<?> enclosingClass = clazz.getEnclosingClass();
-            if (enclosingClass != null) {
-                sb.append("import ").append(enclosingClass.getName()).append(";\n");
-            } else {
-                sb.append("import ").append(clazz.getName()).append(";\n");
+            // Direct import of the domain object (works flawlessly for nested classes too)
+            if (entityCanonicalName != null) {
+                sb.append("import ").append(entityCanonicalName).append(";\n");
             }
 
             sb.append("import org.ujorm.Key;\n");
@@ -174,14 +170,15 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
             sb.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
             sb.append("public class ").append(newClassName).append(" {\n\n");
 
-            sb.append("    public static final DomainHandler<").append(entityCanonicalName)
-                    .append("> meta = DomainHandlerProvider.getHandler(").append(entityCanonicalName).append(".class);\n\n");
+            // Use simple name (originalName) instead of the fully qualified name
+            sb.append("    public static final DomainHandler<").append(originalName)
+                    .append("> meta = DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n\n");
 
-            // Seznam pro uchování všech validních polí (včetně zděděných)
+            // List to hold all valid fields (including inherited ones)
             List<Field> validFields = new ArrayList<>();
 
             if (isRecord) {
-                // Skenování Recordů (bez dědičnosti a setterů)
+                // Scan Records (without inheritance and setters)
                 for (var component : clazz.getRecordComponents()) {
                     try {
                         Field field = clazz.getDeclaredField(component.getName());
@@ -189,11 +186,11 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
                             validFields.add(field);
                         }
                     } catch (NoSuchFieldException e) {
-                        // Nemělo by nastat u platného záznamu
+                        // Should not happen for a valid record
                     }
                 }
             } else {
-                // Skenování JavaBeans (s podporou dědičnosti a kontrolou getterů/setterů)
+                // Scan JavaBeans (supports inheritance and getter/setter validation)
                 Class<?> currentClass = clazz;
                 while (currentClass != null && currentClass != Object.class) {
                     List<Field> classFields = new ArrayList<>();
@@ -208,21 +205,21 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
                         }
                     }
 
-                    // Přidáme na začátek (zděděné atributy by měly být první)
+                    // Add to the beginning (inherited attributes should be first)
                     validFields.addAll(0, classFields);
                     currentClass = currentClass.getSuperclass();
                 }
             }
 
-            // Samotné generování klíčů do výstupu
+            // Generate the keys to the output
             for (Field field : validFields) {
                 String fieldName = field.getName();
 
-                // Zjištění typu (opět s ohledem na možnou vnořenou třídu)
+                // Determine the type (considering potential nested classes)
                 Class<?> fieldType = field.getType();
                 String typeName = fieldType.getCanonicalName() != null ? fieldType.getCanonicalName() : fieldType.getSimpleName();
 
-                // Odstranění "java.lang." z běžných typů pro čistší kód
+                // Remove "java.lang." from common types for cleaner code
                 if (typeName.startsWith("java.lang.")) {
                     typeName = typeName.substring(10);
                 }
@@ -231,7 +228,8 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
                     sb.append("    /** The ").append(fieldName).append(" property */\n");
                 }
 
-                sb.append("    public static final Key<").append(entityCanonicalName).append(", ").append(typeName).append("> ")
+                // Generic parameters now use the simple name
+                sb.append("    public static final Key<").append(originalName).append(", ").append(typeName).append("> ")
                         .append(fieldName).append(" = meta.getKey(\"").append(fieldName).append("\", ").append(typeName).append(".class);\n");
             }
 
@@ -239,10 +237,10 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
             return sb.toString();
         }
 
-        // --- Pomocné metody převzaté a zjednodušené z tvého DomainModelBuilderu ---
+        // --- Helper methods adapted and simplified from DomainModelBuilder ---
 
         private static boolean hasTransientAnnotation(Field field) {
-            // Kontrola podle jména, aby se minimalizovaly importy (funguje pro javax. i jakarta.)
+            // Check by name to minimize imports (works for javax. and jakarta.)
             return Stream.of(field.getAnnotations())
                     .anyMatch(a -> a.annotationType().getSimpleName().equals("Transient"));
         }
@@ -252,7 +250,7 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
             boolean hasGetter = false;
             boolean hasSetter = false;
 
-            // Kontrola Getteru
+            // Getter check
             if (field.getType() == boolean.class) {
                 hasGetter = hasMethod(beanClass, "is" + suffix);
             }
@@ -260,7 +258,7 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
                 hasGetter = hasMethod(beanClass, "get" + suffix);
             }
 
-            // Kontrola Setteru
+            // Setter check
             if (hasGetter) {
                 hasSetter = hasMethod(beanClass, "set" + suffix, field.getType());
             }
