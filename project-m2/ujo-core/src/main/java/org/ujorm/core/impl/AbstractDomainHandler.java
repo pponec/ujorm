@@ -1,11 +1,12 @@
 package org.ujorm.core.impl;
 
-import lombok.NonNull;
+
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.DomainHandler;
-import org.ujorm.core.Key;
+import org.ujorm.DomainHandler;
+import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.generator.TableIdentifier;
 import org.ujorm.tools.common.Primitive;
 import org.ujorm.tools.common.StreamUtils;
@@ -105,7 +106,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public final @NotNull <V> Key<D, V> getKey(@NonNull final String name, @Nullable final Class<V> genericType)
+    public final @NotNull <V> Key<D, V> getKey(@NotNull final String name, @Nullable final Class<V> genericType)
             throws NoSuchElementException {
         var result = keyMap.get(name);
         if (result == null) {
@@ -125,7 +126,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public final @NotNull <V> Key<D, V> getKeyByColumn(@NonNull final String columnName, boolean required, @Nullable final Class<V> genericType)
+    public final @NotNull <V> Key<D, V> getKeyByColumn(@NotNull final String columnName, boolean required, @Nullable final Class<V> genericType)
             throws NoSuchElementException {
         var column = columnName.toUpperCase(Locale.ENGLISH);
         var result = columnMap.get(column);
@@ -147,5 +148,11 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
     @Override
     public final int count() {
         return keyList.size();
+    }
+
+    /** Create a new domain object and assign values from the argument array. */
+    @Override
+    public Ujo<D> newUjoDomain() {
+        return AbstractUjo.of(this);
     }
 }

@@ -2,8 +2,8 @@ package org.ujorm.core.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.DomainHandler;
-import org.ujorm.core.Key;
+import org.ujorm.DomainHandler;
+import org.ujorm.Key;
 
 /** Ujo implementation for classes type of the Java Record */
 public final class UjoRecord<D> extends AbstractUjo<D> {

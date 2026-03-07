@@ -17,8 +17,8 @@ package org.ujorm.mapper.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.DomainHandler;
-import org.ujorm.core.Key;
+import org.ujorm.DomainHandler;
+import org.ujorm.Key;
 
 import java.util.*;
 

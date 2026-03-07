@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.ujorm.core.DomainHandler;
+import org.ujorm.DomainHandler;
 import org.ujorm.core.generator.TableIdentifier;
 import org.ujorm.mapper.impl.Config;
 import org.ujorm.mapper.impl.Context;

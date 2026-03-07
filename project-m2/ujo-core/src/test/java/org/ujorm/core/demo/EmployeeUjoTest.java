@@ -2,7 +2,7 @@ package org.ujorm.core.demo;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.ujorm.core.Key;
+import org.ujorm.Key;
 
 
 class EmployeeUjoTest {

@@ -16,15 +16,9 @@
 package org.ujorm.mapper.utils;
 
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.core.DomainHandler;
-import org.ujorm.core.Key;
-import org.ujorm.tools.jdbc.SQLExceptionBuilder;
+import org.ujorm.DomainHandler;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 public class Tools {

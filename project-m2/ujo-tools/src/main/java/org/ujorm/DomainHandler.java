@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.core;
+package org.ujorm;
 
-import lombok.NonNull;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.impl.AbstractUjo;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -39,7 +38,7 @@ public interface DomainHandler<D> {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    <V> Key<D, V> getKey(@NonNull String name, @NotNull Class<V> genericType)
+    <V> Key<D, V> getKey(@NotNull String name, @NotNull Class<V> genericType)
             throws NoSuchElementException;
 
     /**
@@ -76,7 +75,7 @@ public interface DomainHandler<D> {
      * @return An instance of the Key, or null if not found and not required.
      */
     @Nullable
-    <V> Key<D, V> getKeyByColumn(@NonNull final String columnName, boolean required, @Nullable final Class<V> genericType);
+    <V> Key<D, V> getKeyByColumn(@NotNull final String columnName, boolean required, @Nullable final Class<V> genericType);
 
     /** Return total count of the properties. */
     default int count() {
@@ -87,7 +86,5 @@ public interface DomainHandler<D> {
     D newDomain(Object... values);
 
     /** Create a new domain object and assign values from the argument array. */
-    default AbstractUjo<D> newUjoDomain() {
-        return AbstractUjo.of(this);
-    }
+    Ujo<D> newUjoDomain();
 }

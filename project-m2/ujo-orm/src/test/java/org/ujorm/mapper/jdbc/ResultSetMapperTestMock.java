@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
-import org.ujorm.core.DomainHandler;
+import org.ujorm.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
-import org.ujorm.core.Key;
+import org.ujorm.Key;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

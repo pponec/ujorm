@@ -1,6 +1,7 @@
 package org.ujorm.core;
 
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.DomainHandler;
 
 /**
  * Singleton to provide Domain handlers.
@@ -32,7 +33,7 @@ public final class DomainHandlerProvider {
      * @param clazz An original domain class
      * @return DomainHandler
      */
-    public static <D>DomainHandler<D> getHandler(@NotNull Class<D> clazz) {
+    public static <D> DomainHandler<D> getHandler(@NotNull Class<D> clazz) {
         return provider().getHandler(clazz);
     }
 }

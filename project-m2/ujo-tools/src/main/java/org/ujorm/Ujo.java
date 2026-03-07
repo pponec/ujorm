@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.core;
+package org.ujorm;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -16,11 +16,9 @@
 package org.ujorm.mapper.service;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.Key;
+import org.ujorm.Key;
 import org.ujorm.mapper.impl.Context;
 
-import java.sql.JDBCType;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;

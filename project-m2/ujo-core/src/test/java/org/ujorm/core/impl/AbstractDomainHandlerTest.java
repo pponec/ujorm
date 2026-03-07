@@ -3,7 +3,7 @@ package org.ujorm.core.impl;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.ujorm.core.Key;
+import org.ujorm.Key;
 import org.ujorm.core.demo.City;
 import org.ujorm.core.demo.CityUjo;
 import java.math.BigDecimal;
