@@ -34,8 +34,7 @@ public interface Ujo<D extends Object> {
      *
      * @return Property value
      */
-    <V> Object getValue(@NotNull Key<D,V> key);
-
+    <V> V getValue(@NotNull Key<D,V> key);
 
     /** Common method to assign object value.
      *
@@ -43,6 +42,23 @@ public interface Ujo<D extends Object> {
      * @param value Value
      */
     <V> void setValue(@NotNull Key<D,V> key, @Nullable V value);
+
+    /** Common method to get object value by the keyName.
+     *
+     * @param keyName Property must be a direct type only!
+     */
+    default <V> V getValue(@NotNull String keyName) {
+        return (V) getValue(domainHandler().getKey(keyName));
+    }
+
+    /** Common method to assign object value by the keyName.
+     *
+     * @param keyName Property must be a direct type only!
+     * @param value Value
+     */
+    default <V> void setValue(@NotNull String keyName, @Nullable V value) {
+        setValue(domainHandler().getKey(keyName), value);
+    }
 
     /** Returns a domain handler */
     DomainHandler<D> domainHandler();

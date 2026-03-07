@@ -17,7 +17,7 @@ public final class UjoBean<D> extends AbstractUjo<D> {
     }
 
     @Override
-    public <V> Object getValue(@NotNull Key<D, V> key) {
+    public <V> V getValue(@NotNull Key<D, V> key) {
         return key.getValue(values);
     }
 
