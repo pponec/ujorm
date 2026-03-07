@@ -5,6 +5,7 @@ import org.ujorm.mapper.Crud;
 import org.ujorm.mapper.core.EntityManager;
 import org.ujorm.mapper.tutorial.domains.City;
 import org.ujorm.mapper.tutorial.domains.Employee;
+import org.ujorm.mapper.tutorial.domains.meta.MetaEmployee;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
 import java.util.Comparator;
@@ -130,7 +131,7 @@ public class BasicDemoTest extends AbstractDemo {
         emplIngird.setBoss(newBoss);
         emplDave.setBoss(null);
         emplCarol.setBoss(newBoss);
-        employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol), "boss");
+        employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol), MetaEmployee.boss); // or just "boss"
 
         assertNull(employeeCrud.findByIdNullable(2L).getBoss(), "The new boss is Dave");
     }
