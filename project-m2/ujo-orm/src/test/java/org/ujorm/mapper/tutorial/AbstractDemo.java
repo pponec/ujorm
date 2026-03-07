@@ -19,26 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractDemo {
 
-    private static String CREATE_TABLE_METHOD_NAME = "createTable";
-
     private Connection dbConnection;
+    private boolean initialized = false;
 
     /** Database connection */
     protected Connection connection() {
         return dbConnection;
-    }
-
-    /** Close connection and call init method. */
-    protected void superInit() {
-        if (dbConnection == null) {
-            throw new IllegalStateException("No connection available.");
-        }
-        try {
-            dbConnection.commit();
-        } catch (SQLException ex) {
-            throw SQLExceptionBuilder.build(ex);
-        }
-        init();
     }
 
     void init() {
@@ -55,15 +41,10 @@ public abstract class AbstractDemo {
      * The createTable test is skipped because tables do not exist yet.
      */
     @BeforeEach
-    void checkTablesExist(TestInfo testInfo) {
-        var methodName = testInfo.getTestMethod().map(java.lang.reflect.Method::getName).orElse("");
-        if (CREATE_TABLE_METHOD_NAME.equals(methodName)) {
-            return; // Skip assertion for the initialization method
+    void init(TestInfo testInfo) {
+        if (!initialized) {
+            init();
         }
-        var tableCount = getAllTables()
-                .filter(t -> "employee".equals(t.toLowerCase()))
-                .count();
-        assertTrue(tableCount > 0, "Create database tables first!");
     }
 
     /** Commit the transaction after each test method. */
@@ -99,17 +80,4 @@ public abstract class AbstractDemo {
         return result;
     }
 
-    /** Prints and returns a stream of all database tables. */
-    protected Stream<String> getAllTables() {
-        var result = new ArrayList<String>();
-        var tableTypes = new String[]{"TABLE"};
-        try (var rs = dbConnection.getMetaData().getTables(null, null, "%", tableTypes)) {
-            while (rs.next()) {
-                result.add(rs.getString("TABLE_NAME"));
-            }
-        } catch (SQLException ex) {
-            throw SQLExceptionBuilder.build(ex);
-        }
-        return result.stream();
-    }
 }
