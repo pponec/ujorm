@@ -35,10 +35,10 @@ public class BasicDemoTest extends AbstractDemo {
     void init() {
         employeeCrud = EMPLOYEE_EM.crud(connection());
         cityCrud = CITY_EM.crud(connection());
+
+        createTable();
     }
 
-    @Test
-    @Order(0)
     void createTable() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
@@ -69,7 +69,6 @@ public class BasicDemoTest extends AbstractDemo {
                     ON DELETE CASCADE ON UPDATE RESTRICT;
                     """).execute();
         }
-        superInit();
     }
 
     @Test
@@ -140,20 +139,19 @@ public class BasicDemoTest extends AbstractDemo {
     @Order(400)
     void delete() {
         var allEmployees = employeeCrud
-                .select("id > :id")
+                .selectWhere("id > :id", sqlParamBuilder -> sqlParamBuilder
                 .bind("id", 0L)
                 .streamMap(EMPLOYEE_EM::map)
                 .sorted(Comparator.comparing(e -> e.getBoss() == null)) // The boss is the last
-                .toList();
+                .toList());
 
         assertEquals(3, allEmployees.size());
         employeeCrud.delete(allEmployees.stream());
 
-        var count = employeeCrud
-                .select("1 = 1")
-                .streamMap(e -> e)
-                .count();
-
+        var count = SqlParamBuilder.run(connection(), builder ->
+                builder.sql("SELECT count(*) FROM employee")
+                        .streamMap(rs -> rs.getLong(1))
+                        .findFirst().orElse(0L));
         assertEquals(0L, count);
     }
 

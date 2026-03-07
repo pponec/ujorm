@@ -375,12 +375,12 @@ public class SqlParamBuilder implements AutoCloseable {
     public interface SqlFunction<T, R> extends Function<T, R> {
         default R apply(T resultSet) {
             try {
-                return applyRs(resultSet);
+                return applyFunction(resultSet);
             } catch (Exception ex) {
-                throw (ex instanceof RuntimeException re) ? re : new IllegalStateException(ex);
+                throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
             }
         }
-        R applyRs(T resultSet) throws SQLException;
+        R applyFunction(T resultSet) throws SQLException;
     }
 
     @FunctionalInterface
@@ -402,6 +402,17 @@ public class SqlParamBuilder implements AutoCloseable {
             super((messages.length > 0 || cause == null)
                     ? String.join(" ", messages)
                     : cause.getMessage(), cause);
+        }
+    }
+
+    /** Run a builder statement */
+    public static <R> R run(Connection connection, final SqlFunction<SqlParamBuilder, R> fun) {
+        try (var builder = new SqlParamBuilder(connection)) {
+            return fun.applyFunction(builder);
+        } catch (SQLException ex) {
+            throw SQLExceptionBuilder.build(ex);
+        } catch (Exception ex) {
+            throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
         }
     }
 }

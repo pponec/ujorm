@@ -249,7 +249,7 @@ public final class EntityManager<D, V> {
         }
 
         /** Logs and executes the SQL statement using the provided connection. */
-        public <R> R run(boolean batch, @NotNull Connection connection, final CharSequence sql, final boolean returnGeneratedKeys, final SqlFunction<PreparedStatement, R> fun) {
+        public <R> R run(boolean batch, @NotNull Connection connection, final CharSequence sql, final boolean returnGeneratedKeys, final SqlParamBuilder.SqlFunction<PreparedStatement, R> fun) {
             try (var ps = !returnGeneratedKeys
                     ? connection.prepareStatement(sql.toString())
                     : tableModel().jdbc().isOracleDb()
@@ -262,7 +262,7 @@ public final class EntityManager<D, V> {
                 if (context.config().isPrintSql()) {
                     LOGGER.info(sql::toString);
                 }
-                return fun.applyValue(ps);
+                return fun.applyFunction(ps);
             } catch (SQLException ex) {
                 throw SQLExceptionBuilder.build(ex);
             } catch (Exception ex) {
@@ -278,11 +278,6 @@ public final class EntityManager<D, V> {
                 }
                 writer.append(q).append(columns.get(i).name()).append(q);
             }
-        }
-
-        @FunctionalInterface
-        public interface SqlFunction<T, R> {
-            R applyValue(T ps) throws Exception;
         }
     }
 
@@ -456,12 +451,19 @@ public final class EntityManager<D, V> {
          */
         @Override
         @NotNull
-        public SqlParamBuilder select(@Nullable String whereCondition) {
-            var sql = new StringBuilder(128);
+        public <R> R selectWhere(
+                @Nullable String whereCondition,
+                @NotNull SqlParamBuilder.SqlFunction<SqlParamBuilder, R> fun
+        ) {
+            var sql = new StringBuilder(256);
             buildSelectSql(true, sql);
             sql.append(" WHERE ");
             sql.append(whereCondition == null || whereCondition.isEmpty() ? "1=1" : whereCondition);
-            return new SqlParamBuilder(dbconnection).sql(sql.toString()).fetchSize(utilities.getBatchLimit());
+            try (var builder = new SqlParamBuilder(dbconnection)) {
+                return fun.applyFunction(builder);
+            } catch (Exception ex) {
+                throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
+            }
         }
 
         /**
