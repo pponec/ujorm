@@ -451,12 +451,19 @@ public final class EntityManager<D, V> {
          */
         @Override
         @NotNull
-        public SqlParamBuilder select(@Nullable String whereCondition) {
-            var sql = new StringBuilder(128);
+        public <R> R selectWhere(
+                @Nullable String whereCondition,
+                @NotNull SqlParamBuilder.SqlFunction<SqlParamBuilder, R> fun
+        ) {
+            var sql = new StringBuilder(256);
             buildSelectSql(true, sql);
             sql.append(" WHERE ");
             sql.append(whereCondition == null || whereCondition.isEmpty() ? "1=1" : whereCondition);
-            return new SqlParamBuilder(dbconnection).sql(sql.toString()).fetchSize(utilities.getBatchLimit());
+            try (var builder = new SqlParamBuilder(dbconnection)) {
+                return fun.applyFunction(builder);
+            } catch (Exception ex) {
+                throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
+            }
         }
 
         /**

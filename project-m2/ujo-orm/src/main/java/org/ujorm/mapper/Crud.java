@@ -126,7 +126,9 @@ public interface Crud<D, V> {
      * @return A fluent query builder for fetching data.
      */
     @NotNull
-    SqlParamBuilder select(@Nullable String whereCondition);
+    public <R> R selectWhere(
+            @Nullable String whereCondition,
+            @NotNull SqlParamBuilder.SqlFunction<SqlParamBuilder, R> fun);
 
     /**
      * Updates a single domain object in the database.
