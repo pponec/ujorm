@@ -11,6 +11,7 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -18,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 /** Generates Ujorm metamodel from compiled entities using reflection. */
@@ -144,15 +146,27 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
 
     // --- Internal helper classes for logic organization ---
 
-    /** Generates the Java source code text for the metamodel. */
+    /** Vnitřní třída pro generování samotného zdrojového textu */
     private static class SourceGenerator {
-        static String generate(Class<?> clazz, String prefix, String suffix, String targetPackage) {
-            var originalName = clazz.getSimpleName();
-            var newClassName = prefix + originalName + suffix;
 
-            var sb = new StringBuilder();
+        static String generate(Class<?> clazz, String prefix, String suffix, String targetPackage) {
+            // Správné ošetření názvu pro vnořené třídy (např. OuterClass$InnerClass -> OuterClass.InnerClass)
+            String entityCanonicalName = clazz.getCanonicalName();
+            String originalName = clazz.getSimpleName();
+            String newClassName = prefix + originalName + suffix;
+            boolean isRecord = clazz.isRecord();
+
+            StringBuilder sb = new StringBuilder();
             sb.append("package ").append(targetPackage).append(";\n\n");
-            sb.append("import ").append(clazz.getName()).append(";\n");
+
+            // Ošetření importu (pro vnořené třídy musíme importovat vnější třídu)
+            Class<?> enclosingClass = clazz.getEnclosingClass();
+            if (enclosingClass != null) {
+                sb.append("import ").append(enclosingClass.getName()).append(";\n");
+            } else {
+                sb.append("import ").append(clazz.getName()).append(";\n");
+            }
+
             sb.append("import org.ujorm.Key;\n");
             sb.append("import org.ujorm.mapper.core.DomainHandler;\n");
             sb.append("import org.ujorm.mapper.core.DomainHandlerProvider;\n\n");
@@ -160,24 +174,114 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
             sb.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
             sb.append("public class ").append(newClassName).append(" {\n\n");
 
-            sb.append("    public static final DomainHandler<").append(originalName)
-                    .append("> meta = DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n\n");
+            sb.append("    public static final DomainHandler<").append(entityCanonicalName)
+                    .append("> meta = DomainHandlerProvider.getHandler(").append(entityCanonicalName).append(".class);\n\n");
 
-            for (var field : clazz.getDeclaredFields()) {
-                // Ignore static and transient fields
-                if (Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
-                    continue;
+            // Seznam pro uchování všech validních polí (včetně zděděných)
+            List<Field> validFields = new ArrayList<>();
+
+            if (isRecord) {
+                // Skenování Recordů (bez dědičnosti a setterů)
+                for (var component : clazz.getRecordComponents()) {
+                    try {
+                        Field field = clazz.getDeclaredField(component.getName());
+                        if (!hasTransientAnnotation(field)) {
+                            validFields.add(field);
+                        }
+                    } catch (NoSuchFieldException e) {
+                        // Nemělo by nastat u platného záznamu
+                    }
+                }
+            } else {
+                // Skenování JavaBeans (s podporou dědičnosti a kontrolou getterů/setterů)
+                Class<?> currentClass = clazz;
+                while (currentClass != null && currentClass != Object.class) {
+                    List<Field> classFields = new ArrayList<>();
+                    for (Field field : currentClass.getDeclaredFields()) {
+                        int mods = field.getModifiers();
+                        if (Modifier.isStatic(mods) || Modifier.isTransient(mods) || hasTransientAnnotation(field) || field.isSynthetic()) {
+                            continue;
+                        }
+
+                        if (hasValidGetterAndSetter(clazz, field)) {
+                            classFields.add(field);
+                        }
+                    }
+
+                    // Přidáme na začátek (zděděné atributy by měly být první)
+                    validFields.addAll(0, classFields);
+                    currentClass = currentClass.getSuperclass();
+                }
+            }
+
+            // Samotné generování klíčů do výstupu
+            for (Field field : validFields) {
+                String fieldName = field.getName();
+
+                // Zjištění typu (opět s ohledem na možnou vnořenou třídu)
+                Class<?> fieldType = field.getType();
+                String typeName = fieldType.getCanonicalName() != null ? fieldType.getCanonicalName() : fieldType.getSimpleName();
+
+                // Odstranění "java.lang." z běžných typů pro čistší kód
+                if (typeName.startsWith("java.lang.")) {
+                    typeName = typeName.substring(10);
                 }
 
-                var fieldName = field.getName();
-                var typeName = field.getType().getSimpleName();
+                if (isRecord) {
+                    sb.append("    /** The ").append(fieldName).append(" property */\n");
+                }
 
-                sb.append("    public static final Key<").append(originalName).append(", ").append(typeName).append("> ")
+                sb.append("    public static final Key<").append(entityCanonicalName).append(", ").append(typeName).append("> ")
                         .append(fieldName).append(" = meta.getKey(\"").append(fieldName).append("\", ").append(typeName).append(".class);\n");
             }
 
             sb.append("}\n");
             return sb.toString();
+        }
+
+        // --- Pomocné metody převzaté a zjednodušené z tvého DomainModelBuilderu ---
+
+        private static boolean hasTransientAnnotation(Field field) {
+            // Kontrola podle jména, aby se minimalizovaly importy (funguje pro javax. i jakarta.)
+            return Stream.of(field.getAnnotations())
+                    .anyMatch(a -> a.annotationType().getSimpleName().equals("Transient"));
+        }
+
+        private static boolean hasValidGetterAndSetter(Class<?> beanClass, Field field) {
+            String suffix = capitalize(field.getName());
+            boolean hasGetter = false;
+            boolean hasSetter = false;
+
+            // Kontrola Getteru
+            if (field.getType() == boolean.class) {
+                hasGetter = hasMethod(beanClass, "is" + suffix);
+            }
+            if (!hasGetter) {
+                hasGetter = hasMethod(beanClass, "get" + suffix);
+            }
+
+            // Kontrola Setteru
+            if (hasGetter) {
+                hasSetter = hasMethod(beanClass, "set" + suffix, field.getType());
+            }
+
+            return hasGetter && hasSetter;
+        }
+
+        private static boolean hasMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+            try {
+                clazz.getMethod(methodName, parameterTypes);
+                return true;
+            } catch (NoSuchMethodException e) {
+                return false;
+            }
+        }
+
+        private static String capitalize(String str) {
+            if (str == null || str.isEmpty()) {
+                return str;
+            }
+            return Character.toUpperCase(str.charAt(0)) + str.substring(1);
         }
     }
 
