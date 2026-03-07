@@ -40,6 +40,7 @@ public class BasicDemoTest extends AbstractDemo {
         cityCrud = CITY_EM.crud(connection());
     }
 
+    /** Create all database tables */
     void createTables() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
@@ -74,6 +75,7 @@ public class BasicDemoTest extends AbstractDemo {
 
     @Test
     @Order(100)
+    @DisplayName("Vložení nových entit (City a Employee) do databáze")
     void insert() {
         var cityOttawa = cityCrud.insert(new City(null, "Ottawa", "CA"));
         var emplIngird = Employee.of("Ingrid", cityOttawa, null);
@@ -86,6 +88,7 @@ public class BasicDemoTest extends AbstractDemo {
 
     @Test
     @Order(200)
+    @DisplayName("Základní SELECT s mapováním výsledků do entit")
     void select() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
@@ -121,44 +124,9 @@ public class BasicDemoTest extends AbstractDemo {
     }
 
     @Test
-    @Order(300)
-    void update() {
-        var emplIngird = employeeCrud.findByIdNullable(1L);
-        var emplDave = employeeCrud.findByIdNullable(2L);
-        var emplCarol = employeeCrud.findByIdNullable(3L);
-        var newBoss = emplDave;
-
-        emplIngird.setBoss(newBoss);
-        emplDave.setBoss(null);
-        emplCarol.setBoss(newBoss);
-        employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol), MetaEmployee.boss); // or just "boss"
-
-        assertNull(employeeCrud.findByIdNullable(2L).getBoss(), "The new boss is Dave");
-    }
-
-    @Test
-    @Order(400)
-    void delete() {
-        var allEmployees = employeeCrud
-                .selectWhere("id > :id", sqlParamBuilder -> sqlParamBuilder
-                .bind("id", 0L)
-                .streamMap(EMPLOYEE_EM::map)
-                .sorted(Comparator.comparing(e -> e.getBoss() == null)) // The boss is the last
-                .toList());
-
-        assertEquals(3, allEmployees.size());
-        employeeCrud.delete(allEmployees.stream());
-
-        var count = SqlParamBuilder.run(connection(), builder ->
-                builder.sql("SELECT count(*) FROM employee")
-                        .streamMap(rs -> rs.getLong(1))
-                        .findFirst().orElse(0L));
-        assertEquals(0L, count);
-    }
-
-    @Test
     @Order(220)
-    void select_extended() {
+    @DisplayName("Pokročilý SELECT využívající typově bezpečná (type-safe) zřetězení aliasů")
+    void select_typeSafeLabels() {
         var sql = """
                  SELECT e.id      AS ${e.id}
                  , e.name         AS ${e.name}
@@ -218,5 +186,43 @@ public class BasicDemoTest extends AbstractDemo {
                 ORDER BY e.id
                 """;
         assertEquals(expectedSQL, sqlLog);
+    }
+
+    @Test
+    @Order(300)
+    @DisplayName("Hromadná aktualizace struktury zaměstnanců a jejich nadřízených")
+    void update() {
+        var emplIngird = employeeCrud.findByIdNullable(1L);
+        var emplDave = employeeCrud.findByIdNullable(2L);
+        var emplCarol = employeeCrud.findByIdNullable(3L);
+        var newBoss = emplDave;
+
+        emplIngird.setBoss(newBoss);
+        emplDave.setBoss(null);
+        emplCarol.setBoss(newBoss);
+        employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol), MetaEmployee.boss); // or just "boss"
+
+        assertNull(employeeCrud.findByIdNullable(2L).getBoss(), "The new boss is Dave");
+    }
+
+    @Test
+    @Order(400)
+    @DisplayName("Smazání entit a ověření prázdné tabulky")
+    void delete() {
+        var allEmployees = employeeCrud
+                .selectWhere("id > :id", sqlParamBuilder -> sqlParamBuilder
+                        .bind("id", 0L)
+                        .streamMap(EMPLOYEE_EM::map)
+                        .sorted(Comparator.comparing(e -> e.getBoss() == null)) // The boss is the last
+                        .toList());
+
+        assertEquals(3, allEmployees.size());
+        employeeCrud.delete(allEmployees.stream());
+
+        var count = SqlParamBuilder.run(connection(), builder ->
+                builder.sql("SELECT count(*) FROM employee")
+                        .streamMap(rs -> rs.getLong(1))
+                        .findFirst().orElse(0L));
+        assertEquals(0L, count);
     }
 }
