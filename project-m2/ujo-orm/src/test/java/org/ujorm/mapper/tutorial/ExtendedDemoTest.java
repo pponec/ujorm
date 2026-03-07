@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ExtendedBasicDemoTest extends AbstractDemo {
+public class ExtendedDemoTest extends AbstractDemo {
 
     private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
     private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
