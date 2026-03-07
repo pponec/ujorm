@@ -149,108 +149,37 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
     /** Internal class for generating the source code text */
     private static class SourceGenerator {
 
-        static String generate(Class<?> clazz, String prefix, String suffix, String targetPackage) {
-            String entityCanonicalName = clazz.getCanonicalName();
-            String originalName = clazz.getSimpleName();
-            String newClassName = prefix + originalName + suffix;
-            boolean isRecord = clazz.isRecord();
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("package ").append(targetPackage).append(";\n\n");
-
-            // Direct import of the domain object (works flawlessly for nested classes too)
-            if (entityCanonicalName != null) {
-                sb.append("import ").append(entityCanonicalName).append(";\n");
-            }
-
-            sb.append("import org.ujorm.Key;\n");
-            sb.append("import org.ujorm.DomainHandler;\n");
-            sb.append("import org.ujorm.core.DomainHandlerProvider;\n\n");
-
-            sb.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
-            sb.append("public class ").append(newClassName).append(" {\n\n");
-
-            // Use simple name (originalName) instead of the fully qualified name
-            sb.append("    public static final DomainHandler<").append(originalName)
-                    .append("> meta = DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n\n");
-
-            // List to hold all valid fields (including inherited ones)
-            List<Field> validFields = new ArrayList<>();
-
-            if (isRecord) {
-                // Scan Records (without inheritance and setters)
-                for (var component : clazz.getRecordComponents()) {
-                    try {
-                        Field field = clazz.getDeclaredField(component.getName());
-                        if (!hasTransientAnnotation(field)) {
-                            validFields.add(field);
-                        }
-                    } catch (NoSuchFieldException e) {
-                        // Should not happen for a valid record
-                    }
-                }
-            } else {
-                // Scan JavaBeans (supports inheritance and getter/setter validation)
-                Class<?> currentClass = clazz;
-                while (currentClass != null && currentClass != Object.class) {
-                    List<Field> classFields = new ArrayList<>();
-                    for (Field field : currentClass.getDeclaredFields()) {
-                        int mods = field.getModifiers();
-                        if (Modifier.isStatic(mods) || Modifier.isTransient(mods) || hasTransientAnnotation(field) || field.isSynthetic()) {
-                            continue;
-                        }
-
-                        if (hasValidGetterAndSetter(clazz, field)) {
-                            classFields.add(field);
-                        }
-                    }
-
-                    // Add to the beginning (inherited attributes should be first)
-                    validFields.addAll(0, classFields);
-                    currentClass = currentClass.getSuperclass();
-                }
-            }
-
-            // Generate the keys to the output
-            for (Field field : validFields) {
-                String fieldName = field.getName();
-
-                // Determine the type (considering potential nested classes)
-                Class<?> fieldType = field.getType();
-                String typeName = fieldType.getCanonicalName() != null ? fieldType.getCanonicalName() : fieldType.getSimpleName();
-
-                // Remove "java.lang." from common types for cleaner code
-                if (typeName.startsWith("java.lang.")) {
-                    typeName = typeName.substring(10);
-                }
-
-                if (isRecord) {
-                    sb.append("    /** The ").append(fieldName).append(" property */\n");
-                }
-
-                // Generic parameters now use the simple name
-                sb.append("    public static final Key<").append(originalName).append(", ").append(typeName).append("> ")
-                        .append(fieldName).append(" = meta.getKey(\"").append(fieldName).append("\", ").append(typeName).append(".class);\n");
-            }
-
-            sb.append("}\n");
-            return sb.toString();
+        /** Converts primitive types to their object wrappers. */
+        private static Class<?> getWrapperType(Class<?> clazz) {
+            if (!clazz.isPrimitive()) return clazz;
+            if (clazz == int.class) return Integer.class;
+            if (clazz == long.class) return Long.class;
+            if (clazz == boolean.class) return Boolean.class;
+            if (clazz == double.class) return Double.class;
+            if (clazz == float.class) return Float.class;
+            if (clazz == short.class) return Short.class;
+            if (clazz == byte.class) return Byte.class;
+            if (clazz == char.class) return Character.class;
+            return clazz;
         }
 
-        // --- Helper methods adapted and simplified from DomainModelBuilder ---
+        /** Formats the type name for the generated code. */
+        private static String getTypeName(Class<?> clazz) {
+            var wrapperClass = getWrapperType(clazz);
+            var result = wrapperClass.getCanonicalName() != null ? wrapperClass.getCanonicalName() : wrapperClass.getSimpleName();
+            return result.startsWith("java.lang.") ? result.substring(10) : result;
+        }
 
         private static boolean hasTransientAnnotation(Field field) {
-            // Check by name to minimize imports (works for javax. and jakarta.)
             return Stream.of(field.getAnnotations())
                     .anyMatch(a -> a.annotationType().getSimpleName().equals("Transient"));
         }
 
         private static boolean hasValidGetterAndSetter(Class<?> beanClass, Field field) {
-            String suffix = capitalize(field.getName());
-            boolean hasGetter = false;
-            boolean hasSetter = false;
+            var suffix = capitalize(field.getName());
+            var hasGetter = false;
+            var hasSetter = false;
 
-            // Getter check
             if (field.getType() == boolean.class) {
                 hasGetter = hasMethod(beanClass, "is" + suffix);
             }
@@ -258,7 +187,6 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
                 hasGetter = hasMethod(beanClass, "get" + suffix);
             }
 
-            // Setter check
             if (hasGetter) {
                 hasSetter = hasMethod(beanClass, "set" + suffix, field.getType());
             }
@@ -280,6 +208,78 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
                 return str;
             }
             return Character.toUpperCase(str.charAt(0)) + str.substring(1);
+        }
+
+        public static String generate(Class<?> clazz, String prefix, String suffix, String targetPackage) {
+            var entityCanonicalName = clazz.getCanonicalName();
+            var originalName = clazz.getSimpleName();
+            var newClassName = prefix + originalName + suffix;
+            var isRecord = clazz.isRecord();
+
+            var result = new StringBuilder();
+            result.append("package ").append(targetPackage).append(";\n\n");
+
+            if (entityCanonicalName != null) {
+                result.append("import ").append(entityCanonicalName).append(";\n");
+            }
+
+            result.append("import org.ujorm.Key;\n");
+            result.append("import org.ujorm.DomainHandler;\n");
+            result.append("import org.ujorm.core.DomainHandlerProvider;\n\n");
+
+            result.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
+            result.append("public class ").append(newClassName).append(" {\n\n");
+
+            result.append("    public static final DomainHandler<").append(originalName)
+                    .append("> meta = DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n\n");
+
+            var validFields = new ArrayList<Field>();
+
+            if (isRecord) {
+                for (var component : clazz.getRecordComponents()) {
+                    try {
+                        var field = clazz.getDeclaredField(component.getName());
+                        if (!hasTransientAnnotation(field)) {
+                            validFields.add(field);
+                        }
+                    } catch (NoSuchFieldException e) {
+                        // Ignore
+                    }
+                }
+            } else {
+                var currentClass = clazz;
+                while (currentClass != null && currentClass != Object.class) {
+                    var classFields = new ArrayList<Field>();
+                    for (var field : currentClass.getDeclaredFields()) {
+                        var mods = field.getModifiers();
+                        if (Modifier.isStatic(mods) || Modifier.isTransient(mods) || hasTransientAnnotation(field) || field.isSynthetic()) {
+                            continue;
+                        }
+
+                        if (hasValidGetterAndSetter(clazz, field)) {
+                            classFields.add(field);
+                        }
+                    }
+
+                    validFields.addAll(0, classFields);
+                    currentClass = currentClass.getSuperclass();
+                }
+            }
+
+            for (var field : validFields) {
+                var fieldName = field.getName();
+                var typeName = getTypeName(field.getType());
+
+                if (isRecord) {
+                    result.append("    /** The ").append(fieldName).append(" property */\n");
+                }
+
+                result.append("    public static final Key<").append(originalName).append(", ").append(typeName).append("> ")
+                        .append(fieldName).append(" = meta.getKey(\"").append(fieldName).append("\");\n");
+            }
+
+            result.append("}\n");
+            return result.toString();
         }
     }
 
