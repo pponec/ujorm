@@ -24,6 +24,7 @@ import org.ujorm.mapper.impl.Config;
 import org.ujorm.mapper.impl.Context;
 import org.ujorm.mapper.utils.JdbcTypeProvider;
 import org.ujorm.tools.common.StreamUtils;
+import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
@@ -73,8 +74,8 @@ public class TableModelBuilder<D> {
      * @return result - The real table identifier.
      */
     protected TableIdentifier createTableIdentifier(TableIdentifier table, Connection initConnection) {
-        var catalog = (table.catalog() != null && !table.catalog().isEmpty()) ? table.catalog() : null;
-        var schema = (table.schema() != null && !table.schema().isEmpty()) ? table.schema() : null;
+        var catalog = StringUtils.isFilled(table.catalog()) ? table.catalog() : null;
+        var schema = StringUtils.isFilled(table.schema()) ? table.schema() : null;
         var tableName = table.table();
 
         try {
@@ -123,8 +124,8 @@ public class TableModelBuilder<D> {
         var result = new ArrayList<String>();
         try {
             var metaData = initConnection.getMetaData();
-            var catalog = (table.catalog() != null && !table.catalog().isEmpty()) ? table.catalog() : null;
-            var schema = (table.schema() != null && !table.schema().isEmpty()) ? table.schema() : null;
+            var catalog = StringUtils.isFilled(table.catalog()) ? table.catalog() : null;
+            var schema = StringUtils.isFilled(table.schema()) ? table.schema() : null;
 
             try (var resultSet = metaData.getColumns(catalog, schema, table.table(), null)) {
                 while (resultSet.next()) {
@@ -195,7 +196,7 @@ public class TableModelBuilder<D> {
             jdbcType = jdbcTypeProvider.findJdbcType(key);
         }
         var columnName = dbColumMapLowerCase.get(key.columnLabel().toLowerCase(Locale.ENGLISH));
-        if (columnName == null || columnName.isEmpty()) {
+        if (StringUtils.isEmpty(columnName)) {
             var msg = "Property %s mapped to column '%s' not found in database."
                     .formatted(key.fullName(), key.columnLabel());
             throw new IllegalStateException(msg);

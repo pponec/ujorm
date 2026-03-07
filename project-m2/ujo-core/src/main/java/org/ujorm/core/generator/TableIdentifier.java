@@ -18,6 +18,7 @@ package org.ujorm.core.generator;
 import jakarta.persistence.Table;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.common.StringUtils;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -65,7 +66,7 @@ public record TableIdentifier(
      * @return The merged value.
      */
     private String mergeValue(String original, String real) {
-        return original == null || original.isEmpty() ? null : real;
+        return StringUtils.isEmpty(original) ? null : real;
     }
 
     /** Get Table name in the full format: {@code catalog.schema.table} . */
@@ -74,7 +75,7 @@ public record TableIdentifier(
                         catalog,
                         schema,
                         table)
-                .filter(s -> s != null && !s.isEmpty())
+                .filter(s -> StringUtils.isFilled(s))
                 .collect(Collectors.joining("."));
     }
 

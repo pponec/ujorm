@@ -169,7 +169,7 @@ final public class StringService {
     /** Create comment */
     private Comment getComment(WorkingCopy workingCopy, VariableTree field) {
         final List<Comment> comments = workingCopy.getTreeUtilities().getComments(field, true);
-        final Comment comment = (comments!=null && !comments.isEmpty())
+        final Comment comment = StringUtils.isFilled(comments)
                 ? comments.get(comments.size() - 1)
                 : null;
 
