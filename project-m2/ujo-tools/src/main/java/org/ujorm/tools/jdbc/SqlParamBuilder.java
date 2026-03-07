@@ -18,7 +18,8 @@ package org.ujorm.tools.jdbc;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
+import org.ujorm.Key;
+import org.ujorm.tools.msg.MessageService;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.sql.SQLException;
@@ -78,9 +79,18 @@ public class SqlParamBuilder implements AutoCloseable {
     private ResultSet resultSet = null;
     @Nullable
     private Integer fetchSize = null;
+    @Nullable
+    private Map<String, Object> labels;
+    /** Label quoter */
+    private char q;
 
     public SqlParamBuilder(@NotNull Connection dbConnection) {
+        this(dbConnection, '"');
+    }
+
+    public SqlParamBuilder(@NotNull Connection dbConnection, char quoter) {
         this.dbConnection = dbConnection;
+        this.q = quoter;
     }
 
     /** Sets a new SQL template and resets current parameters.
@@ -174,6 +184,51 @@ public class SqlParamBuilder implements AutoCloseable {
         return bindObject(true, key, JDBCType.OTHER, values);
     }
 
+    /** Add a column label to the placeholder in the format {@code ${placeholder} } */
+    public SqlParamBuilder label(@NotNull String placeholder, @NotNull Key<?,?> label) {
+        return addLabel(placeholder, "" + q + label + q);
+    }
+
+    /** Add a column label to the placeholder in the format {@code ${placeholder} } */
+    public <V1> SqlParamBuilder label(@NotNull String placeholder,
+                                      @NotNull Key<?,V1> label1,
+                                      @NotNull Key<V1,?> label2) {
+        return addLabel(placeholder, "" + q + label1 + '.' + label2 + q);
+    }
+
+    /** Add a column label to the placeholder in the format {@code ${placeholder} } */
+    public <V1,V2> SqlParamBuilder label(@NotNull String placeholder,
+                                      @NotNull Key<?,V1> label1,
+                                      @NotNull Key<V1,V2> label2,
+                                      @NotNull Key<V2,?> label3) {
+        return addLabel(placeholder, "" + q + label1 + '.' + label2 + '.' + label3 + q);
+    }
+
+    /** Add a column label to the placeholder in the format {@code ${placeholder} } */
+    public <V1,V2,V3> SqlParamBuilder label(@NotNull String placeholder,
+                                         @NotNull Key<?,V1> label1,
+                                         @NotNull Key<V1,V2> label2,
+                                         @NotNull Key<V2,V3> label3,
+                                         @NotNull Key<V3,?> label4,
+                                         @NotNull Key<?,?>... labels) {
+        var sb = new StringBuilder()
+                .append(q).append(label1)
+                .append('.').append(label2)
+                .append('.').append(label3)
+                .append('.').append(label4);
+        for (var lab : labels) {
+            sb.append('.').append(lab);
+        }
+        return addLabel(placeholder, sb.append(q).toString());
+    }
+
+    private SqlParamBuilder addLabel(String placeholder, String columnLabel) {
+        if (columnLabel.length() < 3) throw new IllegalArgumentException("Key label is required");
+        if (labels == null) labels = new HashMap<>();
+        labels.put(placeholder, columnLabel);
+        return this;
+    }
+
     /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
     public SqlParamBuilder bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, final Object... values) {
         if (enabled) {
@@ -264,6 +319,7 @@ public class SqlParamBuilder implements AutoCloseable {
             preparedStatement = null;
             fetchSize = null;
             params.clear();
+            labels.clear();
         }
     }
 
@@ -345,6 +401,9 @@ public class SqlParamBuilder implements AutoCloseable {
             throw new SqlException(null, "Missing SQL parameter: " + missingKeys);
         }
         matcher.appendTail(result);
+        if (labels != null && !labels.isEmpty()) {
+            return MessageService.formatMsg(result.toString(), labels);
+        }
         return result.toString();
     }
 
