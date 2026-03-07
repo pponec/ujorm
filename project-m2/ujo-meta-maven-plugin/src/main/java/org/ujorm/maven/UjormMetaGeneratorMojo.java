@@ -168,8 +168,8 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
             }
 
             sb.append("import org.ujorm.Key;\n");
-            sb.append("import org.ujorm.mapper.core.DomainHandler;\n");
-            sb.append("import org.ujorm.mapper.core.DomainHandlerProvider;\n\n");
+            sb.append("import org.ujorm.DomainHandler;\n");
+            sb.append("import org.ujorm.core.DomainHandlerProvider;\n\n");
 
             sb.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
             sb.append("public class ").append(newClassName).append(" {\n\n");
