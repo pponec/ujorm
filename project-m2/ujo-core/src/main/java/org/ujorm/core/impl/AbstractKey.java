@@ -1,9 +1,9 @@
 package org.ujorm.core.impl;
 
-import lombok.NonNull;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.Key;
+import org.ujorm.Key;
 import org.ujorm.tools.common.Primitive;
 
 import java.util.Map;
@@ -26,7 +26,7 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     /** Order of the key, starting at zero. */
     final int order;
     /** Simple name of the key has a canonical instance. */
-    @NonNull
+    @NotNull
     final String name;
     /** Java type of the key value. */
     @NotNull

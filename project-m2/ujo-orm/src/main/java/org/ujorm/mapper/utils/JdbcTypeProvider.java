@@ -17,7 +17,7 @@ package org.ujorm.mapper.utils;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.Key;
+import org.ujorm.Key;
 import org.ujorm.tools.common.Primitive;
 
 import java.math.BigDecimal;
@@ -35,7 +35,6 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 /** JDBC provider */
 public final class JdbcTypeProvider {

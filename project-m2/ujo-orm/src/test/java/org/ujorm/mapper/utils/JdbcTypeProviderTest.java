@@ -1,7 +1,7 @@
 package org.ujorm.mapper.utils;
 
 import org.junit.jupiter.api.Test;
-import org.ujorm.core.DomainHandler;
+import org.ujorm.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.mapper.demo.Employee;
 import org.ujorm.mapper.demo.UserSnapshotable;

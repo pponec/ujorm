@@ -1,14 +1,14 @@
 package org.ujorm.mapper.jdbc;
 
-import lombok.NonNull;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.DomainHandler;
+import org.ujorm.DomainHandler;
+import org.ujorm.Ujo;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
-import org.ujorm.core.Key;
+import org.ujorm.Key;
 import org.ujorm.core.csv.CsvLineSplitter;
-import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.mapper.impl.Config;
 import org.ujorm.tools.common.Primitive;
 import org.ujorm.tools.jdbc.JdbcUtils;
@@ -52,7 +52,7 @@ import java.util.stream.Stream;
  * </p>
  * <h3>Customizing Behavior &amp; Performance Impact</h3>
  * <ul>
- * <li><b>Explicit Column Labels:</b> You can provide explicit column labels or {@link org.ujorm.core.Key}s
+ * <li><b>Explicit Column Labels:</b> You can provide explicit column labels or {@link Key}s
  * via the {@code convert} methods.
  * <i>Speed:</i> This completely bypasses the JDBC metadata query. Since extracting metadata can
  * be a heavy network or processing operation depending on the JDBC driver, providing explicit labels
@@ -76,13 +76,13 @@ public final class ResultSetMapper<D> {
     private static final CsvLineSplitter SPLITTER = CsvLineSplitter.ofFast('.');
     private static final int SPLITTER_INIT_CAPACITY = 8;
 
-    @NonNull
+    @NotNull
     private final Class<D> domainClass;
-    @NonNull
+    @NotNull
     private final DomainHandlerService service;
-    @NonNull
+    @NotNull
     private final DomainHandler<D> rootHandler;
-    @NonNull
+    @NotNull
     private final MappingCache<D> cache;
 
     /**
@@ -93,8 +93,8 @@ public final class ResultSetMapper<D> {
      * @param maxCacheSize the maximum number of cached mapping trees
      */
     private ResultSetMapper(
-            @NonNull Class<D> domainClass,
-            @NonNull DomainHandlerService service,
+            @NotNull Class<D> domainClass,
+            @NotNull DomainHandlerService service,
             int maxCacheSize
     ) {
         this.domainClass = domainClass;
@@ -167,10 +167,10 @@ public final class ResultSetMapper<D> {
     }
 
     /**
-     * Recursively populates the target AbstractUjo wrapper and its relations.
+     * Recursively populates the target Ujo wrapper and its relations.
      * @return true if at least one non-null value was set in this node or its children
      */
-    private <D2> boolean populateNode(MappingNode<D2> node, AbstractUjo<D2> target, ResultSet rs) throws SQLException {
+    private <D2> boolean populateNode(MappingNode<D2> node, Ujo<D2> target, ResultSet rs) throws SQLException {
         var hasData = false;
         for (var mapping : node.directMappings()) {
             var objectType = Primitive.wrapPrimitive(mapping.key().type());
@@ -410,22 +410,22 @@ public final class ResultSetMapper<D> {
     }
 
     /** Factory method to create a new instance with a custom cache size. */
-    public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass, @NonNull DomainHandlerService service, int maxCacheSize) {
+    public static <D> ResultSetMapper<D> of(@NotNull Class<D> domainClass, @NotNull DomainHandlerService service, int maxCacheSize) {
         return new ResultSetMapper<>(domainClass, service, maxCacheSize);
     }
 
     /** Factory method to create a new instance with default cache size. */
-    public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass, @NonNull DomainHandlerService service) {
+    public static <D> ResultSetMapper<D> of(@NotNull Class<D> domainClass, @NotNull DomainHandlerService service) {
         return of(domainClass, service, Config.ofDefault());
     }
 
     /** Factory method to create a new instance with default cache size. */
-    public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass, @NonNull DomainHandlerService service, Config config) {
+    public static <D> ResultSetMapper<D> of(@NotNull Class<D> domainClass, @NotNull DomainHandlerService service, Config config) {
         return of(domainClass, service, config.getMaxCacheSize());
     }
 
     /** Factory method to create a new instance with default service and cache size. */
-    public static <D> ResultSetMapper<D> of(@NonNull Class<D> domainClass, Config config) {
+    public static <D> ResultSetMapper<D> of(@NotNull Class<D> domainClass, Config config) {
         return of(domainClass, DomainHandlerProvider.provider(), config);
     }
 }

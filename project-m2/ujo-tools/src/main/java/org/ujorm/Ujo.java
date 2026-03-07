@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ujorm.core;
+package org.ujorm;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,6 +58,11 @@ public interface Ujo<D extends Object> {
      */
     default <V> void setValue(@NotNull String keyName, @Nullable V value) {
         setValue(domainHandler().getKey(keyName), value);
+    }
+
+    /** Provides an original domain object. */
+    default D buildDomain() {
+        return domainHandler().newDomain();
     }
 
     /** Returns a domain handler */
