@@ -40,24 +40,28 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
-        getLog().info("Spouštím Ujorm3 MetaGenerator (testScope=" + testScope + ")...");
+        getLog().info("Ujorm3 MetaGenerator is running (testScope=" + testScope + ")...");
 
+        // Define output path based on the scope
         var outputDirPath = testScope
                 ? project.getBuild().getDirectory() + "/generated-test-sources/ujorm"
                 : project.getBuild().getDirectory() + "/generated-sources/ujorm";
 
         var outputDirectory = new File(outputDirPath);
 
+        // Ensure the output directory exists
         if (!outputDirectory.exists() && !outputDirectory.mkdirs()) {
-            throw new MojoExecutionException("Nelze vytvořit výstupní složku: " + outputDirectory);
+            throw new MojoExecutionException("Could not create output directory: " + outputDirectory);
         }
 
+        // Register the generated source directory in the Maven project
         if (testScope) {
             project.addTestCompileSourceRoot(outputDirectory.getAbsolutePath());
         } else {
             project.addCompileSourceRoot(outputDirectory.getAbsolutePath());
         }
 
+        // Define which classes to scan
         var classesDirPath = testScope
                 ? project.getBuild().getTestOutputDirectory()
                 : project.getBuild().getOutputDirectory();
@@ -65,34 +69,35 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
         var classesDir = Paths.get(classesDirPath);
 
         if (!Files.exists(classesDir)) {
-            getLog().info("Složka s classes neexistuje, přeskočeno: " + classesDir);
+            getLog().info("Classes directory does not exist, skipping: " + classesDir);
             return;
         }
 
         try (var classLoader = ClassLoaderBuilder.build(project, this.getClass().getClassLoader(), testScope)) {
             try (var paths = Files.walk(classesDir)) {
 
-                // Změna: Místo forEach použijeme filter a count pro sečtení úspěšných generování
+                // Filter class files and count successful generations
                 long generatedCount = paths
                         .filter(Files::isRegularFile)
                         .filter(p -> p.toString().endsWith(".class"))
                         .filter(path -> processClassFile(path, classesDir, classLoader, outputDirectory))
                         .count();
 
-                // Závěrečné logování s barvami / formátováním Mavenu
+                // Final logging using Maven formatting
                 String scopeName = testScope ? "TEST" : "MAIN";
                 getLog().info("---------------------------------------------------------");
-                getLog().info(String.format("Ujorm3 [%s]: Vygenerováno %d metamodelů.", scopeName, generatedCount));
+                getLog().info(String.format("Ujorm3 [%s]: Generated %d metamodels.", scopeName, generatedCount));
                 getLog().info("---------------------------------------------------------");
 
             }
         } catch (Exception e) {
-            throw new MojoExecutionException("Chyba při skenování tříd", e);
+            throw new MojoExecutionException("Error during class scanning", e);
         }
     }
 
     /**
-     * Zpracuje soubor. Vrací true, pokud byl metamodel úspěšně vygenerován, jinak false.
+     * Processes a single class file.
+     * @return true if the metamodel was successfully generated, otherwise false.
      */
     private boolean processClassFile(Path classFile, Path classesRoot, ClassLoader classLoader, File outputDirectory) {
         var relativePath = classesRoot.relativize(classFile).toString();
@@ -101,24 +106,27 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
         try {
             var clazz = classLoader.loadClass(className);
 
+            // Check if the class is marked as an Entity or Table
             var isEntity = Stream.of(clazz.getAnnotations())
                     .anyMatch(a -> a.annotationType().getSimpleName().equals("Table")
                             || a.annotationType().getSimpleName().equals("Entity"));
 
             if (isEntity) {
-                getLog().debug("Generuji metamodel pro entitu: " + clazz.getSimpleName());
+                getLog().debug("Generating metamodel for entity: " + clazz.getSimpleName());
                 var targetPackage = clazz.getPackageName() + ".meta";
                 var sourceCode = SourceGenerator.generate(clazz, prefix, suffix, targetPackage);
 
-                // Pokud metoda saveSourceCode nevyhodí výjimku, vracíme true
+                // Save the source code and return success
                 saveSourceCode(clazz.getSimpleName(), targetPackage, sourceCode, outputDirectory);
                 return true;
             }
         } catch (Throwable e) {
-            getLog().debug("Přeskočena třída " + className + ": " + e.getMessage());
+            getLog().debug("Skipped class " + className + ": " + e.getMessage());
         }
         return false;
     }
+
+    /** Saves the generated source code to the file system. */
     private void saveSourceCode(String originalName, String targetPackage, String sourceCode, File outputDirectory) {
         try {
             var newClassName = prefix + originalName + suffix;
@@ -128,13 +136,13 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
             var sourceFile = packageDir.resolve(newClassName + ".java");
             Files.writeString(sourceFile, sourceCode);
         } catch (IOException e) {
-            getLog().error("Chyba zápisu souboru pro " + originalName, e);
+            getLog().error("Error writing source file for " + originalName, e);
         }
     }
 
-    // --- Vnitřní třídy pro organizaci logiky ---
+    // --- Internal helper classes for logic organization ---
 
-    /** Generates the source code text. */
+    /** Generates the Java source code text for the metamodel. */
     private static class SourceGenerator {
         static String generate(Class<?> clazz, String prefix, String suffix, String targetPackage) {
             var originalName = clazz.getSimpleName();
@@ -147,13 +155,14 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
             sb.append("import org.ujorm.mapper.core.DomainHandler;\n");
             sb.append("import org.ujorm.mapper.core.DomainHandlerProvider;\n\n");
 
-            sb.append("/** Auto-generated metamodel pro ").append(originalName).append(" */\n");
+            sb.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
             sb.append("public class ").append(newClassName).append(" {\n\n");
 
             sb.append("    public static final DomainHandler<").append(originalName)
                     .append("> meta = DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n\n");
 
             for (var field : clazz.getDeclaredFields()) {
+                // Ignore static and transient fields
                 if (Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                     continue;
                 }
@@ -170,7 +179,7 @@ public class UjormMetaGeneratorMojo extends AbstractMojo {
         }
     }
 
-    /** Builds URLClassLoader safely. */
+    /** Builds a URLClassLoader to load classes from the project classpath. */
     private static class ClassLoaderBuilder {
         static URLClassLoader build(MavenProject project, ClassLoader parent, boolean testScope) throws DependencyResolutionRequiredException, IOException {
             var classpathElements = testScope
