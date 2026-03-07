@@ -186,14 +186,14 @@ public class SqlParamBuilder implements AutoCloseable {
 
     /** Add a column label to the placeholder in the format {@code ${placeholder} } */
     public SqlParamBuilder label(@NotNull String placeholder, @NotNull Key<?,?> label) {
-        return addLabel(placeholder, "" + q + label + q);
+        return putLabel(placeholder, "" + q + label + q);
     }
 
     /** Add a column label to the placeholder in the format {@code ${placeholder} } */
     public <V1> SqlParamBuilder label(@NotNull String placeholder,
                                       @NotNull Key<?,V1> label1,
                                       @NotNull Key<V1,?> label2) {
-        return addLabel(placeholder, "" + q + label1 + '.' + label2 + q);
+        return putLabel(placeholder, "" + q + label1 + '.' + label2 + q);
     }
 
     /** Add a column label to the placeholder in the format {@code ${placeholder} } */
@@ -201,7 +201,7 @@ public class SqlParamBuilder implements AutoCloseable {
                                       @NotNull Key<?,V1> label1,
                                       @NotNull Key<V1,V2> label2,
                                       @NotNull Key<V2,?> label3) {
-        return addLabel(placeholder, "" + q + label1 + '.' + label2 + '.' + label3 + q);
+        return putLabel(placeholder, "" + q + label1 + '.' + label2 + '.' + label3 + q);
     }
 
     /** Add a column label to the placeholder in the format {@code ${placeholder} } */
@@ -219,10 +219,10 @@ public class SqlParamBuilder implements AutoCloseable {
         for (var lab : labels) {
             sb.append('.').append(lab);
         }
-        return addLabel(placeholder, sb.append(q).toString());
+        return putLabel(placeholder, sb.append(q).toString());
     }
 
-    private SqlParamBuilder addLabel(String placeholder, String columnLabel) {
+    private SqlParamBuilder putLabel(String placeholder, String columnLabel) {
         if (columnLabel.length() < 3) throw new IllegalArgumentException("Key label is required");
         if (labels == null) labels = new HashMap<>();
         labels.put(placeholder, columnLabel);
@@ -319,7 +319,7 @@ public class SqlParamBuilder implements AutoCloseable {
             preparedStatement = null;
             fetchSize = null;
             params.clear();
-            labels.clear();
+            if (labels != null) labels.clear();
         }
     }
 
