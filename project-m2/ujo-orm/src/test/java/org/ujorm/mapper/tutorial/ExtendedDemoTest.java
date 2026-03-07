@@ -23,71 +23,71 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ExtendedDemoTest extends AbstractDemo {
 
-    private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
-    private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
-
-    private Crud<Employee, Long> employeeCrud;
-    private Crud<City, Long> cityCrud;
-
-    /**
-     * Initializes the CRUD (Create, Read, Update, Delete) service objects for the City and Employee entities.
-     * These objects are bound to a shared database connection.
-     * <p>
-     * Note that the transaction and connection lifecycles are managed by the parent abstract class:
-     * a database commit is automatically performed after each individual test method finishes,
-     * and the shared connection is safely closed once all tests in the class are completed.
-     */
-    @Override
-    void init() {
-        employeeCrud = EMPLOYEE_EM.crud(connection());
-        cityCrud = CITY_EM.crud(connection());
-
-        createTable();
-    }
-
-    void createTable() {
-        try (var builder = new SqlParamBuilder(connection())) {
-            builder.sql("""
-                    CREATE TABLE city
-                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
-                    , name VARCHAR(50) NOT NULL
-                    , country_code VARCHAR(2) NOT NULL
-                    )
-                    """).execute();
-            builder.sql("""
-                    CREATE TABLE employee
-                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
-                    , name VARCHAR(50) NOT NULL
-                    , boss_id BIGINT NULL
-                    , city_id BIGINT NOT NULL
-                    )
-                    """).execute();
-            builder.sql("""
-                    ALTER TABLE employee ADD CONSTRAINT fk_employee_boss_id__id
-                    FOREIGN KEY (boss_id)
-                    REFERENCES employee(id)
-                    ON DELETE RESTRICT ON UPDATE RESTRICT;
-                    """).execute();
-            builder.sql("""
-                    ALTER TABLE employee ADD CONSTRAINT fk_employee_city_id__id
-                    FOREIGN KEY (city_id)
-                    REFERENCES city(id)
-                    ON DELETE CASCADE ON UPDATE RESTRICT;
-                    """).execute();
-        }
-    }
-
-    @Test
-    @Order(100)
-    void insert() {
-        var cityOttawa = cityCrud.insert(new City(null, "Ottawa", "CA"));
-        var emplIngird = Employee.of("Ingrid", cityOttawa, null);
-        var emplDave = Employee.of("Dave", cityOttawa, emplIngird);
-        var emplCarol = Employee.of("Carol", cityOttawa, emplIngird);
-
-        employeeCrud.insert(emplIngird);
-        employeeCrud.insertBatch(emplDave, emplCarol);
-    }
+//    private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
+//    private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
+//
+//    private Crud<Employee, Long> employeeCrud;
+//    private Crud<City, Long> cityCrud;
+//
+//    /**
+//     * Initializes the CRUD (Create, Read, Update, Delete) service objects for the City and Employee entities.
+//     * These objects are bound to a shared database connection.
+//     * <p>
+//     * Note that the transaction and connection lifecycles are managed by the parent abstract class:
+//     * a database commit is automatically performed after each individual test method finishes,
+//     * and the shared connection is safely closed once all tests in the class are completed.
+//     */
+//    @Override
+//    void init() {
+//        employeeCrud = EMPLOYEE_EM.crud(connection());
+//        cityCrud = CITY_EM.crud(connection());
+//
+//        createTable();
+//    }
+//
+//    void createTable() {
+//        try (var builder = new SqlParamBuilder(connection())) {
+//            builder.sql("""
+//                    CREATE TABLE city
+//                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
+//                    , name VARCHAR(50) NOT NULL
+//                    , country_code VARCHAR(2) NOT NULL
+//                    )
+//                    """).execute();
+//            builder.sql("""
+//                    CREATE TABLE employee
+//                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
+//                    , name VARCHAR(50) NOT NULL
+//                    , boss_id BIGINT NULL
+//                    , city_id BIGINT NOT NULL
+//                    )
+//                    """).execute();
+//            builder.sql("""
+//                    ALTER TABLE employee ADD CONSTRAINT fk_employee_boss_id__id
+//                    FOREIGN KEY (boss_id)
+//                    REFERENCES employee(id)
+//                    ON DELETE RESTRICT ON UPDATE RESTRICT;
+//                    """).execute();
+//            builder.sql("""
+//                    ALTER TABLE employee ADD CONSTRAINT fk_employee_city_id__id
+//                    FOREIGN KEY (city_id)
+//                    REFERENCES city(id)
+//                    ON DELETE CASCADE ON UPDATE RESTRICT;
+//                    """).execute();
+//        }
+//    }
+//
+//    @Test
+//    @Order(100)
+//    void insert() {
+//        var cityOttawa = cityCrud.insert(new City(null, "Ottawa", "CA"));
+//        var emplIngird = Employee.of("Ingrid", cityOttawa, null);
+//        var emplDave = Employee.of("Dave", cityOttawa, emplIngird);
+//        var emplCarol = Employee.of("Carol", cityOttawa, emplIngird);
+//
+//        employeeCrud.insert(emplIngird);
+//        employeeCrud.insertBatch(emplDave, emplCarol);
+//    }
 //
 //    @Test
 //    @Order(200)

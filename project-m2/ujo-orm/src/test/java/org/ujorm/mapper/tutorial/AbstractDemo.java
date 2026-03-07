@@ -73,7 +73,7 @@ public abstract class AbstractDemo {
      * @throws SQLException If a database error occurs
      */
     private Connection getDbConnection() throws SQLException {
-        var jdbcUrl = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1";
+        var jdbcUrl = "jdbc:h2:mem:testdb";
         var databaseUser = "sa";
         var databasePassword = "";
         var result = DriverManager.getConnection(jdbcUrl, databaseUser, databasePassword);
