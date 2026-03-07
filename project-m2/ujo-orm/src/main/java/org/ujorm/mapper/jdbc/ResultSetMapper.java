@@ -9,7 +9,7 @@ import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.Key;
 import org.ujorm.core.csv.CsvLineSplitter;
-import org.ujorm.mapper.impl.Config;
+import org.ujorm.mapper.Config;
 import org.ujorm.tools.common.Primitive;
 import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;

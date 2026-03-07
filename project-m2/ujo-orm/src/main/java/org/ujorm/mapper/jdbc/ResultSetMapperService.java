@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
-import org.ujorm.mapper.impl.Config;
+import org.ujorm.mapper.Config;
 import org.ujorm.mapper.impl.ConfigImpl;
 
 import java.util.concurrent.ConcurrentHashMap;

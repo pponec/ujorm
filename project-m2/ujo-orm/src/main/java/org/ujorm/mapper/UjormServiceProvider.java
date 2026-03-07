@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.mapper.core.EntityManager;
 import org.ujorm.mapper.core.EntityManagerService;
-import org.ujorm.mapper.impl.Config;
 import org.ujorm.mapper.jdbc.ResultSetMapper;
 import org.ujorm.mapper.jdbc.ResultSetMapperService;
 
