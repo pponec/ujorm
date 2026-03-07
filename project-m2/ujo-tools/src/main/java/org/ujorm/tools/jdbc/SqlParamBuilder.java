@@ -404,4 +404,15 @@ public class SqlParamBuilder implements AutoCloseable {
                     : cause.getMessage(), cause);
         }
     }
+
+    /** Run a builder statement */
+    public static <R> R run(Connection connection, final SqlFunction<SqlParamBuilder, R> fun) {
+        try (var builder = new SqlParamBuilder(connection)) {
+            return fun.applyFunction(builder);
+        } catch (SQLException ex) {
+            throw SQLExceptionBuilder.build(ex);
+        } catch (Exception ex) {
+            throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
+        }
+    }
 }

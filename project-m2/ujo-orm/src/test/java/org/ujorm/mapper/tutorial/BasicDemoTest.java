@@ -149,11 +149,10 @@ public class BasicDemoTest extends AbstractDemo {
         assertEquals(3, allEmployees.size());
         employeeCrud.delete(allEmployees.stream());
 
-        var count = employeeCrud
-                .select("1 = 1")
-                .streamMap(e -> e)
-                .count();
-
+        var count = SqlParamBuilder.run(connection(), builder ->
+                builder.sql("SELECT count(*) FROM employee")
+                        .streamMap(rs -> rs.getLong(1))
+                        .findFirst().orElse(0L));
         assertEquals(0L, count);
     }
 
