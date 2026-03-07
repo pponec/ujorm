@@ -249,7 +249,7 @@ public final class EntityManager<D, V> {
         }
 
         /** Logs and executes the SQL statement using the provided connection. */
-        public <R> R run(boolean batch, @NotNull Connection connection, final CharSequence sql, final boolean returnGeneratedKeys, final SqlFunction<PreparedStatement, R> fun) {
+        public <R> R run(boolean batch, @NotNull Connection connection, final CharSequence sql, final boolean returnGeneratedKeys, final SqlParamBuilder.SqlFunction<PreparedStatement, R> fun) {
             try (var ps = !returnGeneratedKeys
                     ? connection.prepareStatement(sql.toString())
                     : tableModel().jdbc().isOracleDb()
@@ -262,7 +262,7 @@ public final class EntityManager<D, V> {
                 if (context.config().isPrintSql()) {
                     LOGGER.info(sql::toString);
                 }
-                return fun.applyValue(ps);
+                return fun.applyFunction(ps);
             } catch (SQLException ex) {
                 throw SQLExceptionBuilder.build(ex);
             } catch (Exception ex) {
@@ -278,11 +278,6 @@ public final class EntityManager<D, V> {
                 }
                 writer.append(q).append(columns.get(i).name()).append(q);
             }
-        }
-
-        @FunctionalInterface
-        public interface SqlFunction<T, R> {
-            R applyValue(T ps) throws Exception;
         }
     }
 

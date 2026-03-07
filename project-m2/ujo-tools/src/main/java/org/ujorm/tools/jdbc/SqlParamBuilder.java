@@ -375,12 +375,12 @@ public class SqlParamBuilder implements AutoCloseable {
     public interface SqlFunction<T, R> extends Function<T, R> {
         default R apply(T resultSet) {
             try {
-                return applyRs(resultSet);
+                return applyFunction(resultSet);
             } catch (Exception ex) {
-                throw (ex instanceof RuntimeException re) ? re : new IllegalStateException(ex);
+                throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
             }
         }
-        R applyRs(T resultSet) throws SQLException;
+        R applyFunction(T resultSet) throws SQLException;
     }
 
     @FunctionalInterface
