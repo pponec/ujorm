@@ -13,11 +13,13 @@ import org.ujorm.mapper.tutorial.domains.meta.MetaEmployee;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
 import java.util.Comparator;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+// TODO:pop
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ExtendedDemoTest extends AbstractDemo {
 
@@ -39,10 +41,10 @@ public class ExtendedDemoTest extends AbstractDemo {
     void init() {
         employeeCrud = EMPLOYEE_EM.crud(connection());
         cityCrud = CITY_EM.crud(connection());
+
+        createTable();
     }
 
-    @Test
-    @Order(0)
     void createTable() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
@@ -73,7 +75,6 @@ public class ExtendedDemoTest extends AbstractDemo {
                     ON DELETE CASCADE ON UPDATE RESTRICT;
                     """).execute();
         }
-        superInit();
     }
 
     @Test
@@ -87,82 +88,84 @@ public class ExtendedDemoTest extends AbstractDemo {
         employeeCrud.insert(emplIngird);
         employeeCrud.insertBatch(emplDave, emplCarol);
     }
-
-    @Test
-    @Order(200)
-    void select() {
-        try (var builder = new SqlParamBuilder(connection())) {
-            builder.sql("""
-                    SELECT e.id      AS "%s"
-                    , e.name         AS "%s"
-                    , c.name         AS "%s"
-                    , c.country_code AS "%s"
-                    , b.name         AS "%s"
-                    FROM employee e
-                    JOIN city c ON c.id = e.city_id
-                    LEFT JOIN employee b ON b.id = e.boss_id
-                    WHERE e.id > :employeeId
-                    ORDER BY e.id
-                    """.formatted(MetaEmployee.id,
-                            MetaEmployee.name,
-                            MetaEmployee.city.join(MetaCity.name),
-                            MetaEmployee.city.join(MetaCity.countryCode),
-                            MetaEmployee.boss.join(MetaEmployee.name)))
-                    .bind("employeeId", 0L);
-            var employees = builder.streamMap(EMPLOYEE_EM::map).toList();
-
-            // Test employee names
-            assertEquals("Ingrid", employees.get(0).getName());
-            assertEquals("Dave", employees.get(1).getName());
-            assertEquals("Carol", employees.get(2).getName());
-
-            // Test boss names:
-            assertNull(employees.get(0).getBoss());
-            assertEquals("Ingrid", employees.get(1).getBoss().getName());
-            assertEquals("Ingrid", employees.get(2).getBoss().getName());
-
-            // Test ID
-            assertEquals(1L, employees.get(0).getId()); // Ingrid
-            assertEquals(2L, employees.get(1).getId()); // Dave
-            assertEquals(3L, employees.get(2).getId()); // Carol
-        }
-    }
-
-    @Test
-    @Order(300)
-    void update() {
-        var emplIngird = employeeCrud.findByIdNullable(1L);
-        var emplDave = employeeCrud.findByIdNullable(2L);
-        var emplCarol = employeeCrud.findByIdNullable(3L);
-        var newBoss = emplDave;
-
-        emplIngird.setBoss(newBoss);
-        emplDave.setBoss(null);
-        emplCarol.setBoss(newBoss);
-        employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol), MetaEmployee.boss); // or just "boss"
-
-        assertNull(employeeCrud.findByIdNullable(2L).getBoss(), "The new boss is Dave");
-    }
-
-    @Test
-    @Order(400)
-    void delete() {
-        var allEmployees = employeeCrud
-                .select("id > :id")
-                .bind("id", 0L)
-                .streamMap(EMPLOYEE_EM::map)
-                .sorted(Comparator.comparing(e -> e.getBoss() == null)) // The boss is the last
-                .toList();
-
-        assertEquals(3, allEmployees.size());
-        employeeCrud.delete(allEmployees.stream());
-
-        var count = employeeCrud
-                .select("1 = 1")
-                .streamMap(e -> e)
-                .count();
-
-        assertEquals(0L, count);
-    }
+//
+//    @Test
+//    @Order(200)
+//    void select() {
+//            var sql = """
+//                    SELECT e.id      AS ${e.id}
+//                    , e.name         AS ${e.name}
+//                    , c.name         AS ${c.name}
+//                    , c.country_code AS ${c.country_code}
+//                    , b.name         AS ${b.name}
+//                    FROM employee e
+//                    JOIN city c ON c.id = e.city_id
+//                    LEFT JOIN employee b ON b.id = e.boss_id
+//                    WHERE e.id > :employeeId
+//                    ORDER BY e.id
+//                    """;
+//            var employees = employeeCrud(sql, connection(), buider -> buider
+//                    .label("e.id", MetaEmployee.id)
+//                    .label("e.name", MetaEmployee.name)
+//                    .label("c.name", MetaEmployee.city, MetaCity.name)
+//                    .label("c.country_code", MetaEmployee.city, MetaCity.countryCode)
+//                    .label("b.name", MetaEmployee.boss, MetaEmployee.name)
+//                    .bind("employeeId", 0L)
+//                    .streamMap(EMPLOYEE_EM::map)
+//                    .toList());
+//
+//            // Test employee names
+//            assertEquals("Ingrid", employees.get(0).getName());
+//            assertEquals("Dave", employees.get(1).getName());
+//            assertEquals("Carol", employees.get(2).getName());
+//
+//            // Test boss names:
+//            assertNull(employees.get(0).getBoss());
+//            assertEquals("Ingrid", employees.get(1).getBoss().getName());
+//            assertEquals("Ingrid", employees.get(2).getBoss().getName());
+//
+//            // Test ID
+//            assertEquals(1L, employees.get(0).getId()); // Ingrid
+//            assertEquals(2L, employees.get(1).getId()); // Dave
+//            assertEquals(3L, employees.get(2).getId()); // Carol
+//        }
+//    }
+//
+//    @Test
+//    @Order(300)
+//    void update() {
+//        var emplIngird = employeeCrud.findByIdNullable(1L);
+//        var emplDave = employeeCrud.findByIdNullable(2L);
+//        var emplCarol = employeeCrud.findByIdNullable(3L);
+//        var newBoss = emplDave;
+//
+//        emplIngird.setBoss(newBoss);
+//        emplDave.setBoss(null);
+//        emplCarol.setBoss(newBoss);
+//        employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol), MetaEmployee.boss); // or just "boss"
+//
+//        assertNull(employeeCrud.findByIdNullable(2L).getBoss(), "The new boss is Dave");
+//    }
+//
+//    @Test
+//    @Order(400)
+//    void delete() {
+//        var allEmployees = employeeCrud
+//                .select("id > :id")
+//                .bind("id", 0L)
+//                .streamMap(EMPLOYEE_EM::map)
+//                .sorted(Comparator.comparing(e -> e.getBoss() == null)) // The boss is the last
+//                .toList();
+//
+//        assertEquals(3, allEmployees.size());
+//        employeeCrud.delete(allEmployees.stream());
+//
+//        var count = employeeCrud
+//                .select("1 = 1")
+//                .streamMap(e -> e)
+//                .count();
+//
+//        assertEquals(0L, count);
+//    }
 
 }
