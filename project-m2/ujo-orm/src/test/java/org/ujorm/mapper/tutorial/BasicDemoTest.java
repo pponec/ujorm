@@ -33,13 +33,13 @@ public class BasicDemoTest extends AbstractDemo {
      */
     @Override
     void init() {
+        createTables();
+
         employeeCrud = EMPLOYEE_EM.crud(connection());
         cityCrud = CITY_EM.crud(connection());
-
-        createTable();
     }
 
-    void createTable() {
+    void createTables() {
         try (var builder = new SqlParamBuilder(connection())) {
             builder.sql("""
                     CREATE TABLE city
