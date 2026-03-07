@@ -34,7 +34,7 @@ public interface Ujo<D extends Object> {
      *
      * @return Property value
      */
-    <V> Object getValue(@NotNull Key<D,V> key);
+    <V> V getValue(@NotNull Key<D,V> key);
 
 
     /** Common method to assign object value.

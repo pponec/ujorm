@@ -21,8 +21,8 @@ public abstract class AbstractUjo<D> implements Ujo<D> {
      *
      * @param keyName Property must be a direct type only!
      */
-    public final Object getValue(@NotNull String keyName) {
-        return getValue(domainHandler.getKey(keyName));
+    public final <V> V getValue(@NotNull String keyName) {
+        return (V) getValue(domainHandler.getKey(keyName));
     }
 
     /** Common method to assign object value by the keyName.
