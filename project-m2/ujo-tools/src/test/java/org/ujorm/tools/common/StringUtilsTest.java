@@ -16,6 +16,7 @@
  */
 package org.ujorm.tools.common;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -91,5 +92,51 @@ public class StringUtilsTest {
         value = String.format(StringUtils.TECHNICAL_LOCALE, "%,.6f", 5_400.3456789);
         assertEquals("5" + nbsp + "400,345679", value);
     }
+
+    @Test
+    @DisplayName("isFilled should return true for non-empty string")
+    void isFilled_ShouldReturnTrueForNonEmptyString() {
+        var text = "Hello";
+        var space = " ";
+
+        assertTrue(StringUtils.isFilled(text), "Should return true for 'Hello'");
+        assertTrue(StringUtils.isFilled(space), "Should return true for space");
+    }
+
+    @Test
+    @DisplayName("isFilled should return false for empty string")
+    void isFilled_ShouldReturnFalseForEmptyString() {
+        var empty = "";
+
+        assertFalse(StringUtils.isFilled(empty), "Should return false for empty string");
+    }
+
+    @Test
+    @DisplayName("isEmpty should return true for empty string")
+    void isEmpty_ShouldReturnTrueForEmptyString() {
+        var empty = "";
+
+        assertTrue(StringUtils.isEmpty(empty), "Should return true for empty string");
+    }
+
+    @Test
+    @DisplayName("isEmpty should return false for non-empty string")
+    void isEmpty_ShouldReturnFalseForNonEmptyString() {
+        var text = "text";
+        var tab = "\t";
+
+        assertFalse(StringUtils.isEmpty(text), "Should return false for text");
+        assertFalse(StringUtils.isEmpty(tab), "Should return false for tab");
+    }
+
+    @Test
+    @DisplayName("Methods should be inverse")
+    void methodsShouldBeInverse() {
+        var testData = "test";
+        var result = StringUtils.isFilled(testData);
+
+        assertEquals(result, !StringUtils.isEmpty(testData), "Methods isFilled and isEmpty must return opposite values");
+    }
+
 
 }
