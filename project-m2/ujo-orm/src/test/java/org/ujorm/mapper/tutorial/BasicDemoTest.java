@@ -5,6 +5,7 @@ import org.ujorm.mapper.Crud;
 import org.ujorm.mapper.core.EntityManager;
 import org.ujorm.mapper.tutorial.domains.City;
 import org.ujorm.mapper.tutorial.domains.Employee;
+import org.ujorm.mapper.tutorial.domains.meta.MetaCity;
 import org.ujorm.mapper.tutorial.domains.meta.MetaEmployee;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
@@ -155,4 +156,67 @@ public class BasicDemoTest extends AbstractDemo {
         assertEquals(0L, count);
     }
 
+    @Test
+    @Order(220)
+    void select_extended() {
+        var sql = """
+                 SELECT e.id      AS ${e.id}
+                 , e.name         AS ${e.name}
+                 , c.name         AS ${c.name}
+                 , c.country_code AS ${c.country_code}
+                 , b.name         AS ${b.name}
+                 FROM employee e
+                 JOIN city c ON c.id = e.city_id
+                 LEFT JOIN employee b ON b.id = e.boss_id
+                 WHERE e.id > :employeeId
+                 ORDER BY e.id
+                 """;
+        var employees = SqlParamBuilder.run(connection(), builder -> builder
+                .sql(sql)
+                .label("e.id", MetaEmployee.id)
+                .label("e.name", MetaEmployee.name)
+                .label("c.name", MetaEmployee.city, MetaCity.name)
+                .label("c.country_code", MetaEmployee.city, MetaCity.countryCode)
+                .label("b.name", MetaEmployee.boss, MetaEmployee.name)
+                .bind("employeeId", 0L)
+                .streamMap(EMPLOYEE_EM::map)
+                .toList());
+
+        // Test employee names
+        assertEquals("Ingrid", employees.get(0).getName());
+        assertEquals("Dave", employees.get(1).getName());
+        assertEquals("Carol", employees.get(2).getName());
+        // Test boss names:
+        assertNull(employees.get(0).getBoss());
+        assertEquals("Ingrid", employees.get(1).getBoss().getName());
+        assertEquals("Ingrid", employees.get(2).getBoss().getName());
+        // Test ID
+        assertEquals(1L, employees.get(0).getId()); // Ingrid
+        assertEquals(2L, employees.get(1).getId()); // Dave
+        assertEquals(3L, employees.get(2).getId()); // Carol
+
+        var sqlLog = SqlParamBuilder.run(connection(), builder -> builder
+                .sql(sql)
+                .label("e.id", MetaEmployee.id)
+                .label("e.name", MetaEmployee.name)
+                .label("c.name", MetaEmployee.city, MetaCity.name)
+                .label("c.country_code", MetaEmployee.city, MetaCity.countryCode)
+                .label("b.name", MetaEmployee.boss, MetaEmployee.name)
+                .bind("employeeId", 0L)
+                .toString());
+
+        var expectedSQL = """
+                SELECT e.id      AS "id"
+                , e.name         AS "name"
+                , c.name         AS "city.name"
+                , c.country_code AS "city.countryCode"
+                , b.name         AS "boss.name"
+                FROM employee e
+                JOIN city c ON c.id = e.city_id
+                LEFT JOIN employee b ON b.id = e.boss_id
+                WHERE e.id > [0]
+                ORDER BY e.id
+                """;
+        assertEquals(expectedSQL, sqlLog);
+    }
 }
